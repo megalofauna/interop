@@ -1,0 +1,101 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhTipJar: PhIconDefinition = {
+  "name": "tip-jar",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "path",
+      {
+        "d": "M80,56V32a8,8,0,0,1,8-8h80a8,8,0,0,1,8,8V56",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M112,176h24a16,16,0,0,0,0-32H120a16,16,0,0,1,0-32h24",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "rect",
+      {
+        "x": 48,
+        "y": 56,
+        "width": 160,
+        "height": 176,
+        "rx": 32,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "line",
+      {
+        "x1": 112,
+        "y1": 56,
+        "x2": 112,
+        "y2": 24,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "line",
+      {
+        "x1": 144,
+        "y1": 56,
+        "x2": 144,
+        "y2": 24,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "line",
+      {
+        "x1": 128,
+        "y1": 112,
+        "x2": 128,
+        "y2": 96,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "line",
+      {
+        "x1": 128,
+        "y1": 192,
+        "x2": 128,
+        "y2": 176,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ]
+  ]
+} as const;

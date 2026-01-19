@@ -1,0 +1,124 @@
+:host {
+}
+header {
+    width: 100%;
+    padding: var(--ntr-size-10);
+    max-width: 1200px;
+    margin-inline: auto;
+
+    hgroup svg {
+        max-width: 16ch;
+    }
+}
+main {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    background-color: #fafafa;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.interop-blank-space {
+    flex: 1 1 auto;
+}
+.interop-configuration-panel {
+    background-color: #fff;
+    flex: 1 1 auto;
+    height: 960px;
+}
+
+footer {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    flex: 1 0 100%;
+}
+
+.demo-box {
+    --spacing: 8px;
+    --width: display: flex;
+    background-color: #f1f1f1;
+    padding: var(--spacing);
+    column-gap: var(--spacing);
+    border: 1px solid #fafafa;
+    border-radius: 4px;
+    display: flex;
+    max-width: fit-content;
+}
+
+.demo-box + .demo-box {
+    margin-top: calc(var(--spacing) * 2);
+}
+
+.demo-box + hr {
+    margin-block: 2rem;
+}
+
+.demo-box.compact {
+    --spacing: 0.25rem;
+
+    &.sm .demo-control {
+        --width: 1.5rem;
+        width: var(--width);
+    }
+    &.md .demo-control {
+        --width: 2rem;
+        width: var(--width);
+    }
+    &.lg .demo-control {
+        --width: 2.5rem;
+        width: var(--width);
+    }
+}
+
+.demo-control {
+    background: #2b2b2b;
+    width: var(--width);
+    height: auto;
+    aspect-ratio: 1/1;
+    display: grid;
+    place-items: center;
+    border-radius: 4px;
+
+    svg path {
+        fill: #fafafa;
+        transform: scale(0.75);
+        transform-origin: center;
+    }
+}
+
+.demo-box.standard {
+    --spacing: 0.5rem;
+
+    &.sm .demo-control {
+        --width: 1.5rem;
+        width: var(--width);
+    }
+    &.md .demo-control {
+        --width: 1.875rem;
+        width: var(--width);
+    }
+    &.lg .demo-control {
+        --width: 2.25rem;
+        width: var(--width);
+    }
+}
+
+.demo-box.comfy {
+    --spacing: 1rem;
+
+    &.sm .demo-control {
+        --width: 1.5rem;
+        width: var(--width);
+    }
+    &.md .demo-control {
+        --width: 1.875rem;
+        width: var(--width);
+    }
+    &.lg .demo-control {
+        --width: 2.25rem;
+        width: var(--width);
+    }
+}

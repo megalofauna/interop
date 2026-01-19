@@ -1,0 +1,30 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhEar: PhIconDefinition = {
+  "name": "ear",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "path",
+      {
+        "d": "M160,216c-8.07,9.77-18.34,16-32,16a44,44,0,0,1-44-44c0-41.49-36-28-36-84a80,80,0,0,1,160,0",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M173.86,168A16,16,0,0,1,144,160c0-24,24-32,24-56a40,40,0,0,0-80,0",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ]
+  ]
+} as const;

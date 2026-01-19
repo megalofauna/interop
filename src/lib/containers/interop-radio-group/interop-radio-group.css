@@ -1,0 +1,112 @@
+/* Base host styles - applies to both modes */
+:host {
+    display: block;
+}
+
+/* Hands-off mode: Full fieldset structure */
+:host(interop-radio-group) fieldset {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 0;
+    min-width: 0;
+}
+
+:host(interop-radio-group) fieldset:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+:host(interop-radio-group) legend {
+    font-weight: 600;
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Custom mode: User provides their own container */
+:host(:not(interop-radio-group)) {
+    /* Minimal styling - let user handle container styles */
+}
+
+/* Radio control styles - applies to both modes */
+.radio-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.radio-control:last-child {
+    margin-bottom: 0;
+}
+
+.radio-control input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.radio-control:has(input[type="radio"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.radio-group-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Focus styles for accessibility - both modes */
+.radio-control input[type="radio"]:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Layout helpers for custom mode */
+:host(:not(interop-radio-group)) .radio-control {
+    margin-bottom: 0.5rem;
+}
+
+:host(:not(interop-radio-group)) .radio-group-content {
+    gap: 0.5rem;
+}
+
+/* Utility classes for custom mode users */
+:host(.horizontal) .radio-group-content,
+:host(.horizontal) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+:host(.compact) .radio-control {
+    margin-bottom: 0.25rem;
+    gap: 0.25rem;
+}
+
+:host(.compact) .radio-group-content {
+    gap: 0.25rem;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :host(interop-radio-group) fieldset {
+        border-width: 2px;
+    }
+
+    .radio-control input[type="radio"]:focus {
+        outline-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

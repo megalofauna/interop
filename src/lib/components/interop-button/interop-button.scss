@@ -1,0 +1,16 @@
+@use "./theme/tokens" as *;
+
+:host {
+    display: var(--ntr-button-display);
+    background: var(--ntr-button-background);
+    border: var(--ntr-button-border-width);
+    color: var(--ntr-button-foreground);
+    font: var(--ntr-button-font-family);
+    line-height: var(--ntr-button-line-height);
+    padding-block: var(--ntr-button-padding-block);
+    padding-inline: var(--ntr-button-padding-inline);
+    letter-spacing: var(--ntr-button-letter-spacing);
+    border-style: var(--ntr-button-border-style);
+    border-color: var(--ntr-button-border-color);
+    border-radius: var(--ntr-button-rounding);
+}

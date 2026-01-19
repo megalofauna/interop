@@ -1,0 +1,67 @@
+/**
+ * Base layout styles for InteropLayout directive.
+ *
+ * Provides foundational CSS for elements using the InteropLayout directive.
+ * Components can import this or define their own layout consumption patterns.
+ */
+
+/**
+ * Base layout capability mixin
+ * Apply to components that should consume layout variables
+ */
+@mixin layout-capable {
+  display: flex;
+  flex-direction: var(--ntr-layout-direction, row);
+  justify-content: var(--ntr-layout-justify, flex-start);
+  align-items: var(--ntr-layout-align, flex-start);
+  flex-wrap: var(--ntr-layout-wrap, nowrap);
+  gap: var(--ntr-layout-gap, 0);
+}
+
+/**
+ * Optional utility class for generic containers
+ */
+.ntr-layout {
+  @include layout-capable;
+}
+
+/**
+ * Data attribute selectors for styling hooks
+ * These provide additional styling opportunities based on layout configuration
+ */
+[data-interop-layout*="row"] {
+  // Row-specific styles can go here
+}
+
+[data-interop-layout*="column"] {
+  // Column-specific styles can go here
+}
+
+[data-interop-layout*="wrap"] {
+  // Wrap-specific styles can go here
+}
+
+/**
+ * Gap-specific styling hooks if needed
+ */
+[data-interop-layout*="gap-0"] {
+  // No gap specific styles
+}
+
+[data-interop-layout*="gap-1"],
+[data-interop-layout*="gap-2"],
+[data-interop-layout*="gap-3"],
+[data-interop-layout*="gap-4"] {
+  // Small gap styles
+}
+
+[data-interop-layout*="gap-6"],
+[data-interop-layout*="gap-8"] {
+  // Medium gap styles
+}
+
+[data-interop-layout*="gap-12"],
+[data-interop-layout*="gap-16"],
+[data-interop-layout*="gap-24"] {
+  // Large gap styles
+}

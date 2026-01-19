@@ -1,0 +1,26 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Interop",
+  "entryPoints": ["src/public-api.ts"],
+  "tsconfig": "tsconfig.lib.json",
+
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "markdown",
+  "out": "docs/api",
+  "entryPointStrategy": "resolve",
+
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+
+  "hideBreadcrumbs": true,
+  "hidePageTitle": false,
+  "categorizeByGroup": true,
+  "sort": ["source-order"],
+  "readme": "none",
+
+  "includeVersion": true,
+  "gitRevision": "main",
+  "cleanOutputDir": true
+}

@@ -1,0 +1,48 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhStamp: PhIconDefinition = {
+  "name": "stamp",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "path",
+      {
+        "d": "M114.32,136,96.54,53A24,24,0,0,1,120,24h16a24,24,0,0,1,23.47,29l-17.78,83",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "rect",
+      {
+        "x": 40,
+        "y": 136,
+        "width": 176,
+        "height": 56,
+        "rx": 8,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "line",
+      {
+        "x1": 40,
+        "y1": 224,
+        "x2": 216,
+        "y2": 224,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ]
+  ]
+} as const;

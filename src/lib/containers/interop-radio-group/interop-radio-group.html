@@ -1,0 +1,50 @@
+<!-- Hands-off mode: Full fieldset structure provided -->
+@if (isHandsOffMode()) {
+<fieldset [class]="containerClass()" [disabled]="disabled()">
+    @if (legend()) {
+    <legend>{{ legend() }}</legend>
+    } @if (isDeclarativeMode()) {
+    <!-- Declarative mode: Generate radio inputs from controls array -->
+    @for (control of controls(); track control.id) {
+    <label
+        class="radio-control"
+        interop-radio
+        [id]="control.id"
+        [name]="control.name || groupName()"
+        [value]="control.value"
+        [checked]="isSelected(control.value)"
+        [disabled]="disabled() || control.disabled"
+        [required]="required() || control.required"
+        (valueChange)="onRadioChange($event)"
+    >
+        {{ control.label }}
+    </label>
+    } } @else {
+    <!-- Content projection mode: Use projected radio inputs -->
+    <div class="radio-group-content">
+        <ng-content></ng-content>
+    </div>
+    }
+</fieldset>
+} @else {
+<!-- Custom mode: User provides their own container, just render content -->
+@if (isDeclarativeMode()) {
+<!-- Declarative mode: Generate radio inputs from controls array -->
+@for (control of controls(); track control.id) {
+<label
+    class="radio-control"
+    interop-radio
+    [id]="control.id"
+    [name]="control.name || groupName()"
+    [value]="control.value"
+    [checked]="isSelected(control.value)"
+    [disabled]="disabled() || control.disabled"
+    [required]="required() || control.required"
+    (valueChange)="onRadioChange($event)"
+>
+    {{ control.label }}
+</label>
+} } @else {
+<!-- Content projection mode: Use projected radio inputs -->
+<ng-content></ng-content>
+} }

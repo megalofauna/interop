@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>InteropLayout Examples</title>
+        <style>
+            body {
+                font-family: system-ui;
+                padding: 2rem;
+                background: var(--demo-bg, #f5f5f5);
+            }
+            .example {
+                margin-bottom: 2rem;
+                padding: 1rem;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .example h3 {
+                margin-top: 0;
+                color: #333;
+            }
+            .demo-item {
+                padding: 0.5rem 1rem;
+                background: #e3f2fd;
+                border-radius: 4px;
+                border: 1px solid #90caf9;
+            }
+        </style>
+    </head>
+    <body interop-root>
+        <h1>InteropLayout Directive Examples</h1>
+
+        <!-- Basic Horizontal Layout -->
+        <div class="example">
+            <h3>Basic Horizontal Layout</h3>
+            <div
+                interopLayout="row center gap-4"
+                style="padding: 1rem; border: 1px dashed #ccc"
+            >
+                <div class="demo-item">Item 1</div>
+                <div class="demo-item">Item 2</div>
+                <div class="demo-item">Item 3</div>
+            </div>
+            <code>interopLayout="row center gap-4"</code>
+        </div>
+
+        <!-- Toolbar Layout -->
+        <div class="example">
+            <h3>Toolbar Layout (space-between)</h3>
+            <header
+                interopLayout="row center between"
+                style="
+                    padding: 1rem;
+                    border: 1px dashed #ccc;
+                    background: #f8f9fa;
+                "
+            >
+                <div class="demo-item">Logo</div>
+                <nav interopLayout="row center gap-2">
+                    <div class="demo-item">Home</div>
+                    <div class="demo-item">About</div>
+                    <div class="demo-item">Contact</div>
+                </nav>
+            </header>
+            <code>interopLayout="row center between"</code>
+        </div>
+
+        <!-- Vertical Stack -->
+        <div class="example">
+            <h3>Vertical Stack</h3>
+            <interop-list
+                interopLayout="column stretch gap-3"
+                style="padding: 1rem; border: 1px dashed #ccc"
+            >
+                <li class="demo-item">List Item 1</li>
+                <li class="demo-item">List Item 2</li>
+                <li class="demo-item">List Item 3</li>
+            </interop-list>
+            <code>interopLayout="column stretch gap-3"</code>
+        </div>
+
+        <!-- Wrapping Layout -->
+        <div class="example">
+            <h3>Wrapping Layout</h3>
+            <div
+                interopLayout="row start wrap gap-2"
+                style="padding: 1rem; border: 1px dashed #ccc; max-width: 300px"
+            >
+                <div class="demo-item">Tag 1</div>
+                <div class="demo-item">Tag 2</div>
+                <div class="demo-item">Longer Tag Name</div>
+                <div class="demo-item">Tag 4</div>
+                <div class="demo-item">Another Tag</div>
+            </div>
+            <code>interopLayout="row start wrap gap-2"</code>
+        </div>
+
+        <!-- Button Group -->
+        <div class="example">
+            <h3>Button Group</h3>
+            <div
+                interopLayout="row center gap-1"
+                style="padding: 1rem; border: 1px dashed #ccc"
+            >
+                <button class="demo-item" style="border: none; cursor: pointer">
+                    Save
+                </button>
+                <button class="demo-item" style="border: none; cursor: pointer">
+                    Cancel
+                </button>
+                <button class="demo-item" style="border: none; cursor: pointer">
+                    Delete
+                </button>
+            </div>
+            <code>interopLayout="row center gap-1"</code>
+        </div>
+
+        <!-- Form Layout -->
+        <div class="example">
+            <h3>Form Layout</h3>
+            <form
+                interopLayout="column stretch gap-4"
+                style="padding: 1rem; border: 1px dashed #ccc; max-width: 400px"
+            >
+                <input
+                    type="text"
+                    placeholder="Name"
+                    style="
+                        padding: 0.5rem;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                    "
+                />
+                <input
+                    type="email"
+                    placeholder="Email"
+                    style="
+                        padding: 0.5rem;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                    "
+                />
+                <div interopLayout="row end gap-2">
+                    <button
+                        type="submit"
+                        class="demo-item"
+                        style="border: none; cursor: pointer"
+                    >
+                        Submit
+                    </button>
+                    <button
+                        type="button"
+                        class="demo-item"
+                        style="border: none; cursor: pointer"
+                    >
+                        Reset
+                    </button>
+                </div>
+            </form>
+            <code>interopLayout="column stretch gap-4"</code>
+        </div>
+
+        <!-- Card Grid -->
+        <div class="example">
+            <h3>Card Grid (with wrapping)</h3>
+            <div
+                interopLayout="row start wrap gap-6"
+                style="padding: 1rem; border: 1px dashed #ccc"
+            >
+                <div
+                    class="demo-item"
+                    style="min-width: 200px; min-height: 120px"
+                >
+                    Card 1
+                </div>
+                <div
+                    class="demo-item"
+                    style="min-width: 200px; min-height: 120px"
+                >
+                    Card 2
+                </div>
+                <div
+                    class="demo-item"
+                    style="min-width: 200px; min-height: 120px"
+                >
+                    Card 3
+                </div>
+            </div>
+            <code>interopLayout="row start wrap gap-6"</code>
+        </div>
+
+        <!-- Reverse Direction -->
+        <div class="example">
+            <h3>Reverse Direction</h3>
+            <div
+                interopLayout="row-reverse center gap-3"
+                style="padding: 1rem; border: 1px dashed #ccc"
+            >
+                <div class="demo-item">First (appears last)</div>
+                <div class="demo-item">Second</div>
+                <div class="demo-item">Third (appears first)</div>
+            </div>
+            <code>interopLayout="row-reverse center gap-3"</code>
+        </div>
+
+        <!-- No Gap Example -->
+        <div class="example">
+            <h3>No Gap (Compact Layout)</h3>
+            <div
+                interopLayout="row center gap-0"
+                style="padding: 1rem; border: 1px dashed #ccc"
+            >
+                <div class="demo-item" style="border-radius: 4px 0 0 4px">
+                    Left
+                </div>
+                <div class="demo-item" style="border-radius: 0">Middle</div>
+                <div class="demo-item" style="border-radius: 0 4px 4px 0">
+                    Right
+                </div>
+            </div>
+            <code>interopLayout="row center gap-0"</code>
+        </div>
+
+        <script>
+            // Add InteropLayout directive functionality
+            document.addEventListener("DOMContentLoaded", function () {
+                // This would normally be handled by Angular, but for demo purposes
+                // we'll simulate the layout functionality with vanilla JS
+
+                const layoutElements =
+                    document.querySelectorAll("[interopLayout]");
+
+                layoutElements.forEach((element) => {
+                    const layoutValue = element.getAttribute("interopLayout");
+                    const tokens = layoutValue.split(" ");
+
+                    // Apply basic flex styles
+                    element.style.display = "flex";
+
+                    tokens.forEach((token) => {
+                        switch (token) {
+                            case "row":
+                                element.style.flexDirection = "row";
+                                break;
+                            case "column":
+                                element.style.flexDirection = "column";
+                                break;
+                            case "row-reverse":
+                                element.style.flexDirection = "row-reverse";
+                                break;
+                            case "column-reverse":
+                                element.style.flexDirection = "column-reverse";
+                                break;
+                            case "center":
+                                element.style.alignItems = "center";
+                                element.style.justifyContent = "center";
+                                break;
+                            case "start":
+                                element.style.alignItems = "flex-start";
+                                element.style.justifyContent = "flex-start";
+                                break;
+                            case "end":
+                                element.style.alignItems = "flex-end";
+                                element.style.justifyContent = "flex-end";
+                                break;
+                            case "between":
+                                element.style.justifyContent = "space-between";
+                                break;
+                            case "around":
+                                element.style.justifyContent = "space-around";
+                                break;
+                            case "evenly":
+                                element.style.justifyContent = "space-evenly";
+                                break;
+                            case "stretch":
+                                element.style.alignItems = "stretch";
+                                break;
+                            case "wrap":
+                                element.style.flexWrap = "wrap";
+                                break;
+                            case "nowrap":
+                                element.style.flexWrap = "nowrap";
+                                break;
+                            default:
+                                if (token.startsWith("gap-")) {
+                                    const gapValue = token.split("-")[1];
+                                    const gapMap = {
+                                        0: "0",
+                                        1: "0.25rem",
+                                        2: "0.5rem",
+                                        3: "0.75rem",
+                                        4: "1rem",
+                                        6: "1.5rem",
+                                        8: "2rem",
+                                        12: "3rem",
+                                        16: "4rem",
+                                        24: "6rem",
+                                    };
+                                    element.style.gap = gapMap[gapValue] || "0";
+                                }
+                                break;
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

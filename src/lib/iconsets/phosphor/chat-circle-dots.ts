@@ -1,0 +1,43 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhChatCircleDots: PhIconDefinition = {
+  "name": "chat-circle-dots",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "path",
+      {
+        "d": "M79.93,211.11a96,96,0,1,0-35-35h0L32.42,213.46a8,8,0,0,0,10.12,10.12l37.39-12.47Z",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 128,
+        "cy": 128,
+        "r": 12
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 84,
+        "cy": 128,
+        "r": 12
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": 172,
+        "cy": 128,
+        "r": 12
+      }
+    ]
+  ]
+} as const;

@@ -1,0 +1,34 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhVideoCamera: PhIconDefinition = {
+  "name": "video-camera",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "rect",
+      {
+        "x": 24,
+        "y": 64,
+        "width": 176,
+        "height": 128,
+        "rx": 8,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "polyline",
+      {
+        "points": "200 112 248 80 248 176 200 144",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ]
+  ]
+} as const;

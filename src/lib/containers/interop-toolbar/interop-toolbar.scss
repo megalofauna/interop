@@ -1,0 +1,96 @@
+:host {
+    --ntr-toolbar-base-color: #fafafa;
+    --ntr-toolbar-text-color: hsl(from var(--ntr-toolbar-base-color) h s 20%);
+    --ntr-toolbar-background-color: hsl(
+        from var(--ntr-toolbar-base-color) h s l
+    );
+    --ntr-toolbar-icon-color: hsl(from var(--ntr-toolbar-base-color) h s 30%);
+
+    /* toolbar host properties */
+    --ntr-toolbar-align-items: center;
+    --ntr-toolbar-background-color: transparent;
+    --ntr-toolbar-border-color: black;
+    --ntr-toolbar-border-style: solid;
+    --ntr-toolbar-border-width: 1px;
+    --ntr-toolbar-column-gap: 0;
+    --ntr-toolbar-display: flex;
+    --ntr-toolbar-flex: 1 1 auto;
+    --ntr-toolbar-justify-content: flex-end;
+    --ntr-toolbar-align-items: center;
+    --ntr-toolbar-padding: 0;
+    --ntr-toolbar-rounded: var(--rounded-small, 4px);
+    --ntr-toolbar-width: 100%;
+    /* toolbar-group properties */
+
+    /* Display */
+    --ntr-button-display: inline-flex;
+
+    /* Borders box */
+    --ntr-button-border-width: 2px;
+    --ntr-button-border-style: solid;
+    --ntr-button-border-color: var(--ntr-toolbar-background-color);
+    --ntr-button-rounding: var(--ntr-rounding-sm);
+
+    /* Padding box */
+    --ntr-button-padding-block: var(--ntr-sizing-1);
+    --ntr-button-padding-inline: var(--ntr-sizing-05);
+
+    /* Colors */
+    --ntr-button-background: white;
+    --ntr-button-foreground: black;
+
+    /* Typography */
+    --ntr-button-font-family: inherit;
+    --ntr-button-font-size-clamp: inherit;
+    --ntr-button-font-size: inherit;
+    --ntr-button-letter-spacing: initial;
+    --ntr-button-line-height: 1.25;
+
+    display: var(--ntr-toolbar-display);
+    flex: var(--ntr-toolbar-flex);
+    align-items: var(--ntr-toolbar-align-items);
+    background-color: var(--ntr-toolbar-background-color);
+    gap: var(--ntr-toolbar-column-gap);
+    padding: var(--ntr-toolbar-padding);
+    justify-content: var(--ntr-toolbar-justify-content);
+    align-items: var(--ntr-toolbar-align-items);
+
+    border: var(--ntr-toolbar-border-width) var(--ntr-toolbar-border-style)
+        var(--ntr-toolbar-border-color);
+
+    &[aria-orientation="vertical"] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    &[aria-disabled="true"] {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    button,
+    button[interop-button] {
+    }
+}
+
+// Focus management
+/* :host:focus {
+    outline: 2px solid var(--interop-focus-color, #0066cc);
+    outline-offset: -2px;
+} */
+
+// High contrast mode support
+/* @media (prefers-contrast: high) {
+    :host {
+        border-width: 2px;
+    }
+} */
+
+// Reduced motion support
+/* @media (prefers-reduced-motion: reduce) {
+    :host,
+    :host * {
+        transition: none !important;
+        animation: none !important;
+    }
+} */

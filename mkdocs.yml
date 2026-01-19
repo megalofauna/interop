@@ -1,0 +1,107 @@
+site_name: Interop
+site_description: Angular library for interoperable components and data patterns
+site_url: https://christophersalmon.github.io/interop
+repo_url: https://github.com/christophersalmon/interop
+repo_name: christophersalmon/interop
+edit_uri: ""
+
+# MkDocs will read content from this directory.
+# Our Markdown lives under interop/docs (intro.md and TypeDoc-generated api/)
+docs_dir: docs
+
+# Where the built site will be written.
+site_dir: site
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.footer
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+    - toc.follow
+  palette:
+    - scheme: slate
+      primary: black
+      accent: indigo
+  favicon: img/favicon.ico
+  logo: img/favicon.ico
+
+nav:
+  - Home: index.md
+  - API Reference:
+      - Overview: api/index.md
+      - Classes:
+          - ActivationManagerService: api/classes/ActivationManagerService.md
+          - AttrsManagerService: api/classes/AttrsManagerService.md
+          - InteropButton: api/classes/InteropButton.md
+          - InteropCollection: api/classes/InteropCollection.md
+          - InteropCollectionService: api/classes/InteropCollectionService.md
+          - InteropList: api/classes/InteropList.md
+          - InteropModule: api/classes/InteropModule.md
+          - ManageAttributesDirective: api/classes/ManageAttrsDirective.md
+          - NormalizeSemanticsDirective: api/classes/NormalizeSemanticsDirective.md
+      - Components:
+          - Overview: api/components/index.md
+          - InteropList: api/components/InteropList.md
+      - Interfaces:
+          - ActivationRegistration: api/interfaces/ActivationRegistration.md
+          - Collection: api/interfaces/Collection.md
+          - CollectionConfig: api/interfaces/CollectionConfig.md
+          - SetAttrsConfig: api/interfaces/SetAttrsConfig.md
+      - Type Aliases:
+          - ActivationHandler: api/type-aliases/ActivationHandler.md
+          - ActivationOptions: api/type-aliases/ActivationOptions.md
+          - InteropCollectionInput: api/type-aliases/InteropCollectionInput.md
+          - ManagedActivation: api/type-aliases/ManagedActivation.md
+          - PresetKey: api/type-aliases/PresetKey.md
+          - SimpleIterable: api/type-aliases/SimpleIterable.md
+          - TrackKey: api/type-aliases/TrackKey.md
+      - Functions:
+          - composeActivation: api/functions/composeActivation.md
+          - createActivationHandler: api/functions/createActivationHandler.md
+          - isCollection: api/functions/isCollection.md
+          - isSimpleIterable: api/functions/isSimpleIterable.md
+          - trackByAuto: api/functions/trackByAuto.md
+          - trackByField: api/functions/trackByField.md
+          - trackByFieldThenAutoThenIndex: api/functions/trackByFieldThenAutoThenIndex.md
+          - trackByIndex: api/functions/trackByIndex.md
+      - Variables:
+          - INTEROP_PIPES_VERSION: api/variables/INTEROP_PIPES_VERSION.md
+          - INTEROP_SERVICES_VERSION: api/variables/INTEROP_SERVICES_VERSION.md
+          - INTEROP_UTILS_VERSION: api/variables/INTEROP_UTILS_VERSION.md
+      - Theming:
+          - api/theming/index.md
+
+plugins:
+  - search
+  - redirects
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.emoji
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/christophersalmon/interop
+      name: GitHub
+
+# Deployment notes:
+# - For GitHub Pages under /interop/, you can serve the built site from docs/site or adjust your CI to publish that directory.
+# - TypeDoc-generated Markdown should be output to docs/api via `npm run docs:api` before building.

@@ -1,0 +1,55 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhSpeakerHigh: PhIconDefinition = {
+  "name": "speaker-high",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "path",
+      {
+        "d": "M80,168H32a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8H80l72-56V224Z",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M192,106.85a32,32,0,0,1,0,42.3",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M221.67,80a72,72,0,0,1,0,96",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "line",
+      {
+        "x1": 80,
+        "y1": 88,
+        "x2": 80,
+        "y2": 168,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ]
+  ]
+} as const;

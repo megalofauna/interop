@@ -1,0 +1,35 @@
+:where(html) {
+    --ntr-rounded-sm: 4px;
+
+    --ntr-sizing-05: 0.125rem;
+    --ntr-sizing-1: 0.25rem;
+    --ntr-sizing-2: 0.5rem;
+    --ntr-sizing-3: 0.75rem;
+    --ntr-sizing-4: 1rem;
+}
+
+:where(button[interop-button]) {
+    /* Display */
+    --ntr-button-display: inline-flex;
+
+    /* Borders box */
+    --ntr-button-border-width: 2px;
+    --ntr-button-border-style: solid;
+    --ntr-button-border-color: transparent;
+    --ntr-button-rounding: var(--ntr-rounding-sm);
+
+    /* Padding box */
+    --ntr-button-padding-block: var(--ntr-sizing-1);
+    --ntr-button-padding-inline: var(--ntr-sizing-05);
+
+    /* Colors */
+    --ntr-button-background: white;
+    --ntr-button-foreground: black;
+
+    /* Typography */
+    --ntr-button-font-family: inherit;
+    --ntr-button-font-size-clamp: inherit;
+    --ntr-button-font-size: inherit;
+    --ntr-button-letter-spacing: initial;
+    --ntr-button-line-height: 1.25;
+}

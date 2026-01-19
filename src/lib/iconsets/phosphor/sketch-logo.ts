@@ -1,0 +1,44 @@
+import { PhIconDefinition } from "./helpers/phosphor-icon.types";
+
+export const PhSketchLogo: PhIconDefinition = {
+  "name": "sketch-logo",
+  "viewBox": "0 0 256 256",
+  "nodes": [
+    [
+      "line",
+      {
+        "x1": 16,
+        "y1": 104,
+        "x2": 240,
+        "y2": 104,
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "polygon",
+      {
+        "points": "72 40 184 40 240 104 128 224 16 104 72 40",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ],
+    [
+      "polygon",
+      {
+        "points": "176 104 128 224 80 104 128 40 176 104",
+        "fill": "none",
+        "stroke": "currentColor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": 16
+      }
+    ]
+  ]
+} as const;

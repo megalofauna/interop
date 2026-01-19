@@ -1,0 +1,18 @@
+<div class="interop-toolbar-group-content">
+    <!-- Collection-based rendering when items are provided -->
+    @if (collectionItems().length > 0) { @for (item of collectionItems(); track
+    $index) {
+    <input
+        type="radio"
+        [value]="item.value || item.id || item"
+        [id]="groupId + '-' + $index"
+        [name]="groupName()"
+    />
+    <label [for]="groupId + '-' + $index">
+        {{ item.label || item.name || item.toString() }}
+    </label>
+    } }
+
+    <!-- Default content projection for manual group items -->
+    <ng-content></ng-content>
+</div>

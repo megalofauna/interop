@@ -1,0 +1,52 @@
+:where([interop-root]) {
+    --ntr-clr-surface-0: null;
+    --ntr-clr-surface-1: null;
+    --ntr-clr-surface-2: null;
+    --ntr-clr-on-surface: null;
+    --ntr-clr-muted: null;
+    --ntr-clr-border: null;
+    --ntr-clr-accent: null;
+    --ntr-clr-on-accent: null;
+
+    --demo-bg: #f1f1f1;
+    --demo-fg: #212121;
+
+    --ntr-size-1: 0.25rem;
+    --ntr-size-2: 0.5rem;
+    --ntr-size-3: 0.75rem;
+    --ntr-size-4: 1rem;
+    --ntr-size-5: 1.25rem;
+    --ntr-size-6: 1.5rem;
+    --ntr-size-7: 1.75rem;
+    --ntr-size-8: 2rem;
+    --ntr-size-10: 2.5rem;
+    --ntr-size-12: 3rem;
+    --ntr-size-16: 4rem;
+    --ntr-size-20: 5rem;
+    --ntr-size-24: 6rem;
+    --ntr-size-32: 8rem;
+    --ntr-size-40: 10rem;
+    --ntr-size-48: 12rem;
+    --ntr-size-64: 16rem;
+    --ntr-size-80: 20rem;
+
+    --ntr-whitespace-xxs: var(--ntr-size-1);
+    --ntr-whitespace-xs: var(--ntr-size-2);
+    --ntr-whitespace-sm: var(--ntr-size-4);
+    --ntr-whitespace-md: var(--ntr-size-6);
+    --ntr-whitespace-lg: var(--ntr-size-8);
+    --ntr-whitespace-xl: var(--ntr-size-10);
+    --ntr-whitespace-xxl: var(--ntr-size-12);
+
+    // Layout tokens
+    --ntr-layout-gap-0: 0;
+    --ntr-layout-gap-1: var(--ntr-size-1);
+    --ntr-layout-gap-2: var(--ntr-size-2);
+    --ntr-layout-gap-3: var(--ntr-size-3);
+    --ntr-layout-gap-4: var(--ntr-size-4);
+    --ntr-layout-gap-6: var(--ntr-size-6);
+    --ntr-layout-gap-8: var(--ntr-size-8);
+    --ntr-layout-gap-12: var(--ntr-size-12);
+    --ntr-layout-gap-16: var(--ntr-size-16);
+    --ntr-layout-gap-24: var(--ntr-size-24);
+}

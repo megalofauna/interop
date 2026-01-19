@@ -1,0 +1,83 @@
+/**
+ * InteropTable - Minimal Foundation Styles
+ *
+ * This component is intentionally unstyled to allow complete customization.
+ * Only essential layout and semantic structure is provided.
+ */
+
+:host {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Ensure proper semantic structure */
+.interop-table-header {
+    /* No styling - user provides their own */
+}
+
+.interop-table-header-row {
+    /* No styling - user provides their own */
+}
+
+.interop-table-header-cell {
+    /* No styling - user provides their own */
+}
+
+.interop-table-header-text {
+    /* No styling - user provides their own */
+}
+
+.interop-table-body {
+    /* No styling - user provides their own */
+}
+
+.interop-table-row {
+    /* No styling - user provides their own */
+}
+
+.interop-table-cell {
+    /* No styling - user provides their own */
+}
+
+.interop-table-cell-text {
+    /* No styling - user provides their own */
+}
+
+/* State classes for user styling */
+.interop-table-loading {
+    /* No styling - user provides their own */
+}
+
+.interop-table-loading-cell {
+    /* No styling - user provides their own */
+}
+
+.interop-table-loading-content {
+    /* No styling - user provides their own */
+}
+
+.interop-table-error {
+    /* No styling - user provides their own */
+}
+
+.interop-table-error-cell {
+    /* No styling - user provides their own */
+}
+
+.interop-table-error-content {
+    /* No styling - user provides their own */
+}
+
+.interop-table-empty {
+    /* No styling - user provides their own */
+}
+
+.interop-table-empty-cell {
+    /* No styling - user provides their own */
+}
+
+.interop-table-empty-content {
+    /* No styling - user provides their own */
+}
