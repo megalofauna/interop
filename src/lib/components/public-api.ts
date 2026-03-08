@@ -11,5 +11,6 @@ export * from "./interop-icon/interop-icon";
 export * from "./interop-icon/icon-scope.directive";
 export * from "./interop-tabs/public-api";
 export * from "./interop-code-block/public-api";
+export * from "./interop-checkbox/interop-checkbox";
 export * from "../directives/manage-attrs.directive";
 export * from "../services/interop-attribute.service";
