@@ -1,0 +1,123 @@
+/* Base host styles - applies to both modes */
+:host {
+    display: block;
+}
+
+/* Hands-off mode: Full fieldset structure */
+:host(interop-checkbox-group) fieldset {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 0;
+    min-width: 0;
+}
+
+:host(interop-checkbox-group) fieldset:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+:host(interop-checkbox-group) legend {
+    font-weight: 600;
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Custom mode: User provides their own container */
+:host(:not(interop-checkbox-group)) {
+    /* Minimal styling - let user handle container styles */
+}
+
+/* Checkbox control styles - applies to both modes */
+.checkbox-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.checkbox-control:last-child {
+    margin-bottom: 0;
+}
+
+.checkbox-control input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-control:has(input[type="checkbox"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Select-all separator */
+.checkbox-select-all {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+}
+
+.checkbox-group-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Focus styles for accessibility - both modes */
+.checkbox-control input[type="checkbox"]:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Layout helpers for custom mode */
+:host(:not(interop-checkbox-group)) .checkbox-control {
+    margin-bottom: 0.5rem;
+}
+
+:host(:not(interop-checkbox-group)) .checkbox-group-content {
+    gap: 0.5rem;
+}
+
+/* Utility classes for custom mode users */
+:host(.horizontal) .checkbox-group-content,
+:host(.horizontal) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+:host(.compact) .checkbox-control {
+    margin-bottom: 0.25rem;
+    gap: 0.25rem;
+}
+
+:host(.compact) .checkbox-group-content {
+    gap: 0.25rem;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :host(interop-checkbox-group) fieldset {
+        border-width: 2px;
+    }
+
+    .checkbox-select-all {
+        border-bottom-width: 2px;
+    }
+
+    .checkbox-control input[type="checkbox"]:focus {
+        outline-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

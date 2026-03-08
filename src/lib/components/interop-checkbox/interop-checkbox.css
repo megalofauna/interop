@@ -1,0 +1,64 @@
+:host {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+:host input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+:host:has(input[type="checkbox"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+:host input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+}
+
+/* Focus styles for accessibility */
+:host input[type="checkbox"]:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* Hover states */
+:host:hover:not(:has(input[type="checkbox"]:disabled)) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Support for custom layouts */
+:host(.inline) {
+    display: inline-flex;
+}
+
+:host(.block) {
+    display: flex;
+    width: 100%;
+}
+
+:host(.reverse) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :host input[type="checkbox"]:focus {
+        outline-width: 3px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    :host,
+    :host * {
+        transition: none !important;
+    }
+}
