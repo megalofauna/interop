@@ -1,35 +1,24 @@
-:where(html) {
-    --ntr-rounded-sm: 4px;
-
-    --ntr-sizing-05: 0.125rem;
-    --ntr-sizing-1: 0.25rem;
-    --ntr-sizing-2: 0.5rem;
-    --ntr-sizing-3: 0.75rem;
-    --ntr-sizing-4: 1rem;
-}
-
 :where(button[interop-button]) {
-    /* Display */
-    --ntr-button-display: inline-flex;
+    /* ─── Layout ─────────────────────────────────────────────────────────────── */
+    --itx-button-display: inline-flex;
 
-    /* Borders box */
-    --ntr-button-border-width: 2px;
-    --ntr-button-border-style: solid;
-    --ntr-button-border-color: transparent;
-    --ntr-button-rounding: var(--ntr-rounding-sm);
+    /* ─── Border ─────────────────────────────────────────────────────────────── */
+    --itx-button-border-width: 2px;
+    --itx-button-border-style: solid;
+    --itx-button-border-color: transparent;
+    --itx-button-rounding:     var(--itx-radius-sm);
 
-    /* Padding box */
-    --ntr-button-padding-block: var(--ntr-sizing-1);
-    --ntr-button-padding-inline: var(--ntr-sizing-05);
+    /* ─── Padding — em-based so font-size alone drives sm/md/lg sizing ──────── */
+    --itx-button-padding-block:  0.375em;
+    --itx-button-padding-inline: 0.75em;
 
-    /* Colors */
-    --ntr-button-background: white;
-    --ntr-button-foreground: black;
+    /* ─── Colors ─────────────────────────────────────────────────────────────── */
+    --itx-button-background: var(--itx-color-surface);
+    --itx-button-foreground: var(--itx-color-on-surface);
 
-    /* Typography */
-    --ntr-button-font-family: inherit;
-    --ntr-button-font-size-clamp: inherit;
-    --ntr-button-font-size: inherit;
-    --ntr-button-letter-spacing: initial;
-    --ntr-button-line-height: 1.25;
+    /* ─── Typography ─────────────────────────────────────────────────────────── */
+    --itx-button-font-family:    var(--itx-font-family);
+    --itx-button-font-size:      inherit; /* override per size variant */
+    --itx-button-letter-spacing: initial;
+    --itx-button-line-height:    1.25;
 }

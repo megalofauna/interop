@@ -1,0 +1,22 @@
+// Browser baseline resets for generated tab button elements.
+// Scoped to the host component selector to avoid leaking.
+
+section[interop-tabs] {
+  [role="tab"] {
+    // Remove UA button appearance
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+    white-space: nowrap;
+    text-align: start;
+    user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box;
+
+    // Inherit text from host
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+}

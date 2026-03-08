@@ -19,10 +19,10 @@ import {
 import { ManageAttributesDirective } from "../../directives/manage-attrs.directive";
 import { NormalizeSemanticsDirective } from "../../directives/normalize-semantics.directive";
 import {
-  InteropAttrs,
+  InteropAttribute,
   SetAttrsConfig,
   PresetKey,
-} from "../../services/interop-attrs.service";
+} from "../../services/interop-attribute.service";
 import { createComponentTrackByFn } from "../../utils/track-by";
 import { LayoutCapable } from "../../directives/interop-layout";
 
@@ -44,7 +44,7 @@ import { LayoutCapable } from "../../directives/interop-layout";
 })
 export class InteropList<T = any> {
   private elementRef = inject(ElementRef);
-  private attrsManager = inject(InteropAttrs);
+  private attrsManager = inject(InteropAttribute);
 
   // Inputs
   /**

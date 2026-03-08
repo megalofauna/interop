@@ -1,124 +1,123 @@
-:host {
-}
-header {
-    width: 100%;
-    padding: var(--ntr-size-10);
-    max-width: 1200px;
-    margin-inline: auto;
+@use "lib/tokens/raw" as raw;
 
-    hgroup svg {
-        max-width: 16ch;
-    }
-}
+// ── App shell ───────────────────────────────────────────────────────────────
+
 main {
-    width: 100%;
-    max-width: 1200px;
-    margin-inline: auto;
-    background-color: #fafafa;
-
-    display: flex;
-    flex-wrap: wrap;
+	display: flex;
+	flex-direction: column;
 }
 
-.interop-blank-space {
-    flex: 1 1 auto;
-}
-.interop-configuration-panel {
-    background-color: #fff;
-    flex: 1 1 auto;
-    height: 960px;
-}
+// ── Demo section layout ─────────────────────────────────────────────────────
 
-footer {
-    width: 100%;
-    max-width: 1200px;
-    margin-inline: auto;
-    flex: 1 0 100%;
+.demo-section {
+	padding: 3rem 2rem;
+	max-width: 56rem;
+	margin-inline: auto;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+	box-sizing: border-box;
 }
 
-.demo-box {
-    --spacing: 8px;
-    --width: display: flex;
-    background-color: #f1f1f1;
-    padding: var(--spacing);
-    column-gap: var(--spacing);
-    border: 1px solid #fafafa;
-    border-radius: 4px;
-    display: flex;
-    max-width: fit-content;
+.demo-section__header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
-.demo-box + .demo-box {
-    margin-top: calc(var(--spacing) * 2);
+.demo-section__title {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: -0.02em;
 }
 
-.demo-box + hr {
-    margin-block: 2rem;
+.demo-section__subtitle {
+	margin: 0;
+	font-size: 0.875rem;
+	opacity: 0.6;
 }
 
-.demo-box.compact {
-    --spacing: 0.25rem;
+.demo-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 
-    &.sm .demo-control {
-        --width: 1.5rem;
-        width: var(--width);
-    }
-    &.md .demo-control {
-        --width: 2rem;
-        width: var(--width);
-    }
-    &.lg .demo-control {
-        --width: 2.5rem;
-        width: var(--width);
-    }
+	&--row {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
 }
 
-.demo-control {
-    background: #2b2b2b;
-    width: var(--width);
-    height: auto;
-    aspect-ratio: 1/1;
-    display: grid;
-    place-items: center;
-    border-radius: 4px;
+.demo-group__label {
+	margin: 0;
+	font-size: 0.75rem;
+	opacity: 0.5;
+	letter-spacing: 0.02em;
 
-    svg path {
-        fill: #fafafa;
-        transform: scale(0.75);
-        transform-origin: center;
-    }
+	code {
+		font-family: ui-monospace, monospace;
+		font-size: inherit;
+	}
+
+	&--full {
+		flex-basis: 100%;
+	}
 }
 
-.demo-box.standard {
-    --spacing: 0.5rem;
+// ── InteropCodeBlock theming ────────────────────────────────────────────────
+// Override the transparent defaults with a dark Catppuccin-Mocha surface.
+// Not scoped with :where() so these overrides win over the :where() defaults.
 
-    &.sm .demo-control {
-        --width: 1.5rem;
-        width: var(--width);
-    }
-    &.md .demo-control {
-        --width: 1.875rem;
-        width: var(--width);
-    }
-    &.lg .demo-control {
-        --width: 2.25rem;
-        width: var(--width);
-    }
+figure[interop-code-block] {
+	// Shape
+	--itx-code-block-border-radius: 0.5rem;
+
+	// Header
+	--itx-code-block-header-background: #181825;
+	--itx-code-block-header-padding-block: 0.5rem;
+	--itx-code-block-header-padding-inline: 1rem;
+	--itx-code-block-header-border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+	// Label
+	--itx-code-block-label-color: rgba(205, 214, 244, 0.45);
+	--itx-code-block-label-font-size: 0.7rem;
+	--itx-code-block-label-letter-spacing: 0.08em;
+
+	// Action buttons
+	--itx-code-block-action-btn-color: rgba(205, 214, 244, 0.35);
+	--itx-code-block-copy-copied-color: #a6e3a1;  // Catppuccin green
+	--itx-code-block-wrap-active-color: #89b4fa;  // Catppuccin blue
+	--itx-code-block-action-btn-focus-outline: 2px solid rgba(205, 214, 244, 0.4);
+
+	// Code body
+	--itx-code-block-body-background: #1e1e2e;
+	--itx-code-block-body-padding-block: 1.25rem;
+
+	// Code text
+	--itx-code-block-code-color: #cdd6f4;
+	--itx-code-block-code-font-size: 0.8125rem;
+
+	// Line numbers
+	--itx-code-block-line-number-color: rgba(205, 214, 244, 0.2);
+	--itx-code-block-line-number-opacity: 1;
+
+	// Projected <pre>/<code> inherits the code color from the body
+	pre, code {
+		color: var(--itx-code-block-code-color);
+		background: transparent;
+	}
 }
 
-.demo-box.comfy {
-    --spacing: 1rem;
+// Canonicalization row — compact badge-style blocks
+.demo-group--row figure[interop-code-block] {
+	flex: 1;
+	min-width: 5rem;
 
-    &.sm .demo-control {
-        --width: 1.5rem;
-        width: var(--width);
-    }
-    &.md .demo-control {
-        --width: 1.875rem;
-        width: var(--width);
-    }
-    &.lg .demo-control {
-        --width: 2.25rem;
-        width: var(--width);
-    }
+	--itx-code-block-body-padding-block: 0.5rem;
+	--itx-code-block-body-padding-inline: 0.75rem;
+	--itx-code-block-code-font-size: 0.6875rem;
 }

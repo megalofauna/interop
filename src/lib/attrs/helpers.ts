@@ -1,7 +1,7 @@
-import { SetAttrsConfig } from "../services/interop-attrs.service";
+import { SetAttrsConfig } from "../services/interop-attribute.service";
 
 /**
- * Helpers to compose preset configs and improve ergonomics when using ManageAttributesDirective backed by InteropAttrs.
+ * Helpers to compose preset configs and improve ergonomics when using ManageAttributesDirective backed by InteropAttribute.
  *
  * Design goals:
  * - Make it easy to combine presets with ad hoc configs.

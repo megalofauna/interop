@@ -1,0 +1,42 @@
+/**
+ * Interop — Fluid Typography Scale
+ *
+ * Strategy: each token clamps across a shared viewport range (320px → 1280px),
+ * with min set one scale step below max. This keeps the min/max ratio
+ * between ~70–78%, well within the <50% difference constraint.
+ *
+ * Scale steps (px): 64, 54, 46, 38, 32, 26, 22, 18, 16, 14, 12
+ * Root font size:   16px
+ *
+ * Usage:
+ *   font-size: var(--itx-fs-base);
+ */
+
+:where([interop-root]) {
+	/* ----------------------------------------
+   * Fluid font sizes
+   * clamp(min, slope*vw + intercept, max)
+   * --------------------------------------- */
+	--itx-fs-wtf: clamp(3.625rem, 3.9583vw + 2.8333rem, 6rem); /* 58px → 96px */
+	--itx-fs-2xl: clamp(2.875rem, 1.875vw + 2.5rem, 4rem); /* 46px → 64px */
+	--itx-fs-xl: clamp(
+		2.375rem,
+		1.6667vw + 2.0417rem,
+		3.375rem
+	); /* 38px → 54px */
+	--itx-fs-lg: clamp(2rem, 1.4583vw + 1.7083rem, 2.875rem); /* 32px → 46px */
+	--itx-fs-md: clamp(1.625rem, 1.25vw + 1.375rem, 2.375rem); /* 26px → 38px */
+	--itx-fs-base: clamp(1.375rem, 1.0417vw + 1.1667rem, 2rem); /* 22px → 32px */
+	--itx-fs-sm: clamp(
+		1.125rem,
+		0.8333vw + 0.9583rem,
+		1.625rem
+	); /* 18px → 26px */
+	--itx-fs-xs: clamp(1rem, 0.625vw + 0.875rem, 1.375rem); /* 16px → 22px */
+	--itx-fs-2xs: clamp(
+		0.875rem,
+		0.4167vw + 0.7917rem,
+		1.125rem
+	); /* 14px → 18px */
+	--itx-fs-3xs: clamp(0.75rem, 0.4167vw + 0.6667rem, 1rem); /* 12px → 16px */
+}

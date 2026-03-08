@@ -1,0 +1,27 @@
+<button interop-button>
+	<interop-icon name="menu" [size]="16" />
+</button>
+<ul class="list">
+	<li
+		class="item"
+		routerLinkActive="--active"
+		[routerLinkActiveOptions]="{ exact: true }"
+	>
+		<a routerLink="/philosophy">Philosophy</a>
+	</li>
+	<li class="item" routerLinkActive="--active">
+		<a routerLink="/components">Components</a>
+	</li>
+	<li class="item" routerLinkActive="--active">
+		<a routerLink="/containers">Containers</a>
+	</li>
+	<li class="item" routerLinkActive="--active">
+		<a routerLink="/services">Services</a>
+	</li>
+	<li class="item" routerLinkActive="--active">
+		<a routerLink="/adaptastack">AdaptaStack</a>
+	</li>
+	<li class="item" routerLinkActive="--active">
+		<a routerLink="/composites">Composites</a>
+	</li>
+</ul>

@@ -1,0 +1,53 @@
+@use "./theme/tokens" as *;
+
+:host {
+  display: var(--itx-tabs-display, block);
+}
+
+[role="tablist"] {
+  display: var(--itx-tabs-tablist-display, flex);
+  flex-wrap: var(--itx-tabs-tablist-flex-wrap, nowrap);
+  gap: var(--itx-tabs-gap);
+  border-block-end: var(--itx-tabs-border-bottom);
+}
+
+[role="tab"] {
+  display: var(--itx-tab-display, inline-flex);
+  align-items: var(--itx-tab-align-items, center);
+  gap: var(--itx-tab-gap);
+  padding-block: var(--itx-tab-padding-block);
+  padding-inline: var(--itx-tab-padding-inline);
+  background: var(--itx-tab-background);
+  color: var(--itx-tab-foreground);
+  border: var(--itx-tab-border-width, 0) solid var(--itx-tab-border-color, transparent);
+  border-radius: var(--itx-tab-border-radius);
+  font: var(--itx-tab-font, inherit);
+  letter-spacing: var(--itx-tab-letter-spacing, inherit);
+  cursor: pointer;
+  position: relative;
+
+  // Active indicator — bottom border by default
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--itx-tab-active-indicator-height, 2px);
+    background: transparent;
+    transition: background var(--itx-tab-transition-duration, 0.15s) ease;
+  }
+
+  &[aria-selected="true"] {
+    color: var(--itx-tab-active-foreground, var(--itx-tab-foreground));
+    background: var(--itx-tab-active-background, var(--itx-tab-background));
+
+    &::after {
+      background: var(--itx-tab-active-indicator-color);
+    }
+  }
+
+  &:focus-visible {
+    outline: var(--itx-tab-focus-outline, 2px solid currentColor);
+    outline-offset: var(--itx-tab-focus-outline-offset, -2px);
+  }
+}

@@ -1,0 +1,28 @@
+<div
+  role="tablist"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-labelledby]="ariaLabelledBy()"
+  [attr.aria-orientation]="orientation()"
+  (keydown)="onTablistKeydown($event)"
+>
+  @for (panel of panels(); track panel.key()) {
+    <button
+      #tabButton
+      role="tab"
+      [id]="panel.tabId()"
+      [attr.aria-selected]="panel.isActive()"
+      [attr.aria-controls]="panel.panelId()"
+      [tabindex]="panel.isActive() ? 0 : -1"
+      (click)="selectPanel(panel.key())"
+      (keydown)="onTabKeydown($event, panel.key())"
+    >
+      @if (panel.labelTemplate(); as tmpl) {
+        <ng-template [ngTemplateOutlet]="tmpl.templateRef" />
+      } @else {
+        {{ panel.label() ?? '' }}
+      }
+    </button>
+  }
+</div>
+
+<ng-content />

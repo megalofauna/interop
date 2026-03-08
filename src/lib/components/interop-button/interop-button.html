@@ -1,9 +1,12 @@
 @if (loading()) {
-<!-- During loading, show loading slot with fallback to loadingText -->
-<ng-content select="[slot='loading-spinner']">
-    <span data-interop-loading>{{ loadingText() }}</span>
-</ng-content>
+<!-- During loading, show loading slot or fallback to loadingText -->
+@if (hasLoadingSlot()) {
+<ng-content select="[slot='loading-spinner']"></ng-content>
 } @else {
+<span class="interop-button__loading-text" data-interop-loading>
+    {{ loadingText() }}
+</span>
+} } @else {
 <!-- When not loading, project ALL content in original DOM source order -->
 <!-- This preserves the natural order of icon slots and text content -->
 <ng-content></ng-content>

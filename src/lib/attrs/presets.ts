@@ -1,7 +1,7 @@
-import { SetAttrsConfig } from "../services/interop-attrs.service";
+import { SetAttrsConfig } from "../services/interop-attribute.service";
 
 /**
- * Preset registry for semantic conformity using ManageAttributesDirective backed by InteropAttrs.
+ * Preset registry for semantic conformity using ManageAttributesDirective backed by InteropAttribute.
  *
  * Design principles:
  * - Prefer native semantics: do not use these presets for native UL/OL/LI.

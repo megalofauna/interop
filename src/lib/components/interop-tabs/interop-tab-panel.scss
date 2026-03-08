@@ -1,0 +1,11 @@
+@use "./theme/tokens" as *;
+
+:host {
+  display: var(--itx-tab-panel-display, block);
+  padding-block: var(--itx-tab-panel-padding-block);
+  padding-inline: var(--itx-tab-panel-padding-inline);
+}
+
+:host([hidden]) {
+  display: none;
+}

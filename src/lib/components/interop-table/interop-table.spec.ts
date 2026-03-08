@@ -3,7 +3,7 @@ import { Component, TemplateRef, ViewChild } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { InteropTable, TableColumn } from "./interop-table";
 import { InteropCollectionService } from "../../services/interop-collection.service";
-import { InteropAttrs } from "../../services/interop-attrs.service";
+import { InteropAttribute } from "../../services/interop-attribute.service";
 
 interface TestUser {
   id: number;
@@ -13,6 +13,8 @@ interface TestUser {
 }
 
 @Component({
+  standalone: true,
+  imports: [InteropTable],
   template: `
     <table
       interop-table
@@ -44,21 +46,20 @@ describe("InteropTable", () => {
   let fixture: ComponentFixture<TestHostComponent>;
   let hostComponent: TestHostComponent;
   let collectionService: jasmine.SpyObj<InteropCollectionService>;
-  let attrsManager: jasmine.SpyObj<InteropAttrs>;
+  let attrsManager: jasmine.SpyObj<InteropAttribute>;
 
   beforeEach(async () => {
     const collectionSpy = jasmine.createSpyObj("InteropCollectionService", [
       "resolve",
       "computedResolve",
     ]);
-    const attrsSpy = jasmine.createSpyObj("InteropAttrs", ["Presets"]);
+    const attrsSpy = jasmine.createSpyObj("InteropAttribute", ["Presets"]);
 
     await TestBed.configureTestingModule({
-      imports: [InteropTable],
-      declarations: [TestHostComponent],
+      imports: [TestHostComponent],
       providers: [
         { provide: InteropCollectionService, useValue: collectionSpy },
-        { provide: InteropAttrs, useValue: attrsSpy },
+        { provide: InteropAttribute, useValue: attrsSpy },
       ],
     }).compileComponents();
 
@@ -67,7 +68,9 @@ describe("InteropTable", () => {
     collectionService = TestBed.inject(
       InteropCollectionService,
     ) as jasmine.SpyObj<InteropCollectionService>;
-    attrsManager = TestBed.inject(InteropAttrs) as jasmine.SpyObj<InteropAttrs>;
+    attrsManager = TestBed.inject(
+      InteropAttribute,
+    ) as jasmine.SpyObj<InteropAttribute>;
 
     // Get the component instance
     const tableElement = fixture.debugElement.query(By.directive(InteropTable));
@@ -296,6 +299,7 @@ describe("InteropTable", () => {
       component = Object.assign(component, {
         maxRows: jasmine.createSpy().and.returnValue(2),
       });
+      fixture.detectChanges();
 
       const items = component.items();
       expect(items.length).toBe(2);
@@ -303,6 +307,7 @@ describe("InteropTable", () => {
 
     it("should show all rows when maxRows is null", () => {
       // Default behavior - no limit
+      fixture.detectChanges();
       const items = component.items();
       expect(items.length).toBe(3);
     });

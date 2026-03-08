@@ -12,14 +12,14 @@ import {
   signal,
 } from "@angular/core";
 import {
-  ActivationManagerService,
+  InteropActivation,
   type ActivationRegistration,
-} from "../../services/activation-manager.service";
+} from "../../services/interop-activation.service";
 import {
-  InteropAttrs,
+  InteropAttribute,
   PresetKey,
   SetAttrsConfig,
-} from "../../services/interop-attrs.service";
+} from "../../services/interop-attribute.service";
 import {
   createActivationHandler,
   type ActivationHandler,
@@ -36,7 +36,7 @@ import {
  *
  * Key features:
  * - Activation guardrails (debounce, throttle, reentrancy prevention)
- * - Cross-component coordination via ActivationManagerService
+ * - Cross-component coordination via InteropActivation
  * - Built-in loading and disabled state management
  * - Content projection slots for icons and loading states
  * - Semantic conformity presets for edge cases
@@ -89,8 +89,8 @@ import {
 })
 export class InteropButton {
   private elementRef = inject(ElementRef<HTMLButtonElement>);
-  private activationManager = inject(ActivationManagerService);
-  private attrsManager = inject(InteropAttrs);
+  private activationManager = inject(InteropActivation);
+  private attrsManager = inject(InteropAttribute);
 
   // Core activation inputs
 
@@ -107,7 +107,7 @@ export class InteropButton {
 
   /**
    * Global activation ID for cross-component coordination.
-   * When set, this button triggers a handler registered with ActivationManagerService.
+   * When set, this button triggers a handler registered with InteropActivation.
    * Prefer this for actions that might be triggered from multiple places in the app.
    *
    * @example
@@ -204,6 +204,13 @@ export class InteropButton {
   // Internal state
   private localActivation = signal<ManagedActivation<unknown> | null>(null);
   private activationRegistration = signal<ActivationRegistration | null>(null);
+  private loadingSlotPresent = signal(false);
+
+  /**
+   * Whether a loading slot has been projected into this button.
+   * Useful for deciding between slot content and loadingText fallback.
+   */
+  hasLoadingSlot = computed(() => this.loadingSlotPresent());
 
   constructor() {
     // Validate semantic usage in development
@@ -248,10 +255,18 @@ export class InteropButton {
       if (id && !this.onActivate()) {
         // Only register globally if no local handler
         console.warn(
-          `InteropButton: an activationId has been specified ("${id}"), but no corresponding activation handler has been registered with Interop. ` +
-            "Register an activation event handler with the ActivationManagerService first, so Interop knows how to handle this interaction.",
+          `InteropButton: activationId "${id}" specified, but no corresponding activation handler has been registered with Interop. ` +
+            "Register an activation event handler with the InteropActivation service first, so Interop knows how to handle this interaction.",
         );
       }
+    });
+
+    // Detect projected loading slot content (for loadingText fallback decisions)
+    effect(() => {
+      this.loading();
+      const host = this.elementRef.nativeElement;
+      const hasLoadingSlot = !!host.querySelector("[slot='loading-spinner']");
+      this.loadingSlotPresent.set(hasLoadingSlot);
     });
   }
 

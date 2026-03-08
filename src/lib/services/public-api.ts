@@ -4,8 +4,14 @@
 
 // Export services here as they are created
 export * from "./interop-collection.service";
-export * from "./activation-manager.service";
-export * from "./interop-attrs.service";
+export * from "./interop-activation.service";
+export * from "./interop-activation.builder";
+export * from "./interop-attribute.service";
+
+// Mini-barrel namespace exports
+export * as InteropServices from "./services-only";
+export * as InteropServicesWithBuilders from "./services-and-builders";
+// TODO: Promote these mini-barrels to true secondary entry points via ng-packagr exports.
 
 // Future services:
 // export * from './interop-data.service';

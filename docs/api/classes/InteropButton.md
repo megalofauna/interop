@@ -14,7 +14,7 @@ to ensure proper accessibility and form integration.
 
 Key features:
 - Activation guardrails (debounce, throttle, reentrancy prevention)
-- Cross-component coordination via ActivationManagerService
+- Cross-component coordination via InteropActivation
 - Built-in loading and disabled state management
 - Template slots for content, icons, and loading indicators
 - Semantic conformity presets for edge cases
@@ -77,7 +77,7 @@ Use this for simple, component-specific actions.
 Defined in: src/lib/components/interop-button/interop-button.ts:102
 
 Global activation ID for cross-component coordination.
-When set, this button triggers a handler registered with ActivationManagerService.
+When set, this button triggers a handler registered with InteropActivation.
 Prefer this for actions that might be triggered from multiple places in the app.
 
 #### Example

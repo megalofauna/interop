@@ -1,0 +1,15 @@
+// Shape — border-radius tokens.
+//
+// Change --itx-radius-base to restyle corner rounding across all components.
+// Set to 0 for sharp corners, 9999px for fully pill-shaped elements.
+
+:where([interop-root]) {
+    /* ─── Consumer theming token ────────────────────────────────────────────── */
+    --itx-radius-base: 4px;
+
+    /* ─── Derived scale ──────────────────────────────────────────────────────── */
+    --itx-radius-sm:   var(--itx-radius-base);
+    --itx-radius-md:   calc(var(--itx-radius-base) * 2);
+    --itx-radius-lg:   calc(var(--itx-radius-base) * 4);
+    --itx-radius-full: 9999px;
+}

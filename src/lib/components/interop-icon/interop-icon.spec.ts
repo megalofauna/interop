@@ -24,6 +24,8 @@ const mockIcon: PhIconDefinition = {
 };
 
 @Component({
+  standalone: true,
+  imports: [InteropIcon],
   template: `
     <interop-icon
       [name]="iconName"
@@ -55,7 +57,7 @@ describe("InteropIcon", () => {
     const registrySpy = jasmine.createSpyObj("PhosphorIconRegistry", ["get"]);
 
     await TestBed.configureTestingModule({
-      imports: [InteropIcon],
+      imports: [InteropIcon, TestHostComponent],
       providers: [{ provide: PhosphorIconRegistry, useValue: registrySpy }],
     }).compileComponents();
 
@@ -66,13 +68,6 @@ describe("InteropIcon", () => {
 
     fixture = TestBed.createComponent(InteropIcon);
     component = fixture.componentInstance;
-  });
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [InteropIcon, TestHostComponent],
-      providers: [{ provide: PhosphorIconRegistry, useValue: registry }],
-    }).compileComponents();
 
     hostFixture = TestBed.createComponent(TestHostComponent);
     hostComponent = hostFixture.componentInstance;

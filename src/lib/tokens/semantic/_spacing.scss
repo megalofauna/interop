@@ -1,0 +1,18 @@
+// Spacing — semantic spacing tokens driven by a single unit multiplier.
+//
+// Change --itx-spacing-unit to scale all spacing up or down globally.
+// Default unit is 0.25rem (4px), matching a standard 4pt grid.
+
+:where([interop-root]) {
+    /* ─── Consumer theming token ────────────────────────────────────────────── */
+    --itx-spacing-unit: 0.25rem;
+
+    /* ─── Derived scale ──────────────────────────────────────────────────────── */
+    --itx-spacing-xxs: var(--itx-spacing-unit);                    /* 0.25rem */
+    --itx-spacing-xs:  calc(var(--itx-spacing-unit) * 2);          /* 0.5rem  */
+    --itx-spacing-sm:  calc(var(--itx-spacing-unit) * 4);          /* 1rem    */
+    --itx-spacing-md:  calc(var(--itx-spacing-unit) * 6);          /* 1.5rem  */
+    --itx-spacing-lg:  calc(var(--itx-spacing-unit) * 8);          /* 2rem    */
+    --itx-spacing-xl:  calc(var(--itx-spacing-unit) * 10);         /* 2.5rem  */
+    --itx-spacing-xxl: calc(var(--itx-spacing-unit) * 12);         /* 3rem    */
+}

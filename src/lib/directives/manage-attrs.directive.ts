@@ -10,15 +10,15 @@ import {
   inject,
 } from "@angular/core";
 import {
-  InteropAttrs,
+  InteropAttribute,
   SetAttrsConfig,
-} from "../services/interop-attrs.service";
+} from "../services/interop-attribute.service";
 
 /**
  * ManageAttributesDirective
  *
  * A policy-aware, mutation-aware directive for applying HTML attributes to a host
- * element and its subtree via CSS selectors. Backed by InteropAttrs for
+ * element and its subtree via CSS selectors. Backed by InteropAttribute for
  * presets, composition, and performance hints.
  *
  * Design goals:
@@ -44,7 +44,7 @@ import {
 export class ManageAttributesDirective implements OnInit, OnChanges, OnDestroy {
   private elementRef = inject(ElementRef<HTMLElement>);
   private renderer = inject(Renderer2);
-  private attrsManager = inject(InteropAttrs);
+  private attrsManager = inject(InteropAttribute);
 
   /**
    * Primary config input (new)

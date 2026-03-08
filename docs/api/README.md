@@ -11,7 +11,7 @@
 - [ManageAttributesDirective](classes/ManageAttributesDirective.md)
 - [NormalizeSemanticsDirective](classes/NormalizeSemanticsDirective.md)
 - [InteropModule](classes/InteropModule.md)
-- [ActivationManagerService](classes/ActivationManagerService.md)
+- [InteropActivation](classes/InteropActivation.md)
 - [AttrsManagerService](classes/AttrsManagerService.md)
 - [InteropCollection](classes/InteropCollection.md)
 - [InteropCollectionService](classes/InteropCollectionService.md)

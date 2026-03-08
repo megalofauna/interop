@@ -36,7 +36,7 @@ nav:
   - API Reference:
       - Overview: api/index.md
       - Classes:
-          - ActivationManagerService: api/classes/ActivationManagerService.md
+          - InteropActivation: api/classes/InteropActivation.md
           - AttrsManagerService: api/classes/AttrsManagerService.md
           - InteropButton: api/classes/InteropButton.md
           - InteropCollection: api/classes/InteropCollection.md

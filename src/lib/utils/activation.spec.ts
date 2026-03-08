@@ -7,6 +7,7 @@ import {
 describe("Activation Utilities", () => {
   beforeEach(() => {
     jasmine.clock().install();
+    jasmine.clock().mockDate(new Date("2020-01-01T00:00:00.000Z"));
   });
 
   afterEach(() => {
@@ -95,6 +96,8 @@ describe("Activation Utilities", () => {
 
       jasmine.clock().tick(301);
       activate("e");
+      expect(spy).toHaveBeenCalledTimes(1); // debounced
+      jasmine.clock().tick(200);
       expect(spy).toHaveBeenCalledTimes(2);
       expect(spy.calls.mostRecent().args[0]).toBe("e");
     });
@@ -293,22 +296,18 @@ describe("Activation Utilities", () => {
       const order: string[] = [];
       const h1: ActivationHandler<void> = async () => {
         order.push("h1:start");
-        await new Promise((r) => setTimeout(r, 100));
+        await Promise.resolve();
         order.push("h1:end");
       };
       const h2: ActivationHandler<void> = async () => {
         order.push("h2:start");
-        await new Promise((r) => setTimeout(r, 100));
+        await Promise.resolve();
         order.push("h2:end");
       };
 
       const composed = composeActivation(h1, h2);
 
-      const promise = composed();
-      jasmine.clock().tick(100);
-      await Promise.resolve();
-      jasmine.clock().tick(100);
-      await promise;
+      await composed();
 
       expect(order).toEqual(["h1:start", "h1:end", "h2:start", "h2:end"]);
     });

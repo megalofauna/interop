@@ -174,9 +174,10 @@ export function createActivationHandler<TPayload = void>(
     try {
       onStartSafe(onStart, log);
       running = true;
-      const result = await Promise.resolve(handler(payload));
+      const result = handler(payload);
+      const finalResult = isPromiseLike(result) ? await result : result;
       running = false;
-      onEndSafe(onEnd, result, log);
+      onEndSafe(onEnd, finalResult, log);
       if (once) {
         consumedOnce = true;
         enabled = false;
@@ -267,6 +268,15 @@ export function composeActivation<TPayload = void>(
 /**
  * Safe lifecycle hook invocations to avoid breaking the handler when hooks throw.
  */
+function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+  return (
+    !!value &&
+    (typeof value === "object" || typeof value === "function") &&
+    "then" in value &&
+    typeof (value as PromiseLike<unknown>).then === "function"
+  );
+}
+
 function onStartSafe(
   hook: ActivationOptions["onStart"],
   log: (...args: any[]) => void,

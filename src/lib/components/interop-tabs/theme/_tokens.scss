@@ -1,0 +1,51 @@
+// InteropTabs design tokens
+//
+// All variables are scoped to the component selectors via :where() for
+// minimal specificity — consumers can override without specificity battles.
+
+:where(section[interop-tabs]) {
+    // ─── Layout ────────────────────────────────────────────────────────────────
+    --itx-tabs-display:           block;
+    --itx-tabs-tablist-display:   flex;
+    --itx-tabs-tablist-flex-wrap: nowrap;
+    --itx-tabs-gap:               0;
+
+    // ─── Tablist border ────────────────────────────────────────────────────────
+    --itx-tabs-border-bottom: 1px solid currentColor;
+
+    // ─── Tab button — layout ───────────────────────────────────────────────────
+    --itx-tab-display:       inline-flex;
+    --itx-tab-align-items:   center;
+    --itx-tab-gap:           var(--itx-spacing-xxs);
+    --itx-tab-padding-block: var(--itx-spacing-xs);
+    --itx-tab-padding-inline:var(--itx-spacing-sm);
+
+    // ─── Tab button — appearance ───────────────────────────────────────────────
+    --itx-tab-background:     transparent;
+    --itx-tab-foreground:     inherit;
+    --itx-tab-border-width:   0;
+    --itx-tab-border-color:   transparent;
+    --itx-tab-border-radius:  var(--itx-radius-sm);
+    --itx-tab-font:           inherit;
+    --itx-tab-letter-spacing: inherit;
+
+    // ─── Tab button — active state ─────────────────────────────────────────────
+    --itx-tab-active-background:        transparent;
+    --itx-tab-active-foreground:        inherit;
+    --itx-tab-active-indicator-height:  2px;
+    --itx-tab-active-indicator-color:   currentColor;
+
+    // ─── Tab button — transitions ──────────────────────────────────────────────
+    --itx-tab-transition-duration: var(--itx-duration-fast);
+
+    // ─── Tab button — focus ring ───────────────────────────────────────────────
+    --itx-tab-focus-outline:        2px solid currentColor;
+    --itx-tab-focus-outline-offset: -2px;
+}
+
+:where(section[interop-tab-panel]) {
+    // ─── Panel layout ──────────────────────────────────────────────────────────
+    --itx-tab-panel-display:         block;
+    --itx-tab-panel-padding-block:   var(--itx-spacing-sm);
+    --itx-tab-panel-padding-inline:  0;
+}

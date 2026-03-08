@@ -1,16 +1,18 @@
 @use "./theme/tokens" as *;
 
 :host {
-    display: var(--ntr-button-display);
-    background: var(--ntr-button-background);
-    border: var(--ntr-button-border-width);
-    color: var(--ntr-button-foreground);
-    font: var(--ntr-button-font-family);
-    line-height: var(--ntr-button-line-height);
-    padding-block: var(--ntr-button-padding-block);
-    padding-inline: var(--ntr-button-padding-inline);
-    letter-spacing: var(--ntr-button-letter-spacing);
-    border-style: var(--ntr-button-border-style);
-    border-color: var(--ntr-button-border-color);
-    border-radius: var(--ntr-button-rounding);
+    display: inline-flex;
+    display: var(--itx-button-display);
+    align-items: var(--itx-button-align-items, center);
+    background: var(--itx-button-background);
+    border: var(--itx-button-border-width);
+    color: var(--itx-button-foreground);
+    font: var(--itx-button-font-family);
+    line-height: var(--itx-button-line-height);
+    padding-block: var(--itx-button-padding-block);
+    padding-inline: var(--itx-button-padding-inline);
+    letter-spacing: var(--itx-button-letter-spacing);
+    border-style: var(--itx-button-border-style);
+    border-color: var(--itx-button-border-color);
+    border-radius: var(--itx-button-rounding);
 }

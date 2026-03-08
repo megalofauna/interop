@@ -1,0 +1,68 @@
+// InteropCodeBlock design tokens
+//
+// All variables scoped via :where() for zero-specificity defaults.
+// Consumers can override any token without specificity battles.
+// Naming convention: --itx-code-block-[area]-[property]
+
+:where(figure[interop-code-block]) {
+    // ── Layout ──────────────────────────────────────────────────────────────────
+    --itx-code-block-display:       block;
+    --itx-code-block-border-radius: var(--itx-radius-md);
+
+    // ── Header (figcaption) ─────────────────────────────────────────────────────
+    --itx-code-block-header-background:     transparent;
+    --itx-code-block-header-padding-block:  var(--itx-spacing-xxs);
+    --itx-code-block-header-padding-inline: var(--itx-spacing-sm);
+    --itx-code-block-header-gap:            var(--itx-spacing-xs);
+    --itx-code-block-header-border-bottom:  none;
+
+    // ── Label (filename / language badge) ───────────────────────────────────────
+    --itx-code-block-label-font-family:    var(--itx-font-family);
+    --itx-code-block-label-font-size:      0.75rem; /* fixed — code UI, not fluid */
+    --itx-code-block-label-font-weight:    500;
+    --itx-code-block-label-color:          inherit;
+    --itx-code-block-label-letter-spacing: 0.05em;
+
+    // ── Action buttons (copy, wrap toggle) ──────────────────────────────────────
+    // Revealed on :hover / :focus-within; default opacity 0 hides them at rest
+    --itx-code-block-actions-opacity:    0;
+    --itx-code-block-actions-gap:        var(--itx-spacing-xxs);
+    --itx-code-block-actions-transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
+
+    --itx-code-block-action-btn-padding:         var(--itx-spacing-xxs);
+    --itx-code-block-action-btn-radius:          var(--itx-radius-sm);
+    --itx-code-block-action-btn-color:           inherit;
+    --itx-code-block-action-btn-transition:      color var(--itx-duration-fast) var(--itx-easing-standard),
+                                                 background var(--itx-duration-fast) var(--itx-easing-standard);
+    --itx-code-block-action-btn-focus-outline:        2px solid currentColor;
+    --itx-code-block-action-btn-focus-outline-offset: 2px;
+
+    // ── Copy state ──────────────────────────────────────────────────────────────
+    --itx-code-block-copy-copied-color: currentColor;
+
+    // ── Wrap toggle active state ─────────────────────────────────────────────────
+    --itx-code-block-wrap-active-color: currentColor;
+
+    // ── Code body ───────────────────────────────────────────────────────────────
+    --itx-code-block-body-background:     transparent;
+    --itx-code-block-body-padding-block:  var(--itx-spacing-sm);
+    --itx-code-block-body-padding-inline: var(--itx-spacing-sm);
+
+    // ── Code / pre ──────────────────────────────────────────────────────────────
+    --itx-code-block-code-font-family: var(--itx-font-family-mono);
+    --itx-code-block-code-font-size:   0.875rem; /* fixed — code readability, not fluid */
+    --itx-code-block-code-line-height: 1.6;
+    --itx-code-block-code-color:       inherit;
+    --itx-code-block-tab-size:         2;
+
+    // ── White-space (word-wrap toggle) ───────────────────────────────────────────
+    // Overridden at runtime by the component via a host style binding.
+    // Consumers can also override statically: --itx-code-block-white-space: pre-wrap
+    --itx-code-block-white-space: pre;
+
+    // ── Line numbers ─────────────────────────────────────────────────────────────
+    --itx-code-block-line-number-min-width:   2.5rem;
+    --itx-code-block-line-number-padding-end: var(--itx-spacing-sm);
+    --itx-code-block-line-number-color:       inherit;
+    --itx-code-block-line-number-opacity:     0.4;
+}

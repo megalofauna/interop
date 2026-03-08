@@ -1,497 +1,90 @@
-<header class="ntr-header">
-    <hgroup>
-        <!--<h1>{{ title() }}</h1>-->
-    </hgroup>
-</header>
+<header [meta]="meta" dtx-site-header></header>
 
 <main>
-    <section class="interop-blank-space"></section>
-    <aside class="interop-configuration-panel">
-        <h2>Interop theme configuration</h2>
-        <section>
-            <h3>Rounding</h3>
-            <interop-radio-group> </interop-radio-group>
-            <label for="rounding-select">Select rounding size:</label>
-        </section>
-    </aside>
+	<router-outlet></router-outlet>
 
-    <!--<section class="ntr-section">
-        <h2>Why interop?</h2>
+	<section class="demo-section" aria-labelledby="code-block-demo-heading">
+		<header class="demo-section__header">
+			<h2 id="code-block-demo-heading" class="demo-section__title">
+				Code block
+			</h2>
+			<p class="demo-section__subtitle">
+				Accessible, composable code blocks. Hover to reveal actions.
+			</p>
+		</header>
 
-        <article class="demo-box compact sm">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <article class="demo-box compact md">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <article class="demo-box compact lg">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <hr />
-        <article class="demo-box standard sm">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <article class="demo-box standard md">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <article class="demo-box standard lg">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <hr />
-        <article class="demo-box comfy sm">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <article class="demo-box comfy md">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-        <article class="demo-box comfy lg">
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM101.66,162.34a8,8,0,0,1-11.32,11.32l-40-40a8,8,0,0,1,0-11.32l40-40a8,8,0,0,1,11.32,11.32L67.31,128Zm104-28.68-40,40a8,8,0,0,1-11.32-11.32L188.69,128,154.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,205.66,133.66Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M235.79,89l-104-56a8,8,0,0,0-7.58,0l-104,56A8,8,0,0,0,16,96v64a8,8,0,0,0,4.21,7L114.1,217.6a4,4,0,0,0,5.9-3.52v-57.3L66.55,128,32,146.61V109.39L66.55,128l16.88-9.09L40.87,96,120,53.39V99.22L83.43,118.91l44.57,24,44.57-24L189.45,128,224,109.39v37.22L189.45,128,136,156.78v57.3a4,4,0,0,0,5.9,3.52L235.79,167a8,8,0,0,0,4.21-7V96A8,8,0,0,0,235.79,89Zm-63.22,30L136,99.22V53.39L215.13,96Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M229.89,72.25v0l0,0a15.93,15.93,0,0,0-6.18-6.06L135.68,18a15.94,15.94,0,0,0-15.36,0l-88,48.18a15.93,15.93,0,0,0-6.18,6.06l0,0v0A16,16,0,0,0,24,80.18v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,229.89,72.25ZM120,219.61,88,202.09V152a8,8,0,0,0-4.16-7L40,121v-32l80,43.8Zm8-100.73L48.66,75.44,83.14,56.57l41,22.45a8,8,0,0,0,7.68,0l41-22.45,34.48,18.87Zm88,2.1-43.84,24a8,8,0,0,0-4.16,7v50.09l-32,17.52V132.74l80-43.8Z"
-                    ></path>
-                </svg>
-            </div>
-            <div class="demo-control">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <path
-                        d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34Zm-104,88a8,8,0,0,1-11.32,11.32l-24-24a8,8,0,0,1,0-11.32l24-24a8,8,0,0,1,11.32,11.32L91.31,152Zm72-12.68-24,24a8,8,0,0,1-11.32-11.32L164.69,152l-18.35-18.34a8,8,0,0,1,11.32-11.32l24,24A8,8,0,0,1,181.66,157.66ZM152,88V44l44,44Z"
-                    ></path>
-                </svg>
-            </div>
-        </article>
-    </section>-->
-    <!-- Basic Usage Section -->
-    <!--<section>
-        <style>
-            .spinner-alt {
-                width: 16px;
-                height: 16px;
-                border: 3px solid black;
-                border-bottom: 4px solid transparent;
-                border-radius: 50%;
-                animation: spin 0.75s linear infinite;
-            }
+		<!-- ── 1. Language label — projected content ──────────────────────────── -->
+		<div class="demo-group">
+			<p class="demo-group__label">
+				Language label · projected <code>&lt;pre&gt;&lt;code&gt;</code>
+			</p>
+			<figure interop-code-block language="typescript">
+				<pre><code>const greeting = 'Hello, Interop!';</code></pre>
+			</figure>
+		</div>
 
-            @keyframes spin {
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-        </style>
-        <hgroup>
-            <h2 id="interop-list-demo">
-                <span class="sr-only"></span>InteropList
-            </h2>
-            <p>
-                The best way to use <code>interop-list</code> is by applying the
-                attribute to a semantic HTML list element.
-            </p>
-            <button interop-button>
-                Boo!
-                <span slot="loading-spinner" class="spinner-alt"></span>
-            </button>
-        </hgroup>
-        <ol
-            interop-list
-            [collection]="basicItems()"
-            [manageAttrs]="{ 'li': { 'data-item': 'fruit', class: 'fruit-item', tabindex: 0 } }"
-        ></ol>
+		<!-- ── 2. Filename header ─────────────────────────────────────────────── -->
+		<div class="demo-group">
+			<p class="demo-group__label">
+				Filename header · filename takes precedence over language label
+			</p>
+			<figure
+				interop-code-block
+				[lineNumbers]="true"
+				filename="interop-button.ts"
+				language="typescript"
+			>
+				<pre><code>{{ demoFilenameCode }}</code></pre>
+			</figure>
+		</div>
 
-        <ul
-            interop-list
-            [collection]="users()"
-            [manageAttrs]="{
-                    ':host': userListAttrs(),
-                    'li': { 'data-role': 'user-item', class: 'user-entry' }
-                }"
-        ></ul>
+		<!-- ── 3. Pre-tokenized TypeScript — syntax highlighting + line numbers ─ -->
+		<div class="demo-group">
+			<p class="demo-group__label">
+				Pre-tokenized · syntax highlighting · line numbers
+			</p>
+			<figure
+				interop-code-block
+				language="typescript"
+				[lineNumbers]="true"
+				[tokens]="tsTokens()"
+			></figure>
+		</div>
 
-        <interop-list
-            [collection]="users()"
-            [listItemTemplate]="userTemplate"
-            [manageAttrs]="{
-                    ':host': { class: 'user-directory', role: 'directory' },
-                    'li': { 'data-testid': 'user-card', tabindex: 0 },
-                    'li:first-child': { class: 'first-user' },
-                    'li:nth-child(even)': { class: 'even-user' }
-                }"
-        ></interop-list>
-        <ng-template #userTemplate let-user let-i="index" let-first="first">
-            <div class="user-card">
-                <strong>{{i + 1}}.</strong> {{user.name}}
-                <small>{{user.email}} ({{user.role}})</small>
-                @if (first) {
-                <span class="badge">First User!</span>
-                }
-            </div>
-        </ng-template>
-    </section>-->
-    <!--
-    <section>
-        <interop-toolbar label="Text Formatting">
-            <button interop-button>
-                <interop-icon name="acorn" [size]="24" />
-            </button>
-            <button interop-button>
-                <interop-icon name="user" [size]="20" />
-                User
-            </button>
-            <button interop-button>
-                <interop-icon name="heart" [size]="18" color="red" />
-                Like
-            </button>
+		<!-- ── 4. Pre-tokenized JavaScript — same snippet, no type annotations ── -->
+		<div class="demo-group">
+			<p class="demo-group__label">
+				Pre-tokenized · JavaScript · note the absent type parameters
+			</p>
+			<figure interop-code-block language="js" [tokens]="jsTokens()"></figure>
+		</div>
 
-            <button interop-button>
-                <interop-icon name="star" [size]="16" color="gold" />
-                Star
-            </button>
-            <button interop-button>Beta</button>
-            <button interop-button>Zed</button>
-        </interop-toolbar>
-    </section>-->
+		<!-- ── 5. Word wrap toggle ────────────────────────────────────────────── -->
+		<div class="demo-group">
+			<p class="demo-group__label">
+				Word wrap toggle · try the wrap button in the header
+			</p>
+			<figure
+				interop-code-block
+				language="json"
+				[wrapToggle]="true"
+				[tokens]="demoWrapTokens()"
+			></figure>
+		</div>
 
-    <!-- InteropTable Section -->
-    <!--<section id="">
-        <h2>InteropTable - Bedrock Functionality</h2>
-        <p>
-            Unstyled table component focused on core functionality: semantic
-            HTML, collection integration, and type safety. You provide the
-            styling.
-        </p>
-
-        <div class="demo-grid">
-            <div class="demo-card">
-                <h3>Auto-Generated Columns</h3>
-                <p>
-                    <small>Zero config - just pass data</small>
-                </p>
-                <table interop-table [collection]="users()"></table>
-            </div>
-
-            <div class="demo-card">
-                <h3>Custom Column Definitions</h3>
-                <p>
-                    <small>Define labels for better UX</small>
-                </p>
-                <table
-                    interop-table
-                    [collection]="employees()"
-                    [columns]="basicEmployeeColumns()"
-                ></table>
-            </div>
-
-            <div class="demo-card">
-                <h3>Collection Integration</h3>
-                <p>
-                    <small>Works with InteropCollectionService</small>
-                </p>
-                <div class="controls">
-                    <button interop-button (click)="addEmployee()">
-                        Add Employee
-                    </button>
-                    <button interop-button (click)="removeEmployee()">
-                        Remove Employee
-                    </button>
-                </div>
-                <table
-                    interop-table
-                    [collection]="employeeCollection()"
-                    [columns]="basicEmployeeColumns()"
-                ></table>
-            </div>
-
-            <div class="demo-card">
-                <h3>Observable Data</h3>
-                <p>
-                    <small>Async data with loading states</small>
-                </p>
-                <table
-                    interop-table
-                    [collection]="productsObservable()"
-                    loadingText="Loading products..."
-                ></table>
-            </div>
-
-            <div class="demo-card">
-                <h3>Empty State</h3>
-                <p>
-                    <small>Built-in empty state handling</small>
-                </p>
-                <table
-                    interop-table
-                    [collection]="[]"
-                    emptyText="No data available"
-                ></table>
-            </div>
-        </div>
-    </section>-->
+		<!-- ── 6. Language canonicalization showcase ──────────────────────────── -->
+		<div class="demo-group demo-group--row">
+			<p class="demo-group__label demo-group__label--full">
+				Language canonicalization · short aliases resolve to display names
+			</p>
+			@for (lang of ['ts', 'js', 'py', 'rs', 'bash', 'scss', 'yaml', 'gql'];
+			track lang) {
+			<figure interop-code-block [language]="lang">
+				<pre><code># {{ lang }}</code></pre>
+			</figure>
+			}
+		</div>
+	</section>
 </main>
 
-<footer class="demo-footer"></footer>
+<footer dtx-site-footer></footer>

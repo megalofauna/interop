@@ -3,6 +3,12 @@
 body {
     margin: 0;
 }
+app-root {
+    display: block;
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+}
 :where(html) {
     font-family:
         "SF Pro Text",
