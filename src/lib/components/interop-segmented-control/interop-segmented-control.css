@@ -1,0 +1,171 @@
+/* ============================================================
+   interop-segmented-control — Container (fieldset host)
+
+   Responsibilities:
+     1. Fieldset browser-default reset
+     2. Token cascade (theme → component → private)
+     3. Animated selection pill (CSS Anchor Positioning + fallback)
+   ============================================================ */
+
+/* ── Token cascade ────────────────────────────────────────── */
+
+/*
+ * PUBLIC API — two tiers, one three-step resolution chain per prop:
+ *
+ *   var(--component-token, var(--theme-token, hard-default))
+ *
+ * ┌─────────────────────────────────────────────────────────────┐
+ * │ TIER 1 — THEME TOKENS  (set once to restyle the control)    │
+ * │                                                             │
+ * │  --itx-seg-surface    → track background                   │
+ * │  --itx-seg-accent     → indicator pill bg · focus ring     │
+ * │  --itx-seg-on-accent  → active segment text colour         │
+ * │  --itx-seg-text       → default + hover segment text       │
+ * │  --itx-seg-border     → track border · indicator border    │
+ * │  --itx-seg-radius     → corner radius (track, pill, segs)  │
+ * └─────────────────────────────────────────────────────────────┘
+ *
+ * ┌─────────────────────────────────────────────────────────────┐
+ * │ TIER 2 — COMPONENT TOKENS  (one per visual property)        │
+ * │                                                             │
+ * │  Container:  --itx-seg-track-bg                            │
+ * │              --itx-seg-track-radius                        │
+ * │              --itx-seg-track-border                        │
+ * │              --itx-seg-track-padding                       │
+ * │                                                             │
+ * │  Indicator:  --itx-seg-indicator-bg                        │
+ * │              --itx-seg-indicator-radius                    │
+ * │              --itx-seg-indicator-border                    │
+ * │              --itx-seg-indicator-shadow                    │
+ * │              --itx-seg-indicator-transition                │
+ * │                                                             │
+ * │  Segment tokens live in interop-segment.css                 │
+ * └─────────────────────────────────────────────────────────────┘
+ *
+ * Visual map:
+ *
+ *  --itx-seg-track-border ──────────────────────────────────┐
+ *                                                           ↓
+ *  ╔═════════════════════════════════════════════════════╗
+ *  ║  ↕ --itx-seg-track-padding                         ║
+ *  ║  ┌──────────┐  ┌──────────────────┐  ┌──────────┐  ║  ← --itx-seg-track-bg
+ *  ║  │          │  │  ░░░ pill ░░░░░  │  │          │  ║
+ *  ║  └──────────┘  └──────────────────┘  └──────────┘  ║
+ *  ║  ↕ --itx-seg-track-padding                         ║
+ *  ╚═════════════════════════════════════════════════════╝
+ *  └─────────────────────────────────────────────────────┘
+ *                  --itx-seg-track-radius
+ *
+ *  Pill (::before):
+ *
+ *  ┌──────────────────────────┐  ← --itx-seg-indicator-border
+ *  │ ░░░░░░░░░░░░░░░░░░░░░░░ │  ← --itx-seg-indicator-bg
+ *  └──────────────────────────┘
+ *  └──────────────────────────┘  --itx-seg-indicator-radius
+ *  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░  --itx-seg-indicator-shadow
+ *
+ *  Slide animation: --itx-seg-indicator-transition (top/right/bottom/left)
+ */
+:host {
+	/* ── Track ──────────────────────────────────────────────── */
+	--_track-bg:             var(--itx-seg-track-bg,             var(--itx-seg-surface,   transparent));
+	--_track-radius:         var(--itx-seg-track-radius,         var(--itx-seg-radius,    6px));
+	--_track-border:         var(--itx-seg-track-border,         var(--itx-seg-border,    none));
+	--_track-padding:        var(--itx-seg-track-padding,        3px);
+
+	/* ── Indicator ──────────────────────────────────────────── */
+	--_indicator-bg:         var(--itx-seg-indicator-bg,         var(--itx-seg-accent,    black));
+	--_indicator-radius:     var(--itx-seg-indicator-radius,     var(--itx-seg-radius,    4px));
+	--_indicator-border:     var(--itx-seg-indicator-border,     var(--itx-seg-border,    none));
+	--_indicator-shadow:     var(--itx-seg-indicator-shadow,     none);
+	--_indicator-transition: var(--itx-seg-indicator-transition, 150ms ease);
+}
+
+/* ── Fieldset reset ───────────────────────────────────────── */
+
+:host {
+	background: var(--_track-bg);
+	border: var(--_track-border);
+	border-radius: var(--_track-radius);
+	padding: var(--_track-padding);
+	margin: 0;
+	/* Browsers set min-inline-size: min-content on fieldset by default,
+	   which can cause overflow in flex/grid contexts. Reset it. */
+	min-inline-size: 0;
+	/* Required for the absolutely-positioned pill pseudo-element. */
+	position: relative;
+}
+
+legend {
+	padding: 0;
+	/* Prevent the legend from floating above the fieldset border. */
+	float: left;
+	width: 100%;
+}
+
+/* Clear the float so content flows below the legend. */
+legend + * {
+	clear: both;
+}
+
+/* Visually hidden legend — accessible to screen readers */
+.interop-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ── Animated selection pill ──────────────────────────────── */
+
+/*
+ * The ::before pseudo-element is the sliding pill.
+ * Hidden when nothing is selected ([data-has-selection] absent).
+ *
+ * Without CSS Anchor Positioning: not rendered — fallback styles in
+ * interop-segment.css apply a direct background on [aria-pressed="true"].
+ * The fallback reads --_indicator-bg from this host via CSS inheritance
+ * so the fallback colour and pill colour are always in sync.
+ */
+@supports (anchor-name: none) {
+	:host([data-has-selection])::before {
+		content: "";
+		position: absolute;
+		background: var(--_indicator-bg);
+		border: var(--_indicator-border);
+		border-radius: var(--_indicator-radius);
+		box-shadow: var(--_indicator-shadow);
+		pointer-events: none;
+		/* Sit behind segment text (segments are z-index: 1) */
+		z-index: 0;
+		position-anchor: --itx-segment-active;
+		top: anchor(top);
+		right: anchor(right);
+		bottom: anchor(bottom);
+		left: anchor(left);
+		transition:
+			top    var(--_indicator-transition),
+			right  var(--_indicator-transition),
+			bottom var(--_indicator-transition),
+			left   var(--_indicator-transition);
+	}
+}
+
+/* ── Accessibility ────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+	:host {
+		outline: 2px solid currentColor;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:host::before {
+		transition: none !important;
+	}
+}

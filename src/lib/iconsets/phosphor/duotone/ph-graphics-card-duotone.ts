@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhGraphicsCardDuotone: InteropIconDefinition = {
+  name: "ph-graphics-card-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M232,56H16V184H232a8,8,0,0,0,8-8V64A8,8,0,0,0,232,56ZM80,152a32,32,0,1,1,32-32A32,32,0,0,1,80,152Zm96,0a32,32,0,1,1,32-32A32,32,0,0,1,176,152Z\" opacity=\"0.2\"/><path d=\"M16,184H232a8,8,0,0,0,8-8V64a8,8,0,0,0-8-8H16V208\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"176\" cy=\"120\" r=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"80\" y1=\"208\" x2=\"80\" y2=\"184\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"48\" y1=\"184\" x2=\"48\" y2=\"208\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"112\" y1=\"208\" x2=\"112\" y2=\"184\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"153.37\" y1=\"97.37\" x2=\"198.63\" y2=\"142.63\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"80\" cy=\"120\" r=\"32\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"57.37\" y1=\"97.37\" x2=\"102.63\" y2=\"142.63\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

@@ -1,0 +1,49 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Toast</h1>
+		<p class="demo-page__lead">
+			Imperative notification toasts via <code>InteropToastService</code>.
+			Place one <code>&lt;interop-toast-viewport /&gt;</code> in the app shell;
+			call the service from anywhere to queue notifications.
+		</p>
+	</header>
+
+	<interop-toast-viewport />
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Toast types">
+			<div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+				<button interop-button (click)="showSuccess()">Success</button>
+				<button interop-button (click)="showError()">Error</button>
+				<button interop-button (click)="showInfo()">Info</button>
+				<button interop-button (click)="showWarning()">Warning</button>
+			</div>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

@@ -1,0 +1,26 @@
+/*
+ * Interop — Design System Foundation
+ *
+ * This file is the mechanical layer: scales, formulas, and derived tokens.
+ * It carries no color opinions, no font choices, no aesthetic defaults.
+ * It is intentionally incomplete on its own — a theme must be imported
+ * alongside it to supply seed values and static token definitions.
+ *
+ * Consumers should import a theme, not this file directly:
+ *   @import 'interop/styles/themes/protocol.css';
+ *
+ * The theme imports this foundation internally. If you are building a
+ * custom theme, start by importing this file at the top of your theme:
+ *   @import 'interop/styles/interop.css';
+ *
+ * All tokens are scoped to [interop-root] at zero specificity via :where().
+ * Consumer overrides always win regardless of where they are declared.
+ */
+
+@import "./tokens/primitives.css";
+@import "./tokens/color.css";
+@import "./tokens/spacing.css";
+@import "./tokens/shape.css";
+@import "./tokens/motion.css";
+@import "./tokens/typography.css";
+@import "./tokens/elevation.css";

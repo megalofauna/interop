@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerSocial: InteropIconDefinition = {
+  name: "tabler-social",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0\" /> <path d=\"M3 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0\" /> <path d=\"M17 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0\" /> <path d=\"M9 14a3 3 0 1 0 6 0a3 3 0 1 0 -6 0\" /> <path d=\"M12 7l0 4\" /> <path d=\"M6.7 17.8l2.8 -2\" /> <path d=\"M17.3 17.8l-2.8 -2\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

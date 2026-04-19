@@ -1,0 +1,72 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Scroll Area</h1>
+		<p class="demo-page__lead">
+			Constrained scrollable region with optional scroll-shadow indicators.
+			Keeps keyboard and screen reader navigation intact.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Vertical scroll with shadows">
+			<interop-scroll-area
+				aria-label="Mission log"
+				[showShadows]="true"
+				style="height: 14rem; width: 100%;">
+				@for (entry of logEntries; track entry.time) {
+					<div class="scroll-area-page__log-row">
+						<code class="scroll-area-page__log-time">{{ entry.time }}</code>
+						<span>{{ entry.message }}</span>
+					</div>
+				}
+			</interop-scroll-area>
+		</demo-example>
+
+		<demo-example label="Constrained height, no shadows">
+			<interop-scroll-area
+				aria-label="Station manifest"
+				style="height: 10rem; width: 100%;">
+				<ul style="margin: 0; padding: 0 0 0 1.25rem;">
+					@for (entry of logEntries; track entry.time) {
+						<li>{{ entry.message }}</li>
+					}
+				</ul>
+			</interop-scroll-area>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

@@ -1,0 +1,7 @@
+export * from './interop-tooltip';
+export * from './interop-tooltip-trigger.directive';
+export * from './interop-tooltip-content.directive';
+export * from './interop-tooltip.config';
+export * from './position-strategy';
+export { FloatingUiPositionStrategy } from './floating-ui.strategy';
+export { NativePositionStrategy } from './native.strategy';

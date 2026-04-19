@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhMoonDuotone: InteropIconDefinition = {
+  name: "ph-moon-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M108.11,28.11A96.09,96.09,0,0,0,227.89,147.89,96,96,0,1,1,108.11,28.11Z\" opacity=\"0.2\"/><path d=\"M108.11,28.11A96.09,96.09,0,0,0,227.89,147.89,96,96,0,1,1,108.11,28.11Z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

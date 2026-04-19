@@ -1,102 +1,50 @@
-@if (icon(); as i) {
-<svg
-    [attr.viewBox]="i.viewBox"
-    [attr.width]="sizeInPx()"
-    [attr.height]="sizeInPx()"
-    [style.color]="color() ?? null"
+@if (useRegistry()) {
+  <!-- ── Registry path: icon resolved from name lookup ──────────────────────── -->
+  @if (icon(); as i) {
+    <svg
+      [attr.viewBox]="i.viewBox"
+      [attr.width]="sizeInPx()"
+      [attr.height]="sizeInPx()"
+      [attr.stroke-width]="effectiveStrokeWidth()"
+      [style.color]="color() ?? null"
+      [attr.role]="decorative() ? 'presentation' : 'img'"
+      [attr.aria-hidden]="decorative() ? 'true' : null"
+      [attr.aria-label]="!decorative() ? ariaLabel() : null"
+      xmlns="http://www.w3.org/2000/svg"
+      [innerHTML]="trustedSvgContent()"
+    ></svg>
+  } @else {
+    <!-- Icon not found in registry — renders a placeholder in dev, nothing in prod -->
+    <svg
+      [attr.width]="sizeInPx()"
+      [attr.height]="sizeInPx()"
+      viewBox="0 0 24 24"
+      [attr.role]="decorative() ? 'presentation' : 'img'"
+      [attr.aria-hidden]="decorative() ? 'true' : null"
+      [attr.aria-label]="!decorative() ? (ariaLabel() ?? 'Icon not found') : null"
+      xmlns="http://www.w3.org/2000/svg"
+      class="itx-icon--missing"
+    >
+      <!-- X mark — visible only in development via CSS -->
+      <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>
+      <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  }
+} @else {
+  <!-- ── Projection path: render content from any third-party icon library ─────
+    Size and accessibility are still controlled by interop-icon inputs.
+    The consumer is responsible for their library's rendering.
+  ────────────────────────────────────────────────────────────────────────────── -->
+  <span
+    [style.width]="sizeInPx()"
+    [style.height]="sizeInPx()"
+    [style.display]="'inline-flex'"
+    [style.align-items]="'center'"
+    [style.justify-content]="'center'"
     [attr.role]="decorative() ? 'presentation' : 'img'"
     [attr.aria-hidden]="decorative() ? 'true' : null"
     [attr.aria-label]="!decorative() ? ariaLabel() : null"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
->
-    @for (node of i.nodes; track node) { @switch (node[0]) { @case ('line') {
-    <line
-        [attr.x1]="node[1]['x1']"
-        [attr.y1]="node[1]['y1']"
-        [attr.x2]="node[1]['x2']"
-        [attr.y2]="node[1]['y2']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } @case ('rect') {
-    <rect
-        [attr.x]="node[1]['x']"
-        [attr.y]="node[1]['y']"
-        [attr.width]="node[1]['width']"
-        [attr.height]="node[1]['height']"
-        [attr.rx]="node[1]['rx']"
-        [attr.fill]="node[1]['fill']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } @case ('circle') {
-    <circle
-        [attr.cx]="node[1]['cx']"
-        [attr.cy]="node[1]['cy']"
-        [attr.r]="node[1]['r']"
-        [attr.fill]="node[1]['fill']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } @case ('ellipse') {
-    <ellipse
-        [attr.cx]="node[1]['cx']"
-        [attr.cy]="node[1]['cy']"
-        [attr.rx]="node[1]['rx']"
-        [attr.ry]="node[1]['ry']"
-        [attr.fill]="node[1]['fill']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } @case ('polyline') {
-    <polyline
-        [attr.points]="node[1]['points']"
-        [attr.fill]="node[1]['fill']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } @case ('polygon') {
-    <polygon
-        [attr.points]="node[1]['points']"
-        [attr.fill]="node[1]['fill']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } @case ('path') {
-    <path
-        [attr.d]="node[1]['d']"
-        [attr.fill]="node[1]['fill']"
-        [attr.stroke]="node[1]['stroke'] ?? 'currentColor'"
-        [attr.stroke-linecap]="node[1]['stroke-linecap']"
-        [attr.stroke-linejoin]="node[1]['stroke-linejoin']"
-        [attr.stroke-width]="strokeWidth() ?? node[1]['stroke-width']"
-    />
-    } } }
-</svg>
-} @else {
-<!-- Fallback when icon is not found -->
-<div
-    class="interop-icon-fallback"
-    [style.width]="sizeInPx()"
-    [style.height]="sizeInPx()"
-    [attr.role]="decorative() ? 'presentation' : 'img'"
-    [attr.aria-hidden]="decorative() ? 'true' : null"
-    [attr.aria-label]="!decorative() ? (ariaLabel() || 'Icon not found') : null"
-    [attr.title]="'Icon not found: ' + name()"
->
-    ?
-</div>
+  >
+    <ng-content />
+  </span>
 }

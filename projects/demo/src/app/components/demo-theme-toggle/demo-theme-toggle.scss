@@ -1,0 +1,31 @@
+:host {
+	display: inline-flex;
+	align-items: center;
+}
+
+.theme-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	border: 1px solid var(--itx-border);
+	border-radius: var(--itx-radius-sm);
+	background: var(--itx-surface);
+	cursor: pointer;
+	font-size: 1rem;
+	line-height: 1;
+	transition:
+		background-color var(--itx-duration-fast) var(--itx-easing-standard),
+		border-color var(--itx-duration-fast) var(--itx-easing-standard);
+
+	&:hover {
+		background: var(--itx-surface-hover);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-focus);
+		outline-offset: 2px;
+	}
+}

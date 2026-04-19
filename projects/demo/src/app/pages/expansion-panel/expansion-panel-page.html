@@ -1,0 +1,101 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Expansion Panel</h1>
+		<p class="demo-page__lead">
+			Accessible collapsible panels following the APG accordion pattern.
+			Works standalone or grouped in an accordion with mutual-exclusion mode.
+		</p>
+	</header>
+
+	<!-- ── Standalone ────────────────────────────────────────────────────── -->
+	<demo-section id="standalone" heading="Standalone">
+		<demo-example label="Single panel">
+			<interop-expansion-panel style="width: 100%;">
+				<h3><button interop-expansion-trigger>Docking procedure</button></h3>
+				<div interop-expansion-body>
+					<p>Reduce speed to 10 m/s, extend mag-lock clamps, and align with the docking ring. Verify pressure seal before opening the airlock.</p>
+				</div>
+			</interop-expansion-panel>
+		</demo-example>
+
+		<demo-example label="Default open">
+			<interop-expansion-panel [expanded]="true" style="width: 100%;">
+				<h3><button interop-expansion-trigger>Emergency protocols</button></h3>
+				<div interop-expansion-body>
+					<p>In the event of hull breach: seal bulkheads, activate emergency O2, and transmit distress beacon on channel 9.</p>
+				</div>
+			</interop-expansion-panel>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Accordion ─────────────────────────────────────────────────────── -->
+	<demo-section id="accordion" heading="Accordion">
+		<demo-example label="Mutually exclusive panels">
+			<interop-accordion style="width: 100%;">
+				<interop-expansion-panel>
+					<h3><button interop-expansion-trigger>Navigation systems</button></h3>
+					<div interop-expansion-body>
+						<p>Inertial nav array, stellar cartography uplink, and proximity sensor grid. All systems nominal.</p>
+					</div>
+				</interop-expansion-panel>
+
+				<interop-expansion-panel>
+					<h3><button interop-expansion-trigger>Life support</button></h3>
+					<div interop-expansion-body>
+						<p>O2 at 21%, CO2 scrubbers at 98% efficiency. Recycler cycle in 4h. Temperature stable at 21°C.</p>
+					</div>
+				</interop-expansion-panel>
+
+				<interop-expansion-panel>
+					<h3><button interop-expansion-trigger>Propulsion</button></h3>
+					<div interop-expansion-body>
+						<p>Main drive at 40% thrust. Fuel reserves at 68%. Ion thrusters available for course correction.</p>
+					</div>
+				</interop-expansion-panel>
+			</interop-accordion>
+		</demo-example>
+
+		<demo-example label="Multiple open allowed">
+			<interop-accordion [exclusive]="false" style="width: 100%;">
+				<interop-expansion-panel>
+					<h3><button interop-expansion-trigger>Cargo manifest</button></h3>
+					<div interop-expansion-body>
+						<p>47 items on manifest. 3 flagged hazmat. 12 priority. Bay 4 offline for inspection.</p>
+					</div>
+				</interop-expansion-panel>
+
+				<interop-expansion-panel>
+					<h3><button interop-expansion-trigger>Crew roster</button></h3>
+					<div interop-expansion-body>
+						<p>Commander Reyes, Pilot Tanaka, Navigator Osei, Chief Voskov, Dr. Mbeki — all personnel accounted for.</p>
+					</div>
+				</interop-expansion-panel>
+			</interop-accordion>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

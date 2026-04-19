@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhGhostDuotone: InteropIconDefinition = {
+  name: "ph-ghost-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M216,216l-29.33-24-29.34,24L128,192,98.67,216,69.33,192,40,216V120a88,88,0,0,1,176,0Z\" opacity=\"0.2\"/><circle cx=\"100\" cy=\"116\" r=\"12\"/><circle cx=\"156\" cy=\"116\" r=\"12\"/><path d=\"M216,216l-29.33-24-29.34,24L128,192,98.67,216,69.33,192,40,216V120a88,88,0,0,1,176,0Z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

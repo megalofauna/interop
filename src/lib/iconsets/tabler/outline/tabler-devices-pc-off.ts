@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerDevicesPcOff: InteropIconDefinition = {
+  name: "tabler-devices-pc-off",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 9v10h-6v-14h2\" /> <path d=\"M13 9h9v7h-2m-4 0h-4v-4\" /> <path d=\"M14 19h5\" /> <path d=\"M17 17v2\" /> <path d=\"M6 13v.01\" /> <path d=\"M6 16v.01\" /> <path d=\"M3 3l18 18\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

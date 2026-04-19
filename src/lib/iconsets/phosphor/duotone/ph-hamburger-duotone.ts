@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhHamburgerDuotone: InteropIconDefinition = {
+  name: "ph-hamburger-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M68,160l40,16,40-16,40,16,20-7.27V184a32,32,0,0,1-32,32H80a32,32,0,0,1-32-32V167.27Z\" opacity=\"0.2\"/><path d=\"M48.07,96a8,8,0,0,1-7.89-9.72C46.68,55.55,83.52,32,128,32s81.32,23.55,87.82,54.28A8,8,0,0,1,207.93,96Z\" opacity=\"0.2\"/><path d=\"M48.07,96a8,8,0,0,1-7.89-9.72C46.68,55.55,83.52,32,128,32s81.32,23.55,87.82,54.28A8,8,0,0,1,207.93,96Z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><polyline points=\"24 176 68 160 108 176 148 160 188 176 232 160\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"24\" y1=\"128\" x2=\"232\" y2=\"128\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M208,168.73V184a32,32,0,0,1-32,32H80a32,32,0,0,1-32-32V167.27\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

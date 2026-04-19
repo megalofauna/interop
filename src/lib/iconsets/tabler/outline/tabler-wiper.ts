@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerWiper: InteropIconDefinition = {
+  name: "tabler-wiper",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11 18a1 1 0 1 0 2 0a1 1 0 1 0 -2 0\" /> <path d=\"M3 9l5.5 5.5a5 5 0 0 1 7 0l5.5 -5.5a12 12 0 0 0 -18 0\" /> <path d=\"M12 18l-2.2 -12.8\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

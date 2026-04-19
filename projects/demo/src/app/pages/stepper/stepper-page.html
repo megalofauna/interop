@@ -1,0 +1,126 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Stepper</h1>
+		<p class="demo-page__lead">
+			Composable multi-step wizard. Linear mode enforces step order;
+			non-linear allows free navigation. Navigation buttons are consumer-provided.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Linear wizard">
+			<div style="width: 100%;">
+				<interop-stepper #dockingStepper aria-label="Docking procedure">
+					<ol interop-step-list>
+						<li interop-step label="Approach"></li>
+						<li interop-step label="Align"></li>
+						<li interop-step label="Secure"></li>
+					</ol>
+
+					<section interop-step-panel>
+						<p>Reduce speed to 10 m/s and align approach vector with docking axis.</p>
+					</section>
+					<section interop-step-panel>
+						<p>Extend mag-lock clamps. Match rotation with station ring.</p>
+					</section>
+					<section interop-step-panel>
+						<p>Engage hard dock. Verify pressure seal before opening airlock.</p>
+					</section>
+				</interop-stepper>
+
+				<div class="stepper-page__nav">
+					<button interop-button
+						[disabled]="!dockingStepper.canGoBack()"
+						(click)="dockingStepper.back()">
+						Back
+					</button>
+					<button interop-button
+						[disabled]="!dockingStepper.canGoForward()"
+						(click)="dockingStepper.next()">
+						Next
+					</button>
+				</div>
+			</div>
+		</demo-example>
+
+		<demo-example label="Non-linear (free navigation)">
+			<div style="width: 100%;">
+				<interop-stepper #freeStepper aria-label="Vessel checklist" [linear]="false">
+					<ol interop-step-list>
+						<li interop-step label="Hull"></li>
+						<li interop-step label="Engines"></li>
+						<li interop-step label="Life support"></li>
+						<li interop-step label="Comms"></li>
+					</ol>
+
+					<section interop-step-panel>
+						<p>Inspect hull plating for micro-fractures. Log any anomalies.</p>
+					</section>
+					<section interop-step-panel>
+						<p>Run engine diagnostics. Check thruster alignment and fuel lines.</p>
+					</section>
+					<section interop-step-panel>
+						<p>Verify O2 scrubbers, CO2 sensors, and pressure regulators.</p>
+					</section>
+					<section interop-step-panel>
+						<p>Test all comms channels. Confirm encryption keys are current.</p>
+					</section>
+				</interop-stepper>
+
+				<div class="stepper-page__nav">
+					<button interop-button
+						[disabled]="!freeStepper.canGoBack()"
+						(click)="freeStepper.back()">
+						Back
+					</button>
+					<button interop-button
+						[disabled]="!freeStepper.canGoForward()"
+						(click)="freeStepper.next()">
+						Next
+					</button>
+				</div>
+			</div>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

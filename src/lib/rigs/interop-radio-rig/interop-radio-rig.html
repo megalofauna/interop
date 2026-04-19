@@ -1,0 +1,28 @@
+@if (isDeclarativeMode()) {
+<fieldset [class]="rigClass()" [disabled]="disabled()">
+	@if (legend()) {
+	<legend>{{ legend() }}</legend>
+	} @for (control of controls(); track control.id) {
+	<label
+		class="radio-control"
+		interop-radio
+		[id]="control.id"
+		[name]="control.name || groupName()"
+		[value]="control.value"
+		[checked]="isSelected(control.value)"
+		[disabled]="disabled() || (control.disabled ?? false)"
+		[required]="required() || (control.required ?? false)"
+		(valueChange)="onRadioChange($event)"
+	>
+		{{ control.label }}
+	</label>
+	}
+</fieldset>
+} @else {
+<fieldset [class]="rigClass()" [disabled]="disabled()">
+	@if (legend()) {
+	<legend>{{ legend() }}</legend>
+	}
+	<ng-content />
+</fieldset>
+}

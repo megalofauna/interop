@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhHeadphones: InteropIconDefinition = {
+  name: "ph-headphones",
+  viewBox: "0 0 256 256",
+  svgContent: "<path d=\"M224,128H192a16,16,0,0,0-16,16v40a16,16,0,0,0,16,16h16a16,16,0,0,0,16-16V128a96,96,0,1,0-192,0v56a16,16,0,0,0,16,16H64a16,16,0,0,0,16-16V144a16,16,0,0,0-16-16H32\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  defaultStrokeWidth: 16,
+} as const;

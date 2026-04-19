@@ -1,12 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Component, DebugElement } from "@angular/core";
+import { Component } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { InteropButton } from "./interop-button";
 import { InteropActivation } from "../../services/interop-activation.service";
 
-/**
- * Host component for testing InteropButton since it requires button[interop-button] selector
- */
 @Component({
   standalone: true,
   imports: [InteropButton],
@@ -21,13 +18,12 @@ import { InteropActivation } from "../../services/interop-activation.service";
       [disabled]="disabled"
       [type]="type"
       [loadingText]="loadingText"
-      [attrsPreset]="attrsPreset"
     >
       Test Button Content
     </button>
   `,
 })
-class TestHostComponent {
+class TestHost {
   onActivate: any = null;
   activationId: string | null = null;
   payload: unknown = undefined;
@@ -36,15 +32,14 @@ class TestHostComponent {
   disabled = false;
   type: "button" | "submit" | "reset" = "button";
   loadingText = "Loading...";
-  attrsPreset: any = null;
 }
 
 describe("InteropButton", () => {
-  let hostComponent: TestHostComponent;
-  let fixture: ComponentFixture<TestHostComponent>;
-  let buttonElement: HTMLButtonElement;
-  let interopButtonComponent: InteropButton;
-  let activationManager: jasmine.SpyObj<InteropActivation>;
+  let host: TestHost;
+  let fixture: ComponentFixture<TestHost>;
+  let buttonEl: HTMLButtonElement;
+  let button: InteropButton;
+  let activationService: jasmine.SpyObj<InteropActivation>;
 
   beforeEach(async () => {
     const activationSpy = jasmine.createSpyObj("InteropActivation", [
@@ -54,374 +49,183 @@ describe("InteropButton", () => {
     ]);
 
     await TestBed.configureTestingModule({
-      imports: [TestHostComponent],
+      imports: [TestHost],
       providers: [{ provide: InteropActivation, useValue: activationSpy }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TestHostComponent);
-    hostComponent = fixture.componentInstance;
-    buttonElement = fixture.nativeElement.querySelector("button");
-
-    // Get the InteropButton component instance
-    const interopButtonDebugElement = fixture.debugElement.query(
+    fixture = TestBed.createComponent(TestHost);
+    host = fixture.componentInstance;
+    buttonEl = fixture.nativeElement.querySelector("button");
+    button = fixture.debugElement.query(
       By.directive(InteropButton),
-    );
-    interopButtonComponent = interopButtonDebugElement.componentInstance;
-
-    activationManager = TestBed.inject(
+    ).componentInstance;
+    activationService = TestBed.inject(
       InteropActivation,
     ) as jasmine.SpyObj<InteropActivation>;
 
     fixture.detectChanges();
   });
 
-  describe("Component Setup", () => {
-    it("should create", () => {
-      expect(interopButtonComponent).toBeTruthy();
-      expect(hostComponent).toBeTruthy();
-    });
+  // ── Setup ────────────────────────────────────────────────────────────────────
 
-    it("should require button element (selector enforcement)", () => {
-      expect(buttonElement.tagName).toBe("BUTTON");
-    });
-
-    it("should have proper default values", () => {
-      expect(interopButtonComponent.onActivate()).toBeNull();
-      expect(interopButtonComponent.activationId()).toBeNull();
-      expect(interopButtonComponent.loading()).toBeFalse();
-      expect(interopButtonComponent.disabled()).toBeFalse();
-      expect(interopButtonComponent.type()).toBe("button");
-    });
-
-    it("should update inputs when host component changes", () => {
-      hostComponent.loading = true;
-      hostComponent.disabled = true;
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.loading()).toBeTrue();
-      expect(interopButtonComponent.disabled()).toBeTrue();
-    });
+  it("should create", () => {
+    expect(button).toBeTruthy();
   });
 
-  describe("Computed Properties", () => {
-    it("should compute isDisabled correctly", () => {
-      expect(interopButtonComponent.isDisabled()).toBeFalse();
-
-      hostComponent.disabled = true;
-      fixture.detectChanges();
-      expect(interopButtonComponent.isDisabled()).toBeTrue();
-
-      hostComponent.disabled = false;
-      hostComponent.loading = true;
-      fixture.detectChanges();
-      expect(interopButtonComponent.isDisabled()).toBeTrue();
-    });
-
-    it("should compute canActivate correctly", () => {
-      // No handler configured
-      expect(interopButtonComponent.canActivate()).toBeFalse();
-
-      // With local handler
-      hostComponent.onActivate = jasmine.createSpy("handler");
-      fixture.detectChanges();
-      expect(interopButtonComponent.canActivate()).toBeTrue();
-
-      // Disabled should prevent activation
-      hostComponent.disabled = true;
-      fixture.detectChanges();
-      expect(interopButtonComponent.canActivate()).toBeFalse();
-
-      // With activation ID
-      hostComponent.disabled = false;
-      hostComponent.onActivate = null;
-      hostComponent.activationId = "test";
-      fixture.detectChanges();
-      expect(interopButtonComponent.canActivate()).toBeTrue();
-    });
+  it("should require a button element", () => {
+    expect(buttonEl.tagName).toBe("BUTTON");
   });
 
-  describe("Input Handling", () => {
-    it("should handle onActivate input", () => {
-      const handler = jasmine.createSpy("handler");
-      hostComponent.onActivate = handler;
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.onActivate()).toBe(handler);
-    });
-
-    it("should handle activationId input", () => {
-      hostComponent.activationId = "test-id";
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.activationId()).toBe("test-id");
-    });
-
-    it("should handle payload input", () => {
-      const testPayload = { test: "data" };
-      hostComponent.payload = testPayload;
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.payload()).toBe(testPayload);
-    });
-
-    it("should handle activationOptions input", () => {
-      const options = { debounceMs: 100 };
-      hostComponent.activationOptions = options;
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.activationOptions()).toBe(options);
-    });
-
-    it("should handle type input", () => {
-      hostComponent.type = "submit";
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.type()).toBe("submit");
-    });
+  it("should have correct defaults", () => {
+    expect(button.onActivate()).toBeNull();
+    expect(button.activationId()).toBeNull();
+    expect(button.loading()).toBeFalse();
+    expect(button.disabled()).toBeFalse();
+    expect(button.type()).toBe("button");
   });
 
-  describe("Activation Behavior", () => {
-    it("should call local handler on click", () => {
-      const handler = jasmine.createSpy("handler");
-      hostComponent.onActivate = handler;
-      hostComponent.payload = "test-payload";
-      fixture.detectChanges();
+  // ── Computed state ────────────────────────────────────────────────────────────
 
-      buttonElement.click();
-
-      expect(handler).toHaveBeenCalledWith("test-payload");
-    });
-
-    it("should call global handler when activationId is set", () => {
-      hostComponent.activationId = "global-test";
-      hostComponent.payload = "global-payload";
-      fixture.detectChanges();
-
-      buttonElement.click();
-
-      expect(activationManager.trigger).toHaveBeenCalledWith(
-        "global-test",
-        "global-payload",
-      );
-    });
-
-    it("should prevent activation when disabled", () => {
-      const handler = jasmine.createSpy("handler");
-      hostComponent.onActivate = handler;
-      hostComponent.disabled = true;
-      fixture.detectChanges();
-
-      buttonElement.click();
-
-      expect(handler).not.toHaveBeenCalled();
-    });
-
-    it("should prevent activation when loading", () => {
-      const handler = jasmine.createSpy("handler");
-      hostComponent.onActivate = handler;
-      hostComponent.loading = true;
-      fixture.detectChanges();
-
-      buttonElement.click();
-
-      expect(handler).not.toHaveBeenCalled();
-    });
-
-    it("should prefer local handler over global", () => {
-      const localHandler = jasmine.createSpy("localHandler");
-      hostComponent.onActivate = localHandler;
-      hostComponent.activationId = "global";
-      fixture.detectChanges();
-
-      buttonElement.click();
-
-      expect(localHandler).toHaveBeenCalled();
-      expect(activationManager.trigger).not.toHaveBeenCalled();
-    });
-
-    it("should warn when activationId is set but no global handler exists", () => {
-      spyOn(console, "warn");
-      activationManager.has.and.returnValue(false);
-
-      hostComponent.activationId = "nonexistent";
-      fixture.detectChanges();
-
-      // Warning should be logged during effect execution
-      expect(console.warn).toHaveBeenCalledWith(
-        jasmine.stringContaining('activationId "nonexistent" specified'),
-      );
-    });
+  it("isDisabled is true when disabled=true", () => {
+    host.disabled = true;
+    fixture.detectChanges();
+    expect(button.isDisabled()).toBeTrue();
   });
 
-  describe("Content Projection and Flexible Positioning", () => {
-    it("should project default content", () => {
-      fixture.detectChanges();
-      expect(buttonElement.textContent?.trim()).toContain(
-        "Test Button Content",
-      );
-    });
-
-    it("should show loading text when loading=true and no loading slot provided", () => {
-      hostComponent.loading = true;
-      hostComponent.loadingText = "Saving...";
-      fixture.detectChanges();
-
-      const loadingText = fixture.debugElement.query(
-        By.css(".interop-button__loading-text"),
-      );
-      expect(loadingText).toBeTruthy();
-      expect(loadingText.nativeElement.textContent.trim()).toBe("Saving...");
-    });
-
-    it("should project all content when not loading (preserving source order)", () => {
-      hostComponent.loading = false;
-      fixture.detectChanges();
-
-      // When not loading, both icon slot and default content should be projected
-      expect(interopButtonComponent.loading()).toBeFalse();
-    });
-
-    it("should only show loading content when loading (hiding icon and main content)", () => {
-      hostComponent.loading = true;
-      fixture.detectChanges();
-
-      // When loading, only loading slot content should be visible
-      expect(interopButtonComponent.loading()).toBeTrue();
-
-      const loadingText = fixture.debugElement.query(
-        By.css(".interop-button__loading-text"),
-      );
-      expect(loadingText).toBeTruthy();
-    });
-
-    it("should use flexbox with column-gap for internal layout", () => {
-      fixture.detectChanges();
-
-      // Layout is handled by styles; focus on structural sanity here
-      expect(buttonElement).toBeTruthy();
-    });
+  it("isDisabled is true when loading=true", () => {
+    host.loading = true;
+    fixture.detectChanges();
+    expect(button.isDisabled()).toBeTrue();
   });
 
-  describe("Accessibility and Semantic Enforcement", () => {
-    it("should maintain native button semantics", () => {
-      expect(buttonElement.tagName).toBe("BUTTON");
-      expect(buttonElement.getAttribute("role")).toBeNull(); // Native button doesn't need role
-    });
-
-    it("should handle disabled attribute correctly", () => {
-      hostComponent.disabled = true;
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.isDisabled()).toBeTrue();
-    });
-
-    it("should handle button type attribute", () => {
-      hostComponent.type = "submit";
-      fixture.detectChanges();
-
-      expect(interopButtonComponent.type()).toBe("submit");
-    });
+  it("canActivate is false with no handler", () => {
+    expect(button.canActivate()).toBeFalse();
   });
 
-  describe("Error Handling and Edge Cases", () => {
-    it("should handle missing activation handler gracefully", () => {
-      spyOn(console, "warn");
-
-      // No handler configured
-      fixture.detectChanges();
-      buttonElement.click();
-
-      // Should warn about missing handler only if canActivate would be true but no handler exists
-      // Since canActivate() returns false when no handler is configured, this won't warn
-      expect(interopButtonComponent.canActivate()).toBeFalse();
-    });
-
-    it("should handle undefined payload", () => {
-      const handler = jasmine.createSpy("handler");
-      hostComponent.onActivate = handler;
-      // payload defaults to undefined
-      fixture.detectChanges();
-
-      buttonElement.click();
-
-      expect(handler).toHaveBeenCalledWith(undefined);
-    });
-
-    it("should prevent default click behavior when disabled", () => {
-      const clickEvent = new MouseEvent("click", { bubbles: true });
-      spyOn(clickEvent, "preventDefault");
-
-      hostComponent.disabled = true;
-      fixture.detectChanges();
-
-      interopButtonComponent.onButtonActivate(clickEvent);
-
-      expect(clickEvent.preventDefault).toHaveBeenCalled();
-    });
+  it("canActivate is true with onActivate", () => {
+    host.onActivate = jasmine.createSpy();
+    fixture.detectChanges();
+    expect(button.canActivate()).toBeTrue();
   });
 
-  describe("Integration with Activation Utils", () => {
-    it("should create managed activation with options", () => {
-      const handler = jasmine.createSpy("handler").and.returnValue("result");
-      const options = { throttleMs: 100, reentrant: false };
-
-      hostComponent.onActivate = handler;
-      hostComponent.activationOptions = options;
-      fixture.detectChanges();
-
-      // The component should create a managed activation internally
-      expect(interopButtonComponent.canActivate()).toBeTrue();
-    });
+  it("canActivate is true with activationId", () => {
+    host.activationId = "test";
+    fixture.detectChanges();
+    expect(button.canActivate()).toBeTrue();
   });
 
-  describe("Flexible Icon Positioning Behavior", () => {
-    it("should respect source order for icon placement", () => {
-      // This test verifies the template structure that enables flexible positioning
-      hostComponent.loading = false;
-      fixture.detectChanges();
+  it("canActivate is false when disabled even with handler", () => {
+    host.onActivate = jasmine.createSpy();
+    host.disabled = true;
+    fixture.detectChanges();
+    expect(button.canActivate()).toBeFalse();
+  });
 
-      // The template should project icon slot and default content in that order
-      // This allows users to control actual position via DOM source order
-      expect(interopButtonComponent.loading()).toBeFalse();
-      expect(buttonElement).toBeTruthy();
-    });
+  // ── Click behavior ────────────────────────────────────────────────────────────
 
-    it("should maintain layout during loading state transitions", () => {
-      // Test loading state transitions
-      hostComponent.loading = false;
-      fixture.detectChanges();
-      expect(interopButtonComponent.loading()).toBeFalse();
+  it("calls onActivate handler on click", () => {
+    const handler = jasmine.createSpy();
+    host.onActivate = handler;
+    host.payload = "data";
+    fixture.detectChanges();
 
-      // Switch to loading
-      hostComponent.loading = true;
-      fixture.detectChanges();
-      expect(interopButtonComponent.loading()).toBeTrue();
+    buttonEl.click();
+    expect(handler).toHaveBeenCalledWith("data");
+  });
 
-      // Switch back to normal
-      hostComponent.loading = false;
-      fixture.detectChanges();
-      expect(interopButtonComponent.loading()).toBeFalse();
-    });
+  it("triggers activationService when activationId is set", () => {
+    host.activationId = "global-action";
+    host.payload = "p";
+    fixture.detectChanges();
 
-    it("should handle content projection without icon slot", () => {
-      // Test button with only main content (no icon)
-      hostComponent.loading = false;
-      fixture.detectChanges();
+    buttonEl.click();
+    expect(activationService.trigger).toHaveBeenCalledWith("global-action", "p");
+  });
 
-      // Should work fine with just default content projection
-      expect(interopButtonComponent.loading()).toBeFalse();
-      expect(buttonElement).toBeTruthy();
-    });
+  it("prefers onActivate over activationId", () => {
+    const handler = jasmine.createSpy();
+    host.onActivate = handler;
+    host.activationId = "global";
+    fixture.detectChanges();
 
-    it("should maintain flexbox gap behavior with different content configurations", () => {
-      // Verify that CSS layout works for various content scenarios
-      fixture.detectChanges();
+    buttonEl.click();
+    expect(handler).toHaveBeenCalled();
+    expect(activationService.trigger).not.toHaveBeenCalled();
+  });
 
-      // Avoid asserting computed styles here; keep the test focused on structure
-      expect(buttonElement).toBeTruthy();
+  it("does not call handler when disabled", () => {
+    const handler = jasmine.createSpy();
+    host.onActivate = handler;
+    host.disabled = true;
+    fixture.detectChanges();
 
-      // The column-gap should be applied regardless of content configuration
-      // This ensures consistent spacing whether icon is before, after, or absent
-    });
+    buttonEl.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("does not call handler when loading", () => {
+    const handler = jasmine.createSpy();
+    host.onActivate = handler;
+    host.loading = true;
+    fixture.detectChanges();
+
+    buttonEl.click();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("calls preventDefault when disabled", () => {
+    host.disabled = true;
+    fixture.detectChanges();
+
+    const event = new MouseEvent("click", { bubbles: true });
+    spyOn(event, "preventDefault");
+    button.onButtonActivate(event);
+
+    expect(event.preventDefault).toHaveBeenCalled();
+  });
+
+  it("does not call preventDefault when no handler is configured (native behavior passes through)", () => {
+    const event = new MouseEvent("click", { bubbles: true });
+    spyOn(event, "preventDefault");
+    button.onButtonActivate(event);
+
+    expect(event.preventDefault).not.toHaveBeenCalled();
+  });
+
+  it("passes undefined payload when not set", () => {
+    const handler = jasmine.createSpy();
+    host.onActivate = handler;
+    fixture.detectChanges();
+
+    buttonEl.click();
+    expect(handler).toHaveBeenCalledWith(undefined);
+  });
+
+  // ── Loading state ─────────────────────────────────────────────────────────────
+
+  it("shows loadingText when loading=true", () => {
+    host.loading = true;
+    host.loadingText = "Saving...";
+    fixture.detectChanges();
+
+    const span = fixture.debugElement.query(
+      By.css(".interop-button__loading-text"),
+    );
+    expect(span.nativeElement.textContent.trim()).toBe("Saving...");
+  });
+
+  it("shows projected content when not loading", () => {
+    fixture.detectChanges();
+    expect(buttonEl.textContent?.trim()).toContain("Test Button Content");
+  });
+
+  it("hides projected content when loading", () => {
+    host.loading = true;
+    fixture.detectChanges();
+
+    const span = fixture.debugElement.query(
+      By.css(".interop-button__loading-text"),
+    );
+    expect(span).toBeTruthy();
   });
 });

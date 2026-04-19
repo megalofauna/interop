@@ -1,0 +1,124 @@
+// ── Desktop: always-visible sidebar ─────────────────────────────────────────
+
+:host {
+	display: block;
+	width: 16rem;
+	flex-shrink: 0;
+	overflow-y: auto;
+	border-right: 1px solid var(--itx-border);
+	background: var(--itx-surface);
+}
+
+.nav__backdrop {
+	display: none;
+}
+
+.nav__panel {
+	padding: var(--itx-spacing-4) 0;
+	position: sticky;
+	inset: 0 auto auto 0;
+}
+
+// ── Groups ──────────────────────────────────────────────────────────────────
+
+.nav__group {
+	padding: var(--itx-spacing-2) var(--itx-spacing-4);
+}
+
+.nav__group--disabled {
+	opacity: 0.4;
+}
+
+.nav__group-label {
+	margin: 0 0 var(--itx-spacing-1) 0;
+	padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	font-size: 0.6875rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--itx-muted);
+}
+
+// ── List ────────────────────────────────────────────────────────────────────
+
+.nav__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	row-gap: 4px;
+}
+
+.nav__link {
+	display: block;
+	padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+	font-size: var(--itx-font-size-sm);
+	color: #bbb;
+	text-decoration: none;
+	transition: background-color var(--itx-duration-fast)
+		var(--itx-easing-standard);
+
+	&:hover:not(.nav__link--placeholder) {
+		background: var(--itx-surface-hover);
+	}
+
+	&--active {
+		background: var(--itx-brand);
+		color: var(--itx-on-brand);
+
+		&:hover {
+			background: var(--itx-brand-hover);
+		}
+	}
+
+	&--placeholder {
+		color: var(--itx-muted);
+		cursor: default;
+	}
+}
+
+// ── Mobile: fixed overlay drawer ────────────────────────────────────────────
+
+@media (max-width: 59.999em) {
+	:host {
+		display: contents;
+		width: auto;
+		border: none;
+		overflow: visible;
+	}
+
+	.nav__backdrop {
+		display: none;
+		position: fixed;
+		inset: 0;
+		z-index: 90;
+		background: oklch(0 0 0 / 0.45);
+	}
+
+	.nav__panel {
+		position: fixed;
+		inset-block: 0;
+		inset-inline-start: 0;
+		width: 16rem;
+		z-index: 100;
+		background: var(--itx-surface);
+		border-right: 1px solid var(--itx-border);
+		box-shadow: var(--itx-shadow-lg);
+		overflow-y: auto;
+		transform: translateX(-100%);
+		transition: transform var(--itx-duration-base, 200ms)
+			var(--itx-easing-standard, ease);
+	}
+
+	:host(.is-open) {
+		.nav__backdrop {
+			display: block;
+		}
+
+		.nav__panel {
+			transform: translateX(0);
+		}
+	}
+}

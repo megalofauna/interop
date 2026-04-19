@@ -1,0 +1,109 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Field</h1>
+		<p class="demo-page__lead">
+			Accessible form fields with automatic ARIA wiring, validation error display,
+			and Angular Forms integration. Covers text inputs and textareas.
+		</p>
+	</header>
+
+	<!-- ── Input ──────────────────────────────────────────────────────────── -->
+	<demo-section id="input" heading="Input">
+		<demo-example label="Basic">
+			<interop-field-input
+				id="callsign"
+				label="Callsign"
+				placeholder="e.g. Viper-7"
+				style="max-width: 24rem;"
+			/>
+		</demo-example>
+
+		<demo-example label="Required">
+			<interop-field-input
+				id="destination"
+				label="Destination"
+				placeholder="Sector coordinates"
+				[required]="true"
+				[fieldNotes]="'Enter target sector in format A1-C3'"
+				style="max-width: 24rem;"
+			/>
+		</demo-example>
+
+		<demo-example label="With prefix and suffix">
+			<interop-field-input
+				id="fuel-cost"
+				label="Fuel cost"
+				type="number"
+				placeholder="0"
+				style="max-width: 14rem;">
+				<span interop-field-prefix>⬡</span>
+				<span interop-field-suffix>credits</span>
+			</interop-field-input>
+		</demo-example>
+
+		<demo-example label="Disabled">
+			<interop-field-input
+				id="vessel-id"
+				label="Vessel ID"
+				[disabled]="true"
+				placeholder="Auto-assigned"
+				style="max-width: 24rem;"
+			/>
+		</demo-example>
+
+		<demo-example label="With validation errors">
+			<interop-field-input
+				id="cargo-mass"
+				label="Cargo mass (kg)"
+				type="number"
+				[required]="true"
+				[fieldErrors]="[{ key: 'max', message: 'Exceeds bay capacity of 8,500 kg' }]"
+				style="max-width: 24rem;"
+			/>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Textarea ───────────────────────────────────────────────────────── -->
+	<demo-section id="textarea" heading="Textarea">
+		<demo-example label="Basic">
+			<interop-field-textarea
+				id="mission-brief"
+				label="Mission briefing"
+				placeholder="Describe the mission objectives…"
+				style="max-width: 32rem;"
+			/>
+		</demo-example>
+
+		<demo-example label="With notes">
+			<interop-field-textarea
+				id="incident-log"
+				label="Incident log"
+				[required]="true"
+				[fieldNotes]="'Describe the incident in detail. All logs are transmitted to fleet command.'"
+				style="max-width: 32rem;"
+			/>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

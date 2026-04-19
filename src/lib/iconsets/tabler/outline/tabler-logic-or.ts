@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerLogicOr: InteropIconDefinition = {
+  name: "tabler-logic-or",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 12h-6\" /> <path d=\"M2 9h7\" /> <path d=\"M2 15h7\" /> <path d=\"M8 5c10.667 2.1 10.667 12.6 0 14c1.806 -4.667 1.806 -9.333 0 -14\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

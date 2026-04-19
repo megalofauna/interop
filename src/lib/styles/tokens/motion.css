@@ -1,0 +1,21 @@
+/*
+ * Motion — duration & easing tokens.
+ *
+ * Base duration is the reference value; fast and slow are derived from it
+ * so the entire motion system can be tuned by changing a single property.
+ *
+ * Easing curves follow Material-style naming:
+ *   standard   — symmetric, general-purpose
+ *   decelerate — ease-out, for entering elements
+ *   accelerate — ease-in, for exiting elements
+ */
+
+:where([interop-root]) {
+	--itx-duration-base: 200ms;
+	--itx-duration-fast: calc(var(--itx-duration-base) * 0.5);
+	--itx-duration-slow: calc(var(--itx-duration-base) * 2);
+
+	--itx-easing-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+	--itx-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+	--itx-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+}

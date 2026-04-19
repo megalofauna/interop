@@ -7,45 +7,65 @@ import {
   input,
   isDevMode,
 } from "@angular/core";
-
-import { PhosphorIconRegistry } from "../../iconsets/phosphor/helpers/phosphor-icon.registry";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { InteropIconDefinition, InteropIconRegistry } from "../../iconsets/core";
 
 /**
- * InteropIcon - Generic icon component for displaying iconsets.
+ * InteropIcon — Renders icons from the InteropIconRegistry or projects
+ * arbitrary icon content from any third-party library.
  *
- * This component provides a flexible way to display icons from various iconsets,
- * starting with Phosphor Regular Icons. It supports dynamic sizing, styling,
- * and accessibility features.
+ * ## Registry path (primary)
+ * Icons are registered at any DI scope via `provideInteropIcons()` and
+ * rendered by name. The registry supports Phosphor, Tabler, and any custom
+ * icons adapted via `fromSvg()`.
  *
- * Key features:
- * - Dynamic icon loading from registry
- * - Pixel-based sizing (no units needed)
- * - Customizable stroke width and colors
- * - Built-in accessibility support
- * - SVG-based rendering for scalability
- *
- * @example Basic usage
  * ```html
- * <interop-icon name="user" />
+ * <interop-icon name="ph-copy" [size]="16" />
+ * <interop-icon name="tabler-camera" [size]="24" />
  * ```
  *
- * @example With custom styling
+ * ## Projection path (escape hatch)
+ * When `name` is not provided, InteropIcon renders projected content instead.
+ * Use this to integrate any third-party icon component while still getting
+ * Interop's sizing and accessibility wrapper.
+ *
  * ```html
- * <interop-icon
- *   name="arrow-right"
- *   [size]="32"
- *   [strokeWidth]="2"
- *   color="blue"
- * />
+ * <interop-icon [size]="20" ariaLabel="Settings">
+ *   <i-tabler name="settings" />
+ * </interop-icon>
  * ```
  *
- * @example With accessibility
+ * ## Security note — innerHTML
+ * Icon SVG content is rendered via Angular's `DomSanitizer.bypassSecurityTrustHtml()`.
+ * This is intentional and safe because:
+ *
+ * 1. `svgContent` comes exclusively from developer-provided static imports —
+ *    it is never derived from user input, API responses, or dynamic strings.
+ * 2. Icons enter the registry via explicit `provideInteropIcons(PhCopy, ...)` calls
+ *    written by the application developer. The registry has no dynamic write path.
+ * 3. Even if a consumer somehow passed a crafted string, Angular's sanitizer
+ *    strips `<script>`, event handlers, and `javascript:` URLs regardless.
+ *
+ * `bypassSecurityTrustHtml` is used (rather than `sanitize`) to preserve valid
+ * SVG attributes that Angular's sanitizer may otherwise strip (e.g. `clip-path`,
+ * `mask`, `filter`).
+ *
+ * @example Basic
  * ```html
- * <interop-icon
- *   name="warning"
- *   [decorative]="false"
- *   ariaLabel="Warning: Check your input"
- * />
+ * <interop-icon name="ph-check" [size]="16" />
+ * ```
+ *
+ * @example Non-decorative (accessible)
+ * ```html
+ * <interop-icon name="ph-warning" [decorative]="false" ariaLabel="Warning" />
+ * ```
+ *
+ * @example Stroke weight override
+ * ```html
+ * <!-- Bolder Phosphor icon (default is 16 in 256-unit space) -->
+ * <interop-icon name="ph-copy" [strokeWidth]="24" />
+ * <!-- Lighter Tabler icon (default is 2 in 24-unit space) -->
+ * <interop-icon name="tabler-copy" [strokeWidth]="1.5" />
  * ```
  */
 @Component({
@@ -57,134 +77,102 @@ import { PhosphorIconRegistry } from "../../iconsets/phosphor/helpers/phosphor-i
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropIcon {
-  private elementRef = inject(ElementRef<HTMLElement>);
-  private registry = inject(PhosphorIconRegistry);
+  private readonly _registry = inject(InteropIconRegistry);
+  // DomSanitizer injected by string token to avoid circular import issues.
+  // Safe to cast — Angular always provides this in the browser runtime.
+  private readonly _sanitizer = inject(DomSanitizer);
+  private readonly _el = inject(ElementRef<HTMLElement>);
+
+  // ── Inputs ─────────────────────────────────────────────────────────────────
 
   /**
-   * Icon name to display from the registered iconset.
-   * This should match the name of an icon in the current iconset.
-   *
-   * @example
-   * ```html
-   * <interop-icon name="user" />
-   * <interop-icon name="arrow-left" />
-   * ```
+   * Icon registry key. When provided, the icon is looked up in the registry
+   * and rendered via the SVG path. When absent, projected content is rendered.
    */
-  name = input.required<string>();
+  readonly name = input<string | undefined>(undefined);
+
+  /** Icon size in pixels. Applied to both `width` and `height` of the SVG. */
+  readonly size = input<number>(24);
 
   /**
-   * Icon size in pixels. No unit suffix needed.
-   * Defaults to 24px which is standard for most UI contexts.
+   * Stroke width override in viewBox coordinate units.
+   * When not provided, the icon's own `defaultStrokeWidth` is used.
    *
-   * @example
-   * ```html
-   * <interop-icon name="user" [size]="16" />  <!-- 16px -->
-   * <interop-icon name="user" [size]="32" />  <!-- 32px -->
-   * ```
+   * Units are viewBox-relative: Phosphor icons use a 256×256 space (default 16),
+   * Tabler uses 24×24 (default 2). These values are not directly comparable.
    */
-  size = input<number>(24);
+  readonly strokeWidth = input<number | undefined>(undefined);
+
+  /** Colour override. Accepts any CSS colour value. Defaults to `currentColor`. */
+  readonly color = input<string | undefined>(undefined);
 
   /**
-   * Override stroke width for the icon.
-   * If not provided, uses the icon's default stroke width.
-   * Most Phosphor icons use stroke-width of 1 or 2.
-   *
-   * @example
-   * ```html
-   * <interop-icon name="heart" [strokeWidth]="1.5" />
-   * ```
+   * Whether this icon is purely decorative (`true`) or conveys meaning (`false`).
+   * Decorative icons are hidden from screen readers (`aria-hidden="true"`).
+   * Non-decorative icons require `ariaLabel`.
    */
-  strokeWidth = input<number | undefined>(undefined);
+  readonly decorative = input<boolean>(true);
 
   /**
-   * Icon color. Can be any valid CSS color value.
-   * If not provided, uses 'currentColor' to inherit from parent.
-   *
-   * @example
-   * ```html
-   * <interop-icon name="star" color="gold" />
-   * <interop-icon name="error" color="#ff0000" />
-   * <interop-icon name="success" color="var(--success-color)" />
-   * ```
+   * Accessible label for non-decorative icons.
+   * Ignored when `decorative` is `true`.
    */
-  color = input<string | undefined>(undefined);
+  readonly ariaLabel = input<string | undefined>(undefined);
+
+  // ── Computed ───────────────────────────────────────────────────────────────
+
+  /** Resolved icon definition, or undefined if not found / name not provided. */
+  readonly icon = computed<InteropIconDefinition | undefined>(() => {
+    const n = this.name();
+    return n ? this._registry.get(n) : undefined;
+  });
+
+  /** Whether to render the registry SVG path (vs. projected content). */
+  readonly useRegistry = computed(() => !!this.name());
+
+  /** Pixel size string for width/height attributes. */
+  readonly sizeInPx = computed(() => `${this.size()}px`);
 
   /**
-   * Whether this icon is decorative (purely visual) or semantic.
-   * Decorative icons are hidden from screen readers.
-   * Set to false for icons that convey important information.
-   *
-   * @default true
-   *
-   * @example
-   * ```html
-   * <!-- Decorative icon next to text -->
-   * <interop-icon name="star" [decorative]="true" />
-   * <span>Premium Feature</span>
-   *
-   * <!-- Semantic icon without text -->
-   * <interop-icon name="warning" [decorative]="false" ariaLabel="Warning" />
-   * ```
+   * Effective stroke-width: explicit override → icon default → null.
+   * Applied to the outer `<svg>` so all child elements inherit it.
    */
-  decorative = input<boolean>(true);
+  readonly effectiveStrokeWidth = computed<number | null>(() => {
+    const override = this.strokeWidth();
+    if (override !== undefined) return override;
+    return this.icon()?.defaultStrokeWidth ?? null;
+  });
 
   /**
-   * Accessible label for screen readers.
-   * Required when decorative is false.
-   * Ignored when decorative is true.
+   * Trusted SVG inner content for innerHTML binding.
    *
-   * @example
-   * ```html
-   * <interop-icon
-   *   name="close"
-   *   [decorative]="false"
-   *   ariaLabel="Close dialog"
-   * />
-   * ```
+   * Security rationale: see class-level JSDoc.
    */
-  ariaLabel = input<string | undefined>(undefined);
-
-  /**
-   * Resolved icon definition from the registry.
-   * Returns null if the icon is not found.
-   */
-  icon = computed(() => this.registry.get(this.name()));
-
-  /**
-   * Computed pixel size string for CSS.
-   */
-  sizeInPx = computed(() => `${this.size()}px`);
+  readonly trustedSvgContent = computed<SafeHtml | null>(() => {
+    const icon = this.icon();
+    if (!icon) return null;
+    // Safe: svgContent originates from static developer imports, never user input.
+    return this._sanitizer.bypassSecurityTrustHtml(icon.svgContent);
+  });
 
   constructor() {
-    // Development-time validation
     if (isDevMode()) {
-      // Warn about missing accessibility labels
-      this.validateAccessibility();
+      // Validate accessibility contract
+      const el = this._el.nativeElement;
+      setTimeout(() => {
+        if (!this.decorative() && !this.ariaLabel()) {
+          console.warn(
+            `InteropIcon: Icon "${this.name() ?? "(projected)"}" is marked as non-decorative ` +
+              "but has no [ariaLabel]. Provide an accessible label or set [decorative]=\"true\".",
+          );
+        }
+        if (this.name() && !this.icon()) {
+          console.warn(
+            `InteropIcon: Icon "${this.name()}" was not found in the registry. ` +
+              "Register it via provideInteropIcons() at the app, module, or component level.",
+          );
+        }
+      });
     }
-  }
-
-  private validateAccessibility(): void {
-    // This will run in effect-like context when inputs change
-    setTimeout(() => {
-      const isDecorative = this.decorative();
-      const hasAriaLabel = !!this.ariaLabel();
-      const iconName = this.name();
-
-      if (!isDecorative && !hasAriaLabel) {
-        console.warn(
-          `InteropIcon: Icon "${iconName}" is marked as non-decorative but has no ariaLabel. ` +
-            "Provide an ariaLabel for screen readers or set decorative=true if this icon is purely visual.",
-        );
-      }
-
-      // Warn about missing icons
-      const iconDef = this.icon();
-      if (!iconDef) {
-        console.warn(
-          `InteropIcon: Icon "${iconName}" not found in registry. ` +
-            "Make sure the icon is imported and registered with PhosphorIconRegistry.",
-        );
-      }
-    });
   }
 }

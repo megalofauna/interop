@@ -7,6 +7,7 @@ export * from "./interop-collection.service";
 export * from "./interop-activation.service";
 export * from "./interop-activation.builder";
 export * from "./interop-attribute.service";
+export * from "./interop-announcer.service";
 
 // Mini-barrel namespace exports
 export * as InteropServices from "./services-only";

@@ -1,0 +1,14 @@
+<!--
+  The <nav> wraps only the step indicator list and carries the consumer-provided
+  aria-label. The panels are projected into the default slot outside the nav so
+  they are not inside the navigation landmark.
+
+  Multi-slot content projection:
+  - ol[interop-step-list] → placed inside <nav>
+  - everything else (section[interop-step-panel], nav buttons, etc.) → default slot
+-->
+<nav class="interop-stepper__nav" [attr.aria-label]="ariaLabel()">
+  <ng-content select="ol[interop-step-list]" />
+</nav>
+
+<ng-content />

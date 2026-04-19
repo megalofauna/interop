@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerNavigationX: InteropIconDefinition = {
+  name: "tabler-navigation-x",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M16.622 13.02l-4.622 -10.02l-7.97 17.275c-.07 .2 -.017 .424 .135 .572c.15 .148 .374 .193 .57 .116l7.265 -2.463l1.563 .53\" /> <path d=\"M22 22l-5 -5\" /> <path d=\"M17 22l5 -5\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

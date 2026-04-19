@@ -1,0 +1,114 @@
+/*
+ * InteropScrollArea
+ *
+ * Scroll container with overflow-aware accessibility (auto tabindex/role)
+ * and proportional scroll shadows via CSS mask-image.
+ *
+ * Shadow intensity is driven by --_shadow-* custom properties (0–1), set
+ * imperatively by the component's RAF-throttled scroll handler. CSS does
+ * all visual work — no layout thrash, no paint from JS.
+ *
+ * Token surface (all optional — defaults apply when not set):
+ *   --itx-scroll-area-shadow-size        fade depth          (default: 1.5rem)
+ *   --itx-scroll-area-scrollbar-width    scrollbar-width     (default: thin)
+ *   --itx-scroll-area-scrollbar-color    scrollbar-color     (default: auto)
+ *   --itx-scroll-area-overscroll         overscroll-behavior (default: contain)
+ */
+
+:host {
+	display: block;
+	position: relative;
+
+	scrollbar-width: var(--itx-scroll-area-scrollbar-width, thin);
+	scrollbar-color: var(--itx-scroll-area-scrollbar-color, auto);
+	overscroll-behavior: var(--itx-scroll-area-overscroll, contain);
+}
+
+/* ── Orientation ─────────────────────────────────────────────────────────── */
+
+:host([data-orientation="vertical"]) {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+:host([data-orientation="horizontal"]) {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+:host([data-orientation="both"]) {
+	overflow: auto;
+}
+
+/* ── Scroll shadows (mask-image) ─────────────────────────────────────────
+ *
+ * Applied only when content overflows AND shadows are enabled.
+ * --_shadow-top/bottom/start/end are 0 (at edge) to 1 (fully away from edge).
+ * When a value is 0, the gradient stop collapses to 0px — no fade at that edge.
+ *
+ * The mask fades content to transparent at edges where more content exists,
+ * adapting automatically to any background.
+ */
+
+:host([data-overflowing][data-shadows]) {
+	--_shadow-size: var(--itx-scroll-area-shadow-size, 1.5rem);
+	--_shadow-top: 0;
+	--_shadow-bottom: 0;
+	--_shadow-start: 0;
+	--_shadow-end: 0;
+}
+
+:host([data-overflowing][data-shadows][data-orientation="vertical"]) {
+	mask-image: linear-gradient(
+		to bottom,
+		transparent,
+		black calc(var(--_shadow-top) * var(--_shadow-size)),
+		black calc(100% - var(--_shadow-bottom) * var(--_shadow-size)),
+		transparent
+	);
+}
+
+:host([data-overflowing][data-shadows][data-orientation="horizontal"]) {
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		black calc(var(--_shadow-start) * var(--_shadow-size)),
+		black calc(100% - var(--_shadow-end) * var(--_shadow-size)),
+		transparent
+	);
+}
+
+:host([data-overflowing][data-shadows][data-orientation="both"]) {
+	mask-image:
+		linear-gradient(
+			to bottom,
+			transparent,
+			black calc(var(--_shadow-top) * var(--_shadow-size)),
+			black calc(100% - var(--_shadow-bottom) * var(--_shadow-size)),
+			transparent
+		),
+		linear-gradient(
+			to right,
+			transparent,
+			black calc(var(--_shadow-start) * var(--_shadow-size)),
+			black calc(100% - var(--_shadow-end) * var(--_shadow-size)),
+			transparent
+		);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* ── Focus ring ──────────────────────────────────────────────────────────── */
+
+:host(:focus-visible) {
+	outline: 2px solid var(--itx-focus, #3b82f6);
+	outline-offset: 2px;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:host {
+		scroll-behavior: auto !important;
+	}
+}

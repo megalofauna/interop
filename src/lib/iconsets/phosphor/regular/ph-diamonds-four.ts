@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhDiamondsFour: InteropIconDefinition = {
+  name: "ph-diamonds-four",
+  viewBox: "0 0 256 256",
+  svgContent: "<rect x=\"99.72\" y=\"35.72\" width=\"56.57\" height=\"56.57\" transform=\"translate(-7.76 109.25) rotate(-45)\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"99.72\" y=\"163.72\" width=\"56.57\" height=\"56.57\" transform=\"translate(-98.27 146.75) rotate(-45)\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"163.72\" y=\"99.72\" width=\"56.57\" height=\"56.57\" transform=\"translate(-34.27 173.25) rotate(-45)\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"35.72\" y=\"99.72\" width=\"56.57\" height=\"56.57\" transform=\"translate(-71.76 82.75) rotate(-45)\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  defaultStrokeWidth: 16,
+} as const;

@@ -1,0 +1,26 @@
+@if (isDeclarativeMode()) {
+  @for (control of controls(); track control.value; let i = $index) {
+    <li
+      [id]="optionId(i)"
+      role="option"
+      class="interop-option"
+      [class.interop-option--active]="isActiveValue(control.value)"
+      [class.interop-option--selected]="isSelected(control.value)"
+      [class.interop-option--disabled]="control.disabled"
+      [attr.aria-selected]="isSelected(control.value)"
+      [attr.aria-disabled]="control.disabled || null"
+      (click)="selectValue(control.value)"
+      (mouseenter)="setActiveValue(control.value)"
+    >
+      @if (control.icon) {
+        <span class="interop-option__icon" aria-hidden="true">{{ control.icon }}</span>
+      }
+      <span class="interop-option__label">{{ control.label }}</span>
+      @if (control.description) {
+        <span class="interop-option__description">{{ control.description }}</span>
+      }
+    </li>
+  }
+} @else {
+  <ng-content />
+}

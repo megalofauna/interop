@@ -1,90 +1,30 @@
-<header [meta]="meta" dtx-site-header></header>
+<header class="shell__header">
+	<button
+		class="shell__menu-btn"
+		(click)="toggleNav()"
+		aria-label="Toggle navigation"
+	>
+		<svg
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+		>
+			<line x1="3" y1="6" x2="21" y2="6" />
+			<line x1="3" y1="12" x2="21" y2="12" />
+			<line x1="3" y1="18" x2="21" y2="18" />
+		</svg>
+	</button>
+	<span class="shell__title">Interop</span>
+	<demo-theme-toggle />
+</header>
 
-<main>
-	<router-outlet></router-outlet>
-
-	<section class="demo-section" aria-labelledby="code-block-demo-heading">
-		<header class="demo-section__header">
-			<h2 id="code-block-demo-heading" class="demo-section__title">
-				Code block
-			</h2>
-			<p class="demo-section__subtitle">
-				Accessible, composable code blocks. Hover to reveal actions.
-			</p>
-		</header>
-
-		<!-- ── 1. Language label — projected content ──────────────────────────── -->
-		<div class="demo-group">
-			<p class="demo-group__label">
-				Language label · projected <code>&lt;pre&gt;&lt;code&gt;</code>
-			</p>
-			<figure interop-code-block language="typescript">
-				<pre><code>const greeting = 'Hello, Interop!';</code></pre>
-			</figure>
-		</div>
-
-		<!-- ── 2. Filename header ─────────────────────────────────────────────── -->
-		<div class="demo-group">
-			<p class="demo-group__label">
-				Filename header · filename takes precedence over language label
-			</p>
-			<figure
-				interop-code-block
-				[lineNumbers]="true"
-				filename="interop-button.ts"
-				language="typescript"
-			>
-				<pre><code>{{ demoFilenameCode }}</code></pre>
-			</figure>
-		</div>
-
-		<!-- ── 3. Pre-tokenized TypeScript — syntax highlighting + line numbers ─ -->
-		<div class="demo-group">
-			<p class="demo-group__label">
-				Pre-tokenized · syntax highlighting · line numbers
-			</p>
-			<figure
-				interop-code-block
-				language="typescript"
-				[lineNumbers]="true"
-				[tokens]="tsTokens()"
-			></figure>
-		</div>
-
-		<!-- ── 4. Pre-tokenized JavaScript — same snippet, no type annotations ── -->
-		<div class="demo-group">
-			<p class="demo-group__label">
-				Pre-tokenized · JavaScript · note the absent type parameters
-			</p>
-			<figure interop-code-block language="js" [tokens]="jsTokens()"></figure>
-		</div>
-
-		<!-- ── 5. Word wrap toggle ────────────────────────────────────────────── -->
-		<div class="demo-group">
-			<p class="demo-group__label">
-				Word wrap toggle · try the wrap button in the header
-			</p>
-			<figure
-				interop-code-block
-				language="json"
-				[wrapToggle]="true"
-				[tokens]="demoWrapTokens()"
-			></figure>
-		</div>
-
-		<!-- ── 6. Language canonicalization showcase ──────────────────────────── -->
-		<div class="demo-group demo-group--row">
-			<p class="demo-group__label demo-group__label--full">
-				Language canonicalization · short aliases resolve to display names
-			</p>
-			@for (lang of ['ts', 'js', 'py', 'rs', 'bash', 'scss', 'yaml', 'gql'];
-			track lang) {
-			<figure interop-code-block [language]="lang">
-				<pre><code># {{ lang }}</code></pre>
-			</figure>
-			}
-		</div>
-	</section>
-</main>
-
-<footer dtx-site-footer></footer>
+<div class="shell__body">
+	<demo-nav [open]="navOpen()" (closed)="navOpen.set(false)" />
+	<main class="shell__content">
+		<router-outlet />
+	</main>
+</div>

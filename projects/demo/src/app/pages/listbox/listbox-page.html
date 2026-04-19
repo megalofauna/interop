@@ -1,0 +1,74 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Listbox</h1>
+		<p class="demo-page__lead">
+			Accessible selection primitive with keyboard navigation, single and multi-select,
+			and Angular Forms integration. Declarative or content-projection modes.
+		</p>
+	</header>
+
+	<!-- ── Single select ─────────────────────────────────────────────────── -->
+	<demo-section id="single" heading="Single select">
+		<demo-example label="Declarative">
+			<ul interop-listbox
+				aria-label="Docking bay"
+				[controls]="dockingBays"
+				[(value)]="selectedBay"
+				style="max-width: 22rem;">
+			</ul>
+			<demo-state>
+				<demo-state-item label="Bay">{{ selectedBay() }}</demo-state-item>
+			</demo-state>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Multi select ──────────────────────────────────────────────────── -->
+	<demo-section id="multi" heading="Multi select">
+		<demo-example label="Declarative multi-select">
+			<ul interop-listbox
+				aria-label="Crew manifest"
+				[controls]="crewRoles"
+				[multiselectable]="true"
+				[(value)]="selectedRoles"
+				style="max-width: 22rem;">
+			</ul>
+			<demo-state>
+				<demo-state-item label="Roles">{{ selectedRoles() | json }}</demo-state-item>
+			</demo-state>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

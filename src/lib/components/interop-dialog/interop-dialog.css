@@ -1,0 +1,107 @@
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ * Sizing
+ *   --itx-dialog-width              Width (default: min(90vw, 32rem))
+ *   --itx-dialog-max-height         Max height (default: 85dvh)
+ *   --itx-dialog-padding            Internal padding (default: var(--itx-spacing-8))
+ *
+ * Appearance
+ *   --itx-dialog-background         Background color (default: var(--itx-surface-above))
+ *   --itx-dialog-foreground         Text color (default: var(--itx-on-surface))
+ *   --itx-dialog-border-radius      Border radius (default: var(--itx-radius-md))
+ *   --itx-dialog-border-width       Border width (default: 0)
+ *   --itx-dialog-border-color       Border color (default: var(--itx-border))
+ *   --itx-dialog-shadow             Box shadow (default: 0 8px 32px rgba(0 0 0 / 0.18))
+ *
+ * Backdrop
+ *   --itx-dialog-backdrop-color     Backdrop background (default: rgba(0 0 0 / 0.5))
+ *   --itx-dialog-backdrop-blur      Backdrop blur (default: 0px)
+ *
+ * Animation
+ *   --itx-dialog-enter-duration     Enter duration (default: var(--itx-duration-base))
+ *   --itx-dialog-exit-duration      Exit duration (default: var(--itx-duration-fast))
+ *   --itx-dialog-enter-easing       Enter easing (default: var(--itx-easing-decelerate))
+ *   --itx-dialog-exit-easing        Exit easing (default: var(--itx-easing-accelerate))
+ */
+
+:host {
+  width: var(--itx-dialog-width, min(90vw, 32rem));
+  max-height: var(--itx-dialog-max-height, 85dvh);
+  padding: var(--itx-dialog-padding, var(--itx-spacing-8));
+  border: var(--itx-dialog-border-width, 0) solid var(--itx-dialog-border-color, var(--itx-border));
+  border-radius: var(--itx-dialog-border-radius, var(--itx-radius-md));
+  background: var(--itx-dialog-background, var(--itx-surface-above));
+  color: var(--itx-dialog-foreground, var(--itx-on-surface));
+  box-shadow: var(--itx-dialog-shadow, 0 8px 32px rgba(0 0 0 / 0.18));
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @supports (transition-behavior: allow-discrete) {
+    transition:
+      opacity var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate)),
+      translate var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate)),
+      overlay var(--itx-dialog-enter-duration, var(--itx-duration-base)) allow-discrete,
+      display var(--itx-dialog-enter-duration, var(--itx-duration-base)) allow-discrete;
+  }
+
+  @supports not (transition-behavior: allow-discrete) {
+    transition:
+      opacity var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate)),
+      translate var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate));
+  }
+
+  opacity: 1;
+  translate: 0 0;
+}
+
+@starting-style {
+  :host[open] {
+    opacity: 0;
+    translate: 0 -0.75rem;
+  }
+}
+
+:host:not([open]) {
+  opacity: 0;
+  translate: 0 0.25rem;
+
+  @supports (transition-behavior: allow-discrete) {
+    transition:
+      opacity var(--itx-dialog-exit-duration, var(--itx-duration-fast)) var(--itx-dialog-exit-easing, var(--itx-easing-accelerate)),
+      translate var(--itx-dialog-exit-duration, var(--itx-duration-fast)) var(--itx-dialog-exit-easing, var(--itx-easing-accelerate)),
+      overlay var(--itx-dialog-exit-duration, var(--itx-duration-fast)) allow-discrete,
+      display var(--itx-dialog-exit-duration, var(--itx-duration-fast)) allow-discrete;
+  }
+
+  @supports not (transition-behavior: allow-discrete) {
+    transition:
+      opacity var(--itx-dialog-exit-duration, var(--itx-duration-fast)) var(--itx-dialog-exit-easing, var(--itx-easing-accelerate)),
+      translate var(--itx-dialog-exit-duration, var(--itx-duration-fast)) var(--itx-dialog-exit-easing, var(--itx-easing-accelerate));
+  }
+}
+
+:host::backdrop {
+  background: var(--itx-dialog-backdrop-color, rgba(0 0 0 / 0.5));
+  backdrop-filter: blur(var(--itx-dialog-backdrop-blur, 0px));
+
+  @supports (transition-behavior: allow-discrete) {
+    transition:
+      background var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate)),
+      backdrop-filter var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate)),
+      overlay var(--itx-dialog-enter-duration, var(--itx-duration-base)) allow-discrete,
+      display var(--itx-dialog-enter-duration, var(--itx-duration-base)) allow-discrete;
+  }
+
+  @supports not (transition-behavior: allow-discrete) {
+    transition:
+      background var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate)),
+      backdrop-filter var(--itx-dialog-enter-duration, var(--itx-duration-base)) var(--itx-dialog-enter-easing, var(--itx-easing-decelerate));
+  }
+}
+
+@starting-style {
+  :host[open]::backdrop {
+    background: transparent;
+  }
+}

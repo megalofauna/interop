@@ -1,0 +1,20 @@
+:host {
+	display: flex;
+	flex-direction: column;
+	min-width: 200px;
+	padding: var(--itx-spacing-4);
+	background: var(--itx-surface-below);
+	border: 2px solid var(--itx-deboss-4);
+	border-radius: var(--itx-radius-md);
+	font-size: var(--itx-font-size-caption);
+	align-self: flex-start;
+}
+
+.demo-state__title {
+	margin: 0 0 var(--itx-spacing-3) 0;
+	font-size: var(--itx-font-size-fine-print);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--itx-muted);
+}

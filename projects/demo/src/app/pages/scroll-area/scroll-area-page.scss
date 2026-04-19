@@ -1,0 +1,19 @@
+.scroll-area-page__log-row {
+	display: flex;
+	gap: var(--itx-spacing-4);
+	align-items: baseline;
+	padding: var(--itx-spacing-2) var(--itx-spacing-4);
+	border-bottom: 1px solid var(--itx-border);
+	font-size: var(--itx-font-size-body);
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.scroll-area-page__log-time {
+	flex-shrink: 0;
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	color: var(--itx-muted);
+}

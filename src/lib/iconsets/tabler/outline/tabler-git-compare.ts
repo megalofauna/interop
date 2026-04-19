@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerGitCompare: InteropIconDefinition = {
+  name: "tabler-git-compare",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0\" /> <path d=\"M16 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0\" /> <path d=\"M11 6h5a2 2 0 0 1 2 2v8\" /> <path d=\"M14 9l-3 -3l3 -3\" /> <path d=\"M13 18h-5a2 2 0 0 1 -2 -2v-8\" /> <path d=\"M10 15l3 3l-3 3\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

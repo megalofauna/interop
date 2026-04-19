@@ -1,0 +1,51 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Table</h1>
+		<p class="demo-page__lead">
+			Semantic table for structured data. Column definitions drive header and
+			cell rendering; custom cell templates allow arbitrary markup per column.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Basic">
+			<table interop-table [collection]="cargoManifest" [columns]="columns"></table>
+		</demo-example>
+
+		<demo-example label="Custom cell templates">
+			<table interop-table [collection]="cargoManifest" [columns]="columns">
+				<ng-template itxCell="id" let-entry>
+					<code class="demo-page__api-name">{{ entry.id }}</code>
+				</ng-template>
+				<ng-template itxCell="status" let-entry>
+					<span [class]="'table-page__status table-page__status--' + entry.status">
+						{{ entry.status }}
+					</span>
+				</ng-template>
+			</table>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

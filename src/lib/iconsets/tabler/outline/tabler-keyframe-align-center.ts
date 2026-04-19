@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerKeyframeAlignCenter: InteropIconDefinition = {
+  name: "tabler-keyframe-align-center",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20v2\" /> <path d=\"M12.816 16.58c-.207 .267 -.504 .42 -.816 .42c-.312 0 -.61 -.153 -.816 -.42l-2.908 -3.748a1.39 1.39 0 0 1 0 -1.664l2.908 -3.748c.207 -.267 .504 -.42 .816 -.42c.312 0 .61 .153 .816 .42l2.908 3.748a1.39 1.39 0 0 1 0 1.664l-2.908 3.748\" /> <path d=\"M12 2v2\" /> <path d=\"M3 12h2\" /> <path d=\"M19 12h2\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerCandle: InteropIconDefinition = {
+  name: "tabler-candle",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 21h6v-10a1 1 0 0 0 -1 -1h-4a1 1 0 0 0 -1 1l0 10\" /> <path d=\"M12 2l1.465 1.638a2 2 0 1 1 -3.015 .099l1.55 -1.737\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

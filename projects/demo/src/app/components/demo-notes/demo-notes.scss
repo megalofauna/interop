@@ -1,0 +1,113 @@
+:host {
+	display: block;
+}
+
+.demo-notes__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-1);
+}
+
+.demo-notes__item {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-spacing-3);
+	padding: var(--itx-spacing-3) var(--itx-spacing-4);
+	border-radius: var(--itx-radius-sm);
+	background: var(--itx-surface-above);
+
+	&[data-type="release"] {
+		--_icon-color: var(--itx-success);
+
+		.demo-notes__type {
+			color: var(--itx-success);
+			background: var(--itx-success-surface);
+		}
+	}
+
+	&[data-type="bugfix"] {
+		--_icon-color: var(--itx-info);
+
+		.demo-notes__type {
+			color: var(--itx-info);
+			background: var(--itx-info-surface);
+		}
+	}
+
+	&[data-type="breaking"] {
+		--_icon-color: var(--itx-danger);
+
+		.demo-notes__type {
+			color: var(--itx-danger);
+			background: var(--itx-danger-surface);
+		}
+	}
+
+	&[data-type="deprecated"] {
+		--_icon-color: var(--itx-warning);
+
+		.demo-notes__type {
+			color: var(--itx-warning);
+			background: var(--itx-warning-surface);
+		}
+	}
+
+	&[data-type="note"] {
+		--_icon-color: var(--itx-muted);
+
+		.demo-notes__type {
+			color: var(--itx-muted);
+			background: var(--itx-surface-raised);
+		}
+	}
+}
+
+.demo-notes__icon {
+	flex-shrink: 0;
+	margin-top: 2px;
+	color: var(--_icon-color, var(--itx-muted));
+}
+
+.demo-notes__content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-1);
+	min-width: 0;
+}
+
+.demo-notes__meta {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+}
+
+.demo-notes__type {
+	font-size: var(--itx-font-size-fine-print);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	padding: 1px var(--itx-spacing-2);
+	border-radius: var(--itx-radius-pill);
+}
+
+.demo-notes__label {
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	color: var(--itx-muted);
+}
+
+.demo-notes__title {
+	font-size: var(--itx-font-size-label);
+	font-weight: 600;
+	color: var(--itx-on-surface);
+}
+
+.demo-notes__body {
+	margin: 0;
+	font-size: var(--itx-font-size-body);
+	color: var(--itx-muted);
+	line-height: 1.5;
+}

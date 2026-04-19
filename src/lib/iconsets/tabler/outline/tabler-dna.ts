@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerDna: InteropIconDefinition = {
+  name: "tabler-dna",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656\" /> <path d=\"M9.172 20.485a4 4 0 1 0 -5.657 -5.657\" /> <path d=\"M14.828 3.515a4 4 0 0 0 5.657 5.657\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

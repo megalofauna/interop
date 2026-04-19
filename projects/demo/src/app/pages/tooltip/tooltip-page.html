@@ -1,0 +1,79 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Tooltip</h1>
+		<p class="demo-page__lead">
+			WCAG 1.4.13-compliant tooltip. Shows on hover and focus, dismissible via
+			Escape, and hoverable without closing. Top-layer via
+			<code>popover="manual"</code> — no z-index or overflow issues.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="String label">
+			<interop-tooltip label="Initiate emergency burn sequence">
+				<button interop-button>Emergency burn</button>
+			</interop-tooltip>
+		</demo-example>
+
+		<demo-example label="Rich content">
+			<interop-tooltip>
+				<button interop-button>Save manifest</button>
+				<ng-template interopTooltipContent>
+					Save manifest &nbsp;<kbd interop-kbd>Ctrl</kbd>+<kbd interop-kbd>S</kbd>
+				</ng-template>
+			</interop-tooltip>
+		</demo-example>
+
+		<demo-example label="Placements">
+			<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: center; padding: 2rem;">
+				<interop-tooltip label="Top" placement="top">
+					<button interop-button>Top</button>
+				</interop-tooltip>
+				<interop-tooltip label="Bottom" placement="bottom">
+					<button interop-button>Bottom</button>
+				</interop-tooltip>
+				<interop-tooltip label="Left" placement="left">
+					<button interop-button>Left</button>
+				</interop-tooltip>
+				<interop-tooltip label="Right" placement="right">
+					<button interop-button>Right</button>
+				</interop-tooltip>
+			</div>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

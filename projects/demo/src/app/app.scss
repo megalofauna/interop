@@ -1,123 +1,96 @@
-@use "lib/tokens/raw" as raw;
-
-// ── App shell ───────────────────────────────────────────────────────────────
-
-main {
+:host {
 	display: flex;
 	flex-direction: column;
+	min-height: 100vh;
+	font-family:
+		"Figtree",
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		sans-serif;
 }
 
-// ── Demo section layout ─────────────────────────────────────────────────────
+// ── Header ──────────────────────────────────────────────────────────────────
 
-.demo-section {
-	padding: 3rem 2rem;
-	max-width: 56rem;
+.shell__header {
+	position: sticky;
+	inset: 0 auto auto auto;
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-4);
+	padding: var(--itx-spacing-2) var(--itx-spacing-4);
+	border-bottom: 1px solid var(--itx-border);
+	background-color: rgb(255 255 255 / 0.05);
+	backdrop-filter: blur(12px);
+}
+
+.shell__menu-btn {
+	display: none;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--itx-on-surface);
+	padding: var(--itx-spacing-1);
+	border-radius: var(--itx-radius-sm);
+
+	&:hover {
+		background: var(--itx-surface-hover);
+	}
+}
+
+.shell__title {
+	font-weight: 700;
+	font-size: 1.125rem;
+	color: var(--itx-on-surface);
+	margin-right: auto;
+}
+
+// ── Body (sidebar + main) ───────────────────────────────────────────────────
+
+.shell__body {
+	display: flex;
+	flex: 1;
+	overflow: hidden;
+}
+
+// ── Content ─────────────────────────────────────────────────────────────────
+
+.shell__content {
+	flex: 1;
+	min-width: 0;
+	overflow-y: auto;
+	max-width: 60rem;
 	margin-inline: auto;
+	padding: var(--itx-spacing-8) var(--itx-spacing-10);
 	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 2.5rem;
-	box-sizing: border-box;
 }
 
-.demo-section__header {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-}
+// ── Mobile ──────────────────────────────────────────────────────────────────
 
-.demo-section__title {
-	margin: 0;
-	font-size: 1.5rem;
-	font-weight: 600;
-	letter-spacing: -0.02em;
-}
-
-.demo-section__subtitle {
-	margin: 0;
-	font-size: 0.875rem;
-	opacity: 0.6;
-}
-
-.demo-group {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-
-	&--row {
-		flex-direction: row;
-		flex-wrap: wrap;
-		align-items: flex-start;
-		gap: 0.5rem;
+@media (max-width: 59.999em) {
+	.shell__menu-btn {
+		display: inline-flex;
 	}
 }
 
-.demo-group__label {
-	margin: 0;
-	font-size: 0.75rem;
-	opacity: 0.5;
-	letter-spacing: 0.02em;
+// ── Code block theming (Catppuccin Mocha) ───────────────────────────────────
 
+itx-code-block {
+	background: oklch(0.2 0.02 280);
+	color: oklch(0.88 0.02 280);
+}
+
+figure[interop-code-renderer] {
+	--itx-cr-body-bg: oklch(0.22 0.02 280);
+	--itx-cr-body-padding-block: 1.25rem;
+	--itx-cr-code-color: oklch(0.88 0.02 280);
+	--itx-cr-code-font-size: 0.8125rem;
+
+	pre,
 	code {
-		font-family: ui-monospace, monospace;
-		font-size: inherit;
-	}
-
-	&--full {
-		flex-basis: 100%;
-	}
-}
-
-// ── InteropCodeBlock theming ────────────────────────────────────────────────
-// Override the transparent defaults with a dark Catppuccin-Mocha surface.
-// Not scoped with :where() so these overrides win over the :where() defaults.
-
-figure[interop-code-block] {
-	// Shape
-	--itx-code-block-border-radius: 0.5rem;
-
-	// Header
-	--itx-code-block-header-background: #181825;
-	--itx-code-block-header-padding-block: 0.5rem;
-	--itx-code-block-header-padding-inline: 1rem;
-	--itx-code-block-header-border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-
-	// Label
-	--itx-code-block-label-color: rgba(205, 214, 244, 0.45);
-	--itx-code-block-label-font-size: 0.7rem;
-	--itx-code-block-label-letter-spacing: 0.08em;
-
-	// Action buttons
-	--itx-code-block-action-btn-color: rgba(205, 214, 244, 0.35);
-	--itx-code-block-copy-copied-color: #a6e3a1;  // Catppuccin green
-	--itx-code-block-wrap-active-color: #89b4fa;  // Catppuccin blue
-	--itx-code-block-action-btn-focus-outline: 2px solid rgba(205, 214, 244, 0.4);
-
-	// Code body
-	--itx-code-block-body-background: #1e1e2e;
-	--itx-code-block-body-padding-block: 1.25rem;
-
-	// Code text
-	--itx-code-block-code-color: #cdd6f4;
-	--itx-code-block-code-font-size: 0.8125rem;
-
-	// Line numbers
-	--itx-code-block-line-number-color: rgba(205, 214, 244, 0.2);
-	--itx-code-block-line-number-opacity: 1;
-
-	// Projected <pre>/<code> inherits the code color from the body
-	pre, code {
-		color: var(--itx-code-block-code-color);
+		color: var(--itx-cr-code-color);
 		background: transparent;
 	}
-}
-
-// Canonicalization row — compact badge-style blocks
-.demo-group--row figure[interop-code-block] {
-	flex: 1;
-	min-width: 5rem;
-
-	--itx-code-block-body-padding-block: 0.5rem;
-	--itx-code-block-body-padding-inline: 0.75rem;
-	--itx-code-block-code-font-size: 0.6875rem;
 }

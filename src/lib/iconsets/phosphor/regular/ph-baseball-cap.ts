@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhBaseballCap: InteropIconDefinition = {
+  name: "ph-baseball-cap",
+  viewBox: "0 0 256 256",
+  svgContent: "<path d=\"M32,128a96,96,0,0,1,192,0v56a16,16,0,0,1-25.48,12.88C182.53,185.26,159,176,128,176s-54.53,9.26-70.52,20.88A16,16,0,0,1,32,184Z\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M32,152a160,160,0,0,1,192,0\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M88.4,124.94C92.57,67.43,128,32,128,32s35.43,35.43,39.6,92.94\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  defaultStrokeWidth: 16,
+} as const;

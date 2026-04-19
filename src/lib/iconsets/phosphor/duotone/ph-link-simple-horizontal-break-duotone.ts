@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhLinkSimpleHorizontalBreakDuotone: InteropIconDefinition = {
+  name: "ph-link-simple-horizontal-break-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><rect x=\"16\" y=\"80\" width=\"224\" height=\"96\" rx=\"48\" opacity=\"0.2\"/><path d=\"M104,176H64a48,48,0,0,1,0-96h40\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M152,80h40a48,48,0,0,1,48,48h0a48,48,0,0,1-48,48H152\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

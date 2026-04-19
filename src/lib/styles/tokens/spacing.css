@@ -1,0 +1,49 @@
+/*
+ * Spacing — multiplier-based spacing scale.
+ *
+ * Named after the multiplier: --itx-spacing-4 = 4 × unit = 1rem.
+ * Built from a single base unit so every gap, padding, and margin stays
+ * proportional. Override --itx-spacing-unit to rescale the entire system.
+ *
+ * All tokens are scoped to [interop-root] at zero specificity via :where().
+ */
+
+:where([interop-root]) {
+	--itx-spacing-unit: 0.25rem;
+	--itx-spacing-0: 0px; /*  0rem       0px */
+	--itx-spacing-px: 1px; /*  —          1px */
+	--itx-spacing-0_5: calc(var(--itx-spacing-unit) * 0.5); /*  0.125rem   2px */
+	--itx-spacing-1: var(--itx-spacing-unit); /*  0.25rem    4px */
+	--itx-spacing-1_5: calc(var(--itx-spacing-unit) * 1.5); /*  0.375rem   6px */
+	--itx-spacing-2: calc(var(--itx-spacing-unit) * 2); /*  0.5rem     8px */
+	--itx-spacing-2_5: calc(var(--itx-spacing-unit) * 2.5); /*  0.625rem  10px */
+	--itx-spacing-3: calc(var(--itx-spacing-unit) * 3); /*  0.75rem   12px */
+	--itx-spacing-3_5: calc(var(--itx-spacing-unit) * 3.5); /*  0.875rem  14px */
+	--itx-spacing-4: calc(var(--itx-spacing-unit) * 4); /*  1rem      16px */
+	--itx-spacing-5: calc(var(--itx-spacing-unit) * 5); /*  1.25rem   20px */
+	--itx-spacing-6: calc(var(--itx-spacing-unit) * 6); /*  1.5rem    24px */
+	--itx-spacing-7: calc(var(--itx-spacing-unit) * 7); /*  1.75rem   28px */
+	--itx-spacing-8: calc(var(--itx-spacing-unit) * 8); /*  2rem      32px */
+	--itx-spacing-9: calc(var(--itx-spacing-unit) * 9); /*  2.25rem   36px */
+	--itx-spacing-10: calc(var(--itx-spacing-unit) * 10); /*  2.5rem    40px */
+	--itx-spacing-11: calc(var(--itx-spacing-unit) * 11); /*  2.75rem   44px */
+	--itx-spacing-12: calc(var(--itx-spacing-unit) * 12); /*  3rem      48px */
+	--itx-spacing-14: calc(var(--itx-spacing-unit) * 14); /*  3.5rem    56px */
+	--itx-spacing-16: calc(var(--itx-spacing-unit) * 16); /*  4rem      64px */
+	--itx-spacing-18: calc(var(--itx-spacing-unit) * 18); /*  4.5rem    72px */
+	--itx-spacing-20: calc(var(--itx-spacing-unit) * 20); /*  5rem      80px */
+	--itx-spacing-24: calc(var(--itx-spacing-unit) * 24); /*  6rem      96px */
+	--itx-spacing-28: calc(var(--itx-spacing-unit) * 28); /*  7rem     112px */
+	--itx-spacing-32: calc(var(--itx-spacing-unit) * 32); /*  8rem     128px */
+	--itx-spacing-36: calc(var(--itx-spacing-unit) * 36); /*  9rem     144px */
+	--itx-spacing-40: calc(var(--itx-spacing-unit) * 40); /* 10rem     160px */
+	--itx-spacing-44: calc(var(--itx-spacing-unit) * 44); /* 11rem     176px */
+	--itx-spacing-48: calc(var(--itx-spacing-unit) * 48); /* 12rem     192px */
+	--itx-spacing-52: calc(var(--itx-spacing-unit) * 52); /* 13rem     208px */
+	--itx-spacing-56: calc(var(--itx-spacing-unit) * 56); /* 14rem     224px */
+	--itx-spacing-60: calc(var(--itx-spacing-unit) * 60); /* 15rem     240px */
+	--itx-spacing-64: calc(var(--itx-spacing-unit) * 64); /* 16rem     256px */
+	--itx-spacing-72: calc(var(--itx-spacing-unit) * 72); /* 18rem     288px */
+	--itx-spacing-80: calc(var(--itx-spacing-unit) * 80); /* 20rem     320px */
+	--itx-spacing-96: calc(var(--itx-spacing-unit) * 96); /* 24rem     384px */
+}

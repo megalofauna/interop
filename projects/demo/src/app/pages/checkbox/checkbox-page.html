@@ -1,0 +1,108 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Checkbox</h1>
+		<p class="demo-page__lead">
+			Enhanced checkbox control with declarative indeterminate state. Wraps a
+			native input inside a semantic label element.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Barebones checkbox">
+			<label interop-checkbox id="barebones-demo"> All you need </label>
+			<itx-code-block
+				language="html"
+				[tokens]="bareboniestTokens.value() ?? null"
+			>
+				<pre><code [textContent]="bareboniestCheckbox"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Basic checkbox">
+			<label
+				style="max-width: 300px"
+				interop-checkbox
+				id="basic-demo"
+				[checked]="basicChecked()"
+				(checkedChange)="basicChecked.set($event)"
+			>
+				Accept terms and conditions if you know what's good for you
+			</label>
+			<itx-code-block language="html" [tokens]="basicTokens.value() ?? null">
+				<pre><code [textContent]="basicCheckboxCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Disabled (checked)">
+			<label
+				interop-checkbox
+				id="disabled-demo"
+				[checked]="disabledChecked()"
+				[disabled]="true"
+			>
+				This option is locked
+			</label>
+			<itx-code-block language="html" [tokens]="disabledTokens.value() ?? null">
+				<pre><code [textContent]="disabledCheckboxCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Checkbox Group ─────────────────────────────────────────────────── -->
+	<demo-section id="group" heading="Checkbox Group">
+		<interop-callout type="info">
+			The group component supports declarative rendering from an array,
+			select-all with automatic indeterminate state, and Angular Forms
+			integration via ControlValueAccessor.
+		</interop-callout>
+
+		<demo-example label="Declarative group with select-all">
+			<interop-checkbox-rig
+				[options]="requisitionItems"
+				[legend]="'Requisition order'"
+				[selectAll]="true"
+				[selectAllLabel]="'All items'"
+				[(value)]="selectedItems"
+			/>
+			<code class="demo-page__output">{{ selectedItems() | json }}</code>
+			<itx-code-block [files]="groupFiles()" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API: Inputs ────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) {
+				<span class="demo-page__required">*</span>
+				}
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── API: Outputs ───────────────────────────────────────────────────── -->
+	<demo-section id="outputs" heading="API — Outputs">
+		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

@@ -1,0 +1,45 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Auto Render</h1>
+		<p class="demo-page__lead">
+			CSS-only scroll performance directive. Applies <code>content-visibility: auto</code>
+			to host elements so off-screen items skip layout and paint — no DOM virtualisation required.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="200 cargo items with interopAutoRender">
+			<interop-scroll-area ariaLabel="Cargo manifest" class="auto-render-page__scroll">
+				@for (item of cargoItems; track item.id) {
+					<div class="auto-render-page__row" interopAutoRender="48px">
+						<code class="auto-render-page__id">{{ item.id }}</code>
+						<span class="auto-render-page__name">{{ item.name }}</span>
+						<span class="auto-render-page__qty">×{{ item.qty }}</span>
+					</div>
+				}
+			</interop-scroll-area>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

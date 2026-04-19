@@ -1,0 +1,132 @@
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *   --itx-cb-header-bg            Header background color
+ *   --itx-cb-header-padding-color  Tablist / header bottom border color
+ *   --itx-cb-header-padding-block
+
+ *   --itx-cb-tab-list-padding-block
+ *   --itx-cb-tab-list-padding-inline
+ *   --itx-cb-tab-list-padding-background
+ *   --itx-cb-tab-list-padding-border
+
+ *   --itx-cb-tab-font-size        Tab label font size
+ *   --itx-cb-tab-color-inactive   Tab text color when not selected
+ *   --itx-cb-tab-color-active     Tab text color when selected
+ *   --itx-cb-tab-indicator-color  Selected tab underline color
+ *   --itx-cb-tab-indicator-width  Selected tab underline thickness
+ *   --itx-cb-label-font-size      Single-file label font size
+ *   --itx-cb-label-color          Single-file label text color
+ *   --itx-cb-label-font-weight    Single-file label font weight
+ *   --itx-cb-label-letter-spacing Single-file label letter spacing
+ *   --itx-cb-radius               Host border radius
+ *   --itx-cb-tab-radius           Tab border radius (top corners)
+ *   --itx-cb-actions-radius       Actions toolbar border radius
+ */
+
+:host {
+	display: block;
+	position: relative;
+	border-radius: var(--itx-cb-radius, var(--itx-radius-md));
+	overflow: hidden;
+}
+
+.itx-cb__header {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	padding-block: var(--itx-cb-header-padding-block, var(--itx-spacing-4));
+	padding-inline: var(--itx-cb-header-padding-inline, var(--itx-spacing-4));
+	background: var(--itx-cb-header-bg, transparent);
+}
+
+.itx-cb__tablist {
+	display: flex;
+	min-width: 0;
+	border-bottom: 1px solid var(--itx-cb-header-border-color, var(--itx-border));
+}
+
+.itx-cb__tab {
+	padding-block: var(--itx-spacing-2);
+	padding-inline: var(--itx-spacing-3);
+	background: transparent;
+	border: none;
+	border-radius: var(--itx-cb-tab-radius, 0) var(--itx-cb-tab-radius, 0) 0 0;
+	border-block-end: var(--itx-cb-tab-indicator-width, 2px) solid transparent;
+	color: var(--itx-cb-tab-color-inactive, var(--itx-muted));
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-cb-tab-font-size, var(--itx-font-size-caption));
+	cursor: pointer;
+	transition-property: color;
+	transition-duration: var(--itx-duration-fast);
+	transition-timing-function: var(--itx-easing-standard);
+
+	&[aria-selected="true"] {
+		color: var(--itx-cb-tab-color-active, var(--itx-on-surface));
+		border-block-end-color: var(--itx-cb-tab-indicator-color, var(--itx-brand));
+	}
+
+	&:focus-visible {
+		--itx-cb-header-border-color: vare(--itx-brand);
+		outline: 2px solid var(--itx-brand);
+		outline-offset: 2px;
+		border-radius: inherit;
+
+		&[aria-selected="true"]:focus-visible {
+			border-block-end-color: oklch(
+				from var(--itx-cb-tab-indicator-color, var(--itx-brand)) calc(l - 0.12)
+					calc(c + 0.15) h
+			);
+		}
+	}
+}
+
+.itx-cb__label {
+	flex: 1;
+	font-size: var(--itx-cb-label-font-size, var(--itx-font-size-caption));
+	font-weight: var(--itx-cb-label-font-weight, 500);
+	letter-spacing: var(--itx-cb-label-letter-spacing, 0.05em);
+	color: var(--itx-cb-label-color, var(--itx-muted));
+}
+
+.itx-cb__actions {
+	--itx-toolbar-gap: var(--itx-spacing-1);
+	border-radius: var(--itx-cb-actions-radius, var(--itx-radius-sm));
+	margin-inline-start: auto;
+	opacity: 0;
+	transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
+}
+
+:host:hover .itx-cb__actions,
+:host:focus-within .itx-cb__actions {
+	opacity: 1;
+}
+
+.itx-cb__btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--itx-spacing-1);
+	border-radius: var(--itx-radius-sm);
+	background: transparent;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	line-height: 1;
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-brand);
+		outline-offset: 2px;
+	}
+}
+
+.itx-cb__sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}

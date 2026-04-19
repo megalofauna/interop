@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerLayoutAlignCenterFilled: InteropIconDefinition = {
+  name: "tabler-layout-align-center-filled",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M12 3a1 1 0 0 1 1 1v4h3a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-3v4a1 1 0 0 1 -2 0v-4h-3a3 3 0 0 1 -3 -3v-2a3 3 0 0 1 3 -3h3v-4a1 1 0 0 1 1 -1\" /></g>",
+} as const;

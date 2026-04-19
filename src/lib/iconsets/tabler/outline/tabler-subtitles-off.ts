@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerSubtitlesOff: InteropIconDefinition = {
+  name: "tabler-subtitles-off",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 5h9a3 3 0 0 1 3 3v8a3 3 0 0 1 -.13 .874m-2.006 2a3 3 0 0 1 -.864 .126h-12a3 3 0 0 1 -3 -3v-8c0 -1.35 .893 -2.493 2.12 -2.869\" /> <path d=\"M7 15h5\" /> <path d=\"M17 12h-1\" /> <path d=\"M12 12h-2\" /> <path d=\"M3 3l18 18\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

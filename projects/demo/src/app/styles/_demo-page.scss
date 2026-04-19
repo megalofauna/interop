@@ -1,0 +1,78 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Demo Page — shared styles for every demo page
+//
+// Imported once in the global styles.scss. Every page uses the `.demo-page`
+// namespace instead of per-page classes like `.checkbox-page__*`.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.demo-page {
+	max-width: 64rem;
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
+
+.demo-page__header {
+	margin-bottom: var(--itx-spacing-10);
+}
+
+.demo-page__category {
+	margin-top: var(--itx-spacing-2);
+	font-size: var(--itx-font-size-fine-print);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--itx-muted);
+}
+
+.demo-page__title {
+	margin: 0 0 var(--itx-spacing-2) 0;
+	font-size: var(--itx-font-size-display);
+	font-weight: 500;
+	color: var(--itx-on-surface);
+}
+
+.demo-page__lead {
+	margin: 0;
+	font-size: var(--itx-font-size-body-lg);
+	color: var(--itx-muted);
+	line-height: 1.6;
+}
+
+// ── Code / JSON output ──────────────────────────────────────────────────────
+
+.demo-page__output {
+	display: block;
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	color: var(--itx-on-surface);
+	padding: var(--itx-spacing-2) var(--itx-spacing-4);
+	background: var(--itx-surface-above);
+	border-radius: var(--itx-radius-sm);
+}
+
+// ── API table cells ─────────────────────────────────────────────────────────
+
+.demo-page__api-name {
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	font-weight: 500;
+	color: var(--itx-on-surface);
+}
+
+.demo-page__required {
+	color: var(--itx-danger);
+	font-weight: 700;
+	margin-left: var(--itx-spacing-1);
+}
+
+.demo-page__api-type {
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	color: var(--itx-brand);
+}
+
+.demo-page__api-default {
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	color: var(--itx-muted);
+}

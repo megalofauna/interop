@@ -1,14 +1,11 @@
 {
-  "$schema": "https://json.schemastore.org/stylelintrc",
-  "customSyntax": "postcss-scss",
-  "ignoreFiles": [
-    "projects/demo/**/*.scss",
-    "projects/demo/**/*.css"
-  ],
-  "rules": {
-    "custom-property-pattern": "^--ntr-[a-z0-9-]+$",
-    "property-no-unknown": true,
-    "selector-type-no-unknown": true,
-    "no-duplicate-selectors": true
-  }
+	"$schema": "https://json.schemastore.org/stylelintrc",
+	"customSyntax": "postcss-scss",
+	"ignoreFiles": ["projects/demo/**/*.scss", "projects/demo/**/*.css"],
+	"rules": {
+		"custom-property-pattern": "^--(itx-[a-z0-9-]+|_[a-z0-9-]+)$",
+		"property-no-unknown": true,
+		"selector-type-no-unknown": true,
+		"no-duplicate-selectors": true
+	}
 }

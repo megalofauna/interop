@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerCircleCaretDownFilled: InteropIconDefinition = {
+  name: "tabler-circle-caret-down-filled",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M17 3.34a10 10 0 1 1 -15 8.66l.005 -.324a10 10 0 0 1 14.995 -8.336m-2 6.66h-6a1 1 0 0 0 -.708 1.707l3 3a1 1 0 0 0 1.415 0l3 -3a1 1 0 0 0 0 -1.414l-.094 -.083a1 1 0 0 0 -.613 -.21\" /></g>",
+} as const;

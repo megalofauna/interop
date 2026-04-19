@@ -1,0 +1,91 @@
+/*
+ * InteropBadge — overlay notification counter
+ *
+ * The indicator uses position:fixed + CSS Anchor Positioning, so it escapes
+ * all overflow contexts. CSS Anchor Positioning requires Chrome 125+, Firefox 135+, Safari 18.2+.
+ *
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *   --itx-badge-size         Indicator circle width/height (default: 1.25rem)
+ *   --itx-badge-color        Indicator foreground color (default: #fff)
+ *   --itx-badge-background   Indicator background color (default: #d32f2f)
+ *   --itx-badge-font-size    Font size (default: 0.6875rem)
+ *   --itx-badge-font-weight  Font weight (default: 600)
+ *   --itx-badge-offset       Bleed outside host bounds (default: 0.25rem)
+ */
+
+:host {
+  display: inline-flex;
+  align-self: flex-start;
+}
+
+:host([data-hidden]) .interop-badge__indicator {
+  display: none;
+}
+
+.interop-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.interop-badge__indicator {
+  /* position-anchor is set per-instance via [style.position-anchor] in the template. */
+  position: fixed;
+  z-index: 1;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: var(--itx-badge-size, 1.25rem);
+  height: var(--itx-badge-size, 1.25rem);
+  padding: 0 0.3em;
+  box-sizing: border-box;
+
+  background: var(--itx-badge-background, #d32f2f);
+  color: var(--itx-badge-color, #fff);
+  font-size: var(--itx-badge-font-size, 0.6875rem);
+  font-weight: var(--itx-badge-font-weight, 600);
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 999px;
+
+  &[data-position="top-right"] {
+    position-area: top right;
+    translate: calc(var(--itx-badge-offset, 0.25rem) - 50%) calc(50% - var(--itx-badge-offset, 0.25rem));
+  }
+
+  &[data-position="top-left"] {
+    position-area: top left;
+    translate: calc(50% - var(--itx-badge-offset, 0.25rem)) calc(50% - var(--itx-badge-offset, 0.25rem));
+  }
+
+  &[data-position="bottom-right"] {
+    position-area: bottom right;
+    translate: calc(var(--itx-badge-offset, 0.25rem) - 50%) calc(var(--itx-badge-offset, 0.25rem) - 50%);
+  }
+
+  &[data-position="bottom-left"] {
+    position-area: bottom left;
+    translate: calc(50% - var(--itx-badge-offset, 0.25rem)) calc(var(--itx-badge-offset, 0.25rem) - 50%);
+  }
+
+  &[data-dot] {
+    min-width: 0;
+    width: calc(var(--itx-badge-size, 1.25rem) * 0.6);
+    height: calc(var(--itx-badge-size, 1.25rem) * 0.6);
+    padding: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interop-badge__indicator {
+    transition: none !important;
+  }
+}

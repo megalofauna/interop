@@ -1,0 +1,24 @@
+.table-page__status {
+	display: inline-block;
+	padding: 2px var(--itx-spacing-2);
+	border-radius: var(--itx-radius-pill);
+	font-size: var(--itx-font-size-fine-print);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+
+	&--loaded {
+		color: var(--itx-success);
+		background: var(--itx-success-surface);
+	}
+
+	&--pending {
+		color: var(--itx-warning);
+		background: var(--itx-warning-surface);
+	}
+
+	&--quarantine {
+		color: var(--itx-danger);
+		background: var(--itx-danger-surface);
+	}
+}

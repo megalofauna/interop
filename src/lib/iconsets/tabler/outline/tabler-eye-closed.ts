@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerEyeClosed: InteropIconDefinition = {
+  name: "tabler-eye-closed",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 9c-2.4 2.667 -5.4 4 -9 4c-3.6 0 -6.6 -1.333 -9 -4\" /> <path d=\"M3 15l2.5 -3.8\" /> <path d=\"M21 14.976l-2.492 -3.776\" /> <path d=\"M9 17l.5 -4\" /> <path d=\"M15 17l-.5 -4\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

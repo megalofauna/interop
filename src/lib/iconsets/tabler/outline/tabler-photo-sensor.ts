@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerPhotoSensor: InteropIconDefinition = {
+  name: "tabler-photo-sensor",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M17 5h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 15v2a2 2 0 0 1 -2 2h-2\" /> <path d=\"M7 19h-2a2 2 0 0 1 -2 -2v-2\" /> <path d=\"M3 9v-2a2 2 0 0 1 2 -2h2\" /> <path d=\"M7 10a1 1 0 0 1 1 -1h8a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1l0 -4\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

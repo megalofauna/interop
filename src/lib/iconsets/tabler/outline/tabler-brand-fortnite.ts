@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerBrandFortnite: InteropIconDefinition = {
+  name: "tabler-brand-fortnite",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 3h7.5l-.5 4h-3v3h3v3.5h-3v6.5l-4 1l0 -18\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

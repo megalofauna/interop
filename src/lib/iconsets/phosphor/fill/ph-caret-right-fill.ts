@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhCaretRightFill: InteropIconDefinition = {
+  name: "ph-caret-right-fill",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M181.66,122.34l-80-80A8,8,0,0,0,88,48V208a8,8,0,0,0,13.66,5.66l80-80A8,8,0,0,0,181.66,122.34Z\"/></g>",
+} as const;

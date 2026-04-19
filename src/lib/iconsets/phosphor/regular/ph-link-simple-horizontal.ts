@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhLinkSimpleHorizontal: InteropIconDefinition = {
+  name: "ph-link-simple-horizontal",
+  viewBox: "0 0 256 256",
+  svgContent: "<line x1=\"80\" y1=\"128\" x2=\"176\" y2=\"128\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M104,176H64a48,48,0,0,1,0-96h40\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M152,80h40a48,48,0,0,1,48,48h0a48,48,0,0,1-48,48H152\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  defaultStrokeWidth: 16,
+} as const;

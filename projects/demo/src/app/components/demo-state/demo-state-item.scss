@@ -1,0 +1,23 @@
+:host {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--itx-spacing-4);
+	padding-block: var(--itx-spacing-2);
+}
+
+:host + :host {
+	border-top: 1px solid var(--itx-border);
+}
+
+.demo-state-item__label {
+	color: var(--itx-muted);
+	white-space: nowrap;
+}
+
+.demo-state-item__value {
+	font-family: var(--itx-font-family-mono);
+	font-weight: 500;
+	color: var(--itx-on-surface);
+	text-align: end;
+}

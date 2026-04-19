@@ -1,0 +1,35 @@
+.auto-render-page__scroll {
+	height: 320px;
+	border: 1px solid var(--itx-border);
+	border-radius: var(--itx-radius-md);
+}
+
+.auto-render-page__row {
+	display: flex;
+	gap: var(--itx-spacing-4);
+	align-items: baseline;
+	padding: var(--itx-spacing-2) var(--itx-spacing-4);
+	border-bottom: 1px solid var(--itx-border);
+	font-size: var(--itx-font-size-body);
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.auto-render-page__id {
+	flex-shrink: 0;
+	font-family: var(--itx-font-family-mono);
+	font-size: var(--itx-font-size-caption);
+	color: var(--itx-muted);
+}
+
+.auto-render-page__name {
+	flex: 1;
+}
+
+.auto-render-page__qty {
+	flex-shrink: 0;
+	font-variant-numeric: tabular-nums;
+	color: var(--itx-muted);
+}

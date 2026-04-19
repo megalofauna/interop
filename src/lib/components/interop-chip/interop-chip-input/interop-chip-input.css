@@ -1,0 +1,150 @@
+/* ============================================================
+   interop-chip-input — Free-form text entry with chips
+
+   Visual map:
+
+   ┌──────────────────────────────────────────────────────────┐
+   │  ┌────────┐  ┌────────┐  ┌────────┐  placeholder text…  │
+   │  │ chip × │  │ chip × │  │ chip × │  [           input] │
+   │  └────────┘  └────────┘  └────────┘                     │
+   └──────────────────────────────────────────────────────────┘
+        chip styles: --itx-chip-* tokens shared with chip-item
+        container:   --itx-chip-input-* tokens
+   ============================================================ */
+
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ * Container
+ *   --itx-chip-input-bg           Container background (default: transparent)
+ *   --itx-chip-input-border       Container border (default: 1px solid var(--itx-border))
+ *   --itx-chip-input-radius       Container radius (default: var(--itx-radius-sm))
+ *   --itx-chip-input-padding      Container padding (default: 0.375rem 0.5rem)
+ *   --itx-chip-input-gap          Gap between chips and input (default: 0.375rem)
+ *   --itx-chip-input-min-height   Min height (default: 2.5rem)
+ *   --itx-chip-input-focus-color  Focus ring color (default: var(--itx-brand, currentColor))
+ *
+ * Individual chips (shared with interop-chip-item)
+ *   --itx-chip-bg                 Chip background (default: transparent)
+ *   --itx-chip-border             Chip border (default: 1px solid var(--itx-border))
+ *   --itx-chip-radius             Chip radius (default: var(--itx-radius-full))
+ *   --itx-chip-color              Chip text color (default: inherit)
+ *   --itx-chip-padding            Chip padding (default: 0.125rem 0.5rem)
+ *   --itx-chip-remove-size        Remove button font-size (default: 0.875rem)
+ *   --itx-chip-disabled-opacity   Opacity when disabled (default: 0.4)
+ */
+
+/* ── Container ────────────────────────────────────────────── */
+
+:host {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-chip-input-gap, 0.375rem);
+	background: var(--itx-chip-input-bg, transparent);
+	border: var(
+		--itx-chip-input-border,
+		1px solid var(--itx-border, currentColor)
+	);
+	border-radius: var(--itx-chip-input-radius, var(--itx-radius-sm, 4px));
+	padding: var(--itx-chip-input-padding, 0.375rem 0.5rem);
+	min-height: var(--itx-chip-input-min-height, 2.5rem);
+	cursor: text;
+}
+
+:host(:focus-within) {
+	outline: 2px solid
+		var(--itx-chip-input-focus-color, var(--itx-brand, currentColor));
+	outline-offset: 1px;
+}
+
+/* ── Internal chip list ───────────────────────────────────── */
+
+.itx-chip-list {
+	display: contents; /* chips flow directly in the container flex context */
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* ── Individual chip ──────────────────────────────────────── */
+
+.itx-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	background: var(--itx-chip-bg, transparent);
+	border: var(--itx-chip-border, 1px solid var(--itx-border, currentColor));
+	border-radius: var(--itx-chip-radius, var(--itx-radius-full, 9999px));
+	color: var(--itx-chip-color, inherit);
+	padding: var(--itx-chip-padding, 0.625rem 1rem);
+	list-style: none;
+	white-space: nowrap;
+}
+
+.itx-chip-label {
+	font: inherit;
+}
+
+/* ── Remove button ────────────────────────────────────────── */
+
+.itx-chip-remove {
+	-webkit-appearance: none;
+	appearance: none;
+	background: transparent;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--itx-chip-remove-size, 0.875rem);
+	line-height: 1;
+	padding: 0;
+	margin: 0;
+	opacity: 0.6;
+	transition: opacity 100ms ease;
+}
+
+.itx-chip-remove:hover {
+	opacity: 1;
+}
+
+.itx-chip-remove:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 1px;
+	border-radius: 2px;
+}
+
+/* ── Text input ───────────────────────────────────────────── */
+
+.itx-chip-text-input {
+	flex: 1;
+	min-width: 8rem;
+	background: transparent;
+	border: none;
+	color: inherit;
+	font: inherit;
+	outline: none;
+	padding: 0;
+}
+
+.itx-chip-text-input::placeholder {
+	opacity: 0.5;
+}
+
+/* ── Disabled ─────────────────────────────────────────────── */
+
+:host([data-disabled]) {
+	opacity: var(--itx-chip-disabled-opacity, 0.4);
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	.itx-chip-remove {
+		transition: none;
+	}
+}

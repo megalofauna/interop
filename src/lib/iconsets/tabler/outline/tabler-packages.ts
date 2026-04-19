@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerPackages: InteropIconDefinition = {
+  name: "tabler-packages",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3l0 -5.5\" /> <path d=\"M2 13.5v5.5l5 3\" /> <path d=\"M7 16.545l5 -3.03\" /> <path d=\"M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3l0 -5.5\" /> <path d=\"M12 19l5 3\" /> <path d=\"M17 16.5l5 -3\" /> <path d=\"M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5\" /> <path d=\"M7 5.03v5.455\" /> <path d=\"M12 8l5 -3\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

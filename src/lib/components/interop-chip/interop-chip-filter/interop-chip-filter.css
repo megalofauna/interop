@@ -1,0 +1,66 @@
+/* ============================================================
+   interop-chip-filter — Filter chip group container (fieldset host)
+
+   Responsibilities:
+     1. Fieldset browser-default reset
+     2. Token cascade (theme → component → private)
+
+   Layout is intentionally absent. The consumer controls how
+   chips are arranged via flex/grid on this host or a wrapper.
+   ============================================================ */
+
+/* ── Token cascade ────────────────────────────────────────── */
+
+/*
+ * Two tiers of public tokens feed into private props used in rules below.
+ *
+ * TIER 1 — THEME TOKENS
+ *   --itx-chip-surface    → group background
+ *   --itx-chip-border     → group border
+ *   --itx-chip-radius     → group corner radius
+ *
+ * TIER 2 — COMPONENT TOKENS
+ *   --itx-chip-filter-bg
+ *   --itx-chip-filter-border
+ *   --itx-chip-filter-radius
+ *   --itx-chip-filter-padding
+ */
+:host {
+	--_bg:      var(--itx-chip-filter-bg,      var(--itx-chip-surface, transparent));
+	--_border:  var(--itx-chip-filter-border,  var(--itx-chip-border,  none));
+	--_radius:  var(--itx-chip-filter-radius,  var(--itx-chip-radius,  0));
+	--_padding: var(--itx-chip-filter-padding, 0);
+}
+
+/* ── Fieldset reset ───────────────────────────────────────── */
+
+:host {
+	background: var(--_bg);
+	border: var(--_border);
+	border-radius: var(--_radius);
+	padding: var(--_padding);
+	margin: 0;
+	min-inline-size: 0;
+}
+
+legend {
+	padding: 0;
+	float: left;
+	width: 100%;
+}
+
+legend + * {
+	clear: both;
+}
+
+.interop-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}

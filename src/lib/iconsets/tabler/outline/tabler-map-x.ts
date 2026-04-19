@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerMapX: InteropIconDefinition = {
+  name: "tabler-map-x",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 19.5l-5 -2.5l-6 3v-13l6 -3l6 3l6 -3v9\" /> <path d=\"M9 4v13\" /> <path d=\"M15 7v6.5\" /> <path d=\"M22 22l-5 -5\" /> <path d=\"M17 22l5 -5\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

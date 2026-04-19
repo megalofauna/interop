@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerAugmentedReality2: InteropIconDefinition = {
+  name: "tabler-augmented-reality-2",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 21h-2a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v3.5\" /> <path d=\"M17 17l-4 -2.5l4 -2.5l4 2.5v4.5l-4 2.5l0 -4.5\" /> <path d=\"M13 14.5v4.5l4 2.5\" /> <path d=\"M17 17l4 -2.5\" /> <path d=\"M11 4h2\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

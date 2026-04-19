@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerPlayerPlayFilled: InteropIconDefinition = {
+  name: "tabler-player-play-filled",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z\" /></g>",
+} as const;

@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerBleachNoChlorine: InteropIconDefinition = {
+  name: "tabler-bleach-no-chlorine",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75\" /> <path d=\"M6.576 19l7.907 -13.733\" /> <path d=\"M11.719 19.014l5.346 -9.284\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

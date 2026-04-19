@@ -1,0 +1,214 @@
+/*
+ * Elevation — automatic surface depth via the "sliding window" technique.
+ *
+ * The consumer sets two seed values:
+ *   --itx-page             Base surface color in OKLCH.
+ *   --itx-elevation-step   Lightness delta per stop (default 0.035).
+ *
+ * Seven stops are derived by shifting L in OKLCH space. The hue and chroma
+ * of --itx-page carry through, so warm/cool/pure-gray neutrals all work.
+ *
+ * Seven internal slot properties (--_e-*) shadow the stops and shift on each
+ * [itx-raise] or [itx-lower], so --itx-surface always resolves to the
+ * correct color for the current nesting depth. Clamped at both ends.
+ *
+ * Consumer API:
+ *   --itx-surface         Current surface color at this depth.
+ *   --itx-surface-above   One stop brighter than current.
+ *   --itx-surface-below   One stop darker than current.
+ *   --itx-elevation       Numeric depth (0 = page). For derived math.
+ *
+ * Opt-in attributes:
+ *   itx-raise             Raise by 1 (or itx-raise="2", itx-raise="3").
+ *   itx-lower             Lower by 1 (or itx-lower="2", itx-lower="3").
+ */
+
+@property --itx-elevation {
+	syntax: "<integer>";
+	inherits: true;
+	initial-value: 0;
+}
+
+/*
+ * Seed values (--itx-page, --itx-elevation-step) and shadow tokens are
+ * defined in the active theme file — e.g. themes/protocol.css.
+ */
+
+/* ─── Derived ramp ───────────────────────────────────────────────────── */
+
+:where([interop-root]) {
+	/* ─── Derived stops ─────────────────────────────────────────────── */
+	--itx-emboss-1: oklch(
+		from var(--itx-page) calc(l + var(--itx-elevation-step)) c h
+	);
+	--itx-emboss-2: oklch(
+		from var(--itx-page) calc(l + var(--itx-elevation-step) * 2) c h
+	);
+	--itx-emboss-3: oklch(
+		from var(--itx-page) calc(l + var(--itx-elevation-step) * 3) c h
+	);
+	--itx-emboss-4: oklch(
+		from var(--itx-page) calc(l + var(--itx-elevation-step) * 4) c h
+	);
+	--itx-emboss-5: oklch(
+		from var(--itx-page) calc(l + var(--itx-elevation-step) * 5) c h
+	);
+	--itx-deboss-1: oklch(
+		from var(--itx-page) calc(l - var(--itx-elevation-step)) c h
+	);
+	--itx-deboss-2: oklch(
+		from var(--itx-page) calc(l - var(--itx-elevation-step) * 2) c h
+	);
+	--itx-deboss-3: oklch(
+		from var(--itx-page) calc(l - var(--itx-elevation-step) * 3) c h
+	);
+	--itx-deboss-4: oklch(
+		from var(--itx-page) calc(l - var(--itx-elevation-step) * 4) c h
+	);
+	--itx-deboss-5: oklch(
+		from var(--itx-page) calc(l - var(--itx-elevation-step) * 5) c h
+	);
+
+	/* ─── Internal sliding slots ────────────────────────────────────── */
+	--_e-n5: var(--itx-deboss-5);
+	--_e-n4: var(--itx-deboss-4);
+	--_e-n3: var(--itx-deboss-3);
+	--_e-n2: var(--itx-deboss-2);
+	--_e-n1: var(--itx-deboss-1);
+	--_e-0: var(--itx-page);
+	--_e-p1: var(--itx-emboss-1);
+	--_e-p2: var(--itx-emboss-2);
+	--_e-p3: var(--itx-emboss-3);
+	--_e-p4: var(--itx-emboss-4);
+	--_e-p5: var(--itx-emboss-5);
+
+	/* ─── Consumer API ──────────────────────────────────────────────── */
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+
+	/* ─── Apply to root ─────────────────────────────────────────────────── */
+	background-color: var(--itx-page);
+	color: var(--itx-on-surface);
+
+	/* ─── Z-index scale ─────────────────────────────────────────────────── */
+	--itx-z-dropdown: 1000;
+	--itx-z-sticky: 1020;
+	--itx-z-fixed: 1030;
+}
+
+/* ─── Raise by 1 ────────────────────────────────────────────────────── */
+
+:where([itx-raise]) {
+	--_e-n5: var(--_e-n4);
+	--_e-n4: var(--_e-n3);
+	--_e-n3: var(--_e-n2);
+	--_e-n2: var(--_e-n1);
+	--_e-n1: var(--_e-0);
+	--_e-0: var(--_e-p1);
+	--_e-p1: var(--_e-p2);
+	--_e-p2: var(--_e-p3);
+	--_e-p3: var(--_e-p4);
+	--_e-p4: var(--_e-p5);
+
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+	--itx-elevation: calc(var(--itx-elevation) + 1);
+	background-color: var(--itx-surface);
+}
+
+/* ─── Raise by 2 ────────────────────────────────────────────────────── */
+
+:where([itx-raise="2"]) {
+	--_e-n5: var(--_e-n3);
+	--_e-n4: var(--_e-n2);
+	--_e-n3: var(--_e-n1);
+	--_e-n2: var(--_e-0);
+	--_e-n1: var(--_e-p1);
+	--_e-0: var(--_e-p2);
+	--_e-p1: var(--_e-p3);
+	--_e-p2: var(--_e-p3);
+	--_e-p3: var(--_e-p5);
+
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+	--itx-elevation: calc(var(--itx-elevation) + 2);
+	background-color: var(--itx-surface);
+}
+
+/* ─── Raise by 3 ────────────────────────────────────────────────────── */
+
+:where([itx-raise="3"]) {
+	--_e-n3: var(--_e-0);
+	--_e-n2: var(--_e-p1);
+	--_e-n1: var(--_e-p2);
+	--_e-0: var(--_e-p3);
+	--_e-p1: var(--_e-p3);
+	--_e-p2: var(--_e-p3);
+	--_e-p3: var(--_e-p3);
+
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+	--itx-elevation: calc(var(--itx-elevation) + 3);
+	background-color: var(--itx-surface);
+}
+
+/* ─── Lower by 1 ────────────────────────────────────────────────────── */
+
+:where([itx-lower]) {
+	--_e-p5: var(--_e-p4);
+	--_e-p4: var(--_e-p3);
+	--_e-p3: var(--_e-p2);
+	--_e-p2: var(--_e-p1);
+	--_e-p1: var(--_e-0);
+	--_e-0: var(--_e-n1);
+	--_e-n1: var(--_e-n2);
+	--_e-n2: var(--_e-n3);
+	--_e-n3: var(--_e-n4);
+	--_e-n4: var(--_e-n5);
+
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+	--itx-elevation: calc(var(--itx-elevation) - 1);
+	background-color: var(--itx-surface);
+}
+
+/* ─── Lower by 2 ────────────────────────────────────────────────────── */
+
+:where([itx-lower="2"]) {
+	--_e-p3: var(--_e-p1);
+	--_e-p2: var(--_e-0);
+	--_e-p1: var(--_e-n1);
+	--_e-0: var(--_e-n2);
+	--_e-n1: var(--_e-n3);
+	--_e-n2: var(--_e-n3);
+	--_e-n3: var(--_e-n3);
+
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+	--itx-elevation: calc(var(--itx-elevation) - 2);
+	background-color: var(--itx-surface);
+}
+
+/* ─── Lower by 3 ────────────────────────────────────────────────────── */
+
+:where([itx-lower="3"]) {
+	--_e-p3: var(--_e-0);
+	--_e-p2: var(--_e-n1);
+	--_e-p1: var(--_e-n2);
+	--_e-0: var(--_e-n3);
+	--_e-n1: var(--_e-n3);
+	--_e-n2: var(--_e-n3);
+	--_e-n3: var(--_e-n3);
+
+	--itx-surface: var(--_e-0);
+	--itx-surface-above: var(--_e-p1);
+	--itx-surface-below: var(--_e-n1);
+	--itx-elevation: calc(var(--itx-elevation) - 3);
+	background-color: var(--itx-surface);
+}

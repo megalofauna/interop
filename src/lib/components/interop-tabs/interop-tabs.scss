@@ -1,53 +1,95 @@
-@use "./theme/tokens" as *;
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ * Tablist
+ *   --itx-tabs-tablist-display      Display (default: flex)
+ *   --itx-tabs-tablist-flex-wrap    Flex-wrap (default: nowrap)
+ *   --itx-tabs-gap                  Gap between tabs (default: 0)
+ *   --itx-tabs-border-bottom        Tablist bottom border (default: 1px solid currentColor)
+ *
+ * Tab button
+ *   --itx-tab-gap                   Gap between icon and label (default: var(--itx-spacing-1))
+ *   --itx-tab-padding-block         Block padding (default: var(--itx-spacing-2))
+ *   --itx-tab-padding-inline        Inline padding (default: var(--itx-spacing-4))
+ *   --itx-tab-background            Background (inactive, default: transparent)
+ *   --itx-tab-foreground            Text color (inactive, default: inherit)
+ *   --itx-tab-border-width          Border width (default: 0)
+ *   --itx-tab-border-color          Border color (default: transparent)
+ *   --itx-tab-border-radius         Border radius (default: var(--itx-radius-sm))
+ *   --itx-tab-font                  Font shorthand (default: inherit)
+ *   --itx-tab-letter-spacing        Letter spacing (default: inherit)
+ *   --itx-tab-active-background     Background (selected, default: transparent)
+ *   --itx-tab-active-foreground     Text color (selected, default: inherit)
+ *   --itx-tab-active-indicator-height  Indicator bar height (default: 2px)
+ *   --itx-tab-active-indicator-color   Indicator bar color (default: currentColor)
+ *   --itx-tab-transition-duration   Transition duration (default: var(--itx-duration-fast))
+ *   --itx-tab-focus-outline         Focus outline (default: 2px solid currentColor)
+ *   --itx-tab-focus-outline-offset  Focus outline offset (default: -2px)
+ */
 
 :host {
-  display: var(--itx-tabs-display, block);
+	display: block;
+}
+
+/* UA reset for tab buttons */
+:host [role="tab"] {
+	appearance: none;
+	-webkit-appearance: none;
+	margin: 0;
+	white-space: nowrap;
+	text-align: start;
+	user-select: none;
+	-webkit-user-select: none;
+	box-sizing: border-box;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
 }
 
 [role="tablist"] {
-  display: var(--itx-tabs-tablist-display, flex);
-  flex-wrap: var(--itx-tabs-tablist-flex-wrap, nowrap);
-  gap: var(--itx-tabs-gap);
-  border-block-end: var(--itx-tabs-border-bottom);
+	display: var(--itx-tabs-tablist-display, flex);
+	flex-wrap: var(--itx-tabs-tablist-flex-wrap, nowrap);
+	gap: var(--itx-tabs-gap, 0);
+	border-block-end: var(--itx-tabs-border-bottom, 1px solid currentColor);
 }
 
 [role="tab"] {
-  display: var(--itx-tab-display, inline-flex);
-  align-items: var(--itx-tab-align-items, center);
-  gap: var(--itx-tab-gap);
-  padding-block: var(--itx-tab-padding-block);
-  padding-inline: var(--itx-tab-padding-inline);
-  background: var(--itx-tab-background);
-  color: var(--itx-tab-foreground);
-  border: var(--itx-tab-border-width, 0) solid var(--itx-tab-border-color, transparent);
-  border-radius: var(--itx-tab-border-radius);
-  font: var(--itx-tab-font, inherit);
-  letter-spacing: var(--itx-tab-letter-spacing, inherit);
-  cursor: pointer;
-  position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-tab-gap, var(--itx-spacing-1));
+	padding-block: var(--itx-tab-padding-block, var(--itx-spacing-2));
+	padding-inline: var(--itx-tab-padding-inline, var(--itx-spacing-4));
+	background: var(--itx-tab-background, transparent);
+	color: var(--itx-tab-foreground, inherit);
+	border: var(--itx-tab-border-width, 0) solid var(--itx-tab-border-color, transparent);
+	border-radius: var(--itx-tab-border-radius, var(--itx-radius-sm));
+	font: var(--itx-tab-font, inherit);
+	letter-spacing: var(--itx-tab-letter-spacing, inherit);
+	cursor: pointer;
+	position: relative;
 
-  // Active indicator — bottom border by default
-  &::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    inset-block-end: 0;
-    block-size: var(--itx-tab-active-indicator-height, 2px);
-    background: transparent;
-    transition: background var(--itx-tab-transition-duration, 0.15s) ease;
-  }
+	&::after {
+		content: '';
+		position: absolute;
+		inset-inline: 0;
+		inset-block-end: 0;
+		block-size: var(--itx-tab-active-indicator-height, 2px);
+		background: transparent;
+		transition: background var(--itx-tab-transition-duration, var(--itx-duration-fast)) ease;
+	}
 
-  &[aria-selected="true"] {
-    color: var(--itx-tab-active-foreground, var(--itx-tab-foreground));
-    background: var(--itx-tab-active-background, var(--itx-tab-background));
+	&[aria-selected="true"] {
+		color: var(--itx-tab-active-foreground, var(--itx-tab-foreground, inherit));
+		background: var(--itx-tab-active-background, transparent);
 
-    &::after {
-      background: var(--itx-tab-active-indicator-color);
-    }
-  }
+		&::after {
+			background: var(--itx-tab-active-indicator-color, currentColor);
+		}
+	}
 
-  &:focus-visible {
-    outline: var(--itx-tab-focus-outline, 2px solid currentColor);
-    outline-offset: var(--itx-tab-focus-outline-offset, -2px);
-  }
+	&:focus-visible {
+		outline: var(--itx-tab-focus-outline, 2px solid currentColor);
+		outline-offset: var(--itx-tab-focus-outline-offset, -2px);
+	}
 }

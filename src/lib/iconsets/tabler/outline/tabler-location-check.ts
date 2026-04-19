@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerLocationCheck: InteropIconDefinition = {
+  name: "tabler-location-check",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11.512 17.023l-1.512 -3.023l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5l-4.45 12.324\" /> <path d=\"M15 19l2 2l4 -4\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

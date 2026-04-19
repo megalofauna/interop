@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerHeadingOff: InteropIconDefinition = {
+  name: "tabler-heading-off",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 12h5m4 0h1\" /> <path d=\"M7 7v12\" /> <path d=\"M17 5v8m0 4v2\" /> <path d=\"M15 19h4\" /> <path d=\"M15 5h4\" /> <path d=\"M5 19h4\" /> <path d=\"M3 3l18 18\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

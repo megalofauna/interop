@@ -1,0 +1,32 @@
+<!-- Projected trigger element — rendered as-is, unmodified. -->
+<ng-content />
+
+<!--
+  Tooltip panel.
+
+  popover="manual": promoted to the browser top layer on showPopover(), escaping
+  all overflow:hidden ancestors and z-index stacking without portaling to body.
+
+  role="tooltip": establishes the ARIA tooltip semantics. The trigger element's
+  aria-describedby (or aria-labelledby) points to this element's [id].
+
+  Closed state: opacity:0 (not display:none) — keeps the element in the
+  accessibility tree so NVDA/JAWS can resolve the aria-describedby reference
+  when focus lands on the trigger, before the tooltip is first shown.
+
+  [attr.data-placement]: reflects the resolved placement after flip/shift,
+  available for CSS arrow positioning via attribute selectors.
+-->
+<div
+  #tooltipPanel
+  [id]="tooltipId"
+  role="tooltip"
+  popover="manual"
+  class="interop-tooltip__panel"
+  [attr.data-placement]="resolvedPlacement()">
+  @if (contentTemplate()) {
+    <ng-container [ngTemplateOutlet]="contentTemplate()!" />
+  } @else {
+    {{ label() }}
+  }
+</div>

@@ -1,0 +1,48 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Kbd</h1>
+		<p class="demo-page__lead">
+			Semantic keyboard key-cap indicator. Drop it on any <code>&lt;kbd&gt;</code> element
+			to apply consistent token-driven styling for shortcut documentation.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Single key">
+			<p>Press <kbd interop-kbd>Esc</kbd> to abort the docking sequence.</p>
+		</demo-example>
+
+		<demo-example label="Key combination">
+			<p>
+				<kbd interop-kbd>Ctrl</kbd> + <kbd interop-kbd>Shift</kbd> + <kbd interop-kbd>D</kbd>
+				triggers emergency depressurisation override.
+			</p>
+		</demo-example>
+
+		<demo-example label="In a table context">
+			<table style="border-spacing: 0 0.5rem; width: 100%;">
+				<tbody>
+					<tr>
+						<td><kbd interop-kbd>W</kbd> <kbd interop-kbd>A</kbd> <kbd interop-kbd>S</kbd> <kbd interop-kbd>D</kbd></td>
+						<td>Thruster direction</td>
+					</tr>
+					<tr>
+						<td><kbd interop-kbd>Space</kbd></td>
+						<td>Emergency burn</td>
+					</tr>
+					<tr>
+						<td><kbd interop-kbd>Tab</kbd></td>
+						<td>Cycle subsystems</td>
+					</tr>
+				</tbody>
+			</table>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

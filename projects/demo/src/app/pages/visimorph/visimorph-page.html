@@ -1,0 +1,124 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Visimorph</h1>
+		<p class="demo-page__lead">
+			Shared visual indicator layer for radio, checkbox, and toggle controls.
+			CSS-only state rendering driven by <code>--itx-control-*</code> tokens.
+		</p>
+	</header>
+
+	<!-- ── States ─────────────────────────────────────────────────────────── -->
+	<demo-section id="states" heading="States">
+		<demo-example label="Radio">
+			<div class="visimorph-page__grid">
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="radio" /><span>Default</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="radio" [checked]="true" />
+					<span>Checked</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="radio" [disabled]="true" />
+					<span>Disabled</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="radio" [checked]="true" [disabled]="true" />
+					<span>Checked + Disabled</span>
+				</div>
+
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="radio" [focused]="true" />
+					<span>Focused</span>
+				</div>
+			</div>
+		</demo-example>
+
+		<demo-example label="Checkbox">
+			<div class="visimorph-page__grid">
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="checkbox" /><span>Default</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="checkbox" [checked]="true" /><span
+						>Checked</span
+					>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="checkbox" [indeterminate]="true" /><span
+						>Indeterminate</span
+					>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="checkbox" [disabled]="true" /><span
+						>Disabled</span
+					>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph
+						type="checkbox"
+						[checked]="true"
+						[disabled]="true"
+					/><span>Checked + Disabled</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="checkbox" [focused]="true" /><span
+						>Focused</span
+					>
+				</div>
+			</div>
+		</demo-example>
+
+		<demo-example label="Toggle">
+			<div class="visimorph-page__grid">
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="toggle" /><span>Default</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="toggle" [checked]="true" /><span
+						>Checked</span
+					>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="toggle" [disabled]="true" /><span
+						>Disabled</span
+					>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph
+						type="toggle"
+						[checked]="true"
+						[disabled]="true"
+					/><span>Checked + Disabled</span>
+				</div>
+				<div class="visimorph-page__grid-item">
+					<interop-visimorph type="toggle" [focused]="true" /><span
+						>Focused</span
+					>
+				</div>
+			</div>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

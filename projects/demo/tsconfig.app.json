@@ -8,13 +8,15 @@
     "baseUrl": "../../",
     "paths": {
       "interop": ["src/public-api"],
-      "interop/*": ["src/*"]
+      "interop/*": ["src/*"],
+      "@interop/composites": ["projects/composites/src/public-api.ts"]
     }
   },
   "include": [
     "src/**/*.ts",
     "../../src/lib/**/*.ts",
-    "../../src/types/**/*.ts"
+    "../../src/types/**/*.ts",
+    "../../projects/composites/src/**/*.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts",

@@ -1,0 +1,114 @@
+<article class="home-page">
+
+	<!-- ── Hero ──────────────────────────────────────────────────────────── -->
+	<section class="home-page__hero">
+		<p class="home-page__eyebrow">Angular Component Library</p>
+		<h1 class="home-page__headline">
+			Components that work<br>
+			<em class="home-page__headline-em">with</em> the browser.
+		</h1>
+		<p class="home-page__lead">
+			Interop builds on what the platform already provides — native elements,
+			CSS cascade, and browser semantics — rather than replacing them.
+			The result is components that are correct without effort.
+		</p>
+
+		<div class="home-page__actions">
+			<a class="home-page__cta home-page__cta--primary" routerLink="/components/button">
+				Browse components
+			</a>
+			<a class="home-page__cta home-page__cta--secondary" routerLink="/components/checkbox">
+				See an example
+			</a>
+		</div>
+
+		<figure interop-code-renderer language="html" class="home-page__hero-code">
+			<pre><code>&lt;!-- Write the element. Interop enhances it. --&gt;
+&lt;button interop-button (click)="submit()"&gt;
+  Launch sequence
+&lt;/button&gt;
+
+&lt;label&gt;
+  &lt;input type="checkbox" interop-checkbox [(ngModel)]="confirmed" /&gt;
+  Confirm docking clamps released
+&lt;/label&gt;
+
+&lt;input type="text" interop-field label="Destination" /&gt;</code></pre>
+		</figure>
+	</section>
+
+	<!-- ── Pillars ───────────────────────────────────────────────────────── -->
+	<section class="home-page__pillars">
+
+		<div class="home-page__pillar">
+			<div class="home-page__pillar-icon" aria-hidden="true">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+					<polyline points="16 18 22 12 16 6" />
+					<polyline points="8 6 2 12 8 18" />
+				</svg>
+			</div>
+			<h2 class="home-page__pillar-heading">HTML-first</h2>
+			<p class="home-page__pillar-body">
+				Attribute selectors attach to native elements. <code>&lt;button interop-button&gt;</code>
+				keeps keyboard behavior, ARIA role, form participation, and focus management
+				for free — none of it needs to be recreated.
+			</p>
+		</div>
+
+		<div class="home-page__pillar">
+			<div class="home-page__pillar-icon" aria-hidden="true">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+				</svg>
+			</div>
+			<h2 class="home-page__pillar-heading">Angular-forward</h2>
+			<p class="home-page__pillar-body">
+				Signals are the reactive primitive — no subjects, no manual
+				change detection, no <code>markForCheck()</code>. Every component is
+				standalone, OnPush, and uses the new control flow syntax. Not aspirationally.
+				Actually.
+			</p>
+		</div>
+
+		<div class="home-page__pillar">
+			<div class="home-page__pillar-icon" aria-hidden="true">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M12 22V12" />
+					<path d="m17 7-5-5-5 5" />
+					<path d="M5 22h14" />
+				</svg>
+			</div>
+			<h2 class="home-page__pillar-heading">Ships only what you use</h2>
+			<p class="home-page__pillar-body">
+				Import <code>InteropButton</code> and you pay for <code>InteropButton</code>.
+				Nothing else. Every component, icon, and adapter is tree-shakeable by design.
+				Heavy dependencies like syntax-highlighting grammars are lazy-loaded on demand.
+			</p>
+		</div>
+
+		<div class="home-page__pillar">
+			<div class="home-page__pillar-icon" aria-hidden="true">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+					<circle cx="12" cy="12" r="3" />
+					<path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+				</svg>
+			</div>
+			<h2 class="home-page__pillar-heading">A token system that compounds</h2>
+			<p class="home-page__pillar-body">
+				Override <code>--itx-control-accent</code> at any ancestor and every
+				form control in that subtree updates — checkbox, radio, and toggle
+				simultaneously. No selector specificity battles. The cascade does the work.
+			</p>
+		</div>
+
+	</section>
+
+	<!-- ── CTA strip ─────────────────────────────────────────────────────── -->
+	<section class="home-page__footer-strip">
+		<p class="home-page__footer-text">24 components. All documented, all interactive.</p>
+		<a class="home-page__cta home-page__cta--primary" routerLink="/components/badge">
+			Start exploring
+		</a>
+	</section>
+
+</article>

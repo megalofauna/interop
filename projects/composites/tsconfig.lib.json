@@ -1,0 +1,17 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "../../dist/out-tsc",
+		"declaration": true,
+		"declarationMap": true,
+		"inlineSources": true,
+		"types": [],
+		"paths": {
+			"interop": ["../../src/public-api.ts"],
+			"interop/*": ["../../src/*"]
+		}
+	},
+	"exclude": [
+		"src/**/*.spec.ts"
+	]
+}

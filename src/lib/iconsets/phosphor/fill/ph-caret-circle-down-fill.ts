@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhCaretCircleDownFill: InteropIconDefinition = {
+  name: "ph-caret-circle-down-fill",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,93.66-40,40a8,8,0,0,1-11.32,0l-40-40a8,8,0,0,1,11.32-11.32L128,140.69l34.34-34.35a8,8,0,0,1,11.32,11.32Z\"/></g>",
+} as const;

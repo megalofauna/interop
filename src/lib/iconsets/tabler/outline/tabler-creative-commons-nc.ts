@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerCreativeCommonsNc: InteropIconDefinition = {
+  name: "tabler-creative-commons-nc",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0\" /> <path d=\"M15 9h-4.5a1.5 1.5 0 0 0 0 3h3a1.5 1.5 0 0 1 0 3h-4.5\" /> <path d=\"M12 7v2\" /> <path d=\"M12 15v2\" /> <path d=\"M6 6l3 3\" /> <path d=\"M15 15l3 3\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

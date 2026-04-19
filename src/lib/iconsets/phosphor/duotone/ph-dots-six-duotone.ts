@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhDotsSixDuotone: InteropIconDefinition = {
+  name: "ph-dots-six-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><rect x=\"16\" y=\"48\" width=\"224\" height=\"160\" rx=\"16\" opacity=\"0.2\"/><circle cx=\"60\" cy=\"92\" r=\"12\"/><circle cx=\"128\" cy=\"92\" r=\"12\"/><circle cx=\"196\" cy=\"92\" r=\"12\"/><circle cx=\"60\" cy=\"164\" r=\"12\"/><circle cx=\"128\" cy=\"164\" r=\"12\"/><circle cx=\"196\" cy=\"164\" r=\"12\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

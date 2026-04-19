@@ -1,11 +1,16 @@
-@use "./theme/tokens" as *;
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   --itx-tab-panel-padding-block   Block padding (default: var(--itx-spacing-4))
+ *   --itx-tab-panel-padding-inline  Inline padding (default: 0)
+ */
 
 :host {
-  display: var(--itx-tab-panel-display, block);
-  padding-block: var(--itx-tab-panel-padding-block);
-  padding-inline: var(--itx-tab-panel-padding-inline);
+	display: block;
+	padding-block: var(--itx-tab-panel-padding-block, var(--itx-spacing-4));
+	padding-inline: var(--itx-tab-panel-padding-inline, 0);
 }
 
 :host([hidden]) {
-  display: none;
+	display: none;
 }

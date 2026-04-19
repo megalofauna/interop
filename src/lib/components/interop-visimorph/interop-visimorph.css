@@ -1,0 +1,226 @@
+/* ============================================================
+   interop-visimorph — Shared visual indicator for form controls
+   All appearance is driven by --itx-control-* custom properties.
+   Override at any ancestor scope to theme all controls at once.
+   ============================================================ */
+
+:host {
+	/*
+     * Private resolved tokens — read public --itx-control-* (inherited from ancestors)
+     * then fall back to sensible defaults. Never set --itx-control-* here so that
+     * ancestor overrides can flow through via normal CSS inheritance.
+     */
+	--_size: var(--itx-control-size, 1.25rem);
+	--_border-width: var(--itx-control-border-width, 2px);
+	--_border-color: var(--itx-control-border-color, var(--itx-border, #e0e0e0));
+	--_bg: var(--itx-control-bg, var(--itx-surface-below, #ffffff));
+	--_accent: var(--itx-control-accent, var(--itx-brand, #0066cc));
+	--_indicator: var(--itx-control-indicator, var(--itx-on-brand, #ffffff));
+	--_radius: var(--itx-control-radius, var(--itx-radius-sm, 4px));
+	--_dot-size: var(--itx-control-dot-size, 0.625rem);
+	--_check-weight: var(--itx-control-check-weight, 3px);
+	--_transition: var(
+		--itx-control-transition,
+		var(--itx-duration-fast, 100ms)
+			var(--itx-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))
+	);
+	--_focus-ring-color: var(
+		--itx-control-focus-ring-color,
+		var(--itx-brand, #0066cc)
+	);
+	--_focus-ring-width: var(--itx-control-focus-ring-width, 3px);
+	--_focus-ring-offset: var(--itx-control-focus-ring-offset, 3px);
+	--_disabled-opacity: var(--itx-control-disabled-opacity, 0.5);
+
+	/* --- Base layout --- */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	position: relative;
+	width: var(--_size);
+	height: var(--_size);
+	box-sizing: border-box;
+	border: var(--_border-width) solid var(--_border-color);
+	background-color: var(--_bg);
+	transition:
+		border-color var(--_transition),
+		background-color var(--_transition),
+		transform var(--_transition);
+	pointer-events: none; /* host is decorative; clicks target the native input */
+}
+
+/* ============================================================
+   TYPE: radio
+   ============================================================ */
+
+:host([itx-visimorph="radio"]) {
+	border-radius: 50%;
+}
+
+/* Inner dot */
+:host([itx-visimorph="radio"])::after {
+	content: "";
+	display: block;
+	width: var(--_dot-size);
+	height: var(--_dot-size);
+	border-radius: 50%;
+	background-color: var(--_indicator);
+	transform: scale(0);
+	transition: transform var(--_transition);
+}
+
+/* Selected state */
+:host([itx-visimorph="radio"][data-selected]) {
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:host([itx-visimorph="radio"][data-selected])::after {
+	transform: scale(1);
+}
+
+/* ============================================================
+   TYPE: checkbox
+   ============================================================ */
+
+:host([itx-visimorph="checkbox"]) {
+	border-radius: var(--_radius);
+	corner-shape: superellipse(1);
+}
+
+/* Checkmark — drawn as a rotated L-shape via borders */
+:host([itx-visimorph="checkbox"])::after {
+	content: "";
+	display: block;
+	width: calc(var(--_size) * 0.4);
+	height: calc(var(--_size) * 0.2);
+	border-left: var(--_check-weight) solid var(--_indicator);
+	border-bottom: var(--_check-weight) solid var(--_indicator);
+	transform: rotate(-45deg) scale(0) translate(5%, -10%);
+	transition: transform var(--_transition);
+}
+
+/* Checked state */
+/*:host([itx-visimorph="checkbox"][data-focused]):focus-visible {
+	transform: scale(0.25);
+}*/
+
+/* Checked state */
+:host([itx-visimorph="checkbox"][data-checked]) {
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:host([itx-visimorph="checkbox"][data-checked])::after {
+	transform: rotate(-45deg) scale(1) translate(5%, -10%);
+}
+
+/* Indeterminate: replace checkmark with a horizontal dash */
+:host([itx-visimorph="checkbox"][data-indeterminate]) {
+	--itx-control-check-weight: 4px;
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:host([itx-visimorph="checkbox"][data-indeterminate])::after {
+	width: calc(var(--_size) * 0.5);
+	height: 0;
+	border-left: none;
+	border-bottom: var(--_check-weight) solid var(--_indicator);
+	transform: scale(1);
+}
+
+/* ============================================================
+   TYPE: toggle (pill track + sliding thumb)
+   ============================================================ */
+
+:host([itx-visimorph="toggle"]) {
+	--_toggle-width: var(--itx-control-toggle-width, 2.5rem);
+	--_toggle-height: var(--itx-control-toggle-height, 1.25rem);
+	--_toggle-thumb-size: var(
+		--itx-control-toggle-thumb-size,
+		calc(var(--_toggle-height) - 4px)
+	);
+	--_toggle-thumb-width: var(
+		--itx-control-toggle-thumb-width,
+		calc(var(--_toggle-thumb-size) * 1.5)
+	);
+	--_toggle-thumb-color: var(--itx-control-toggle-thumb-color, #ccc);
+
+	width: var(--_toggle-width);
+	height: var(--_toggle-height);
+	/* Override the square default */
+	border-radius: calc(var(--_toggle-height) / 2);
+}
+
+/* Sliding thumb — ::after is free since toggle has no checkmark */
+:host([itx-visimorph="toggle"])::after {
+	content: "";
+	position: absolute;
+	width: var(--_toggle-thumb-width);
+	height: 16px;
+	border-radius: 999px;
+	background-color: var(--_toggle-thumb-color);
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	transition: transform var(--_transition);
+	/* Thumb shadow for depth — off by default, can be overridden */
+	box-shadow: var(
+		--itx-control-toggle-thumb-shadow,
+		1px 4px 0 0 rgba(0, 0, 0, 0.2)
+	);
+}
+
+/* On state */
+:host([itx-visimorph="toggle"][data-checked]) {
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+	--itx-control-toggle-thumb-color: #fff;
+}
+
+:host([itx-visimorph="toggle"][data-checked])::after {
+	--itx-control-toggle-thumb-color: #fff;
+	transform: translateY(-50%)
+		translateX(
+			calc(
+				var(--_toggle-width) - var(--_toggle-thumb-width) - 2 *
+					var(--_border-width)
+			)
+		);
+}
+
+/* ============================================================
+   STATES: shared across types
+   ============================================================ */
+
+/* Focus ring — drawn as an outline on the host */
+:host([data-focused]) {
+	outline: var(--_focus-ring-width) solid var(--_focus-ring-color);
+	outline-offset: var(--_focus-ring-offset);
+	transform: scale(0.875);
+}
+
+/* Disabled */
+:host([data-disabled]) {
+	opacity: var(--_disabled-opacity);
+}
+
+/* ============================================================
+   ACCESSIBILITY OVERRIDES
+   ============================================================ */
+
+@media (prefers-contrast: high) {
+	:host {
+		--itx-control-border-width: 3px;
+		--itx-control-focus-ring-width: 3px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:host,
+	:host::after {
+		transition: none !important;
+	}
+}

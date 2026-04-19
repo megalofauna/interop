@@ -1,0 +1,41 @@
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   --itx-button-display          Display mode
+ *   --itx-button-align-items      Align-items
+ *   --itx-button-background       Background color
+ *   --itx-button-foreground       Text color
+ *   --itx-button-border-width     Border width
+ *   --itx-button-border-style     Border style
+ *   --itx-button-border-color     Border color
+ *   --itx-button-rounding         Border radius
+ *   --itx-button-padding-block    Block padding
+ *   --itx-button-padding-inline   Inline padding
+ *   --itx-button-font-family      Font family
+ *   --itx-button-font-size        Font size
+ *   --itx-button-line-height      Line height
+ *   --itx-button-letter-spacing   Letter spacing
+ */
+
+:where([interop-button]) {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+:host {
+	display: var(--itx-button-display, inline-flex);
+	align-items: var(--itx-button-align-items, center);
+	background: var(--itx-button-background, var(--itx-surface));
+	border-width: var(--itx-button-border-width, 2px);
+	border-style: var(--itx-button-border-style, solid);
+	border-color: var(--itx-button-border-color, transparent);
+	border-radius: var(--itx-button-rounding, var(--itx-radius-sm));
+	color: var(--itx-button-foreground, var(--itx-on-surface));
+	font-family: var(--itx-button-font-family, var(--itx-font-family));
+	font-size: var(--itx-button-font-size, inherit);
+	line-height: var(--itx-button-line-height, 1.25);
+	padding-block: var(--itx-button-padding-block, 0.375em);
+	padding-inline: var(--itx-button-padding-inline, 0.75em);
+	letter-spacing: var(--itx-button-letter-spacing, initial);
+	max-width: var(--itx-button-max-width, initial);
+}

@@ -1,0 +1,61 @@
+/*
+ * Primitive tokens — raw size scale & fluid typography ramp.
+ *
+ * These are the lowest-level design values. They are NOT intended for direct
+ * use in component styles; instead, higher-level semantic tokens (spacing,
+ * typography, etc.) reference these primitives so that a single change here
+ * ripples through the entire system.
+ */
+
+:where([interop-root]) {
+	/* ─── Size scale ────────────────────────────────────────────────────── */
+
+	--itx-sz-1: 0.25rem;
+	--itx-sz-2: 0.5rem;
+	--itx-sz-3: 0.75rem;
+	--itx-sz-4: 1rem;
+	--itx-sz-5: 1.25rem;
+	--itx-sz-6: 1.5rem;
+	--itx-sz-7: 1.75rem;
+	--itx-sz-8: 2rem;
+	--itx-sz-10: 2.5rem;
+	--itx-sz-12: 3rem;
+	--itx-sz-16: 4rem;
+	--itx-sz-20: 5rem;
+	--itx-sz-24: 6rem;
+	--itx-sz-32: 8rem;
+	--itx-sz-40: 10rem;
+	--itx-sz-48: 12rem;
+	--itx-sz-64: 16rem;
+	--itx-sz-80: 20rem;
+
+	/* ─── Fluid typography scale ────────────────────────────────────────
+	 *
+	 * Viewport ramp: 320 px → 1280 px.
+	 * Base ≈ 16 px at a typical viewport; hard-capped at 17 px (< 18).
+	 *
+	 * Scale steps (px, min → max):
+	 *   wtf 48→64 · 3xl 38→48 · 2xl 30→38 · xl 24→30
+	 *   lg 20→24  · md 17→20   · base 15→17 · sm 13→15
+	 *   xs 11→13  · micro 10→11
+	 * ───────────────────────────────────────────────────────────────────── */
+
+	--itx-fs-wtf: clamp(3rem, 1.6667vw + 2.6667rem, 4rem); /* 48 → 64 */
+	--itx-fs-3xl: clamp(2.375rem, 1.0417vw + 2.1667rem, 3rem); /* 38 → 48 */
+	--itx-fs-2xl: clamp(1.875rem, 0.8333vw + 1.7083rem, 2.375rem); /* 30 → 38 */
+	--itx-fs-xl: clamp(1.5rem, 0.625vw + 1.375rem, 1.875rem); /* 24 → 30 */
+	--itx-fs-lg: clamp(1.25rem, 0.4167vw + 1.1667rem, 1.5rem); /* 20 → 24 */
+	--itx-fs-md: clamp(1.0625rem, 0.3125vw + 1rem, 1.25rem); /* 17 → 20 */
+	--itx-fs-base: clamp(
+		0.9375rem,
+		0.2083vw + 0.8958rem,
+		1.0625rem
+	); /* 15 → 17 */
+	--itx-fs-sm: clamp(0.8125rem, 0.2083vw + 0.7708rem, 0.9375rem); /* 13 → 15 */
+	--itx-fs-xs: clamp(0.6875rem, 0.2083vw + 0.6458rem, 0.8125rem); /* 11 → 13 */
+	--itx-fs-micro: clamp(
+		0.625rem,
+		0.1042vw + 0.6042rem,
+		0.6875rem
+	); /* 10 → 11 */
+}

@@ -1,0 +1,90 @@
+<div class="itx-cb__header">
+	@if (isMultiFile()) {
+		<div
+			role="tablist"
+			class="itx-cb__tablist"
+			(keydown)="onTablistKeydown($event)"
+		>
+			@for (file of files(); track fileKey(file)) {
+				<button
+					#tabBtn
+					role="tab"
+					class="itx-cb__tab"
+					[id]="tabId(fileKey(file))"
+					[attr.aria-selected]="activeKey() === fileKey(file)"
+					[attr.aria-controls]="panelId(fileKey(file))"
+					[tabindex]="activeKey() === fileKey(file) ? 0 : -1"
+					(click)="selectTab(fileKey(file))"
+					(keydown)="onTabKeydown($event, fileKey(file))"
+				>{{ file.label }}</button>
+			}
+		</div>
+	} @else {
+		@if (displayLabel()) {
+			<span class="itx-cb__label">{{ displayLabel() }}</span>
+		}
+	}
+
+	<div
+		class="itx-cb__actions"
+		interop-toolbar
+		[label]="actionsLabel()"
+	>
+		@if (wrapToggle()) {
+			<button
+				interop-button
+				class="itx-cb__btn"
+				type="button"
+				[attr.aria-pressed]="isWrapped()"
+				[attr.aria-label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
+				[onActivate]="handleWrapToggle"
+			>
+				<interop-icon name="arrow-u-down-left" [size]="16" />
+			</button>
+		}
+		<button
+			interop-button
+			class="itx-cb__btn"
+			type="button"
+			[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
+			[onActivate]="handleCopy"
+			[activationOptions]="copyOptions"
+		>
+			<interop-icon
+				[name]="isCopied() ? 'tabler-check' : 'tabler-copy'"
+				[size]="20"
+			/>
+		</button>
+	</div>
+</div>
+
+@if (isMultiFile()) {
+	@for (file of files(); track fileKey(file)) {
+		<div
+			role="tabpanel"
+			[id]="panelId(fileKey(file))"
+			[attr.aria-labelledby]="tabId(fileKey(file))"
+			[hidden]="activeKey() !== fileKey(file)"
+		>
+			<figure
+				interop-code-renderer
+				[tokens]="file.tokens"
+				[lineNumbers]="lineNumbers()"
+				[wrap]="isWrapped()"
+			></figure>
+		</div>
+	}
+} @else {
+	<figure
+		interop-code-renderer
+		[tokens]="tokens()"
+		[lineNumbers]="lineNumbers()"
+		[wrap]="isWrapped()"
+	>
+		<ng-content />
+	</figure>
+}
+
+<span class="itx-cb__sr" aria-live="polite" aria-atomic="true">
+	@if (isCopied()) { Copied to clipboard }
+</span>

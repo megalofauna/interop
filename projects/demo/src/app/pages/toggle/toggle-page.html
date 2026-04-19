@@ -1,0 +1,92 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Toggle</h1>
+		<p class="demo-page__lead">
+			Binary switch built on a native checkbox with <code>role="switch"</code>.
+			Participates in native form submission without extra JavaScript.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Basic">
+			<label interop-toggle id="gravity" [checked]="gravityOn()" (checkedChange)="gravityOn.set($event)">
+				Artificial gravity
+			</label>
+			<demo-state>
+				<demo-state-item label="On">{{ gravityOn() }}</demo-state-item>
+			</demo-state>
+		</demo-example>
+
+		<demo-example label="Default on">
+			<label interop-toggle id="shields" [checked]="shieldsOn()" (checkedChange)="shieldsOn.set($event)">
+				Deflector shields
+			</label>
+			<demo-state>
+				<demo-state-item label="On">{{ shieldsOn() }}</demo-state-item>
+			</demo-state>
+		</demo-example>
+
+		<demo-example label="Disabled">
+			<label interop-toggle id="life-support" [checked]="lifeSupportOn()" [disabled]="true">
+				Life support (locked)
+			</label>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Multiple toggles ───────────────────────────────────────────────── -->
+	<demo-section id="group" heading="Toggle group">
+		<demo-example label="System status panel">
+			<div style="display: flex; flex-direction: column; gap: 0.75rem;">
+				<label interop-toggle id="g-gravity" [checked]="gravityOn()" (checkedChange)="gravityOn.set($event)">
+					Artificial gravity
+				</label>
+				<label interop-toggle id="g-shields" [checked]="shieldsOn()" (checkedChange)="shieldsOn.set($event)">
+					Deflector shields
+				</label>
+				<label interop-toggle id="g-life" [checked]="lifeSupportOn()" [disabled]="true">
+					Life support (locked)
+				</label>
+			</div>
+			<demo-state label="System status">
+				<demo-state-item label="Gravity">{{ gravityOn() }}</demo-state-item>
+				<demo-state-item label="Shields">{{ shieldsOn() }}</demo-state-item>
+				<demo-state-item label="Life support">{{ lifeSupportOn() }}</demo-state-item>
+			</demo-state>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

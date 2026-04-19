@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerDiamond: InteropIconDefinition = {
+  name: "tabler-diamond",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5\" /> <path d=\"M10 12l-2 -2.2l.6 -1\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

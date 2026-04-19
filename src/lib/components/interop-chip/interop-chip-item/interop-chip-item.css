@@ -1,0 +1,117 @@
+/* ============================================================
+   interop-chip-item — Individual display chip (li host)
+
+   Visual map:
+
+   ┌───────────────────────────────────────────────────┐  ← --itx-chip-border
+   │  ←pad→  Chip label text  ←pad→  [×] ← remove btn │  ← --itx-chip-color
+   └───────────────────────────────────────────────────┘
+                  --itx-chip-radius
+
+   Remove button (×):
+     size:    --itx-chip-remove-size
+     colour:  inherits from chip text colour
+   ============================================================ */
+
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   --itx-chip-color             Text color (default: inherit)
+ *   --itx-chip-bg                Background (default: transparent)
+ *   --itx-chip-border            Border shorthand (default: 1px solid var(--itx-border))
+ *   --itx-chip-radius            Border radius (default: var(--itx-radius-full))
+ *   --itx-chip-padding           Padding shorthand (default: 0.25rem 0.75rem)
+ *   --itx-chip-font-size         Font size (default: inherit)
+ *   --itx-chip-font-weight       Font weight (default: inherit)
+ *   --itx-chip-remove-background <color> default: transparent);
+ *   --itx-chip-remove-border     default: 1px solid var(--itx-chip-border)
+ *   --itx-chip-remove-border-radius     default: full
+ *   --itx-chip-remove-width
+ *   --itx-chip-remove-entity-size   Remove button font-size (default: 1.25rem)
+ *   --itx-chip-disabled-opacity  Opacity when disabled (default: 0.4)
+ */
+
+/* ── Base chip ────────────────────────────────────────────── */
+
+:host {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-spacing-3);
+	background: var(--itx-chip-bg, transparent);
+	border: var(--itx-chip-border, 1px solid var(--itx-border, currentColor));
+	border-radius: var(--itx-chip-radius, var(--itx-radius-full, 9999px));
+	color: var(--itx-chip-color, inherit);
+	font-size: var(--itx-chip-font-size, inherit);
+	font-weight: var(--itx-chip-font-weight, inherit);
+	padding: var(--itx-chip-padding, 0.25rem 0.75rem);
+	list-style: none;
+}
+
+:host:has(.itx-chip-remove) {
+	--itx-chip-padding: var(--itx-spacing-2) var(--itx-spacing-2)
+		var(--itx-spacing-2) var(--itx-spacing-4);
+}
+
+:host:has(.itx-chip-remove):hover {
+	.itx-chip-remove {
+		--itx-chip-remove-border: 2px solid var(--itx-brand);
+	}
+}
+
+:host:has(.itx-chip-remove):focus {
+	.itx-chip-remove,
+	.itx-chip-remove:hover {
+		scale: 0.825;
+		border-color: transparent;
+	}
+}
+
+/* ── Remove button ────────────────────────────────────────── */
+
+.itx-chip-remove {
+	-webkit-appearance: none;
+	appearance: none;
+	background: transparent;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--itx-chip-remove-entity-size, 1rem);
+	line-height: 1;
+	padding: 0;
+	margin: 0;
+	transition: opacity 100ms ease;
+	width: var(--itx-chip-remove-width);
+	height: auto;
+	aspect-ratio: 1;
+	border: var(--itx-chip-remove-border, var(--itx-border));
+	background: var(--itx-chip-remove-background, var(--itx-surface-below));
+	border-radius: var(--itx-chip-remove-radius, var(--itx-radius-full));
+}
+
+.itx-chip-remove:focus-visible {
+	outline: 3px solid var(--itx-brand);
+	outline-offset: 3px;
+	border-radius: var(--itx-radius-full);
+}
+
+.itx-chip-remove:disabled {
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* ── Disabled ─────────────────────────────────────────────── */
+
+:host([data-disabled]) {
+	opacity: var(--itx-chip-disabled-opacity, 0.4);
+}
+
+/* ── High contrast ────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+	:host {
+		outline: 1px solid currentColor;
+	}
+}

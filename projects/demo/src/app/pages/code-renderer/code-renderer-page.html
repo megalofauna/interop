@@ -1,0 +1,70 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Code Renderer</h1>
+		<p class="demo-page__lead">
+			Minimal tokenized code primitive for syntax-highlighted output.
+			Accepts pre-tokenized <code>[tokens]</code> from a Shiki adapter or
+			falls back to projected <code>&lt;pre&gt;&lt;code&gt;</code> content.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Projection fallback (TypeScript)">
+			<figure interop-code-renderer language="ts" filename="cargo.service.ts">
+				<pre><code>import &#123; Injectable, signal &#125; from '@angular/core';
+
+&#64;Injectable(&#123; providedIn: 'root' &#125;)
+export class CargoService &#123;
+  private readonly manifest = signal&lt;CargoItem[]&gt;([]);
+
+  add(item: CargoItem) &#123;
+    this.manifest.update(items => [...items, item]);
+  &#125;
+&#125;</code></pre>
+			</figure>
+		</demo-example>
+
+		<demo-example label="Projection fallback (HTML)">
+			<figure interop-code-renderer language="html">
+				<pre><code>&lt;interop-scroll-area ariaLabel="Cargo manifest" style="height: 320px"&gt;
+  &#64;for (item of items(); track item.id) &#123;
+    &lt;app-cargo-row [item]="item" interopAutoRender="48px" /&gt;
+  &#125;
+&lt;/interop-scroll-area&gt;</code></pre>
+			</figure>
+		</demo-example>
+
+		<demo-example label="With line numbers">
+			<figure interop-code-renderer language="scss" filename="_tokens.scss" [lineNumbers]="true">
+				<pre><code>:root &#123;
+  --itx-control-accent:  var(--itx-primary);
+  --itx-control-size:    1rem;
+  --itx-control-radius:  var(--itx-radius-sm);
+  --itx-control-border:  var(--itx-border);
+&#125;</code></pre>
+			</figure>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

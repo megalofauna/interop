@@ -1,0 +1,12 @@
+@if (headerLabel()) {
+	<figcaption class="itx-cr__caption">{{ headerLabel() }}</figcaption>
+}
+
+<div class="itx-cr__body">
+	@if (tokens(); as tokenLines) {
+		<!-- prettier-ignore -->
+		<pre class="itx-cr__pre" [attr.aria-label]="languageLabel() ? languageLabel() + ' code' : null"><code class="itx-cr__code">@for (line of tokenLines; track $index) {<span class="itx-cr__line">@if (lineNumbers()) {<span class="itx-cr__line-number" aria-hidden="true">{{ $index + 1 }}</span>}<span class="itx-cr__line-content">@for (t of line.tokens; track $index) {<span class="itx-cr__token" [style.color]="t.color ?? null" [style.font-style]="(t.fontStyle === 1 || t.fontStyle === 3) ? 'italic' : null" [style.font-weight]="(t.fontStyle === 2 || t.fontStyle === 3) ? 'bold' : null">{{ t.text }}</span>}</span></span>}</code></pre>
+	} @else {
+		<ng-content />
+	}
+</div>

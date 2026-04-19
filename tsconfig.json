@@ -22,8 +22,9 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "interop": ["dist/interop"],
-      "interop/*": ["dist/interop/*"]
+      "interop": ["dist/interop", "src/public-api.ts"],
+      "interop/*": ["dist/interop/*", "src/*"],
+      "@interop/composites": ["projects/composites/src/public-api.ts"]
     }
   },
   "angularCompilerOptions": {

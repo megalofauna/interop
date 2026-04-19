@@ -2,45 +2,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  line-height: 0; // Prevent extra spacing around SVG
+  line-height: 0;
+  flex-shrink: 0;
+  pointer-events: none; // icons are never interactive targets
 }
 
 svg {
   display: block;
   flex-shrink: 0;
-  // Ensure crisp rendering at different sizes
   shape-rendering: geometricPrecision;
 }
 
-// Fallback styling when icon is not found
-.interop-icon-fallback {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f0f0f0;
-  color: #666;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  font-family: monospace;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
-  box-sizing: border-box;
-
-  // Dark mode support
-  @media (prefers-color-scheme: dark) {
-    background-color: #333;
-    color: #999;
-    border-color: #555;
-  }
-}
-
-// Ensure the component doesn't interfere with flexbox layouts
-:host-context(.flex-container) {
-  flex-shrink: 0;
-}
-
-// Common icon button context styling
-:host-context(button) {
-  pointer-events: none; // Let button handle all interactions
+// Missing-icon indicator — visible in development only via ng-reflect or devtools
+// In production builds the X remains in the DOM but is unstyled and hidden via aria.
+.itx-icon--missing {
+  opacity: 0.3;
+  color: red;
 }

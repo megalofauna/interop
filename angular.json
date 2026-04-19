@@ -33,6 +33,29 @@
 				}
 			}
 		},
+		"composites": {
+			"projectType": "library",
+			"root": "projects/composites",
+			"sourceRoot": "projects/composites/src",
+			"prefix": "itx",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:ng-packagr",
+					"options": {
+						"project": "projects/composites/ng-package.json"
+					},
+					"configurations": {
+						"production": {
+							"tsConfig": "projects/composites/tsconfig.lib.json"
+						},
+						"development": {
+							"tsConfig": "projects/composites/tsconfig.lib.json"
+						}
+					},
+					"defaultConfiguration": "production"
+				}
+			}
+		},
 		"demo": {
 			"projectType": "application",
 			"schematics": {

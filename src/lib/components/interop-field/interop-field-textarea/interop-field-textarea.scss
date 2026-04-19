@@ -1,0 +1,124 @@
+/*
+ * Available tokens: same as interop-field-input (--itx-field-*)
+ * See interop-field-input.scss for the full token list.
+ */
+
+/* ─── Host ───────────────────────────────────────────────────────────────── */
+
+:host {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-field-gap, var(--itx-spacing-1));
+}
+
+/* ─── Label ──────────────────────────────────────────────────────────────── */
+
+:where(.interop-field-label) {
+	color: var(--itx-field-label-color, var(--itx-on-surface));
+	font-size: var(--itx-field-label-font-size, 0.875rem);
+	font-weight: var(--itx-field-label-font-weight, 500);
+	line-height: var(--itx-field-label-line-height, 1.25);
+}
+
+/* ─── Control row ────────────────────────────────────────────────────────── */
+
+interop-field-control {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-field-addon-gap, var(--itx-spacing-2));
+
+	border: var(--itx-field-border-width, 1px) var(--itx-field-border-style, solid)
+		var(--itx-field-border-color, var(--itx-border));
+	border-radius: var(--itx-field-border-radius, var(--itx-radius-sm));
+	background: var(--itx-field-bg, var(--itx-surface));
+	padding-block: var(--itx-field-padding-block, var(--itx-spacing-2));
+	padding-inline: var(--itx-field-padding-inline, var(--itx-spacing-4));
+
+	transition:
+		border-color 150ms ease,
+		outline-color 150ms ease;
+}
+
+interop-field-control.focused {
+	border-color: var(--itx-field-focus-color, var(--itx-brand));
+	outline: var(--itx-field-focus-width, 2px) solid var(--itx-field-focus-color, var(--itx-brand));
+	outline-offset: -1px;
+}
+
+interop-field-control.invalid {
+	border-color: var(--itx-field-invalid-border-color, var(--itx-danger));
+}
+
+interop-field-control.invalid.focused {
+	border-color: var(--itx-field-invalid-focus-color, var(--itx-danger));
+	outline-color: var(--itx-field-invalid-focus-color, var(--itx-danger));
+}
+
+interop-field-control.disabled {
+	opacity: var(--itx-field-disabled-opacity, 0.6);
+	pointer-events: none;
+}
+
+interop-field-control.readonly {
+	background: transparent;
+}
+
+/* ─── Textarea ───────────────────────────────────────────────────────────── */
+
+:where(.interop-text-area) {
+	flex: 1;
+	min-width: 0;
+	border: none;
+	outline: none;
+	background: transparent;
+	padding: 0;
+	margin: 0;
+	font-family: var(--itx-field-font-family, var(--itx-font-family, inherit));
+	font-size: var(--itx-field-font-size, inherit);
+	line-height: var(--itx-field-line-height, 1.5);
+	color: inherit;
+	resize: vertical;
+	field-sizing: content;
+}
+
+:where(.interop-text-area)::placeholder {
+	color: var(--itx-muted, #757575);
+	opacity: 1;
+}
+
+:where(.interop-text-area):disabled {
+	cursor: not-allowed;
+}
+
+/* ─── Prefix / Suffix ────────────────────────────────────────────────────── */
+
+:where(.interop-field-prefix),
+:where(.interop-field-suffix) {
+	flex-shrink: 0;
+	color: var(--itx-field-addon-color, var(--itx-muted));
+	line-height: 1;
+	user-select: none;
+}
+
+/* ─── Notes ──────────────────────────────────────────────────────────────── */
+
+:where(.interop-field-note) {
+	color: var(--itx-field-note-color, var(--itx-muted));
+	font-size: var(--itx-field-note-font-size, 0.8125rem);
+}
+
+/* ─── Errors ─────────────────────────────────────────────────────────────── */
+
+:where(.interop-field-error) {
+	color: var(--itx-field-error-color, var(--itx-danger));
+	font-size: var(--itx-field-error-font-size, 0.8125rem);
+}
+
+/* ─── Notes & Errors containers ──────────────────────────────────────────── */
+
+interop-field-notes,
+interop-field-errors {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-field-errors-gap, var(--itx-spacing-1));
+}

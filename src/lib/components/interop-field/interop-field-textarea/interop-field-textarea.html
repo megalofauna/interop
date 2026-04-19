@@ -1,0 +1,46 @@
+<label [attr.for]="id()" class="interop-field-label">
+	{{ label() }}
+</label>
+
+<interop-field-control
+	[class.focused]="focused()"
+	[class.invalid]="hasVisibleErrors()"
+	[class.disabled]="disabled()"
+	[class.readonly]="readonly()">
+	<ng-content select="[interop-field-prefix]" />
+	<textarea
+		#textareaEl
+		[id]="id()"
+		[value]="value()"
+		[placeholder]="placeholder()"
+		[required]="required()"
+		[disabled]="disabled()"
+		[readOnly]="readonly()"
+		[rows]="rows()"
+		[attr.aria-required]="required() || null"
+		[attr.aria-invalid]="hasVisibleErrors() || null"
+		[attr.aria-describedby]="describedByIds()"
+		[attr.aria-errormessage]="firstErrorId()"
+		class="interop-text-area"
+		(input)="onInput($event)"
+		(focus)="focused.set(true)"
+		(blur)="focused.set(false); onTouched()">
+	</textarea>
+	<ng-content select="[interop-field-suffix]" />
+</interop-field-control>
+
+@if (normalizedNotes().length) {
+	<interop-field-notes>
+		@for (note of normalizedNotes(); track $index) {
+			<span class="interop-field-note" [id]="noteId($index)">{{ note }}</span>
+		}
+	</interop-field-notes>
+}
+
+@if (hasVisibleErrors()) {
+	<interop-field-errors role="alert">
+		@for (error of visibleErrors(); track error.key ?? $index) {
+			<span class="interop-field-error" [id]="errorId($index)">{{ error.message }}</span>
+		}
+	</interop-field-errors>
+}

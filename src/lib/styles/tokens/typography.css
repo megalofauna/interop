@@ -1,0 +1,23 @@
+/*
+ * Typography — semantic font roles.
+ *
+ * Maps human-readable role names (display, heading, body …) to the
+ * fluid primitive font-size scale defined in primitives.css.
+ * Components should reference these semantic aliases, never the raw
+ * --itx-fs-* primitives directly.
+ *
+ * Font family choices (--itx-font-family, --itx-font-family-mono) are
+ * defined in the active theme file — e.g. themes/protocol.css.
+ */
+
+:where([interop-root]) {
+	--itx-font-size-display: var(--itx-fs-3xl);
+	--itx-font-size-heading-lg: var(--itx-fs-2xl);
+	--itx-font-size-heading: var(--itx-fs-xl);
+	--itx-font-size-subheading: var(--itx-fs-lg);
+	--itx-font-size-body-lg: var(--itx-fs-md);
+	--itx-font-size-body: var(--itx-fs-base);
+	--itx-font-size-label: var(--itx-fs-sm);
+	--itx-font-size-caption: var(--itx-fs-xs);
+	--itx-font-size-fine-print: var(--itx-fs-micro);
+}

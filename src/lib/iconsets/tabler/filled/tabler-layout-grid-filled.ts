@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerLayoutGridFilled: InteropIconDefinition = {
+  name: "tabler-layout-grid-filled",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M9 3a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-4a2 2 0 0 1 2 -2z\" /> <path d=\"M19 3a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-4a2 2 0 0 1 2 -2z\" /> <path d=\"M9 13a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-4a2 2 0 0 1 2 -2z\" /> <path d=\"M19 13a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-4a2 2 0 0 1 2 -2z\" /></g>",
+} as const;

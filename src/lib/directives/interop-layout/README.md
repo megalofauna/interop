@@ -5,7 +5,7 @@ Universal layout control for Interop components via CSS custom properties. Provi
 ## Key Features
 
 - **Constrained vocabulary**: Prevents raw CSS exposure with curated layout options
-- **Token-based spacing**: Gap values map to design system tokens (`--ntr-size-*`)
+- **Token-based spacing**: Gap values map to design system tokens (`--itx-sz-*`)
 - **Shorthand syntax**: Simple string format for common use cases
 - **Explicit object syntax**: Structured configuration for complex layouts
 - **Component opt-in**: Only affects components that consume layout variables
@@ -59,13 +59,13 @@ Universal layout control for Interop components via CSS custom properties. Provi
 
 ## Gap Values & Design Tokens
 
-Gap values map to your existing `--ntr-size-*` tokens:
+Gap values map to your existing `--itx-sz-*` tokens:
 
 - `gap-0` → `0`
-- `gap-1` → `var(--ntr-size-1)` (0.25rem)
-- `gap-2` → `var(--ntr-size-2)` (0.5rem)
-- `gap-4` → `var(--ntr-size-4)` (1rem)
-- `gap-8` → `var(--ntr-size-8)` (2rem)
+- `gap-1` → `var(--itx-sz-1)` (0.25rem)
+- `gap-2` → `var(--itx-sz-2)` (0.5rem)
+- `gap-4` → `var(--itx-sz-4)` (1rem)
+- `gap-8` → `var(--itx-sz-8)` (2rem)
 - etc.
 
 ## Layout-Capable Components
@@ -73,7 +73,7 @@ Gap values map to your existing `--ntr-size-*` tokens:
 Components must opt into layout support by:
 
 1. **Using the decorator**: `@LayoutCapable(['direction', 'justify', 'align', 'wrap', 'gap'])`
-2. **Consuming CSS variables**: Include layout styles that read `--ntr-layout-*` variables
+2. **Consuming CSS variables**: Include layout styles that read `--itx-layout-*` variables
 
 ### Built-in Layout-Capable Components
 
@@ -104,7 +104,7 @@ export class MyContainerComponent {
   @include layout.layout-capable;
   
   // Override defaults if needed
-  flex-direction: var(--ntr-layout-direction, column);
+  flex-direction: var(--itx-layout-direction, column);
 }
 ```
 
@@ -127,11 +127,11 @@ Use CSS custom properties for responsive behavior:
 
 ```scss
 .my-responsive-container {
-  --ntr-layout-direction: column;
+  --itx-layout-direction: column;
   
   @media (min-width: 768px) {
-    --ntr-layout-direction: row;
-    --ntr-layout-gap: var(--ntr-layout-gap-8);
+    --itx-layout-direction: row;
+    --itx-layout-gap: var(--itx-layout-gap-8);
   }
 }
 ```
@@ -158,11 +158,11 @@ export class MyComponent {
 
 The directive sets these CSS custom properties:
 
-- `--ntr-layout-direction`: flex-direction value
-- `--ntr-layout-justify`: justify-content value  
-- `--ntr-layout-align`: align-items value
-- `--ntr-layout-wrap`: flex-wrap value
-- `--ntr-layout-gap`: gap value (using design tokens)
+- `--itx-layout-direction`: flex-direction value
+- `--itx-layout-justify`: justify-content value  
+- `--itx-layout-align`: align-items value
+- `--itx-layout-wrap`: flex-wrap value
+- `--itx-layout-gap`: gap value (using design tokens)
 
 ## Development Warnings
 
@@ -181,14 +181,14 @@ InteropLayout works alongside existing component styles:
 :host {
   display: flex;
   flex-direction: column;
-  gap: var(--ntr-size-2);
+  gap: var(--itx-sz-2);
   
   // Layout directive can override these
-  flex-direction: var(--ntr-layout-direction, column);
-  justify-content: var(--ntr-layout-justify, flex-start);
-  align-items: var(--ntr-layout-align, flex-start);
-  flex-wrap: var(--ntr-layout-wrap, nowrap);
-  gap: var(--ntr-layout-gap, var(--ntr-size-2));
+  flex-direction: var(--itx-layout-direction, column);
+  justify-content: var(--itx-layout-justify, flex-start);
+  align-items: var(--itx-layout-align, flex-start);
+  flex-wrap: var(--itx-layout-wrap, nowrap);
+  gap: var(--itx-layout-gap, var(--itx-sz-2));
 }
 ```
 

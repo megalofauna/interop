@@ -1,0 +1,95 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Badge</h1>
+		<p class="demo-page__lead">
+			Overlay notification counter for buttons, avatars, and any interactive element.
+			Uses CSS anchor positioning — no JavaScript layout required.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Counter badge">
+			<interop-badge
+				[count]="alertCount()"
+				[accessibleLabel]="alertCount() + ' unread alerts'">
+				<button interop-button>Alerts</button>
+			</interop-badge>
+			<demo-state>
+				<demo-state-item label="Count">{{ alertCount() }}</demo-state-item>
+			</demo-state>
+		</demo-example>
+
+		<demo-example label="Increment / reset">
+			<div style="display: flex; gap: 0.5rem; align-items: center;">
+				<interop-badge
+					[count]="alertCount()"
+					[accessibleLabel]="alertCount() + ' unread alerts'">
+					<button interop-button (click)="increment()">+ Alert</button>
+				</interop-badge>
+				<button interop-button (click)="reset()">Reset</button>
+			</div>
+		</demo-example>
+
+		<demo-example label="Count cap (max)">
+			<interop-badge
+				[count]="150"
+				[max]="99"
+				[accessibleLabel]="'More than 99 alerts'">
+				<button interop-button>Comms</button>
+			</interop-badge>
+		</demo-example>
+
+		<demo-example label="Dot indicator">
+			<interop-badge
+				[dot]="true"
+				[accessibleLabel]="'New activity'">
+				<button interop-button>Status</button>
+			</interop-badge>
+		</demo-example>
+
+		<demo-example label="Hidden">
+			<interop-badge
+				[count]="0"
+				[hidden]="true"
+				[accessibleLabel]="'No alerts'">
+				<button interop-button>Quiet bay</button>
+			</interop-badge>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Positions ─────────────────────────────────────────────────────── -->
+	<demo-section id="positions" heading="Positions">
+		<demo-example label="All four corners">
+			<div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+				@for (pos of positions; track pos) {
+					<interop-badge [count]="3" [position]="pos" [accessibleLabel]="'3 items'">
+						<button interop-button>{{ pos }}</button>
+					</interop-badge>
+				}
+			</div>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const PhSubsetProperOfDuotone: InteropIconDefinition = {
+  name: "ph-subset-proper-of-duotone",
+  viewBox: "0 0 256 256",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M200,48H128a80,80,0,0,0-80,80h0a80,80,0,0,0,80,80h72Z\" opacity=\"0.2\"/><path d=\"M200,48H128a80,80,0,0,0-80,80h0a80,80,0,0,0,80,80h72\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+  defaultStrokeWidth: 16,
+} as const;

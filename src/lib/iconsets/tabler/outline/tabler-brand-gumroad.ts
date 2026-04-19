@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerBrandGumroad: InteropIconDefinition = {
+  name: "tabler-brand-gumroad",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12a9 9 0 1 1 -18 0a9 9 0 0 1 18 0\" /> <path d=\"M13.5 13h2.5v3\" /> <path d=\"M15.024 9.382a4 4 0 1 0 -3.024 6.618c1.862 0 2.554 -1.278 3 -3\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

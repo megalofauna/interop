@@ -1,0 +1,159 @@
+/* ============================================================
+   interop-segment — Individual segment button (button host)
+
+   The host IS the <button> element.
+
+   Token resolution:
+     Tier 2 component tokens → private props → style rules.
+
+     The container's --_indicator-bg private prop is also
+     available here via CSS custom property inheritance, since
+     <button> is a child of <fieldset>. This keeps the fallback
+     [aria-pressed] background in sync with the pill colour
+     without duplication.
+   ============================================================ */
+
+/* ── Token cascade ────────────────────────────────────────── */
+
+/*
+ * TIER 2 — COMPONENT TOKENS handled here:
+ *
+ * Visual map:
+ *
+ *   ┌────────────────────────────────────────┐  ← --itx-seg-segment-radius
+ *   │  ←── --itx-seg-padding ──→             │
+ *   │         Label text                     │  ← --itx-seg-color (default)
+ *   │                                        │    --itx-seg-hover-color (hover)
+ *   └────────────────────────────────────────┘    --itx-seg-active-color (pressed)
+ *   │←────── --itx-seg-min-width ───────────→│
+ *
+ *   Background layers (bottom → top):
+ *     transparent (default)                      --itx-seg-bg
+ *     ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒  (hover)            --itx-seg-hover-bg
+ *     ████████████████████████ (pill, z below)   inherited --_indicator-bg
+ *
+ *   Font:
+ *     size:    --itx-seg-font-size
+ *     weight:  --itx-seg-font-weight (default)
+ *              --itx-seg-active-font-weight (pressed)
+ *
+ *   Focus ring:
+ *
+ *   ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐  ← --itx-seg-focus-color
+ *    ┌──────────────────────────────────────┐      ← --itx-seg-focus-width
+ *   ││  focused segment                     ││     ← --itx-seg-focus-offset
+ *    └──────────────────────────────────────┘
+ *   └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+ *
+ *   Disabled: opacity --itx-seg-disabled-opacity
+ */
+:host {
+	/* ── Default state ──────────────────────────────── */
+	--_color:              var(--itx-seg-color,              var(--itx-seg-text,      inherit));
+	--_bg:                 var(--itx-seg-bg,                 transparent);
+	--_padding:            var(--itx-seg-padding,            0.25rem 0.75rem);
+	--_radius:             var(--itx-seg-segment-radius,     var(--itx-seg-radius,    4px));
+	--_min-width:          var(--itx-seg-min-width,          0px);
+	--_font-size:          var(--itx-seg-font-size,          inherit);
+	--_font-weight:        var(--itx-seg-font-weight,        inherit);
+
+	/* ── Hover ──────────────────────────────────────── */
+	--_hover-color:        var(--itx-seg-hover-color,        var(--itx-seg-text,      inherit));
+	--_hover-bg:           var(--itx-seg-hover-bg,           transparent);
+
+	/* ── Active / pressed ───────────────────────────── */
+	--_active-color:       var(--itx-seg-active-color,       var(--itx-seg-on-accent, white));
+	--_active-font-weight: var(--itx-seg-active-font-weight, inherit);
+
+	/* ── Focus ──────────────────────────────────────── */
+	--_focus-color:        var(--itx-seg-focus-color,        var(--itx-seg-accent,    currentColor));
+	--_focus-width:        var(--itx-seg-focus-width,        2px);
+	--_focus-offset:       var(--itx-seg-focus-offset,       -2px);
+
+	/* ── Disabled ───────────────────────────────────── */
+	--_disabled-opacity:   var(--itx-seg-disabled-opacity,   0.4);
+}
+
+/* ── Button reset + base styles ──────────────────────────── */
+
+:host {
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--_bg);
+	border: none;
+	border-radius: var(--_radius);
+	font: inherit;
+	font-size: var(--_font-size);
+	font-weight: var(--_font-weight);
+	color: var(--_color);
+	cursor: pointer;
+	padding: var(--_padding);
+	min-width: var(--_min-width);
+	/* Segments must stack above the pill pseudo-element on the container */
+	position: relative;
+	z-index: 1;
+	/* Prevent text selection on rapid clicks */
+	user-select: none;
+}
+
+/* ── Hover ────────────────────────────────────────────────── */
+
+:host(:hover:not([data-disabled]):not(:disabled)) {
+	color: var(--_hover-color);
+	background: var(--_hover-bg);
+}
+
+/* ── Selected state — fallback (no anchor positioning) ─────── */
+
+/*
+ * --_indicator-bg is set on the container's :host. CSS custom
+ * properties inherit through the DOM, so it resolves here via the
+ * parent <fieldset>. The fallback background always matches the pill.
+ */
+:host([aria-pressed="true"]) {
+	background: var(--_indicator-bg, black);
+	color: var(--_active-color);
+	font-weight: var(--_active-font-weight);
+	border: var(--_indicator-border, none);
+}
+
+/* ── Selected state — enhancement (with anchor positioning) ── */
+
+/*
+ * The container's ::before pill provides the background.
+ * The segment only needs to: declare its anchor-name, flip text
+ * colour, and clear the fallback background.
+ */
+@supports (anchor-name: none) {
+	:host([aria-pressed="true"]) {
+		background: transparent;
+		color: var(--_active-color);
+		font-weight: var(--_active-font-weight);
+		border: none;
+		anchor-name: --itx-segment-active;
+	}
+}
+
+/* ── Focus ────────────────────────────────────────────────── */
+
+:host(:focus-visible) {
+	outline: var(--_focus-width) solid var(--_focus-color);
+	outline-offset: var(--_focus-offset);
+}
+
+/* ── Disabled ─────────────────────────────────────────────── */
+
+:host([data-disabled]),
+:host(:disabled) {
+	opacity: var(--_disabled-opacity);
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* ── High contrast ────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+	:host([aria-pressed="true"]) {
+		outline: 2px solid currentColor;
+	}
+}

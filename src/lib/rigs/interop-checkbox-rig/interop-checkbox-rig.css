@@ -1,0 +1,126 @@
+/* Element selector: remove the custom element from layout, fieldset becomes the layout root */
+:host(interop-checkbox-rig) {
+	display: contents;
+}
+
+/* Attribute selector: user owns the container element, don't touch its display */
+:host(:not(interop-checkbox-rig)) {
+	display: block;
+}
+
+/* Hands-off mode: Full fieldset structure */
+:host(interop-checkbox-rig) fieldset {
+	border: 1px solid transparent;
+	/*border-radius: 4px;*/
+	/*padding: 1rem;*/
+	margin: 0;
+	min-width: 0;
+}
+
+:host(interop-checkbox-rig) fieldset:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+:host(interop-checkbox-rig) legend {
+	font-weight: 600;
+	padding: 0 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+/* Checkbox control styles - applies to both modes */
+.checkbox-control {
+	display: flex;
+	align-items: center;
+	/*margin-bottom: 0.75rem;*/
+	gap: var(--itx-spacing-2);
+	cursor: pointer;
+	user-select: none;
+	font-size: var(--itx-font-size-body);
+	line-height: 1.5;
+}
+
+.checkbox-control:last-child {
+	margin-bottom: 0;
+}
+
+.checkbox-control input[type="checkbox"] {
+	margin: 0;
+	cursor: pointer;
+}
+
+.checkbox-control:has(input[type="checkbox"]:disabled) {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+/* Select-all separator */
+.checkbox-select-all {
+	/*padding-bottom: 0.5rem;*/
+	/*margin-bottom: 0.75rem;*/
+	/*border-radius: 0;*/
+	border-bottom: 1px solid var(--itx-surface-below);
+	padding-bottom: var(--itx-spacing-2);
+	margin-block: var(--itx-spacing-4);
+}
+
+.checkbox-rig-content {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-8);
+}
+
+/* Focus styles for accessibility - both modes */
+.checkbox-control input[type="checkbox"]:focus {
+	outline: 2px solid #0066cc;
+	outline-offset: 2px;
+}
+
+/* Layout helpers for custom mode */
+:host(:not(interop-checkbox-rig)) .checkbox-control {
+	margin-bottom: 0.5rem;
+}
+
+:host(:not(interop-checkbox-rig)) .checkbox-rig-content {
+	gap: 0.5rem;
+}
+
+/* Utility classes for custom mode users */
+:host(.horizontal) .checkbox-rig-content,
+:host(.horizontal) {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+:host(.compact) .checkbox-control {
+	margin-bottom: 0.25rem;
+	gap: 0.25rem;
+}
+
+:host(.compact) .checkbox-rig-content {
+	gap: 0.25rem;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+	:host(interop-checkbox-rig) fieldset {
+		border-width: 2px;
+	}
+
+	.checkbox-select-all {
+		border-bottom-width: 2px;
+	}
+
+	.checkbox-control input[type="checkbox"]:focus {
+		outline-width: 3px;
+	}
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition: none !important;
+	}
+}

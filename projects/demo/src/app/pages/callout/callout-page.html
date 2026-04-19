@@ -1,0 +1,79 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Callout</h1>
+		<p class="demo-page__lead">
+			Semantic status admonition for inline notices, warnings, and alerts.
+			Automatically themed via status color tokens with full dark-mode support.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Info (default)">
+			<interop-callout>
+				Hull integrity check scheduled for 0600. All non-essential crew to standby.
+			</interop-callout>
+			<itx-code-block language="html" [tokens]="infoTokens.value() ?? null">
+				<pre><code [textContent]="infoCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="With heading">
+			<interop-callout type="info" heading="Docking protocol">
+				Extend mag-lock clamps before engaging the docking collar. Verify pressure seal before releasing airlock.
+			</interop-callout>
+			<itx-code-block language="html" [tokens]="headingTokens.value() ?? null">
+				<pre><code [textContent]="headingCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Warning">
+			<interop-callout type="warning" heading="Radiation zone">
+				Sector 7-G is currently above safe exposure limits. EVA suits required beyond this point.
+			</interop-callout>
+			<itx-code-block language="html" [tokens]="warningTokens.value() ?? null">
+				<pre><code [textContent]="warningCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Success">
+			<interop-callout type="success" heading="Cargo secured">
+				All requisition items verified and locked in bay 4. Transit clearance granted.
+			</interop-callout>
+			<itx-code-block language="html" [tokens]="successTokens.value() ?? null">
+				<pre><code [textContent]="successCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Danger">
+			<interop-callout type="danger" heading="Hull breach detected">
+				Emergency bulkhead engaged on deck 3. Evacuate immediately and await decompression protocol.
+			</interop-callout>
+			<itx-code-block language="html" [tokens]="dangerTokens.value() ?? null">
+				<pre><code [textContent]="dangerCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

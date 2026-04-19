@@ -40,8 +40,14 @@
 		"@angular/common": "^17.0.0",
 		"@angular/core": "^17.0.0",
 		"@angular/forms": "^17.0.0",
+		"@floating-ui/dom": ">=1.6.0",
 		"rxjs": "^7.8.0",
 		"typescript": "^5.2.0"
+	},
+	"peerDependenciesMeta": {
+		"@floating-ui/dom": {
+			"optional": true
+		}
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "^21.0.3",
@@ -60,6 +66,7 @@
 		"@angular/platform-browser": "^21.0.3",
 		"@angular/platform-browser-dynamic": "^21.0.3",
 		"@angular/router": "^21.0.3",
+		"@floating-ui/dom": "^1.6.0",
 		"@types/jasmine": "^5.1.0",
 		"@types/node": "^20.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.49.0",
@@ -74,6 +81,7 @@
 		"karma-jasmine-html-reporter": "^2.1.0",
 		"ng-packagr": "^21.0.0",
 		"rxjs": "^7.8.0",
+		"shiki": "^4.0.2",
 		"tsx": "^4.21.0",
 		"typedoc": "^0.28.15",
 		"typedoc-plugin-markdown": "^4.9.0",

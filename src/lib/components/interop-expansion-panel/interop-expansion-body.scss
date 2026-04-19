@@ -1,0 +1,20 @@
+// Grid-rows trick: animates from/to natural content height without
+// hardcoding a max-height value. The inner wrapper provides the
+// overflow:hidden boundary that the grid algorithm requires.
+
+:host {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows var(--itx-expansion-duration, 200ms)
+    var(--itx-expansion-easing, ease);
+}
+
+:host([data-expanded]) {
+  grid-template-rows: 1fr;
+}
+
+.itx-expansion-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}

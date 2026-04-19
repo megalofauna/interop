@@ -1,0 +1,17 @@
+.visimorph-page__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+	gap: var(--itx-spacing-8);
+	padding: var(--itx-spacing-4) 0;
+	align-items: start;
+}
+
+.visimorph-page__grid-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--itx-spacing-3);
+	color: var(--itx-muted);
+	font-size: var(--itx-font-size-caption);
+	text-align: center;
+}

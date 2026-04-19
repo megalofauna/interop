@@ -1,0 +1,8 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerDeviceWatchSearch: InteropIconDefinition = {
+  name: "tabler-device-watch-search",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M11 18h-2a3 3 0 0 1 -3 -3v-6a3 3 0 0 1 3 -3h6a3 3 0 0 1 3 3v2\" /> <path d=\"M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0\" /> <path d=\"M20.2 20.2l1.8 1.8\" /> <path d=\"M9 18v3h3\" /> <path d=\"M9 6v-3h6v3\" /></g>",
+  defaultStrokeWidth: 2,
+} as const;

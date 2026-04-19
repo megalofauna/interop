@@ -13,6 +13,7 @@ import {
   signal,
   afterNextRender,
 } from "@angular/core";
+import { InteropVisimorph } from "../../interop-visimorph/interop-visimorph";
 import {
   InteropActivation,
   type ActivationRegistration,
@@ -94,11 +95,12 @@ import {
 @Component({
   selector: "label[interop-radio]",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InteropVisimorph],
   template: `
     <input
       #radioInput
       type="radio"
+      class="interop-sr-only"
       [id]="id()"
       [name]="name()"
       [value]="value()"
@@ -106,6 +108,14 @@ import {
       [disabled]="disabled()"
       [required]="required()"
       (change)="onRadioChange($event)"
+      (focus)="focused.set(true)"
+      (blur)="focused.set(false)"
+    />
+    <interop-visimorph
+      [type]="'radio'"
+      [checked]="checked()"
+      [disabled]="disabled()"
+      [focused]="focused()"
     />
     <ng-content></ng-content>
   `,
@@ -255,6 +265,7 @@ export class InteropRadioControl {
   });
 
   // Internal state
+  readonly focused = signal(false);
   private localActivation = signal<ManagedActivation<unknown> | null>(null);
   private activationRegistration = signal<ActivationRegistration | null>(null);
 

@@ -1,49 +1,51 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ElementRef,
-  TemplateRef,
-  computed,
-  input,
-  inject,
-  signal,
-  effect,
-  TrackByFunction,
-  isDevMode,
+	Component,
+	ChangeDetectionStrategy,
+	ElementRef,
+	TemplateRef,
+	computed,
+	contentChildren,
+	input,
+	inject,
+	signal,
+	effect,
+	TrackByFunction,
+	isDevMode,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
-  InteropCollectionInput,
-  isCollection,
+	InteropCollectionInput,
+	isCollection,
 } from "../../../types/collection";
 import { InteropCollectionService } from "../../services/interop-collection.service";
 import {
-  InteropAttribute,
-  SetAttrsConfig,
-  PresetKey,
+	InteropAttribute,
+	SetAttrsConfig,
+	PresetKey,
 } from "../../services/interop-attribute.service";
 import { createComponentTrackByFn } from "../../utils/track-by";
+import { InteropCellDef, InteropCellContext } from "./interop-cell-def";
 
 /**
  * Basic column definition for InteropTable
  * Focused on bedrock functionality only
  */
 export interface TableColumn<T = any> {
-  /**
-   * Property key from the data object to display
-   */
-  key: keyof T | string;
+	/**
+	 * Property key from the data object to display
+	 */
+	key: keyof T | string;
 
-  /**
-   * Display label for the column header
-   * Defaults to the key name if not provided
-   */
-  label?: string;
+	/**
+	 * Display label for the column header
+	 * Defaults to the key name if not provided
+	 */
+	label?: string;
 
-  /**
-   * Whether this column is hidden
-   */
-  hidden?: boolean;
+	/**
+	 * Whether this column is hidden
+	 */
+	hidden?: boolean;
 }
 
 /**
@@ -68,249 +70,274 @@ export interface TableColumn<T = any> {
  * ```
  */
 @Component({
-  selector: "table[interop-table]",
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: "./interop-table.html",
-  styleUrl: "./interop-table.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "table[interop-table]",
+	standalone: true,
+	imports: [CommonModule],
+	templateUrl: "./interop-table.html",
+	styleUrl: "./interop-table.scss",
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropTable<T = any> {
-  private elementRef = inject(ElementRef<HTMLTableElement>);
-  private collectionService = inject(InteropCollectionService);
-  private attrsManager = inject(InteropAttribute);
+	private elementRef = inject(ElementRef<HTMLTableElement>);
+	private collectionService = inject(InteropCollectionService);
+	private attrsManager = inject(InteropAttribute);
 
-  // Core inputs
+	// Core inputs
 
-  /**
-   * Data collection to display in the table
-   * Supports arrays, observables, promises, and InteropCollection instances
-   */
-  collection = input<InteropCollectionInput<T>>();
+	/**
+	 * Data collection to display in the table
+	 * Supports arrays, observables, promises, and InteropCollection instances
+	 */
+	collection = input<InteropCollectionInput<T>>();
 
-  /**
-   * Column definitions for the table
-   * If not provided, columns will be auto-generated from the first data item
-   */
-  columns = input<TableColumn<T>[] | null>(null);
+	/**
+	 * Column definitions for the table
+	 * If not provided, columns will be auto-generated from the first data item
+	 */
+	columns = input<TableColumn<T>[] | null>(null);
 
-  /**
-   * Determines how table rows are tracked for change detection and DOM updates.
-   * Same options as InteropList component for consistency
-   */
-  trackBy = input<TrackByFunction<T> | "auto" | "index">("auto");
+	/**
+	 * Determines how table rows are tracked for change detection and DOM updates.
+	 * Same options as InteropList component for consistency
+	 */
+	trackBy = input<TrackByFunction<T> | "auto" | "index">("auto");
 
-  /**
-   * Field name to use for tracking row identity when available.
-   * If provided, the value of this field on the item is used as the track key.
-   */
-  trackByField = input<keyof T | null>(null);
+	/**
+	 * Field name to use for tracking row identity when available.
+	 * If provided, the value of this field on the item is used as the track key.
+	 */
+	trackByField = input<keyof T | null>(null);
 
-  /**
-   * Whether to show table headers
-   */
-  showHeaders = input<boolean>(true);
+	/**
+	 * Whether to show table headers
+	 */
+	showHeaders = input<boolean>(true);
 
-  /**
-   * Text to display when no data is available
-   */
-  emptyText = input<string>("No data available");
+	/**
+	 * Text to display when no data is available
+	 */
+	emptyText = input<string>("No data available");
 
-  /**
-   * Text to display while loading
-   */
-  loadingText = input<string>("Loading...");
+	/**
+	 * Text to display while loading
+	 */
+	loadingText = input<string>("Loading...");
 
-  /**
-   * Whether to auto-generate columns from data when no columns are provided
-   */
-  autoColumns = input<boolean>(true);
+	/**
+	 * Whether to auto-generate columns from data when no columns are provided
+	 */
+	autoColumns = input<boolean>(true);
 
-  /**
-   * Maximum number of rows to display (null = no limit).
-   */
-  maxRows = input<number | null>(null);
+	/**
+	 * Maximum number of rows to display (null = no limit).
+	 */
+	maxRows = input<number | null>(null);
 
-  // Internal state
-  private collectionInstance = signal<any>(null);
-  private autoGeneratedColumns = signal<TableColumn<T>[]>([]);
+	// Content children — custom cell templates projected by the consumer
+	private cellDefs = contentChildren(InteropCellDef);
 
-  // Computed properties
+	/**
+	 * Map of column key → custom cell TemplateRef.
+	 * Rebuilt whenever projected InteropCellDef directives change.
+	 */
+	cellTemplateMap = computed(() => {
+		const map = new Map<string, TemplateRef<InteropCellContext<T>>>();
+		for (const def of this.cellDefs()) {
+			map.set(def.itxCell(), def.templateRef);
+		}
+		return map;
+	});
 
-  /**
-   * Resolved collection instance
-   */
-  resolvedCollection = computed(() => {
-    const collection = this.collection();
-    if (!collection) return null;
+	// Internal state
+	private collectionInstance = signal<any>(null);
+	private autoGeneratedColumns = signal<TableColumn<T>[]>([]);
 
-    // Try to get existing collection first (for computed safety)
-    const existing = this.collectionService.computedResolve(collection);
-    if (existing) return existing;
+	// Computed properties
 
-    // Return the signal value (will be set in effect)
-    return this.collectionInstance();
-  });
+	/**
+	 * Resolved collection instance
+	 */
+	resolvedCollection = computed(() => {
+		const collection = this.collection();
+		if (!collection) return null;
 
-  /**
-   * Items to display
-   */
-  items = computed(() => {
-    const collection = this.resolvedCollection();
-    const items = collection?.items() ?? [];
-    const max = this.maxRows();
-    if (max === null || max === undefined) {
-      return items;
-    }
-    return items.slice(0, max);
-  });
+		// Try to get existing collection first (for computed safety)
+		const existing = this.collectionService.computedResolve(collection);
+		if (existing) return existing;
 
-  /**
-   * Loading state
-   */
-  isLoading = computed(() => {
-    const collection = this.resolvedCollection();
-    return collection?.loading() ?? false;
-  });
+		// Return the signal value (will be set in effect)
+		return this.collectionInstance();
+	});
 
-  /**
-   * Error state
-   */
-  hasError = computed(() => {
-    const collection = this.resolvedCollection();
-    return collection?.hasError() ?? false;
-  });
+	/**
+	 * Items to display
+	 */
+	items = computed(() => {
+		const collection = this.resolvedCollection();
+		const items = collection?.items() ?? [];
+		const max = this.maxRows();
+		if (max === null || max === undefined) {
+			return items;
+		}
+		return items.slice(0, max);
+	});
 
-  /**
-   * Whether to show empty state
-   */
-  isEmpty = computed(() => {
-    const collection = this.resolvedCollection();
-    return collection?.isEmpty() ?? true;
-  });
+	/**
+	 * Loading state
+	 */
+	isLoading = computed(() => {
+		const collection = this.resolvedCollection();
+		return collection?.loading() ?? false;
+	});
 
-  /**
-   * Final resolved columns (custom or auto-generated)
-   */
-  resolvedColumns = computed(() => {
-    const customColumns = this.columns();
-    if (customColumns && customColumns.length > 0) {
-      return customColumns.filter((col) => !col.hidden);
-    }
+	/**
+	 * Error state
+	 */
+	hasError = computed(() => {
+		const collection = this.resolvedCollection();
+		return collection?.hasError() ?? false;
+	});
 
-    if (this.autoColumns()) {
-      return this.autoGeneratedColumns().filter((col) => !col.hidden);
-    }
+	/**
+	 * Whether to show empty state
+	 */
+	isEmpty = computed(() => {
+		const collection = this.resolvedCollection();
+		return collection?.isEmpty() ?? true;
+	});
 
-    return [];
-  });
+	/**
+	 * Final resolved columns (custom or auto-generated)
+	 */
+	resolvedColumns = computed(() => {
+		const customColumns = this.columns();
+		if (customColumns && customColumns.length > 0) {
+			return customColumns.filter((col) => !col.hidden);
+		}
 
-  constructor() {
-    // Validate semantic usage in development
-    if (isDevMode()) {
-      const element = this.elementRef.nativeElement;
-      if (element.tagName !== "TABLE") {
-        console.warn(
-          "InteropTable must be used on <table> elements for semantic correctness. " +
-            "Found on: " +
-            element.tagName.toLowerCase(),
-        );
-      }
-    }
+		if (this.autoColumns()) {
+			return this.autoGeneratedColumns().filter((col) => !col.hidden);
+		}
 
-    // Effect to resolve collection when input changes
-    effect(() => {
-      const collectionInput = this.collection();
-      if (collectionInput) {
-        // Only create new collections in effects, not computed functions
-        const resolved = this.collectionService.resolve(collectionInput);
-        this.collectionInstance.set(resolved);
-      } else {
-        this.collectionInstance.set(null);
-      }
-    });
+		return [];
+	});
 
-    // Effect to auto-generate columns when data changes
-    effect(() => {
-      const items = this.items();
-      const customColumns = this.columns();
-      const shouldAutoGenerate = this.autoColumns();
+	constructor() {
+		// Validate semantic usage in development
+		if (isDevMode()) {
+			const element = this.elementRef.nativeElement;
+			if (element.tagName !== "TABLE") {
+				console.warn(
+					"InteropTable must be used on <table> elements for semantic correctness. " +
+						"Found on: " +
+						element.tagName.toLowerCase(),
+				);
+			}
+		}
 
-      if (
-        shouldAutoGenerate &&
-        (!customColumns || customColumns.length === 0) &&
-        items.length > 0
-      ) {
-        const generated = this.generateColumnsFromData(items[0]);
-        this.autoGeneratedColumns.set(generated);
-      } else if (
-        !shouldAutoGenerate ||
-        (customColumns && customColumns.length > 0)
-      ) {
-        this.autoGeneratedColumns.set([]);
-      }
-    });
-  }
+		// Effect to resolve collection when input changes
+		effect(() => {
+			const collectionInput = this.collection();
+			if (collectionInput) {
+				// Only create new collections in effects, not computed functions
+				const resolved = this.collectionService.resolve(collectionInput);
+				this.collectionInstance.set(resolved);
+			} else {
+				this.collectionInstance.set(null);
+			}
+		});
 
-  /**
-   * TrackBy function for table rows
-   */
-  trackByFn = createComponentTrackByFn<T>(
-    () => this.trackBy(),
-    () => this.trackByField(),
-  );
+		// Effect to auto-generate columns when data changes
+		effect(() => {
+			const items = this.items();
+			const customColumns = this.columns();
+			const shouldAutoGenerate = this.autoColumns();
 
-  /**
-   * TrackBy function for table columns
-   */
-  trackByColumnIndex = (index: number, column: TableColumn<T>): any => {
-    return column.key;
-  };
+			if (
+				shouldAutoGenerate &&
+				(!customColumns || customColumns.length === 0) &&
+				items.length > 0
+			) {
+				const generated = this.generateColumnsFromData(items[0]);
+				this.autoGeneratedColumns.set(generated);
+			} else if (
+				!shouldAutoGenerate ||
+				(customColumns && customColumns.length > 0)
+			) {
+				this.autoGeneratedColumns.set([]);
+			}
+		});
+	}
 
-  /**
-   * Get display text for a cell
-   */
-  getCellText(item: T, column: TableColumn<T>): string {
-    const key = column.key as string;
-    const value = (item as any)?.[key];
+	/**
+	 * TrackBy function for table rows
+	 */
+	trackByFn = createComponentTrackByFn<T>(
+		() => this.trackBy(),
+		() => this.trackByField(),
+	);
 
-    if (value === null || value === undefined) {
-      return "";
-    }
+	/**
+	 * TrackBy function for table columns
+	 */
+	trackByColumnIndex = (index: number, column: TableColumn<T>): any => {
+		return column.key;
+	};
 
-    return String(value);
-  }
+	/**
+	 * Get the custom cell template for a column, if one was provided.
+	 * Returns null when no custom template exists (fall back to default text).
+	 */
+	getCellTemplate(
+		column: TableColumn<T>,
+	): TemplateRef<InteropCellContext<T>> | null {
+		return this.cellTemplateMap().get(String(column.key)) ?? null;
+	}
 
-  /**
-   * Get column header text
-   */
-  getColumnLabel(column: TableColumn<T>): string {
-    return column.label || String(column.key);
-  }
+	/**
+	 * Get display text for a cell
+	 */
+	getCellText(item: T, column: TableColumn<T>): string {
+		const key = column.key as string;
+		const value = (item as any)?.[key];
 
-  /**
-   * Auto-generate columns from the first data item
-   */
-  private generateColumnsFromData(firstItem: T): TableColumn<T>[] {
-    if (!firstItem || typeof firstItem !== "object") {
-      return [];
-    }
+		if (value === null || value === undefined) {
+			return "";
+		}
 
-    const keys = Object.keys(firstItem) as (keyof T)[];
-    return keys.map((key) => ({
-      key,
-      label: this.formatKeyAsLabel(String(key)),
-    }));
-  }
+		return String(value);
+	}
 
-  /**
-   * Format a property key as a human-readable label
-   */
-  private formatKeyAsLabel(key: string): string {
-    return key
-      .replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase to spaces
-      .replace(/[_-]/g, " ") // underscores and dashes to spaces
-      .toLowerCase()
-      .replace(/^\w/, (c) => c.toUpperCase()); // capitalize first letter
-  }
+	/**
+	 * Get column header text
+	 */
+	getColumnLabel(column: TableColumn<T>): string {
+		return column.label || String(column.key);
+	}
+
+	/**
+	 * Auto-generate columns from the first data item
+	 */
+	private generateColumnsFromData(firstItem: T): TableColumn<T>[] {
+		if (!firstItem || typeof firstItem !== "object") {
+			return [];
+		}
+
+		const keys = Object.keys(firstItem) as (keyof T)[];
+		return keys.map((key) => ({
+			key,
+			label: this.formatKeyAsLabel(String(key)),
+		}));
+	}
+
+	/**
+	 * Format a property key as a human-readable label
+	 */
+	private formatKeyAsLabel(key: string): string {
+		return key
+			.replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase to spaces
+			.replace(/[_-]/g, " ") // underscores and dashes to spaces
+			.toLowerCase()
+			.replace(/^\w/, (c) => c.toUpperCase()); // capitalize first letter
+	}
 }

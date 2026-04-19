@@ -1,0 +1,70 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">List</h1>
+		<p class="demo-page__lead">
+			Semantic list component for <code>ul</code>, <code>ol</code>, and <code>dl</code>.
+			Accepts a <code>[collection]</code> input or static projected content.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Unordered from collection">
+			<ul interop-list [collection]="crewMembers"></ul>
+			<itx-code-block language="html" [tokens]="unorderedTokens.value() ?? null">
+				<pre><code [textContent]="unorderedCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Ordered from collection">
+			<ol interop-list [collection]="crewMembers"></ol>
+			<itx-code-block language="html" [tokens]="orderedTokens.value() ?? null">
+				<pre><code [textContent]="orderedCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Custom item template">
+			<ng-template #itemTpl let-item>
+				<li>{{ item.label }}</li>
+			</ng-template>
+			<ul interop-list [collection]="cargoItems" [listItemTemplate]="itemTpl"></ul>
+			<itx-code-block language="html" [tokens]="templateTokens.value() ?? null">
+				<pre><code [textContent]="templateCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Static content">
+			<ul interop-list>
+				<li>Bay 1 — Docking ring A</li>
+				<li>Bay 2 — Docking ring A</li>
+				<li>Bay 3 — Docking ring B (reserved)</li>
+				<li>Bay 4 — Offline for maintenance</li>
+			</ul>
+			<itx-code-block language="html" [tokens]="staticTokens.value() ?? null">
+				<pre><code [textContent]="staticCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

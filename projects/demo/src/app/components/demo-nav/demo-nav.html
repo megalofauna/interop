@@ -1,0 +1,29 @@
+<div class="nav__backdrop" (click)="onBackdropClick()"></div>
+
+<nav class="nav__panel">
+	@for (group of groups; track group.label) {
+	<div class="nav__group" [class.nav__group--disabled]="group.disabled">
+		<h3 class="nav__group-label">{{ group.label }}</h3>
+		@if (!group.disabled && group.items.length) {
+		<ul class="nav__list">
+			@for (item of group.items; track item.label) {
+			<li>
+				@if (item.route) {
+				<a
+					class="nav__link"
+					[routerLink]="item.route"
+					routerLinkActive="nav__link--active"
+					(click)="onBackdropClick()"
+				>
+					{{ item.label }}
+				</a>
+				} @else {
+				<span class="nav__link nav__link--placeholder"> {{ item.label }} </span>
+				}
+			</li>
+			}
+		</ul>
+		}
+	</div>
+	}
+</nav>

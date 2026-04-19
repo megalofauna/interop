@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const TablerXFilled: InteropIconDefinition = {
+  name: "tabler-x-filled",
+  viewBox: "0 0 24 24",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M6.707 5.293l5.293 5.292l5.293 -5.292a1 1 0 0 1 1.414 1.414l-5.292 5.293l5.292 5.293a1 1 0 0 1 -1.414 1.414l-5.293 -5.292l-5.293 5.292a1 1 0 1 1 -1.414 -1.414l5.292 -5.293l-5.292 -5.293a1 1 0 0 1 1.414 -1.414\" /></g>",
+} as const;

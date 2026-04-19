@@ -1,0 +1,68 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Tabs</h1>
+		<p class="demo-page__lead">
+			Accessible tab container with roving tabindex, ARIA wiring, and state-preserving panels.
+			Inactive panels stay in the DOM — no destroy/recreate on tab switch.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Basic">
+			<section interop-tabs aria-label="Station systems" style="width: 100%;">
+				<section interop-tab-panel label="Navigation">
+					<p>Heading: 042° / Speed: 0.4c / ETA: 6h 14m</p>
+					<p>Next waypoint: Kepler Station — sector A4.</p>
+				</section>
+				<section interop-tab-panel label="Engineering">
+					<p>Reactor output: 94% / Shields: nominal / Hull: 100%</p>
+					<p>Fuel cell banks 1–4 online. Bank 5 scheduled for maintenance.</p>
+				</section>
+				<section interop-tab-panel label="Cargo">
+					<p>Bay utilisation: 62% / Manifest items: 47 / Hazmat: 3</p>
+					<p>Next offload: Kepler Station, berth 12.</p>
+				</section>
+			</section>
+		</demo-example>
+
+		<demo-example label="Vertical orientation">
+			<section interop-tabs aria-label="Crew roster" orientation="vertical" style="width: 100%;">
+				<section interop-tab-panel label="Bridge">
+					<p>Commander Reyes, Pilot Tanaka, Navigator Osei</p>
+				</section>
+				<section interop-tab-panel label="Engineering">
+					<p>Chief Voskov, Technician Ahuja, Technician Park</p>
+				</section>
+				<section interop-tab-panel label="Medical">
+					<p>Dr. Mbeki, Medic Chen</p>
+				</section>
+			</section>
+		</demo-example>
+	</demo-section>
+
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</table>
+	</demo-section>
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

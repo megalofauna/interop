@@ -1,0 +1,61 @@
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   --itx-callout-bg          Background color (overrides variant default)
+ *   --itx-callout-accent      Accent border color (overrides variant default)
+ *   --itx-callout-color       Text color (overrides variant default)
+ *   --itx-callout-padding     Internal padding (default: var(--itx-spacing-4) var(--itx-spacing-6))
+ *   --itx-callout-radius      Border radius (default: var(--itx-radius-sm))
+ *   --itx-callout-font-size   Font size (default: var(--itx-font-size-body))
+ *
+ * Variant defaults draw from semantic status tokens:
+ *   info (default): --itx-info-surface, --itx-info, --itx-on-info-surface
+ *   warning:        --itx-warning-surface, --itx-warning, --itx-on-warning-surface
+ *   success:        --itx-success-surface, --itx-success, --itx-on-success-surface
+ *   danger:         --itx-danger-surface, --itx-danger, --itx-on-danger-surface
+ */
+
+:host {
+	display: block;
+	padding: var(--itx-callout-padding, var(--itx-spacing-4, 1rem) var(--itx-spacing-6, 1.5rem));
+	border-left: 3px solid var(--itx-callout-accent, var(--itx-info, #3b82f6));
+	border-radius: var(--itx-callout-radius, var(--itx-radius-sm, 4px));
+	background: var(--itx-callout-bg, var(--itx-info-surface, #eff6ff));
+	color: var(--itx-callout-color, var(--itx-on-info-surface, #1e3a5f));
+	font-size: var(--itx-callout-font-size, var(--itx-font-size-body, 0.9375rem));
+	line-height: 1.6;
+}
+
+:host([data-type="warning"]) {
+	background: var(--itx-callout-bg, var(--itx-warning-surface, #fffbeb));
+	border-left-color: var(--itx-callout-accent, var(--itx-warning, #f59e0b));
+	color: var(--itx-callout-color, var(--itx-on-warning-surface, #5a3e00));
+}
+
+:host([data-type="success"]) {
+	background: var(--itx-callout-bg, var(--itx-success-surface, #f0fdf4));
+	border-left-color: var(--itx-callout-accent, var(--itx-success, #22c55e));
+	color: var(--itx-callout-color, var(--itx-on-success-surface, #14532d));
+}
+
+:host([data-type="danger"]) {
+	background: var(--itx-callout-bg, var(--itx-danger-surface, #fef2f2));
+	border-left-color: var(--itx-callout-accent, var(--itx-danger, #ef4444));
+	color: var(--itx-callout-color, var(--itx-on-danger-surface, #5f1212));
+}
+
+.interop-callout__heading {
+	display: block;
+	margin-bottom: var(--itx-spacing-2, 0.5rem);
+	font-weight: 500;
+	font-size: var(--itx-font-size-label, 0.875rem);
+}
+
+.interop-callout__body {
+	> :first-child {
+		margin-top: 0;
+	}
+	> :last-child {
+		margin-bottom: 0;
+	}
+}
