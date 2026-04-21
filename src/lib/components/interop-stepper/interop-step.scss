@@ -42,7 +42,7 @@
 :host(.interop-step--completed):not(:last-child)::after {
 	background: var(
 		--itx-stepper-connector-completed-color,
-		var(--itx-brand, #0066cc)
+		var(--itx-colorway, #0066cc)
 	);
 }
 
@@ -71,7 +71,7 @@
 
 		.interop-step__indicator {
 			outline: 2px solid
-				var(--itx-stepper-focus-ring, var(--itx-brand, #0066cc));
+				var(--itx-stepper-focus-ring, var(--itx-colorway, #0066cc));
 			outline-offset: 3px;
 		}
 	}
@@ -106,15 +106,15 @@
 // State overrides applied on the :host <li> propagate down via class selectors
 
 :host(.interop-step--active) .interop-step__indicator {
-	background: var(--itx-stepper-active-bg, var(--itx-brand, #0066cc));
-	color: var(--itx-stepper-active-color, var(--itx-on-brand, #fff));
-	border-color: var(--itx-stepper-active-bg, var(--itx-brand, #0066cc));
+	background: var(--itx-stepper-active-bg, var(--itx-colorway, #0066cc));
+	color: var(--itx-stepper-active-color, var(--itx-on-colorway, #fff));
+	border-color: var(--itx-stepper-active-bg, var(--itx-colorway, #0066cc));
 }
 
 :host(.interop-step--completed) .interop-step__indicator {
-	background: var(--itx-stepper-completed-bg, var(--itx-brand, #0066cc));
-	color: var(--itx-stepper-completed-color, var(--itx-on-brand, #fff));
-	border-color: var(--itx-stepper-completed-bg, var(--itx-brand, #0066cc));
+	background: var(--itx-stepper-completed-bg, var(--itx-colorway, #0066cc));
+	color: var(--itx-stepper-completed-color, var(--itx-on-colorway, #fff));
+	border-color: var(--itx-stepper-completed-bg, var(--itx-colorway, #0066cc));
 }
 
 :host(.interop-step--error) .interop-step__indicator {

@@ -52,17 +52,19 @@
 		var(--itx-spacing-2) var(--itx-spacing-4);
 }
 
-:host:has(.itx-chip-remove):hover {
+/*:host:has(.itx-chip-remove):hover {
 	.itx-chip-remove {
-		--itx-chip-remove-border: 2px solid var(--itx-brand);
+		--itx-chip-remove-border: 2px solid var(--itx-colorway);
 	}
-}
+}*/
 
-:host:has(.itx-chip-remove):focus {
-	.itx-chip-remove,
-	.itx-chip-remove:hover {
-		scale: 0.825;
-		border-color: transparent;
+:host:has(.itx-chip-remove) {
+	&:hover:not(:focus) {
+		--itx-chip-remove-border: 2px solid var(--itx-colorway);
+	}
+
+	&:focus-visible {
+		--itx-chip-remove-border: 2px solid transparent;
 	}
 }
 
@@ -92,7 +94,7 @@
 }
 
 .itx-chip-remove:focus-visible {
-	outline: 3px solid var(--itx-brand);
+	outline: 3px solid var(--itx-colorway);
 	outline-offset: 3px;
 	border-radius: var(--itx-radius-full);
 }

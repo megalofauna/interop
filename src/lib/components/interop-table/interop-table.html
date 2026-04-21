@@ -1,97 +1,103 @@
-<!-- Loading state -->
-<tbody *ngIf="isLoading()" class="interop-table-loading">
-	<tr>
-		<td
-			[attr.colspan]="resolvedColumns().length || 1"
-			class="interop-table-loading-cell"
-		>
-			<div class="interop-table-loading-content">{{ loadingText() }}</div>
-		</td>
-	</tr>
-</tbody>
-
-<!-- Error state -->
-<tbody *ngIf="hasError() && !isLoading()" class="interop-table-error">
-	<tr>
-		<td
-			[attr.colspan]="resolvedColumns().length || 1"
-			class="interop-table-error-cell"
-		>
-			<div class="interop-table-error-content">
-				<ng-content select="[slot=error]">
-					<span class="interop-table-default-error">Error loading data</span>
-				</ng-content>
-			</div>
-		</td>
-	</tr>
-</tbody>
-
-<!-- Empty state -->
-<tbody
-	*ngIf="isEmpty() && !isLoading() && !hasError()"
-	class="interop-table-empty"
+<div
+	#scrollContainerEl
+	class="interop-table__scroll"
+	[class.interop-table__scroll--active]="scrollable()"
+	[attr.role]="scrollable() ? 'region' : null"
+	[attr.aria-label]="scrollable() ? (scrollLabel() ?? 'Scrollable table') : null"
+	[attr.tabindex]="scrollable() ? 0 : null"
+	[attr.data-scrolled]="isScrolled() || null"
+	(scroll)="onScroll()"
 >
-	<tr>
-		<td
-			[attr.colspan]="resolvedColumns().length || 1"
-			class="interop-table-empty-cell"
-		>
-			<div class="interop-table-empty-content">
-				<ng-content select="[slot=empty]">
-					<span class="interop-table-default-empty">{{ emptyText() }}</span>
-				</ng-content>
-			</div>
-		</td>
-	</tr>
-</tbody>
+	<table class="interop-table__table">
 
-<!-- Table header -->
-<thead
-	*ngIf="showHeaders() && resolvedColumns().length > 0 && !isLoading() && !hasError() && !isEmpty()"
-	class="interop-table-header"
->
-	<tr class="interop-table-header-row">
-		<th
-			*ngFor="let column of resolvedColumns(); let colIndex = index; trackBy: trackByColumnIndex"
-			class="interop-table-header-cell"
-			[attr.data-column-key]="column.key"
-		>
-			<span class="interop-table-header-text">
-				{{ getColumnLabel(column) }}
-			</span>
-		</th>
-	</tr>
-</thead>
+		<!-- Loading state -->
+		@if (isLoading()) {
+			<tbody class="interop-table-loading">
+				<tr>
+					<td [attr.colspan]="resolvedColumns().length || 1" class="interop-table-loading-cell">
+						<div class="interop-table-loading-content">{{ loadingText() }}</div>
+					</td>
+				</tr>
+			</tbody>
+		}
 
-<!-- Table body with data -->
-<tbody
-	*ngIf="!isLoading() && !hasError() && !isEmpty()"
-	class="interop-table-body"
->
-	<tr
-		*ngFor="let item of items(); trackBy: trackByFn; let rowIndex = index"
-		class="interop-table-row"
-		[attr.data-row-index]="rowIndex"
-	>
-		<td
-			*ngFor="let column of resolvedColumns(); let colIndex = index"
-			class="interop-table-cell"
-			[attr.data-column-key]="column.key"
-			[attr.data-cell-index]="colIndex"
-		>
-			<ng-container *ngIf="getCellTemplate(column) as tmpl; else defaultCell">
-				<ng-container
-					*ngTemplateOutlet="tmpl; context: { $implicit: item, column: column, index: rowIndex }"
-				></ng-container>
-			</ng-container>
-			<ng-template #defaultCell>
-				<span class="interop-table-cell-text">
-					{{ getCellText(item, column) }}
-				</span>
-			</ng-template>
-		</td>
-	</tr>
-</tbody>
+		<!-- Error state -->
+		@if (hasError() && !isLoading()) {
+			<tbody class="interop-table-error">
+				<tr>
+					<td [attr.colspan]="resolvedColumns().length || 1" class="interop-table-error-cell">
+						<div class="interop-table-error-content">
+							<ng-content select="[slot=error]">
+								<span class="interop-table-default-error">Error loading data</span>
+							</ng-content>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		}
 
-<!-- Projected content for additional customization -->
-<ng-content></ng-content>
+		<!-- Empty state -->
+		@if (isEmpty() && !isLoading() && !hasError()) {
+			<tbody class="interop-table-empty">
+				<tr>
+					<td [attr.colspan]="resolvedColumns().length || 1" class="interop-table-empty-cell">
+						<div class="interop-table-empty-content">
+							<ng-content select="[slot=empty]">
+								<span class="interop-table-default-empty">{{ emptyText() }}</span>
+							</ng-content>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		}
+
+		<!-- Header -->
+		@if (showHeaders() && resolvedColumns().length > 0 && !isLoading() && !hasError() && !isEmpty()) {
+			<thead class="interop-table-header">
+				<tr class="interop-table-header-row">
+					@for (column of resolvedColumns(); track column.key; let colIndex = $index) {
+						<th
+							class="interop-table-header-cell"
+							[attr.data-column-key]="column.key"
+							[attr.data-sticky]="column.sticky || null"
+							[style.left]="column.sticky ? getStickyLeft(column) : null"
+						>
+							<span class="interop-table-header-text">{{ getColumnLabel(column) }}</span>
+						</th>
+					}
+				</tr>
+			</thead>
+		}
+
+		<!-- Body -->
+		@if (!isLoading() && !hasError() && !isEmpty()) {
+			<tbody class="interop-table-body">
+				@for (item of items(); track trackByFn($index, item); let rowIndex = $index) {
+					<tr class="interop-table-row" [attr.data-row-index]="rowIndex">
+						@for (column of resolvedColumns(); track column.key; let colIndex = $index) {
+							<td
+								class="interop-table-cell"
+								[attr.data-column-key]="column.key"
+								[attr.data-cell-index]="colIndex"
+								[attr.data-sticky]="column.sticky || null"
+								[style.left]="column.sticky ? getStickyLeft(column) : null"
+							>
+								@if (getCellTemplate(column); as tmpl) {
+									<ng-container
+										*ngTemplateOutlet="tmpl; context: { $implicit: item, column: column, index: rowIndex }"
+									/>
+								} @else {
+									<span class="interop-table-cell-text">{{ getCellText(item, column) }}</span>
+								}
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		}
+
+	</table>
+
+	<!-- Custom cell template definitions (projected, not rendered visibly) -->
+	<ng-content />
+</div>

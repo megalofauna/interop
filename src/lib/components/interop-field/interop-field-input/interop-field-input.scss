@@ -19,7 +19,7 @@
  *   --itx-field-bg                  Background (default: var(--itx-surface))
  *   --itx-field-padding-block       Control block padding (default: var(--itx-spacing-2))
  *   --itx-field-padding-inline      Control inline padding (default: var(--itx-spacing-4))
- *   --itx-field-focus-color         Focus ring / border color (default: var(--itx-brand))
+ *   --itx-field-focus-color         Focus ring / border color (default: var(--itx-colorway))
  *   --itx-field-focus-width         Focus ring width (default: 2px)
  *   --itx-field-invalid-border-color  Invalid border color (default: var(--itx-danger))
  *   --itx-field-invalid-focus-color   Invalid focus color (default: var(--itx-danger))
@@ -76,8 +76,8 @@ interop-field-control {
 }
 
 interop-field-control.focused {
-	border-color: var(--itx-field-focus-color, var(--itx-brand));
-	outline: var(--itx-field-focus-width, 2px) solid var(--itx-field-focus-color, var(--itx-brand));
+	border-color: var(--itx-field-focus-color, var(--itx-colorway));
+	outline: var(--itx-field-focus-width, 2px) solid var(--itx-field-focus-color, var(--itx-colorway));
 	outline-offset: -1px;
 }
 

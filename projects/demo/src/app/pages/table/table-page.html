@@ -11,11 +11,11 @@
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic">
-			<table interop-table [collection]="cargoManifest" [columns]="columns"></table>
+			<interop-table [collection]="cargoManifest" [columns]="columns"></interop-table>
 		</demo-example>
 
 		<demo-example label="Custom cell templates">
-			<table interop-table [collection]="cargoManifest" [columns]="columns">
+			<interop-table [collection]="cargoManifest" [columns]="columns">
 				<ng-template itxCell="id" let-entry>
 					<code class="demo-page__api-name">{{ entry.id }}</code>
 				</ng-template>
@@ -24,14 +24,14 @@
 						{{ entry.status }}
 					</span>
 				</ng-template>
-			</table>
+			</interop-table>
 		</demo-example>
 	</demo-section>
 
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
-		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) { <span class="demo-page__required">*</span> }
@@ -42,7 +42,7 @@
 			<ng-template itxCell="default" let-entry>
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
-		</table>
+		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
 	<demo-section id="notes" heading="Notes">

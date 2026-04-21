@@ -20,7 +20,7 @@
 	font-weight: 600;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	color: var(--itx-brand);
+	color: var(--itx-colorway);
 }
 
 .home-page__headline {
@@ -34,7 +34,7 @@
 
 .home-page__headline-em {
 	font-style: italic;
-	color: var(--itx-brand);
+	color: var(--itx-colorway);
 }
 
 .home-page__lead {
@@ -64,12 +64,12 @@
 	transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
 
 	&--primary {
-		background: var(--itx-brand);
-		color: var(--itx-on-brand);
+		background: var(--itx-colorway);
+		color: var(--itx-on-colorway);
 		border: 1px solid transparent;
 
 		&:hover {
-			background: var(--itx-brand-hover);
+			background: var(--itx-colorway-hover);
 		}
 	}
 
@@ -128,7 +128,7 @@
 	height: 2.25rem;
 	border-radius: var(--itx-radius-sm);
 	background: var(--itx-surface-hover);
-	color: var(--itx-brand);
+	color: var(--itx-colorway);
 	flex-shrink: 0;
 }
 

@@ -15,8 +15,6 @@
 
 .nav__panel {
 	padding: var(--itx-spacing-4) 0;
-	position: sticky;
-	inset: 0 auto auto 0;
 }
 
 // ── Groups ──────────────────────────────────────────────────────────────────
@@ -65,11 +63,11 @@
 	}
 
 	&--active {
-		background: var(--itx-brand);
-		color: var(--itx-on-brand);
+		background: var(--itx-colorway);
+		color: var(--itx-on-colorway);
 
 		&:hover {
-			background: var(--itx-brand-hover);
+			background: var(--itx-colorway-hover);
 		}
 	}
 

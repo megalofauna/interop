@@ -3,31 +3,46 @@
 		<p class="demo-page__category">Components</p>
 		<h1 class="demo-page__title">Radio</h1>
 		<p class="demo-page__lead">
-			Mutually exclusive selection built on native radio inputs.
-			Use the declarative rig for data-driven groups or project controls
-			directly for custom layouts.
+			Mutually exclusive selection built on native radio inputs. Use the
+			declarative rig for data-driven groups or project controls directly for
+			custom layouts.
 		</p>
 	</header>
 
 	<!-- ── Manual usage ───────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Manual group">
-			<fieldset style="border: none; padding: 0; margin: 0;">
-				<legend style="font-weight: 600; margin-bottom: 0.5rem;">Docking mode</legend>
-				<div style="display: flex; flex-direction: column; gap: 0.5rem;">
-					<label interop-radio id="dock-auto" name="docking" value="auto"
+			<fieldset>
+				<legend>Docking mode</legend>
+				<div style="display: flex; flex-direction: column; gap: 0.5rem">
+					<label
+						interop-radio
+						id="dock-auto"
+						name="docking"
+						value="auto"
 						[checked]="dockingMode() === 'auto'"
-						(valueChange)="dockingMode.set($event)">
+						(valueChange)="dockingMode.set($event)"
+					>
 						Auto-dock
 					</label>
-					<label interop-radio id="dock-manual" name="docking" value="manual"
+					<label
+						interop-radio
+						id="dock-manual"
+						name="docking"
+						value="manual"
 						[checked]="dockingMode() === 'manual'"
-						(valueChange)="dockingMode.set($event)">
+						(valueChange)="dockingMode.set($event)"
+					>
 						Manual approach
 					</label>
-					<label interop-radio id="dock-remote" name="docking" value="remote"
+					<label
+						interop-radio
+						id="dock-remote"
+						name="docking"
+						value="remote"
 						[checked]="dockingMode() === 'remote'"
-						(valueChange)="dockingMode.set($event)">
+						(valueChange)="dockingMode.set($event)"
+					>
 						Remote pilot
 					</label>
 				</div>
@@ -48,15 +63,16 @@
 				[(value)]="selectedThruster"
 			/>
 			<demo-state>
-				<demo-state-item label="Selected">{{ selectedThruster() }}</demo-state-item>
+				<demo-state-item label="Selected"
+					>{{ selectedThruster() }}</demo-state-item
+				>
 			</demo-state>
 		</demo-example>
 	</demo-section>
 
-
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
-		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-default">{{ entry.component }}</code>
 			</ng-template>
@@ -70,12 +86,12 @@
 			<ng-template itxCell="default" let-entry>
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
-		</table>
+		</interop-table>
 	</demo-section>
 
 	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
 	<demo-section id="api-outputs" heading="API — Outputs">
-		<table interop-table [collection]="outputEntries" [columns]="outputColumns">
+		<interop-table [collection]="outputEntries" [columns]="outputColumns">
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-default">{{ entry.component }}</code>
 			</ng-template>
@@ -85,7 +101,7 @@
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
 			</ng-template>
-		</table>
+		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
 	<demo-section id="notes" heading="Notes">

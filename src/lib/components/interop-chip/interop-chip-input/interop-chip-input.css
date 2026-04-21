@@ -22,7 +22,7 @@
  *   --itx-chip-input-padding      Container padding (default: 0.375rem 0.5rem)
  *   --itx-chip-input-gap          Gap between chips and input (default: 0.375rem)
  *   --itx-chip-input-min-height   Min height (default: 2.5rem)
- *   --itx-chip-input-focus-color  Focus ring color (default: var(--itx-brand, currentColor))
+ *   --itx-chip-input-focus-color  Focus ring color (default: var(--itx-colorway, currentColor))
  *
  * Individual chips (shared with interop-chip-item)
  *   --itx-chip-bg                 Chip background (default: transparent)
@@ -54,7 +54,7 @@
 
 :host(:focus-within) {
 	outline: 2px solid
-		var(--itx-chip-input-focus-color, var(--itx-brand, currentColor));
+		var(--itx-chip-input-focus-color, var(--itx-colorway, currentColor));
 	outline-offset: 1px;
 }
 

@@ -45,7 +45,7 @@
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
-		<table interop-table [collection]="apiEntries" [columns]="apiColumns">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-default">{{ entry.component }}</code>
 			</ng-template>
@@ -59,7 +59,7 @@
 			<ng-template itxCell="default" let-entry>
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
-		</table>
+		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
 	<demo-section id="notes" heading="Notes">

@@ -1,0 +1,33 @@
+<button
+	#triggerEl
+	class="theme-btn"
+	[attr.popovertarget]="popoverId"
+	aria-haspopup="listbox"
+	[attr.aria-expanded]="isOpen()"
+	[attr.aria-label]="'Theme: ' + mode()"
+>
+	<interop-icon [name]="currentIcon()" [size]="18" [decorative]="true" />
+</button>
+
+<div
+	#popoverEl
+	[id]="popoverId"
+	popover="auto"
+	class="theme-popover"
+	(toggle)="onToggle($event)"
+>
+	<ul interop-listbox [value]="mode()" (valueChange)="onSelect($event)">
+		<li interop-option value="light" label="Light">
+			<interop-icon name="tabler-sun" [size]="16" [decorative]="true" />
+			<span>Light</span>
+		</li>
+		<li interop-option value="dark" label="Dark">
+			<interop-icon name="tabler-moon" [size]="16" [decorative]="true" />
+			<span>Dark</span>
+		</li>
+		<li interop-option value="system" label="System">
+			<interop-icon name="tabler-device-desktop" [size]="16" [decorative]="true" />
+			<span>System</span>
+		</li>
+	</ul>
+</div>

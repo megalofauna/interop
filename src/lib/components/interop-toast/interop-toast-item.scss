@@ -70,7 +70,7 @@
 }
 
 :host(:focus-visible) {
-  outline: 2px solid var(--itx-brand, #3b82f6);
+  outline: 2px solid var(--itx-colorway, #3b82f6);
   outline-offset: 2px;
 }
 
@@ -148,7 +148,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--itx-brand, #3b82f6);
+    outline: 2px solid var(--itx-colorway, #3b82f6);
     outline-offset: 1px;
   }
 }
@@ -174,7 +174,7 @@
 
   &:focus-visible {
     opacity: 1;
-    outline: 2px solid var(--itx-brand, #3b82f6);
+    outline: 2px solid var(--itx-colorway, #3b82f6);
     outline-offset: 1px;
   }
 }

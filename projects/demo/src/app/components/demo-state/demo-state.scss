@@ -1,13 +1,13 @@
 :host {
 	display: flex;
 	flex-direction: column;
-	min-width: 200px;
+	align-self: stretch;
+	min-width: var(--itx-spacing-48);
 	padding: var(--itx-spacing-4);
 	background: var(--itx-surface-below);
-	border: 2px solid var(--itx-deboss-4);
+	border: 2px solid var(--itx-neutral-6);
 	border-radius: var(--itx-radius-md);
 	font-size: var(--itx-font-size-caption);
-	align-self: flex-start;
 }
 
 .demo-state__title {

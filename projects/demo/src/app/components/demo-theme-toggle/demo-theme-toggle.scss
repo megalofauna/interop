@@ -3,7 +3,9 @@
 	align-items: center;
 }
 
-.theme-toggle {
+// ── Trigger button ───────────────────────────────────────────────────────────
+
+.theme-btn {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -13,9 +15,8 @@
 	border: 1px solid var(--itx-border);
 	border-radius: var(--itx-radius-sm);
 	background: var(--itx-surface);
+	color: var(--itx-on-surface);
 	cursor: pointer;
-	font-size: 1rem;
-	line-height: 1;
 	transition:
 		background-color var(--itx-duration-fast) var(--itx-easing-standard),
 		border-color var(--itx-duration-fast) var(--itx-easing-standard);
@@ -28,4 +29,31 @@
 		outline: 2px solid var(--itx-focus);
 		outline-offset: 2px;
 	}
+}
+
+// ── Popover panel ────────────────────────────────────────────────────────────
+
+.theme-popover {
+	// Reset browser popover defaults so FloatingUI top/left take effect
+	position: fixed;
+	inset: unset;
+	border: none;
+	padding: 0;
+	background: transparent;
+	color: inherit;
+	margin: 0;
+
+	// Panel chrome
+	background: var(--itx-surface);
+	border: 1px solid var(--itx-border);
+	border-radius: var(--itx-radius-lg);
+	box-shadow: var(--itx-shadow-md);
+	padding: var(--itx-spacing-1);
+	min-width: 10rem;
+}
+
+// ── Listbox inside panel ─────────────────────────────────────────────────────
+
+.theme-popover ul[interop-listbox] {
+	padding: 0;
 }

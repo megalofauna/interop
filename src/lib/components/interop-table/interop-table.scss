@@ -1,28 +1,61 @@
 /*
  * Available tokens (set on any ancestor, e.g. [interop-root]):
  *
- *   --itx-table-header-bg       Header row background (default: var(--itx-surface-above))
- *   --itx-table-header-color    Header cell text color (default: var(--itx-on-surface))
- *   --itx-table-border          Border color (default: var(--itx-border))
- *   --itx-table-cell-padding    Cell padding (default: var(--itx-spacing-4) var(--itx-spacing-4))
- *   --itx-table-row-hover-bg    Row hover background (default: var(--itx-surface-hover))
- *   --itx-table-body-color      Body text color (default: var(--itx-on-surface))
- *   --itx-table-stripe-bg       Even-row stripe background (default: transparent)
- *   --itx-table-font-size       Font size (default: var(--itx-font-size-caption))
- *   --itx-table-empty-color     Empty/loading/error text color (default: var(--itx-muted))
+ *   --itx-table-header-bg         Header row background
+ *   --itx-table-header-color      Header cell text color
+ *   --itx-table-border            Border color
+ *   --itx-table-cell-padding      Cell padding
+ *   --itx-table-row-hover-bg      Row hover background
+ *   --itx-table-body-color        Body text color
+ *   --itx-table-stripe-bg         Even-row stripe background
+ *   --itx-table-font-size         Font size
+ *   --itx-table-empty-color       Empty/loading/error text color
+ *   --itx-table-sticky-bg         Body sticky cell background (default: surface)
  */
 
+// ── Host ─────────────────────────────────────────────────────────────────────
+
 :host {
+	display: block;
+}
+
+// ── Scroll wrapper ────────────────────────────────────────────────────────────
+
+.interop-table__scroll {
+	// Passthrough by default — no visual change when scrollable is false.
+}
+
+.interop-table__scroll--active {
+	overflow-x: auto;
+	// Webkit smooth momentum scrolling on iOS
+	-webkit-overflow-scrolling: touch;
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-focus, var(--itx-colorway, #0066cc));
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+
+.interop-table__table {
 	display: table;
 	width: 100%;
 	border-collapse: collapse;
 	border-spacing: 0;
 	font-size: var(--itx-table-font-size, var(--itx-font-size-caption, 0.875rem));
-	font-weight: 400 !important;
+	font-weight: 400;
 	color: var(--itx-table-body-color, var(--itx-on-surface, #374151));
 }
 
-/* ─── Header ────────────────────────────────────────────────────────────── */
+// Inside a scroll wrapper the table expresses its natural content width.
+.interop-table__scroll--active .interop-table__table {
+	width: max-content;
+	min-width: 100%;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
 
 .interop-table-header-row {
 	background: var(--itx-table-header-bg, var(--itx-surface-above, #f9fafb));
@@ -37,7 +70,7 @@
 	border-bottom: 2px solid var(--itx-table-border, var(--itx-border, #e5e7eb));
 }
 
-/* ─── Body ──────────────────────────────────────────────────────────────── */
+// ── Body ──────────────────────────────────────────────────────────────────────
 
 .interop-table-row {
 	border-bottom: 1px solid var(--itx-table-border, var(--itx-border, #e5e7eb));
@@ -60,7 +93,34 @@
 	vertical-align: top;
 }
 
-/* ─── State rows ────────────────────────────────────────────────────────── */
+// ── Sticky columns ────────────────────────────────────────────────────────────
+
+// Header sticky cell — elevated z-index so it floats above body sticky cells.
+.interop-table-header-cell[data-sticky] {
+	position: sticky;
+	z-index: 2;
+	background: var(--itx-table-header-bg, var(--itx-surface-above, #f9fafb));
+}
+
+// Body sticky cell.
+.interop-table-cell[data-sticky] {
+	position: sticky;
+	z-index: 1;
+	background: var(--itx-table-sticky-bg, var(--itx-surface, #ffffff));
+}
+
+// Shadow appears on sticky cells once the table has scrolled.
+// Uses box-shadow so it's contained within the scroll region and respects dark mode via the border token.
+.interop-table__scroll--active[data-scrolled] {
+	.interop-table-header-cell[data-sticky],
+	.interop-table-cell[data-sticky] {
+		box-shadow:
+			inset -1px 0 0 var(--itx-table-border, var(--itx-border, #e5e7eb)),
+			4px 0 8px -2px oklch(0 0 0 / 0.1);
+	}
+}
+
+// ── State rows ────────────────────────────────────────────────────────────────
 
 .interop-table-loading-cell,
 .interop-table-error-cell,

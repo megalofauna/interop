@@ -2,6 +2,7 @@ import {
 	Component,
 	ChangeDetectionStrategy,
 	ElementRef,
+	OnDestroy,
 	TemplateRef,
 	computed,
 	contentChildren,
@@ -9,8 +10,8 @@ import {
 	inject,
 	signal,
 	effect,
+	viewChild,
 	TrackByFunction,
-	isDevMode,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
@@ -27,120 +28,114 @@ import { createComponentTrackByFn } from "../../utils/track-by";
 import { InteropCellDef, InteropCellContext } from "./interop-cell-def";
 
 /**
- * Basic column definition for InteropTable
- * Focused on bedrock functionality only
+ * Column definition for InteropTable.
  */
 export interface TableColumn<T = any> {
-	/**
-	 * Property key from the data object to display
-	 */
+	/** Property key from the data object to display. */
 	key: keyof T | string;
 
-	/**
-	 * Display label for the column header
-	 * Defaults to the key name if not provided
-	 */
+	/** Display label for the column header. Defaults to the key name. */
 	label?: string;
 
-	/**
-	 * Whether this column is hidden
-	 */
+	/** Whether this column is hidden. */
 	hidden?: boolean;
+
+	/**
+	 * Whether this column sticks to the left edge during horizontal scroll.
+	 * Apply to the leftmost column(s) only.
+	 */
+	sticky?: boolean;
+
+	/**
+	 * Explicit left offset in pixels for sticky columns.
+	 * Required only when multiple consecutive columns are sticky.
+	 * The first sticky column is always `left: 0`; subsequent sticky columns
+	 * must declare their offset manually (sum of all preceding sticky column widths).
+	 */
+	stickyLeft?: number;
 }
 
 /**
- * InteropTable - Unstyled table component with bedrock functionality
+ * InteropTable — Semantic, signal-based table component.
  *
- * Core features:
- * - Semantic HTML table structure
- * - Collection integration via InteropCollectionService
- * - Auto-generated columns from data
- * - Type-safe column definitions
- * - Signal-based reactivity
- * - Loading/empty states (unstyled)
- *
- * @example Basic usage
+ * @example Basic
  * ```html
- * <table interop-table [collection]="users"></table>
+ * <interop-table [collection]="users" />
  * ```
  *
- * @example With custom columns
+ * @example Scrollable with sticky first column
  * ```html
- * <table interop-table [collection]="users" [columns]="columns"></table>
+ * <interop-table
+ *   [collection]="rows"
+ *   [columns]="cols"
+ *   [scrollable]="true"
+ *   scrollLabel="Cargo manifest"
+ * />
  * ```
+ * Where `cols[0]` has `sticky: true`.
  */
 @Component({
-	selector: "table[interop-table]",
+	selector: "interop-table",
 	standalone: true,
 	imports: [CommonModule],
 	templateUrl: "./interop-table.html",
 	styleUrl: "./interop-table.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InteropTable<T = any> {
-	private elementRef = inject(ElementRef<HTMLTableElement>);
-	private collectionService = inject(InteropCollectionService);
-	private attrsManager = inject(InteropAttribute);
+export class InteropTable<T = any> implements OnDestroy {
+	private readonly collectionService = inject(InteropCollectionService);
+	private readonly attrsManager = inject(InteropAttribute);
+	private readonly scrollContainerEl =
+		viewChild<ElementRef<HTMLDivElement>>("scrollContainerEl");
 
-	// Core inputs
+	// ── Inputs ────────────────────────────────────────────────────────────────
 
-	/**
-	 * Data collection to display in the table
-	 * Supports arrays, observables, promises, and InteropCollection instances
-	 */
+	/** Data collection. Accepts arrays, Observables, Promises, or InteropCollection. */
 	collection = input<InteropCollectionInput<T>>();
 
-	/**
-	 * Column definitions for the table
-	 * If not provided, columns will be auto-generated from the first data item
-	 */
+	/** Column definitions. Auto-generated from first data item when omitted. */
 	columns = input<TableColumn<T>[] | null>(null);
 
-	/**
-	 * Determines how table rows are tracked for change detection and DOM updates.
-	 * Same options as InteropList component for consistency
-	 */
+	/** Row tracking strategy: 'auto', 'index', or a custom TrackByFunction. */
 	trackBy = input<TrackByFunction<T> | "auto" | "index">("auto");
 
-	/**
-	 * Field name to use for tracking row identity when available.
-	 * If provided, the value of this field on the item is used as the track key.
-	 */
+	/** Field to use for identity tracking when trackBy is 'auto'. */
 	trackByField = input<keyof T | null>(null);
 
-	/**
-	 * Whether to show table headers
-	 */
+	/** Whether to show column header row. */
 	showHeaders = input<boolean>(true);
 
-	/**
-	 * Text to display when no data is available
-	 */
+	/** Text shown when no data is available. */
 	emptyText = input<string>("No data available");
 
-	/**
-	 * Text to display while loading
-	 */
+	/** Text shown while loading. */
 	loadingText = input<string>("Loading...");
 
-	/**
-	 * Whether to auto-generate columns from data when no columns are provided
-	 */
+	/** Auto-generate columns from the first data item when no columns are provided. */
 	autoColumns = input<boolean>(true);
 
-	/**
-	 * Maximum number of rows to display (null = no limit).
-	 */
+	/** Maximum number of rows to display. null = no limit. */
 	maxRows = input<number | null>(null);
 
-	// Content children — custom cell templates projected by the consumer
-	private cellDefs = contentChildren(InteropCellDef);
+	/**
+	 * Enable horizontal overflow scrolling.
+	 * The table is wrapped in a focusable scroll region with role="region" and
+	 * an accessible label. Combine with `sticky: true` on key columns.
+	 */
+	scrollable = input<boolean>(false);
 
 	/**
-	 * Map of column key → custom cell TemplateRef.
-	 * Rebuilt whenever projected InteropCellDef directives change.
+	 * Accessible label for the scroll region.
+	 * Announced by screen readers as "Label, region".
+	 * Defaults to "Scrollable table" when not provided.
 	 */
-	cellTemplateMap = computed(() => {
+	scrollLabel = input<string | null>(null);
+
+	// ── Content children ──────────────────────────────────────────────────────
+
+	private readonly cellDefs = contentChildren(InteropCellDef);
+
+	readonly cellTemplateMap = computed(() => {
 		const map = new Map<string, TemplateRef<InteropCellContext<T>>>();
 		for (const def of this.cellDefs()) {
 			map.set(def.itxCell(), def.templateRef);
@@ -148,196 +143,135 @@ export class InteropTable<T = any> {
 		return map;
 	});
 
-	// Internal state
-	private collectionInstance = signal<any>(null);
-	private autoGeneratedColumns = signal<TableColumn<T>[]>([]);
+	// ── Internal state ────────────────────────────────────────────────────────
 
-	// Computed properties
+	private readonly collectionInstance = signal<any>(null);
+	private readonly autoGeneratedColumns = signal<TableColumn<T>[]>([]);
+	private rafId: number | null = null;
 
-	/**
-	 * Resolved collection instance
-	 */
-	resolvedCollection = computed(() => {
+	/** True once the scroll container has been scrolled past its left origin. */
+	readonly isScrolled = signal(false);
+
+	// ── Computed ──────────────────────────────────────────────────────────────
+
+	readonly resolvedCollection = computed(() => {
 		const collection = this.collection();
 		if (!collection) return null;
-
-		// Try to get existing collection first (for computed safety)
 		const existing = this.collectionService.computedResolve(collection);
 		if (existing) return existing;
-
-		// Return the signal value (will be set in effect)
 		return this.collectionInstance();
 	});
 
-	/**
-	 * Items to display
-	 */
-	items = computed(() => {
-		const collection = this.resolvedCollection();
-		const items = collection?.items() ?? [];
+	readonly items = computed(() => {
+		const items = this.resolvedCollection()?.items() ?? [];
 		const max = this.maxRows();
-		if (max === null || max === undefined) {
-			return items;
-		}
-		return items.slice(0, max);
+		return max == null ? items : items.slice(0, max);
 	});
 
-	/**
-	 * Loading state
-	 */
-	isLoading = computed(() => {
-		const collection = this.resolvedCollection();
-		return collection?.loading() ?? false;
-	});
+	readonly isLoading = computed(() => this.resolvedCollection()?.loading() ?? false);
+	readonly hasError = computed(() => this.resolvedCollection()?.hasError() ?? false);
+	readonly isEmpty = computed(() => this.resolvedCollection()?.isEmpty() ?? true);
 
-	/**
-	 * Error state
-	 */
-	hasError = computed(() => {
-		const collection = this.resolvedCollection();
-		return collection?.hasError() ?? false;
-	});
-
-	/**
-	 * Whether to show empty state
-	 */
-	isEmpty = computed(() => {
-		const collection = this.resolvedCollection();
-		return collection?.isEmpty() ?? true;
-	});
-
-	/**
-	 * Final resolved columns (custom or auto-generated)
-	 */
-	resolvedColumns = computed(() => {
-		const customColumns = this.columns();
-		if (customColumns && customColumns.length > 0) {
-			return customColumns.filter((col) => !col.hidden);
-		}
-
-		if (this.autoColumns()) {
-			return this.autoGeneratedColumns().filter((col) => !col.hidden);
-		}
-
+	readonly resolvedColumns = computed(() => {
+		const custom = this.columns();
+		if (custom && custom.length > 0) return custom.filter((c) => !c.hidden);
+		if (this.autoColumns()) return this.autoGeneratedColumns().filter((c) => !c.hidden);
 		return [];
 	});
 
-	constructor() {
-		// Validate semantic usage in development
-		if (isDevMode()) {
-			const element = this.elementRef.nativeElement;
-			if (element.tagName !== "TABLE") {
-				console.warn(
-					"InteropTable must be used on <table> elements for semantic correctness. " +
-						"Found on: " +
-						element.tagName.toLowerCase(),
-				);
-			}
-		}
+	readonly hasStickyColumns = computed(() =>
+		this.resolvedColumns().some((c) => c.sticky),
+	);
 
-		// Effect to resolve collection when input changes
+	// ── Lifecycle ─────────────────────────────────────────────────────────────
+
+	constructor() {
 		effect(() => {
 			const collectionInput = this.collection();
 			if (collectionInput) {
-				// Only create new collections in effects, not computed functions
-				const resolved = this.collectionService.resolve(collectionInput);
-				this.collectionInstance.set(resolved);
+				this.collectionInstance.set(
+					this.collectionService.resolve(collectionInput),
+				);
 			} else {
 				this.collectionInstance.set(null);
 			}
 		});
 
-		// Effect to auto-generate columns when data changes
 		effect(() => {
 			const items = this.items();
-			const customColumns = this.columns();
-			const shouldAutoGenerate = this.autoColumns();
-
+			const custom = this.columns();
 			if (
-				shouldAutoGenerate &&
-				(!customColumns || customColumns.length === 0) &&
+				this.autoColumns() &&
+				(!custom || custom.length === 0) &&
 				items.length > 0
 			) {
-				const generated = this.generateColumnsFromData(items[0]);
-				this.autoGeneratedColumns.set(generated);
-			} else if (
-				!shouldAutoGenerate ||
-				(customColumns && customColumns.length > 0)
-			) {
+				this.autoGeneratedColumns.set(this.generateColumnsFromData(items[0]));
+			} else if (!this.autoColumns() || (custom && custom.length > 0)) {
 				this.autoGeneratedColumns.set([]);
 			}
 		});
 	}
 
-	/**
-	 * TrackBy function for table rows
-	 */
+	ngOnDestroy(): void {
+		if (this.rafId !== null) {
+			cancelAnimationFrame(this.rafId);
+			this.rafId = null;
+		}
+	}
+
+	// ── Scroll handling ───────────────────────────────────────────────────────
+
+	onScroll(): void {
+		if (this.rafId !== null) return;
+		this.rafId = requestAnimationFrame(() => {
+			this.rafId = null;
+			const el = this.scrollContainerEl()?.nativeElement;
+			this.isScrolled.set((el?.scrollLeft ?? 0) > 1);
+		});
+	}
+
+	// ── Template helpers ──────────────────────────────────────────────────────
+
+	getCellTemplate(column: TableColumn<T>): TemplateRef<InteropCellContext<T>> | null {
+		return this.cellTemplateMap().get(String(column.key)) ?? null;
+	}
+
+	getCellText(item: T, column: TableColumn<T>): string {
+		const value = (item as any)?.[column.key as string];
+		if (value == null) return "";
+		return String(value);
+	}
+
+	getColumnLabel(column: TableColumn<T>): string {
+		return column.label ?? String(column.key);
+	}
+
+	getStickyLeft(column: TableColumn<T>): string {
+		return `${column.stickyLeft ?? 0}px`;
+	}
+
 	trackByFn = createComponentTrackByFn<T>(
 		() => this.trackBy(),
 		() => this.trackByField(),
 	);
 
-	/**
-	 * TrackBy function for table columns
-	 */
-	trackByColumnIndex = (index: number, column: TableColumn<T>): any => {
-		return column.key;
-	};
+	trackByColumnIndex = (_index: number, column: TableColumn<T>): any => column.key;
 
-	/**
-	 * Get the custom cell template for a column, if one was provided.
-	 * Returns null when no custom template exists (fall back to default text).
-	 */
-	getCellTemplate(
-		column: TableColumn<T>,
-	): TemplateRef<InteropCellContext<T>> | null {
-		return this.cellTemplateMap().get(String(column.key)) ?? null;
-	}
+	// ── Private ───────────────────────────────────────────────────────────────
 
-	/**
-	 * Get display text for a cell
-	 */
-	getCellText(item: T, column: TableColumn<T>): string {
-		const key = column.key as string;
-		const value = (item as any)?.[key];
-
-		if (value === null || value === undefined) {
-			return "";
-		}
-
-		return String(value);
-	}
-
-	/**
-	 * Get column header text
-	 */
-	getColumnLabel(column: TableColumn<T>): string {
-		return column.label || String(column.key);
-	}
-
-	/**
-	 * Auto-generate columns from the first data item
-	 */
 	private generateColumnsFromData(firstItem: T): TableColumn<T>[] {
-		if (!firstItem || typeof firstItem !== "object") {
-			return [];
-		}
-
-		const keys = Object.keys(firstItem) as (keyof T)[];
-		return keys.map((key) => ({
+		if (!firstItem || typeof firstItem !== "object") return [];
+		return (Object.keys(firstItem) as (keyof T)[]).map((key) => ({
 			key,
 			label: this.formatKeyAsLabel(String(key)),
 		}));
 	}
 
-	/**
-	 * Format a property key as a human-readable label
-	 */
 	private formatKeyAsLabel(key: string): string {
 		return key
-			.replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase to spaces
-			.replace(/[_-]/g, " ") // underscores and dashes to spaces
+			.replace(/([a-z])([A-Z])/g, "$1 $2")
+			.replace(/[_-]/g, " ")
 			.toLowerCase()
-			.replace(/^\w/, (c) => c.toUpperCase()); // capitalize first letter
+			.replace(/^\w/, (c) => c.toUpperCase());
 	}
 }

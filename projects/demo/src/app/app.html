@@ -1,25 +1,48 @@
 <header class="shell__header">
-	<button
-		class="shell__menu-btn"
-		(click)="toggleNav()"
-		aria-label="Toggle navigation"
-	>
-		<svg
-			width="20"
-			height="20"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
+	<div class="shell__header-start">
+		<button
+			class="shell__menu-btn"
+			(click)="toggleNav()"
+			aria-label="Toggle navigation"
 		>
-			<line x1="3" y1="6" x2="21" y2="6" />
-			<line x1="3" y1="12" x2="21" y2="12" />
-			<line x1="3" y1="18" x2="21" y2="18" />
-		</svg>
-	</button>
-	<span class="shell__title">Interop</span>
-	<demo-theme-toggle />
+			<svg
+				width="20"
+				height="20"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+			>
+				<line x1="3" y1="6" x2="21" y2="6" />
+				<line x1="3" y1="12" x2="21" y2="12" />
+				<line x1="3" y1="18" x2="21" y2="18" />
+			</svg>
+		</button>
+		<span class="shell__title">Interop</span>
+	</div>
+
+	<nav class="shell__nav" aria-label="Main">
+		<a
+			class="shell__nav-link"
+			routerLink="/components"
+			routerLinkActive="shell__nav-link--active"
+		>Components</a>
+		<a
+			class="shell__nav-link"
+			routerLink="/rigs"
+			routerLinkActive="shell__nav-link--active"
+		>Rigs</a>
+		<a
+			class="shell__nav-link"
+			routerLink="/composites"
+			routerLinkActive="shell__nav-link--active"
+		>Composites</a>
+	</nav>
+
+	<div class="shell__header-end">
+		<demo-theme-toggle />
+	</div>
 </header>
 
 <div class="shell__body">

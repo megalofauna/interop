@@ -49,8 +49,8 @@
  *   --itx-chip-hover-bg          Background on hover (default: var(--itx-surface-hover))
  *
  * Checked / selected state
- *   --itx-chip-accent            Selected background color (default: var(--itx-brand))
- *   --itx-chip-on-accent         Text color on selected (default: var(--itx-on-brand))
+ *   --itx-chip-accent            Selected background color (default: var(--itx-colorway))
+ *   --itx-chip-on-accent         Text color on selected (default: var(--itx-on-colorway))
  *   --itx-chip-selected-bg       Override for selected background (default: var(--itx-chip-accent))
  *   --itx-chip-selected-color    Text color when selected (default: var(--itx-chip-on-accent))
  *   --itx-chip-selected-border   Border when selected (default: var(--itx-chip-border))
@@ -110,8 +110,8 @@
 /* ── Checked / selected ───────────────────────────────────── */
 
 :host([data-checked]) {
-	background: var(--itx-chip-selected-bg, var(--itx-chip-accent, var(--itx-brand, currentColor)));
-	color: var(--itx-chip-selected-color, var(--itx-chip-on-accent, var(--itx-on-brand, white)));
+	background: var(--itx-chip-selected-bg, var(--itx-chip-accent, var(--itx-colorway, currentColor)));
+	color: var(--itx-chip-selected-color, var(--itx-chip-on-accent, var(--itx-on-colorway, white)));
 	border: var(--itx-chip-selected-border, var(--itx-chip-border, 1px solid var(--itx-border, currentColor)));
 	font-weight: var(--itx-chip-selected-weight, inherit);
 }

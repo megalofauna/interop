@@ -40,8 +40,8 @@ interop-field-control {
 }
 
 interop-field-control.focused {
-	border-color: var(--itx-field-focus-color, var(--itx-brand));
-	outline: var(--itx-field-focus-width, 2px) solid var(--itx-field-focus-color, var(--itx-brand));
+	border-color: var(--itx-field-focus-color, var(--itx-colorway));
+	outline: var(--itx-field-focus-width, 2px) solid var(--itx-field-focus-color, var(--itx-colorway));
 	outline-offset: -1px;
 }
 

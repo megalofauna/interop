@@ -62,18 +62,18 @@
 
 	&[aria-selected="true"] {
 		color: var(--itx-cb-tab-color-active, var(--itx-on-surface));
-		border-block-end-color: var(--itx-cb-tab-indicator-color, var(--itx-brand));
+		border-block-end-color: var(--itx-cb-tab-indicator-color, var(--itx-colorway));
 	}
 
 	&:focus-visible {
-		--itx-cb-header-border-color: vare(--itx-brand);
-		outline: 2px solid var(--itx-brand);
+		--itx-cb-header-border-color: var(--itx-colorway);
+		outline: 2px solid var(--itx-colorway);
 		outline-offset: 2px;
 		border-radius: inherit;
 
 		&[aria-selected="true"]:focus-visible {
 			border-block-end-color: oklch(
-				from var(--itx-cb-tab-indicator-color, var(--itx-brand)) calc(l - 0.12)
+				from var(--itx-cb-tab-indicator-color, var(--itx-colorway)) calc(l - 0.12)
 					calc(c + 0.15) h
 			);
 		}
@@ -114,7 +114,7 @@
 	line-height: 1;
 
 	&:focus-visible {
-		outline: 2px solid var(--itx-brand);
+		outline: 2px solid var(--itx-colorway);
 		outline-offset: 2px;
 	}
 }

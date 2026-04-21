@@ -27,19 +27,19 @@
   border-radius: 4px;
 
   &--active {
-    background-color: var(--itx-option-active-bg, oklch(0.95 0 0));
-    outline: 2px solid var(--itx-option-focus-ring, oklch(0.6 0.15 250));
+    background-color: var(--itx-option-active-bg, var(--itx-surface-hover, oklch(0.91 0.005 250)));
+    outline: 2px solid var(--itx-option-focus-ring, var(--itx-colorway, oklch(0.55 0.18 250)));
     outline-offset: -2px;
   }
 
   &--selected {
-    background-color: var(--itx-option-selected-bg, oklch(0.9 0.05 250));
-    color: var(--itx-option-selected-color, oklch(0.3 0.1 250));
+    background-color: var(--itx-option-selected-bg, var(--itx-info-surface, oklch(0.95 0.03 250)));
+    color: var(--itx-option-selected-color, var(--itx-colorway, oklch(0.55 0.18 250)));
     font-weight: 500;
   }
 
   &--active#{&}--selected {
-    background-color: var(--itx-option-active-selected-bg, oklch(0.85 0.08 250));
+    background-color: var(--itx-option-active-selected-bg, var(--itx-surface-hover, oklch(0.91 0.005 250)));
   }
 
   &--disabled {

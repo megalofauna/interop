@@ -11,7 +11,7 @@
 }
 
 :host:hover {
-	--itx-control-border-color: var(--itx-brand);
+	--itx-control-border-color: var(--itx-colorway);
 }
 
 /* Visually hidden — remains in DOM for accessibility (focus, keyboard, form submission) */
@@ -33,7 +33,7 @@
 
 /* Hover states */
 :host:hover:not(:has(input[type="checkbox"]:disabled)) {
-	background-color: var(--itx-emboss-2);
+	background-color: var(--itx-neutral-3);
 }
 
 /* Reduced motion support */

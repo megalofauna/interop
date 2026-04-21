@@ -1,20 +1,22 @@
 /*
  * Available tokens (set on any ancestor, e.g. [interop-root]):
  *
- *   --itx-button-display          Display mode
- *   --itx-button-align-items      Align-items
- *   --itx-button-background       Background color
- *   --itx-button-foreground       Text color
- *   --itx-button-border-width     Border width
- *   --itx-button-border-style     Border style
- *   --itx-button-border-color     Border color
- *   --itx-button-rounding         Border radius
- *   --itx-button-padding-block    Block padding
- *   --itx-button-padding-inline   Inline padding
- *   --itx-button-font-family      Font family
- *   --itx-button-font-size        Font size
- *   --itx-button-line-height      Line height
- *   --itx-button-letter-spacing   Letter spacing
+ *   --itx-button-display          		Display mode
+ *   --itx-button-align-items      		Align-items
+ *   --itx-button-background-color 		Background color
+ *   --itx-button-background-image 		Background image
+ *   --itx-button-foreground       		Text color
+ *   --itx-button-border-width     		Border width
+ *   --itx-button-border-style     		Border style
+ *   --itx-button-border-color     		Border color
+ *   --itx-button-rounding         		Border radius
+ *   --itx-button-padding-block    		Block padding (visual pill interior)
+ *   --itx-button-padding-inline   		Inline padding
+ *   --itx-button-font-family      		Font family
+ *   --itx-button-font-size        		Font size
+ *   --itx-button-line-height      		Line height
+ *   --itx-button-letter-spacing   		Letter spacing
+ *   --itx-button-touch-inset      		Extra block space between visual pill and touch target boundary
  */
 
 :where([interop-button]) {
@@ -23,19 +25,77 @@
 }
 
 :host {
+	/* Touch target container — the host IS the hit area */
 	display: var(--itx-button-display, inline-flex);
+	align-self: flex-start;
 	align-items: var(--itx-button-align-items, center);
-	background: var(--itx-button-background, var(--itx-surface));
-	border-width: var(--itx-button-border-width, 2px);
-	border-style: var(--itx-button-border-style, solid);
-	border-color: var(--itx-button-border-color, transparent);
-	border-radius: var(--itx-button-rounding, var(--itx-radius-sm));
+	position: relative;
+	isolation: isolate; /* confines ::before z-index: -1 within this stacking context */
+
+	/* Visual styling lives on ::before, not here */
+	background: none;
+	border: none;
+
+	/*
+	 * padding-block = visual pill padding + touch inset.
+	 * ::before mirrors the touch inset as its inset-block, so the pill
+	 * visually shrinks by exactly that amount on each side.
+	 */
+	padding-block: calc(
+		var(--itx-button-padding-block, 0.375em) +
+			var(--itx-button-touch-inset, 0.25em)
+	);
+	padding-inline: var(--itx-button-padding-inline, 0.75em);
+
+	max-width: var(--itx-button-max-width, initial);
+
+	/* Typography */
 	color: var(--itx-button-foreground, var(--itx-on-surface));
 	font-family: var(--itx-button-font-family, var(--itx-font-family));
 	font-size: var(--itx-button-font-size, inherit);
 	line-height: var(--itx-button-line-height, 1.25);
-	padding-block: var(--itx-button-padding-block, 0.375em);
-	padding-inline: var(--itx-button-padding-inline, 0.75em);
 	letter-spacing: var(--itx-button-letter-spacing, initial);
-	max-width: var(--itx-button-max-width, initial);
+
+	transition-property: color;
+	transition-duration: 75ms;
+	transition-timing-function: ease-in;
+}
+
+/* Visual pill — purely decorative layer behind content */
+:host::before {
+	content: "";
+	position: absolute;
+	inset-block: var(--itx-button-touch-inset, 0.25em);
+	inset-inline: 0;
+	z-index: -1;
+	pointer-events: none;
+
+	background-color: var(--itx-button-background-color, var(--itx-surface));
+	background-image: var(--itx-button-background-image, none);
+	border-width: var(--itx-button-border-width, 2px);
+	border-style: var(--itx-button-border-style, solid);
+	border-color: var(--itx-button-border-color, transparent);
+	border-radius: var(--itx-button-rounding, var(--itx-radius-sm));
+	box-shadow: 0 6px 0 0 rgb(0 0 0 / 0.05);
+
+	transition-property: border-color, background-color, background-image;
+	transition-duration: 75ms;
+	transition-timing-function: ease-in;
+}
+
+/* Focus ring on the visual pill, not the full touch target */
+:host:focus {
+	outline: none;
+}
+
+:host:focus::before {
+	outline: 3px solid var(--itx-colorway);
+	outline-offset: 3px;
+}
+
+/* On fine pointers (mouse/trackpad), collapse touch inset so hit area = visual pill */
+@media (pointer: fine) {
+	:host {
+		--itx-button-touch-inset: 0em;
+	}
 }

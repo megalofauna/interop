@@ -1,6 +1,9 @@
 @import "../../../src/lib/styles/themes/protocol.css";
 @import "./app/styles/demo-page";
 
+html,
 body {
 	margin: 0;
+	height: 100%;
+	overflow: hidden;
 }
