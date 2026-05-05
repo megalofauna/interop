@@ -5,32 +5,6 @@
 
 // ── Trigger button ───────────────────────────────────────────────────────────
 
-.theme-btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 2rem;
-	height: 2rem;
-	padding: 0;
-	border: 1px solid var(--itx-border);
-	border-radius: var(--itx-radius-sm);
-	background: var(--itx-surface);
-	color: var(--itx-on-surface);
-	cursor: pointer;
-	transition:
-		background-color var(--itx-duration-fast) var(--itx-easing-standard),
-		border-color var(--itx-duration-fast) var(--itx-easing-standard);
-
-	&:hover {
-		background: var(--itx-surface-hover);
-	}
-
-	&:focus-visible {
-		outline: 2px solid var(--itx-focus);
-		outline-offset: 2px;
-	}
-}
-
 // ── Popover panel ────────────────────────────────────────────────────────────
 
 .theme-popover {
@@ -44,16 +18,17 @@
 	margin: 0;
 
 	// Panel chrome
-	background: var(--itx-surface);
-	border: 1px solid var(--itx-border);
+	background: var(--itx-surface-above);
+	border: 1px solid var(--itx-neutral-6);
 	border-radius: var(--itx-radius-lg);
 	box-shadow: var(--itx-shadow-md);
-	padding: var(--itx-spacing-1);
+	padding: 0;
 	min-width: 10rem;
+	box-shadow: 0 10px 0 0 rgb(0 0 0 / 0.0925);
 }
 
 // ── Listbox inside panel ─────────────────────────────────────────────────────
 
 .theme-popover ul[interop-listbox] {
-	padding: 0;
+	padding: var(--itx-spacing-1);
 }

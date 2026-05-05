@@ -1,0 +1,22 @@
+@if (entries().length > 0) {
+	<button class="itx-term__reset" interop-button="icon xs" (click)="reset.emit()" aria-label="Clear terminal">
+		<interop-icon name="tabler-eraser" [size]="14" />
+	</button>
+}
+<div class="itx-term__scroll" #scrollEl role="log" aria-live="polite" aria-label="Terminal output">
+	<div class="itx-term__log">
+		@for (entry of displayEntries(); track $index) {
+			<div class="itx-term__line">
+				<span class="itx-term__prompt" aria-hidden="true">{{ prompt() }}</span>
+				@if (entry.delta) {
+					<span class="itx-term__delta">[{{ entry.delta }}]</span>
+				}
+				<span class="itx-term__text">{{ entry.text }}</span>
+			</div>
+		}
+		<div class="itx-term__cursor" aria-hidden="true">
+			<span class="itx-term__prompt">{{ prompt() }}</span>
+			<span class="itx-term__caret">▋</span>
+		</div>
+	</div>
+</div>

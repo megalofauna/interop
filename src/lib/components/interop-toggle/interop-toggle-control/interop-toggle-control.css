@@ -6,6 +6,27 @@
 	user-select: none;
 	font-size: 1rem;
 	line-height: 1.5;
+	/*
+	 * Toggle had no padding previously. Adding base + touch inset here so the
+	 * touch target reaches 36–40px on coarse pointer devices, matching the
+	 * button and other control components.
+	 */
+	padding-block: calc(0.5rem + var(--itx-control-touch-inset, 0.25em));
+	padding-inline: 0.25rem;
+	position: relative;
+	isolation: isolate;
+}
+
+/* Hover background — inset from touch target boundary */
+:host::before {
+	content: "";
+	position: absolute;
+	inset-block: var(--itx-control-touch-inset, 0.25em);
+	inset-inline: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-color: transparent;
+	transition: background-color 75ms ease-in;
 }
 
 /* Visually hidden — remains in DOM for accessibility (focus, keyboard, form submission) */
@@ -26,7 +47,7 @@
 }
 
 /* Hover states */
-:host:hover:not(:has(input[type="checkbox"]:disabled)) {
+:host:hover:not(:has(input[type="checkbox"]:disabled))::before {
 	background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -44,6 +65,13 @@
 :host(.reverse) {
 	flex-direction: row-reverse;
 	justify-content: flex-end;
+}
+
+/* On fine pointers, collapse touch inset so hover bg fills full label area */
+@media (pointer: fine) {
+	:host {
+		--itx-control-touch-inset: 0em;
+	}
 }
 
 /* Reduced motion support */

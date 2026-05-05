@@ -1,0 +1,48 @@
+/*
+ * Rule utility — a layout-inert separator element for flex containers.
+ *
+ * Apply [itx-rule] to an element placed *between* siblings inside a flex
+ * container (preferably an <hr> for semantics). The element renders as a
+ * straight line — horizontal in a column track, vertical in a row track —
+ * and contributes zero net layout space, so siblings touch just as they
+ * would without it.
+ *
+ *   <fieldset>                        column track:
+ *     <button>One</button>              ─────
+ *     <hr itx-rule>                     One
+ *     <button>Two</button>              ─────  ← <hr itx-rule>
+ *     <hr itx-rule>                     Two
+ *     <button>Three</button>            ─────
+ *   </fieldset>                         Three
+ *
+ * The axis is implicit: the same markup works in a row track. flex-basis
+ * sizes the rule along the *main* axis; align-self: stretch fills the cross
+ * axis automatically. Negative margins on both axes make the rule layout-
+ * inert (block in column tracks, inline in row tracks; the cross-axis
+ * negatives just bleed slightly past the container edge — usually invisible
+ * inside any container padding).
+ *
+ * Tokens (set on any ancestor, e.g. [interop-root]):
+ *   --itx-rule-color    rule colour      (default: currentColor)
+ *   --itx-rule-width    rule thickness   (default: 1px)
+ *
+ * Notes:
+ *   - Browser UA styling on <hr> (default border, margin, height) is reset.
+ *   - pointer-events: none so the rule never intercepts hover from a gap.
+ *   - aria-hidden is recommended on auto-injected separators since they're
+ *     decorative; an authored <hr> already conveys a thematic break.
+ */
+
+:where([itx-rule]) {
+	flex: 0 0 var(--itx-rule-width, 1px);
+	align-self: stretch;
+	background: var(--itx-rule-color, currentColor);
+	margin-block: calc(var(--itx-rule-width, 1px) / -2);
+	margin-inline: calc(var(--itx-rule-width, 1px) / -2);
+	border: 0;
+	padding: 0;
+	pointer-events: none;
+	/* Reset the inset look browsers give <hr>. */
+	color: inherit;
+	overflow: hidden;
+}

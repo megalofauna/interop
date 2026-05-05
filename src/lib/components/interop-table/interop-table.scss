@@ -120,6 +120,23 @@
 	}
 }
 
+// ── Group rows ────────────────────────────────────────────────────────────────
+
+.interop-table-group-row {
+	border-bottom: 1px solid var(--itx-table-border, var(--itx-border, #e5e7eb));
+}
+
+.interop-table-group-label {
+	padding: var(--itx-table-cell-padding, var(--itx-spacing-4, 0.75rem) var(--itx-spacing-4, 1rem));
+	padding-block-start: var(--itx-spacing-6, 1.5rem);
+	font-size: var(--itx-font-size-fine-print, 0.75rem);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--itx-table-header-color, var(--itx-muted, #6b7280));
+	text-align: left;
+}
+
 // ── State rows ────────────────────────────────────────────────────────────────
 
 .interop-table-loading-cell,

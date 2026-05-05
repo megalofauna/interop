@@ -21,9 +21,9 @@
 	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: var(--itx-spacing-4);
-	padding: var(--itx-spacing-2) var(--itx-spacing-4);
-	border-bottom: 1px solid var(--itx-border);
-	background-color: rgb(255 255 255 / 0.05);
+	padding: var(--itx-spacing-3) var(--itx-spacing-8);
+	/* border-bottom: 1px solid var(--itx-border); */
+	background-color: rgba(24, 27, 29, 0.25);
 	backdrop-filter: blur(12px);
 }
 
@@ -99,10 +99,7 @@
 	flex: 1;
 	min-width: 0;
 	overflow-y: auto;
-	max-width: 60rem;
-	margin-inline: auto;
-	padding: var(--itx-spacing-8) var(--itx-spacing-10);
-	width: 100%;
+	padding-inline: var(--itx-spacing-10);
 }
 
 // ── Mobile ──────────────────────────────────────────────────────────────────

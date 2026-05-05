@@ -1,0 +1,67 @@
+/*
+ * Managed Radius — coordinated nested border-radius via CSS inheritance.
+ *
+ * Opt-in: add [interop-managed-radius] to any element to establish (or reset)
+ * a radius context. Participating components inside inherit --itx-context-radius,
+ * use it for their own border-radius, then re-declare it reduced by their own
+ * padding so descendants receive the correct nested value automatically.
+ *
+ * Formula:  inner-radius = max(0px, outer-radius - element-padding)
+ *
+ * Perceptual note: once padding ≥ ~1.5× the outer radius, the child's corner
+ * sits outside the parent's arc zone and any radius mismatch becomes
+ * imperceptible. max(0px) handles the arithmetic floor; this is why.
+ *
+ * ─── Opt-in attributes ──────────────────────────────────────────────────────
+ *
+ *   [interop-managed-radius]   Establishes (or resets) the radius context.
+ *                              Apply at [interop-root] for global opt-in, or on
+ *                              any subtree element for scoped opt-in.
+ *
+ * ─── Consumer API ───────────────────────────────────────────────────────────
+ *
+ *   --itx-context-radius       Inherited radius for the current nesting depth.
+ *                              Unset outside a managed context; fallbacks in
+ *                              component CSS kick in automatically.
+ *
+ *   --itx-context-radius-base  Starting radius when [interop-managed-radius]
+ *                              fires. Defaults to --itx-radius-lg.
+ *                              Override this to change the whole subtree's seed.
+ *
+ * ─── Component participation ────────────────────────────────────────────────
+ *
+ *   Components have two responsibilities:
+ *
+ *   1. Consume — insert --itx-context-radius into the border-radius fallback
+ *      chain, between the explicit component override and the hard default:
+ *
+ *        border-radius: var(--itx-[component]-border-radius,
+ *                           var(--itx-context-radius,
+ *                               var(--itx-radius-[default])));
+ *
+ *   2. Propagate (containers only) — re-declare --itx-context-radius for
+ *      children after subtracting your own padding:
+ *
+ *        --_radius:  var(--itx-[component]-border-radius,
+ *                        var(--itx-context-radius, var(--itx-radius-lg)));
+ *        --_padding: var(--itx-[component]-padding, var(--itx-spacing-4));
+ *
+ *        border-radius: var(--_radius);
+ *        padding:       var(--_padding);
+ *        --itx-context-radius: max(0px, var(--_radius) - var(--_padding));
+ *
+ *      Leaf components (e.g. buttons) that never contain nested radius-bearing
+ *      elements can skip step 2.
+ *
+ * ─── Escape hatch ───────────────────────────────────────────────────────────
+ *
+ *   Set --itx-[component]-border-radius on any component to bypass the managed
+ *   system for that instance. The three-tier fallback chain in component CSS
+ *   ensures the explicit value always wins. To opt a whole subtree out, add
+ *   [interop-managed-radius] with a custom --itx-context-radius-base of 0px,
+ *   or simply unset --itx-context-radius on the subtree root.
+ */
+
+:where([interop-managed-radius]) {
+	--itx-context-radius: var(--itx-context-radius-base, var(--itx-radius-xl));
+}

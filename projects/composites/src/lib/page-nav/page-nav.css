@@ -1,0 +1,200 @@
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Shared
+ *   --itx-pn-z-index             Z-index in sticky mode
+ *   --itx-pn-font-size           Link font size
+ *   --itx-pn-font-weight         Link font weight
+ *   --itx-pn-link-color          Link color (default)
+ *   --itx-pn-link-color-hover    Link color (hover)
+ *   --itx-pn-link-color-active   Link color (aria-current)
+ *
+ *   Horizontal only
+ *   --itx-pn-bg                  Background color
+ *   --itx-pn-padding-block       Block padding
+ *   --itx-pn-padding-inline      Inline padding
+ *   --itx-pn-border-color        Bottom border color
+ *   --itx-pn-border-width        Bottom border width
+ *   --itx-pn-gap                 Gap between links
+ *
+ *   Vertical only
+ *   --itx-pn-label-color         Section label color
+ *   --itx-pn-item-gap            Gap between items
+ *   --itx-pn-indent              Child link indent
+ *   --itx-pn-child-font-size     Child link font size
+ *   --itx-pn-child-color         Child link color (default)
+ *   --itx-pn-indicator-size      Dot width and height
+ *   --itx-pn-indicator-radius    Dot border-radius (9999px = circle, 2px = square-ish)
+ *   --itx-pn-indicator-color     Dot fill color
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+
+:host {
+	display: block;
+}
+
+:host(.itx-pn--sticky) {
+	position: sticky;
+	z-index: var(--itx-pn-z-index, 10);
+}
+
+:host(.itx-pn--horizontal.itx-pn--sticky) {
+	top: 0;
+}
+
+:host(.itx-pn--vertical.itx-pn--sticky) {
+	top: 0;
+}
+
+:host(.itx-pn--stuck) {
+	--itx-pn-gap: var(--itx-spacing-6);
+	--itx-pn-link-color: var(--itx-neutral-11);
+	--itx-pn-icon-opacity: 0.5;
+	--itx-pn-icon-scale: 1;
+	/* Styling hook — applied when the nav is actively pinned to the viewport top. */
+}
+
+/* ── Horizontal ──────────────────────────────────────────────────────────── */
+
+:host(.itx-pn--horizontal) nav {
+	display: flex;
+	padding-inline: 0;
+	background: var(--itx-pn-bg, var(--itx-neutral-3));
+	column-gap: var(--itx-pn-icon-gap, var(--itx-spacing-3));
+}
+
+:host(.itx-pn--horizontal) interop-scroll-area {
+	padding-block: var(--itx-pn-padding-block, var(--itx-spacing-5));
+	padding-inline: var(--itx-pn-padding-inline, var(--itx-spacing-5));
+}
+
+:host(.itx-pn--horizontal) interop-icon {
+	display: inline-flex;
+	opacity: var(--itx-pn-icon-opacity, 1);
+	transition: var(--itx-duration-fast) var(--itx-easing-standard);
+	scale: var(--itx-pn-icon-scale, 1.5);
+}
+
+:host(.itx-pn--horizontal) ul {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-pn-gap, var(--itx-spacing-4));
+	width: max-content;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	transition: gap var(--itx-duration-fast) var(--itx-easing-standard);
+}
+
+:host(.itx-pn--horizontal) a {
+	font-size: var(--itx-pn-font-size, var(--itx-fs-label));
+	font-weight: var(--itx-pn-font-weight, 400);
+	color: var(--itx-pn-link-color, var(--itx-neutral-9));
+	text-decoration: none;
+	transition: color var(--itx-duration-fast) var(--itx-easing-standard);
+}
+
+:host(.itx-pn--horizontal) a:hover {
+	color: var(--itx-pn-link-color-hover, var(--itx-on-surface));
+}
+
+:host(.itx-pn--horizontal) a[aria-current] {
+	color: var(--itx-pn-link-color-active, var(--itx-colorway));
+	--itx-pn-font-weight: 800;
+}
+
+:host(.itx-pn--horizontal) a:focus-visible {
+	outline: 2px solid var(--itx-neutral-5);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* ── Vertical ────────────────────────────────────────────────────────────── */
+
+:host(.itx-pn--vertical) nav {
+	display: flex;
+	flex-direction: column;
+}
+
+:host(.itx-pn--vertical) .itx-pn__label {
+	margin: 0 0 var(--itx-spacing-3) 0;
+	font-size: var(--itx-fs-micro);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--itx-pn-label-color, var(--itx-muted));
+}
+
+:host(.itx-pn--vertical) .itx-pn__list,
+:host(.itx-pn--vertical) .itx-pn__children {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+:host(.itx-pn--vertical) .itx-pn__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-pn-item-gap, var(--itx-spacing-1));
+}
+
+:host(.itx-pn--vertical) .itx-pn__children {
+	padding-inline-start: var(--itx-pn-indent, 0.625rem);
+	margin-block-start: var(--itx-spacing-1);
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-pn-item-gap, var(--itx-spacing-1));
+}
+
+:host(.itx-pn--vertical) .itx-pn__link {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	padding-block: var(--itx-spacing-1);
+	font-size: var(--itx-pn-font-size, var(--itx-fs-sm));
+	font-weight: var(--itx-pn-font-weight, 400);
+	color: var(--itx-pn-link-color, var(--itx-neutral-9));
+	text-decoration: none;
+	transition: color var(--itx-duration-fast) var(--itx-easing-standard);
+}
+
+:host(.itx-pn--vertical) .itx-pn__link:hover {
+	color: var(--itx-pn-link-color-hover, var(--itx-on-surface));
+}
+
+:host(.itx-pn--vertical) .itx-pn__link[aria-current] {
+	color: var(--itx-pn-link-color-active, var(--itx-colorway-8));
+	font-weight: 500;
+}
+
+:host(.itx-pn--vertical) .itx-pn__link[aria-current] .itx-pn__indicator {
+	opacity: 1;
+	transform: scale(1);
+}
+
+:host(.itx-pn--vertical) .itx-pn__link:focus-visible {
+	outline: 2px solid var(--itx-colorway);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+:host(.itx-pn--vertical) .itx-pn__link--child {
+	font-size: var(--itx-pn-child-font-size, var(--itx-fs-xs));
+	color: var(--itx-pn-child-color, var(--itx-neutral-8));
+}
+
+/* ── Active indicator dot ─────────────────────────────────────────────────── */
+
+:host(.itx-pn--vertical) .itx-pn__indicator {
+	flex-shrink: 0;
+	width: var(--itx-pn-indicator-size, 5px);
+	height: var(--itx-pn-indicator-size, 5px);
+	border-radius: var(--itx-pn-indicator-radius, 9999px);
+	background: var(--itx-pn-indicator-color, currentColor);
+	opacity: 0;
+	transform: scale(0.4);
+	transition:
+		opacity 120ms var(--itx-easing-standard),
+		transform 120ms var(--itx-easing-standard);
+}

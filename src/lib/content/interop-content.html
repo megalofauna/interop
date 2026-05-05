@@ -1,0 +1,298 @@
+@switch (tag()) {
+
+  @case ('doc') {
+    @for (child of children(); track $index) {
+      <interop-content [node]="child" />
+    }
+  }
+
+  @case ('section') {
+    <section [attr.id]="attrId()" [class]="attrClass()">
+      @for (child of children(); track $index) {
+        <interop-content [node]="child" />
+      }
+    </section>
+  }
+
+  @case ('div') {
+    @if (divRenderer(); as Comp) {
+      <ng-container *ngComponentOutlet="Comp; inputs: divRendererInputs()" />
+    } @else {
+      <div [attr.id]="attrId()" [class]="attrClass()">
+        @for (child of children(); track $index) {
+          <interop-content [node]="child" />
+        }
+      </div>
+    }
+  }
+
+  @case ('para') {
+    <p [attr.id]="attrId()" [class]="attrClass()">
+      @for (child of children(); track $index) {
+        <interop-content [node]="child" />
+      }
+    </p>
+  }
+
+  @case ('heading') {
+    @switch (headingLevel()) {
+      @case (1) { <h1 [attr.id]="attrId()" [class]="attrClass()">@for (c of children(); track $index) { <interop-content [node]="c" /> }</h1> }
+      @case (2) { <h2 [attr.id]="attrId()" [class]="attrClass()">@for (c of children(); track $index) { <interop-content [node]="c" /> }</h2> }
+      @case (3) { <h3 [attr.id]="attrId()" [class]="attrClass()">@for (c of children(); track $index) { <interop-content [node]="c" /> }</h3> }
+      @case (4) { <h4 [attr.id]="attrId()" [class]="attrClass()">@for (c of children(); track $index) { <interop-content [node]="c" /> }</h4> }
+      @case (5) { <h5 [attr.id]="attrId()" [class]="attrClass()">@for (c of children(); track $index) { <interop-content [node]="c" /> }</h5> }
+      @case (6) { <h6 [attr.id]="attrId()" [class]="attrClass()">@for (c of children(); track $index) { <interop-content [node]="c" /> }</h6> }
+    }
+  }
+
+  @case ('thematic_break') {
+    <hr [attr.id]="attrId()" [class]="attrClass()" />
+  }
+
+  @case ('block_quote') {
+    <blockquote [attr.id]="attrId()" [class]="attrClass()">
+      @for (child of children(); track $index) {
+        <interop-content [node]="child" />
+      }
+    </blockquote>
+  }
+
+  @case ('code_block') {
+    <pre [attr.id]="attrId()" [class]="attrClass()"><code [attr.data-lang]="asAny()['lang']">{{ asAny()['text'] }}</code></pre>
+  }
+
+  @case ('raw_block') {
+    <!-- raw_block intentionally rendered as visible text by default. Override
+         via a div wrapper + provideContentDivRenderers if format-specific
+         injection is needed. -->
+    <pre data-raw [attr.data-format]="asAny()['format']">{{ asAny()['text'] }}</pre>
+  }
+
+  @case ('bullet_list') {
+    <ul [attr.id]="attrId()" [class]="attrClass()" [attr.data-style]="asAny()['style']">
+      @for (item of children(); track $index) {
+        <li [attr.id]="$any(item).attributes?.id" [class]="$any(item).attributes?.class">
+          @for (block of $any(item).children; track $index) {
+            <interop-content [node]="block" />
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  @case ('ordered_list') {
+    <ol
+      [attr.id]="attrId()"
+      [class]="attrClass()"
+      [attr.start]="asAny()['start']"
+      [attr.data-style]="asAny()['style']"
+    >
+      @for (item of children(); track $index) {
+        <li [attr.id]="$any(item).attributes?.id" [class]="$any(item).attributes?.class">
+          @for (block of $any(item).children; track $index) {
+            <interop-content [node]="block" />
+          }
+        </li>
+      }
+    </ol>
+  }
+
+  @case ('task_list') {
+    <ul
+      [attr.id]="attrId()"
+      [class]="attrClass()"
+      role="list"
+      data-task-list
+    >
+      @for (item of children(); track $index) {
+        <li [attr.id]="$any(item).attributes?.id" [class]="$any(item).attributes?.class">
+          <input
+            type="checkbox"
+            [attr.checked]="$any(item).checkbox === 'checked' ? '' : null"
+            disabled
+          />
+          @for (block of $any(item).children; track $index) {
+            <interop-content [node]="block" />
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  @case ('definition_list') {
+    <dl [attr.id]="attrId()" [class]="attrClass()">
+      @for (item of children(); track $index) {
+        <dt [attr.id]="$any(item).children[0].attributes?.id">
+          @for (c of $any(item).children[0].children; track $index) {
+            <interop-content [node]="c" />
+          }
+        </dt>
+        <dd>
+          @for (c of $any(item).children[1].children; track $index) {
+            <interop-content [node]="c" />
+          }
+        </dd>
+      }
+    </dl>
+  }
+
+  @case ('table') {
+    <table [attr.id]="attrId()" [class]="attrClass()">
+      @for (row of children(); track $index) {
+        @if ($any(row).tag === 'caption') {
+          <caption>
+            @for (c of $any(row).children; track $index) {
+              <interop-content [node]="c" />
+            }
+          </caption>
+        } @else {
+          <tr>
+            @for (cell of $any(row).children; track $index) {
+              @if ($any(cell).head) {
+                <th [attr.align]="$any(cell).align !== 'default' ? $any(cell).align : null">
+                  @for (c of $any(cell).children; track $index) {
+                    <interop-content [node]="c" />
+                  }
+                </th>
+              } @else {
+                <td [attr.align]="$any(cell).align !== 'default' ? $any(cell).align : null">
+                  @for (c of $any(cell).children; track $index) {
+                    <interop-content [node]="c" />
+                  }
+                </td>
+              }
+            }
+          </tr>
+        }
+      }
+    </table>
+  }
+
+  <!-- ── Inline ─────────────────────────────────────────────────────────── -->
+
+  @case ('str') { {{ asAny()['text'] }} }
+
+  @case ('soft_break') { {{ ' ' }} }
+
+  @case ('hard_break') { <br /> }
+
+  @case ('non_breaking_space') { {{ ' ' }} }
+
+  @case ('smart_punctuation') { {{ asAny()['text'] }} }
+
+  @case ('emph') {
+    <em [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </em>
+  }
+
+  @case ('strong') {
+    <strong [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </strong>
+  }
+
+  @case ('mark') {
+    <mark [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </mark>
+  }
+
+  @case ('insert') {
+    <ins [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </ins>
+  }
+
+  @case ('delete') {
+    <del [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </del>
+  }
+
+  @case ('superscript') {
+    <sup [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </sup>
+  }
+
+  @case ('subscript') {
+    <sub [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </sub>
+  }
+
+  @case ('span') {
+    <span [attr.id]="attrId()" [class]="attrClass()">
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </span>
+  }
+
+  @case ('verbatim') {
+    <code [attr.id]="attrId()" [class]="attrClass()">{{ asAny()['text'] }}</code>
+  }
+
+  @case ('raw_inline') {
+    <span data-raw-inline [attr.data-format]="asAny()['format']">{{ asAny()['text'] }}</span>
+  }
+
+  @case ('inline_math') {
+    <span class="math inline" data-math="inline">{{ asAny()['text'] }}</span>
+  }
+
+  @case ('display_math') {
+    <span class="math display" data-math="display">{{ asAny()['text'] }}</span>
+  }
+
+  @case ('link') {
+    <a
+      [attr.href]="asAny()['destination']"
+      [attr.id]="attrId()"
+      [class]="attrClass()"
+    >
+      @for (c of children(); track $index) { <interop-content [node]="c" /> }
+    </a>
+  }
+
+  @case ('image') {
+    <img
+      [attr.src]="asAny()['destination']"
+      [attr.alt]="imageAlt()"
+      [attr.id]="attrId()"
+      [class]="attrClass()"
+    />
+  }
+
+  @case ('url') {
+    <a [attr.href]="asAny()['text']">{{ asAny()['text'] }}</a>
+  }
+
+  @case ('email') {
+    <a [attr.href]="'mailto:' + asAny()['text']">{{ asAny()['text'] }}</a>
+  }
+
+  @case ('symb') {
+    @if (symbolComponent(); as Comp) {
+      <ng-container *ngComponentOutlet="Comp; inputs: symbolComponentInputs()" />
+    } @else {
+      {{ ':' + asAny()['alias'] + ':' }}
+    }
+  }
+
+  @case ('double_quoted') {
+    {{ '“' }}@for (c of children(); track $index) { <interop-content [node]="c" /> }{{ '”' }}
+  }
+
+  @case ('single_quoted') {
+    {{ '‘' }}@for (c of children(); track $index) { <interop-content [node]="c" /> }{{ '’' }}
+  }
+
+  @case ('footnote_reference') {
+    <sup>
+      <a [attr.href]="'#fn-' + asAny()['text']" [attr.id]="'fnref-' + asAny()['text']">
+        {{ asAny()['text'] }}
+      </a>
+    </sup>
+  }
+
+}

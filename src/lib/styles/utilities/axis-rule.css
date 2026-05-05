@@ -1,0 +1,79 @@
+/*
+ * Axis rule utility — straight, layout-agnostic dividers between flex / grid
+ * children, drawn independently of each child's border-radius.
+ *
+ * Apply data-interop-axis-rule to the parent and the utility paints a rule
+ * before every child except the first. Rules render via a pseudo-element on
+ * each child, positioned in the gap zone (or straddling the boundary when
+ * gap is 0) with no border-radius — so the rule stays straight even when
+ * the children have rounded corners.
+ *
+ *   <fieldset data-interop-axis-rule="block">    column track → horizontal rules
+ *   <div      data-interop-axis-rule="inline">   row track    → vertical rules
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   --itx-axis-rule-color           rule colour            (default: transparent)
+ *   --itx-axis-rule-width           rule thickness         (default: 0 — opt-in)
+ *   --itx-axis-rule-gap             parent's flex/grid gap (default: 0)
+ *
+ *   Per-host compensation — set on the *child* (the host of the pseudo), in
+ *   its own component CSS. Compensates for the host's leading padding +
+ *   border so the rule lands at the host's outer edge instead of its content
+ *   edge. Required for hosts with non-zero padding-block / padding-inline,
+ *   especially <button> elements where the pseudo's containing block can
+ *   resolve to the content box.
+ *
+ *   --itx-axis-rule-block-offset    block-axis  (column track) compensation
+ *   --itx-axis-rule-inline-offset   inline-axis (row track)    compensation
+ *
+ * Notes:
+ *   - :not(:first-of-type) skips the first child of each element-type, so a
+ *     leading <legend> / <header> / etc. is naturally ignored.
+ *   - The pseudo is created on each child. Children that don't already
+ *     establish a positioning context get position: relative forced on them
+ *     at zero specificity — consumers can override.
+ *   - To suppress the rule on a specific child, override its ::before, e.g.
+ *     :host([aria-pressed="true"])::before { display: none } from the
+ *     child component's own CSS.
+ *   - All selectors use :where() for zero specificity. Consumer CSS at any
+ *     specificity wins.
+ */
+
+:where([data-interop-axis-rule]) > *:not(:first-of-type) {
+	position: relative;
+}
+
+:where([data-interop-axis-rule]) > *:not(:first-of-type)::before {
+	content: "";
+	position: absolute;
+	background: var(--itx-axis-rule-color, transparent);
+	border-radius: 0;
+	pointer-events: none;
+}
+
+/* ── Block axis ─────────────────────────────────────────────────────────── */
+/*    Column track. Rule sits on the block-start edge, full inline span.    */
+
+:where([data-interop-axis-rule="block"]) > *:not(:first-of-type)::before {
+	inset-inline: 0;
+	inset-block-start: calc(
+		0px - var(--itx-axis-rule-block-offset, 0px) -
+		var(--itx-axis-rule-gap, 0px) / 2 -
+		var(--itx-axis-rule-width, 0px) / 2
+	);
+	block-size: var(--itx-axis-rule-width, 0);
+}
+
+/* ── Inline axis ────────────────────────────────────────────────────────── */
+/*    Row track. Rule sits on the inline-start edge, full block span.       */
+
+:where([data-interop-axis-rule="inline"]) > *:not(:first-of-type)::before {
+	inset-block: 0;
+	inset-inline-start: calc(
+		0px - var(--itx-axis-rule-inline-offset, 0px) -
+		var(--itx-axis-rule-gap, 0px) / 2 -
+		var(--itx-axis-rule-width, 0px) / 2
+	);
+	inlin e-size: var(--itx-axis-rule-width, 0);
+}

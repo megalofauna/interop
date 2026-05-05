@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { INTEROP_EXPANSION_PANEL_CONTEXT } from './interop-expansion-panel.context.token';
 
 /**
@@ -19,8 +19,10 @@ import { INTEROP_EXPANSION_PANEL_CONTEXT } from './interop-expansion-panel.conte
  * ```
  *
  * CSS custom properties (set on host or any ancestor):
- * - `--itx-expansion-duration` — transition duration (default: 200ms)
- * - `--itx-expansion-easing`   — transition easing (default: ease)
+ * - `--itx-expansion-duration`    — transition duration (default: 200ms)
+ * - `--itx-expansion-easing`      — transition easing (default: ease)
+ * - `--itx-expansion-peek-height` — visible height in peek mode (default: 4rem)
+ * - `--itx-expansion-peek-fade`   — gradient stop color in peek mode (default: --itx-surface)
  */
 @Component({
   selector: '[interop-expansion-body]',
@@ -31,9 +33,20 @@ import { INTEROP_EXPANSION_PANEL_CONTEXT } from './interop-expansion-panel.conte
   host: {
     '[id]': 'panel.bodyId',
     '[attr.data-expanded]': 'panel.isExpanded() ? "" : null',
-    '[attr.aria-hidden]': '!panel.isExpanded() ? "true" : null',
+    '[attr.data-peek]': 'peek() ? "" : null',
+    '[attr.aria-hidden]': '!panel.isExpanded() && !peek() ? "true" : null',
   },
 })
 export class InteropExpansionBody {
   readonly panel = inject(INTEROP_EXPANSION_PANEL_CONTEXT);
+
+  /**
+   * When true, the body shows a partial preview of its content while collapsed
+   * rather than hiding it entirely. The visible height is controlled by the
+   * `--itx-expansion-peek-height` CSS custom property (default: 4rem).
+   * A fade gradient indicates there is more content beyond the threshold.
+   *
+   * `aria-hidden` is not applied in peek mode since the content is visible.
+   */
+  readonly peek = input<boolean>(false);
 }

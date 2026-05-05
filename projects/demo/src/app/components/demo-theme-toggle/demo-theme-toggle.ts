@@ -8,6 +8,7 @@ import {
 	viewChild,
 } from "@angular/core";
 import {
+	InteropButton,
 	InteropIcon,
 	InteropListbox,
 	InteropOption,
@@ -16,7 +17,13 @@ import {
 import { TablerSun } from "src/lib/iconsets/tabler/outline/tabler-sun";
 import { TablerMoon } from "src/lib/iconsets/tabler/outline/tabler-moon";
 import { TablerDeviceDesktop } from "src/lib/iconsets/tabler/outline/tabler-device-desktop";
-import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
+import {
+	autoUpdate,
+	computePosition,
+	flip,
+	offset,
+	shift,
+} from "@floating-ui/dom";
 
 export type ThemeMode = "light" | "dark" | "system";
 
@@ -25,14 +32,14 @@ let nextId = 0;
 @Component({
 	selector: "demo-theme-toggle",
 	standalone: true,
-	imports: [InteropIcon, InteropListbox, InteropOption],
+	imports: [InteropIcon, InteropListbox, InteropOption, InteropButton],
 	providers: [provideInteropIcons(TablerSun, TablerMoon, TablerDeviceDesktop)],
 	templateUrl: "./demo-theme-toggle.html",
 	styleUrl: "./demo-theme-toggle.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoThemeToggle implements OnDestroy {
-	private readonly triggerEl = viewChild<ElementRef<HTMLElement>>("triggerEl");
+	private readonly triggerEl = viewChild("triggerEl", { read: ElementRef<HTMLElement> });
 	private readonly popoverEl = viewChild<ElementRef<HTMLElement>>("popoverEl");
 	private cleanupAutoUpdate: (() => void) | null = null;
 
@@ -43,9 +50,12 @@ export class DemoThemeToggle implements OnDestroy {
 
 	readonly currentIcon = computed(() => {
 		switch (this.mode()) {
-			case "light": return "tabler-sun";
-			case "dark": return "tabler-moon";
-			case "system": return "tabler-device-desktop";
+			case "light":
+				return "tabler-sun";
+			case "dark":
+				return "tabler-moon";
+			case "system":
+				return "tabler-device-desktop";
 		}
 	});
 
@@ -94,7 +104,8 @@ export class DemoThemeToggle implements OnDestroy {
 
 	private readInitialMode(): ThemeMode {
 		const stored = localStorage.getItem("itx-theme");
-		if (stored === "light" || stored === "dark" || stored === "system") return stored;
+		if (stored === "light" || stored === "dark" || stored === "system")
+			return stored;
 		return "system";
 	}
 

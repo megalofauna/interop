@@ -1,12 +1,12 @@
 <button
 	#triggerEl
-	class="theme-btn"
+	interop-button="icon sm"
 	[attr.popovertarget]="popoverId"
 	aria-haspopup="listbox"
 	[attr.aria-expanded]="isOpen()"
 	[attr.aria-label]="'Theme: ' + mode()"
 >
-	<interop-icon [name]="currentIcon()" [size]="18" [decorative]="true" />
+	<interop-icon [name]="currentIcon()" [size]="16" [decorative]="true" />
 </button>
 
 <div
@@ -26,7 +26,11 @@
 			<span>Dark</span>
 		</li>
 		<li interop-option value="system" label="System">
-			<interop-icon name="tabler-device-desktop" [size]="16" [decorative]="true" />
+			<interop-icon
+				name="tabler-device-desktop"
+				[size]="16"
+				[decorative]="true"
+			/>
 			<span>System</span>
 		</li>
 	</ul>

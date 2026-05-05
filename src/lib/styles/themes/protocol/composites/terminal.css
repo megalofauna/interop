@@ -1,0 +1,6 @@
+/* ── Terminal — Protocol theme ───────────────────────────────────────────── */
+
+:where([interop-root]) {
+	/* Inherit protocol's curated monospace stack */
+	--itx-term-font: var(--itx-font-family-mono);
+}

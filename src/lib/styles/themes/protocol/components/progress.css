@@ -1,0 +1,8 @@
+:where([interop-root]) {
+	--itx-progress-track: var(--itx-neutral-3);
+	--itx-progress-fill: var(--itx-colorway);
+	--itx-progress-height: 0.5rem;
+	--itx-progress-radius: var(--itx-radius-full);
+	--itx-progress-duration: 200ms;
+	--itx-progress-length: 8rem;
+}

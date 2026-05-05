@@ -1,0 +1,11 @@
+:host {
+	--itx-expansion-peek-height: 24rem;
+}
+
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-around;
+	column-gap: 1rem;
+}

@@ -1,0 +1,79 @@
+/*
+ * InteropSegmentedControl + InteropSegment — Protocol theme.
+ *
+ * Container tokens use the --itx-segmented-control-* namespace; segment-button
+ * tokens use --itx-segment-*. The sliding pill itself is themed via the
+ * shared --itx-indicator-* tokens (see ./indicator.css), since the same
+ * surface is reused by other selection-pill patterns.
+ *
+ * No state selectors here — the component CSS owns state activation. This
+ * file only declares values.
+ */
+
+:where([interop-root]) {
+	/* ── Container — track ──────────────────────────────────────────────── */
+	--itx-segmented-control-track-display: flex;
+	--itx-segmented-control-track-align-items: stretch;
+	--itx-segmented-control-track-justify-content: stretch;
+	--itx-segmented-control-track-row-gap: 0;
+	--itx-segmented-control-track-flex-direction: column;
+	--itx-segmented-control-track-background-color: var(--itx-neutral-3);
+	--itx-segmented-control-track-border-color: var(--itx-neutral-2);
+	--itx-segmented-control-track-border-width: 2px;
+	--itx-segmented-control-track-border-style: solid;
+	--itx-segmented-control-track-border-radius: var(--itx-radius-3);
+	--itx-segmented-control-track-padding: var(--itx-spacing-1);
+	--itx-segmented-control-track-box-shadow: inset 0 4px 2px 0 rgb(0 0 0 / 0.1);
+
+	/* ── Inter-segment rule (global rule utility) ───────────────────────── */
+	/* Set on [interop-root] so any flex container hosting <hr itx-rule>
+	   children picks these up. Override locally on a specific control if
+	   the divider needs to differ from the default. */
+	--itx-rule-color: var(--itx-neutral-1);
+	--itx-rule-width: 1px;
+
+	/* ── Segment — layout / typography ──────────────────────────────────── */
+	--itx-segment-display: flex;
+	--itx-segment-padding-block: var(--itx-spacing-2);
+	--itx-segment-padding-inline: var(--itx-spacing-4);
+	--itx-segment-min-width: 0;
+
+	--itx-segment-font-family: var(--itx-font-family-sans);
+	--itx-segment-font-size: var(--itx-fs-label);
+	--itx-segment-font-weight: 500;
+	--itx-segment-font-weight-selected: 600;
+
+	/* ── Segment — visual structure (no state variants) ─────────────────── */
+	--itx-segment-border-width: 2px;
+	--itx-segment-border-style: dashed;
+	--itx-segment-border-radius: var(--itx-radius-2);
+
+	/* ── Segment — rest state ───────────────────────────────────────────── */
+	--itx-segment-background: transparent;
+	--itx-segment-foreground: var(--itx-neutral-10);
+	--itx-segment-border-color: transparent;
+
+	/* ── Segment — hover state ──────────────────────────────────────────── */
+	--itx-segment-background-hover: var(--itx-neutral-4);
+	--itx-segment-foreground-hover: var(--itx-neutral-10);
+	--itx-segment-border-color-hover: var(--itx-neutral-5);
+
+	/* ── Segment — selected state ───────────────────────────────────────── */
+	/* Background defaults to the indicator pill colour via the component CSS
+	   fallback chain — only set this if you want the selected segment to
+	   diverge from the pill (rare). */
+	--itx-segment-foreground-selected: var(--itx-neutral-11);
+
+	/* ── Segment — focus ring ───────────────────────────────────────────── */
+	--itx-segment-outline-width: 1px;
+	--itx-segment-outline-style: solid;
+	--itx-segment-outline-color: var(--itx-colorway-8);
+	--itx-segment-outline-offset: -2px;
+
+	/* ── Segment — transition ───────────────────────────────────────────── */
+	--itx-segment-transition-duration: 96ms;
+	--itx-segment-transition-timing-function: ease-in;
+
+	/* ── Segment — disabled ─────────────────────────────────────────────── */
+	--itx-segment-disabled-opacity: 0.4;
+}

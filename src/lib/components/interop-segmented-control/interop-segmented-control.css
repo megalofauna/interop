@@ -1,106 +1,71 @@
-/* ============================================================
-   interop-segmented-control — Container (fieldset host)
-
-   Responsibilities:
-     1. Fieldset browser-default reset
-     2. Token cascade (theme → component → private)
-     3. Animated selection pill (CSS Anchor Positioning + fallback)
-   ============================================================ */
-
-/* ── Token cascade ────────────────────────────────────────── */
-
 /*
- * PUBLIC API — two tiers, one three-step resolution chain per prop:
+ * InteropSegmentedControl component styles.
  *
- *   var(--component-token, var(--theme-token, hard-default))
+ * This file owns the track only — the static background, border, padding,
+ * and flex layout of the host fieldset. The sliding pill that animates
+ * between segments is rendered as a discrete <interop-indicator> child and
+ * styled by `styles/components/indicator.css` plus the indicator theme.
  *
- * ┌─────────────────────────────────────────────────────────────┐
- * │ TIER 1 — THEME TOKENS  (set once to restyle the control)    │
- * │                                                             │
- * │  --itx-seg-surface    → track background                   │
- * │  --itx-seg-accent     → indicator pill bg · focus ring     │
- * │  --itx-seg-on-accent  → active segment text colour         │
- * │  --itx-seg-text       → default + hover segment text       │
- * │  --itx-seg-border     → track border · indicator border    │
- * │  --itx-seg-radius     → corner radius (track, pill, segs)  │
- * └─────────────────────────────────────────────────────────────┘
+ * The track has no hover / active state, so no state-token slots are
+ * needed; tokens are read directly. The theme sets values.
  *
- * ┌─────────────────────────────────────────────────────────────┐
- * │ TIER 2 — COMPONENT TOKENS  (one per visual property)        │
- * │                                                             │
- * │  Container:  --itx-seg-track-bg                            │
- * │              --itx-seg-track-radius                        │
- * │              --itx-seg-track-border                        │
- * │              --itx-seg-track-padding                       │
- * │                                                             │
- * │  Indicator:  --itx-seg-indicator-bg                        │
- * │              --itx-seg-indicator-radius                    │
- * │              --itx-seg-indicator-border                    │
- * │              --itx-seg-indicator-shadow                    │
- * │              --itx-seg-indicator-transition                │
- * │                                                             │
- * │  Segment tokens live in interop-segment.css                 │
- * └─────────────────────────────────────────────────────────────┘
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
  *
- * Visual map:
+ *   Track
+ *   --itx-segmented-control-track-display
+ *   --itx-segmented-control-track-align-items
+ *   --itx-segmented-control-track-justify-content
+ *   --itx-segmented-control-track-background-color
+ *   --itx-segmented-control-track-background-image
+ *   --itx-segmented-control-track-border-color
+ *   --itx-segmented-control-track-border-width
+ *   --itx-segmented-control-track-border-style
+ *   --itx-segmented-control-track-border-radius
+ *   --itx-segmented-control-track-padding
+ *   --itx-segmented-control-track-box-shadow
  *
- *  --itx-seg-track-border ──────────────────────────────────┐
- *                                                           ↓
- *  ╔═════════════════════════════════════════════════════╗
- *  ║  ↕ --itx-seg-track-padding                         ║
- *  ║  ┌──────────┐  ┌──────────────────┐  ┌──────────┐  ║  ← --itx-seg-track-bg
- *  ║  │          │  │  ░░░ pill ░░░░░  │  │          │  ║
- *  ║  └──────────┘  └──────────────────┘  └──────────┘  ║
- *  ║  ↕ --itx-seg-track-padding                         ║
- *  ╚═════════════════════════════════════════════════════╝
- *  └─────────────────────────────────────────────────────┘
- *                  --itx-seg-track-radius
+ *   Inter-segment rule
+ *   The component auto-injects <hr itx-rule> elements between segments.
+ *   They're styled by the global rule utility (styles/utilities/rule.css)
+ *   and the axis is implicit (works for column or row tracks).
+ *   Tune via --itx-rule-{color,width} on any ancestor.
  *
- *  Pill (::before):
- *
- *  ┌──────────────────────────┐  ← --itx-seg-indicator-border
- *  │ ░░░░░░░░░░░░░░░░░░░░░░░ │  ← --itx-seg-indicator-bg
- *  └──────────────────────────┘
- *  └──────────────────────────┘  --itx-seg-indicator-radius
- *  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░  --itx-seg-indicator-shadow
- *
- *  Slide animation: --itx-seg-indicator-transition (top/right/bottom/left)
+ *   Indicator pill — see styles/components/indicator.css for tokens.
  */
-:host {
-	/* ── Track ──────────────────────────────────────────────── */
-	--_track-bg:             var(--itx-seg-track-bg,             var(--itx-seg-surface,   transparent));
-	--_track-radius:         var(--itx-seg-track-radius,         var(--itx-seg-radius,    6px));
-	--_track-border:         var(--itx-seg-track-border,         var(--itx-seg-border,    none));
-	--_track-padding:        var(--itx-seg-track-padding,        3px);
 
-	/* ── Indicator ──────────────────────────────────────────── */
-	--_indicator-bg:         var(--itx-seg-indicator-bg,         var(--itx-seg-accent,    black));
-	--_indicator-radius:     var(--itx-seg-indicator-radius,     var(--itx-seg-radius,    4px));
-	--_indicator-border:     var(--itx-seg-indicator-border,     var(--itx-seg-border,    none));
-	--_indicator-shadow:     var(--itx-seg-indicator-shadow,     none);
-	--_indicator-transition: var(--itx-seg-indicator-transition, 150ms ease);
-}
-
-/* ── Fieldset reset ───────────────────────────────────────── */
+/* ── Track ───────────────────────────────────────────────────────────────── */
 
 :host {
-	background: var(--_track-bg);
-	border: var(--_track-border);
-	border-radius: var(--_track-radius);
-	padding: var(--_track-padding);
+	background-color: var(
+		--itx-segmented-control-track-background-color,
+		transparent
+	);
+	background-image: var(--itx-segmented-control-track-background-image, none);
+	border-color: var(--itx-segmented-control-track-border-color, transparent);
+	border-width: var(--itx-segmented-control-track-border-width, 0);
+	border-style: var(--itx-segmented-control-track-border-style, solid);
+	border-radius: var(--itx-segmented-control-track-border-radius, 0);
+	box-shadow: var(--itx-segmented-control-track-box-shadow, none);
+	padding: var(--itx-segmented-control-track-padding, 4px);
 	margin: 0;
 	/* Browsers set min-inline-size: min-content on fieldset by default,
 	   which can cause overflow in flex/grid contexts. Reset it. */
 	min-inline-size: 0;
-	/* Required for the absolutely-positioned pill pseudo-element. */
+	/* Containing block for the absolutely-positioned <interop-indicator>. */
 	position: relative;
+	/* Bind the child indicator to the anchor exposed by the active segment. */
+	--itx-indicator-anchor-name: --itx-segment-active;
+	display: var(--itx-segmented-control-track-display);
+	flex-direction: var(--itx-segmented-control-track-flex-direction);
+	row-gap: var(--itx-segmented-control-track-row-gap);
+	column-gap: var(--itx-segmented-control-track-column-gap);
+	align-items: var(--itx-segmented-control-track-align-items);
+	justify-content: var(--itx-segmented-control-track-justify-content);
 }
 
 legend {
-	padding: 0;
-	/* Prevent the legend from floating above the fieldset border. */
-	float: left;
-	width: 100%;
+	position: absolute;
+	inset: var(--itx-spacing-3) auto 0 var(--itx-spacing-3);
 }
 
 /* Clear the float so content flows below the legend. */
@@ -121,51 +86,10 @@ legend + * {
 	border: 0;
 }
 
-/* ── Animated selection pill ──────────────────────────────── */
-
-/*
- * The ::before pseudo-element is the sliding pill.
- * Hidden when nothing is selected ([data-has-selection] absent).
- *
- * Without CSS Anchor Positioning: not rendered — fallback styles in
- * interop-segment.css apply a direct background on [aria-pressed="true"].
- * The fallback reads --_indicator-bg from this host via CSS inheritance
- * so the fallback colour and pill colour are always in sync.
- */
-@supports (anchor-name: none) {
-	:host([data-has-selection])::before {
-		content: "";
-		position: absolute;
-		background: var(--_indicator-bg);
-		border: var(--_indicator-border);
-		border-radius: var(--_indicator-radius);
-		box-shadow: var(--_indicator-shadow);
-		pointer-events: none;
-		/* Sit behind segment text (segments are z-index: 1) */
-		z-index: 0;
-		position-anchor: --itx-segment-active;
-		top: anchor(top);
-		right: anchor(right);
-		bottom: anchor(bottom);
-		left: anchor(left);
-		transition:
-			top    var(--_indicator-transition),
-			right  var(--_indicator-transition),
-			bottom var(--_indicator-transition),
-			left   var(--_indicator-transition);
-	}
-}
-
-/* ── Accessibility ────────────────────────────────────────── */
+/* ── Accessibility ───────────────────────────────────────────────────────── */
 
 @media (prefers-contrast: high) {
 	:host {
 		outline: 2px solid currentColor;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	:host::before {
-		transition: none !important;
 	}
 }

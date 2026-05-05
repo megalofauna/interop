@@ -68,6 +68,7 @@
 /* ── Base chip styles ─────────────────────────────────────── */
 
 :host {
+	position: relative;
 	display: inline-flex;
 	align-items: center;
 	cursor: pointer;

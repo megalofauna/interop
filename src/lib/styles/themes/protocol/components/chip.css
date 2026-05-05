@@ -1,0 +1,12 @@
+:where([interop-root]) {
+	--itx-chip-border: 1px solid var(--itx-border);
+	--itx-chip-radius: var(--itx-radius-full);
+	--itx-chip-padding: 0.1875rem 0.625rem;
+	--itx-chip-font-size: 0.8125rem;
+	--itx-chip-hover-bg: var(--itx-surface-hover);
+	--itx-chip-accent: var(--itx-colorway);
+	--itx-chip-on-accent: var(--itx-on-colorway);
+
+	--itx-chip-input-border: 1px solid var(--itx-border);
+	--itx-chip-input-radius: var(--itx-radius-sm);
+}

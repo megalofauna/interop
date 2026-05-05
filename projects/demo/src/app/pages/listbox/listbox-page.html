@@ -3,46 +3,98 @@
 		<p class="demo-page__category">Components</p>
 		<h1 class="demo-page__title">Listbox</h1>
 		<p class="demo-page__lead">
-			Accessible selection primitive with keyboard navigation, single and multi-select,
-			and Angular Forms integration. Declarative or content-projection modes.
+			Accessible selection primitive with keyboard navigation, single and
+			multi-select, and Angular Forms integration. Declarative or
+			content-projection modes.
 		</p>
 	</header>
 
 	<!-- ── Single select ─────────────────────────────────────────────────── -->
 	<demo-section id="single" heading="Single select">
 		<demo-example label="Declarative">
-			<ul interop-listbox
+			<ul
+				interop-listbox
 				aria-label="Docking bay"
 				[controls]="dockingBays"
 				[(value)]="selectedBay"
-				style="max-width: 22rem;">
-			</ul>
+				style="max-width: 22rem"
+			></ul>
 			<demo-state>
 				<demo-state-item label="Bay">{{ selectedBay() }}</demo-state-item>
 			</demo-state>
+			<itx-code-block [files]="singleSelectFiles()" />
 		</demo-example>
 	</demo-section>
 
 	<!-- ── Multi select ──────────────────────────────────────────────────── -->
 	<demo-section id="multi" heading="Multi select">
 		<demo-example label="Declarative multi-select">
-			<ul interop-listbox
+			<ul
+				interop-listbox
 				aria-label="Crew manifest"
 				[controls]="crewRoles"
 				[multiselectable]="true"
 				[(value)]="selectedRoles"
-				style="max-width: 22rem;">
-			</ul>
+				style="max-width: 22rem"
+			></ul>
 			<demo-state>
-				<demo-state-item label="Roles">{{ selectedRoles() | json }}</demo-state-item>
+				<demo-state-item label="Roles"
+					>{{ selectedRoles() | json }}</demo-state-item
+				>
 			</demo-state>
+			<itx-code-block [files]="multiSelectFiles()" />
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Content projection ────────────────────────────────────────────── -->
+	<demo-section id="projection" heading="Content projection">
+		<demo-example label="User-marked-up options">
+			<ul
+				interop-listbox
+				aria-label="Sector"
+				[(value)]="selectedSector"
+				style="max-width: 22rem"
+			>
+				<li interop-option value="alpha" label="Sector Alpha">
+					<span aria-hidden="true">▲</span>
+					<span class="interop-option__label">Sector Alpha</span>
+					<span class="interop-option__description">Operational</span>
+				</li>
+				<li interop-option value="bravo" label="Sector Bravo">
+					<span aria-hidden="true">▼</span>
+					<span class="interop-option__label">Sector Bravo</span>
+					<span class="interop-option__description">Standby</span>
+				</li>
+				<li
+					interop-option
+					value="charlie"
+					label="Sector Charlie"
+					[disabled]="true"
+				>
+					<span aria-hidden="true">●</span>
+					<span class="interop-option__label">Sector Charlie</span>
+					<span class="interop-option__description">Locked</span>
+				</li>
+			</ul>
+			<demo-state>
+				<demo-state-item label="Sector">{{ selectedSector() }}</demo-state-item>
+			</demo-state>
+			<itx-code-block
+				language="html"
+				[tokens]="projectionTokens.value() ?? null"
+			>
+				<pre><code [textContent]="projectionTemplate"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) { <span class="demo-page__required">*</span> }

@@ -73,25 +73,35 @@
 		@if (!isLoading() && !hasError() && !isEmpty()) {
 			<tbody class="interop-table-body">
 				@for (item of items(); track trackByFn($index, item); let rowIndex = $index) {
-					<tr class="interop-table-row" [attr.data-row-index]="rowIndex">
-						@for (column of resolvedColumns(); track column.key; let colIndex = $index) {
-							<td
-								class="interop-table-cell"
-								[attr.data-column-key]="column.key"
-								[attr.data-cell-index]="colIndex"
-								[attr.data-sticky]="column.sticky || null"
-								[style.left]="column.sticky ? getStickyLeft(column) : null"
-							>
-								@if (getCellTemplate(column); as tmpl) {
-									<ng-container
-										*ngTemplateOutlet="tmpl; context: { $implicit: item, column: column, index: rowIndex }"
-									/>
-								} @else {
-									<span class="interop-table-cell-text">{{ getCellText(item, column) }}</span>
-								}
-							</td>
-						}
-					</tr>
+					@if (isGroupRow(item)) {
+						<tr class="interop-table-group-row">
+							<th
+								class="interop-table-group-label"
+								[attr.colspan]="resolvedColumns().length"
+								scope="rowgroup"
+							>{{ item.groupLabel }}</th>
+						</tr>
+					} @else {
+						<tr class="interop-table-row" [attr.data-row-index]="rowIndex">
+							@for (column of resolvedColumns(); track column.key; let colIndex = $index) {
+								<td
+									class="interop-table-cell"
+									[attr.data-column-key]="column.key"
+									[attr.data-cell-index]="colIndex"
+									[attr.data-sticky]="column.sticky || null"
+									[style.left]="column.sticky ? getStickyLeft(column) : null"
+								>
+									@if (getCellTemplate(column); as tmpl) {
+										<ng-container
+											*ngTemplateOutlet="tmpl; context: { $implicit: item, column: column, index: rowIndex }"
+										/>
+									} @else {
+										<span class="interop-table-cell-text">{{ getCellText(item, column) }}</span>
+									}
+								</td>
+							}
+						</tr>
+					}
 				}
 			</tbody>
 		}

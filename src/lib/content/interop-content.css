@@ -1,0 +1,259 @@
+/*
+ * <interop-content> typography defaults.
+ *
+ * Every rule below is consumer-overridable via the --interop-content-*
+ * custom properties declared on :host. Set them on any ancestor of an
+ * <interop-content> mount point to retheme that mount in isolation —
+ * e.g. .demo-example__lede tightens paragraph spacing without affecting
+ * other content elsewhere in the page.
+ */
+
+:host {
+	display: contents;
+
+	/* — Body — */
+	--interop-content-color: var(--itx-on-surface);
+	--interop-content-font-family: var(--itx-font-family-sans);
+	--interop-content-font-size: var(--itx-fs-base);
+	--interop-content-line-height: 1.5;
+	--interop-content-max-width: 76ch;
+
+	/* — Block rhythm — */
+	--interop-content-paragraph-gap: var(--itx-spacing-4);
+	--interop-content-list-gap: var(--itx-spacing-2);
+	--interop-content-heading-margin-top: var(--itx-spacing-6);
+	--interop-content-heading-margin-bottom: var(--itx-spacing-3);
+	--interop-content-heading-weight: 600;
+	--interop-content-heading-line-height: 1.25;
+
+	/* — Headings (semantic scale, not raw) — */
+	--interop-content-heading-1-fs: var(--itx-font-size-display);
+	--interop-content-heading-2-fs: var(--itx-font-size-heading-lg);
+	--interop-content-heading-3-fs: var(--itx-font-size-heading);
+	--interop-content-heading-4-fs: var(--itx-font-size-subheading);
+	--interop-content-heading-5-fs: var(--itx-font-size-body-lg);
+	--interop-content-heading-6-fs: var(--itx-font-size-body);
+
+	/* — Inline code & code blocks — */
+	--interop-content-code-family: var(--itx-font-family-mono);
+	--interop-content-code-font-size: 0.875em;
+	--interop-content-code-color: var(--itx-colorway-12);
+	--interop-content-code-bg: var(--itx-colorway-4);
+	--interop-content-code-padding: 0.125em 0.275em;
+	--interop-content-code-border: 2px solid var(--itx-colorway-6);
+	--interop-content-code-radius: 6px;
+
+	/* — Links — */
+	--interop-content-link-color: var(--itx-colorway);
+	--interop-content-link-decoration: underline;
+	--interop-content-link-underline-offset: 0.2em;
+
+	/* — Quotes — */
+	--interop-content-quote-border-color: var(--itx-neutral-5);
+	--interop-content-quote-border-width: 2px;
+	--interop-content-quote-color: var(--itx-neutral-10);
+	--interop-content-quote-padding: var(--itx-spacing-4);
+
+	/* — Tables — */
+	--interop-content-table-border-color: var(--itx-neutral-4);
+	--interop-content-table-cell-padding: var(--itx-spacing-2)
+		var(--itx-spacing-3);
+	--interop-content-table-header-bg: var(--itx-neutral-2);
+
+	max-width: var(--interop-content-max-width);
+}
+
+/* ── Body ───────────────────────────────────────────────────────────── */
+
+p {
+	margin: 0 0 var(--interop-content-paragraph-gap) 0;
+	color: var(--interop-content-color);
+	font-family: var(--interop-content-font-family);
+	font-size: var(--interop-content-font-size);
+	line-height: var(--interop-content-line-height);
+}
+
+p:last-child {
+	/*margin-bottom: 0;*/
+}
+
+/* ── Headings ───────────────────────────────────────────────────────── */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: var(--interop-content-heading-margin-top) 0
+		var(--interop-content-heading-margin-bottom) 0;
+	color: var(--interop-content-color);
+	font-family: var(--interop-content-font-family);
+	font-weight: var(--interop-content-heading-weight);
+	line-height: var(--interop-content-heading-line-height);
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child {
+	margin-top: 0;
+}
+
+h1 {
+	font-size: var(--interop-content-heading-1-fs);
+}
+h2 {
+	font-size: var(--interop-content-heading-2-fs);
+}
+h3 {
+	font-size: var(--interop-content-heading-3-fs);
+}
+h4 {
+	font-size: var(--interop-content-heading-4-fs);
+}
+h5 {
+	font-size: var(--interop-content-heading-5-fs);
+}
+h6 {
+	font-size: var(--interop-content-heading-6-fs);
+}
+
+/* ── Inline emphasis ────────────────────────────────────────────────── */
+
+strong {
+	font-weight: 600;
+}
+em {
+	font-style: italic;
+}
+mark {
+	background: var(--itx-neutral-3);
+	color: var(--interop-content-color);
+	padding: 0 0.15em;
+	border-radius: 2px;
+}
+del {
+	text-decoration: line-through;
+	opacity: 0.7;
+}
+ins {
+	text-decoration: none;
+	background: var(--itx-neutral-3);
+}
+sup,
+sub {
+	font-size: 0.8em;
+	line-height: 1;
+}
+
+/* ── Code ───────────────────────────────────────────────────────────── */
+
+code {
+	font-family: var(--interop-content-code-family);
+	font-size: var(--interop-content-code-font-size);
+	color: var(--interop-content-code-color);
+	background: var(--interop-content-code-bg);
+	padding: var(--interop-content-code-padding);
+	border: var(--interop-content-code-border);
+	border-radius: var(--interop-content-code-radius);
+	font-weight: 400;
+	line-height: 2;
+}
+
+pre {
+	margin: 0 0 var(--interop-content-paragraph-gap) 0;
+	padding: var(--itx-spacing-4);
+	background: var(--itx-neutral-2);
+	border-radius: 6px;
+	overflow-x: auto;
+}
+
+pre code {
+	padding: 0;
+	background: transparent;
+	font-size: var(--interop-content-font-size);
+}
+
+/* ── Links ──────────────────────────────────────────────────────────── */
+
+a {
+	color: var(--interop-content-link-color);
+	text-decoration: var(--interop-content-link-decoration);
+	text-underline-offset: var(--interop-content-link-underline-offset);
+}
+
+a:hover {
+	text-decoration-thickness: 2px;
+}
+
+/* ── Lists ──────────────────────────────────────────────────────────── */
+
+ul,
+ol {
+	margin: 0 0 var(--interop-content-paragraph-gap) 0;
+	padding-inline-start: 1.5em;
+	color: var(--interop-content-color);
+	font-family: var(--interop-content-font-family);
+	font-size: var(--interop-content-font-size);
+	line-height: var(--interop-content-line-height);
+}
+
+li + li {
+	margin-top: var(--interop-content-list-gap);
+}
+
+li > p:only-child {
+	margin: 0;
+}
+
+/* ── Quotes ─────────────────────────────────────────────────────────── */
+
+blockquote {
+	margin: 0 0 var(--interop-content-paragraph-gap) 0;
+	padding: 0 0 0 var(--interop-content-quote-padding);
+	border-inline-start: var(--interop-content-quote-border-width) solid
+		var(--interop-content-quote-border-color);
+	color: var(--interop-content-quote-color);
+}
+
+/* ── Tables ─────────────────────────────────────────────────────────── */
+
+table {
+	width: 100%;
+	margin: 0 0 var(--interop-content-paragraph-gap) 0;
+	border-collapse: collapse;
+	font-family: var(--interop-content-font-family);
+	font-size: var(--interop-content-font-size);
+	color: var(--interop-content-color);
+}
+
+th,
+td {
+	padding: var(--interop-content-table-cell-padding);
+	text-align: left;
+	border-bottom: 1px solid var(--interop-content-table-border-color);
+}
+
+th {
+	background: var(--interop-content-table-header-bg);
+	font-weight: 600;
+}
+
+caption {
+	caption-side: top;
+	padding-bottom: var(--itx-spacing-2);
+	color: var(--itx-neutral-10);
+	font-size: var(--itx-font-size-label);
+	text-align: left;
+}
+
+/* ── Misc ───────────────────────────────────────────────────────────── */
+
+hr {
+	margin: var(--itx-spacing-6) 0;
+	border: 0;
+	border-top: 1px solid var(--itx-neutral-4);
+}

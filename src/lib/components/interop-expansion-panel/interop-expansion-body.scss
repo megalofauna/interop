@@ -3,18 +3,42 @@
 // overflow:hidden boundary that the grid algorithm requires.
 
 :host {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition:
-    grid-template-rows var(--itx-expansion-duration, 200ms)
-    var(--itx-expansion-easing, ease);
+	display: grid;
+	position: relative;
+	overflow: clip;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows var(--itx-expansion-duration, 200ms)
+		var(--itx-expansion-easing, ease);
 }
 
 :host([data-expanded]) {
-  grid-template-rows: 1fr;
+	grid-template-rows: 1fr;
 }
 
 .itx-expansion-body-inner {
-  overflow: hidden;
-  min-height: 0;
+	overflow: hidden;
+	min-height: 0;
+}
+
+// ── Peek ─────────────────────────────────────────────────────────────────────
+//
+// min-height is kept on the inner wrapper even when expanded so there is no
+// jump at transition start (it becomes irrelevant once 1fr > peek height).
+
+:host([data-peek]) .itx-expansion-body-inner {
+	min-height: var(--itx-expansion-peek-height, 4rem);
+}
+
+:host([data-peek]:not([data-expanded]))::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	bottom: 0;
+	height: var(--itx-expansion-peek-fade-height, 2.5rem);
+	background: linear-gradient(
+		to bottom,
+		transparent,
+		var(--itx-expansion-peek-fade, var(--itx-surface, white))
+	);
+	pointer-events: none;
 }

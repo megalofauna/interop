@@ -5,6 +5,7 @@
 // Export components here as they are created
 export * from "./interop-list/interop-list";
 export * from "./interop-button/interop-button";
+export * from "./interop-button/interop-button-map";
 export * from "./interop-radio/public-api";
 export * from "./interop-table/interop-table";
 export * from "./interop-table/interop-cell-def";
@@ -26,6 +27,9 @@ export * from "./interop-scroll-area/public-api";
 export * from "./interop-auto-render/public-api";
 export * from "./interop-field/public-api";
 export * from "./interop-visimorph/interop-visimorph";
+export * from "./interop-indicator/public-api";
+export * from "./interop-progress/public-api";
+export * from "./interop-slider/public-api";
 export * from "./interop-callout/public-api";
 export * from "./interop-kbd/public-api";
 export * from "./interop-toast/public-api";

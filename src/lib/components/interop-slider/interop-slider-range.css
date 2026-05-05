@@ -1,0 +1,85 @@
+/*
+ * InteropSliderRange — styles for the parent <interop-slider-range>.
+ *
+ * Provides positioning context for the two child <input type=range>
+ * thumbs (which set position:absolute via interop-slider.css when they
+ * carry data-thumb-role). The visible track and active fill are drawn
+ * by ::before / ::after on this host using --itx-slider-range-start
+ * and --itx-slider-range-end (set by JS as 0-100% strings).
+ */
+
+:host {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: var(--itx-slider-thumb-size, 1.5rem);
+
+	--_track-color: var(--itx-slider-track-color, var(--itx-neutral-4));
+	--_fill-color: var(--itx-slider-fill-color, var(--itx-colorway));
+	--_track-height: var(--itx-slider-track-height, 0.375rem);
+	--_track-radius: var(
+		--itx-slider-track-radius,
+		var(--itx-radius-full, 9999px)
+	);
+	--_start: var(--itx-slider-range-start, 0%);
+	--_end: var(--itx-slider-range-end, 100%);
+}
+
+/* ── Track ────────────────────────────────────────────────────────────── */
+
+:host::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: var(--_track-height);
+	border-radius: var(--_track-radius);
+	background: var(--_track-color);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+/* ── Active fill ──────────────────────────────────────────────────────── */
+
+:host::after {
+	content: "";
+	position: absolute;
+	left: var(--_start);
+	right: calc(100% - var(--_end));
+	top: 50%;
+	height: var(--_track-height);
+	background: var(--_fill-color);
+	border-radius: var(--_track-radius);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+:host([aria-disabled="true"]) {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* ── Vertical orientation ─────────────────────────────────────────────── */
+
+:host([data-orientation="vertical"]) {
+	width: var(--itx-slider-thumb-size, 1.5rem);
+	height: var(--itx-slider-length, 8rem);
+}
+
+:host([data-orientation="vertical"])::before,
+:host([data-orientation="vertical"])::after {
+	left: 50%;
+	right: auto;
+	top: 0;
+	bottom: 0;
+	width: var(--_track-height);
+	height: auto;
+	transform: translateX(-50%);
+}
+
+:host([data-orientation="vertical"])::after {
+	top: var(--_start);
+	bottom: calc(100% - var(--_end));
+	height: auto;
+}

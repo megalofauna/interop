@@ -1,0 +1,38 @@
+{#hero .lead}
+:::
+# Authoring with djot
+
+A *single* source file, **many** mount points. Each top-level `:::`-block with
+an `{#id}` becomes a typed export — projected into the DOM wherever the page
+needs it.
+:::
+
+{#install}
+:::
+``` bash
+npm install @djot/djot
+```
+:::
+
+{#features}
+:::
+- Predictable parser — block structure resolves before inlines
+- Native block attributes — `{#id .class key=value}` on any block
+- Generic divs and spans — no plugins required
+- Symbol syntax for renderer hooks — `:icon-name:`
+:::
+
+{#tradeoffs}
+:::
+| Concern              | djot                      | markdown            |
+|---------------------:|:--------------------------|:--------------------|
+| Named regions        | first-class               | extension required  |
+| Parser ambiguity     | none                      | many edge cases     |
+| Ecosystem maturity   | small                     | huge                |
+| Editor familiarity   | low                       | high                |
+:::
+
+{#footer}
+:::
+> djot is by John MacFarlane, who also designed CommonMark and pandoc.
+:::

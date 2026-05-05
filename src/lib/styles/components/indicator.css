@@ -1,0 +1,108 @@
+/*
+ * InteropIndicator — structural foundation.
+ *
+ * Rendering rules for `interop-indicator`: a decorative anchored surface used
+ * by selection-pill patterns (segmented controls, tab strips, toggle groups).
+ * The indicator carries no state of its own — the parent component owns
+ * "which item is active" and exposes that via an anchor name. This file
+ * therefore declares structure only; there is no state activation to manage.
+ *
+ * Loaded globally via `interop.css` so any consumer (Interop component or
+ * application code) can drop an `<interop-indicator>` into a positioning
+ * context and have it animate to the anchor without further setup.
+ *
+ * Token values (colors, radii, motion) are set separately by the theme — see
+ * `themes/protocol/components/indicator.css`. This file declares structure;
+ * the theme declares values.
+ *
+ * All selectors are wrapped in :where() to keep specificity at zero, so
+ * consumer overrides always win regardless of declaration order.
+ *
+ * ── Anchor contract ─────────────────────────────────────────────────────────
+ *
+ * The parent component sets `anchor-name: --itx-indicator-anchor` on the
+ * currently-active item. The indicator binds to that name and tracks the
+ * four edges. To switch indicator targets, change which element carries the
+ * anchor-name; the indicator animates between them.
+ *
+ * Multiple indicators in the same scope must each own a distinct anchor name.
+ * Override `--itx-indicator-anchor-name` per scope if you need more than one.
+ *
+ * ── No anchor positioning ───────────────────────────────────────────────────
+ *
+ * Browsers without anchor-positioning support hide the indicator. Parent
+ * components are expected to provide a non-animated fallback (typically by
+ * painting the active item's background directly using the same indicator
+ * tokens), so the visual is preserved even if the motion is not.
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Visual surface
+ *   --itx-indicator-background-color
+ *   --itx-indicator-background-image
+ *   --itx-indicator-border-color
+ *   --itx-indicator-border-width
+ *   --itx-indicator-border-style
+ *   --itx-indicator-border-radius
+ *   --itx-indicator-box-shadow
+ *
+ *   Anchor binding
+ *   --itx-indicator-anchor-name      Default: --itx-indicator-anchor
+ *
+ *   Transition
+ *   --itx-indicator-transition-duration
+ *   --itx-indicator-transition-timing-function
+ */
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+
+:where(interop-indicator) {
+	display: block;
+	position: absolute;
+	pointer-events: none;
+
+	background-color: var(--itx-indicator-background-color, transparent);
+	background-image: var(--itx-indicator-background-image, none);
+	border-color: var(--itx-indicator-border-color, transparent);
+	border-width: var(--itx-indicator-border-width, 0);
+	border-style: var(--itx-indicator-border-style, solid);
+	border-radius: var(--itx-indicator-border-radius, 0);
+	box-shadow: var(--itx-indicator-box-shadow, none);
+}
+
+/* ── Anchor positioning — enhancement path ──────────────────────────────── */
+
+@supports (anchor-name: none) {
+	:where(interop-indicator) {
+		position-anchor: var(--itx-indicator-anchor-name, --itx-indicator-anchor);
+		top: anchor(top);
+		right: anchor(right);
+		bottom: anchor(bottom);
+		left: anchor(left);
+
+		transition-property: top, right, bottom, left;
+		transition-duration: var(--itx-indicator-transition-duration, 150ms);
+		transition-timing-function: var(
+			--itx-indicator-transition-timing-function,
+			ease
+		);
+	}
+}
+
+/* ── Anchor positioning — fallback path ─────────────────────────────────── */
+/*    Without anchor support the indicator cannot follow a target, so we    */
+/*    hide it and rely on the parent component's painted-fallback path.    */
+
+@supports not (anchor-name: none) {
+	:where(interop-indicator) {
+		display: none;
+	}
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(interop-indicator) {
+		transition: none;
+	}
+}

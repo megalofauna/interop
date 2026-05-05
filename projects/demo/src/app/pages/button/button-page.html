@@ -1,110 +1,220 @@
-<article class="demo-page">
-	<header class="demo-page__header">
-		<p class="demo-page__category">Components</p>
-		<h1 class="demo-page__title">Button</h1>
-		<p class="demo-page__lead">
-			Enhanced button with activation guardrails — debounce, throttle, and
-			reentrancy protection built in. Drop-in replacement for any native button.
-		</p>
-	</header>
+<article class="demo-page demo-page--with-sidenav">
+	<div class="demo-page__content">
+		<header class="demo-page__header">
+			<p class="demo-page__category">Components</p>
+			<h1 class="demo-page__title">Button</h1>
+			<p class="demo-page__lead">
+				Enhanced button with activation guardrails — debounce, throttle, and
+				reentrancy protection built in. Drop-in replacement for any native
+				button.
+			</p>
+		</header>
 
-	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
-	<demo-section id="usage" heading="Usage">
-		<demo-example label="Plain">
-			<button interop-button>Fire thrusters</button>
-			<itx-code-block language="html" [tokens]="plainTokens.value() ?? null">
-				<pre><code [textContent]="plainCode"></code></pre>
-			</itx-code-block>
-		</demo-example>
+		<itx-page-nav
+			[links]="links"
+			[activeHref]="activeHref()"
+			[sticky]="true"
+			[fade]="true"
+		/>
 
-		<demo-example label="Disabled">
-			<button interop-button [disabled]="true">Offline</button>
-			<itx-code-block language="html" [tokens]="disabledTokens.value() ?? null">
-				<pre><code [textContent]="disabledCode"></code></pre>
-			</itx-code-block>
-		</demo-example>
+		<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+		<demo-section id="usage" heading="Button system">
+			<demo-example label="Base">
+				<!--<button interop-button>Fire thrusters</button>-->
 
-		<demo-example label="Loading">
-			<button interop-button [loading]="true">Initialising</button>
-			<itx-code-block language="html" [tokens]="loadingTokens.value() ?? null">
-				<pre><code [textContent]="loadingCode"></code></pre>
-			</itx-code-block>
-		</demo-example>
-	</demo-section>
+				<div class="flex">
+					<button interop-button="xs">Micro</button>
+					<button interop-button="sm">Small</button>
+					<button interop-button="md">Medium</button>
+					<button interop-button="lg">Large</button>
+				</div>
+				<div class="flex">
+					<button interop-button>Micro</button>
+					<button interop-button>Small</button>
+					<button interop-button>Medium</button>
+					<button interop-button>Large</button>
+				</div>
 
-	<!-- ── Throttle ───────────────────────────────────────────────────────── -->
-	<demo-section id="throttle" heading="Throttle">
-		<interop-callout type="info">
-			Throttle fires immediately then suppresses further activations for the
-			configured window. Useful for physical actions like engine bursts where
-			rapid repeat clicks should be ignored.
-		</interop-callout>
+				<!--<div class="flex">
+				<div class="flex">
+					<button interop-button="action xs">Micro</button>
+					<button interop-button="action sm">Small</button>
+					<button interop-button="action md">Medium</button>
+					<button interop-button="action lg">Large</button>
+				</div>
 
-		<demo-example label="1 s throttle window">
-			<button interop-button (click)="onThrottleClick()">Boost</button>
-			<demo-state>
-				<demo-state-item label="Clicks">{{ throttleClickCount() }}</demo-state-item>
-				<demo-state-item label="Fired">{{ throttleFireCount() }}</demo-state-item>
-			</demo-state>
-			<itx-code-block language="typescript" [tokens]="throttleTokens.value() ?? null">
-				<pre><code [textContent]="throttleCode"></code></pre>
-			</itx-code-block>
-		</demo-example>
-	</demo-section>
+				<div class="flex">
+					<button interop-button="action-plus xs">Micro</button>
+					<button interop-button="action-plus sm">Small</button>
+					<button interop-button="action-plus md">Medium</button>
+					<button interop-button="action-plus lg">Large</button>
+				</div>
 
-	<!-- ── Debounce ───────────────────────────────────────────────────────── -->
-	<demo-section id="debounce" heading="Debounce">
-		<interop-callout type="info">
-			Debounce delays activation until the user stops clicking. Useful for
-			search or filter inputs where you want to wait for a pause before firing.
-		</interop-callout>
+				<div class="flex">
+					<button interop-button="action-colorway xs">Micro</button>
+					<button interop-button="action-colorway sm">Small</button>
+					<button interop-button="action-colorway md">Medium</button>
+					<button interop-button="action-colorway lg">Large</button>
+				</div>-->
 
-		<demo-example label="600 ms debounce">
-			<button interop-button (click)="onDebounceClick()">Search manifest</button>
-			<demo-state>
-				<demo-state-item label="Clicks">{{ debounceClickCount() }}</demo-state-item>
-				<demo-state-item label="Fired">{{ debounceFireCount() }}</demo-state-item>
-			</demo-state>
-			<itx-code-block language="typescript" [tokens]="debounceTokens.value() ?? null">
-				<pre><code [textContent]="debounceCode"></code></pre>
-			</itx-code-block>
-		</demo-example>
-	</demo-section>
+				<!--<interop-expansion-panel>
+					<h3>
+						<button interop-expansion-trigger>CSS custom properties</button>
+					</h3>
+					<div
+						interop-expansion-body
+						[peek]="true"
+						style="--itx-expansion-peek-fade: var(--itx-neutral-3)"
+					>
+						<itx-code-block
+							language="css"
+							[tokens]="customPropsTokens.value() ?? null"
+						>
+							<pre><code [textContent]="customProps"></code></pre>
+						</itx-code-block>
+					</div>
+				</interop-expansion-panel>-->
+			</demo-example>
 
-	<!-- ── Reentrancy ─────────────────────────────────────────────────────── -->
-	<demo-section id="reentrancy" heading="Reentrancy guard">
-		<interop-callout type="info">
-			With <code>reentrant: false</code>, a second click while the handler is
-			still running is dropped. Prevents double-submission on slow async
-			operations like docking sequences or cargo transfers.
-		</interop-callout>
+			<demo-example label="Disabled" [lede]="ledes.disabled">
+				<button interop-button="action md" [disabled]="true">Offline</button>
+				<itx-code-block
+					language="html"
+					[tokens]="disabledTokens.value() ?? null"
+				>
+					<pre><code [textContent]="disabledCode"></code></pre>
+				</itx-code-block>
+			</demo-example>
 
-		<demo-example label="Non-reentrant (2 s async handler)">
-			<button interop-button (click)="onReentrantClick()">
-				{{ reentrantActive() ? 'Running…' : 'Submit order' }}
-			</button>
-			<demo-state>
-				<demo-state-item label="Fired">{{ reentrantFireCount() }}</demo-state-item>
-				<demo-state-item label="Blocked">{{ reentrantBlockCount() }}</demo-state-item>
-			</demo-state>
-			<itx-code-block language="typescript" [tokens]="reentrantTokens.value() ?? null">
-				<pre><code [textContent]="reentrantCode"></code></pre>
-			</itx-code-block>
-		</demo-example>
-	</demo-section>
+			<demo-example label="Loading" [lede]="ledes.loading">
+				<button interop-button="action-minus md" [loading]="true">
+					Initialising
+				</button>
+				<itx-code-block
+					language="html"
+					[tokens]="loadingTokens.value() ?? null"
+				>
+					<pre><code [textContent]="loadingCode"></code></pre>
+				</itx-code-block>
+			</demo-example>
+		</demo-section>
 
-	<!-- ── API ────────────────────────────────────────────────────────────── -->
-	<demo-section id="api" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
-			<ng-template itxCell="name" let-entry>
-				<code class="demo-page__api-name">{{ entry.name }}</code>
-			</ng-template>
-			<ng-template itxCell="type" let-entry>
-				<code class="demo-page__api-type">{{ entry.type }}</code>
-			</ng-template>
-			<ng-template itxCell="default" let-entry>
-				<code class="demo-page__api-default">{{ entry.default }}</code>
-			</ng-template>
-		</interop-table>
-	</demo-section>
+		<!-- ── Playground ─────────────────────────────────────────────────────── -->
+		<demo-section id="playground" heading="Playground">
+			<demo-example
+				label="Compose attributes interactively"
+				[lede]="ledes.playground"
+			>
+				<button-playground />
+			</demo-example>
+		</demo-section>
+
+		<!-- ── Throttle ───────────────────────────────────────────────────────── -->
+		<demo-section id="throttle" heading="Throttle">
+			<interop-callout type="info">
+				Throttle fires immediately then suppresses further activations for the
+				configured window. Useful for physical actions like engine bursts where
+				rapid repeat clicks should be ignored.
+			</interop-callout>
+
+			<demo-example label="1 s throttle window" [lede]="ledes.throttle">
+				<button interop-button="action-plus md" (click)="onThrottleClick()">
+					Boost
+				</button>
+				<itx-terminal [entries]="throttleLog()" (reset)="throttleLog.set([])" />
+				<itx-code-block
+					language="typescript"
+					[tokens]="throttleTokens.value() ?? null"
+				>
+					<pre><code [textContent]="throttleCode"></code></pre>
+				</itx-code-block>
+			</demo-example>
+		</demo-section>
+
+		<!-- ── Debounce ───────────────────────────────────────────────────────── -->
+		<demo-section id="debounce" heading="Debounce">
+			<interop-callout type="info">
+				Debounce delays activation until the user stops clicking. Useful for
+				search or filter inputs where you want to wait for a pause before
+				firing.
+			</interop-callout>
+
+			<demo-example label="600 ms debounce" [lede]="ledes.debounce">
+				<button interop-button="action md" (click)="onDebounceClick()">
+					Search manifest
+				</button>
+				<itx-terminal [entries]="debounceLog()" (reset)="debounceLog.set([])" />
+				<itx-code-block
+					language="typescript"
+					[tokens]="debounceTokens.value() ?? null"
+				>
+					<pre><code [textContent]="debounceCode"></code></pre>
+				</itx-code-block>
+			</demo-example>
+		</demo-section>
+
+		<!-- ── Reentrancy ─────────────────────────────────────────────────────── -->
+		<demo-section id="reentrancy" heading="Reentrancy guard">
+			<interop-callout type="info">
+				With <code>reentrant: false</code>, a second click while the handler is
+				still running is dropped. Prevents double-submission on slow async
+				operations like docking sequences or cargo transfers.
+			</interop-callout>
+
+			<demo-example
+				label="Non-reentrant (2 s async handler)"
+				[lede]="ledes.reentrancy"
+			>
+				<button interop-button="action md" (click)="onReentrantClick()">
+					{{ reentrantActive() ? 'Running…' : 'Submit order' }}
+				</button>
+				<itx-terminal
+					[entries]="reentrantLog()"
+					(reset)="reentrantLog.set([])"
+				/>
+				<itx-code-block
+					language="typescript"
+					[tokens]="reentrantTokens.value() ?? null"
+				>
+					<pre><code [textContent]="reentrantCode"></code></pre>
+				</itx-code-block>
+			</demo-example>
+		</demo-section>
+
+		<!-- ── Tokens ───────────────────────────────────────────────────────── -->
+		<demo-section id="tokens" heading="CSS tokens">
+			<interop-table [collection]="tokenEntries" [columns]="tokenColumns">
+				<ng-template itxCell="property" let-entry>
+					<code class="demo-page__api-name">{{ entry.property }}</code>
+				</ng-template>
+				<ng-template itxCell="default" let-entry>
+					<code class="demo-page__api-default">{{ entry.default }}</code>
+				</ng-template>
+			</interop-table>
+		</demo-section>
+
+		<!-- ── API ────────────────────────────────────────────────────────────── -->
+		<demo-section id="api" heading="API — Inputs">
+			<interop-table [collection]="apiEntries" [columns]="apiColumns">
+				<ng-template itxCell="name" let-entry>
+					<code class="demo-page__api-name">{{ entry.name }}</code>
+				</ng-template>
+				<ng-template itxCell="type" let-entry>
+					<code class="demo-page__api-type">{{ entry.type }}</code>
+				</ng-template>
+				<ng-template itxCell="default" let-entry>
+					<code class="demo-page__api-default">{{ entry.default }}</code>
+				</ng-template>
+			</interop-table>
+		</demo-section>
+	</div>
+
+	<aside class="demo-page__sidenav">
+		<itx-page-nav
+			orientation="vertical"
+			[links]="links"
+			[activeHref]="activeHref()"
+			[sticky]="true"
+		/>
+	</aside>
 </article>

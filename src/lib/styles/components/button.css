@@ -1,0 +1,208 @@
+/*
+ * InteropButton — structural foundation.
+ *
+ * This file ships the rendering rules for `button[interop-button]`: the visual
+ * pill, padding, focus ring, disabled treatment, and the state-resolved private
+ * slots (--_background, --_foreground, --_border-color) that read from public
+ * theme tokens.
+ *
+ * It is loaded globally via `interop.css` so that any consumer can apply
+ * Interop button styling by writing `<button interop-button>` — no Angular
+ * component import required. Importing the InteropButton class additionally
+ * brings activation guardrails, ARIA wiring, and the loading-text template.
+ *
+ * Token values (colors, sizes, radii) are set separately by the theme — see
+ * `themes/protocol/components/button.css`. This file declares structure and
+ * state activation rules; the theme declares values.
+ *
+ * All selectors are wrapped in :where() to keep specificity at zero, so
+ * consumer overrides always win regardless of declaration order.
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Layout / structure
+ *   --itx-button-display
+ *   --itx-button-align-items
+ *   --itx-button-padding-block
+ *   --itx-button-padding-inline
+ *   --itx-button-touch-inset      Extra block space between pill and touch boundary
+ *   --itx-button-max-width
+ *   --itx-button-gap
+ *
+ *   Typography
+ *   --itx-button-font-family
+ *   --itx-button-font-size
+ *   --itx-button-line-height
+ *   --itx-button-letter-spacing
+ *
+ *   Visual pill — state tokens (rest / hover / active)
+ *   --itx-button-background          --itx-button-background-hover          --itx-button-background-active
+ *   --itx-button-foreground          --itx-button-foreground-hover          --itx-button-foreground-active
+ *   --itx-button-border-color        --itx-button-border-color-hover        --itx-button-border-color-active
+ *
+ *   Visual pill — structure (no state variants)
+ *   --itx-button-background-image
+ *   --itx-button-border-width
+ *   --itx-button-border-style
+ *   --itx-button-border-radius     Explicit override; bypasses managed-radius context.
+ *   --itx-button-box-shadow
+ *
+ *   Focus ring
+ *   --itx-button-outline-width
+ *   --itx-button-outline-style
+ *   --itx-button-outline-color
+ *   --itx-button-outline-offset
+ *
+ *   Transition
+ *   --itx-button-transition-property
+ *   --itx-button-transition-duration
+ *   --itx-button-transition-timing-function
+ */
+
+:where([interop-button]) {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+/* ── Touch target ────────────────────────────────────────────────────────── */
+
+:where(button[interop-button]) {
+	display: var(--itx-button-display, inline-flex);
+	align-items: var(--itx-button-align-items, center);
+	position: relative;
+	isolation: isolate;
+	gap: var(--itx-button-gap);
+
+	background: none;
+	border: none;
+
+	padding-block: calc(
+		var(--itx-button-padding-block, 0.5em) *
+			var(--itx-button-sizing-multiplier, 1) +
+			var(--itx-button-touch-inset, 0.25em)
+	);
+	padding-inline: calc(
+		var(--itx-button-padding-inline, 1.125em) *
+			var(--itx-button-sizing-multiplier, 1)
+	);
+	max-width: var(--itx-button-max-width, initial);
+
+	font-family: var(--itx-button-font-family, var(--itx-font-family));
+	font-size: var(--itx-button-font-size, inherit);
+	line-height: var(--itx-button-line-height, unset);
+	letter-spacing: var(--itx-button-letter-spacing, initial);
+
+	color: var(--_foreground);
+
+	transition-property: color;
+	transition-duration: var(--itx-button-transition-duration, 96ms);
+	transition-timing-function: var(
+		--itx-button-transition-timing-function,
+		ease-in
+	);
+}
+
+/* ── State-resolved private slots ────────────────────────────────────────── */
+/*    State activation lives here. Theme files set values, not selectors.    */
+
+:where(button[interop-button]) {
+	--_background: var(--itx-button-background, transparent);
+	--_foreground: var(--itx-button-foreground, var(--itx-on-surface));
+	--_border-color: var(--itx-button-border-color, transparent);
+	--_box-shadow: var(--itx-button-box-shadow, none);
+}
+
+:where(button[interop-button]:hover:not(:active)) {
+	--_background: var(
+		--itx-button-background-hover,
+		var(--itx-button-background, transparent)
+	);
+	--_foreground: var(
+		--itx-button-foreground-hover,
+		var(--itx-button-foreground, var(--itx-on-surface))
+	);
+	--_border-color: var(
+		--itx-button-border-color-hover,
+		var(--itx-button-border-color, transparent)
+	);
+	--_box-shadow: var(--itx-button-box-shadow-hover, none);
+}
+
+:where(button[interop-button]:active) {
+	--_background: var(
+		--itx-button-background-active,
+		var(--itx-button-background, transparent)
+	);
+	--_foreground: var(
+		--itx-button-foreground-active,
+		var(--itx-button-foreground, var(--itx-on-surface))
+	);
+	--_border-color: var(
+		--itx-button-border-color-active,
+		var(--itx-button-border-color, transparent)
+	);
+	--_box-shadow: var(--itx-button-box-shadow-active, none);
+}
+
+/* ── Visual pill ─────────────────────────────────────────────────────────── */
+
+:where(button[interop-button])::before {
+	content: "";
+	position: absolute;
+	inset-block: var(--itx-button-touch-inset, 0.25em);
+	inset-inline: 0;
+	z-index: -1;
+	pointer-events: none;
+
+	background-color: var(--_background, transparent);
+	background-image: var(--itx-button-background-image, none);
+	border-width: var(--itx-button-border-width, 0);
+	border-style: var(--itx-button-border-style, solid);
+	border-color: var(--_border-color);
+	border-radius: var(
+		--itx-button-border-radius,
+		var(--itx-context-radius, var(--itx-radius-sm))
+	);
+	box-shadow: var(--_box-shadow);
+	corner-shape: var(--itx-button-corner-shape);
+
+	transition-property: var(
+		--itx-button-transition-properties,
+		background-color,
+		border-color
+	);
+	transition-duration: var(--itx-button-transition-duration, 96ms);
+	transition-timing-function: var(
+		--itx-button-transition-timing-function,
+		ease-in
+	);
+}
+
+/* ── Focus ring ──────────────────────────────────────────────────────────── */
+
+:where(button[interop-button]:focus) {
+	outline: none;
+}
+
+:where(button[interop-button]:focus-visible:not(:active))::before {
+	outline: var(--itx-button-outline-width, 4px)
+		var(--itx-button-outline-style, solid)
+		var(--itx-button-outline-color, var(--itx-neutral-8));
+	outline-offset: var(--itx-button-outline-offset, 3px);
+}
+
+/* ── Disabled ────────────────────────────────────────────────────────────── */
+
+:where(button[interop-button]:disabled),
+:where(button[interop-button][aria-disabled="true"]) {
+	opacity: var(--itx-button-disabled-opacity, 0.4);
+	pointer-events: none;
+}
+
+/* ── Pointer fine: collapse touch inset so hit area = visual pill ────────── */
+
+@media (pointer: fine) {
+	:where(button[interop-button]) {
+		--itx-button-touch-inset: 0em;
+	}
+}

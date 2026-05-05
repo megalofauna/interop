@@ -1,0 +1,50 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Content</p>
+		<h1 class="demo-page__title">djot-driven content projection</h1>
+		<p class="demo-page__lead">
+			A single <code>.djot</code> file is compiled at build time into a typed
+			module. Each top-level <code>&#123;#id&#125;</code> div becomes a named
+			export that <code>&lt;interop-content&gt;</code> can render at any mount
+			point on the page.
+		</p>
+	</header>
+
+	<!-- Hero slot, mounted on its own -->
+	<demo-section id="hero" heading="Slot: hero">
+		<demo-example label="Mounted at the top of the page">
+			<interop-content [node]="content.hero" />
+		</demo-example>
+	</demo-section>
+
+	<!-- Two slots side-by-side, sourced from the same file -->
+	<demo-section id="dual-mount" heading="Two slots, same source file">
+		<div class="dual-mount">
+			<demo-example label="content.install">
+				<interop-content [node]="content.install" />
+			</demo-example>
+			<demo-example label="content.features">
+				<interop-content [node]="content.features" />
+			</demo-example>
+		</div>
+	</demo-section>
+
+	<!-- Re-mounting the install block to prove it's not stateful -->
+	<demo-section id="remount" heading="Re-mounted slot">
+		<demo-example label="content.install rendered again">
+			<interop-content [node]="content.install" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="tradeoffs" heading="Slot: tradeoffs (table)">
+		<demo-example label="content.tradeoffs">
+			<interop-content [node]="content.tradeoffs" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="footer" heading="Slot: footer (blockquote)">
+		<demo-example label="content.footer">
+			<interop-content [node]="content.footer" />
+		</demo-example>
+	</demo-section>
+</article>

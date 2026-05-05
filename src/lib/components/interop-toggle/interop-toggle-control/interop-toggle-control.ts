@@ -74,7 +74,7 @@ import { InteropVisimorph } from "../../interop-visimorph/interop-visimorph";
 			[attr.name]="name()"
 			[attr.value]="value()"
 			(change)="onToggleChange($event)"
-			(focus)="focused.set(true)"
+			(focus)="focused.set(toggleInput.matches(':focus-visible'))"
 			(blur)="focused.set(false)"
 		/>
 		<interop-visimorph

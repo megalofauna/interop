@@ -6,21 +6,37 @@
 	 * tokens (accent, border-color, etc.) are intentionally absent so that ancestor
 	 * overrides of --itx-control-* flow through unblocked.
 	 */
-	--itx-control-size: 1.25rem; /* 24px */
-	--itx-control-dot-size: 8px; /* 12px */
-	--itx-control-focus-ring-width: 3px;
-	--itx-control-focus-ring-offset: 1px;
-	--itx-control-focus-ring-color: #444;
+	--itx-control-dot-size: var(--itx-spacing-2); /* 8px */
 
-	/* --- Layout (Figma specs) --- */
+	/* --- Layout --- */
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem; /* 8px — control → label gap */
-	padding: 0.5rem 1.5rem 0.5rem 0.5rem; /* 8px 24px 8px 8px */
+	gap: 0.5rem;
+	/*
+	 * padding-block = base visual padding + touch inset.
+	 * ::before mirrors the inset so the hover bg shrinks by the same amount,
+	 * keeping the visible interaction area inside the touch target boundary.
+	 */
+	padding-block: calc(0.5rem + var(--itx-control-touch-inset, 0.25em));
+	padding-inline: 0.5rem 1.5rem;
 	cursor: pointer;
 	user-select: none;
 	font-size: 1rem;
 	line-height: 1.5;
+	position: relative;
+	isolation: isolate;
+}
+
+/* Hover background — inset from touch target boundary */
+:host::before {
+	content: "";
+	position: absolute;
+	inset-block: var(--itx-control-touch-inset, 0.25em);
+	inset-inline: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-color: transparent;
+	transition: background-color 75ms ease-in;
 }
 
 /* Visually hidden — remains in DOM for accessibility (focus, keyboard, form submission) */
@@ -41,7 +57,7 @@
 }
 
 /* Hover state */
-:host:hover:not(:has(input[type="radio"]:disabled)) {
+:host:hover:not(:has(input[type="radio"]:disabled))::before {
 	background-color: rgba(0, 0, 0, 0.05);
 }
 
@@ -54,6 +70,13 @@
 :host(.reverse) {
 	flex-direction: row-reverse;
 	justify-content: flex-end;
+}
+
+/* On fine pointers, collapse touch inset so hover bg fills full label area */
+@media (pointer: fine) {
+	:host {
+		--itx-control-touch-inset: 0em;
+	}
 }
 
 /* Reduced motion support */

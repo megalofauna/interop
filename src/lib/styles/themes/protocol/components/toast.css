@@ -1,0 +1,50 @@
+:where([interop-root]) {
+	/* Viewport */
+	--itx-toast-z-index: 9999;
+	--itx-toast-gap: var(--itx-spacing-3);
+	--itx-toast-max-width: 25rem;
+	--itx-toast-offset: var(--itx-spacing-4);
+	--itx-toast-border-left-color: var(--) /* Item */
+		--itx-toast-background: var(--itx-surface-above);
+	--itx-toast-foreground: var(--itx-on-surface);
+	--itx-toast-border-color: var(--itx-border);
+	--itx-toast-border-width: 0px;
+	--itx-toast-border-radius: var(--itx-radius-sm);
+	--itx-toast-padding: var(--itx-spacing-4);
+	--itx-toast-shadow: var(--itx-shadow-lg);
+
+	/* Typography */
+	--itx-toast-font-size: var(--itx-font-size-body);
+	--itx-toast-description-font-size: var(--itx-font-size-caption);
+
+	/* Animation */
+	--itx-toast-enter-duration: var(--itx-duration-base);
+	--itx-toast-enter-easing: var(--itx-easing-decelerate);
+}
+
+/* ── Variants ────────────────────────────────────────────────────────────── */
+
+:where(interop-toast-item[data-type="success"]) {
+	--itx-toast-background: var(--itx-success-surface);
+	--itx-toast-foreground: var(--itx-on-success-surface);
+	--itx-toast-border-color: var(--itx-success);
+	--itx-toast-border-left-color: red;
+}
+
+:where(interop-toast-item[data-type="error"]) {
+	--itx-toast-background: var(--itx-danger-surface);
+	--itx-toast-foreground: var(--itx-on-danger-surface);
+	--itx-toast-border-color: var(--itx-danger);
+}
+
+:where(interop-toast-item[data-type="warning"]) {
+	--itx-toast-background: var(--itx-warning-surface);
+	--itx-toast-foreground: var(--itx-on-warning-surface);
+	--itx-toast-border-color: var(--itx-warning);
+}
+
+:where(interop-toast-item[data-type="info"]) {
+	--itx-toast-background: var(--itx-info-surface);
+	--itx-toast-foreground: var(--itx-on-info-surface);
+	--itx-toast-border-color: var(--itx-info);
+}

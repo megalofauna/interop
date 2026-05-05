@@ -3,27 +3,37 @@
 		<p class="demo-page__category">Components</p>
 		<h1 class="demo-page__title">Expansion Panel</h1>
 		<p class="demo-page__lead">
-			Accessible collapsible panels following the APG accordion pattern.
-			Works standalone or grouped in an accordion with mutual-exclusion mode.
+			Accessible collapsible panels following the APG accordion pattern. Works
+			standalone or grouped in an accordion with mutual-exclusion mode.
 		</p>
 	</header>
 
 	<!-- ── Standalone ────────────────────────────────────────────────────── -->
 	<demo-section id="standalone" heading="Standalone">
 		<demo-example label="Single panel">
-			<interop-expansion-panel style="width: 100%;">
+			<interop-expansion-panel style="width: 100%">
 				<h3><button interop-expansion-trigger>Docking procedure</button></h3>
 				<div interop-expansion-body>
-					<p>Reduce speed to 10 m/s, extend mag-lock clamps, and align with the docking ring. Verify pressure seal before opening the airlock.</p>
+					<p>
+						Reduce speed to 10 m/s, extend mag-lock clamps, and align with the
+						docking ring. Verify pressure seal before opening the airlock.
+					</p>
 				</div>
 			</interop-expansion-panel>
 		</demo-example>
 
 		<demo-example label="Default open">
-			<interop-expansion-panel [expanded]="true" style="width: 100%;">
-				<h3><button interop-expansion-trigger>Emergency protocols</button></h3>
+			<interop-expansion-panel [expanded]="true" style="width: 100%">
+				<h3>
+					<button interop-button="assert neutral xs" interop-expansion-trigger>
+						Emergency protocols
+					</button>
+				</h3>
 				<div interop-expansion-body>
-					<p>In the event of hull breach: seal bulkheads, activate emergency O2, and transmit distress beacon on channel 9.</p>
+					<p>
+						In the event of hull breach: seal bulkheads, activate emergency O2,
+						and transmit distress beacon on channel 9.
+					</p>
 				</div>
 			</interop-expansion-panel>
 		</demo-example>
@@ -32,49 +42,63 @@
 	<!-- ── Accordion ─────────────────────────────────────────────────────── -->
 	<demo-section id="accordion" heading="Accordion">
 		<demo-example label="Mutually exclusive panels">
-			<interop-accordion style="width: 100%;">
+			<interop-accordion style="width: 100%">
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Navigation systems</button></h3>
 					<div interop-expansion-body>
-						<p>Inertial nav array, stellar cartography uplink, and proximity sensor grid. All systems nominal.</p>
+						<p>
+							Inertial nav array, stellar cartography uplink, and proximity
+							sensor grid. All systems nominal.
+						</p>
 					</div>
 				</interop-expansion-panel>
 
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Life support</button></h3>
 					<div interop-expansion-body>
-						<p>O2 at 21%, CO2 scrubbers at 98% efficiency. Recycler cycle in 4h. Temperature stable at 21°C.</p>
+						<p>
+							O2 at 21%, CO2 scrubbers at 98% efficiency. Recycler cycle in 4h.
+							Temperature stable at 21°C.
+						</p>
 					</div>
 				</interop-expansion-panel>
 
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Propulsion</button></h3>
 					<div interop-expansion-body>
-						<p>Main drive at 40% thrust. Fuel reserves at 68%. Ion thrusters available for course correction.</p>
+						<p>
+							Main drive at 40% thrust. Fuel reserves at 68%. Ion thrusters
+							available for course correction.
+						</p>
 					</div>
 				</interop-expansion-panel>
 			</interop-accordion>
 		</demo-example>
 
 		<demo-example label="Multiple open allowed">
-			<interop-accordion [exclusive]="false" style="width: 100%;">
+			<interop-accordion [exclusive]="false" style="width: 100%">
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Cargo manifest</button></h3>
 					<div interop-expansion-body>
-						<p>47 items on manifest. 3 flagged hazmat. 12 priority. Bay 4 offline for inspection.</p>
+						<p>
+							47 items on manifest. 3 flagged hazmat. 12 priority. Bay 4 offline
+							for inspection.
+						</p>
 					</div>
 				</interop-expansion-panel>
 
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Crew roster</button></h3>
 					<div interop-expansion-body>
-						<p>Commander Reyes, Pilot Tanaka, Navigator Osei, Chief Voskov, Dr. Mbeki — all personnel accounted for.</p>
+						<p>
+							Commander Reyes, Pilot Tanaka, Navigator Osei, Chief Voskov, Dr.
+							Mbeki — all personnel accounted for.
+						</p>
 					</div>
 				</interop-expansion-panel>
 			</interop-accordion>
 		</demo-example>
 	</demo-section>
-
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">

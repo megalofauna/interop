@@ -108,7 +108,7 @@ import {
       [disabled]="disabled()"
       [required]="required()"
       (change)="onRadioChange($event)"
-      (focus)="focused.set(true)"
+      (focus)="focused.set(radioInput.matches(':focus-visible'))"
       (blur)="focused.set(false)"
     />
     <interop-visimorph

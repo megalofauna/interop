@@ -36,7 +36,6 @@ import {
 	selector: "button[interop-segment]",
 	standalone: true,
 	template: "<ng-content></ng-content>",
-	styleUrl: "./interop-segment.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"type": "button",

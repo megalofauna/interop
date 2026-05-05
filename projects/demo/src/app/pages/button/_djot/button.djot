@@ -1,0 +1,52 @@
+{#base}
+:::
+Four sizes (`xs`, `sm`, `md`, `lg`) crossed with four colorways
+(default, *action-minus*, *action*, *action-plus*) plus a *colorway* variant.
+Drop the size onto `interop-button="<size>"` and the variant onto
+`interop-button="<variant> <size>"`.
+Interop provides a straightforward token system for creating buttons that feel right at home in your design. The default button styles shown here can be used as is or as models for your own exploration.
+Every Interop button is built atop the same chassis.
+This means that any button can be transformed into any other Interop button simply by changing the string values in the `interop-button`  attribute.
+:::
+
+{#disabled}
+:::
+Setting `[disabled]="true"` blocks pointer and keyboard activation, applies
+the standard disabled styling, and ensures assistive tech announces the
+button as unavailable. No additional ARIA wiring needed.
+:::
+
+{#loading}
+:::
+`[loading]="true"` swaps the label for an indeterminate spinner and prevents
+activation while in flight. The button keeps its width so surrounding layout
+doesn't shift when the state toggles.
+:::
+
+{#throttle}
+:::
+The handler fires *immediately* on the leading edge, then ignores further
+activations for the configured window. Use this when the action represents a
+discrete burst — a click that should never be missed, but also never doubled.
+:::
+
+{#debounce}
+:::
+Activation is *deferred* until the user stops clicking. Each new click resets
+the timer. Best for search-as-you-type or any handler whose work is wasted if
+another click is on its way.
+:::
+
+{#reentrancy}
+:::
+With `reentrant: false`, a second click while the handler is still running is
+silently dropped. Pair this with async handlers (network, file IO) where a
+double-submit would be a correctness bug, not just a UX annoyance.
+:::
+
+{#playground}
+:::
+With `reentrant: false`, a second click while the handler is still running is
+silently dropped. Pair this with async handlers (network, file IO) where a
+double-submit would be a correctness bug, not just a UX annoyance.
+:::

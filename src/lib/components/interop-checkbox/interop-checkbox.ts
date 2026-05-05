@@ -75,7 +75,7 @@ import { InteropVisimorph } from "../interop-visimorph/interop-visimorph";
 			[attr.name]="name()"
 			[attr.value]="value()"
 			(change)="onCheckboxChange($event)"
-			(focus)="focused.set(true)"
+			(focus)="focused.set(checkboxInput.matches(':focus-visible'))"
 			(blur)="focused.set(false)"
 		/>
 		<interop-visimorph

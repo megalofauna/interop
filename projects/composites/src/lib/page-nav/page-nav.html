@@ -1,0 +1,59 @@
+@if (orientation() === 'vertical') {
+<nav [attr.aria-label]="label()">
+	<p class="itx-pn__label" aria-hidden="true">{{ label() }}</p>
+	<ul class="itx-pn__list">
+		@for (link of links(); track link.href) {
+		<li class="itx-pn__item">
+			<a
+				class="itx-pn__link"
+				[href]="link.href"
+				[attr.aria-current]="activeHref() === link.href ? true : null"
+				(click)="handleLinkClick($event, link.href)"
+			>
+				<span class="itx-pn__indicator" aria-hidden="true"></span>
+				{{ link.label }}
+			</a>
+			@if (link.children?.length) {
+			<ul class="itx-pn__children">
+				@for (child of link.children!; track child.href) {
+				<li class="itx-pn__item">
+					<a
+						class="itx-pn__link itx-pn__link--child"
+						[href]="child.href"
+						[attr.aria-current]="activeHref() === child.href ? true : null"
+						(click)="handleLinkClick($event, child.href)"
+					>
+						<span class="itx-pn__indicator" aria-hidden="true"></span>
+						{{ child.label }}
+					</a>
+				</li>
+				}
+			</ul>
+			}
+		</li>
+		}
+	</ul>
+</nav>
+} @else {
+<nav [attr.aria-label]="label()">
+	<interop-icon
+		name="tabler-map-pin-2"
+		[size]="24"
+		[strokeWidth]="1"
+	></interop-icon>
+	<interop-scroll-area orientation="horizontal" [showShadows]="true">
+		<ul>
+			@for (link of links(); track link.href) {
+			<li>
+				<a
+					[href]="link.href"
+					[attr.aria-current]="activeHref() === link.href ? true : null"
+					(click)="handleLinkClick($event, link.href)"
+					>{{ link.label }}</a
+				>
+			</li>
+			}
+		</ul>
+	</interop-scroll-area>
+</nav>
+}

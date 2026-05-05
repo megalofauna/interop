@@ -1,0 +1,218 @@
+/*
+ * InteropSegment — structural foundation.
+ *
+ * Rendering rules for `button[interop-segment]`: the visual pill background
+ * via state-resolved private slots, focus ring, disabled treatment, and the
+ * anchor-name exposure used by the parent container's enhanced selection pill.
+ *
+ * Loaded globally via `interop.css` so any consumer can apply Interop segment
+ * styling by writing `<button interop-segment>` — no Angular component import
+ * required. Importing the InteropSegment class additionally brings ARIA wiring,
+ * roving-tabindex coordination, and parent container integration.
+ *
+ * Token values (colors, sizes, radii) are set separately by the theme — see
+ * `themes/protocol/components/segmented-control.css`. This file declares
+ * structure and state activation rules; the theme declares values.
+ *
+ * All selectors are wrapped in :where() to keep specificity at zero, so
+ * consumer overrides always win regardless of declaration order.
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Layout / structure
+ *   --itx-segment-display
+ *   --itx-segment-flex
+ *   --itx-segment-padding-block
+ *   --itx-segment-padding-inline
+ *   --itx-segment-min-width
+ *
+ *   Typography
+ *   --itx-segment-font-family
+ *   --itx-segment-font-size
+ *   --itx-segment-font-weight              --itx-segment-font-weight-selected
+ *
+ *   Visual — state tokens (rest / hover / selected)
+ *   --itx-segment-background       --itx-segment-background-hover       --itx-segment-background-selected
+ *   --itx-segment-foreground       --itx-segment-foreground-hover       --itx-segment-foreground-selected
+ *   --itx-segment-border-color     --itx-segment-border-color-hover     --itx-segment-border-color-selected
+ *
+ *   Visual — structure (no state variants)
+ *   --itx-segment-border-width
+ *   --itx-segment-border-style
+ *   --itx-segment-border-radius
+ *
+ *   Focus ring
+ *   --itx-segment-outline-width
+ *   --itx-segment-outline-style
+ *   --itx-segment-outline-color
+ *   --itx-segment-outline-offset
+ *
+ *   Transition
+ *   --itx-segment-transition-duration
+ *   --itx-segment-transition-timing-function
+ *
+ *   Disabled
+ *   --itx-segment-disabled-opacity
+ *
+ * Inter-segment dividers are <hr itx-rule> elements that the container
+ * auto-injects between segments. They're styled by the global rule utility
+ * (styles/utilities/rule.css) — tune colour and thickness via
+ * --itx-rule-{color,width} on any ancestor.
+ */
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+
+:where(button[interop-segment]) {
+	-webkit-appearance: none;
+	appearance: none;
+
+	display: var(--itx-segment-display, inline-flex);
+	align-items: stretch;
+	flex: var(--itx-segment-flex);
+
+	padding-block: var(--itx-segment-padding-block, 0.25rem);
+	padding-inline: var(--itx-segment-padding-inline, 0.75rem);
+	min-width: var(--itx-segment-min-width, 0);
+
+	font-family: var(--itx-segment-font-family, inherit);
+	font-size: var(--itx-segment-font-size, inherit);
+	font-weight: var(--_font-weight);
+
+	background: var(--_background);
+	color: var(--_foreground);
+	border-color: var(--_border-color);
+	border-width: var(--itx-segment-border-width, 0);
+	border-style: var(--itx-segment-border-style, solid);
+	border-radius: var(--itx-segment-border-radius, 4px);
+
+	cursor: pointer;
+	/* Prevent text selection on rapid clicks. */
+	user-select: none;
+
+	/* Stack above the container's pill pseudo-element (::before, z-index 0). */
+	position: relative;
+	z-index: 1;
+
+	transition-property: background-color, color, border-color;
+	transition-duration: var(--itx-segment-transition-duration, 96ms);
+	transition-timing-function: var(
+		--itx-segment-transition-timing-function,
+		ease-in
+	);
+}
+
+/* ── State-resolved private slots ────────────────────────────────────────── */
+/*    State activation lives here. Theme files set values, not selectors.    */
+
+:where(button[interop-segment]) {
+	--_background: var(--itx-segment-background, transparent);
+	--_foreground: var(--itx-segment-foreground, inherit);
+	--_border-color: var(--itx-segment-border-color, transparent);
+	--_font-weight: var(--itx-segment-font-weight, inherit);
+
+	/* Compensate the axis-rule pseudo for our own padding + border so the
+	   rule lands at our outer edge instead of our content edge. (Buttons
+	   resolve their pseudo's containing block to the content box.) */
+	--itx-axis-rule-block-offset: calc(
+		var(--itx-segment-padding-block, 8px) + var(--itx-segment-border-width, 2px)
+	);
+	--itx-axis-rule-block-offset: -8px;
+	--itx-axis-rule-inline-offset: calc(
+		var(--itx-segment-padding-inline, 0px) +
+			var(--itx-segment-border-width, 0px)
+	);
+}
+
+:where(
+	button[interop-segment]:hover:not([aria-pressed="true"]):not(:disabled):not([data-disabled])
+) {
+	--_background: var(
+		--itx-segment-background-hover,
+		var(--itx-segment-background, transparent)
+	);
+	--_foreground: var(
+		--itx-segment-foreground-hover,
+		var(--itx-segment-foreground, inherit)
+	);
+	--_border-color: var(
+		--itx-segment-border-color-hover,
+		var(--itx-segment-border-color, transparent)
+	);
+}
+
+/*
+ * Selected — fallback path (no anchor positioning).
+ *
+ * The <interop-indicator> child is hidden in this path. The segment fills
+ * its own background using the shared --itx-indicator-* tokens, which the
+ * theme sets at a high scope, so the fallback colour always tracks the
+ * configured pill colour without per-control plumbing.
+ */
+:where(button[interop-segment][aria-pressed="true"]) {
+	--_background: var(
+		--itx-segment-background-selected,
+		var(--itx-indicator-background-color, transparent)
+	);
+	--_image: var(
+		--itx-segment-background-selected,
+		var(--itx-indicator-background-image, transparent)
+	);
+	--_foreground: var(
+		--itx-segment-foreground-selected,
+		var(--itx-segment-foreground, inherit)
+	);
+	--_border-color: var(
+		--itx-segment-border-color-selected,
+		var(--itx-segment-border-color, transparent)
+	);
+	--_font-weight: var(
+		--itx-segment-font-weight-selected,
+		var(--itx-segment-font-weight, inherit)
+	);
+}
+
+/*
+ * Selected — enhancement path (with anchor positioning).
+ *
+ * The <interop-indicator> child draws the pill. The segment clears its own
+ * background/border so the indicator shows through, and exposes
+ * anchor-name so the indicator can position to it. The segmented-control
+ * binds --itx-indicator-anchor-name to this same name on its track.
+ */
+@supports (anchor-name: none) {
+	:where(button[interop-segment][aria-pressed="true"]) {
+		--_background: transparent;
+		--_border-color: transparent;
+		anchor-name: --itx-segment-active;
+	}
+}
+
+/* ── Focus ring ──────────────────────────────────────────────────────────── */
+
+:where(button[interop-segment]:focus) {
+	outline: none;
+}
+
+:where(button[interop-segment]:focus-visible) {
+	outline: var(--itx-segment-outline-width, 2px)
+		var(--itx-segment-outline-style, solid)
+		var(--itx-segment-outline-color, currentColor);
+	outline-offset: var(--itx-segment-outline-offset, -2px);
+}
+
+/* ── Disabled ────────────────────────────────────────────────────────────── */
+
+:where(button[interop-segment][data-disabled]),
+:where(button[interop-segment]:disabled) {
+	opacity: var(--itx-segment-disabled-opacity, 0.4);
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* ── High contrast ───────────────────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+	:where(button[interop-segment][aria-pressed="true"]) {
+		outline: 2px solid currentColor;
+	}
+}

@@ -1,0 +1,62 @@
+<div class="playground">
+	<div class="playground__stage">
+		<button interop-button [attr.interop-button]="attributeValue()">
+			Fire thrusters
+		</button>
+	</div>
+	<code class="playground__attr">{{ attributeMarkup() }}</code>
+
+	<div class="playground__controls">
+		<fieldset
+			class="itx-playground-segmented-control"
+			interop-segmented-control
+			label="Variant"
+			[labelHidden]="true"
+			[value]="variant()"
+			(valueChange)="setVariant($event)"
+		>
+			<button interop-segment value="base">base</button>
+			<button interop-segment value="action-minus">action-minus</button>
+			<button interop-segment value="action">action</button>
+			<button interop-segment value="action-plus">action-plus</button>
+			<button interop-segment value="action-colorway">action-colorway</button>
+		</fieldset>
+
+		<fieldset
+			interop-segmented-control
+			label="Size"
+			[labelHidden]="true"
+			[value]="size()"
+			(valueChange)="setSize($event)"
+		>
+			<button interop-segment value="xs">xs</button>
+			<button interop-segment value="sm">sm</button>
+			<button interop-segment value="md">md</button>
+			<button interop-segment value="lg">lg</button>
+		</fieldset>
+
+		<!--<fieldset
+			interop-segmented-control
+			label="Radius"
+			[value]="radius()"
+			(valueChange)="setRadius($event)"
+		>
+			<button interop-segment value="round-xs">round-xs</button>
+			<button interop-segment value="round-sm">round-sm</button>
+			<button interop-segment value="round-md">round-md</button>
+			<button interop-segment value="round-lg">round-lg</button>
+			<button interop-segment value="round-xl">round-xl</button>
+			<button interop-segment value="round-full">round-full</button>
+		</fieldset>-->
+
+		<!--<fieldset
+			interop-chip-filter
+			label="Modifiers"
+			[value]="modifiers()"
+			(valueChange)="modifiers.set($event)"
+		>
+			<label interop-chip-option value="destroy">destroy</label>
+			<label interop-chip-option value="full">full</label>
+		</fieldset>-->
+	</div>
+</div>

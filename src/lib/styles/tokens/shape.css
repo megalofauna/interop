@@ -7,15 +7,15 @@
 
 :where([interop-root]) {
 	--itx-radius-nominal: calc(var(--itx-radius-base) * 0.25);
-	--itx-radius-xs: calc(var(--itx-radius-base) * 0.5);
+	--itx-radius-0_5: calc(var(--itx-radius-base) * 0.5);
 	--itx-radius-base: 4px;
-	--itx-radius-sm: var(--itx-radius-base);
-	--itx-radius-md: calc(var(--itx-radius-base) * 2);
+	--itx-radius-1: var(--itx-radius-base);
+	--itx-radius-2: calc(var(--itx-radius-base) * 2);
 	--itx-radius-3: calc(var(--itx-radius-base) * 3);
-	--itx-radius-lg: calc(var(--itx-radius-base) * 4);
+	--itx-radius-4: calc(var(--itx-radius-base) * 4);
 	--itx-radius-5: calc(var(--itx-radius-base) * 5);
-	--itx-radius-xl: calc(var(--itx-radius-base) * 6);
-	--itx-radius-2xl: calc(var(--itx-radius-base) * 8);
-	--itx-radius-3xl: calc(var(--itx-radius-base) * 12);
+	--itx-radius-6: calc(var(--itx-radius-base) * 6);
+	--itx-radius-8: calc(var(--itx-radius-base) * 8);
+	--itx-radius-12: calc(var(--itx-radius-base) * 12);
 	--itx-radius-full: 9999px;
 }

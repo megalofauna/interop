@@ -31,6 +31,9 @@ export * from "./lib/interop.module";
 // Components
 export * from "./lib/components/public-api";
 
+// Content (djot-driven prose rendering)
+export * from "./lib/content/public-api";
+
 // Rigs
 export * from "./lib/rigs/public-api";
 

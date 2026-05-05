@@ -1,0 +1,34 @@
+/*
+ * InteropIndicator — Protocol theme.
+ *
+ * Token values for the shared anchored-indicator surface. Consumed by
+ * InteropSegmentedControl today, and by any future component that needs a
+ * sliding pill (tabs, toggle groups, nav rails).
+ *
+ * No state selectors here — the indicator has no states. This file only
+ * declares values.
+ */
+
+:where([interop-root]) {
+	/* ── Visual surface ─────────────────────────────────────────────────── */
+	--itx-indicator-background-color: light-dark(
+		var(--itx-neutral-1),
+		rgb(255 255 255 / 0.1)
+	);
+
+	--itx-indicator-border-color: var(--itx-neutral-2);
+	--itx-indicator-border-width: 1px;
+	--itx-indicator-border-style: solid;
+	--itx-indicator-border-radius: var(--itx-radius-2);
+
+	--itx-indicator-background-image: ;
+	--itx-indicator-box-shadow:
+		inset -2px -2px 4px -1px rgb(200 200 200 / 0.25),
+		inset 2px 2px 4px -1px rgb(200 200 200 / 0.25),
+		inset -1px -1px 1px 0 rgb(200 200 200 / 0.55),
+		inset 1px 1px 1px 0 rgb(200 200 200 / 0.55);
+
+	/* ── Transition ─────────────────────────────────────────────────────── */
+	--itx-indicator-transition-duration: 150ms;
+	--itx-indicator-transition-timing-function: ease;
+}

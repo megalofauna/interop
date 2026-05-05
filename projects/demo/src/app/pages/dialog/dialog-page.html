@@ -12,45 +12,66 @@
 	<!-- ── Basic ─────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic open/close">
-			<button interop-button (click)="basicOpen.set(true)">Open docking request</button>
+			<button interop-button (click)="basicOpen.set(true)">
+				Open docking request
+			</button>
 
-			<dialog interop-dialog
+			<dialog
+				interop-dialog
 				[isOpen]="basicOpen()"
 				(closed)="onClosed($event)"
-				class="dialog-page__dialog">
+				class="dialog-page__dialog"
+			>
 				<h2 class="dialog-page__title">Docking request</h2>
 				<p>Vessel ID: UCS-7741 requests permission to dock at Bay 3.</p>
 				<p>ETA: 14 minutes. Cargo: general supply run.</p>
 				<div class="dialog-page__actions">
-					<button interop-button (click)="basicOpen.set(false)">Deny</button>
-					<button interop-button (click)="basicOpen.set(false)">Approve</button>
+					<button
+						interop-button="assert neutral"
+						(click)="basicOpen.set(false)"
+					>
+						Deny
+					</button>
+					<button interop-button="assert" (click)="basicOpen.set(false)">
+						Approve
+					</button>
 				</div>
 			</dialog>
 
 			<demo-state>
 				<demo-state-item label="Open">{{ basicOpen() }}</demo-state-item>
-				<demo-state-item label="Last closed by">{{ closeReason() }}</demo-state-item>
+				<demo-state-item label="Last closed by"
+					>{{ closeReason() }}</demo-state-item
+				>
 			</demo-state>
 		</demo-example>
 
 		<demo-example label="Escape locked">
-			<button interop-button (click)="lockedOpen.set(true)">Open locked dialog</button>
+			<button interop-button (click)="lockedOpen.set(true)">
+				Open locked dialog
+			</button>
 
-			<dialog interop-dialog
+			<dialog
+				interop-dialog
 				[isOpen]="lockedOpen()"
 				[disableEscape]="true"
 				[dismissOnBackdrop]="false"
 				(closed)="lockedOpen.set(false)"
-				class="dialog-page__dialog">
+				class="dialog-page__dialog"
+			>
 				<h2 class="dialog-page__title">Emergency protocol</h2>
-				<p>Hull breach detected on deck 3. Confirm evacuation order before proceeding.</p>
+				<p>
+					Hull breach detected on deck 3. Confirm evacuation order before
+					proceeding.
+				</p>
 				<div class="dialog-page__actions">
-					<button interop-button (click)="lockedOpen.set(false)">Confirm evacuation</button>
+					<button interop-button="action-plus" (click)="lockedOpen.set(false)">
+						Confirm evacuation
+					</button>
 				</div>
 			</dialog>
 		</demo-example>
 	</demo-section>
-
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">

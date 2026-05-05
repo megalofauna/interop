@@ -21,6 +21,19 @@
 @import "./tokens/color.css";
 @import "./tokens/spacing.css";
 @import "./tokens/shape.css";
+@import "./tokens/managed-radius.css";
 @import "./tokens/motion.css";
 @import "./tokens/typography.css";
 @import "./tokens/elevation.css";
+
+/* ── Components (structural foundation) ─────────────────────────────────── */
+/*    Rendering rules for each component, decoupled from Angular imports.   */
+/*    Token values are layered on top by the active theme.                  */
+
+@import "./components/button.css";
+@import "./components/indicator.css";
+@import "./components/segment.css";
+
+/* ── Utilities ──────────────────────────────────────────────────────────── */
+
+@import "./utilities/rule.css";

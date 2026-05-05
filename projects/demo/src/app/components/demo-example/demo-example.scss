@@ -1,31 +1,58 @@
 :host {
 	display: block;
+	--itx-context-radius: var(--itx-radius-lg);
+
+	margin-block-start: var(--itx-spacing-12);
 }
 
 .demo-example__label {
-	margin: 0 0 var(--itx-spacing-2) 0;
-	font-size: var(--itx-font-size-caption);
+	margin: 0 0 var(--itx-spacing-6) 0;
+	font-size: var(--itx-fs-base);
 	font-weight: 500;
-	color: var(--itx-muted);
+	color: var(--itx-neutral-11);
+}
+
+.demo-example__lede {
+	margin: 0 0 0 0;
+
+	/* Override interop-content tokens for the lede context.
+	   Encapsulation gotcha: rules like `& p { … }` don't reach
+	   <interop-content>'s emitted elements — set CSS variables here
+	   and the renderer's stylesheet picks them up. */
+	--interop-content-paragraph-gap: var(--itx-spacing-3);
+	--interop-content-line-height: 1.5;
+	--interop-content-color: var(--itx-neutral-10);
 }
 
 .demo-example__preview {
-	--itx-code-block-border-radius: var(--itx-radius-3);
-	border: 1px solid var(--itx-surface-below);
-	border-radius: var(--itx-radius-lg);
-	background: var(--itx-surface-above);
+	border: 2px solid var(--itx-neutral-2);
+	border-radius: var(--itx-context-radius, 12px);
+	background: var(--itx-neutral-4);
 	box-shadow: var(--itx-shadow-sm);
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	padding: var(--itx-spacing-6);
+}
+
+demo-state {
+	width: 12px;
 }
 
 .demo-example__canvas {
 	display: flex;
 	align-items: flex-start;
 	flex-wrap: wrap;
-	gap: var(--itx-spacing-6);
-	padding: var(--itx-spacing-6);
+}
+
+.demo-example__canvas.has-state {
+	--demo-state-flex: 1 1 auto;
+	.demo-example__ui {
+		flex: 1 1 auto;
+	}
+	.demo-example__state {
+		flex: 1 1 40%;
+	}
 }
 
 .demo-example__ui {
@@ -34,10 +61,12 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-spacing-4);
+	/* padding: var(--itx-spacing-6); */
 }
 
 .demo-example__code {
+	/* padding: var(--itx-spacing-6); */
 	&:not(:empty) {
-		border-top: 1px solid var(--itx-surface-below);
+		background: var(--itx-neutral-3);
 	}
 }

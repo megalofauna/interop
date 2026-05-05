@@ -42,7 +42,9 @@ export const routes: Routes = [
 		path: "components/expansion-panel",
 		title: "Expansion Panel — Interop",
 		loadComponent: () =>
-			import("./pages/expansion-panel/expansion-panel-page").then((m) => m.ExpansionPanelPage),
+			import("./pages/expansion-panel/expansion-panel-page").then(
+				(m) => m.ExpansionPanelPage,
+			),
 	},
 	{
 		path: "components/chip",
@@ -65,8 +67,7 @@ export const routes: Routes = [
 	{
 		path: "components/kbd",
 		title: "Kbd — Interop",
-		loadComponent: () =>
-			import("./pages/kbd/kbd-page").then((m) => m.KbdPage),
+		loadComponent: () => import("./pages/kbd/kbd-page").then((m) => m.KbdPage),
 	},
 	{
 		path: "components/list",
@@ -81,6 +82,12 @@ export const routes: Routes = [
 			import("./pages/listbox/listbox-page").then((m) => m.ListboxPage),
 	},
 	{
+		path: "components/progress",
+		title: "Progress — Interop",
+		loadComponent: () =>
+			import("./pages/progress/progress-page").then((m) => m.ProgressPage),
+	},
+	{
 		path: "components/radio",
 		title: "Radio — Interop",
 		loadComponent: () =>
@@ -90,7 +97,9 @@ export const routes: Routes = [
 		path: "components/scroll-area",
 		title: "Scroll Area — Interop",
 		loadComponent: () =>
-			import("./pages/scroll-area/scroll-area-page").then((m) => m.ScrollAreaPage),
+			import("./pages/scroll-area/scroll-area-page").then(
+				(m) => m.ScrollAreaPage,
+			),
 	},
 	{
 		path: "components/table",
@@ -126,7 +135,15 @@ export const routes: Routes = [
 		path: "components/segmented-control",
 		title: "Segmented Control — Interop",
 		loadComponent: () =>
-			import("./pages/segmented-control/segmented-control-page").then((m) => m.SegmentedControlPage),
+			import("./pages/segmented-control/segmented-control-page").then(
+				(m) => m.SegmentedControlPage,
+			),
+	},
+	{
+		path: "components/slider",
+		title: "Slider — Interop",
+		loadComponent: () =>
+			import("./pages/slider/slider-page").then((m) => m.SliderPage),
 	},
 	{
 		path: "components/toggle",
@@ -144,13 +161,23 @@ export const routes: Routes = [
 		path: "components/auto-render",
 		title: "Auto Render — Interop",
 		loadComponent: () =>
-			import("./pages/auto-render/auto-render-page").then((m) => m.AutoRenderPage),
+			import("./pages/auto-render/auto-render-page").then(
+				(m) => m.AutoRenderPage,
+			),
 	},
 	{
 		path: "components/code-renderer",
 		title: "Code Renderer — Interop",
 		loadComponent: () =>
-			import("./pages/code-renderer/code-renderer-page").then((m) => m.CodeRendererPage),
+			import("./pages/code-renderer/code-renderer-page").then(
+				(m) => m.CodeRendererPage,
+			),
+	},
+	{
+		path: "content",
+		title: "Content (djot) — Interop",
+		loadComponent: () =>
+			import("./pages/content/content-page").then((m) => m.ContentPage),
 	},
 	{
 		path: "**",

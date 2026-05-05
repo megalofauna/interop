@@ -1,0 +1,126 @@
+/*
+ * Protocol — Foundation
+ *
+ * Palette, semantic tokens, and atmosphere. All values use light-dark() so
+ * the entire foundation is defined once. Mode switching is handled by toggling
+ * color-scheme on [interop-root] — no token duplication needed.
+ */
+
+:where([interop-root]) {
+	color-scheme: light dark;
+
+	/* ── Typography ──────────────────────────────────────────────────── */
+	--itx-font-family-sans: "Figtree", system-ui, sans-serif;
+	--itx-font-family-mono:
+		ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+
+	/* ── Neutral palette ─────────────────────────────────────────────── */
+	/*    light: 1 = lightest → 12 = darkest                             */
+	/*    dark:  1 = darkest  → 12 = lightest                            */
+	--itx-neutral-1: light-dark(oklch(0.99 0.003 250), oklch(0.1 0.003 250));
+	--itx-neutral-2: light-dark(oklch(0.96 0.005 250), oklch(0.15 0.004 250));
+	--itx-neutral-3: light-dark(oklch(0.93 0.007 250), oklch(0.22 0.005 250));
+	--itx-neutral-3_5: light-dark(oklch(0.91 0.007 250), oklch(0.24 0.005 250));
+	--itx-neutral-4: light-dark(oklch(0.89 0.008 250), oklch(0.27 0.006 250));
+	--itx-neutral-4_5: light-dark(oklch(0.86 0.008 250), oklch(0.3 0.006 250));
+	--itx-neutral-5: light-dark(oklch(0.83 0.012 250), oklch(0.33 0.007 250));
+	--itx-neutral-6: light-dark(oklch(0.76 0.012 250), oklch(0.38 0.009 250));
+	--itx-neutral-7: light-dark(oklch(0.68 0.012 250), oklch(0.46 0.01 250));
+	--itx-neutral-8: light-dark(oklch(0.58 0.011 250), oklch(0.55 0.01 250));
+	--itx-neutral-9: light-dark(oklch(0.48 0.01 250), oklch(0.64 0.011 250));
+	--itx-neutral-10: light-dark(oklch(0.38 0.009 250), oklch(0.72 0.01 250));
+	--itx-neutral-10_5: light-dark(oklch(0.33 0.009 250), oklch(0.77 0.01 250));
+	--itx-neutral-11: light-dark(oklch(0.28 0.008 250), oklch(0.82 0.008 250));
+	--itx-neutral-12: light-dark(oklch(0.15 0.005 250), oklch(0.92 0.004 250));
+
+	/* ── Colorway palette ────────────────────────────────────────────── */
+	/*    Anchored to Science Blue (#0066CC) at slot 8 in light mode     */
+	--itx-colorway-1: light-dark(oklch(0.97 0.01 264), oklch(0.12 0.022 264));
+	--itx-colorway-2: light-dark(oklch(0.93 0.022 264), oklch(0.17 0.038 264));
+	--itx-colorway-3: light-dark(oklch(0.87 0.05 264), oklch(0.22 0.06 264));
+	--itx-colorway-4: light-dark(oklch(0.8 0.088 264), oklch(0.28 0.088 264));
+	--itx-colorway-5: light-dark(oklch(0.72 0.13 264), oklch(0.36 0.118 264));
+	--itx-colorway-6: light-dark(oklch(0.63 0.162 264), oklch(0.44 0.15 264));
+	--itx-colorway-7: light-dark(oklch(0.56 0.182 264), oklch(0.52 0.17 264));
+	--itx-colorway-8: light-dark(oklch(0.5 0.19 264), oklch(0.6 0.178 264));
+	--itx-colorway-9: light-dark(oklch(0.43 0.182 264), oklch(0.68 0.172 264));
+	--itx-colorway-10: light-dark(oklch(0.36 0.165 264), oklch(0.76 0.148 264));
+	--itx-colorway-11: light-dark(oklch(0.28 0.135 264), oklch(0.84 0.105 264));
+	--itx-colorway-12: light-dark(oklch(0.19 0.088 264), oklch(0.92 0.048 264));
+
+	/* ── Elevation slots ─────────────────────────────────────────────── */
+	--_e-n5: light-dark(var(--itx-neutral-7), var(--itx-neutral-1));
+	--_e-n4: light-dark(var(--itx-neutral-6), var(--itx-neutral-1));
+	--_e-n3: light-dark(var(--itx-neutral-5), var(--itx-neutral-1));
+	--_e-n2: light-dark(var(--itx-neutral-4), var(--itx-neutral-2));
+	--_e-n1: light-dark(var(--itx-neutral-3), var(--itx-neutral-2));
+	--_e-0: light-dark(var(--itx-neutral-2), var(--itx-neutral-3));
+	--_e-p1: light-dark(var(--itx-neutral-1), var(--itx-neutral-4));
+	--_e-p2: light-dark(var(--itx-neutral-1), var(--itx-neutral-5));
+	--_e-p3: light-dark(var(--itx-neutral-1), var(--itx-neutral-6));
+	--_e-p4: light-dark(var(--itx-neutral-1), var(--itx-neutral-7));
+	--_e-p5: light-dark(var(--itx-neutral-1), var(--itx-neutral-8));
+
+	/* ── Semantic — surface & text ───────────────────────────────────── */
+	--itx-page: light-dark(var(--itx-neutral-2), var(--itx-neutral-3));
+	--itx-on-surface: var(--itx-neutral-12);
+	--itx-muted: var(--itx-neutral-8);
+	--itx-border: light-dark(var(--itx-neutral-5), var(--itx-neutral-6));
+	--itx-surface-hover: light-dark(var(--itx-neutral-3), var(--itx-neutral-4));
+
+	/* ── Semantic — colorway ─────────────────────────────────────────── */
+	--itx-colorway: light-dark(var(--itx-colorway-8), var(--itx-colorway-9));
+	--itx-colorway-hover: light-dark(
+		var(--itx-colorway-9),
+		var(--itx-colorway-10)
+	);
+	--itx-on-colorway: light-dark(var(--itx-neutral-1), var(--itx-neutral-2));
+
+	/* ── Status accents ──────────────────────────────────────────────── */
+	--itx-danger: light-dark(oklch(0.58 0.22 27), oklch(0.68 0.2 27));
+	--itx-info: light-dark(oklch(0.55 0.19 250), oklch(0.65 0.17 250));
+	--itx-success: light-dark(oklch(0.62 0.19 145), oklch(0.72 0.17 145));
+	--itx-warning: light-dark(oklch(0.75 0.16 85), oklch(0.8 0.14 85));
+
+	/* ── Status surfaces ─────────────────────────────────────────────── */
+	--itx-info-surface: light-dark(oklch(0.95 0.03 250), oklch(0.25 0.04 250));
+	--itx-on-info-surface: light-dark(oklch(0.35 0.1 250), oklch(0.8 0.08 250));
+
+	--itx-warning-surface: light-dark(oklch(0.96 0.04 85), oklch(0.26 0.05 85));
+	--itx-on-warning-surface: light-dark(oklch(0.4 0.12 85), oklch(0.82 0.08 85));
+
+	--itx-success-surface: light-dark(oklch(0.95 0.04 145), oklch(0.3 0.05 165));
+	--itx-on-success-surface: light-dark(oklch(0.33 0.1 145), oklch(0.8 0.1 165));
+
+	--itx-danger-surface: light-dark(oklch(0.95 0.03 27), oklch(0.25 0.04 27));
+	--itx-on-danger-surface: light-dark(oklch(0.38 0.12 27), oklch(0.82 0.08 27));
+
+	/* ── Atmosphere ──────────────────────────────────────────────────── */
+	--itx-overlay: light-dark(oklch(0.15 0 0 / 0.5), oklch(0.05 0 0 / 0.65));
+
+	--itx-shadow-sm: light-dark(
+		0 1px 2px 0 oklch(0.15 0 0 / 0.06),
+		0 1px 2px 0 oklch(0 0 0 / 0.25)
+	);
+	--itx-shadow-md: light-dark(
+		0 4px 6px -1px oklch(0.15 0 0 / 0.08),
+		0 2px 4px -2px oklch(0.15 0 0 / 0.06),
+		0 4px 6px -1px oklch(0 0 0 / 0.35),
+		0 2px 4px -2px oklch(0 0 0 / 0.3)
+	);
+	--itx-shadow-lg: light-dark(
+		0 10px 15px -3px oklch(0.15 0 0 / 0.1),
+		0 4px 6px -4px oklch(0.15 0 0 / 0.1),
+		0 10px 15px -3px oklch(0 0 0 / 0.4),
+		0 4px 6px -4px oklch(0 0 0 / 0.3)
+	);
+}
+
+/* ── Explicit mode pins ──────────────────────────────────────────────────── */
+
+:where([interop-root][data-theme="light"]) {
+	color-scheme: light;
+}
+:where([interop-root][data-theme="dark"]) {
+	color-scheme: dark;
+}

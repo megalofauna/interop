@@ -1,0 +1,180 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Progress</h1>
+		<p class="demo-page__lead">
+			Semantic progress bar built on the native
+			<code>&lt;progress&gt;</code> element. Correct indeterminate ARIA,
+			first-class <code>valueText</code> for humanized announcements, and
+			auto-wired labelling via a companion directive.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Determinate">
+			<div class="progress-demo">
+				<span interop-progress-label>Uploading firmware</span>
+				<progress
+					interop-progress
+					[value]="uploadProgress()"
+					[max]="100"
+				></progress>
+				<div class="progress-demo__actions">
+					<button interop-button="action" (click)="increment()">+10</button>
+					<button interop-button="action" (click)="reset()">Reset</button>
+				</div>
+			</div>
+			<demo-state>
+				<demo-state-item label="value">{{ uploadProgress() }}</demo-state-item>
+				<demo-state-item label="max">100</demo-state-item>
+			</demo-state>
+			<itx-code-block
+				language="html"
+				[tokens]="determinateTokens.value() ?? null"
+			>
+				<pre><code [textContent]="determinateCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example label="Indeterminate">
+			<div class="progress-demo">
+				<span interop-progress-label>Connecting to relay</span>
+				<progress interop-progress [indeterminate]="true"></progress>
+			</div>
+			<itx-code-block
+				language="html"
+				[tokens]="indeterminateTokens.value() ?? null"
+			>
+				<pre><code [textContent]="indeterminateCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Step-based ─────────────────────────────────────────────────────── -->
+	<demo-section id="step-based" heading="Step-based with valueText">
+		<demo-example label="Humanized announcements">
+			<div class="progress-demo">
+				<span interop-progress-label>Account setup</span>
+				<progress
+					interop-progress
+					[value]="currentStep()"
+					[min]="1"
+					[max]="totalSteps"
+					[valueText]="currentStep() + ' of ' + totalSteps + ' steps complete'"
+				></progress>
+				<div class="progress-demo__actions">
+					<button
+						interop-button
+						(click)="prevStep()"
+						[disabled]="currentStep() === 1"
+					>
+						Previous
+					</button>
+					<button
+						interop-button
+						(click)="nextStep()"
+						[disabled]="currentStep() === totalSteps"
+					>
+						Next
+					</button>
+				</div>
+			</div>
+			<demo-state>
+				<demo-state-item label="aria-valuenow"
+					>{{ currentStep() }}</demo-state-item
+				>
+				<demo-state-item label="aria-valuemin">1</demo-state-item>
+				<demo-state-item label="aria-valuemax"
+					>{{ totalSteps }}</demo-state-item
+				>
+				<demo-state-item label="aria-valuetext"
+					>{{ currentStep() }} of {{ totalSteps }} steps
+					complete</demo-state-item
+				>
+			</demo-state>
+			<itx-code-block [files]="stepBasedFiles()" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Orientation ────────────────────────────────────────────────────── -->
+	<demo-section id="orientation" heading="Orientation">
+		<demo-example label="Vertical">
+			<div class="progress-demo progress-demo--vertical">
+				<progress
+					interop-progress
+					[value]="75"
+					[orientation]="'vertical'"
+					style="--itx-progress-length: 10rem"
+					aria-label="Fuel reserve"
+				></progress>
+				<progress
+					interop-progress
+					[indeterminate]="true"
+					[orientation]="'vertical'"
+					style="--itx-progress-length: 10rem"
+					aria-label="Reactor calibration"
+				></progress>
+			</div>
+			<itx-code-block language="html" [tokens]="verticalTokens.value() ?? null">
+				<pre><code [textContent]="verticalCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Status companion ───────────────────────────────────────────────── -->
+	<demo-section id="status" heading="Status Companion">
+		<demo-example label="Milestone announcements">
+			<div class="progress-demo">
+				<span interop-progress-label>Syncing data</span>
+				<progress
+					interop-progress
+					[value]="syncProgress()"
+					[max]="100"
+				></progress>
+				<interop-progress-status>
+					@if (syncProgress() >= 50) { Half way there! } @if (syncProgress() ===
+					100) { Sync complete — all systems nominal. }
+				</interop-progress-status>
+				<div class="progress-demo__actions">
+					<button interop-button="action-minus micro" (click)="syncIncrement()">
+						+20
+					</button>
+					<button interop-button="action-minus micro" (click)="syncReset()">
+						Reset
+					</button>
+				</div>
+			</div>
+			<demo-state>
+				<demo-state-item label="AT announces">
+					{{ syncProgress() === 100 ? 'Sync complete — all systems nominal.' :
+					'(silent)' }}
+				</demo-state-item>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="statusTokens.value() ?? null">
+				<pre><code [textContent]="statusTemplateCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API — Inputs">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

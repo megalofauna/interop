@@ -49,9 +49,11 @@ export class DemoNav {
 				{ label: "Kbd", route: "/components/kbd" },
 				{ label: "List", route: "/components/list" },
 				{ label: "Listbox", route: "/components/listbox" },
+				{ label: "Progress", route: "/components/progress" },
 				{ label: "Radio", route: "/components/radio" },
 				{ label: "Scroll Area", route: "/components/scroll-area" },
 				{ label: "Segmented Control", route: "/components/segmented-control" },
+				{ label: "Slider", route: "/components/slider" },
 				{ label: "Stepper", route: "/components/stepper" },
 				{ label: "Table", route: "/components/table" },
 				{ label: "Tabs", route: "/components/tabs" },
@@ -63,17 +65,13 @@ export class DemoNav {
 		},
 		{
 			label: "Directives",
-			items: [
-				{ label: "Auto Render", route: "/components/auto-render" },
-			],
+			items: [{ label: "Auto Render", route: "/components/auto-render" }],
 		},
 		{
 			label: "Primitives",
-			items: [
-				{ label: "Code Renderer", route: "/components/code-renderer" },
-			],
+			items: [{ label: "Code Renderer", route: "/components/code-renderer" }],
 		},
-		{ label: "Containers", disabled: true, items: [] },
+		{ label: "Rigs", disabled: true, items: [] },
 		{ label: "Services", disabled: true, items: [] },
 		{ label: "Composites", disabled: true, items: [] },
 	];

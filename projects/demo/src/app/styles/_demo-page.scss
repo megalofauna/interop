@@ -9,10 +9,16 @@
 	max-width: 64rem;
 }
 
+// Offset anchor scroll targets to clear the sticky page nav
+.demo-page demo-section {
+	scroll-margin-top: var(--demo-scroll-offset, 3.5rem);
+}
+
 // ── Header ───────────────────────────────────────────────────────────────────
 
 .demo-page__header {
-	margin-bottom: var(--itx-spacing-10);
+	margin-top: var(--itx-spacing-16);
+	padding-block: var(--itx-spacing-10);
 }
 
 .demo-page__category {
@@ -76,3 +82,18 @@
 	font-size: var(--itx-font-size-caption);
 	color: var(--itx-muted);
 }
+/*
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *   --itx-pn-bg                  Background color
+ *   --itx-pn-padding-block       Block padding
+ *   --itx-pn-padding-inline      Inline padding
+ *   --itx-pn-border-color        Bottom border color
+ *   --itx-pn-border-width        Bottom border width
+ *   --itx-pn-gap                 Gap between links
+ *   --itx-pn-font-size           Link font size
+ *   --itx-pn-font-weight         Link font weight
+ *   --itx-pn-link-color          Link color (default)
+ *   --itx-pn-link-color-hover    Link color (hover)
+ *   --itx-pn-link-color-active   Link color (aria-current)
+ *   --itx-pn-z-index             Z-index in sticky mode
+ */

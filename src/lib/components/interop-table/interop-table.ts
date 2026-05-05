@@ -28,6 +28,28 @@ import { createComponentTrackByFn } from "../../utils/track-by";
 import { InteropCellDef, InteropCellContext } from "./interop-cell-def";
 
 /**
+ * A sentinel item that renders as a group header row spanning all columns.
+ * Include inline in the collection alongside data rows to create visual groups.
+ *
+ * @example
+ * ```ts
+ * entries = [
+ *   { groupLabel: 'Layout' },
+ *   { property: '--itx-button-display', default: 'inline-flex' },
+ *   { groupLabel: 'Typography' },
+ *   { property: '--itx-button-font-size', default: 'var(--itx-fs-label)' },
+ * ];
+ * ```
+ */
+export interface TableGroupRow {
+	groupLabel: string;
+}
+
+export function isTableGroupRow(item: unknown): item is TableGroupRow {
+	return typeof item === "object" && item !== null && "groupLabel" in item;
+}
+
+/**
  * Column definition for InteropTable.
  */
 export interface TableColumn<T = any> {
@@ -249,6 +271,8 @@ export class InteropTable<T = any> implements OnDestroy {
 	getStickyLeft(column: TableColumn<T>): string {
 		return `${column.stickyLeft ?? 0}px`;
 	}
+
+	readonly isGroupRow = isTableGroupRow;
 
 	trackByFn = createComponentTrackByFn<T>(
 		() => this.trackBy(),

@@ -21,12 +21,21 @@
  *   --itx-cb-radius               Host border radius
  *   --itx-cb-tab-radius           Tab border radius (top corners)
  *   --itx-cb-actions-radius       Actions toolbar border radius
+
+ *   --itx-spacing-offset
+ 			--itx-cr-body-bg
+
  */
 
 :host {
+	/* --itx-button-background: transparent; */
+	--itx-cr-body-bg: var(--itx-neutral-3);
 	display: block;
 	position: relative;
-	border-radius: var(--itx-cb-radius, var(--itx-radius-md));
+	border-radius: var(
+		--itx-cb-radius,
+		var(--itx-context-radius, var(--itx-radius-md))
+	);
 	overflow: hidden;
 }
 
@@ -34,9 +43,10 @@
 	display: flex;
 	align-items: center;
 	gap: var(--itx-spacing-2);
-	padding-block: var(--itx-cb-header-padding-block, var(--itx-spacing-4));
-	padding-inline: var(--itx-cb-header-padding-inline, var(--itx-spacing-4));
-	background: var(--itx-cb-header-bg, transparent);
+	padding-block: var(--itx-cb-header-padding-block, var(--itx-spacing-2));
+	padding-inline: var(--itx-cb-header-padding-inline, var(--itx-spacing-2));
+	background-color: var(--itx-neutral-3);
+	background-image: var(--itx-cb-header-bg, transparent);
 }
 
 .itx-cb__tablist {
@@ -62,7 +72,10 @@
 
 	&[aria-selected="true"] {
 		color: var(--itx-cb-tab-color-active, var(--itx-on-surface));
-		border-block-end-color: var(--itx-cb-tab-indicator-color, var(--itx-colorway));
+		border-block-end-color: var(
+			--itx-cb-tab-indicator-color,
+			var(--itx-colorway)
+		);
 	}
 
 	&:focus-visible {
@@ -73,8 +86,8 @@
 
 		&[aria-selected="true"]:focus-visible {
 			border-block-end-color: oklch(
-				from var(--itx-cb-tab-indicator-color, var(--itx-colorway)) calc(l - 0.12)
-					calc(c + 0.15) h
+				from var(--itx-cb-tab-indicator-color, var(--itx-colorway))
+					calc(l - 0.12) calc(c + 0.15) h
 			);
 		}
 	}
@@ -86,37 +99,35 @@
 	font-weight: var(--itx-cb-label-font-weight, 500);
 	letter-spacing: var(--itx-cb-label-letter-spacing, 0.05em);
 	color: var(--itx-cb-label-color, var(--itx-muted));
+	padding-inline-start: var(--itx-spacing-3);
 }
 
 .itx-cb__actions {
 	--itx-toolbar-gap: var(--itx-spacing-1);
 	border-radius: var(--itx-cb-actions-radius, var(--itx-radius-sm));
-	margin-inline-start: auto;
-	opacity: 0;
-	transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
-}
 
-:host:hover .itx-cb__actions,
-:host:focus-within .itx-cb__actions {
-	opacity: 1;
+	margin-inline-start: auto;
+
+	flex: 0 1 auto;
+	border: 0px solid transparent;
 }
 
 .itx-cb__btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: var(--itx-spacing-1);
-	border-radius: var(--itx-radius-sm);
-	background: transparent;
-	border: none;
-	color: inherit;
-	cursor: pointer;
-	line-height: 1;
+	width: var(--itx-space-4);
+	height: auto;
+	aspect-ratio: 1;
+	--itx-button-border-radius: 9999px;
+	corner-shape: round;
+	/* --itx-button-border-radius: 50%; */
 
-	&:focus-visible {
+	/* &:focus-visible {
 		outline: 2px solid var(--itx-colorway);
 		outline-offset: 2px;
-	}
+	} */
+}
+
+.itx-cr__body {
+	background: red;
 }
 
 .itx-cb__sr {

@@ -1,0 +1,54 @@
+.slider-demo {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: 100%;
+	max-width: 28rem;
+
+	&__row {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+
+		label {
+			font-weight: 500;
+		}
+
+		output {
+			font-variant-numeric: tabular-nums;
+			color: var(--itx-on-surface-muted, currentColor);
+		}
+	}
+
+	&__range-output {
+		display: inline-flex;
+		gap: 0.4rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__marks-labels {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.8rem;
+		color: var(--itx-on-surface-muted, currentColor);
+	}
+
+	&__submit {
+		align-self: flex-start;
+		padding: 0.5rem 1rem;
+		font: inherit;
+		cursor: pointer;
+	}
+
+	&__vertical-readout {
+		font-variant-numeric: tabular-nums;
+	}
+
+	&--vertical {
+		flex-direction: row;
+		align-items: center;
+		gap: 1.5rem;
+		width: auto;
+	}
+}

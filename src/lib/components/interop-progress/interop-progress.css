@@ -1,0 +1,89 @@
+/*
+ * InteropProgress — styles for progress[interop-progress]
+ *
+ * Visual approach: appearance: none strips browser chrome; fill and track
+ * are styled via WebKit pseudo-elements. Firefox's ::-moz-progress-bar
+ * handles the fill; indeterminate mode falls back to Firefox's native
+ * animation (which is acceptable) rather than duplicating shimmer logic.
+ *
+ * Available tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   --itx-progress-track        Track background color
+ *   --itx-progress-fill         Fill / indicator color
+ *   --itx-progress-height       Track thickness (horizontal) / width (vertical)
+ *   --itx-progress-length       Track length when vertical (width when horizontal
+ *                               is always 100% of container)
+ *   --itx-progress-radius       Track corner radius
+ *   --itx-progress-duration     Fill transition duration
+ */
+
+:host {
+	-webkit-appearance: none;
+	appearance: none;
+	display: block;
+	width: 100%;
+	height: var(--itx-progress-height, 0.5rem);
+	border: none;
+	border-radius: var(--itx-progress-radius, var(--itx-radius-full, 9999px));
+	overflow: hidden;
+}
+
+/* ── Track ───────────────────────────────────────────────────────────────── */
+
+:host::-webkit-progress-bar {
+	background-color: var(--itx-progress-track, var(--itx-neutral-4));
+	border-radius: inherit;
+}
+
+/* ── Determinate fill ────────────────────────────────────────────────────── */
+
+:host::-webkit-progress-value {
+	background-color: var(--itx-progress-fill, var(--itx-colorway));
+	border-radius: inherit;
+	transition: width var(--itx-progress-duration, 200ms) ease;
+}
+
+/* Firefox */
+:host::-moz-progress-bar {
+	background-color: var(--itx-progress-fill, var(--itx-colorway));
+	border-radius: inherit;
+}
+
+/* ── Indeterminate ───────────────────────────────────────────────────────── */
+
+@keyframes itx-progress-shimmer {
+	0%   { background-position: 200% center; }
+	100% { background-position: -200% center; }
+}
+
+:host(:indeterminate)::-webkit-progress-bar {
+	background-image: linear-gradient(
+		90deg,
+		var(--itx-progress-track, var(--itx-neutral-4)) 25%,
+		var(--itx-progress-fill, var(--itx-colorway)) 50%,
+		var(--itx-progress-track, var(--itx-neutral-4)) 75%
+	);
+	background-size: 200% 100%;
+	animation: itx-progress-shimmer 1.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:host(:indeterminate)::-webkit-progress-bar {
+		animation: none;
+		/* Replace motion with a static split that still reads as "active". */
+		background-image: linear-gradient(
+			90deg,
+			var(--itx-progress-track, var(--itx-neutral-4)) 50%,
+			var(--itx-progress-fill, var(--itx-colorway)) 50%
+		);
+		opacity: 0.6;
+	}
+}
+
+/* ── Vertical orientation ────────────────────────────────────────────────── */
+
+:host([data-orientation="vertical"]) {
+	writing-mode: vertical-lr;
+	width: var(--itx-progress-height, 0.5rem);
+	height: var(--itx-progress-length, 8rem);
+}

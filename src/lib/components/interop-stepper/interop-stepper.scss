@@ -4,7 +4,7 @@
 // rearranges the nav + panels without any DOM changes. Both orientations share
 // the same markup.
 
-:host {
+:where(interop-stepper) {
   display: grid;
   gap: var(--itx-stepper-gap, 1.5rem);
 
@@ -40,14 +40,14 @@ ol.interop-step-list {
   padding: 0;
 
   // Horizontal: steps laid out in a row
-  :host([data-orientation="horizontal"]) &,
-  :host(:not([data-orientation])) & {
+  :where(interop-stepper[data-orientation="horizontal"]) &,
+  :where(interop-stepper:not([data-orientation])) & {
     flex-direction: row;
     align-items: flex-start;
   }
 
   // Vertical: steps stacked in a column
-  :host([data-orientation="vertical"]) & {
+  :where(interop-stepper[data-orientation="vertical"]) & {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -65,7 +65,7 @@ ol.interop-step-list {
 // In vertical orientation the connector is a vertical line on the left side of
 // the step list, connecting indicator centres top-to-bottom.
 
-:host([data-orientation="vertical"]) {
+:where(interop-stepper[data-orientation="vertical"]) {
   li[interop-step]:not(:last-child)::after {
     // Override the horizontal positioning from interop-step.scss
     --_size: var(--itx-stepper-indicator-size, 2rem);

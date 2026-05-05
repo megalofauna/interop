@@ -2,6 +2,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	Renderer2,
 	Signal,
 	afterNextRender,
 	computed,
@@ -12,6 +13,7 @@ import {
 	isDevMode,
 	output,
 	signal,
+	untracked,
 } from "@angular/core";
 import {
 	INTEROP_SEGMENTED_CONTROL,
@@ -19,6 +21,7 @@ import {
 	SegmentRef,
 } from "./interop-segmented-control.token";
 import { InteropSegment } from "./interop-segment/interop-segment";
+import { InteropIndicator } from "../interop-indicator/interop-indicator";
 
 /**
  * InteropSegmentedControl — A semantically correct segmented control built on
@@ -60,8 +63,12 @@ import { InteropSegment } from "./interop-segment/interop-segment";
 @Component({
 	selector: "fieldset[interop-segmented-control]",
 	standalone: true,
+	imports: [InteropIndicator],
 	template: `
 		<legend [class.interop-sr-only]="labelHidden()">{{ label() }}</legend>
+		@if (effectiveValue() !== null) {
+			<interop-indicator />
+		}
 		<ng-content></ng-content>
 	`,
 	styleUrl: "./interop-segmented-control.css",
@@ -77,6 +84,7 @@ import { InteropSegment } from "./interop-segment/interop-segment";
 })
 export class InteropSegmentedControl implements SegmentedControlRef {
 	private el = inject(ElementRef<HTMLFieldSetElement>);
+	private renderer = inject(Renderer2);
 
 	/**
 	 * Accessible label for the group, rendered as a `<legend>`.
@@ -160,6 +168,45 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 			if (idx >= 0) this._roverIndex.set(idx);
 		});
 
+		// Auto-inject <hr itx-rule> separators between segments. The rule
+		// utility (styles/utilities/rule.css) styles them as layout-inert
+		// dividers; axis is implicit so the same markup works for column or
+		// row tracks. Re-runs whenever segment count changes.
+		effect(() => {
+			const count = this.segments().length;
+			untracked(() => this.syncSeparators(count));
+		});
+	}
+
+	/**
+	 * Insert one <hr itx-rule> immediately before each segment except the
+	 * first, removing any stale separators we previously injected. The
+	 * separators are decorative (aria-hidden) and don't participate in
+	 * the segments() query (filtered by InteropSegment component class).
+	 */
+	private syncSeparators(_count: number): void {
+		const host = this.el.nativeElement;
+		const renderer = this.renderer;
+
+		// Tear down stale separators from a prior run.
+		const stale = Array.from(
+			host.querySelectorAll(":scope > [data-itx-rule-injected]"),
+		);
+		for (const node of stale) renderer.removeChild(host, node);
+
+		// Re-walk in DOM order so we can insert before each non-first
+		// <button interop-segment> we encounter.
+		const segmentEls: NodeListOf<HTMLButtonElement> = host.querySelectorAll(
+			":scope > button[interop-segment]",
+		);
+		segmentEls.forEach((segEl, i) => {
+			if (i === 0) return;
+			const hr = renderer.createElement("hr");
+			renderer.setAttribute(hr, "itx-rule", "");
+			renderer.setAttribute(hr, "data-itx-rule-injected", "");
+			renderer.setAttribute(hr, "aria-hidden", "true");
+			renderer.insertBefore(host, hr, segEl);
+		});
 	}
 
 	// ── SegmentedControlRef ──────────────────────────────────────────────────

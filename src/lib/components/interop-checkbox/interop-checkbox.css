@@ -6,12 +6,36 @@
 	user-select: none;
 	font-size: 1rem;
 	line-height: 1.5;
-	padding: var(--itx-spacing-2);
-	border-radius: var(--itx-radius-md);
+	/*
+	 * padding-block = base visual padding + touch inset.
+	 * ::before mirrors the inset so the hover bg stays inside the touch boundary.
+	 */
+	padding-block: calc(
+		var(--itx-spacing-2, 0.5rem) + var(--itx-control-touch-inset, 0.25em)
+	);
+	padding-inline: var(--itx-spacing-2, 0.5rem);
+	position: relative;
+	isolation: isolate;
 }
 
-:host:hover {
-	--itx-control-border-color: var(--itx-colorway);
+/* Hover background — inset from touch target boundary, rounded to match host */
+:host::before {
+	content: "";
+	position: absolute;
+	inset-block: var(--itx-control-touch-inset, 0.25em);
+	inset-inline: 0;
+	border-radius: var(--itx-radius-md);
+	z-index: -1;
+	pointer-events: none;
+	background-color: transparent;
+	border: 2px solid transparent;
+	transition:
+		background-color 75ms ease-in,
+		border-color 75ms ease-in;
+}
+
+:host:focus {
+	outline: none;
 }
 
 /* Visually hidden — remains in DOM for accessibility (focus, keyboard, form submission) */
@@ -32,8 +56,16 @@
 }
 
 /* Hover states */
-:host:hover:not(:has(input[type="checkbox"]:disabled)) {
+/*:host:hover:not(:has(input[type="checkbox"]:disabled))::before {
 	background-color: var(--itx-neutral-3);
+	border-color: var(--itx-colorway);
+}*/
+
+/* On fine pointers, collapse touch inset so hover bg fills full label area */
+@media (pointer: fine) {
+	:host {
+		--itx-control-touch-inset: 0em;
+	}
 }
 
 /* Reduced motion support */

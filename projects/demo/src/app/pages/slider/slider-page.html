@@ -1,0 +1,314 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Slider</h1>
+		<p class="demo-page__lead">
+			Semantic single-thumb and range sliders built on real
+			<code>&lt;input type="range"&gt;</code>
+			elements. Free form participation, free APG keyboard model, free RTL — the
+			directive decorates, never replaces.
+		</p>
+	</header>
+
+	<!-- ── Basic ──────────────────────────────────────────────────────────── -->
+	<demo-section id="basic" heading="Basic">
+		<demo-example label="Single thumb with output companion">
+			<div class="slider-demo">
+				<div class="slider-demo__row">
+					<label for="brightness">Brightness</label>
+					<output interop-slider-value for="brightness"></output>
+				</div>
+				<input
+					type="range"
+					interop-slider
+					id="brightness"
+					[min]="0"
+					[max]="100"
+					[step]="1"
+					[(value)]="brightness"
+					name="brightness"
+				/>
+			</div>
+			<demo-state>
+				<demo-state-item label="value">{{ brightness() }}</demo-state-item>
+				<demo-state-item label="aria-valuenow"
+					>{{ brightness() }}</demo-state-item
+				>
+				<demo-state-item label="aria-valuetext">(none)</demo-state-item>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="basicTokens.value() ?? null">
+				<pre><code [textContent]="basicCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Visual format ─────────────────────────────────────────────────── -->
+	<demo-section id="visual-format" heading="Visual formatting">
+		<demo-example
+			label="Currency display (visual only — SR still hears the raw number)"
+		>
+			<div class="slider-demo">
+				<div class="slider-demo__row">
+					<label for="price">Budget</label>
+					<output
+						interop-slider-value
+						for="price"
+						[format]="currencyFormatter"
+					></output>
+				</div>
+				<input
+					type="range"
+					interop-slider
+					id="price"
+					[min]="0"
+					[max]="5000"
+					[step]="50"
+					[(value)]="price"
+				/>
+			</div>
+			<demo-state>
+				<demo-state-item label="value">{{ price() }}</demo-state-item>
+				<demo-state-item label="display"
+					>{{ currencyFormatter(price()) }}</demo-state-item
+				>
+				<demo-state-item label="aria-valuetext"
+					>(unset — SR announces raw number)</demo-state-item
+				>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="currencyTokens.value() ?? null">
+				<pre><code [textContent]="currencyCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+
+		<demo-example
+			label="Discrete categories (slider's valueText drives both display + SR)"
+		>
+			<div class="slider-demo">
+				<div class="slider-demo__row">
+					<label for="size">Shirt size</label>
+					<output interop-slider-value for="size"></output>
+				</div>
+				<input
+					type="range"
+					interop-slider
+					id="size"
+					[min]="0"
+					[max]="4"
+					[step]="1"
+					[(value)]="sizeIndex"
+					[valueText]="sizeFormatter"
+				/>
+			</div>
+			<demo-state>
+				<demo-state-item label="value">{{ sizeIndex() }}</demo-state-item>
+				<demo-state-item label="aria-valuetext"
+					>{{ sizeFormatter(sizeIndex()) }}</demo-state-item
+				>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="sizesTokens.value() ?? null">
+				<pre><code [textContent]="sizesCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Marks ─────────────────────────────────────────────────────────── -->
+	<demo-section id="marks" heading="Marks">
+		<demo-example
+			label="Major + minor (dimmed) ticks via [interop-slider-marks-subdivisions]"
+		>
+			<div class="slider-demo">
+				<input
+					type="range"
+					interop-slider
+					id="quality"
+					[min]="0"
+					[max]="100"
+					[step]="5"
+					[(value)]="quality"
+					[interop-slider-marks]="[0, 25, 50, 75, 100]"
+					[interop-slider-marks-subdivisions]="5"
+					aria-label="Quality"
+				/>
+				<div class="slider-demo__marks-labels" aria-hidden="true">
+					<span>Low</span>
+					<span>Med</span>
+					<span>High</span>
+					<span>Best</span>
+					<span>Max</span>
+				</div>
+			</div>
+			<demo-state>
+				<demo-state-item label="value">{{ quality() }}</demo-state-item>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="marksTokens.value() ?? null">
+				<pre><code [textContent]="marksCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Range ─────────────────────────────────────────────────────────── -->
+	<demo-section id="range" heading="Range slider">
+		<demo-example label="Two thumbs, real inputs, clamped against each other">
+			<div class="slider-demo">
+				<div class="slider-demo__row">
+					<label>Price range</label>
+					<span class="slider-demo__range-output">
+						<output
+							interop-slider-value
+							for="price-min"
+							[format]="currencyFormatter"
+						></output>
+						<span aria-hidden="true">&ndash;</span>
+						<output
+							interop-slider-value
+							for="price-max"
+							[format]="currencyFormatter"
+						></output>
+					</span>
+				</div>
+				<interop-slider-range
+					[min]="0"
+					[max]="2000"
+					[step]="50"
+					[(value)]="priceRange"
+					aria-label="Price range"
+				>
+					<input
+						type="range"
+						interop-slider-thumb="start"
+						id="price-min"
+						aria-label="Minimum price"
+						name="price-min"
+					/>
+					<input
+						type="range"
+						interop-slider-thumb="end"
+						id="price-max"
+						aria-label="Maximum price"
+						name="price-max"
+					/>
+				</interop-slider-range>
+			</div>
+			<demo-state>
+				<demo-state-item label="start"
+					>{{ priceRange().start }}</demo-state-item
+				>
+				<demo-state-item label="end">{{ priceRange().end }}</demo-state-item>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="rangeTokens.value() ?? null">
+				<pre><code [textContent]="rangeCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Vertical ──────────────────────────────────────────────────────── -->
+	<demo-section id="vertical" heading="Vertical orientation">
+		<demo-example label="writing-mode: vertical-lr">
+			<div class="slider-demo slider-demo--vertical">
+				<input
+					type="range"
+					interop-slider
+					[orientation]="'vertical'"
+					[(value)]="temperature"
+					style="--itx-slider-length: 12rem"
+					aria-label="Temperature"
+				/>
+				<div class="slider-demo__vertical-readout">
+					Temp: {{ temperature() }}°
+				</div>
+			</div>
+			<itx-code-block language="html" [tokens]="verticalTokens.value() ?? null">
+				<pre><code [textContent]="verticalCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Form participation ────────────────────────────────────────────── -->
+	<demo-section id="form" heading="Form participation">
+		<demo-example label="Native form submission — no ngModel needed">
+			<form (submit)="onSubmit($event)" class="slider-demo">
+				<div class="slider-demo__row">
+					<label for="vol-form">Volume</label>
+					<output interop-slider-value for="vol-form"></output>
+				</div>
+				<input
+					type="range"
+					interop-slider
+					id="vol-form"
+					[min]="0"
+					[max]="100"
+					[(value)]="volume"
+					name="volume"
+				/>
+				<button
+					interop-button="assert neutral"
+					type="submit"
+					class="slider-demo__submit"
+				>
+					Submit form
+				</button>
+			</form>
+			<demo-state>
+				<demo-state-item label="last submitted FormData"
+					>{{ lastSubmittedFormData() }}</demo-state-item
+				>
+			</demo-state>
+			<itx-code-block language="html" [tokens]="formTokens.value() ?? null">
+				<pre><code [textContent]="formCode"></code></pre>
+			</itx-code-block>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — InteropSlider ───────────────────────────────────────────── -->
+	<demo-section id="api-slider" heading="API — InteropSlider">
+		<interop-table [collection]="sliderApi" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API — InteropSliderRange ──────────────────────────────────────── -->
+	<demo-section id="api-range" heading="API — InteropSliderRange">
+		<interop-table [collection]="rangeApi" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API — InteropSliderValue ──────────────────────────────────────── -->
+	<demo-section id="api-value" heading="API — InteropSliderValue">
+		<interop-table [collection]="valueApi" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) { <span class="demo-page__required">*</span> }
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

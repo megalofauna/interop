@@ -16,13 +16,12 @@
 	--_bg: var(--itx-control-bg, var(--itx-surface-below, #ffffff));
 	--_accent: var(--itx-control-accent, var(--itx-colorway, #0066cc));
 	--_indicator: var(--itx-control-indicator, var(--itx-on-colorway, #ffffff));
-	--_radius: var(--itx-control-radius, var(--itx-radius-sm, 4px));
+	--_radius: var(--itx-control-radius, 4px);
 	--_dot-size: var(--itx-control-dot-size, 0.625rem);
 	--_check-weight: var(--itx-control-check-weight, 3px);
 	--_transition: var(
 		--itx-control-transition,
-		var(--itx-duration-fast, 100ms)
-			var(--itx-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))
+		var(--itx-duration-fast, 100ms) var(--itx-easing-standard)
 	);
 	--_focus-ring-color: var(
 		--itx-control-focus-ring-color,
@@ -72,8 +71,8 @@
 
 /* Selected state */
 :host:hover {
-	border-color: var(--_accent);
-	background-color: var(--_accent);
+	border-color: transparent;
+	background-color: transparent;
 }
 /* Selected state */
 :host:focus {
