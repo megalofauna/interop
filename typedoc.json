@@ -1,8 +1,8 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "name": "Interop",
-  "entryPoints": ["src/public-api.ts"],
-  "tsconfig": "tsconfig.lib.json",
+  "entryPoints": ["projects/interop/src/public-api.ts"],
+  "tsconfig": "projects/interop/tsconfig.lib.json",
 
   "plugin": ["typedoc-plugin-markdown"],
   "theme": "markdown",

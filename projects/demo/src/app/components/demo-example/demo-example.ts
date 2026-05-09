@@ -5,7 +5,7 @@ import {
 	contentChild,
 } from "@angular/core";
 import { DemoState } from "../demo-state/demo-state";
-import { InteropContent, type Div } from "src/public-api";
+import { InteropContent, type Div } from 'interop';
 
 @Component({
 	selector: "demo-example",

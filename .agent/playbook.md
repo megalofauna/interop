@@ -56,12 +56,19 @@ Components that need responsive layout declare `container-type: inline-size; con
 
 ## Popover / anchor positioning
 
-Per-instance anchor names prevent multiple component instances from sharing a positioning anchor. Pattern:
-```typescript
-protected readonly menuId = `interop-foo-${nextId++}`;
-protected readonly menuAnchorName = `--${this.menuId}-anchor`;
+When a component needs an anchored overlay (menu, picker, etc.), prefer composing `InteropPopover` + `InteropPopoverTrigger` over hand-rolling the native `popover` attribute and CSS-anchor wiring. The directive owns per-instance id, `anchor-name` / `position-anchor`, ARIA wiring, and delegates positioning to `INTEROP_POSITION_STRATEGY` (FloatingUI by default).
+
+Pattern:
+```html
+<button [interop-popover-trigger]="menu" [popoverHaspopup]="'menu'">…</button>
+
+<!-- Hoist the popover to the root template scope when multiple triggers
+     in sibling @if branches need to bind to it: template ref vars declared
+     inside @if are scoped to that block. -->
+<div #menu="interopPopover" interop-popover placement="top-start">…</div>
 ```
-Bound via `[style.anchor-name]` on the trigger and `[style.position-anchor]` on the popover.
+
+Programmatic dismissal: `popoverInstance.close()` (uses the directive's API; do not call raw `.hidePopover()` on the host).
 
 ## Accessibility
 

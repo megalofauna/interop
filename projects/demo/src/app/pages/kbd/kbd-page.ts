@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropKbd } from "src/public-api";
+import { InteropKbd } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";

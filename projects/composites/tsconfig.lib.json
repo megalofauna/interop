@@ -7,8 +7,8 @@
 		"inlineSources": true,
 		"types": [],
 		"paths": {
-			"interop": ["../../src/public-api.ts"],
-			"interop/*": ["../../src/*"]
+			"interop": ["../../projects/interop/src/public-api.ts"],
+			"interop/*": ["../../projects/interop/src/*"]
 		}
 	},
 	"exclude": [

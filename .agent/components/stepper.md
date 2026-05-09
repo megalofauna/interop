@@ -21,7 +21,7 @@ projects/demo/src/app/pages/stepper/        demo page
 <interop-stepper>
   <nav class="interop-stepper__nav">
     <!-- Compact trigger (narrow viewports): button or div -->
-    <button class="interop-stepper__nav-trigger" [style.anchor-name]="menuAnchorName" ...>
+    <button class="interop-stepper__nav-trigger" [interop-popover-trigger]="menuPopover" [popoverHaspopup]="'menu'" ...>
       <interop-icon /> step label  N/M
     </button>
     <!-- Full step list (wide viewports) -->
@@ -29,6 +29,14 @@ projects/demo/src/app/pages/stepper/        demo page
       <li interop-step label="Step 1">...</li>
     </ol>
   </nav>
+
+  <!-- Popover hoisted to root template scope so both triggers (nav-trigger
+       above, action-bar menu-trigger below) can bind via #menuPopover -->
+  <div #menuPopover="interopPopover" interop-popover placement="top-start">
+    @if (menu() !== "never") {
+      <ul interop-listbox ...></ul>
+    }
+  </div>
 
   <div #viewport class="interop-stepper__viewport">
     <section interop-step-panel>Panel 1</section>
@@ -39,12 +47,10 @@ projects/demo/src/app/pages/stepper/        demo page
     <!-- Source order = priority order (Back first, then Next, then secondary) -->
     <button interop-button (click)="back()">Back</button>
     <button interop-button (click)="next()">Next/Finish</button>
-    <!-- menu trigger (always mode) and cancel (cancellable mode) follow -->
-  </div>
-
-  <!-- Popover: lifted to stepper top-level, positioned via anchor-name -->
-  <div #menuPopover [id]="menuId" popover [style.position-anchor]="menuAnchorName">
-    <interop-listbox ... />
+    <!-- Action-bar menu trigger (when menu="always") and cancel (when cancellable) follow -->
+    <button class="interop-stepper__menu-trigger" [interop-popover-trigger]="menuPopover" [popoverHaspopup]="'menu'">
+      <interop-icon name="tabler-list" />
+    </button>
   </div>
 </interop-stepper>
 ```
@@ -118,14 +124,13 @@ The viewport is a flex container with `scroll-snap-type: x/y mandatory`. Each pa
 
 ## Popover menu
 
-Per-instance anchor names prevent multiple steppers from colliding:
+The menu is an `InteropPopover` instance. The directive owns the per-instance id, the `anchor-name` / `position-anchor` wiring, and the `popover` attribute. Positioning is delegated to `INTEROP_POSITION_STRATEGY` (FloatingUI by default) and configured via `placement="top-start"` on the popover element so the menu opens upward — matching the action-bar's bottom-of-stepper position. FloatingUI flips automatically when there's no room above.
 
-```typescript
-protected readonly menuId = `interop-stepper-menu-${nextStepperId++}`;
-protected readonly menuAnchorName = `--${this.menuId}-anchor`;
-```
+The compact nav-trigger (narrow viewports) and the action-bar menu-trigger (wide viewports + `menu="always"`) both bind to the same popover via `[interop-popover-trigger]="menuPopover"` referencing a `#menuPopover="interopPopover"` template ref variable.
 
-The compact nav-trigger and the menu popover share these via `[style.anchor-name]` / `[style.position-anchor]`. At narrow viewports the full step list is hidden (`display: none`) and the nav-trigger is shown — since the nav-trigger is in layout, the popover anchors to it. At wide viewports the nav-trigger is `display: none` so it exits anchor resolution.
+**Template-scope detail:** `#menuPopover` is declared at the root template scope, NOT inside an `@if`. Template ref variables declared inside `@if` blocks are scoped to that block, so siblings can't see them — and the two triggers live in separate `@if` branches. Hoisting the popover element to root scope is what makes both bindings reachable. The popover's inner listbox content is gated by `@if (menu() !== "never")` so `menuOptions()` doesn't recompute when the menu UI is disabled. When `menu="never"` the popover element renders but has no triggers and no listbox content; the native `popover` attribute keeps it hidden.
+
+Programmatic dismissal after step selection: `this.menuPopover()?.close()` (uses the directive's API, not raw `hidePopover()`).
 
 ## Registration protocol
 

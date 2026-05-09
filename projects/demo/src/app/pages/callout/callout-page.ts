@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, resource } from "@angular/core";
-import { InteropCallout, InteropTable, InteropCellDef, type TableColumn } from "src/public-api";
+import { InteropCallout, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { CodeBlock } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";

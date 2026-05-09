@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
-import { InteropIcon, provideInteropIcons } from 'src/public-api';
-import { TablerRocket } from 'src/lib/iconsets/tabler/outline/tabler-rocket';
-import { TablerBug } from 'src/lib/iconsets/tabler/outline/tabler-bug';
-import { TablerBolt } from 'src/lib/iconsets/tabler/outline/tabler-bolt';
-import { TablerArchive } from 'src/lib/iconsets/tabler/outline/tabler-archive';
-import { TablerInfoCircle } from 'src/lib/iconsets/tabler/outline/tabler-info-circle';
+import { InteropIcon, provideInteropIcons } from 'interop';
+import { TablerRocket } from 'interop/lib/iconsets/tabler/outline/tabler-rocket';
+import { TablerBug } from 'interop/lib/iconsets/tabler/outline/tabler-bug';
+import { TablerBolt } from 'interop/lib/iconsets/tabler/outline/tabler-bolt';
+import { TablerArchive } from 'interop/lib/iconsets/tabler/outline/tabler-archive';
+import { TablerInfoCircle } from 'interop/lib/iconsets/tabler/outline/tabler-info-circle';
 
 export type DemoNoteType = 'release' | 'bugfix' | 'breaking' | 'deprecated' | 'note';
 

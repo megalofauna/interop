@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { InteropCodeRenderer } from "src/public-api";
+import { InteropCodeRenderer } from 'interop';
 
 @Component({
 	selector: "home-page",

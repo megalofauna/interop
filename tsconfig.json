@@ -22,8 +22,8 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "interop": ["dist/interop", "src/public-api.ts"],
-      "interop/*": ["dist/interop/*", "src/*"],
+      "interop": ["dist/interop", "projects/interop/src/public-api.ts"],
+      "interop/*": ["dist/interop/*", "projects/interop/src/*"],
       "@interop/composites": ["projects/composites/src/public-api.ts"]
     }
   },

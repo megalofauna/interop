@@ -7,20 +7,20 @@
     "types": [],
     "baseUrl": "../../",
     "paths": {
-      "interop": ["src/public-api"],
-      "interop/*": ["src/*"],
+      "interop": ["projects/interop/src/public-api"],
+      "interop/*": ["projects/interop/src/*"],
       "@interop/composites": ["projects/composites/src/public-api.ts"]
     }
   },
   "include": [
     "src/**/*.ts",
-    "../../src/lib/**/*.ts",
-    "../../src/types/**/*.ts",
+    "../../projects/interop/src/lib/**/*.ts",
+    "../../projects/interop/src/types/**/*.ts",
     "../../projects/composites/src/**/*.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts",
-    "../../src/**/*.spec.ts",
-    "../../src/examples/**/*"
+    "../../projects/interop/src/**/*.spec.ts",
+    "../../projects/interop/src/examples/**/*"
   ]
 }

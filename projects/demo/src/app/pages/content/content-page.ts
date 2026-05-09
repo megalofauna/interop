@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { InteropContent } from 'src/public-api';
+import { InteropContent } from 'interop';
 import { DemoSection } from '../../components/demo-section/demo-section';
 import { DemoExample } from '../../components/demo-example/demo-example';
 import * as content from './content.djot';

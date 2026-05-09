@@ -17,9 +17,10 @@ import {
 	provideInteropIcons,
 	type PopoverPlacement,
 	type TableColumn,
-} from "src/public-api";
-import { TablerCaretUp } from "src/lib/iconsets/tabler/outline/tabler-caret-up";
-import { TablerInfoCircle } from "src/lib/iconsets/tabler/outline/tabler-info-circle";
+} from 'interop';
+import { TablerCaretUp } from "interop/lib/iconsets/tabler/outline/tabler-caret-up";
+import { TablerInfoCircle } from "interop/lib/iconsets/tabler/outline/tabler-info-circle";
+import { TablerTarget } from "interop/lib/iconsets/tabler/outline/tabler-target";
 import { CodeBlock, type CodeFile } from "@interop/composites";
 import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
@@ -54,7 +55,9 @@ interface ApiEntry {
 		DemoExample,
 		DemoNotes,
 	],
-	providers: [provideInteropIcons(TablerCaretUp, TablerInfoCircle)],
+	providers: [
+		provideInteropIcons(TablerCaretUp, TablerInfoCircle, TablerTarget),
+	],
 	templateUrl: "./popover-page.html",
 	styleUrl: "./popover-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,18 +66,18 @@ export class PopoverPage {
 	private readonly hl = inject(HighlightService);
 
 	readonly placements: PopoverPlacement[] = [
+		"top-end",
 		"top",
 		"top-start",
-		"top-end",
-		"bottom",
-		"bottom-start",
-		"bottom-end",
-		"left",
-		"left-start",
-		"left-end",
+		"right-end",
 		"right",
 		"right-start",
-		"right-end",
+		"bottom-end",
+		"bottom",
+		"bottom-start",
+		"left-end",
+		"left",
+		"left-start",
 	];
 
 	readonly selectedPlacement = signal<PopoverPlacement>("bottom");

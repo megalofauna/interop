@@ -17,7 +17,7 @@ import {
 	InteropButton,
 	type SliderRangeValue,
 	type TableColumn,
-} from "src/public-api";
+} from 'interop';
 import { CodeBlock } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";

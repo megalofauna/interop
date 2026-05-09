@@ -15,7 +15,7 @@ import {
 	InteropCellDef,
 	TableColumn,
 	InteropCallout,
-} from "src/public-api";
+} from 'interop';
 import { CodeBlock, type CodeFile } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";

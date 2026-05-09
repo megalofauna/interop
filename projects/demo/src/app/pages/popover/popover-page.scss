@@ -5,17 +5,30 @@
 	align-items: center;
 }
 
-.popover-page__placement-grid {
-	display: grid;
-	/* grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); */
-	grid-template-columns: repeat(4, 1fr);
-	grid-template-rows: repeat(3, 1fr);
-	gap: var(--itx-spacing-2);
-	max-width: 32rem;
-}
-
 .popover-page__placement-anchor {
 	display: flex;
 	justify-content: center;
-	margin-block-start: var(--itx-spacing-4);
+	margin-block-end: var(--itx-spacing-6);
+}
+
+.popover-page__placement-grid {
+	display: grid;
+	grid-template-columns: repeat(5, max-content);
+	gap: var(--itx-spacing-1);
+	width: max-content;
+	margin-inline: auto;
+
+	// Perimeter buttons — clockwise, matches the `placements` array order
+	> :nth-child(1)  { grid-area: 1 / 2; } // top-end
+	> :nth-child(2)  { grid-area: 1 / 3; } // top
+	> :nth-child(3)  { grid-area: 1 / 4; } // top-start
+	> :nth-child(4)  { grid-area: 2 / 5; } // right-end
+	> :nth-child(5)  { grid-area: 3 / 5; } // right
+	> :nth-child(6)  { grid-area: 4 / 5; } // right-start
+	> :nth-child(7)  { grid-area: 5 / 4; } // bottom-end
+	> :nth-child(8)  { grid-area: 5 / 3; } // bottom
+	> :nth-child(9)  { grid-area: 5 / 2; } // bottom-start
+	> :nth-child(10) { grid-area: 4 / 1; } // left-end
+	> :nth-child(11) { grid-area: 3 / 1; } // left
+	> :nth-child(12) { grid-area: 2 / 1; } // left-start
 }

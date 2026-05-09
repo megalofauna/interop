@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { codeToTokens } from "shiki";
-import { fromShikiTokens, type HighlightedCode } from "src/public-api";
+import { fromShikiTokens, type HighlightedCode } from 'interop';
 
 /**
  * Thin wrapper around Shiki + the InteropCodeBlock adapter.

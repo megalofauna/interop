@@ -13,10 +13,10 @@ import {
 	InteropListbox,
 	InteropOption,
 	provideInteropIcons,
-} from "src/public-api";
-import { TablerSun } from "src/lib/iconsets/tabler/outline/tabler-sun";
-import { TablerMoon } from "src/lib/iconsets/tabler/outline/tabler-moon";
-import { TablerDeviceDesktop } from "src/lib/iconsets/tabler/outline/tabler-device-desktop";
+} from 'interop';
+import { TablerSun } from "interop/lib/iconsets/tabler/outline/tabler-sun";
+import { TablerMoon } from "interop/lib/iconsets/tabler/outline/tabler-moon";
+import { TablerDeviceDesktop } from "interop/lib/iconsets/tabler/outline/tabler-device-desktop";
 import {
 	autoUpdate,
 	computePosition,

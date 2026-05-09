@@ -10,7 +10,7 @@ import {
 	InteropChipOption,
 	InteropSegment,
 	InteropSegmentedControl,
-} from "src/public-api";
+} from 'interop';
 
 type Variant =
 	| "base"

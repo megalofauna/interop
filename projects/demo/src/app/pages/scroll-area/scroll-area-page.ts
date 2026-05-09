@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropScrollArea, InteropTable, InteropCellDef, type TableColumn } from "src/public-api";
+import { InteropScrollArea, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";

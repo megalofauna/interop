@@ -5,21 +5,21 @@
 	"projects": {
 		"interop": {
 			"projectType": "library",
-			"root": "",
-			"sourceRoot": "src",
+			"root": "projects/interop",
+			"sourceRoot": "projects/interop/src",
 			"prefix": "itx",
 			"architect": {
 				"build": {
 					"builder": "@angular-devkit/build-angular:ng-packagr",
 					"options": {
-						"project": "ng-package.json"
+						"project": "projects/interop/ng-package.json"
 					},
 					"configurations": {
 						"production": {
-							"tsConfig": "tsconfig.lib.prod.json"
+							"tsConfig": "projects/interop/tsconfig.lib.prod.json"
 						},
 						"development": {
-							"tsConfig": "tsconfig.lib.json"
+							"tsConfig": "projects/interop/tsconfig.lib.json"
 						}
 					},
 					"defaultConfiguration": "production"
@@ -27,7 +27,7 @@
 				"test": {
 					"builder": "@angular-devkit/build-angular:karma",
 					"options": {
-						"tsConfig": "tsconfig.spec.json",
+						"tsConfig": "projects/interop/tsconfig.spec.json",
 						"polyfills": ["zone.js", "zone.js/testing"]
 					}
 				}
@@ -103,7 +103,7 @@
 						],
 						"styles": ["projects/demo/src/styles.scss"],
 						"stylePreprocessorOptions": {
-							"includePaths": ["src", "projects/demo/src"]
+							"includePaths": ["projects/interop/src", "projects/demo/src"]
 						}
 					},
 					"configurations": {

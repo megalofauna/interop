@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
-import { InteropRadioControl, InteropRadioRig, InteropTable, InteropCellDef, type RadioControl, type TableColumn } from "src/public-api";
+import { InteropRadioControl, InteropRadioRig, InteropTable, InteropCellDef, type RadioControl, type TableColumn } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";

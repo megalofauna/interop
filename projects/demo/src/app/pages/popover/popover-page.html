@@ -77,23 +77,23 @@
 	<!-- ── Placement ──────────────────────────────────────────────────────── -->
 	<demo-section id="placement" heading="Placement">
 		<demo-example label="All 12 placements">
-			<div class="popover-page__placement-grid">
-				@for (p of placements; track p) {
-				<button
-					interop-button="md icon"
-					(click)="showPlacement(p, placedRef)"
-					type="button"
-				>
-					{{ p }}
-				</button>
-				}
-			</div>
 			<div class="popover-page__placement-anchor">
 				<button
 					interop-button="action-plus icon"
 					[interop-popover-trigger]="placedRef"
 					type="button"
 				></button>
+			</div>
+			<div class="popover-page__placement-grid">
+				@for (p of placements; track p) {
+				<button
+					interop-button="xs icon"
+					(click)="showPlacement(p, placedRef)"
+					type="button"
+				>
+					<interop-icon name="tabler-target" [size]="16" />
+				</button>
+				}
 			</div>
 			<div
 				#placedRef="interopPopover"

@@ -5,7 +5,7 @@ import {
 	InteropTableSort,
 	type TableColumn,
 	type TableSortEvent,
-} from "src/public-api";
+} from 'interop';
 import { CodeBlock, type CodeFile } from "@interop/composites";
 import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";

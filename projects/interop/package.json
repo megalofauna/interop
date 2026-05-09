@@ -1,0 +1,31 @@
+{
+	"name": "interop",
+	"version": "0.1.0",
+	"description": "Angular library for interoperable components and data patterns",
+	"keywords": [
+		"angular",
+		"interop",
+		"library",
+		"components",
+		"typescript"
+	],
+	"author": "Christopher Salmon",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/christophersalmon/interop.git"
+	},
+	"peerDependencies": {
+		"@angular/common": "^17.0.0",
+		"@angular/core": "^17.0.0",
+		"@angular/forms": "^17.0.0",
+		"@floating-ui/dom": ">=1.6.0",
+		"rxjs": "^7.8.0",
+		"typescript": "^5.2.0"
+	},
+	"peerDependenciesMeta": {
+		"@floating-ui/dom": {
+			"optional": true
+		}
+	}
+}
