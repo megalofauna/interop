@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Component, TemplateRef, ViewChild } from "@angular/core";
+import { Component, TemplateRef, ViewChild, signal } from "@angular/core";
 import { By } from "@angular/platform-browser";
+import { Subject } from "rxjs";
 import { InteropTable, TableColumn } from "./interop-table";
-import { InteropCollectionService } from "../../services/interop-collection.service";
-import { InteropAttribute } from "../../services/interop-attribute.service";
 
 interface TestUser {
   id: number;
@@ -21,6 +20,7 @@ interface TestUser {
       [collection]="users"
       [columns]="columns"
       [trackBy]="trackBy"
+      [maxRows]="maxRows"
     ></table>
 
     <ng-template #nameTemplate let-value let-item="item">
@@ -31,7 +31,7 @@ interface TestUser {
 class TestHostComponent {
   @ViewChild("nameTemplate") nameTemplate!: TemplateRef<any>;
 
-  users: TestUser[] = [
+  users: TestUser[] | Subject<TestUser[]> = [
     { id: 1, name: "John Doe", email: "john@example.com", active: true },
     { id: 2, name: "Jane Smith", email: "jane@example.com", active: false },
     { id: 3, name: "Bob Johnson", email: "bob@example.com", active: true },
@@ -39,40 +39,23 @@ class TestHostComponent {
 
   columns: TableColumn<TestUser>[] = [];
   trackBy: any = "auto";
+  maxRows: number | null = null;
 }
 
 describe("InteropTable", () => {
   let component: InteropTable<TestUser>;
   let fixture: ComponentFixture<TestHostComponent>;
   let hostComponent: TestHostComponent;
-  let collectionService: jasmine.SpyObj<InteropCollectionService>;
-  let attrsManager: jasmine.SpyObj<InteropAttribute>;
 
   beforeEach(async () => {
-    const collectionSpy = jasmine.createSpyObj("InteropCollectionService", [
-      "resolve",
-      "computedResolve",
-    ]);
-    const attrsSpy = jasmine.createSpyObj("InteropAttribute", ["Presets"]);
-
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
-      providers: [
-        { provide: InteropCollectionService, useValue: collectionSpy },
-        { provide: InteropAttribute, useValue: attrsSpy },
-      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
     hostComponent = fixture.componentInstance;
-    collectionService = TestBed.inject(
-      InteropCollectionService,
-    ) as jasmine.SpyObj<InteropCollectionService>;
-    attrsManager = TestBed.inject(
-      InteropAttribute,
-    ) as jasmine.SpyObj<InteropAttribute>;
+    fixture.detectChanges();
 
-    // Get the component instance
     const tableElement = fixture.debugElement.query(By.directive(InteropTable));
     component = tableElement.componentInstance;
   });
@@ -88,26 +71,12 @@ describe("InteropTable", () => {
   });
 
   describe("Auto-generated columns", () => {
-    beforeEach(() => {
-      // Mock collection service to return a simple collection
-      collectionService.resolve.and.returnValue({
-        items: jasmine.createSpy().and.returnValue(hostComponent.users),
-        loading: jasmine.createSpy().and.returnValue(false),
-        error: jasmine.createSpy().and.returnValue(null),
-        hasError: jasmine.createSpy().and.returnValue(false),
-        isEmpty: jasmine.createSpy().and.returnValue(false),
-      } as any);
-
-      collectionService.computedResolve.and.returnValue(null);
-
-      // No custom columns, should auto-generate
+    it("should auto-generate columns from data", () => {
       hostComponent.columns = [];
       fixture.detectChanges();
-    });
 
-    it("should auto-generate columns from data", () => {
       const columns = component.resolvedColumns();
-      expect(columns.length).toBe(4); // id, name, email, active
+      expect(columns.length).toBe(4);
       expect(columns.map((c) => c.key)).toEqual([
         "id",
         "name",
@@ -117,6 +86,9 @@ describe("InteropTable", () => {
     });
 
     it("should format keys as labels", () => {
+      hostComponent.columns = [];
+      fixture.detectChanges();
+
       const columns = component.resolvedColumns();
       expect(component.getColumnLabel(columns[0])).toBe("Id");
       expect(component.getColumnLabel(columns[1])).toBe("Name");
@@ -126,19 +98,6 @@ describe("InteropTable", () => {
   });
 
   describe("Custom columns", () => {
-    beforeEach(() => {
-      // Mock collection service
-      collectionService.resolve.and.returnValue({
-        items: jasmine.createSpy().and.returnValue(hostComponent.users),
-        loading: jasmine.createSpy().and.returnValue(false),
-        error: jasmine.createSpy().and.returnValue(null),
-        hasError: jasmine.createSpy().and.returnValue(false),
-        isEmpty: jasmine.createSpy().and.returnValue(false),
-      } as any);
-
-      collectionService.computedResolve.and.returnValue(null);
-    });
-
     it("should use custom columns when provided", () => {
       hostComponent.columns = [
         { key: "name", label: "Full Name" },
@@ -170,7 +129,7 @@ describe("InteropTable", () => {
 
   describe("Cell value extraction", () => {
     it("should get value by key", () => {
-      const user = hostComponent.users[0];
+      const user = (hostComponent.users as TestUser[])[0];
       const column: TableColumn<TestUser> = { key: "name" };
 
       const text = component.getCellText(user, column);
@@ -188,16 +147,13 @@ describe("InteropTable", () => {
     });
 
     it("should default column label to key when no label provided", () => {
-      const column: TableColumn<TestUser> = {
-        key: "email",
-      };
-
+      const column: TableColumn<TestUser> = { key: "email" };
       const label = component.getColumnLabel(column);
       expect(label).toBe("email");
     });
 
     it("should convert values to text", () => {
-      const user = hostComponent.users[0];
+      const user = (hostComponent.users as TestUser[])[0];
       const column: TableColumn<TestUser> = { key: "active" };
 
       const text = component.getCellText(user, column);
@@ -205,7 +161,10 @@ describe("InteropTable", () => {
     });
 
     it("should handle null/undefined values", () => {
-      const user = { ...hostComponent.users[0], name: null as any };
+      const user = {
+        ...(hostComponent.users as TestUser[])[0],
+        name: null as any,
+      };
       const column: TableColumn<TestUser> = { key: "name" };
 
       const text = component.getCellText(user, column);
@@ -218,98 +177,77 @@ describe("InteropTable", () => {
       hostComponent.trackBy = "index";
       fixture.detectChanges();
 
-      const trackResult = component.trackByFn(1, hostComponent.users[1]);
+      const trackResult = component.trackByFn(
+        1,
+        (hostComponent.users as TestUser[])[1],
+      );
       expect(trackResult).toBe(1);
     });
 
     it("should use auto tracking by default", () => {
-      const trackResult = component.trackByFn(0, hostComponent.users[0]);
-      expect(trackResult).toBe(1); // Should use the 'id' field
+      const trackResult = component.trackByFn(
+        0,
+        (hostComponent.users as TestUser[])[0],
+      );
+      expect(trackResult).toBe(1);
     });
 
     it("should use custom trackBy function", () => {
-      const customTrackBy = (index: number, item: TestUser) => item.email;
+      const customTrackBy = (_index: number, item: TestUser) => item.email;
       hostComponent.trackBy = customTrackBy;
       fixture.detectChanges();
 
-      const trackResult = component.trackByFn(0, hostComponent.users[0]);
+      const trackResult = component.trackByFn(
+        0,
+        (hostComponent.users as TestUser[])[0],
+      );
       expect(trackResult).toBe("john@example.com");
     });
   });
 
-  describe("Loading states", () => {
-    it("should show loading state", () => {
-      collectionService.resolve.and.returnValue({
-        items: jasmine.createSpy().and.returnValue([]),
-        loading: jasmine.createSpy().and.returnValue(true),
-        error: jasmine.createSpy().and.returnValue(null),
-        hasError: jasmine.createSpy().and.returnValue(false),
-        isEmpty: jasmine.createSpy().and.returnValue(true),
-      } as any);
-
+  describe("Async sources", () => {
+    it("should reflect Observable emissions", () => {
+      const source = new Subject<TestUser[]>();
+      hostComponent.users = source;
       fixture.detectChanges();
 
       expect(component.isLoading()).toBe(true);
+
+      source.next([
+        { id: 9, name: "Async", email: "a@x.com", active: true },
+      ]);
+      fixture.detectChanges();
+
+      expect(component.isLoading()).toBe(false);
+      expect(component.items().length).toBe(1);
+      expect(component.items()[0].name).toBe("Async");
     });
 
-    it("should show error state", () => {
-      collectionService.resolve.and.returnValue({
-        items: jasmine.createSpy().and.returnValue([]),
-        loading: jasmine.createSpy().and.returnValue(false),
-        error: jasmine.createSpy().and.returnValue(new Error("Test error")),
-        hasError: jasmine.createSpy().and.returnValue(true),
-        isEmpty: jasmine.createSpy().and.returnValue(true),
-      } as any);
+    it("should expose Observable errors via hasError()", () => {
+      const source = new Subject<TestUser[]>();
+      hostComponent.users = source;
+      fixture.detectChanges();
 
+      source.error(new Error("boom"));
       fixture.detectChanges();
 
       expect(component.hasError()).toBe(true);
     });
-
-    it("should show empty state", () => {
-      collectionService.resolve.and.returnValue({
-        items: jasmine.createSpy().and.returnValue([]),
-        loading: jasmine.createSpy().and.returnValue(false),
-        error: jasmine.createSpy().and.returnValue(null),
-        hasError: jasmine.createSpy().and.returnValue(false),
-        isEmpty: jasmine.createSpy().and.returnValue(true),
-      } as any);
-
-      fixture.detectChanges();
-
-      expect(component.isEmpty()).toBe(true);
-    });
   });
 
   describe("Max rows limitation", () => {
-    beforeEach(() => {
-      collectionService.resolve.and.returnValue({
-        items: jasmine.createSpy().and.returnValue(hostComponent.users),
-        loading: jasmine.createSpy().and.returnValue(false),
-        error: jasmine.createSpy().and.returnValue(null),
-        hasError: jasmine.createSpy().and.returnValue(false),
-        isEmpty: jasmine.createSpy().and.returnValue(false),
-      } as any);
-
-      collectionService.computedResolve.and.returnValue(null);
-    });
-
     it("should limit rows when maxRows is set", () => {
-      // Set maxRows to 2
-      component = Object.assign(component, {
-        maxRows: jasmine.createSpy().and.returnValue(2),
-      });
+      hostComponent.maxRows = 2;
       fixture.detectChanges();
 
-      const items = component.items();
-      expect(items.length).toBe(2);
+      expect(component.items().length).toBe(2);
     });
 
     it("should show all rows when maxRows is null", () => {
-      // Default behavior - no limit
+      hostComponent.maxRows = null;
       fixture.detectChanges();
-      const items = component.items();
-      expect(items.length).toBe(3);
+
+      expect(component.items().length).toBe(3);
     });
   });
 });

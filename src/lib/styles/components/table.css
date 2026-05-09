@@ -1,0 +1,279 @@
+/*
+ * InteropTable — structural foundation.
+ *
+ * Rendering rules for `<interop-table>` and its internal scroll wrapper,
+ * `<table>`, header, body, sticky columns, group rows, and state rows
+ * (loading / error / empty).
+ *
+ * Loaded globally via `interop.css`. Token values (colors, borders, font
+ * sizes, padding, shadows) are set separately by the active theme — see
+ * `themes/protocol/components/table.css`. This file owns structure and
+ * state activation; the theme owns values.
+ *
+ * All selectors use :where() for zero specificity so consumer overrides
+ * always win regardless of declaration order.
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Typography
+ *   --itx-table-font-size
+ *   --itx-table-font-weight
+ *   --itx-table-cell-padding
+ *
+ *   Body
+ *   --itx-table-body-color
+ *   --itx-table-stripe-bg              even-row stripe (transparent default)
+ *   --itx-table-row-hover-bg
+ *   --itx-table-row-border-width
+ *   --itx-table-row-transition-duration
+ *   --itx-table-row-transition-easing
+ *
+ *   Header
+ *   --itx-table-header-bg
+ *   --itx-table-header-color
+ *   --itx-table-header-font-weight
+ *   --itx-table-header-border-width
+ *
+ *   Borders
+ *   --itx-table-border                 row + header dividers
+ *
+ *   Sticky columns
+ *   --itx-table-sticky-bg              body sticky cell background
+ *   --itx-table-sticky-shadow          full box-shadow declaration applied
+ *                                      to sticky cells once the wrapper is
+ *                                      [data-scrolled]
+ *
+ *   State rows (loading / error / empty)
+ *   --itx-table-state-color
+ *
+ *   Scroll-region focus ring
+ *   --itx-table-focus-outline-color
+ *
+ *   Group rows
+ *   --itx-table-group-label-padding-block-start
+ *   --itx-table-group-label-color
+ *   --itx-table-group-label-font-size
+ *   --itx-table-group-label-font-weight
+ *   --itx-table-group-label-letter-spacing
+ *   --itx-table-group-label-text-transform
+ */
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+
+:where(interop-table) {
+	display: block;
+	min-inline-size: 0;
+}
+
+/* ── Scroll wrapper ──────────────────────────────────────────────────────── */
+/*
+ * Passthrough by default — only the `--active` variant introduces scroll
+ * behavior. The wrapper becomes a focusable scroll region with role="region"
+ * (set in the template) when [scrollable]="true".
+ */
+
+:where(interop-table .interop-table__scroll) {
+	min-inline-size: 0;
+}
+
+:where(interop-table .interop-table__scroll--active) {
+	overflow-x: auto;
+	/* Claim horizontal pans for this wrapper; vertical pans fall through to
+	   the page so users can still scroll past the table on touch devices.
+	   Without this, the browser may treat a swipe as page scroll, especially
+	   under Chrome's touch-emulation mode. */
+	touch-action: pan-x;
+}
+
+:where(interop-table .interop-table__scroll--active:focus-visible) {
+	outline: 2px solid var(--itx-table-focus-outline-color, currentColor);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+
+:where(interop-table .interop-table__table) {
+	display: table;
+	inline-size: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: var(--itx-table-font-size, 0.875rem);
+	font-weight: var(--itx-table-font-weight, 400);
+	color: var(--itx-table-body-color, inherit);
+}
+
+/* Inside an active scroll wrapper, the table expresses its natural width so
+   columns aren't crushed into a too-narrow layout. The wrapper handles the
+   overflow. */
+:where(interop-table .interop-table__scroll--active .interop-table__table) {
+	inline-size: max-content;
+	min-inline-size: 100%;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+:where(interop-table .interop-table-header-row) {
+	background: var(--itx-table-header-bg, transparent);
+}
+
+:where(interop-table .interop-table-header-cell) {
+	padding: var(--itx-table-cell-padding, 0.75rem 1rem);
+	font-weight: var(--itx-table-header-font-weight, 400);
+	color: var(--itx-table-header-color, inherit);
+	text-align: start;
+	white-space: nowrap;
+	border-block-end: var(--itx-table-header-border-width, 2px) solid
+		var(--itx-table-border, currentColor);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+
+:where(interop-table .interop-table-row) {
+	border-block-end: var(--itx-table-row-border-width, 1px) solid
+		var(--itx-table-border, currentColor);
+	transition: background-color
+		var(--itx-table-row-transition-duration, 100ms)
+		var(--itx-table-row-transition-easing, ease);
+
+	&:hover {
+		background-color: var(--itx-table-row-hover-bg, transparent);
+	}
+
+	&:nth-child(even) {
+		background-color: var(--itx-table-stripe-bg, transparent);
+
+		&:hover {
+			background-color: var(--itx-table-row-hover-bg, transparent);
+		}
+	}
+}
+
+:where(interop-table .interop-table-cell) {
+	padding: var(--itx-table-cell-padding, 0.75rem 1rem);
+	vertical-align: top;
+}
+
+/* ── Sticky columns ──────────────────────────────────────────────────────── */
+/*
+ * Sticky cells pin to the inline-start edge during horizontal scroll. The
+ * header sticky cell uses z-index: 2 and the body sticky cell uses z-index: 1
+ * so the header floats above body sticky cells during cross-axis scroll.
+ *
+ * Authors with multiple consecutive sticky columns must declare each
+ * column's `stickyLeft` (in px) — the first sticky column is always
+ * `left: 0`, but subsequent ones need an explicit cumulative offset.
+ */
+
+:where(interop-table .interop-table-header-cell[data-sticky]) {
+	position: sticky;
+	z-index: 2;
+	background: var(--itx-table-header-bg, transparent);
+}
+
+:where(interop-table .interop-table-cell[data-sticky]) {
+	position: sticky;
+	z-index: 1;
+	background: var(--itx-table-sticky-bg, transparent);
+}
+
+/* Sticky shadow — appears once the wrapper has scrolled past origin. The
+   default shadow combines an inline-end-edge hairline (clean seam between
+   sticky and scrolled content) with a soft offset blur (depth cue). The
+   theme can replace the entire shadow declaration via the token. */
+:where(interop-table .interop-table__scroll--active[data-scrolled] .interop-table-header-cell[data-sticky]),
+:where(interop-table .interop-table__scroll--active[data-scrolled] .interop-table-cell[data-sticky]) {
+	box-shadow: var(
+		--itx-table-sticky-shadow,
+		inset -1px 0 0 var(--itx-table-border, currentColor),
+		4px 0 8px -2px oklch(0 0 0 / 0.1)
+	);
+}
+
+/* ── Group rows ──────────────────────────────────────────────────────────── */
+/*
+ * Sentinel rows that span all columns (set inline in the data array as
+ * `{ groupLabel: '...' }`). Visually act as section headings within the body.
+ */
+
+:where(interop-table .interop-table-group-row) {
+	border-block-end: var(--itx-table-row-border-width, 1px) solid
+		var(--itx-table-border, currentColor);
+}
+
+:where(interop-table .interop-table-group-label) {
+	padding: var(--itx-table-cell-padding, 0.75rem 1rem);
+	padding-block-start: var(--itx-table-group-label-padding-block-start, 1.5rem);
+	font-size: var(--itx-table-group-label-font-size, 0.75rem);
+	font-weight: var(--itx-table-group-label-font-weight, 500);
+	text-transform: var(--itx-table-group-label-text-transform, uppercase);
+	letter-spacing: var(--itx-table-group-label-letter-spacing, 0.06em);
+	color: var(--itx-table-group-label-color, inherit);
+	text-align: start;
+}
+
+/* ── Sort button ─────────────────────────────────────────────────────────── */
+/*
+ * Present only when [itxSort] is applied to the table. The <th> receives
+ * [aria-sort="none|ascending|descending"] from the directive; the ::after
+ * indicator piggybacks on that attribute so AT and CSS stay in sync without
+ * a separate data attribute.
+ *
+ * Tokens:
+ *   --itx-table-sort-gap                    gap between label and indicator
+ *   --itx-table-sort-indicator-idle-opacity  neutral ⇅ opacity (default 0.4)
+ */
+
+:where(interop-table .interop-table-sort-button) {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-table-sort-gap, 0.375rem);
+	padding: 0;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	text-align: start;
+	white-space: nowrap;
+}
+
+:where(interop-table .interop-table-sort-button:focus-visible) {
+	outline: 2px solid var(--itx-table-focus-outline-color, currentColor);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* Neutral indicator — column is sortable but not currently active. */
+:where(interop-table [aria-sort="none"] .interop-table-sort-button)::after {
+	content: "⇅";
+	font-size: 0.85em;
+	opacity: var(--itx-table-sort-indicator-idle-opacity, 0.4);
+}
+
+/* Active indicators — full opacity, direction-specific glyph. */
+:where(interop-table [aria-sort="ascending"] .interop-table-sort-button)::after {
+	content: "↑";
+	font-size: 0.85em;
+}
+
+:where(interop-table [aria-sort="descending"] .interop-table-sort-button)::after {
+	content: "↓";
+	font-size: 0.85em;
+}
+
+/* ── State rows ──────────────────────────────────────────────────────────── */
+/*
+ * Loading, error, and empty states share padding + colour. The body
+ * contains exactly one of these `<tbody>` blocks at a time (template @if
+ * branches).
+ */
+
+:where(interop-table .interop-table-loading-cell),
+:where(interop-table .interop-table-error-cell),
+:where(interop-table .interop-table-empty-cell) {
+	padding: 2rem var(--itx-table-cell-padding, 1rem);
+	text-align: center;
+	color: var(--itx-table-state-color, inherit);
+	font-style: italic;
+}

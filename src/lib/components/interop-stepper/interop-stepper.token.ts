@@ -58,6 +58,10 @@ export interface StepperNavContext {
   next(): void;
   back(): void;
   goTo(index: number): void;
+  /** Roll the stepper back to its initial state — step 0, frontier cleared,
+   * every step returns to its auto-pending status. Use as the "abandon and
+   * restart" path; typically wired to a Cancel button. */
+  reset(): void;
 }
 
 // ── Full internal interface ────────────────────────────────────────────────────
@@ -68,13 +72,27 @@ export interface IInteropStepper extends StepperNavContext {
   readonly indicatorTemplate: Signal<TemplateRef<StepIndicatorContext> | null>;
   getAutoStatus(index: number): StepStatus;
   isStepLocked(index: number): boolean;
-  registerStep(): number;
+  /** True when the user has previously advanced past this step. Independent
+   * of whether the step is currently active — a step revisited via `back()`
+   * remains "reached". Drives the `interop-step--reviewed` host class so the
+   * "active+reviewed" combination can be styled distinctly. */
+  wasReached(index: number): boolean;
+  /** Each step registers itself, surfacing its label as a signal so the
+   * stepper can build menu options without a back-reference to InteropStep. */
+  registerStep(label: Signal<string>): number;
   registerPanel(panel: StepPanelRef): number;
 }
 
 /** Minimal reference the stepper holds for each panel. */
 export interface StepPanelRef {
-  requestFocus(): void;
+  /** Move focus to the panel's first heading (or the panel itself as a
+   * fallback). The `preventScroll` option avoids a focus-induced scroll
+   * adjustment when the stepper has already programmatically scrolled the
+   * panel into view. */
+  requestFocus(options?: { preventScroll?: boolean }): void;
+  /** The DOM element representing the panel. The stepper uses this to drive
+   * `scrollIntoView()` for click-driven navigation in the scroll-snap viewport. */
+  getElement(): HTMLElement;
 }
 
 // ── Token ──────────────────────────────────────────────────────────────────────

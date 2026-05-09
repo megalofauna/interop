@@ -98,6 +98,16 @@
 	/* ── Atmosphere ──────────────────────────────────────────────────── */
 	--itx-overlay: light-dark(oklch(0.15 0 0 / 0.5), oklch(0.05 0 0 / 0.65));
 
+	/* ── Backdrop (shared across components that render ::backdrop) ──── */
+	/*
+	 * Components that render a backdrop (dialog, optionally popover, etc.)
+	 * consume these globals so a single theme decision propagates across
+	 * surfaces. Per-component tokens (e.g. --itx-dialog-backdrop-color) can
+	 * still override these for component-specific tuning.
+	 */
+	--itx-backdrop-color: var(--itx-overlay);
+	--itx-backdrop-blur: 0px;
+
 	--itx-shadow-sm: light-dark(
 		0 1px 2px 0 oklch(0.15 0 0 / 0.06),
 		0 1px 2px 0 oklch(0 0 0 / 0.25)

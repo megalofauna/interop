@@ -1,0 +1,14 @@
+.resizable-page__demo-content {
+	padding: var(--itx-spacing-4);
+	block-size: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-2);
+}
+
+.resizable-page__live {
+	margin-block-start: var(--itx-spacing-3);
+	font-family: var(--itx-mono-family, monospace);
+	font-size: var(--itx-fs-sm);
+	color: var(--itx-neutral-10);
+}

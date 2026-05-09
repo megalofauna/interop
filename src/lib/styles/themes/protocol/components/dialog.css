@@ -1,0 +1,33 @@
+/*
+ * InteropDialog — Protocol theme.
+ *
+ * Sets values for dialog sizing, appearance, backdrop, and animation tokens.
+ * State activation and animation mechanism live in the component CSS
+ * (`styles/components/dialog.css`) — this file only declares values.
+ */
+
+:where([interop-root]) {
+	--itx-border: rgb(255 255 255 / 0.05);
+	/* ── Sizing ─────────────────────────────────────────────────────────── */
+	--itx-dialog-width: min(90vw, 32rem);
+	--itx-dialog-max-height: 85dvh;
+	--itx-dialog-padding: var(--itx-spacing-6);
+
+	/* ── Appearance ─────────────────────────────────────────────────────── */
+	--itx-dialog-background: var(--itx-surface-above);
+	--itx-dialog-foreground: var(--itx-on-surface);
+	--itx-dialog-border-radius: var(--itx-radius-md);
+	--itx-dialog-border-width: 2px;
+	--itx-dialog-border-color: var(--itx-border);
+	--itx-dialog-shadow: 0 8px 0 rgba(0 0 0 / 0.2);
+
+	/* ── Backdrop ───────────────────────────────────────────────────────── */
+	--itx-dialog-backdrop-color: rgba(0 0 0 / 0.5);
+	--itx-dialog-backdrop-blur: 2px;
+
+	/* ── Animation ──────────────────────────────────────────────────────── */
+	--itx-dialog-enter-duration: var(--itx-duration-base);
+	--itx-dialog-exit-duration: var(--itx-duration-fast);
+	--itx-dialog-enter-easing: var(--itx-easing-decelerate);
+	--itx-dialog-exit-easing: var(--itx-easing-accelerate);
+}

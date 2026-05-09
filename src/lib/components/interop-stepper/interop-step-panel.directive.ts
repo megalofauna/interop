@@ -14,12 +14,18 @@ import {
 /**
  * InteropStepPanel — directive applied to each step's content panel.
  *
- * Must be used on a `<section>` inside an `<interop-stepper>`. Panels are matched
- * to steps by registration order — the first panel pairs with the first step, etc.
+ * Must be used on a `<section>` inside an `<interop-stepper>`. Panels are
+ * matched to steps by registration order — the first panel pairs with the
+ * first step, etc.
  *
- * When a panel becomes active, focus is moved to its first heading (or the panel
- * itself as a fallback). This is the accessibility behaviour missing from every
- * major stepper implementation.
+ * In the scroll-snap viewport, all reachable panels are siblings inside the
+ * scroll container. Locked panels (linear mode + index past the frontier)
+ * are removed from the DOM via `[hidden]` so swipe physics can't pass the
+ * frontier — that's the hard-lock model.
+ *
+ * When a panel becomes active (scroll settles on it, or programmatic nav),
+ * focus is moved to its first heading. The accessibility behaviour missing
+ * from every major stepper implementation.
  *
  * @example
  * ```html
@@ -34,7 +40,9 @@ import {
   standalone: true,
   host: {
     class: "interop-step-panel",
-    "[hidden]": "!isActive()",
+    "[hidden]": "isLocked()",
+    "[attr.data-step-index]": "index",
+    "[attr.aria-current]": 'isActive() ? "step" : null',
     role: "region",
   },
 })
@@ -42,7 +50,7 @@ export class InteropStepPanel implements StepPanelRef {
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
 
-  private readonly index: number;
+  protected readonly index: number;
 
   constructor() {
     this.index = this.stepper?.registerPanel(this) ?? 0;
@@ -84,16 +92,28 @@ export class InteropStepPanel implements StepPanelRef {
     () => this.stepper?.activeIndex() === this.index,
   );
 
+  /** Locked panels are removed from the DOM via [hidden] so the scroll-snap
+   * viewport cannot reach them — the linear-mode hard-lock. */
+  protected readonly isLocked = computed(
+    () => this.stepper?.isStepLocked(this.index) ?? false,
+  );
+
+  getElement(): HTMLElement {
+    return this.el.nativeElement;
+  }
+
   /**
-   * Called by InteropStepper when this panel is activated via navigation.
-   * Schedules focus on the panel's first heading (or the panel itself),
-   * after Angular has rendered the newly visible panel.
+   * Called by InteropStepper when this panel becomes active. Schedules focus
+   * on the panel's first heading (or the panel itself as a fallback).
+   *
+   * The `preventScroll` option (default true) avoids a focus-induced scroll
+   * adjustment, since the stepper has already programmatically scrolled the
+   * panel into view via `scrollIntoView`. Pass `{ preventScroll: false }` to
+   * fall back to native focus-scroll behaviour.
    */
-  requestFocus(): void {
-    // requestAnimationFrame defers until after the browser has rendered the
-    // panel (the [hidden] attribute is removed by the change detection cycle
-    // that also triggers the goTo() call). Without this deferral, the element
-    // may still be hidden when focus is attempted.
+  requestFocus(options?: { preventScroll?: boolean }): void {
+    // requestAnimationFrame defers until after the browser has rendered, so
+    // the panel is laid out by the time we reach for its heading.
     requestAnimationFrame(() => {
       const el = this.el.nativeElement;
       const heading = el.querySelector(
@@ -110,7 +130,7 @@ export class InteropStepPanel implements StepPanelRef {
         });
       }
 
-      target.focus({ preventScroll: false });
+      target.focus({ preventScroll: options?.preventScroll ?? true });
     });
   }
 

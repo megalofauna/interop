@@ -1,0 +1,190 @@
+/*
+ * InteropResizable — structural foundation.
+ *
+ * Two visual modes driven by `[data-tier]`:
+ *
+ *   Tier 0 ("native"):   browser-native CSS resize. Zero JS in the resize
+ *                        loop. Tiny BR-corner affordance drawn by the UA.
+ *
+ *   Tier 1 ("enhanced"): native resize is disabled and a custom handle is
+ *                        rendered by the directive. Pointer Events,
+ *                        keyboard, snap, dimension readout, aspect lock.
+ *
+ * The host is a container-query container by default (`container-type:
+ * inline-size`), set as an inline style by the directive. Every selector
+ * is wrapped in :where() to keep specificity at zero — consumer overrides
+ * always win.
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Bounds (default min/max — superseded by the per-instance [min] / [max]
+ *   inputs when those write inline styles)
+ *   --itx-resizable-min-width
+ *   --itx-resizable-min-height
+ *   --itx-resizable-max-width
+ *   --itx-resizable-max-height
+ *
+ *   Handle (Tier 1 only)
+ *   --itx-resizable-handle-size            both-axis corner; thickness for edge
+ *   --itx-resizable-handle-color
+ *   --itx-resizable-handle-color-hover
+ *   --itx-resizable-handle-color-active
+ *   --itx-resizable-handle-corner-radius
+ *   --itx-resizable-handle-focus-outline-color
+ *   --itx-resizable-handle-focus-outline-width
+ *   --itx-resizable-handle-focus-outline-offset
+ *
+ *   Readout badge (Tier 1, with [showDimensions])
+ *   --itx-resizable-readout-background-color
+ *   --itx-resizable-readout-foreground
+ *   --itx-resizable-readout-padding
+ *   --itx-resizable-readout-border-radius
+ *   --itx-resizable-readout-font-family
+ *   --itx-resizable-readout-font-size
+ *   --itx-resizable-readout-offset         distance from edge
+ *
+ *   Border (subtle frame so the resize boundary is visible)
+ *   --itx-resizable-border-color
+ *   --itx-resizable-border-width
+ *   --itx-resizable-border-style
+ *   --itx-resizable-border-radius
+ */
+
+/* ── Host (both tiers) ───────────────────────────────────────────────────── */
+
+:where([interop-resizable]) {
+	overflow: hidden;
+	min-inline-size: var(--itx-resizable-min-width, 0);
+	min-block-size: var(--itx-resizable-min-height, 0);
+	max-inline-size: var(--itx-resizable-max-width, none);
+	max-block-size: var(--itx-resizable-max-height, none);
+
+	border-color: var(--itx-resizable-border-color, transparent);
+	border-width: var(--itx-resizable-border-width, 0);
+	border-style: var(--itx-resizable-border-style, solid);
+	border-radius: var(--itx-resizable-border-radius, 0);
+}
+
+/* ── Tier 0: native CSS resize ───────────────────────────────────────────── */
+/*
+ * `resize` requires `overflow != visible` (already set above). Each
+ * data-axis variant maps directly to the CSS keyword.
+ */
+
+:where([interop-resizable][data-tier="native"][data-axis="horizontal"]) {
+	resize: horizontal;
+}
+
+:where([interop-resizable][data-tier="native"][data-axis="vertical"]) {
+	resize: vertical;
+}
+
+:where([interop-resizable][data-tier="native"][data-axis="both"]) {
+	resize: both;
+}
+
+/* ── Tier 1: custom handle ───────────────────────────────────────────────── */
+/*
+ * Native resize is OFF — the directive owns the resize loop. The host
+ * becomes a positioning context for the absolutely-placed handle.
+ */
+
+:where([interop-resizable][data-tier="enhanced"]) {
+	resize: none;
+	position: relative;
+}
+
+/* Handle base — corner footprint by default. Edge variants below override
+   the placement and size for axis-locked modes. */
+:where(.interop-resizable__handle) {
+	position: absolute;
+	inset-block-end: 0;
+	inset-inline-end: 0;
+	inline-size: var(--itx-resizable-handle-size, 14px);
+	block-size: var(--itx-resizable-handle-size, 14px);
+	background-color: var(--itx-resizable-handle-color, currentColor);
+	border-radius: var(--itx-resizable-handle-corner-radius, 0);
+	cursor: nwse-resize;
+	touch-action: none;
+	user-select: none;
+	z-index: 1;
+	transition: background-color 96ms ease-in-out;
+}
+
+:where(.interop-resizable__handle:hover) {
+	background-color: var(
+		--itx-resizable-handle-color-hover,
+		var(--itx-resizable-handle-color, currentColor)
+	);
+}
+
+:where([interop-resizable--dragging] .interop-resizable__handle),
+:where(.interop-resizable--dragging) :where(.interop-resizable__handle) {
+	background-color: var(
+		--itx-resizable-handle-color-active,
+		var(--itx-resizable-handle-color, currentColor)
+	);
+}
+
+:where(.interop-resizable__handle:focus) {
+	outline: none;
+}
+
+:where(.interop-resizable__handle:focus-visible) {
+	outline: var(--itx-resizable-handle-focus-outline-width, 2px) solid
+		var(--itx-resizable-handle-focus-outline-color, currentColor);
+	outline-offset: var(--itx-resizable-handle-focus-outline-offset, 2px);
+}
+
+/* Axis-specific cursors and edge-spanning handle for the keyboard story
+   (the visual handle is still anchored at the BR corner; cursor reflects
+   the active drag axis). */
+:where([interop-resizable][data-axis="horizontal"]) :where(.interop-resizable__handle) {
+	cursor: ew-resize;
+	block-size: 100%;
+	inset-block-start: 0;
+}
+
+:where([interop-resizable][data-axis="vertical"]) :where(.interop-resizable__handle) {
+	cursor: ns-resize;
+	inline-size: 100%;
+	inset-inline-start: 0;
+}
+
+/* ── Tier 1: dimension readout ───────────────────────────────────────────── */
+
+:where(.interop-resizable__readout) {
+	position: absolute;
+	inset-block-start: var(--itx-resizable-readout-offset, 8px);
+	inset-inline-end: var(--itx-resizable-readout-offset, 8px);
+	padding: var(--itx-resizable-readout-padding, 2px 6px);
+	background-color: var(
+		--itx-resizable-readout-background-color,
+		rgb(0 0 0 / 0.65)
+	);
+	color: var(--itx-resizable-readout-foreground, white);
+	border-radius: var(--itx-resizable-readout-border-radius, 4px);
+	font-family: var(--itx-resizable-readout-font-family, monospace);
+	font-size: var(--itx-resizable-readout-font-size, 0.75rem);
+	font-variant-numeric: tabular-nums;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 160ms ease-in-out;
+	z-index: 2;
+}
+
+/* Readout fades in only during drag, then fades back out. Keyboard-driven
+   resizes don't show the readout (the focus-visible ring on the handle is
+   the affordance there). */
+:where(.interop-resizable--dragging .interop-resizable__readout) {
+	opacity: 1;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(.interop-resizable__handle),
+	:where(.interop-resizable__readout) {
+		transition: none;
+	}
+}

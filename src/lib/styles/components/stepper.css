@@ -1,0 +1,851 @@
+/*
+ * InteropStepper — structural foundation.
+ *
+ * Rendering rules for `<interop-stepper>` and its declarative children
+ * (`ol[interop-step-list]`, `li[interop-step]`, `section[interop-step-panel]`).
+ *
+ * Loaded globally via `interop.css` so any consumer can apply Interop stepper
+ * styling by writing the markup — no Angular component import required.
+ * Importing the InteropStepper class additionally brings step coordination,
+ * focus management, and the navigation context.
+ *
+ * Token values (colors, sizes, radii) are set separately by the theme — see
+ * `themes/protocol/components/stepper.css`. This file declares structure and
+ * state activation rules; the theme declares values.
+ *
+ * All selectors are wrapped in :where() to keep specificity at zero, so
+ * consumer overrides always win regardless of declaration order.
+ *
+ * ── Layout ────────────────────────────────────────────────────────────────
+ *
+ * The outer stepper is a single-column stack of three regions, always in
+ * the same vertical order regardless of orientation:
+ *
+ *   ┌───────────────────────┐
+ *   │  nav (step list)      │
+ *   ├───────────────────────┤
+ *   │  viewport (panels)    │
+ *   ├───────────────────────┤
+ *   │  actions (toolbar)    │
+ *   └───────────────────────┘
+ *
+ * `[data-orientation]` only affects what happens *inside* the regions:
+ *   - horizontal: step list flexes as a row, viewport scroll-snaps on X
+ *   - vertical:   step list flexes as a column, viewport scroll-snaps on Y
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Container
+ *   --itx-stepper-display
+ *   --itx-stepper-gap
+ *   --itx-stepper-padding
+ *   --itx-stepper-background-color
+ *   --itx-stepper-border-radius
+ *
+ *   Nav region
+ *   --itx-stepper-nav-padding
+ *
+ *   Viewport region (scroll-snap container)
+ *   --itx-stepper-viewport-padding
+ *   --itx-stepper-viewport-background-color
+ *   --itx-stepper-viewport-border-radius
+ *   --itx-stepper-viewport-min-height
+ *   --itx-stepper-viewport-block-size           Defined height in vertical mode
+ *                                               (vertical scroll-snap requires it)
+ *   --itx-stepper-viewport-scrollbar-width      `none` (default) | `thin` | `auto`
+ *   --itx-stepper-viewport-scrollbar-thumb-color    used when scrollbar visible
+ *   --itx-stepper-viewport-scrollbar-track-color    used when scrollbar visible
+ *
+ *   Actions region
+ *   --itx-stepper-actions-padding
+ *   --itx-stepper-actions-gap                 between adjacent buttons
+ *
+ *   Menu (popover)
+ *   --itx-stepper-menu-min-width
+ *   --itx-stepper-menu-max-width
+ *   --itx-stepper-menu-padding
+ *   --itx-stepper-menu-background-color
+ *   --itx-stepper-menu-border-color
+ *   --itx-stepper-menu-border-width
+ *   --itx-stepper-menu-border-radius
+ *   --itx-stepper-menu-box-shadow
+ *   --itx-stepper-menu-offset                 gap between trigger and popover
+ *
+ *   Compact nav-trigger (shown on narrow viewports in place of the full
+ *   step list — also the popover trigger when menu is enabled)
+ *   --itx-stepper-nav-trigger-padding
+ *   --itx-stepper-nav-trigger-gap
+ *   --itx-stepper-nav-trigger-font-size
+ *   --itx-stepper-nav-trigger-font-weight
+ *   --itx-stepper-nav-trigger-background-color
+ *   --itx-stepper-nav-trigger-foreground
+ *   --itx-stepper-nav-trigger-border-color
+ *   --itx-stepper-nav-trigger-border-width
+ *   --itx-stepper-nav-trigger-border-radius
+ *   --itx-stepper-nav-trigger-background-color-hover
+ *   --itx-stepper-nav-trigger-foreground-hover
+ *   --itx-stepper-nav-trigger-progress-color    secondary "N/M" text colour
+ *
+ *   Step list (ol)
+ *   --itx-step-list-gap
+ *   --itx-step-list-padding
+ *
+ *   Step item (li)
+ *   --itx-step-flex
+ *   --itx-step-button-gap          gap between indicator and label
+ *
+ *   Step indicator (the circle)
+ *   --itx-step-indicator-size
+ *   --itx-step-indicator-border-radius
+ *   --itx-step-indicator-border-width
+ *   --itx-step-indicator-border-style
+ *   --itx-step-indicator-font-size
+ *   --itx-step-indicator-font-weight
+ *   --itx-step-indicator-transition-duration
+ *   --itx-step-indicator-transition-timing-function
+ *
+ *   Step indicator — state tokens (rest=pending / active / completed / error / skipped)
+ *   --itx-step-indicator-background           --itx-step-indicator-background-active           …-completed   …-error   …-skipped
+ *   --itx-step-indicator-foreground           --itx-step-indicator-foreground-active           …-completed   …-error   …-skipped
+ *   --itx-step-indicator-border-color         --itx-step-indicator-border-color-active         …-completed   …-error   …-skipped
+ *
+ *   Step indicator — composite states (active + previously-reviewed)
+ *   The user is back on a step they'd already advanced past. These let the
+ *   theme distinguish a "revisit" from a fresh active step. Unset values
+ *   cascade to the matching `*-active` slot, so themes only set them when
+ *   they want a different look.
+ *   --itx-step-indicator-background-active-reviewed
+ *   --itx-step-indicator-foreground-active-reviewed
+ *   --itx-step-indicator-border-color-active-reviewed
+ *
+ *   Step label
+ *   --itx-step-label-font-family
+ *   --itx-step-label-font-size
+ *   --itx-step-label-font-weight
+ *   --itx-step-label-color
+ *   --itx-step-label-color-active
+ *   --itx-step-label-color-active-reviewed       composite (cascades to -active)
+ *   --itx-step-label-color-completed
+ *   --itx-step-label-color-locked
+ *   --itx-step-label-text-align
+ *
+ *   Step optional suffix
+ *   --itx-step-optional-font-size
+ *   --itx-step-optional-opacity
+ *
+ *   Connector line (between consecutive steps)
+ *   --itx-step-connector-thickness
+ *   --itx-step-connector-color
+ *   --itx-step-connector-color-completed
+ *
+ *   Step focus ring (lands on the indicator)
+ *   --itx-step-outline-width
+ *   --itx-step-outline-style
+ *   --itx-step-outline-color
+ *   --itx-step-outline-offset
+ */
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+
+:where(interop-stepper) {
+	display: var(--itx-stepper-display, grid);
+	grid-template-rows: auto 1fr auto;
+	gap: var(--itx-stepper-gap, var(--itx-spacing-4));
+	padding: var(--itx-stepper-padding, 0);
+	background-color: var(--itx-stepper-background-color, transparent);
+	border-radius: var(--itx-stepper-border-radius, 0);
+	min-inline-size: 0;
+	/* Container query for the responsive menu trigger ([data-menu="auto"]). */
+	container-type: inline-size;
+	container-name: stepper;
+}
+
+/* ── Regions ─────────────────────────────────────────────────────────────── */
+
+:where(interop-stepper > .interop-stepper__nav) {
+	padding: var(--itx-stepper-nav-padding, 0);
+	min-inline-size: 0;
+}
+
+:where(interop-stepper > .interop-stepper__viewport) {
+	padding: var(--itx-stepper-viewport-padding, 0);
+	background-color: var(--itx-stepper-viewport-background-color, transparent);
+	border-radius: var(--itx-stepper-viewport-border-radius, 0);
+	min-block-size: var(--itx-stepper-viewport-min-height, 0);
+	min-inline-size: 0;
+
+	/* Scroll-snap container. The viewport is a flex track holding the panels
+	   side-by-side (horizontal) or stacked (vertical). The user can swipe
+	   freely between panels; locked panels are removed from the DOM via
+	   `[hidden]` (the linear-mode hard-lock), so swipe physics stop at the
+	   frontier without snap-back jank. */
+	display: flex;
+	overflow: hidden;
+	scroll-behavior: smooth;
+
+	/* The viewport behaves like a sliding stage, not a scrolling document.
+	   The step indicators and action bar carry the position affordance, so
+	   the browser scrollbar is hidden by default. Modern browsers honour
+	   `scrollbar-width` / `scrollbar-color` (Firefox, Chromium 121+, Safari
+	   18.4+); older WebKit needs the pseudo-element rule below. Consumers
+	   can opt back in by overriding the tokens to `thin` or `auto`; the
+	   thumb/track tokens give the visible scrollbar a themed appearance. */
+	scrollbar-width: var(--itx-stepper-viewport-scrollbar-width, none);
+	scrollbar-color: var(
+			--itx-stepper-viewport-scrollbar-thumb-color,
+			transparent
+		)
+		var(--itx-stepper-viewport-scrollbar-track-color, transparent);
+}
+
+/* Older WebKit fallback: `::-webkit-scrollbar` doesn't read scrollbar-width,
+   so we hide it explicitly. Consumers opting into a visible scrollbar on
+   pre-Safari-18.4 will additionally need to override this rule. */
+:where(interop-stepper > .interop-stepper__viewport)::-webkit-scrollbar {
+	inline-size: 0;
+	block-size: 0;
+	display: none;
+}
+
+/* Horizontal: panels lay out as a row, viewport scroll-snaps on X.
+   `touch-action: pan-x` claims horizontal pans for the viewport's scroll
+   container and lets vertical pans fall through to the page so the user
+   can still scroll the rest of the document past the stepper. Without it
+   the browser (especially under devtools touch emulation) can decide a
+   gesture is "page scroll" rather than "stepper scroll". */
+:where(interop-stepper:not([data-orientation="vertical"]) > .interop-stepper__viewport) {
+	flex-direction: row;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	touch-action: pan-x;
+}
+
+/* Vertical: panels stack, viewport scroll-snaps on Y. Vertical scroll-snap
+   needs a defined height to be useful — fall back to a token-driven default.
+   `touch-action: pan-y` reserves vertical pans for the viewport so swipes
+   advance steps; horizontal pans fall through to ancestors. */
+:where(interop-stepper[data-orientation="vertical"] > .interop-stepper__viewport) {
+	flex-direction: column;
+	overflow-y: auto;
+	scroll-snap-type: y mandatory;
+	touch-action: pan-y;
+	block-size: var(--itx-stepper-viewport-block-size, 16rem);
+}
+
+/* Each panel fills the viewport on the scroll axis and snaps to its start. */
+:where(interop-stepper > .interop-stepper__viewport > section[interop-step-panel]) {
+	flex: 0 0 100%;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	min-inline-size: 0;
+	min-block-size: 0;
+	overflow: auto;
+}
+
+/* Reduced motion: no smooth-scroll. The user still gets snap, just instant. */
+@media (prefers-reduced-motion: reduce) {
+	:where(interop-stepper > .interop-stepper__viewport) {
+		scroll-behavior: auto;
+	}
+}
+
+:where(interop-stepper > .interop-stepper__actions) {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-stepper-actions-gap, var(--itx-spacing-2));
+	padding: var(--itx-stepper-actions-padding, 0);
+	align-items: center;
+	min-inline-size: 0;
+}
+
+/*
+ * Source order is priority order. The author writes the most important
+ * controls first (typically Back, Next), followed by any secondary ones
+ * (menu, cancel, custom). Layout rules:
+ *
+ *   1, 2  → pushed to the end (primary action position)
+ *   3, 4… → pushed to the start (secondary)
+ *
+ * Mechanism: the first item gets `margin-inline-start: auto`, which
+ * absorbs all available space and drags itself plus subsequent in-flow
+ * siblings to the end. Items beyond the second use a negative `order`,
+ * lifting them ahead of the priority pair in flex flow so they end up at
+ * the start of the bar.
+ *
+ * Authors can rearrange visual order per-button by overriding `order`
+ * (e.g. swap Back and Next), or flip the entire bar with
+ * `flex-direction: row-reverse`. Nothing in this rule set locks a
+ * substructure beyond the 1/2-vs-3+ priority split.
+ */
+
+:where(interop-stepper > .interop-stepper__actions > *:first-child) {
+	margin-inline-start: auto;
+}
+
+:where(interop-stepper > .interop-stepper__actions > *:nth-child(n + 3)) {
+	order: -1;
+}
+
+/* ── Responsive (stacked) action bar ─────────────────────────────────────── */
+/*
+ * Opt-in via [data-actions-responsive="sm|md|lg"]. Below the chosen
+ * threshold the bar flips to a vertical stack of full-width buttons. The
+ * three presets map to fixed pixel thresholds (CSS `@container` queries
+ * can't read custom properties in their parens, so the values are baked
+ * in; consumers needing different cutoffs can override these blocks).
+ *
+ * In stacked mode the priority-order tricks (`order: -1`,
+ * `margin-inline-start: auto`) are neutralised so source order becomes
+ * top-to-bottom visual order — primary-first, secondary-last. Authors can
+ * override per-button `order` to invert.
+ */
+
+@container stepper (max-width: 320px) {
+	:where(interop-stepper[data-actions-responsive="sm"] > .interop-stepper__actions) {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	:where(interop-stepper[data-actions-responsive="sm"] > .interop-stepper__actions > *) {
+		inline-size: 100%;
+		margin-inline-start: 0;
+		order: 0;
+	}
+}
+
+@container stepper (max-width: 480px) {
+	:where(interop-stepper[data-actions-responsive="md"] > .interop-stepper__actions) {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	:where(interop-stepper[data-actions-responsive="md"] > .interop-stepper__actions > *) {
+		inline-size: 100%;
+		margin-inline-start: 0;
+		order: 0;
+	}
+}
+
+@container stepper (max-width: 640px) {
+	:where(interop-stepper[data-actions-responsive="lg"] > .interop-stepper__actions) {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	:where(interop-stepper[data-actions-responsive="lg"] > .interop-stepper__actions > *) {
+		inline-size: 100%;
+		margin-inline-start: 0;
+		order: 0;
+	}
+}
+
+/* ── Responsive nav / menu visibility ───────────────────────────────────── */
+/*
+ * On narrow viewports the full step list collapses into a compact
+ * `.interop-stepper__nav-trigger` (a button when the menu is enabled, a
+ * passive div when menu="never"). On wide viewports the full <ol> step list
+ * is visible and the compact trigger is hidden.
+ *
+ * The action-bar `.interop-stepper__menu-trigger` is only shown on wide
+ * viewports under data-menu="always" — it's the explicit consumer override
+ * for "I want a menu UI even when labels are visible inline." Under "auto"
+ * the nav-trigger handles narrow and there's no need for the action-bar
+ * button at any size.
+ *
+ * Container queries don't read CSS variables in their parens, so the 600px
+ * threshold is hard-coded; consumers who need a different cutoff can
+ * override these blocks in their own CSS.
+ */
+
+/* Compact nav-trigger: hidden by default, shown on narrow viewports. */
+:where(.interop-stepper__nav-trigger) {
+	display: none;
+}
+
+/* Action-bar menu trigger: hidden by default; opt-in via data-menu="always"
+   on wide viewports only. */
+:where(.interop-stepper__menu-trigger) {
+	display: none;
+}
+
+/* Narrow viewport: show compact nav-trigger, hide the full <ol> step list. */
+@container stepper (max-width: 599px) {
+	:where(interop-stepper) :where(.interop-stepper__nav-trigger) {
+		display: inline-flex;
+	}
+	:where(interop-stepper) :where(ol[interop-step-list]) {
+		display: none;
+	}
+}
+
+/* Wide viewport: opt-in action-bar menu trigger when explicitly requested. */
+@container stepper (min-width: 600px) {
+	:where(interop-stepper[data-menu="always"]) :where(.interop-stepper__menu-trigger) {
+		display: inline-flex;
+	}
+}
+
+/* Always-hide rules: when menu="never", the popover doesn't render at all
+   (template-level @if), so nothing else to do here. */
+
+/* ── Compact nav-trigger ─────────────────────────────────────────────────── */
+/*
+ * The narrow-viewport stand-in for the full step list. Renders inline-flex
+ * as a pill containing: list icon · current step label · "N/M" progress.
+ * Click toggles the popover menu (when the menu is enabled). The passive
+ * variant — applied when menu="never" — is a <div> that drops the hover/
+ * cursor affordances and has no popovertarget wiring.
+ */
+
+:where(.interop-stepper__nav-trigger) {
+	-webkit-appearance: none;
+	appearance: none;
+
+	/* The nav-trigger manages its own padding — bypass the button's
+	   touch-inset calc so the visual pill matches the outer box on coarse
+	   pointers. Without this, the pill is inset by 0.25em (the default
+	   touch inset) but the trigger's padding-block doesn't compensate,
+	   producing visible gaps above and below the pill. */
+	--itx-button-touch-inset: 0em;
+
+	align-items: center;
+	gap: var(--itx-stepper-nav-trigger-gap, var(--itx-spacing-2));
+	padding-block: var(--itx-stepper-nav-trigger-padding-block, var(--itx-spacing-2));
+	padding-inline: var(--itx-stepper-nav-trigger-padding-inline, var(--itx-spacing-3));
+
+	font-family: inherit;
+	font-size: var(--itx-stepper-nav-trigger-font-size, var(--itx-fs-label));
+	font-weight: var(--itx-stepper-nav-trigger-font-weight, 500);
+	text-align: start;
+
+	color: var(--itx-stepper-nav-trigger-foreground, inherit);
+	background-color: var(--itx-stepper-nav-trigger-background-color, transparent);
+	border-color: var(--itx-stepper-nav-trigger-border-color, currentColor);
+	border-width: var(--itx-stepper-nav-trigger-border-width, 1px);
+	border-style: solid;
+	border-radius: var(--itx-stepper-nav-trigger-border-radius, 8px);
+
+	min-inline-size: 0;
+
+	transition-property: background-color, color, border-color;
+	transition-duration: var(--itx-stepper-nav-trigger-transition-duration, 96ms);
+	transition-timing-function: ease-in-out;
+}
+
+:where(button.interop-stepper__nav-trigger) {
+	cursor: pointer;
+}
+
+:where(button.interop-stepper__nav-trigger:hover) {
+	color: var(
+		--itx-stepper-nav-trigger-foreground-hover,
+		var(--itx-stepper-nav-trigger-foreground, inherit)
+	);
+	background-color: var(
+		--itx-stepper-nav-trigger-background-color-hover,
+		var(--itx-stepper-nav-trigger-background-color, transparent)
+	);
+}
+
+:where(.interop-stepper__nav-trigger--passive) {
+	cursor: default;
+}
+
+:where(.interop-stepper__nav-summary) {
+	flex: 1;
+	min-inline-size: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+:where(.interop-stepper__nav-progress) {
+	flex: none;
+	color: var(
+		--itx-stepper-nav-trigger-progress-color,
+		var(--itx-stepper-nav-trigger-foreground, inherit)
+	);
+	font-variant-numeric: tabular-nums;
+	opacity: 0.7;
+}
+
+/* ── Menu (popover) ──────────────────────────────────────────────────────── */
+/*
+ * The trigger and popover share a per-instance `anchor-name` /
+ * `position-anchor` value bound inline by InteropStepper (one unique dashed
+ * ident per stepper). Multiple stepper instances on the same page would
+ * otherwise collide on a shared anchor name and stack their popovers against
+ * the last trigger in source order.
+ */
+
+:where(.interop-stepper__menu[popover]) {
+	margin: 0;
+	padding: var(--itx-stepper-menu-padding, var(--itx-spacing-1));
+	min-inline-size: var(--itx-stepper-menu-min-width, 12rem);
+	max-inline-size: var(--itx-stepper-menu-max-width, 20rem);
+	background-color: var(--itx-stepper-menu-background-color, white);
+	border-color: var(--itx-stepper-menu-border-color, transparent);
+	border-width: var(--itx-stepper-menu-border-width, 1px);
+	border-style: solid;
+	border-radius: var(--itx-stepper-menu-border-radius, 8px);
+	box-shadow: var(--itx-stepper-menu-box-shadow, none);
+	color: inherit;
+	overflow: auto;
+	max-block-size: 60vh;
+
+	/* Anchor positioning: menu opens upward from the trigger (action bar is
+	   at the bottom of the stepper). Browsers without anchor-positioning fall
+	   back to centred top-layer positioning, which is still usable. */
+	inset: auto;
+	bottom: anchor(top);
+	left: anchor(left);
+	margin-block-end: var(--itx-stepper-menu-offset, var(--itx-spacing-2));
+}
+
+:where(.interop-stepper__menu-list) {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* ── Step list (ol) ──────────────────────────────────────────────────────── */
+
+:where(ol[interop-step-list]) {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: var(--itx-step-list-padding, 0);
+	gap: var(--itx-step-list-gap, 0);
+}
+
+:where(interop-stepper:not([data-orientation="vertical"]) ol[interop-step-list]) {
+	flex-direction: row;
+	align-items: flex-start;
+}
+
+:where(interop-stepper[data-orientation="vertical"] ol[interop-step-list]) {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+/* ── Step item (li) ──────────────────────────────────────────────────────── */
+
+:where(li[interop-step]) {
+	flex: var(--itx-step-flex, 1);
+	display: flex;
+	position: relative;
+	list-style: none;
+	min-inline-size: 0;
+}
+
+/* Horizontal: indicator stacks above label, item is centered */
+:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step]) {
+	flex-direction: column;
+	align-items: center;
+}
+
+/* Vertical: indicator and label sit side by side, full-width item */
+:where(interop-stepper[data-orientation="vertical"] li[interop-step]) {
+	flex-direction: row;
+	align-items: flex-start;
+	flex: none;
+}
+
+/* ── Step button (the navigable region) ──────────────────────────────────── */
+
+:where(li[interop-step] .interop-step__btn) {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-step-button-gap, var(--itx-spacing-2));
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	position: relative;
+	z-index: 1; /* Above the connector */
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+}
+
+/* Horizontal: button stacks indicator above label */
+:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step] .interop-step__btn) {
+	flex-direction: column;
+}
+
+/* Vertical: button lays out indicator beside label */
+:where(interop-stepper[data-orientation="vertical"] li[interop-step] .interop-step__btn) {
+	flex-direction: row;
+	text-align: start;
+}
+
+/* Focus ring lands on the indicator */
+:where(li[interop-step] .interop-step__btn:focus) {
+	outline: none;
+}
+
+:where(li[interop-step] .interop-step__btn:focus-visible .interop-step__indicator) {
+	outline: var(--itx-step-outline-width, 2px)
+		var(--itx-step-outline-style, solid)
+		var(--itx-step-outline-color, currentColor);
+	outline-offset: var(--itx-step-outline-offset, 3px);
+}
+
+/* ── Step indicator (the circle) ─────────────────────────────────────────── */
+
+:where(li[interop-step] .interop-step__indicator) {
+	--_size: var(--itx-step-indicator-size, 2rem);
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	inline-size: var(--_size);
+	block-size: var(--_size);
+	border-radius: var(--itx-step-indicator-border-radius, 50%);
+	font-size: var(--itx-step-indicator-font-size, 0.8125rem);
+	font-weight: var(--itx-step-indicator-font-weight, 600);
+	line-height: 1;
+
+	background: var(--_indicator-background);
+	color: var(--_indicator-foreground);
+	border: var(--itx-step-indicator-border-width, 2px)
+		var(--itx-step-indicator-border-style, solid)
+		var(--_indicator-border-color);
+
+	transition-property: background-color, color, border-color;
+	transition-duration: var(--itx-step-indicator-transition-duration, 160ms);
+	transition-timing-function: var(
+		--itx-step-indicator-transition-timing-function,
+		ease-in-out
+	);
+}
+
+/* ── State-resolved private slots ────────────────────────────────────────── */
+/*    State activation lives here. Theme files set values, not selectors.   */
+
+:where(li[interop-step]) {
+	--_indicator-background: var(--itx-step-indicator-background, transparent);
+	--_indicator-foreground: var(--itx-step-indicator-foreground, inherit);
+	--_indicator-border-color: var(--itx-step-indicator-border-color, currentColor);
+	--_label-color: var(--itx-step-label-color, inherit);
+	--_connector-color: var(--itx-step-connector-color, currentColor);
+}
+
+:where(li[interop-step].interop-step--active) {
+	--_indicator-background: var(
+		--itx-step-indicator-background-active,
+		var(--itx-step-indicator-background, transparent)
+	);
+	--_indicator-foreground: var(
+		--itx-step-indicator-foreground-active,
+		var(--itx-step-indicator-foreground, inherit)
+	);
+	--_indicator-border-color: var(
+		--itx-step-indicator-border-color-active,
+		var(--itx-step-indicator-border-color, currentColor)
+	);
+	--_label-color: var(
+		--itx-step-label-color-active,
+		var(--itx-step-label-color, inherit)
+	);
+}
+
+:where(li[interop-step].interop-step--completed) {
+	--_indicator-background: var(
+		--itx-step-indicator-background-completed,
+		var(--itx-step-indicator-background, transparent)
+	);
+	--_indicator-foreground: var(
+		--itx-step-indicator-foreground-completed,
+		var(--itx-step-indicator-foreground, inherit)
+	);
+	--_indicator-border-color: var(
+		--itx-step-indicator-border-color-completed,
+		var(--itx-step-indicator-border-color, currentColor)
+	);
+	--_label-color: var(
+		--itx-step-label-color-completed,
+		var(--itx-step-label-color, inherit)
+	);
+}
+
+/* The connector belongs to the path leading FROM this step. Once a step
+   has been passed (reviewed), the path it travels has been walked — so
+   connector colour follows reviewed-ness, not the effective status. This
+   makes the connector colorway-coloured both for completed-not-active
+   steps and for an active step the user has previously advanced past. */
+:where(li[interop-step].interop-step--reviewed) {
+	--_connector-color: var(
+		--itx-step-connector-color-completed,
+		var(--itx-step-connector-color, currentColor)
+	);
+}
+
+:where(li[interop-step].interop-step--error) {
+	--_indicator-background: var(
+		--itx-step-indicator-background-error,
+		var(--itx-step-indicator-background, transparent)
+	);
+	--_indicator-foreground: var(
+		--itx-step-indicator-foreground-error,
+		var(--itx-step-indicator-foreground, inherit)
+	);
+	--_indicator-border-color: var(
+		--itx-step-indicator-border-color-error,
+		var(--itx-step-indicator-border-color, currentColor)
+	);
+}
+
+:where(li[interop-step].interop-step--skipped) {
+	--_indicator-background: var(
+		--itx-step-indicator-background-skipped,
+		var(--itx-step-indicator-background, transparent)
+	);
+	--_indicator-foreground: var(
+		--itx-step-indicator-foreground-skipped,
+		var(--itx-step-indicator-foreground, inherit)
+	);
+	--_indicator-border-color: var(
+		--itx-step-indicator-border-color-skipped,
+		var(--itx-step-indicator-border-color, currentColor)
+	);
+}
+
+:where(li[interop-step].interop-step--locked) {
+	--_label-color: var(
+		--itx-step-label-color-locked,
+		var(--itx-step-label-color, inherit)
+	);
+}
+
+/* ── Composite state: active + reviewed ─────────────────────────────────── */
+/*
+ * Applied when the active step is one the user has previously advanced past
+ * (came back via Back / menu). Cascades on top of the .--active block above,
+ * so unset tokens here fall through to the active values — themes only need
+ * to set the slots they want to diverge.
+ *
+ * Specificity: two classes vs the single-class --active block, so this wins
+ * naturally without !important.
+ */
+:where(li[interop-step].interop-step--active.interop-step--reviewed) {
+	--_indicator-background: var(
+		--itx-step-indicator-background-active-reviewed,
+		var(
+			--itx-step-indicator-background-active,
+			var(--itx-step-indicator-background, transparent)
+		)
+	);
+	--_indicator-foreground: var(
+		--itx-step-indicator-foreground-active-reviewed,
+		var(
+			--itx-step-indicator-foreground-active,
+			var(--itx-step-indicator-foreground, inherit)
+		)
+	);
+	--_indicator-border-color: var(
+		--itx-step-indicator-border-color-active-reviewed,
+		var(
+			--itx-step-indicator-border-color-active,
+			var(--itx-step-indicator-border-color, currentColor)
+		)
+	);
+	--_label-color: var(
+		--itx-step-label-color-active-reviewed,
+		var(--itx-step-label-color-active, var(--itx-step-label-color, inherit))
+	);
+}
+
+/* ── Step number (default content of indicator when no icon) ─────────────── */
+
+:where(li[interop-step] .interop-step__number) {
+	font: inherit;
+	line-height: 1;
+}
+
+/* ── Step label ──────────────────────────────────────────────────────────── */
+
+:where(li[interop-step] .interop-step__label) {
+	font-family: var(--itx-step-label-font-family, inherit);
+	font-size: var(--itx-step-label-font-size, 0.8125rem);
+	font-weight: var(--itx-step-label-font-weight, 500);
+	color: var(--_label-color);
+	text-align: var(--itx-step-label-text-align, center);
+	min-inline-size: 0;
+}
+
+:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step] .interop-step__label) {
+	white-space: nowrap;
+}
+
+:where(interop-stepper[data-orientation="vertical"] li[interop-step] .interop-step__label) {
+	text-align: start;
+}
+
+:where(li[interop-step] .interop-step__optional) {
+	display: block;
+	font-size: var(--itx-step-optional-font-size, 0.75em);
+	font-weight: 400;
+	opacity: var(--itx-step-optional-opacity, 0.65);
+}
+
+/* ── Connector line ──────────────────────────────────────────────────────── */
+/*
+ * Drawn as ::after on every step except the last. The geometry differs by
+ * orientation: in horizontal mode the line bridges from the centre of this
+ * indicator to the centre of the next; in vertical mode it runs vertically
+ * down the indicator's centre line.
+ */
+
+:where(li[interop-step]:not(:last-child))::after {
+	content: "";
+	position: absolute;
+	background: var(--_connector-color);
+	transition: background-color
+		var(--itx-step-indicator-transition-duration, 160ms)
+		var(--itx-step-indicator-transition-timing-function, ease-in-out);
+	z-index: 0;
+}
+
+/* Horizontal: line runs across the top, between indicator centres. */
+:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step]:not(:last-child))::after {
+	--_size: var(--itx-step-indicator-size, 2rem);
+	--_thickness: var(--itx-step-connector-thickness, 2px);
+
+	top: calc(var(--_size) / 2 - var(--_thickness) / 2);
+	left: 50%;
+	right: -50%;
+	block-size: var(--_thickness);
+}
+
+/* Vertical: line runs down the left, through indicator centres. */
+:where(interop-stepper[data-orientation="vertical"] li[interop-step]:not(:last-child))::after {
+	--_size: var(--itx-step-indicator-size, 2rem);
+	--_thickness: var(--itx-step-connector-thickness, 2px);
+
+	top: var(--_size);
+	bottom: calc(var(--_size) * -1 + var(--_thickness));
+	left: calc(var(--_size) / 2 - var(--_thickness) / 2);
+	inline-size: var(--_thickness);
+}
+
+/* Note: structural rules for `section[interop-step-panel]` live in the
+   viewport block above (it's the only place panels render). */
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(li[interop-step] .interop-step__indicator),
+	:where(li[interop-step]:not(:last-child))::after {
+		transition: none;
+	}
+}
+
+/* ── High contrast ───────────────────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+	:where(li[interop-step].interop-step--active .interop-step__indicator) {
+		outline: 2px solid currentColor;
+	}
+}

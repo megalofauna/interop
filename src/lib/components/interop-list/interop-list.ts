@@ -5,18 +5,14 @@ import {
   computed,
   input,
   inject,
-  signal,
-  effect,
   TrackByFunction,
   TemplateRef,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { Observable, isObservable } from "rxjs";
 import {
-  InteropCollectionInput,
-  isCollection,
-} from "../../../types/collection";
-import { ManageAttributesDirective } from "../../directives/manage-attrs.directive";
+  type InteropCollectionInput,
+  interopCollection,
+} from "../../collection/public-api";
 import { NormalizeSemanticsDirective } from "../../directives/normalize-semantics.directive";
 import {
   InteropAttribute,
@@ -117,90 +113,12 @@ export class InteropList<T = any> {
     return key ? this.attrsManager.Presets[key] : null;
   });
 
-  // Internal state
-  private itemsSignal = signal<T[]>([]);
+  // Resolved collection — handles arrays, signals, observables, promises,
+  // iterables, and existing InteropCollection instances. Cleanup wired to
+  // component DestroyRef.
+  private readonly resolved = interopCollection<T>(this.collection);
 
-  // Computed
-  items = computed(() => this.itemsSignal());
-
-  constructor() {
-    // Effect to watch collection changes
-    effect(() => {
-      const collectionInput = this.collection();
-      this.processCollection(collectionInput);
-    });
-  }
-
-  private processCollection(
-    input: InteropCollectionInput<T> | undefined,
-  ): void {
-    if (!input) {
-      this.itemsSignal.set([]);
-      return;
-    }
-
-    // Handle Collection objects
-    if (isCollection(input)) {
-      this.processSimpleIterable(input.items);
-      return;
-    }
-
-    // Handle simple iterables directly
-    this.processSimpleIterable(input);
-  }
-
-  private processSimpleIterable(iterable: any): void {
-    // Handle arrays directly
-    if (Array.isArray(iterable)) {
-      console.log("Setting items:", iterable);
-      this.itemsSignal.set(iterable);
-      return;
-    }
-
-    // Handle observables
-    if (isObservable(iterable)) {
-      (iterable as Observable<T[]>).subscribe({
-        next: (items: T[]) => {
-          this.itemsSignal.set(
-            Array.isArray(items) ? items : Array.from(items),
-          );
-        },
-        error: (error) => {
-          console.error("Error loading items", error);
-          this.itemsSignal.set([]);
-        },
-      });
-      return;
-    }
-
-    // Handle promises
-    if (iterable && typeof iterable.then === "function") {
-      Promise.resolve(iterable)
-        .then((items: any) => {
-          this.itemsSignal.set(
-            Array.isArray(items) ? items : Array.from(items),
-          );
-        })
-        .catch((error: any) => {
-          console.error("Error loading items", error);
-          this.itemsSignal.set([]);
-        });
-      return;
-    }
-
-    // Handle other iterables
-    if (
-      iterable &&
-      typeof iterable !== "string" &&
-      Symbol.iterator in Object(iterable)
-    ) {
-      this.itemsSignal.set(Array.from(iterable));
-      return;
-    }
-
-    // Fallback
-    this.itemsSignal.set([]);
-  }
+  readonly items = this.resolved.items;
 
   /**
    * Internal resolver for Angular's `trackBy` to optimize DOM updates.

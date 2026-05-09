@@ -15,10 +15,9 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
-	InteropCollectionInput,
-	isCollection,
-} from "../../../types/collection";
-import { InteropCollectionService } from "../../services/interop-collection.service";
+	type InteropCollectionInput,
+	interopCollection,
+} from "../../collection/public-api";
 import {
 	InteropAttribute,
 	SetAttrsConfig,
@@ -26,6 +25,7 @@ import {
 } from "../../services/interop-attribute.service";
 import { createComponentTrackByFn } from "../../utils/track-by";
 import { InteropCellDef, InteropCellContext } from "./interop-cell-def";
+import type { InteropTableSortApi } from "./interop-table-sort.token";
 
 /**
  * A sentinel item that renders as a group header row spanning all columns.
@@ -75,6 +75,20 @@ export interface TableColumn<T = any> {
 	 * must declare their offset manually (sum of all preceding sticky column widths).
 	 */
 	stickyLeft?: number;
+
+	/**
+	 * Whether this column participates in sorting when [itxSort] is applied to
+	 * the table. Has no effect without [itxSort] — no bundle cost for tables
+	 * that don't import the sort directive.
+	 */
+	sortable?: boolean;
+
+	/**
+	 * Custom comparator for 'auto' mode sorting. When provided, replaces the
+	 * default locale-aware comparator for this column only. Receives two row
+	 * items; return negative / zero / positive for sort order.
+	 */
+	comparator?: (a: T, b: T) => number;
 }
 
 /**
@@ -85,27 +99,25 @@ export interface TableColumn<T = any> {
  * <interop-table [collection]="users" />
  * ```
  *
- * @example Scrollable with sticky first column
+ * @example Wide table with sticky first column, exposed as a landmark
  * ```html
  * <interop-table
  *   [collection]="rows"
  *   [columns]="cols"
- *   [scrollable]="true"
- *   scrollLabel="Cargo manifest"
+ *   scrollRegionLabel="Cargo manifest"
  * />
  * ```
- * Where `cols[0]` has `sticky: true`.
+ * Where `cols[0]` has `sticky: true`. `scrollable` defaults to true; naming
+ * the region promotes the scroll wrapper to an ARIA landmark.
  */
 @Component({
 	selector: "interop-table",
 	standalone: true,
 	imports: [CommonModule],
 	templateUrl: "./interop-table.html",
-	styleUrl: "./interop-table.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropTable<T = any> implements OnDestroy {
-	private readonly collectionService = inject(InteropCollectionService);
 	private readonly attrsManager = inject(InteropAttribute);
 	private readonly scrollContainerEl =
 		viewChild<ElementRef<HTMLDivElement>>("scrollContainerEl");
@@ -140,18 +152,47 @@ export class InteropTable<T = any> implements OnDestroy {
 	maxRows = input<number | null>(null);
 
 	/**
-	 * Enable horizontal overflow scrolling.
-	 * The table is wrapped in a focusable scroll region with role="region" and
-	 * an accessible label. Combine with `sticky: true` on key columns.
+	 * Whether to wrap the table in a horizontal-scroll container. Default is
+	 * `true` — wide tables overflow gracefully out of the box and the page
+	 * remains layout-stable on narrow viewports. Set to `false` to render the
+	 * table without an overflow wrapper (e.g. when a parent already manages
+	 * overflow, or when the table is guaranteed to fit).
 	 */
-	scrollable = input<boolean>(false);
+	scrollable = input<boolean>(true);
 
 	/**
-	 * Accessible label for the scroll region.
-	 * Announced by screen readers as "Label, region".
-	 * Defaults to "Scrollable table" when not provided.
+	 * Accessible label for the scroll region. **Providing a label is what
+	 * promotes the wrapper to an ARIA landmark** (`role="region"`,
+	 * `tabindex="0"`, focus ring). Without a label, the wrapper still scrolls
+	 * but is not exposed as a landmark — keeping it out of the screen-reader
+	 * landmark list unless the author has named it.
+	 *
+	 * Naming a region is the AT contract: a region without a name is not a
+	 * useful landmark. Pair `scrollable` (mechanism) with this input
+	 * (semantics) consciously.
+	 *
+	 * @example Promote to landmark
+	 * ```html
+	 * <interop-table scrollRegionLabel="Cargo manifest" [collection]="rows" />
+	 * ```
 	 */
-	scrollLabel = input<string | null>(null);
+	scrollRegionLabel = input<string | null>(null);
+
+	// ── Optional sort integration ─────────────────────────────────────────────
+
+	private readonly _sortRef = signal<InteropTableSortApi | null>(null);
+
+	/**
+	 * Signal: the [itxSort] directive registers itself here on construction and
+	 * clears on destroy. Null when no sort directive is present — all sort
+	 * template branches and the items transform are inert in that case.
+	 */
+	protected readonly sort = this._sortRef.asReadonly();
+
+	/** Called by [itxSort] on construction/destroy. Not part of the public API. */
+	registerSort(api: InteropTableSortApi | null): void {
+		this._sortRef.set(api);
+	}
 
 	// ── Content children ──────────────────────────────────────────────────────
 
@@ -167,7 +208,7 @@ export class InteropTable<T = any> implements OnDestroy {
 
 	// ── Internal state ────────────────────────────────────────────────────────
 
-	private readonly collectionInstance = signal<any>(null);
+	private readonly resolved = interopCollection<T>(this.collection);
 	private readonly autoGeneratedColumns = signal<TableColumn<T>[]>([]);
 	private rafId: number | null = null;
 
@@ -176,23 +217,20 @@ export class InteropTable<T = any> implements OnDestroy {
 
 	// ── Computed ──────────────────────────────────────────────────────────────
 
-	readonly resolvedCollection = computed(() => {
-		const collection = this.collection();
-		if (!collection) return null;
-		const existing = this.collectionService.computedResolve(collection);
-		if (existing) return existing;
-		return this.collectionInstance();
-	});
-
 	readonly items = computed(() => {
-		const items = this.resolvedCollection()?.items() ?? [];
+		const raw = this.resolved.items();
+		// When [itxSort] is present, getTransformedItems() reads its own
+		// activeKey/direction signals — those reads are tracked here, so the
+		// computed re-runs automatically on every sort change.
+		const sort = this.sort();
+		const items = sort ? sort.getTransformedItems(raw) : raw;
 		const max = this.maxRows();
 		return max == null ? items : items.slice(0, max);
 	});
 
-	readonly isLoading = computed(() => this.resolvedCollection()?.loading() ?? false);
-	readonly hasError = computed(() => this.resolvedCollection()?.hasError() ?? false);
-	readonly isEmpty = computed(() => this.resolvedCollection()?.isEmpty() ?? true);
+	readonly isLoading = this.resolved.loading;
+	readonly hasError = this.resolved.hasError;
+	readonly isEmpty = this.resolved.isEmpty;
 
 	readonly resolvedColumns = computed(() => {
 		const custom = this.columns();
@@ -205,20 +243,21 @@ export class InteropTable<T = any> implements OnDestroy {
 		this.resolvedColumns().some((c) => c.sticky),
 	);
 
+	/**
+	 * True when the scroll wrapper should be exposed as an ARIA landmark
+	 * (`role="region"` + accessible name + focusable). Requires both
+	 * `scrollable` and a non-empty `scrollRegionLabel` — naming the region
+	 * is what makes it a landmark; an unnamed region is not announced.
+	 */
+	readonly hasScrollRegion = computed(() => {
+		if (!this.scrollable()) return false;
+		const label = this.scrollRegionLabel();
+		return label != null && label !== "";
+	});
+
 	// ── Lifecycle ─────────────────────────────────────────────────────────────
 
 	constructor() {
-		effect(() => {
-			const collectionInput = this.collection();
-			if (collectionInput) {
-				this.collectionInstance.set(
-					this.collectionService.resolve(collectionInput),
-				);
-			} else {
-				this.collectionInstance.set(null);
-			}
-		});
-
 		effect(() => {
 			const items = this.items();
 			const custom = this.columns();
@@ -280,6 +319,14 @@ export class InteropTable<T = any> implements OnDestroy {
 	);
 
 	trackByColumnIndex = (_index: number, column: TableColumn<T>): any => column.key;
+
+	getAriaSort(column: TableColumn<T>): "ascending" | "descending" | "none" {
+		const sort = this.sort();
+		if (!sort) return "none";
+		const key = String(column.key);
+		if (sort.activeKey() !== key) return "none";
+		return sort.direction() === "asc" ? "ascending" : "descending";
+	}
 
 	// ── Private ───────────────────────────────────────────────────────────────
 

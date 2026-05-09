@@ -2,9 +2,9 @@
 	#scrollContainerEl
 	class="interop-table__scroll"
 	[class.interop-table__scroll--active]="scrollable()"
-	[attr.role]="scrollable() ? 'region' : null"
-	[attr.aria-label]="scrollable() ? (scrollLabel() ?? 'Scrollable table') : null"
-	[attr.tabindex]="scrollable() ? 0 : null"
+	[attr.role]="hasScrollRegion() ? 'region' : null"
+	[attr.aria-label]="hasScrollRegion() ? scrollRegionLabel() : null"
+	[attr.tabindex]="hasScrollRegion() ? 0 : null"
 	[attr.data-scrolled]="isScrolled() || null"
 	(scroll)="onScroll()"
 >
@@ -60,9 +60,20 @@
 							class="interop-table-header-cell"
 							[attr.data-column-key]="column.key"
 							[attr.data-sticky]="column.sticky || null"
+							[attr.aria-sort]="sort() && column.sortable ? getAriaSort(column) : null"
 							[style.left]="column.sticky ? getStickyLeft(column) : null"
 						>
-							<span class="interop-table-header-text">{{ getColumnLabel(column) }}</span>
+							@if (sort() && column.sortable) {
+								<button
+									type="button"
+									class="interop-table-sort-button"
+									(click)="sort()!.toggle(column.key.toString())"
+								>
+									{{ getColumnLabel(column) }}
+								</button>
+							} @else {
+								<span class="interop-table-header-text">{{ getColumnLabel(column) }}</span>
+							}
 						</th>
 					}
 				</tr>

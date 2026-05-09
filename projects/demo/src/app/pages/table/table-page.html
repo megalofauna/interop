@@ -12,6 +12,7 @@
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic">
 			<interop-table [collection]="cargoManifest" [columns]="columns"></interop-table>
+			<itx-code-block [files]="basicFiles()" />
 		</demo-example>
 
 		<demo-example label="Custom cell templates">
@@ -25,9 +26,34 @@
 					</span>
 				</ng-template>
 			</interop-table>
+			<itx-code-block [files]="customCellsFiles()" />
 		</demo-example>
 	</demo-section>
 
+
+	<!-- ── Sorting ───────────────────────────────────────────────────────── -->
+	<demo-section id="sorting" heading="Sorting">
+		<demo-example label="Auto sort — table sorts its own items">
+			<interop-table
+				[collection]="cargoManifest"
+				[columns]="sortableColumns"
+				itxSort
+				(sortChange)="onSortChange($event)"
+			>
+				<ng-template itxCell="status" let-entry>
+					<span [class]="'table-page__status table-page__status--' + entry.status">
+						{{ entry.status }}
+					</span>
+				</ng-template>
+			</interop-table>
+			<demo-state>
+				<demo-state-item label="last sortChange">
+					{{ lastSortEvent() ? (lastSortEvent()!.key + ' ' + lastSortEvent()!.direction) : '—' }}
+				</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="sortFiles()" />
+		</demo-example>
+	</demo-section>
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">

@@ -43,10 +43,15 @@
 
 @import "./protocol/components/button.css";
 @import "./protocol/components/chip.css";
+@import "./protocol/components/dialog.css";
 @import "./protocol/components/indicator.css";
+@import "./protocol/components/popover.css";
 @import "./protocol/components/progress.css";
 @import "./protocol/components/segmented-control.css";
+@import "./protocol/components/stepper.css";
+@import "./protocol/components/table.css";
 @import "./protocol/components/toast.css";
+@import "./protocol/components/resizable.css";
 
 /* ── Composites ─────────────────────────────────────────────────────────── */
 

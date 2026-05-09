@@ -1,0 +1,51 @@
+/*
+ * InteropTable — Protocol theme.
+ *
+ * Sets values for typography, header, body, sticky-column, group-row, and
+ * state-row tokens. Structure and state activation live in the component
+ * CSS (`styles/components/table.css`) — this file only declares values.
+ */
+
+:where([interop-root]) {
+	/* ── Typography ─────────────────────────────────────────────────────── */
+	--itx-table-font-size: var(--itx-fs-caption, 0.875rem);
+	--itx-table-font-weight: 400;
+	--itx-table-cell-padding: var(--itx-spacing-3) var(--itx-spacing-4);
+
+	/* ── Body ───────────────────────────────────────────────────────────── */
+	--itx-table-body-color: var(--itx-on-surface, var(--itx-neutral-11));
+	--itx-table-stripe-bg: transparent;
+	--itx-table-row-hover-bg: var(--itx-surface-hover, oklch(0 0 0 / 0.03));
+	--itx-table-row-border-width: 1px;
+	--itx-table-row-transition-duration: var(--itx-duration-fast, 100ms);
+	--itx-table-row-transition-easing: var(--itx-easing-standard, ease);
+
+	/* ── Header ─────────────────────────────────────────────────────────── */
+	--itx-table-header-bg: var(--itx-surface-above, transparent);
+	--itx-table-header-color: var(--itx-neutral-12);
+	--itx-table-header-font-weight: 500;
+	--itx-table-header-border-width: 2px;
+
+	/* ── Borders ────────────────────────────────────────────────────────── */
+	--itx-table-border: var(--itx-border, var(--itx-neutral-5));
+
+	/* ── Sticky columns ─────────────────────────────────────────────────── */
+	--itx-table-sticky-bg: var(--itx-surface, var(--itx-neutral-1));
+	--itx-table-sticky-shadow:
+		inset -1px 0 0 var(--itx-table-border),
+		4px 0 8px -2px oklch(0 0 0 / 0.1);
+
+	/* ── State rows (loading / error / empty) ───────────────────────────── */
+	--itx-table-state-color: var(--itx-muted, var(--itx-neutral-9));
+
+	/* ── Scroll-region focus ring ───────────────────────────────────────── */
+	--itx-table-focus-outline-color: var(--itx-colorway-8);
+
+	/* ── Group rows ─────────────────────────────────────────────────────── */
+	--itx-table-group-label-padding-block-start: var(--itx-spacing-6);
+	--itx-table-group-label-color: var(--itx-muted, var(--itx-neutral-9));
+	--itx-table-group-label-font-size: var(--itx-fs-fine-print, 0.75rem);
+	--itx-table-group-label-font-weight: 500;
+	--itx-table-group-label-letter-spacing: 0.06em;
+	--itx-table-group-label-text-transform: uppercase;
+}

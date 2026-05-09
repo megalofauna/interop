@@ -1,0 +1,21 @@
+.popover-page__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-3);
+	align-items: center;
+}
+
+.popover-page__placement-grid {
+	display: grid;
+	/* grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); */
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	gap: var(--itx-spacing-2);
+	max-width: 32rem;
+}
+
+.popover-page__placement-anchor {
+	display: flex;
+	justify-content: center;
+	margin-block-start: var(--itx-spacing-4);
+}

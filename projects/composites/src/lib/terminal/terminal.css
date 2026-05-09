@@ -1,89 +1,107 @@
-/* ── Tokens ────────────────────────────────────────────────────────────────
+/*
+ * Public tokens — set on :host or any ancestor:
  *
- *   --itx-term-bg              Background color
- *   --itx-term-fg              Primary text / glow color
- *   --itx-term-glow            text-shadow value
- *   --itx-term-font            Font stack
- *   --itx-term-font-size       Font size
- *   --itx-term-line-height     Line height
- *   --itx-term-padding         Inner padding
- *   --itx-term-border-radius   Corner radius
- *   --itx-term-max-height      Scroll container max height
- *   --itx-term-prompt-color    Prompt glyph color
- *   --itx-term-delta-color     Timestamp delta color
+ *   Layout
+ *   --itx-term-max-height          Scroll region max-height
+ *   --itx-term-padding             Inner padding
+ *   --itx-term-radius              Border radius
+ *   --itx-term-font-family         Monospace font stack
+ *   --itx-term-font-size           Base font size
+ *   --itx-term-line-height         Line height
+ *
+ *   Colors (both variants)
+ *   --itx-term-background          Surface background
+ *   --itx-term-color               Primary text color
+ *   --itx-term-glow                text-shadow for phosphor effect; 'none' disables
+ *   --itx-term-prompt-color        Prompt glyph color
+ *   --itx-term-delta-color         Timestamp delta color
+ *   --itx-term-caret-color         Blinking cursor color
+ *   --itx-term-scrollbar-color     Scrollbar thumb color
+ *
+ *   Terminal variant only
+ *   --itx-term-scan-line-color     Repeating scan-line overlay color
  */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
 
 :host {
 	display: block;
 	position: relative;
 
-	--itx-term-bg: oklch(8% 0.02 140);
-	--itx-term-fg: oklch(83% 0.26 140);
-	--itx-term-glow: 0 0 6px currentColor, 0 0 12px oklch(83% 0.26 140 / 0.3);
-	--itx-term-font:
-		ui-monospace, "Cascadia Code", "Fira Code", "Courier New", Courier,
-		monospace;
-	--itx-term-font-size: 0.8125rem;
-	--itx-term-line-height: 1.65;
-	--itx-term-padding: 1rem;
-	--itx-term-border-radius: 6px;
-	--itx-term-max-height: 18rem;
-	--itx-term-prompt-color: oklch(65% 0.2 140);
-	--itx-term-delta-color: oklch(55% 0.12 140);
+	/* Resolved private slots */
+	--_max-height:      var(--itx-term-max-height,    18rem);
+	--_padding:         var(--itx-term-padding,        1rem);
+	--_radius:          var(--itx-term-radius,         0);
+	--_font:            var(--itx-term-font-family,    ui-monospace, "Cascadia Code", "Fira Code", monospace);
+	--_font-size:       var(--itx-term-font-size,      0.8125rem);
+	--_line-height:     var(--itx-term-line-height,    1.65);
+	--_background:      var(--itx-term-background,     transparent);
+	--_color:           var(--itx-term-color,          inherit);
+	--_glow:            var(--itx-term-glow,           none);
+	--_prompt-color:    var(--itx-term-prompt-color,   var(--_color));
+	--_delta-color:     var(--itx-term-delta-color,    var(--_color));
+	--_caret-color:     var(--itx-term-caret-color,    var(--_color));
+	--_scrollbar-color: var(--itx-term-scrollbar-color, transparent);
 }
 
-/* ── Scroll wrapper ───────────────────────────────────────────────────────── */
+/* ── Reset button ────────────────────────────────────────────────────────── */
 
-.itx-term__scroll {
+:where(.itx-term__reset) {
+	position: absolute;
+	top: var(--itx-spacing-2, 0.5rem);
+	inset-inline-end: var(--itx-spacing-2, 0.5rem);
+	z-index: 1;
+}
+
+/* ── Scroll wrapper ──────────────────────────────────────────────────────── */
+
+:where(.itx-term__scroll) {
 	position: relative;
-	background: var(--itx-term-bg);
-	border-radius: var(--itx-term-border-radius);
-	max-height: var(--itx-term-max-height);
+	border-radius: var(--_radius);
+	background: var(--_background);
+	max-height: var(--_max-height);
 	overflow-y: auto;
 	scrollbar-width: thin;
-	scrollbar-color: oklch(28% 0.08 140) transparent;
+	scrollbar-color: var(--_scrollbar-color) transparent;
 }
 
-/* ── Scan lines ──────────────────────────────────────────────────────────── */
+/* ── Scan-line overlay (opt-in, terminal variant) ────────────────────────── */
 
-:host(.itx-term--scan-lines) .itx-term__scroll::after {
+:host(.itx-term--scan-lines) :where(.itx-term__scroll)::after {
 	content: "";
 	position: absolute;
 	inset: 0;
 	background: repeating-linear-gradient(
 		to bottom,
-		transparent,
-		transparent 5px,
-		oklch(0% 0 0 / 0.5) 2px,
-		oklch(0% 0 0 / 0.5) 4px
+		transparent 0,
+		transparent 3px,
+		var(--itx-term-scan-line-color, oklch(0% 0 0 / 0.2)) 3px,
+		var(--itx-term-scan-line-color, oklch(0% 0 0 / 0.2)) 4px
 	);
 	pointer-events: none;
 	border-radius: inherit;
 }
 
-.itx-term__reset {
-}
+/* ── Log body ────────────────────────────────────────────────────────────── */
 
-/* ── Log body ─────────────────────────────────────────────────────────────── */
-
-.itx-term__log {
-	padding: var(--itx-term-padding);
-	color: var(--itx-term-fg);
-	font-family: var(--itx-term-font);
-	font-size: var(--itx-term-font-size);
-	line-height: var(--itx-term-line-height);
-	text-shadow: var(--itx-term-glow);
+:where(.itx-term__log) {
+	padding: var(--_padding);
+	color: var(--_color);
+	font-family: var(--_font);
+	font-size: var(--_font-size);
+	line-height: var(--_line-height);
+	text-shadow: var(--_glow);
 }
 
 /* ── Lines ───────────────────────────────────────────────────────────────── */
 
-.itx-term__line {
+:where(.itx-term__line) {
 	display: flex;
 	gap: 0.5ch;
 	align-items: baseline;
 }
 
-.itx-term__text {
+:where(.itx-term__text) {
 	flex: 1;
 	white-space: pre-wrap;
 	word-break: break-all;
@@ -91,17 +109,16 @@
 
 /* ── Prompt ──────────────────────────────────────────────────────────────── */
 
-.itx-term__prompt {
-	color: var(--itx-term-prompt-color);
+:where(.itx-term__prompt) {
+	color: var(--_prompt-color);
 	flex-shrink: 0;
 	user-select: none;
-	text-shadow: var(--itx-term-glow);
 }
 
 /* ── Timestamp delta ─────────────────────────────────────────────────────── */
 
-.itx-term__delta {
-	color: var(--itx-term-delta-color);
+:where(.itx-term__delta) {
+	color: var(--_delta-color);
 	flex-shrink: 0;
 	font-size: 0.9em;
 	text-shadow: none;
@@ -110,28 +127,24 @@
 
 /* ── Cursor ──────────────────────────────────────────────────────────────── */
 
-.itx-term__cursor {
+:where(.itx-term__cursor) {
 	display: flex;
 	gap: 0.5ch;
 	align-items: baseline;
 	margin-block-start: 0.1em;
 }
 
-.itx-term__caret {
+:where(.itx-term__caret) {
+	color: var(--_caret-color);
 	opacity: 0.25;
 }
 
-:host(.itx-term--active) .itx-term__caret {
+:host(.itx-term--active) :where(.itx-term__caret) {
 	opacity: 1;
 	animation: itx-term-blink 1.1s step-start infinite;
 }
 
 @keyframes itx-term-blink {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0;
-	}
+	0%, 100% { opacity: 1; }
+	50%       { opacity: 0; }
 }

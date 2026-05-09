@@ -1,0 +1,55 @@
+/*
+ * InteropPopover — Protocol theme.
+ *
+ * Sets values for sizing, appearance, animation, and arrow tokens. Layout
+ * and animation mechanism live in the component CSS
+ * (`styles/components/popover.css`) — this file only declares values.
+ *
+ * Backdrop tokens (`--itx-backdrop-color`, `--itx-backdrop-blur`) are global
+ * and live in `protocol/foundation.css`. The popover's [showBackdrop]
+ * opt-in consumes those globals directly; no per-component override needed
+ * unless a popover wants to diverge.
+ */
+
+:where([interop-root]) {
+	/* ── Sizing ─────────────────────────────────────────────────────────── */
+	--itx-popover-min-width: 0;
+	--itx-popover-max-width: min(90vw, 24rem);
+	--itx-popover-max-height: 70vh;
+	--itx-popover-padding: var(--itx-spacing-3) var(--itx-spacing-4);
+
+	/* ── Appearance ─────────────────────────────────────────────────────── */
+	--itx-popover-background: var(--itx-surface-above);
+	--itx-popover-foreground: var(--itx-on-surface);
+	--itx-popover-border-radius: var(--itx-radius-md);
+	--itx-popover-border-width: 1px;
+	--itx-popover-border-style: solid;
+	--itx-popover-border-color: var(--itx-border);
+	--itx-popover-shadow: var(--itx-shadow-md);
+
+	/* ── Animation ──────────────────────────────────────────────────────── */
+	--itx-popover-enter-duration: var(--itx-duration-fast);
+	--itx-popover-exit-duration: var(--itx-duration-fast);
+	--itx-popover-enter-easing: var(--itx-easing-decelerate);
+	--itx-popover-exit-easing: var(--itx-easing-accelerate);
+	/*
+	 * Entry/exit translate values are written as a 2-axis translate vector.
+	 * Default: subtle 0.25rem upward fade-in (suitable for `bottom` placement).
+	 * For other placements the translate axis still works visually — the panel
+	 * fades in from the trigger axis with a slight slide.
+	 */
+	--itx-popover-enter-translate: 0 -0.25rem;
+	--itx-popover-exit-translate: 0 -0.25rem;
+
+	/* ── Arrow ──────────────────────────────────────────────────────────── */
+	/*
+	 * Built-in CSS-triangle uses --itx-popover-arrow-size as the side length
+	 * of the triangle. Custom arrows (consumer-supplied [interop-popover-arrow]
+	 * marker children) use the same token to compute their negative offset
+	 * from the panel edge — keeping the visual rhythm consistent between the
+	 * two arrow modes.
+	 */
+	--itx-popover-arrow-size: 8px;
+	--itx-popover-arrow-color: var(--itx-popover-background);
+	--itx-popover-arrow-offset: 0px;
+}

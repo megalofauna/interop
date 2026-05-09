@@ -31,6 +31,8 @@ interface DisplayEntry {
 	styleUrl: "./terminal.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
+		"[class.itx-term--terminal]": "variant() === 'terminal'",
+		"[class.itx-term--plain]": "variant() === 'plain'",
 		"[class.itx-term--scan-lines]": "scanLines()",
 		"[class.itx-term--active]": "entries().length > 0",
 	},
@@ -40,6 +42,13 @@ export class Terminal {
 	readonly maxEntries = input<number>(200);
 	readonly prompt = input<string>("›");
 	readonly scanLines = input<boolean>(false);
+	/**
+	 * Visual variant.
+	 * - `'terminal'` — retro phosphor look: dark surface, glow, blinking cursor.
+	 * - `'plain'` — minimal log view: transparent surface, inherits surrounding
+	 *   colors, no glow effects.
+	 */
+	readonly variant = input<"terminal" | "plain">("terminal");
 	readonly reset = output<void>();
 
 	private readonly scrollEl = viewChild<ElementRef<HTMLElement>>("scrollEl");

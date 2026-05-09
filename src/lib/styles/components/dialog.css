@@ -1,0 +1,194 @@
+/*
+ * InteropDialog — structural foundation.
+ *
+ * Rendering rules for `dialog[interop-dialog]`.
+ *
+ * Loaded globally via `interop.css`. The directive wires open/close,
+ * focus management, and ESC/backdrop/form-submit close paths. This file
+ * owns the visual layer: sizing, animation, and backdrop.
+ *
+ * Token values (colors, shadow, durations) are set by the active theme —
+ * see `themes/protocol/components/dialog.css`. This file only uses them.
+ *
+ * All selectors use :where() for zero specificity so consumer overrides
+ * always win. `::backdrop` pseudo-elements are placed outside :where()
+ * per the CSS spec (pseudo-elements cannot appear inside :where()).
+ *
+ * Public tokens:
+ *
+ *   Sizing
+ *   --itx-dialog-width              default: min(90vw, 32rem)
+ *   --itx-dialog-max-height         default: 85dvh
+ *   --itx-dialog-padding            default: var(--itx-spacing-8)
+ *
+ *   Appearance
+ *   --itx-dialog-background
+ *   --itx-dialog-foreground
+ *   --itx-dialog-border-radius
+ *   --itx-dialog-border-width       default: 0
+ *   --itx-dialog-border-color
+ *   --itx-dialog-shadow
+ *
+ *   Backdrop
+ *   --itx-dialog-backdrop-color
+ *   --itx-dialog-backdrop-blur      default: 0px
+ *
+ *   Animation
+ *   --itx-dialog-enter-duration
+ *   --itx-dialog-exit-duration
+ *   --itx-dialog-enter-easing
+ *   --itx-dialog-exit-easing
+ */
+
+/* ── Dialog element ──────────────────────────────────────────────────────── */
+
+:where(dialog[interop-dialog]) {
+	width: var(--itx-dialog-width, min(90vw, 32rem));
+	max-height: var(--itx-dialog-max-height, 85dvh);
+	padding: var(--itx-dialog-padding, var(--itx-spacing-6, 1.5rem));
+	border: var(--itx-dialog-border-width, 0) solid
+		var(--itx-dialog-border-color, var(--itx-border, currentColor));
+	border-radius: var(--itx-dialog-border-radius, 0.5rem);
+	background: var(--itx-dialog-background, Canvas);
+	color: var(--itx-dialog-foreground, CanvasText);
+	box-shadow: var(--itx-dialog-shadow, 0 8px 32px rgba(0 0 0 / 0.18));
+	overflow-y: auto;
+	overflow-x: hidden;
+	opacity: 1;
+	translate: 0 0;
+
+	@supports (transition-behavior: allow-discrete) {
+		transition:
+			opacity var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out),
+			translate
+				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out),
+			overlay var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				allow-discrete,
+			display var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				allow-discrete;
+	}
+
+	@supports not (transition-behavior: allow-discrete) {
+		transition:
+			opacity var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out),
+			translate
+				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out);
+	}
+}
+
+/* Entry: dialog begins here, transitions to opacity:1 / translate:0 above. */
+@starting-style {
+	:where(dialog[interop-dialog][open]) {
+		opacity: 0;
+		translate: 0 -0.75rem;
+	}
+}
+
+/* Exit: dialog not[open] slides down slightly and fades out. */
+:where(dialog[interop-dialog]:not([open])) {
+	opacity: 0;
+	translate: 0 0.25rem;
+
+	@supports (transition-behavior: allow-discrete) {
+		transition:
+			opacity var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in),
+			translate var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in),
+			overlay var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				allow-discrete,
+			display var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				allow-discrete;
+	}
+
+	@supports not (transition-behavior: allow-discrete) {
+		transition:
+			opacity var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in),
+			translate var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in);
+	}
+}
+
+/* ── Backdrop ────────────────────────────────────────────────────────────── */
+/*
+ * `::backdrop` cannot appear inside :where(), so the full selector is
+ * written here at its natural specificity. This is the only place in the
+ * dialog CSS that intentionally carries non-zero specificity.
+ */
+
+dialog[interop-dialog]::backdrop {
+	background: var(--itx-dialog-backdrop-color, rgba(0 0 0 / 0.5));
+	backdrop-filter: blur(var(--itx-dialog-backdrop-blur, 0px));
+
+	@supports (transition-behavior: allow-discrete) {
+		transition:
+			background
+				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out),
+			backdrop-filter
+				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out),
+			overlay var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				allow-discrete,
+			display var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				allow-discrete;
+	}
+
+	@supports not (transition-behavior: allow-discrete) {
+		transition:
+			background
+				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out),
+			backdrop-filter
+				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-easing, ease-out);
+	}
+}
+
+/* Backdrop entry: fades in from transparent. */
+@starting-style {
+	dialog[interop-dialog][open]::backdrop {
+		background: transparent;
+		backdrop-filter: blur(0px);
+	}
+}
+
+/*
+ * Backdrop exit: fade out alongside the dialog using the EXIT timing.
+ * Without this, the backdrop sits at full opacity through the entire
+ * dialog fade-out, then snaps off when the dialog leaves the top layer —
+ * a visible "pop" against the smoothly fading dialog.
+ */
+dialog[interop-dialog]:not([open])::backdrop {
+	background: transparent;
+	backdrop-filter: blur(0px);
+
+	@supports (transition-behavior: allow-discrete) {
+		transition:
+			background
+				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in),
+			backdrop-filter
+				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in),
+			overlay var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				allow-discrete,
+			display var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				allow-discrete;
+	}
+
+	@supports not (transition-behavior: allow-discrete) {
+		transition:
+			background
+				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in),
+			backdrop-filter
+				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-easing, ease-in);
+	}
+}

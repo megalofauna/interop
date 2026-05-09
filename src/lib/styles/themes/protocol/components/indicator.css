@@ -13,20 +13,16 @@
 	/* ── Visual surface ─────────────────────────────────────────────────── */
 	--itx-indicator-background-color: light-dark(
 		var(--itx-neutral-1),
-		rgb(255 255 255 / 0.1)
+		var(--itx-neutral-4)
 	);
 
-	--itx-indicator-border-color: var(--itx-neutral-2);
-	--itx-indicator-border-width: 1px;
+	--itx-indicator-border-color: var(--itx-neutral-3);
+	--itx-indicator-border-width: 2px;
 	--itx-indicator-border-style: solid;
 	--itx-indicator-border-radius: var(--itx-radius-2);
 
 	--itx-indicator-background-image: ;
-	--itx-indicator-box-shadow:
-		inset -2px -2px 4px -1px rgb(200 200 200 / 0.25),
-		inset 2px 2px 4px -1px rgb(200 200 200 / 0.25),
-		inset -1px -1px 1px 0 rgb(200 200 200 / 0.55),
-		inset 1px 1px 1px 0 rgb(200 200 200 / 0.55);
+	--itx-indicator-box-shadow: inset 0 0 12px -3px rgb(125 125 125 / 0.75);
 
 	/* ── Transition ─────────────────────────────────────────────────────── */
 	--itx-indicator-transition-duration: 150ms;

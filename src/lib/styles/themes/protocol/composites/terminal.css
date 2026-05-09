@@ -1,6 +1,29 @@
 /* ── Terminal — Protocol theme ───────────────────────────────────────────── */
 
-:where([interop-root]) {
-	/* Inherit protocol's curated monospace stack */
-	--itx-term-font: var(--itx-font-family-mono);
+/* ── terminal variant (retro phosphor) ──────────────────────────────────── */
+
+:where([interop-root] itx-terminal.itx-term--terminal) {
+	--itx-term-background:     oklch(8% 0.02 140);
+	--itx-term-color:          oklch(83% 0.26 140);
+	--itx-term-glow:           0 0 6px currentColor, 0 0 12px oklch(83% 0.26 140 / 0.3);
+	--itx-term-prompt-color:   oklch(65% 0.2 140);
+	--itx-term-delta-color:    oklch(55% 0.12 140);
+	--itx-term-caret-color:    oklch(83% 0.26 140);
+	--itx-term-scrollbar-color: oklch(28% 0.08 140);
+	--itx-term-radius:         6px;
+	--itx-term-font-family:    var(--itx-font-family-mono);
+}
+
+/* ── plain variant (minimal, no-frills log) ──────────────────────────────── */
+
+:where([interop-root] itx-terminal.itx-term--plain) {
+	--itx-term-background:     transparent;
+	--itx-term-color:          var(--itx-on-surface);
+	--itx-term-glow:           none;
+	--itx-term-prompt-color:   var(--itx-muted);
+	--itx-term-delta-color:    var(--itx-muted);
+	--itx-term-caret-color:    var(--itx-on-surface);
+	--itx-term-scrollbar-color: var(--itx-neutral-5);
+	--itx-term-radius:         0;
+	--itx-term-font-family:    var(--itx-font-family-mono);
 }

@@ -16,14 +16,16 @@ import {
   KeyboardNavigationManager,
   DevWarningsManager,
   ComponentIdManager,
-  CollectionProcessor,
 } from "../shared/interop-toolbar-base";
 import {
   RadioGroupManager,
   RadioGroupValidator,
   RadioGroupKeyboardHandler,
 } from "../shared/radio-group-utils";
-import { InteropCollectionInput } from "../../../../types/collection";
+import {
+  type InteropCollectionInput,
+  interopCollection,
+} from "../../../collection/public-api";
 
 /**
  * InteropToolbarGroup - Semantic grouping component for toolbar items.
@@ -138,7 +140,7 @@ export class InteropToolbarGroup
   private keyboardNav = new KeyboardNavigationManager(this.elementRef);
   private radioManager?: RadioGroupManager;
   private radioKeyboardHandler?: RadioGroupKeyboardHandler;
-  private collectionProcessor = new CollectionProcessor<any>();
+  private collectionResolved = interopCollection<any>(this.items);
 
   // Component state
   protected groupId = ComponentIdManager.generateId("interop-toolbar-group");
@@ -157,9 +159,9 @@ export class InteropToolbarGroup
   groupName = computed(() => this.name() || `${this.groupId}-radios`);
 
   /**
-   * Computed items from the collection processor
+   * Computed items from the resolved collection.
    */
-  collectionItems = computed(() => this.collectionProcessor.items());
+  collectionItems = this.collectionResolved.items;
 
   // InteropToolbarBase implementation
   get componentName(): string {
@@ -190,11 +192,6 @@ export class InteropToolbarGroup
       }
     });
 
-    // Process collection items when they change
-    effect(() => {
-      const itemsInput = this.items();
-      this.collectionProcessor.processCollection(itemsInput);
-    });
   }
 
   ngAfterContentInit() {

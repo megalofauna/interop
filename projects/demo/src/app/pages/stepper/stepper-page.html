@@ -3,16 +3,24 @@
 		<p class="demo-page__category">Components</p>
 		<h1 class="demo-page__title">Stepper</h1>
 		<p class="demo-page__lead">
-			Composable multi-step wizard. Linear mode enforces step order;
-			non-linear allows free navigation. Navigation buttons are consumer-provided.
+			Composable multi-step wizard with a built-in action bar and a
+			responsive step menu. Linear mode enforces step order; non-linear
+			mode allows free navigation. Completion is irreversible by
+			navigation alone.
 		</p>
 	</header>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
-		<demo-example label="Linear wizard">
+		<demo-example label="Linear wizard with default action bar">
 			<div style="width: 100%;">
-				<interop-stepper #dockingStepper aria-label="Docking procedure">
+				<interop-stepper
+					#dockingStepper
+					aria-label="Docking procedure"
+					[cancellable]="true"
+					[responsiveActions]="'md'"
+					(cancel)="dockingStepper.reset()"
+					(finish)="onFinish('docking')">
 					<ol interop-step-list>
 						<li interop-step label="Approach"></li>
 						<li interop-step label="Align"></li>
@@ -20,34 +28,29 @@
 					</ol>
 
 					<section interop-step-panel>
+						<h2>Approach</h2>
 						<p>Reduce speed to 10 m/s and align approach vector with docking axis.</p>
 					</section>
 					<section interop-step-panel>
+						<h2>Align</h2>
 						<p>Extend mag-lock clamps. Match rotation with station ring.</p>
 					</section>
 					<section interop-step-panel>
+						<h2>Secure</h2>
 						<p>Engage hard dock. Verify pressure seal before opening airlock.</p>
 					</section>
 				</interop-stepper>
-
-				<div class="stepper-page__nav">
-					<button interop-button
-						[disabled]="!dockingStepper.canGoBack()"
-						(click)="dockingStepper.back()">
-						Back
-					</button>
-					<button interop-button
-						[disabled]="!dockingStepper.canGoForward()"
-						(click)="dockingStepper.next()">
-						Next
-					</button>
-				</div>
 			</div>
+			<itx-code-block [files]="linearFiles()" />
 		</demo-example>
 
-		<demo-example label="Non-linear (free navigation)">
+		<demo-example label="Non-linear (free navigation), menu always shown">
 			<div style="width: 100%;">
-				<interop-stepper #freeStepper aria-label="Vessel checklist" [linear]="false">
+				<interop-stepper
+					aria-label="Vessel checklist"
+					[linear]="false"
+					[menu]="'always'"
+					(finish)="onFinish('vessel')">
 					<ol interop-step-list>
 						<li interop-step label="Hull"></li>
 						<li interop-step label="Engines"></li>
@@ -56,32 +59,52 @@
 					</ol>
 
 					<section interop-step-panel>
+						<h2>Hull</h2>
 						<p>Inspect hull plating for micro-fractures. Log any anomalies.</p>
 					</section>
 					<section interop-step-panel>
+						<h2>Engines</h2>
 						<p>Run engine diagnostics. Check thruster alignment and fuel lines.</p>
 					</section>
 					<section interop-step-panel>
+						<h2>Life support</h2>
 						<p>Verify O2 scrubbers, CO2 sensors, and pressure regulators.</p>
 					</section>
 					<section interop-step-panel>
+						<h2>Comms</h2>
 						<p>Test all comms channels. Confirm encryption keys are current.</p>
 					</section>
 				</interop-stepper>
-
-				<div class="stepper-page__nav">
-					<button interop-button
-						[disabled]="!freeStepper.canGoBack()"
-						(click)="freeStepper.back()">
-						Back
-					</button>
-					<button interop-button
-						[disabled]="!freeStepper.canGoForward()"
-						(click)="freeStepper.next()">
-						Next
-					</button>
-				</div>
 			</div>
+			<itx-code-block [tokens]="nonLinearTokens.value() ?? null" lang="html" />
+		</demo-example>
+
+		<demo-example label="Vertical orientation">
+			<div style="width: 100%; max-width: 32rem;">
+				<interop-stepper
+					aria-label="Setup wizard"
+					orientation="vertical">
+					<ol interop-step-list>
+						<li interop-step label="Account"></li>
+						<li interop-step label="Profile"></li>
+						<li interop-step label="Confirm"></li>
+					</ol>
+
+					<section interop-step-panel>
+						<h2>Account</h2>
+						<p>Create your account credentials.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Profile</h2>
+						<p>Tell us a bit about yourself.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Confirm</h2>
+						<p>Review and confirm your selections.</p>
+					</section>
+				</interop-stepper>
+			</div>
+			<itx-code-block [tokens]="verticalTokens.value() ?? null" lang="html" />
 		</demo-example>
 	</demo-section>
 

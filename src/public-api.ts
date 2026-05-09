@@ -22,8 +22,8 @@
  *   import { registerAllPhosphorIcons } from 'interop';
  */
 
-// Core types
-export * from "./types/collection";
+// Core collection mechanism (types + class + factory)
+export * from "./lib/collection/public-api";
 
 // Library module
 export * from "./lib/interop.module";

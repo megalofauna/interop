@@ -82,6 +82,12 @@ export const routes: Routes = [
 			import("./pages/listbox/listbox-page").then((m) => m.ListboxPage),
 	},
 	{
+		path: "components/popover",
+		title: "Popover — Interop",
+		loadComponent: () =>
+			import("./pages/popover/popover-page").then((m) => m.PopoverPage),
+	},
+	{
 		path: "components/progress",
 		title: "Progress — Interop",
 		loadComponent: () =>
@@ -92,6 +98,14 @@ export const routes: Routes = [
 		title: "Radio — Interop",
 		loadComponent: () =>
 			import("./pages/radio/radio-page").then((m) => m.RadioPage),
+	},
+	{
+		path: "components/resizable",
+		title: "Resizable — Interop",
+		loadComponent: () =>
+			import("./pages/resizable/resizable-page").then(
+				(m) => m.ResizablePage,
+			),
 	},
 	{
 		path: "components/scroll-area",

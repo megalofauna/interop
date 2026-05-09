@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { InteropCollectionService } from "./services/interop-collection.service";
 import { InteropLayoutDirective } from "./directives/interop-layout";
 
 /**
@@ -11,6 +10,6 @@ import { InteropLayoutDirective } from "./directives/interop-layout";
   declarations: [],
   imports: [CommonModule, InteropLayoutDirective],
   exports: [InteropLayoutDirective],
-  providers: [InteropCollectionService],
+  providers: [],
 })
 export class InteropModule {}

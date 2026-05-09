@@ -23,16 +23,10 @@
 				<!--<button interop-button>Fire thrusters</button>-->
 
 				<div class="flex">
-					<button interop-button="xs">Micro</button>
-					<button interop-button="sm">Small</button>
-					<button interop-button="md">Medium</button>
-					<button interop-button="lg">Large</button>
-				</div>
-				<div class="flex">
-					<button interop-button>Micro</button>
-					<button interop-button>Small</button>
-					<button interop-button>Medium</button>
-					<button interop-button>Large</button>
+					<button interop-button="xs radius-xs">Micro</button>
+					<button interop-button="sm radius-sm">Small</button>
+					<button interop-button="md radius-md">Medium</button>
+					<button interop-button="lg radius-lg">Large</button>
 				</div>
 
 				<!--<div class="flex">
@@ -183,7 +177,11 @@
 
 		<!-- ── Tokens ───────────────────────────────────────────────────────── -->
 		<demo-section id="tokens" heading="CSS tokens">
-			<interop-table [collection]="tokenEntries" [columns]="tokenColumns">
+			<interop-table
+				[collection]="tokenEntries"
+				[columns]="tokenColumns"
+				[scrollable]="true"
+			>
 				<ng-template itxCell="property" let-entry>
 					<code class="demo-page__api-name">{{ entry.property }}</code>
 				</ng-template>
@@ -195,7 +193,11 @@
 
 		<!-- ── API ────────────────────────────────────────────────────────────── -->
 		<demo-section id="api" heading="API — Inputs">
-			<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<interop-table
+				[collection]="apiEntries"
+				[columns]="apiColumns"
+				[scrollable]="true"
+			>
 				<ng-template itxCell="name" let-entry>
 					<code class="demo-page__api-name">{{ entry.name }}</code>
 				</ng-template>

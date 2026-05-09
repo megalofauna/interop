@@ -3,7 +3,7 @@ import { Component, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Observable, of, throwError, delay } from "rxjs";
 import { InteropList } from "./interop-list";
-import { InteropCollectionInput } from "../../../types/collection";
+import { InteropCollectionInput } from "../../collection/public-api";
 
 // Test host component for testing attribute selector
 @Component({

@@ -1,17 +1,10 @@
 import {
-  input,
   inject,
   ElementRef,
   isDevMode,
   effect,
   signal,
-  InputSignal,
 } from "@angular/core";
-import { Observable, isObservable } from "rxjs";
-import {
-  InteropCollectionInput,
-  isCollection,
-} from "../../../../types/collection";
 
 /**
  * Base class for toolbar components with common ARIA functionality
@@ -280,89 +273,3 @@ export class ComponentIdManager {
   }
 }
 
-/**
- * Collection processing utilities for toolbar components
- */
-export class CollectionProcessor<T = any> {
-  private itemsSignal = signal<T[]>([]);
-
-  constructor() {}
-
-  /**
-   * Get the current items as a readonly signal
-   */
-  get items() {
-    return this.itemsSignal.asReadonly();
-  }
-
-  /**
-   * Process various collection input types
-   */
-  processCollection(input: InteropCollectionInput<T> | undefined): void {
-    if (!input) {
-      this.itemsSignal.set([]);
-      return;
-    }
-
-    // Handle Collection objects
-    if (isCollection(input)) {
-      this.processSimpleIterable(input.items);
-      return;
-    }
-
-    // Handle simple iterables directly
-    this.processSimpleIterable(input);
-  }
-
-  /**
-   * Process simple iterable types
-   */
-  private processSimpleIterable(iterable: any): void {
-    // Handle arrays directly
-    if (Array.isArray(iterable)) {
-      this.itemsSignal.set(iterable);
-      return;
-    }
-
-    // Handle observables
-    if (isObservable(iterable)) {
-      (iterable as Observable<T[]>).subscribe({
-        next: (items: T[]) => {
-          this.itemsSignal.set(
-            Array.isArray(items) ? items : Array.from(items),
-          );
-        },
-        error: (error) => {
-          console.error("Error loading collection items", error);
-          this.itemsSignal.set([]);
-        },
-      });
-      return;
-    }
-
-    // Handle promises
-    if (iterable && typeof iterable.then === "function") {
-      Promise.resolve(iterable)
-        .then((items: any) => {
-          this.itemsSignal.set(
-            Array.isArray(items) ? items : Array.from(items),
-          );
-        })
-        .catch((error) => {
-          console.error("Error loading collection items", error);
-          this.itemsSignal.set([]);
-        });
-      return;
-    }
-
-    // Handle other iterables (Set, Map.values(), etc.)
-    if (iterable && Symbol.iterator in Object(iterable)) {
-      this.itemsSignal.set(Array.from(iterable));
-      return;
-    }
-
-    // Fallback for unknown types
-    console.warn("Unknown collection type, treating as empty:", iterable);
-    this.itemsSignal.set([]);
-  }
-}

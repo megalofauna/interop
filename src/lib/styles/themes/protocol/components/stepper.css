@@ -1,0 +1,150 @@
+/*
+ * InteropStepper — Protocol theme.
+ *
+ * Sets values for stepper / step / connector tokens. State activation lives
+ * in the component CSS (`styles/components/stepper.css`) — this file only
+ * declares values.
+ *
+ * Active and completed states share the same colorway fill — they read as
+ * "lit". The indicator content differentiates them: active shows the step
+ * number, completed shows a check icon. Connector segments behind completed
+ * steps inherit the same colorway so the path you've walked is visible.
+ */
+
+:where([interop-root]) {
+	/* ── Container ──────────────────────────────────────────────────────── */
+	--itx-stepper-display: grid;
+	--itx-stepper-gap: var(--itx-spacing-5);
+	--itx-stepper-padding: 0;
+	--itx-stepper-background-color: transparent;
+	--itx-stepper-border-radius: 0;
+
+	/* ── Nav region ─────────────────────────────────────────────────────── */
+	--itx-stepper-nav-padding: 0;
+
+	/* ── Viewport region ────────────────────────────────────────────────── */
+	--itx-stepper-viewport-padding: 0;
+	--itx-stepper-viewport-background-color: var(--itx-neutral-3);
+	--itx-stepper-viewport-border-radius: 0;
+	--itx-stepper-viewport-min-height: 386px;
+	/* Vertical scroll-snap requires a defined viewport height. Horizontal
+	   mode ignores this and uses natural panel height. */
+	--itx-stepper-viewport-block-size: 18rem;
+	/* Scrollbar hidden by default — the viewport is a sliding stage, not a
+	   scrolling document. To opt back in, override `-scrollbar-width` to
+	   `thin` (or `auto`); the thumb/track values below give it a themed
+	   appearance that blends with the surface. */
+	--itx-stepper-viewport-scrollbar-width: none;
+	--itx-stepper-viewport-scrollbar-thumb-color: var(--itx-neutral-5);
+	--itx-stepper-viewport-scrollbar-track-color: transparent;
+
+	/* ── Actions region ─────────────────────────────────────────────────── */
+	--itx-stepper-actions-padding: var(--itx-spacing-2) 0 0 0;
+	--itx-stepper-actions-gap: var(--itx-spacing-2);
+
+	/* ── Compact nav-trigger (narrow viewports) ─────────────────────────── */
+	--itx-stepper-nav-trigger-padding-block: var(--itx-spacing-2);
+	--itx-stepper-nav-trigger-padding-inline: var(--itx-spacing-3);
+	--itx-stepper-nav-trigger-gap: var(--itx-spacing-2);
+	--itx-stepper-nav-trigger-font-size: var(--itx-fs-label);
+	--itx-stepper-nav-trigger-font-weight: 500;
+	--itx-stepper-nav-trigger-background-color: var(--itx-neutral-3);
+	--itx-stepper-nav-trigger-foreground: var(--itx-neutral-11);
+	--itx-stepper-nav-trigger-border-color: var(--itx-neutral-4);
+	--itx-stepper-nav-trigger-border-width: 1px;
+	--itx-stepper-nav-trigger-border-radius: var(--itx-radius-2, 8px);
+	--itx-stepper-nav-trigger-background-color-hover: var(--itx-neutral-4);
+	--itx-stepper-nav-trigger-foreground-hover: var(--itx-neutral-12);
+	--itx-stepper-nav-trigger-progress-color: var(--itx-neutral-9);
+	--itx-stepper-nav-trigger-transition-duration: 96ms;
+
+	/* ── Menu (popover) ─────────────────────────────────────────────────── */
+	--itx-stepper-menu-min-width: 14rem;
+	--itx-stepper-menu-max-width: 22rem;
+	--itx-stepper-menu-padding: var(--itx-spacing-1);
+	--itx-stepper-menu-background-color: var(--itx-neutral-2);
+	--itx-stepper-menu-border-color: var(--itx-neutral-4);
+	--itx-stepper-menu-border-width: 1px;
+	--itx-stepper-menu-border-radius: var(--itx-radius-3, 8px);
+	--itx-stepper-menu-box-shadow:
+		0 4px 12px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06);
+	--itx-stepper-menu-offset: var(--itx-spacing-2);
+
+	/* ── Step list ──────────────────────────────────────────────────────── */
+	--itx-step-list-gap: 0;
+	--itx-step-list-padding: 0;
+
+	/* ── Step item ──────────────────────────────────────────────────────── */
+	--itx-step-flex: 1;
+	--itx-step-button-gap: var(--itx-spacing-2);
+
+	/* ── Step indicator — structure ─────────────────────────────────────── */
+	--itx-step-indicator-size: 2rem;
+	--itx-step-indicator-border-radius: 9999px;
+	--itx-step-indicator-border-width: 2px;
+	--itx-step-indicator-border-style: solid;
+	--itx-step-indicator-font-size: var(--itx-fs-label);
+	--itx-step-indicator-font-weight: 600;
+	--itx-step-indicator-transition-duration: 160ms;
+	--itx-step-indicator-transition-timing-function: ease-in-out;
+
+	/* ── Step indicator — pending (rest) ────────────────────────────────── */
+	--itx-step-indicator-background: var(--itx-neutral-3);
+	--itx-step-indicator-foreground: var(--itx-neutral-9);
+	--itx-step-indicator-border-color: var(--itx-neutral-5);
+
+	/* ── Step indicator — active ────────────────────────────────────────── */
+	--itx-step-indicator-background-active: var(--itx-colorway-8);
+	--itx-step-indicator-foreground-active: var(--itx-on-colorway, white);
+	--itx-step-indicator-border-color-active: var(--itx-colorway-8);
+
+	/* ── Step indicator — active + reviewed (revisited) ────────────────── */
+	/* Outlined variant: keeps the colorway hue (so you know it's a step
+	   you've completed) while clearly differentiating from the solid-fill
+	   "current first-visit" treatment. The number is shown in colorway,
+	   the indicator is transparent with a colorway-8 border. */
+	--itx-step-indicator-background-active-reviewed: transparent;
+	--itx-step-indicator-foreground-active-reviewed: var(--itx-colorway-8);
+	--itx-step-indicator-border-color-active-reviewed: var(--itx-colorway-8);
+
+	/* ── Step indicator — completed ─────────────────────────────────────── */
+	--itx-step-indicator-background-completed: var(--itx-colorway-8);
+	--itx-step-indicator-foreground-completed: var(--itx-on-colorway, white);
+	--itx-step-indicator-border-color-completed: var(--itx-colorway-8);
+
+	/* ── Step indicator — error ─────────────────────────────────────────── */
+	/* Errors are a deliberate signal — a coloured fill is appropriate here. */
+	--itx-step-indicator-background-error: var(--itx-danger);
+	--itx-step-indicator-foreground-error: var(--itx-neutral-1);
+	--itx-step-indicator-border-color-error: var(--itx-danger);
+
+	/* ── Step indicator — skipped ───────────────────────────────────────── */
+	--itx-step-indicator-background-skipped: var(--itx-neutral-3);
+	--itx-step-indicator-foreground-skipped: var(--itx-neutral-8);
+	--itx-step-indicator-border-color-skipped: var(--itx-neutral-5);
+
+	/* ── Step label ─────────────────────────────────────────────────────── */
+	--itx-step-label-font-family: var(--itx-font-family-sans);
+	--itx-step-label-font-size: var(--itx-fs-label);
+	--itx-step-label-font-weight: 500;
+	--itx-step-label-color: var(--itx-neutral-10);
+	--itx-step-label-color-active: var(--itx-neutral-12);
+	--itx-step-label-color-active-reviewed: var(--itx-colorway-8);
+	--itx-step-label-color-completed: var(--itx-neutral-11);
+	--itx-step-label-color-locked: var(--itx-neutral-8);
+	--itx-step-label-text-align: center;
+
+	--itx-step-optional-font-size: 0.75em;
+	--itx-step-optional-opacity: 0.65;
+
+	/* ── Connector ──────────────────────────────────────────────────────── */
+	--itx-step-connector-thickness: 2px;
+	--itx-step-connector-color: var(--itx-neutral-5);
+	--itx-step-connector-color-completed: var(--itx-colorway-8);
+
+	/* ── Step focus ring ────────────────────────────────────────────────── */
+	--itx-step-outline-width: 2px;
+	--itx-step-outline-style: solid;
+	--itx-step-outline-color: var(--itx-colorway-8);
+	--itx-step-outline-offset: 3px;
+}

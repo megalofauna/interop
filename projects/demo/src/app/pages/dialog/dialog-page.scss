@@ -1,19 +1,5 @@
-.dialog-page__dialog {
-	border: 1px solid var(--itx-border);
-	border-radius: var(--itx-radius-md);
-	background: var(--itx-surface);
-	color: var(--itx-on-surface);
-	padding: var(--itx-spacing-8);
-	max-width: 28rem;
-	width: 90vw;
-
-	&::backdrop {
-		background: rgb(0 0 0 / 50%);
-	}
-}
-
 .dialog-page__title {
-	margin: 0 0 var(--itx-spacing-4);
+	margin: 0 0 var(--itx-spacing-2);
 	font-size: var(--itx-font-size-subheading);
 	font-weight: 600;
 }
@@ -22,5 +8,5 @@
 	display: flex;
 	justify-content: flex-end;
 	gap: var(--itx-spacing-3);
-	margin-top: var(--itx-spacing-6);
+	margin-top: var(--itx-spacing-12);
 }

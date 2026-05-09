@@ -6,13 +6,14 @@
 	/* layout */
 	--itx-button-display: inline-flex;
 	--itx-button-align-items: center;
+	--itx-button-max-width: max-content;
 	--itx-button-justify-content: center;
 	--itx-button-gap: var(--itx-spacing-2);
 
 	/* internal spacing */
 	--itx-button-padding-block: calc(var(--itx-button-sizing-multiplier) * 0.5em);
 	--itx-button-padding-inline: calc(
-		var(--itx-button-sizing-multiplier) * 0.75em
+		var(--itx-button-sizing-multiplier) * 0.925em
 	);
 
 	/* typography */
@@ -56,6 +57,8 @@
 	--itx-button-background: var(--itx-neutral-3);
 	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-radius: var(--itx-radius-md);
+	--itx-button-border-radius: 12px;
+	--itx-button-corner-shape: squircle;
 
 	--itx-button-background-hover: var(--itx-neutral-5);
 	--itx-button-foreground-hover: var(--itx-neutral-11);
@@ -157,7 +160,7 @@
 
 :where(button[interop-button~="sm"]) {
 	--itx-button-font-size: var(--itx-fs-sm); /* 13 → 15px */
-	--itx-button-sizing-multiplier: 1.125;
+	--itx-button-sizing-multiplier: 1.25;
 }
 
 :where(button[interop-button~="md"]) {
@@ -171,7 +174,7 @@
 }
 
 /* ── Layer ───────────────────────────────────────────────────────────────── */
-
+/*confirm / caution / destroy*/
 :where(button[interop-button~="destroy"]) {
 	--itx-button-background: oklch(70.07% 65% 28.7);
 	--itx-button-foreground: var(--itx-neutral-1);
@@ -188,30 +191,50 @@
 	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.15);
 }
 
-:where(button[interop-button~="round-none"]) {
+:where(button[interop-button~="caution"]) {
+	--itx-button-background: oklch(21.07% 65% 28.7);
+	--itx-button-foreground: var(--itx-neutral-1);
+	--itx-button-border-color: oklch(30% 0.25% 30);
+	--itx-button-box-shadow: 0 0.12em 0 rgb(0 0 0 / 0.25);
+
+	--itx-button-background-hover: oklch(75.07% 50% 28.7);
+	--itx-button-foreground-hover: var(--itx-neutral-1);
+	--itx-button-border-color-hover: var(--itx-neutral-2);
+	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
+
+	--itx-button-background-active: oklch(70.07% 65% 28.7);
+	--itx-button-foreground-active: var(--itx-neutral-1);
+	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.15);
+}
+
+:where(button[interop-button~="radius-none"]) {
 	--itx-button-border-radius: unset;
 }
 
-:where(button[interop-button~="round-xs"]) {
-	--itx-button-border-radius: 3px;
+:where(button[interop-button~="radius-nominal"]) {
+	--itx-button-border-radius: var(--itx-radius-nominal, 1px);
 }
 
-:where(button[interop-button~="round-sm"]) {
-	--itx-button-border-radius: 5px;
+:where(button[interop-button~="radius-xs"]) {
+	--itx-button-border-radius: var(--itx-radius-1);
 }
 
-:where(button[interop-button~="round-md"]) {
-	--itx-button-border-radius: 9px;
+:where(button[interop-button~="radius-sm"]) {
+	--itx-button-border-radius: var(--itx-radius-2);
 }
 
-:where(button[interop-button~="round-lg"]) {
-	--itx-button-border-radius: 12px;
+:where(button[interop-button~="radius-md"]) {
+	--itx-button-border-radius: var(--itx-radius-3);
 }
 
-:where(button[interop-button~="round-xl"]) {
-	--itx-button-border-radius: 16px;
+:where(button[interop-button~="radius-lg"]) {
+	--itx-button-border-radius: var(--itx-radius-4);
 }
 
-:where(button[interop-button~="round-full"]) {
-	--itx-button-border-radius: 9999px;
+:where(button[interop-button~="radius-xl"]) {
+	--itx-button-border-radius: var(--itx-radius-6);
+}
+
+:where(button[interop-button~="radius-full"]) {
+	--itx-button-border-radius: var(--itx-radius-full);
 }

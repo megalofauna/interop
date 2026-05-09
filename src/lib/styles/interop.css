@@ -31,8 +31,13 @@
 /*    Token values are layered on top by the active theme.                  */
 
 @import "./components/button.css";
+@import "./components/dialog.css";
 @import "./components/indicator.css";
+@import "./components/popover.css";
 @import "./components/segment.css";
+@import "./components/stepper.css";
+@import "./components/table.css";
+@import "./components/resizable.css";
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */
 

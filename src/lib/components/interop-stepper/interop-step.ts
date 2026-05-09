@@ -53,13 +53,13 @@ import {
         } @else {
           @switch (effectiveStatus()) {
             @case ("completed") {
-              <interop-icon [name]="resolvedIcons().completed ?? 'check'" [size]="16" />
+              <interop-icon [name]="resolvedIcons().completed ?? 'tabler-check'" [size]="16" />
             }
             @case ("error") {
-              <interop-icon [name]="resolvedIcons().error ?? 'warning-circle'" [size]="16" />
+              <interop-icon [name]="resolvedIcons().error ?? 'tabler-alert-circle'" [size]="16" />
             }
             @case ("skipped") {
-              <interop-icon [name]="resolvedIcons().skipped ?? 'minus'" [size]="16" />
+              <interop-icon [name]="resolvedIcons().skipped ?? 'tabler-minus'" [size]="16" />
             }
             @default {
               @if (resolvedIcons()[effectiveStatus()]; as iconName) {
@@ -79,7 +79,6 @@ import {
       </span>
     </button>
   `,
-  styleUrl: "./interop-step.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     "[attr.aria-current]": 'isActive() ? "step" : null',
@@ -90,6 +89,10 @@ import {
     "[class.interop-step--skipped]": 'effectiveStatus() === "skipped"',
     "[class.interop-step--locked]": "isLocked()",
     "[class.interop-step--pending]": 'effectiveStatus() === "pending"',
+    // Applied independently of effective status. Combined with --active, this
+    // marks the "you came back to a step you'd already finished" case so it
+    // can be styled distinctly from a fresh active step.
+    "[class.interop-step--reviewed]": "isReviewed()",
   },
 })
 export class InteropStep {
@@ -123,7 +126,7 @@ export class InteropStep {
   private readonly index: number;
 
   constructor() {
-    this.index = this.stepper?.registerStep() ?? 0;
+    this.index = this.stepper?.registerStep(this.label) ?? 0;
 
     if (isDevMode()) {
       if (!this.stepper) {
@@ -145,6 +148,13 @@ export class InteropStep {
 
   protected readonly isLocked = computed(
     () => this.stepper?.isStepLocked(this.index) ?? false,
+  );
+
+  /** True when the user has advanced past this step at any point. Combines
+   * with isActive() to drive distinct treatment for "active+reviewed" vs
+   * "active+first-visit" and the existing "completed" (reviewed-not-active). */
+  protected readonly isReviewed = computed(
+    () => this.stepper?.wasReached(this.index) ?? false,
   );
 
   /** Pulls the stepper-level indicator template down so the template can reference it. */

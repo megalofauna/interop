@@ -13,10 +13,9 @@ import { CommonModule } from "@angular/common";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { InteropCheckbox } from "../../components/interop-checkbox/interop-checkbox";
 import {
-  InteropCollectionService,
-  InteropCollection,
-} from "../../services/interop-collection.service";
-import type { InteropCollectionInput } from "../../../types/collection";
+  type InteropCollectionInput,
+  interopCollection,
+} from "../../collection/public-api";
 import { createComponentTrackByFn } from "../../utils/track-by";
 
 export type CheckboxOption = {
@@ -56,7 +55,7 @@ export type CheckboxOption = {
  * ## FEATURES
  * - Angular Forms integration (ControlValueAccessor emitting T[])
  * - Select-all checkbox with derived indeterminate state
- * - Data-driven rendering via InteropCollectionService
+ * - Data-driven rendering via the interopCollection() primitive
  * - Two-way data binding with selected values array
  * - Accessibility-first design with fieldset/legend in hands-off mode
  *
@@ -135,7 +134,6 @@ export type CheckboxOption = {
 })
 export class InteropCheckboxRig implements ControlValueAccessor {
   private hostElement = inject(ElementRef<HTMLElement>);
-  private collectionService = inject(InteropCollectionService);
 
   // Content mode inputs
 
@@ -146,8 +144,9 @@ export class InteropCheckboxRig implements ControlValueAccessor {
   options = input<CheckboxOption[]>();
 
   /**
-   * Data-driven collection input. Accepts arrays, observables, promises,
-   * or InteropCollection instances. Resolved through InteropCollectionService.
+   * Data-driven collection input. Accepts arrays, signals, observables,
+   * promises, iterables, or InteropCollection instances. Resolved through
+   * the `interopCollection()` primitive.
    */
   collection = input<InteropCollectionInput<CheckboxOption>>();
 
@@ -217,7 +216,7 @@ export class InteropCheckboxRig implements ControlValueAccessor {
 
   // Internal state
   private internalValue = signal<(string | number | boolean)[]>([]);
-  private resolvedCollection = signal<InteropCollection<CheckboxOption> | null>(null);
+  private resolvedCollection = interopCollection<CheckboxOption>(this.collection);
   private onChangeFn: (value: any) => void = () => {};
   private onTouchedFn: () => void = () => {};
 
@@ -235,9 +234,7 @@ export class InteropCheckboxRig implements ControlValueAccessor {
   resolvedItems = computed(() => {
     const options = this.options();
     if (options?.length) return options;
-
-    const col = this.resolvedCollection();
-    return col?.items() ?? [];
+    return this.resolvedCollection.items();
   });
 
   /**
@@ -323,16 +320,6 @@ export class InteropCheckboxRig implements ControlValueAccessor {
       }
 
       this.internalValue.set([...inputValue]);
-    });
-
-    // Resolve collection input through InteropCollectionService
-    effect(() => {
-      const col = this.collection();
-      if (col) {
-        this.resolvedCollection.set(this.collectionService.resolve(col));
-      } else {
-        this.resolvedCollection.set(null);
-      }
     });
   }
 

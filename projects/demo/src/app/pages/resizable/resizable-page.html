@@ -1,0 +1,126 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Resizable</h1>
+		<p class="demo-page__lead">
+			Drag-to-resize wrapper with two performance tiers. Pure-CSS resize
+			by default (zero JS in the resize loop); enhancement features —
+			keyboard, snap-to-breakpoints, dimension readout, aspect lock —
+			activate implicitly when their inputs are set.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Tier 0 — pure CSS resize (zero runtime cost)">
+			<div
+				interop-resizable
+				[initialSize]="{ width: 360, height: 220 }"
+				[min]="{ width: 200, height: 120 }"
+				[max]="{ width: 720, height: 480 }"
+			>
+				<div class="resizable-page__demo-content">
+					<h3>Native handle</h3>
+					<p>
+						Browser-native <code>resize: both</code>. No pointer
+						listeners, no Angular CD during drag. Drag the
+						bottom-right corner.
+					</p>
+					<p>
+						Width is also a container-query container — try
+						narrowing me past 320px.
+					</p>
+				</div>
+			</div>
+		</demo-example>
+
+		<demo-example label="Tier 1 — keyboard, snap, dimension readout">
+			<div
+				#enhanced="interopResizable"
+				interop-resizable
+				[initialSize]="{ width: 480, height: 280 }"
+				[min]="{ width: 240, height: 160 }"
+				[max]="{ width: 800, height: 520 }"
+				[breakpoints]="[320, 480, 640, 768]"
+				[showDimensions]="true"
+				[keyboard]="true"
+				[liveResize]="true"
+				(resize)="onResize($event)"
+				(resizeEnd)="onResizeEnd($event)"
+			>
+				<div class="resizable-page__demo-content">
+					<h3>Enhanced handle</h3>
+					<p>
+						Drag the corner or focus it and use the arrow keys.
+						Snaps magnetically near 320 / 480 / 640 / 768px.
+						Hold <kbd>Shift</kbd> while dragging to lock aspect ratio,
+						or for a larger keyboard step.
+					</p>
+					<p>
+						Double-click the handle, or press the button below, to
+						reset.
+					</p>
+					<button
+						type="button"
+						interop-button="action round-md"
+						(click)="enhanced.reset()"
+					>
+						Reset
+					</button>
+				</div>
+			</div>
+
+			<p class="resizable-page__live">
+				Last resize: <code>{{ lastSize() }}</code>
+			</p>
+		</demo-example>
+
+		<demo-example label="Aspect-locked (16:9)">
+			<div
+				interop-resizable
+				[initialSize]="{ width: 480, height: 270 }"
+				[min]="{ width: 240, height: 135 }"
+				[max]="{ width: 800, height: 450 }"
+				[aspectLocked]="true"
+				[showDimensions]="true"
+			>
+				<div class="resizable-page__demo-content">
+					<h3>Aspect lock</h3>
+					<p>Width and height stay in 16:9 throughout the drag.</p>
+				</div>
+			</div>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

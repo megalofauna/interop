@@ -1,14 +1,130 @@
 <!--
-  The <nav> wraps only the step indicator list and carries the consumer-provided
-  aria-label. The panels are projected into the default slot outside the nav so
-  they are not inside the navigation landmark.
+  Three-region single-column layout (top to bottom):
 
-  Multi-slot content projection:
-  - ol[interop-step-list] → placed inside <nav>
-  - everything else (section[interop-step-panel], nav buttons, etc.) → default slot
+    1. nav      — full step list on wide viewports; compact menu trigger on narrow
+    2. viewport — the active step's panel content (scroll-snap)
+    3. actions  — toolbar (cancel ↔ back | next), shown only on wide when menu="always"
+
+  Slot routing:
+    - ol[interop-step-list]       → nav
+    - [interop-stepper-actions]   → actions (replaces the default action bar)
+    - everything else (panels)    → viewport (default slot)
+
+  The actions region renders a built-in bar (Back / Next, plus optional
+  Cancel and a responsive menu trigger). Consumers can fully replace it by
+  projecting any element with the [interop-stepper-actions] selector — that
+  content takes the place of the default. Set [actions]="false" to drop the
+  region entirely.
+
+  The popover menu is shared between the nav-trigger (narrow) and the
+  action-bar menu button (wide + menu="always"). Both anchor to the same
+  popover via the per-instance anchor name. Only one trigger is in layout
+  at a time (the other is display:none from the container query).
 -->
 <nav class="interop-stepper__nav" [attr.aria-label]="ariaLabel()">
-  <ng-content select="ol[interop-step-list]" />
+	@if (menu() === "never") {
+	<div
+		class="interop-stepper__nav-trigger interop-stepper__nav-trigger--passive"
+	>
+		<interop-icon name="tabler-list" [size]="14" />
+		<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
+		<span class="interop-stepper__nav-progress"
+			>{{ activeIndex() + 1 }}/{{ totalSteps() }}</span
+		>
+	</div>
+	} @else {
+	<button
+		interop-button="action"
+		type="button"
+		class="interop-stepper__nav-trigger"
+		[attr.popovertarget]="menuId"
+		popovertargetaction="toggle"
+		[attr.aria-label]="menuLabel()"
+		[style.anchor-name]="menuAnchorName"
+	>
+		<interop-icon name="tabler-list" [size]="24" />
+		<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
+		<span class="interop-stepper__nav-progress"
+			>{{ activeIndex() + 1 }}/{{ totalSteps() }}</span
+		>
+	</button>
+	}
+	<ng-content select="ol[interop-step-list]" />
 </nav>
 
-<ng-content />
+@if (menu() !== "never") {
+<div
+	#menuPopover
+	class="interop-stepper__menu"
+	[id]="menuId"
+	popover
+	[style.position-anchor]="menuAnchorName"
+>
+	<ul
+		interop-listbox
+		class="interop-stepper__menu-list"
+		[attr.aria-label]="menuLabel()"
+		[controls]="menuOptions()"
+		[value]="activeIndex()"
+		(valueChange)="onMenuSelect($event)"
+	></ul>
+</div>
+}
+
+<div #viewport class="interop-stepper__viewport">
+	<ng-content />
+</div>
+
+@if (actions()) {
+<div class="interop-stepper__actions">
+	<ng-content select="[interop-stepper-actions]">
+		<!--
+		  Default action bar. Buttons are direct children — source order is
+		  priority order. The first two are pushed to the end (primary), any
+		  subsequent ones are pushed to the start (secondary). Authors can
+		  rearrange visual order per-button via `order`, or invert the whole
+		  bar with `flex-direction: row-reverse`.
+		-->
+		<button
+			type="button"
+			interop-button="action round-md"
+			class="interop-stepper__back"
+			[disabled]="!canGoBack()"
+			[focusableWhenDisabled]="true"
+			(click)="back()"
+		>
+			{{ backLabel() }}
+		</button>
+		<button
+			type="button"
+			interop-button="action-plus round-md"
+			class="interop-stepper__next"
+			(click)="onNextOrFinish()"
+		>
+			{{ isOnLastStep() ? finishLabel() : nextLabel() }}
+		</button>
+		@if (menu() === "always") {
+		<button
+			type="button"
+			interop-button="icon action round-md"
+			class="interop-stepper__menu-trigger"
+			[attr.popovertarget]="menuId"
+			popovertargetaction="toggle"
+			[attr.aria-label]="menuLabel()"
+			[style.anchor-name]="menuAnchorName"
+		>
+			<interop-icon name="tabler-list" [size]="16" />
+		</button>
+		} @if (cancellable()) {
+		<button
+			type="button"
+			interop-button="action-minus round-md"
+			class="interop-stepper__cancel"
+			(click)="cancel.emit()"
+		>
+			{{ cancelLabel() }}
+		</button>
+		}
+	</ng-content>
+</div>
+}

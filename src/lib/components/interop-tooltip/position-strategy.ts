@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken } from "@angular/core";
 
 /**
  * Placement variants for the tooltip panel relative to its trigger.
@@ -6,26 +6,26 @@ import { InjectionToken } from '@angular/core';
  * so placement changes are reflected without re-connecting.
  */
 export type Placement =
-  | 'top'
-  | 'top-start'
-  | 'top-end'
-  | 'bottom'
-  | 'bottom-start'
-  | 'bottom-end'
-  | 'left'
-  | 'left-start'
-  | 'left-end'
-  | 'right'
-  | 'right-start'
-  | 'right-end';
+	| "top"
+	| "top-start"
+	| "top-end"
+	| "bottom"
+	| "bottom-start"
+	| "bottom-end"
+	| "left"
+	| "left-start"
+	| "left-end"
+	| "right"
+	| "right-start"
+	| "right-end";
 
 /** The main axis resolved after flip/shift — used to set [data-placement] on the panel. */
-export type ResolvedPlacement = 'top' | 'bottom' | 'left' | 'right';
+export type ResolvedPlacement = "top" | "bottom" | "left" | "right";
 
 export interface PositionOptions {
-  placement: Placement;
-  /** Gap between trigger edge and tooltip panel in pixels. */
-  offset: number;
+	placement: Placement;
+	/** Gap between trigger edge and tooltip panel in pixels. */
+	offset: number;
 }
 
 /**
@@ -52,33 +52,33 @@ export interface PositionOptions {
  * no component code changes.
  */
 export interface InteropPositionStrategy {
-  readonly name: string;
+	readonly name: string;
 
-  /**
-   * Wire up the trigger and tooltip elements.
-   * Called once after both elements exist in the DOM.
-   */
-  connect(trigger: HTMLElement, tooltip: HTMLElement): void;
+	/**
+	 * Wire up the trigger and tooltip elements.
+	 * Called once after both elements exist in the DOM.
+	 */
+	connect(trigger: HTMLElement, tooltip: HTMLElement): void;
 
-  /**
-   * Compute and apply position.
-   * JS strategies set inline `top`/`left` and return the resolved placement.
-   * CSS anchor strategy returns the requested placement; the browser owns layout.
-   */
-  position(options: PositionOptions): Promise<ResolvedPlacement>;
+	/**
+	 * Compute and apply position.
+	 * JS strategies set inline `top`/`left` and return the resolved placement.
+	 * CSS anchor strategy returns the requested placement; the browser owns layout.
+	 */
+	position(options: PositionOptions): Promise<ResolvedPlacement>;
 
-  /**
-   * Start listening for scroll/resize to keep the tooltip positioned correctly.
-   * Returns a cleanup function; call it on hide to stop the update loop.
-   * CSS anchor strategy returns a no-op cleanup.
-   */
-  startAutoUpdate(onUpdate: () => void): () => void;
+	/**
+	 * Start listening for scroll/resize to keep the tooltip positioned correctly.
+	 * Returns a cleanup function; call it on hide to stop the update loop.
+	 * CSS anchor strategy returns a no-op cleanup.
+	 */
+	startAutoUpdate(onUpdate: () => void): () => void;
 
-  /**
-   * Release all resources held by the strategy.
-   * Called once on component destroy.
-   */
-  disconnect(): void;
+	/**
+	 * Release all resources held by the strategy.
+	 * Called once on component destroy.
+	 */
+	disconnect(): void;
 }
 
 /**
@@ -95,6 +95,5 @@ export interface InteropPositionStrategy {
  * ]
  * ```
  */
-export const INTEROP_POSITION_STRATEGY = new InjectionToken<InteropPositionStrategy>(
-  'INTEROP_POSITION_STRATEGY',
-);
+export const INTEROP_POSITION_STRATEGY =
+	new InjectionToken<InteropPositionStrategy>("INTEROP_POSITION_STRATEGY");

@@ -374,7 +374,7 @@ export class ButtonPage {
 
 	// ── API table ────────────────────────────────────────────────────────────
 	apiColumns: TableColumn<ApiEntry>[] = [
-		{ key: "name", label: "Input" },
+		{ key: "name", label: "Input", sticky: true },
 		{ key: "type", label: "Type" },
 		{ key: "default", label: "Default" },
 		{ key: "description", label: "Description" },

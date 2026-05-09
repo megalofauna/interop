@@ -1,8 +1,18 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropTable, InteropCellDef, type TableColumn } from "src/public-api";
+import { Component, ChangeDetectionStrategy, computed, inject, resource, signal } from "@angular/core";
+import {
+	InteropTable,
+	InteropCellDef,
+	InteropTableSort,
+	type TableColumn,
+	type TableSortEvent,
+} from "src/public-api";
+import { CodeBlock, type CodeFile } from "@interop/composites";
+import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoState } from "../../components/demo-state/demo-state";
+import { DemoStateItem } from "../../components/demo-state/demo-state-item";
 
 interface CargoEntry {
 	id: string;
@@ -23,12 +33,110 @@ interface ApiEntry {
 @Component({
 	selector: "table-page",
 	standalone: true,
-	imports: [InteropTable, InteropCellDef, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropTable, InteropCellDef, InteropTableSort, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoState, DemoStateItem],
 	templateUrl: "./table-page.html",
 	styleUrl: "./table-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablePage {
+	private readonly hl = inject(HighlightService);
+
+	// ── Code strings ──────────────────────────────────────────────────────────
+
+	readonly basicHtml = `<interop-table [collection]="cargoManifest" [columns]="columns" />`;
+
+	readonly basicTs = `interface CargoEntry {
+  id: string;
+  description: string;
+  qty: number;
+  bay: string;
+  status: 'loaded' | 'pending' | 'quarantine';
+}
+
+columns: TableColumn<CargoEntry>[] = [
+  { key: 'id',          label: 'Item ID' },
+  { key: 'description', label: 'Description' },
+  { key: 'qty',         label: 'Qty' },
+  { key: 'bay',         label: 'Bay' },
+  { key: 'status',      label: 'Status' },
+];
+
+cargoManifest: CargoEntry[] = [
+  { id: 'PLX-001', description: 'Plasma conduit',      qty: 4, bay: 'A1', status: 'loaded' },
+  { id: 'MAG-008', description: 'Mag-lock coupling',   qty: 8, bay: 'A2', status: 'loaded' },
+  { id: 'HUL-002', description: 'Hull epoxy Type-7',   qty: 2, bay: 'B1', status: 'pending' },
+  { id: 'EVA-006', description: 'EVA tether',           qty: 6, bay: 'B2', status: 'loaded' },
+  { id: 'RAD-009', description: 'Rad shielding panel', qty: 9, bay: 'C1', status: 'quarantine' },
+];`;
+
+	readonly customCellsHtml = `<interop-table [collection]="cargoManifest" [columns]="columns">
+  <ng-template itxCell="id" let-entry>
+    <code>{{ entry.id }}</code>
+  </ng-template>
+  <ng-template itxCell="status" let-entry>
+    <span [class]="'badge--' + entry.status">{{ entry.status }}</span>
+  </ng-template>
+</interop-table>`;
+
+	readonly customCellsTs = `columns: TableColumn<CargoEntry>[] = [
+  { key: 'id',          label: 'Item ID' },
+  { key: 'description', label: 'Description' },
+  { key: 'qty',         label: 'Qty' },
+  { key: 'bay',         label: 'Bay' },
+  { key: 'status',      label: 'Status' },
+];`;
+
+	readonly sortHtml = `<interop-table
+  [collection]="cargoManifest"
+  [columns]="sortableColumns"
+  itxSort
+  (sortChange)="onSortChange($event)"
+>
+  <ng-template itxCell="status" let-entry>
+    <span [class]="'badge--' + entry.status">{{ entry.status }}</span>
+  </ng-template>
+</interop-table>`;
+
+	readonly sortTs = `sortableColumns: TableColumn<CargoEntry>[] = [
+  { key: 'id',          label: 'Item ID',     sortable: true },
+  { key: 'description', label: 'Description', sortable: true },
+  { key: 'qty',         label: 'Qty',         sortable: true },
+  { key: 'bay',         label: 'Bay',         sortable: true },
+  { key: 'status',      label: 'Status' },   // not sortable
+];
+
+lastSortEvent = signal<TableSortEvent | null>(null);
+
+onSortChange(event: TableSortEvent): void {
+  this.lastSortEvent.set(event);
+}`;
+
+	// ── Highlighted tokens ────────────────────────────────────────────────────
+
+	readonly basicHtmlTokens = resource({ loader: () => this.hl.highlight(this.basicHtml, "html") });
+	readonly basicTsTokens = resource({ loader: () => this.hl.highlight(this.basicTs, "typescript") });
+	readonly customCellsHtmlTokens = resource({ loader: () => this.hl.highlight(this.customCellsHtml, "html") });
+	readonly customCellsTsTokens = resource({ loader: () => this.hl.highlight(this.customCellsTs, "typescript") });
+	readonly sortHtmlTokens = resource({ loader: () => this.hl.highlight(this.sortHtml, "html") });
+	readonly sortTsTokens = resource({ loader: () => this.hl.highlight(this.sortTs, "typescript") });
+
+	readonly basicFiles = computed<CodeFile[]>(() => [
+		{ label: "template.html", language: "html", tokens: this.basicHtmlTokens.value() ?? null },
+		{ label: "component.ts",  language: "ts",   tokens: this.basicTsTokens.value()  ?? null },
+	]);
+
+	readonly customCellsFiles = computed<CodeFile[]>(() => [
+		{ label: "template.html", language: "html", tokens: this.customCellsHtmlTokens.value() ?? null },
+		{ label: "component.ts",  language: "ts",   tokens: this.customCellsTsTokens.value()  ?? null },
+	]);
+
+	readonly sortFiles = computed<CodeFile[]>(() => [
+		{ label: "template.html", language: "html", tokens: this.sortHtmlTokens.value() ?? null },
+		{ label: "component.ts",  language: "ts",   tokens: this.sortTsTokens.value()  ?? null },
+	]);
+
+	// ── Data ──────────────────────────────────────────────────────────────────
+
 	columns: TableColumn<CargoEntry>[] = [
 		{ key: 'id', label: 'Item ID' },
 		{ key: 'description', label: 'Description' },
@@ -36,6 +144,20 @@ export class TablePage {
 		{ key: 'bay', label: 'Bay' },
 		{ key: 'status', label: 'Status' },
 	];
+
+	sortableColumns: TableColumn<CargoEntry>[] = [
+		{ key: 'id', label: 'Item ID', sortable: true },
+		{ key: 'description', label: 'Description', sortable: true },
+		{ key: 'qty', label: 'Qty', sortable: true },
+		{ key: 'bay', label: 'Bay', sortable: true },
+		{ key: 'status', label: 'Status' },
+	];
+
+	lastSortEvent = signal<TableSortEvent | null>(null);
+
+	onSortChange(event: TableSortEvent): void {
+		this.lastSortEvent.set(event);
+	}
 
 	cargoManifest: CargoEntry[] = [
 		{ id: 'PLX-001', description: 'Plasma conduit', qty: 4, bay: 'A1', status: 'loaded' },

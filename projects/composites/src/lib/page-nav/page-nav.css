@@ -31,6 +31,7 @@
 /* ── Host ────────────────────────────────────────────────────────────────── */
 
 :host {
+	--itx-pn-icon-scale: 1.25;
 	display: block;
 }
 
@@ -60,7 +61,7 @@
 :host(.itx-pn--horizontal) nav {
 	display: flex;
 	padding-inline: 0;
-	background: var(--itx-pn-bg, var(--itx-neutral-3));
+	background: var(--itx-pn-bg, var(--itx-neutral-3_5));
 	column-gap: var(--itx-pn-icon-gap, var(--itx-spacing-3));
 }
 

@@ -1,0 +1,191 @@
+<article class="demo-page">
+	<header class="demo-page__header">
+		<p class="demo-page__category">Components</p>
+		<h1 class="demo-page__title">Popover</h1>
+		<p class="demo-page__lead">
+			Anchored panel built on the native HTML <code>popover</code> attribute.
+			Top-layer promotion, light-dismiss, and Escape are browser-native;
+			placement is delegated to the same position-strategy infrastructure as the
+			tooltip. Role is the consumer's decision — drop in a listbox, a form, or
+			arbitrary content.
+		</p>
+	</header>
+
+	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
+	<demo-section id="usage" heading="Usage">
+		<demo-example label="Basic — bottom-anchored panel">
+			<div class="popover-page__row">
+				<button
+					interop-button="action"
+					[interop-popover-trigger]="basic"
+					type="button"
+				>
+					Open panel
+				</button>
+				<div #basic="interopPopover" interop-popover>
+					<p style="margin: 0">
+						This is a popover. Click the trigger again or press
+						<kbd>Esc</kbd> to dismiss.
+					</p>
+				</div>
+			</div>
+		</demo-example>
+
+		<demo-example label="Built-in arrow">
+			<div class="popover-page__row">
+				<button
+					interop-button="action"
+					[interop-popover-trigger]="arrowed"
+					type="button"
+				>
+					Show with arrow
+				</button>
+				<div #arrowed="interopPopover" interop-popover [showArrow]="true">
+					<p style="margin: 0">CSS-triangle arrow points at the trigger.</p>
+				</div>
+			</div>
+		</demo-example>
+
+		<demo-example label="Custom arrow icon (auto-rotates per placement)">
+			<div class="popover-page__row">
+				<button
+					interop-button="action"
+					[interop-popover-trigger]="iconArrow"
+					[popoverHaspopup]="'menu'"
+					type="button"
+				>
+					More options
+				</button>
+				<div
+					#iconArrow="interopPopover"
+					interop-popover
+					placement="bottom-start"
+				>
+					<span interop-popover-arrow>
+						<interop-icon name="tabler-caret-up" [size]="14" />
+					</span>
+					<p style="margin: 0">
+						Consumer-supplied <code>[interop-popover-arrow]</code> wins over the
+						built-in triangle. The structural CSS rotates it automatically per
+						resolved placement.
+					</p>
+				</div>
+			</div>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Placement ──────────────────────────────────────────────────────── -->
+	<demo-section id="placement" heading="Placement">
+		<demo-example label="All 12 placements">
+			<div class="popover-page__placement-grid">
+				@for (p of placements; track p) {
+				<button
+					interop-button="md icon"
+					(click)="showPlacement(p, placedRef)"
+					type="button"
+				>
+					{{ p }}
+				</button>
+				}
+			</div>
+			<div class="popover-page__placement-anchor">
+				<button
+					interop-button="action-plus icon"
+					[interop-popover-trigger]="placedRef"
+					type="button"
+				></button>
+			</div>
+			<div
+				#placedRef="interopPopover"
+				interop-popover
+				[popoverType]="'manual'"
+				[placement]="selectedPlacement()"
+				[showArrow]="true"
+			>
+				<p style="margin: 0">
+					Placement: <strong>{{ selectedPlacement() }}</strong>
+				</p>
+			</div>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Modes ──────────────────────────────────────────────────────────── -->
+	<demo-section id="modes" heading="Modes">
+		<demo-example label="popoverType — auto / manual / hint">
+			<div class="popover-page__row">
+				<button
+					interop-button="action"
+					[interop-popover-trigger]="autoMode"
+					type="button"
+				>
+					auto (light-dismiss)
+				</button>
+				<div #autoMode="interopPopover" interop-popover>
+					<p style="margin: 0">
+						Default. Click outside or press <kbd>Esc</kbd> to dismiss. Only one
+						auto-popover is open at a time.
+					</p>
+				</div>
+
+				<button
+					interop-button="action"
+					[interop-popover-trigger]="manualMode"
+					type="button"
+				>
+					manual (no light-dismiss)
+				</button>
+				<div
+					#manualMode="interopPopover"
+					interop-popover
+					[popoverType]="'manual'"
+				>
+					<p style="margin: 0">
+						Stays open until you click the trigger again. Use for non-modal
+						panels that shouldn't auto-dismiss.
+					</p>
+				</div>
+			</div>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-name">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) {
+				<span class="demo-page__required">*</span>
+				}
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-name">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>
