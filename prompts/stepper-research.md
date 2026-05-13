@@ -5,7 +5,7 @@ companion checklists ([`semantics-a11y-checklist.md`](research/semantics-a11y-ch
 and [`library-catalog.md`](research/library-catalog.md)).
 
 **Twist:** Interop already ships `InteropStepper`. This document doubles as
-a review of the existing implementation — see §5.
+a review of the existing implementation — see §6.
 
 ---
 
@@ -33,7 +33,7 @@ Headlines:
 - Monotonic completion frontier (irreversible by navigation; only `reset()`
   clears it)
 - Focus moves to the active panel's **first heading** after scroll settles
-  (currently a rare behaviour across libraries — see §3)
+  (currently a rare behaviour across libraries — see §4)
 - Auto-status derived (`pending`/`active`/`completed`); consumer can
   override with `error`/`skipped`
 - Built-in action bar with Back/Next/Finish + optional Cancel and a shared
@@ -114,7 +114,7 @@ panels.
 - **`aria-current="step"`** on the active step's button (or the `<li>`
   per spec-letter — the value is on whichever element identifies the
   current step in the sequence). InteropStepper applies it on both the
-  `<li>` host and the panel (see §5 — likely should not be on both).
+  `<li>` host and the panel (see §6 — likely should not be on both).
 - **`aria-label`** on the navigation landmark (`<nav>`) wrapping the step
   list. Default "Progress" is OK; consumers should override when multiple
   steppers coexist on a page (multiple navs with the same label collapse
@@ -124,7 +124,7 @@ panels.
   on the `<li>` host is redundant when the inner button is disabled and
   arguably misleading (the `<li>` is not interactive).
 - **`aria-controls`** on each step's button pointing at the panel id:
-  **missing today** ([see §5 review](#5-review-of-existing-interopstepper)).
+  **missing today** ([see §6 review](#6-review-of-existing-interopstepper)).
   MUI explicitly calls this out as a requirement
   ([MUI Stepper docs](https://mui.com/material-ui/react-stepper/)). Adding
   it is cheap and meaningful.
@@ -135,7 +135,7 @@ panels.
   - Drop the role entirely (panel is just a labelled `<section>`,
     `aria-labelledby` to its heading), or
   - Apply `role="region"` *only* to the active panel
-  - Current Interop default applies it to every panel — see §5
+  - Current Interop default applies it to every panel — see §6
 
 ### 1.4 Keyboard interaction
 
@@ -183,7 +183,7 @@ Three distinct focus events:
    but worth verifying behaviour on iOS (see #31559 below — Material's
    stepper has had recent issues with iOS announcement quirks in panels).
 
-The panel-heading focus model is *unusually good* — see §3.
+The panel-heading focus model is *unusually good* — see §4.
 
 **Initial focus on mount:** the stepper does NOT move focus on init —
 correct. Mounting a component should not steal focus.
@@ -205,7 +205,7 @@ show focus rings via the CSS pseudo-class.
   text reads "1 Profile". The visible label is not the accessible name.
   Best-practice is to make the visible text be the accessible name, and
   add status context via a visually-hidden status node or
-  `aria-describedby`. ([See §5.](#5-review-of-existing-interopstepper))
+  `aria-describedby`. ([See §6.](#6-review-of-existing-interopstepper))
 - **Panel name source:** auto-wired `aria-labelledby` to the panel's
   first heading, with a generated id when the heading lacks one.
   Correct. DevMode warning for missing heading is correct.
@@ -383,7 +383,117 @@ prefer no stepper.
 
 ---
 
-## 3. Killer differentiator
+## 3. The single most-requested feature
+
+Pain points (§2) cover *what's broken*; this section names *what consumers
+want that no library currently ships well*. The signal across surveyed
+libraries is unusually consistent.
+
+### 3.1 The pattern
+
+Filter Angular Material's issue tracker for `stepper + validation` and the
+list reads like a single, decade-long conversation. Twelve issues filed
+since 2017, recurring themes:
+
+| # | Filed | Theme |
+|---|---|---|
+| [#29781](https://github.com/angular/components/issues/29781) | 2024 | `reset()` incorrectly marks form controls as touched/dirty |
+| [#29178](https://github.com/angular/components/issues/29178) | 2024 | Feature request: nested stepper inside a step |
+| [#25830](https://github.com/angular/components/issues/25830) | 2022 | Custom input validation messages don't surface inside a stepper |
+| [#20114](https://github.com/angular/components/issues/20114) | 2020 | Min/max validation on datepicker doesn't refresh on step change |
+| [#17355](https://github.com/angular/components/issues/17355) | 2019 | Stepper validates optional/unrequired forms unnecessarily |
+| [#17056](https://github.com/angular/components/issues/17056) | 2019 | `mat-error` doesn't trigger on Next-click |
+| [#16554](https://github.com/angular/components/issues/16554) | 2019 | `updateValueAndValidity` doesn't propagate state change to stepper |
+| [#15859](https://github.com/angular/components/issues/15859) | 2019 | Stepper's `FormControlLike` isn't compatible with `FormGroup` |
+| [#14026](https://github.com/angular/components/issues/14026) | 2018 | Navigation prematurely triggers validation on untouched fields |
+| [#8645](https://github.com/angular/components/issues/8645)  | 2017 | Steps with pending async validators are still considered completed |
+
+The earliest issue is from 2017; the most recent from 2024. **Seven-plus
+years, same friction.** The titles describe different concrete failures,
+but every one of them is a symptom of the same underlying gap.
+
+### 3.2 The feature, named
+
+**First-class, reactive form-aware navigation gating — including reliable
+async-validator handling, opt-in optional-step semantics, and stable
+reset behaviour.**
+
+In plain language: *"I have a form on each step. The stepper should know
+when that form is invalid, pending, or untouched, and gate Next/Finish
+accordingly — without me re-implementing the gating in every consumer."*
+
+The full feature is not just a single boolean. It comprises:
+
+- **Validity gating** — invalid forms block forward navigation
+- **Async/pending gating** — pending async validators block forward
+  navigation while resolving, with a way to surface the pending state
+- **Untouched / dirty awareness** — don't show validation errors until
+  the user has actually interacted with the field, *and* don't mark
+  fields touched/dirty when the user simply navigates between steps
+- **Optional-step semantics** — declared-optional steps don't gate
+- **Reset stability** — `reset()` clears state without forging
+  touched/dirty/invalid signals on the forms inside
+
+### 3.3 Where it's filed (and where it isn't)
+
+- **Angular Material** — `[stepControl]` ties a `FormGroup`/`FormControl`
+  to a step. Wires linear-mode locking to validity. But the surrounding
+  details (the 12 issues above) keep biting. Acknowledged as the
+  primitive, but the implementation is unreliable enough that the issue
+  tracker has not closed the conversation.
+- **MUI Stepper** — does not ship form integration at all. Consumers
+  wire it manually with whichever form library is in scope
+  (`react-hook-form`, `formik`, native). The community has built dozens
+  of "stepper-with-form" tutorials and starter kits to fill the gap.
+- **PrimeNG Stepper** — `[linear]` blocks forward via a per-step
+  function, not validity. Consumers wire validity into the function
+  manually.
+- **Radix UI / React Aria / Headless UI / Ariakit** — no stepper
+  primitive at all (re-confirming §2.4). The form-integration question
+  doesn't even arise because the abstraction is missing.
+
+### 3.4 Why the demand persists
+
+Multi-step forms are *the most common reason developers reach for a
+stepper.* The wizard pattern almost always wraps a flow whose individual
+pages are forms — onboarding, checkout, settings, KYC, multi-page
+surveys. Yet none of the surveyed libraries provide a primitive that
+makes the form-integration part feel done. Consumers re-implement the
+gating wiring on every project.
+
+### 3.5 Alignment with Interop's ethos
+
+Form participation is one of the [semantics-a11y-checklist](research/semantics-a11y-checklist.md#7-form-participation)
+sections we explicitly hold ourselves to. Interop's stepper today exposes
+`[blockOn]` (status-array; blocks forward navigation when a step on the
+forward path has a blocking status) and `[status]` per-step (consumer
+sets `'error' / 'skipped'`). Together these address the *surface* of the
+problem — but they require the consumer to translate form-state into
+status-state on every project.
+
+**The full feature would be: a `[stepControl]`-equivalent input that
+takes a Reactive Forms `AbstractControl`, drives `status` from
+`control.invalid / pending / touched / dirty / disabled`, gates
+navigation automatically, and gets reset behaviour right.** The
+"untouched / dirty awareness" and async-validator handling are where
+Material has historically broken — those are the specific places to
+get right.
+
+This is on-ethos: it's form-correctness, the consumer still owns the
+form definition and rendering, and the integration is opt-in. It would
+turn `blockOn` from a small convenience into the *primary* surface for
+form-based wizards.
+
+### 3.6 Recommendation
+
+This is the strongest candidate for the next stepper milestone. It is
+not a current Interop strength — `[blockOn]` is foundation, not the
+full feature. Flag it in the open questions for the team and treat it
+as the highest-priority follow-up after the current a11y fixes.
+
+---
+
+## 4. Killer differentiator
 
 Two, both partially in place; one needs to land.
 
@@ -433,7 +543,7 @@ stepper meaningfully different from every shipping alternative.
 
 ---
 
-## 4. Implementation plan (for net-new components, applied retroactively to InteropStepper)
+## 5. Implementation plan (for net-new components, applied retroactively to InteropStepper)
 
 ### 4.1 Decision summary
 
@@ -545,7 +655,7 @@ In `projects/demo/src/app/pages/stepper/`:
 
 ---
 
-## 5. Review of existing InteropStepper
+## 6. Review of existing InteropStepper
 
 Applying the checklist findings to what's currently shipped. Severity:
 🔴 fix • 🟡 consider • 🟢 confirm/document.
@@ -733,7 +843,7 @@ label is still rendered alongside.
 
 ---
 
-## 6. Decisions on open questions
+## 7. Decisions on open questions
 
 Resolved after review:
 
@@ -778,7 +888,7 @@ Resolved after review:
 
 ---
 
-## 7. Source references
+## 8. Source references
 
 External:
 - ARIA APG patterns index — https://www.w3.org/WAI/ARIA/apg/patterns/

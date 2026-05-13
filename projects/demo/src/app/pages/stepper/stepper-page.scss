@@ -24,6 +24,9 @@
 
 	.itx-stepper-demo-hgroup {
 		p {
+			display: inline-block;
+			text-transform: uppercase;
+			letter-spacing: 0.125em;
 			font-size: var(--itx-font-size-caption);
 			padding-bottom: 0.75em;
 			color: var(--itx-neutral-8);

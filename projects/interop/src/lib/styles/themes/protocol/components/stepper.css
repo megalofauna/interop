@@ -85,14 +85,14 @@
 	/*--itx-step-indicator-size: 1.75rem;*/
 	--itx-step-indicator-border-radius: 9999px;
 	--itx-step-indicator-border-width: 2px;
-	--itx-step-indicator-border-style: dashed;
+	--itx-step-indicator-border-style: solid;
 	--itx-step-indicator-font-size: var(--itx-fs-label);
 	--itx-step-indicator-font-weight: 500;
 	--itx-step-indicator-transition-duration: 160ms;
 	--itx-step-indicator-transition-timing-function: ease-in-out;
 
 	/* ── Step indicator — pending (rest) ────────────────────────────────── */
-	--itx-step-indicator-background: var(--itx-neutral-3);
+	--itx-step-indicator-background: var(--itx-neutral-3_5);
 	--itx-step-indicator-foreground: var(--itx-neutral-9);
 	--itx-step-indicator-border-color: var(--itx-neutral-7);
 
@@ -106,14 +106,14 @@
 	   you've completed) while clearly differentiating from the solid-fill
 	   "current first-visit" treatment. The number is shown in neutral,
 	   the indicator is transparent with a neutral-8 border. */
-	--itx-step-indicator-background-active-reviewed: transparent;
-	--itx-step-indicator-foreground-active-reviewed: var(--itx-neutral-8);
-	--itx-step-indicator-border-color-active-reviewed: var(--itx-neutral-8);
+	--itx-step-indicator-background-active-reviewed: var(--itx-neutral-12);
+	--itx-step-indicator-foreground-active-reviewed: var(--itx-neutral-2);
+	--itx-step-indicator-border-color-active-reviewed: var(--itx-neutral-12);
 
 	/* ── Step indicator — completed ─────────────────────────────────────── */
-	--itx-step-indicator-background-completed: var(--itx-neutral-8);
-	--itx-step-indicator-foreground-completed: var(--itx-on-neutral, white);
-	--itx-step-indicator-border-color-completed: var(--itx-neutral-8);
+	--itx-step-indicator-background-completed: var(--itx-neutral-4);
+	--itx-step-indicator-foreground-completed: var(--itx-on-neutral, black);
+	--itx-step-indicator-border-color-completed: var(--itx-neutral-12);
 
 	/* ── Step indicator — error ─────────────────────────────────────────── */
 	/* Errors are a deliberate signal — a coloured fill is appropriate here. */

@@ -37,6 +37,7 @@ import { TablerAlertCircle } from "../../iconsets/tabler/outline/tabler-alert-ci
 import { TablerMinus } from "../../iconsets/tabler/outline/tabler-minus";
 import { TablerCircle } from "../../iconsets/tabler/outline/tabler-circle";
 import { TablerList } from "../../iconsets/tabler/outline/tabler-list";
+import { TablerChevronDown } from "../../iconsets/tabler/outline/tabler-chevron-down";
 import {
 	INTEROP_STEPPER_TOKEN,
 	type IInteropStepper,
@@ -148,6 +149,7 @@ export type StepperResponsiveActions = false | "sm" | "md" | "lg";
 			TablerArrowNarrowRight,
 			TablerArrowNarrowLeft,
 			TablerCircle,
+			TablerChevronDown,
 		),
 	],
 	host: {
@@ -391,6 +393,17 @@ export class InteropStepper
 
 	private readonly viewport = viewChild<ElementRef<HTMLDivElement>>("viewport");
 
+	/** The InteropScrollArea wrapping the horizontal step list. Used to scroll
+	 * the active step indicator into view when navigation makes it off-screen
+	 * on narrow viewports. Hidden by CSS in vertical orientation, so both
+	 * fields resolve to non-null even in vertical mode — the
+	 * `_scrollActiveStepIntoView` method bails when the host is not laid out
+	 * (`offsetParent === null`). */
+	private readonly listScroll = viewChild(InteropScrollArea);
+	private readonly listScrollEl = viewChild(InteropScrollArea, {
+		read: ElementRef,
+	});
+
 	/** True while a programmatic scroll is in flight (Back/Next/menu/goTo).
 	 * The scrollend handler ignores updates while this is set so a smooth
 	 * animated scroll doesn't echo back through the gesture path. */
@@ -442,10 +455,20 @@ export class InteropStepper
 
 	/** Label of the currently active step. Used by the compact nav-trigger
 	 * shown on narrow viewports, where the full step list collapses into a
-	 * single status/menu button. */
-	protected readonly activeStepLabel = computed(
-		() => this._stepLabels[this.activeIndex()]?.() ?? "",
-	);
+	 * single status/menu button — and by the always-on nav-trigger in
+	 * vertical orientation, where the step list lives in the popover.
+	 *
+	 * `_stepLabels` is a plain array; pushes during `registerStep` don't
+	 * invalidate this computed on their own. Reading `totalSteps()` (a
+	 * signal that the same `registerStep` call updates) gives the computed
+	 * something reactive to depend on, so it re-runs when steps come in
+	 * late — notably the vertical-orientation case where steps live in
+	 * `[stepListTemplate]` and register after `<nav>` first renders. Same
+	 * trick as `menuOptions` below. */
+	protected readonly activeStepLabel = computed(() => {
+		this.totalSteps();
+		return this._stepLabels[this.activeIndex()]?.() ?? "";
+	});
 
 	// ── Constructor ────────────────────────────────────────────────────────────
 
@@ -650,6 +673,9 @@ export class InteropStepper
 		// settles (see `_onScrollEnd`), so swiping doesn't yank focus around
 		// mid-gesture and click navigation lands focus where the eye is.
 		this._scrollToActivePanel();
+		// Keep the step nav strip in sync — bring the active step into view in
+		// the horizontal-overflow scroll-area when it's off-screen.
+		this._scrollActiveStepIntoView();
 	}
 
 	// ── Scroll-snap viewport coordination ─────────────────────────────────────
@@ -663,7 +689,10 @@ export class InteropStepper
 		// initialised non-zero. The constructor's effect already ran goTo(),
 		// but the panel elements weren't laid out yet — re-issue the scroll now.
 		if (this.activeIndex() !== 0) {
-			queueMicrotask(() => this._scrollToActivePanel());
+			queueMicrotask(() => {
+				this._scrollToActivePanel();
+				this._scrollActiveStepIntoView();
+			});
 		}
 	}
 
@@ -728,6 +757,62 @@ export class InteropStepper
 		});
 	}
 
+	/**
+	 * Scroll the active step's `<li>` into view inside the horizontal
+	 * `InteropScrollArea` wrapping the step list. Nearest-edge policy —
+	 * already-visible steps trigger no scroll. Bails in vertical orientation
+	 * (the scroll-area host is `display:none` per the CSS), on missing host,
+	 * and on missing step element (panel/step registration in flight).
+	 *
+	 * Uses the scroll-area's own `scrollTo` so the wrapper element scrolls,
+	 * not the page. Honours `prefers-reduced-motion` — instant vs smooth
+	 * — matching the panel viewport's policy.
+	 */
+	private _scrollActiveStepIntoView(): void {
+		const scrollArea = this.listScroll();
+		const hostRef = this.listScrollEl();
+		if (!scrollArea || !hostRef) return;
+
+		const host = hostRef.nativeElement as HTMLElement;
+		// `offsetParent === null` covers the vertical-orientation case where
+		// CSS hides the wrapper, plus any consumer-driven display:none. No
+		// rects to compute in that state.
+		if (host.offsetParent === null) return;
+
+		const target =
+			host.querySelectorAll<HTMLLIElement>("li[interop-step]")[
+				this.activeIndex()
+			];
+		if (!target) return;
+
+		const targetRect = target.getBoundingClientRect();
+		const hostRect = host.getBoundingClientRect();
+
+		// Nearest-edge policy: only scroll when the active step is off-screen.
+		// Centring on every navigation feels twitchy mid-flow; this matches a
+		// tab-strip's "stays put if already visible" expectation.
+		if (
+			targetRect.left >= hostRect.left &&
+			targetRect.right <= hostRect.right
+		) {
+			return;
+		}
+
+		const delta =
+			targetRect.right > hostRect.right
+				? targetRect.right - hostRect.right
+				: targetRect.left - hostRect.left;
+
+		const reducedMotion = this.document?.defaultView?.matchMedia?.(
+			"(prefers-reduced-motion: reduce)",
+		).matches;
+
+		void scrollArea.scrollTo({
+			left: host.scrollLeft + delta,
+			behavior: reducedMotion ? "instant" : "smooth",
+		});
+	}
+
 	/** Scrollend handler — fires once when the viewport's scroll settles. */
 	private readonly _onScrollEnd = (): void => {
 		if (this._scrollSettleFallback) {
@@ -778,6 +863,10 @@ export class InteropStepper
 		this.activeIndex.set(index);
 		this.activeStepChange.emit(index);
 		this._panels[index]?.requestFocus();
+		// Bring the new active step into view in the nav strip. The user may
+		// have swiped to a panel whose corresponding step indicator is
+		// off-screen in the horizontal-overflow list.
+		this._scrollActiveStepIntoView();
 	}
 
 	// ── Action bar handlers ────────────────────────────────────────────────────

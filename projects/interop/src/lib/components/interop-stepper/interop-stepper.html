@@ -46,9 +46,17 @@
 	>
 		<interop-icon name="tabler-list" [size]="24" />
 		<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
+		<span spacer style="flex: 1"></span>
 		<span class="interop-stepper__nav-progress"
 			>Step {{ activeIndex() + 1 }} of {{ totalSteps() }}</span
 		>
+		<span spacer style="flex: 0.0125"></span>
+		<interop-icon
+			class="interop-stepper__nav-arrow"
+			name="tabler-chevron-down"
+			[size]="20"
+			[color]="'var(--itx-neutral-10)'"
+		></interop-icon>
 	</button>
 	}
 	<!--

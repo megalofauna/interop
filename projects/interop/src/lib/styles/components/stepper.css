@@ -474,6 +474,13 @@
 	--itx-button-width: 100%;
 }
 
+:where(
+	button[aria-expanded="true"].interop-stepper__nav-trigger
+		.interop-stepper__nav-arrow
+) {
+	rotate: -180deg;
+}
+
 :where(button.interop-stepper__nav-trigger) {
 	cursor: pointer;
 }
@@ -551,7 +558,6 @@
 	display: flex;
 	list-style: none;
 	margin: 0;
-	/*background-color: var(--itx-neutral-3);*/
 	padding: var(--itx-step-list-padding, 0);
 	row-gap: var(--itx-step-list-row-gap, 0);
 	column-gap: var(--itx-step-list-column-gap, 0);
