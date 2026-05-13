@@ -24,6 +24,8 @@
 	"scripts": {
 		"build": "ng build",
 		"build:watch": "ng build --watch",
+		"build:lib": "ng build interop",
+		"build:demo": "ng build demo",
 		"build:icons": "tsx tools/gen-phosphor-icons.ts Working-Iconset-Files/svgs/phosphor/regular projects/interop/src/lib/iconsets/phosphor Ph",
 		"build:content": "tsx tools/djot-build.ts projects/demo/src",
 		"build:content:watch": "tsx tools/djot-build.ts --watch projects/demo/src",

@@ -1,0 +1,74 @@
+# Netlify configuration for the Interop demo site.
+#
+# This file is the single source of truth for how Netlify builds and serves
+# the demo. Keep build settings here rather than in the Netlify dashboard
+# so the configuration is reviewable in version control.
+
+[build]
+  # The demo project is part of an Angular workspace at the repo root.
+  # `ng build demo` runs via the npm alias to keep build configuration
+  # discoverable in package.json. The demo project's build target
+  # defaults to the production configuration (see angular.json).
+  command = "npm ci && npm run build:demo"
+
+  # Angular v17+ output layout: the deployable SPA lives in `browser/`
+  # under the project's dist dir. The sibling files
+  # (`3rdpartylicenses.txt`, `prerendered-routes.json`) live one level up
+  # and are not served.
+  publish = "dist/demo/browser"
+
+[build.environment]
+  # Angular 21 requires Node 20.11+ or 22+. Pin to the current LTS to
+  # avoid Netlify picking an older or newer default that doesn't match
+  # local dev. The CI image installs this version before `command` runs.
+  NODE_VERSION = "22"
+
+  # Netlify auto-installs the `@netlify/angular-runtime` plugin when it
+  # detects Angular. With multiple projects in angular.json (interop,
+  # composites, demo), the plugin defaults to the FIRST one — which is
+  # the `interop` library, not a deployable web app. Without this var,
+  # the plugin builds the library, looks for app output at `dist/interop`,
+  # and errors with "Could not find build output directory".
+  ANGULAR_PROJECT = "demo"
+
+# ── SPA fallback ──────────────────────────────────────────────────────────────
+# The Angular router uses HTML5 history mode, so deep URLs like
+# `/components/stepper` need to resolve to `index.html` and let the SPA
+# bootstrap and route client-side. Without this, a hard refresh or a
+# shared deep link returns a 404.
+#
+# `status = 200` (not 301/302) is critical — it rewrites in place rather
+# than redirecting, so the URL the user typed stays in the address bar.
+# `force = false` (the default) means Netlify will still serve real
+# files (`/assets/foo.png`, `/index.html` itself, hashed JS/CSS bundles)
+# before falling through to this rule.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ── Asset caching ─────────────────────────────────────────────────────────────
+# Angular's production build content-hashes all JS/CSS filenames
+# (`outputHashing: "all"` in angular.json), so these assets are
+# immutable — safe to cache aggressively. `index.html` itself must NOT
+# be long-cached or users won't pick up new builds.
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
