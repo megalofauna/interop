@@ -14,6 +14,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Stepper component deep-dive | [components/stepper.md](components/stepper.md) |
 | Table component deep-dive | [components/table.md](components/table.md) |
 | Resizable directive deep-dive | [components/resizable.md](components/resizable.md) |
+| Scroll-area component deep-dive | [components/scroll-area.md](components/scroll-area.md) |
 | Tooltip component deep-dive | [components/tooltip.md](components/tooltip.md) |
 | Collection service deep-dive | [services/collection.md](services/collection.md) |
 | Adding a demo page (workflow) | [workflows/new-demo-page.md](workflows/new-demo-page.md) |

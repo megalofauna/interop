@@ -6,14 +6,18 @@
 	/* layout */
 	--itx-button-display: inline-flex;
 	--itx-button-align-items: center;
+	--itx-button-width: fit-content;
+	--itx-button-flex: initial;
 	--itx-button-max-width: max-content;
 	--itx-button-justify-content: center;
 	--itx-button-gap: var(--itx-spacing-2);
 
 	/* internal spacing */
-	--itx-button-padding-block: calc(var(--itx-button-sizing-multiplier) * 0.5em);
+	--itx-button-padding-block: calc(
+		var(--itx-button-sizing-multiplier) * 0.425em
+	);
 	--itx-button-padding-inline: calc(
-		var(--itx-button-sizing-multiplier) * 0.925em
+		var(--itx-button-sizing-multiplier) * 0.5em
 	);
 
 	/* typography */
@@ -24,8 +28,8 @@
 	/* edge */
 	--itx-button-border-width: 2px;
 	--itx-button-border-style: solid;
-	--itx-button-border-radius: 8px;
-	--itx-button-corner-shape: unset;
+	--itx-button-border-radius: var(--itx-radius-nominal);
+	--itx-button-corner-shape: initial;
 
 	/* transition */
 	--itx-button-transition-property: background-color, border-color, box-shadow;
@@ -57,9 +61,7 @@
 	--itx-button-max-width: none;
 	--itx-button-background: var(--itx-neutral-3);
 	--itx-button-foreground: var(--itx-neutral-11);
-	--itx-button-border-radius: var(--itx-radius-md);
-	--itx-button-border-radius: 12px;
-	--itx-button-corner-shape: squircle;
+	--itx-button-corner-shape: none;
 
 	--itx-button-background-hover: var(--itx-neutral-5);
 	--itx-button-foreground-hover: var(--itx-neutral-11);
@@ -73,20 +75,36 @@
 }
 
 :where(button[interop-button~="action"]) {
+	--itx-button-flex: 1;
 	--itx-button-background: var(--itx-neutral-5);
 	--itx-button-foreground: var(--itx-neutral-11);
-	--itx-button-border-color: var(--itx-neutral-3);
-	--itx-button-box-shadow: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	--itx-button-border-color: var(--itx-neutral-3_5);
+	/*--itx-button-box-shadow: 0 0.12em 0 rgb(0 0 0 / 0.25);*/
 
 	--itx-button-background-hover: var(--itx-neutral-7);
 	--itx-button-foreground-hover: var(--itx-neutral-11);
 	--itx-button-border-color-hover: var(--itx-neutral-2);
-	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	/*--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);*/
 
 	--itx-button-background-active: var(--itx-neutral-6);
 	--itx-button-foreground-active: var(--itx-neutral-12);
-	--itx-button-box-shadow-active:
-		inset 0 0.12em 0 rgb(0 0 0 / 0.15), inset 0 0 0.35em rgb(0 0 0 / 0.25);
+	/*--itx-button-box-shadow-active:
+		inset 0 0.12em 0 rgb(0 0 0 / 0.15), inset 0 0 0.35em rgb(0 0 0 / 0.25);*/
+}
+
+:where(button[interop-button~="grow"]) {
+	--itx-button-flex: 1;
+	--itx-button-max-width: none;
+}
+
+:where(button[interop-button~="protocol"]) {
+	--itx-button-sizing-multiplier: 1.5;
+	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-border-radius: var(--itx-radius-2);
+	--itx-button-border-color: var(--itx-neutral-2);
+	--itx-button-background-hover: var(--itx-neutral-5);
+	--itx-button-foreground-hover: var(--itx-neutral-10);
+	--itx-button-border-color-hover: var(--itx-neutral-3);
 }
 
 :where(button[interop-button~="action-plus"]) {
@@ -122,19 +140,21 @@
 }
 
 :where(button[interop-button~="action-minus"]) {
-	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-max-width: none;
+	--itx-button-flex: 0;
+	/*--itx-button-background: var(--itx-neutral-3);*/
 	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-color: var(--itx-neutral-2);
-	--itx-button-border-width: 2px;
-	--itx-button-box-shadow:
+	/*--itx-button-border-width: 2px;*/
+	/*--itx-button-box-shadow:
 		inset 0 0.075em 0 rgb(255 255 255 / 0.04),
-		0 0.075em 0 rgb(255 255 255 / 0.08);
+		0 0.075em 0 rgb(255 255 255 / 0.08);*/
 
 	--itx-button-background-hover: var(--itx-neutral-5);
 	--itx-button-foreground-hover: var(--itx-neutral-12);
-	--itx-button-box-shadow-hover:
+	/*--itx-button-box-shadow-hover:
 		inset 0 0.075em 0 rgb(255 255 255 / 0.08),
-		0 0.075em 0 rgb(255 255 255 / 0.12);
+		0 0.075em 0 rgb(255 255 255 / 0.12);*/
 
 	--itx-button-background-active: var(--itx-neutral-3_5);
 	--itx-button-box-shadow-active:
@@ -193,19 +213,22 @@
 }
 
 :where(button[interop-button~="caution"]) {
-	--itx-button-background: oklch(21.07% 65% 28.7);
-	--itx-button-foreground: var(--itx-neutral-1);
-	--itx-button-border-color: oklch(30% 0.25% 30);
-	--itx-button-box-shadow: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	--itx-button-background: hsla(50, 90%, 4%, 100%);
+	--itx-button-foreground: hsla(50, 50%, 85%, 100%);
+	--itx-button-box-shadow: none;
+	--itx-button-icon-color: hsla(50, 50%, 50%, 100%);
 
-	--itx-button-background-hover: oklch(75.07% 50% 28.7);
-	--itx-button-foreground-hover: var(--itx-neutral-1);
+	--itx-button-background-hover: hsla(50, 50%, 50%, 100%);
+	--itx-button-foreground-hover: var(--itx-neutral-2);
 	--itx-button-border-color-hover: var(--itx-neutral-2);
 	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	--itx-button-icon-color-hover: hsla(50, 10%, 8%, 100%);
 
-	--itx-button-background-active: oklch(70.07% 65% 28.7);
-	--itx-button-foreground-active: var(--itx-neutral-1);
-	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.15);
+	--itx-button-background-active: hsla(50, 85%, 35%, 100%);
+	--itx-button-foreground-active: var(--itx-neutral-2);
+	/*--itx-button-border-color-active: var(--itx-neutral-2);*/
+	--itx-button-box-shadow-active: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	--itx-button-icon-color-active: hsla(50, 10%, 8%, 100%);
 }
 
 :where(button[interop-button~="radius-none"]) {

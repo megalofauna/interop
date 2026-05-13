@@ -213,7 +213,10 @@
    can still scroll the rest of the document past the stepper. Without it
    the browser (especially under devtools touch emulation) can decide a
    gesture is "page scroll" rather than "stepper scroll". */
-:where(interop-stepper:not([data-orientation="vertical"]) > .interop-stepper__viewport) {
+:where(
+	interop-stepper:not([data-orientation="vertical"])
+		> .interop-stepper__viewport
+) {
 	flex-direction: row;
 	overflow-x: auto;
 	scroll-snap-type: x mandatory;
@@ -224,16 +227,20 @@
    needs a defined height to be useful — fall back to a token-driven default.
    `touch-action: pan-y` reserves vertical pans for the viewport so swipes
    advance steps; horizontal pans fall through to ancestors. */
-:where(interop-stepper[data-orientation="vertical"] > .interop-stepper__viewport) {
+:where(
+	interop-stepper[data-orientation="vertical"] > .interop-stepper__viewport
+) {
 	flex-direction: column;
 	overflow-y: auto;
 	scroll-snap-type: y mandatory;
 	touch-action: pan-y;
-	block-size: var(--itx-stepper-viewport-block-size, 16rem);
+	block-size: var(--itx-stepper-viewport-block-size, 24rem);
 }
 
 /* Each panel fills the viewport on the scroll axis and snaps to its start. */
-:where(interop-stepper > .interop-stepper__viewport > section[interop-step-panel]) {
+:where(
+	interop-stepper > .interop-stepper__viewport > section[interop-step-panel]
+) {
 	flex: 0 0 100%;
 	scroll-snap-align: start;
 	scroll-snap-stop: always;
@@ -301,11 +308,17 @@
  */
 
 @container stepper (max-width: 320px) {
-	:where(interop-stepper[data-actions-responsive="sm"] > .interop-stepper__actions) {
+	:where(
+		interop-stepper[data-actions-responsive="sm"] > .interop-stepper__actions
+	) {
 		flex-direction: column;
 		align-items: stretch;
 	}
-	:where(interop-stepper[data-actions-responsive="sm"] > .interop-stepper__actions > *) {
+	:where(
+		interop-stepper[data-actions-responsive="sm"]
+			> .interop-stepper__actions
+			> *
+	) {
 		inline-size: 100%;
 		margin-inline-start: 0;
 		order: 0;
@@ -313,11 +326,17 @@
 }
 
 @container stepper (max-width: 480px) {
-	:where(interop-stepper[data-actions-responsive="md"] > .interop-stepper__actions) {
+	:where(
+		interop-stepper[data-actions-responsive="md"] > .interop-stepper__actions
+	) {
 		flex-direction: column;
 		align-items: stretch;
 	}
-	:where(interop-stepper[data-actions-responsive="md"] > .interop-stepper__actions > *) {
+	:where(
+		interop-stepper[data-actions-responsive="md"]
+			> .interop-stepper__actions
+			> *
+	) {
 		inline-size: 100%;
 		margin-inline-start: 0;
 		order: 0;
@@ -325,11 +344,17 @@
 }
 
 @container stepper (max-width: 640px) {
-	:where(interop-stepper[data-actions-responsive="lg"] > .interop-stepper__actions) {
+	:where(
+		interop-stepper[data-actions-responsive="lg"] > .interop-stepper__actions
+	) {
 		flex-direction: column;
 		align-items: stretch;
 	}
-	:where(interop-stepper[data-actions-responsive="lg"] > .interop-stepper__actions > *) {
+	:where(
+		interop-stepper[data-actions-responsive="lg"]
+			> .interop-stepper__actions
+			> *
+	) {
 		inline-size: 100%;
 		margin-inline-start: 0;
 		order: 0;
@@ -338,23 +363,26 @@
 
 /* ── Responsive nav / menu visibility ───────────────────────────────────── */
 /*
- * On narrow viewports the full step list collapses into a compact
- * `.interop-stepper__nav-trigger` (a button when the menu is enabled, a
- * passive div when menu="never"). On wide viewports the full <ol> step list
- * is visible and the compact trigger is hidden.
+ * Horizontal default: the step list renders in-flow at all viewport sizes,
+ * wrapped in an InteropScrollArea (see template) so narrow viewports get
+ * horizontal scroll + edge fades. No compact nav-trigger and no popover
+ * trigger are shown by default — the scroll affordance is the mobile UX.
  *
- * The action-bar `.interop-stepper__menu-trigger` is only shown on wide
- * viewports under data-menu="always" — it's the explicit consumer override
- * for "I want a menu UI even when labels are visible inline." Under "auto"
- * the nav-trigger handles narrow and there's no need for the action-bar
- * button at any size.
+ * Vertical: the step list lives in the popover (consumer-supplied
+ * `[stepListTemplate]`). The compact nav-trigger is always present and
+ * acts as the popover trigger.
+ *
+ * Horizontal + `menu="always"`: opt back into the popover pattern. On
+ * narrow viewports the compact nav-trigger replaces the in-flow step list;
+ * on wide viewports the step list stays in-flow and a separate menu button
+ * appears in the action bar.
  *
  * Container queries don't read CSS variables in their parens, so the 600px
  * threshold is hard-coded; consumers who need a different cutoff can
  * override these blocks in their own CSS.
  */
 
-/* Compact nav-trigger: hidden by default, shown on narrow viewports. */
+/* Compact nav-trigger: hidden by default. */
 :where(.interop-stepper__nav-trigger) {
 	display: none;
 }
@@ -365,26 +393,64 @@
 	display: none;
 }
 
-/* Narrow viewport: show compact nav-trigger, hide the full <ol> step list. */
+/* Vertical: nav-trigger always visible — the step list lives in the popover,
+   so there is no inline list to show/hide at any container width. */
+:where(interop-stepper[data-orientation="vertical"])
+	:where(.interop-stepper__nav-trigger) {
+	display: inline-flex;
+}
+
+/* Narrow viewport, horizontal, menu="always": surface the compact
+   nav-trigger and hide the in-flow step list (the popover replaces it). */
 @container stepper (max-width: 599px) {
-	:where(interop-stepper) :where(.interop-stepper__nav-trigger) {
+	:where(interop-stepper[data-menu="always"]:not([data-orientation="vertical"]))
+		:where(.interop-stepper__nav-trigger) {
 		display: inline-flex;
 	}
-	:where(interop-stepper) :where(ol[interop-step-list]) {
+	:where(interop-stepper[data-menu="always"]:not([data-orientation="vertical"]))
+		:where(ol[interop-step-list]) {
 		display: none;
 	}
 }
 
 /* Wide viewport: opt-in action-bar menu trigger when explicitly requested. */
 @container stepper (min-width: 600px) {
-	:where(interop-stepper[data-menu="always"]) :where(.interop-stepper__menu-trigger) {
+	:where(interop-stepper[data-menu="always"])
+		:where(.interop-stepper__menu-trigger) {
 		display: inline-flex;
 	}
 }
 
-/* When menu="never" the popover element is rendered but has no triggers and
+/* When menu="never" or menu="auto" in horizontal mode, the popover element
+   is still rendered (template ref needs to exist) but has no triggers and
    no listbox content (gated at template level), so it stays hidden by the
    native `popover` attribute. No CSS hide rules needed here. */
+
+/* ── List scroll-area (horizontal narrow default) ───────────────────────── */
+/*
+ * The InteropScrollArea wrapping the <ol> in horizontal mode. Sits between
+ * the nav landmark and the step list, providing horizontal scroll + fade
+ * shadows at edges. Scoped overrides:
+ *   - hide the scroll-area's own scrollbar (the fade shadows ARE the
+ *     affordance; a thin scrollbar at the bottom of a step list strip is
+ *     visually noisy)
+ *   - claim full nav width
+ */
+:where(
+	interop-stepper > .interop-stepper__nav > .interop-stepper__list-scroll
+) {
+	--itx-scroll-area-scrollbar-width: none;
+	inline-size: 100%;
+	/*background-color: var(--itx-neutral-3_5);*/
+}
+
+/* Vertical orientation: the step list lives in the popover via
+   [stepListTemplate], so the in-flow scroll-area would be an empty box
+   adding nav-padding for nothing. Hide it. */
+:where(interop-stepper[data-orientation="vertical"])
+	:where(.interop-stepper__list-scroll) {
+	display: none;
+}
 
 /* ── Compact nav-trigger ─────────────────────────────────────────────────── */
 /*
@@ -405,29 +471,7 @@
 	   touch inset) but the trigger's padding-block doesn't compensate,
 	   producing visible gaps above and below the pill. */
 	--itx-button-touch-inset: 0em;
-
-	align-items: center;
-	gap: var(--itx-stepper-nav-trigger-gap, var(--itx-spacing-2));
-	padding-block: var(--itx-stepper-nav-trigger-padding-block, var(--itx-spacing-2));
-	padding-inline: var(--itx-stepper-nav-trigger-padding-inline, var(--itx-spacing-3));
-
-	font-family: inherit;
-	font-size: var(--itx-stepper-nav-trigger-font-size, var(--itx-fs-label));
-	font-weight: var(--itx-stepper-nav-trigger-font-weight, 500);
-	text-align: start;
-
-	color: var(--itx-stepper-nav-trigger-foreground, inherit);
-	background-color: var(--itx-stepper-nav-trigger-background-color, transparent);
-	border-color: var(--itx-stepper-nav-trigger-border-color, currentColor);
-	border-width: var(--itx-stepper-nav-trigger-border-width, 1px);
-	border-style: solid;
-	border-radius: var(--itx-stepper-nav-trigger-border-radius, 8px);
-
-	min-inline-size: 0;
-
-	transition-property: background-color, color, border-color;
-	transition-duration: var(--itx-stepper-nav-trigger-transition-duration, 96ms);
-	transition-timing-function: ease-in-out;
+	--itx-button-width: 100%;
 }
 
 :where(button.interop-stepper__nav-trigger) {
@@ -451,6 +495,7 @@
 
 :where(.interop-stepper__nav-summary) {
 	flex: 1;
+	max-inline-size: max-content;
 	min-inline-size: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -465,6 +510,7 @@
 	);
 	font-variant-numeric: tabular-nums;
 	opacity: 0.7;
+	font-size: var(--itx-font-size-caption);
 }
 
 /* ── Menu (popover) ──────────────────────────────────────────────────────── */
@@ -505,11 +551,15 @@
 	display: flex;
 	list-style: none;
 	margin: 0;
+	/*background-color: var(--itx-neutral-3);*/
 	padding: var(--itx-step-list-padding, 0);
-	gap: var(--itx-step-list-gap, 0);
+	row-gap: var(--itx-step-list-row-gap, 0);
+	column-gap: var(--itx-step-list-column-gap, 0);
 }
 
-:where(interop-stepper:not([data-orientation="vertical"]) ol[interop-step-list]) {
+:where(
+	interop-stepper:not([data-orientation="vertical"]) ol[interop-step-list]
+) {
 	flex-direction: row;
 	align-items: flex-start;
 }
@@ -522,11 +572,11 @@
 /* ── Step item (li) ──────────────────────────────────────────────────────── */
 
 :where(li[interop-step]) {
-	flex: var(--itx-step-flex, 1);
+	flex: var(--itx-step-flex, 1 0 fit-content);
 	display: flex;
 	position: relative;
 	list-style: none;
-	min-inline-size: 0;
+	min-inline-size: fit-content;
 }
 
 /* Horizontal: indicator stacks above label, item is centered */
@@ -563,12 +613,20 @@
 }
 
 /* Horizontal: button stacks indicator above label */
-:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step] .interop-step__btn) {
+:where(
+	interop-stepper:not([data-orientation="vertical"])
+		li[interop-step]
+		.interop-step__btn
+) {
 	flex-direction: column;
 }
 
 /* Vertical: button lays out indicator beside label */
-:where(interop-stepper[data-orientation="vertical"] li[interop-step] .interop-step__btn) {
+:where(
+	interop-stepper[data-orientation="vertical"]
+		li[interop-step]
+		.interop-step__btn
+) {
 	flex-direction: row;
 	text-align: start;
 }
@@ -578,7 +636,9 @@
 	outline: none;
 }
 
-:where(li[interop-step] .interop-step__btn:focus-visible .interop-step__indicator) {
+:where(
+	li[interop-step] .interop-step__btn:focus-visible .interop-step__indicator
+) {
 	outline: var(--itx-step-outline-width, 2px)
 		var(--itx-step-outline-style, solid)
 		var(--itx-step-outline-color, currentColor);
@@ -604,8 +664,7 @@
 	background: var(--_indicator-background);
 	color: var(--_indicator-foreground);
 	border: var(--itx-step-indicator-border-width, 2px)
-		var(--itx-step-indicator-border-style, solid)
-		var(--_indicator-border-color);
+		var(--itx-step-indicator-border-style, solid) var(--_indicator-border-color);
 
 	transition-property: background-color, color, border-color;
 	transition-duration: var(--itx-step-indicator-transition-duration, 160ms);
@@ -621,7 +680,10 @@
 :where(li[interop-step]) {
 	--_indicator-background: var(--itx-step-indicator-background, transparent);
 	--_indicator-foreground: var(--itx-step-indicator-foreground, inherit);
-	--_indicator-border-color: var(--itx-step-indicator-border-color, currentColor);
+	--_indicator-border-color: var(
+		--itx-step-indicator-border-color,
+		currentColor
+	);
 	--_label-color: var(--itx-step-label-color, inherit);
 	--_connector-color: var(--itx-step-connector-color, currentColor);
 }
@@ -769,11 +831,19 @@
 	min-inline-size: 0;
 }
 
-:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step] .interop-step__label) {
+:where(
+	interop-stepper:not([data-orientation="vertical"])
+		li[interop-step]
+		.interop-step__label
+) {
 	white-space: nowrap;
 }
 
-:where(interop-stepper[data-orientation="vertical"] li[interop-step] .interop-step__label) {
+:where(
+	interop-stepper[data-orientation="vertical"]
+		li[interop-step]
+		.interop-step__label
+) {
 	text-align: start;
 }
 
@@ -782,6 +852,26 @@
 	font-size: var(--itx-step-optional-font-size, 0.75em);
 	font-weight: 400;
 	opacity: var(--itx-step-optional-opacity, 0.65);
+}
+
+/* ── Step status (visually hidden) ───────────────────────────────────────── */
+/*
+ * Carries the "Completed" / "Error" / "Skipped" suffix that contributes to
+ * the step button's accessible name. Visible status is conveyed graphically
+ * by the indicator; this span exists purely so screen-reader users hear the
+ * status alongside the visible label, without an explicit `aria-label`
+ * displacing the natural name computation from the button content.
+ */
+:where(li[interop-step] .interop-step__status) {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 /* ── Connector line ──────────────────────────────────────────────────────── */
@@ -802,30 +892,100 @@
 	z-index: 0;
 }
 
-/* Horizontal: line runs across the top, between indicator centres. */
-:where(interop-stepper:not([data-orientation="vertical"]) li[interop-step]:not(:last-child))::after {
+/* Horizontal: line spans from this indicator's right edge to the next
+   indicator's left edge.
+     - This indicator is centred in its <li> (the button is
+       `align-items: center` and the indicator has fixed inline-size), so its
+       right edge sits at `50% + size/2` of the li → that's the `left` anchor.
+     - The next indicator's left edge, expressed as `right:` (distance from
+       this li's right edge going outward), is
+       `-(column-gap + li-width/2 - size/2)`. Under the equal-width
+       assumption produced by `flex: 1` on the wide-viewport default
+       (`li-width/2` ≡ `50%` of this li), this simplifies to
+       `size/2 - 50% - column-gap`.
+   The narrow-viewport block hides these connectors entirely — items are
+   auto-width there and the equal-width assumption no longer holds, so this
+   rule only needs to be correct for the wide layout. */
+:where(
+	interop-stepper:not([data-orientation="vertical"])
+		li[interop-step]:not(:last-child)
+)::after {
 	--_size: var(--itx-step-indicator-size, 2rem);
 	--_thickness: var(--itx-step-connector-thickness, 2px);
 
 	top: calc(var(--_size) / 2 - var(--_thickness) / 2);
-	left: 50%;
-	right: -50%;
+	left: calc(50% + var(--_size) / 2);
+	right: calc(var(--_size) / 2 - 50% - var(--itx-step-list-column-gap, 0px));
 	block-size: var(--_thickness);
 }
 
 /* Vertical: line runs down the left, through indicator centres. */
-:where(interop-stepper[data-orientation="vertical"] li[interop-step]:not(:last-child))::after {
+:where(
+	interop-stepper[data-orientation="vertical"] li[interop-step]:not(:last-child)
+)::after {
 	--_size: var(--itx-step-indicator-size, 2rem);
 	--_thickness: var(--itx-step-connector-thickness, 2px);
 
 	top: var(--_size);
-	bottom: calc(var(--_size) * -1 + var(--_thickness));
+	bottom: calc(var(--itx-step-list-row-gap) * -1);
 	left: calc(var(--_size) / 2 - var(--_thickness) / 2);
 	inline-size: var(--_thickness);
 }
 
 /* Note: structural rules for `section[interop-step-panel]` live in the
    viewport block above (it's the only place panels render). */
+
+/* ── Narrow-viewport scroll-area layout ──────────────────────────────────── */
+/*
+ * When the step list lives inside the InteropScrollArea on a narrow
+ * horizontal viewport (default `menu="auto"` or explicit `menu="never"`),
+ * the wide-viewport default of `flex: 1` (grow + shrink, basis 0) would
+ * squeeze items to share container width — items never overflow, labels
+ * clip individually instead of the strip scrolling. We need the opposite:
+ * items take at least their natural content width, but expand to fill the
+ * strip when there's room.
+ *
+ * `flex: 1 0 auto`:
+ *   - flex-grow: 1     → distribute extra space evenly when items fit
+ *                        (no clustering / bunching at the start)
+ *   - flex-shrink: 0   → never shrink below natural width
+ *                        (overflow when items don't fit → scroll-area
+ *                        engages, edge fades become meaningful)
+ *   - flex-basis: auto → natural content width is the starting size
+ *
+ * The fallback value in `var(--itx-step-flex, …)` is what changes; if
+ * consumers set `--itx-step-flex` explicitly, that wins (e.g. set it to
+ * `0 0 8rem` to lock every step to an 8rem column).
+ *
+ * Connectors use a `left: 50%; right: -50%` geometry that bridges between
+ * equal-width item centres. With auto-width items the math doesn't reach
+ * the next centre cleanly, so connectors are hidden in this layout —
+ * rather than draw broken lines. The reviewed/completed colour-coding
+ * still applies to the indicators themselves.
+ */
+
+@container stepper (max-width: 599px) {
+	:where(
+		interop-stepper:not([data-orientation="vertical"]):not([data-menu="always"])
+			li[interop-step]
+	) {
+		flex: var(--itx-step-flex, 1 0 auto);
+	}
+
+	:where(
+		interop-stepper:not([data-orientation="vertical"]):not([data-menu="always"])
+			ol[interop-step-list]
+	) {
+		column-gap: var(--itx-step-list-column-gap, var(--itx-spacing-4));
+	}
+
+	:where(
+		interop-stepper:not([data-orientation="vertical"]):not([data-menu="always"])
+			li[interop-step]:not(:last-child)
+	)::after {
+		display: none;
+	}
+}
 
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 

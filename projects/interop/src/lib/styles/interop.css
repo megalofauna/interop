@@ -37,6 +37,7 @@
 @import "./components/segment.css";
 @import "./components/stepper.css";
 @import "./components/table.css";
+@import "./components/tooltip.css";
 @import "./components/resizable.css";
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */

@@ -20,14 +20,21 @@ projects/demo/src/app/pages/stepper/        demo page
 ```html
 <interop-stepper>
   <nav class="interop-stepper__nav">
-    <!-- Compact trigger (narrow viewports): button or div -->
+    <!-- Compact trigger: rendered in vertical mode (always) and in horizontal
+         narrow mode when menu="always". For horizontal menu="auto"|"never" it
+         stays display:none — the in-flow step list inside the scroll-area is
+         the mobile UX instead. -->
     <button class="interop-stepper__nav-trigger" [interop-popover-trigger]="menuPopover" [popoverHaspopup]="'menu'" ...>
       <interop-icon /> step label  N/M
     </button>
-    <!-- Full step list (wide viewports) -->
-    <ol interop-step-list>
-      <li interop-step label="Step 1">...</li>
-    </ol>
+    <!-- Horizontal: step list wrapped in InteropScrollArea so a narrow
+         viewport can scroll the strip horizontally with edge fades.
+         Vertical: bare ng-content slot, no scroll-area. -->
+    <interop-scroll-area orientation="horizontal" class="interop-stepper__list-scroll">
+      <ol interop-step-list>
+        <li interop-step label="Step 1">...</li>
+      </ol>
+    </interop-scroll-area>
   </nav>
 
   <!-- Popover hoisted to root template scope so both triggers (nav-trigger
@@ -124,9 +131,30 @@ The viewport is a flex container with `scroll-snap-type: x/y mandatory`. Each pa
 
 ## Popover menu
 
-The menu is an `InteropPopover` instance. The directive owns the per-instance id, the `anchor-name` / `position-anchor` wiring, and the `popover` attribute. Positioning is delegated to `INTEROP_POSITION_STRATEGY` (FloatingUI by default) and configured via `placement="top-start"` on the popover element so the menu opens upward — matching the action-bar's bottom-of-stepper position. FloatingUI flips automatically when there's no room above.
+The menu is an `InteropPopover` instance, used as an *opt-in alternative* to
+the default scroll-area mobile pattern. Surfaced when:
 
-The compact nav-trigger (narrow viewports) and the action-bar menu-trigger (wide viewports + `menu="always"`) both bind to the same popover via `[interop-popover-trigger]="menuPopover"` referencing a `#menuPopover="interopPopover"` template ref variable.
+- `orientation="vertical"` — the step list lives in the popover (consumer
+  supplies it via `[stepListTemplate]`); the compact nav-trigger is always
+  present as the popover trigger.
+- `menu="always"` — popover trigger present at every viewport size. On
+  narrow horizontal it replaces the in-flow step list (compact nav-trigger
+  pattern). On wide horizontal a separate menu button sits in the action
+  bar; the in-flow step list remains visible.
+- `menu="auto"` (default) / `"never"` in horizontal — popover element
+  renders but has no triggers; the scroll-area wrapper handles overflow.
+
+The directive owns the per-instance id, the `anchor-name` /
+`position-anchor` wiring, and the `popover` attribute. Positioning is
+delegated to `INTEROP_POSITION_STRATEGY` (FloatingUI by default) and
+configured via `placement="top-start"` on the popover element so the menu
+opens upward — matching the action-bar's bottom-of-stepper position.
+FloatingUI flips automatically when there's no room above.
+
+The compact nav-trigger (narrow + `menu="always"`, or vertical) and the
+action-bar menu-trigger (wide + `menu="always"`) both bind to the same
+popover via `[interop-popover-trigger]="menuPopover"` referencing a
+`#menuPopover="interopPopover"` template ref variable.
 
 **Template-scope detail:** `#menuPopover` is declared at the root template scope, NOT inside an `@if`. Template ref variables declared inside `@if` blocks are scoped to that block, so siblings can't see them — and the two triggers live in separate `@if` branches. Hoisting the popover element to root scope is what makes both bindings reachable. The popover's inner listbox content is gated by `@if (menu() !== "never")` so `menuOptions()` doesn't recompute when the menu UI is disabled. When `menu="never"` the popover element renders but has no triggers and no listbox content; the native `popover` attribute keeps it hidden.
 

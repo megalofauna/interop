@@ -61,7 +61,10 @@ demo-state {
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-spacing-4);
-	/* padding: var(--itx-spacing-6); */
+	padding: var(--demo-example-ui-padding, var(--itx-spacing-3));
+	background-color: var(--demo-example-ui-background-color, transparent);
+	border-radius: var(--demo-example-ui-radius, initial);
+	padding: var(--demo-example-ui-padding, var(--itx-spacing-4));
 }
 
 .demo-example__code {

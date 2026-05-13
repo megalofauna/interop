@@ -15,6 +15,9 @@
 			<interop-tooltip label="Initiate emergency burn sequence">
 				<button interop-button>Emergency burn</button>
 			</interop-tooltip>
+			<itx-code-block language="html" [tokens]="stringLabelTokens.value() ?? null">
+				<pre><code [textContent]="stringLabelHtml"></code></pre>
+			</itx-code-block>
 		</demo-example>
 
 		<demo-example label="Rich content">
@@ -24,6 +27,9 @@
 					Save manifest &nbsp;<kbd interop-kbd>Ctrl</kbd>+<kbd interop-kbd>S</kbd>
 				</ng-template>
 			</interop-tooltip>
+			<itx-code-block language="html" [tokens]="richContentTokens.value() ?? null">
+				<pre><code [textContent]="richContentHtml"></code></pre>
+			</itx-code-block>
 		</demo-example>
 
 		<demo-example label="Placements">
@@ -41,6 +47,9 @@
 					<button interop-button>Right</button>
 				</interop-tooltip>
 			</div>
+			<itx-code-block language="html" [tokens]="placementsTokens.value() ?? null">
+				<pre><code [textContent]="placementsHtml"></code></pre>
+			</itx-code-block>
 		</demo-example>
 	</demo-section>
 
@@ -48,6 +57,9 @@
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-name">{{ entry.component }}</code>
+			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) { <span class="demo-page__required">*</span> }
@@ -64,6 +76,9 @@
 	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
 	<demo-section id="api-outputs" heading="API — Outputs">
 		<interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-name">{{ entry.component }}</code>
+			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 			</ng-template>
@@ -72,6 +87,7 @@
 			</ng-template>
 		</interop-table>
 	</demo-section>
+
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
 	<demo-section id="notes" heading="Notes">
 		<demo-notes [notes]="notes" />

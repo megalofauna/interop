@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   afterNextRender,
   computed,
   inject,
@@ -44,7 +45,7 @@ import {
       type="button"
       class="interop-step__btn"
       [disabled]="isLocked()"
-      [attr.aria-label]="ariaLabel()"
+      [attr.aria-controls]="panelId()"
       (click)="activate()"
     >
       <span class="interop-step__indicator" aria-hidden="true">
@@ -74,15 +75,17 @@ import {
       <span class="interop-step__label">
         {{ label() }}
         @if (optional()) {
-          <span class="interop-step__optional" aria-hidden="true">(optional)</span>
+          <span class="interop-step__optional">(optional)</span>
         }
       </span>
+      @if (statusSuffix(); as suffix) {
+        <span class="interop-step__status">{{ suffix }}</span>
+      }
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     "[attr.aria-current]": 'isActive() ? "step" : null',
-    "[attr.aria-disabled]": "isLocked() ? 'true' : null",
     "[class.interop-step--active]": "isActive()",
     "[class.interop-step--completed]": 'effectiveStatus() === "completed"',
     "[class.interop-step--error]": 'effectiveStatus() === "error"',
@@ -95,7 +98,7 @@ import {
     "[class.interop-step--reviewed]": "isReviewed()",
   },
 })
-export class InteropStep {
+export class InteropStep implements OnDestroy {
   private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
 
   /** The step's visible label. */
@@ -126,7 +129,7 @@ export class InteropStep {
   private readonly index: number;
 
   constructor() {
-    this.index = this.stepper?.registerStep(this.label) ?? 0;
+    this.index = this.stepper?.registerStep(this.label, this.status) ?? 0;
 
     if (isDevMode()) {
       if (!this.stepper) {
@@ -142,8 +145,16 @@ export class InteropStep {
   /** 1-based display number shown inside the indicator. */
   protected readonly displayIndex = computed(() => this.index + 1);
 
+  /** "Active" from the step indicator's perspective: the user is currently on
+   * this step AND the flow is not finished. Once `(finish)` fires the active
+   * step's status flips to "completed" (see InteropStepper.getAutoStatus)
+   * and this signal drops to false so the `--active` CSS class no longer
+   * applies — letting the `--completed` colourway win — and `aria-current`
+   * stops claiming a current step in a finished flow. */
   protected readonly isActive = computed(
-    () => this.stepper?.activeIndex() === this.index,
+    () =>
+      !this.stepper?.isFinished() &&
+      this.stepper?.activeIndex() === this.index,
   );
 
   protected readonly isLocked = computed(
@@ -190,19 +201,32 @@ export class InteropStep {
     return this.stepper?.getAutoStatus(this.index) ?? "pending";
   });
 
-  /** Accessible label read by screen readers, includes status context. */
-  protected readonly ariaLabel = computed(() => {
-    const n = this.index + 1;
-    const lbl = this.label();
-    const opt = this.optional() ? " (optional)" : "";
-    const status = this.effectiveStatus();
-    const statusSuffix =
-      status === "completed" ? " — Completed"
-      : status === "error"   ? " — Error"
-      : status === "skipped" ? " — Skipped"
-      : "";
-    return `Step ${n}: ${lbl}${opt}${statusSuffix}`;
+  /**
+   * Visually-hidden status suffix appended after the visible label. Lets AT
+   * users hear "Profile, Completed" without the explicit `aria-label`
+   * override that previously displaced the natural accessible name from the
+   * visible button content. Returns an empty string for `pending` / `active`
+   * — those don't need announcing as status (active is conveyed by
+   * `aria-current="step"` on the host).
+   */
+  protected readonly statusSuffix = computed((): string => {
+    switch (this.effectiveStatus()) {
+      case "completed": return "Completed";
+      case "error":     return "Error";
+      case "skipped":   return "Skipped";
+      default:          return "";
+    }
   });
+
+  /** Panel id this step controls — sourced from the parent stepper so step
+   * and panel agree on the same identifier. */
+  protected readonly panelId = computed(
+    () => this.stepper?.getPanelId(this.index),
+  );
+
+  ngOnDestroy(): void {
+    this.stepper?.unregisterStep(this.index);
+  }
 
   protected activate(): void {
     this.stepper?.goTo(this.index);

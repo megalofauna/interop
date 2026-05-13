@@ -116,12 +116,12 @@
 
 /* ── Backdrop ────────────────────────────────────────────────────────────── */
 /*
- * `::backdrop` cannot appear inside :where(), so the full selector is
- * written here at its natural specificity. This is the only place in the
- * dialog CSS that intentionally carries non-zero specificity.
+ * `::backdrop` cannot appear inside :where(), but the element selector that
+ * precedes it can. The pseudo-element is placed after :where() so the rule
+ * carries zero specificity — the same pattern used for ::after on step connectors.
  */
 
-dialog[interop-dialog]::backdrop {
+:where(dialog[interop-dialog])::backdrop {
 	background: var(--itx-dialog-backdrop-color, rgba(0 0 0 / 0.5));
 	backdrop-filter: blur(var(--itx-dialog-backdrop-blur, 0px));
 
@@ -152,7 +152,7 @@ dialog[interop-dialog]::backdrop {
 
 /* Backdrop entry: fades in from transparent. */
 @starting-style {
-	dialog[interop-dialog][open]::backdrop {
+	:where(dialog[interop-dialog][open])::backdrop {
 		background: transparent;
 		backdrop-filter: blur(0px);
 	}
@@ -164,7 +164,7 @@ dialog[interop-dialog]::backdrop {
  * dialog fade-out, then snaps off when the dialog leaves the top layer —
  * a visible "pop" against the smoothly fading dialog.
  */
-dialog[interop-dialog]:not([open])::backdrop {
+:where(dialog[interop-dialog]:not([open]))::backdrop {
 	background: transparent;
 	backdrop-filter: blur(0px);
 

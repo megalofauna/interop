@@ -3,6 +3,7 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	Injector,
 	OnDestroy,
 	Signal,
 	TemplateRef,
@@ -16,8 +17,9 @@ import {
 	untracked,
 	viewChild,
 } from "@angular/core";
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT, NgTemplateOutlet } from "@angular/common";
 import { InteropButton } from "../interop-button/interop-button";
+import { InteropButtonPrefix } from "../interop-button/interop-button-prefix";
 import { InteropIcon } from "../interop-icon/interop-icon";
 import {
 	InteropListbox,
@@ -26,10 +28,14 @@ import {
 } from "../interop-listbox/interop-listbox";
 import { InteropPopover } from "../interop-popover/interop-popover";
 import { InteropPopoverTrigger } from "../interop-popover/interop-popover-trigger";
+import { InteropScrollArea } from "../interop-scroll-area/interop-scroll-area";
 import { provideInteropIcons } from "../../iconsets/core";
 import { TablerCheck } from "../../iconsets/tabler/outline/tabler-check";
+import { TablerArrowNarrowRight } from "../../iconsets/tabler/outline/tabler-arrow-narrow-right";
+import { TablerArrowNarrowLeft } from "../../iconsets/tabler/outline/tabler-arrow-narrow-left";
 import { TablerAlertCircle } from "../../iconsets/tabler/outline/tabler-alert-circle";
 import { TablerMinus } from "../../iconsets/tabler/outline/tabler-minus";
+import { TablerCircle } from "../../iconsets/tabler/outline/tabler-circle";
 import { TablerList } from "../../iconsets/tabler/outline/tabler-list";
 import {
 	INTEROP_STEPPER_TOKEN,
@@ -115,11 +121,14 @@ export type StepperResponsiveActions = false | "sm" | "md" | "lg";
 	selector: "interop-stepper",
 	standalone: true,
 	imports: [
+		NgTemplateOutlet,
 		InteropButton,
+		InteropButtonPrefix,
 		InteropIcon,
 		InteropListbox,
 		InteropPopover,
 		InteropPopoverTrigger,
+		InteropScrollArea,
 	],
 	templateUrl: "./interop-stepper.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -136,6 +145,9 @@ export type StepperResponsiveActions = false | "sm" | "md" | "lg";
 			TablerAlertCircle,
 			TablerMinus,
 			TablerList,
+			TablerArrowNarrowRight,
+			TablerArrowNarrowLeft,
+			TablerCircle,
 		),
 	],
 	host: {
@@ -149,11 +161,17 @@ export class InteropStepper
 	implements IInteropStepper, AfterViewInit, OnDestroy
 {
 	private readonly document = inject(DOCUMENT);
+	readonly injector = inject(Injector);
 	// ── Inputs ─────────────────────────────────────────────────────────────────
 
 	/**
-	 * Accessible label for the step indicator navigation landmark.
-	 * Describes the purpose of the stepper to screen reader users.
+	 * Accessible label for the step indicator navigation landmark. Describes
+	 * the purpose of the stepper to screen reader users.
+	 *
+	 * **Composition note:** when multiple `<interop-stepper>` instances appear
+	 * in the same view, set a unique label on each — otherwise AT users hear
+	 * two indistinguishable "Progress" navigation landmarks. The default is
+	 * intentionally generic; per-page uniqueness is the consumer's call.
 	 */
 	ariaLabel = input<string>("Progress", { alias: "aria-label" });
 
@@ -193,6 +211,12 @@ export class InteropStepper
 	 * When provided, replaces the default icon / number content for all steps.
 	 * The template receives a {@link StepIndicatorContext} as its implicit value.
 	 *
+	 * **Scope note:** the template replaces *only* the indicator graphic. The
+	 * step's visible label (and the visually-hidden status suffix that drives
+	 * the step's accessible name) continue to render alongside. Templates
+	 * should treat the indicator as decorative — the indicator graphic itself
+	 * is `aria-hidden`; the accessible name comes from the label + status.
+	 *
 	 * @example
 	 * ```html
 	 * <ng-template #myIndicator let-status let-i="index">
@@ -202,6 +226,23 @@ export class InteropStepper
 	 * ```
 	 */
 	indicatorTemplate = input<TemplateRef<StepIndicatorContext> | null>(null);
+
+	/**
+	 * Template rendered inside the popover menu when orientation="vertical".
+	 * Provide an `ng-template` containing `ol[interop-step-list]` so the popover
+	 * shows the full rich step list instead of a separate listbox.
+	 *
+	 * @example
+	 * ```html
+	 * <ng-template #steps>
+	 *   <ol interop-step-list>
+	 *     <li interop-step label="Account"></li>
+	 *   </ol>
+	 * </ng-template>
+	 * <interop-stepper orientation="vertical" [stepListTemplate]="steps">
+	 * ```
+	 */
+	stepListTemplate = input<TemplateRef<unknown> | null>(null);
 
 	// ── Action bar inputs ──────────────────────────────────────────────────────
 
@@ -229,15 +270,47 @@ export class InteropStepper
 	finishLabel = input<string>("Finish");
 
 	/**
-	 * Menu trigger visibility:
-	 * - "auto"   — shown on narrow viewports (container query, default 600px)
-	 * - "always" — shown at all sizes
-	 * - "never"  — hidden at all sizes
+	 * Popover-menu visibility (horizontal orientation only — vertical mode
+	 * always uses the popover because the step list lives inside it).
+	 *
+	 * - `"auto"`   — no popover trigger. The step list renders in-flow and
+	 *   becomes horizontally scrollable on narrow viewports via the
+	 *   InteropScrollArea wrapper (lighter bundle, no positioning logic).
+	 *   This is the default and the recommended mobile pattern.
+	 * - `"always"` — popover trigger present at every viewport size. On
+	 *   narrow viewports the trigger replaces the inline step list (compact
+	 *   "Step N of M" pill with the icon + label). On wide viewports the
+	 *   step list stays in-flow and a separate menu button appears in the
+	 *   action bar. Use when the flow has many steps or when consumers
+	 *   prefer the popover affordance over the scroll affordance.
+	 * - `"never"`  — no popover trigger ever; the scroll-area handles
+	 *   horizontal overflow on narrow viewports. Behavioural equivalent of
+	 *   `"auto"` today; the distinction is forward-compatibility (if a
+	 *   future heuristic causes `"auto"` to surface the popover for some
+	 *   workloads, `"never"` keeps the explicit opt-out).
 	 */
 	menu = input<StepperMenuMode>("auto");
 
 	/** Accessible label for the menu trigger button (and the menu itself). */
 	menuLabel = input<string>("Steps");
+
+	/**
+	 * Step statuses that block forward navigation past them. Forward navigation
+	 * (`next()`, or `goTo(target)` with `target > activeIndex`) checks every
+	 * step from the current index up to (but not including) the target — if
+	 * any has an effective status listed here, the navigation is rejected and
+	 * `stepAttempt` fires with `reason: "blocked"`.
+	 *
+	 * Defaults to an empty array — only `linear`-mode locking blocks. Set
+	 * `[blockOn]="['error']"` to prevent the user from advancing past a step
+	 * the consumer has flagged invalid via `[status]="'error'"`. Pass
+	 * `["error", "skipped"]` to block both, etc.
+	 *
+	 * Backward navigation is never blocked. The active step itself is
+	 * included in the check, so `next()` is blocked while the active step
+	 * has a blocking status.
+	 */
+	blockOn = input<readonly StepStatus[]>([]);
 
 	// ── Outputs ────────────────────────────────────────────────────────────────
 
@@ -245,11 +318,18 @@ export class InteropStepper
 	activeStepChange = output<number>();
 
 	/**
-	 * Emitted when the user attempts to navigate to a locked or out-of-bounds step.
-	 * Use this to show validation errors when [linear]="true" and the user clicks
-	 * a future step.
+	 * Emitted when the user attempts a navigation the stepper rejects.
+	 *
+	 * - `"bounds"`  — target index is `< 0` or `>= totalSteps`
+	 * - `"locked"`  — target is past the linear-mode completion frontier
+	 * - `"blocked"` — a step on the forward path has a status listed in
+	 *   `[blockOn]` (e.g. an `"error"` step ahead). `index` is the blocking
+	 *   step's index, not the requested target.
 	 */
-	stepAttempt = output<{ index: number; reason: "locked" | "bounds" }>();
+	stepAttempt = output<{
+		index: number;
+		reason: "locked" | "bounds" | "blocked";
+	}>();
 
 	/** Fired when the action bar's Cancel button is activated. */
 	cancel = output<void>();
@@ -270,9 +350,21 @@ export class InteropStepper
 	// ── Internal registration state ────────────────────────────────────────────
 
 	private _stepCount = 0;
+	private _registeredStepCount = 0;
 	private _panelCount = 0;
+	private _registeredPanelCount = 0;
 	private _panels: StepPanelRef[] = [];
 	private _stepLabels: Signal<string>[] = [];
+	private _stepStatusOverrides: (Signal<StepStatus | null> | undefined)[] = [];
+
+	/**
+	 * Per-instance unique id. Used to build stable panel ids
+	 * (`{uid}-panel-{index}`) so the step buttons can wire `aria-controls`
+	 * at the corresponding panel. Counter-based — predictable in tests and
+	 * cheap. Module-private; never exposed to consumers.
+	 */
+	private readonly uid = `itx-stepper-${++InteropStepper._uidSequence}`;
+	private static _uidSequence = 0;
 
 	/**
 	 * Monotonic completion frontier — the highest index the user has ever
@@ -282,6 +374,18 @@ export class InteropStepper
 	 * `reset()` (and a future `cancel(index)`).
 	 */
 	private readonly _frontier = signal<number>(0);
+
+	/**
+	 * Set to true when `(finish)` is emitted; cleared on any subsequent
+	 * navigation or on `reset()`. The frontier model alone can't represent
+	 * "last step completed" — the frontier equals the active index on the
+	 * last step, so the active step would otherwise stay "active" indefinitely
+	 * after finish. This flag tips the active step's auto-status to
+	 * "completed" while it's set, and the step indicator drops its `--active`
+	 * class so the completed colourway shows.
+	 */
+	private readonly _finished = signal<boolean>(false);
+	readonly isFinished = this._finished.asReadonly();
 
 	// ── Viewport / scroll-snap state ───────────────────────────────────────────
 
@@ -316,9 +420,24 @@ export class InteropStepper
 		}));
 	});
 
-	/** True when the active step is the last one — Next becomes Finish. */
+	/** True when the active step is the last one. Used internally; doesn't
+	 * imply that the Next button should switch to Finish — see `canFinish`. */
 	protected readonly isOnLastStep = computed(
 		() => this.totalSteps() > 0 && this.activeIndex() === this.totalSteps() - 1,
+	);
+
+	/**
+	 * True only when the action bar's Next button should switch to Finish AND
+	 * the click should emit `(finish)`. Gated on `linear` because non-linear
+	 * steppers have no canonical "last" step — there's no completion semantics
+	 * to assert. Consumers wiring non-linear flows are expected to provide
+	 * their own completion control outside the built-in action bar.
+	 */
+	protected readonly canFinish = computed(
+		() =>
+			this.linear() &&
+			this.totalSteps() > 0 &&
+			this.activeIndex() === this.totalSteps() - 1,
 	);
 
 	/** Label of the currently active step. Used by the compact nav-trigger
@@ -348,17 +467,50 @@ export class InteropStepper
 
 	// ── IInteropStepper ────────────────────────────────────────────────────────
 
-	registerStep(label: Signal<string>): number {
+	registerStep(
+		label: Signal<string>,
+		status?: Signal<StepStatus | null>,
+	): number {
 		const index = this._stepCount++;
+		this._registeredStepCount++;
 		this._stepLabels.push(label);
-		this.totalSteps.set(this._stepCount);
+		this._stepStatusOverrides.push(status);
+		this.totalSteps.set(this._registeredStepCount);
 		return index;
+	}
+
+	unregisterStep(_index: number): void {
+		this._registeredStepCount--;
+		if (this._registeredStepCount <= 0) {
+			this._stepCount = 0;
+			this._registeredStepCount = 0;
+			this._stepLabels = [];
+			this._stepStatusOverrides = [];
+			this.totalSteps.set(0);
+		} else {
+			this.totalSteps.set(this._registeredStepCount);
+		}
+	}
+
+	getPanelId(index: number): string | undefined {
+		if (index < 0 || index >= this._panels.length) return undefined;
+		return `${this.uid}-panel-${index}`;
 	}
 
 	registerPanel(panel: StepPanelRef): number {
 		const index = this._panelCount++;
+		this._registeredPanelCount++;
 		this._panels[index] = panel;
 		return index;
+	}
+
+	unregisterPanel(_index: number): void {
+		this._registeredPanelCount--;
+		if (this._registeredPanelCount <= 0) {
+			this._panelCount = 0;
+			this._registeredPanelCount = 0;
+			this._panels = [];
+		}
 	}
 
 	/**
@@ -368,7 +520,14 @@ export class InteropStepper
 	 * Consumer-provided [status] on InteropStep overrides this default.
 	 */
 	getAutoStatus(index: number): StepStatus {
-		if (index === this.activeIndex()) return "active";
+		if (index === this.activeIndex()) {
+			// While finished, treat the active (last) step as completed so the
+			// visual matches the flow's terminal state. The step component
+			// separately drops the `--active` class so the completed colourway
+			// wins; aria-current is also removed since "current" no longer
+			// applies to a finished flow.
+			return this._finished() ? "completed" : "active";
+		}
 		if (index < this._frontier()) return "completed";
 		return "pending";
 	}
@@ -394,6 +553,11 @@ export class InteropStepper
 			this.stepAttempt.emit({ index, reason: "locked" });
 			return;
 		}
+		const blocker = this._firstBlockingStepIndex(index);
+		if (blocker !== null) {
+			this.stepAttempt.emit({ index: blocker, reason: "blocked" });
+			return;
+		}
 		this._navigate(index);
 	}
 
@@ -403,7 +567,33 @@ export class InteropStepper
 			this.stepAttempt.emit({ index, reason: "bounds" });
 			return;
 		}
+		const blocker = this._firstBlockingStepIndex(index);
+		if (blocker !== null) {
+			this.stepAttempt.emit({ index: blocker, reason: "blocked" });
+			return;
+		}
 		this._navigate(index);
+	}
+
+	/**
+	 * Returns the index of the first step that blocks forward navigation from
+	 * the current `activeIndex` to (but not including) `targetIndex`, or
+	 * `null` when no step blocks. Only forward navigation is checked —
+	 * backward navigation is never blocked. The active step itself is
+	 * included in the scan, so `next()` is blocked while the active step has
+	 * a blocking status.
+	 */
+	private _firstBlockingStepIndex(targetIndex: number): number | null {
+		const blocking = this.blockOn();
+		if (blocking.length === 0) return null;
+		const current = this.activeIndex();
+		if (targetIndex <= current) return null;
+		for (let i = current; i < targetIndex; i++) {
+			const statusSignal = this._stepStatusOverrides[i];
+			const status = statusSignal?.();
+			if (status != null && blocking.includes(status)) return i;
+		}
+		return null;
 	}
 
 	back(): void {
@@ -417,6 +607,7 @@ export class InteropStepper
 
 	reset(): void {
 		this._frontier.set(0);
+		this._finished.set(false);
 		if (this.activeIndex() !== 0) {
 			this._navigate(0);
 		} else {
@@ -429,14 +620,31 @@ export class InteropStepper
 		const prev = this.activeIndex();
 		if (index === prev) return;
 
+		// Defensive bounds. Public callers (goTo/next/back/reset) all bounds-
+		// check before reaching here, but this is the single write site for
+		// activeIndex — guard it so no future caller (and no scroll-derived
+		// update) can put the index past the registered step count.
+		if (index < 0 || index >= this.totalSteps()) return;
+
 		// Advance the completion frontier when moving forward. Going backwards
 		// never decreases it — completion is irreversible by navigation.
 		if (index > this._frontier()) {
 			this._frontier.set(index);
 		}
 
+		// Any navigation away from a finished state clears the flag — the user
+		// has moved on (back, jump-to, etc.), so the "flow is complete"
+		// indication should drop.
+		if (this._finished()) {
+			this._finished.set(false);
+		}
+
 		this.activeIndex.set(index);
 		this.activeStepChange.emit(index);
+
+		// In vertical mode the step list lives inside the popover, so any
+		// navigation (step click, Back, Next) should dismiss it.
+		this.menuPopover()?.close();
 
 		// Scroll the new panel into view. Focus is moved once the scroll
 		// settles (see `_onScrollEnd`), so swiping doesn't yank focus around
@@ -557,9 +765,16 @@ export class InteropStepper
 	}
 
 	/** Update active state from a gesture-driven scroll. Mirrors `_navigate()`
-	 * but skips the `_scrollToActivePanel()` call (the panel is already there). */
+	 * but skips the `_scrollToActivePanel()` call (the panel is already there).
+	 *
+	 * Bounds-checks defensively — scroll math (`Math.round(pos / dim)`) can
+	 * resolve to an out-of-bounds index when the viewport overscrolls or
+	 * contains extra space beyond the last panel; we silently ignore those
+	 * rather than corrupt activeIndex. */
 	private _setActiveFromScroll(index: number): void {
+		if (index < 0 || index >= this.totalSteps()) return;
 		if (index > this._frontier()) this._frontier.set(index);
+		if (this._finished()) this._finished.set(false);
 		this.activeIndex.set(index);
 		this.activeStepChange.emit(index);
 		this._panels[index]?.requestFocus();
@@ -567,9 +782,19 @@ export class InteropStepper
 
 	// ── Action bar handlers ────────────────────────────────────────────────────
 
-	/** Next-or-finish: emits (finish) on the last step, otherwise advances. */
+	/** Next-or-finish: emits (finish) when on the last step of a linear flow
+	 * (see `canFinish`), otherwise advances. In non-linear mode the action
+	 * bar never fires finish — consumers wire their own completion control.
+	 *
+	 * The `_finished` flag flips before `(finish)` emits so consumers reacting
+	 * to the output (e.g. opening a confirmation dialog) see the stepper in
+	 * its finished state. Re-clicking Finish while still on the last step is
+	 * a no-op — the flag short-circuits further emissions until the user
+	 * navigates or `reset()` is called. */
 	protected onNextOrFinish(): void {
-		if (this.isOnLastStep()) {
+		if (this.canFinish()) {
+			if (this._finished()) return;
+			this._finished.set(true);
 			this.finish.emit();
 			return;
 		}

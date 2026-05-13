@@ -148,6 +148,44 @@ Three-level resolution: instance input > `INTEROP_TOOLTIP_CONFIG` token > `INTER
 3. **No content provided** — `console.warn` if both `label` and `[interopTooltipContent]` are absent.
 4. **`semantic="label"` with visible text** — `console.warn` if `aria-labelledby` would override visible text content, which suppresses it for screen reader users.
 
+## CSS strategy
+
+Two-file split per `css-strategy.md`:
+
+| File | Purpose |
+|---|---|
+| `src/lib/styles/components/tooltip.css` | Structural rules — layout, animation mechanism, state activation selectors |
+| `src/lib/styles/themes/protocol/components/tooltip.css` | Token values — colors, radii, shadows, durations |
+
+Both files are imported globally (no per-component `styleUrl`). The structural file owns:
+
+- `.interop-tooltip__panel` base rules: `position: fixed`, `opacity: 0`, `padding`, `border-radius`, `font-size`, `max-inline-size`, `box-shadow`, `transition`
+- `:not(:popover-open)` closed-state override: `display: block; pointer-events: none; top: -9999px; left: -9999px` — keeps the element in the AT tree without affecting layout
+- `:popover-open` open state: `opacity: 1; transform: scale(1); pointer-events: auto`
+- `@starting-style` entry animation: `opacity: 0; transform: scale(0.96)`
+- `@supports (transition-behavior: allow-discrete)` guard — prevents fallback browsers from rejecting the full `transition` shorthand when `overlay`/`display` discrete transitions are included
+- `@media (prefers-reduced-motion: reduce)` override: `transition: none`
+
+All selectors are wrapped in `:where()` for zero specificity. No pseudo-elements on this component, so the pseudo-element exception from `css-strategy.md` does not apply.
+
+Token naming follows `--itx-[component]-[property](-[state])`:
+
+```
+--itx-tooltip-background
+--itx-tooltip-foreground
+--itx-tooltip-padding
+--itx-tooltip-border-radius
+--itx-tooltip-font-size
+--itx-tooltip-max-width
+--itx-tooltip-shadow
+--itx-tooltip-enter-duration
+--itx-tooltip-exit-duration
+--itx-tooltip-enter-easing
+--itx-tooltip-exit-easing
+```
+
+The Protocol theme sets a dark-pill appearance via `light-dark()` so the tooltip inverts correctly for both color schemes — dark background in light mode, dark background in dark mode — without mode-specific overrides.
+
 ## CSS Anchor Positioning migration
 
 Both `interop-tooltip` and `interop-popover` already set `anchor-name` / `position-anchor` inline to prepare for this. When CSS anchor positioning reaches Newly Available baseline, swap `useFactory` in the `providers` array to a `CssAnchorPositionStrategy`. The component code requires no other changes — `position()` and `startAutoUpdate()` become no-ops in that strategy.

@@ -1,0 +1,118 @@
+/*
+ * InteropTooltip — structural foundation.
+ *
+ * Rendering rules for .interop-tooltip__panel — the tooltip's content panel,
+ * rendered via popover="manual" for top-layer promotion.
+ *
+ * Loaded globally via interop.css. Token values (colors, radii, shadows,
+ * durations) come from the active theme — see
+ * themes/protocol/components/tooltip.css. This file owns layout and animation;
+ * the theme owns values.
+ *
+ * Key accessibility decision: the panel stays in the accessibility tree when
+ * hidden (opacity: 0, not display: none) so NVDA/JAWS can resolve the
+ * trigger's aria-describedby reference before the tooltip is first shown.
+ *
+ * All selectors use :where() for zero specificity. Pseudo-elements cannot
+ * appear inside :where() per the CSS spec — none are needed here.
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Appearance
+ *   --itx-tooltip-background
+ *   --itx-tooltip-foreground
+ *   --itx-tooltip-padding
+ *   --itx-tooltip-border-radius
+ *   --itx-tooltip-font-size
+ *   --itx-tooltip-max-width
+ *   --itx-tooltip-shadow
+ *
+ *   Animation
+ *   --itx-tooltip-enter-duration
+ *   --itx-tooltip-exit-duration
+ *   --itx-tooltip-enter-easing
+ *   --itx-tooltip-exit-easing
+ */
+
+/* ── Panel (base) ────────────────────────────────────────────────────────── */
+
+:where(.interop-tooltip__panel) {
+	/* Reset native popover UA styles. */
+	border: none;
+	margin: 0;
+
+	/* Fixed positioning keeps the closed panel out of normal flow. */
+	position: fixed;
+
+	background: var(--itx-tooltip-background, #333);
+	color: var(--itx-tooltip-foreground, #fff);
+	padding: var(--itx-tooltip-padding, 0.375rem 0.625rem);
+	border-radius: var(--itx-tooltip-border-radius, 0.25rem);
+	font-size: var(--itx-tooltip-font-size, 0.8125rem);
+	max-inline-size: var(--itx-tooltip-max-width, 18rem);
+	box-shadow: var(--itx-tooltip-shadow, 0 2px 8px rgba(0 0 0 / 0.18));
+	line-height: 1.4;
+	word-break: break-word;
+
+	/* Hidden by default; :popover-open raises it to opacity: 1. */
+	opacity: 0;
+
+	@supports (transition-behavior: allow-discrete) {
+		transition:
+			opacity var(--itx-tooltip-enter-duration, 120ms)
+				var(--itx-tooltip-enter-easing, ease),
+			transform var(--itx-tooltip-enter-duration, 120ms)
+				var(--itx-tooltip-enter-easing, ease),
+			overlay var(--itx-tooltip-enter-duration, 120ms) allow-discrete,
+			display var(--itx-tooltip-enter-duration, 120ms) allow-discrete;
+	}
+
+	@supports not (transition-behavior: allow-discrete) {
+		transition:
+			opacity var(--itx-tooltip-enter-duration, 120ms)
+				var(--itx-tooltip-enter-easing, ease),
+			transform var(--itx-tooltip-enter-duration, 120ms)
+				var(--itx-tooltip-enter-easing, ease);
+	}
+}
+
+/* ── Closed state ────────────────────────────────────────────────────────── */
+/*
+ * Override the browser's default display:none on closed [popover] elements.
+ * display:block + opacity:0 preserves the element in the accessibility tree —
+ * NVDA/JAWS resolve the trigger's aria-describedby at focus time, before the
+ * tooltip has ever been shown. Off-screen via position:fixed so it does not
+ * affect surrounding layout.
+ */
+
+:where(.interop-tooltip__panel:not(:popover-open)) {
+	display: block;
+	pointer-events: none;
+	top: -9999px;
+	left: -9999px;
+}
+
+/* ── Open state ──────────────────────────────────────────────────────────── */
+
+:where(.interop-tooltip__panel:popover-open) {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: auto;
+}
+
+/* ── Entry animation ─────────────────────────────────────────────────────── */
+
+@starting-style {
+	:where(.interop-tooltip__panel:popover-open) {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(.interop-tooltip__panel) {
+		transition: none;
+	}
+}

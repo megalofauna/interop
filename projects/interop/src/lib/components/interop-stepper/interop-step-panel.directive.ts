@@ -1,6 +1,7 @@
 import {
   Directive,
   ElementRef,
+  OnDestroy,
   afterNextRender,
   computed,
   inject,
@@ -42,11 +43,16 @@ import {
     class: "interop-step-panel",
     "[hidden]": "isLocked()",
     "[attr.data-step-index]": "index",
-    "[attr.aria-current]": 'isActive() ? "step" : null',
-    role: "region",
+    "[attr.id]": "panelId()",
+    // `<section>` with aria-labelledby already exposes as a region landmark
+    // where it matters; declaring role="region" on every panel pollutes
+    // landmark navigation with "Step 1 / Step 2 / ..." entries. Drop the
+    // explicit role and rely on native section semantics. `aria-current="step"`
+    // lives on the step indicator only — duplicating it here would cause
+    // double-announcement on some screen readers.
   },
 })
-export class InteropStepPanel implements StepPanelRef {
+export class InteropStepPanel implements StepPanelRef, OnDestroy {
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
 
@@ -97,6 +103,17 @@ export class InteropStepPanel implements StepPanelRef {
   protected readonly isLocked = computed(
     () => this.stepper?.isStepLocked(this.index) ?? false,
   );
+
+  /** Stable per-instance id, sourced from the parent stepper. The step
+   * button's `aria-controls` binds to this same id so AT users can identify
+   * which content the step opens. */
+  protected readonly panelId = computed(
+    () => this.stepper?.getPanelId(this.index),
+  );
+
+  ngOnDestroy(): void {
+    this.stepper?.unregisterPanel(this.index);
+  }
 
   getElement(): HTMLElement {
     return this.el.nativeElement;

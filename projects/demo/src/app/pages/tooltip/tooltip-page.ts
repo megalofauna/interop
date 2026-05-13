@@ -1,4 +1,9 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import {
+	Component,
+	ChangeDetectionStrategy,
+	inject,
+	resource,
+} from "@angular/core";
 import {
 	InteropTooltip,
 	InteropTooltipTriggerDirective,
@@ -9,11 +14,14 @@ import {
 	InteropCellDef,
 	type TableColumn,
 } from 'interop';
+import { CodeBlock } from "@interop/composites";
+import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 
 interface ApiEntry {
+	component?: string;
 	name: string;
 	type: string;
 	default: string;
@@ -32,6 +40,7 @@ interface ApiEntry {
 		InteropKbd,
 		InteropTable,
 		InteropCellDef,
+		CodeBlock,
 		DemoSection,
 		DemoExample,
 		DemoNotes,
@@ -41,7 +50,58 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipPage {
+	private readonly hl = inject(HighlightService);
+
+	// ── Code snippets ──────────────────────────────────────────────────────────
+
+	readonly stringLabelHtml = `\
+<interop-tooltip label="Initiate emergency burn sequence">
+  <button interop-button>Emergency burn</button>
+</interop-tooltip>`;
+
+	readonly richContentHtml = `\
+<interop-tooltip>
+  <button interop-button>Save manifest</button>
+  <ng-template interopTooltipContent>
+    Save manifest &nbsp;<kbd interop-kbd>Ctrl</kbd>+<kbd interop-kbd>S</kbd>
+  </ng-template>
+</interop-tooltip>`;
+
+	readonly placementsHtml = `\
+<interop-tooltip label="Top" placement="top">
+  <button interop-button>Top</button>
+</interop-tooltip>
+
+<interop-tooltip label="Bottom" placement="bottom">
+  <button interop-button>Bottom</button>
+</interop-tooltip>
+
+<interop-tooltip label="Left" placement="left">
+  <button interop-button>Left</button>
+</interop-tooltip>
+
+<interop-tooltip label="Right" placement="right">
+  <button interop-button>Right</button>
+</interop-tooltip>`;
+
+	// ── Highlight tokens ───────────────────────────────────────────────────────
+
+	readonly stringLabelTokens = resource({
+		loader: () => this.hl.highlight(this.stringLabelHtml, "html"),
+	});
+
+	readonly richContentTokens = resource({
+		loader: () => this.hl.highlight(this.richContentHtml, "html"),
+	});
+
+	readonly placementsTokens = resource({
+		loader: () => this.hl.highlight(this.placementsHtml, "html"),
+	});
+
+	// ── API table ──────────────────────────────────────────────────────────────
+
 	apiColumns: TableColumn<ApiEntry>[] = [
+		{ key: "component", label: "Component", sticky: true },
 		{ key: "name", label: "Input" },
 		{ key: "type", label: "Type" },
 		{ key: "default", label: "Default" },
@@ -49,21 +109,72 @@ export class TooltipPage {
 	];
 
 	apiEntries: ApiEntry[] = [
-		{ name: "label", type: "string", default: "''", description: "Tooltip text for simple string-only content. Use interopTooltipContent for rich HTML." },
-		{ name: "placement", type: "Placement | undefined", default: "undefined", description: "Preferred placement relative to the trigger (e.g. 'top', 'bottom-start'). Falls back to auto-placement." },
-		{ name: "showDelay", type: "number | undefined", default: "undefined", description: "Delay in milliseconds before the tooltip appears on hover." },
-		{ name: "offset", type: "number | undefined", default: "undefined", description: "Gap in pixels between the trigger edge and the tooltip panel." },
-		{ name: "semantic", type: "'description' | 'label' | undefined", default: "undefined", description: "ARIA wiring mode. 'description' adds aria-describedby; 'label' adds aria-labelledby on the trigger." },
+		{
+			component: "InteropTooltip",
+			name: "label",
+			type: "string",
+			default: "''",
+			description: "Tooltip text for simple string-only content. Use <ng-template interopTooltipContent> for rich HTML.",
+		},
+		{
+			component: "InteropTooltip",
+			name: "placement",
+			type: "Placement | undefined",
+			default: "undefined",
+			description: "Preferred placement relative to the trigger (e.g. 'top', 'bottom-start'). Falls back to auto-placement.",
+		},
+		{
+			component: "InteropTooltip",
+			name: "showDelay",
+			type: "number | undefined",
+			default: "undefined",
+			description: "Delay in milliseconds before the tooltip appears on hover. Focus always shows immediately.",
+		},
+		{
+			component: "InteropTooltip",
+			name: "offset",
+			type: "number | undefined",
+			default: "undefined",
+			description: "Gap in pixels between the trigger edge and the tooltip panel.",
+		},
+		{
+			component: "InteropTooltip",
+			name: "semantic",
+			type: "'description' | 'label' | undefined",
+			default: "undefined",
+			description: "ARIA wiring mode. 'description' adds aria-describedby (default); 'label' adds aria-labelledby. Reserve 'label' for icon-only controls.",
+		},
+		{
+			component: "[interopTooltipTrigger]",
+			name: "—",
+			type: "marker",
+			default: "—",
+			description: "Marks a child element as the explicit trigger. Use when auto-detection (first button/a/input/[tabindex]) would pick the wrong element.",
+		},
+		{
+			component: "ng-template[interopTooltipContent]",
+			name: "—",
+			type: "marker",
+			default: "—",
+			description: "Rich-content projection slot. When present, the template is rendered inside the panel instead of the [label] string.",
+		},
 	];
 
 	outputColumns: TableColumn<ApiEntry>[] = [
+		{ key: "component", label: "Component", sticky: true },
 		{ key: "name", label: "Output" },
 		{ key: "type", label: "Type" },
 		{ key: "description", label: "Description" },
 	];
 
 	outputEntries: ApiEntry[] = [
-		{ name: "visibilityChange", type: "boolean", default: "", description: "Emitted when the tooltip shows (true) or hides (false)." },
+		{
+			component: "InteropTooltip",
+			name: "visibilityChange",
+			type: "boolean",
+			default: "",
+			description: "Emitted when the tooltip shows (true) or hides (false).",
+		},
 	];
 
 	notes: DemoNote[] = [

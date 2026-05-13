@@ -99,7 +99,6 @@ let nextId = 0;
   standalone: true,
   imports: [NgTemplateOutlet],
   templateUrl: './interop-tooltip.html',
-  styleUrl: './interop-tooltip.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

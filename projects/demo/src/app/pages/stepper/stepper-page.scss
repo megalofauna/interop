@@ -1,5 +1,45 @@
+:host {
+	interop-stepper {
+		--itx-stepper-padding: var(--itx-spacing-6);
+		--itx-stepper-background-color: var(--itx-neutral-3_5);
+		--itx-stepper-border-radius: var(--itx-radius-4);
+	}
+
+	.interop-stepper__nav-trigger {
+		justify-content: start;
+		/* .interop-stepper__nav-progress {
+			margin-inline-start: auto;
+			display: inline-block;
+		} */
+	}
+
+	[interop-step-panel] p {
+		color: var(--itx-neutral-8);
+	}
+
+	.actions {
+		display: flex;
+		gap: var(--itx-spacing-3);
+	}
+
+	.itx-stepper-demo-hgroup {
+		p {
+			font-size: var(--itx-font-size-caption);
+			padding-bottom: 0.75em;
+			color: var(--itx-neutral-8);
+			border-bottom: 1px solid var(--itx-neutral-5);
+		}
+		h2 {
+			font-size: var(--itx-fs-2xl);
+			font-weight: 400;
+			margin: unset;
+		}
+	}
+}
+
 .stepper-page__nav {
 	display: flex;
-	gap: var(--itx-spacing-3);
+	gap: var(--itx-spacing-1);
 	margin-top: var(--itx-spacing-10);
+	justify-content: stretch;
 }

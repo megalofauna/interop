@@ -2,11 +2,13 @@
   Three-region single-column layout (top to bottom):
 
     1. nav      — full step list on wide viewports; compact menu trigger on narrow
+                  (vertical: trigger only — step list lives in the popover)
     2. viewport — the active step's panel content (scroll-snap)
     3. actions  — toolbar (cancel ↔ back | next), shown only on wide when menu="always"
 
   Slot routing:
-    - ol[interop-step-list]       → nav
+    - ol[interop-step-list]       → nav (horizontal; responsive via container query)
+    - [stepListTemplate]          → popover (vertical; ng-template input)
     - [interop-stepper-actions]   → actions (replaces the default action bar)
     - everything else (panels)    → viewport (default slot)
 
@@ -35,7 +37,7 @@
 	</div>
 	} @else {
 	<button
-		interop-button="action-minus"
+		interop-button="protocol md"
 		type="button"
 		class="interop-stepper__nav-trigger"
 		[interop-popover-trigger]="menuPopover"
@@ -45,11 +47,32 @@
 		<interop-icon name="tabler-list" [size]="24" />
 		<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
 		<span class="interop-stepper__nav-progress"
-			>{{ activeIndex() + 1 }}/{{ totalSteps() }}</span
+			>Step {{ activeIndex() + 1 }} of {{ totalSteps() }}</span
 		>
 	</button>
 	}
-	<ng-content select="ol[interop-step-list]" />
+	<!--
+	  Horizontal default: the projected step list lives inside an
+	  InteropScrollArea so a narrow viewport can scroll the strip horizontally
+	  with shadow fades at the scrollable edges. Each step item keeps its
+	  natural width (set in the CSS narrow-viewport block), so labels never
+	  truncate. The scroll-area exposes no aria-label — the surrounding <nav>
+	  already carries the landmark name; we don't want a nested redundant
+	  region.
+
+	  Vertical mode: the step list lives in the popover via [stepListTemplate],
+	  so this ng-content slot is normally empty in vertical use; the
+	  scroll-area host is hidden by CSS in that case (see stepper.css).
+	  Note: a single ng-content slot is used (rather than duplicating the slot
+	  across @if/@else branches) — duplicate ng-contents with the same
+	  selector do not reroute reliably between conditional views.
+	-->
+	<interop-scroll-area
+		orientation="horizontal"
+		class="interop-stepper__list-scroll"
+	>
+		<ng-content select="ol[interop-step-list]" />
+	</interop-scroll-area>
 </nav>
 
 <!--
@@ -60,17 +83,25 @@
   an @if block are scoped to that block and would not be reachable from
   sibling @if branches.
 
-  When menu()==="never" the popover is rendered but never triggered. The inner
-  @if gates the listbox content so menuOptions() doesn't recompute when the
-  menu UI is disabled.
+  Popover content:
+  - vertical + [stepListTemplate] provided: renders the consumer's ng-template
+    directly, giving the popover the full rich step list (indicators, labels,
+    connectors) instead of a separate listbox.
+  - horizontal (or vertical without a template): renders the listbox driven by
+    menuOptions(), unless menu="never".
 -->
 <div
 	#menuPopover="interopPopover"
 	interop-popover
 	class="interop-stepper__menu"
-	placement="bottom"
+	placement="top-end"
 >
-	@if (menu() !== "never") {
+	@if (orientation() === "vertical" && stepListTemplate(); as tpl) {
+	<ng-container
+		[ngTemplateOutlet]="tpl"
+		[ngTemplateOutletInjector]="injector"
+	/>
+	} @else if (menu() !== "never") {
 	<ul
 		interop-listbox
 		class="interop-stepper__menu-list"
@@ -96,44 +127,59 @@
 		  rearrange visual order per-button via `order`, or invert the whole
 		  bar with `flex-direction: row-reverse`.
 		-->
+
 		<button
 			type="button"
-			interop-button="action md radius-sm"
+			interop-button="protocol grow"
 			class="interop-stepper__back"
 			[disabled]="!canGoBack()"
 			[focusableWhenDisabled]="true"
 			(click)="back()"
 		>
+			<interop-icon name="tabler-arrow-narrow-left" [size]="20" />
 			{{ backLabel() }}
 		</button>
 		<button
 			type="button"
-			interop-button="action-plus md radius-sm"
+			interop-button="protocol grow"
 			class="interop-stepper__next"
+			[disabled]="(!canGoForward() && !canFinish()) || isFinished()"
+			[focusableWhenDisabled]="true"
 			(click)="onNextOrFinish()"
 		>
-			{{ isOnLastStep() ? finishLabel() : nextLabel() }}
+			{{ canFinish() ? finishLabel() : nextLabel() }} @if (!canFinish()) {
+			<interop-icon name="tabler-arrow-narrow-right" [size]="20" />
+			}
 		</button>
 		@if (menu() === "always") {
 		<button
 			type="button"
-			interop-button="icon action md radius-sm"
+			interop-button="protocol icon sm"
 			class="interop-stepper__menu-trigger"
 			[interop-popover-trigger]="menuPopover"
 			[popoverHaspopup]="'menu'"
 			[attr.aria-label]="menuLabel()"
 		>
-			<interop-icon name="tabler-list" [size]="16" />
+			<interop-icon name="tabler-list" [size]="20" />
 		</button>
+		<span spacer style="flex: 1"></span>
+
 		} @if (cancellable()) {
 		<button
 			type="button"
-			interop-button="md radius-sm"
+			interop-button="protocol caution"
 			class="interop-stepper__cancel"
 			(click)="cancel.emit()"
 		>
+			<interop-icon
+				name="tabler-circle-x"
+				[size]="24"
+				[strokeWidth]="2"
+				[color]="'var(--_icon-color)'"
+			/>
 			{{ cancelLabel() }}
 		</button>
+		<span spacer style="flex: 1"></span>
 		}
 	</ng-content>
 </div>

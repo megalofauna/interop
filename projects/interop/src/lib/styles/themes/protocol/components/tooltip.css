@@ -1,0 +1,32 @@
+/*
+ * InteropTooltip — Protocol theme.
+ *
+ * Sets values for appearance and animation tokens. Structure and animation
+ * mechanism live in components/tooltip.css — this file only declares values.
+ *
+ * The tooltip uses a dark-pill appearance that inverts correctly for both
+ * light and dark color schemes via light-dark().
+ */
+
+:where([interop-root]) {
+	/* ── Appearance ─────────────────────────────────────────────────── */
+	--itx-tooltip-background: light-dark(
+		var(--itx-neutral-11),
+		var(--itx-neutral-3)
+	);
+	--itx-tooltip-foreground: light-dark(
+		var(--itx-neutral-1),
+		var(--itx-neutral-12)
+	);
+	--itx-tooltip-padding: 0.375rem 0.625rem;
+	--itx-tooltip-border-radius: var(--itx-radius-2);
+	--itx-tooltip-font-size: 0.8125rem;
+	--itx-tooltip-max-width: 18rem;
+	--itx-tooltip-shadow: var(--itx-shadow-sm);
+
+	/* ── Animation ──────────────────────────────────────────────────── */
+	--itx-tooltip-enter-duration: var(--itx-duration-fast);
+	--itx-tooltip-exit-duration: var(--itx-duration-fast);
+	--itx-tooltip-enter-easing: var(--itx-easing-decelerate);
+	--itx-tooltip-exit-easing: var(--itx-easing-accelerate);
+}

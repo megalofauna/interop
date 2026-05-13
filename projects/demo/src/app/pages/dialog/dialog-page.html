@@ -26,13 +26,10 @@
 				<p>Vessel ID: UCS-7741 requests permission to dock at Bay 3.</p>
 				<p>ETA: 14 minutes. Cargo: general supply run.</p>
 				<div class="dialog-page__actions">
-					<button interop-button="action md" (click)="basicOpen.set(false)">
+					<button interop-button="protocol grow" (click)="basicOpen.set(false)">
 						Deny
 					</button>
-					<button
-						interop-button="action-plus md"
-						(click)="basicOpen.set(false)"
-					>
+					<button interop-button="protocol grow" (click)="basicOpen.set(false)">
 						Approve
 					</button>
 				</div>
@@ -44,6 +41,8 @@
 					>{{ closeReason() }}</demo-state-item
 				>
 			</demo-state>
+
+			<itx-code-block [files]="basicFiles()" />
 		</demo-example>
 
 		<demo-example label="Escape locked">
@@ -70,6 +69,38 @@
 					</button>
 				</div>
 			</dialog>
+
+			<itx-code-block [files]="lockedFiles()" />
+		</demo-example>
+
+		<demo-example label="Auto-close on form submit">
+			<button interop-button (click)="formOpen.set(true)">
+				File mission report
+			</button>
+
+			<dialog
+				interop-dialog
+				[isOpen]="formOpen()"
+				[autoClose]="true"
+				(closed)="formOpen.set(false)"
+				class="dialog-page__dialog"
+			>
+				<h2 class="dialog-page__title">Mission report</h2>
+				<p>Submitting the form closes the dialog automatically.</p>
+				<form>
+					<label class="dialog-page__field">
+						Summary
+						<input type="text" name="summary" />
+					</label>
+					<div class="dialog-page__actions">
+						<button interop-button="action-plus" type="submit">
+							Submit report
+						</button>
+					</div>
+				</form>
+			</dialog>
+
+			<itx-code-block [files]="autoCloseFiles()" />
 		</demo-example>
 	</demo-section>
 
@@ -100,6 +131,7 @@
 			</ng-template>
 		</interop-table>
 	</demo-section>
+
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
 	<demo-section id="notes" heading="Notes">
 		<demo-notes [notes]="notes" />

@@ -26,6 +26,7 @@
  *   --itx-button-padding-block
  *   --itx-button-padding-inline
  *   --itx-button-touch-inset      Extra block space between pill and touch boundary
+ *   --itx-button-width            Set to 100% to force a full-width button
  *   --itx-button-max-width
  *   --itx-button-gap
  *
@@ -69,23 +70,24 @@
 :where(button[interop-button]) {
 	display: var(--itx-button-display, inline-flex);
 	align-items: var(--itx-button-align-items, center);
+	justify-content: var(--itx-button-justify-content, center);
 	position: relative;
 	isolation: isolate;
 	gap: var(--itx-button-gap);
-
 	background: none;
 	border: none;
+	corner-shape: var(--itx-button-corner-shape, initial);
 
 	padding-block: calc(
-		var(--itx-button-padding-block, 0.5em) *
-			var(--itx-button-sizing-multiplier, 1) +
+		var(--itx-button-padding-block) * var(--itx-button-sizing-multiplier, 1) +
 			var(--itx-button-touch-inset, 0.25em)
 	);
 	padding-inline: calc(
-		var(--itx-button-padding-inline, 1.125em) *
-			var(--itx-button-sizing-multiplier, 1)
+		var(--itx-button-padding-inline) * var(--itx-button-sizing-multiplier, 1)
 	);
+	width: var(--itx-button-width, auto);
 	max-width: var(--itx-button-max-width, initial);
+	flex: var(--itx-button-flex, initial);
 
 	font-family: var(--itx-button-font-family, var(--itx-font-family));
 	font-size: var(--itx-button-font-size, inherit);
@@ -110,6 +112,7 @@
 	--_foreground: var(--itx-button-foreground, var(--itx-on-surface));
 	--_border-color: var(--itx-button-border-color, transparent);
 	--_box-shadow: var(--itx-button-box-shadow, none);
+	--_icon-color: var(--itx-button-icon-color, var(--itx-neutral-7));
 }
 
 :where(button[interop-button]:hover:not(:active)) {
@@ -126,6 +129,7 @@
 		var(--itx-button-border-color, transparent)
 	);
 	--_box-shadow: var(--itx-button-box-shadow-hover, none);
+	--_icon-color: var(--itx-button-icon-color-hover, black);
 }
 
 :where(button[interop-button]:active) {
@@ -142,6 +146,7 @@
 		var(--itx-button-border-color, transparent)
 	);
 	--_box-shadow: var(--itx-button-box-shadow-active, none);
+	--_icon-color: var(--itx-button-icon-color-active, black);
 }
 
 /* ── Visual pill ─────────────────────────────────────────────────────────── */
@@ -161,10 +166,10 @@
 	border-color: var(--_border-color);
 	border-radius: var(
 		--itx-button-border-radius,
-		var(--itx-context-radius, var(--itx-radius-sm))
+		var(--itx-context-radius, var(--itx-radius-2))
 	);
 	box-shadow: var(--_box-shadow);
-	corner-shape: var(--itx-button-corner-shape);
+	corner-shape: var(--itx-button-corner-shape, initial);
 
 	transition-property: var(
 		--itx-button-transition-properties,
@@ -191,12 +196,41 @@
 	outline-offset: var(--itx-button-outline-offset, 3px);
 }
 
+/* ── Prefix / suffix addon slots ─────────────────────────────────────────── */
+/*
+ * Marker classes applied by `InteropButtonPrefix` and `InteropButtonSuffix`.
+ * Source order is still layout order — the existing flex `gap` separates the
+ * addon from the label. These rules only constrain the slot itself so that
+ * addons (icons, badges) line up with the label baseline and don't grow to
+ * fill extra space.
+ *
+ * `line-height: 1` keeps a 1em icon vertically centred even when the button
+ * uses `line-height: unset` — addons measure to their own content rather
+ * than the button's text leading.
+ */
+
+:where(
+	button[interop-button] .interop-button__prefix,
+	button[interop-button] .interop-button__suffix
+) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	line-height: 1;
+}
+
 /* ── Disabled ────────────────────────────────────────────────────────────── */
 
 :where(button[interop-button]:disabled),
 :where(button[interop-button][aria-disabled="true"]) {
 	opacity: var(--itx-button-disabled-opacity, 0.4);
 	pointer-events: none;
+}
+
+:where(button[interop-button~="icon"]) {
+	width: var(--itx-button-max-width, min-content);
+	flex: 0 0 auto;
 }
 
 /* ── Pointer fine: collapse touch inset so hit area = visual pill ────────── */

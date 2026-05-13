@@ -202,7 +202,11 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 	private triggerEl: HTMLElement | null = null;
 	private previousFocus: HTMLElement | null = null;
 	private stopAutoUpdate: (() => void) | null = null;
-	private connected = false;
+	/** The trigger currently wired into the position strategy. When multiple
+	 * triggers are bound (e.g. responsive UIs that swap nav-trigger vs
+	 * action-bar trigger by viewport width), this changes to whichever
+	 * trigger fired the most recent toggle, and the strategy reconnects. */
+	private connectedTrigger: HTMLElement | null = null;
 	/**
 	 * Tracks whether this popover initiated its own close (e.g. via the
 	 * close() method). When true, the toggle event reports
@@ -215,7 +219,7 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 		effect(() => {
 			const placement = this.effectivePlacement();
 			const offset = this.effectiveOffset();
-			if (this.isOpen() && this.connected) {
+			if (this.isOpen() && this.connectedTrigger) {
 				queueMicrotask(() => this.runPosition(placement, offset));
 			}
 		});
@@ -232,9 +236,9 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 	ngOnDestroy(): void {
 		this.stopAutoUpdate?.();
 		this.stopAutoUpdate = null;
-		if (this.connected) {
+		if (this.connectedTrigger) {
 			this.strategy.disconnect();
-			this.connected = false;
+			this.connectedTrigger = null;
 		}
 	}
 
@@ -294,12 +298,19 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 	// ── Internal helpers ──────────────────────────────────────────────────────
 
 	private async handleOpen(): Promise<void> {
-		const trigger = this.triggerEl;
+		const trigger = this.resolveTriggerForOpen();
 		if (!trigger) return;
 
-		if (!this.connected) {
+		// Multi-trigger setups: if the trigger that opened us is different from
+		// the one currently wired into the position strategy, reconnect.
+		// Without this, the strategy's cached trigger reference can point at
+		// a sibling trigger that's `display:none` (e.g. the responsive
+		// nav-trigger when only the action-bar trigger is visible), which
+		// resolves to a zero-size rect and parks the popover at (0,0).
+		if (this.connectedTrigger !== trigger) {
+			this.strategy.disconnect?.();
 			this.strategy.connect(trigger, this.el.nativeElement);
-			this.connected = true;
+			this.connectedTrigger = trigger;
 		}
 
 		await this.runPosition(this.effectivePlacement(), this.effectiveOffset());
@@ -313,6 +324,33 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 		});
 
 		queueMicrotask(() => this.applyAutoFocus());
+	}
+
+	/**
+	 * Resolve which element should anchor the popover for this open.
+	 *
+	 * When a popover has a single `[interop-popover-trigger]` directive, the
+	 * single registered `triggerEl` is correct. With multiple triggers (e.g.
+	 * responsive UI: one trigger on narrow, another on wide; both bound to
+	 * the same popover ref), the LAST-registered trigger wins by default —
+	 * which can be the wrong, currently-hidden one.
+	 *
+	 * Prefer `document.activeElement` when it's an element targeting this
+	 * popover via `popovertarget`. The browser's invoker semantics put focus
+	 * on the clicked trigger before dispatching the toggle, so this resolves
+	 * to whichever trigger the user actually clicked. Falls back to the
+	 * registered `triggerEl` for programmatic opens (no focused invoker).
+	 */
+	private resolveTriggerForOpen(): HTMLElement | null {
+		const doc = this.el.nativeElement.ownerDocument;
+		const active = doc?.activeElement;
+		if (
+			active instanceof HTMLElement &&
+			active.getAttribute("popovertarget") === this.popoverId
+		) {
+			return active;
+		}
+		return this.triggerEl;
 	}
 
 	private handleClose(): void {

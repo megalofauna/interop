@@ -1,18 +1,36 @@
-import { Component, ChangeDetectionStrategy, computed, inject, resource } from "@angular/core";
+import {
+	Component,
+	ChangeDetectionStrategy,
+	computed,
+	inject,
+	resource,
+	signal,
+} from "@angular/core";
 import {
 	InteropStepper,
+	InteropDialog,
 	InteropStepList,
 	InteropStep,
 	InteropStepPanel,
 	InteropTable,
 	InteropCellDef,
+	InteropIcon,
+	provideInteropIcons,
 	type TableColumn,
-} from 'interop';
+	DialogClosedEvent,
+} from "interop";
 import { CodeBlock, type CodeFile } from "@interop/composites";
 import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import {
+	DemoNotes,
+	type DemoNote,
+} from "../../components/demo-notes/demo-notes";
+import {
+	TablerCircleX,
+	TablerMessageLanguage,
+} from "interop/lib/iconsets/tabler";
 
 interface ApiEntry {
 	component?: string;
@@ -28,11 +46,13 @@ interface ApiEntry {
 	standalone: true,
 	imports: [
 		InteropStepper,
+		InteropDialog,
 		InteropStepList,
 		InteropStep,
 		InteropStepPanel,
 		InteropTable,
 		InteropCellDef,
+		InteropIcon,
 		CodeBlock,
 		DemoSection,
 		DemoExample,
@@ -41,6 +61,7 @@ interface ApiEntry {
 	templateUrl: "./stepper-page.html",
 	styleUrl: "./stepper-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [provideInteropIcons(TablerCircleX)],
 })
 export class StepperPage {
 	private readonly hl = inject(HighlightService);
@@ -116,6 +137,30 @@ onFinish(): void {
   </section>
 </interop-stepper>`;
 
+	readonly manyStepsHtml = `\
+<!-- Container width is 480px to trigger the narrow-viewport rules. The
+     stepper itself is the container-query container, so wrapping it in
+     a constrained-width parent is enough to flip the in-flow step list
+     into its scroll-area-friendly layout (items at natural widths,
+     connectors hidden, edge fades visible). -->
+<div style="max-width: 480px; margin-inline: auto;">
+  <interop-stepper aria-label="Launch sequence" [linear]="false">
+    <ol interop-step-list>
+      <li interop-step label="Fuel"></li>
+      <li interop-step label="Avionics"></li>
+      <li interop-step label="Trajectory"></li>
+      <li interop-step label="Telemetry"></li>
+      <li interop-step label="Ignition"></li>
+      <li interop-step label="Liftoff"></li>
+      <li interop-step label="Stage separation"></li>
+      <li interop-step label="Orbit insertion"></li>
+    </ol>
+
+    <section interop-step-panel><h2>Fuel</h2>…</section>
+    <!-- one section[interop-step-panel] per step -->
+  </interop-stepper>
+</div>`;
+
 	readonly verticalHtml = `\
 <interop-stepper aria-label="Setup wizard" orientation="vertical">
   <ol interop-step-list>
@@ -138,6 +183,13 @@ onFinish(): void {
   </section>
 </interop-stepper>`;
 
+	verticalOpen = signal(false);
+	closeReason = signal<string>("—");
+	onClosed(event: DialogClosedEvent) {
+		this.verticalOpen.set(false);
+		this.closeReason.set(event.reason);
+	}
+
 	// ── Highlighted tokens ───────────────────────────────────────────────────
 
 	readonly linearHtmlTokens = resource({
@@ -149,12 +201,24 @@ onFinish(): void {
 	});
 
 	readonly linearFiles = computed<CodeFile[]>(() => [
-		{ label: "HTML", tokens: this.linearHtmlTokens.value() ?? null, lang: "html" },
-		{ label: "TS", tokens: this.linearTsTokens.value() ?? null, lang: "typescript" },
+		{
+			label: "HTML",
+			tokens: this.linearHtmlTokens.value() ?? null,
+			lang: "html",
+		},
+		{
+			label: "TS",
+			tokens: this.linearTsTokens.value() ?? null,
+			lang: "typescript",
+		},
 	]);
 
 	readonly nonLinearTokens = resource({
 		loader: () => this.hl.highlight(this.nonLinearHtml, "html"),
+	});
+
+	readonly manyStepsTokens = resource({
+		loader: () => this.hl.highlight(this.manyStepsHtml, "html"),
 	});
 
 	readonly verticalTokens = resource({

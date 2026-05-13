@@ -17,7 +17,7 @@
 					#dockingStepper
 					aria-label="Docking procedure"
 					[cancellable]="true"
-					[responsiveActions]="'md'"
+					[responsiveActions]="'sm'"
 					(cancel)="dockingStepper.reset()"
 					(finish)="onFinish('docking')"
 				>
@@ -87,17 +87,121 @@
 			<itx-code-block [tokens]="nonLinearTokens.value() ?? null" lang="html" />
 		</demo-example>
 
+		<demo-example label="Many steps — horizontal scroll on narrow containers">
+			<!--
+			  Constrains the stepper to 480px so the container query
+			  (`@container stepper (max-width: 599px)`) fires regardless of
+			  the surrounding viewport width. With eight steps at their
+			  natural widths, the strip overflows and InteropScrollArea
+			  handles horizontal scroll with edge-fade affordances.
+			-->
+			<div style="width: 100%; max-width: 480px; margin-inline: auto">
+				<interop-stepper
+					aria-label="Launch sequence"
+					[linear]="true"
+					(finish)="onFinish('launch')"
+				>
+					<ol interop-step-list>
+						<li interop-step label="Fuel"></li>
+						<li interop-step label="Avionics"></li>
+						<li interop-step label="Trajectory"></li>
+						<li interop-step label="Telemetry"></li>
+						<li interop-step label="Ignition"></li>
+						<li interop-step label="Liftoff"></li>
+						<li interop-step label="Stage separation"></li>
+						<li interop-step label="Orbit insertion"></li>
+					</ol>
+
+					<section interop-step-panel>
+						<h2>Fuel</h2>
+						<p>Top up RP-1 and LOX. Confirm tank pressurisation.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Avionics</h2>
+						<p>Power flight computer, run guidance self-test.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Trajectory</h2>
+						<p>Load orbital insertion profile. Verify range-safety bounds.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Telemetry</h2>
+						<p>Establish ground-station downlink. Check signal margin.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Ignition</h2>
+						<p>Arm engines. T-minus 10 seconds to ignition.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Liftoff</h2>
+						<p>Clear the tower. Begin pitch-over manoeuvre.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Stage separation</h2>
+						<p>Confirm staging events. Light second-stage engine.</p>
+					</section>
+					<section interop-step-panel>
+						<h2>Orbit insertion</h2>
+						<p>Achieve target orbit. Begin coast phase.</p>
+					</section>
+				</interop-stepper>
+			</div>
+			<itx-code-block [tokens]="manyStepsTokens.value() ?? null" lang="html" />
+		</demo-example>
+
 		<demo-example label="Vertical orientation">
-			<div style="width: 100%; max-width: 24rem">
-				<interop-stepper aria-label="Setup wizard" orientation="vertical">
+			<div
+				style="
+					width: 100%;
+					max-width: 393px;
+					height: 852px;
+					margin-inline: auto;
+				"
+			>
+				<ng-template #verticalSteps>
 					<ol interop-step-list>
 						<li interop-step label="Account"></li>
 						<li interop-step label="Profile"></li>
 						<li interop-step label="Confirm"></li>
 					</ol>
+				</ng-template>
 
+				<dialog
+					interop-dialog
+					[isOpen]="verticalOpen()"
+					(closed)="onClosed($event)"
+				>
+					<p>ETA: 14 minutes. Cargo: general supply run.</p>
+					<div class="actions">
+						<button
+							interop-button="protocol grow"
+							(click)="verticalOpen.set(false)"
+						>
+							Deny
+						</button>
+						<button
+							interop-button="protocol grow"
+							(click)="verticalOpen.set(false)"
+						>
+							Okay
+						</button>
+					</div>
+				</dialog>
+
+				<interop-stepper
+					#verticalDemo
+					aria-label="Setup wizard"
+					orientation="vertical"
+					[stepListTemplate]="verticalSteps"
+					[cancellable]="true"
+					(cancel)="verticalDemo.reset()"
+					(finish)="verticalOpen.set(true)"
+				>
 					<section interop-step-panel>
-						<h2>Account</h2>
+						<hgroup class="itx-stepper-demo-hgroup">
+							<p>Step 1</p>
+							<h2>Account creation</h2>
+						</hgroup>
 						<p>Create your account credentials.</p>
 					</section>
 					<section interop-step-panel>

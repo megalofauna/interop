@@ -51,6 +51,7 @@
 @import "./protocol/components/stepper.css";
 @import "./protocol/components/table.css";
 @import "./protocol/components/toast.css";
+@import "./protocol/components/tooltip.css";
 @import "./protocol/components/resizable.css";
 
 /* ── Composites ─────────────────────────────────────────────────────────── */
