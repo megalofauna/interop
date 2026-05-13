@@ -10,6 +10,10 @@ Companion files (load as needed during the relevant phase):
   labeling, form participation, spec divergence)
 - [research/library-catalog.md](research/library-catalog.md) — representative
   set of libraries/design systems to consult for section 2, grouped by tier
+- [research/pain-point-analysis.md](research/pain-point-analysis.md) —
+  optional substep for section 2: axes, sources, and output format for a
+  full critical review of a single incumbent (run once per incumbent that
+  warrants depth — Angular Material almost always does)
 
 Repo conventions (don't restate, reference):
 
@@ -86,6 +90,23 @@ The output should answer:
 For each finding, **link the source** — issue URL, PR URL, blog post,
 mailing-list thread, etc. Pattern: "Angular Material #12345 — focus returns
 to body instead of trigger after dialog close."
+
+### Optional substep — deep critical review of a single incumbent
+
+When an incumbent warrants more than a bullet list — almost always
+Angular Material, sometimes one Tier-2 library that's structurally
+representative — run a full critical review of it before moving on.
+
+Walk [research/pain-point-analysis.md](research/pain-point-analysis.md).
+It defines the seven analysis axes (semantic correctness, API surface,
+state machine, fragility, motion/contrast/focus, customization walls,
+*and* what the incumbent gets right), the source-mining order, and the
+output format. The resulting report folds back into this section as
+linked evidence and seeds the §3/§4 differentiator argument.
+
+Run once per incumbent that warrants depth. Skip when the broad bullet
+sweep above already exposed the structural failures, or when no single
+incumbent is dominant enough to justify the focus.
 
 ---
 
