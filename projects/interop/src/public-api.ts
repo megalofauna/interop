@@ -28,6 +28,9 @@ export * from "./lib/collection/public-api";
 // Components
 export * from "./lib/components/public-api";
 
+// Highlighter contract (no implementation — see interop/highlighters/shiki)
+export * from "./lib/highlighter/public-api";
+
 // Content (djot-driven prose rendering)
 export * from "./lib/content/public-api";
 

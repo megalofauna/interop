@@ -29,12 +29,7 @@
 				<demo-state-item label="value">{{ uploadProgress() }}</demo-state-item>
 				<demo-state-item label="max">100</demo-state-item>
 			</demo-state>
-			<itx-code-block
-				language="html"
-				[tokens]="determinateTokens.value() ?? null"
-			>
-				<pre><code [textContent]="determinateCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="determinateCode" />
 		</demo-example>
 
 		<demo-example label="Indeterminate">
@@ -42,12 +37,7 @@
 				<span interop-progress-label>Connecting to relay</span>
 				<progress interop-progress [indeterminate]="true"></progress>
 			</div>
-			<itx-code-block
-				language="html"
-				[tokens]="indeterminateTokens.value() ?? null"
-			>
-				<pre><code [textContent]="indeterminateCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="indeterminateCode" />
 		</demo-example>
 	</demo-section>
 
@@ -93,7 +83,7 @@
 					complete</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block [files]="stepBasedFiles()" />
+			<itx-code-block [files]="stepBasedFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -116,9 +106,7 @@
 					aria-label="Reactor calibration"
 				></progress>
 			</div>
-			<itx-code-block language="html" [tokens]="verticalTokens.value() ?? null">
-				<pre><code [textContent]="verticalCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="verticalCode" />
 		</demo-example>
 	</demo-section>
 
@@ -151,9 +139,7 @@
 					'(silent)' }}
 				</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="statusTokens.value() ?? null">
-				<pre><code [textContent]="statusTemplateCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="statusTemplateCode" />
 		</demo-example>
 	</demo-section>
 

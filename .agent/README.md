@@ -16,9 +16,15 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Resizable directive deep-dive | [components/resizable.md](components/resizable.md) |
 | Scroll-area component deep-dive | [components/scroll-area.md](components/scroll-area.md) |
 | Tooltip component deep-dive | [components/tooltip.md](components/tooltip.md) |
+| Indicator component deep-dive | [components/indicator.md](components/indicator.md) |
+| Segmented-control deep-dive | [components/segmented-control.md](components/segmented-control.md) |
+| Visimorph (faux-control surface) deep-dive | [components/visimorph.md](components/visimorph.md) |
 | Collection service deep-dive | [services/collection.md](services/collection.md) |
 | Adding a demo page (workflow) | [workflows/new-demo-page.md](workflows/new-demo-page.md) |
 | Terminal composite deep-dive | [composites/terminal.md](composites/terminal.md) |
+| InlineCode composite deep-dive | [composites/inline-code.md](composites/inline-code.md) |
+| CodeBlock composite deep-dive | [composites/code-block.md](composites/code-block.md) |
+| Highlighter contract + Shiki adapter | [highlighter.md](highlighter.md) |
 
 ## Key paths
 

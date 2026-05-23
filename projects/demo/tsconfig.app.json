@@ -8,6 +8,9 @@
     "baseUrl": "../../",
     "paths": {
       "interop": ["projects/interop/src/public-api"],
+      "interop/highlighters/shiki": [
+        "projects/interop/highlighters/shiki/src/public-api.ts"
+      ],
       "interop/*": ["projects/interop/src/*"],
       "@interop/composites": ["projects/composites/src/public-api.ts"]
     }
@@ -16,11 +19,15 @@
     "src/**/*.ts",
     "../../projects/interop/src/lib/**/*.ts",
     "../../projects/interop/src/types/**/*.ts",
+    "../../projects/interop/highlighters/**/*.ts",
     "../../projects/composites/src/**/*.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts",
     "../../projects/interop/src/**/*.spec.ts",
     "../../projects/interop/src/examples/**/*"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "compilationMode": "full"
+  }
 }

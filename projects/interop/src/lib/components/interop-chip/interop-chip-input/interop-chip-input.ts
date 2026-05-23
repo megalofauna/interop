@@ -87,7 +87,7 @@ export interface ChipInputItem {
 						<button
 							#removeBtn
 							type="button"
-							class="itx-chip-remove"
+							class="humb  "
 							[attr.aria-label]="'Remove ' + chip.label"
 							(click)="removeChip(i)"
 							(keydown)="onChipKeydown($event, i)"
@@ -109,7 +109,6 @@ export interface ChipInputItem {
 			(blur)="onBlur()"
 		/>
 	`,
-	styleUrl: "./interop-chip-input.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{ provide: NG_VALUE_ACCESSOR, useExisting: InteropChipInput, multi: true },
@@ -121,7 +120,8 @@ export interface ChipInputItem {
 	},
 })
 export class InteropChipInput implements ControlValueAccessor {
-	private textInputRef = viewChild.required<ElementRef<HTMLInputElement>>("textInput");
+	private textInputRef =
+		viewChild.required<ElementRef<HTMLInputElement>>("textInput");
 	private removeBtns = viewChildren<ElementRef<HTMLButtonElement>>("removeBtn");
 
 	private el = inject(ElementRef<HTMLDivElement>);
@@ -187,7 +187,10 @@ export class InteropChipInput implements ControlValueAccessor {
 							`Found on: <${el.tagName.toLowerCase()}>`,
 					);
 				}
-				if (!el.hasAttribute("aria-label") && !el.hasAttribute("aria-labelledby")) {
+				if (
+					!el.hasAttribute("aria-label") &&
+					!el.hasAttribute("aria-labelledby")
+				) {
 					console.warn(
 						`[InteropChipInput] Provide an accessible label via aria-label or aria-labelledby.`,
 					);

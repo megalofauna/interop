@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject, resource } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { InteropCallout, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { CodeBlock } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
 
 interface ApiEntry {
 	name: string;
@@ -23,8 +22,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalloutPage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Code strings ─────────────────────────────────────────────────────────
 
 	readonly infoCode = `<interop-callout>
@@ -50,14 +47,6 @@ export class CalloutPage {
   Emergency bulkhead engaged on deck 3.
   Evacuate immediately and await decompression protocol.
 </interop-callout>`;
-
-	// ── Highlighted tokens ───────────────────────────────────────────────────
-
-	readonly infoTokens = resource({ loader: () => this.hl.highlight(this.infoCode, "html") });
-	readonly headingTokens = resource({ loader: () => this.hl.highlight(this.headingCode, "html") });
-	readonly warningTokens = resource({ loader: () => this.hl.highlight(this.warningCode, "html") });
-	readonly successTokens = resource({ loader: () => this.hl.highlight(this.successCode, "html") });
-	readonly dangerTokens = resource({ loader: () => this.hl.highlight(this.dangerCode, "html") });
 
 	// ── API table ────────────────────────────────────────────────────────────
 

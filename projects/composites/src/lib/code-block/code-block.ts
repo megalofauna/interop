@@ -3,19 +3,23 @@ import {
 	Component,
 	DestroyRef,
 	ElementRef,
+	afterNextRender,
 	computed,
 	effect,
 	inject,
 	input,
+	isDevMode,
 	linkedSignal,
 	signal,
 	viewChildren,
 } from "@angular/core";
 import {
 	InteropButton,
+	InteropButtonActivation,
 	InteropIcon,
 	InteropActivation,
 	InteropCodeRenderer,
+	INTEROP_HIGHLIGHTER,
 	canonicalizeLanguage,
 	type HighlightedCode,
 	type ActivationOptions,
@@ -33,7 +37,10 @@ export interface CodeFile {
 	label: string;
 	language?: string;
 	filename?: string;
-	tokens: HighlightedCode | null;
+	/** Pre-tokenized output. Wins over `code` if both are set. */
+	tokens?: HighlightedCode | null;
+	/** Raw source string. Auto-tokenized when `language` is set and a highlighter is registered. */
+	code?: string;
 }
 
 let _cbIdCounter = 0;
@@ -46,16 +53,23 @@ let _cbIdCounter = 0;
  * multi-file (tabbed) modes, copy-to-clipboard, word-wrap toggle, and
  * cross-block language sync via `InteropActivation`.
  *
- * @example Single file
+ * Resolves its source in this order:
+ *   1. `[tokens]` (single) or `file.tokens` (multi) — explicit pre-tokenized
+ *   2. `[code]` (single) or `file.code` (multi) — string, auto-highlighted when `language` set + highlighter provided
+ *   3. Projected `<pre><code>` content — single-file fallback
+ *
+ * Register a highlighter via `provideHighlighter()` (see `interop/highlighters/shiki`).
+ *
+ * @example Magical single-file
  * ```html
- * <itx-code-block language="ts" filename="app.ts" [tokens]="tokens" />
+ * <itx-code-block language="ts" code="const x = 1;" />
  * ```
  *
- * @example Multi-file (tabbed)
+ * @example Multi-file with auto-tokenization
  * ```html
  * <itx-code-block [files]="[
- *   { label: 'app.ts', language: 'ts', tokens: tsTokens },
- *   { label: 'app.html', language: 'html', tokens: htmlTokens },
+ *   { label: 'app.ts', language: 'ts', code: tsSource },
+ *   { label: 'app.html', language: 'html', code: htmlSource },
  * ]" />
  * ```
  *
@@ -68,9 +82,8 @@ let _cbIdCounter = 0;
 @Component({
 	selector: "itx-code-block",
 	standalone: true,
-	imports: [InteropCodeRenderer, InteropButton, InteropIcon, InteropToolbar],
+	imports: [InteropCodeRenderer, InteropButton, InteropButtonActivation, InteropIcon, InteropToolbar],
 	templateUrl: "./code-block.html",
-	styleUrl: "./code-block.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		provideInteropIcons(PhArrowUDownLeft, TablerCheck, TablerCopy),
@@ -82,6 +95,10 @@ export class CodeBlock {
 	private readonly activationService = inject(InteropActivation, {
 		optional: true,
 	});
+	private readonly highlighter = inject(INTEROP_HIGHLIGHTER, {
+		optional: true,
+	});
+	private warnedNoHighlighter = false;
 
 	readonly uid = `itx-cb-${_cbIdCounter++}`;
 
@@ -90,6 +107,7 @@ export class CodeBlock {
 	readonly language = input<string | null>(null);
 	readonly filename = input<string | null>(null);
 	readonly tokens = input<HighlightedCode | null>(null);
+	readonly code = input<string | null>(null);
 
 	// ── Multi-file mode ──────────────────────────────────────────────────────────
 
@@ -117,6 +135,27 @@ export class CodeBlock {
 	});
 
 	readonly isWrapped = signal(false);
+
+	// Auto-tokenization storage
+	private readonly projectedText = signal<string | null>(null);
+	private readonly singleAutoTokens = signal<HighlightedCode | null>(null);
+	private readonly multiAutoTokens = signal<Map<string, HighlightedCode>>(
+		new Map(),
+	);
+
+	readonly singleSourceText = computed(
+		() => this.code() ?? this.projectedText(),
+	);
+
+	/** Resolved tokens for single-file mode. */
+	readonly singleDisplayTokens = computed(
+		() => this.tokens() ?? this.singleAutoTokens(),
+	);
+
+	/** Resolved tokens for the given file in multi-file mode. */
+	tokensFor(file: CodeFile): HighlightedCode | null {
+		return file.tokens ?? this.multiAutoTokens().get(this.fileKey(file)) ?? null;
+	}
 
 	private readonly copyState = signal<"idle" | "copied">("idle");
 	private copyTimer: ReturnType<typeof setTimeout> | null = null;
@@ -158,6 +197,7 @@ export class CodeBlock {
 	// ── Constructor ──────────────────────────────────────────────────────────────
 
 	constructor() {
+		// Cross-block tab sync
 		effect(() => {
 			const key = this.syncKey();
 			if (!key || !this.activationService) return;
@@ -174,6 +214,107 @@ export class CodeBlock {
 			);
 
 			this.destroyRef.onDestroy(() => reg.unregister());
+		});
+
+		// Capture projected text after first render (single-file only)
+		afterNextRender(() => {
+			if (this.isMultiFile() || this.code() != null) return;
+			const codeEl = this.elementRef.nativeElement.querySelector(
+				"pre > code",
+			);
+			const text = (codeEl as HTMLElement | null)?.innerText;
+			if (text) this.projectedText.set(text);
+		});
+
+		// Single-file auto-tokenization
+		effect(() => {
+			if (this.isMultiFile() || this.tokens()) {
+				this.singleAutoTokens.set(null);
+				return;
+			}
+
+			const lang = this.language();
+			const text = this.singleSourceText();
+			if (!lang || !text) {
+				this.singleAutoTokens.set(null);
+				return;
+			}
+
+			const highlighter = this.highlighter;
+			if (!highlighter) {
+				this.warnNoHighlighter(lang);
+				this.singleAutoTokens.set(null);
+				return;
+			}
+
+			const result = highlighter.highlight(text, lang);
+			if (result instanceof Promise) {
+				result.then((highlighted) => {
+					if (
+						!this.tokens() &&
+						this.language() === lang &&
+						this.singleSourceText() === text
+					) {
+						this.singleAutoTokens.set(highlighted);
+					}
+				});
+			} else {
+				this.singleAutoTokens.set(result);
+			}
+		});
+
+		// Multi-file auto-tokenization (eager across all files)
+		effect(() => {
+			if (!this.isMultiFile()) {
+				this.multiAutoTokens.set(new Map());
+				return;
+			}
+
+			const highlighter = this.highlighter;
+			const files = this.files();
+
+			for (const file of files) {
+				if (file.tokens) continue;
+				const lang = file.language;
+				const code = file.code;
+				if (!lang || !code) continue;
+
+				if (!highlighter) {
+					this.warnNoHighlighter(lang);
+					continue;
+				}
+
+				const key = this.fileKey(file);
+				const existing = this.multiAutoTokens().get(key);
+				if (existing) continue;
+
+				const result = highlighter.highlight(code, lang);
+				if (result instanceof Promise) {
+					result.then((highlighted) => {
+						const currentFile = this.files().find(
+							(f) => this.fileKey(f) === key,
+						);
+						if (
+							currentFile &&
+							!currentFile.tokens &&
+							currentFile.language === lang &&
+							currentFile.code === code
+						) {
+							this.multiAutoTokens.update((map) => {
+								const next = new Map(map);
+								next.set(key, highlighted);
+								return next;
+							});
+						}
+					});
+				} else {
+					this.multiAutoTokens.update((map) => {
+						const next = new Map(map);
+						next.set(key, result);
+						return next;
+					});
+				}
+			}
 		});
 	}
 
@@ -231,6 +372,15 @@ export class CodeBlock {
 
 	// ── Private ──────────────────────────────────────────────────────────────────
 
+	private warnNoHighlighter(lang: string): void {
+		if (!isDevMode() || this.warnedNoHighlighter) return;
+		console.warn(
+			`[itx-code-block] language="${lang}" set but no highlighter is registered. ` +
+				`Call provideHighlighter() at app bootstrap to enable syntax highlighting.`,
+		);
+		this.warnedNoHighlighter = true;
+	}
+
 	private async executeCopy(): Promise<void> {
 		const text = this.resolveActiveText();
 		if (!text) return;
@@ -251,13 +401,21 @@ export class CodeBlock {
 	private resolveActiveText(): string {
 		if (this.isMultiFile()) {
 			const file = this.activeFile();
-			if (!file?.tokens) return "";
-			return file.tokens
-				.map((l) => l.tokens.map((t) => t.text).join(""))
-				.join("\n");
+			if (!file) return "";
+			if (file.code) return file.code;
+			const fileTokens = this.tokensFor(file);
+			if (fileTokens) {
+				return fileTokens
+					.map((l) => l.tokens.map((t) => t.text).join(""))
+					.join("\n");
+			}
+			return "";
 		}
 
-		const tokenLines = this.tokens();
+		const src = this.singleSourceText();
+		if (src) return src;
+
+		const tokenLines = this.singleDisplayTokens();
 		if (tokenLines) {
 			return tokenLines
 				.map((l) => l.tokens.map((t) => t.text).join(""))

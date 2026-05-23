@@ -1,0 +1,28 @@
+<code class="itx-ic__code" [attr.data-language]="language()"
+	>@if (displayLine(); as l) {@for (t of l.tokens; track $index) {<span
+		class="itx-ic__token"
+		[style.color]="t.color ?? null"
+		[style.font-style]="(t.fontStyle === 1 || t.fontStyle === 3) ? 'italic' : null"
+		[style.font-weight]="(t.fontStyle === 2 || t.fontStyle === 3) ? 'bold' : null"
+		>{{ t.text }}</span
+	>}} @else if (code(); as c) {{{ c }}} @else {<ng-content />}</code
+>
+
+<button
+	interop-button="icon"
+	itx-size="sm"
+	class="itx-ic__btn"
+	type="button"
+	[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
+	[onActivate]="handleCopy"
+	[activationOptions]="copyOptions"
+>
+	<interop-icon
+		[name]="isCopied() ? 'tabler-check' : 'tabler-copy'"
+		[size]="20"
+	/>
+</button>
+
+<span class="itx-ic__sr" aria-live="polite" aria-atomic="true">
+	@if (isCopied()) { Copied to clipboard }
+</span>

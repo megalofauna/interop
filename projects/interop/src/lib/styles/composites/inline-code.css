@@ -1,0 +1,64 @@
+/*
+ * InlineCode — structural foundation.
+ *
+ * Rendering rules for `<itx-inline-code>` and its descendants. Loaded globally
+ * via `interop.css`; theme values live in
+ * `themes/protocol/composites/inline-code.css`.
+ *
+ * All selectors wrapped in :where() for zero specificity — consumer overrides
+ * always win regardless of declaration order.
+ *
+ * The copy button is sized intrinsically via `interop-button`'s padding system
+ * (driven by `itx-size` and optional `interop-button="icon"` variant). InlineCode
+ * does not impose width/height — doing so would clamp the box smaller than
+ * the intrinsic padding can fill, collapsing the visible whitespace.
+ *
+ * Public tokens — see the theme file's header comment for the full list.
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+
+:where(itx-inline-code) {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-ic-gap, var(--itx-spacing-1));
+	padding-block: var(--itx-ic-padding-block, 0);
+	padding-inline: var(--itx-ic-padding-inline, var(--itx-spacing-2));
+	background: var(--itx-ic-background, var(--itx-neutral-3));
+	color: var(--itx-ic-foreground, inherit);
+	border-radius: var(
+		--itx-ic-radius,
+		var(--itx-context-radius, var(--itx-radius-1))
+	);
+	font-family: var(--itx-ic-font-family, var(--itx-font-family-mono));
+	font-size: var(--itx-ic-font-size, 0.875em);
+	line-height: var(--itx-ic-line-height, 1.4);
+	vertical-align: baseline;
+}
+
+/* ── Code element ────────────────────────────────────────────────────────── */
+
+:where(itx-inline-code .itx-ic__code) {
+	white-space: pre;
+	color: inherit;
+}
+
+/* ── Copy button (size flows through interop-button; chip only sets shape) ── */
+
+:where(itx-inline-code .itx-ic__btn) {
+	corner-shape: initial;
+}
+
+/* ── Screen-reader live region ───────────────────────────────────────────── */
+
+:where(itx-inline-code .itx-ic__sr) {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}

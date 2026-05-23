@@ -3,16 +3,22 @@
 		<p class="demo-page__category">Components</p>
 		<h1 class="demo-page__title">Segmented Control</h1>
 		<p class="demo-page__lead">
-			Mutually exclusive option group built on a native <code>&lt;fieldset&gt;</code>.
-			Animated selection pill via CSS anchor positioning, roving tabindex keyboard model.
+			Mutually exclusive option group built on a native
+			<code>&lt;fieldset&gt;</code>. Animated selection pill via CSS anchor
+			positioning, roving tabindex keyboard model.
 		</p>
 	</header>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic">
-			<fieldset interop-segmented-control label="View mode"
-				[value]="viewMode()" (valueChange)="viewMode.set($event)">
+			<fieldset
+				interop-segmented-control
+				label="View mode"
+				orientation="horizontal"
+				[value]="viewMode()"
+				(valueChange)="viewMode.set($event)"
+			>
 				<button interop-segment value="list">List</button>
 				<button interop-segment value="grid">Grid</button>
 				<button interop-segment value="detail">Detail</button>
@@ -22,9 +28,66 @@
 			</demo-state>
 		</demo-example>
 
+		<demo-example label="Icon">
+			<fieldset
+				interop-segmented-control="icon"
+				label="Text alignment"
+				orientation="horizontal"
+				[value]="align()"
+				(valueChange)="align.set($event)"
+			>
+				<button
+					interop-segment
+					value="left"
+					[interopTooltip]="'Align left'"
+					[interopTooltipSemantic]="'label'"
+				>
+					<interop-icon
+						[size]="20"
+						[strokeWidth]="3"
+						name="tabler-align-left"
+					/>
+				</button>
+
+				<!--<button
+					interop-segment
+					value="center"
+					[interopTooltip]="'Align center'"
+					[interopTooltipSemantic]="'label'"
+				>
+					<interop-icon
+						[size]="20"
+						[strokeWidth]="isSelected() ? 3 : 2"
+						name="tabler-align-center"
+					/>
+				</button>
+
+				<button
+					interop-segment
+					value="right"
+					[interopTooltip]="'Align right'"
+					[interopTooltipSemantic]="'label'"
+				>
+					<interop-icon
+						[size]="20"
+						[strokeWidth]="isSelected() ? 3 : 2"
+						name="tabler-align-right"
+					/>
+				</button>-->
+			</fieldset>
+			<!--<demo-state>
+				<demo-state-item label="View">{{ viewMode() }}</demo-state-item>
+			</demo-state>-->
+		</demo-example>
+
 		<demo-example label="Hidden label">
-			<fieldset interop-segmented-control label="Scan mode" [labelHidden]="true"
-				[value]="scanMode()" (valueChange)="scanMode.set($event)">
+			<fieldset
+				interop-segmented-control
+				label="Scan mode"
+				[labelHidden]="true"
+				[value]="scanMode()"
+				(valueChange)="scanMode.set($event)"
+			>
 				<button interop-segment value="passive">Passive</button>
 				<button interop-segment value="active">Active</button>
 				<button interop-segment value="deep">Deep scan</button>
@@ -38,18 +101,24 @@
 			<fieldset interop-segmented-control label="Thruster mode" value="cruise">
 				<button interop-segment value="idle">Idle</button>
 				<button interop-segment value="cruise">Cruise</button>
-				<button interop-segment value="overdrive" [disabled]="true">Overdrive</button>
+				<button interop-segment value="overdrive" [disabled]="true">
+					Overdrive
+				</button>
 			</fieldset>
 		</demo-example>
 
 		<demo-example label="Disabled group">
-			<fieldset interop-segmented-control label="Nav lock" [disabled]="true" value="locked">
+			<fieldset
+				interop-segmented-control
+				label="Nav lock"
+				[disabled]="true"
+				value="locked"
+			>
 				<button interop-segment value="locked">Locked</button>
 				<button interop-segment value="free">Free</button>
 			</fieldset>
 		</demo-example>
 	</demo-section>
-
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">

@@ -12,16 +12,12 @@
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Unordered from collection">
 			<ul interop-list [collection]="crewMembers"></ul>
-			<itx-code-block language="html" [tokens]="unorderedTokens.value() ?? null">
-				<pre><code [textContent]="unorderedCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="unorderedCode" />
 		</demo-example>
 
 		<demo-example label="Ordered from collection">
 			<ol interop-list [collection]="crewMembers"></ol>
-			<itx-code-block language="html" [tokens]="orderedTokens.value() ?? null">
-				<pre><code [textContent]="orderedCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="orderedCode" />
 		</demo-example>
 
 		<demo-example label="Custom item template">
@@ -29,9 +25,7 @@
 				<li>{{ item.label }}</li>
 			</ng-template>
 			<ul interop-list [collection]="cargoItems" [listItemTemplate]="itemTpl"></ul>
-			<itx-code-block language="html" [tokens]="templateTokens.value() ?? null">
-				<pre><code [textContent]="templateCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="templateCode" />
 		</demo-example>
 
 		<demo-example label="Static content">
@@ -41,9 +35,7 @@
 				<li>Bay 3 — Docking ring B (reserved)</li>
 				<li>Bay 4 — Offline for maintenance</li>
 			</ul>
-			<itx-code-block language="html" [tokens]="staticTokens.value() ?? null">
-				<pre><code [textContent]="staticCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="staticCode" />
 		</demo-example>
 	</demo-section>
 

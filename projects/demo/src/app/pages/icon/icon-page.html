@@ -13,9 +13,7 @@
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic">
 			<interop-icon name="tabler-rocket" />
-			<itx-code-block language="html" [tokens]="basicTokens.value() ?? null">
-				<pre><code [textContent]="basicCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="basicCode" />
 		</demo-example>
 
 		<demo-example label="Sizes">
@@ -25,9 +23,7 @@
 				<interop-icon name="tabler-bell" [size]="32" />
 				<interop-icon name="tabler-bell" [size]="48" />
 			</div>
-			<itx-code-block language="html" [tokens]="sizesTokens.value() ?? null">
-				<pre><code [textContent]="sizesCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="sizesCode" />
 		</demo-example>
 
 		<demo-example label="Stroke weight">
@@ -37,9 +33,7 @@
 				<interop-icon name="tabler-star" [size]="32" [strokeWidth]="2" />
 				<interop-icon name="tabler-star" [size]="32" [strokeWidth]="3" />
 			</div>
-			<itx-code-block language="html" [tokens]="strokeTokens.value() ?? null">
-				<pre><code [textContent]="strokeCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="strokeCode" />
 		</demo-example>
 
 		<demo-example label="Color override">
@@ -61,21 +55,14 @@
 				/>
 				<interop-icon name="tabler-x" [size]="28" color="var(--itx-danger)" />
 			</div>
-			<itx-code-block language="html" [tokens]="colorTokens.value() ?? null">
-				<pre><code [textContent]="colorCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="colorCode" />
 		</demo-example>
 	</demo-section>
 
 	<!-- ── Registration ──────────────────────────────────────────────────── -->
 	<demo-section id="registration" heading="Registration">
 		<demo-example label="provideInteropIcons">
-			<itx-code-block
-				language="typescript"
-				[tokens]="registerTokens.value() ?? null"
-			>
-				<pre><code [textContent]="registerCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="typescript" [code]="registerCode" />
 		</demo-example>
 	</demo-section>
 

@@ -1,12 +1,101 @@
+/* ── chip shared tokens ──────────────────────────────────────────────────── */
+
 :where([interop-root]) {
-	--itx-chip-border: 1px solid var(--itx-border);
+	/* appearance */
+	--itx-chip-background: var(--itx-neutral-5);
+	--itx-chip-color: inherit;
+	--itx-chip-border: 2px solid var(--itx-neutral-7);
 	--itx-chip-radius: var(--itx-radius-full);
-	--itx-chip-padding: 0.1875rem 0.625rem;
-	--itx-chip-font-size: 0.8125rem;
-	--itx-chip-hover-bg: var(--itx-surface-hover);
+	--itx-chip-padding: 0.5rem 0.825rem;
+	--itx-chip-font-size: var(--itx-font-size-caption);
+	--itx-chip-font-weight: inherit;
+	--itx-chip-gap: var(--itx-spacing-2);
+
+	/* hover */
+	--itx-chip-background-hover: var(--itx-surface-hover);
+	--itx-chip-color-hover: inherit;
+
+	/* selected / checked */
 	--itx-chip-accent: var(--itx-colorway);
 	--itx-chip-on-accent: var(--itx-on-colorway);
+	--itx-chip-background-selected: var(--itx-chip-accent);
+	--itx-chip-color-selected: var(--itx-chip-on-accent);
+	--itx-chip-border-selected: var(--itx-chip-border);
+	--itx-chip-font-weight-selected: inherit;
 
+	/* focus ring (chip-option) */
+	--itx-chip-outline-color: var(--itx-chip-accent);
+	--itx-chip-outline-width: 2px;
+	--itx-chip-outline-style: solid;
+	--itx-chip-outline-offset: 2px;
+
+	/* disabled */
+	--itx-chip-disabled-opacity: 0.4;
+
+	/* transitions */
+	--itx-chip-transition-duration: 120ms;
+	--itx-chip-transition-timing-function: ease;
+
+	/* chip-list gap */
+	--itx-chip-list-gap: 0.375rem;
+}
+
+/* ── chip-filter ─────────────────────────────────────────────────────────── */
+
+:where(fieldset[interop-chip-filter]) {
+	--itx-chip-filter-background: transparent;
+	--itx-chip-filter-border: none;
+	--itx-chip-filter-radius: 0;
+	--itx-chip-filter-padding: 0;
+}
+
+/* ── chip-item ───────────────────────────────────────────────────────────── */
+
+:where(li[interop-chip-item]) {
+	/* layout */
+	--itx-chip-item-gap: var(--itx-spacing-3, 0.375rem);
+
+	/* removable padding — asymmetric: full inline-start, compact inline-end
+	   so the remove button sits flush without crowding the label            */
+	--itx-chip-padding-removable: var(--itx-spacing-1, 0.25rem)
+		var(--itx-spacing-1, 0.25rem) var(--itx-spacing-1, 0.25rem)
+		var(--itx-spacing-3, 0.5rem);
+
+	/* remove button — rest */
+	--itx-chip-remove-background: transparent;
+	--itx-chip-remove-border: 1px solid transparent;
+	--itx-chip-remove-radius: var(--itx-radius-full);
+	--itx-chip-remove-font-size: 0.875rem;
+	--itx-chip-remove-padding: var(--itx-spacing-1, 0.25rem);
+	--itx-chip-remove-width: var(--itx-spacing-6, 1.5rem);
+
+	/* remove button — chip hover */
+	--itx-chip-remove-border-hover: 2px solid var(--itx-chip-accent);
+
+	/* remove button — focus ring */
+	--itx-chip-remove-outline-color: var(--itx-chip-accent);
+	--itx-chip-remove-outline-width: 3px;
+	--itx-chip-remove-outline-offset: 3px;
+}
+
+/* ── chip-input ──────────────────────────────────────────────────────────── */
+
+:where(div[interop-chip-input]) {
+	/* container */
+	--itx-chip-input-background: transparent;
 	--itx-chip-input-border: 1px solid var(--itx-border);
-	--itx-chip-input-radius: var(--itx-radius-sm);
+	--itx-chip-input-radius: var(--itx-radius-sm, 4px);
+	--itx-chip-input-gap: 0.375rem;
+	--itx-chip-input-padding: 0.375rem 0.5rem;
+	--itx-chip-input-min-height: 2.5rem;
+
+	/* focus ring (focus-within) */
+	--itx-chip-input-outline-color: var(--itx-colorway);
+	--itx-chip-input-outline-width: 2px;
+	--itx-chip-input-outline-style: solid;
+	--itx-chip-input-outline-offset: 1px;
+
+	/* internal chip layout + remove */
+	--itx-chip-input-chip-gap: 0.25rem;
+	--itx-chip-input-remove-font-size: 0.875rem;
 }

@@ -14,45 +14,35 @@
 			<interop-callout>
 				Hull integrity check scheduled for 0600. All non-essential crew to standby.
 			</interop-callout>
-			<itx-code-block language="html" [tokens]="infoTokens.value() ?? null">
-				<pre><code [textContent]="infoCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="infoCode" />
 		</demo-example>
 
 		<demo-example label="With heading">
 			<interop-callout type="info" heading="Docking protocol">
 				Extend mag-lock clamps before engaging the docking collar. Verify pressure seal before releasing airlock.
 			</interop-callout>
-			<itx-code-block language="html" [tokens]="headingTokens.value() ?? null">
-				<pre><code [textContent]="headingCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="headingCode" />
 		</demo-example>
 
 		<demo-example label="Warning">
 			<interop-callout type="warning" heading="Radiation zone">
 				Sector 7-G is currently above safe exposure limits. EVA suits required beyond this point.
 			</interop-callout>
-			<itx-code-block language="html" [tokens]="warningTokens.value() ?? null">
-				<pre><code [textContent]="warningCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="warningCode" />
 		</demo-example>
 
 		<demo-example label="Success">
 			<interop-callout type="success" heading="Cargo secured">
 				All requisition items verified and locked in bay 4. Transit clearance granted.
 			</interop-callout>
-			<itx-code-block language="html" [tokens]="successTokens.value() ?? null">
-				<pre><code [textContent]="successCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="successCode" />
 		</demo-example>
 
 		<demo-example label="Danger">
 			<interop-callout type="danger" heading="Hull breach detected">
 				Emergency bulkhead engaged on deck 3. Evacuate immediately and await decompression protocol.
 			</interop-callout>
-			<itx-code-block language="html" [tokens]="dangerTokens.value() ?? null">
-				<pre><code [textContent]="dangerCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="dangerCode" />
 		</demo-example>
 	</demo-section>
 

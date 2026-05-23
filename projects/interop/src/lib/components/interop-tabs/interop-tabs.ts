@@ -97,7 +97,7 @@ let _tabsIdCounter = 0;
 @Component({
   selector: "section[interop-tabs]",
   standalone: true,
-  imports: [NgTemplateOutlet, InteropTabPanel],
+  imports: [NgTemplateOutlet],
   templateUrl: "./interop-tabs.html",
   styleUrl: "./interop-tabs.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

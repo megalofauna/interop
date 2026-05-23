@@ -16,6 +16,7 @@
 				<li interop-chip-item label="Mag-lock">Mag-lock</li>
 				<li interop-chip-item label="Hull epoxy">Hull epoxy</li>
 			</ul>
+			<itx-code-block language="html" [code]="readOnlyCode" />
 		</demo-example>
 
 		<demo-example label="Removable chips">
@@ -26,9 +27,12 @@
 					</li>
 				}
 			</ul>
-			<demo-state>
-				<demo-state-item label="Tags">{{ cargoTags().length }}</demo-state-item>
-			</demo-state>
+			<itx-terminal
+				variant="plain"
+				[entries]="removeLog()"
+				(reset)="removeLog.set([])"
+			/>
+			<itx-code-block language="html" [code]="removableCode" />
 		</demo-example>
 	</demo-section>
 
@@ -36,16 +40,53 @@
 	<demo-section id="filter" heading="Filter chips">
 		<demo-example label="Multi-select filter group">
 			<fieldset interop-chip-filter label="Cargo flags"
-				[value]="activeFilters()" (valueChange)="activeFilters.set($event)">
+				[value]="activeFilters()" (valueChange)="onFiltersChange($event)">
 				<label interop-chip-option value="hazmat">Hazmat</label>
 				<label interop-chip-option value="priority">Priority</label>
 				<label interop-chip-option value="fragile">Fragile</label>
 				<label interop-chip-option value="oversized" [disabled]="true">Oversized</label>
 			</fieldset>
-			<demo-state>
-				<demo-state-item label="Active">{{ activeFilters() | json }}</demo-state-item>
-			</demo-state>
+			<itx-terminal
+				variant="plain"
+				[entries]="filterLog()"
+				(reset)="filterLog.set([])"
+			/>
+			<itx-code-block language="html" [code]="filterCode" />
 		</demo-example>
+	</demo-section>
+
+	<!-- ── Input chips ────────────────────────────────────────────────────── -->
+	<demo-section id="input" heading="Input chips">
+		<demo-example label="Free-form recipient entry">
+			<div interop-chip-input
+				aria-label="Recipients"
+				placeholder="Add a recipient…"
+				[value]="recipients()"
+				(valueChange)="onRecipientsChange($event)">
+			</div>
+			<itx-terminal
+				variant="plain"
+				[entries]="recipientsLog()"
+				(reset)="recipientsLog.set([])"
+			/>
+			<itx-code-block language="html" [code]="inputCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Tokens ─────────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
 	</demo-section>
 
 

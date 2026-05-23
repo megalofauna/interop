@@ -1,12 +1,9 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
-	inject,
-	resource,
 } from "@angular/core";
 import {
 	InteropTooltip,
-	InteropTooltipTriggerDirective,
 	InteropTooltipContentDirective,
 	InteropButton,
 	InteropKbd,
@@ -15,7 +12,6 @@ import {
 	type TableColumn,
 } from 'interop';
 import { CodeBlock } from "@interop/composites";
-import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
@@ -34,7 +30,6 @@ interface ApiEntry {
 	standalone: true,
 	imports: [
 		InteropTooltip,
-		InteropTooltipTriggerDirective,
 		InteropTooltipContentDirective,
 		InteropButton,
 		InteropKbd,
@@ -50,8 +45,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipPage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Code snippets ──────────────────────────────────────────────────────────
 
 	readonly stringLabelHtml = `\
@@ -83,20 +76,6 @@ export class TooltipPage {
 <interop-tooltip label="Right" placement="right">
   <button interop-button>Right</button>
 </interop-tooltip>`;
-
-	// ── Highlight tokens ───────────────────────────────────────────────────────
-
-	readonly stringLabelTokens = resource({
-		loader: () => this.hl.highlight(this.stringLabelHtml, "html"),
-	});
-
-	readonly richContentTokens = resource({
-		loader: () => this.hl.highlight(this.richContentHtml, "html"),
-	});
-
-	readonly placementsTokens = resource({
-		loader: () => this.hl.highlight(this.placementsHtml, "html"),
-	});
 
 	// ── API table ──────────────────────────────────────────────────────────────
 

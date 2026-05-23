@@ -2,7 +2,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	Renderer2,
 	Signal,
 	afterNextRender,
 	computed,
@@ -13,7 +12,6 @@ import {
 	isDevMode,
 	output,
 	signal,
-	untracked,
 } from "@angular/core";
 import {
 	INTEROP_SEGMENTED_CONTROL,
@@ -66,25 +64,29 @@ import { InteropIndicator } from "../interop-indicator/interop-indicator";
 	imports: [InteropIndicator],
 	template: `
 		<legend [class.interop-sr-only]="labelHidden()">{{ label() }}</legend>
-		@if (effectiveValue() !== null) {
-			<interop-indicator />
-		}
-		<ng-content></ng-content>
+		<div class="interop-segmented-control__track">
+			@if (hasResolvedSelection()) {
+				<interop-indicator />
+			}
+			<ng-content></ng-content>
+		</div>
 	`,
 	styleUrl: "./interop-segmented-control.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
-		{ provide: INTEROP_SEGMENTED_CONTROL, useExisting: InteropSegmentedControl },
+		{
+			provide: INTEROP_SEGMENTED_CONTROL,
+			useExisting: InteropSegmentedControl,
+		},
 	],
 	host: {
 		"(keydown)": "onKeydown($event)",
-		"[attr.data-has-selection]": 'effectiveValue() !== null ? "" : null',
+		"[attr.data-has-selection]": 'hasResolvedSelection() ? "" : null',
 		"[attr.data-disabled]": 'disabled() ? "" : null',
 	},
 })
 export class InteropSegmentedControl implements SegmentedControlRef {
 	private el = inject(ElementRef<HTMLFieldSetElement>);
-	private renderer = inject(Renderer2);
 
 	/**
 	 * Accessible label for the group, rendered as a `<legend>`.
@@ -122,6 +124,19 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 	readonly effectiveValue: Signal<string | null> = computed(
 		() => this.value() ?? this._selectedValue(),
 	);
+
+	/**
+	 * True iff effectiveValue() identifies a segment that is actually mounted.
+	 * Drives the indicator render guard: an effectiveValue with no matching
+	 * segment would leave the indicator anchored to nothing and collapsed to
+	 * a 4px artefact in the corner. Gating on existence here is the parent's
+	 * half of the anchor contract (see .agent/components/indicator.md).
+	 */
+	protected readonly hasResolvedSelection: Signal<boolean> = computed(() => {
+		const v = this.effectiveValue();
+		if (v === null) return false;
+		return this.segments().some((s) => s.value() === v);
+	});
 
 	/**
 	 * Index of the segment that owns tabindex="0".
@@ -167,46 +182,6 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 			const idx = segs.findIndex((s) => s.value() === effective);
 			if (idx >= 0) this._roverIndex.set(idx);
 		});
-
-		// Auto-inject <hr itx-rule> separators between segments. The rule
-		// utility (styles/utilities/rule.css) styles them as layout-inert
-		// dividers; axis is implicit so the same markup works for column or
-		// row tracks. Re-runs whenever segment count changes.
-		effect(() => {
-			const count = this.segments().length;
-			untracked(() => this.syncSeparators(count));
-		});
-	}
-
-	/**
-	 * Insert one <hr itx-rule> immediately before each segment except the
-	 * first, removing any stale separators we previously injected. The
-	 * separators are decorative (aria-hidden) and don't participate in
-	 * the segments() query (filtered by InteropSegment component class).
-	 */
-	private syncSeparators(_count: number): void {
-		const host = this.el.nativeElement;
-		const renderer = this.renderer;
-
-		// Tear down stale separators from a prior run.
-		const stale = Array.from(
-			host.querySelectorAll(":scope > [data-itx-rule-injected]"),
-		);
-		for (const node of stale) renderer.removeChild(host, node);
-
-		// Re-walk in DOM order so we can insert before each non-first
-		// <button interop-segment> we encounter.
-		const segmentEls: NodeListOf<HTMLButtonElement> = host.querySelectorAll(
-			":scope > button[interop-segment]",
-		);
-		segmentEls.forEach((segEl, i) => {
-			if (i === 0) return;
-			const hr = renderer.createElement("hr");
-			renderer.setAttribute(hr, "itx-rule", "");
-			renderer.setAttribute(hr, "data-itx-rule-injected", "");
-			renderer.setAttribute(hr, "aria-hidden", "true");
-			renderer.insertBefore(host, hr, segEl);
-		});
 	}
 
 	// ── SegmentedControlRef ──────────────────────────────────────────────────
@@ -224,7 +199,16 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 		if (!segs.length) return;
 
 		const key = event.key;
-		if (!["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp", "Home", "End"].includes(key)) {
+		if (
+			![
+				"ArrowRight",
+				"ArrowLeft",
+				"ArrowDown",
+				"ArrowUp",
+				"Home",
+				"End",
+			].includes(key)
+		) {
 			return;
 		}
 
@@ -236,19 +220,24 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 		if (key === "ArrowRight" || key === "ArrowDown") {
 			// Skip disabled segments forward
 			let next = (newIndex + 1) % len;
-			while (next !== newIndex && segs[next].disabled()) next = (next + 1) % len;
+			while (next !== newIndex && segs[next].disabled())
+				next = (next + 1) % len;
 			newIndex = next;
 		} else if (key === "ArrowLeft" || key === "ArrowUp") {
 			// Skip disabled segments backward
 			let prev = (newIndex - 1 + len) % len;
-			while (prev !== newIndex && segs[prev].disabled()) prev = (prev - 1 + len) % len;
+			while (prev !== newIndex && segs[prev].disabled())
+				prev = (prev - 1 + len) % len;
 			newIndex = prev;
 		} else if (key === "Home") {
 			newIndex = segs.findIndex((s) => !s.disabled());
 			if (newIndex === -1) return;
 		} else if (key === "End") {
 			for (let i = len - 1; i >= 0; i--) {
-				if (!segs[i].disabled()) { newIndex = i; break; }
+				if (!segs[i].disabled()) {
+					newIndex = i;
+					break;
+				}
 			}
 		}
 

@@ -25,10 +25,10 @@
 }
 
 .demo-example__preview {
-	border: 2px solid var(--itx-neutral-5);
+	/* border: 2px solid var(--itx-neutral-5); */
 	/* border-radius: var(--itx-context-radius, 12px); */
 	background: var(--itx-neutral-4);
-	box-shadow: var(--itx-shadow-sm);
+	/* box-shadow: var(--itx-shadow-sm); */
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
@@ -36,7 +36,7 @@
 }
 
 demo-state {
-	width: 12px;
+	/* width: 12px; */
 }
 
 .demo-example__canvas {

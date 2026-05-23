@@ -39,7 +39,8 @@
 		</button>
 		}
 		<button
-			interop-button="xs"
+			interop-button
+		itx-size="xs"
 			class="itx-cb__btn"
 			type="button"
 			[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
@@ -63,7 +64,7 @@
 >
 	<figure
 		interop-code-renderer
-		[tokens]="file.tokens"
+		[tokens]="tokensFor(file)"
 		[lineNumbers]="lineNumbers()"
 		[wrap]="isWrapped()"
 	></figure>
@@ -71,7 +72,7 @@
 } } @else {
 <figure
 	interop-code-renderer
-	[tokens]="tokens()"
+	[tokens]="singleDisplayTokens()"
 	[lineNumbers]="lineNumbers()"
 	[wrap]="isWrapped()"
 >

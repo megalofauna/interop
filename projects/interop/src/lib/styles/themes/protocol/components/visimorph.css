@@ -1,0 +1,51 @@
+/*
+ * InteropVisimorph — Protocol theme.
+ *
+ * Token values for the shared faux-control surface (radio / checkbox /
+ * toggle). State activation lives in the component CSS
+ * (`styles/components/visimorph.css`) — this file only declares values.
+ *
+ * The visimorph reads `--itx-control-*` tokens, which are intentionally
+ * shared with the surrounding radio / checkbox / toggle host CSS so a single
+ * override re-themes every control type at once.
+ */
+
+:where([interop-root]) {
+	/* ── Sizing ─────────────────────────────────────────────────────────── */
+	--itx-control-size: 1.25rem;
+	--itx-control-border-width: 2px;
+	--itx-control-radius: var(--itx-inner-radius, 4px);
+	--itx-control-dot-size: 0.625rem;
+	--itx-control-check-weight: 3px;
+	--itx-control-check-weight-indeterminate: 4px;
+
+	/* ── Colour ─────────────────────────────────────────────────────────── */
+	--itx-control-border-color: light-dark(
+		var(--itx-neutral-7),
+		var(--itx-neutral-6)
+	);
+	--itx-control-bg: light-dark(var(--itx-neutral-1), var(--itx-neutral-2));
+	--itx-control-accent: var(--itx-neutral-12);
+	--itx-control-indicator: light-dark(
+		var(--itx-neutral-1),
+		var(--itx-neutral-12-on)
+	);
+
+	/* ── Toggle-specific ────────────────────────────────────────────────── */
+	--itx-control-toggle-width: 2.5rem;
+	--itx-control-toggle-height: 1.25rem;
+	--itx-control-toggle-thumb-color: var(--itx-neutral-5);
+	--itx-control-toggle-thumb-color-on: var(--itx-neutral-1);
+	--itx-control-toggle-thumb-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.18);
+
+	/* ── Focus ring ─────────────────────────────────────────────────────── */
+	--itx-control-focus-ring-color: var(--itx-colorway, var(--itx-neutral-8));
+	--itx-control-focus-ring-width: 3px;
+	--itx-control-focus-ring-offset: 3px;
+	--itx-control-focus-scale: 0.875;
+
+	/* ── Motion / a11y ──────────────────────────────────────────────────── */
+	--itx-control-transition: var(--itx-duration-fast, 100ms)
+		var(--itx-easing-standard, ease);
+	--itx-control-disabled-opacity: 0.5;
+}

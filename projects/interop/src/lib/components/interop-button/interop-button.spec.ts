@@ -2,11 +2,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Component } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { InteropButton } from "./interop-button";
+import { InteropButtonActivation } from "./interop-button-activation";
 import { InteropActivation } from "../../services/interop-activation.service";
 
 @Component({
   standalone: true,
-  imports: [InteropButton],
+  imports: [InteropButton, InteropButtonActivation],
   template: `
     <button
       interop-button
@@ -39,6 +40,7 @@ describe("InteropButton", () => {
   let fixture: ComponentFixture<TestHost>;
   let buttonEl: HTMLButtonElement;
   let button: InteropButton;
+  let activation: InteropButtonActivation;
   let activationService: jasmine.SpyObj<InteropActivation>;
 
   beforeEach(async () => {
@@ -56,9 +58,11 @@ describe("InteropButton", () => {
     fixture = TestBed.createComponent(TestHost);
     host = fixture.componentInstance;
     buttonEl = fixture.nativeElement.querySelector("button");
-    button = fixture.debugElement.query(
-      By.directive(InteropButton),
-    ).componentInstance;
+
+    const debugEl = fixture.debugElement.query(By.directive(InteropButton));
+    button = debugEl.componentInstance;
+    activation = debugEl.injector.get(InteropButtonActivation);
+
     activationService = TestBed.inject(
       InteropActivation,
     ) as jasmine.SpyObj<InteropActivation>;
@@ -70,6 +74,7 @@ describe("InteropButton", () => {
 
   it("should create", () => {
     expect(button).toBeTruthy();
+    expect(activation).toBeTruthy();
   });
 
   it("should require a button element", () => {
@@ -77,8 +82,8 @@ describe("InteropButton", () => {
   });
 
   it("should have correct defaults", () => {
-    expect(button.onActivate()).toBeNull();
-    expect(button.activationId()).toBeNull();
+    expect(activation.onActivate()).toBeNull();
+    expect(activation.activationId()).toBeNull();
     expect(button.loading()).toBeFalse();
     expect(button.disabled()).toBeFalse();
     expect(button.type()).toBe("button");
@@ -99,26 +104,26 @@ describe("InteropButton", () => {
   });
 
   it("canActivate is false with no handler", () => {
-    expect(button.canActivate()).toBeFalse();
+    expect(activation.canActivate()).toBeFalse();
   });
 
   it("canActivate is true with onActivate", () => {
     host.onActivate = jasmine.createSpy();
     fixture.detectChanges();
-    expect(button.canActivate()).toBeTrue();
+    expect(activation.canActivate()).toBeTrue();
   });
 
   it("canActivate is true with activationId", () => {
     host.activationId = "test";
     fixture.detectChanges();
-    expect(button.canActivate()).toBeTrue();
+    expect(activation.canActivate()).toBeTrue();
   });
 
   it("canActivate is false when disabled even with handler", () => {
     host.onActivate = jasmine.createSpy();
     host.disabled = true;
     fixture.detectChanges();
-    expect(button.canActivate()).toBeFalse();
+    expect(activation.canActivate()).toBeFalse();
   });
 
   // ── Click behavior ────────────────────────────────────────────────────────────

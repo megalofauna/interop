@@ -1,9 +1,6 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
-	computed,
-	inject,
-	resource,
 	signal,
 } from "@angular/core";
 import { JsonPipe } from "@angular/common";
@@ -20,7 +17,6 @@ import { CodeBlock, type CodeFile } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
 
 interface ApiEntry {
 	name: string;
@@ -50,8 +46,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxPage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Interactive state for demos ──────────────────────────────────────
 	barebonesChecked = signal(false);
 	basicChecked = signal(false);
@@ -99,27 +93,11 @@ export class CheckboxPage {
 
 selectedItems = signal<string[]>(['plasma-conduit']);`;
 
-	// ── Highlighted tokens (async via Shiki) ─────────────────────────
-	readonly basicTokens = resource({
-		loader: () => this.hl.highlight(this.basicCheckboxCode, "html"),
-	});
-	readonly disabledTokens = resource({
-		loader: () => this.hl.highlight(this.disabledCheckboxCode, "html"),
-	});
-	readonly bareboniestTokens = resource({
-		loader: () => this.hl.highlight(this.bareboniestCheckbox, "html"),
-	});
-	readonly groupTemplateTokens = resource({
-		loader: () => this.hl.highlight(this.checkboxGroupCode, "html"),
-	});
-	readonly groupDataTokens = resource({
-		loader: () => this.hl.highlight(this.toppingsDataCode, "typescript"),
-	});
-
-	readonly groupFiles = computed<CodeFile[]>(() => [
-		{ label: "template.html", language: "html", tokens: this.groupTemplateTokens.value() ?? null },
-		{ label: "component.ts", language: "ts", tokens: this.groupDataTokens.value() ?? null },
-	]);
+	// ── Code files ─────────────────────────
+	readonly groupFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.checkboxGroupCode },
+		{ label: "component.ts", language: "ts", code: this.toppingsDataCode },
+	];
 
 	// ── API table data ──────────────────────────────────────────────────
 	apiColumns: TableColumn<ApiEntry>[] = [

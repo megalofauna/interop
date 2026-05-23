@@ -1,9 +1,6 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
-	computed,
-	inject,
-	resource,
 	signal,
 } from "@angular/core";
 import {
@@ -14,13 +11,11 @@ import {
 	InteropStepPanel,
 	InteropTable,
 	InteropCellDef,
-	InteropIcon,
 	provideInteropIcons,
 	type TableColumn,
 	DialogClosedEvent,
 } from "interop";
 import { CodeBlock, type CodeFile } from "@interop/composites";
-import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import {
@@ -52,7 +47,6 @@ interface ApiEntry {
 		InteropStepPanel,
 		InteropTable,
 		InteropCellDef,
-		InteropIcon,
 		CodeBlock,
 		DemoSection,
 		DemoExample,
@@ -64,8 +58,6 @@ interface ApiEntry {
 	providers: [provideInteropIcons(TablerCircleX)],
 })
 export class StepperPage {
-	private readonly hl = inject(HighlightService);
-
 	onFinish(id: string): void {
 		console.log(`[stepper] finish — ${id}`);
 	}
@@ -190,40 +182,12 @@ onFinish(): void {
 		this.closeReason.set(event.reason);
 	}
 
-	// ── Highlighted tokens ───────────────────────────────────────────────────
+	// ── Code files ───────────────────────────────────────────────────────────
 
-	readonly linearHtmlTokens = resource({
-		loader: () => this.hl.highlight(this.linearHtml, "html"),
-	});
-
-	readonly linearTsTokens = resource({
-		loader: () => this.hl.highlight(this.linearTs, "typescript"),
-	});
-
-	readonly linearFiles = computed<CodeFile[]>(() => [
-		{
-			label: "HTML",
-			tokens: this.linearHtmlTokens.value() ?? null,
-			lang: "html",
-		},
-		{
-			label: "TS",
-			tokens: this.linearTsTokens.value() ?? null,
-			lang: "typescript",
-		},
-	]);
-
-	readonly nonLinearTokens = resource({
-		loader: () => this.hl.highlight(this.nonLinearHtml, "html"),
-	});
-
-	readonly manyStepsTokens = resource({
-		loader: () => this.hl.highlight(this.manyStepsHtml, "html"),
-	});
-
-	readonly verticalTokens = resource({
-		loader: () => this.hl.highlight(this.verticalHtml, "html"),
-	});
+	readonly linearFiles: CodeFile[] = [
+		{ label: "HTML", language: "html", code: this.linearHtml },
+		{ label: "TS", language: "typescript", code: this.linearTs },
+	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "component", label: "Component", sticky: true },

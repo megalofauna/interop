@@ -73,7 +73,7 @@ let _panelIdCounter = 0;
 @Component({
   selector: "section[interop-tab-panel]",
   standalone: true,
-  imports: [InteropTabLabel],
+  imports: [],
   templateUrl: "./interop-tab-panel.html",
   styleUrl: "./interop-tab-panel.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

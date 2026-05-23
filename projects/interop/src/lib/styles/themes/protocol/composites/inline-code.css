@@ -1,0 +1,45 @@
+/* ── InlineCode — Protocol theme ─────────────────────────────────────────── */
+
+/*
+ * The chip is em-relative on purpose: drop it next to xs text and it shrinks,
+ * next to lg text and it grows. Theme values use em where it makes sense
+ * so the proportional sizing stays intact across contexts.
+ *
+ * Token surface:
+ *   --itx-ic-background       Chip background color
+ *   --itx-ic-foreground       Code text color
+ *   --itx-ic-radius           Chip border-radius
+ *   --itx-ic-font-family      Code font family
+ *   --itx-ic-font-size        Code font size (em-relative)
+ *   --itx-ic-line-height      Code line-height
+ *   --itx-ic-padding-block    Chip block padding
+ *   --itx-ic-padding-inline   Chip inline padding
+ *   --itx-ic-gap              Gap between code and copy button
+ *
+ * The copy button sizes itself via `itx-size` on the <button> + interop-button's
+ * own padding system — InlineCode doesn't impose width/height. To resize the
+ * button, change `itx-size` in the template or use `interop-button="icon"` to
+ * collapse inline padding to match block padding (square button).
+ */
+
+:where([interop-root] itx-inline-code) {
+	--itx-ic-background: var(--itx-neutral-3);
+	--itx-ic-foreground: var(--itx-on-surface);
+
+	--itx-ic-radius: var(--itx-radius-full);
+
+	--itx-button-background: transparent;
+	--itx-button-border-radius: var(--itx-radius-full);
+	--itx-button-background-hover: var(--itx-neutral-11);
+	--itx-button-foreground-hover: var(--itx-neutral-3);
+
+	/*--itx-button-background: purple;
+	--itx-button-foreground: white;*/
+
+	--itx-ic-font-family: var(--itx-font-family-mono);
+	--itx-ic-font-size: var(--itx-font-size-caption);
+	--itx-ic-line-height: 1.4;
+	--itx-ic-padding-block: var(--itx-spacing-1);
+	--itx-ic-padding-inline: var(--itx-spacing-3) var(--itx-spacing-1);
+	--itx-ic-gap: var(--itx-spacing-3);
+}

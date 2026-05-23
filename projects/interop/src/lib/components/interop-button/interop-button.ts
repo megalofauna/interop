@@ -4,27 +4,20 @@ import {
 	ElementRef,
 	HostListener,
 	computed,
-	effect,
 	inject,
 	input,
 	isDevMode,
-	signal,
 } from "@angular/core";
-import { InteropActivation } from "../../services/interop-activation.service";
-import {
-	createActivationHandler,
-	type ActivationHandler,
-	type ActivationOptions,
-	type ManagedActivation,
-} from "../../utils/activation";
 
 /**
- * InteropButton — Styled button with opt-in activation guardrails.
+ * InteropButton — Styled button with accessibility state management.
  *
- * Use on any `<button>` element. With no additional inputs it behaves as a
- * plain native button with Interop styling applied. Activation guardrails
- * (debounce, throttle, reentrancy) activate when `[onActivate]` is provided.
- * Cross-component triggering activates when `[activationId]` is provided.
+ * Use on any `<button>` element. Handles disabled/loading states and their
+ * correct ARIA representations. With no additional inputs it behaves as a
+ * plain native button with Interop styling applied.
+ *
+ * For activation guardrails (debounce, throttle, reentrancy), also import
+ * InteropButtonActivation alongside this component.
  *
  * ── Disabled vs loading semantics ───────────────────────────────────────────
  *
@@ -81,7 +74,7 @@ import {
  * cannot receive focus and therefore cannot expose a tooltip. See:
  * https://github.com/adobe/react-spectrum/discussions/9232
  *
- * @example Styled native button (no guardrails)
+ * @example Styled native button
  * ```html
  * <button interop-button (click)="save()">Save</button>
  * ```
@@ -89,15 +82,6 @@ import {
  * @example Focusable disabled — submit gated by form validity
  * ```html
  * <button interop-button [disabled]="!form.valid" [focusableWhenDisabled]="true">
- *   Submit
- * </button>
- * ```
- *
- * @example With activation guardrails
- * ```html
- * <button interop-button
- *         [onActivate]="submit"
- *         [activationOptions]="{ throttleMs: 500, reentrant: false }">
  *   Submit
  * </button>
  * ```
@@ -121,14 +105,7 @@ import {
 })
 export class InteropButton {
 	private readonly elementRef = inject(ElementRef<HTMLButtonElement>);
-	private readonly activationService = inject(InteropActivation, {
-		optional: true,
-	});
 
-	readonly onActivate = input<ActivationHandler<unknown> | null>(null);
-	readonly activationId = input<string | null>(null);
-	readonly payload = input<unknown>(undefined);
-	readonly activationOptions = input<ActivationOptions>({});
 	readonly loading = input<boolean>(false);
 	readonly disabled = input<boolean>(false);
 	/**
@@ -146,13 +123,6 @@ export class InteropButton {
 	readonly loadingText = input<string>("Loading...");
 
 	readonly isDisabled = computed(() => this.disabled() || this.loading());
-	readonly canActivate = computed(
-		() => !this.isDisabled() && !!(this.onActivate() || this.activationId()),
-	);
-
-	private readonly localActivation = signal<ManagedActivation<unknown> | null>(
-		null,
-	);
 
 	constructor() {
 		if (isDevMode()) {
@@ -164,32 +134,12 @@ export class InteropButton {
 			}
 			warnOnConflictingTokens(el);
 		}
-
-		effect(() => {
-			const handler = this.onActivate();
-			const options = this.activationOptions();
-			this.localActivation.set(
-				handler ? createActivationHandler(handler, options) : null,
-			);
-		});
 	}
 
 	@HostListener("click", ["$event"])
-	protected onButtonActivate(event: Event): void {
+	protected onButtonClick(event: Event): void {
 		if (this.isDisabled()) {
 			event.preventDefault();
-			return;
-		}
-
-		const local = this.localActivation();
-		if (local) {
-			local(this.payload());
-			return;
-		}
-
-		const id = this.activationId();
-		if (id) {
-			this.activationService?.trigger(id, this.payload());
 		}
 	}
 }

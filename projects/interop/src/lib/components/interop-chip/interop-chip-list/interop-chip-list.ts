@@ -31,7 +31,6 @@ import {
 	selector: "ul[interop-chip-list]",
 	standalone: true,
 	template: "<ng-content></ng-content>",
-	styleUrl: "./interop-chip-list.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		/* VoiceOver + Safari strips list semantics from <ul> elements with

@@ -1,9 +1,6 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	computed,
-	inject,
-	resource,
 	signal,
 } from "@angular/core";
 import {
@@ -23,7 +20,6 @@ import {
 	DemoNotes,
 	type DemoNote,
 } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
 
 interface ApiEntry {
 	name: string;
@@ -54,8 +50,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgressPage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Interactive state ────────────────────────────────────────────────
 	uploadProgress = signal(40);
 	readonly totalSteps = 7;
@@ -115,44 +109,12 @@ currentStep = signal(1);`;
   @if (progress() === 100) { Sync complete — all systems nominal. }
 </interop-progress-status>`;
 
-	// ── Highlighted tokens ───────────────────────────────────────────────
+	// ── Code files ───────────────────────────────────────────────────────
 
-	readonly determinateTokens = resource({
-		loader: () => this.hl.highlight(this.determinateCode, "html"),
-	});
-
-	readonly indeterminateTokens = resource({
-		loader: () => this.hl.highlight(this.indeterminateCode, "html"),
-	});
-
-	readonly stepBasedTemplateTokens = resource({
-		loader: () => this.hl.highlight(this.stepBasedTemplateCode, "html"),
-	});
-
-	readonly stepBasedComponentTokens = resource({
-		loader: () => this.hl.highlight(this.stepBasedComponentCode, "typescript"),
-	});
-
-	readonly stepBasedFiles = computed<CodeFile[]>(() => [
-		{
-			label: "template.html",
-			language: "html",
-			tokens: this.stepBasedTemplateTokens.value() ?? null,
-		},
-		{
-			label: "component.ts",
-			language: "ts",
-			tokens: this.stepBasedComponentTokens.value() ?? null,
-		},
-	]);
-
-	readonly verticalTokens = resource({
-		loader: () => this.hl.highlight(this.verticalCode, "html"),
-	});
-
-	readonly statusTokens = resource({
-		loader: () => this.hl.highlight(this.statusTemplateCode, "html"),
-	});
+	readonly stepBasedFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.stepBasedTemplateCode },
+		{ label: "component.ts", language: "ts", code: this.stepBasedComponentCode },
+	];
 
 	// ── API tables ───────────────────────────────────────────────────────
 

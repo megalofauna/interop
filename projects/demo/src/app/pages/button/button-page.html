@@ -19,14 +19,74 @@
 
 		<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 		<demo-section id="usage" heading="Button system">
-			<demo-example label="Base">
+			<demo-example label="Overview" [lede]="ledes.overview">
+				<div class="inline-snippet">
+					<button interop-button>Label</button>
+					<p>The most basic instatiation of InteropButton</p>
+				</div>
+				<div class="inline-snippet">
+					<button interop-button itx-size="md">Do thing</button>
+					<itx-inline-code language="html"
+						>&lt;button interop-button&gt;Label&lt;/button&gt;</itx-inline-code
+					>
+				</div>
+				<!--<div class="flex">
+					<button interop-button itx-radius="sm" itx-size="xs">Tiny</button>
+					<button interop-button itx-radius="sm" itx-size="sm">Small</button>
+					<button interop-button itx-radius="sm" itx-size="md">Button</button>
+					<button interop-button itx-radius="sm" itx-size="lg">Large</button>
+					<button interop-button itx-radius="sm" itx-size="xl">Huge</button>
+				</div>-->
+
+				<!--<div class="flex">
+				<div class="flex">
+					<button interop-button="action xs">Micro</button>
+					<button interop-button="action sm">Small</button>
+					<button interop-button="action md">Medium</button>
+					<button interop-button="action lg">Large</button>
+				</div>
+
+				<div class="flex">
+					<button interop-button="action-plus xs">Micro</button>
+					<button interop-button="action-plus sm">Small</button>
+					<button interop-button="action-plus md">Medium</button>
+					<button interop-button="action-plus lg">Large</button>
+				</div>
+
+				<div class="flex">
+					<button interop-button="action-colorway xs">Micro</button>
+					<button interop-button="action-colorway sm">Small</button>
+					<button interop-button="action-colorway md">Medium</button>
+					<button interop-button="action-colorway lg">Large</button>
+				</div>-->
+
+				<!--<interop-expansion-panel>
+					<h3>
+						<button interop-expansion-trigger>CSS custom properties</button>
+					</h3>
+					<div
+						interop-expansion-body
+						[peek]="true"
+						style="--itx-expansion-peek-fade: var(--itx-neutral-3)"
+					>
+						<itx-code-block
+							language="css"
+							[tokens]="customPropsTokens.value() ?? null"
+						>
+							<pre><code [textContent]="customProps"></code></pre>
+						</itx-code-block>
+					</div>
+				</interop-expansion-panel>-->
+			</demo-example>
+			<demo-example label="Button sizes" [lede]="ledes.sizes">
 				<!--<button interop-button>Fire thrusters</button>-->
 
 				<div class="flex">
-					<button interop-button="xs radius-xs">Micro</button>
-					<button interop-button="sm radius-sm">Small</button>
-					<button interop-button="md radius-md">Medium</button>
-					<button interop-button="lg radius-lg">Large</button>
+					<button interop-button itx-size="xs">Extra small</button>
+					<button interop-button itx-size="sm">Small</button>
+					<button interop-button itx-size="md">Medium</button>
+					<button interop-button itx-size="lg">Large</button>
+					<button interop-button itx-size="xl">Extra large</button>
 				</div>
 
 				<!--<div class="flex">
@@ -71,25 +131,17 @@
 			</demo-example>
 
 			<demo-example label="Disabled" [lede]="ledes.disabled">
-				<button interop-button="action md" [disabled]="true">Offline</button>
-				<itx-code-block
-					language="html"
-					[tokens]="disabledTokens.value() ?? null"
-				>
-					<pre><code [textContent]="disabledCode"></code></pre>
-				</itx-code-block>
+				<button interop-button="action" itx-size="md" [disabled]="true">
+					Offline
+				</button>
+				<itx-code-block language="html" [code]="disabledCode" />
 			</demo-example>
 
 			<demo-example label="Loading" [lede]="ledes.loading">
-				<button interop-button="action-minus md" [loading]="true">
+				<button interop-button="action-minus" itx-size="md" [loading]="true">
 					Initialising
 				</button>
-				<itx-code-block
-					language="html"
-					[tokens]="loadingTokens.value() ?? null"
-				>
-					<pre><code [textContent]="loadingCode"></code></pre>
-				</itx-code-block>
+				<itx-code-block language="html" [code]="loadingCode" />
 			</demo-example>
 		</demo-section>
 
@@ -112,16 +164,19 @@
 			</interop-callout>
 
 			<demo-example label="1 s throttle window" [lede]="ledes.throttle">
-				<button interop-button="action-plus md" (click)="onThrottleClick()">
+				<button
+					interop-button="action-plus"
+					itx-size="md"
+					(click)="onThrottleClick()"
+				>
 					Boost
 				</button>
-				<itx-terminal [entries]="throttleLog()" (reset)="throttleLog.set([])" />
-				<itx-code-block
-					language="typescript"
-					[tokens]="throttleTokens.value() ?? null"
-				>
-					<pre><code [textContent]="throttleCode"></code></pre>
-				</itx-code-block>
+				<itx-terminal
+					variant="plain"
+					[entries]="throttleLog()"
+					(reset)="throttleLog.set([])"
+				/>
+				<itx-code-block language="typescript" [code]="throttleCode" />
 			</demo-example>
 		</demo-section>
 
@@ -134,16 +189,15 @@
 			</interop-callout>
 
 			<demo-example label="600 ms debounce" [lede]="ledes.debounce">
-				<button interop-button="action md" (click)="onDebounceClick()">
+				<button
+					interop-button="action"
+					itx-size="md"
+					(click)="onDebounceClick()"
+				>
 					Search manifest
 				</button>
 				<itx-terminal [entries]="debounceLog()" (reset)="debounceLog.set([])" />
-				<itx-code-block
-					language="typescript"
-					[tokens]="debounceTokens.value() ?? null"
-				>
-					<pre><code [textContent]="debounceCode"></code></pre>
-				</itx-code-block>
+				<itx-code-block language="typescript" [code]="debounceCode" />
 			</demo-example>
 		</demo-section>
 
@@ -159,19 +213,18 @@
 				label="Non-reentrant (2 s async handler)"
 				[lede]="ledes.reentrancy"
 			>
-				<button interop-button="action md" (click)="onReentrantClick()">
+				<button
+					interop-button="action"
+					itx-size="md"
+					(click)="onReentrantClick()"
+				>
 					{{ reentrantActive() ? 'Running…' : 'Submit order' }}
 				</button>
 				<itx-terminal
 					[entries]="reentrantLog()"
 					(reset)="reentrantLog.set([])"
 				/>
-				<itx-code-block
-					language="typescript"
-					[tokens]="reentrantTokens.value() ?? null"
-				>
-					<pre><code [textContent]="reentrantCode"></code></pre>
-				</itx-code-block>
+				<itx-code-block language="typescript" [code]="reentrantCode" />
 			</demo-example>
 		</demo-section>
 

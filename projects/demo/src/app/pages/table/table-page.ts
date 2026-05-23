@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, computed, inject, resource, signal } from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import {
 	InteropTable,
 	InteropCellDef,
@@ -7,7 +7,6 @@ import {
 	type TableSortEvent,
 } from 'interop';
 import { CodeBlock, type CodeFile } from "@interop/composites";
-import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
@@ -39,8 +38,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablePage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Code strings ──────────────────────────────────────────────────────────
 
 	readonly basicHtml = `<interop-table [collection]="cargoManifest" [columns]="columns" />`;
@@ -111,29 +108,22 @@ onSortChange(event: TableSortEvent): void {
   this.lastSortEvent.set(event);
 }`;
 
-	// ── Highlighted tokens ────────────────────────────────────────────────────
+	// ── Code files ────────────────────────────────────────────────────────────
 
-	readonly basicHtmlTokens = resource({ loader: () => this.hl.highlight(this.basicHtml, "html") });
-	readonly basicTsTokens = resource({ loader: () => this.hl.highlight(this.basicTs, "typescript") });
-	readonly customCellsHtmlTokens = resource({ loader: () => this.hl.highlight(this.customCellsHtml, "html") });
-	readonly customCellsTsTokens = resource({ loader: () => this.hl.highlight(this.customCellsTs, "typescript") });
-	readonly sortHtmlTokens = resource({ loader: () => this.hl.highlight(this.sortHtml, "html") });
-	readonly sortTsTokens = resource({ loader: () => this.hl.highlight(this.sortTs, "typescript") });
+	readonly basicFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.basicHtml },
+		{ label: "component.ts",  language: "ts",   code: this.basicTs },
+	];
 
-	readonly basicFiles = computed<CodeFile[]>(() => [
-		{ label: "template.html", language: "html", tokens: this.basicHtmlTokens.value() ?? null },
-		{ label: "component.ts",  language: "ts",   tokens: this.basicTsTokens.value()  ?? null },
-	]);
+	readonly customCellsFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.customCellsHtml },
+		{ label: "component.ts",  language: "ts",   code: this.customCellsTs },
+	];
 
-	readonly customCellsFiles = computed<CodeFile[]>(() => [
-		{ label: "template.html", language: "html", tokens: this.customCellsHtmlTokens.value() ?? null },
-		{ label: "component.ts",  language: "ts",   tokens: this.customCellsTsTokens.value()  ?? null },
-	]);
-
-	readonly sortFiles = computed<CodeFile[]>(() => [
-		{ label: "template.html", language: "html", tokens: this.sortHtmlTokens.value() ?? null },
-		{ label: "component.ts",  language: "ts",   tokens: this.sortTsTokens.value()  ?? null },
-	]);
+	readonly sortFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.sortHtml },
+		{ label: "component.ts",  language: "ts",   code: this.sortTs },
+	];
 
 	// ── Data ──────────────────────────────────────────────────────────────────
 

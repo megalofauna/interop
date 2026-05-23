@@ -15,9 +15,7 @@
 			<interop-tooltip label="Initiate emergency burn sequence">
 				<button interop-button>Emergency burn</button>
 			</interop-tooltip>
-			<itx-code-block language="html" [tokens]="stringLabelTokens.value() ?? null">
-				<pre><code [textContent]="stringLabelHtml"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="stringLabelHtml" />
 		</demo-example>
 
 		<demo-example label="Rich content">
@@ -27,9 +25,7 @@
 					Save manifest &nbsp;<kbd interop-kbd>Ctrl</kbd>+<kbd interop-kbd>S</kbd>
 				</ng-template>
 			</interop-tooltip>
-			<itx-code-block language="html" [tokens]="richContentTokens.value() ?? null">
-				<pre><code [textContent]="richContentHtml"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="richContentHtml" />
 		</demo-example>
 
 		<demo-example label="Placements">
@@ -47,9 +43,7 @@
 					<button interop-button>Right</button>
 				</interop-tooltip>
 			</div>
-			<itx-code-block language="html" [tokens]="placementsTokens.value() ?? null">
-				<pre><code [textContent]="placementsHtml"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="placementsHtml" />
 		</demo-example>
 	</demo-section>
 

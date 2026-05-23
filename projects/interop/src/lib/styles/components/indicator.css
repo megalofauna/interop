@@ -74,11 +74,12 @@
 
 @supports (anchor-name: none) {
 	:where(interop-indicator) {
+		--itx-indicator-inset: 0px;
 		position-anchor: var(--itx-indicator-anchor-name, --itx-indicator-anchor);
-		top: anchor(top);
-		right: anchor(right);
-		bottom: anchor(bottom);
-		left: anchor(left);
+		top: calc(anchor(top) + var(--itx-indicator-inset));
+		right: calc(anchor(right) + var(--itx-indicator-inset));
+		bottom: calc(anchor(bottom) + var(--itx-indicator-inset));
+		left: calc(anchor(left) + var(--itx-indicator-inset));
 
 		transition-property: top, right, bottom, left;
 		transition-duration: var(--itx-indicator-transition-duration, 150ms);

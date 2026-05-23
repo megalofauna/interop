@@ -49,7 +49,6 @@ import { INTEROP_CHIP_FILTER, ChipOptionRef } from "../interop-chip.token";
 		/>
 		<ng-content></ng-content>
 	`,
-	styleUrl: "./interop-chip-option.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"[attr.for]": "inputId()",

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, resource } from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import { InteropIcon, InteropTable, InteropCellDef, provideInteropIcons, type TableColumn } from 'interop';
 import { TablerRocket } from "interop/lib/iconsets/tabler/outline/tabler-rocket";
 import { TablerBug } from "interop/lib/iconsets/tabler/outline/tabler-bug";
@@ -19,7 +19,6 @@ import { CodeBlock } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
 
 interface ApiEntry {
 	name: string;
@@ -45,8 +44,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconPage {
-	private readonly hl = inject(HighlightService);
-
 	gridIcons = [
 		'tabler-rocket', 'tabler-bug', 'tabler-bolt', 'tabler-archive', 'tabler-info-circle',
 		'tabler-check', 'tabler-x', 'tabler-settings', 'tabler-user', 'tabler-home',
@@ -128,13 +125,6 @@ export const appConfig: ApplicationConfig = {
     provideInteropIcons(TablerRocket),
   ],
 };`;
-
-	// ── Highlighted tokens ───────────────────────────────────────────────────
-	readonly basicTokens = resource({ loader: () => this.hl.highlight(this.basicCode, "html") });
-	readonly sizesTokens = resource({ loader: () => this.hl.highlight(this.sizesCode, "html") });
-	readonly strokeTokens = resource({ loader: () => this.hl.highlight(this.strokeCode, "html") });
-	readonly colorTokens = resource({ loader: () => this.hl.highlight(this.colorCode, "html") });
-	readonly registerTokens = resource({ loader: () => this.hl.highlight(this.registerCode, "typescript") });
 
 	notes: DemoNote[] = [
 		{

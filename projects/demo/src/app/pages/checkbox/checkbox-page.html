@@ -12,12 +12,7 @@
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Barebones checkbox">
 			<label interop-checkbox id="barebones-demo"> All you need </label>
-			<itx-code-block
-				language="html"
-				[tokens]="bareboniestTokens.value() ?? null"
-			>
-				<pre><code [textContent]="bareboniestCheckbox"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="bareboniestCheckbox" />
 		</demo-example>
 
 		<demo-example label="Basic checkbox">
@@ -30,9 +25,7 @@
 			>
 				Accept terms and conditions if you know what's good for you
 			</label>
-			<itx-code-block language="html" [tokens]="basicTokens.value() ?? null">
-				<pre><code [textContent]="basicCheckboxCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="basicCheckboxCode" />
 		</demo-example>
 
 		<demo-example label="Disabled (checked)">
@@ -44,9 +37,7 @@
 			>
 				This option is locked
 			</label>
-			<itx-code-block language="html" [tokens]="disabledTokens.value() ?? null">
-				<pre><code [textContent]="disabledCheckboxCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="disabledCheckboxCode" />
 		</demo-example>
 	</demo-section>
 
@@ -67,7 +58,7 @@
 				[(value)]="selectedItems"
 			/>
 			<code class="demo-page__output">{{ selectedItems() | json }}</code>
-			<itx-code-block [files]="groupFiles()" />
+			<itx-code-block [files]="groupFiles" />
 		</demo-example>
 	</demo-section>
 

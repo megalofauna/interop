@@ -42,7 +42,6 @@ export type VisiMorphType = "radio" | "checkbox" | "toggle";
   selector: "interop-visimorph",
   standalone: true,
   template: "",
-  styleUrl: "./interop-visimorph.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     "[attr.itx-visimorph]": "type()",

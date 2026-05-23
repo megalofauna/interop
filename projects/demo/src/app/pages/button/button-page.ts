@@ -5,17 +5,12 @@ import {
 	afterNextRender,
 	signal,
 	inject,
-	resource,
 } from "@angular/core";
 import {
 	InteropButton,
 	InteropCallout,
 	InteropTable,
 	InteropCellDef,
-	InteropExpansionPanel,
-	InteropExpansionTrigger,
-	InteropExpansionBody,
-	InteropIcon,
 	provideInteropIcons,
 	type TableColumn,
 	type TableGroupRow,
@@ -25,6 +20,7 @@ import { TablerAlertTriangleFilled } from "interop/lib/iconsets/tabler";
 import { TablerMoon } from "interop/lib/iconsets/tabler/outline/tabler-moon";
 import {
 	CodeBlock,
+	InlineCode,
 	PageNav,
 	Terminal,
 	type PageNavLink,
@@ -33,7 +29,6 @@ import {
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { ButtonPlayground } from "./button-playground/button-playground";
-import { HighlightService } from "../../services/highlight.service";
 import * as ledes from "./button.djot";
 interface ApiEntry {
 	name: string;
@@ -54,15 +49,12 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
+		InlineCode,
 		PageNav,
 		Terminal,
-		InteropExpansionPanel,
-		InteropExpansionTrigger,
-		InteropExpansionBody,
 		DemoSection,
 		DemoExample,
 		ButtonPlayground,
-		InteropIcon,
 	],
 	providers: [provideInteropIcons(TablerAlertTriangleFilled, TablerMoon)],
 	templateUrl: "./button-page.html",
@@ -70,7 +62,6 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonPage {
-	private readonly hl = inject(HighlightService);
 	private readonly destroyRef = inject(DestroyRef);
 
 	protected readonly ledes = ledes;
@@ -268,29 +259,6 @@ export class ButtonPage {
   },
   { reentrant: false }
 );`;
-
-	// ── Highlighted tokens ───────────────────────────────────────────────────
-	readonly customPropsTokens = resource({
-		loader: () => this.hl.highlight(this.customProps, "css"),
-	});
-	readonly plainTokens = resource({
-		loader: () => this.hl.highlight(this.plainCode, "html"),
-	});
-	readonly disabledTokens = resource({
-		loader: () => this.hl.highlight(this.disabledCode, "html"),
-	});
-	readonly loadingTokens = resource({
-		loader: () => this.hl.highlight(this.loadingCode, "html"),
-	});
-	readonly throttleTokens = resource({
-		loader: () => this.hl.highlight(this.throttleCode, "typescript"),
-	});
-	readonly debounceTokens = resource({
-		loader: () => this.hl.highlight(this.debounceCode, "typescript"),
-	});
-	readonly reentrantTokens = resource({
-		loader: () => this.hl.highlight(this.reentrantCode, "typescript"),
-	});
 
 	// ── Token table ──────────────────────────────────────────────────────────
 	tokenColumns: TableColumn<TokenEntry>[] = [

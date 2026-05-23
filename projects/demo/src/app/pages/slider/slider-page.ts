@@ -1,9 +1,6 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	computed,
-	inject,
-	resource,
 	signal,
 } from "@angular/core";
 import {
@@ -27,8 +24,6 @@ import {
 	DemoNotes,
 	type DemoNote,
 } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
-
 interface ApiEntry {
 	name: string;
 	type: string;
@@ -63,8 +58,6 @@ const SHIRT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderPage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Interactive state ────────────────────────────────────────────────
 	brightness = signal(60);
 	volume = signal(35);
@@ -140,30 +133,6 @@ export class SliderPage {
 </form>
 
 <!-- FormData on submit:  volume=35  -->`;
-
-	// ── Highlighted tokens ───────────────────────────────────────────────
-
-	readonly basicTokens = resource({
-		loader: () => this.hl.highlight(this.basicCode, "html"),
-	});
-	readonly currencyTokens = resource({
-		loader: () => this.hl.highlight(this.currencyCode, "html"),
-	});
-	readonly sizesTokens = resource({
-		loader: () => this.hl.highlight(this.sizesCode, "html"),
-	});
-	readonly marksTokens = resource({
-		loader: () => this.hl.highlight(this.marksCode, "html"),
-	});
-	readonly rangeTokens = resource({
-		loader: () => this.hl.highlight(this.rangeCode, "html"),
-	});
-	readonly verticalTokens = resource({
-		loader: () => this.hl.highlight(this.verticalCode, "html"),
-	});
-	readonly formTokens = resource({
-		loader: () => this.hl.highlight(this.formCode, "html"),
-	});
 
 	// ── Form demo ────────────────────────────────────────────────────────
 

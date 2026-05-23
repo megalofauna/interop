@@ -12,7 +12,7 @@
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic">
 			<interop-table [collection]="cargoManifest" [columns]="columns"></interop-table>
-			<itx-code-block [files]="basicFiles()" />
+			<itx-code-block [files]="basicFiles" />
 		</demo-example>
 
 		<demo-example label="Custom cell templates">
@@ -26,7 +26,7 @@
 					</span>
 				</ng-template>
 			</interop-table>
-			<itx-code-block [files]="customCellsFiles()" />
+			<itx-code-block [files]="customCellsFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -51,7 +51,7 @@
 					{{ lastSortEvent() ? (lastSortEvent()!.key + ' ' + lastSortEvent()!.direction) : '—' }}
 				</demo-state-item>
 			</demo-state>
-			<itx-code-block [files]="sortFiles()" />
+			<itx-code-block [files]="sortFiles" />
 		</demo-example>
 	</demo-section>
 

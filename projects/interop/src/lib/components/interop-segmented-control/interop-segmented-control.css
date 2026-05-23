@@ -1,13 +1,27 @@
 /*
  * InteropSegmentedControl component styles.
  *
- * This file owns the track only — the static background, border, padding,
- * and flex layout of the host fieldset. The sliding pill that animates
- * between segments is rendered as a discrete <interop-indicator> child and
- * styled by `styles/components/indicator.css` plus the indicator theme.
+ * Layout split:
  *
- * The track has no hover / active state, so no state-token slots are
- * needed; tokens are read directly. The theme sets values.
+ *   :host           = the <fieldset>. Outer layout only — sized as a column
+ *                     so its <legend> and the inner track stack naturally
+ *                     in document flow. The legend is a true sibling of the
+ *                     track, not an absolutely-positioned overlay.
+ *   <legend>        = the group label, in-flow above the track.
+ *   .interop-segmented-control__track
+ *                   = wrapping <div> that owns everything visual: background,
+ *                     border, radius, padding, flex layout, and the anchor-
+ *                     positioning context for the <interop-indicator> pill.
+ *
+ * The wrapper exists so the <legend> can be styled as a normal block without
+ * the track inheriting its background. Painting the track on the fieldset
+ * itself would either bleed under the legend or require encoding the legend's
+ * rendered height into a gradient stop — fragile to font, padding, and
+ * wrapping changes.
+ *
+ * The sliding pill animates between segments as a discrete <interop-indicator>
+ * child of the track. It is styled by `styles/components/indicator.css` plus
+ * the indicator theme.
  *
  * Public tokens (set on any ancestor, e.g. [interop-root]):
  *
@@ -23,54 +37,44 @@
  *   --itx-segmented-control-track-border-radius
  *   --itx-segmented-control-track-padding
  *   --itx-segmented-control-track-box-shadow
+ *   --itx-segmented-control-track-max-width
  *
  *   Inter-segment rule
- *   The component auto-injects <hr itx-rule> elements between segments.
- *   They're styled by the global rule utility (styles/utilities/rule.css)
- *   and the axis is implicit (works for column or row tracks).
- *   Tune via --itx-rule-{color,width} on any ancestor.
+ *   Dividers between segments are rendered as a ::before pseudo on the
+ *   segment itself (see styles/components/segment.css). Tune colour and
+ *   thickness via --itx-rule-{color,width} on any ancestor.
  *
  *   Indicator pill — see styles/components/indicator.css for tokens.
  */
 
-/* ── Track ───────────────────────────────────────────────────────────────── */
+/* ── Fieldset shell ──────────────────────────────────────────────────────── */
+/*    Reset UA chrome and stack the legend + track in flow.                  */
 
 :host {
-	background-color: var(
-		--itx-segmented-control-track-background-color,
-		transparent
-	);
-	background-image: var(--itx-segmented-control-track-background-image, none);
-	border-color: var(--itx-segmented-control-track-border-color, transparent);
-	border-width: var(--itx-segmented-control-track-border-width, 0);
-	border-style: var(--itx-segmented-control-track-border-style, solid);
-	border-radius: var(--itx-segmented-control-track-border-radius, 0);
-	box-shadow: var(--itx-segmented-control-track-box-shadow, none);
-	padding: var(--itx-segmented-control-track-padding, 4px);
 	margin: 0;
+	padding: 0;
+	border: 0;
 	/* Browsers set min-inline-size: min-content on fieldset by default,
 	   which can cause overflow in flex/grid contexts. Reset it. */
 	min-inline-size: 0;
-	/* Containing block for the absolutely-positioned <interop-indicator>. */
-	position: relative;
-	/* Bind the child indicator to the anchor exposed by the active segment. */
-	--itx-indicator-anchor-name: --itx-segment-active;
-	display: var(--itx-segmented-control-track-display);
-	flex-direction: var(--itx-segmented-control-track-flex-direction);
-	row-gap: var(--itx-segmented-control-track-row-gap);
-	column-gap: var(--itx-segmented-control-track-column-gap);
-	align-items: var(--itx-segmented-control-track-align-items);
-	justify-content: var(--itx-segmented-control-track-justify-content);
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	/* Don't expand to fill the parent — the control sizes to its content. */
+	flex: 0 1 fit-content;
 }
+
+/* ── Legend ──────────────────────────────────────────────────────────────── */
 
 legend {
-	position: absolute;
-	inset: var(--itx-spacing-3) auto 0 var(--itx-spacing-3);
-}
-
-/* Clear the float so content flows below the legend. */
-legend + * {
-	clear: both;
+	display: block;
+	padding: 0;
+	margin-block-end: var(--itx-spacing-2);
+	font-size: var(--itx-font-size-body);
+	line-height: 24px;
+	font-weight: 400;
 }
 
 /* Visually hidden legend — accessible to screen readers */
@@ -86,10 +90,41 @@ legend + * {
 	border: 0;
 }
 
+/* ── Track wrapper ───────────────────────────────────────────────────────── */
+
+.interop-segmented-control__track {
+	background-color: var(
+		--itx-segmented-control-track-background-color,
+		transparent
+	);
+	background-image: var(--itx-segmented-control-track-background-image, none);
+	border-color: var(--itx-segmented-control-track-border-color, transparent);
+	border-width: var(--itx-segmented-control-track-border-width, 0);
+	border-style: var(--itx-segmented-control-track-border-style, solid);
+	border-radius: var(--itx-segmented-control-track-border-radius, 0);
+	box-shadow: var(--itx-segmented-control-track-box-shadow, none);
+	padding: var(--itx-segmented-control-track-padding, 4px);
+	max-width: var(--itx-segmented-control-track-max-width);
+	/*overflow: clip;	*/
+
+	/* Containing block for the absolutely-positioned <interop-indicator>. */
+	position: relative;
+
+	/* Bind the child indicator to the anchor exposed by the active segment. */
+	--itx-indicator-anchor-name: --itx-segment-active;
+
+	display: var(--itx-segmented-control-track-display);
+	flex-direction: var(--itx-segmented-control-track-flex-direction);
+	row-gap: var(--itx-segmented-control-track-row-gap);
+	column-gap: var(--itx-segmented-control-track-column-gap);
+	align-items: var(--itx-segmented-control-track-align-items);
+	justify-content: var(--itx-segmented-control-track-justify-content);
+}
+
 /* ── Accessibility ───────────────────────────────────────────────────────── */
 
 @media (prefers-contrast: high) {
-	:host {
+	.interop-segmented-control__track {
 		outline: 2px solid currentColor;
 	}
 }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, computed, inject, resource, signal } from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import { JsonPipe } from "@angular/common";
 import {
 	InteropListbox,
@@ -14,7 +14,6 @@ import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
 
 interface ApiEntry {
 	name: string;
@@ -45,8 +44,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListboxPage {
-	private readonly hl = inject(HighlightService);
-
 	// ── Single-select demo ────────────────────────────────────────────────
 	dockingBays: SelectControl[] = [
 		{ value: 'bay-1', label: 'Bay 1 — Docking ring A' },
@@ -122,32 +119,16 @@ selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
   </li>
 </ul>`;
 
-	// ── Highlighted tokens ────────────────────────────────────────────────
-	readonly singleSelectTemplateTokens = resource({
-		loader: () => this.hl.highlight(this.singleSelectTemplate, "html"),
-	});
-	readonly singleSelectDataTokens = resource({
-		loader: () => this.hl.highlight(this.singleSelectData, "typescript"),
-	});
-	readonly multiSelectTemplateTokens = resource({
-		loader: () => this.hl.highlight(this.multiSelectTemplate, "html"),
-	});
-	readonly multiSelectDataTokens = resource({
-		loader: () => this.hl.highlight(this.multiSelectData, "typescript"),
-	});
-	readonly projectionTokens = resource({
-		loader: () => this.hl.highlight(this.projectionTemplate, "html"),
-	});
+	// ── Code files ────────────────────────────────────────────────────────
+	readonly singleSelectFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.singleSelectTemplate },
+		{ label: "component.ts", language: "ts", code: this.singleSelectData },
+	];
 
-	readonly singleSelectFiles = computed<CodeFile[]>(() => [
-		{ label: "template.html", language: "html", tokens: this.singleSelectTemplateTokens.value() ?? null },
-		{ label: "component.ts", language: "ts", tokens: this.singleSelectDataTokens.value() ?? null },
-	]);
-
-	readonly multiSelectFiles = computed<CodeFile[]>(() => [
-		{ label: "template.html", language: "html", tokens: this.multiSelectTemplateTokens.value() ?? null },
-		{ label: "component.ts", language: "ts", tokens: this.multiSelectDataTokens.value() ?? null },
-	]);
+	readonly multiSelectFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.multiSelectTemplate },
+		{ label: "component.ts", language: "ts", code: this.multiSelectData },
+	];
 
 	// ── API tables ────────────────────────────────────────────────────────
 	apiColumns: TableColumn<ApiEntry>[] = [

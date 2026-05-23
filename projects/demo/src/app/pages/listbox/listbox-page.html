@@ -22,7 +22,7 @@
 			<demo-state>
 				<demo-state-item label="Bay">{{ selectedBay() }}</demo-state-item>
 			</demo-state>
-			<itx-code-block [files]="singleSelectFiles()" />
+			<itx-code-block [files]="singleSelectFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -42,7 +42,7 @@
 					>{{ selectedRoles() | json }}</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block [files]="multiSelectFiles()" />
+			<itx-code-block [files]="multiSelectFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -79,12 +79,7 @@
 			<demo-state>
 				<demo-state-item label="Sector">{{ selectedSector() }}</demo-state-item>
 			</demo-state>
-			<itx-code-block
-				language="html"
-				[tokens]="projectionTokens.value() ?? null"
-			>
-				<pre><code [textContent]="projectionTemplate"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="projectionTemplate" />
 		</demo-example>
 	</demo-section>
 

@@ -55,7 +55,6 @@ import { InteropChipOption } from "../interop-chip-option/interop-chip-option";
 		<legend [class.interop-sr-only]="labelHidden()">{{ label() }}</legend>
 		<ng-content></ng-content>
 	`,
-	styleUrl: "./interop-chip-filter.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{ provide: INTEROP_CHIP_FILTER, useExisting: InteropChipFilter },

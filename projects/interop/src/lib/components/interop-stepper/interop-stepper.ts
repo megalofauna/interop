@@ -19,7 +19,6 @@ import {
 } from "@angular/core";
 import { DOCUMENT, NgTemplateOutlet } from "@angular/common";
 import { InteropButton } from "../interop-button/interop-button";
-import { InteropButtonPrefix } from "../interop-button/interop-button-prefix";
 import { InteropIcon } from "../interop-icon/interop-icon";
 import {
 	InteropListbox,
@@ -124,7 +123,6 @@ export type StepperResponsiveActions = false | "sm" | "md" | "lg";
 	imports: [
 		NgTemplateOutlet,
 		InteropButton,
-		InteropButtonPrefix,
 		InteropIcon,
 		InteropListbox,
 		InteropPopover,

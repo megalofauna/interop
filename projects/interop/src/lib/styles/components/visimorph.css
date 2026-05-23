@@ -1,0 +1,272 @@
+/*
+ * InteropVisimorph — structural foundation.
+ *
+ * Rendering rules for `<interop-visimorph>`: the shared visual indicator layer
+ * used by `interop-radio-control`, `interop-checkbox`, and
+ * `interop-toggle-control`. The element is purely decorative — its host is
+ * `aria-hidden="true"` and `pointer-events: none`, so clicks travel through
+ * to the underlying native `<input>` that owns focus, keyboard, and form
+ * submission.
+ *
+ * Three variants are selected via the `[itx-visimorph]` host attribute
+ * (`radio` | `checkbox` | `toggle`). State is reflected as `data-*`
+ * attributes: `data-selected` (radio), `data-checked` (checkbox/toggle),
+ * `data-indeterminate` (checkbox), `data-focused`, `data-disabled`. The
+ * `focused` flag is forwarded by the parent control rather than derived
+ * here, since the visimorph itself is not focusable.
+ *
+ * Loaded globally via `interop.css`. Token values (colours, radii, motion)
+ * live in `themes/protocol/components/visimorph.css`.
+ *
+ * Public token surface — `--itx-control-*` (NOT `--itx-visimorph-*`). The
+ * tokens are shared across every faux control so a single override at any
+ * ancestor scope re-themes radio + checkbox + toggle in one place. The
+ * structural rules below resolve those tokens into private `--_` slots and
+ * never write back to the public namespace, so ancestor overrides always
+ * flow through unobstructed.
+ *
+ * Public tokens (set on any ancestor):
+ *
+ *   Sizing
+ *   --itx-control-size                  square box (radio/checkbox)
+ *   --itx-control-dot-size              radio inner dot diameter
+ *   --itx-control-check-weight          checkbox stroke width
+ *   --itx-control-radius                checkbox corner radius
+ *   --itx-control-border-width
+ *
+ *   Colour
+ *   --itx-control-border-color
+ *   --itx-control-bg
+ *   --itx-control-accent                selected / checked fill
+ *   --itx-control-indicator             dot / check stroke colour
+ *
+ *   Toggle-specific
+ *   --itx-control-toggle-width
+ *   --itx-control-toggle-height
+ *   --itx-control-toggle-thumb-size
+ *   --itx-control-toggle-thumb-width
+ *   --itx-control-toggle-thumb-color
+ *   --itx-control-toggle-thumb-color-on
+ *   --itx-control-toggle-thumb-shadow
+ *
+ *   Focus ring (lands on the host outline)
+ *   --itx-control-focus-ring-color
+ *   --itx-control-focus-ring-width
+ *   --itx-control-focus-ring-offset
+ *   --itx-control-focus-scale           press-in transform on focus
+ *
+ *   Motion / a11y
+ *   --itx-control-transition
+ *   --itx-control-disabled-opacity
+ */
+
+/* ── Base host ───────────────────────────────────────────────────────────── */
+
+:where(interop-visimorph) {
+	--_size: var(--itx-control-size, 1.25rem);
+	--_border-width: var(--itx-control-border-width, 2px);
+	--_border-color: var(
+		--itx-control-border-color,
+		var(--itx-border, var(--itx-neutral-5))
+	);
+	--_bg: var(--itx-control-bg, var(--itx-neutral-2, #ffffff));
+	--_accent: var(--itx-control-accent, var(--itx-neutral-12));
+	--_indicator: var(--itx-control-indicator, var(--itx-neutral-3, #ffffff));
+	--_radius: var(--itx-control-radius, 4px);
+	--_dot-size: var(--itx-control-dot-size, 0.625rem);
+	--_check-weight: var(--itx-control-check-weight, 3px);
+	--_transition: var(
+		--itx-control-transition,
+		var(--itx-duration-fast, 100ms) var(--itx-easing-standard)
+	);
+	--_focus-ring-color: var(
+		--itx-control-focus-ring-color,
+		var(--itx-colorway, #0066cc)
+	);
+	--_focus-ring-width: var(--itx-control-focus-ring-width, 3px);
+	--_focus-ring-offset: var(--itx-control-focus-ring-offset, 3px);
+	--_focus-scale: var(--itx-control-focus-scale, 0.875);
+	--_disabled-opacity: var(--itx-control-disabled-opacity, 0.5);
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	position: relative;
+	width: var(--_size);
+	height: var(--_size);
+	box-sizing: border-box;
+	border: var(--_border-width) solid var(--_border-color);
+	background-color: var(--_bg);
+	transition:
+		border-color var(--_transition),
+		background-color var(--_transition),
+		transform var(--_transition);
+	pointer-events: none;
+}
+
+/* ── TYPE: radio ─────────────────────────────────────────────────────────── */
+
+:where(interop-visimorph[itx-visimorph="radio"]) {
+	border-radius: 50%;
+}
+
+:where(interop-visimorph[itx-visimorph="radio"])::after {
+	content: "";
+	display: block;
+	width: var(--_dot-size);
+	height: var(--_dot-size);
+	border-radius: 50%;
+	background-color: var(--_indicator);
+	transform: scale(0);
+	transition: transform var(--_transition);
+}
+
+:where(interop-visimorph[itx-visimorph="radio"][data-selected]) {
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:where(interop-visimorph[itx-visimorph="radio"][data-selected])::after {
+	transform: scale(1);
+}
+
+/* ── TYPE: checkbox ──────────────────────────────────────────────────────── */
+
+:where(interop-visimorph[itx-visimorph="checkbox"]) {
+	border-radius: var(--_radius);
+}
+
+/* Checkmark — drawn as a rotated L-shape via borders */
+:where(interop-visimorph[itx-visimorph="checkbox"])::after {
+	content: "";
+	display: block;
+	width: calc(var(--_size) * 0.4);
+	height: calc(var(--_size) * 0.2);
+	border-left: var(--_check-weight) solid var(--_indicator);
+	border-bottom: var(--_check-weight) solid var(--_indicator);
+	transform: rotate(-45deg) scale(0) translate(5%, -10%);
+	transition: transform var(--_transition);
+}
+
+:where(interop-visimorph[itx-visimorph="checkbox"][data-checked]) {
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:where(interop-visimorph[itx-visimorph="checkbox"][data-checked])::after {
+	transform: rotate(-45deg) scale(1) translate(5%, -10%);
+}
+
+/*
+ * Indeterminate replaces the check with a horizontal dash. Uses a private
+ * slot for the dash weight so consumers overriding --itx-control-check-weight
+ * still take effect — the previous implementation wrote back to the public
+ * token, blocking that override.
+ */
+:where(interop-visimorph[itx-visimorph="checkbox"][data-indeterminate]) {
+	--_check-weight: var(--itx-control-check-weight-indeterminate, 4px);
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:where(interop-visimorph[itx-visimorph="checkbox"][data-indeterminate])::after {
+	width: calc(var(--_size) * 0.5);
+	height: 0;
+	border-left: none;
+	border-bottom: var(--_check-weight) solid var(--_indicator);
+	transform: scale(1);
+}
+
+/* ── TYPE: toggle ────────────────────────────────────────────────────────── */
+
+:where(interop-visimorph[itx-visimorph="toggle"]) {
+	--_toggle-width: var(--itx-control-toggle-width, 2.5rem);
+	--_toggle-height: var(--itx-control-toggle-height, 1.25rem);
+	--_toggle-thumb-size: var(
+		--itx-control-toggle-thumb-size,
+		calc(var(--_toggle-height) - 4px)
+	);
+	--_toggle-thumb-width: var(
+		--itx-control-toggle-thumb-width,
+		calc(var(--_toggle-thumb-size) * 1.5)
+	);
+	--_toggle-thumb-color: var(--itx-control-toggle-thumb-color, #ccc);
+
+	width: var(--_toggle-width);
+	height: var(--_toggle-height);
+	border-radius: calc(var(--_toggle-height) / 2);
+}
+
+/* Sliding thumb — height uses the resolved thumb-size slot (was hardcoded 16px). */
+:where(interop-visimorph[itx-visimorph="toggle"])::after {
+	content: "";
+	position: absolute;
+	width: var(--_toggle-thumb-width);
+	height: var(--_toggle-thumb-size);
+	border-radius: 999px;
+	background-color: var(--_toggle-thumb-color);
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	transition: transform var(--_transition);
+	box-shadow: var(
+		--itx-control-toggle-thumb-shadow,
+		1px 4px 0 0 rgba(0, 0, 0, 0.2)
+	);
+}
+
+/*
+ * On state. Thumb colour resolves through a private slot so the public
+ * --itx-control-toggle-thumb-color override still flows through; previously
+ * this rule wrote back to the public token, blocking ancestor overrides.
+ */
+:where(interop-visimorph[itx-visimorph="toggle"][data-checked]) {
+	--_toggle-thumb-color: var(
+		--itx-control-toggle-thumb-color-on,
+		var(--itx-neutral-1)
+	);
+	border-color: var(--_accent);
+	background-color: var(--_accent);
+}
+
+:where(interop-visimorph[itx-visimorph="toggle"][data-checked])::after {
+	transform: translateY(-50%)
+		translateX(
+			calc(
+				var(--_toggle-width) - var(--_toggle-thumb-width) - 2 *
+					var(--_border-width)
+			)
+		);
+}
+
+/* ── Shared states ───────────────────────────────────────────────────────── */
+
+:where(interop-visimorph[data-focused]) {
+	outline: var(--_focus-ring-width) solid var(--_focus-ring-color);
+	outline-offset: var(--_focus-ring-offset);
+	transform: scale(var(--_focus-scale));
+}
+
+:where(interop-visimorph[data-disabled]) {
+	opacity: var(--_disabled-opacity);
+}
+
+/* ── Accessibility overrides ─────────────────────────────────────────────── */
+
+@media (prefers-contrast: high) {
+	:where(interop-visimorph) {
+		--itx-control-border-width: 3px;
+		--itx-control-focus-ring-width: 3px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(interop-visimorph) {
+		--_focus-scale: 1;
+		transition: none;
+	}
+	:where(interop-visimorph)::after {
+		transition: none;
+	}
+}

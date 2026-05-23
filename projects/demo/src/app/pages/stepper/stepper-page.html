@@ -46,7 +46,7 @@
 					</section>
 				</interop-stepper>
 			</div>
-			<itx-code-block [files]="linearFiles()" />
+			<itx-code-block [files]="linearFiles" />
 		</demo-example>
 
 		<demo-example label="Non-linear (free navigation), menu always shown">
@@ -84,7 +84,7 @@
 					</section>
 				</interop-stepper>
 			</div>
-			<itx-code-block [tokens]="nonLinearTokens.value() ?? null" lang="html" />
+			<itx-code-block language="html" [code]="nonLinearHtml" />
 		</demo-example>
 
 		<demo-example label="Many steps — horizontal scroll on narrow containers">
@@ -146,7 +146,7 @@
 					</section>
 				</interop-stepper>
 			</div>
-			<itx-code-block [tokens]="manyStepsTokens.value() ?? null" lang="html" />
+			<itx-code-block language="html" [code]="manyStepsHtml" />
 		</demo-example>
 
 		<demo-example label="Vertical orientation">
@@ -220,7 +220,7 @@
 					</section>
 				</interop-stepper>
 			</div>
-			<itx-code-block [tokens]="verticalTokens.value() ?? null" lang="html" />
+			<itx-code-block language="html" [code]="verticalHtml" />
 		</demo-example>
 	</demo-section>
 

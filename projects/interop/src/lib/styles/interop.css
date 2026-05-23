@@ -31,6 +31,7 @@
 /*    Token values are layered on top by the active theme.                  */
 
 @import "./components/button.css";
+@import "./components/chip.css";
 @import "./components/dialog.css";
 @import "./components/indicator.css";
 @import "./components/popover.css";
@@ -39,6 +40,16 @@
 @import "./components/table.css";
 @import "./components/tooltip.css";
 @import "./components/resizable.css";
+@import "./components/visimorph.css";
+
+/* ── Composites (structural foundation) ─────────────────────────────────── */
+/*    Higher-level assemblies built atop component primitives. Loaded         */
+/*    globally so consumer overrides via :where() work the same as components.*/
+
+@import "./composites/code-block.css";
+@import "./composites/inline-code.css";
+
+@import "./example-buttons.css";
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */
 

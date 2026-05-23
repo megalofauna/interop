@@ -1,0 +1,93 @@
+/* ── CodeBlock — Protocol theme ──────────────────────────────────────────── */
+
+/*
+ * Token surface:
+ *
+ *   Host
+ *     --itx-cb-radius                       Host border-radius (participates in managed-radius)
+ *     --itx-cb-body-background              Code body background (piped to --itx-cr-body-bg)
+ *
+ *   Header
+ *     --itx-cb-header-background            Header background color
+ *     --itx-cb-header-background-image      Header background-image (gradients, etc.)
+ *     --itx-cb-header-padding-block         Header block padding
+ *     --itx-cb-header-padding-inline        Header inline padding
+ *     --itx-cb-header-gap                   Gap between header items
+ *
+ *   Tablist
+ *     --itx-cb-tablist-border-width         Tablist bottom border thickness
+ *     --itx-cb-tablist-border-color         Tablist bottom border color
+ *
+ *   Tab
+ *     --itx-cb-tab-padding-block            Tab block padding
+ *     --itx-cb-tab-padding-inline           Tab inline padding
+ *     --itx-cb-tab-radius                   Tab top-corner radius
+ *     --itx-cb-tab-font-family              Tab font family
+ *     --itx-cb-tab-font-size                Tab font size
+ *     --itx-cb-tab-foreground               Inactive tab text color
+ *     --itx-cb-tab-foreground-active        Active tab text color
+ *     --itx-cb-tab-indicator-color          Active tab underline color
+ *     --itx-cb-tab-indicator-width          Active tab underline thickness
+ *     --itx-cb-tab-outline-color            Focus-visible outline color
+ *     --itx-cb-tab-outline-width            Focus-visible outline thickness
+ *     --itx-cb-tab-outline-offset           Focus-visible outline offset
+ *     --itx-cb-tab-transition-duration      Tab color transition duration
+ *     --itx-cb-tab-transition-timing        Tab color transition timing function
+ *
+ *   Single-file label
+ *     --itx-cb-label-padding-inline         Label leading inline padding
+ *     --itx-cb-label-foreground             Label text color
+ *     --itx-cb-label-font-size              Label font size
+ *     --itx-cb-label-font-weight            Label font weight
+ *     --itx-cb-label-letter-spacing         Label letter-spacing
+ *
+ *   Actions toolbar
+ *     --itx-cb-actions-radius               Actions toolbar border-radius
+ *     --itx-cb-actions-gap                  Gap between action buttons
+ *     --itx-cb-button-size                  Action button square size
+ */
+
+:where([interop-root] itx-code-block) {
+	/* Host */
+	--itx-cb-radius:                  var(--itx-radius-2);
+	--itx-cb-body-background:         var(--itx-neutral-3);
+
+	/* Header */
+	--itx-cb-header-background:       var(--itx-neutral-3);
+	--itx-cb-header-background-image: none;
+	--itx-cb-header-padding-block:    var(--itx-spacing-2);
+	--itx-cb-header-padding-inline:   var(--itx-spacing-2);
+	--itx-cb-header-gap:              var(--itx-spacing-2);
+
+	/* Tablist */
+	--itx-cb-tablist-border-width:    1px;
+	--itx-cb-tablist-border-color:    var(--itx-border);
+
+	/* Tab */
+	--itx-cb-tab-padding-block:       var(--itx-spacing-2);
+	--itx-cb-tab-padding-inline:      var(--itx-spacing-3);
+	--itx-cb-tab-radius:              0;
+	--itx-cb-tab-font-family:         var(--itx-font-family-mono);
+	--itx-cb-tab-font-size:           var(--itx-font-size-caption);
+	--itx-cb-tab-foreground:          var(--itx-muted);
+	--itx-cb-tab-foreground-active:   var(--itx-on-surface);
+	--itx-cb-tab-indicator-color:     var(--itx-colorway);
+	--itx-cb-tab-indicator-width:     2px;
+	--itx-cb-tab-outline-color:       var(--itx-colorway);
+	--itx-cb-tab-outline-width:       2px;
+	--itx-cb-tab-outline-offset:      2px;
+	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
+	--itx-cb-tab-transition-timing:   var(--itx-easing-standard);
+
+	/* Label */
+	--itx-cb-label-padding-inline:    var(--itx-spacing-3);
+	--itx-cb-label-foreground:        var(--itx-muted);
+	--itx-cb-label-font-size:         var(--itx-font-size-caption);
+	--itx-cb-label-font-weight:       500;
+	--itx-cb-label-letter-spacing:    0.05em;
+
+	/* Actions */
+	--itx-cb-actions-radius:          var(--itx-radius-1);
+	--itx-cb-actions-gap:             var(--itx-spacing-1);
+	--itx-cb-button-size:             1.5em;
+}

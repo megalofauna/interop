@@ -37,10 +37,10 @@
 	/* — Inline code & code blocks — */
 	--interop-content-code-family: var(--itx-font-family-mono);
 	--interop-content-code-font-size: 0.875em;
-	--interop-content-code-color: var(--itx-colorway-12);
-	--interop-content-code-bg: var(--itx-colorway-4);
+	--interop-content-code-color: var(--itx-neutral-12);
+	--interop-content-code-bg: var(--itx-neutral-5);
 	--interop-content-code-padding: 0.125em 0.275em;
-	--interop-content-code-border: 2px solid var(--itx-colorway-6);
+	--interop-content-code-border: 2px solid var(--itx-neutral-6);
 	--interop-content-code-radius: 6px;
 
 	/* — Links — */

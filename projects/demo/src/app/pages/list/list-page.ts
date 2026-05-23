@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject, resource } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { InteropList, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { CodeBlock } from "@interop/composites";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
-import { HighlightService } from "../../services/highlight.service";
 
 interface ApiEntry {
 	name: string;
@@ -23,8 +22,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListPage {
-	private readonly hl = inject(HighlightService);
-
 	crewMembers = [
 		'Commander Reyes',
 		'Pilot Tanaka',
@@ -57,12 +54,6 @@ export class ListPage {
   <li>Bay 3 — Docking ring B (reserved)</li>
   <li>Bay 4 — Offline for maintenance</li>
 </ul>`;
-
-	// ── Highlighted tokens ───────────────────────────────────────────────────
-	readonly unorderedTokens = resource({ loader: () => this.hl.highlight(this.unorderedCode, "html") });
-	readonly orderedTokens = resource({ loader: () => this.hl.highlight(this.orderedCode, "html") });
-	readonly templateTokens = resource({ loader: () => this.hl.highlight(this.templateCode, "html") });
-	readonly staticTokens = resource({ loader: () => this.hl.highlight(this.staticCode, "html") });
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "name", label: "Input" },

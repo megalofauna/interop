@@ -37,7 +37,8 @@
 	</div>
 	} @else {
 	<button
-		interop-button="protocol md"
+		interop-button="protocol"
+		itx-size="md"
 		type="button"
 		class="interop-stepper__nav-trigger"
 		[interop-popover-trigger]="menuPopover"
@@ -162,7 +163,8 @@
 		@if (menu() === "always") {
 		<button
 			type="button"
-			interop-button="protocol icon sm"
+			interop-button="protocol icon"
+			itx-size="sm"
 			class="interop-stepper__menu-trigger"
 			[interop-popover-trigger]="menuPopover"
 			[popoverHaspopup]="'menu'"

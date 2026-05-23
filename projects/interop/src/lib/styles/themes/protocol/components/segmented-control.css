@@ -11,68 +11,79 @@
  */
 
 :where([interop-root]) {
+	/* ── Managed radii ──────────────────────────────────────────────── */
+	--itx-outer-radius: var(--itx-radius-2);
+	--itx-inner-radius: calc(
+		var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
+	);
+
 	/* ── Container — track ──────────────────────────────────────────────── */
 	--itx-segmented-control-track-display: flex;
-	--itx-segmented-control-track-align-items: stretch;
-	--itx-segmented-control-track-justify-content: stretch;
+	--itx-segmented-control-track-align-items: initial;
+	--itx-segmented-control-track-justify-content: flex-start;
 	--itx-segmented-control-track-row-gap: 0;
-	--itx-segmented-control-track-flex-direction: column;
+	--itx-segmented-control-track-column-gap: 0;
+	--itx-segmented-control-track-flex-direction: row;
 	--itx-segmented-control-track-background-color: var(--itx-neutral-3);
-	--itx-segmented-control-track-border-color: var(--itx-neutral-2);
-	--itx-segmented-control-track-border-width: 2px;
+	--itx-segmented-control-track-background-image: none;
+	--itx-segmented-control-track-border-color: transparent;
+	--itx-segmented-control-track-border-width: 0;
 	--itx-segmented-control-track-border-style: solid;
-	--itx-segmented-control-track-border-radius: var(--itx-radius-3);
-	--itx-segmented-control-track-padding: var(--itx-spacing-1);
-	--itx-segmented-control-track-box-shadow: inset 0 4px 2px 0 rgb(0 0 0 / 0.1);
+	--itx-segmented-control-track-border-radius: var(--itx-outer-radius);
+	--itx-segmented-control-track-border-radius: 0;
+	--itx-segmented-control-track-padding: 0;
+	--itx-segmented-control-track-max-width: none;
 
-	/* ── Inter-segment rule (global rule utility) ───────────────────────── */
-	/* Set on [interop-root] so any flex container hosting <hr itx-rule>
-	   children picks these up. Override locally on a specific control if
-	   the divider needs to differ from the default. */
-	--itx-rule-color: var(--itx-neutral-1);
-	--itx-rule-width: 1px;
+	/*--itx-segmented-control-track-box-shadow: inset 0 4px 2px 0 rgb(0 0 0 / 0.1);*/
+
+	/* ── Inter-segment rule ─────────────────────────────────────────────── */
+	/* Consumed by the segment ::before divider and by any <hr itx-rule>
+	   the consumer places explicitly. Override locally on a specific control
+	   if the divider needs to differ from the default. */
+	--itx-rule-color: transparent;
+	--itx-rule-width: 0;
 
 	/* ── Segment — layout / typography ──────────────────────────────────── */
 	--itx-segment-display: flex;
-	--itx-segment-padding-block: var(--itx-spacing-2);
-	--itx-segment-padding-inline: var(--itx-spacing-4);
+	--itx-segment-padding-block: 0;
+	--itx-segment-padding-inline: 0;
 	--itx-segment-min-width: 0;
+	--itx-segment-flex: 0 0 fit-content;
 
 	--itx-segment-font-family: var(--itx-font-family-sans);
 	--itx-segment-font-size: var(--itx-fs-label);
-	--itx-segment-font-weight: 500;
-	--itx-segment-font-weight-selected: 600;
+	--itx-segment-font-weight: 400;
+	--itx-segment-font-weight-selected: 500;
 
 	/* ── Segment — visual structure (no state variants) ─────────────────── */
 	--itx-segment-border-width: 2px;
-	--itx-segment-border-style: dashed;
-	--itx-segment-border-radius: var(--itx-radius-2);
+	--itx-segment-border-radius: var(--itx-inner-radius);
 
 	/* ── Segment — rest state ───────────────────────────────────────────── */
 	--itx-segment-background: transparent;
-	--itx-segment-foreground: var(--itx-neutral-10);
+	--itx-segment-foreground: var(--itx-neutral-12);
 	--itx-segment-border-color: transparent;
 
 	/* ── Segment — hover state ──────────────────────────────────────────── */
-	--itx-segment-background-hover: var(--itx-neutral-4);
-	--itx-segment-foreground-hover: var(--itx-neutral-10);
-	--itx-segment-border-color-hover: var(--itx-neutral-5);
+	--itx-segment-background-hover: var(--itx-neutral-6);
+	--itx-segment-foreground-hover: var(--itx-neutral-12);
+	/*--itx-segment-border-color-hover: var(--itx-neutral-7);*/
 
 	/* ── Segment — selected state ───────────────────────────────────────── */
 	/* Background defaults to the indicator pill colour via the component CSS
 	   fallback chain — only set this if you want the selected segment to
 	   diverge from the pill (rare). */
-	--itx-segment-foreground-selected: var(--itx-neutral-11);
+	--itx-segment-foreground-selected: var(--itx-neutral-3);
 
 	/* ── Segment — focus ring ───────────────────────────────────────────── */
-	--itx-segment-outline-width: 1px;
+	--itx-segment-outline-width: 2px;
 	--itx-segment-outline-style: solid;
-	--itx-segment-outline-color: var(--itx-colorway-8);
-	--itx-segment-outline-offset: -2px;
+	--itx-segment-outline-color: var(--itx-neutral-12);
+	--itx-segment-outline-offset: 1px;
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
-	--itx-segment-transition-duration: 96ms;
-	--itx-segment-transition-timing-function: ease-in;
+	--itx-segment-transition-duration: 48ms;
+	--itx-segment-transition-timing-function: ease-in-out;
 
 	/* ── Segment — disabled ─────────────────────────────────────────────── */
 	--itx-segment-disabled-opacity: 0.4;

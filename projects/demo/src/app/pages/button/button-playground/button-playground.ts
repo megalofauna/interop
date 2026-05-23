@@ -6,8 +6,6 @@ import {
 } from "@angular/core";
 import {
 	InteropButton,
-	InteropChipFilter,
-	InteropChipOption,
 	InteropSegment,
 	InteropSegmentedControl,
 } from 'interop';
@@ -51,8 +49,6 @@ const RADII: ReadonlySet<string> = new Set([
 		InteropButton,
 		InteropSegmentedControl,
 		InteropSegment,
-		InteropChipFilter,
-		InteropChipOption,
 	],
 	templateUrl: "./button-playground.html",
 	styleUrl: "./button-playground.scss",

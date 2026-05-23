@@ -36,9 +36,7 @@
 				>
 				<demo-state-item label="aria-valuetext">(none)</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="basicTokens.value() ?? null">
-				<pre><code [textContent]="basicCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="basicCode" />
 		</demo-example>
 	</demo-section>
 
@@ -75,9 +73,7 @@
 					>(unset — SR announces raw number)</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="currencyTokens.value() ?? null">
-				<pre><code [textContent]="currencyCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="currencyCode" />
 		</demo-example>
 
 		<demo-example
@@ -105,9 +101,7 @@
 					>{{ sizeFormatter(sizeIndex()) }}</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="sizesTokens.value() ?? null">
-				<pre><code [textContent]="sizesCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="sizesCode" />
 		</demo-example>
 	</demo-section>
 
@@ -140,9 +134,7 @@
 			<demo-state>
 				<demo-state-item label="value">{{ quality() }}</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="marksTokens.value() ?? null">
-				<pre><code [textContent]="marksCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="marksCode" />
 		</demo-example>
 	</demo-section>
 
@@ -195,9 +187,7 @@
 				>
 				<demo-state-item label="end">{{ priceRange().end }}</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="rangeTokens.value() ?? null">
-				<pre><code [textContent]="rangeCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="rangeCode" />
 		</demo-example>
 	</demo-section>
 
@@ -217,9 +207,7 @@
 					Temp: {{ temperature() }}°
 				</div>
 			</div>
-			<itx-code-block language="html" [tokens]="verticalTokens.value() ?? null">
-				<pre><code [textContent]="verticalCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="verticalCode" />
 		</demo-example>
 	</demo-section>
 
@@ -253,9 +241,7 @@
 					>{{ lastSubmittedFormData() }}</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block language="html" [tokens]="formTokens.value() ?? null">
-				<pre><code [textContent]="formCode"></code></pre>
-			</itx-code-block>
+			<itx-code-block language="html" [code]="formCode" />
 		</demo-example>
 	</demo-section>
 

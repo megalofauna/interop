@@ -1,9 +1,6 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
-	computed,
-	inject,
-	resource,
 	signal,
 } from "@angular/core";
 import {
@@ -15,7 +12,6 @@ import {
 	type TableColumn,
 } from "interop";
 import { CodeBlock, type CodeFile } from "@interop/composites";
-import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
@@ -50,8 +46,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogPage {
-	private readonly hl = inject(HighlightService);
-
 	basicOpen = signal(false);
 	closeReason = signal<string>("—");
 
@@ -75,8 +69,8 @@ export class DialogPage {
   <p>Vessel ID: UCS-7741 requests permission to dock at Bay 3.</p>
   <p>ETA: 14 minutes. Cargo: general supply run.</p>
   <div class="actions">
-    <button interop-button="action md" (click)="basicOpen.set(false)">Deny</button>
-    <button interop-button="action-plus md" (click)="basicOpen.set(false)">Approve</button>
+    <button interop-button="action" itx-size="md" (click)="basicOpen.set(false)">Deny</button>
+    <button interop-button="action-plus" itx-size="md" (click)="basicOpen.set(false)">Approve</button>
   </div>
 </dialog>`;
 
@@ -140,40 +134,22 @@ lockedOpen = signal(false);`;
 	readonly autoCloseTs = `\
 formOpen = signal(false);`;
 
-	// ── Highlighted tokens ───────────────────────────────────────────────────
+	// ── Code files ───────────────────────────────────────────────────────────
 
-	readonly basicHtmlTokens = resource({
-		loader: () => this.hl.highlight(this.basicHtml, "html"),
-	});
-	readonly basicTsTokens = resource({
-		loader: () => this.hl.highlight(this.basicTs, "typescript"),
-	});
-	readonly basicFiles = computed<CodeFile[]>(() => [
-		{ label: "HTML", language: "html", tokens: this.basicHtmlTokens.value() ?? null },
-		{ label: "TS", language: "typescript", tokens: this.basicTsTokens.value() ?? null },
-	]);
+	readonly basicFiles: CodeFile[] = [
+		{ label: "HTML", language: "html", code: this.basicHtml },
+		{ label: "TS", language: "typescript", code: this.basicTs },
+	];
 
-	readonly lockedHtmlTokens = resource({
-		loader: () => this.hl.highlight(this.lockedHtml, "html"),
-	});
-	readonly lockedTsTokens = resource({
-		loader: () => this.hl.highlight(this.lockedTs, "typescript"),
-	});
-	readonly lockedFiles = computed<CodeFile[]>(() => [
-		{ label: "HTML", language: "html", tokens: this.lockedHtmlTokens.value() ?? null },
-		{ label: "TS", language: "typescript", tokens: this.lockedTsTokens.value() ?? null },
-	]);
+	readonly lockedFiles: CodeFile[] = [
+		{ label: "HTML", language: "html", code: this.lockedHtml },
+		{ label: "TS", language: "typescript", code: this.lockedTs },
+	];
 
-	readonly autoCloseHtmlTokens = resource({
-		loader: () => this.hl.highlight(this.autoCloseHtml, "html"),
-	});
-	readonly autoCloseTsTokens = resource({
-		loader: () => this.hl.highlight(this.autoCloseTs, "typescript"),
-	});
-	readonly autoCloseFiles = computed<CodeFile[]>(() => [
-		{ label: "HTML", language: "html", tokens: this.autoCloseHtmlTokens.value() ?? null },
-		{ label: "TS", language: "typescript", tokens: this.autoCloseTsTokens.value() ?? null },
-	]);
+	readonly autoCloseFiles: CodeFile[] = [
+		{ label: "HTML", language: "html", code: this.autoCloseHtml },
+		{ label: "TS", language: "typescript", code: this.autoCloseTs },
+	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "name", label: "Input" },

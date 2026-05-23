@@ -1,9 +1,6 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
-	computed,
-	inject,
-	resource,
 	signal,
 } from "@angular/core";
 import {
@@ -21,8 +18,6 @@ import {
 import { TablerCaretUp } from "interop/lib/iconsets/tabler/outline/tabler-caret-up";
 import { TablerInfoCircle } from "interop/lib/iconsets/tabler/outline/tabler-info-circle";
 import { TablerTarget } from "interop/lib/iconsets/tabler/outline/tabler-target";
-import { CodeBlock, type CodeFile } from "@interop/composites";
-import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import {
@@ -50,7 +45,6 @@ interface ApiEntry {
 		InteropIcon,
 		InteropTable,
 		InteropCellDef,
-		CodeBlock,
 		DemoSection,
 		DemoExample,
 		DemoNotes,
@@ -63,8 +57,6 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopoverPage {
-	private readonly hl = inject(HighlightService);
-
 	readonly placements: PopoverPlacement[] = [
 		"top-end",
 		"top",
@@ -135,7 +127,7 @@ export class PopoverPage {
 
 	readonly placementHtml = `\
 @for (p of placements; track p) {
-  <button interop-button="xs" (click)="showPlacement(p, placedRef)">
+  <button interop-button itx-size="xs" (click)="showPlacement(p, placedRef)">
     {{ p }}
   </button>
 }
@@ -190,45 +182,6 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 <div #manualMode="interopPopover" interop-popover [popoverType]="'manual'">
   <p>Stays open until you click the trigger again.</p>
 </div>`;
-
-	// ── Highlighted tokens ───────────────────────────────────────────────────
-
-	readonly basicTokens = resource({
-		loader: () => this.hl.highlight(this.basicHtml, "html"),
-	});
-
-	readonly builtinArrowTokens = resource({
-		loader: () => this.hl.highlight(this.builtinArrowHtml, "html"),
-	});
-
-	readonly customArrowTokens = resource({
-		loader: () => this.hl.highlight(this.customArrowHtml, "html"),
-	});
-
-	readonly placementHtmlTokens = resource({
-		loader: () => this.hl.highlight(this.placementHtml, "html"),
-	});
-
-	readonly placementTsTokens = resource({
-		loader: () => this.hl.highlight(this.placementTs, "typescript"),
-	});
-
-	readonly placementFiles = computed<CodeFile[]>(() => [
-		{
-			label: "HTML",
-			tokens: this.placementHtmlTokens.value() ?? null,
-			lang: "html",
-		},
-		{
-			label: "TS",
-			tokens: this.placementTsTokens.value() ?? null,
-			lang: "typescript",
-		},
-	]);
-
-	readonly modesTokens = resource({
-		loader: () => this.hl.highlight(this.modesHtml, "html"),
-	});
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "component", label: "Directive", sticky: true },

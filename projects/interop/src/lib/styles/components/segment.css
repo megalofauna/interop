@@ -54,10 +54,11 @@
  *   Disabled
  *   --itx-segment-disabled-opacity
  *
- * Inter-segment dividers are <hr itx-rule> elements that the container
- * auto-injects between segments. They're styled by the global rule utility
- * (styles/utilities/rule.css) — tune colour and thickness via
- * --itx-rule-{color,width} on any ancestor.
+ * Inter-segment dividers are rendered as a ::before pseudo-element on each
+ * non-first segment via the adjacent-sibling combinator. Tune colour and
+ * thickness via --itx-rule-{color,width} on any ancestor. A consumer can
+ * suppress the pseudo divider in a given gap by placing their own
+ * <hr itx-rule> there — adjacency breaks and the explicit markup wins.
  */
 
 /* ── Base ────────────────────────────────────────────────────────────────── */
@@ -67,11 +68,12 @@
 	appearance: none;
 
 	display: var(--itx-segment-display, inline-flex);
+	justify-content: center;
 	align-items: stretch;
 	flex: var(--itx-segment-flex);
 
-	padding-block: var(--itx-segment-padding-block, 0.25rem);
-	padding-inline: var(--itx-segment-padding-inline, 0.75rem);
+	padding-block: var(--itx-segment-padding-block, 0rem);
+	padding-inline: var(--itx-segment-padding-inline, 0rem);
 	min-width: var(--itx-segment-min-width, 0);
 
 	font-family: var(--itx-segment-font-family, inherit);
@@ -109,22 +111,43 @@
 	--_foreground: var(--itx-segment-foreground, inherit);
 	--_border-color: var(--itx-segment-border-color, transparent);
 	--_font-weight: var(--itx-segment-font-weight, inherit);
+}
 
-	/* Compensate the axis-rule pseudo for our own padding + border so the
-	   rule lands at our outer edge instead of our content edge. (Buttons
-	   resolve their pseudo's containing block to the content box.) */
-	--itx-axis-rule-block-offset: calc(
-		var(--itx-segment-padding-block, 8px) + var(--itx-segment-border-width, 2px)
-	);
-	--itx-axis-rule-block-offset: -8px;
-	--itx-axis-rule-inline-offset: calc(
-		var(--itx-segment-padding-inline, 0px) +
-			var(--itx-segment-border-width, 0px)
-	);
+/* ── Inter-segment divider ───────────────────────────────────────────────── */
+/*
+ * Pseudo-element rule between adjacent segments. Replaces the prior approach
+ * of imperatively injecting <hr itx-rule> children, which required segments
+ * to be direct fieldset children and had timing fragility against Angular's
+ * content-projection lifecycle.
+ *
+ * Adjacent-sibling combinator means a manually-authored separator (e.g.
+ * <hr itx-rule> placed between segments by the consumer) breaks adjacency
+ * and suppresses this pseudo automatically — explicit markup still wins.
+ *
+ * Skipped on either side of the selected segment so the divider never
+ * overlays the active indicator pill.
+ *
+ * Tokens consumed (set on any ancestor):
+ *   --itx-rule-color   divider colour (default: currentColor)
+ *   --itx-rule-width   divider thickness (default: 0)
+ */
+:where(
+	button[interop-segment]:not([aria-pressed="true"])
+		+ button[interop-segment]:not([aria-pressed="true"])
+)::before {
+	content: "";
+	position: absolute;
+	inset-block: 0;
+	inset-inline-start: 0;
+	width: var(--itx-rule-width, 0);
+	background-color: var(--itx-rule-color, currentColor);
+	pointer-events: none;
 }
 
 :where(
-	button[interop-segment]:hover:not([aria-pressed="true"]):not(:disabled):not([data-disabled])
+	button[interop-segment]:hover:not([aria-pressed="true"]):not(:disabled):not(
+			[data-disabled]
+		)
 ) {
 	--_background: var(
 		--itx-segment-background-hover,
@@ -138,6 +161,15 @@
 		--itx-segment-border-color-hover,
 		var(--itx-segment-border-color, transparent)
 	);
+}
+
+:where([interop-segmented-control~="icon"]) {
+	[interop-segment] {
+		/*padding: 0.5rem;*/
+		/*margin: 4px;*/
+		/*height: auto;*/
+		/*aspect-ratio: 1 / 1;*/
+	}
 }
 
 /*

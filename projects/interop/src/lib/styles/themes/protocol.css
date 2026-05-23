@@ -53,8 +53,11 @@
 @import "./protocol/components/toast.css";
 @import "./protocol/components/tooltip.css";
 @import "./protocol/components/resizable.css";
+@import "./protocol/components/visimorph.css";
 
 /* ── Composites ─────────────────────────────────────────────────────────── */
 
+@import "./protocol/composites/code-block.css";
+@import "./protocol/composites/inline-code.css";
 @import "./protocol/composites/page-nav.css";
 @import "./protocol/composites/terminal.css";

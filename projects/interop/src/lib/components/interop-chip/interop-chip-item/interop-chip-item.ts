@@ -48,7 +48,6 @@ import {
 			</button>
 		}
 	`,
-	styleUrl: "./interop-chip-item.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"[attr.data-removable]": 'removable() ? "" : null',

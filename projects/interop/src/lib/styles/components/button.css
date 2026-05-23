@@ -79,12 +79,9 @@
 	corner-shape: var(--itx-button-corner-shape, initial);
 
 	padding-block: calc(
-		var(--itx-button-padding-block) * var(--itx-button-sizing-multiplier, 1) +
-			var(--itx-button-touch-inset, 0.25em)
+		var(--itx-button-padding-block) + var(--itx-button-touch-inset, 0.25em)
 	);
-	padding-inline: calc(
-		var(--itx-button-padding-inline) * var(--itx-button-sizing-multiplier, 1)
-	);
+	padding-inline: var(--itx-button-padding-inline);
 	width: var(--itx-button-width, auto);
 	max-width: var(--itx-button-max-width, initial);
 	flex: var(--itx-button-flex, initial);
@@ -166,7 +163,7 @@
 	border-color: var(--_border-color);
 	border-radius: var(
 		--itx-button-border-radius,
-		var(--itx-context-radius, var(--itx-radius-2))
+		var(--itx-context-radius, initial)
 	);
 	box-shadow: var(--_box-shadow);
 	corner-shape: var(--itx-button-corner-shape, initial);

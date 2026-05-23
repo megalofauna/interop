@@ -5,6 +5,7 @@
 // Export components here as they are created
 export * from "./interop-list/interop-list";
 export * from "./interop-button/interop-button";
+export * from "./interop-button/interop-button-activation";
 export * from "./interop-button/interop-button-map";
 export * from "./interop-button/interop-button-prefix";
 export * from "./interop-button/interop-button-suffix";
