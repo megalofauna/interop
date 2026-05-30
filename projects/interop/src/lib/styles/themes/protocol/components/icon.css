@@ -1,0 +1,18 @@
+/*
+ * InteropIcon — Protocol theme.
+ *
+ * The icon's primary visual property — `color` — defaults to
+ * `currentColor` via the structural slot, so icons inherit their text
+ * context (a button's foreground, a heading's color, etc.) without any
+ * theme declaration. The theme therefore only sets values for the dev-
+ * mode missing-icon placeholder and any future iconset-aware overrides.
+ *
+ * Structural rules live in `styles/components/icon.css` — this file only
+ * declares values.
+ */
+
+:where([interop-root]) {
+	/* ── Missing-icon placeholder (dev only) ───────────────────────────── */
+	--itx-icon-missing-color: var(--itx-danger);
+	--itx-icon-missing-opacity: 0.35;
+}

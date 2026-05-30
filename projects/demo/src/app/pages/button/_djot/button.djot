@@ -1,7 +1,7 @@
 {#overview}
 :::
-Rather than providing a limited set of predefined button variants (although we do that, too), Interop provides a button theming
-system that allows wide-open access to a few dozen CSS surfaces.
+InteropButton styles are driven purely by Interop\'s bundled CSS.
+Use our prerolls (and roll your own) with no imports (not even InteropButton) and no associated bundle cost.
 :::
 {#sizes}
 :::

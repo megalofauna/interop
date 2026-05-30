@@ -1,0 +1,108 @@
+/*
+ * InteropExpansionPanel — Protocol theme.
+ *
+ * Sets values for the panel host's chrome, the body's interior, the body
+ * animation/peek tokens, and the contextual button-token overrides that
+ * give the trigger its appearance.
+ *
+ * Structural rules live in `styles/components/expansion-panel.css` — this
+ * file only declares values.
+ *
+ * Visual target:
+ *   Subtly bordered card with a transparent rest background, a slightly
+ *   raised expanded state (colorway-tinted border + soft shadow), full-
+ *   width trigger that reads as part of the card (no chrome of its own
+ *   until hovered), and a 1px hairline divider between trigger and body
+ *   when open.
+ */
+
+:where([interop-root]) {
+	/* ── Panel host — frame (rest) ──────────────────────────────────────── */
+	--itx-expansion-panel-background: var(--itx-neutral-2);
+	--itx-expansion-panel-background-image: none;
+	--itx-expansion-panel-foreground: var(--itx-on-surface);
+	--itx-expansion-panel-border-width: 1px;
+	--itx-expansion-panel-border-style: solid;
+	--itx-expansion-panel-border-color: var(--itx-border);
+	--itx-expansion-panel-border-radius: var(--itx-radius-2);
+	--itx-expansion-panel-box-shadow: none;
+	--itx-expansion-panel-padding: 0;
+
+	/* ── Panel host — expanded state ────────────────────────────────────── */
+	--itx-expansion-panel-background-expanded: var(--itx-neutral-2);
+	--itx-expansion-panel-border-color-expanded: var(--itx-colorway-8);
+	--itx-expansion-panel-box-shadow-expanded: 0 4px 12px rgb(0 0 0 / 0.06);
+
+	/* ── Disabled state ─────────────────────────────────────────────────── */
+	--itx-expansion-panel-disabled-opacity: 0.5;
+
+	/* ── Transition ─────────────────────────────────────────────────────── */
+	--itx-expansion-panel-transition-property: background-color, border-color,
+		box-shadow;
+	--itx-expansion-panel-transition-duration: var(--itx-duration-fast);
+	--itx-expansion-panel-transition-timing-function: var(--itx-easing-standard);
+
+	/* ── Body — interior ────────────────────────────────────────────────── */
+	--itx-expansion-panel-body-background: transparent;
+	--itx-expansion-panel-body-background-image: none;
+	--itx-expansion-panel-body-padding: var(--itx-spacing-4);
+
+	/* ── Body — divider ─────────────────────────────────────────────────── */
+	--itx-expansion-panel-body-divider-width: 1px;
+	--itx-expansion-panel-body-divider-style: solid;
+	--itx-expansion-panel-body-divider-color: var(--itx-border);
+
+	/* ── Body — animation ───────────────────────────────────────────────── */
+	--itx-expansion-panel-body-transition-duration: var(--itx-duration-base);
+	--itx-expansion-panel-body-transition-easing: var(--itx-easing-standard);
+
+	/* ── Body — peek mode ───────────────────────────────────────────────── */
+	--itx-expansion-panel-body-peek-height: 4rem;
+	--itx-expansion-panel-body-peek-fade-height: 2.5rem;
+	--itx-expansion-panel-body-peek-fade-color: var(--itx-page);
+}
+
+/* ── Trigger — contextual button-token overrides ────────────────────────── */
+/*
+ * The trigger is a `<button interop-button interop-expansion-trigger>`.
+ * Re-assigning button tokens inside the panel scope styles it without
+ * inventing a parallel `--itx-expansion-panel-trigger-*` token line.
+ * `--itx-button-outline-offset: -2px` tucks the focus ring inside the
+ * panel's clipped border-radius so it remains visible.
+ */
+
+:where(interop-expansion-panel) {
+	/* Layout — full width, left-aligned content, optional chevron on right */
+	--itx-button-width: 100%;
+	--itx-button-max-width: none;
+	--itx-button-flex: 1;
+	--itx-button-justify-content: space-between;
+	--itx-button-border-radius: 0;
+	--itx-button-outline-offset: -2px;
+
+	/* Rest */
+	--itx-button-background: transparent;
+	--itx-button-foreground: var(--itx-on-surface);
+	--itx-button-border-color: transparent;
+
+	/* Hover */
+	--itx-button-background-hover: var(--itx-surface-hover);
+	--itx-button-foreground-hover: var(--itx-on-surface);
+
+	/* Active */
+	--itx-button-background-active: var(--itx-neutral-4);
+	--itx-button-foreground-active: var(--itx-on-surface);
+}
+
+/*
+ * Expanded state — subtle trigger tint so the user reads the trigger as
+ * "the heading of the open card". Same tokens are re-assigned; the more
+ * specific (two-attribute) selector wins for source-order reasons inside
+ * :where() — both rules are zero-specificity so the later declaration
+ * applies when the state is active.
+ */
+
+:where(interop-expansion-panel[data-expanded]) {
+	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-foreground: var(--itx-on-surface);
+}

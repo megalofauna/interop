@@ -1,0 +1,68 @@
+/*
+ * InteropToolbar — Protocol theme.
+ *
+ * Sets values for the toolbar's own tokens and applies contextual button
+ * overrides so buttons projected into a toolbar adopt a flat, minimal
+ * appearance that reads as toolbar chrome rather than as standalone
+ * actions. Structural rules live in `styles/rigs/toolbar.css` — this file
+ * only declares values.
+ *
+ * The contextual button overrides are scoped to the toolbar selector
+ * (not :where([interop-root])) so the flat styling stops at the toolbar
+ * boundary. CSS custom properties cascade through descendants by default,
+ * so any button — direct child, inside a toolbar-group, or nested
+ * arbitrarily deep — picks up the contextual values.
+ */
+
+/* ── Toolbar tokens ──────────────────────────────────────────────────────── */
+
+:where([interop-root]) {
+	/* Layout */
+	--itx-toolbar-gap: var(--itx-spacing-1);
+
+	/* Frame */
+	--itx-toolbar-padding: var(--itx-spacing-1) var(--itx-spacing-1);
+	--itx-toolbar-background: var(--itx-neutral-3);
+	--itx-toolbar-border-width: 2px;
+	--itx-toolbar-border-color: transparent;
+	--itx-toolbar-border-radius: var(--itx-radius-full);
+
+	/* State */
+	--itx-toolbar-disabled-opacity: 0.6;
+
+	/* Group */
+	--itx-toolbar-group-gap: var(--itx-spacing-1);
+}
+
+/* ── Contextual button overrides ─────────────────────────────────────────── */
+/*
+ * Buttons inside a toolbar adopt a transparent, flat appearance — the
+ * toolbar itself supplies the frame, and individual buttons should not
+ * stack visual weight on top of it.
+ */
+
+:where(interop-toolbar),
+:where([interop-toolbar]) {
+	--itx-button-display: inline-flex;
+
+	--itx-button-font-family: inherit;
+	--itx-button-font-size: inherit;
+	--itx-button-line-height: 1.25;
+
+	--itx-button-padding-block: var(--itx-spacing-1);
+	--itx-button-padding-inline: var(--itx-spacing-1);
+
+	--itx-button-border-width: 2px;
+	--itx-button-border-style: solid;
+
+	--itx-button-background: transparent;
+	--itx-button-foreground: var(--itx-on-surface);
+
+	--itx-button-background-hover: var(--itx-neutral-10);
+	--itx-button-foreground-hover: var(--itx-neutral-2);
+	--itx-button-border-color-hover: inherit;
+
+	--itx-button-background-active: inherit;
+	--itx-button-foreground-active: inherit;
+	--itx-button-border-color-active: inherit;
+}

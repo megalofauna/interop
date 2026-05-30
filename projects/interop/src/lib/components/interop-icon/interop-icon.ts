@@ -73,7 +73,6 @@ import { InteropIconDefinition, InteropIconRegistry } from "../../iconsets/core"
   standalone: true,
   imports: [],
   templateUrl: "./interop-icon.html",
-  styleUrl: "./interop-icon.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropIcon {

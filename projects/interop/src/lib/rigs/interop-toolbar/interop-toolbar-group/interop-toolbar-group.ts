@@ -62,7 +62,6 @@ import {
   standalone: true,
   imports: [CommonModule],
   templateUrl: "./interop-toolbar-group.html",
-  styleUrl: "./interop-toolbar-group.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     "[attr.role]": "groupRole()",

@@ -23,7 +23,7 @@
  */
 
 :where([interop-root] itx-inline-code) {
-	--itx-ic-background: var(--itx-neutral-3);
+	--itx-ic-background: var(--itx-neutral-4);
 	--itx-ic-foreground: var(--itx-on-surface);
 
 	--itx-ic-radius: var(--itx-radius-full);

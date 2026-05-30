@@ -69,7 +69,6 @@ import {
   standalone: true,
   imports: [CommonModule],
   templateUrl: "./interop-toolbar.html",
-  styleUrl: "./interop-toolbar.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: "toolbar",

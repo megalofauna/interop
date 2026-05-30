@@ -1,5 +1,12 @@
 import { Component, ChangeDetectionStrategy, input } from "@angular/core";
 
+type DemoSectionChips = [
+	{
+		label: string;
+		size: string;
+	},
+];
+
 @Component({
 	selector: "demo-section",
 	standalone: true,
@@ -18,4 +25,10 @@ import { Component, ChangeDetectionStrategy, input } from "@angular/core";
 export class DemoSection {
 	id = input.required<string>();
 	heading = input.required<string>();
+	chips = input<DemoSectionChips>([
+		{
+			label: "css only",
+			size: "sm",
+		},
+	]);
 }

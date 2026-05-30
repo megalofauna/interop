@@ -29,7 +29,7 @@
 	overflow: hidden;
 
 	/* Pipe the composite-level body background into the renderer's token. */
-	--itx-cr-body-bg: var(--itx-cb-body-background, var(--itx-neutral-3));
+	--itx-cb-body-bg: var(--itx-cb-body-background);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -38,9 +38,11 @@
 	display: flex;
 	align-items: center;
 	gap: var(--itx-cb-header-gap, var(--itx-spacing-2));
-	padding-block: var(--itx-cb-header-padding-block, var(--itx-spacing-2));
-	padding-inline: var(--itx-cb-header-padding-inline, var(--itx-spacing-2));
-	background-color: var(--itx-cb-header-background, var(--itx-neutral-3));
+	padding-block: 0;
+	padding-inline: var(--itx-cb-header-padding-inline);
+	padding-inline: 0;
+	/*background-color: var(--itx-cb-header-background, transparent);*/
+
 	background-image: var(--itx-cb-header-background-image, none);
 }
 
@@ -110,17 +112,36 @@
 
 :where(itx-code-block .itx-cb__actions) {
 	flex: 0 1 auto;
-	margin-inline-start: auto;
+	/*margin-inline-start: auto;*/
 	border-radius: var(--itx-cb-actions-radius, var(--itx-radius-1));
 	--itx-toolbar-gap: var(--itx-cb-actions-gap, var(--itx-spacing-1));
 }
 
 :where(itx-code-block .itx-cb__btn) {
-	width: var(--itx-cb-button-size, 1.5em);
-	height: var(--itx-cb-button-size, 1.5em);
-	aspect-ratio: 1;
-	--itx-button-border-radius: 9999px;
-	corner-shape: round;
+	--itx-button-border-radius: var(--itx-radius-full);
+	/*position: absolute;
+	inset: 4px 4px auto auto;*/
+	transition-property: background-color, background, color;
+	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-foreground: var(--itx-neutral-9);
+	--itx-button-transition-duration: 300ms;
+	--itx-button-transition-timing-function: ease-out;
+
+	&:hover {
+		--itx-button-background-hover: var(--itx-neutral-11);
+		--itx-button-foreground-hover: var(--itx-colorway-6);
+		--itx-button-transition-duration: 75ms;
+		transition-duration: var(--itx-button-transition-duration);
+		--itx-button-transition-timing-function: ease-in;
+	}
+
+	interop-icon {
+		--itx-icon-stroke-width: 2px;
+	}
+	&[aria-pressed="true"] {
+		--itx-button-background: var(--itx-neutral-6);
+		--itx-button-foreground: var(--itx-neutral-12);
+	}
 }
 
 /* ── Screen-reader live region ───────────────────────────────────────────── */

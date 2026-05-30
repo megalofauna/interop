@@ -49,45 +49,45 @@
 
 :where([interop-root] itx-code-block) {
 	/* Host */
-	--itx-cb-radius:                  var(--itx-radius-2);
-	--itx-cb-body-background:         var(--itx-neutral-3);
+	--itx-cb-radius: var(--itx-radius-2);
+	--itx-cb-body-background: var(--itx-neutral-1);
 
 	/* Header */
-	--itx-cb-header-background:       var(--itx-neutral-3);
+	--itx-cb-header-background: var(--itx-neutral-3_5);
 	--itx-cb-header-background-image: none;
-	--itx-cb-header-padding-block:    var(--itx-spacing-2);
-	--itx-cb-header-padding-inline:   var(--itx-spacing-2);
-	--itx-cb-header-gap:              var(--itx-spacing-2);
+	--itx-cb-header-padding-block: var(--itx-spacing-2);
+	--itx-cb-header-padding-inline: var(--itx-spacing-2);
+	--itx-cb-header-gap: var(--itx-spacing-2);
 
 	/* Tablist */
-	--itx-cb-tablist-border-width:    1px;
-	--itx-cb-tablist-border-color:    var(--itx-border);
+	--itx-cb-tablist-border-width: 1px;
+	--itx-cb-tablist-border-color: var(--itx-border);
 
 	/* Tab */
-	--itx-cb-tab-padding-block:       var(--itx-spacing-2);
-	--itx-cb-tab-padding-inline:      var(--itx-spacing-3);
-	--itx-cb-tab-radius:              0;
-	--itx-cb-tab-font-family:         var(--itx-font-family-mono);
-	--itx-cb-tab-font-size:           var(--itx-font-size-caption);
-	--itx-cb-tab-foreground:          var(--itx-muted);
-	--itx-cb-tab-foreground-active:   var(--itx-on-surface);
-	--itx-cb-tab-indicator-color:     var(--itx-colorway);
-	--itx-cb-tab-indicator-width:     2px;
-	--itx-cb-tab-outline-color:       var(--itx-colorway);
-	--itx-cb-tab-outline-width:       2px;
-	--itx-cb-tab-outline-offset:      2px;
+	--itx-cb-tab-padding-block: var(--itx-spacing-2);
+	--itx-cb-tab-padding-inline: var(--itx-spacing-3);
+	--itx-cb-tab-radius: 0;
+	--itx-cb-tab-font-family: var(--itx-font-family-mono);
+	--itx-cb-tab-font-size: var(--itx-font-size-caption);
+	--itx-cb-tab-foreground: var(--itx-muted);
+	--itx-cb-tab-foreground-active: var(--itx-on-surface);
+	--itx-cb-tab-indicator-color: var(--itx-colorway);
+	--itx-cb-tab-indicator-width: 2px;
+	--itx-cb-tab-outline-color: var(--itx-colorway);
+	--itx-cb-tab-outline-width: 2px;
+	--itx-cb-tab-outline-offset: 2px;
 	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
-	--itx-cb-tab-transition-timing:   var(--itx-easing-standard);
+	--itx-cb-tab-transition-timing: var(--itx-easing-standard);
 
 	/* Label */
-	--itx-cb-label-padding-inline:    var(--itx-spacing-3);
-	--itx-cb-label-foreground:        var(--itx-muted);
-	--itx-cb-label-font-size:         var(--itx-font-size-caption);
-	--itx-cb-label-font-weight:       500;
-	--itx-cb-label-letter-spacing:    0.05em;
+	--itx-cb-label-padding-inline: initial;
+	--itx-cb-label-foreground: var(--itx-muted);
+	--itx-cb-label-font-size: var(--itx-font-size-caption);
+	--itx-cb-label-font-weight: 500;
+	--itx-cb-label-letter-spacing: 0.05em;
 
 	/* Actions */
-	--itx-cb-actions-radius:          var(--itx-radius-1);
-	--itx-cb-actions-gap:             var(--itx-spacing-1);
-	--itx-cb-button-size:             1.5em;
+	--itx-cb-actions-radius: var(--itx-radius-1);
+	--itx-cb-actions-gap: var(--itx-spacing-1);
+	--itx-cb-button-size: 1.5em;
 }

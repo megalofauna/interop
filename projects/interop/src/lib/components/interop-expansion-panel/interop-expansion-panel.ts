@@ -68,7 +68,6 @@ let _panelIdCounter = 0;
   selector: 'interop-expansion-panel',
   standalone: true,
   template: '<ng-content />',
-  styleUrl: './interop-expansion-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

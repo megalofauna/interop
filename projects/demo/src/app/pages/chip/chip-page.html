@@ -3,13 +3,53 @@
 		<p class="demo-page__category">Components</p>
 		<h1 class="demo-page__title">Chip</h1>
 		<p class="demo-page__lead">
-			Three chip patterns — display tags, filter checkboxes, and free-form input.
-			All built on native HTML with no custom ARIA roles.
+			Chip primitives — inline badges, display tags, filter checkboxes, and
+			free-form input. All built on native HTML with no custom ARIA roles.
 		</p>
 	</header>
 
+	<!-- ── Standalone badges ─────────────────────────────────────────────── -->
+	<demo-section id="badge" heading="Standalone badges">
+		<demo-example label="Inline within prose">
+			<div class="chip-page__prose">
+				<p>Mission status: <span interop-chip-badge>Operational</span></p>
+				<p>
+					Build <span interop-chip-badge>v0.1.0</span> deployed to
+					<span interop-chip-badge>prod</span> at <time>14:02</time>.
+				</p>
+			</div>
+			<div class="demo-example__notes">
+				<ul>
+					<li>item 1</li>
+				</ul>
+			</div>
+			<itx-code-block language="html" [code]="badgeInlineCode" />
+		</demo-example>
+
+		<demo-example label="Key/value via definition list">
+			<dl class="chip-page__defs">
+				<dt>Reactor</dt>
+				<dd><span interop-chip-badge>online</span></dd>
+				<dt>Atmosphere</dt>
+				<dd><span interop-chip-badge>nominal</span></dd>
+				<dt>Crew</dt>
+				<dd><span interop-chip-badge>5 / 7</span></dd>
+			</dl>
+			<itx-code-block language="html" [code]="badgeDefsCode" />
+		</demo-example>
+	</demo-section>
+
 	<!-- ── Display chips ─────────────────────────────────────────────────── -->
-	<demo-section id="display" heading="Display chips">
+	<demo-section
+		id="display"
+		heading="Display chips"
+		[chips]="[
+		{
+			label: 'css only',
+			size: 'sm',
+		},
+]"
+	>
 		<demo-example label="Read-only tags">
 			<ul interop-chip-list aria-label="Cargo manifest tags">
 				<li interop-chip-item label="Plasma conduit">Plasma conduit</li>
@@ -20,11 +60,17 @@
 		</demo-example>
 
 		<demo-example label="Removable chips">
+			<!--<span interop-chip-badge>CSS only</span>-->
 			<ul interop-chip-list aria-label="Active cargo tags">
 				@for (tag of cargoTags(); track tag) {
-					<li interop-chip-item [label]="tag" [removable]="true" (removed)="removeTag(tag)">
-						{{ tag }}
-					</li>
+				<li
+					interop-chip-item
+					[label]="tag"
+					[removable]="true"
+					(removed)="removeTag(tag)"
+				>
+					{{ tag }}
+				</li>
 				}
 			</ul>
 			<itx-terminal
@@ -38,13 +84,19 @@
 
 	<!-- ── Filter chips ───────────────────────────────────────────────────── -->
 	<demo-section id="filter" heading="Filter chips">
-		<demo-example label="Multi-select filter group">
-			<fieldset interop-chip-filter label="Cargo flags"
-				[value]="activeFilters()" (valueChange)="onFiltersChange($event)">
+		<demo-example label="Multi-select filter group" icon="tabler-filter-check">
+			<fieldset
+				interop-chip-filter
+				label="Cargo flags"
+				[value]="activeFilters()"
+				(valueChange)="onFiltersChange($event)"
+			>
 				<label interop-chip-option value="hazmat">Hazmat</label>
 				<label interop-chip-option value="priority">Priority</label>
 				<label interop-chip-option value="fragile">Fragile</label>
-				<label interop-chip-option value="oversized" [disabled]="true">Oversized</label>
+				<label interop-chip-option value="oversized" [disabled]="true"
+					>Oversized</label
+				>
 			</fieldset>
 			<itx-terminal
 				variant="plain"
@@ -58,12 +110,13 @@
 	<!-- ── Input chips ────────────────────────────────────────────────────── -->
 	<demo-section id="input" heading="Input chips">
 		<demo-example label="Free-form recipient entry">
-			<div interop-chip-input
+			<div
+				interop-chip-input
 				aria-label="Recipients"
 				placeholder="Add a recipient…"
 				[value]="recipients()"
-				(valueChange)="onRecipientsChange($event)">
-			</div>
+				(valueChange)="onRecipientsChange($event)"
+			></div>
 			<itx-terminal
 				variant="plain"
 				[entries]="recipientsLog()"
@@ -89,13 +142,9 @@
 		</interop-table>
 	</demo-section>
 
-
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
-			<ng-template itxCell="component" let-entry>
-				<code class="demo-page__api-default">{{ entry.component }}</code>
-			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) { <span class="demo-page__required">*</span> }
@@ -112,9 +161,6 @@
 	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
 	<demo-section id="api-outputs" heading="API — Outputs">
 		<interop-table [collection]="outputEntries" [columns]="outputColumns">
-			<ng-template itxCell="component" let-entry>
-				<code class="demo-page__api-default">{{ entry.component }}</code>
-			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 			</ng-template>

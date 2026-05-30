@@ -18,17 +18,18 @@ import { INTEROP_EXPANSION_PANEL_CONTEXT } from './interop-expansion-panel.conte
  * </div>
  * ```
  *
- * CSS custom properties (set on host or any ancestor):
- * - `--itx-expansion-duration`    — transition duration (default: 200ms)
- * - `--itx-expansion-easing`      — transition easing (default: ease)
- * - `--itx-expansion-peek-height` — visible height in peek mode (default: 4rem)
- * - `--itx-expansion-peek-fade`   — gradient stop color in peek mode (default: --itx-surface)
+ * CSS custom properties — see `styles/components/expansion-panel.css` for
+ * the complete grouped list. Body-specific surface includes:
+ * - `--itx-expansion-panel-body-background` / `-background-image`
+ * - `--itx-expansion-panel-body-padding`
+ * - `--itx-expansion-panel-body-divider-width` / `-style` / `-color`
+ * - `--itx-expansion-panel-body-transition-duration` / `-easing`
+ * - `--itx-expansion-panel-body-peek-height` / `-peek-fade-height` / `-peek-fade-color`
  */
 @Component({
   selector: '[interop-expansion-body]',
   standalone: true,
   template: `<div class="itx-expansion-body-inner"><ng-content /></div>`,
-  styleUrl: './interop-expansion-body.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[id]': 'panel.bodyId',
@@ -43,7 +44,7 @@ export class InteropExpansionBody {
   /**
    * When true, the body shows a partial preview of its content while collapsed
    * rather than hiding it entirely. The visible height is controlled by the
-   * `--itx-expansion-peek-height` CSS custom property (default: 4rem).
+   * `--itx-expansion-panel-body-peek-height` CSS custom property.
    * A fade gradient indicates there is more content beyond the threshold.
    *
    * `aria-hidden` is not applied in peek mode since the content is visible.

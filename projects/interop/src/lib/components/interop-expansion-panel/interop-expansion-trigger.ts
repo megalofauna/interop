@@ -21,8 +21,15 @@ import { INTEROP_ACCORDION_CONTEXT } from './interop-accordion.context.token';
  * outline. A dev-mode warning fires if no heading ancestor is found.
  *
  * ```html
- * <h3><button interop-expansion-trigger>Section Title</button></h3>
+ * <h3><button interop-button interop-expansion-trigger>Section Title</button></h3>
  * ```
+ *
+ * ## Pair with `interop-button` for themed chrome
+ * The Protocol theme styles the trigger by re-assigning `--itx-button-*`
+ * tokens inside the panel scope. For those tokens to apply, the trigger
+ * must also carry the `interop-button` attribute — otherwise it renders
+ * as a native unstyled `<button>`. Bare `<button interop-expansion-trigger>`
+ * remains valid for minimal/unthemed usage.
  *
  * ## Arrow key navigation
  * When inside an `interop-accordion`, Up/Down Arrow, Home, and End move

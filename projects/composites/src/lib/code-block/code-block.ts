@@ -19,6 +19,7 @@ import {
 	InteropIcon,
 	InteropActivation,
 	InteropCodeRenderer,
+	InteropTooltip,
 	INTEROP_HIGHLIGHTER,
 	canonicalizeLanguage,
 	type HighlightedCode,
@@ -27,8 +28,10 @@ import {
 } from "interop";
 import { InteropToolbar } from "interop/lib/rigs/interop-toolbar/interop-toolbar";
 import { PhArrowUDownLeft } from "interop/lib/iconsets/phosphor/regular/ph-arrow-u-down-left";
-import { TablerCheck } from "interop/lib/iconsets/tabler/outline/tabler-check";
-import { TablerCopy } from "interop/lib/iconsets/tabler/outline/tabler-copy";
+import { TablerCheckFilled } from "interop/lib/iconsets/tabler/filled/tabler-check-filled";
+import { TablerCopyFilled } from "interop/lib/iconsets/tabler/filled/tabler-copy-filled";
+import { TablerTextWrap } from "interop/lib/iconsets/tabler/outline/tabler-text-wrap";
+import { TablerTextWrapDisabled } from "interop/lib/iconsets/tabler/outline/tabler-text-wrap-disabled";
 
 export interface CodeFile {
 	/** Stable key for this tab. Defaults to `label` if omitted. */
@@ -82,11 +85,24 @@ let _cbIdCounter = 0;
 @Component({
 	selector: "itx-code-block",
 	standalone: true,
-	imports: [InteropCodeRenderer, InteropButton, InteropButtonActivation, InteropIcon, InteropToolbar],
+	imports: [
+		InteropCodeRenderer,
+		InteropButton,
+		InteropButtonActivation,
+		InteropIcon,
+		InteropToolbar,
+		InteropTooltip,
+	],
 	templateUrl: "./code-block.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
-		provideInteropIcons(PhArrowUDownLeft, TablerCheck, TablerCopy),
+		provideInteropIcons(
+			PhArrowUDownLeft,
+			TablerCheckFilled,
+			TablerCopyFilled,
+			TablerTextWrap,
+			TablerTextWrapDisabled,
+		),
 	],
 })
 export class CodeBlock {
@@ -154,7 +170,9 @@ export class CodeBlock {
 
 	/** Resolved tokens for the given file in multi-file mode. */
 	tokensFor(file: CodeFile): HighlightedCode | null {
-		return file.tokens ?? this.multiAutoTokens().get(this.fileKey(file)) ?? null;
+		return (
+			file.tokens ?? this.multiAutoTokens().get(this.fileKey(file)) ?? null
+		);
 	}
 
 	private readonly copyState = signal<"idle" | "copied">("idle");
@@ -163,15 +181,12 @@ export class CodeBlock {
 	readonly isCopied = computed(() => this.copyState() === "copied");
 
 	readonly displayLabel = computed(
-		() =>
-			this.filename() ??
-			canonicalizeLanguage(this.language()),
+		() => this.filename() ?? canonicalizeLanguage(this.language()),
 	);
 
 	// ── Tab button refs for keyboard focus management ─────────────────────────────
 
-	readonly tabBtns =
-		viewChildren<ElementRef<HTMLButtonElement>>("tabBtn");
+	readonly tabBtns = viewChildren<ElementRef<HTMLButtonElement>>("tabBtn");
 
 	// ── Stable handler refs ───────────────────────────────────────────────────────
 
@@ -202,16 +217,11 @@ export class CodeBlock {
 			const key = this.syncKey();
 			if (!key || !this.activationService) return;
 
-			const reg = this.activationService.register(
-				key,
-				(payload: unknown) => {
-					if (typeof payload !== "string") return;
-					const match = this.files().find(
-						(f) => this.fileKey(f) === payload,
-					);
-					if (match) this.activeKey.set(payload);
-				},
-			);
+			const reg = this.activationService.register(key, (payload: unknown) => {
+				if (typeof payload !== "string") return;
+				const match = this.files().find((f) => this.fileKey(f) === payload);
+				if (match) this.activeKey.set(payload);
+			});
 
 			this.destroyRef.onDestroy(() => reg.unregister());
 		});
@@ -219,9 +229,7 @@ export class CodeBlock {
 		// Capture projected text after first render (single-file only)
 		afterNextRender(() => {
 			if (this.isMultiFile() || this.code() != null) return;
-			const codeEl = this.elementRef.nativeElement.querySelector(
-				"pre > code",
-			);
+			const codeEl = this.elementRef.nativeElement.querySelector("pre > code");
 			const text = (codeEl as HTMLElement | null)?.innerText;
 			if (text) this.projectedText.set(text);
 		});
@@ -350,8 +358,7 @@ export class CodeBlock {
 		const currentIdx = keys.indexOf(this.activeKey() ?? "");
 		let targetIdx: number | null = null;
 
-		if (event.key === "ArrowRight")
-			targetIdx = (currentIdx + 1) % keys.length;
+		if (event.key === "ArrowRight") targetIdx = (currentIdx + 1) % keys.length;
 		else if (event.key === "ArrowLeft")
 			targetIdx = (currentIdx - 1 + keys.length) % keys.length;
 		else if (event.key === "Home") targetIdx = 0;

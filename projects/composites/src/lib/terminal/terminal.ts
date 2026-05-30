@@ -51,6 +51,16 @@ export class Terminal {
 	readonly variant = input<"terminal" | "plain">("terminal");
 	readonly reset = output<void>();
 
+	/**
+	 * Public escape hatch for consumers that want to drive the reset from
+	 * outside the terminal (e.g. a wrapper's own button). Emits the same
+	 * `reset` event as the built-in eraser, so existing `(reset)` bindings
+	 * fire identically regardless of which affordance the user clicked.
+	 */
+	requestReset(): void {
+		this.reset.emit();
+	}
+
 	private readonly scrollEl = viewChild<ElementRef<HTMLElement>>("scrollEl");
 
 	readonly displayEntries = computed<DisplayEntry[]>(() => {

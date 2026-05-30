@@ -26,7 +26,7 @@
 }
 
 .itx-cr__body {
-	background: var(--itx-cr-body-bg, transparent);
+	background: transparent;
 	padding-block: var(--itx-cr-body-padding-block, var(--itx-spacing-4, 1rem));
 	padding-inline: var(--itx-cr-body-padding-inline, var(--itx-spacing-4, 1rem));
 	overflow: auto;

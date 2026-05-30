@@ -1,0 +1,212 @@
+/*
+ * InteropExpansionPanel — structural foundation.
+ *
+ * Rendering rules for `interop-expansion-panel`, `[interop-expansion-body]`,
+ * and `interop-accordion`. The Angular components/directives wire ARIA,
+ * accordion coordination, and toggle behaviour; this file owns the visual
+ * layer: card chrome on the panel host, height animation and interior on
+ * the body, peek mode, and the disabled affordance.
+ *
+ * Token values (colors, durations, peek geometry, contextual button
+ * overrides for the trigger) are set by the active theme — see
+ * `themes/protocol/components/expansion-panel.css`. This file only uses
+ * them, with neutral defaults so an un-themed panel still renders.
+ *
+ * Host-as-chrome model:
+ *   The panel host owns the bordered/elevated card look. The trigger is a
+ *   nested `<button interop-button interop-expansion-trigger>` whose
+ *   appearance is driven by the existing `--itx-button-*` tokens
+ *   contextually re-assigned in the theme. The body is the animated
+ *   content region inside the card.
+ *
+ * All selectors use :where() for zero specificity. The peek-fade `::after`
+ * sits outside :where() per the CSS spec (pseudo-elements cannot appear
+ * inside :where() — the rule would be silently dropped).
+ *
+ * ── Public tokens — panel host (chrome) ─────────────────────────────────────
+ *
+ *   Frame (rest)
+ *   --itx-expansion-panel-background
+ *   --itx-expansion-panel-background-image
+ *   --itx-expansion-panel-foreground            cascades to text color inside
+ *   --itx-expansion-panel-border-width
+ *   --itx-expansion-panel-border-style
+ *   --itx-expansion-panel-border-color
+ *   --itx-expansion-panel-border-radius
+ *   --itx-expansion-panel-box-shadow
+ *   --itx-expansion-panel-padding               outer pad around trigger+body
+ *
+ *   Expanded state (cascades to the base token when unset)
+ *   --itx-expansion-panel-background-expanded
+ *   --itx-expansion-panel-background-image-expanded
+ *   --itx-expansion-panel-border-color-expanded
+ *   --itx-expansion-panel-box-shadow-expanded
+ *
+ *   Disabled state
+ *   --itx-expansion-panel-disabled-opacity
+ *
+ *   Transition
+ *   --itx-expansion-panel-transition-property
+ *   --itx-expansion-panel-transition-duration
+ *   --itx-expansion-panel-transition-timing-function
+ *
+ * ── Public tokens — body ────────────────────────────────────────────────────
+ *
+ *   Interior surface
+ *   --itx-expansion-panel-body-background
+ *   --itx-expansion-panel-body-background-image
+ *   --itx-expansion-panel-body-padding          inner pad around content
+ *
+ *   Divider (top edge of body, only painted when expanded)
+ *   --itx-expansion-panel-body-divider-width
+ *   --itx-expansion-panel-body-divider-style
+ *   --itx-expansion-panel-body-divider-color
+ *
+ *   Animation (unchanged)
+ *   --itx-expansion-panel-body-transition-duration
+ *   --itx-expansion-panel-body-transition-easing
+ *
+ *   Peek mode (unchanged)
+ *   --itx-expansion-panel-body-peek-height
+ *   --itx-expansion-panel-body-peek-fade-height
+ *   --itx-expansion-panel-body-peek-fade-color
+ */
+
+/* ── Panel host (rest) ───────────────────────────────────────────────────── */
+/*
+ * `overflow: clip` lets the host's border-radius clip the trigger's and
+ * body's painted edges so a square-cornered trigger appears rounded by
+ * the parent. Box-shadow is painted outside the host's clip box, so card
+ * elevation is unaffected. Trigger focus rings are kept visible by
+ * setting `--itx-button-outline-offset` negative in the theme (so the
+ * ring lives just inside the trigger's painted edge).
+ */
+
+:where(interop-expansion-panel) {
+	display: block;
+	overflow: clip;
+	background-color: var(--itx-expansion-panel-background, transparent);
+	background-image: var(--itx-expansion-panel-background-image, none);
+	color: var(--itx-expansion-panel-foreground, inherit);
+	border-width: var(--itx-expansion-panel-border-width, 0);
+	border-style: var(--itx-expansion-panel-border-style, solid);
+	border-color: var(--itx-expansion-panel-border-color, transparent);
+	border-radius: var(--itx-expansion-panel-border-radius, 0);
+	box-shadow: var(--itx-expansion-panel-box-shadow, none);
+	padding: var(--itx-expansion-panel-padding, 0);
+	transition-property: var(
+		--itx-expansion-panel-transition-property,
+		background-color, border-color, box-shadow
+	);
+	transition-duration: var(--itx-expansion-panel-transition-duration, 200ms);
+	transition-timing-function: var(
+		--itx-expansion-panel-transition-timing-function,
+		ease
+	);
+}
+
+/* ── Panel host (expanded state) ─────────────────────────────────────────── */
+/*
+ * Each expanded-state token cascades to its base token as the final
+ * fallback, so themes that only want the rest appearance need not declare
+ * any -expanded variants.
+ */
+
+:where(interop-expansion-panel[data-expanded]) {
+	background-color: var(
+		--itx-expansion-panel-background-expanded,
+		var(--itx-expansion-panel-background, transparent)
+	);
+	background-image: var(
+		--itx-expansion-panel-background-image-expanded,
+		var(--itx-expansion-panel-background-image, none)
+	);
+	border-color: var(
+		--itx-expansion-panel-border-color-expanded,
+		var(--itx-expansion-panel-border-color, transparent)
+	);
+	box-shadow: var(
+		--itx-expansion-panel-box-shadow-expanded,
+		var(--itx-expansion-panel-box-shadow, none)
+	);
+}
+
+/* ── Panel host (disabled state) ─────────────────────────────────────────── */
+
+:where(interop-expansion-panel[data-disabled]) {
+	opacity: var(--itx-expansion-panel-disabled-opacity, 0.6);
+	pointer-events: none;
+}
+
+/* ── Accordion host ──────────────────────────────────────────────────────── */
+
+:where(interop-accordion) {
+	display: block;
+}
+
+/* ── Body: grid-rows height animation ────────────────────────────────────── */
+/*
+ * Grid-rows trick: animates from/to natural content height without
+ * hardcoding a max-height. The inner wrapper provides the overflow:hidden
+ * boundary that the grid algorithm requires.
+ *
+ * Interior surface (background, background-image) is on the body host so
+ * it shows for the full collapsed-or-expanded silhouette. Padding and the
+ * top divider live on the inner wrapper so both animate with the content
+ * reveal — putting them on the host would leave painted edges visible
+ * even while collapsed.
+ */
+
+:where([interop-expansion-body]) {
+	display: grid;
+	position: relative;
+	overflow: clip;
+	grid-template-rows: 0fr;
+	background-color: var(--itx-expansion-panel-body-background, transparent);
+	background-image: var(--itx-expansion-panel-body-background-image, none);
+	transition: grid-template-rows
+		var(--itx-expansion-panel-body-transition-duration, 200ms)
+		var(--itx-expansion-panel-body-transition-easing, ease);
+}
+
+:where([interop-expansion-body][data-expanded]) {
+	grid-template-rows: 1fr;
+}
+
+:where([interop-expansion-body] .itx-expansion-body-inner) {
+	overflow: hidden;
+	min-height: 0;
+	padding: var(--itx-expansion-panel-body-padding, 0);
+	border-top-width: var(--itx-expansion-panel-body-divider-width, 0);
+	border-top-style: var(--itx-expansion-panel-body-divider-style, solid);
+	border-top-color: var(--itx-expansion-panel-body-divider-color, transparent);
+}
+
+/* ── Peek mode ───────────────────────────────────────────────────────────── */
+/*
+ * min-height stays on the inner wrapper even when expanded so there is no
+ * jump at transition start (it becomes irrelevant once 1fr > peek height).
+ */
+
+:where([interop-expansion-body][data-peek] .itx-expansion-body-inner) {
+	min-height: var(--itx-expansion-panel-body-peek-height, 4rem);
+}
+
+/*
+ * Fade gradient overlay shown only while collapsed in peek mode. The
+ * pseudo-element sits outside :where() because pseudo-elements cannot
+ * appear inside :where() — the rule would be silently dropped.
+ */
+:where([interop-expansion-body][data-peek]:not([data-expanded]))::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	bottom: 0;
+	height: var(--itx-expansion-panel-body-peek-fade-height, 2.5rem);
+	background: linear-gradient(
+		to bottom,
+		transparent,
+		var(--itx-expansion-panel-body-peek-fade-color, transparent)
+	);
+	pointer-events: none;
+}

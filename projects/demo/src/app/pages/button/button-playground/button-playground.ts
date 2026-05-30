@@ -6,6 +6,7 @@ import {
 } from "@angular/core";
 import {
 	InteropButton,
+	InteropMotionTrigger,
 	InteropSegment,
 	InteropSegmentedControl,
 } from 'interop';
@@ -47,6 +48,7 @@ const RADII: ReadonlySet<string> = new Set([
 	standalone: true,
 	imports: [
 		InteropButton,
+		InteropMotionTrigger,
 		InteropSegmentedControl,
 		InteropSegment,
 	],

@@ -44,6 +44,8 @@
 @import "./protocol/components/button.css";
 @import "./protocol/components/chip.css";
 @import "./protocol/components/dialog.css";
+@import "./protocol/components/expansion-panel.css";
+@import "./protocol/components/icon.css";
 @import "./protocol/components/indicator.css";
 @import "./protocol/components/popover.css";
 @import "./protocol/components/progress.css";
@@ -61,3 +63,7 @@
 @import "./protocol/composites/inline-code.css";
 @import "./protocol/composites/page-nav.css";
 @import "./protocol/composites/terminal.css";
+
+/* ── Rigs ───────────────────────────────────────────────────────────────── */
+
+@import "./protocol/rigs/toolbar.css";

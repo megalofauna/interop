@@ -29,18 +29,24 @@
 	position: relative;
 
 	/* Resolved private slots */
-	--_max-height:      var(--itx-term-max-height,    18rem);
-	--_padding:         var(--itx-term-padding,        1rem);
-	--_radius:          var(--itx-term-radius,         0);
-	--_font:            var(--itx-term-font-family,    ui-monospace, "Cascadia Code", "Fira Code", monospace);
-	--_font-size:       var(--itx-term-font-size,      0.8125rem);
-	--_line-height:     var(--itx-term-line-height,    1.65);
-	--_background:      var(--itx-term-background,     transparent);
-	--_color:           var(--itx-term-color,          inherit);
-	--_glow:            var(--itx-term-glow,           none);
-	--_prompt-color:    var(--itx-term-prompt-color,   var(--_color));
-	--_delta-color:     var(--itx-term-delta-color,    var(--_color));
-	--_caret-color:     var(--itx-term-caret-color,    var(--_color));
+	--_max-height: var(--itx-term-max-height, 18rem);
+	--_padding: var(--itx-term-padding, 1rem);
+	--_radius: var(--itx-term-radius, 0);
+	--_font: var(
+		--itx-term-font-family,
+		ui-monospace,
+		"Cascadia Code",
+		"Fira Code",
+		monospace
+	);
+	--_font-size: var(--itx-term-font-size, 0.8125rem);
+	--_line-height: var(--itx-term-line-height, 1.65);
+	--_background: var(--itx-term-background, hsl(200 50% 50% / 50%));
+	--_color: var(--itx-term-color, inherit);
+	--_glow: var(--itx-term-glow, none);
+	--_prompt-color: var(--itx-term-prompt-color, var(--_color));
+	--_delta-color: var(--itx-term-delta-color, var(--_color));
+	--_caret-color: var(--itx-term-caret-color, var(--_color));
 	--_scrollbar-color: var(--itx-term-scrollbar-color, transparent);
 }
 
@@ -85,7 +91,7 @@
 /* ── Log body ────────────────────────────────────────────────────────────── */
 
 :where(.itx-term__log) {
-	padding: var(--_padding);
+	padding: 0;
 	color: var(--_color);
 	font-family: var(--_font);
 	font-size: var(--_font-size);
@@ -145,6 +151,11 @@
 }
 
 @keyframes itx-term-blink {
-	0%, 100% { opacity: 1; }
-	50%       { opacity: 0; }
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
 }

@@ -238,6 +238,118 @@ describe("Activation Utilities", () => {
       activate("3");
       expect(spy).toHaveBeenCalledTimes(2);
     });
+
+    it("reset() clears the throttle cooldown so the next trigger fires immediately", () => {
+      const spy = jasmine.createSpy("handler").and.returnValue(undefined);
+      const activate = createActivationHandler(spy, { throttleMs: 500 });
+
+      activate("1");
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      // Mid-cooldown trigger is suppressed.
+      jasmine.clock().tick(100);
+      activate("2");
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      activate.reset();
+      activate("3");
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy.calls.mostRecent().args[0]).toBe("3");
+    });
+
+    it("reset() cancels a pending debounced execution", () => {
+      const spy = jasmine.createSpy("handler").and.returnValue(undefined);
+      const activate = createActivationHandler(spy, { debounceMs: 300 });
+
+      activate("x");
+      jasmine.clock().tick(150);
+      activate.reset();
+      jasmine.clock().tick(300);
+
+      expect(spy).toHaveBeenCalledTimes(0);
+    });
+
+    it("reset() releases the reentrancy lock on an in-flight async handler", async () => {
+      const onEnd = jasmine.createSpy("onEnd");
+      let resolveFirst: (() => void) | undefined;
+      const asyncHandler = jasmine.createSpy("asyncHandler").and.callFake(
+        () =>
+          new Promise<void>((resolve) => {
+            // Only capture the very first resolver; later calls run synchronously.
+            if (!resolveFirst) {
+              resolveFirst = resolve;
+            } else {
+              resolve();
+            }
+          }),
+      );
+
+      const activate = createActivationHandler(asyncHandler, { onEnd });
+
+      // First trigger holds the reentrancy lock.
+      activate("first");
+      expect(asyncHandler).toHaveBeenCalledTimes(1);
+
+      // Second trigger is blocked by the lock.
+      activate("second");
+      expect(asyncHandler).toHaveBeenCalledTimes(1);
+
+      // Reset releases the lock; a fresh trigger now executes.
+      activate.reset();
+      activate("third");
+      expect(asyncHandler).toHaveBeenCalledTimes(2);
+
+      // Orphaned first call still settles and fires its onEnd hook —
+      // this is the documented caveat that resets cannot abort async work.
+      if (resolveFirst) {
+        resolveFirst();
+      }
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(onEnd).toHaveBeenCalledTimes(2);
+    });
+
+    it("reset() clears once consumption and re-arms the handler", () => {
+      const spy = jasmine.createSpy("handler").and.returnValue(undefined);
+      const activate = createActivationHandler(spy, { once: true });
+
+      activate("first");
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(activate.isEnabled()).toBeFalse();
+
+      activate("second");
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      activate.reset();
+      expect(activate.isEnabled()).toBeTrue();
+
+      activate("third");
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it("reset() preserves an explicit disable()", () => {
+      const spy = jasmine.createSpy("handler").and.returnValue(undefined);
+      const activate = createActivationHandler(spy);
+
+      activate.disable();
+      activate.reset();
+
+      expect(activate.isEnabled()).toBeFalse();
+
+      activate("blocked");
+      expect(spy).toHaveBeenCalledTimes(0);
+    });
+
+    it("reset() is a no-op on a fresh handler", () => {
+      const spy = jasmine.createSpy("handler").and.returnValue(undefined);
+      const activate = createActivationHandler(spy);
+
+      activate.reset();
+      activate("first");
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith("first");
+    });
   });
 
   describe("composeActivation", () => {

@@ -78,6 +78,22 @@
 		</div>
 	</demo-section>
 
+	<!-- ── Tokens ───────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="Inputs">
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">

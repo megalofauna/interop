@@ -1,0 +1,58 @@
+/*
+ * Motion preset: pop.
+ *
+ * Anticipation : transform: scale(1.05), 100ms ease-out on hover
+ * Action       : scale 1 → 1.2 → 1, 250ms ease-out, 1 iteration
+ * Reduced      : itx-motion-opacity-pulse, 120ms ease-out
+ *
+ * Multi-child scoping: when [data-itx-motion-target] is present in the host's
+ * subtree, anticipation and action route to that element instead of the host.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+	:where([itx-motion-preset="pop"]:not(:has([data-itx-motion-target]))),
+	:where([itx-motion-preset="pop"]:has([data-itx-motion-target]))
+		[data-itx-motion-target] {
+		transition: transform 100ms ease-out;
+	}
+
+	:where(
+			[itx-motion-preset="pop"]:not(:disabled):not(
+					[aria-disabled="true"]
+				):not(:has([data-itx-motion-target]))
+		):hover,
+	:where(
+			[itx-motion-preset="pop"]:not(:disabled):not(
+					[aria-disabled="true"]
+				):has([data-itx-motion-target])
+		):hover
+		[data-itx-motion-target] {
+		transform: scale(1.05);
+	}
+
+	:where(
+			[itx-motion-preset="pop"].is-acting:not(:has([data-itx-motion-target]))
+		),
+	:where([itx-motion-preset="pop"].is-acting:has([data-itx-motion-target]))
+		[data-itx-motion-target] {
+		animation: itx-motion-pop-action 250ms ease-out;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where([itx-motion-preset="pop"].is-acting) {
+		animation: itx-motion-opacity-pulse 120ms ease-out;
+	}
+}
+
+@keyframes itx-motion-pop-action {
+	0% {
+		scale: 1;
+	}
+	50% {
+		scale: 1.2;
+	}
+	100% {
+		scale: 1;
+	}
+}

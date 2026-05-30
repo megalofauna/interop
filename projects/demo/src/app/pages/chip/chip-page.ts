@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import {
 	InteropChipList,
 	InteropChipItem,
+	InteropChipBadge,
 	InteropChipFilter,
 	InteropChipOption,
 	InteropChipInput,
@@ -16,14 +17,22 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 
-interface ApiEntry {
-	component?: string;
+interface ApiInputRow {
 	name: string;
 	type: string;
 	default: string;
 	description: string;
 	required?: boolean;
 }
+
+interface ApiOutputRow {
+	name: string;
+	type: string;
+	description: string;
+}
+
+type ApiInputEntry = TableGroupRow | ApiInputRow;
+type ApiOutputEntry = TableGroupRow | ApiOutputRow;
 
 type TokenEntry = TableGroupRow | { property: string; default: string };
 
@@ -33,6 +42,7 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	imports: [
 		InteropChipList,
 		InteropChipItem,
+		InteropChipBadge,
 		InteropChipFilter,
 		InteropChipOption,
 		InteropChipInput,
@@ -45,7 +55,7 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		DemoNotes,
 	],
 	templateUrl: "./chip-page.html",
-	styleUrl: "./chip-page.scss",
+	styleUrl: "./chip-page.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipPage {
@@ -103,6 +113,18 @@ export class ChipPage {
 		]);
 	}
 
+	readonly badgeInlineCode = `<p>Mission status: <span interop-chip-badge>Operational</span></p>
+<p>Build <span interop-chip-badge>v0.1.0</span> deployed to <span interop-chip-badge>prod</span>.</p>`;
+
+	readonly badgeDefsCode = `<dl>
+  <dt>Reactor</dt>
+  <dd><span interop-chip-badge>online</span></dd>
+  <dt>Atmosphere</dt>
+  <dd><span interop-chip-badge>nominal</span></dd>
+  <dt>Crew</dt>
+  <dd><span interop-chip-badge>5 / 7</span></dd>
+</dl>`;
+
 	readonly readOnlyCode = `<ul interop-chip-list aria-label="Cargo manifest tags">
   <li interop-chip-item label="Plasma conduit">Plasma conduit</li>
   <li interop-chip-item label="Mag-lock">Mag-lock</li>
@@ -132,48 +154,56 @@ export class ChipPage {
   (valueChange)="recipients.set($event)">
 </div>`;
 
-	apiColumns: TableColumn<ApiEntry>[] = [
-		{ key: "component", label: "Component" },
+	apiColumns: TableColumn<ApiInputEntry>[] = [
 		{ key: "name", label: "Input" },
 		{ key: "type", label: "Type" },
 		{ key: "default", label: "Default" },
 		{ key: "description", label: "Description" },
 	];
 
-	apiEntries: ApiEntry[] = [
-		{ component: "chip-list", name: "disabled", type: "boolean", default: "false", description: "Whether the entire list is in a disabled presentation state." },
+	apiEntries: ApiInputEntry[] = [
+		{ groupLabel: "chip-list" },
+		{ name: "disabled", type: "boolean", default: "false", description: "Whether the entire list is in a disabled presentation state." },
 
-		{ component: "chip-item", name: "label", type: "string", default: "—", description: "Required. Accessible label for this chip. Also used as the base for the remove button's aria-label.", required: true },
-		{ component: "chip-item", name: "removable", type: "boolean", default: "false", description: "When true, renders a remove button inside the chip." },
-		{ component: "chip-item", name: "disabled", type: "boolean", default: "false", description: "Disables the remove button." },
+		{ groupLabel: "chip-item" },
+		{ name: "label", type: "string", default: "—", description: "Required. Accessible label for this chip. Also used as the base for the remove button's aria-label.", required: true },
+		{ name: "removable", type: "boolean", default: "false", description: "When true, renders a remove button inside the chip." },
+		{ name: "disabled", type: "boolean", default: "false", description: "Disables the remove button." },
 
-		{ component: "chip-filter", name: "label", type: "string", default: "—", description: "Required. Accessible label rendered as a fieldset legend.", required: true },
-		{ component: "chip-filter", name: "labelHidden", type: "boolean", default: "false", description: "When true, the legend is visually hidden but remains accessible." },
-		{ component: "chip-filter", name: "value", type: "string[]", default: "[]", description: "Currently selected values in controlled mode." },
-		{ component: "chip-filter", name: "disabled", type: "boolean", default: "false", description: "Disables all filter options." },
+		{ groupLabel: "chip-filter" },
+		{ name: "label", type: "string", default: "—", description: "Required. Accessible label rendered as a fieldset legend.", required: true },
+		{ name: "labelHidden", type: "boolean", default: "false", description: "When true, the legend is visually hidden but remains accessible." },
+		{ name: "value", type: "string[]", default: "[]", description: "Currently selected values in controlled mode." },
+		{ name: "disabled", type: "boolean", default: "false", description: "Disables all filter options." },
 
-		{ component: "chip-option", name: "value", type: "string", default: "—", description: "Required. The value this option represents.", required: true },
-		{ component: "chip-option", name: "disabled", type: "boolean", default: "false", description: "Disables this option independently of the group." },
-		{ component: "chip-option", name: "name", type: "string | null", default: "null", description: "Name attribute forwarded to the checkbox input. Required for native form submission." },
+		{ groupLabel: "chip-option" },
+		{ name: "value", type: "string", default: "—", description: "Required. The value this option represents.", required: true },
+		{ name: "disabled", type: "boolean", default: "false", description: "Disables this option independently of the group." },
+		{ name: "name", type: "string | null", default: "null", description: "Name attribute forwarded to the checkbox input. Required for native form submission." },
 
-		{ component: "chip-input", name: "value", type: "ChipInputItem[]", default: "[]", description: "Controlled chip list. Pair with (valueChange) for two-way binding." },
-		{ component: "chip-input", name: "placeholder", type: "string", default: "''", description: "Placeholder text for the text input." },
-		{ component: "chip-input", name: "disabled", type: "boolean", default: "false", description: "Disables the control." },
-		{ component: "chip-input", name: "separators", type: "string[]", default: "['Enter', ',']", description: "Keys that trigger chip creation from the current input text." },
-		{ component: "chip-input", name: "maxChips", type: "number", default: "0", description: "Maximum number of chips. No limit when 0." },
+		{ groupLabel: "chip-input" },
+		{ name: "value", type: "ChipInputItem[]", default: "[]", description: "Controlled chip list. Pair with (valueChange) for two-way binding." },
+		{ name: "placeholder", type: "string", default: "''", description: "Placeholder text for the text input." },
+		{ name: "disabled", type: "boolean", default: "false", description: "Disables the control." },
+		{ name: "separators", type: "string[]", default: "['Enter', ',']", description: "Keys that trigger chip creation from the current input text." },
+		{ name: "maxChips", type: "number", default: "0", description: "Maximum number of chips. No limit when 0." },
 	];
 
-	outputColumns: TableColumn<ApiEntry>[] = [
-		{ key: "component", label: "Component" },
+	outputColumns: TableColumn<ApiOutputEntry>[] = [
 		{ key: "name", label: "Output" },
 		{ key: "type", label: "Type" },
 		{ key: "description", label: "Description" },
 	];
 
-	outputEntries: ApiEntry[] = [
-		{ component: "chip-item", name: "removed", type: "void", default: "", description: "Emitted when the chip's remove button is clicked." },
-		{ component: "chip-filter", name: "valueChange", type: "string[]", default: "", description: "Emitted when the selected filter values change." },
-		{ component: "chip-input", name: "valueChange", type: "ChipInputItem[]", default: "", description: "Emitted when the chip list changes (add, remove, blur-commit)." },
+	outputEntries: ApiOutputEntry[] = [
+		{ groupLabel: "chip-item" },
+		{ name: "removed", type: "void", description: "Emitted when the chip's remove button is clicked." },
+
+		{ groupLabel: "chip-filter" },
+		{ name: "valueChange", type: "string[]", description: "Emitted when the selected filter values change." },
+
+		{ groupLabel: "chip-input" },
+		{ name: "valueChange", type: "ChipInputItem[]", description: "Emitted when the chip list changes (add, remove, blur-commit)." },
 	];
 
 	// ── Token table ──────────────────────────────────────────────────────────
@@ -184,11 +214,11 @@ export class ChipPage {
 
 	tokenEntries: TokenEntry[] = [
 		{ groupLabel: "Shared — appearance" },
-		{ property: "--itx-chip-background", default: "var(--itx-neutral-5)" },
+		{ property: "--itx-chip-background", default: "transparent" },
 		{ property: "--itx-chip-color", default: "inherit" },
-		{ property: "--itx-chip-border", default: "2px solid var(--itx-neutral-7)" },
+		{ property: "--itx-chip-border", default: "2px solid transparent" },
 		{ property: "--itx-chip-radius", default: "var(--itx-radius-full)" },
-		{ property: "--itx-chip-padding", default: "0.5rem 0.825rem" },
+		{ property: "--itx-chip-padding", default: "computed: step × mult" },
 		{ property: "--itx-chip-font-size", default: "var(--itx-font-size-caption)" },
 		{ property: "--itx-chip-font-weight", default: "inherit" },
 		{ property: "--itx-chip-gap", default: "var(--itx-spacing-2)" },
@@ -219,11 +249,13 @@ export class ChipPage {
 		{ groupLabel: "chip-list" },
 		{ property: "--itx-chip-list-gap", default: "0.375rem" },
 
-		{ groupLabel: "chip-item — layout" },
-		{ property: "--itx-chip-item-gap", default: "var(--itx-spacing-3, 0.375rem)" },
+		{ groupLabel: "chip-item / chip-badge — shared overrides" },
+		{ property: "--itx-chip-background", default: "var(--itx-neutral-3)" },
+		{ property: "--itx-chip-border", default: "2px solid var(--itx-neutral-7)" },
+		{ property: "--itx-chip-item-gap", default: "var(--itx-spacing-3)" },
 		{
 			property: "--itx-chip-padding-removable",
-			default: "0.25rem 0.25rem 0.25rem 0.5rem",
+			default: "computed: step × mult (left: × 2)",
 		},
 
 		{ groupLabel: "chip-item — remove button" },
@@ -243,6 +275,9 @@ export class ChipPage {
 		{ property: "--itx-chip-filter-border", default: "none" },
 		{ property: "--itx-chip-filter-radius", default: "0" },
 		{ property: "--itx-chip-filter-padding", default: "0" },
+
+		{ groupLabel: "chip-badge — own overrides" },
+		{ property: "--itx-chip-line-height", default: "1.2 (tight for prose)" },
 
 		{ groupLabel: "chip-input — container" },
 		{ property: "--itx-chip-input-background", default: "transparent" },
@@ -269,9 +304,20 @@ export class ChipPage {
 			body: 'Three chip patterns: InteropChipList (read-only tags), InteropChipFilter (multi-select checkboxes), and InteropChipInput (free-form entry). Each is built on native HTML — no ARIA listbox or grid.',
 		},
 		{
+			type: 'release',
+			label: 'v0.1.1',
+			title: 'InteropChipBadge — standalone inline chip',
+			body: 'A tag-agnostic [interop-chip-badge] selector for single chips that live outside a list — inline status badges, version tags, key/value pairs. Non-interactive by design; use a one-item chip-list when you need a removable single chip.',
+		},
+		{
 			type: 'note',
 			label: 'Semantics',
 			body: 'Filter chips are checkboxes inside a fieldset, not ARIA listbox/option. This gives correct keyboard behavior and screen reader announcements across all platforms for free.',
+		},
+		{
+			type: 'note',
+			label: 'Badge vs list-of-one',
+			body: 'A one-item <ul interop-chip-list> announces "list, 1 item" — an overclaim if the chip is really a status label. Use <span interop-chip-badge> for inline single-chip use; the list semantic is reserved for actual collections.',
 		},
 	];
 }

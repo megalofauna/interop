@@ -1,0 +1,81 @@
+/*
+ * InteropIcon — structural foundation.
+ *
+ * Rendering rules for `interop-icon`. The Angular component handles the
+ * registry lookup, ARIA contract, and projection escape hatch; this file
+ * owns the visual layer: host shape, SVG rendering hints, and the dev-only
+ * missing-icon placeholder.
+ *
+ * Token values (colors, opacity) are set by the active theme — see
+ * `themes/protocol/components/icon.css`. This file only uses them, with
+ * neutral defaults so an un-themed icon still renders sensibly.
+ *
+ * All selectors use :where() for zero specificity so consumer overrides
+ * always win.
+ *
+ * Note on sizing: pixel sizing comes from the component's `[size]` input
+ * (applied as `width`/`height` attributes on the SVG). There is no
+ * `--itx-icon-size` token — sizing is per-instance, not theme-driven.
+ *
+ * Public tokens:
+ *
+ *   Layout
+ *   --itx-icon-display              default: inline-flex
+ *   --itx-icon-align-items          default: center
+ *   --itx-icon-justify-content      default: center
+ *   --itx-icon-flex-shrink          default: 0
+ *   --itx-icon-line-height          default: 0
+ *
+ *   SVG rendering
+ *   --itx-icon-svg-display          default: block
+ *   --itx-icon-shape-rendering      default: geometricPrecision
+ *
+ *   Appearance
+ *   --itx-icon-color                default: currentColor
+ *
+ *   Interaction
+ *   --itx-icon-pointer-events       default: none
+ *
+ *   Missing-icon placeholder (dev only)
+ *   --itx-icon-missing-color        default: red
+ *   --itx-icon-missing-opacity      default: 0.3
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+
+:where(interop-icon) {
+	display: var(--itx-icon-display, inline-flex);
+	align-items: var(--itx-icon-align-items, center);
+	justify-content: var(--itx-icon-justify-content, center);
+	flex-shrink: var(--itx-icon-flex-shrink, 0);
+	line-height: var(--itx-icon-line-height, 0);
+	color: var(--itx-icon-color, currentColor);
+	pointer-events: var(--itx-icon-pointer-events, none);
+}
+
+/* ── SVG rendering ───────────────────────────────────────────────────────── */
+/*
+ * `display: block` removes the inline-baseline gap that would otherwise
+ * push the host's height past the SVG's own. `shape-rendering` keeps
+ * stroked paths crisp at integer pixel sizes.
+ */
+
+:where(interop-icon svg) {
+	display: var(--itx-icon-svg-display, block);
+	flex-shrink: var(--itx-icon-flex-shrink, 0);
+	shape-rendering: var(--itx-icon-shape-rendering, geometricPrecision);
+}
+
+/* ── Missing-icon placeholder ────────────────────────────────────────────── */
+/*
+ * Rendered when a registry name was provided but no matching icon was
+ * registered. The X mark sits in the DOM in all environments; it is
+ * visually muted via opacity and tinted via color so it is obvious during
+ * development but not catastrophic in production. The component's
+ * `aria-hidden` / `aria-label` wiring keeps assistive tech informed.
+ */
+
+:where(interop-icon .itx-icon--missing) {
+	color: var(--itx-icon-missing-color, red);
+	opacity: var(--itx-icon-missing-opacity, 0.3);
+}

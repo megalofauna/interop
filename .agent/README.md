@@ -25,6 +25,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | InlineCode composite deep-dive | [composites/inline-code.md](composites/inline-code.md) |
 | CodeBlock composite deep-dive | [composites/code-block.md](composites/code-block.md) |
 | Highlighter contract + Shiki adapter | [highlighter.md](highlighter.md) |
+| Motion family (gesture/pending/confirm, design proposal) | [motion.md](motion.md) |
 
 ## Key paths
 

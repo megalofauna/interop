@@ -106,31 +106,39 @@
 	--itx-button-max-width: none;
 }*/
 
-/*:where(button[interop-button~="protocol"]) {
+:where(button[interop-button~="protocol"]) {
 	--itx-button-sizing-multiplier: 1.5;
-	--itx-button-background: var(--itx-neutral-3);
+	/*--itx-button-background: var(--itx-neutral-);*/
 	--itx-button-border-radius: var(--itx-radius-2);
-	--itx-button-border-color: var(--itx-neutral-2);
+	--itx-button-border-style: solid;
+	--itx-button-border-color: var(--itx-neutral-1);
 	--itx-button-background-hover: var(--itx-neutral-5);
 	--itx-button-foreground-hover: var(--itx-neutral-10);
 	--itx-button-border-color-hover: var(--itx-neutral-3);
-}*/
+}
 
-/*:where(button[interop-button~="action-plus"]) {
-	--itx-button-background: var(--itx-neutral-10_5);
-	--itx-button-foreground: var(--itx-neutral-3);
+:where(button[interop-button~="action"]) {
+	--itx-button-font-size: var(--itx-fs-base);
+	--itx-button-sizing-multiplier: 3;
+
+	--itx-button-border-radius: calc(
+		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 1
+	);
+
+	--itx-button-background: var(--itx-neutral-5);
+	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-color: var(--itx-neutral-3);
-	--itx-button-box-shadow: 0 0.15em 0 rgb(0 0 0 / 0.35);
+	--itx-button-border-width: 2px;
+	--itx-button-box-shadow: 0 0.25em 0 rgb(0 0 0 / 0.1);
 
-	--itx-button-background-hover: var(--itx-neutral-12);
-	--itx-button-foreground-hover: var(--itx-neutral-1);
-	--itx-button-border-color-hover: var(--itx-neutral-2);
+	--itx-button-background-hover: var(--itx-neutral-6);
+	--itx-button-foreground-hover: var(--itx-neutral-12);
 	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
 
-	--itx-button-background-active: var(--itx-neutral-11);
-	--itx-button-foreground-active: var(--itx-neutral-2);
-	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.15);
-}*/
+	--itx-button-background-active: var(--itx-neutral-5);
+	--itx-button-foreground-active: var(--itx-neutral-11);
+	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.2);
+}
 /*
 :where(button[interop-button~="action-colorway"]) {
 	--itx-button-background: var(--itx-colorway-8);

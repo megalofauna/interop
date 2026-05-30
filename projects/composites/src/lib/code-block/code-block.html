@@ -27,31 +27,40 @@
 
 	<div class="itx-cb__actions" interop-toolbar [label]="actionsLabel()">
 		@if (wrapToggle()) {
-		<button
-			interop-button
-			class="itx-cb__btn"
-			type="button"
-			[attr.aria-pressed]="isWrapped()"
-			[attr.aria-label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
-			[onActivate]="handleWrapToggle"
+		<interop-tooltip
+			[label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
 		>
-			<interop-icon name="arrow-u-down-left" [size]="16" />
-		</button>
+			<button
+				interop-button="icon"
+				class="itx-cb__btn"
+				type="button"
+				[attr.aria-pressed]="isWrapped()"
+				[attr.aria-label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
+				[onActivate]="handleWrapToggle"
+			>
+				<interop-icon
+					[size]="20"
+					[name]="isWrapped() ? 'tabler-text-wrap' : 'tabler-text-wrap-disabled'"
+				>
+				</interop-icon>
+			</button>
+		</interop-tooltip>
 		}
-		<button
-			interop-button
-		itx-size="xs"
-			class="itx-cb__btn"
-			type="button"
-			[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
-			[onActivate]="handleCopy"
-			[activationOptions]="copyOptions"
-		>
-			<interop-icon
-				[name]="isCopied() ? 'tabler-check' : 'tabler-copy'"
-				[size]="16"
-			/>
-		</button>
+		<interop-tooltip label="Copy">
+			<button
+				interop-button="icon"
+				class="itx-cb__btn"
+				type="button"
+				[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
+				[onActivate]="handleCopy"
+				[activationOptions]="copyOptions"
+			>
+				<interop-icon
+					[name]="isCopied() ? 'tabler-check-filled' : 'tabler-copy-filled'"
+					[size]="20"
+				/>
+			</button>
+		</interop-tooltip>
 	</div>
 </div>
 

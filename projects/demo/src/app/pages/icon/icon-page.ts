@@ -1,5 +1,12 @@
 import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
-import { InteropIcon, InteropTable, InteropCellDef, provideInteropIcons, type TableColumn } from 'interop';
+import {
+	InteropIcon,
+	InteropTable,
+	InteropCellDef,
+	provideInteropIcons,
+	type TableColumn,
+	type TableGroupRow,
+} from 'interop';
 import { TablerRocket } from "interop/lib/iconsets/tabler/outline/tabler-rocket";
 import { TablerBug } from "interop/lib/iconsets/tabler/outline/tabler-bug";
 import { TablerBolt } from "interop/lib/iconsets/tabler/outline/tabler-bolt";
@@ -28,6 +35,10 @@ interface ApiEntry {
 	required?: boolean;
 }
 
+type TokenEntry =
+	| TableGroupRow
+	| { property: string; default: string; description: string };
+
 @Component({
 	selector: "icon-page",
 	standalone: true,
@@ -51,6 +62,80 @@ export class IconPage {
 	];
 
 	previewSize = signal(24);
+
+	// ── CSS tokens ───────────────────────────────────────────────────────────
+	tokenColumns: TableColumn<TokenEntry>[] = [
+		{ key: "property", label: "Property" },
+		{ key: "default", label: "Default" },
+		{ key: "description", label: "Description" },
+	];
+
+	tokenEntries: TokenEntry[] = [
+		{ groupLabel: "Layout" },
+		{
+			property: "--itx-icon-display",
+			default: "inline-flex",
+			description: "Outer box behaviour. Set to inline-flex so the icon sits on the text baseline.",
+		},
+		{
+			property: "--itx-icon-align-items",
+			default: "center",
+			description: "Cross-axis alignment of the SVG within the host.",
+		},
+		{
+			property: "--itx-icon-justify-content",
+			default: "center",
+			description: "Main-axis alignment of the SVG within the host.",
+		},
+		{
+			property: "--itx-icon-flex-shrink",
+			default: "0",
+			description: "Prevents the icon from shrinking when placed in a constrained flex parent.",
+		},
+		{
+			property: "--itx-icon-line-height",
+			default: "0",
+			description: "Collapses the inline line-box so the host height matches the SVG exactly.",
+		},
+
+		{ groupLabel: "SVG rendering" },
+		{
+			property: "--itx-icon-svg-display",
+			default: "block",
+			description: "Removes the inline baseline gap inside the host.",
+		},
+		{
+			property: "--itx-icon-shape-rendering",
+			default: "geometricPrecision",
+			description: "Browser hint for path rasterisation. Keeps strokes crisp at integer pixel sizes.",
+		},
+
+		{ groupLabel: "Appearance" },
+		{
+			property: "--itx-icon-color",
+			default: "currentColor",
+			description: "Stroke / fill colour. Inherits text colour by default; override per-instance with the [color] input.",
+		},
+
+		{ groupLabel: "Interaction" },
+		{
+			property: "--itx-icon-pointer-events",
+			default: "none",
+			description: "Icons are never click targets — events pass through to whatever wraps them.",
+		},
+
+		{ groupLabel: "Missing-icon placeholder (dev)" },
+		{
+			property: "--itx-icon-missing-color",
+			default: "var(--itx-danger)",
+			description: "Tint of the X-mark shown when a registry name has no match. Visible in dev.",
+		},
+		{
+			property: "--itx-icon-missing-opacity",
+			default: "0.35",
+			description: "Opacity of the missing-icon placeholder.",
+		},
+	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "name", label: "Input" },

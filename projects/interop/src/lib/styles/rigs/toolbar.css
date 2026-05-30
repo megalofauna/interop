@@ -1,0 +1,105 @@
+/*
+ * InteropToolbar — structural foundation.
+ *
+ * Rendering rules for `interop-toolbar` / `[interop-toolbar]` and its
+ * `interop-toolbar-group` children. The Angular components own ARIA role
+ * wiring, keyboard navigation, and radio-group detection; this file owns
+ * the visual layer: layout direction, gap, orientation, disabled affordance.
+ *
+ * Token values (colors, borders, contextual button overrides) are set by the
+ * active theme — see `themes/protocol/rigs/toolbar.css`. This file only uses
+ * them with neutral defaults so an un-themed toolbar still renders sensibly.
+ *
+ * All selectors use :where() for zero specificity so consumer overrides
+ * always win regardless of declaration order.
+ *
+ * Public tokens (toolbar):
+ *
+ *   Layout
+ *   --itx-toolbar-display              default: flex
+ *   --itx-toolbar-flex                 default: 0 1 auto
+ *   --itx-toolbar-align-items          default: center
+ *   --itx-toolbar-justify-content      default: flex-end
+ *   --itx-toolbar-gap                  default: 0
+ *   --itx-toolbar-width                default: fit-content
+ *
+ *   Frame
+ *   --itx-toolbar-padding              default: 0
+ *   --itx-toolbar-background           default: transparent
+ *   --itx-toolbar-border-width         default: 0
+ *   --itx-toolbar-border-style         default: solid
+ *   --itx-toolbar-border-color         default: transparent
+ *   --itx-toolbar-border-radius        default: 0
+ *
+ *   State
+ *   --itx-toolbar-disabled-opacity     default: 0.6
+ *
+ * Public tokens (toolbar-group):
+ *
+ *   --itx-toolbar-group-display        default: inline-flex
+ *   --itx-toolbar-group-align-items    default: center
+ *   --itx-toolbar-group-gap            default: cascades to --itx-toolbar-gap
+ */
+
+/* ── Toolbar host ────────────────────────────────────────────────────────── */
+
+:where(interop-toolbar),
+:where([interop-toolbar]) {
+	display: var(--itx-toolbar-display, flex);
+	flex: var(--itx-toolbar-flex, 0 1 auto);
+	align-items: var(--itx-toolbar-align-items, center);
+	justify-content: var(--itx-toolbar-justify-content, flex-end);
+	gap: var(--itx-toolbar-gap, 0);
+	width: var(--itx-toolbar-width, fit-content);
+	padding: var(--itx-toolbar-padding, var(--itx-spacing-1));
+	background-color: var(--itx-toolbar-background, transparent);
+	border-width: var(--itx-toolbar-border-width, 0);
+	border-style: var(--itx-toolbar-border-style, solid);
+	border-color: var(--itx-toolbar-border-color, transparent);
+	border-radius: var(--itx-toolbar-border-radius, 0);
+}
+
+/* ── Orientation ─────────────────────────────────────────────────────────── */
+/*
+ * ARIA orientation drives the flex axis. Vertical toolbars stretch their
+ * children so a stack of buttons reads as one visual column.
+ */
+
+:where(interop-toolbar[aria-orientation="vertical"]),
+:where([interop-toolbar][aria-orientation="vertical"]) {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+/* ── Disabled state ──────────────────────────────────────────────────────── */
+/*
+ * The toolbar component sets aria-disabled on its host when the input
+ * flips. Visual dim + pointer-events:none mirrors the native disabled UX
+ * without preventing screen-reader announcement of contents.
+ */
+
+:where(interop-toolbar[aria-disabled="true"]),
+:where([interop-toolbar][aria-disabled="true"]) {
+	opacity: var(--itx-toolbar-disabled-opacity, 0.6);
+	pointer-events: none;
+}
+
+/* ── Toolbar group ───────────────────────────────────────────────────────── */
+/*
+ * Groups are inline-flex by default so a regular group (independent
+ * actions) lays out horizontally and a radio group (one selection) stays
+ * tight. The inner `.interop-toolbar-group-content` wrapper from the
+ * template uses `display: contents` so the host's flex layout reaches
+ * straight through to the buttons / radio inputs.
+ */
+
+:where(interop-toolbar-group),
+:where([interop-toolbar-group]) {
+	display: var(--itx-toolbar-group-display, inline-flex);
+	align-items: var(--itx-toolbar-group-align-items, center);
+	gap: var(--itx-toolbar-group-gap, var(--itx-toolbar-gap, 0));
+}
+
+:where(.interop-toolbar-group-content) {
+	display: contents;
+}

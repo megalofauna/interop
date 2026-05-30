@@ -115,21 +115,3 @@
 }
 
 // ── Code block theming (Catppuccin Mocha) ───────────────────────────────────
-
-itx-code-block {
-	background: oklch(0.2 0.02 280);
-	color: oklch(0.88 0.02 280);
-}
-
-figure[interop-code-renderer] {
-	--itx-cr-body-bg: oklch(0.22 0.02 280);
-	--itx-cr-body-padding-block: 1.25rem;
-	--itx-cr-code-color: oklch(0.88 0.02 280);
-	--itx-cr-code-font-size: 0.8125rem;
-
-	pre,
-	code {
-		color: var(--itx-cr-code-color);
-		background: transparent;
-	}
-}

@@ -1,0 +1,44 @@
+/*
+ * InteropMotion — structural foundation.
+ *
+ * Property-agnostic substrate for the InteropMotion family of directives
+ * (InteropMotionTrigger, InteropMotionWhile, InteropMotionOn). Provides hooks
+ * that presets attach to; declares no transform, animation, or transition
+ * rules of its own. Each preset is a self-contained CSS module that targets
+ * [itx-motion-preset="<name>"].
+ *
+ * Loaded globally via `interop.css`. Selectors wrapped in :where() per the
+ * library's zero-specificity convention.
+ *
+ * Hooks owned here:
+ *   - [itx-motion-preset]                   universal preset attribute, the
+ *                                           directive-agnostic CSS surface
+ *   - .is-acting / .is-while / .is-on       state classes managed by each
+ *                                           directive; each preset references
+ *                                           the class(es) it supports
+ *   - [data-itx-motion-target]              opt-in marker for multi-child
+ *                                           scoping; presets use :has() to
+ *                                           route rules to the marked child
+ *   - @keyframes itx-motion-opacity-pulse   shared reduced-motion fallback;
+ *                                           presets reference it under
+ *                                           prefers-reduced-motion: reduce
+ */
+
+:where([itx-motion-preset]) {
+	position: relative;
+}
+
+:where([itx-motion-preset].is-acting),
+:where([itx-motion-preset].is-while),
+:where([itx-motion-preset].is-on) {
+	will-change: transform, opacity;
+}
+
+@keyframes itx-motion-opacity-pulse {
+	0% {
+		opacity: 0.6;
+	}
+	100% {
+		opacity: 1;
+	}
+}

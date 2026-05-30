@@ -81,6 +81,25 @@ export type ManagedActivation<TPayload = void> = ActivationHandler<TPayload> & {
    * Returns whether the handler is currently enabled.
    */
   isEnabled(): boolean;
+
+  /**
+   * Restore the handler to its just-created runtime state: cancels any
+   * pending debounced trigger, clears the throttle cooldown, releases the
+   * reentrancy lock, and clears `once` consumption (re-arming a handler
+   * that auto-disabled itself after firing).
+   *
+   * An *explicit* `disable()` call is preserved — if you disabled the
+   * handler yourself, it stays disabled after `reset()`. Call `enable()`
+   * separately to re-arm in that case. Only the implicit disable caused by
+   * `once` consumption is undone.
+   *
+   * Caveat: in-flight async handlers cannot be aborted. Their `onEnd` /
+   * `onError` callbacks will still fire when the orphaned work settles, so
+   * any UI state those hooks mutate should be guarded against running after
+   * a reset. Reset only releases the reentrancy lock so a fresh trigger is
+   * not blocked; it does not unsubscribe from work already in motion.
+   */
+  reset(): void;
 };
 
 /**
@@ -225,6 +244,18 @@ export function createActivationHandler<TPayload = void>(
       },
       isEnabled() {
         return enabled && !(once && consumedOnce);
+      },
+      reset() {
+        clearDebounce();
+        lastExecTs = 0;
+        running = false;
+        // Re-arm only when `enabled === false` was a side effect of `once`
+        // consumption — never when the consumer explicitly called disable().
+        if (once && consumedOnce && !enabled) {
+          enabled = true;
+        }
+        consumedOnce = false;
+        log("Handler reset to initial runtime state");
       },
     },
   );

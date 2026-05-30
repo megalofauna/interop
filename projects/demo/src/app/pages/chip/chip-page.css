@@ -1,0 +1,28 @@
+.chip-page__prose {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-2);
+}
+
+.chip-page__prose p {
+	margin: 0;
+}
+
+.chip-page__defs {
+	display: grid;
+	grid-template-columns: auto auto;
+	column-gap: var(--itx-spacing-4);
+	row-gap: var(--itx-spacing-2);
+	align-items: center;
+	margin: 0;
+}
+
+.chip-page__defs dt {
+	font-weight: 600;
+	color: var(--itx-neutral-11);
+}
+
+.chip-page__defs dd {
+	margin: 0;
+}
+

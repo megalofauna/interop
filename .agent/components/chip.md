@@ -10,6 +10,7 @@ src/lib/components/interop-chip/
   interop-chip-option/interop-chip-option.ts  filter chip (label + hidden checkbox)
   interop-chip-list/interop-chip-list.ts      display chip list (ul)
   interop-chip-item/interop-chip-item.ts      individual display chip (li)
+  interop-chip-badge/interop-chip-badge.ts    standalone inline chip (tag-agnostic)
   interop-chip-input/interop-chip-input.ts    free-form chip text entry (div)
 
 src/lib/styles/components/chip.css                   structural rules (global)
@@ -58,6 +59,25 @@ Individual display chip. The host **is** the `<li>`. When `[removable]="true"`, 
 
 **Data attributes on host:** `data-removable`, `data-disabled`
 
+### InteropChipBadge — `[interop-chip-badge]`
+
+A standalone, inline-friendly chip for single-use cases. The selector is **tag-agnostic** — the badge can sit on any inline-appropriate element (`<span>`, `<output>`, `<mark>`, `<div>`, etc.). Non-interactive by design: no remove button, no disabled state, no inputs. If you need a removable single chip, use a one-item `<ul interop-chip-list>` instead — that's *a list of one*, semantically distinct from *a badge*.
+
+```html
+<p>Build: <span interop-chip-badge>v0.1.0</span></p>
+<h2>Cargo bay <span interop-chip-badge>operational</span></h2>
+```
+
+**Why not just use a one-item chip-list?**
+- A `<ul>` is block-level; a badge needs to sit inline within prose.
+- A one-item list announces "list, 1 item" — an *over*claim if the chip is just a status label, not a list.
+- No `aria-label` required (nothing to label); no list wrapper required.
+- Removes the "list of one" UX smell ("this could be more").
+
+Visual paint reuses the shared `--itx-chip-*` family. The badge defaults to a smaller scale by overriding `--itx-chip-sizing-multiplier` to `1` on its own selector.
+
+**Inputs:** none — presentational.
+
 ### InteropChipInput — `div[interop-chip-input]`
 
 Free-form text entry that converts input into chips. Implements the Gmail To: field pattern. Implements `ControlValueAccessor` — usable with `ngModel` or `formControlName`.
@@ -96,25 +116,32 @@ Sub-component-specific tokens (`--itx-chip-filter-*`, `--itx-chip-input-*`) over
 
 ## State activation pattern
 
-Private `--_` slots hold the state-resolved value; public tokens supply the theme default.
+A single shared base rule paints every chip-shaped element using the public `--itx-chip-*` tokens. State rules on `chip-option` re-define those same cascading tokens — the base rule's `var(--itx-chip-*)` reads the new value automatically, so no private slots are needed.
 
 ```css
-/* default: slot reads from public token */
-:where(label[interop-chip-option]) {
-  --_bg: var(--itx-chip-bg, transparent);
-  background: var(--_bg);
+/* shared base: paint every chip from the public tokens */
+:where(
+  label[interop-chip-option],
+  li[interop-chip-item],
+  [interop-chip-badge],
+  div[interop-chip-input] .itx-chip
+) {
+  background: var(--itx-chip-background, transparent);
+  /* … border, color, padding, etc. */
 }
 
-/* hover: slot overrides to hover token */
+/* hover: re-define cascading token; base picks up the new value */
 :where(label[interop-chip-option]:hover:not([data-disabled])) {
-  --_bg: var(--itx-chip-hover-bg, var(--itx-surface-hover, transparent));
+  --itx-chip-background: var(--itx-chip-background-hover, var(--itx-surface-hover));
 }
 
-/* checked: slot overrides to accent token */
+/* checked: same pattern */
 :where(label[interop-chip-option][data-checked]) {
-  --_bg: var(--itx-chip-selected-bg, var(--itx-chip-accent, ...));
+  --itx-chip-background: var(--itx-chip-background-selected, var(--itx-chip-accent));
 }
 ```
+
+The remove button on `chip-item` still uses a private `--_remove-border` slot because two distinct state rules (`hover` and `:has(:focus-visible)`) need to swap its value.
 
 ## Remove button — hover/focus state design (chip-item)
 
@@ -130,20 +157,29 @@ The `--_remove-border` private slot is set on the `li` and inherited by the butt
 
 The `li[interop-chip-item]` element itself is NOT focusable. Using `:focus-visible` or `:focus` on the `<li>` would never fire. `:has(.itx-chip-remove:focus-visible)` is the correct selector for detecting button focus.
 
+## Sizing
+
+Chips ship at a single fixed size. Padding is computed from `--itx-chip-padding-step × --itx-chip-sizing-multiplier` (theme defaults: `0.1875rem × 1.25`). `chip-badge` overrides the multiplier to `1` on its own selector for an intrinsically smaller inline-prose appearance.
+
+To bypass the formula entirely, override `--itx-chip-padding` or `--itx-chip-radius` directly. Border-radius defaults to `var(--itx-radius-full)` (pill); set `--itx-chip-radius` locally to change it.
+
 ## Token reference
 
 ### Shared chip tokens (set on any ancestor, e.g. `[interop-root]`)
 
 | Token | Default | Description |
 |---|---|---|
+| `--itx-chip-padding-step` | `0.1875rem` | Base unit for the padding formula |
+| `--itx-chip-sizing-multiplier` | `1.25` | Multiplier; padding = step × mult, inline = block × 2 |
 | `--itx-chip-background` | `transparent` | Background (all chip shapes) |
 | `--itx-chip-color` | `inherit` | Text color |
-| `--itx-chip-border` | `1px solid var(--itx-border)` | Border |
+| `--itx-chip-border` | `2px solid transparent` | Border |
 | `--itx-chip-radius` | `var(--itx-radius-full)` | Border radius |
-| `--itx-chip-padding` | `0.1875rem 0.625rem` | Padding |
-| `--itx-chip-font-size` | `0.8125rem` | Font size |
+| `--itx-chip-padding` | *computed from multiplier* | Set to bypass the multiplier formula |
+| `--itx-chip-font-size` | `var(--itx-font-size-caption)` | Font size |
 | `--itx-chip-font-weight` | `inherit` | Font weight |
-| `--itx-chip-gap` | `0.5rem` | Internal gap |
+| `--itx-chip-line-height` | `1.4` | Line-box height (badge overrides to `1.2`) |
+| `--itx-chip-gap` | `var(--itx-spacing-2)` | Internal gap |
 | `--itx-chip-background-hover` | `var(--itx-surface-hover)` | Hover background |
 | `--itx-chip-color-hover` | `inherit` | Hover text color |
 | `--itx-chip-accent` | `var(--itx-colorway)` | Selected/checked background |
@@ -171,7 +207,7 @@ The `li[interop-chip-item]` element itself is NOT focusable. Using `:focus-visib
 | Token | Description |
 |---|---|
 | `--itx-chip-item-gap` | Gap between label text and remove button |
-| `--itx-chip-padding-removable` | Padding when remove button is present (asymmetric) |
+| `--itx-chip-padding-removable` | Padding when remove button is present (asymmetric). Defaults to the multiplier formula; override for absolute values. |
 | `--itx-chip-remove-background` | Remove button background |
 | `--itx-chip-remove-border` | Remove button border (rest state) |
 | `--itx-chip-remove-border-hover` | Remove button border when chip is hovered |
@@ -192,6 +228,10 @@ The `li[interop-chip-item]` element itself is NOT focusable. Using `:focus-visib
 | `--itx-chip-filter-radius` | Filter container border radius |
 | `--itx-chip-filter-padding` | Filter container padding |
 | `--itx-chip-surface` | Semantic fallback for filter background |
+
+### chip-badge tokens
+
+The badge has **no per-component tokens** — it expresses its smaller default by overriding `--itx-chip-sizing-multiplier` to `1` and `--itx-chip-line-height` to `auto` on its own selector. Reuses the shared `--itx-chip-*` family for everything else.
 
 ### chip-input tokens (set on `div[interop-chip-input]`)
 

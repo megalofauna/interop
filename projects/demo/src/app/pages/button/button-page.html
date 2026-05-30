@@ -20,16 +20,6 @@
 		<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 		<demo-section id="usage" heading="Button system">
 			<demo-example label="Overview" [lede]="ledes.overview">
-				<div class="inline-snippet">
-					<button interop-button>Label</button>
-					<p>The most basic instatiation of InteropButton</p>
-				</div>
-				<div class="inline-snippet">
-					<button interop-button itx-size="md">Do thing</button>
-					<itx-inline-code language="html"
-						>&lt;button interop-button&gt;Label&lt;/button&gt;</itx-inline-code
-					>
-				</div>
 				<!--<div class="flex">
 					<button interop-button itx-radius="sm" itx-size="xs">Tiny</button>
 					<button interop-button itx-radius="sm" itx-size="sm">Small</button>
@@ -67,7 +57,7 @@
 					<div
 						interop-expansion-body
 						[peek]="true"
-						style="--itx-expansion-peek-fade: var(--itx-neutral-3)"
+						style="--itx-expansion-panel-body-peek-fade-color: var(--itx-neutral-3)"
 					>
 						<itx-code-block
 							language="css"
@@ -118,7 +108,7 @@
 					<div
 						interop-expansion-body
 						[peek]="true"
-						style="--itx-expansion-peek-fade: var(--itx-neutral-3)"
+						style="--itx-expansion-panel-body-peek-fade-color: var(--itx-neutral-3)"
 					>
 						<itx-code-block
 							language="css"
@@ -162,13 +152,12 @@
 				configured window. Useful for physical actions like engine bursts where
 				rapid repeat clicks should be ignored.
 			</interop-callout>
-
-			<demo-example label="1 s throttle window" [lede]="ledes.throttle">
-				<button
-					interop-button="action-plus"
-					itx-size="md"
-					(click)="onThrottleClick()"
-				>
+			<demo-example
+				label="1 s throttle window"
+				[lede]="ledes.throttle"
+				(reset)="resetThrottleExample()"
+			>
+				<button interop-button="action" (click)="onThrottleClick()">
 					Boost
 				</button>
 				<itx-terminal
@@ -176,7 +165,12 @@
 					[entries]="throttleLog()"
 					(reset)="throttleLog.set([])"
 				/>
-				<itx-code-block language="typescript" [code]="throttleCode" />
+
+				<itx-code-block
+					[wrapToggle]="true"
+					language="typescript"
+					[code]="throttleCode"
+				/>
 			</demo-example>
 		</demo-section>
 
@@ -188,7 +182,11 @@
 				firing.
 			</interop-callout>
 
-			<demo-example label="600 ms debounce" [lede]="ledes.debounce">
+			<demo-example
+				label="600 ms debounce"
+				[lede]="ledes.debounce"
+				(reset)="resetDebounceExample()"
+			>
 				<button
 					interop-button="action"
 					itx-size="md"
@@ -212,6 +210,7 @@
 			<demo-example
 				label="Non-reentrant (2 s async handler)"
 				[lede]="ledes.reentrancy"
+				(reset)="resetReentrantExample()"
 			>
 				<button
 					interop-button="action"

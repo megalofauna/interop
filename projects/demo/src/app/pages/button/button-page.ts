@@ -12,6 +12,7 @@ import {
 	InteropTable,
 	InteropCellDef,
 	provideInteropIcons,
+	InteropList,
 	type TableColumn,
 	type TableGroupRow,
 } from "interop";
@@ -48,6 +49,7 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		InteropCallout,
 		InteropTable,
 		InteropCellDef,
+		InteropList,
 		CodeBlock,
 		InlineCode,
 		PageNav,
@@ -128,6 +130,11 @@ export class ButtonPage {
 		this.throttledHandler(undefined);
 	}
 
+	resetThrottleExample() {
+		this.throttledHandler.reset();
+		this.throttleLog.set([]);
+	}
+
 	// ── Debounce demo ────────────────────────────────────────────────────────
 	debounceLog = signal<TerminalEntry[]>([]);
 
@@ -146,6 +153,11 @@ export class ButtonPage {
 			{ text: "click received", time: Date.now() },
 		]);
 		this.debouncedHandler(undefined);
+	}
+
+	resetDebounceExample() {
+		this.debouncedHandler.reset();
+		this.debounceLog.set([]);
 	}
 
 	// ── Reentrancy demo ──────────────────────────────────────────────────────
@@ -180,6 +192,16 @@ export class ButtonPage {
 			]);
 		}
 		this.reentrantHandler(undefined);
+	}
+
+	resetReentrantExample() {
+		// `reset()` releases the reentrancy lock so the next click is accepted
+		// even if the 2s async handler is still in flight. The orphaned promise
+		// still resolves, but `reentrantActive` is force-cleared here so the
+		// button label flips back to "Submit order" immediately.
+		this.reentrantHandler.reset();
+		this.reentrantActive.set(false);
+		this.reentrantLog.set([]);
 	}
 
 	// ── Code snippets ────────────────────────────────────────────────────────
