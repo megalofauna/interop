@@ -177,6 +177,11 @@
 								"glob": "**/*.md",
 								"input": "projects/protocol/src/content",
 								"output": "content"
+							},
+							{
+								"glob": "**/*.woff2",
+								"input": "projects/protocol/src/fonts",
+								"output": "fonts"
 							}
 						],
 						"styles": ["projects/protocol/src/styles.scss"],

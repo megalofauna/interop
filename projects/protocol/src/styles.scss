@@ -1,9 +1,48 @@
 @import "../../../projects/interop/src/lib/styles/themes/protocol.css";
 
+/* IBM Plex Sans — local-first, variable. The browser walks src left-to-right:
+ * if the font is installed it's used with zero network; only otherwise is the
+ * self-hosted variable woff2 fetched. One face spans the whole weight axis
+ * (100–700). Family name matches the references below and interop's
+ * --itx-font-family default, so both pick it up. */
+@font-face {
+	font-family: "IBM Plex Sans";
+	font-style: normal;
+	font-weight: 100 700;
+	font-display: swap;
+	src:
+		local("IBM Plex Sans"),
+		local("IBMPlexSans"),
+		url("/fonts/IBMPlexSans-Variable.woff2") format("woff2") tech(variations);
+}
+@font-face {
+	font-family: "IBM Plex Sans";
+	font-style: italic;
+	font-weight: 100 700;
+	font-display: swap;
+	src:
+		local("IBM Plex Sans Italic"),
+		local("IBMPlexSans-Italic"),
+		url("/fonts/IBMPlexSans-Variable-Italic.woff2") format("woff2") tech(variations);
+}
+
 html,
 body {
 	margin: 0;
 	min-height: 100%;
+	font-family:
+		"IBM Plex Sans",
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Open Sans",
+		"Helvetica Neue",
+		sans-serif;
 }
 
 :where([interop-root]) {
