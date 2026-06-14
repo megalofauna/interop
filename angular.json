@@ -143,6 +143,84 @@
 					"defaultConfiguration": "development"
 				}
 			}
+		},
+		"protocol": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss",
+					"skipTests": true
+				},
+				"@schematics/angular:class": {
+					"skipTests": true
+				},
+				"@schematics/angular:directive": {
+					"skipTests": true
+				},
+				"@schematics/angular:service": {
+					"skipTests": true
+				}
+			},
+			"root": "projects/protocol",
+			"sourceRoot": "projects/protocol/src",
+			"prefix": "ptx",
+			"architect": {
+				"build": {
+					"builder": "@angular/build:application",
+					"options": {
+						"browser": "projects/protocol/src/main.ts",
+						"index": "projects/protocol/src/index.html",
+						"tsConfig": "projects/protocol/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							{
+								"glob": "**/*.md",
+								"input": "projects/protocol/src/content",
+								"output": "content"
+							}
+						],
+						"styles": ["projects/protocol/src/styles.scss"],
+						"stylePreprocessorOptions": {
+							"includePaths": ["projects/interop/src", "projects/protocol/src"]
+						}
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "1MB",
+									"maximumError": "1.5MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "8kB",
+									"maximumError": "16kB"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular/build:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "protocol:build:production"
+						},
+						"development": {
+							"buildTarget": "protocol:build:development"
+						}
+					},
+					"defaultConfiguration": "development"
+				}
+			}
 		}
 	},
 	"cli": {

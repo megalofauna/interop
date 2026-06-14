@@ -26,6 +26,7 @@
 		"build:watch": "ng build --watch",
 		"build:lib": "ng build interop",
 		"build:demo": "ng build demo",
+		"build:protocol": "ng build protocol",
 		"build:icons": "tsx tools/gen-phosphor-icons.ts Working-Iconset-Files/svgs/phosphor/regular projects/interop/src/lib/iconsets/phosphor Ph",
 		"build:content": "tsx tools/djot-build.ts projects/demo/src",
 		"build:content:watch": "tsx tools/djot-build.ts --watch projects/demo/src",
@@ -34,6 +35,7 @@
 		"serve": "ng serve demo",
 		"start": "ng serve demo",
 		"demo": "ng serve demo --open",
+		"protocol": "ng serve protocol --open",
 		"docs:api": "typedoc --plugin typedoc-plugin-markdown --out docs/api projects/interop/src/public-api.ts --tsconfig projects/interop/tsconfig.lib.json --excludePrivate --excludeProtected --hideBreadcrumbs",
 		"docs:dev": "mkdocs serve",
 		"docs:build": "mkdocs build",
@@ -84,5 +86,8 @@
 		"typedoc-plugin-markdown": "^4.9.0",
 		"typescript": "^5.2.0",
 		"zone.js": "^0.15.0"
+	},
+	"dependencies": {
+		"marked": "^18.0.5"
 	}
 }

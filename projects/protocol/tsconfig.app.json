@@ -1,0 +1,33 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/protocol",
+    "types": [],
+    "baseUrl": "../../",
+    "paths": {
+      "interop": ["projects/interop/src/public-api"],
+      "interop/highlighters/shiki": [
+        "projects/interop/highlighters/shiki/src/public-api.ts"
+      ],
+      "interop/*": ["projects/interop/src/*"],
+      "@interop/composites": ["projects/composites/src/public-api.ts"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "../../projects/interop/src/lib/**/*.ts",
+    "../../projects/interop/src/types/**/*.ts",
+    "../../projects/interop/highlighters/**/*.ts",
+    "../../projects/composites/src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "../../projects/interop/src/**/*.spec.ts",
+    "../../projects/interop/src/examples/**/*"
+  ],
+  "angularCompilerOptions": {
+    "compilationMode": "full"
+  }
+}
