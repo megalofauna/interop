@@ -11,13 +11,14 @@ body {
 }
 
 /* Markdown code fences hydrate into <itx-code-block> (see content-codeblocks).
- * Give them the same block rhythm the type scale gives <pre>, and pin a dark
- * code surface so the github-dark shiki theme reads regardless of system
- * scheme. Theme-aware (dual-theme) highlighting is a follow-up. */
+ * Give them the same block rhythm the type scale gives <pre>, and make the code
+ * surface scheme-aware via light-dark() so it tracks the github-light/-dark
+ * token colors the highlighter emits (see protocol-highlighter). */
 [interop-typography-root] :where(* + itx-code-block) {
 	margin-block-start: var(--itx-rhythm-3);
 }
 
 itx-code-block {
-	--itx-cb-body-background: #0d1117;
+	--itx-cb-body-background: light-dark(#fff, #24292e);
+	color: light-dark(#24292e, #e1e4e8);
 }
