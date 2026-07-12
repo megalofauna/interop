@@ -28,6 +28,7 @@ export class CalloutPage {
 	readonly palettes = [
 		{ id: "seventies", label: "70s — earthy" },
 		{ id: "eighties", label: "80s — OS" },
+		{ id: "aero", label: "Aero — glass" },
 	];
 
 	// ── Code strings ─────────────────────────────────────────────────────────

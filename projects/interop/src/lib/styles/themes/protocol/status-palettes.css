@@ -67,3 +67,28 @@
 	--itx-danger-surface: light-dark(oklch(0.9 0.12 29), oklch(0.34 0.18 29));
 	--itx-on-danger-surface: light-dark(oklch(0.34 0.19 29), oklch(0.95 0.1 29));
 }
+
+/* ── Aero / Aqua — glossy candy glass: the signature Aqua blue plus gel red /
+ * amber / green, over pale cool "frosted" surfaces. The frosted-UI era (Mac OS
+ * X Aqua, Windows Aero). Vivid but cool-leaning, tuned to sit under a frosted
+ * toast tray (see the aero panel override in components/toast.css). */
+:where([data-status-palette="aero"]) {
+	--itx-danger: light-dark(oklch(0.62 0.21 25), oklch(0.68 0.2 25));
+	--itx-info: light-dark(oklch(0.6 0.19 255), oklch(0.7 0.18 255));
+	--itx-success: light-dark(oklch(0.72 0.18 150), oklch(0.78 0.18 150));
+	--itx-warning: light-dark(oklch(0.82 0.16 90), oklch(0.85 0.15 90));
+
+	--itx-on-danger: oklch(0.97 0.02 95);
+	--itx-on-info: oklch(0.97 0.02 95);
+	--itx-on-success: oklch(0.24 0.07 150);
+	--itx-on-warning: oklch(0.28 0.07 95);
+
+	--itx-info-surface: light-dark(oklch(0.94 0.04 255), oklch(0.34 0.08 255));
+	--itx-on-info-surface: light-dark(oklch(0.35 0.12 255), oklch(0.88 0.06 255));
+	--itx-warning-surface: light-dark(oklch(0.95 0.06 90), oklch(0.36 0.08 90));
+	--itx-on-warning-surface: light-dark(oklch(0.34 0.1 90), oklch(0.9 0.08 90));
+	--itx-success-surface: light-dark(oklch(0.94 0.05 150), oklch(0.34 0.08 150));
+	--itx-on-success-surface: light-dark(oklch(0.32 0.1 150), oklch(0.9 0.08 150));
+	--itx-danger-surface: light-dark(oklch(0.94 0.04 25), oklch(0.34 0.08 25));
+	--itx-on-danger-surface: light-dark(oklch(0.35 0.13 25), oklch(0.9 0.07 25));
+}

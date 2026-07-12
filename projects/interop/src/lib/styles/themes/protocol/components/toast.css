@@ -29,26 +29,21 @@
 	--itx-toast-item-gap: var(--itx-spacing-3);
 	--itx-toast-shadow: var(--itx-shadow-sm);
 
-	/* Panel — the viewport becomes a frosted tray around the whole group,
-	   applied only when populated (:has). Every property is swappable; the
-	   eighties palette re-skins this into a solid EGA panel below. */
+	/* Panel — the viewport becomes a tray around the whole group, applied only
+	   when populated (:has). Default (seventies) is a saturated warm charcoal —
+	   70s hi-fi chassis, earthy status cards glowing inside it. eighties → EGA
+	   chrome; aero → frosted glass. All token swaps in the palette blocks below. */
 	--itx-toast-panel-padding: var(--itx-spacing-3);
-	--itx-toast-panel-background: color-mix(
-		in oklab,
-		var(--itx-surface-above) 62%,
-		transparent
+	--itx-toast-panel-background: light-dark(
+		oklch(0.31 0.03 65),
+		oklch(0.26 0.025 65)
 	);
-	--itx-toast-panel-background-image: linear-gradient(
-		to bottom,
-		oklch(1 0 0 / 0.1),
-		oklch(1 0 0 / 0)
-	);
-	--itx-toast-panel-backdrop-filter: blur(16px) saturate(1.6);
+	--itx-toast-panel-background-image: none;
+	--itx-toast-panel-backdrop-filter: none;
 	--itx-toast-panel-border-width: 1px;
-	--itx-toast-panel-border-color: color-mix(
-		in oklab,
-		var(--itx-border) 60%,
-		transparent
+	--itx-toast-panel-border-color: light-dark(
+		oklch(0.42 0.03 65),
+		oklch(0.36 0.03 65)
 	);
 	--itx-toast-panel-radius: var(--itx-radius-md);
 	--itx-toast-panel-shadow: var(--itx-shadow-lg);
@@ -142,4 +137,32 @@
 :where([data-status-palette="eighties"] interop-toast-item) {
 	--itx-toast-border-radius: 0px;
 	--itx-toast-shadow: none;
+}
+
+/* ── Aero: frosted-glass tray — the aqua/aero era. Cool translucent fill, heavy
+ * blur, a glossy top highlight, a light rim, and a soft blue-cast glow. Cards
+ * round off to sit as glassy pods inside the pane. */
+:where([data-status-palette="aero"] interop-toast-viewport) {
+	--itx-toast-panel-background: light-dark(
+		color-mix(in oklab, var(--itx-info-surface) 55%, transparent),
+		color-mix(in oklab, oklch(0.42 0.06 255) 50%, transparent)
+	);
+	--itx-toast-panel-background-image: linear-gradient(
+		to bottom,
+		oklch(1 0 0 / 0.28),
+		oklch(1 0 0 / 0.03) 45%,
+		oklch(1 0 0 / 0)
+	);
+	--itx-toast-panel-backdrop-filter: blur(20px) saturate(1.8);
+	--itx-toast-panel-border-width: 1px;
+	--itx-toast-panel-border-color: light-dark(
+		oklch(1 0 0 / 0.55),
+		oklch(1 0 0 / 0.22)
+	);
+	--itx-toast-panel-radius: 16px;
+	--itx-toast-panel-shadow: 0 12px 40px oklch(0.5 0.12 255 / 0.35);
+}
+
+:where([data-status-palette="aero"] interop-toast-item) {
+	--itx-toast-border-radius: var(--itx-radius-md);
 }
