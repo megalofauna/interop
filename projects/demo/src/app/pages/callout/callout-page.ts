@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
-import { InteropCallout, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import { InteropCallout, InteropTable, InteropCellDef, InteropSegmentedControl, InteropSegment, type TableColumn } from 'interop';
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -17,18 +17,18 @@ interface ApiEntry {
 @Component({
 	selector: "callout-page",
 	standalone: true,
-	imports: [InteropCallout, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
+	imports: [InteropCallout, InteropTable, InteropCellDef, InteropSegmentedControl, InteropSegment, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	templateUrl: "./callout-page.html",
 	styleUrl: "./callout-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalloutPage {
 	/** Live status-palette preview — drives `data-status-palette` on the page. */
-	readonly palette = signal<"seventies" | "eighties">("seventies");
+	readonly palette = signal<string>("seventies");
 	readonly palettes = [
 		{ id: "seventies", label: "70s — earthy" },
 		{ id: "eighties", label: "80s — OS" },
-	] as const;
+	];
 
 	// ── Code strings ─────────────────────────────────────────────────────────
 

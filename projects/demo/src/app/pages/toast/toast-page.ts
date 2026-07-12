@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from "@angular/core";
-import { InteropToastViewport, InteropToastService, InteropButton, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import { InteropToastViewport, InteropToastService, InteropButton, InteropTable, InteropCellDef, InteropSegmentedControl, InteropSegment, type TableColumn } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
@@ -17,7 +17,7 @@ interface ApiEntry {
 @Component({
 	selector: "toast-page",
 	standalone: true,
-	imports: [InteropToastViewport, InteropButton, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoNotes, DemoMasthead],
+	imports: [InteropToastViewport, InteropButton, InteropTable, InteropCellDef, InteropSegmentedControl, InteropSegment, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	templateUrl: "./toast-page.html",
 	styleUrl: "./toast-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,11 +26,11 @@ export class ToastPage {
 	private readonly toast = inject(InteropToastService);
 
 	/** Live status-palette preview — drives `data-status-palette` on the page. */
-	readonly palette = signal<"seventies" | "eighties">("seventies");
+	readonly palette = signal<string>("seventies");
 	readonly palettes = [
 		{ id: "seventies", label: "70s — earthy" },
 		{ id: "eighties", label: "80s — OS" },
-	] as const;
+	];
 
 	showSuccess() {
 		this.toast.success('Docking request approved. Bay 3 is yours.');

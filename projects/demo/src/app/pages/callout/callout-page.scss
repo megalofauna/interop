@@ -2,35 +2,9 @@
 	display: block;
 }
 
-/* Palette switcher — swaps data-status-palette on the page to preview the sets. */
+/* Palette switcher — an interop-segmented-control; page owns only its spacing. */
 .palette-switch {
-	display: flex;
-	align-items: center;
-	gap: var(--itx-spacing-2);
 	margin-block-end: var(--itx-spacing-6);
-}
-
-.palette-switch__label {
-	font-size: var(--itx-font-size-label);
-	font-weight: 600;
-	color: var(--itx-muted);
-}
-
-.palette-switch__option {
-	padding: var(--itx-spacing-1) var(--itx-spacing-3);
-	border: 1px solid var(--itx-border);
-	border-radius: var(--itx-radius-sm);
-	background: transparent;
-	color: var(--itx-text);
-	font: inherit;
-	font-size: var(--itx-font-size-label);
-	cursor: pointer;
-
-	&.is-active {
-		background: var(--itx-colorway);
-		border-color: var(--itx-colorway);
-		color: var(--itx-on-colorway);
-	}
 }
 
 /* Solid-fill treatment preview — full-strength 70s accent as the background,

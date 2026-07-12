@@ -8,20 +8,17 @@
 	<interop-toast-viewport />
 
 	<!-- ── Palette switcher (preview) ──────────────────────────────────────── -->
-	<div class="palette-switch" role="group" aria-label="Status colour palette">
-		<span class="palette-switch__label">Palette</span>
+	<fieldset
+		interop-segmented-control
+		class="palette-switch"
+		label="Status palette"
+		[value]="palette()"
+		(valueChange)="palette.set($event)"
+	>
 		@for (p of palettes; track p.id) {
-			<button
-				type="button"
-				class="palette-switch__option"
-				[class.is-active]="palette() === p.id"
-				[attr.aria-pressed]="palette() === p.id"
-				(click)="palette.set(p.id)"
-			>
-				{{ p.label }}
-			</button>
+			<button interop-segment [value]="p.id">{{ p.label }}</button>
 		}
-	</div>
+	</fieldset>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
