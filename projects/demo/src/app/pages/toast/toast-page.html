@@ -1,4 +1,4 @@
-<article class="demo-page">
+<article class="demo-page" [attr.data-status-palette]="palette()">
 	<demo-masthead category="Components" title="Toast">
 		Imperative notification toasts via <code>InteropToastService</code>. Place
 		one <code>&lt;interop-toast-viewport /&gt;</code> in the app shell; call
@@ -6,6 +6,22 @@
 	</demo-masthead>
 
 	<interop-toast-viewport />
+
+	<!-- ── Palette switcher (preview) ──────────────────────────────────────── -->
+	<div class="palette-switch" role="group" aria-label="Status colour palette">
+		<span class="palette-switch__label">Palette</span>
+		@for (p of palettes; track p.id) {
+			<button
+				type="button"
+				class="palette-switch__option"
+				[class.is-active]="palette() === p.id"
+				[attr.aria-pressed]="palette() === p.id"
+				(click)="palette.set(p.id)"
+			>
+				{{ p.label }}
+			</button>
+		}
+	</div>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">

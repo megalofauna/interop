@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from "@angular/core";
+import { Component, ChangeDetectionStrategy, inject, signal } from "@angular/core";
 import { InteropToastViewport, InteropToastService, InteropButton, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -24,6 +24,13 @@ interface ApiEntry {
 })
 export class ToastPage {
 	private readonly toast = inject(InteropToastService);
+
+	/** Live status-palette preview — drives `data-status-palette` on the page. */
+	readonly palette = signal<"seventies" | "eighties">("seventies");
+	readonly palettes = [
+		{ id: "seventies", label: "70s — earthy" },
+		{ id: "eighties", label: "80s — OS" },
+	] as const;
 
 	showSuccess() {
 		this.toast.success('Docking request approved. Bay 3 is yours.');
