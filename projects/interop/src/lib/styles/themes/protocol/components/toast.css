@@ -59,14 +59,14 @@
 	--itx-toast-message-font-weight: 500;
 	--itx-toast-description-font-size: var(--itx-font-size-caption);
 	--itx-toast-description-margin-block-start: var(--itx-spacing-1);
-	--itx-toast-description-opacity: 0.8;
+	--itx-toast-description-opacity: 1;
 
 	/* Item — motion */
 	--itx-toast-enter-duration: var(--itx-duration-base);
 	--itx-toast-enter-easing: var(--itx-easing-decelerate);
 
 	/* Actions */
-	--itx-toast-actions-gap: var(--itx-spacing-2);
+	--itx-toast-actions-gap: var(--itx-spacing-4);
 	--itx-toast-action-padding-block: var(--itx-spacing-1);
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
 	--itx-toast-action-border-width: 1px;
@@ -77,7 +77,7 @@
 	--itx-toast-action-background-hover: var(--itx-surface-hover);
 
 	/* Close */
-	--itx-toast-close-size: 1.5rem;
+	--itx-toast-close-size: 2.5rem;
 	--itx-toast-close-border-radius: var(--itx-radius-sm);
 	--itx-toast-close-opacity: 0.5;
 	--itx-toast-close-opacity-hover: 1;
@@ -130,12 +130,12 @@
  * so the stack reads like a stacked-window VGA dialog. All token swaps. */
 
 :where([data-status-palette="eighties"] interop-toast-viewport) {
-	--itx-toast-panel-background: var(--itx-info);
+	--itx-toast-panel-background: var(--itx-neutral-3);
 	--itx-toast-panel-background-image: none;
 	--itx-toast-panel-backdrop-filter: none;
-	--itx-toast-panel-border-width: 3px;
-	--itx-toast-panel-border-color: var(--itx-warning);
-	--itx-toast-panel-radius: 0px;
+	--itx-toast-panel-border-width: 4px;
+	--itx-toast-panel-border-color: var(--itx-neutral-5);
+	--itx-toast-panel-radius: var(--itx-radius-nominal);
 	--itx-toast-panel-shadow: 6px 6px 0 0 oklch(0 0 0 / 0.5);
 }
 
