@@ -7,6 +7,7 @@
  *   Color   --itx-kbd-color           --itx-kbd-background
  *   Edge    --itx-kbd-border-color    --itx-kbd-border-width
  *   Keycap  --itx-kbd-shadow-size     --itx-kbd-shadow-color
+ *   Tilt    --itx-kbd-perspective     --itx-kbd-tilt
  */
 
 :where([interop-root] kbd[interop-kbd]) {
@@ -24,11 +25,15 @@
 	--itx-kbd-color: var(--itx-on-surface);
 	--itx-kbd-background: var(--itx-surface-above);
 
-	/* edge — thicker bottom border gives the key-cap its depth */
+	/* edge — thicker bottom border is the raised front lip of the cap */
 	--itx-kbd-border-color: var(--itx-border);
-	--itx-kbd-border-width: 1px 1px 0.25em;
+	--itx-kbd-border-width: 1px 1px 0.35em;
 
 	/* keycap drop shadow */
 	--itx-kbd-shadow-size: 2px;
 	--itx-kbd-shadow-color: var(--itx-border);
+
+	/* 3D tilt — viewed from above and front */
+	--itx-kbd-perspective: 8em; /* smaller = stronger recede */
+	--itx-kbd-tilt: 20deg;
 }

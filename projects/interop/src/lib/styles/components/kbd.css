@@ -32,4 +32,10 @@
 	border-radius: var(--itx-kbd-radius);
 
 	box-shadow: 0 var(--itx-kbd-shadow-size) 0 var(--itx-kbd-shadow-color);
+
+	/* Tilt the cap as if viewed from above and front: the top edge recedes while
+	 * the base stays planted (transform-origin: bottom). One composited transform
+	 * — GPU, no layout or paint, no will-change needed for a static tilt. */
+	transform: perspective(var(--itx-kbd-perspective)) rotateX(var(--itx-kbd-tilt));
+	transform-origin: bottom center;
 }
