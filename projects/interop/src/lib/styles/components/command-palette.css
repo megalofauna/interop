@@ -14,8 +14,6 @@
 /* ── Modal shell (native <dialog>, centred near the top) ─────────────────── */
 
 :where(dialog[interop-command-palette]) {
-	display: flex;
-	flex-direction: column;
 	inline-size: var(--itx-cmdp-inline-size);
 	max-inline-size: var(--itx-cmdp-max-inline-size);
 	max-block-size: var(--itx-cmdp-max-block-size);
@@ -29,6 +27,15 @@
 	border: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
 	border-radius: var(--itx-cmdp-radius);
 	box-shadow: var(--itx-cmdp-shadow);
+}
+
+/* Only lay out (and show) the box when the native dialog is actually open —
+ * showModal() sets [open]. Without scoping display to [open], the flex layout
+ * overrides the UA `dialog:not([open]) { display: none }` and the palette is
+ * permanently visible (and never a real modal). */
+:where(dialog[interop-command-palette][open]) {
+	display: flex;
+	flex-direction: column;
 }
 
 :where(dialog[interop-command-palette])::backdrop {
