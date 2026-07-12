@@ -198,11 +198,15 @@ axis (fuzzy sorting) that generates the bugs.
 Two supporting differentiators, anchored on Interop's structural advantages:
 
 1. **Composition over reimplementation.** It's `interop-dialog` (native modal) +
-   `interop-listbox` (already `aria-activedescendant`-correct, stable option ids,
-   `SelectControl[]`) + `InteropActivation` (debounce the async query; guard
-   command double-fire via reentrancy) + invoker commands (open). Consumers get
-   zero-specificity CSS overrides (no `::ng-deep`), light-DOM IDREF wiring, and
-   primitives they already know — where cmdk is a bespoke monolith.
+   `interop-listbox` (already `aria-activedescendant`-correct, stable option ids)
+   + **`InteropCollection`** (normalizes any source — array/Promise/Observable/
+   Signal/`{items,loading}` — into reactive `items/loading/error/isEmpty/count`,
+   **and discards stale async resolutions via an identity token**, solving the
+   cmdk [#267](https://github.com/pacocoursey/cmdk/issues/267)/[#280](https://github.com/pacocoursey/cmdk/issues/280)
+   async-desync directly) + `InteropActivation` (debounce query; guard double-fire)
+   + invoker commands (open). Consumers get zero-specificity CSS overrides (no
+   `::ng-deep`), light-DOM IDREF wiring, and primitives they already know — where
+   cmdk is a bespoke monolith.
 2. **devMode a11y guards** for the exact failure modes the research documents:
    dialog/input with no accessible name; `aria-activedescendant` pointing at a
    missing/unrendered option; active option missing `aria-selected` (VoiceOver);
@@ -233,8 +237,8 @@ Two supporting differentiators, anchored on Interop's structural advantages:
 ### Angular architecture
 - **Selector:** `dialog[interop-command-palette]` (identity attr on native dialog). `itx-*` for config axes (e.g. `itx-size`).
 - **Coordination:** `INTEROP_COMMAND_PALETTE_TOKEN` (parent `useExisting`); input + items resolve active-descendant id + activation through it.
-- **Signals:** `open` (two-way via interop-dialog); `(queryChange)` output (controlled); `[items]`/`[controls]` input (consumer-supplied, *already filtered*); `[loading]`/`[status]` inputs; `activeId` computed; `(command)` output fires the chosen item's id on Enter/click.
-- **Services:** `InteropActivation` → debounce the query emit (`debounceMs`) and guard command activation (`reentrant:false`/`once`) against double-fire; `InteropAttribute` for ARIA presets; `InteropCollection` for the item collection if useful.
+- **Signals:** `open` (two-way via interop-dialog); `(queryChange)` output (controlled — consumer filters); **`[collection]: InteropCollectionInput<CommandItem>`** (consumer-supplied, *already filtered*, any shape incl. async) → normalized via `interopCollection()`; `activeId` computed; `(command)` output fires the chosen item's id on Enter/click. `CommandItem = { id, label, icon?, shortcut?, keywords?, disabled? }` — **`id` is the stable identity** (never `textContent`).
+- **Services:** **`InteropCollection`** (via `interopCollection(this.collection)`) owns async normalization — `loading()`/`error()`/`isEmpty()`/`count()` drive the loading/empty/error slots *and* the live-region announcements, and its stale-token guard fixes the async-desync incumbents fail on; `InteropActivation` → debounce the query emit (`debounceMs`) and guard command activation (`reentrant:false`/`once`) against double-fire; `InteropAttribute` for ARIA presets.
 - **Hotkey:** ship a tiny reusable **`[interopHotkey]`** directive (⌘/Ctrl+K, platform-aware) — invoker commands are click-only, so the hotkey is the one unavoidable JS bit; broadly useful beyond the palette.
 
 ### CSS plan (two-file split, `.agent/css-strategy.md`)
