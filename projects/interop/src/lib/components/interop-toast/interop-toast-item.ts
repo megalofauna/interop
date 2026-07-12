@@ -15,6 +15,9 @@ import { DOCUMENT } from '@angular/common';
 
 import type { ToastState, ToastType } from './interop-toast.types';
 import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.config';
+import { InteropIcon } from '../interop-icon/interop-icon';
+import { provideInteropIcons } from '../../iconsets/core';
+import { TablerX } from '../../iconsets/tabler';
 
 /**
  * InteropToastItem — renders a single toast notification.
@@ -23,6 +26,8 @@ import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.co
 @Component({
   selector: 'interop-toast-item',
   standalone: true,
+  imports: [InteropIcon],
+  providers: [provideInteropIcons(TablerX)],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'status',
@@ -61,9 +66,7 @@ import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.co
           type="button"
           aria-label="Close notification"
           (click)="dismissed.emit()">
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+          <interop-icon name="tabler-x" [size]="16" />
         </button>
       }
     </div>
