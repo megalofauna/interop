@@ -46,6 +46,7 @@ import { InteropButton } from '../interop-button/interop-button';
     'aria-label': 'Notifications',
     '[attr.data-position]': 'effectivePosition()',
     '[attr.data-expanded]': 'expanded()',
+    '[attr.data-populated]': 'hasToasts()',
     '(mouseenter)': 'onMouseEnter()',
     '(mouseleave)': 'onMouseLeave()',
     '(focusin)': 'onFocusIn()',
@@ -138,6 +139,14 @@ export class InteropToastViewport implements OnDestroy {
     // Show the most recent toasts (end of array = newest)
     return all.slice(-max);
   });
+
+  /** Drives the panel's visibility as a host attribute rather than a CSS
+   *  :has() — :has() can miss the invalidation when the last toast is removed
+   *  dynamically, leaving an empty tray until some other style recalc. A
+   *  signal-backed attribute is deterministic. */
+  protected readonly hasToasts = computed<boolean>(
+    () => this.visibleToasts().length > 0,
+  );
 
   /** Surface the nuclear "clear all" control once a stack has formed. Threshold
    *  is the total count (visible + queued), so a deep backlog surfaces it too. */

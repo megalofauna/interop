@@ -29,10 +29,12 @@
 }
 
 /* The viewport becomes a visible PANEL wrapping the whole group — but only
-   while it actually holds toasts (:has), so an empty viewport leaves no
-   floating box. Every panel property is a token: frosted by default, but
-   fully re-skinnable (see the eighties EGA override in the theme). */
-:where(interop-toast-viewport:has(interop-toast-item)) {
+   while it actually holds toasts, so an empty viewport leaves no floating box.
+   Gated on data-populated (a signal-backed host attribute) rather than
+   :has(interop-toast-item): :has() can miss the invalidation when the last
+   toast is removed dynamically, stranding an empty tray. Every panel property
+   is a token: frosted by default, but fully re-skinnable (see the theme). */
+:where(interop-toast-viewport[data-populated="true"]) {
 	padding: var(--itx-toast-panel-padding);
 	background-color: var(--itx-toast-panel-background);
 	background-image: var(--itx-toast-panel-background-image);
