@@ -16,7 +16,7 @@
 	--itx-button-gap: none;
 
 	/* typography */
-	--itx-button-font-family: var(--itx-font-family-sans), "Figtree", sans-serif;
+	--itx-button-font-family: var(--itx-font-family-sans);
 	--itx-button-font-size: var(--itx-font-size-label);
 	--itx-button-line-height: 1;
 

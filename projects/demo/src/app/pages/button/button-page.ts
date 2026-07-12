@@ -227,7 +227,7 @@ export class ButtonPage {
 
 
 		/* typography */
-		--itx-button-font-family: var(--itx-sans-family), "Figtree", sans-serif;
+		--itx-button-font-family: var(--itx-font-family-sans);
 		--itx-button-font-size: var(--itx-fs-label);
 		/*--itx-button-line-height: 1.5rem;*/
 
@@ -309,7 +309,7 @@ export class ButtonPage {
 		{ groupLabel: "Typography" },
 		{
 			property: "--itx-button-font-family",
-			default: 'var(--itx-sans-family), "Figtree", sans-serif',
+			default: 'var(--itx-font-family-sans)',
 		},
 		{ property: "--itx-button-font-size", default: "var(--itx-fs-label)" },
 
