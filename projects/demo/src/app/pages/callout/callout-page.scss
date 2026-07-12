@@ -1,0 +1,69 @@
+:host {
+	display: block;
+}
+
+/* Palette switcher — swaps data-status-palette on the page to preview the sets. */
+.palette-switch {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	margin-block-end: var(--itx-spacing-6);
+}
+
+.palette-switch__label {
+	font-size: var(--itx-font-size-label);
+	font-weight: 600;
+	color: var(--itx-muted);
+}
+
+.palette-switch__option {
+	padding: var(--itx-spacing-1) var(--itx-spacing-3);
+	border: 1px solid var(--itx-border);
+	border-radius: var(--itx-radius-sm);
+	background: transparent;
+	color: var(--itx-text);
+	font: inherit;
+	font-size: var(--itx-font-size-label);
+	cursor: pointer;
+
+	&.is-active {
+		background: var(--itx-colorway);
+		border-color: var(--itx-colorway);
+		color: var(--itx-on-colorway);
+	}
+}
+
+/* Solid-fill treatment preview — full-strength 70s accent as the background,
+ * warm cream text (dark brown on the light gold). This is the "alerts / toasts"
+ * treatment; the tint callouts above are the "prose" treatment. */
+.callout-fills {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-2);
+}
+
+.callout-fill {
+	padding: var(--itx-spacing-3) var(--itx-spacing-4);
+	border-radius: var(--itx-radius-md);
+	font-weight: 600;
+}
+
+/* Text colour comes from the palette's on-accent token, so light fills (bright
+ * green, EGA yellow) get dark text and dark fills (blue, red) get cream —
+ * correct across both palettes. */
+.callout-fill--info {
+	background: var(--itx-info);
+	color: var(--itx-on-info);
+}
+.callout-fill--warning {
+	background: var(--itx-warning);
+	color: var(--itx-on-warning);
+}
+.callout-fill--success {
+	background: var(--itx-success);
+	color: var(--itx-on-success);
+}
+.callout-fill--danger {
+	background: var(--itx-danger);
+	color: var(--itx-on-danger);
+}

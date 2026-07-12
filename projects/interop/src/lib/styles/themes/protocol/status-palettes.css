@@ -1,0 +1,69 @@
+/*
+ * Status colour palettes
+ * ──────────────────────
+ * Each palette defines the four status accents (danger/info/success/warning),
+ * their -surface tints, and the on-surface text colour. Swap the whole set by
+ * setting `data-status-palette` on any ancestor — callouts, alerts, toasts,
+ * and anything else reading these tokens re-skin together.
+ *
+ *   <html interop-root>                                  → seventies (default)
+ *   <html interop-root data-status-palette="eighties">   → 80s OS
+ *
+ * Add a palette by copying a block and giving it a new data-status-palette
+ * value. Values are OKLCH light-dark() pairs; tune freely.
+ */
+
+/* ── Seventies (default) — avocado / harvest gold / burnt-orange / teal ──────
+ * Warm, saturated, earthy. Hue shifts vs a "clean" palette: success 145 → 126
+ * (avocado), info 250 → 205 (retro teal), danger 27 → 38 (burnt orange-rust).
+ * Surfaces are bold tints (~0.08–0.10 chroma) so the panel carries the signal;
+ * on-surface text is darkened to hold AA contrast on the richer tint. */
+:where([interop-root], [data-status-palette="seventies"]) {
+	--itx-danger: light-dark(oklch(0.55 0.19 38), oklch(0.66 0.18 40));
+	--itx-info: light-dark(oklch(0.56 0.11 205), oklch(0.68 0.1 205));
+	--itx-success: light-dark(oklch(0.56 0.15 126), oklch(0.68 0.15 128));
+	--itx-warning: light-dark(oklch(0.72 0.16 80), oklch(0.8 0.15 82));
+
+	/* Text on the solid accent fill (alerts/toasts). The gold is light → dark
+	 * text; the rest are mid-dark → warm cream. */
+	--itx-on-danger: oklch(0.97 0.02 95);
+	--itx-on-info: oklch(0.97 0.02 95);
+	--itx-on-success: oklch(0.97 0.02 95);
+	--itx-on-warning: oklch(0.28 0.06 85);
+
+	--itx-info-surface: light-dark(oklch(0.9 0.06 205), oklch(0.32 0.07 205));
+	--itx-on-info-surface: light-dark(oklch(0.32 0.08 205), oklch(0.85 0.06 205));
+	--itx-warning-surface: light-dark(oklch(0.9 0.1 82), oklch(0.34 0.09 82));
+	--itx-on-warning-surface: light-dark(oklch(0.34 0.09 80), oklch(0.86 0.08 82));
+	--itx-success-surface: light-dark(oklch(0.89 0.09 126), oklch(0.32 0.08 128));
+	--itx-on-success-surface: light-dark(oklch(0.3 0.09 126), oklch(0.85 0.08 128));
+	--itx-danger-surface: light-dark(oklch(0.89 0.08 38), oklch(0.32 0.09 38));
+	--itx-on-danger-surface: light-dark(oklch(0.34 0.1 38), oklch(0.86 0.07 38));
+}
+
+/* ── Eighties — eye-searing 80s-OS: electric DOS blue / EGA yellow / CRT green
+ * / pure red. Accents ride the sRGB gamut edge (chroma maxed for the hue) —
+ * pure primaries, phosphor-CRT energy, the opposite of the 70s earthiness.
+ * Info is the iconic DOS blue (hue 264); its dark-mode surface goes deep blue
+ * with yellow text, the canonical DOS text-mode pairing. Green and yellow are
+ * light colours → their solid fills take DARK text (--itx-on-*). */
+:where([data-status-palette="eighties"]) {
+	--itx-danger: light-dark(oklch(0.58 0.25 29), oklch(0.62 0.25 29));
+	--itx-info: light-dark(oklch(0.46 0.3 264), oklch(0.54 0.29 264));
+	--itx-success: light-dark(oklch(0.7 0.26 145), oklch(0.8 0.27 145));
+	--itx-warning: light-dark(oklch(0.9 0.2 105), oklch(0.92 0.2 105));
+
+	--itx-on-danger: oklch(0.97 0.02 95);
+	--itx-on-info: oklch(0.97 0.02 95);
+	--itx-on-success: oklch(0.24 0.08 150);
+	--itx-on-warning: oklch(0.28 0.07 100);
+
+	--itx-info-surface: light-dark(oklch(0.9 0.1 264), oklch(0.32 0.18 264));
+	--itx-on-info-surface: light-dark(oklch(0.32 0.2 264), oklch(0.94 0.16 100));
+	--itx-warning-surface: light-dark(oklch(0.95 0.19 105), oklch(0.4 0.16 105));
+	--itx-on-warning-surface: light-dark(oklch(0.32 0.12 100), oklch(0.95 0.16 105));
+	--itx-success-surface: light-dark(oklch(0.92 0.19 145), oklch(0.34 0.16 145));
+	--itx-on-success-surface: light-dark(oklch(0.3 0.16 145), oklch(0.95 0.16 145));
+	--itx-danger-surface: light-dark(oklch(0.9 0.12 29), oklch(0.34 0.18 29));
+	--itx-on-danger-surface: light-dark(oklch(0.34 0.19 29), oklch(0.95 0.1 29));
+}
