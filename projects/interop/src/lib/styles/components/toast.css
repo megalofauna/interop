@@ -78,6 +78,18 @@
 	align-items: center;
 }
 
+/* Bulk "clear all" header — the viewport is pointer-events:none, so the row is
+   inert and only the button re-enables pointer events. */
+:where(interop-toast-viewport .interop-toast-viewport__header) {
+	display: flex;
+	justify-content: flex-end;
+	inline-size: 100%;
+	pointer-events: none;
+}
+:where(interop-toast-viewport .interop-toast-viewport__clear-all) {
+	pointer-events: auto;
+}
+
 /* Visually hidden live regions (announcement plumbing). */
 :where(interop-toast-viewport .interop-toast-viewport__live-region) {
 	position: absolute;
@@ -196,9 +208,11 @@
 	border: none;
 	border-radius: var(--itx-toast-close-border-radius);
 	background: transparent;
+	corner-shape: squircle;
 	color: inherit;
 	opacity: var(--itx-toast-close-opacity);
 	cursor: pointer;
+	translate: 16px -16px;
 
 	&:where(:hover) {
 		opacity: var(--itx-toast-close-opacity-hover);

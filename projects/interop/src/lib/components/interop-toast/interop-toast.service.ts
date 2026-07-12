@@ -58,6 +58,9 @@ export class InteropToastService {
   /** @internal — registry of Observable subscriptions for async toasts. */
   private readonly asyncSubs = new Map<string, Subscription>();
 
+  /** @internal — the most recently nuked batch, held for a single undo. */
+  private lastCleared: ToastState[] = [];
+
   /** @internal — whether a viewport component is registered. */
   _viewportRegistered = signal(false);
 
@@ -190,11 +193,70 @@ export class InteropToastService {
     this.removeToast(id, 'programmatic');
   }
 
-  /** Dismiss all active toasts. */
+  /**
+   * Nuclear bulk clear: dismiss every toast (visible *and* queued), skipping
+   * only capability-locked toasts — a loading toast held open with
+   * cancelBehavior: 'prevent'. The cleared *static* toasts are snapshotted and
+   * offered back through a single "Cleared N · Undo" toast; Undo re-shows them
+   * as fresh toasts. Loading/async toasts can't be honestly restored (their
+   * source has moved on), so they are cleared but excluded from the snapshot.
+   */
   dismissAll(): void {
-    const toasts = this._toasts();
-    for (const toast of toasts) {
-      this.removeToast(toast.id, 'programmatic');
+    const isLocked = (t: ToastState) =>
+      t.type === 'loading' && t.cancelBehavior === 'prevent';
+    const isRestorable = (t: ToastState) =>
+      t.type !== 'loading' && !this.asyncSubs.has(t.id);
+
+    const toClear = this._toasts().filter(t => !isLocked(t));
+    if (toClear.length === 0) return;
+
+    // Snapshot the honestly-restorable ones before tearing the tray down.
+    this.lastCleared = toClear.filter(isRestorable);
+
+    for (const t of toClear) {
+      this.removeToast(t.id, 'programmatic');
+    }
+
+    // Nothing worth undoing (e.g. everything cleared was a loading toast).
+    if (this.lastCleared.length === 0) return;
+
+    const n = toClear.length;
+    const undoRef = this.create(
+      `Cleared ${n} notification${n === 1 ? '' : 's'}`,
+      {
+        type: 'default',
+        action: {
+          label: 'Undo',
+          id: 'undo',
+          altText: 'Restore the notifications that were just cleared',
+        },
+      },
+    );
+    undoRef.onAction().subscribe(actionId => {
+      if (actionId !== 'undo') return;
+      undoRef.dismiss();
+      this.restoreCleared();
+    });
+  }
+
+  /**
+   * Re-show the most recently cleared batch as *fresh* toasts — same content
+   * and type, timers reset. This is "re-show", not "rewind": elapsed timers and
+   * async sources are deliberately not reconstructed.
+   */
+  private restoreCleared(): void {
+    const batch = this.lastCleared;
+    this.lastCleared = [];
+    for (const t of batch) {
+      this.create(t.message, {
+        type: t.type,
+        description: t.description,
+        duration: t.duration,
+        action: t.action,
+        dismissible: t.dismissible,
+        cancelBehavior: t.cancelBehavior,
+        data: t.data,
+      });
     }
   }
 

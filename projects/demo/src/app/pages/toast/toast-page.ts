@@ -48,6 +48,23 @@ export class ToastPage {
 		this.toast.show('Fuel reserves below 20%. Plot course to refuelling depot.', { type: 'warning' });
 	}
 
+	/** Fire a burst so the stack forms — exercises the "Clear all (N)" + undo path. */
+	flood() {
+		const msgs = [
+			'Sensor array recalibrated.',
+			'Airlock 2 pressurised.',
+			'Nav beacon acquired.',
+			'Coolant loop nominal.',
+			'Telemetry uplink restored.',
+			'Reactor output steady.',
+			'Cargo seal verified.',
+			'Comms handshake complete.',
+		];
+		for (let i = 0; i < 12; i++) {
+			this.toast.show(`${msgs[i % msgs.length]} (${i + 1})`, { type: 'info' });
+		}
+	}
+
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "component", label: "Component" },
 		{ key: "name", label: "Input" },

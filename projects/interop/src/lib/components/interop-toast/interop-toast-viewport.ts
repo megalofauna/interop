@@ -16,6 +16,7 @@ import type { ToastPosition, ToastState } from './interop-toast.types';
 import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.config';
 import { InteropToastService } from './interop-toast.service';
 import { InteropToastItem } from './interop-toast-item';
+import { InteropButton } from '../interop-button/interop-button';
 
 /**
  * InteropToastViewport — rendering container for toast notifications.
@@ -38,7 +39,7 @@ import { InteropToastItem } from './interop-toast-item';
 @Component({
   selector: 'interop-toast-viewport',
   standalone: true,
-  imports: [InteropToastItem],
+  imports: [InteropToastItem, InteropButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'role': 'region',
@@ -66,6 +67,19 @@ import { InteropToastItem } from './interop-toast-item';
       aria-atomic="true"
       aria-relevant="additions text">
     </div>
+
+    @if (showClearAll()) {
+      <div class="interop-toast-viewport__header">
+        <button
+          interop-button
+          itx-size="sm"
+          type="button"
+          class="interop-toast-viewport__clear-all"
+          (click)="service.dismissAll()">
+          Clear all ({{ service.count() }})
+        </button>
+      </div>
+    }
 
     @for (toast of visibleToasts(); track toast.id; let i = $index) {
       <interop-toast-item
@@ -124,6 +138,12 @@ export class InteropToastViewport implements OnDestroy {
     // Show the most recent toasts (end of array = newest)
     return all.slice(-max);
   });
+
+  /** Surface the nuclear "clear all" control once a stack has formed. Threshold
+   *  is the total count (visible + queued), so a deep backlog surfaces it too. */
+  protected readonly showClearAll = computed<boolean>(
+    () => this.service.count() >= 3,
+  );
 
   constructor() {
     this.service._registerViewport();
