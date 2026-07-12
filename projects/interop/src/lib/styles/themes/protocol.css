@@ -43,6 +43,7 @@
 
 @import "./protocol/components/button.css";
 @import "./protocol/components/chip.css";
+@import "./protocol/components/command-palette.css";
 @import "./protocol/components/dialog.css";
 @import "./protocol/components/expansion-panel.css";
 @import "./protocol/components/icon.css";

@@ -1,0 +1,173 @@
+/*
+ * InteropCommandPalette — structural foundation.
+ *
+ * Rendering rules for `dialog[interop-command-palette]` and its parts. Loaded
+ * globally via `interop.css`; token *values* live in
+ * `themes/protocol/components/command-palette.css`.
+ *
+ * Contract: references theme tokens directly with no inline var(token, fallback)
+ * defaults — the theme is the single source of truth for every --itx-cmdp-*
+ * value; global foundation tokens (motion) are referenced directly. All
+ * selectors wrapped in :where() for zero specificity.
+ */
+
+/* ── Modal shell (native <dialog>, centred near the top) ─────────────────── */
+
+:where(dialog[interop-command-palette]) {
+	display: flex;
+	flex-direction: column;
+	inline-size: var(--itx-cmdp-inline-size);
+	max-inline-size: var(--itx-cmdp-max-inline-size);
+	max-block-size: var(--itx-cmdp-max-block-size);
+	margin-block-start: var(--itx-cmdp-offset-block-start);
+	margin-inline: auto;
+	padding: 0;
+	overflow: hidden;
+
+	color: var(--itx-cmdp-color);
+	background-color: var(--itx-cmdp-background);
+	border: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
+	border-radius: var(--itx-cmdp-radius);
+	box-shadow: var(--itx-cmdp-shadow);
+}
+
+:where(dialog[interop-command-palette])::backdrop {
+	background: var(--itx-cmdp-backdrop);
+	backdrop-filter: var(--itx-cmdp-backdrop-filter);
+}
+
+/* ── Filter field ─────────────────────────────────────────────────────────── */
+
+:where(.itx-cmdp__field) {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: var(--itx-cmdp-field-gap);
+	padding-inline: var(--itx-cmdp-field-padding-inline);
+	border-block-end: var(--itx-cmdp-rule-width) solid var(--itx-cmdp-rule-color);
+}
+
+:where(.itx-cmdp__search-icon) {
+	flex: 0 0 auto;
+	color: var(--itx-cmdp-muted);
+}
+
+:where(.itx-cmdp__input) {
+	flex: 1 1 auto;
+	min-inline-size: 0;
+	appearance: none;
+	border: none;
+	outline: none;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: var(--itx-cmdp-input-font-size);
+	padding-block: var(--itx-cmdp-input-padding-block);
+}
+
+:where(.itx-cmdp__input)::placeholder {
+	color: var(--itx-cmdp-muted);
+}
+
+/* ── Results listbox ──────────────────────────────────────────────────────── */
+
+:where(.itx-cmdp__list) {
+	flex: 1 1 auto;
+	min-block-size: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	margin: 0;
+	padding: var(--itx-cmdp-list-padding);
+	list-style: none;
+}
+
+:where(.itx-cmdp__option) {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-cmdp-option-gap);
+	padding-block: var(--itx-cmdp-option-padding-block);
+	padding-inline: var(--itx-cmdp-option-padding-inline);
+	border-radius: var(--itx-cmdp-option-radius);
+	cursor: pointer;
+	color: var(--itx-cmdp-option-color);
+	transition: background-color var(--itx-duration-fast)
+		var(--itx-easing-standard);
+}
+
+:where(.itx-cmdp__option--active) {
+	background-color: var(--itx-cmdp-option-background-active);
+	color: var(--itx-cmdp-option-color-active);
+}
+
+:where(.itx-cmdp__option[aria-disabled="true"]) {
+	cursor: default;
+	opacity: var(--itx-cmdp-option-disabled-opacity);
+}
+
+:where(.itx-cmdp__option-icon) {
+	flex: 0 0 auto;
+	color: var(--itx-cmdp-muted);
+}
+
+:where(.itx-cmdp__option-label) {
+	flex: 1 1 auto;
+	min-inline-size: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+:where(.itx-cmdp__option-desc) {
+	flex: 0 1 auto;
+	color: var(--itx-cmdp-muted);
+	font-size: var(--itx-cmdp-desc-font-size);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+:where(.itx-cmdp__option-kbd) {
+	flex: 0 0 auto;
+	margin-inline-start: auto;
+}
+
+/* ── Empty / loading message ──────────────────────────────────────────────── */
+
+:where(.itx-cmdp__message) {
+	padding: var(--itx-cmdp-message-padding);
+	color: var(--itx-cmdp-muted);
+	font-size: var(--itx-cmdp-message-font-size);
+	text-align: center;
+}
+
+/* ── Visually-hidden live-region announcer ────────────────────────────────── */
+
+:where(.itx-cmdp__announce) {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(.itx-cmdp__option) {
+		transition: none;
+	}
+}
+
+/* ── Forced colors — the active option must survive stripped backgrounds ──── */
+
+@media (forced-colors: active) {
+	:where(.itx-cmdp__option--active) {
+		background-color: Highlight;
+		color: HighlightText;
+		forced-color-adjust: none;
+	}
+}

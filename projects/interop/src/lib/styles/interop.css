@@ -38,6 +38,7 @@
 
 @import "./components/button.css";
 @import "./components/chip.css";
+@import "./components/command-palette.css";
 @import "./components/dialog.css";
 @import "./components/expansion-panel.css";
 @import "./components/icon.css";

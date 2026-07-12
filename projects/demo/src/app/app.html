@@ -51,6 +51,15 @@
 	</nav>
 
 	<div class="shell__header-end">
+		<button
+			class="shell__cmdk"
+			type="button"
+			(click)="openPalette()"
+			aria-label="Search — command palette"
+		>
+			<span>Search</span>
+			<kbd interop-kbd>⌘K</kbd>
+		</button>
 		<demo-theme-toggle />
 	</div>
 </header>
@@ -60,3 +69,17 @@
 <main class="shell__content">
 	<router-outlet />
 </main>
+
+<!-- ⌘K / Ctrl+K opens the command palette (the hotkey listens on document). -->
+<div interopHotkey="mod+k" (hotkey)="openPalette()" hidden></div>
+
+<dialog
+	interop-command-palette
+	label="Command palette"
+	placeholder="Search pages…"
+	[open]="paletteOpen()"
+	(closed)="paletteOpen.set(false)"
+	[commands]="filteredCommands()"
+	(queryChange)="query.set($event)"
+	(command)="runCommand($event)"
+></dialog>
