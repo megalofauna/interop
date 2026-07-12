@@ -20,6 +20,7 @@ export * from "./interop-tabs/public-api";
 export * from "./interop-code-renderer/public-api";
 export * from "./interop-checkbox/public-api";
 export * from "./interop-dialog/public-api";
+export * from "./interop-command-palette/public-api";
 export * from "./interop-listbox/public-api";
 export * from "./interop-popover/public-api";
 export * from "./interop-toggle/public-api";

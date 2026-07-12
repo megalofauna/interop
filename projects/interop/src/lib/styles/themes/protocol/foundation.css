@@ -10,9 +10,10 @@
 	color-scheme: light dark;
 
 	/* ── Typography ──────────────────────────────────────────────────── */
-	--itx-font-family-sans: "Figtree", system-ui, sans-serif;
+	--itx-font-family-sans: "IBM Plex Sans", system-ui, sans-serif;
 	--itx-font-family-mono:
-		ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+		"IBM Plex Mono", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+		Consolas, monospace;
 
 	/* ── Neutral palette ─────────────────────────────────────────────── */
 	/*    light: 1 = lightest → 12 = darkest                             */
@@ -76,24 +77,10 @@
 	);
 	--itx-on-colorway: light-dark(var(--itx-neutral-1), var(--itx-neutral-2));
 
-	/* ── Status accents ──────────────────────────────────────────────── */
-	--itx-danger: light-dark(oklch(0.58 0.22 27), oklch(0.68 0.2 27));
-	--itx-info: light-dark(oklch(0.55 0.19 250), oklch(0.65 0.17 250));
-	--itx-success: light-dark(oklch(0.62 0.19 145), oklch(0.72 0.17 145));
-	--itx-warning: light-dark(oklch(0.75 0.16 85), oklch(0.8 0.14 85));
-
-	/* ── Status surfaces ─────────────────────────────────────────────── */
-	--itx-info-surface: light-dark(oklch(0.95 0.03 250), oklch(0.25 0.04 250));
-	--itx-on-info-surface: light-dark(oklch(0.35 0.1 250), oklch(0.8 0.08 250));
-
-	--itx-warning-surface: light-dark(oklch(0.96 0.04 85), oklch(0.26 0.05 85));
-	--itx-on-warning-surface: light-dark(oklch(0.4 0.12 85), oklch(0.82 0.08 85));
-
-	--itx-success-surface: light-dark(oklch(0.95 0.04 145), oklch(0.3 0.05 165));
-	--itx-on-success-surface: light-dark(oklch(0.33 0.1 145), oklch(0.8 0.1 165));
-
-	--itx-danger-surface: light-dark(oklch(0.95 0.03 27), oklch(0.25 0.04 27));
-	--itx-on-danger-surface: light-dark(oklch(0.38 0.12 27), oklch(0.82 0.08 27));
+	/* ── Status colours ──────────────────────────────────────────────────────
+	 * Palette-scoped: danger/info/success/warning + -surface + on-surface live
+	 * in status-palettes.css so the whole set swaps via `data-status-palette`.
+	 * Default = "seventies"; "eighties" = bright 80s-OS. ──────────────────── */
 
 	/* ── Atmosphere ──────────────────────────────────────────────────── */
 	--itx-overlay: light-dark(oklch(0.15 0 0 / 0.5), oklch(0.05 0 0 / 0.65));

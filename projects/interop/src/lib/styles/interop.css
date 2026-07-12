@@ -38,10 +38,12 @@
 
 @import "./components/button.css";
 @import "./components/chip.css";
+@import "./components/command-palette.css";
 @import "./components/dialog.css";
 @import "./components/expansion-panel.css";
 @import "./components/icon.css";
 @import "./components/indicator.css";
+@import "./components/kbd.css";
 @import "./components/list.css";
 @import "./components/popover.css";
 @import "./components/segment.css";

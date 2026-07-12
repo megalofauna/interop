@@ -1,0 +1,41 @@
+/*
+ * InteropKbd — keyboard key-cap indicator.
+ *
+ * Rendering rules for `kbd[interop-kbd]`. Loaded globally via `interop.css`;
+ * token *values* live in `themes/protocol/components/kbd.css`.
+ *
+ * Contract: references theme tokens directly with no inline `var(token, fallback)`
+ * defaults — the theme is the single source of truth for every `--itx-kbd-*`
+ * value; global foundation tokens are referenced directly. All selectors wrapped
+ * in :where() for zero specificity — consumer overrides always win regardless of
+ * declaration order.
+ */
+
+:where(kbd[interop-kbd]) {
+	display: inline-block;
+	vertical-align: baseline;
+	white-space: nowrap;
+
+	padding-block: var(--itx-kbd-padding-block);
+	padding-inline: var(--itx-kbd-padding-inline);
+
+	font-family: var(--itx-kbd-font-family);
+	font-size: var(--itx-kbd-font-size);
+	line-height: var(--itx-kbd-line-height);
+
+	color: var(--itx-kbd-color);
+	background: var(--itx-kbd-background);
+
+	border-style: solid;
+	border-width: var(--itx-kbd-border-width);
+	border-color: var(--itx-kbd-border-color);
+	border-radius: var(--itx-kbd-radius);
+
+	box-shadow: 0 var(--itx-kbd-shadow-size) 0 var(--itx-kbd-shadow-color);
+
+	/* Tilt the cap as if viewed from above and front: the top edge recedes while
+	 * the base stays planted (transform-origin: bottom). One composited transform
+	 * — GPU, no layout or paint, no will-change needed for a static tilt. */
+	transform: perspective(var(--itx-kbd-perspective)) rotateX(var(--itx-kbd-tilt));
+	transform-origin: bottom center;
+}

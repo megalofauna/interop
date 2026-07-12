@@ -1,0 +1,39 @@
+/*
+ * InteropKbd — Protocol theme.
+ *
+ * Token surface:
+ *   Box     --itx-kbd-padding-block   --itx-kbd-padding-inline   --itx-kbd-radius
+ *   Type    --itx-kbd-font-family     --itx-kbd-font-size        --itx-kbd-line-height
+ *   Color   --itx-kbd-color           --itx-kbd-background
+ *   Edge    --itx-kbd-border-color    --itx-kbd-border-width
+ *   Keycap  --itx-kbd-shadow-size     --itx-kbd-shadow-color
+ *   Tilt    --itx-kbd-perspective     --itx-kbd-tilt
+ */
+
+:where([interop-root] kbd[interop-kbd]) {
+	/* box */
+	--itx-kbd-padding-block: 0.3em;
+	--itx-kbd-padding-inline: 0.45em;
+	--itx-kbd-radius: var(--itx-radius-sm);
+
+	/* type — monospace key caps */
+	--itx-kbd-font-family: var(--itx-font-family-mono);
+	--itx-kbd-font-size: 0.85em;
+	--itx-kbd-line-height: normal;
+
+	/* color */
+	--itx-kbd-color: var(--itx-on-surface);
+	--itx-kbd-background: var(--itx-surface-above);
+
+	/* edge — thicker bottom border is the raised front lip of the cap */
+	--itx-kbd-border-color: var(--itx-border);
+	--itx-kbd-border-width: 1px 1px 0.35em;
+
+	/* keycap drop shadow */
+	--itx-kbd-shadow-size: 2px;
+	--itx-kbd-shadow-color: var(--itx-border);
+
+	/* 3D tilt — viewed from above and front */
+	--itx-kbd-perspective: 8em; /* smaller = stronger recede */
+	--itx-kbd-tilt: 20deg;
+}
