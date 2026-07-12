@@ -19,43 +19,61 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-toast-gap);
-	inline-size: 100%;
-	max-inline-size: var(--itx-toast-max-width);
-	padding: var(--itx-toast-offset);
+	/* Fit the stack width, but never spill past the screen edges minus offset. */
+	inline-size: min(
+		var(--itx-toast-max-width),
+		100% - 2 * var(--itx-toast-offset)
+	);
 	box-sizing: border-box;
 	pointer-events: none;
 }
 
-/* Position variants are layout, so they stay structural. */
+/* The viewport becomes a visible PANEL wrapping the whole group — but only
+   while it actually holds toasts (:has), so an empty viewport leaves no
+   floating box. Every panel property is a token: frosted by default, but
+   fully re-skinnable (see the eighties EGA override in the theme). */
+:where(interop-toast-viewport:has(interop-toast-item)) {
+	padding: var(--itx-toast-panel-padding);
+	background-color: var(--itx-toast-panel-background);
+	background-image: var(--itx-toast-panel-background-image);
+	-webkit-backdrop-filter: var(--itx-toast-panel-backdrop-filter);
+	backdrop-filter: var(--itx-toast-panel-backdrop-filter);
+	border: var(--itx-toast-panel-border-width) solid
+		var(--itx-toast-panel-border-color);
+	border-radius: var(--itx-toast-panel-radius);
+	box-shadow: var(--itx-toast-panel-shadow);
+}
+
+/* Position variants — the offset is the panel's inset from the screen edge. */
 :where(interop-toast-viewport[data-position="bottom-right"]) {
-	bottom: 0;
-	right: 0;
+	inset-block-end: var(--itx-toast-offset);
+	inset-inline-end: var(--itx-toast-offset);
 	align-items: flex-end;
 }
 :where(interop-toast-viewport[data-position="bottom-left"]) {
-	bottom: 0;
-	left: 0;
+	inset-block-end: var(--itx-toast-offset);
+	inset-inline-start: var(--itx-toast-offset);
 	align-items: flex-start;
 }
 :where(interop-toast-viewport[data-position="bottom-center"]) {
-	bottom: 0;
-	left: 50%;
+	inset-block-end: var(--itx-toast-offset);
+	inset-inline-start: 50%;
 	transform: translateX(-50%);
 	align-items: center;
 }
 :where(interop-toast-viewport[data-position="top-right"]) {
-	top: 0;
-	right: 0;
+	inset-block-start: var(--itx-toast-offset);
+	inset-inline-end: var(--itx-toast-offset);
 	align-items: flex-end;
 }
 :where(interop-toast-viewport[data-position="top-left"]) {
-	top: 0;
-	left: 0;
+	inset-block-start: var(--itx-toast-offset);
+	inset-inline-start: var(--itx-toast-offset);
 	align-items: flex-start;
 }
 :where(interop-toast-viewport[data-position="top-center"]) {
-	top: 0;
-	left: 50%;
+	inset-block-start: var(--itx-toast-offset);
+	inset-inline-start: 50%;
 	transform: translateX(-50%);
 	align-items: center;
 }
@@ -88,9 +106,6 @@
 		var(--itx-toast-accent-color);
 	border-radius: var(--itx-toast-border-radius);
 	background-color: var(--itx-toast-background);
-	background-image: var(--itx-toast-background-image);
-	-webkit-backdrop-filter: var(--itx-toast-backdrop-filter);
-	backdrop-filter: var(--itx-toast-backdrop-filter);
 	color: var(--itx-toast-foreground);
 	box-shadow: var(--itx-toast-shadow);
 	font-size: var(--itx-toast-font-size);

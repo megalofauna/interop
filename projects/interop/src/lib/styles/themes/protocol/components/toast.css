@@ -17,19 +17,8 @@
 	--itx-toast-max-width: 32rem;
 	--itx-toast-offset: var(--itx-spacing-4);
 
-	/* Item — container (frosted-glass panel: translucent fill + top sheen +
-	   backdrop blur, so each alert reads as an ephemeral pane over the page) */
-	--itx-toast-background: color-mix(
-		in oklab,
-		var(--itx-surface-above) 78%,
-		transparent
-	);
-	--itx-toast-background-image: linear-gradient(
-		to bottom,
-		oklch(1 0 0 / 0.12),
-		oklch(1 0 0 / 0)
-	);
-	--itx-toast-backdrop-filter: blur(14px) saturate(1.5);
+	/* Item — a solid card sitting within the panel (the panel owns the frost) */
+	--itx-toast-background: var(--itx-surface-above);
 	--itx-toast-foreground: var(--itx-on-surface);
 	--itx-toast-border-width: 0px;
 	--itx-toast-border-color: var(--itx-border);
@@ -38,7 +27,31 @@
 	--itx-toast-accent-color: var(--itx-border);
 	--itx-toast-padding: var(--itx-spacing-4);
 	--itx-toast-item-gap: var(--itx-spacing-3);
-	--itx-toast-shadow: var(--itx-shadow-lg);
+	--itx-toast-shadow: var(--itx-shadow-sm);
+
+	/* Panel — the viewport becomes a frosted tray around the whole group,
+	   applied only when populated (:has). Every property is swappable; the
+	   eighties palette re-skins this into a solid EGA panel below. */
+	--itx-toast-panel-padding: var(--itx-spacing-3);
+	--itx-toast-panel-background: color-mix(
+		in oklab,
+		var(--itx-surface-above) 62%,
+		transparent
+	);
+	--itx-toast-panel-background-image: linear-gradient(
+		to bottom,
+		oklch(1 0 0 / 0.1),
+		oklch(1 0 0 / 0)
+	);
+	--itx-toast-panel-backdrop-filter: blur(16px) saturate(1.6);
+	--itx-toast-panel-border-width: 1px;
+	--itx-toast-panel-border-color: color-mix(
+		in oklab,
+		var(--itx-border) 60%,
+		transparent
+	);
+	--itx-toast-panel-radius: var(--itx-radius-md);
+	--itx-toast-panel-shadow: var(--itx-shadow-lg);
 
 	/* Item — typography */
 	--itx-toast-font-size: var(--itx-font-size-body);
@@ -80,44 +93,28 @@
 /* ── Variants (rebind colour tokens from the status palette) ─────────────── */
 
 :where([interop-root] interop-toast-item[data-type="success"]) {
-	--itx-toast-background: color-mix(
-		in oklab,
-		var(--itx-success-surface) 78%,
-		transparent
-	);
+	--itx-toast-background: var(--itx-success-surface);
 	--itx-toast-foreground: var(--itx-on-success-surface);
 	--itx-toast-border-color: var(--itx-success);
 	--itx-toast-accent-color: var(--itx-success);
 }
 
 :where([interop-root] interop-toast-item[data-type="error"]) {
-	--itx-toast-background: color-mix(
-		in oklab,
-		var(--itx-danger-surface) 78%,
-		transparent
-	);
+	--itx-toast-background: var(--itx-danger-surface);
 	--itx-toast-foreground: var(--itx-on-danger-surface);
 	--itx-toast-border-color: var(--itx-danger);
 	--itx-toast-accent-color: var(--itx-danger);
 }
 
 :where([interop-root] interop-toast-item[data-type="warning"]) {
-	--itx-toast-background: color-mix(
-		in oklab,
-		var(--itx-warning-surface) 78%,
-		transparent
-	);
+	--itx-toast-background: var(--itx-warning-surface);
 	--itx-toast-foreground: var(--itx-on-warning-surface);
 	--itx-toast-border-color: var(--itx-warning);
 	--itx-toast-accent-color: var(--itx-warning);
 }
 
 :where([interop-root] interop-toast-item[data-type="info"]) {
-	--itx-toast-background: color-mix(
-		in oklab,
-		var(--itx-info-surface) 78%,
-		transparent
-	);
+	--itx-toast-background: var(--itx-info-surface);
 	--itx-toast-foreground: var(--itx-on-info-surface);
 	--itx-toast-border-color: var(--itx-info);
 	--itx-toast-accent-color: var(--itx-info);
@@ -125,4 +122,24 @@
 
 :where([interop-root] interop-toast-item[data-type="loading"]) {
 	--itx-toast-accent-color: var(--itx-muted);
+}
+
+/* ── Eighties: swap the frosted tray for a solid EGA panel ─────────────────
+ * Flat DOS-blue fill, chunky bright border, hard corners, hard drop shadow —
+ * no blur. Cards go square and lose their shadow to sit flush inside the frame,
+ * so the stack reads like a stacked-window VGA dialog. All token swaps. */
+
+:where([data-status-palette="eighties"] interop-toast-viewport) {
+	--itx-toast-panel-background: var(--itx-info);
+	--itx-toast-panel-background-image: none;
+	--itx-toast-panel-backdrop-filter: none;
+	--itx-toast-panel-border-width: 3px;
+	--itx-toast-panel-border-color: var(--itx-warning);
+	--itx-toast-panel-radius: 0px;
+	--itx-toast-panel-shadow: 6px 6px 0 0 oklch(0 0 0 / 0.5);
+}
+
+:where([data-status-palette="eighties"] interop-toast-item) {
+	--itx-toast-border-radius: 0px;
+	--itx-toast-shadow: none;
 }
