@@ -87,7 +87,10 @@
 	border-inline-start: var(--itx-toast-accent-width) solid
 		var(--itx-toast-accent-color);
 	border-radius: var(--itx-toast-border-radius);
-	background: var(--itx-toast-background);
+	background-color: var(--itx-toast-background);
+	background-image: var(--itx-toast-background-image);
+	-webkit-backdrop-filter: var(--itx-toast-backdrop-filter);
+	backdrop-filter: var(--itx-toast-backdrop-filter);
 	color: var(--itx-toast-foreground);
 	box-shadow: var(--itx-toast-shadow);
 	font-size: var(--itx-toast-font-size);
