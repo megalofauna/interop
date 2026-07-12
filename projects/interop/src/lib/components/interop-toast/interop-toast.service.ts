@@ -326,12 +326,35 @@ export class InteropToastService {
     );
   }
 
+  /*
+   * Dismissal defaults scale deliberateness with stakes (see the toast
+   * behaviour verdict). Two independent axes:
+   *
+   *   auto-dismiss (resolveDuration)      how long before it self-clears
+   *   × chrome     (resolveDismissible)   whether a close button is rendered
+   *
+   * A third axis — the *capability* to dismiss via Esc/swipe — is universal and
+   * lives on the item (canDismiss); it is NOT gated by the × chrome. Hiding the
+   * button on an ephemeral success toast never strands the user.
+   *
+   *   type       auto-dismiss   × button
+   *   success    timed          no (swipe/Esc floor)
+   *   info       timed          no (swipe/Esc floor)
+   *   default    timed          no (swipe/Esc floor)
+   *   warning    never (0)      yes
+   *   error      never (0)      yes  (errors must not vanish; see create())
+   *   loading    never (0)      yes, unless cancelBehavior: 'prevent'
+   */
+
   private resolveDuration(type: ToastType, explicit?: number): number {
     if (explicit !== undefined) return explicit;
+    // Higher-stakes types persist until acted on rather than racing a timer.
     if (type === 'error' || type === 'warning' || type === 'loading') return 0;
     return this.globalConfig.duration ?? INTEROP_TOAST_DEFAULTS.duration;
   }
 
+  /** Resolves whether the × close button is shown (chrome), not the capability
+   *  to dismiss — Esc/swipe always work unless the item is capability-locked. */
   private resolveDismissible(
     type: ToastType,
     duration: number,
@@ -341,7 +364,9 @@ export class InteropToastService {
     if (explicit !== undefined && explicit !== 'auto') return explicit;
     if (type === 'error' || type === 'warning') return true;
     if (type === 'loading') return options.cancelBehavior !== 'prevent';
+    // Any other persistent toast (no auto-dismiss) earns a button too.
     if (duration === 0 || !isFinite(duration)) return true;
+    // Ephemeral success/info/default: no button; swipe + Esc remain.
     return false;
   }
 }

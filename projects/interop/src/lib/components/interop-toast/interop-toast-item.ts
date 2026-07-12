@@ -156,8 +156,19 @@ export class InteropToastItem implements OnDestroy {
     this.swipeCleanup?.();
   }
 
+  /**
+   * Dismissal *capability* — distinct from the × *chrome* (toast().dismissible).
+   * Every toast can be dismissed by Esc or swipe; the only lock is a loading
+   * toast explicitly held open with cancelBehavior: 'prevent'. Hiding the ×
+   * (e.g. ephemeral success toasts) never removes this keyboard/gesture floor.
+   */
+  protected readonly canDismiss = computed(() => {
+    const t = this.toast();
+    return !(t.type === 'loading' && t.cancelBehavior === 'prevent');
+  });
+
   protected onEscape(): void {
-    if (this.toast().dismissible) {
+    if (this.canDismiss()) {
       this.dismissed.emit();
     }
   }
@@ -205,12 +216,14 @@ export class InteropToastItem implements OnDestroy {
         const elapsed = Date.now() - this.pointerStartTime;
         const velocity = distance / Math.max(elapsed, 1);
 
-        // Dismiss if distance exceeds threshold OR velocity is high enough
-        if (distance >= threshold || velocity > 0.11) {
+        // Dismiss if distance exceeds threshold OR velocity is high enough —
+        // unless the toast is capability-locked (loading + 'prevent').
+        const passedThreshold = distance >= threshold || velocity > 0.11;
+        if (passedThreshold && this.canDismiss()) {
           this.swipeState.set(null);
           this.swipeDismiss.emit();
         } else {
-          // Snap back
+          // Below threshold, or locked — snap back.
           el.style.removeProperty('--_swipe-x');
           el.style.removeProperty('--_swipe-y');
           this.swipeState.set(null);
