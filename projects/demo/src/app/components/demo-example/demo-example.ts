@@ -15,7 +15,7 @@ import {
 	InteropMotionTrigger,
 	provideInteropIcons,
 } from "interop";
-import { Terminal } from "@interop/composites";
+import { Terminal } from "interop";
 import { TablerReload } from "interop/lib/iconsets/tabler";
 
 // ─── Reload-button semantics ─────────────────────────────────────────────────
@@ -72,28 +72,11 @@ import { TablerReload } from "interop/lib/iconsets/tabler";
 				<interop-icon name="tabler-reload" itx-size="lg"></interop-icon>
 			</button>
 		}
-		<div class="demo-example__preview">
-			@if (label()) {
-				<p class="demo-example__label">{{ label() }}</p>
-			}
-			@if (lede(); as ledeNode) {
-				<div class="demo-example__lede">
-					<interop-content [node]="ledeNode" />
-				</div>
-			}
-			<div class="demo-example__canvas" [class.has-state]="!!state()">
-				<div class="demo-example__ui">
-					<ng-content />
-				</div>
-				<div class="demo-example__notes">
-					<ng-content select=".demo-example__notes" />
-				</div>
-				<ng-content select="demo-state" />
-			</div>
-			<div class="demo-example__code">
-				<ng-content select="itx-code-block" />
-			</div>
-		</div>
+		@if (label()) {
+			<h3 class="example__heading">{{ label() }}</h3>
+		}
+		<ng-content />
+		<ng-content select="itx-code-block" />
 	`,
 	styleUrl: "./demo-example.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

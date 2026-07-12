@@ -3,7 +3,7 @@
 ## Files
 
 ```
-projects/composites/src/lib/inline-code/
+projects/interop/src/lib/composites/inline-code/
   inline-code.ts        Component class
   inline-code.html      Template (code element + copy button + sr live region)
   inline-code.scss      Structural CSS (em-relative sizing, inline-flex host)
@@ -13,7 +13,7 @@ projects/interop/src/lib/styles/themes/protocol/composites/
   inline-code.css       Protocol theme — token values
 ```
 
-Re-exported from `@interop/composites` (`projects/composites/src/public-api.ts`).
+Re-exported from `interop` (`projects/interop/src/lib/composites/public-api.ts`).
 
 ## What it is
 

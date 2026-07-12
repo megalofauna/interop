@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { InteropScrollArea, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
@@ -15,7 +16,7 @@ interface ApiEntry {
 @Component({
 	selector: "scroll-area-page",
 	standalone: true,
-	imports: [InteropScrollArea, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropScrollArea, InteropTable, InteropCellDef, DemoMasthead, DemoSection, DemoExample, DemoNotes],
 	templateUrl: "./scroll-area-page.html",
 	styleUrl: "./scroll-area-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

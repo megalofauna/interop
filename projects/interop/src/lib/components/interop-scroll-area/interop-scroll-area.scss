@@ -40,6 +40,36 @@
 	overflow: auto;
 }
 
+/* ── Shadow-intensity properties ──────────────────────────────────────────
+ *
+ * These 0–1 values are set imperatively (inline) by the scroll handler and are
+ * consumed inside the mask-image gradients below. Registering them as typed
+ * <number> properties is not cosmetic: some engines fail to invalidate the
+ * mask's paint when an *unregistered* custom property changes, so the initial
+ * shadow can compute correctly yet not paint until a later composite (e.g. a
+ * hover repaint). Typing them makes the update invalidate paint reliably.
+ */
+@property --_shadow-top {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --_shadow-bottom {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --_shadow-start {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --_shadow-end {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+
 /* ── Scroll shadows (mask-image) ─────────────────────────────────────────
  *
  * Applied only when content overflows AND shadows are enabled.

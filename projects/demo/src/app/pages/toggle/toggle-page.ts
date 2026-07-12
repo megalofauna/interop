@@ -5,6 +5,7 @@ import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -17,7 +18,7 @@ interface ApiEntry {
 @Component({
 	selector: "toggle-page",
 	standalone: true,
-	imports: [InteropToggle, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoState, DemoStateItem, DemoNotes],
+	imports: [InteropToggle, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoState, DemoStateItem, DemoNotes, DemoMasthead],
 	templateUrl: "./toggle-page.html",
 	styleUrl: "./toggle-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

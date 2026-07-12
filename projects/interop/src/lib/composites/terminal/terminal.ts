@@ -8,8 +8,9 @@ import {
 	output,
 	viewChild,
 } from "@angular/core";
-import { InteropButton, InteropIcon, provideInteropIcons } from "interop";
-import { TablerEraser } from "interop/lib/iconsets/tabler/outline/tabler-eraser";
+import { InteropButton, InteropIcon } from "../../components/public-api";
+import { provideInteropIcons } from "../../iconsets/core";
+import { TablerEraser } from "../../iconsets/tabler/outline/tabler-eraser";
 
 export interface TerminalEntry {
 	text: string;

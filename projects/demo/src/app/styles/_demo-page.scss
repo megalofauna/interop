@@ -5,6 +5,7 @@
 // namespace instead of per-page classes like `.checkbox-page__*`.
 // ─────────────────────────────────────────────────────────────────────────────
 
+
 .demo-page {
 	max-width: 64rem;
 	margin-inline: auto;
@@ -34,14 +35,18 @@
 
 .demo-page__title {
 	margin: 0 0 var(--itx-spacing-2) 0;
-	font-size: 64px;
+	font-size: var(--itx-font-size-display);
 	font-weight: 400;
 	color: var(--itx-on-surface);
+	// Drives the shell header's collapsed breadcrumb as this heading scrolls off
+	// the top (see app.scss → .shell__crumb / shell-crumb-in).
+	view-timeline-name: --page-title;
+	view-timeline-axis: block;
 }
 
 .demo-page__lead {
 	margin: 0;
-	font-size: var(--itx-font-size-body-lg);
+	font-size: var(--itx-font-size-body);
 	color: var(--itx-muted);
 	line-height: 1.6;
 }
@@ -53,9 +58,9 @@
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
 	color: var(--itx-on-surface);
-	padding: var(--itx-spacing-2) var(--itx-spacing-4);
-	background: hsla(0 0 100 / 0.05);
-	backdrop-filter: blur(3px);
+	/* padding: var(--itx-spacing-2) var(--itx-spacing-4); */
+	/* background: hsla(0 0 100 / 0.05); */
+	/* backdrop-filter: blur(3px); */
 	border-radius: var(--itx-radius-sm);
 }
 

@@ -3,9 +3,10 @@
 }
 
 .flex {
+	container-type: inline-size;
 	display: flex;
 	justify-content: space-evenly;
-	align-items: start;
+	align-items: center;
 	gap: var(--itx-spacing-3);
 }
 
@@ -38,5 +39,22 @@
 	}
 	.inline-snippet__inline-code {
 		margin-top: var(--itx-spacing-2);
+	}
+}
+
+.demo-example__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(256px, 100%), 1fr));
+	list-style: none;
+	padding: unset;
+	margin: unset;
+	height: auto;
+	aspect-ratio: 1 / 0.5;
+	gap: var(--itx-spacing-1);
+
+	li {
+		place-content: center;
+		text-align: center;
+		background-color: rgb(255 255 255 / 0.0125);
 	}
 }

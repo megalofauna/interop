@@ -8,7 +8,7 @@
 
 :where([interop-root]) {
 	/* ── Typography ─────────────────────────────────────────────────────── */
-	--itx-table-font-size: var(--itx-fs-caption, 0.875rem);
+	--itx-table-font-size: var(--itx-font-size-caption);
 	--itx-table-font-weight: 400;
 	--itx-table-cell-padding: var(--itx-spacing-3) var(--itx-spacing-4);
 
@@ -44,7 +44,7 @@
 	/* ── Group rows ─────────────────────────────────────────────────────── */
 	--itx-table-group-label-padding-block-start: var(--itx-spacing-6);
 	--itx-table-group-label-color: var(--itx-muted, var(--itx-neutral-9));
-	--itx-table-group-label-font-size: var(--itx-fs-fine-print, 0.75rem);
+	--itx-table-group-label-font-size: var(--itx-font-size-fine-print);
 	--itx-table-group-label-font-weight: 500;
 	--itx-table-group-label-letter-spacing: 0.06em;
 	--itx-table-group-label-text-transform: uppercase;

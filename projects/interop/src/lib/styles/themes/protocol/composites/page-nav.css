@@ -1,28 +1,102 @@
-/* ── Page Nav — Protocol theme ───────────────────────────────────────────── */
+/* ── PageNav — Protocol theme ────────────────────────────────────────────── */
 
-:where([interop-root]) {
+/*
+ * Minimal surface — the structural foundation references every one of these;
+ * there are no fallbacks there, so this file is the single source of truth.
+ *
+ * Token surface:
+ *
+ *   Surface (bar)
+ *     --itx-pn-background            Bar background (transparent until stuck)
+ *     --itx-pn-radius               Bar corner radius
+ *     --itx-pn-border-width          --itx-pn-border-color   Bottom rule
+ *     --itx-pn-padding-block         --itx-pn-padding-inline
+ *     --itx-pn-gap                  Gap between horizontal links
+ *     --itx-pn-z-index              Stacking order while sticky
+ *
+ *   Links (both orientations)
+ *     --itx-pn-font-size             --itx-pn-font-weight
+ *     --itx-pn-font-weight-active
+ *     --itx-pn-link-color            --itx-pn-link-color-hover
+ *     --itx-pn-link-color-active     --itx-pn-link-background-hover
+ *     --itx-pn-link-padding-block    --itx-pn-link-padding-inline
+ *     --itx-pn-link-radius
+ *
+ *   Focus ring
+ *     --itx-pn-focus-color           --itx-pn-focus-width   --itx-pn-focus-offset
+ *
+ *   Vertical only
+ *     --itx-pn-label-color           --itx-pn-item-gap       --itx-pn-indent
+ *     --itx-pn-child-color           --itx-pn-child-font-size
+ *     --itx-pn-indicator-size        --itx-pn-indicator-radius
+ *     --itx-pn-indicator-color
+ */
+
+:where([interop-root] itx-page-nav) {
+	/* surface */
+	--itx-pn-background-opacity: 100%;
+
+  --itx-pn-background-color: color-mix(in srgb, currentColor 0%, transparent);
+  --itx-pn-background-image: none;
+	--itx-pn-backdrop-filter: none;
+
+	--itx-pn-radius: 0;
+	--itx-pn-padding-block: var(--itx-spacing-4);
+	--itx-pn-padding-inline: var(--itx-spacing-2);
+	--itx-pn-border-width: 2px;
+	--itx-pn-border-color: var(--itx-border);
+	--itx-pn-gap: 0;
+	--itx-pn-z-index: 10;
+
+	--itx-pn-nav-rule-width: 2px;
+	--itx-pn-nav-rule-style: solid;
+	--itx-pn-nav-rule-color: var(--itx-neutral-4);
+
+	/* links */
+	--itx-pn-font-size: var(--itx-font-size-body-lg);
+	--itx-pn-font-weight: 400;
+	--itx-pn-font-weight-active: 600;
+
+	--itx-pn-link-border-color: transparent;
+	--itx-pn-link-border-width: 2px;
+
+	--itx-pn-link-color: var(--itx-muted);
+	--itx-pn-link-color-active: var(--itx-neutral-12);
+	--itx-pn-link-background-hover: var(--itx-surface-hover);
+	--itx-pn-link-padding-block: var(--itx-spacing-4);
+	--itx-pn-link-padding-inline: var(--itx-spacing-8);
+	--itx-pn-link-radius: var(--itx-radius-sm);
+
+	/* Hover */
+	--itx-pn-link-color-hover: var(--itx-neutral-12);
+	--itx-pn-link-border-color-hover: var(--itx-neutral-8);
+
+	/* focus */
+	--itx-pn-focus-background-color: var(--itx-neutral-4);
+	--itx-pn-focus-color: var(--itx-colorway);
+	--itx-pn-focus-width: 1px;
+	--itx-pn-focus-offset: -4px;
+	--itx-pn-link-border-color-current: #ff9c56;
+	--itx-pn-link-background-color-current: var(--itx-neutral-3_5);
+	--itx-pn-link-background-image-current: radial-gradient(circle at 0 0 25%, #ff9c56, transparent);
+
+	/* vertical */
+	--itx-pn-label-color: var(--itx-muted);
+	--itx-pn-item-gap: var(--itx-spacing-1);
+	--itx-pn-indent: var(--itx-spacing-3);
+	--itx-pn-child-color: var(--itx-neutral-9);
+	--itx-pn-child-font-size: var(--itx-font-size-caption);
+	--itx-pn-indicator-size: 5px;
+	--itx-pn-indicator-radius: var(--itx-radius-full);
+	--itx-pn-indicator-color: var(--itx-colorway);
 }
 
-/*--itx-pn-z-index             Z-index in sticky mode
---itx-pn-font-size           Link font size
---itx-pn-font-weight         Link font weight
---itx-pn-link-color          Link color (default)
---itx-pn-link-color-hover    Link color (hover)
---itx-pn-link-color-active   Link color (aria-current)
-Horizontal only
---itx-pn-bg                  Background color
---itx-pn-padding-block       Block padding
---itx-pn-padding-inline      Inline padding
---itx-pn-border-color        Bottom border color
---itx-pn-border-width        Bottom border width
---itx-pn-gap                 Gap between links
-Vertical only
---itx-pn-label-color         Section label color
---itx-pn-item-gap            Gap between items
---itx-pn-indent              Child link indent
---itx-pn-child-font-size     Child link font size
---itx-pn-child-color         Child link color (default)
---itx-pn-indicator-size      Dot width and height
---itx-pn-indicator-radius    Dot border-radius (9999px = circle, 2px = square-ish)
---itx-pn-indicator-color     Dot fill color*/
-/*--itx-pn-icon-opacity*/
+/* Stuck — reveal a solid bar when pinned to the scroll container's top. */
+:where([interop-root] itx-page-nav.itx-pn--stuck) {
+	--itx-pn-background-color: color-mix(in srgb, var(--itx-page) 100%, transparent);
+	--itx-pn-backdrop-filter: blur(12px);
+	--itx-pn-border-color: var(--itx-page);
+	--itx-pn-link-padding-block: var(--itx-spacing-3);
+	--itx-pn-link-padding-inline: var(--itx-spacing-4);
+	--itx-pn-font-size: var(--itx-font-size-body);
+}

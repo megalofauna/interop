@@ -1,0 +1,107 @@
+/*
+ * InteropList — structural foundation.
+ *
+ * Rendering rules for `ul[interop-list]`, `ol[interop-list]`,
+ * `dl[interop-list]`, and the standalone `<interop-list>` element.
+ *
+ * Loaded globally via `interop.css` so any consumer can apply Interop list
+ * styling by writing the markup — no Angular component import required.
+ *
+ * Token values (colors, sizes, radii) are set separately by the theme — see
+ * `themes/protocol/components/list.css`. This file declares structure; the
+ * theme declares values.
+ *
+ * All selectors are wrapped in :where() to keep specificity at zero, so
+ * consumer overrides always win regardless of declaration order. The single
+ * exception is the marker pseudo-element, which the spec forbids inside
+ * :where() (see css-strategy.md).
+ *
+ * Public tokens (set on any ancestor, e.g. [interop-root]):
+ *
+ *   Layout (shared with the InteropLayout directive)
+ *   --itx-layout-direction   --itx-layout-justify   --itx-layout-align
+ *   --itx-layout-wrap        --itx-layout-gap
+ *
+ *   Enclosed marker variant — ol[interop-list][itx-marker="enclosed"]
+ *   --itx-list-marker-gap          Space between marker and item text
+ *   --itx-list-marker-align        Cross-axis alignment of marker vs text
+ *   --itx-list-marker-size         Marker box diameter
+ *   --itx-list-marker-border       Stroke (default: stroked circle)
+ *   --itx-list-marker-background    --itx-list-marker-color
+ *   --itx-list-marker-radius       Shape (default: full circle)
+ *   --itx-list-marker-font-size     --itx-list-marker-font-weight
+ *   --itx-list-marker-style        counter() style (decimal, upper-roman, …)
+ */
+
+/* ── Base: layout-capable list container ─────────────────────────────────── */
+/* Mirrors the InteropLayout `layout-capable` mixin, but lists default to a
+   vertical stack (column) rather than a row. */
+
+:where(
+		ul[interop-list],
+		ol[interop-list],
+		dl[interop-list],
+		interop-list
+	) {
+	display: flex;
+	flex-direction: var(--itx-layout-direction, column);
+	justify-content: var(--itx-layout-justify, flex-start);
+	align-items: var(--itx-layout-align, flex-start);
+	flex-wrap: var(--itx-layout-wrap, nowrap);
+	gap: var(--itx-layout-gap, 0);
+
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* When laid out as a row, give items inter-item spacing unless a layout gap
+   is already in effect. */
+:where([interop-list][data-interop-layout*="row"] > li) {
+	margin-inline-end: var(--itx-layout-gap, var(--itx-spacing-2));
+}
+
+:where([interop-list][data-interop-layout*="row"] > li:last-child) {
+	margin-inline-end: 0;
+}
+
+/* ── Opt-in: enclosed numeral markers (itx-marker="enclosed") ─────────────── */
+/* Renders each ordinal as a styled box — a stroked circle by default — with
+   the numeral centred inside. The base rule above sets list-style:none, so the
+   native marker is gone; a named counter on the row reinstates the ordinal and
+   the ::before paints it.
+
+   Trade-off: the row becomes a flex container, so native ordering attributes
+   (`<ol start>`, `reversed`, `<li value>`) are not reflected — ordering comes
+   from source order, which is the common case for collection-rendered lists. */
+
+:where(ol[interop-list][itx-marker="enclosed"]) {
+	counter-reset: itx-list-marker;
+}
+
+:where(ol[interop-list][itx-marker="enclosed"] > li) {
+	counter-increment: itx-list-marker;
+	display: flex;
+	align-items: var(--itx-list-marker-align, center);
+	gap: var(--itx-list-marker-gap, var(--itx-spacing-3));
+}
+
+/* Pseudo-element lives OUTSIDE :where() — browsers silently drop a
+   pseudo-element nested inside it (see css-strategy.md). */
+:where(ol[interop-list][itx-marker="enclosed"] > li)::before {
+	content: counter(itx-list-marker, var(--itx-list-marker-style, decimal));
+	flex: 0 0 auto;
+	display: grid;
+	place-items: center;
+	box-sizing: border-box;
+	inline-size: var(--itx-list-marker-size, 2em);
+	block-size: var(--itx-list-marker-size, 2em);
+	border: var(--itx-list-marker-border, 2px solid currentColor);
+	border-radius: var(--itx-list-marker-radius, var(--itx-radius-full, 9999px));
+	background: var(--itx-list-marker-background, transparent);
+	color: var(--itx-list-marker-color, inherit);
+	font-size: var(--itx-list-marker-font-size, 0.8em);
+	font-weight: var(--itx-list-marker-font-weight, 600);
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+}

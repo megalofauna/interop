@@ -45,7 +45,8 @@
  *   --itx-button-background-image
  *   --itx-button-border-width
  *   --itx-button-border-style
- *   --itx-button-border-radius     Explicit override; bypasses managed-radius context.
+ *   --itx-button-radius-default    Theme's default radius. The itx-radius="…" attribute overrides it.
+ *   --itx-button-border-radius     Explicit hard override — wins over both itx-radius and the default.
  *   --itx-button-box-shadow
  *
  *   Focus ring
@@ -77,6 +78,15 @@
 	background: none;
 	border: none;
 	corner-shape: var(--itx-button-corner-shape, initial);
+
+	/* Bridge the itx-radius attribute onto the visual pill. `--itx-radius` is
+	 * registered non-inheriting (so a container's radius can't leak into nested
+	 * children), which means the ::before pill — a pseudo of this host — can't
+	 * see it. Copy it here onto an inheriting private token the pill CAN inherit.
+	 * With no itx-radius present this resolves guaranteed-invalid, so the pill
+	 * falls through to its theme default. This is the pattern for any component
+	 * that paints its radius on a pseudo-element. */
+	--_itx-button-radius: var(--itx-radius);
 
 	padding-block: calc(
 		var(--itx-button-padding-block) + var(--itx-button-touch-inset, 0.25em)
@@ -163,7 +173,10 @@
 	border-color: var(--_border-color);
 	border-radius: var(
 		--itx-button-border-radius,
-		var(--itx-context-radius, initial)
+		var(
+			--_itx-button-radius,
+			var(--itx-button-radius-default, var(--itx-context-radius, initial))
+		)
 	);
 	box-shadow: var(--_box-shadow);
 	corner-shape: var(--itx-button-corner-shape, initial);

@@ -15,6 +15,7 @@ import {
 	DemoNotes,
 	type DemoNote,
 } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	component?: string;
@@ -39,6 +40,7 @@ interface ApiEntry {
 		DemoSection,
 		DemoExample,
 		DemoNotes,
+		DemoMasthead,
 	],
 	templateUrl: "./expansion-panel-page.html",
 	styleUrl: "./expansion-panel-page.scss",

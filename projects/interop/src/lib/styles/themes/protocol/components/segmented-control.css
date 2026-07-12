@@ -51,7 +51,7 @@
 	--itx-segment-flex: 0 0 fit-content;
 
 	--itx-segment-font-family: var(--itx-font-family-sans);
-	--itx-segment-font-size: var(--itx-fs-label);
+	--itx-segment-font-size: var(--itx-font-size-label);
 	--itx-segment-font-weight: 400;
 	--itx-segment-font-weight-selected: 500;
 

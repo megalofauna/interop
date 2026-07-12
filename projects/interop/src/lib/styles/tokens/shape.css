@@ -1,14 +1,28 @@
 /*
- * Shape — border-radius tokens.
+ * Shape — the canonical border-radius system.
  *
- * All radii derive from --itx-radius-base so a single override
- * rescales the entire shape system.
+ * One source of truth for radius across Interop:
+ *   1. Primitive ramp  — numeric steps derived from --itx-radius-base.
+ *   2. Semantic scale  — the t-shirt vocabulary (none/nominal/sm/md/lg/xl/full)
+ *                        that components and the itx-radius attribute speak.
+ *   3. itx-radius      — a component-agnostic attribute that resolves the
+ *                        semantic scale into --itx-radius for any element.
+ *
+ * Components consume radius through their own fallback chain, e.g.:
+ *   border-radius: var(--itx-<c>-border-radius,     ← per-instance escape hatch
+ *                      var(--itx-radius,            ← itx-radius="…" attribute
+ *                          var(--itx-context-radius,  ← managed context
+ *                              <theme default>)));    ← final fallback
+ *
+ * Put a component's theme DEFAULT in the final fallback slot — never assign it
+ * to --itx-<c>-border-radius, which is the escape hatch and would mask the
+ * attribute. See project_css_layering_contract.
  */
 
 :where([interop-root]) {
-	--itx-radius-nominal: calc(var(--itx-radius-base) * 0.25);
-	--itx-radius-0_5: calc(var(--itx-radius-base) * 0.5);
+	/* ── Primitive ramp — a single base rescales the whole system ────────── */
 	--itx-radius-base: 4px;
+	--itx-radius-0_5: calc(var(--itx-radius-base) * 0.5);
 	--itx-radius-1: var(--itx-radius-base);
 	--itx-radius-2: calc(var(--itx-radius-base) * 2);
 	--itx-radius-3: calc(var(--itx-radius-base) * 3);
@@ -18,4 +32,48 @@
 	--itx-radius-8: calc(var(--itx-radius-base) * 8);
 	--itx-radius-12: calc(var(--itx-radius-base) * 12);
 	--itx-radius-full: 9999px;
+
+	/* ── Semantic scale — the canonical vocabulary ───────────────────────── */
+	--itx-radius-none: 0;
+	--itx-radius-nominal: var(--itx-radius-0_5); /* 2px */
+	--itx-radius-sm: var(--itx-radius-1); /* 4px */
+	--itx-radius-md: var(--itx-radius-2); /* 8px */
+	--itx-radius-lg: var(--itx-radius-3); /* 12px */
+	--itx-radius-xl: var(--itx-radius-4); /* 16px */
+}
+
+/* ── itx-radius — component-agnostic application attribute ────────────────────
+ *
+ * Resolves the semantic scale into --itx-radius on the element it sits on.
+ * Registered non-inheriting so an itx-radius on a container cannot leak into
+ * nested radius-bearing children. Any component that includes var(--itx-radius)
+ * in its border-radius chain participates automatically — no per-component
+ * selectors required.
+ */
+
+@property --itx-radius {
+	syntax: "*";
+	inherits: false;
+}
+
+:where([itx-radius="none"]) {
+	--itx-radius: var(--itx-radius-none);
+}
+:where([itx-radius="nominal"]) {
+	--itx-radius: var(--itx-radius-nominal);
+}
+:where([itx-radius="sm"]) {
+	--itx-radius: var(--itx-radius-sm);
+}
+:where([itx-radius="md"]) {
+	--itx-radius: var(--itx-radius-md);
+}
+:where([itx-radius="lg"]) {
+	--itx-radius: var(--itx-radius-lg);
+}
+:where([itx-radius="xl"]) {
+	--itx-radius: var(--itx-radius-xl);
+}
+:where([itx-radius="full"]) {
+	--itx-radius: var(--itx-radius-full);
 }

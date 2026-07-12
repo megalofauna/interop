@@ -26,9 +26,10 @@ import {
 	Terminal,
 	type PageNavLink,
 	type TerminalEntry,
-} from "@interop/composites";
+} from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { ButtonPlayground } from "./button-playground/button-playground";
 import * as ledes from "./button.djot";
 interface ApiEntry {
@@ -56,6 +57,7 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		Terminal,
 		DemoSection,
 		DemoExample,
+		DemoMasthead,
 		ButtonPlayground,
 	],
 	providers: [provideInteropIcons(TablerAlertTriangleFilled, TablerMoon)],
@@ -72,11 +74,9 @@ export class ButtonPage {
 	readonly activeHref = signal<string | null>(null);
 
 	readonly links: PageNavLink[] = [
-		{ label: "Usage", href: "#usage" },
-		{ label: "Playground", href: "#playground" },
-		{ label: "Throttle", href: "#throttle" },
-		{ label: "Debounce", href: "#debounce" },
-		{ label: "Reentrancy", href: "#reentrancy" },
+		{ label: "Quick start", href: "#quick-start" },
+		{ label: "Appearance", href: "#appearance" },
+		{ label: "Activation", href: "#activation-management" },
 		{ label: "Tokens", href: "#tokens" },
 		{ label: "API", href: "#api" },
 	];

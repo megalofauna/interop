@@ -45,7 +45,7 @@
 	/*--itx-stepper-nav-trigger-padding-block: var(--itx-spacing-2);
 	--itx-stepper-nav-trigger-padding-inline: var(--itx-spacing-3);
 	--itx-stepper-nav-trigger-gap: var(--itx-spacing-2);
-	--itx-stepper-nav-trigger-font-size: var(--itx-fs-label);
+	--itx-stepper-nav-trigger-font-size: var(--itx-font-size-label);
 	--itx-stepper-nav-trigger-font-weight: 500;*/
 	/*--itx-stepper-nav-trigger-background-color: var(--itx-neutral-3);
 	--itx-stepper-nav-trigger-foreground: var(--itx-neutral-11);
@@ -86,7 +86,7 @@
 	--itx-step-indicator-border-radius: 9999px;
 	--itx-step-indicator-border-width: 2px;
 	--itx-step-indicator-border-style: solid;
-	--itx-step-indicator-font-size: var(--itx-fs-label);
+	--itx-step-indicator-font-size: var(--itx-font-size-label);
 	--itx-step-indicator-font-weight: 500;
 	--itx-step-indicator-transition-duration: 160ms;
 	--itx-step-indicator-transition-timing-function: ease-in-out;
@@ -128,7 +128,7 @@
 
 	/* ── Step label ─────────────────────────────────────────────────────── */
 	--itx-step-label-font-family: var(--itx-font-family-sans);
-	--itx-step-label-font-size: var(--itx-fs-label);
+	--itx-step-label-font-size: var(--itx-font-size-label);
 	--itx-step-label-font-weight: 500;
 	--itx-step-label-color: var(--itx-neutral-10);
 	--itx-step-label-color-active: var(--itx-neutral-12);

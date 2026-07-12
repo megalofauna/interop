@@ -11,6 +11,7 @@ import {
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -33,6 +34,7 @@ interface ApiEntry {
 		DemoSection,
 		DemoExample,
 		DemoNotes,
+		DemoMasthead,
 	],
 	templateUrl: "./field-page.html",
 	styleUrl: "./field-page.scss",

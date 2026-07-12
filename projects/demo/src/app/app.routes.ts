@@ -194,6 +194,14 @@ export const routes: Routes = [
 			import("./pages/content/content-page").then((m) => m.ContentPage),
 	},
 	{
+		path: "foundation/typography",
+		title: "Typography — Interop",
+		loadComponent: () =>
+			import("./pages/typography/typography-page").then(
+				(m) => m.TypographyPage,
+			),
+	},
+	{
 		path: "**",
 		redirectTo: "components/checkbox",
 	},

@@ -8,16 +8,15 @@ type DemoSectionChips = [
 ];
 
 @Component({
-	selector: "demo-section",
+	selector: "section[demo-section], demo-section",
 	standalone: true,
 	template: `
 		<h2 [id]="id()" class="demo-section__heading">
 			<a [href]="'#' + id()" class="demo-section__anchor">#</a>
 			{{ heading() }}
 		</h2>
-		<div class="demo-section__body">
-			<ng-content />
-		</div>
+
+		<ng-content />
 	`,
 	styleUrl: "./demo-section.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

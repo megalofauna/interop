@@ -12,10 +12,11 @@ import {
 	type TableColumn,
 	type TableGroupRow,
 } from 'interop';
-import { CodeBlock, Terminal, type TerminalEntry } from "@interop/composites";
+import { CodeBlock, Terminal, type TerminalEntry } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiInputRow {
 	name: string;
@@ -53,6 +54,7 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		DemoSection,
 		DemoExample,
 		DemoNotes,
+		DemoMasthead,
 	],
 	templateUrl: "./chip-page.html",
 	styleUrl: "./chip-page.css",

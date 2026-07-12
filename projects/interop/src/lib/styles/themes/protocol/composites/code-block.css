@@ -48,12 +48,13 @@
  */
 
 :where([interop-root] itx-code-block) {
-	/* Host */
-	--itx-cb-radius: var(--itx-radius-2);
-	--itx-cb-body-background: var(--itx-neutral-1);
+	/* Host — participates in managed-radius: inherit the context radius when one
+	   is set, else fall back to the static radius-2 step. */
+	--itx-cb-radius: var(--itx-context-radius, var(--itx-radius-2));
+	--itx-cb-body-background: yellow;
 
 	/* Header */
-	--itx-cb-header-background: var(--itx-neutral-3_5);
+	--itx-cb-header-background: var(--itx-neutral-3);
 	--itx-cb-header-background-image: none;
 	--itx-cb-header-padding-block: var(--itx-spacing-2);
 	--itx-cb-header-padding-inline: var(--itx-spacing-2);

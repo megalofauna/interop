@@ -22,10 +22,11 @@ import { TablerBell } from "interop/lib/iconsets/tabler/outline/tabler-bell";
 import { TablerStar } from "interop/lib/iconsets/tabler/outline/tabler-star";
 import { TablerArrowUp } from "interop/lib/iconsets/tabler/outline/tabler-arrow-up";
 import { TablerArrowDown } from "interop/lib/iconsets/tabler/outline/tabler-arrow-down";
-import { CodeBlock } from "@interop/composites";
+import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -42,7 +43,7 @@ type TokenEntry =
 @Component({
 	selector: "icon-page",
 	standalone: true,
-	imports: [InteropIcon, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropIcon, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	providers: [
 		provideInteropIcons(
 			TablerRocket, TablerBug, TablerBolt, TablerArchive, TablerInfoCircle,

@@ -31,7 +31,7 @@
 	--itx-toolbar-disabled-opacity: 0.6;
 
 	/* Group */
-	--itx-toolbar-group-gap: var(--itx-spacing-1);
+	--itx-toolbar-group-gap: var(--itx-spacing-5);
 }
 
 /* ── Contextual button overrides ─────────────────────────────────────────── */

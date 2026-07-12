@@ -1,35 +1,56 @@
 /*
- * Typography — semantic font roles.
+ * Typography tokens — font-size roles, line-height, rhythm, measure.
  *
- * Maps human-readable role names (display, heading, body …) to the
- * fluid primitive font-size scale defined in primitives.css.
- * Components should reference these semantic aliases, never the raw
- * --itx-fs-* primitives directly.
+ * Three concerns, one home:
+ *   1. Font-size roles  — human names (display…fine-print) mapped to the fluid
+ *      --itx-fs-* primitive ramp (primitives.css). Consume these roles;
+ *      never reference the raw --itx-fs-* primitives directly.
+ *   2. Line-height      — a single staked, fluid, inverse expression
+ *      (--itx-line-height): constant leading over the element's own font-size,
+ *      so the ratio loosens as text shrinks. Bounded by --itx-lh-tight/-loose.
+ *   3. Rhythm + measure — vertical flow between prose blocks and the max line
+ *      length. Applied by styles/typography/prose.css under
+ *      [interop-typography-root]. See .agent/typography.md.
  *
- * Font family choices (--itx-font-family, --itx-font-family-mono) are
- * defined in the active theme file — e.g. themes/protocol.css.
+ * Font families live in the active theme (--itx-font-family-sans / -mono).
  */
 
 :where([interop-root]) {
-	--itx-font-size-display: var(--itx-fs-3xl);
-	--itx-font-size-heading-lg: var(--itx-fs-2xl);
-	--itx-font-size-heading: var(--itx-fs-xl);
+	/* ── Font-size roles ──────────────────────────────────────────────── */
+	--itx-font-size-display: var(--itx-fs-wtf);
+	--itx-font-size-heading-lg: var(--itx-fs-3xl);
+	--itx-font-size-heading: var(--itx-fs-2xl);
 	--itx-font-size-subheading: var(--itx-fs-lg);
 	--itx-font-size-body-lg: var(--itx-fs-md);
 	--itx-font-size-body: var(--itx-fs-base);
 	--itx-font-size-label: var(--itx-fs-sm);
 	--itx-font-size-caption: var(--itx-fs-xs);
 	--itx-font-size-fine-print: var(--itx-fs-micro);
-}
 
-:where([interop-root]) {
-	/* @link https://utopia.fyi/type/calculator?c=386,16,1.875,1280,18,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
-	--itx-fluid--2: clamp(0.2844rem, 0.0964rem + 0.7795cqi, 0.72rem);
-	--itx-fluid--1: clamp(0.5333rem, 0.375rem + 0.6562cqi, 0.9rem);
-	--itx-fluid-0: clamp(1rem, 0.946rem + 0.2237cqi, 1.125rem);
-	--itx-fluid-1: clamp(1.4063rem, 2.0774rem + -0.8389cqi, 1.875rem);
-	--itx-fluid-2: clamp(1.7578rem, 4.2746rem + -3.146cqi, 3.5156rem);
-	--itx-fluid-3: clamp(2.1973rem, 8.4892rem + -7.8649cqi, 6.5918rem);
-	--itx-fluid-4: clamp(2.7466rem, 16.5102rem + -17.2045cqi, 12.3596rem);
-	--itx-fluid-5: clamp(3.4332rem, 31.6978rem + -35.3308cqi, 23.1743rem);
+	/* ── Font weights ─────────────────────────────────────────────────── */
+	--itx-font-weight-body: 400;
+	--itx-font-weight-heading: 400; /* all headings — reads well with IBM Plex */
+
+	/* ── Line-height — staked to font-size, fluid, inverse ────────────────
+	 * ratio = 1 + leading / font-size, clamped: larger text tightens toward
+	 * --itx-lh-tight, smaller text loosens toward --itx-lh-loose. Reads 1em,
+	 * so it must be applied ON a text element (recomputes per element) — it
+	 * then rides the fluid font-size for free. */
+	--itx-lh-tight: 1; /* floor  — display & headings (reeled in; 1.3 was gappy) */
+	--itx-lh-loose: 1.6; /* ceiling — captions & fine print (must stay > tight) */
+	--itx-lh-leading: 0.875em; /* constant leading (~8px) added over 1em */
+	--itx-line-height: clamp(
+		calc(var(--itx-lh-tight) * 1em),
+		1em + var(--itx-lh-leading),
+		calc(var(--itx-lh-loose) * 1em)
+	);
+
+	/* ── Vertical rhythm — prose flow (owl model) ─────────────────────────
+	 * margin-block-start between adjacent block siblings under the root. */
+	--itx-rhythm: var(--itx-spacing-8); /* default flow (p → p) */
+	--itx-rhythm-loose: var(--itx-spacing-12); /* opening a heading */
+	--itx-rhythm-tight: var(--itx-spacing-4); /* binding heading → body */
+
+	/* ── Measure — max line length for readability ───────────────────────*/
+	--itx-measure: 80ch;
 }

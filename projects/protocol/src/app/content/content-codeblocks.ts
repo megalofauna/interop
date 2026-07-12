@@ -25,7 +25,7 @@ import {
 	EnvironmentInjector,
 	createComponent,
 } from "@angular/core";
-import { CodeBlock } from "@interop/composites";
+import { CodeBlock } from "interop";
 
 export function hydrateCodeBlocks(
 	root: HTMLElement,

@@ -3,11 +3,12 @@ import { InteropKbd } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 @Component({
 	selector: "kbd-page",
 	standalone: true,
-	imports: [InteropKbd, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropKbd, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	templateUrl: "./kbd-page.html",
 	styleUrl: "./kbd-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -15,13 +15,14 @@ import {
 	type TableColumn,
 	DialogClosedEvent,
 } from "interop";
-import { CodeBlock, type CodeFile } from "@interop/composites";
+import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import {
 	DemoNotes,
 	type DemoNote,
 } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import {
 	TablerCircleX,
 	TablerMessageLanguage,
@@ -51,6 +52,7 @@ interface ApiEntry {
 		DemoSection,
 		DemoExample,
 		DemoNotes,
+		DemoMasthead,
 	],
 	templateUrl: "./stepper-page.html",
 	styleUrl: "./stepper-page.scss",

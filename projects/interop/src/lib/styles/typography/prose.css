@@ -1,0 +1,79 @@
+/*
+ * Prose — base-element typography for flowing content.
+ *
+ * The one place bare <h1>–<h6>, <p>, lists, quotes, etc. get sized, leaded, and
+ * spaced. Opt in by putting `interop-typography-root` on a container; everything
+ * inside inherits the system. Library-owned, so every app (demo, protocol,
+ * consumers) shares one prose voice instead of re-deriving it.
+ *
+ * Values come entirely from typography tokens (font-size roles, --itx-line-
+ * height, --itx-rhythm-*, --itx-measure). This file owns STRUCTURE only — never
+ * colour; text colour is inherited from the theme/app.
+ *
+ * Zero specificity via :where() throughout — consumer overrides always win.
+ * See .agent/typography.md.
+ */
+
+/* Normalize — shed UA weights/margins; the roles below re-add intentionally.
+ * List padding is left alone so markers keep their indent. */
+:where([interop-typography-root])
+	:where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, blockquote, pre, figure) {
+	margin: 0;
+	font-weight: var(--itx-font-weight-body);
+}
+
+/* Staked, fluid, inverse line-height — applied per text element so `1em`
+ * resolves against that element's own font-size. */
+:where([interop-typography-root])
+	:where(h1, h2, h3, h4, h5, h6, p, li, dt, dd, blockquote, figcaption) {
+	line-height: var(--itx-line-height);
+}
+
+/* Font-size roles (consume the semantic scale, never raw primitives). */
+:where([interop-typography-root] h1) { font-size: var(--itx-font-size-display); }
+:where([interop-typography-root] h2) { font-size: var(--itx-font-size-heading-lg); }
+:where([interop-typography-root] h3) { font-size: var(--itx-font-size-heading); }
+:where([interop-typography-root] h4) { font-size: var(--itx-font-size-subheading); }
+:where([interop-typography-root] h5) { font-size: var(--itx-font-size-body-lg); }
+:where([interop-typography-root] h6) { font-size: var(--itx-font-size-body); }
+:where([interop-typography-root] :where(p, li, dd, blockquote)) {
+	font-size: var(--itx-font-size-body);
+}
+:where([interop-typography-root] small) {
+	font-size: var(--itx-font-size-caption);
+}
+
+/* All headings share one weight — reads well with IBM Plex Sans. */
+:where([interop-typography-root] :where(h1, h2, h3, h4, h5, h6, [data-label="display"])) {
+	--itx-line-height: 1.125 ;
+}
+
+/* All headings share one weight — reads well with IBM Plex Sans. */
+:where([interop-typography-root] :where(h1, h2, h3, h4, h5, h6)) {
+	font-weight: var(--itx-font-weight-heading);
+}
+
+/* Measure — cap line length on running text. */
+:where([interop-typography-root] :where(p, li, blockquote)) {
+	max-inline-size: var(--itx-measure);
+}
+
+/* ── Vertical rhythm — owl flow (margin-block-start on adjacent siblings) ──
+ * Base flow for like siblings; a looser gap opens a heading; a tight gap binds
+ * a heading to the block beneath it. The three rules resolve their overlaps by
+ * source order at equal (zero) specificity. First child gets no top margin for
+ * free. Doublets (p+p, h2+p) fall out of these rules — no per-pair selectors. */
+:where([interop-typography-root]) > :where(* + *) {
+	margin-block-start: var(--itx-rhythm);
+}
+:where([interop-typography-root]) > :where(* + :where(h1, h2, h3, h4, h5, h6)) {
+	margin-block-start: var(--itx-rhythm-loose);
+}
+:where([interop-typography-root]) > :where(:where(h1, h2, h3, h4, h5, h6) + *) {
+	margin-block-start: var(--itx-rhythm-tight);
+}
+
+/* Nested list / definition flow. */
+:where([interop-typography-root]) :where(li + li, dd + dt) {
+	margin-block-start: var(--itx-rhythm-tight);
+}

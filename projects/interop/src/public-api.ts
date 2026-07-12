@@ -28,6 +28,9 @@ export * from "./lib/collection/public-api";
 // Components
 export * from "./lib/components/public-api";
 
+// Composites — higher-order assemblies of Interop components
+export * from "./lib/composites/public-api";
+
 // Highlighter contract (no implementation — see interop/highlighters/shiki)
 export * from "./lib/highlighter/public-api";
 

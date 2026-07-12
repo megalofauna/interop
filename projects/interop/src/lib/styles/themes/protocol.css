@@ -47,6 +47,7 @@
 @import "./protocol/components/expansion-panel.css";
 @import "./protocol/components/icon.css";
 @import "./protocol/components/indicator.css";
+@import "./protocol/components/list.css";
 @import "./protocol/components/popover.css";
 @import "./protocol/components/progress.css";
 @import "./protocol/components/segmented-control.css";

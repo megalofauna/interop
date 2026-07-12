@@ -1,25 +1,26 @@
 <header class="shell__header">
 	<div class="shell__header-start">
 		<button
+			interop-button="icon"
+			itx-radius="lg"
 			class="shell__menu-btn"
-			(click)="toggleNav()"
+			command="toggle-popover"
+			commandfor="site-nav"
 			aria-label="Toggle navigation"
 		>
-			<svg
-				width="20"
-				height="20"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-			>
-				<line x1="3" y1="6" x2="21" y2="6" />
-				<line x1="3" y1="12" x2="21" y2="12" />
-				<line x1="3" y1="18" x2="21" y2="18" />
-			</svg>
+			<interop-icon name="tabler-layout-sidebar-left-expand" [size]="24"></interop-icon>
 		</button>
 		<span class="shell__title">Interop</span>
+		@if (meta().title) {
+		<span class="shell__crumb" aria-hidden="true">
+			<span class="shell__crumb-sep">›</span>
+			@if (meta().category) {
+			<span class="shell__crumb-category">{{ meta().category }}</span>
+			<span class="shell__crumb-sep">›</span>
+			}
+			<span class="shell__crumb-title">{{ meta().title }}</span>
+		</span>
+		}
 	</div>
 
 	<nav class="shell__nav" aria-label="Main">
@@ -54,9 +55,8 @@
 	</div>
 </header>
 
-<div class="shell__body">
-	<demo-nav [open]="navOpen()" (closed)="navOpen.set(false)" />
-	<main class="shell__content">
-		<router-outlet />
-	</main>
-</div>
+<demo-nav class="shell__sidebar" />
+
+<main class="shell__content">
+	<router-outlet />
+</main>

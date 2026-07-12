@@ -1,8 +1,0 @@
-{
-	"name": "@interop/composites",
-	"version": "0.1.0",
-	"peerDependencies": {
-		"@angular/core": ">=21.0.0",
-		"interop": ">=0.1.0"
-	}
-}

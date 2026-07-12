@@ -1,14 +1,10 @@
 <article class="demo-page demo-page--with-sidenav">
 	<div class="demo-page__content">
-		<header class="demo-page__header">
-			<p class="demo-page__category">Components</p>
-			<h1 class="demo-page__title">Button</h1>
-			<p class="demo-page__lead">
-				Enhanced button with activation guardrails — debounce, throttle, and
-				reentrancy protection built in. Drop-in replacement for any native
-				button.
-			</p>
-		</header>
+		<demo-masthead category="Components" title="Button">
+			Enhanced button with activation guardrails — debounce, throttle, and
+			reentrancy protection built in. Drop-in replacement for any native
+			button.
+		</demo-masthead>
 
 		<itx-page-nav
 			[links]="links"
@@ -17,60 +13,40 @@
 			[fade]="true"
 		/>
 
-		<!-- ── Usage ──────────────────────────────────────────────────────────── -->
-		<demo-section id="usage" heading="Button system">
-			<demo-example label="Overview" [lede]="ledes.overview">
-				<!--<div class="flex">
-					<button interop-button itx-radius="sm" itx-size="xs">Tiny</button>
-					<button interop-button itx-radius="sm" itx-size="sm">Small</button>
-					<button interop-button itx-radius="sm" itx-size="md">Button</button>
-					<button interop-button itx-radius="sm" itx-size="lg">Large</button>
-					<button interop-button itx-radius="sm" itx-size="xl">Huge</button>
-				</div>-->
-
-				<!--<div class="flex">
-				<div class="flex">
-					<button interop-button="action xs">Micro</button>
-					<button interop-button="action sm">Small</button>
-					<button interop-button="action md">Medium</button>
-					<button interop-button="action lg">Large</button>
-				</div>
-
-				<div class="flex">
-					<button interop-button="action-plus xs">Micro</button>
-					<button interop-button="action-plus sm">Small</button>
-					<button interop-button="action-plus md">Medium</button>
-					<button interop-button="action-plus lg">Large</button>
-				</div>
-
-				<div class="flex">
-					<button interop-button="action-colorway xs">Micro</button>
-					<button interop-button="action-colorway sm">Small</button>
-					<button interop-button="action-colorway md">Medium</button>
-					<button interop-button="action-colorway lg">Large</button>
-				</div>-->
-
-				<!--<interop-expansion-panel>
-					<h3>
-						<button interop-expansion-trigger>CSS custom properties</button>
-					</h3>
-					<div
-						interop-expansion-body
-						[peek]="true"
-						style="--itx-expansion-panel-body-peek-fade-color: var(--itx-neutral-3)"
-					>
-						<itx-code-block
-							language="css"
-							[tokens]="customPropsTokens.value() ?? null"
-						>
-							<pre><code [textContent]="customProps"></code></pre>
-						</itx-code-block>
-					</div>
-				</interop-expansion-panel>-->
-			</demo-example>
-			<demo-example label="Button sizes" [lede]="ledes.sizes">
-				<!--<button interop-button>Fire thrusters</button>-->
-
+		<section demo-section id="quick-start" heading="Quick start">
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+				mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
+				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+				qui officia deserunt mollit anim id est laborum.
+			</p>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+				mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
+				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+				qui officia deserunt mollit anim id est laborum.
+			</p>
+		</section>
+		<section demo-section id="appearance" heading="Appearance">
+			<demo-example id="size" label="Size">
 				<div class="flex">
 					<button interop-button itx-size="xs">Extra small</button>
 					<button interop-button itx-size="sm">Small</button>
@@ -78,197 +54,72 @@
 					<button interop-button itx-size="lg">Large</button>
 					<button interop-button itx-size="xl">Extra large</button>
 				</div>
-
-				<!--<div class="flex">
-				<div class="flex">
-					<button interop-button="action xs">Micro</button>
-					<button interop-button="action sm">Small</button>
-					<button interop-button="action md">Medium</button>
-					<button interop-button="action lg">Large</button>
-				</div>
-
-				<div class="flex">
-					<button interop-button="action-plus xs">Micro</button>
-					<button interop-button="action-plus sm">Small</button>
-					<button interop-button="action-plus md">Medium</button>
-					<button interop-button="action-plus lg">Large</button>
-				</div>
-
-				<div class="flex">
-					<button interop-button="action-colorway xs">Micro</button>
-					<button interop-button="action-colorway sm">Small</button>
-					<button interop-button="action-colorway md">Medium</button>
-					<button interop-button="action-colorway lg">Large</button>
-				</div>-->
-
-				<!--<interop-expansion-panel>
-					<h3>
-						<button interop-expansion-trigger>CSS custom properties</button>
-					</h3>
-					<div
-						interop-expansion-body
-						[peek]="true"
-						style="--itx-expansion-panel-body-peek-fade-color: var(--itx-neutral-3)"
-					>
-						<itx-code-block
-							language="css"
-							[tokens]="customPropsTokens.value() ?? null"
-						>
-							<pre><code [textContent]="customProps"></code></pre>
-						</itx-code-block>
-					</div>
-				</interop-expansion-panel>-->
 			</demo-example>
-
-			<demo-example label="Disabled" [lede]="ledes.disabled">
-				<button interop-button="action" itx-size="md" [disabled]="true">
-					Offline
-				</button>
-				<itx-code-block language="html" [code]="disabledCode" />
+			<demo-example id="radius" label="Radius"></demo-example>
+			<demo-example id="variants" label="Variants"></demo-example>
+		</section>
+		<section
+			demo-section
+			id="activation-management"
+			heading="Activation management"
+		>
+			<demo-example id="throttle" label="Throttle">
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+				mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur
+				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+				qui officia deserunt mollit anim id est laborum.
 			</demo-example>
-
-			<demo-example label="Loading" [lede]="ledes.loading">
-				<button interop-button="action-minus" itx-size="md" [loading]="true">
-					Initialising
-				</button>
-				<itx-code-block language="html" [code]="loadingCode" />
+			<demo-example id="debounce" label="Debounce">
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+				mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur
+				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+				qui officia deserunt mollit anim id est laborum.
 			</demo-example>
+			<demo-example id="reentrancy" label="Reentrance guard"></demo-example>
+		</section>
+		<demo-section id="tokens" heading="Tokens">
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+				mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
+				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+				qui officia deserunt mollit anim id est laborum.
+			</p>
 		</demo-section>
-
-		<!-- ── Playground ─────────────────────────────────────────────────────── -->
-		<demo-section id="playground" heading="Playground">
-			<demo-example
-				label="Compose attributes interactively"
-				[lede]="ledes.playground"
-			>
-				<button-playground />
-			</demo-example>
-		</demo-section>
-
-		<!-- ── Throttle ───────────────────────────────────────────────────────── -->
-		<demo-section id="throttle" heading="Throttle">
-			<interop-callout type="info">
-				Throttle fires immediately then suppresses further activations for the
-				configured window. Useful for physical actions like engine bursts where
-				rapid repeat clicks should be ignored.
-			</interop-callout>
-			<demo-example
-				label="1 s throttle window"
-				[lede]="ledes.throttle"
-				(reset)="resetThrottleExample()"
-			>
-				<button interop-button="action" (click)="onThrottleClick()">
-					Boost
-				</button>
-				<itx-terminal
-					variant="plain"
-					[entries]="throttleLog()"
-					(reset)="throttleLog.set([])"
-				/>
-
-				<itx-code-block
-					[wrapToggle]="true"
-					language="typescript"
-					[code]="throttleCode"
-				/>
-			</demo-example>
-		</demo-section>
-
-		<!-- ── Debounce ───────────────────────────────────────────────────────── -->
-		<demo-section id="debounce" heading="Debounce">
-			<interop-callout type="info">
-				Debounce delays activation until the user stops clicking. Useful for
-				search or filter inputs where you want to wait for a pause before
-				firing.
-			</interop-callout>
-
-			<demo-example
-				label="600 ms debounce"
-				[lede]="ledes.debounce"
-				(reset)="resetDebounceExample()"
-			>
-				<button
-					interop-button="action"
-					itx-size="md"
-					(click)="onDebounceClick()"
-				>
-					Search manifest
-				</button>
-				<itx-terminal [entries]="debounceLog()" (reset)="debounceLog.set([])" />
-				<itx-code-block language="typescript" [code]="debounceCode" />
-			</demo-example>
-		</demo-section>
-
-		<!-- ── Reentrancy ─────────────────────────────────────────────────────── -->
-		<demo-section id="reentrancy" heading="Reentrancy guard">
-			<interop-callout type="info">
-				With <code>reentrant: false</code>, a second click while the handler is
-				still running is dropped. Prevents double-submission on slow async
-				operations like docking sequences or cargo transfers.
-			</interop-callout>
-
-			<demo-example
-				label="Non-reentrant (2 s async handler)"
-				[lede]="ledes.reentrancy"
-				(reset)="resetReentrantExample()"
-			>
-				<button
-					interop-button="action"
-					itx-size="md"
-					(click)="onReentrantClick()"
-				>
-					{{ reentrantActive() ? 'Running…' : 'Submit order' }}
-				</button>
-				<itx-terminal
-					[entries]="reentrantLog()"
-					(reset)="reentrantLog.set([])"
-				/>
-				<itx-code-block language="typescript" [code]="reentrantCode" />
-			</demo-example>
-		</demo-section>
-
-		<!-- ── Tokens ───────────────────────────────────────────────────────── -->
-		<demo-section id="tokens" heading="CSS tokens">
-			<interop-table
-				[collection]="tokenEntries"
-				[columns]="tokenColumns"
-				[scrollable]="true"
-			>
-				<ng-template itxCell="property" let-entry>
-					<code class="demo-page__api-name">{{ entry.property }}</code>
-				</ng-template>
-				<ng-template itxCell="default" let-entry>
-					<code class="demo-page__api-default">{{ entry.default }}</code>
-				</ng-template>
-			</interop-table>
-		</demo-section>
-
-		<!-- ── API ────────────────────────────────────────────────────────────── -->
-		<demo-section id="api" heading="API — Inputs">
-			<interop-table
-				[collection]="apiEntries"
-				[columns]="apiColumns"
-				[scrollable]="true"
-			>
-				<ng-template itxCell="name" let-entry>
-					<code class="demo-page__api-name">{{ entry.name }}</code>
-				</ng-template>
-				<ng-template itxCell="type" let-entry>
-					<code class="demo-page__api-type">{{ entry.type }}</code>
-				</ng-template>
-				<ng-template itxCell="default" let-entry>
-					<code class="demo-page__api-default">{{ entry.default }}</code>
-				</ng-template>
-			</interop-table>
-		</demo-section>
+		<demo-section id="api" heading="API"
+			>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+			veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+			commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+			velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+			cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+			est laborum.</demo-section
+		>
 	</div>
-
-	<aside class="demo-page__sidenav">
-		<itx-page-nav
-			orientation="vertical"
-			[links]="links"
-			[activeHref]="activeHref()"
-			[sticky]="true"
-		/>
-	</aside>
 </article>

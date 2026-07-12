@@ -1,30 +1,44 @@
+// Landmark app-shell grid. Scroll happens on the document (see styles.scss), so
+// the header and the in-page page-nav share one scroll context.
+//   header (full) ┄ nav | main | aside ┄ footer (full)
+// aside/footer areas are pre-wired but empty until those landmarks are added.
 :host {
-	display: flex;
-	flex-direction: column;
-	height: 100dvh;
-	font-family:
-		"Figtree",
-		system-ui,
-		-apple-system,
-		BlinkMacSystemFont,
-		"Segoe UI",
-		Roboto,
-		sans-serif;
+	--header-h: 3.5rem;
+	// Stack the in-page page-nav beneath the persistent header (the library knob).
+	--itx-pn-sticky-top: var(--header-h);
+	// Bridge the page <h1>'s view-timeline up to this common ancestor so the
+	// header breadcrumb (a cousin in the tree) can toggle off it. The timeline is
+	// named on .demo-page__title (see _demo-page.scss).
+	timeline-scope: --page-title;
+
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	grid-template-rows: auto 1fr auto;
+	grid-template-areas:
+		"header header header"
+		"nav    main   aside"
+		"footer footer footer";
+	min-block-size: 100dvh;
 }
 
-// ── Header ──────────────────────────────────────────────────────────────────
+// ── Header (full width; persistent sticky bar of fixed height. The large page
+//    title collapses into it on scroll; sidebar + page-nav stack beneath it
+//    via --header-h). ──
 
 .shell__header {
+	grid-area: header;
 	position: sticky;
-	inset: 0 auto auto auto;
+	top: 0;
+	z-index: 20;
+	block-size: var(--header-h);
 	display: grid;
 	grid-template-columns: 1fr auto 1fr;
 	align-items: center;
 	gap: var(--itx-spacing-4);
-	padding: var(--itx-spacing-3) var(--itx-spacing-8);
+	padding-inline: var(--itx-spacing-4);
 	/* border-bottom: 1px solid var(--itx-border); */
-	background-color: rgba(24, 27, 29, 0.25);
-	backdrop-filter: blur(12px);
+	background-color: var(--itx-page);
+	backdrop-filter: none;
 }
 
 .shell__header-start {
@@ -46,7 +60,6 @@
 	cursor: pointer;
 	color: var(--itx-on-surface);
 	padding: var(--itx-spacing-1);
-	border-radius: var(--itx-radius-sm);
 
 	&:hover {
 		background: var(--itx-surface-hover);
@@ -57,6 +70,46 @@
 	font-weight: 700;
 	font-size: 1.125rem;
 	color: var(--itx-on-surface);
+}
+
+// Collapsed-state breadcrumb: "Interop › Components › Button". Hidden until the
+// page <h1> scrolls away, then toggled on — a discrete step, not a fade — via the
+// --page-title view-timeline. `both` holds it hidden before the range and shown
+// after; putting `display` in the keyframe means it reserves no space while
+// hidden. Tune the switch point with the `exit N%` in animation-range.
+.shell__crumb {
+	// Rendered but transparent at rest, hidden via OPACITY not display: an element
+	// based at display:none never runs its animation, so it can never un-hide.
+	// Opacity avoids that trap and still fails hidden (base 0) where scroll-driven
+	// animations aren't supported. It lives in the header's left 1fr cell, so the
+	// reserved width at rest doesn't shift the centered nav.
+	display: flex;
+	opacity: 0;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	font-size: 1.125rem;
+	color: var(--itx-muted);
+	white-space: nowrap;
+	animation: shell-crumb-in steps(1, jump-end) both;
+	animation-timeline: --page-title;
+	animation-range: exit 0% exit 25%;
+}
+
+.shell__crumb-title {
+	color: var(--itx-on-surface);
+}
+
+.shell__crumb-sep {
+	opacity: 0.5;
+}
+
+@keyframes shell-crumb-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 // ── Header nav ───────────────────────────────────────────────────────────────
@@ -85,26 +138,36 @@
 	}
 }
 
-// ── Body (sidebar + main) ───────────────────────────────────────────────────
+// ── Sidebar (sticky; stacks beneath the persistent header) ──────────────────
 
-.shell__body {
-	display: flex;
-	flex: 1;
-	overflow: hidden;
+.shell__sidebar {
+	grid-area: nav;
+	position: sticky;
+	top: var(--header-h);
+	align-self: start;
+	block-size: calc(100dvh - var(--header-h));
+	overflow-y: auto;
 }
 
 // ── Content ─────────────────────────────────────────────────────────────────
 
 .shell__content {
-	flex: 1;
-	min-width: 0;
-	overflow-y: auto;
-	padding-inline: var(--itx-spacing-6);
+	grid-area: main;
+	min-inline-size: 0;
+	padding: var(--itx-spacing-6);
 }
 
 // ── Mobile ──────────────────────────────────────────────────────────────────
 
 @media (max-width: 59.999em) {
+	:host {
+		grid-template-columns: 1fr;
+		grid-template-areas:
+			"header"
+			"main"
+			"footer";
+	}
+
 	.shell__menu-btn {
 		display: inline-flex;
 	}

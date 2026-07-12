@@ -11,10 +11,11 @@ import {
 	InteropCellDef,
 	type TableColumn,
 } from 'interop';
-import { CodeBlock } from "@interop/composites";
+import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	component?: string;
@@ -39,6 +40,7 @@ interface ApiEntry {
 		DemoSection,
 		DemoExample,
 		DemoNotes,
+		DemoMasthead,
 	],
 	templateUrl: "./tooltip-page.html",
 	styleUrl: "./tooltip-page.scss",

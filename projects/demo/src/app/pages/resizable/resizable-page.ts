@@ -7,6 +7,7 @@ import {
 	type ResizableDimensions,
 	type TableColumn,
 } from 'interop';
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
@@ -26,6 +27,7 @@ interface ApiEntry {
 		InteropButton,
 		InteropTable,
 		InteropCellDef,
+		DemoMasthead,
 		DemoSection,
 		DemoExample,
 		DemoNotes,

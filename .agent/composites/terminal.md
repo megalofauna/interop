@@ -3,7 +3,7 @@
 ## Files
 
 ```
-projects/composites/src/lib/terminal/
+projects/interop/src/lib/composites/terminal/
   terminal.ts           Component class
   terminal.html         Template (reset button + scroll wrapper + log + cursor)
   terminal.css          Structural CSS (styleUrl, `:where()` on all children)

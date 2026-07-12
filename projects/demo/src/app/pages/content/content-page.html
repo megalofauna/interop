@@ -1,14 +1,10 @@
 <article class="demo-page">
-	<header class="demo-page__header">
-		<p class="demo-page__category">Content</p>
-		<h1 class="demo-page__title">djot-driven content projection</h1>
-		<p class="demo-page__lead">
-			A single <code>.djot</code> file is compiled at build time into a typed
-			module. Each top-level <code>&#123;#id&#125;</code> div becomes a named
-			export that <code>&lt;interop-content&gt;</code> can render at any mount
-			point on the page.
-		</p>
-	</header>
+	<demo-masthead category="Content" title="djot-driven content projection">
+		A single <code>.djot</code> file is compiled at build time into a typed
+		module. Each top-level <code>&#123;#id&#125;</code> div becomes a named
+		export that <code>&lt;interop-content&gt;</code> can render at any mount
+		point on the page.
+	</demo-masthead>
 
 	<!-- Hero slot, mounted on its own -->
 	<demo-section id="hero" heading="Slot: hero">

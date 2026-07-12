@@ -35,7 +35,6 @@ import { LayoutCapable } from "../../directives/interop-layout";
   ],
 
   templateUrl: "interop-list.html",
-  styleUrls: ["interop-list.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropList<T = any> {

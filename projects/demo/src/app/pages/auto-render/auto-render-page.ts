@@ -3,6 +3,7 @@ import { InteropAutoRender, InteropScrollArea, InteropTable, InteropCellDef, typ
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -15,7 +16,7 @@ interface ApiEntry {
 @Component({
 	selector: "auto-render-page",
 	standalone: true,
-	imports: [InteropAutoRender, InteropScrollArea, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropAutoRender, InteropScrollArea, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	templateUrl: "./auto-render-page.html",
 	styleUrl: "./auto-render-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

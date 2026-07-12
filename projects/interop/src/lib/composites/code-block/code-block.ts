@@ -17,21 +17,21 @@ import {
 	InteropButton,
 	InteropButtonActivation,
 	InteropIcon,
-	InteropActivation,
 	InteropCodeRenderer,
 	InteropTooltip,
-	INTEROP_HIGHLIGHTER,
 	canonicalizeLanguage,
 	type HighlightedCode,
-	type ActivationOptions,
-	provideInteropIcons,
-} from "interop";
-import { InteropToolbar } from "interop/lib/rigs/interop-toolbar/interop-toolbar";
-import { PhArrowUDownLeft } from "interop/lib/iconsets/phosphor/regular/ph-arrow-u-down-left";
-import { TablerCheckFilled } from "interop/lib/iconsets/tabler/filled/tabler-check-filled";
-import { TablerCopyFilled } from "interop/lib/iconsets/tabler/filled/tabler-copy-filled";
-import { TablerTextWrap } from "interop/lib/iconsets/tabler/outline/tabler-text-wrap";
-import { TablerTextWrapDisabled } from "interop/lib/iconsets/tabler/outline/tabler-text-wrap-disabled";
+} from "../../components/public-api";
+import { InteropActivation } from "../../services/public-api";
+import { INTEROP_HIGHLIGHTER } from "../../highlighter/public-api";
+import { type ActivationOptions } from "../../utils/public-api";
+import { provideInteropIcons } from "../../iconsets/core";
+import { InteropToolbar } from "../../rigs/public-api";
+import { PhArrowUDownLeft } from "../../iconsets/phosphor/regular/ph-arrow-u-down-left";
+import { TablerCheckFilled } from "../../iconsets/tabler/filled/tabler-check-filled";
+import { TablerCopyFilled } from "../../iconsets/tabler/filled/tabler-copy-filled";
+import { TablerTextWrap } from "../../iconsets/tabler/outline/tabler-text-wrap";
+import { TablerTextWrapDisabled } from "../../iconsets/tabler/outline/tabler-text-wrap-disabled";
 
 export interface CodeFile {
 	/** Stable key for this tab. Defaults to `label` if omitted. */

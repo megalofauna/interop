@@ -86,7 +86,7 @@ Every `<demo-example>` must include a syntax-highlighted code block showing the 
 
 ```typescript
 import { computed, inject, resource } from "@angular/core";
-import { CodeBlock, type CodeFile } from "@interop/composites";
+import { CodeBlock, type CodeFile } from "interop";
 import { HighlightService } from "../../services/highlight.service";
 ```
 
@@ -149,7 +149,7 @@ import {
   /* component imports */
   InteropTable, InteropCellDef, type TableColumn,
 } from "src/public-api";
-import { CodeBlock, type CodeFile } from "@interop/composites";
+import { CodeBlock, type CodeFile } from "interop";
 import { HighlightService } from "../../services/highlight.service";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";

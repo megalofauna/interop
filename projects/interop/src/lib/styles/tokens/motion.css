@@ -12,6 +12,7 @@
 
 :where([interop-root]) {
 	--itx-duration-base: 200ms;
+	--itx-duration-speedy: calc(var(--itx-duration-base) * 0.125);
 	--itx-duration-fast: calc(var(--itx-duration-base) * 0.5);
 	--itx-duration-slow: calc(var(--itx-duration-base) * 2);
 

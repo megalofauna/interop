@@ -34,7 +34,7 @@
 	--itx-resizable-readout-padding: var(--itx-spacing-1)
 		var(--itx-spacing-2);
 	--itx-resizable-readout-border-radius: var(--itx-radius-2, 4px);
-	--itx-resizable-readout-font-family: var(--itx-mono-family, monospace);
+	--itx-resizable-readout-font-family: var(--itx-font-family-mono, monospace);
 	--itx-resizable-readout-font-size: var(--itx-fs-xs, 0.75rem);
 	--itx-resizable-readout-offset: var(--itx-spacing-2);
 }

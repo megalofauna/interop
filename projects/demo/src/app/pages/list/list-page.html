@@ -1,12 +1,8 @@
 <article class="demo-page">
-	<header class="demo-page__header">
-		<p class="demo-page__category">Components</p>
-		<h1 class="demo-page__title">List</h1>
-		<p class="demo-page__lead">
-			Semantic list component for <code>ul</code>, <code>ol</code>, and <code>dl</code>.
-			Accepts a <code>[collection]</code> input or static projected content.
-		</p>
-	</header>
+	<demo-masthead category="Components" title="List">
+		Semantic list component for <code>ul</code>, <code>ol</code>, and <code>dl</code>.
+		Accepts a <code>[collection]</code> input or static projected content.
+	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
@@ -36,6 +32,14 @@
 				<li>Bay 4 — Offline for maintenance</li>
 			</ul>
 			<itx-code-block language="html" [code]="staticCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Enclosed markers ───────────────────────────────────────────────── -->
+	<demo-section id="enclosed-markers" heading="Enclosed markers">
+		<demo-example label="Stroked-circle numerals (itx-marker)">
+			<ol interop-list itx-marker="enclosed" [collection]="launchSteps"></ol>
+			<itx-code-block language="html" [code]="enclosedCode" />
 		</demo-example>
 	</demo-section>
 

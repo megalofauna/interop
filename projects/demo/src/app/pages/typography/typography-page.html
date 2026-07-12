@@ -1,0 +1,89 @@
+<article class="demo-page">
+	<demo-masthead category="Foundations" title="Typography">
+		A fluid <code>clamp()</code> font-size ramp, a single line-height that stays
+		staked to it, and owl-model rhythm — everything below is rendered by that
+		system on a container marked <code>interop-typography-root</code>, with no
+		per-element sizing on this page.
+	</demo-masthead>
+
+	<!-- ── In prose ───────────────────────────────────────────────────────── -->
+	<demo-section id="prose" heading="In prose">
+		<div class="specimen-frame">
+			<div interop-typography-root class="specimen">
+				<h1 data-label="h1">The measured, not the decorated</h1>
+				<p data-label="p">
+					Type in Interop is one system: a fluid font-size ramp, a line-height
+					mathematically tied to it, and vertical rhythm that spaces blocks by
+					their role. This whole passage is bare <code>h1</code>–<code>h6</code>,
+					<code>p</code>, and list markup — the root does the rest.
+				</p>
+
+				<h2 data-label="h2">Leading that answers to size</h2>
+				<p data-label="p">
+					Body text sits at a comfortable leading past 1.5. The leading is a
+					constant absolute space added over each element's own size, so it
+					behaves the way legible type should at both ends of the scale.
+				</p>
+				<p data-label="p">
+					As the type grows into headings the ratio tightens toward 1.3; as it
+					shrinks toward captions and fine print it opens toward 1.8, keeping
+					short lines from crowding. One clamped expression governs all of it.
+				</p>
+
+				<ul data-label="ul">
+					<li>Font-size is a fluid <code>clamp()</code>, ramped by viewport.</li>
+					<li>Line-height is staked to font-size and clamped at both ends.</li>
+					<li>Rhythm is three owl rules; the doublets fall out of them.</li>
+				</ul>
+
+				<h3 data-label="h3">Rhythm from three rules</h3>
+				<p data-label="p">
+					Paragraphs flow with a default gap. A heading opens with more space
+					above and binds tightly to the text beneath it — that pairing is the
+					entire doublet system, no per-pair table required.
+				</p>
+
+				<blockquote data-label="blockquote">
+					Keep the era's principles — system over artifact, the measured,
+					neutral by default — and drop its artifacts.
+				</blockquote>
+			</div>
+		</div>
+	</demo-section>
+
+	<!-- ── Staked, inverse line-height ────────────────────────────────────── -->
+	<demo-section id="leading" heading="Staked, inverse line-height">
+		<p class="specimen__note">
+			The same sentence at five roles, each wrapped to several lines. Nothing
+			sets line-height here but the shared token — watch the leading open up as
+			the type shrinks.
+		</p>
+		<div class="specimen-frame specimen-frame--leading">
+			<div interop-typography-root class="specimen specimen--leading">
+				<p data-label="display" style="font-size: var(--itx-font-size-display)">
+					Constant leading over the font size means the ratio loosens as the
+					type shrinks.
+				</p>
+				<p data-label="heading" style="font-size: var(--itx-font-size-heading)">
+					Constant leading over the font size means the ratio loosens as the
+					type shrinks.
+				</p>
+				<p data-label="body" style="font-size: var(--itx-font-size-body)">
+					Constant leading over the font size means the ratio loosens as the
+					type shrinks.
+				</p>
+				<p data-label="caption" style="font-size: var(--itx-font-size-caption)">
+					Constant leading over the font size means the ratio loosens as the
+					type shrinks.
+				</p>
+				<p
+					data-label="fine-print"
+					style="font-size: var(--itx-font-size-fine-print)"
+				>
+					Constant leading over the font size means the ratio loosens as the
+					type shrinks.
+				</p>
+			</div>
+		</div>
+	</demo-section>
+</article>

@@ -1,0 +1,75 @@
+:host {
+	display: block;
+}
+
+/* Each specimen sits in a frame that is the container-query context — an element
+ * can't query its own size, and the labels' left-vs-above placement responds to
+ * the specimen's available width. */
+.specimen-frame {
+	container-type: inline-size;
+	max-inline-size: none;
+}
+
+.specimen-frame--leading {
+	max-inline-size: 42rem;
+}
+
+.specimen {
+	position: relative;
+
+	--label-gutter: 5.5rem;
+	--label-color: color-mix(in srgb, var(--itx-on-surface) 80%, transparent);
+	--label-font: "IBM Plex Mono", var(--itx-font-family-mono);
+}
+
+/* Leading comparison: fill the frame at every size so each sample wraps and its
+ * leading is legible. */
+.specimen--leading > p {
+	max-inline-size: none;
+}
+
+.specimen__note {
+	max-inline-size: 60ch;
+	margin-block-end: var(--itx-spacing-6);
+	color: var(--itx-muted);
+	font-size: var(--itx-font-size-body);
+	line-height: var(--itx-line-height);
+}
+
+/* ── Element / role annotation ────────────────────────────────────────────
+ * Decorative: the empty alt (`/ ""`) keeps the label out of the accessibility
+ * tree, so the prose stays semantically clean. Uniform monospace regardless of
+ * the labelled element's size — the column reads as an intentional grid. */
+.specimen :where([data-label]) {
+	position: relative;
+}
+
+.specimen :where([data-label])::before {
+	content: attr(data-label) / "";
+	font-family: var(--label-font);
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	letter-spacing: 0.02em;
+	color: var(--label-color);
+
+	/* Narrow default: above the element. */
+	display: block;
+	margin-block-end: var(--itx-spacing-1);
+}
+
+/* Wide enough for a gutter: labels move into a left column, top-aligned and
+ * right-aligned against the content edge. */
+@container (min-width: 34rem) {
+	.specimen {
+		padding-inline-start: var(--label-gutter);
+	}
+
+	.specimen :where([data-label])::before {
+		position: absolute;
+		inset-block-start: 0;
+		inset-inline-start: calc(-1 * var(--label-gutter));
+		inline-size: calc(var(--label-gutter) - 1.75rem);
+		margin-block-end: 0;
+		text-align: end;
+	}
+}

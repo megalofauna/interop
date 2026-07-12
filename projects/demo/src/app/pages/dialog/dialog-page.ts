@@ -11,12 +11,13 @@ import {
 	type DialogClosedEvent,
 	type TableColumn,
 } from "interop";
-import { CodeBlock, type CodeFile } from "@interop/composites";
+import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -40,6 +41,7 @@ interface ApiEntry {
 		DemoState,
 		DemoStateItem,
 		DemoNotes,
+		DemoMasthead,
 	],
 	templateUrl: "./dialog-page.html",
 	styleUrl: "./dialog-page.scss",

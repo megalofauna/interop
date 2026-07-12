@@ -1,0 +1,21 @@
+/* ── list base ───────────────────────────────────────────────────────────── */
+/* The base list is layout-only; Protocol adds no paint to the container. The
+   enclosed-marker variant below is the one piece carrying visual opinion. */
+
+/* ── enclosed marker variant ─────────────────────────────────────────────── */
+/* Stroked circle in the active colorway, with a slightly smaller bold numeral
+   centred inside. Tokens are set on the row; the marker pseudo-element
+   inherits them. */
+
+:where(ol[interop-list][itx-marker="enclosed"] > li) {
+	--itx-list-marker-gap: var(--itx-spacing-3);
+	--itx-list-marker-align: center;
+	--itx-list-marker-size: 2em;
+	--itx-list-marker-radius: var(--itx-radius-full);
+	--itx-list-marker-border: 2px solid var(--itx-colorway);
+	--itx-list-marker-background: transparent;
+	--itx-list-marker-color: var(--itx-colorway);
+	--itx-list-marker-font-size: 0.8em;
+	--itx-list-marker-font-weight: 600;
+	--itx-list-marker-style: decimal;
+}

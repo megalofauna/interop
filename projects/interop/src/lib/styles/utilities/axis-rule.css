@@ -75,5 +75,5 @@
 		var(--itx-axis-rule-gap, 0px) / 2 -
 		var(--itx-axis-rule-width, 0px) / 2
 	);
-	inlin e-size: var(--itx-axis-rule-width, 0);
+	inline-size: var(--itx-axis-rule-width, 0);
 }

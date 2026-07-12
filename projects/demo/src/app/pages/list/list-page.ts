@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { InteropList, InteropTable, InteropCellDef, type TableColumn } from 'interop';
-import { CodeBlock } from "@interop/composites";
+import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -16,7 +17,7 @@ interface ApiEntry {
 @Component({
 	selector: "list-page",
 	standalone: true,
-	imports: [InteropList, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropList, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	templateUrl: "./list-page.html",
 	styleUrl: "./list-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +31,14 @@ export class ListPage {
 		'Dr. Mbeki',
 	];
 
+	launchSteps = [
+		'Pressurise the docking collar',
+		'Run pre-flight diagnostics',
+		'Confirm trajectory with navigation',
+		'Release the mag-lock couplings',
+		'Initiate primary burn',
+	];
+
 	cargoItems = [
 		{ id: 1, label: 'Plasma conduit (×4)' },
 		{ id: 2, label: 'Mag-lock coupling (×8)' },
@@ -41,6 +50,8 @@ export class ListPage {
 	readonly unorderedCode = `<ul interop-list [collection]="crewMembers"></ul>`;
 
 	readonly orderedCode = `<ol interop-list [collection]="crewMembers"></ol>`;
+
+	readonly enclosedCode = `<ol interop-list itx-marker="enclosed" [collection]="launchSteps"></ol>`;
 
 	readonly templateCode = `<ng-template #itemTpl let-item>
   <li>{{ item.label }}</li>

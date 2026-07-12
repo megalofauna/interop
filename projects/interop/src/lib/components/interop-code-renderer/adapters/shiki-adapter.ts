@@ -13,7 +13,7 @@ export interface ShikiThemedToken {
  * @example
  * ```ts
  * import { codeToTokens } from 'shiki';
- * import { fromShikiTokens } from '@interop/composites';
+ * import { fromShikiTokens } from 'interop';
  *
  * const { tokens } = await codeToTokens(source, { lang: 'ts', theme: 'github-dark' });
  * const highlighted = fromShikiTokens(tokens);

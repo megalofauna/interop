@@ -6,12 +6,13 @@ import {
 	type TableColumn,
 	type TableSortEvent,
 } from 'interop';
-import { CodeBlock, type CodeFile } from "@interop/composites";
+import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface CargoEntry {
 	id: string;
@@ -32,7 +33,7 @@ interface ApiEntry {
 @Component({
 	selector: "table-page",
 	standalone: true,
-	imports: [InteropTable, InteropCellDef, InteropTableSort, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoState, DemoStateItem],
+	imports: [InteropTable, InteropCellDef, InteropTableSort, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoState, DemoStateItem, DemoMasthead],
 	templateUrl: "./table-page.html",
 	styleUrl: "./table-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

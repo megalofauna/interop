@@ -64,9 +64,9 @@
 	/* ── Semantic — surface & text ───────────────────────────────────── */
 	--itx-page: light-dark(var(--itx-neutral-2), var(--itx-neutral-3));
 	--itx-on-surface: var(--itx-neutral-12);
-	--itx-muted: var(--itx-neutral-8);
+	--itx-muted: var(--itx-neutral-9);
 	--itx-border: light-dark(var(--itx-neutral-5), var(--itx-neutral-6));
-	--itx-surface-hover: light-dark(var(--itx-neutral-3), var(--itx-neutral-4));
+	--itx-surface-hover: light-dark(var(--itx-neutral-3), var(--itx-neutral-3_5));
 
 	/* ── Semantic — colorway ─────────────────────────────────────────── */
 	--itx-colorway: light-dark(var(--itx-colorway-8), var(--itx-colorway-9));

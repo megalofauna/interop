@@ -348,7 +348,10 @@
 		--itx-chip-input-border,
 		1px solid var(--itx-border, currentColor)
 	);
-	border-radius: var(--itx-chip-input-radius, var(--itx-radius-sm, 4px));
+	border-radius: var(
+		--itx-chip-input-radius,
+		var(--itx-radius, var(--itx-radius-sm))
+	);
 	padding: var(--itx-chip-input-padding, 0.375rem 0.5rem);
 	min-height: var(--itx-chip-input-min-height, 2.5rem);
 	cursor: text;

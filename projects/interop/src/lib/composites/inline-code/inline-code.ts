@@ -14,13 +14,13 @@ import {
 	InteropButton,
 	InteropButtonActivation,
 	InteropIcon,
-	INTEROP_HIGHLIGHTER,
-	type ActivationOptions,
 	type HighlightedLine,
-	provideInteropIcons,
-} from "interop";
-import { TablerCheck } from "interop/lib/iconsets/tabler/outline/tabler-check";
-import { TablerCopy } from "interop/lib/iconsets/tabler/outline/tabler-copy";
+} from "../../components/public-api";
+import { INTEROP_HIGHLIGHTER } from "../../highlighter/public-api";
+import { type ActivationOptions } from "../../utils/public-api";
+import { provideInteropIcons } from "../../iconsets/core";
+import { TablerCheck } from "../../iconsets/tabler/outline/tabler-check";
+import { TablerCopy } from "../../iconsets/tabler/outline/tabler-copy";
 
 /**
  * InlineCode — Single-line inline code with copy button.

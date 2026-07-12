@@ -78,7 +78,7 @@ let _rendererIdCounter = 0;
  * code via the `[tokens]` input, or projects a consumer-provided `<pre><code>`.
  *
  * This is a primitive — no toolbar, no copy button, no actions. Compose those
- * via the `CodeBlock` composite from `@interop/composites`.
+ * via the `CodeBlock` composite from `interop`.
  *
  * @example Token rendering (from Shiki)
  * ```html

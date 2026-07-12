@@ -1,6 +1,6 @@
 :host {
 	display: block;
-	margin-top: var(--itx-spacing-12);
+	/* margin-top: var(--itx-spacing-12); */
 }
 
 .demo-section__heading {
@@ -11,6 +11,7 @@
 }
 
 .demo-section__anchor {
+	display: none;
 	color: var(--itx-muted);
 	position: relative;
 	text-decoration: none;
@@ -26,5 +27,5 @@
 .demo-section__body {
 	display: flex;
 	flex-direction: column;
-	gap: var(--itx-spacing-6);
+	/* gap: var(--itx-spacing-6); */
 }

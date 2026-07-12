@@ -18,6 +18,7 @@ import {
 import { TablerCaretUp } from "interop/lib/iconsets/tabler/outline/tabler-caret-up";
 import { TablerInfoCircle } from "interop/lib/iconsets/tabler/outline/tabler-info-circle";
 import { TablerTarget } from "interop/lib/iconsets/tabler/outline/tabler-target";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import {
@@ -45,6 +46,7 @@ interface ApiEntry {
 		InteropIcon,
 		InteropTable,
 		InteropCellDef,
+		DemoMasthead,
 		DemoSection,
 		DemoExample,
 		DemoNotes,

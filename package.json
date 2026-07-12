@@ -31,6 +31,7 @@
 		"build:content": "tsx tools/djot-build.ts projects/demo/src",
 		"build:content:watch": "tsx tools/djot-build.ts --watch projects/demo/src",
 		"test": "ng test",
+		"lint:boundaries": "node scripts/check-boundaries.mjs",
 		"publish:npm": "npm publish dist/interop/",
 		"serve": "ng serve demo",
 		"start": "ng serve demo",

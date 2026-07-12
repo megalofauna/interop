@@ -1,19 +1,32 @@
 // ── Desktop: always-visible sidebar ─────────────────────────────────────────
 
 :host {
+	--demo-background-color: var(--itx-page);
+	--demo-background-image: none;
+	--demo-background-blur: 0px;
+
 	display: block;
 	width: 16rem;
 	flex-shrink: 0;
 	overflow-y: auto;
-	background: var(--itx-surface);
 }
 
 .nav__backdrop {
 	display: none;
 }
 
+.nav__panel-header {
+	display: flex;
+	justify-content: flex-end;
+	padding-inline: var(--itx-spacing-4);
+	padding-block-end: var(--itx-spacing-2);
+}
+
 .nav__panel {
 	padding: var(--itx-spacing-4) 0;
+	background-color: var(--demo-background-color);
+	background-image: var(--demo-background-image);
+	backdrop-filter: var(--demo-background-blur);
 }
 
 // ── Groups ──────────────────────────────────────────────────────────────────
@@ -51,7 +64,7 @@
 	display: block;
 	padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	border-radius: var(--itx-radius-sm);
-	font-size: var(--itx-font-size-sm);
+	font-size: var(--itx-font-size-label);
 	color: #bbb;
 	text-decoration: none;
 	transition: background-color var(--itx-duration-fast)
@@ -86,36 +99,44 @@
 		overflow: visible;
 	}
 
-	.nav__backdrop {
-		display: none;
+	// The nav panel is an `auto` popover in this range (see demo-nav.ts → drawer()).
+	// The top layer handles stacking/positioning; light-dismiss, Esc, and the
+	// backdrop are the platform's job. UA popover defaults (centered margin,
+	// border, auto inset) are reset to pin it as a left drawer.
+	.nav__panel[popover] {
 		position: fixed;
-		inset: 0;
-		z-index: 90;
-		/* background: oklch(0 0 0 / 0.45); */
-	}
-
-	.nav__panel {
-		position: fixed;
-		inset-block: 0;
-		inset-inline-start: 0;
+		inset: 0 auto 0 0;
 		width: 16rem;
-		z-index: 100;
-		/* background: var(--itx-surface); */
+		margin: 0;
+		border: none;
 		border-right: 1px solid var(--itx-border);
 		box-shadow: var(--itx-shadow-lg);
 		overflow-y: auto;
+
+		// Offscreen (closed) state; transitioned on open/close. `overlay` and
+		// `display` with allow-discrete keep the panel in the top layer through
+		// the exit slide so it animates out, not just in.
 		transform: translateX(-100%);
-		transition: transform var(--itx-duration-base, 200ms)
-			var(--itx-easing-standard, ease);
+		transition:
+			transform var(--itx-duration-base, 200ms)
+				var(--itx-easing-standard, ease),
+			overlay var(--itx-duration-base, 200ms) allow-discrete,
+			display var(--itx-duration-base, 200ms) allow-discrete;
 	}
 
-	:host(.is-open) {
-		.nav__backdrop {
-			display: block;
-		}
+	.nav__panel[popover]:popover-open {
+		transform: translateX(0);
+	}
 
-		.nav__panel {
-			transform: translateX(0);
+	// Entry start point — slides in from the left on open.
+	@starting-style {
+		.nav__panel[popover]:popover-open {
+			transform: translateX(-100%);
 		}
+	}
+
+	// Scrim, replacing the old hand-rolled .nav__backdrop element.
+	.nav__panel[popover]::backdrop {
+		background: oklch(0 0 0 / 0.5);
 	}
 }

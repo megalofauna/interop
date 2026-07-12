@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { InteropCallout, InteropTable, InteropCellDef, type TableColumn } from 'interop';
-import { CodeBlock } from "@interop/composites";
+import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
 	name: string;
@@ -16,7 +17,7 @@ interface ApiEntry {
 @Component({
 	selector: "callout-page",
 	standalone: true,
-	imports: [InteropCallout, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes],
+	imports: [InteropCallout, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
 	templateUrl: "./callout-page.html",
 	styleUrl: "./callout-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

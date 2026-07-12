@@ -1,6 +1,24 @@
-<div class="nav__backdrop" (click)="onBackdropClick()"></div>
-
-<nav class="nav__panel">
+<nav
+	#panel
+	id="site-nav"
+	[attr.popover]="drawer() ? 'auto' : null"
+	class="nav__panel"
+>
+	@if (drawer()) {
+	<div class="nav__panel-header">
+		<button
+			type="button"
+			interop-button="icon"
+			itx-radius="lg"
+			class="nav__close"
+			command="hide-popover"
+			commandfor="site-nav"
+			aria-label="Close navigation"
+		>
+			<interop-icon name="tabler-layout-sidebar-right-expand" [size]="24" />
+		</button>
+	</div>
+	}
 	@for (group of groups; track group.label) {
 	<div class="nav__group" [class.nav__group--disabled]="group.disabled">
 		<h3 class="nav__group-label">{{ group.label }}</h3>
@@ -13,7 +31,7 @@
 					class="nav__link"
 					[routerLink]="item.route"
 					routerLinkActive="nav__link--active"
-					(click)="onBackdropClick()"
+					(click)="closeDrawer()"
 				>
 					{{ item.label }}
 				</a>

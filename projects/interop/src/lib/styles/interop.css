@@ -26,6 +26,12 @@
 @import "./tokens/typography.css";
 @import "./tokens/elevation.css";
 
+/* ── Typography (base-element prose) ────────────────────────────────────── */
+/*    Sizes, leads, and spaces flowing content under [interop-typography-root].*/
+/*    See .agent/typography.md.                                               */
+
+@import "./typography/prose.css";
+
 /* ── Components (structural foundation) ─────────────────────────────────── */
 /*    Rendering rules for each component, decoupled from Angular imports.   */
 /*    Token values are layered on top by the active theme.                  */
@@ -36,6 +42,7 @@
 @import "./components/expansion-panel.css";
 @import "./components/icon.css";
 @import "./components/indicator.css";
+@import "./components/list.css";
 @import "./components/popover.css";
 @import "./components/segment.css";
 @import "./components/stepper.css";
@@ -58,14 +65,13 @@
 
 @import "./composites/code-block.css";
 @import "./composites/inline-code.css";
+@import "./composites/page-nav.css";
 
 /* ── Rigs (structural foundation) ───────────────────────────────────────── */
 /*    Container/layout components that coordinate child controls (toolbars,   */
 /*    etc). Same authoring pattern as components.                             */
 
 @import "./rigs/toolbar.css";
-
-@import "./example-buttons.css";
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */
 

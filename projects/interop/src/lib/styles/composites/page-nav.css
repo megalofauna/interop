@@ -1,0 +1,200 @@
+/*
+ * PageNav — structural foundation.
+ *
+ * Rendering rules for `<itx-page-nav>` and its descendants. Loaded globally
+ * via `interop.css`; token *values* live in
+ * `themes/protocol/composites/page-nav.css`.
+ *
+ * Contract: like code-block, this file references theme tokens directly with
+ * no inline `var(token, fallback)` defaults. The theme is the single source of
+ * truth for every `--itx-pn-*` value; global foundation tokens (spacing,
+ * motion) are referenced directly. To change appearance, edit the theme.
+ *
+ * All selectors wrapped in :where() for zero specificity — consumer overrides
+ * always win regardless of declaration order.
+ *
+ * Orientation is a host class set by the component (`itx-pn--horizontal` /
+ * `itx-pn--vertical`); `itx-pn--sticky` / `itx-pn--stuck` are the sticky hooks.
+ *
+ * Deliberately minimal surface: backgrounds, borders, radius, flex gap /
+ * justify, and lightweight hover / active / focus levers. (The earlier
+ * icon-scaling layer was dropped — no `<interop-icon>` is rendered — and the
+ * stuck state now just reveals a surface rather than animating gap/scale.)
+ *
+ * Public tokens — see the theme file's header comment for the full list.
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+
+:where(itx-page-nav) {
+	display: flex;
+}
+
+:where(itx-page-nav.itx-pn--sticky) {
+	position: sticky;
+	/* Consumer knob for stacked-sticky layouts: offset the pinned position so the
+	 * nav can rest beneath a persistent header/toolbar. Defaults to 0. The stuck
+	 * detection reads this offset back (see page-nav.ts) so the reveal still fires
+	 * at the right point. */
+	top: var(--itx-pn-sticky-top, 0);
+	z-index: var(--itx-pn-z-index);
+}
+
+/* ── Horizontal ──────────────────────────────────────────────────────────── */
+
+:where(itx-page-nav.itx-pn--horizontal nav) {
+	display: flex;
+	flex: 1 0 100%;
+	/* nav is not a scroll container, so its min-width:auto floors at min-content
+	 * and would override the 100% basis — dragging the whole bar out to the
+	 * links' full width and defeating the scroll-area's clip. min-inline-size:0
+	 * removes that floor so nav stays at its container width and the
+	 * scroll-area (a flex child of it) can finally collapse and scroll. */
+	min-inline-size: 0;
+	background-color: var(--itx-pn-background-color);
+	background-image: var(--itx-pn-background-image);
+	backdrop-filter: var(--itx-pn-backdrop-filter);
+	position: relative;
+	border-block-end: var(--itx-pn-nav-rule-width) var(--itx-pn-nav-rule-style)
+		var(--itx-pn-nav-rule-color);
+}
+
+:where(itx-page-nav.itx-pn--horizontal interop-scroll-area) {
+	flex: 1;
+	display: flex;
+}
+
+:where(itx-page-nav.itx-pn--horizontal ul) {
+	display: flex;
+	margin: unset;
+	padding: unset;
+	align-items: center;
+	justify-content: flex-start;
+	gap: var(--itx-pn-gap);
+	/* Floor the width at content size so the ul overflows the scroll-area
+	 * (which is display:flex here) instead of shrinking to fit. As a flex item
+	 * the ul carries default flex-shrink:1, so a plain max-content width would
+	 * be a mere basis that shrink overrides — collapsing the list and killing
+	 * the horizontal scroll. The min-* floor is what keeps it scrollable. */
+	min-inline-size: max-content;
+	list-style: none;
+
+	li {
+		display: contents;
+	}
+}
+
+/* ── Vertical ────────────────────────────────────────────────────────────── */
+
+:where(itx-page-nav.itx-pn--vertical nav) {
+	display: flex;
+	flex-direction: column;
+}
+
+:where(itx-page-nav.itx-pn--vertical .itx-pn__label) {
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+:where(
+	itx-page-nav.itx-pn--vertical .itx-pn__list,
+	itx-page-nav.itx-pn--vertical .itx-pn__children
+) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-pn-item-gap);
+}
+
+:where(itx-page-nav.itx-pn--vertical .itx-pn__children) {
+	padding-inline-start: var(--itx-pn-indent);
+	margin-block-start: var(--itx-pn-item-gap);
+}
+
+:where(itx-page-nav.itx-pn--vertical .itx-pn__link) {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+}
+
+:where(itx-page-nav.itx-pn--vertical .itx-pn__link--child) {
+	font-size: var(--itx-pn-child-font-size);
+	color: var(--itx-pn-child-color);
+}
+
+/* Active-item indicator dot (vertical only) */
+:where(itx-page-nav.itx-pn--vertical .itx-pn__indicator) {
+	block-size: var(--itx-pn-indicator-size);
+	border-radius: var(--itx-pn-indicator-radius);
+	background: var(--itx-pn-indicator-color);
+}
+
+:where(
+	itx-page-nav.itx-pn--vertical .itx-pn__link[aria-current] .itx-pn__indicator
+) {
+	opacity: 1;
+}
+
+/* ── Links (shared across orientations) ──────────────────────────────────── */
+
+:where(
+	itx-page-nav.itx-pn--horizontal a,
+	itx-page-nav.itx-pn--vertical .itx-pn__link
+) {
+	display: inline-flex;
+	flex: 1 1 auto;
+	color: var(--itx-pn-link-color);
+	font-size: var(--itx-pn-font-size);
+	font-weight: var(--itx-pn-font-weight);
+	text-decoration: none;
+	padding-block: var(--itx-pn-link-padding-block);
+	padding-inline: var(--itx-pn-link-padding-inline);
+	border-bottom: var(--itx-pn-link-border-width) solid
+		var(--itx-pn-link-border-color);
+	transition:
+		color var(--itx-duration-fast) var(--itx-easing-standard),
+		background-color var(--itx-duration-fast) var(--itx-easing-standard),
+		font-size var(--itx-duration-fast) var(--itx-easing-standard),
+		padding-block var(--itx-duration-fast) var(--itx-easing-standard);
+}
+
+:where(
+	itx-page-nav.itx-pn--horizontal a:hover,
+	itx-page-nav.itx-pn--vertical .itx-pn__link:hover
+) {
+	color: var(--itx-pn-link-color-hover);
+	background-color: var(--itx-pn-link-background-hover);
+	border-bottom-color: var(--itx-pn-link-border-color-hover);
+}
+
+:where(
+	itx-page-nav.itx-pn--horizontal a[aria-current],
+	itx-page-nav.itx-pn--vertical .itx-pn__link[aria-current]
+) {
+	color: var(--itx-pn-link-color-active);
+	font-weight: var(--itx-pn-font-weight-active);
+	border-block-end-color: var(--itx-pn-link-border-color-current);
+	background-color: var(--itx-pn-link-background-color-current);
+	background-image: var(--itx-pn-link-background-image-current);
+}
+
+:where(
+	itx-page-nav.itx-pn--horizontal a:focus-visible,
+	itx-page-nav.itx-pn--vertical .itx-pn__link:focus-visible
+) {
+	outline: var(--itx-pn-focus-width) solid var(--itx-pn-focus-color);
+	outline-offset: var(--itx-pn-focus-offset);
+}
+
+:where([interop-root] itx-page-nav.itx-pn--stuck) {
+	box-shadow: 0 var(--itx-spacing-3) 4px 0 rgb(0 0 0  / 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(
+		itx-page-nav.itx-pn--horizontal a,
+		itx-page-nav.itx-pn--vertical .itx-pn__link,
+		itx-page-nav.itx-pn--vertical .itx-pn__indicator
+	) {
+		transition: none;
+	}
+}

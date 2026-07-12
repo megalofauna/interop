@@ -36,11 +36,6 @@
 </nav>
 } @else {
 <nav [attr.aria-label]="label()">
-	<interop-icon
-		name="tabler-map-pin-2"
-		[size]="24"
-		[strokeWidth]="1"
-	></interop-icon>
 	<interop-scroll-area orientation="horizontal" [showShadows]="true">
 		<ul>
 			@for (link of links(); track link.href) {

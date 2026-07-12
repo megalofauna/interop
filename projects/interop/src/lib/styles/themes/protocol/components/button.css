@@ -3,7 +3,7 @@
 :where([interop-root]) {
 	/* sizing ratio + step */
 	--itx-button-padding-consequent: 1.5;
-	--itx-button-padding-step: 0.1875rem;
+	--itx-button-padding-step: 0.2rem;
 	--itx-button-sizing-multiplier: 2;
 
 	/* layout */
@@ -16,15 +16,15 @@
 	--itx-button-gap: none;
 
 	/* typography */
-	--itx-button-font-family: var(--itx-sans-family), "Figtree", sans-serif;
-	--itx-button-font-size: var(--itx-fs-label);
-	--itx-button-line-height: 1.5;
+	--itx-button-font-family: var(--itx-font-family-sans), "Figtree", sans-serif;
+	--itx-button-font-size: var(--itx-font-size-label);
+	--itx-button-line-height: 1;
 
 	/* edge */
-	--itx-button-border-width: initial;
-	--itx-button-border-style: initial;
-	--itx-button-border-radius: initial;
-	--itx-button-corner-shape: initial;
+	--itx-button-border-width: 1px;
+	--itx-button-border-style: solid;
+	--itx-button-radius-default: var(--itx-radius-nominal);
+	--itx-button-corner-shape: squircle;
 
 	/* transition */
 	--itx-button-transition-property: background-color, border-color, box-shadow;
@@ -74,7 +74,7 @@
 	--itx-button-background: var(--itx-neutral-3);
 	--itx-button-foreground: var(--itx-neutral-12);
 	--itx-button-corner-shape: none;
-	--itx-button-border-radius: 8px;
+	--itx-button-radius-default: 8px;
 	--itx-button-border-color: hsl(0 60 27 / 0.2);
 	--itx-button-border-width: 1px;
 	--itx-button-background-image: linear-gradient(
@@ -109,7 +109,7 @@
 :where(button[interop-button~="protocol"]) {
 	--itx-button-sizing-multiplier: 1.5;
 	/*--itx-button-background: var(--itx-neutral-);*/
-	--itx-button-border-radius: var(--itx-radius-2);
+	--itx-button-radius-default: var(--itx-radius-2);
 	--itx-button-border-style: solid;
 	--itx-button-border-color: var(--itx-neutral-1);
 	--itx-button-background-hover: var(--itx-neutral-5);
@@ -121,7 +121,7 @@
 	--itx-button-font-size: var(--itx-fs-base);
 	--itx-button-sizing-multiplier: 3;
 
-	--itx-button-border-radius: calc(
+	--itx-button-radius-default: calc(
 		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 1
 	);
 
@@ -185,6 +185,7 @@
 :where(button[interop-button~="icon"]) {
 	/* square: inline matches block (skip the consequent) */
 	--itx-button-padding-inline: var(--itx-button-padding-block);
+	--itx-button-radius-default: var(--itx-radius-md);
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
@@ -197,7 +198,8 @@
 
 :where(button[interop-button][itx-size="xs"]) {
 	--itx-button-font-size: var(--itx-fs-xs);
-	--itx-button-sizing-multiplier: 1;
+	--itx-button-sizing-multiplier: 1.5;
+	--itx-button-padding-consequent: 2.5;
 }
 
 :where(button[interop-button][itx-size="sm"]) {
@@ -206,17 +208,17 @@
 }
 
 :where(button[interop-button][itx-size="md"]) {
-	--itx-button-font-size: var(--itx-fs-base);
+	--itx-button-font-size: var(--itx-font-size-label);
 	--itx-button-sizing-multiplier: 3;
 }
 
 :where(button[interop-button][itx-size="lg"]) {
-	--itx-button-font-size: var(--itx-fs-base);
+	--itx-button-font-size: var(--itx-font-size-label);
 	--itx-button-sizing-multiplier: 4;
 }
 
 :where(button[interop-button][itx-size="xl"]) {
-	--itx-button-font-size: var(--itx-fs-lg);
+	--itx-button-font-size: var(--itx-font-size-body);
 	--itx-button-sizing-multiplier: 6;
 }
 
@@ -258,39 +260,11 @@
 }*/
 
 /* ── Radius ───────────────────────────────────────────────────────────────── */
-/* Proportional to the size unit (step × multiplier) so the same tier looks  */
-/* the same relative to the pill at any itx-size. Consumers can always        */
-/* override --itx-button-border-radius directly for absolute values.          */
-
-:where(button[interop-button][itx-radius="none"]) {
-	--itx-button-border-radius: 0;
-}
-
-:where(button[interop-button][itx-radius="nominal"]) {
-	--itx-button-border-radius: 0.125rem;
-}
-
-:where(button[interop-button][itx-radius="sm"]) {
-	--itx-button-border-radius: calc(
-		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 0.5
-	);
-}
-
-:where(button[interop-button][itx-radius="md"]) {
-	--itx-button-border-radius: calc(
-		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 1
-	);
-}
-
-:where(button[interop-button][itx-radius="lg"]) {
-	--itx-button-border-radius: calc(
-		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 2
-	);
-}
-
-:where(button[interop-button][itx-radius="full"]) {
-	--itx-button-border-radius: var(--itx-radius-full);
-}
+/* Priority: --itx-button-border-radius (hard override) > itx-radius="…" attribute */
+/* > --itx-button-radius-default (the per-variant defaults set above). The pill is */
+/* a pseudo, so the attribute reaches it via the --_itx-button-radius bridge on    */
+/* the host (see components/button.css). Set --itx-button-border-radius directly    */
+/* only to force a single instance to an absolute value past the attribute.        */
 
 :where(button[interop-button~="action"]:disabled),
 :where(button[interop-button~="action"][aria-disabled="true"]) {

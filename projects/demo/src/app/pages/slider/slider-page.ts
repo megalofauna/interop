@@ -15,7 +15,8 @@ import {
 	type SliderRangeValue,
 	type TableColumn,
 } from 'interop';
-import { CodeBlock } from "@interop/composites";
+import { CodeBlock } from "interop";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
@@ -46,6 +47,7 @@ const SHIRT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
+		DemoMasthead,
 		DemoSection,
 		DemoExample,
 		DemoState,

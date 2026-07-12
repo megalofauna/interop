@@ -27,8 +27,7 @@
         "dist/interop/highlighters/shiki",
         "projects/interop/highlighters/shiki/src/public-api.ts"
       ],
-      "interop/*": ["dist/interop/*", "projects/interop/src/*"],
-      "@interop/composites": ["projects/composites/src/public-api.ts"]
+      "interop/*": ["dist/interop/*", "projects/interop/src/*"]
     }
   },
   "angularCompilerOptions": {

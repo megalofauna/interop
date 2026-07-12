@@ -3,7 +3,7 @@
 ## Files
 
 ```
-projects/composites/src/lib/code-block/
+projects/interop/src/lib/composites/code-block/
   code-block.ts         Component class
   code-block.html       Template (header → tablist / label / actions → renderer panel)
   code-block.scss       Structural styles (Angular emulated encapsulation)
@@ -13,7 +13,7 @@ projects/interop/src/lib/styles/themes/protocol/composites/
   code-block.css        Protocol theme — token values
 ```
 
-Re-exported from `@interop/composites`.
+Re-exported from `interop`.
 
 ## What it is
 

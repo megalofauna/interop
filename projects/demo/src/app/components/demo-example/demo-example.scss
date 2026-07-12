@@ -1,38 +1,20 @@
 :host {
 	display: block;
-	--itx-context-radius: var(--itx-radius-lg);
 	position: relative;
 }
 
 .demo-example__label {
-	font-size: var(--itx-fs-body);
-	color: var(--itx-neutral-11);
+	font-size: var(--itx-fluid-1);
+	font-weight: 400;
+	color: var(--itx-neutral-10);
 	margin: unset;
-	padding: var(--itx-spacing-6) var(--itx-spacing-6) 0;
-}
-
-.demo-example__lede {
-	margin: var(--itx-spacing-10) 0 0 0;
-	padding: 0 var(--itx-spacing-6);
-
-	/* Override interop-content tokens for the lede context.
-	   Encapsulation gotcha: rules like `& p { … }` don't reach
-	   <interop-content>'s emitted elements — set CSS variables here
-	   and the renderer's stylesheet picks them up. */
-	--interop-content-paragraph-gap: var(--itx-spacing-3);
-	--interop-content-line-height: 1.5;
-	--interop-content-color: var(--itx-neutral-10);
+	/* padding: var(--itx-spacing-6) var(--itx-spacing-6) 0; */
 }
 
 .demo-example__preview {
-	border: 2px solid var(--itx-neutral-4);
-	border-radius: var(--itx-radius-8);
-	background: var(--itx-neutral-3);
-	box-shadow: var(--itx-shadow-sm);
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	padding: var(--itx-spacing-2);
 }
 
 .demo-example__canvas {
@@ -40,32 +22,10 @@
 	align-items: flex-start;
 	flex-wrap: wrap;
 	overflow: hidden;
-	padding: var(--itx-spacing-6);
-	margin-top: var(--itx-spacing-6);
 }
-
-/* .demo-example__canvas.has-state {
-	--demo-state-flex: 1 1 auto;
-	.demo-example__ui {
-		flex: 1 1 auto;
-	}
-	.demo-example__state {
-		flex: 1 1 40%;
-	}
-} */
 
 .demo-example__ui {
 	flex: 1 0 100%;
-	/* background-color: var(
-		--demo-example-ui-background-color,
-		var(--itx-neutral-3_5)
-	); */
-	/* border-radius: var(--demo-example-ui-radius, var(--itx-radius-6)); */
-	/* border: 1px solid var(--itx-neutral-6);
-	box-sizing: content-box;
-	min-height: var(--itx-spacing-12); */
-
-	/* padding: var(--itx-spacing-6); */
 }
 
 .demo-example__reload {
@@ -74,32 +34,9 @@
 	--itx-button-border-radius: var(--itx-radius-full);
 }
 
-.demo-example__notes {
-	/* flex: 1; */
-	/* min-width: 0;
-	display: flex;
-	flex-direction: column;
-	gap: var(--itx-spacing-4);
-	padding: 0;
-	background-color: var(
-		--demo-example-ui-background-color,
-		var(--itx-neutral-3_5)
-	);
-	border-radius: var(--demo-example-ui-radius, var(--itx-radius-6));
-	border: 1px solid var(--itx-neutral-6);
-	box-sizing: content-box;
-	min-height: var(--itx-spacing-12);
-	padding: var(--itx-spacing-6); */
-}
-
 .demo-example__code {
-	border-radius: 0 var(--itx-radius-6) var(--itx-radius-6) var(--itx-radius-6);
-	margin-top: var(--itx-spacing-6);
 	overflow: clip;
 	&:not(:empty) {
-		/* padding: 0 var(--itx-spacing-2) var(--itx-spacing-4) var(--itx-spacing-2); */
-		background: var(--itx-neutral-3_5);
-		border: 4px solid var(--itx-neutral-3_5);
-		padding: var(--itx-spacing-0);
+		background: var(--itx-neutral-2);
 	}
 }

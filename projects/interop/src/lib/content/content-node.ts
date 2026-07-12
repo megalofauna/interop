@@ -14,7 +14,9 @@ export type {
 	Caption,
 	Cell,
 	CheckboxStatus,
-	CodeBlock,
+	// Aliased: the `CodeBlock` name at the interop root belongs to the
+	// composite component; this is djot's code-block AST node.
+	CodeBlock as CodeBlockNode,
 	Definition,
 	DefinitionList,
 	DefinitionListItem,

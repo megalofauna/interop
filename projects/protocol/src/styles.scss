@@ -23,7 +23,8 @@
 	src:
 		local("IBM Plex Sans Italic"),
 		local("IBMPlexSans-Italic"),
-		url("/fonts/IBMPlexSans-Variable-Italic.woff2") format("woff2") tech(variations);
+		url("/fonts/IBMPlexSans-Variable-Italic.woff2") format("woff2")
+			tech(variations);
 }
 
 html,
@@ -49,15 +50,37 @@ body {
 	display: grid;
 }
 
-/* Markdown code fences hydrate into <itx-code-block> (see content-codeblocks).
- * Give them the same block rhythm the type scale gives <pre>, and make the code
- * surface scheme-aware via light-dark() so it tracks the github-light/-dark
- * token colors the highlighter emits (see protocol-highlighter). */
-[interop-typography-root] :where(* + itx-code-block) {
-	margin-block-start: var(--itx-rhythm-3);
+body {
+	display: grid;
+	grid-template-areas:
+		"header"
+		"main"
+		"footer";
+	background-color: var(--itx-neutral-3);
 }
 
-itx-code-block {
-	--itx-cb-body-background: light-dark(#fff, #24292e);
+header {
+	grid-template: "header";
+}
+main {
+	grid-template: "main";
+
+	article {
+		margin-inline: auto;
+		padding-block-start: var(--itx-spacing-24);
+		width: 100vw;
+		max-width: 64rem;
+	}
+}
+footer {
+	grid-template: "footer";
+}
+
+/* Prose typography ([interop-typography-root]) is library-owned — one voice for
+ * every app. See interop/styles/typography/prose.css and .agent/typography.md.
+ * Code fences hydrate into <itx-code-block>; the library owl spaces them, this
+ * only makes the code surface scheme-aware via light-dark() so it tracks the
+ * github-light/-dark colours the highlighter emits (see protocol-highlighter). */
+:where([interop-root] itx-code-block) {
 	color: light-dark(#24292e, #e1e4e8);
 }

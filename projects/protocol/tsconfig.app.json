@@ -11,16 +11,14 @@
       "interop/highlighters/shiki": [
         "projects/interop/highlighters/shiki/src/public-api.ts"
       ],
-      "interop/*": ["projects/interop/src/*"],
-      "@interop/composites": ["projects/composites/src/public-api.ts"]
+      "interop/*": ["projects/interop/src/*"]
     }
   },
   "include": [
     "src/**/*.ts",
     "../../projects/interop/src/lib/**/*.ts",
     "../../projects/interop/src/types/**/*.ts",
-    "../../projects/interop/highlighters/**/*.ts",
-    "../../projects/composites/src/**/*.ts"
+    "../../projects/interop/highlighters/**/*.ts"
   ],
   "exclude": [
     "src/**/*.spec.ts",
