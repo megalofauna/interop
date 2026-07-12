@@ -1,8 +1,24 @@
-<article class="demo-page">
+<article class="demo-page" [attr.data-status-palette]="palette()">
 	<demo-masthead category="Components" title="Callout">
 		Semantic status admonition for inline notices, warnings, and alerts.
 		Automatically themed via status color tokens with full dark-mode support.
 	</demo-masthead>
+
+	<!-- ── Palette switcher (preview) ──────────────────────────────────────── -->
+	<div class="palette-switch" role="group" aria-label="Status colour palette">
+		<span class="palette-switch__label">Palette</span>
+		@for (p of palettes; track p.id) {
+			<button
+				type="button"
+				class="palette-switch__option"
+				[class.is-active]="palette() === p.id"
+				[attr.aria-pressed]="palette() === p.id"
+				(click)="palette.set(p.id)"
+			>
+				{{ p.label }}
+			</button>
+		}
+	</div>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
@@ -39,6 +55,26 @@
 				Emergency bulkhead engaged on deck 3. Evacuate immediately and await decompression protocol.
 			</interop-callout>
 			<itx-code-block language="html" [code]="dangerCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Treatments (70s colour preview) ─────────────────────────────────── -->
+	<demo-section id="treatments" heading="Treatments">
+		<demo-example
+			label="Solid fill — for alerts / toasts (short text, full-strength accent)"
+		>
+			<div class="callout-fills">
+				<div class="callout-fill callout-fill--info">Info — sensors nominal</div>
+				<div class="callout-fill callout-fill--warning">
+					Warning — radiation zone
+				</div>
+				<div class="callout-fill callout-fill--success">
+					Success — cargo secured
+				</div>
+				<div class="callout-fill callout-fill--danger">
+					Danger — hull breach on deck 3
+				</div>
+			</div>
 		</demo-example>
 	</demo-section>
 

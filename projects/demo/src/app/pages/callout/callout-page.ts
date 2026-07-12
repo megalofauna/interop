@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import { InteropCallout, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
@@ -23,6 +23,13 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalloutPage {
+	/** Live status-palette preview — drives `data-status-palette` on the page. */
+	readonly palette = signal<"seventies" | "eighties">("seventies");
+	readonly palettes = [
+		{ id: "seventies", label: "70s — earthy" },
+		{ id: "eighties", label: "80s — OS" },
+	] as const;
+
 	// ── Code strings ─────────────────────────────────────────────────────────
 
 	readonly infoCode = `<interop-callout>

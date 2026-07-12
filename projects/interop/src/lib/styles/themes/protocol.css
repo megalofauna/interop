@@ -38,6 +38,7 @@
 
 @import "../interop.css";
 @import "./protocol/foundation.css";
+@import "./protocol/status-palettes.css";
 
 /* ── Components ─────────────────────────────────────────────────────────── */
 
