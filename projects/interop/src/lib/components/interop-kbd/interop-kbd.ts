@@ -18,7 +18,6 @@ import {
 	selector: 'kbd[interop-kbd]',
 	standalone: true,
 	template: '<ng-content />',
-	styleUrl: './interop-kbd.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropKbd {}
