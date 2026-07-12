@@ -1,0 +1,209 @@
+/*
+ * Toast — structural foundation (interop-toast-viewport + interop-toast-item)
+ *
+ * Layout, stacking, enter motion, swipe transform, and interaction-state
+ * selectors. Every colour / border / radius / shadow / spacing value is a bare
+ * token with NO inline fallback — the theme owns each value. See
+ * themes/protocol/components/toast.css for the full token surface, including the
+ * per-`data-type` variant rebindings that pull from the status-colour palette.
+ *
+ * Zero specificity via :where(); nested states use &:where(:state) so the whole
+ * chain stays (0,0,0).
+ */
+
+/* ── Viewport ────────────────────────────────────────────────────────────── */
+
+:where(interop-toast-viewport) {
+	position: fixed;
+	z-index: var(--itx-toast-z-index);
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-toast-gap);
+	inline-size: 100%;
+	max-inline-size: var(--itx-toast-max-width);
+	padding: var(--itx-toast-offset);
+	box-sizing: border-box;
+	pointer-events: none;
+}
+
+/* Position variants are layout, so they stay structural. */
+:where(interop-toast-viewport[data-position="bottom-right"]) {
+	bottom: 0;
+	right: 0;
+	align-items: flex-end;
+}
+:where(interop-toast-viewport[data-position="bottom-left"]) {
+	bottom: 0;
+	left: 0;
+	align-items: flex-start;
+}
+:where(interop-toast-viewport[data-position="bottom-center"]) {
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	align-items: center;
+}
+:where(interop-toast-viewport[data-position="top-right"]) {
+	top: 0;
+	right: 0;
+	align-items: flex-end;
+}
+:where(interop-toast-viewport[data-position="top-left"]) {
+	top: 0;
+	left: 0;
+	align-items: flex-start;
+}
+:where(interop-toast-viewport[data-position="top-center"]) {
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	align-items: center;
+}
+
+/* Visually hidden live regions (announcement plumbing). */
+:where(interop-toast-viewport .interop-toast-viewport__live-region) {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ── Toast item ──────────────────────────────────────────────────────────── */
+
+:where(interop-toast-item) {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--itx-toast-item-gap);
+	inline-size: 100%;
+	box-sizing: border-box;
+	padding: var(--itx-toast-padding);
+	border: var(--itx-toast-border-width) solid var(--itx-toast-border-color);
+	border-inline-start: var(--itx-toast-accent-width) solid
+		var(--itx-toast-accent-color);
+	border-radius: var(--itx-toast-border-radius);
+	background: var(--itx-toast-background);
+	color: var(--itx-toast-foreground);
+	box-shadow: var(--itx-toast-shadow);
+	font-size: var(--itx-toast-font-size);
+	line-height: var(--itx-toast-line-height);
+	pointer-events: auto;
+	touch-action: none;
+	outline: none;
+
+	/* --_swipe-* are private runtime slots set during a swipe gesture; they
+	   legitimately default to 0 (at rest, no translation). */
+	translate: var(--_swipe-x, 0) var(--_swipe-y, 0);
+	opacity: 1;
+	scale: 1;
+	transition:
+		opacity var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
+		scale var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
+		translate 150ms ease;
+
+	&:where(:focus-visible) {
+		outline: var(--itx-toast-focus-width) solid var(--itx-toast-focus-color);
+		outline-offset: var(--itx-toast-focus-offset);
+	}
+}
+
+/* Enter start point — appears from a slightly scaled, transparent state. */
+@starting-style {
+	:where(interop-toast-item) {
+		opacity: 0;
+		scale: 0.93;
+	}
+}
+
+/* ── Item content ────────────────────────────────────────────────────────── */
+
+:where(interop-toast-item .interop-toast-item__content) {
+	flex: 1;
+	min-inline-size: 0;
+}
+
+:where(interop-toast-item .interop-toast-item__message) {
+	font-weight: var(--itx-toast-message-font-weight);
+}
+
+:where(interop-toast-item .interop-toast-item__description) {
+	margin-block-start: var(--itx-toast-description-margin-block-start);
+	font-size: var(--itx-toast-description-font-size);
+	opacity: var(--itx-toast-description-opacity);
+}
+
+/* ── Item actions ────────────────────────────────────────────────────────── */
+
+:where(interop-toast-item .interop-toast-item__actions) {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-toast-actions-gap);
+	flex-shrink: 0;
+}
+
+:where(interop-toast-item .interop-toast-item__action-btn) {
+	padding: var(--itx-toast-action-padding-block)
+		var(--itx-toast-action-padding-inline);
+	border: var(--itx-toast-action-border-width) solid
+		var(--itx-toast-action-border-color);
+	border-radius: var(--itx-toast-action-border-radius);
+	background: transparent;
+	color: inherit;
+	font-size: var(--itx-toast-action-font-size);
+	font-weight: var(--itx-toast-action-font-weight);
+	cursor: pointer;
+	white-space: nowrap;
+
+	&:where(:hover) {
+		background: var(--itx-toast-action-background-hover);
+	}
+	&:where(:focus-visible) {
+		outline: var(--itx-toast-focus-width) solid var(--itx-toast-focus-color);
+		outline-offset: var(--itx-toast-focus-offset-tight);
+	}
+}
+
+:where(interop-toast-item .interop-toast-item__close-btn) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--itx-toast-close-size);
+	block-size: var(--itx-toast-close-size);
+	padding: 0;
+	border: none;
+	border-radius: var(--itx-toast-close-border-radius);
+	background: transparent;
+	color: inherit;
+	opacity: var(--itx-toast-close-opacity);
+	cursor: pointer;
+
+	&:where(:hover) {
+		opacity: var(--itx-toast-close-opacity-hover);
+		background: var(--itx-toast-close-background-hover);
+	}
+	&:where(:focus-visible) {
+		opacity: var(--itx-toast-close-opacity-hover);
+		outline: var(--itx-toast-focus-width) solid var(--itx-toast-focus-color);
+		outline-offset: var(--itx-toast-focus-offset-tight);
+	}
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(interop-toast-item) {
+		transition: none;
+	}
+
+	@starting-style {
+		:where(interop-toast-item) {
+			opacity: 1;
+			scale: 1;
+		}
+	}
+}

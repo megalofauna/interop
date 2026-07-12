@@ -1,50 +1,101 @@
+/*
+ * Toast — Protocol theme values.
+ *
+ * Token surface for components/toast.css. Base values are inheritable on
+ * [interop-root]; the per-`data-type` blocks rebind only the colour tokens and
+ * pull from the status-colour palette (--itx-success / --itx-danger /
+ * --itx-warning / --itx-info + their -surface + on-surface pairs), so a toast
+ * re-skins with the active data-status-palette.
+ *
+ * Custom properties only — never a real CSS property.
+ */
+
 :where([interop-root]) {
 	/* Viewport */
 	--itx-toast-z-index: 9999;
 	--itx-toast-gap: var(--itx-spacing-3);
 	--itx-toast-max-width: 25rem;
 	--itx-toast-offset: var(--itx-spacing-4);
-	--itx-toast-border-left-color: var(--) /* Item */
-		--itx-toast-background: var(--itx-surface-above);
+
+	/* Item — container */
+	--itx-toast-background: var(--itx-surface-above);
 	--itx-toast-foreground: var(--itx-on-surface);
-	--itx-toast-border-color: var(--itx-border);
 	--itx-toast-border-width: 0px;
+	--itx-toast-border-color: var(--itx-border);
 	--itx-toast-border-radius: var(--itx-radius-sm);
+	--itx-toast-accent-width: 3px;
+	--itx-toast-accent-color: var(--itx-border);
 	--itx-toast-padding: var(--itx-spacing-4);
+	--itx-toast-item-gap: var(--itx-spacing-3);
 	--itx-toast-shadow: var(--itx-shadow-lg);
 
-	/* Typography */
+	/* Item — typography */
 	--itx-toast-font-size: var(--itx-font-size-body);
+	--itx-toast-line-height: 1.5;
+	--itx-toast-message-font-weight: 500;
 	--itx-toast-description-font-size: var(--itx-font-size-caption);
+	--itx-toast-description-margin-block-start: var(--itx-spacing-1);
+	--itx-toast-description-opacity: 0.8;
 
-	/* Animation */
+	/* Item — motion */
 	--itx-toast-enter-duration: var(--itx-duration-base);
 	--itx-toast-enter-easing: var(--itx-easing-decelerate);
+
+	/* Actions */
+	--itx-toast-actions-gap: var(--itx-spacing-2);
+	--itx-toast-action-padding-block: var(--itx-spacing-1);
+	--itx-toast-action-padding-inline: var(--itx-spacing-3);
+	--itx-toast-action-border-width: 1px;
+	--itx-toast-action-border-color: var(--itx-border);
+	--itx-toast-action-border-radius: var(--itx-radius-sm);
+	--itx-toast-action-font-size: var(--itx-font-size-label);
+	--itx-toast-action-font-weight: 500;
+	--itx-toast-action-background-hover: var(--itx-surface-hover);
+
+	/* Close */
+	--itx-toast-close-size: 1.5rem;
+	--itx-toast-close-border-radius: var(--itx-radius-sm);
+	--itx-toast-close-opacity: 0.5;
+	--itx-toast-close-opacity-hover: 1;
+	--itx-toast-close-background-hover: var(--itx-surface-hover);
+
+	/* Focus */
+	--itx-toast-focus-width: 2px;
+	--itx-toast-focus-color: var(--itx-colorway);
+	--itx-toast-focus-offset: 2px;
+	--itx-toast-focus-offset-tight: 1px;
 }
 
-/* ── Variants ────────────────────────────────────────────────────────────── */
+/* ── Variants (rebind colour tokens from the status palette) ─────────────── */
 
-:where(interop-toast-item[data-type="success"]) {
+:where([interop-root] interop-toast-item[data-type="success"]) {
 	--itx-toast-background: var(--itx-success-surface);
 	--itx-toast-foreground: var(--itx-on-success-surface);
 	--itx-toast-border-color: var(--itx-success);
-	--itx-toast-border-left-color: red;
+	--itx-toast-accent-color: var(--itx-success);
 }
 
-:where(interop-toast-item[data-type="error"]) {
+:where([interop-root] interop-toast-item[data-type="error"]) {
 	--itx-toast-background: var(--itx-danger-surface);
 	--itx-toast-foreground: var(--itx-on-danger-surface);
 	--itx-toast-border-color: var(--itx-danger);
+	--itx-toast-accent-color: var(--itx-danger);
 }
 
-:where(interop-toast-item[data-type="warning"]) {
+:where([interop-root] interop-toast-item[data-type="warning"]) {
 	--itx-toast-background: var(--itx-warning-surface);
 	--itx-toast-foreground: var(--itx-on-warning-surface);
 	--itx-toast-border-color: var(--itx-warning);
+	--itx-toast-accent-color: var(--itx-warning);
 }
 
-:where(interop-toast-item[data-type="info"]) {
+:where([interop-root] interop-toast-item[data-type="info"]) {
 	--itx-toast-background: var(--itx-info-surface);
 	--itx-toast-foreground: var(--itx-on-info-surface);
 	--itx-toast-border-color: var(--itx-info);
+	--itx-toast-accent-color: var(--itx-info);
+}
+
+:where([interop-root] interop-toast-item[data-type="loading"]) {
+	--itx-toast-accent-color: var(--itx-muted);
 }
