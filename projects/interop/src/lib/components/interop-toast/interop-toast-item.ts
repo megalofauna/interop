@@ -68,7 +68,6 @@ import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.co
       }
     </div>
   `,
-  styleUrl: './interop-toast-item.scss',
 })
 export class InteropToastItem implements OnDestroy {
   private readonly el = inject(ElementRef<HTMLElement>);

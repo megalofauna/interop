@@ -81,7 +81,6 @@ import { InteropToastItem } from './interop-toast-item';
       />
     }
   `,
-  styleUrl: './interop-toast-viewport.scss',
 })
 export class InteropToastViewport implements OnDestroy {
   protected readonly service = inject(InteropToastService);
