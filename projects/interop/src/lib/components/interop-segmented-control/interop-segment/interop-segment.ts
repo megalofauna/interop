@@ -50,8 +50,18 @@ export class InteropSegment implements SegmentRef {
 	private el = inject(ElementRef<HTMLButtonElement>);
 	private parent = inject(INTEROP_SEGMENTED_CONTROL, { optional: true });
 
-	/** The value this segment represents. Emitted by the container on selection. */
-	value = input.required<string>();
+	/**
+	 * The value this segment represents. Emitted by the container on selection.
+	 *
+	 * NOT `input.required`: the parent container reads each segment's value
+	 * reactively (in effects over its projected `contentChildren`). A required
+	 * input read during the brief bind window — before `[value]` propagates —
+	 * throws NG0950 and kills the whole page's change detection (intermittently,
+	 * since it's timing-dependent). Defaulting to "" makes the read return empty
+	 * instead; the effect re-runs and corrects itself once the value lands. A
+	 * dev-mode warning below preserves the "every segment needs a value" contract.
+	 */
+	value = input<string>("");
 
 	/** Disables just this segment, leaving others interactive. */
 	disabled = input<boolean>(false);
@@ -84,6 +94,11 @@ export class InteropSegment implements SegmentRef {
 					console.warn(
 						`[InteropSegment] Must be used on a <button> element for semantic correctness. ` +
 							`Found on: <${el.tagName.toLowerCase()}>`,
+					);
+				}
+				if (!this.value()) {
+					console.warn(
+						`[InteropSegment] Missing "value" input. Every segment must declare a non-empty value.`,
 					);
 				}
 			});
