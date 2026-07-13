@@ -10,7 +10,7 @@ import {
 import { DOCUMENT } from "@angular/common";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { InteropButton, InteropIcon, provideInteropIcons } from "interop";
-import { TablerLayoutSidebarRightExpand } from "interop/lib/iconsets/tabler";
+import { TablerLayoutSidebarRightExpand } from "interop/lib/iconsets/tabler/outline/tabler-layout-sidebar-right-expand";
 
 interface NavGroup {
 	label: string;

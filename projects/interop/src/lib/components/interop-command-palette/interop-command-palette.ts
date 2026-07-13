@@ -16,7 +16,7 @@ import { InteropDialog } from "../interop-dialog/interop-dialog";
 import { InteropIcon } from "../interop-icon/interop-icon";
 import { InteropKbd } from "../interop-kbd/interop-kbd";
 import { provideInteropIcons } from "../../iconsets/core";
-import { TablerSearch } from "../../iconsets/tabler";
+import { TablerSearch } from "../../iconsets/tabler/outline/tabler-search";
 import {
 	interopCollection,
 	type InteropCollectionInput,

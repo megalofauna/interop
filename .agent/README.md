@@ -9,6 +9,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 |---|---|
 | Architecture, conventions, patterns | [playbook.md](playbook.md) |
 | CSS split (structural vs theme) | [css-strategy.md](css-strategy.md) |
+| Import hygiene (direct icon imports, no barrels) | [imports.md](imports.md) |
 | Dialog directive deep-dive | [components/dialog.md](components/dialog.md) |
 | Popover directive deep-dive | [components/popover.md](components/popover.md) |
 | Stepper component deep-dive | [components/stepper.md](components/stepper.md) |

@@ -16,7 +16,7 @@ import {
 	provideInteropIcons,
 } from "interop";
 import { Terminal } from "interop";
-import { TablerReload } from "interop/lib/iconsets/tabler";
+import { TablerReload } from "interop/lib/iconsets/tabler/outline/tabler-reload";
 
 // ─── Reload-button semantics ─────────────────────────────────────────────────
 //

@@ -17,7 +17,7 @@ import {
 	type TableGroupRow,
 } from "interop";
 import { createActivationHandler } from "interop/lib/utils/activation";
-import { TablerAlertTriangleFilled } from "interop/lib/iconsets/tabler";
+import { TablerAlertTriangleFilled } from "interop/lib/iconsets/tabler/filled/tabler-alert-triangle-filled";
 import { TablerMoon } from "interop/lib/iconsets/tabler/outline/tabler-moon";
 import {
 	CodeBlock,
