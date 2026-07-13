@@ -17,7 +17,9 @@ import type { ToastState, ToastType } from './interop-toast.types';
 import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.config';
 import { InteropIcon } from '../interop-icon/interop-icon';
 import { provideInteropIcons } from '../../iconsets/core';
-import { TablerX } from '../../iconsets/tabler';
+// Import the single icon directly, not via the ~10k-line tabler barrel — keeps
+// the toast chunk's dependency graph small so cold loads don't flash/re-optimize.
+import { TablerX } from '../../iconsets/tabler/outline/tabler-x';
 
 /**
  * InteropToastItem — renders a single toast notification.
