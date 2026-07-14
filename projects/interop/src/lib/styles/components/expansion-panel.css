@@ -105,6 +105,26 @@
 	);
 }
 
+/* ── Guest heading normalization ─────────────────────────────────────────── */
+/*
+ * The APG accordion pattern requires the trigger button to live inside a
+ * heading (h1–h6); the component mandates it and dev-warns when it is absent.
+ * That heading is therefore a guest the panel *demanded* — so the panel, not
+ * the consumer, owns its layout. Left alone the UA heading styles leak two
+ * kinds of whitespace into the card interior: the `margin-block: 0.83em`
+ * default, and the tall `font-size: 1.5em / line-height: normal` line-box that
+ * reserves more vertical space than the trigger occupies.
+ *
+ * Zero the margin and collapse the font to the panel's own so the heading
+ * contributes no box of its own — the trigger reads flush against the panel's
+ * top border. The consumer still chooses the heading *level* (document
+ * outline); the panel controls its whitespace.
+ */
+:where(interop-expansion-panel) > :where(h1, h2, h3, h4, h5, h6) {
+	margin: 0;
+	font: inherit;
+}
+
 /* ── Panel host (expanded state) ─────────────────────────────────────────── */
 /*
  * Each expanded-state token cascades to its base token as the final

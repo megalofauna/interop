@@ -16,7 +16,8 @@
  * here, since the visimorph itself is not focusable.
  *
  * Loaded globally via `interop.css`. Token values (colours, radii, motion)
- * live in `themes/protocol/components/visimorph.css`.
+ * live in `themes/protocol/components/visimorph/visimorph.css`. The shared
+ * `<label>` shell that wraps this box lives beside it in `label.css`.
  *
  * Public token surface — `--itx-control-*` (NOT `--itx-visimorph-*`). The
  * tokens are shared across every faux control so a single override at any
@@ -181,7 +182,7 @@
 /* ── TYPE: toggle ────────────────────────────────────────────────────────── */
 
 :where(interop-visimorph[itx-visimorph="toggle"]) {
-	--_toggle-width: var(--itx-control-toggle-width, 2.5rem);
+	--_toggle-width: var(--itx-control-toggle-width, 1.5rem);
 	--_toggle-height: var(--itx-control-toggle-height, 1.25rem);
 	--_toggle-thumb-size: var(
 		--itx-control-toggle-thumb-size,

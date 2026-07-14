@@ -18,19 +18,19 @@
 
 :where([interop-root]) {
 	/* ── Panel host — frame (rest) ──────────────────────────────────────── */
-	--itx-expansion-panel-background: var(--itx-neutral-2);
+	--itx-expansion-panel-background: var(--itx-surface-above);
 	--itx-expansion-panel-background-image: none;
 	--itx-expansion-panel-foreground: var(--itx-on-surface);
 	--itx-expansion-panel-border-width: 1px;
 	--itx-expansion-panel-border-style: solid;
 	--itx-expansion-panel-border-color: var(--itx-border);
-	--itx-expansion-panel-border-radius: var(--itx-radius-2);
+	--itx-expansion-panel-border-radius: var(--itx-radius-0);
 	--itx-expansion-panel-box-shadow: none;
 	--itx-expansion-panel-padding: 0;
 
 	/* ── Panel host — expanded state ────────────────────────────────────── */
-	--itx-expansion-panel-background-expanded: var(--itx-neutral-2);
-	--itx-expansion-panel-border-color-expanded: var(--itx-colorway-8);
+	--itx-expansion-panel-background-expanded: var(--itx-surface);
+	--itx-expansion-panel-border-color-expanded: transparent;
 	--itx-expansion-panel-box-shadow-expanded: 0 4px 12px rgb(0 0 0 / 0.06);
 
 	/* ── Disabled state ─────────────────────────────────────────────────── */
@@ -45,10 +45,10 @@
 	/* ── Body — interior ────────────────────────────────────────────────── */
 	--itx-expansion-panel-body-background: transparent;
 	--itx-expansion-panel-body-background-image: none;
-	--itx-expansion-panel-body-padding: var(--itx-spacing-4);
+	--itx-expansion-panel-body-padding: var(--itx-spacing-1);
 
 	/* ── Body — divider ─────────────────────────────────────────────────── */
-	--itx-expansion-panel-body-divider-width: 1px;
+	--itx-expansion-panel-body-divider-width: 0;
 	--itx-expansion-panel-body-divider-style: solid;
 	--itx-expansion-panel-body-divider-color: var(--itx-border);
 

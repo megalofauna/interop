@@ -6,12 +6,16 @@
 src/lib/components/interop-visimorph/
   interop-visimorph.ts       component (empty template, host attribute reflection)
   public-api.ts              barrel
-src/lib/styles/components/visimorph.css                  structural rules
-src/lib/styles/themes/protocol/components/visimorph.css  token values
-projects/demo/src/app/pages/visimorph/                   demo page (state matrix)
+src/lib/styles/components/visimorph/visimorph.css                 structural rules (the box)
+src/lib/styles/components/visimorph/label.css                     structural rules (label shell, all 3)
+src/lib/styles/themes/protocol/components/visimorph/visimorph.css token values (the box)
+src/lib/styles/themes/protocol/components/visimorph/label.css     token values (label shell, all 3)
+projects/demo/src/app/pages/visimorph/                            demo page (state matrix)
 ```
 
 Live consumers: `interop-radio-control`, `interop-checkbox`, `interop-toggle-control`.
+
+**Division of labour.** `visimorph/visimorph.css` styles the decorative *box* (`interop-visimorph`); `visimorph/label.css` styles the shared `<label>` *shell* the three controls wrap it in — layout, the inset `::before` interaction surface (background / border / backdrop-filter with hover/active/focus deltas), the sr-only input, and layout modifiers. Both files live under the `visimorph/` group because the shell is scoped to exactly the three visimorph variants. The three control components carry no `styleUrl`; both concerns are global CSS keyed on the semantic selectors, so the shell styles a plain `label[interop-checkbox]` from markup alone. Shell tokens are `--itx-control-label-*`; box tokens are `--itx-control-*`.
 
 ## What it is
 
@@ -188,8 +192,8 @@ Two-file split per `css-strategy.md`:
 
 | File | Purpose |
 |---|---|
-| `src/lib/styles/components/visimorph.css` | Structural — variant geometry, pseudo-element positioning, state activation of private slots, `@media` accessibility overrides |
-| `src/lib/styles/themes/protocol/components/visimorph.css` | Values — colours, radii, sizes, transition |
+| `src/lib/styles/components/visimorph/visimorph.css` | Structural — variant geometry, pseudo-element positioning, state activation of private slots, `@media` accessibility overrides |
+| `src/lib/styles/themes/protocol/components/visimorph/visimorph.css` | Values — colours, radii, sizes, transition |
 
 Both files are imported globally via `interop.css` / `protocol.css`. All
 selectors wrapped in `:where()` for zero specificity. Pseudo-elements sit

@@ -77,3 +77,8 @@
 :where([interop-typography-root]) :where(li + li, dd + dt) {
 	margin-block-start: var(--itx-rhythm-tight);
 }
+
+
+h2 {
+	margin: 0;
+}

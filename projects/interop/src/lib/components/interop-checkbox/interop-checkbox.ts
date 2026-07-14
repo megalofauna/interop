@@ -87,7 +87,6 @@ import { InteropVisimorph } from "../interop-visimorph/interop-visimorph";
 		/>
 		<ng-content></ng-content>
 	`,
-	styleUrls: ["./interop-checkbox.css"],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropCheckbox {

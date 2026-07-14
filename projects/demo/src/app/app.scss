@@ -85,6 +85,60 @@
 	}
 }
 
+// ── Command-palette landing-page cards (projected into the aside slot) ───────
+// Light, provisional styling — no official link-card component exists yet. The
+// palette places and scrolls the slot; this owns only the cards. The nav fills
+// the slot and scrolls on one axis: a horizontal row when narrow (never wraps —
+// room for many links via horizontal overflow), a vertical column when wide.
+.cmdp-landings {
+	flex: 1 1 auto;
+	min-inline-size: 0;
+	min-block-size: 0;
+	display: flex;
+	gap: var(--itx-spacing-2);
+	padding: var(--itx-spacing-3) var(--itx-spacing-4);
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior: contain;
+}
+
+// Matches the palette's own layout switch — scoped to the palette box width
+// (its `itx-cmdp` query container), not the viewport. Row → column in lockstep
+// with the aside becoming a side column.
+@container itx-cmdp (min-width: 34rem) {
+	.cmdp-landings {
+		flex-direction: column;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+}
+
+.cmdp-landings__card {
+	flex: 0 0 auto; // never shrink — overflow instead of squashing
+	padding: var(--itx-spacing-2) var(--itx-spacing-3);
+	border: 1px solid var(--itx-border);
+	border-radius: var(--itx-radius-sm);
+	color: var(--itx-on-surface);
+	font-size: var(--itx-font-size-caption);
+	font-weight: 500;
+	white-space: nowrap;
+	text-align: center;
+	text-decoration: none;
+	transition: background-color var(--itx-duration-fast, 100ms) ease;
+
+	&:hover {
+		background: var(--itx-surface-hover);
+	}
+
+	// Current section — derived from the router, so it is correct on every
+	// open with no retained state.
+	&--active {
+		border-color: var(--itx-colorway-8);
+		background: var(--itx-surface-hover);
+		color: var(--itx-on-surface);
+	}
+}
+
 .shell__title {
 	font-weight: 700;
 	font-size: 1.125rem;

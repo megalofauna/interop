@@ -1,0 +1,224 @@
+/*
+ * Interop faux-control label shell — structural foundation.
+ *
+ * The shared <label> wrapper for `interop-checkbox`, `interop-radio`, and
+ * `interop-toggle`. Each label wraps a visually-hidden native <input> (which
+ * owns focus, keyboard, and form submission) plus an <interop-visimorph>
+ * decorative box. This file styles ONLY the label shell — layout, the inset
+ * interaction surface (`::before`), the sr-only input, and hover/active/focus
+ * state hooks. The morph box itself lives beside it in `visimorph.css`.
+ *
+ * One wrapper for three controls: their shells are identical. Per-type deltas
+ * (alignment, gap, padding, the radio dot size) are custom-property VALUES
+ * assigned in `themes/protocol/components/control.css` — never a real property
+ * here, so the structure reads type-agnostic.
+ *
+ * Because these rules live in the global stylesheet keyed on the semantic
+ * selector, the shell styles a plain `label[interop-checkbox]` from markup
+ * alone — no component import needed. (The morph box still needs the component
+ * to render; that is the only JS-dependent piece.)
+ *
+ * No-fallback contract: interaction-state tokens fall back to their base token
+ * (`var(--x-hover, var(--x))`) so an undeclared/renamed state degrades to base
+ * rather than going invalid at computed-value time. Values live in the theme.
+ *
+ * Public token surface — see the theme file header for the full grouped list.
+ * Wrapper tokens are `--itx-control-label-*`; the morph box uses
+ * `--itx-control-*`. Both share the `--itx-control-` prefix so one override
+ * scope re-themes the whole control.
+ */
+
+/* ── Label shell ─────────────────────────────────────────────────────────── */
+
+:where(label:is([interop-checkbox], [interop-radio], [interop-toggle])) {
+	display: inline-flex;
+	align-items: var(--itx-control-label-align, center);
+	gap: var(--itx-control-label-gap, 0.5rem);
+	/*
+	 * padding-block = base visual padding + touch inset. The ::before mirrors
+	 * the inset so the interaction surface stays inside the touch boundary.
+	 */
+	padding-block: calc(
+		var(--itx-control-label-padding-block, 0.5rem) +
+			var(--itx-control-touch-inset, 0.25em)
+	);
+	padding-inline: var(--itx-control-label-padding-inline, 0.5rem);
+	position: relative;
+	isolation: isolate;
+	cursor: pointer;
+	user-select: none;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: var(--itx-control-label-color, inherit);
+
+	/* Text colour states. */
+	&:where(:hover:not(:has(input:disabled))) {
+		color: var(
+			--itx-control-label-color-hover,
+			var(--itx-control-label-color, inherit)
+		);
+	}
+	&:where(:active:not(:has(input:disabled))) {
+		color: var(
+			--itx-control-label-color-active,
+			var(--itx-control-label-color, inherit)
+		);
+	}
+	&:where(:has(input:focus-visible)) {
+		color: var(
+			--itx-control-label-color-focus,
+			var(--itx-control-label-color, inherit)
+		);
+	}
+
+	/* The label carries no ring of its own — the morph box shows focus. */
+	&:where(:focus) {
+		outline: none;
+	}
+
+	/* Disabled input → not-allowed on the whole label. */
+	&:where(:has(input:disabled)) {
+		cursor: not-allowed;
+	}
+
+	/*
+	 * Visually hidden input — stays in the DOM for accessibility (focus,
+	 * keyboard, form submission).
+	 */
+	& .interop-sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	/* ── Interaction surface — inset backdrop behind the label ───────────── */
+	&::before {
+		content: "";
+		position: absolute;
+		inset-block: var(--itx-control-touch-inset, 0.25em);
+		inset-inline: 0;
+		z-index: -1;
+		pointer-events: none;
+
+		/* Backgrounds — inert by default; states light them up. */
+		background-color: var(--itx-control-label-bg, transparent);
+		background-image: var(--itx-control-label-bg-image, none);
+		-webkit-backdrop-filter: var(--itx-control-label-backdrop-filter, none);
+		backdrop-filter: var(--itx-control-label-backdrop-filter, none);
+
+		/* Border + corner — width/radius reserved, colour transparent at rest. */
+		border: var(--itx-control-label-border-width, 2px) solid
+			var(--itx-control-label-border-color, transparent);
+		border-radius: var(--itx-control-label-radius, var(--itx-radius-md));
+		corner-shape: var(--itx-control-label-corner-shape, round);
+
+		transition:
+			background-color var(--itx-control-label-transition, 75ms ease-in),
+			background-image var(--itx-control-label-transition, 75ms ease-in),
+			backdrop-filter var(--itx-control-label-transition, 75ms ease-in),
+			border-color var(--itx-control-label-transition, 75ms ease-in);
+	}
+
+	&:where(:hover:not(:has(input:disabled)))::before {
+		background-color: var(
+			--itx-control-label-bg-hover,
+			var(--itx-control-label-bg, transparent)
+		);
+		background-image: var(
+			--itx-control-label-bg-image-hover,
+			var(--itx-control-label-bg-image, none)
+		);
+		-webkit-backdrop-filter: var(
+			--itx-control-label-backdrop-filter-hover,
+			var(--itx-control-label-backdrop-filter, none)
+		);
+		backdrop-filter: var(
+			--itx-control-label-backdrop-filter-hover,
+			var(--itx-control-label-backdrop-filter, none)
+		);
+		border-color: var(
+			--itx-control-label-border-color-hover,
+			var(--itx-control-label-border-color, transparent)
+		);
+	}
+
+	&:where(:active:not(:has(input:disabled)))::before {
+		background-color: var(
+			--itx-control-label-bg-active,
+			var(--itx-control-label-bg-hover, var(--itx-control-label-bg, transparent))
+		);
+		background-image: var(
+			--itx-control-label-bg-image-active,
+			var(--itx-control-label-bg-image, none)
+		);
+		-webkit-backdrop-filter: var(
+			--itx-control-label-backdrop-filter-active,
+			var(--itx-control-label-backdrop-filter, none)
+		);
+		backdrop-filter: var(
+			--itx-control-label-backdrop-filter-active,
+			var(--itx-control-label-backdrop-filter, none)
+		);
+		border-color: var(
+			--itx-control-label-border-color-active,
+			var(--itx-control-label-border-color-hover, var(--itx-control-label-border-color, transparent))
+		);
+	}
+
+	&:where(:has(input:focus-visible))::before {
+		background-color: var(
+			--itx-control-label-bg-focus,
+			var(--itx-control-label-bg, transparent)
+		);
+		background-image: var(
+			--itx-control-label-bg-image-focus,
+			var(--itx-control-label-bg-image, none)
+		);
+		-webkit-backdrop-filter: var(
+			--itx-control-label-backdrop-filter-focus,
+			var(--itx-control-label-backdrop-filter, none)
+		);
+		backdrop-filter: var(
+			--itx-control-label-backdrop-filter-focus,
+			var(--itx-control-label-backdrop-filter, none)
+		);
+		border-color: var(
+			--itx-control-label-border-color-focus,
+			var(--itx-control-label-border-color, transparent)
+		);
+	}
+
+	/* ── Layout modifiers ────────────────────────────────────────────────── */
+	&:where(.inline) {
+		display: inline-flex;
+	}
+	&:where(.block) {
+		display: flex;
+		width: 100%;
+	}
+	&:where(.reverse) {
+		flex-direction: row-reverse;
+		justify-content: flex-end;
+	}
+}
+
+/* ── Accessibility overrides ─────────────────────────────────────────────── */
+
+/* On fine pointers, collapse the touch inset so the surface fills the label. */
+@media (pointer: fine) {
+	:where(label:is([interop-checkbox], [interop-radio], [interop-toggle])) {
+		--itx-control-touch-inset: 0em;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(label:is([interop-checkbox], [interop-radio], [interop-toggle]))::before {
+		transition: none;
+	}
+}

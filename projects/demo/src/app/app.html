@@ -82,4 +82,39 @@
 	[commands]="filteredCommands()"
 	(queryChange)="query.set($event)"
 	(command)="runCommand($event)"
-></dialog>
+>
+	<!-- Landing-page quick links, projected into the palette's aside slot. The
+	     palette positions them (top row when narrow, left column when wide) and
+	     owns overflow scrolling; the demo owns the card visuals. Light,
+	     provisional styling — no official link-card component yet. -->
+	<nav class="cmdp-landings" aria-label="Browse sections">
+		<a
+			class="cmdp-landings__card"
+			routerLink="/Components"
+			routerLinkActive="cmdp-landings__card--active"
+			(click)="paletteOpen.set(false)"
+			>Components</a
+		>
+		<a
+			class="cmdp-landings__card"
+			routerLink="/composites"
+			routerLinkActive="cmdp-landings__card--active"
+			(click)="paletteOpen.set(false)"
+			>Composites</a
+		>
+		<a
+			class="cmdp-landings__card"
+			routerLink="/rigs"
+			routerLinkActive="cmdp-landings__card--active"
+			(click)="paletteOpen.set(false)"
+			>Rigs</a
+		>
+		<a
+			class="cmdp-landings__card"
+			routerLink="/Directives"
+			routerLinkActive="cmdp-landings__card--active"
+			(click)="paletteOpen.set(false)"
+			>Directives</a
+		>
+	</nav>
+</dialog>
