@@ -23,19 +23,20 @@
 	--itx-cmdp-max-inline-size: 40rem;
 	--itx-cmdp-max-block-size: min(28rem, 70vh);
 	--itx-cmdp-offset-block-start: 12vh;
+	--itx-cmdp-aside-inline-size: 12rem;
 	--itx-cmdp-background: var(--itx-surface-above);
 	--itx-cmdp-color: var(--itx-on-surface);
 	--itx-cmdp-border-width: 1px;
 	--itx-cmdp-border-color: var(--itx-border);
-	--itx-cmdp-radius: var(--itx-radius-lg);
+	--itx-cmdp-radius: var(--itx-radius-md);
 	--itx-cmdp-shadow: var(--itx-shadow-lg);
 	--itx-cmdp-backdrop: oklch(0 0 0 / 0.4);
 	--itx-cmdp-backdrop-filter: blur(2px);
 
 	/* common */
 	--itx-cmdp-muted: var(--itx-muted);
-	--itx-cmdp-rule-width: 1px;
-	--itx-cmdp-rule-color: var(--itx-border);
+	--itx-cmdp-rule-width: 2px;
+	--itx-cmdp-rule-color: #ff9c56;
 
 	/* field */
 	--itx-cmdp-field-gap: var(--itx-spacing-3);
@@ -50,7 +51,7 @@
 	--itx-cmdp-option-gap: var(--itx-spacing-3);
 	--itx-cmdp-option-padding-block: var(--itx-spacing-2_5);
 	--itx-cmdp-option-padding-inline: var(--itx-spacing-3);
-	--itx-cmdp-option-radius: var(--itx-radius-md);
+	--itx-cmdp-option-radius: var(--itx-radius-sm);
 	--itx-cmdp-option-color: var(--itx-on-surface);
 	--itx-cmdp-option-color-active: var(--itx-on-surface);
 	--itx-cmdp-option-background-active: var(--itx-surface-hover);
@@ -60,4 +61,11 @@
 	/* message */
 	--itx-cmdp-message-padding: var(--itx-spacing-8);
 	--itx-cmdp-message-font-size: var(--itx-font-size-body);
+
+	/* expansion panel guest */
+	--itx-ep-background: red;
+}
+
+:where([interop-root] dialog[interop-command-palette="link-cards"]) {
+	--itx-expansion-panel-background: blue;
 }
