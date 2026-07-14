@@ -119,7 +119,6 @@ import {
     />
     <ng-content></ng-content>
   `,
-  styleUrl: "./interop-radio-control.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropRadioControl {

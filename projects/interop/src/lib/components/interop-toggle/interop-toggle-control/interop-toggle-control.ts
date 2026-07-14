@@ -85,7 +85,6 @@ import { InteropVisimorph } from "../../interop-visimorph/interop-visimorph";
 		/>
 		<ng-content></ng-content>
 	`,
-	styleUrl: "./interop-toggle-control.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropToggle {

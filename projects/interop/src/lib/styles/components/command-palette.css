@@ -27,21 +27,36 @@
 	border: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
 	border-radius: var(--itx-cmdp-radius);
 	box-shadow: var(--itx-cmdp-shadow);
+
+	/* Query container for the interior layout. The palette caps at its own
+	 * max-inline-size, so its box width — not the viewport — is what should pick
+	 * the layout. An element can't query itself, so the grid lives on the inner
+	 * .itx-cmdp__frame, which reacts to this container. */
+	container: itx-cmdp / inline-size;
 }
 
 /* Only lay out (and show) the box when the native dialog is actually open —
- * showModal() sets [open]. Without scoping display to [open], the grid layout
+ * showModal() sets [open]. Without scoping display to [open], the layout
  * overrides the UA `dialog:not([open]) { display: none }` and the palette is
- * permanently visible (and never a real modal).
- *
- * Grid (not flex) so the projected aside can occupy a different track in each
- * layout: stacked below the field when narrow, a left-hand column spanning the
- * field+results rows when wide. Regions are placed by name; DOM order stays
- * field → aside → results for a sensible reading/tab order. An empty aside
- * (no projected content) collapses its track to zero. */
+ * permanently visible (and never a real modal). The open dialog is a flex
+ * column whose single child (the frame) fills it, so the results list can
+ * scroll within the capped block-size. */
 :where(dialog[interop-command-palette][open]) {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Interior grid. The projected aside occupies a different track per layout:
+ * stacked below the field when narrow, a left-hand column spanning the
+ * field+results rows when wide. Regions are placed by name; DOM order stays
+ * field → aside → results for a sensible reading/tab order. minmax(0, 1fr)
+ * lets the flexible tracks shrink below their content so long labels ellipsis
+ * instead of overflowing. An empty aside collapses its track to zero. */
+:where(.itx-cmdp__frame) {
+	flex: 1 1 auto;
+	min-block-size: 0;
 	display: grid;
-	grid-template-columns: 1fr;
+	grid-template-columns: minmax(0, 1fr);
 	grid-template-rows: auto auto 1fr;
 	grid-template-areas:
 		"field"
@@ -49,14 +64,13 @@
 		"results";
 }
 
-/* Wide enough for a side column: the palette is at (or near) its max width, so
- * park the aside as a left-hand column spanning the full height. Gated on the
- * aside actually having projected content — an empty slot keeps the single
- * column. The breakpoint tracks the viewport because the palette's own width is
- * min(92vw, max-inline-size); past ~44rem it has hit that ceiling. */
-@media (min-width: 44rem) {
-	:where(dialog[interop-command-palette][open]:has(.itx-cmdp__aside > *)) {
-		grid-template-columns: var(--itx-cmdp-aside-inline-size) 1fr;
+/* Wide enough for a side column: the palette box has the room, so park the
+ * aside as a left-hand column spanning the full height. Scoped to the palette's
+ * own inline size (not the viewport) and gated on the aside actually having
+ * projected content — an empty slot keeps the single column. */
+@container itx-cmdp (min-width: 34rem) {
+	:where(.itx-cmdp__frame:has(.itx-cmdp__aside > *)) {
+		grid-template-columns: var(--itx-cmdp-aside-inline-size) minmax(0, 1fr);
 		grid-template-rows: auto 1fr;
 		grid-template-areas:
 			"aside field"
@@ -98,12 +112,9 @@
 	border-block-end: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
 }
 
-@media (min-width: 44rem) {
+@container itx-cmdp (min-width: 34rem) {
 	/* As a side column the divider moves to the inline edge. */
-	:where(
-		dialog[interop-command-palette][open]:has(.itx-cmdp__aside > *)
-			.itx-cmdp__aside
-	) {
+	:where(.itx-cmdp__frame:has(.itx-cmdp__aside > *) .itx-cmdp__aside) {
 		border-block-end: 0;
 		border-inline-end: var(--itx-cmdp-border-width) solid
 			var(--itx-cmdp-border-color);

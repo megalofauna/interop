@@ -102,7 +102,10 @@
 	overscroll-behavior: contain;
 }
 
-@media (min-width: 44rem) {
+// Matches the palette's own layout switch — scoped to the palette box width
+// (its `itx-cmdp` query container), not the viewport. Row → column in lockstep
+// with the aside becoming a side column.
+@container itx-cmdp (min-width: 34rem) {
 	.cmdp-landings {
 		flex-direction: column;
 		overflow-x: hidden;

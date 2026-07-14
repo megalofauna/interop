@@ -52,7 +52,8 @@
 @import "./components/toast.css";
 @import "./components/tooltip.css";
 @import "./components/resizable.css";
-@import "./components/visimorph.css";
+@import "./components/visimorph/visimorph.css";
+@import "./components/visimorph/label.css";
 
 /* ── Motion (structural foundation + presets) ───────────────────────────── */
 /*    Property-agnostic substrate plus self-contained preset modules used by  */

@@ -1,0 +1,97 @@
+/*
+ * Interop faux-control label shell — Protocol theme.
+ *
+ * Token values for the shared <label> shell of `interop-checkbox`,
+ * `interop-radio`, and `interop-toggle`. Structure lives in
+ * `styles/components/visimorph/label.css`; this file only assigns custom
+ * properties.
+ *
+ * Base values on `[interop-root]`; per-type deltas and interaction-state
+ * deltas scoped below. The theme declares only the deltas that differ — an
+ * undeclared `-hover`/`-active`/`-focus` token falls back to base in the
+ * structural file, so states stay inert until given a value.
+ *
+ * Wrapper tokens are `--itx-control-label-*`; they share the `--itx-control-`
+ * prefix with the morph box (`--itx-control-*`) so a single override scope
+ * re-themes the whole control.
+ *
+ * Token surface (all optional to override):
+ *
+ *   Layout
+ *   --itx-control-label-align                align-items (start | center)
+ *   --itx-control-label-gap
+ *   --itx-control-label-padding-block
+ *   --itx-control-label-padding-inline
+ *
+ *   Text colour
+ *   --itx-control-label-color[-hover|-active|-focus]
+ *
+ *   Interaction surface — background
+ *   --itx-control-label-bg[-hover|-active|-focus]
+ *   --itx-control-label-bg-image[-hover|-active|-focus]
+ *   --itx-control-label-backdrop-filter[-hover|-active|-focus]
+ *
+ *   Interaction surface — border + corner
+ *   --itx-control-label-border-width
+ *   --itx-control-label-border-color[-hover|-active|-focus]
+ *   --itx-control-label-radius
+ *   --itx-control-label-corner-shape
+ *
+ *   Motion
+ *   --itx-control-label-transition          "<duration> <easing>"
+ */
+
+:where(
+	[interop-root]
+		label:is([interop-checkbox], [interop-radio], [interop-toggle])
+) {
+	/* ── Layout ─────────────────────────────────────────────────────────── */
+	--itx-control-label-align: center;
+	--itx-control-label-gap: 0.5rem;
+	--itx-control-label-padding-block: 0.5rem;
+	--itx-control-label-padding-inline: 0.5rem;
+
+	/* ── Text colour ────────────────────────────────────────────────────── */
+	--itx-control-label-color: inherit;
+
+	/* ── Interaction surface — background ───────────────────────────────── */
+	--itx-control-label-bg: transparent;
+	--itx-control-label-bg-image: none;
+	--itx-control-label-backdrop-filter: none;
+	--itx-control-label-bg-hover: light-dark(
+		rgb(0 0 0 / 0.05),
+		rgb(255 255 255 / 0.06)
+	);
+	--itx-control-label-bg-active: light-dark(
+		rgb(0 0 0 / 0.09),
+		rgb(255 255 255 / 0.1)
+	);
+	--itx-control-label-bg-focus: var(--itx-control-label-bg-hover);
+
+	/* ── Interaction surface — border + corner ─────────────────────────── */
+	--itx-control-label-border-width: 2px;
+	--itx-control-label-border-color: transparent;
+	--itx-control-label-radius: var(--itx-radius-md);
+	--itx-control-label-corner-shape: round;
+
+	/* ── Motion ─────────────────────────────────────────────────────────── */
+	--itx-control-label-transition: var(--itx-duration-fast, 75ms)
+		var(--itx-easing-standard, ease-in);
+}
+
+/* ── Per-type deltas ──────────────────────────────────────────────────────── */
+
+:where([interop-root] label[interop-checkbox]) {
+	--itx-control-label-align: start;
+	--itx-control-label-gap: 0.75rem;
+}
+
+:where([interop-root] label[interop-radio]) {
+	--itx-control-label-padding-inline: 0.5rem 1.5rem;
+	/* Radio dot size cascades into the morph box (a --itx-control-* box token). */
+	--itx-control-dot-size: var(--itx-spacing-2);
+}
+
+:where([interop-root] label[interop-toggle]) {
+	--itx-control-label-padding-inline: 0.25rem;
+}

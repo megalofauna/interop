@@ -3,7 +3,8 @@
  *
  * Token values for the shared faux-control surface (radio / checkbox /
  * toggle). State activation lives in the component CSS
- * (`styles/components/visimorph.css`) — this file only declares values.
+ * (`styles/components/visimorph/visimorph.css`) — this file only declares
+ * values.
  *
  * The visimorph reads `--itx-control-*` tokens, which are intentionally
  * shared with the surrounding radio / checkbox / toggle host CSS so a single
