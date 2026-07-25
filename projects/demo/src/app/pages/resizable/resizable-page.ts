@@ -1,12 +1,19 @@
 import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
 import {
 	InteropResizable,
-	InteropButton,
 	InteropTable,
 	InteropCellDef,
+	InteropExpansionPanel,
+	InteropExpansionTrigger,
+	InteropExpansionBody,
+	CodeBlock,
+	Terminal,
 	type ResizableDimensions,
 	type TableColumn,
+	type CodeFile,
+	type TerminalEntry,
 } from 'interop';
+import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -24,9 +31,14 @@ interface ApiEntry {
 	standalone: true,
 	imports: [
 		InteropResizable,
-		InteropButton,
 		InteropTable,
 		InteropCellDef,
+		InteropExpansionPanel,
+		InteropExpansionTrigger,
+		InteropExpansionBody,
+		CodeBlock,
+		Terminal,
+		DemoPage,
 		DemoMasthead,
 		DemoSection,
 		DemoExample,
@@ -37,16 +49,67 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResizablePage {
-	private readonly _lastSize = signal<string>("—");
-	readonly lastSize = this._lastSize.asReadonly();
+	// ── Enhanced example — resize log + reset ────────────────────────────────
+	readonly resizeLog = signal<TerminalEntry[]>([]);
 
-	onResize(dims: ResizableDimensions): void {
-		this._lastSize.set(`${Math.round(dims.width)} × ${Math.round(dims.height)}`);
+	onEnhancedResizeEnd(dims: ResizableDimensions): void {
+		this.resizeLog.update((log) => [
+			...log,
+			{
+				text: `${Math.round(dims.width)} × ${Math.round(dims.height)}`,
+				time: Date.now(),
+			},
+		]);
 	}
 
-	onResizeEnd(dims: ResizableDimensions): void {
-		console.log(`[resizable] resizeEnd ${Math.round(dims.width)} × ${Math.round(dims.height)}`);
+	/** Standard frame reset: return the widget to its initial size and clear
+	 * the log. Called by the demo-example's frame-level reload button. */
+	resetEnhanced(frame: InteropResizable): void {
+		frame.reset();
+		this.resizeLog.set([]);
 	}
+
+	// ── Code samples ─────────────────────────────────────────────────────────
+	private readonly nativeHtml = `<div interop-resizable
+     [initialSize]="{ width: 360, height: 220 }"
+     [min]="{ width: 200, height: 120 }"
+     [max]="{ width: 720, height: 480 }">
+  <!-- your content -->
+</div>`;
+
+	private readonly enhancedHtml = `<div #frame="interopResizable"
+     interop-resizable
+     [initialSize]="{ width: 480, height: 280 }"
+     [breakpoints]="[320, 480, 640, 768]"
+     [showDimensions]="true"
+     [keyboard]="true"
+     (resizeEnd)="onResizeEnd($event)">
+  <!-- your content -->
+</div>`;
+
+	private readonly enhancedTs = `onResizeEnd(dims: ResizableDimensions): void {
+  this.lastSize.set(dims.width + ' × ' + dims.height);
+}`;
+
+	private readonly aspectHtml = `<div interop-resizable
+     [initialSize]="{ width: 480, height: 270 }"
+     [aspectLocked]="true"
+     [showDimensions]="true">
+  <!-- your content -->
+</div>`;
+
+	readonly nativeFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.nativeHtml },
+	];
+
+	readonly enhancedFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.enhancedHtml },
+		{ label: "component.ts", language: "ts", code: this.enhancedTs },
+	];
+
+	readonly aspectFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.aspectHtml },
+	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "name", label: "Input" },

@@ -2,7 +2,7 @@ import {
 	ApplicationConfig,
 	provideZonelessChangeDetection,
 } from "@angular/core";
-import { provideRouter } from "@angular/router";
+import { provideRouter, withInMemoryScrolling } from "@angular/router";
 import { provideHighlighter } from "interop";
 import { ShikiHighlighter } from "interop/highlighters/shiki";
 import { routes } from "./app.routes";
@@ -18,7 +18,14 @@ void highlighter.preload(["ts", "typescript", "html", "css", "scss"]);
 export const appConfig: ApplicationConfig = {
 	providers: [
 		provideZonelessChangeDetection(),
-		provideRouter(routes),
+		// Reset scroll to top on forward navigation (restore on back/forward).
+		// Without this the document scroll persists across route changes, so every
+		// page loads already scrolled past its <h1> — leaving the header breadcrumb
+		// (driven by the h1's view-timeline) stuck permanently on.
+		provideRouter(
+			routes,
+			withInMemoryScrolling({ scrollPositionRestoration: "enabled" }),
+		),
 		provideHighlighter(highlighter),
 	],
 };

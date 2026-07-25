@@ -1,0 +1,139 @@
+.lab-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: var(--itx-spacing-4);
+}
+
+/* Each frame is its own pinned-scheme root. Foundation tokens (--itx-page,
+   --itx-border, …) resolve to the frame's itx-theme; the --r-* role vars are
+   mapped from one strategy's lab tokens by the strategy class below. */
+.lab-frame {
+	background: var(--itx-page);
+	color: var(--itx-on-surface);
+	border: 1px solid var(--itx-border);
+	border-radius: var(--itx-radius-3, 8px);
+	padding: var(--itx-spacing-5);
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-4);
+}
+
+.lab-frame__label {
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	font-size: var(--itx-fs-xs);
+	font-family: var(--itx-font-family-mono);
+	color: var(--itx-muted);
+}
+
+/* ── Strategy → role-var mapping ─────────────────────────────────────────── */
+.strat-contrast {
+	--r-bg-subtle: var(--itx-lab-contrast-bg-subtle);
+	--r-bg-muted: var(--itx-lab-contrast-bg-muted);
+	--r-bg-bold: var(--itx-lab-contrast-bg-bold);
+	--r-border-muted: var(--itx-lab-contrast-border-muted);
+	--r-border-bold: var(--itx-lab-contrast-border-bold);
+	--r-text: var(--itx-lab-contrast-text);
+	--r-on-bold: var(--itx-lab-contrast-on-bold);
+}
+
+.strat-anchor {
+	--r-bg-subtle: var(--itx-lab-anchor-bg-subtle);
+	--r-bg-muted: var(--itx-lab-anchor-bg-muted);
+	--r-bg-bold: var(--itx-lab-anchor-bg-bold);
+	--r-border-muted: var(--itx-lab-anchor-border-muted);
+	--r-border-bold: var(--itx-lab-anchor-border-bold);
+	--r-text: var(--itx-lab-anchor-text);
+	--r-on-bold: var(--itx-lab-anchor-on-bold);
+}
+
+.strat-floored {
+	--r-bg-subtle: var(--itx-lab-floored-bg-subtle);
+	--r-bg-muted: var(--itx-lab-floored-bg-muted);
+	--r-bg-bold: var(--itx-lab-floored-bg-bold);
+	--r-border-muted: var(--itx-lab-floored-border-muted);
+	--r-border-bold: var(--itx-lab-floored-border-bold);
+	--r-text: var(--itx-lab-floored-text);
+	--r-on-bold: var(--itx-lab-floored-on-bold);
+}
+
+/* ── Raw role swatches ───────────────────────────────────────────────────── */
+.lab-swatches {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+	gap: var(--itx-spacing-2);
+}
+
+.lab-swatch {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.lab-swatch__chip {
+	block-size: 40px;
+	border-radius: var(--itx-radius-2, 4px);
+	border: 1px solid oklch(0.5 0 0 / 0.25);
+}
+
+.lab-swatch__name {
+	font-size: 11px;
+	font-family: var(--itx-font-family-mono);
+	color: var(--itx-muted);
+}
+
+/* ── Contextual mini-card (roles doing their jobs) ───────────────────────── */
+.lab-card {
+	background: var(--r-bg-subtle);
+	border: 1.5px solid var(--r-border-muted);
+	border-radius: var(--itx-radius-3, 8px);
+	padding: var(--itx-spacing-4);
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-2);
+}
+
+.lab-card__title {
+	margin: 0;
+	color: var(--r-text);
+}
+
+.lab-card__body {
+	margin: 0;
+	font-size: var(--itx-fs-sm);
+	color: var(--r-text);
+}
+
+.lab-card__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	margin-block-start: var(--itx-spacing-2);
+}
+
+.lab-btn {
+	background: var(--r-bg-bold);
+	color: var(--r-on-bold);
+	border: none;
+	border-radius: var(--itx-radius-2, 4px);
+	padding: var(--itx-spacing-2) var(--itx-spacing-3);
+	font: inherit;
+	cursor: pointer;
+}
+
+.lab-outline {
+	border: 2px solid var(--r-border-bold);
+	color: var(--r-text);
+	border-radius: var(--itx-radius-2, 4px);
+	padding: 2px var(--itx-spacing-2);
+	font-size: var(--itx-fs-sm);
+}
+
+.lab-muted {
+	background: var(--r-bg-muted);
+	color: var(--r-text);
+	border-radius: var(--itx-radius-2, 4px);
+	padding: 2px var(--itx-spacing-2);
+	font-size: var(--itx-fs-sm);
+}

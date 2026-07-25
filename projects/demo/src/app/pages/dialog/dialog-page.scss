@@ -1,14 +1,28 @@
 .dialog-page__title {
+	position: relative;
 	margin: 0 0 var(--itx-spacing-2);
-	font-size: var(--itx-font-size-subheading);
-	font-weight: 600;
+	display: flex;
+	font-size: var(--itx-font-size-body);
+	font-weight: 500;
+	& + * {
+		margin-block-start: var(--itx-spacing-6);
+	}
+
+	&::before {
+		content: "";
+		margin-right: var(--itx-spacing-2);
+		flex: 0 0 var(--itx-spacing-2);
+		height: var(--itx-spacing-2);
+		align-self: center;
+		background-color: orange;
+	}
 }
 
 .dialog-page__actions {
 	display: flex;
 	justify-content: flex-end;
 	gap: var(--itx-spacing-3);
-	margin-top: var(--itx-spacing-12);
+	margin-block-start: var(--itx-spacing-12);
 }
 
 .dialog-page__field {

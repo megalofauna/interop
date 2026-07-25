@@ -23,7 +23,7 @@ interface ApiEntry {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalloutPage {
-	/** Live status-palette preview — drives `data-status-palette` on the page. */
+	/** Live status-palette preview — drives `itx-status-palette` on the page. */
 	readonly palette = signal<"seventies" | "eighties">("seventies");
 	readonly palettes = [
 		{ id: "seventies", label: "70s — earthy" },

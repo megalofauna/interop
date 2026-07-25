@@ -14,7 +14,7 @@
 
 // Offset anchor scroll targets to clear the sticky page nav
 .demo-page demo-section {
-	scroll-margin-top: var(--demo-scroll-offset, 3.5rem);
+	scroll-margin-top: var(--demo-scroll-offset, var(--itx-spacing-48));
 }
 
 // ── Header ───────────────────────────────────────────────────────────────────

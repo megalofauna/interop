@@ -1,63 +1,49 @@
 import {
-	Component,
 	ChangeDetectionStrategy,
+	Component,
+	computed,
+	contentChild,
 	input,
 	output,
-	contentChild,
-	computed,
 } from "@angular/core";
 import { DemoState } from "../demo-state/demo-state";
 import {
-	InteropContent,
-	type Div,
+	CodeBlock,
 	InteropButton,
 	InteropIcon,
 	InteropMotionTrigger,
+	InteropTable,
 	provideInteropIcons,
+	Terminal,
 } from "interop";
-import { Terminal } from "interop";
 import { TablerReload } from "interop/lib/iconsets/tabler";
+import { demoSlug } from "../demo-page/demo-page.registry";
 
+// ─── Example frame ───────────────────────────────────────────────────────────
+//
+// A demo-example is the canonical subsection frame: an optional heading + a
+// projected `[description]`, then content routed into fixed slots by tag:
+//
+//   default          → preview   (live widgets)
+//   <interop-table>  → reference  (token/API tables, unpadded)
+//   <itx-code-block> → code
+//   <itx-terminal>   → output
+//
+// Authors drop the pieces in any order; the frame owns the layout.
+//
 // ─── Reload-button semantics ─────────────────────────────────────────────────
 //
-// The reload button is a *frame-level* affordance that lets the user reset any
-// stateful surface inside the example without having to discover the in-widget
-// affordance (e.g. the terminal's own eraser, which we deliberately keep — it
-// is part of `Terminal`'s own composite contract, not demo-specific).
-//
-// Enable rule (`canReload`):
-//   The button is enabled when the example has *something* to reset. Two
-//   independent signals contribute:
-//     - a projected `<itx-terminal>` with entries (mirrors `.itx-term--active`)
-//     - the consumer-provided `[dirty]` input set to `true`
-//   ORed together so the page can declare extra dirt without losing the
-//   automatic terminal-driven behaviour.
-//
-// Click behaviour (`onReload`):
-//   1. Emit the `(reset)` output. The page is responsible for restoring any
-//      state it owns (signals, activation handlers via `handler.reset()`, etc).
-//   2. Call `terminal()?.requestReset()` so the in-terminal `(reset)` binding
-//      still fires for pages that haven't migrated to the frame-level pattern.
-//      For pages that *have* migrated, their `(reset)` callback can clear the
-//      terminal-backed signal directly and drop the per-terminal `(reset)`
-//      binding — the duplicate emission is harmless if both remain.
-//
-// Visibility:
-//   Button is shown when there is a credible reset target: a projected
-//   terminal, or a currently-`dirty` example. With neither, the affordance
-//   would be perpetually inert, so it is hidden. (Angular doesn't expose a
-//   way to detect whether `(reset)` is bound; `[dirty]` serves as the
-//   page-side opt-in for terminal-less examples.)
-//
-// `contentChild(Terminal)` matches direct projected children. The existing
-// demos always place `<itx-terminal>` directly in `<demo-example>`'s default
-// slot, so this is sufficient. If a future example wraps the terminal in a
-// `<div>` or `@if`, add `{ descendants: true }`.
+// The reload button is a frame-level affordance that resets any stateful surface
+// inside the example. It is shown when there is a credible reset target (a
+// projected terminal, or a `[dirty]` example) and enabled when there is actually
+// something to reset. Clicking emits `(reset)` — the page restores state it owns
+// (signals, `handler.reset()`) — and also calls `terminal()?.requestReset()` so
+// a projected terminal's own `(reset)` still fires for pages that bind it there.
 //
 @Component({
 	selector: "demo-example",
 	standalone: true,
-	imports: [InteropContent, InteropButton, InteropIcon, InteropMotionTrigger],
+	imports: [InteropButton, InteropIcon, InteropMotionTrigger],
 	template: `
 		@if (terminal() || dirty()) {
 			<button
@@ -69,42 +55,57 @@ import { TablerReload } from "interop/lib/iconsets/tabler";
 				(click)="onReload()"
 				aria-label="Reset example"
 			>
-				<interop-icon name="tabler-reload" itx-size="lg"></interop-icon>
+				<interop-icon name="tabler-reload" itx-size="lg" />
 			</button>
 		}
-		@if (label()) {
-			<h3 class="example__heading">{{ label() }}</h3>
+		<hgroup class="demo-example__head">
+			@if (label()) {
+				<h3 [id]="resolvedId()" class="demo-example__heading">{{ label() }}</h3>
+			}
+			<ng-content select="[description]" />
+		</hgroup>
+		<div class="demo-example__preview"><ng-content /></div>
+		@if (table()) {
+			<div class="demo-example__reference">
+				<ng-content select="interop-table" />
+			</div>
 		}
-		<ng-content />
-		<ng-content select="itx-code-block" />
+		@if (codeBlock()) {
+			<div class="demo-example__code">
+				<ng-content select="itx-code-block" />
+			</div>
+		}
+		@if (terminal()) {
+			<div class="demo-example__output">
+				<ng-content select="itx-terminal" />
+			</div>
+		}
 	`,
-	styleUrl: "./demo-example.scss",
+	styleUrl: "./demo-example.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [provideInteropIcons(TablerReload)],
 })
 export class DemoExample {
-	label = input<string | null>(null);
-	lede = input<Div | null>(null);
+	readonly label = input<string | null>(null);
 
 	/**
-	 * Page-declared "this example holds state worth resetting" flag. Drives
-	 * both the reload button's visibility (for terminal-less examples) and
-	 * its enabled state. ORed with the terminal-activity signal — pages with
-	 * terminals don't need to set this for the basic case.
+	 * Page-declared "this example holds state worth resetting" flag. Drives both
+	 * the reload button's visibility (for terminal-less examples) and its enabled
+	 * state. ORed with the terminal-activity signal.
 	 */
 	readonly dirty = input<boolean>(false);
 
-	/**
-	 * Emitted when the user clicks the frame-level reload button. The page
-	 * should restore any state it owns: clear signals, call `.reset()` on
-	 * activation handlers, restore form values, etc. The projected
-	 * `<itx-terminal>` (if any) is reset separately by this component, so
-	 * pages that only have terminal state can leave `(reset)` unbound.
-	 */
+	/** Emitted when the frame-level reload button is clicked. */
 	readonly reset = output<void>();
+
+	readonly resolvedId = computed(() =>
+		this.label() ? demoSlug(this.label()!) : null,
+	);
 
 	readonly state = contentChild(DemoState);
 	readonly terminal = contentChild(Terminal);
+	readonly codeBlock = contentChild(CodeBlock);
+	readonly table = contentChild(InteropTable);
 
 	readonly canReload = computed(
 		() => (this.terminal()?.entries().length ?? 0) > 0 || this.dirty(),

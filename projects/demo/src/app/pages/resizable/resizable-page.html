@@ -1,4 +1,4 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Resizable">
 		Drag-to-resize wrapper with two performance tiers. Pure-CSS resize
 		by default (zero JS in the resize loop); enhancement features —
@@ -7,30 +7,61 @@
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
-	<demo-section id="usage" heading="Usage">
-		<demo-example label="Tier 0 — pure CSS resize (zero runtime cost)">
+	<demo-section heading="Usage">
+		<p description>
+			The directive picks one of two tiers by the inputs you set. With no
+			enhancement input it stays on <strong>Tier 0</strong> — browser-native
+			<code>resize</code>, nothing in the resize loop. Any of
+			<code>breakpoints</code>, <code>showDimensions</code>,
+			<code>keyboard</code>, <code>aspectLocked</code>, or
+			<code>liveResize</code> upgrades it to <strong>Tier 1</strong>, a
+			custom handle the directive drives itself.
+		</p>
+
+		<demo-example
+			label="Native resize (Tier 0)"
+			[dirty]="true"
+			(reset)="native.reset()"
+		>
+			<p description>
+				Browser-native <code>resize: both</code> — no pointer listeners
+				and no Angular change detection during the drag. Drag the
+				bottom-right corner. The host is also a container-query container,
+				so content inside can respond to its width. <code>[min]</code> /
+				<code>[max]</code> feed the CSS bounds and <code>[initialSize]</code>
+				seeds the starting size.
+			</p>
 			<div
+				#native="interopResizable"
 				interop-resizable
 				[initialSize]="{ width: 360, height: 220 }"
 				[min]="{ width: 200, height: 120 }"
 				[max]="{ width: 720, height: 480 }"
 			>
 				<div class="resizable-page__demo-content">
-					<h3>Native handle</h3>
 					<p>
-						Browser-native <code>resize: both</code>. No pointer
-						listeners, no Angular CD during drag. Drag the
-						bottom-right corner.
-					</p>
-					<p>
-						Width is also a container-query container — try
-						narrowing me past 320px.
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						Nullam euismod, nisl eget aliquam ultricies, nunc nisl
+						aliquet nunc, eget aliquam nisl nunc eget nisl.
 					</p>
 				</div>
 			</div>
+			<itx-code-block [files]="nativeFiles" />
 		</demo-example>
 
-		<demo-example label="Tier 1 — keyboard, snap, dimension readout">
+		<demo-example
+			label="Enhanced — keyboard, snap, readout (Tier 1)"
+			(reset)="resetEnhanced(enhanced)"
+		>
+			<p description>
+				Setting an enhancement input swaps the native handle for a custom
+				corner handle with the APG separator keyboard contract, magnetic
+				snap, and a live dimension badge. Drag the corner or focus it and
+				use the arrow keys — <kbd>Shift</kbd> for a larger step,
+				<kbd>Home</kbd> / <kbd>End</kbd> for min / max. It snaps near
+				320 / 480 / 640 / 768px. Double-click the handle, or the reset
+				control on this example, to return to the initial size.
+			</p>
 			<div
 				#enhanced="interopResizable"
 				interop-resizable
@@ -40,40 +71,32 @@
 				[breakpoints]="[320, 480, 640, 768]"
 				[showDimensions]="true"
 				[keyboard]="true"
-				[liveResize]="true"
-				(resize)="onResize($event)"
-				(resizeEnd)="onResizeEnd($event)"
+				(resizeEnd)="onEnhancedResizeEnd($event)"
 			>
 				<div class="resizable-page__demo-content">
-					<h3>Enhanced handle</h3>
 					<p>
-						Drag the corner or focus it and use the arrow keys.
-						Snaps magnetically near 320 / 480 / 640 / 768px.
-						Hold <kbd>Shift</kbd> while dragging to lock aspect ratio,
-						or for a larger keyboard step.
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						Sed do eiusmod tempor incididunt ut labore et dolore magna
+						aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
 					</p>
-					<p>
-						Double-click the handle, or press the button below, to
-						reset.
-					</p>
-					<button
-						type="button"
-						interop-button="action"
-					itx-radius="md"
-						(click)="enhanced.reset()"
-					>
-						Reset
-					</button>
 				</div>
 			</div>
-
-			<p class="resizable-page__live">
-				Last resize: <code>{{ lastSize() }}</code>
-			</p>
+			<itx-code-block [files]="enhancedFiles" />
+			<itx-terminal [entries]="resizeLog()" />
 		</demo-example>
 
-		<demo-example label="Aspect-locked (16:9)">
+		<demo-example
+			label="Aspect-locked (16:9)"
+			[dirty]="true"
+			(reset)="aspect.reset()"
+		>
+			<p description>
+				<code>[aspectLocked]</code> captures the width-to-height ratio at
+				drag start and holds it for the whole drag. Holding
+				<kbd>Shift</kbd> mid-drag toggles the lock temporarily.
+			</p>
 			<div
+				#aspect="interopResizable"
 				interop-resizable
 				[initialSize]="{ width: 480, height: 270 }"
 				[min]="{ width: 240, height: 135 }"
@@ -82,15 +105,90 @@
 				[showDimensions]="true"
 			>
 				<div class="resizable-page__demo-content">
-					<h3>Aspect lock</h3>
-					<p>Width and height stay in 16:9 throughout the drag.</p>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						Vestibulum ante ipsum primis in faucibus orci luctus et
+						ultrices posuere cubilia curae.
+					</p>
 				</div>
 			</div>
+			<itx-code-block [files]="aspectFiles" />
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Guides ────────────────────────────────────────────────────────── -->
+	<demo-section heading="Setting size bounds">
+		<!-- Disambiguation explainer: seek-out + long, so it's a disclosure
+		     whose summary is the reader's question. Swap the summary to topic
+		     form ("Size bounds: inputs vs. tokens") when several sit together
+		     in one accordion — same content, author's choice. -->
+		<interop-expansion-panel style="width: 100%">
+			<h3>
+				<button interop-expansion-trigger>
+					Why can I set bounds in two places?
+				</button>
+			</h3>
+			<div interop-expansion-body>
+				<p>Each size bound is one CSS custom property:</p>
+				<ul>
+					<li>
+						<code>--itx-resizable-min-width</code> /
+						<code>--itx-resizable-min-height</code>
+					</li>
+					<li>
+						<code>--itx-resizable-max-width</code> /
+						<code>--itx-resizable-max-height</code>
+					</li>
+				</ul>
+				<p>
+					The Protocol theme sets a default for each. Override it in
+					one of two places.
+				</p>
+
+				<p>
+					<strong>CSS — a scoped default.</strong> Declare the
+					property on an ancestor to set every resizable in that
+					scope, or on the host for one:
+				</p>
+				<pre><code>[interop-root] &#123; --itx-resizable-min-width: 12rem; &#125;</code></pre>
+
+				<p>
+					<strong><code>[min]</code> / <code>[max]</code> inputs — one
+					instance.</strong> The directive writes the same custom
+					property inline on the host, so the input overrides an
+					ancestor default through the normal cascade:
+				</p>
+				<pre><code>&lt;div interop-resizable [min]="&#123; width: 200 &#125;" [max]="&#123; width: 720 &#125;"&gt;…&lt;/div&gt;</code></pre>
+
+				<p>
+					Both paths resolve to the same property, so both tiers
+					enforce the bound identically. In Tier 0, native CSS
+					<code>resize</code> reads the <code>min</code>/<code>max-inline-size</code>
+					the token feeds — no script runs during the drag. In Tier 1,
+					the drag loop reads the inputs when it clamps.
+				</p>
+
+				<p>Choose by scope:</p>
+				<ul>
+					<li>
+						<strong>CSS token</strong> — a default across many
+						instances, or when you already configure in CSS.
+					</li>
+					<li>
+						<strong><code>[min]</code> / <code>[max]</code> inputs</strong>
+						— one instance, or a value that changes at runtime.
+					</li>
+				</ul>
+				<p>
+					The input is a per-instance override of the same token.
+					Nothing else differs.
+				</p>
+			</div>
+		</interop-expansion-panel>
+	</demo-section>
+
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
+	<demo-section heading="API — Inputs">
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
@@ -105,7 +203,7 @@
 	</demo-section>
 
 	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
-	<demo-section id="api-outputs" heading="API — Outputs">
+	<demo-section heading="API — Outputs">
 		<interop-table [collection]="outputEntries" [columns]="outputColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
@@ -117,7 +215,7 @@
 	</demo-section>
 
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
+	<demo-section heading="Notes">
 		<demo-notes [notes]="notes" />
 	</demo-section>
-</article>
+</demo-page>
