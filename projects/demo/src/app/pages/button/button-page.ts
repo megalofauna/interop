@@ -1,43 +1,38 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
-	DestroyRef,
-	afterNextRender,
 	signal,
-	inject,
 } from "@angular/core";
 import {
 	InteropButton,
-	InteropCallout,
 	InteropTable,
 	InteropCellDef,
-	provideInteropIcons,
-	InteropList,
+	CodeBlock,
+	Terminal,
 	type TableColumn,
 	type TableGroupRow,
+	type TerminalEntry,
+	type CodeFile,
 } from "interop";
 import { createActivationHandler } from "interop/lib/utils/activation";
-import { TablerAlertTriangleFilled } from "interop/lib/iconsets/tabler";
-import { TablerMoon } from "interop/lib/iconsets/tabler/outline/tabler-moon";
-import {
-	CodeBlock,
-	InlineCode,
-	PageNav,
-	Terminal,
-	type PageNavLink,
-	type TerminalEntry,
-} from "interop";
+import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import { ButtonPlayground } from "./button-playground/button-playground";
-import * as ledes from "./button.djot";
 interface ApiEntry {
 	name: string;
 	type: string;
 	default: string;
 	description: string;
 	required?: boolean;
+}
+
+interface AvailabilityEntry {
+	state: string;
+	disabledAttr: string;
+	ariaDisabled: string;
+	ariaBusy: string;
+	tabOrder: string;
 }
 
 type TokenEntry = TableGroupRow | { property: string; default: string };
@@ -47,69 +42,20 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	standalone: true,
 	imports: [
 		InteropButton,
-		InteropCallout,
 		InteropTable,
 		InteropCellDef,
-		InteropList,
 		CodeBlock,
-		InlineCode,
-		PageNav,
 		Terminal,
+		DemoPage,
 		DemoSection,
 		DemoExample,
 		DemoMasthead,
-		ButtonPlayground,
 	],
-	providers: [provideInteropIcons(TablerAlertTriangleFilled, TablerMoon)],
 	templateUrl: "./button-page.html",
-	styleUrl: "./button-page.scss",
+	styleUrl: "./button-page.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonPage {
-	private readonly destroyRef = inject(DestroyRef);
-
-	protected readonly ledes = ledes;
-
-	// ── Page nav ─────────────────────────────────────────────────────────────
-	readonly activeHref = signal<string | null>(null);
-
-	readonly links: PageNavLink[] = [
-		{ label: "Quick start", href: "#quick-start" },
-		{ label: "Appearance", href: "#appearance" },
-		{ label: "Activation", href: "#activation-management" },
-		{ label: "Tokens", href: "#tokens" },
-		{ label: "API", href: "#api" },
-	];
-
-	constructor() {
-		afterNextRender(() => {
-			const visible = new Set<string>();
-
-			const observer = new IntersectionObserver(
-				(entries) => {
-					for (const entry of entries) {
-						const href = `#${entry.target.id}`;
-						if (entry.isIntersecting) {
-							visible.add(href);
-						} else {
-							visible.delete(href);
-						}
-					}
-					const active = this.links.findLast((l) => visible.has(l.href));
-					this.activeHref.set(active?.href ?? null);
-				},
-				{ rootMargin: "0px 0px -60% 0px", threshold: 0 },
-			);
-
-			for (const link of this.links) {
-				const el = document.querySelector(link.href);
-				if (el) observer.observe(el);
-			}
-
-			this.destroyRef.onDestroy(() => observer.disconnect());
-		});
-	}
-
 	// ── Throttle demo ────────────────────────────────────────────────────────
 	throttleLog = signal<TerminalEntry[]>([]);
 
@@ -205,65 +151,30 @@ export class ButtonPage {
 	}
 
 	// ── Code snippets ────────────────────────────────────────────────────────
-	readonly plainCode = `<button interop-button (click)="save()">Save</button>`;
+	readonly sizeCode = `<button interop-button itx-size="xs">Extra small</button>
+<button interop-button itx-size="sm">Small</button>
+<button interop-button="default" itx-size="md">Medium</button>
+<button interop-button itx-size="lg">Large</button>
+<button interop-button itx-size="xl">Extra large</button>`;
 
-	readonly customProps = `/* ── Base (default, no variant) ──────────────────────────────────────────── */
+	readonly radiusCode = `<button interop-button itx-radius="none">None</button>
+<button interop-button itx-radius="nominal">Nominal</button>
+<button interop-button="default" itx-radius="sm">Small</button>
+<button interop-button itx-radius="md">Medium</button>
+<button interop-button itx-radius="lg">Large</button>
+<button interop-button itx-radius="xl">Extra large</button>
+<button interop-button itx-radius="full">Full</button>`;
 
-:where([interop-root]) {
-		--itx-button-sizing-multiplier: 1;
+	readonly variantCss = `:where([interop-button~="interop-demo"]) {
+  --itx-button-background: hsl(250 60% 55%);
+  --itx-button-foreground: white;
+  --itx-button-border-color: hsl(250 60% 45%);
 
-		--itx-button-display: inline-flex;
-		--itx-button-align-items: center;
-		--itx-button-justify-content: center;
-		--itx-button-gap: var(--itx-spacing-2);
-
-
-		--itx-button-padding-block: calc(var(--itx-button-sizing-multiplier) * 0.5em);
-		--itx-button-padding-inline: calc(
-			var(--itx-button-sizing-multiplier) * 0.75em
-		);
-
-
-
-
-		/* typography */
-		--itx-button-font-family: var(--itx-font-family-sans);
-		--itx-button-font-size: var(--itx-fs-label);
-		/*--itx-button-line-height: 1.5rem;*/
-
-		/* edge */
-		--itx-button-border-width: 2px;
-		--itx-button-border-style: solid;
-		--itx-button-border-radius: 8px;
-		--itx-button-corner-shape: unset;
-
-		/* transition */
-		--itx-button-transition-property: background-color, border-color, box-shadow;
-		--itx-button-transition-duration: 75ms;
-		--itx-button-transition-timing-function: ease-in-out;
-
-		/* Rest state */
-		--itx-button-background: var(--itx-neutral-3);
-		--itx-button-foreground: var(--itx-neutral-10);
-		--itx-button-border-color: transparent;
-
-		--itx-button-outline-width: 2px;
-		--itx-button-outline-style: solid;
-		--itx-button-outline-color: var(--itx-neutral-8);
-		--itx-button-outline-offset: 2px;
-
-		/* Hover state */
-		--itx-button-background-hover: var(--itx-neutral-5);
-		--itx-button-foreground-hover: var(--itx-neutral-11);
-
-		/* Active state */
-		--itx-button-background-active: var(--itx-neutral-7);
-		--itx-button-foreground-active: var(--itx-neutral-12);
+  --itx-button-background-hover: hsl(250 60% 60%);
+  --itx-button-background-active: hsl(250 60% 50%);
 }`;
 
-	readonly disabledCode = `<button interop-button [disabled]="true">Disabled</button>`;
-
-	readonly loadingCode = `<button interop-button [loading]="true">Save</button>`;
+	readonly variantHtml = `<button interop-button="interop-demo">Custom</button>`;
 
 	readonly throttleCode = `readonly handler = createActivationHandler(
   () => this.save(),
@@ -281,6 +192,101 @@ export class ButtonPage {
   },
   { reentrant: false }
 );`;
+
+	// ── Availability snippets ────────────────────────────────────────────────
+	readonly disabledCode = `<button interop-button [disabled]="true">Save</button>`;
+
+	readonly focusableDisabledCode = `<button interop-button [disabled]="true" [focusableWhenDisabled]="true">Save</button>`;
+
+	readonly loadingHtml = `<button interop-button [loading]="saving()" loadingText="Saving…">Save</button>`;
+
+	readonly loadingTs = `readonly saving = signal(false);
+
+async save() {
+  this.saving.set(true);
+  await this.persist();
+  this.saving.set(false);
+}`;
+
+	// ── Size theming snippet ─────────────────────────────────────────────────
+	readonly sizeOverrideCss = `/* Every size is one token — retune a height directly. */
+[interop-button][itx-size="md"] {
+  --itx-button-height: 2.75rem;
+}
+
+/* Or set a height on any button, no size attribute required. */
+[interop-button].compact {
+  --itx-button-height: 1.75rem;
+}`;
+
+	// ── Activation template snippets ─────────────────────────────────────────
+	readonly throttleHtml = `<button interop-button [onActivate]="handler">Load more</button>`;
+	readonly debounceHtml = `<button interop-button [onActivate]="handler">Recalculate</button>`;
+	readonly reentrantHtml = `<button interop-button [onActivate]="handler">Place order</button>`;
+
+	// ── Tabbed multi-file code blocks ────────────────────────────────────────
+	readonly sizeFiles: CodeFile[] = [
+		{ label: "markup.html", language: "html", code: this.sizeCode },
+		{ label: "theming.css", language: "css", code: this.sizeOverrideCss },
+	];
+
+	readonly variantFiles: CodeFile[] = [
+		{ label: "styles.css", language: "css", code: this.variantCss },
+		{ label: "markup.html", language: "html", code: this.variantHtml },
+	];
+
+	readonly loadingFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.loadingHtml },
+		{ label: "component.ts", language: "ts", code: this.loadingTs },
+	];
+
+	readonly throttleFiles: CodeFile[] = [
+		{ label: "component.ts", language: "ts", code: this.throttleCode },
+		{ label: "template.html", language: "html", code: this.throttleHtml },
+	];
+
+	readonly debounceFiles: CodeFile[] = [
+		{ label: "component.ts", language: "ts", code: this.debounceCode },
+		{ label: "template.html", language: "html", code: this.debounceHtml },
+	];
+
+	readonly reentrantFiles: CodeFile[] = [
+		{ label: "component.ts", language: "ts", code: this.reentrantCode },
+		{ label: "template.html", language: "html", code: this.reentrantHtml },
+	];
+
+	// ── Availability table ───────────────────────────────────────────────────
+	availabilityColumns: TableColumn<AvailabilityEntry>[] = [
+		{ key: "state", label: "State" },
+		{ key: "disabledAttr", label: "disabled" },
+		{ key: "ariaDisabled", label: "aria-disabled" },
+		{ key: "ariaBusy", label: "aria-busy" },
+		{ key: "tabOrder", label: "In tab order" },
+	];
+
+	availabilityEntries: AvailabilityEntry[] = [
+		{
+			state: "disabled (default)",
+			disabledAttr: "✓",
+			ariaDisabled: "—",
+			ariaBusy: "—",
+			tabOrder: "No",
+		},
+		{
+			state: "disabled, focusable",
+			disabledAttr: "—",
+			ariaDisabled: "true",
+			ariaBusy: "—",
+			tabOrder: "Yes",
+		},
+		{
+			state: "loading",
+			disabledAttr: "—",
+			ariaDisabled: "true",
+			ariaBusy: "true",
+			tabOrder: "Yes",
+		},
+	];
 
 	// ── Token table ──────────────────────────────────────────────────────────
 	tokenColumns: TableColumn<TokenEntry>[] = [
@@ -417,6 +423,13 @@ export class ButtonPage {
 			type: "boolean",
 			default: "false",
 			description: "Disables the button and prevents activation.",
+		},
+		{
+			name: "focusableWhenDisabled",
+			type: "boolean",
+			default: "false",
+			description:
+				"Uses aria-disabled instead of the native disabled attribute, keeping the button in the tab order.",
 		},
 		{
 			name: "type",

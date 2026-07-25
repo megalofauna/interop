@@ -1,29 +1,45 @@
 /*
  * InteropResizable — Protocol theme.
  *
- * Sets values for the bounds, handle, readout, and frame tokens. State
- * activation lives in the component CSS — this file only declares values.
+ * Values only — every declaration is a custom property. State activation and
+ * layout live in the structural file (styles/components/resizable.css).
+ *
+ * Token surface:
+ *   Bounds   --itx-resizable-min-width  --itx-resizable-min-height
+ *            --itx-resizable-max-width  --itx-resizable-max-height
+ *   Frame    --itx-resizable-border-color (transparent by default; the frame
+ *            is off until a consumer opts in) --itx-resizable-border-width
+ *            --itx-resizable-border-style  --itx-resizable-border-radius
+ *   Handle   --itx-resizable-handle-size  --itx-resizable-handle-color(-hover/-active)
+ *            --itx-resizable-handle-corner-radius
+ *            --itx-resizable-handle-focus-outline-color/-width/-offset
+ *   Readout  --itx-resizable-readout-background-color  --itx-resizable-readout-foreground
+ *            --itx-resizable-readout-padding  --itx-resizable-readout-border-radius
+ *            --itx-resizable-readout-font-family  --itx-resizable-readout-font-size
+ *            --itx-resizable-readout-offset
  */
 
-:where([interop-root]) {
-	/* ── Bounds (defaults; per-instance [min]/[max] inputs override) ──── */
+:where([interop-root] [interop-resizable]) {
+	/* ── Bounds (Tier 0 sizing constraint; also clamps the Tier 1 drag) ─── */
 	--itx-resizable-min-width: 8rem;
 	--itx-resizable-min-height: 4rem;
 	--itx-resizable-max-width: 100%;
 	--itx-resizable-max-height: none;
 
 	/* ── Frame ─────────────────────────────────────────────────────────── */
-	--itx-resizable-border-color: var(--itx-neutral-4);
+	/* Transparent by default: the 1px width reserves the frame's space so a
+	   consumer only has to set -border-color to reveal it — no reflow. */
+	--itx-resizable-border-color: transparent;
 	--itx-resizable-border-width: 1px;
 	--itx-resizable-border-style: solid;
-	--itx-resizable-border-radius: var(--itx-radius-2, 6px);
+	--itx-resizable-border-radius: var(--itx-radius-2);
 
 	/* ── Handle (Tier 1) ───────────────────────────────────────────────── */
 	--itx-resizable-handle-size: 14px;
 	--itx-resizable-handle-color: var(--itx-neutral-6);
 	--itx-resizable-handle-color-hover: var(--itx-neutral-8);
 	--itx-resizable-handle-color-active: var(--itx-colorway-8);
-	--itx-resizable-handle-corner-radius: 2px 0 var(--itx-radius-2, 6px) 0;
+	--itx-resizable-handle-corner-radius: 2px 0 var(--itx-radius-2) 0;
 	--itx-resizable-handle-focus-outline-color: var(--itx-colorway-8);
 	--itx-resizable-handle-focus-outline-width: 2px;
 	--itx-resizable-handle-focus-outline-offset: 2px;
@@ -31,10 +47,9 @@
 	/* ── Readout badge (Tier 1, with [showDimensions]) ─────────────────── */
 	--itx-resizable-readout-background-color: var(--itx-neutral-11);
 	--itx-resizable-readout-foreground: var(--itx-neutral-1);
-	--itx-resizable-readout-padding: var(--itx-spacing-1)
-		var(--itx-spacing-2);
-	--itx-resizable-readout-border-radius: var(--itx-radius-2, 4px);
-	--itx-resizable-readout-font-family: var(--itx-font-family-mono, monospace);
-	--itx-resizable-readout-font-size: var(--itx-fs-xs, 0.75rem);
+	--itx-resizable-readout-padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	--itx-resizable-readout-border-radius: var(--itx-radius-2);
+	--itx-resizable-readout-font-family: var(--itx-font-family-mono);
+	--itx-resizable-readout-font-size: var(--itx-fs-xs);
 	--itx-resizable-readout-offset: var(--itx-spacing-2);
 }

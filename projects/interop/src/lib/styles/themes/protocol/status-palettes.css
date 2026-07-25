@@ -3,13 +3,13 @@
  * ──────────────────────
  * Each palette defines the four status accents (danger/info/success/warning),
  * their -surface tints, and the on-surface text colour. Swap the whole set by
- * setting `data-status-palette` on any ancestor — callouts, alerts, toasts,
+ * setting `itx-status-palette` on any ancestor — callouts, alerts, toasts,
  * and anything else reading these tokens re-skin together.
  *
  *   <html interop-root>                                  → seventies (default)
- *   <html interop-root data-status-palette="eighties">   → 80s OS
+ *   <html interop-root itx-status-palette="eighties">   → 80s OS
  *
- * Add a palette by copying a block and giving it a new data-status-palette
+ * Add a palette by copying a block and giving it a new itx-status-palette
  * value. Values are OKLCH light-dark() pairs; tune freely.
  */
 
@@ -18,7 +18,7 @@
  * (avocado), info 250 → 205 (retro teal), danger 27 → 38 (burnt orange-rust).
  * Surfaces are bold tints (~0.08–0.10 chroma) so the panel carries the signal;
  * on-surface text is darkened to hold AA contrast on the richer tint. */
-:where([interop-root], [data-status-palette="seventies"]) {
+:where([interop-root], [itx-status-palette="seventies"]) {
 	--itx-danger: light-dark(oklch(0.55 0.19 38), oklch(0.66 0.18 40));
 	--itx-info: light-dark(oklch(0.56 0.11 205), oklch(0.68 0.1 205));
 	--itx-success: light-dark(oklch(0.56 0.15 126), oklch(0.68 0.15 128));
@@ -47,7 +47,7 @@
  * Info is the iconic DOS blue (hue 264); its dark-mode surface goes deep blue
  * with yellow text, the canonical DOS text-mode pairing. Green and yellow are
  * light colours → their solid fills take DARK text (--itx-on-*). */
-:where([data-status-palette="eighties"]) {
+:where([itx-status-palette="eighties"]) {
 	--itx-danger: light-dark(oklch(0.58 0.25 29), oklch(0.62 0.25 29));
 	--itx-info: light-dark(oklch(0.46 0.3 264), oklch(0.54 0.29 264));
 	--itx-success: light-dark(oklch(0.7 0.26 145), oklch(0.8 0.27 145));

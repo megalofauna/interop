@@ -75,7 +75,7 @@
 	/* Layout — full width, left-aligned content, optional chevron on right */
 	--itx-button-width: 100%;
 	--itx-button-max-width: none;
-	--itx-button-flex: 1;
+	--itx-button-flex: 1 1 100%;
 	--itx-button-justify-content: space-between;
 	--itx-button-border-radius: 0;
 	--itx-button-outline-offset: -2px;

@@ -1,0 +1,46 @@
+/*:host:not(:first-of-type) {
+	display: block;
+	margin-top: var(--itx-spacing-32);
+}*/
+
+:host {
+	display: block;
+	margin-block-start: var(--itx-spacing-32);
+}
+
+
+.demo-section__heading {
+	margin: 0;
+	font-size: var(--itx-font-size-heading);
+	font-weight: 400;
+	color: var(--itx-on-surface);
+}
+
+.demo-section__anchor {
+	display: none;
+	position: relative;
+	margin-left: -16px;
+	color: var(--itx-muted);
+	text-decoration: none;
+	opacity: 0;
+	transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
+}
+
+.demo-section__heading:hover .demo-section__anchor {
+	opacity: 1;
+}
+
+.demo-section__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-8);
+}
+
+/* Projected [description] prose lives in the page's view, so reach it with
+   ::ng-deep rather than a scoped rule. */
+:host ::ng-deep [description] {
+	margin: var(--itx-spacing-3) 0 0;
+	font-size: var(--itx-font-size-body);
+	color: var(--itx-muted);
+	line-height: 1.6;
+}

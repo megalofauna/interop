@@ -113,10 +113,10 @@ export class DemoThemeToggle implements OnDestroy {
 		const root = document.querySelector<HTMLElement>("[interop-root]");
 		if (!root) return;
 		if (mode === "system") {
-			root.removeAttribute("data-theme");
+			root.removeAttribute("itx-theme");
 			localStorage.removeItem("itx-theme");
 		} else {
-			root.setAttribute("data-theme", mode);
+			root.setAttribute("itx-theme", mode);
 			localStorage.setItem("itx-theme", mode);
 		}
 	}

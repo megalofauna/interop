@@ -83,6 +83,15 @@ import {
     "[attr.data-tier]": "tier()",
     "[attr.data-aspect-locked]": "aspectLocked() ? '' : null",
     "[style.container-type]": "containerType()",
+    // Bounds inputs feed the CSS min/max tokens per-instance. Native `resize`
+    // (Tier 0) honours these directly — no JS in the resize loop. The Tier-1
+    // drag loop reads the same inputs when clamping. One source, both tiers.
+    // Bindings emit the full `<n>px` string (the `.px` unit suffix is not
+    // reliable on custom-property style bindings).
+    "[style.--itx-resizable-min-width]": "boundVar('min', 'width')",
+    "[style.--itx-resizable-min-height]": "boundVar('min', 'height')",
+    "[style.--itx-resizable-max-width]": "boundVar('max', 'width')",
+    "[style.--itx-resizable-max-height]": "boundVar('max', 'height')",
   },
 })
 export class InteropResizable implements OnInit, OnDestroy {
@@ -167,6 +176,17 @@ export class InteropResizable implements OnInit, OnDestroy {
     }
     return "native";
   });
+
+  /** Host-binding helper: renders a bound input as a `<n>px` string for the
+   * matching CSS token, or `null` (no inline override) when unset. Reads the
+   * input signal, so the binding re-evaluates when `[min]`/`[max]` change. */
+  protected boundVar(
+    bound: "min" | "max",
+    axis: "width" | "height",
+  ): string | null {
+    const v = (bound === "min" ? this.min() : this.max())?.[axis];
+    return v != null ? `${v}px` : null;
+  }
 
   // ── Internal state ────────────────────────────────────────────────────────
 

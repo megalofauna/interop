@@ -19,8 +19,8 @@
  * ── Light / dark switching ─────────────────────────────────────────────────
  *
  *   <html interop-root>                     follows system preference
- *   <html interop-root data-theme="light">  always Protocol Light
- *   <html interop-root data-theme="dark">   always Protocol Dark
+ *   <html interop-root itx-theme="light">  always Protocol Light
+ *   <html interop-root itx-theme="dark">   always Protocol Dark
  *
  * ── Building a custom theme ────────────────────────────────────────────────
  *
@@ -72,3 +72,7 @@
 /* ── Rigs ───────────────────────────────────────────────────────────────── */
 
 @import "./protocol/rigs/toolbar.css";
+
+/* ── Experiments (opt-in, self-scoped; safe to remove) ──────────────────── */
+
+@import "./protocol/experiments/amber-lab.css";

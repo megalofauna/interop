@@ -31,10 +31,10 @@
 
 /* Font-size roles (consume the semantic scale, never raw primitives). */
 :where([interop-typography-root] h1) { font-size: var(--itx-font-size-display); }
-:where([interop-typography-root] h2) { font-size: var(--itx-font-size-heading-lg); }
-:where([interop-typography-root] h3) { font-size: var(--itx-font-size-heading); }
-:where([interop-typography-root] h4) { font-size: var(--itx-font-size-subheading); }
-:where([interop-typography-root] h5) { font-size: var(--itx-font-size-body-lg); }
+:where([interop-typography-root] h2) { font-size: var(--itx-font-size-heading); }
+:where([interop-typography-root] h3) { font-size: var(--itx-font-size-subheading); }
+:where([interop-typography-root] h4) { font-size: var(--itx-font-size-body-lg); }
+:where([interop-typography-root] h5) { font-size: var(--itx-font-size-body); }
 :where([interop-typography-root] h6) { font-size: var(--itx-font-size-body); }
 :where([interop-typography-root] :where(p, li, dd, blockquote)) {
 	font-size: var(--itx-font-size-body);
@@ -70,7 +70,7 @@
 	margin-block-start: var(--itx-rhythm-loose);
 }
 :where([interop-typography-root]) > :where(:where(h1, h2, h3, h4, h5, h6) + *) {
-	margin-block-start: var(--itx-rhythm-tight);
+	margin-block-start: var(--itx-rhythm-loose);
 }
 
 /* Nested list / definition flow. */

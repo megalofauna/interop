@@ -1,125 +1,205 @@
-<article class="demo-page demo-page--with-sidenav">
-	<div class="demo-page__content">
-		<demo-masthead category="Components" title="Button">
-			Enhanced button with activation guardrails — debounce, throttle, and
-			reentrancy protection built in. Drop-in replacement for any native
-			button.
-		</demo-masthead>
+<demo-page>
+	<demo-masthead category="Components" title="Button">
+		A native button with a CSS-driven appearance, three availability states, and
+		an optional set of activation guards — throttle, debounce, and reentrance.
+	</demo-masthead>
 
-		<itx-page-nav
-			[links]="links"
-			[activeHref]="activeHref()"
-			[sticky]="true"
-			[fade]="true"
-		/>
+	<!-- ── Appearance ────────────────────────────────────────────────────── -->
+	<demo-section heading="Appearance">
+		<p description>
+			Appearance is set through three attributes across two namespaces:
+			<code>interop-button=""</code> for identity and variant,
+			<code>itx-size</code> for size, and <code>itx-radius</code> for corner
+			radius.
+		</p>
 
-		<section demo-section id="quick-start" heading="Quick start">
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-				mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-				qui officia deserunt mollit anim id est laborum.
+		<demo-example label="Size">
+			<p description>
+				Five opt-in sizes on an 8-point grid — 24, 32, 40, 48, 56px — with
+				<code>md</code> (40) the anchor. Each size pins one value, its height;
+				the block padding is derived from it, so the label-to-height ratio holds
+				across the scale. Omit the attribute to retain the base size (md).
 			</p>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-				mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-				qui officia deserunt mollit anim id est laborum.
+			<!--<button interop-button="flex" itx-size="xs">Extra small</button>
+			<button interop-button="flex" itx-size="sm">Small</button>-->
+			<button interop-button="default flex" itx-size="md">Medium</button>
+			<button interop-button="action flex" itx-size="md">Medium</button>
+			<!--<button interop-button="flex" itx-size="lg">Large</button>
+			<button interop-button="flex" itx-size="xl">Extra large</button>-->
+			<itx-code-block [files]="sizeFiles" />
+		</demo-example>
+
+		<demo-example label="Radius">
+			<p description>
+				Seven opt-in radii, applied through <code>itx-radius</code>. The values
+				draw from the system's semantic radius scale, so a button's corners
+				align with the components around it. Omit the attribute to retain the
+				theme default.
 			</p>
-		</section>
-		<section demo-section id="appearance" heading="Appearance">
-			<demo-example id="size" label="Size">
-				<div class="flex">
-					<button interop-button itx-size="xs">Extra small</button>
-					<button interop-button itx-size="sm">Small</button>
-					<button interop-button itx-size="md">Medium</button>
-					<button interop-button itx-size="lg">Large</button>
-					<button interop-button itx-size="xl">Extra large</button>
-				</div>
-			</demo-example>
-			<demo-example id="radius" label="Radius"></demo-example>
-			<demo-example id="variants" label="Variants"></demo-example>
-		</section>
-		<section
-			demo-section
-			id="activation-management"
-			heading="Activation management"
+			<button interop-button itx-radius="none">None</button>
+			<button interop-button itx-radius="nominal">Nominal</button>
+			<button interop-button itx-radius="sm">Small</button>
+			<button interop-button="default" itx-radius="md">Medium</button>
+			<button interop-button itx-radius="lg">Large</button>
+			<button interop-button itx-radius="xl">Extra large</button>
+			<button interop-button itx-radius="full">Full</button>
+			<itx-code-block language="html" [code]="radiusCode" />
+		</demo-example>
+
+		<demo-example label="Variants">
+			<p description>
+				A variant is a named bundle of CSS custom properties — nothing more.
+				There is no variant registry and no component code to amend: define a
+				selector, assign tokens, and that name becomes a variant. Any token left
+				unset inherits from the base. The selector uses <code>~=</code> (word
+				match), so a button may carry more than one; the <code>:where()</code>
+				wrapper keeps specificity at zero, so any default may be overridden from
+				a consumer stylesheet.
+			</p>
+			<button interop-button="">Base</button>
+			<button interop-button="">Custom</button>
+			<itx-code-block [files]="variantFiles" />
+		</demo-example>
+
+		<demo-example label="Custom properties">
+			<p description>
+				The custom properties a variant or theme may set. The coloured slots
+				have state variants: append <code>-hover</code> or <code>-active</code>
+				to the rest token.
+			</p>
+			<interop-table [collection]="tokenEntries" [columns]="tokenColumns">
+				<ng-template itxCell="property" let-entry>
+					<code class="demo-page__api-name">{{ entry.property }}</code>
+				</ng-template>
+				<ng-template itxCell="default" let-entry>
+					<code class="demo-page__api-default">{{ entry.default }}</code>
+				</ng-template>
+			</interop-table>
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Availability ──────────────────────────────────────────────────── -->
+	<demo-section heading="Availability">
+		<p description>
+			A button communicates its availability through three distinct states, each
+			producing a different set of attributes and a different relationship to the
+			tab order. The choice among them is an accessibility decision, not merely a
+			visual one.
+		</p>
+
+		<interop-table
+			[collection]="availabilityEntries"
+			[columns]="availabilityColumns"
 		>
-			<demo-example id="throttle" label="Throttle">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-				mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-				qui officia deserunt mollit anim id est laborum.
-			</demo-example>
-			<demo-example id="debounce" label="Debounce">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-				mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-				qui officia deserunt mollit anim id est laborum.
-			</demo-example>
-			<demo-example id="reentrancy" label="Reentrance guard"></demo-example>
-		</section>
-		<demo-section id="tokens" heading="Tokens">
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-				veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-				commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-				velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-				occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-				mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur
-				adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-				magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-				in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-				pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-				qui officia deserunt mollit anim id est laborum.
+			<ng-template itxCell="state" let-entry>
+				<code class="demo-page__api-name">{{ entry.state }}</code>
+			</ng-template>
+		</interop-table>
+
+		<demo-example label="Disabled">
+			<p description>
+				The default. It sets the native <code>disabled</code> attribute, which
+				browsers, form engines, and assistive technology all understand without
+				further wiring. The button is removed from the tab order — appropriate
+				when the action is structurally unavailable and its absence requires no
+				explanation.
 			</p>
-		</demo-section>
-		<demo-section id="api" heading="API"
-			>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-			veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-			commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-			velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-			cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-			est laborum.</demo-section
-		>
-	</div>
-</article>
+			<button interop-button="" [disabled]="true">Save</button>
+			<itx-code-block language="html" [code]="disabledCode" />
+		</demo-example>
+
+		<demo-example label="Focusable when disabled">
+			<p description>
+				<code>focusableWhenDisabled</code> substitutes
+				<code>aria-disabled</code> for the native attribute, keeping the button
+				in the tab order. It suits a control a keyboard user should be able to
+				reach in order to discover why it is unavailable — a submit button gated
+				by form validity, for instance. Interaction remains blocked; the click
+				is suppressed rather than the element withdrawn.
+			</p>
+			<button interop-button="" [disabled]="true" [focusableWhenDisabled]="true">
+				Save
+			</button>
+			<itx-code-block language="html" [code]="focusableDisabledCode" />
+		</demo-example>
+
+		<demo-example label="Loading">
+			<p description>
+				<code>loading</code> marks an operation in progress. It never applies the
+				native <code>disabled</code> attribute: the button stays focusable, so a
+				screen-reader user who reaches it mid-operation hears its busy state
+				rather than silence. <code>aria-busy</code> is set, pointer interaction
+				is suppressed, and the content is replaced by <code>loadingText</code>.
+			</p>
+			<button interop-button="" [loading]="true" loadingText="Saving…">Save</button>
+			<itx-code-block [files]="loadingFiles" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Activation ────────────────────────────────────────────────────── -->
+	<demo-section heading="Activation">
+		<p description>
+			The guards live on <code>InteropButtonActivation</code>. Import it
+			alongside <code>InteropButton</code>, pass a handler to
+			<code>[onActivate]</code>, and configure it with
+			<code>[activationOptions]</code>. <code>activationOptions</code> accepts
+			<code>debounceMs</code>, <code>throttleMs</code>, <code>reentrant</code>,
+			and <code>once</code>.
+		</p>
+
+		<demo-example label="Throttle" (reset)="resetThrottleExample()">
+			<p description>
+				Runs the handler at most once per window. The first click fires
+				immediately; clicks within the window are dropped.
+			</p>
+			<button interop-button="" (click)="onThrottleClick()">Load more</button>
+			<itx-code-block [files]="throttleFiles" />
+			<itx-terminal [entries]="throttleLog()" />
+		</demo-example>
+
+		<demo-example label="Debounce" (reset)="resetDebounceExample()">
+			<p description>
+				Runs the handler once, after clicks stop. Each click resets the timer;
+				the handler fires after the window elapses with no further clicks.
+			</p>
+			<button interop-button="" (click)="onDebounceClick()">Recalculate</button>
+			<itx-code-block [files]="debounceFiles" />
+			<itx-terminal [entries]="debounceLog()" />
+		</demo-example>
+
+		<demo-example label="Reentrance gate" (reset)="resetReentrantExample()">
+			<p description>
+				Blocks overlapping runs of an async handler. While a run is in progress,
+				further clicks are ignored until it settles, preventing duplicate
+				submissions. This is the default (<code>reentrant: false</code>).
+			</p>
+			<button interop-button="" (click)="onReentrantClick()">
+				{{ reentrantActive() ? "Placing order…" : "Place order" }}
+			</button>
+			<itx-code-block [files]="reentrantFiles" />
+			<itx-terminal [entries]="reentrantLog()" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── API ───────────────────────────────────────────────────────────── -->
+	<demo-section heading="API">
+		<p description>
+			Inputs across <code>InteropButton</code> and
+			<code>InteropButtonActivation</code>.
+		</p>
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+</demo-page>

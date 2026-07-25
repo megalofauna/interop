@@ -202,6 +202,12 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "experiments/amber-lab",
+		title: "Amber Lab — Interop",
+		loadComponent: () =>
+			import("./pages/amber-lab/amber-lab-page").then((m) => m.AmberLabPage),
+	},
+	{
 		path: "**",
 		redirectTo: "components/checkbox",
 	},

@@ -1,30 +1,31 @@
 /* ── Base (default, no variant) ──────────────────────────────────────────── */
 
 :where([interop-root]) {
-	/* sizing ratio + step */
-	--itx-button-padding-consequent: 1.5;
-	--itx-button-padding-step: 0.2rem;
-	--itx-button-sizing-multiplier: 2;
+	/* Sizing — pin the height; the foundation derives block padding as
+	   (height − 1em) / 2, so the visible pill lands at exactly the height and
+	   the label:height ratio holds. Default size = md (40 / label 16). */
+	--itx-button-height: 2.5rem;
+	--itx-button-padding-inline: 1.375rem;
 
 	/* layout */
 	--itx-button-display: inline-flex;
 	--itx-button-align-items: center;
-	--itx-button-width: fit-content;
+	--itx-button-width: max-content;
 	--itx-button-flex: 1;
 	--itx-button-max-width: max-content;
 	--itx-button-justify-content: center;
 	--itx-button-gap: none;
 
-	/* typography */
+	/* typography — fixed label sizes keep the pinned heights from drifting */
 	--itx-button-font-family: var(--itx-font-family-sans);
-	--itx-button-font-size: var(--itx-font-size-label);
+	--itx-button-font-size: 1rem;
 	--itx-button-line-height: 1;
 
 	/* edge */
 	--itx-button-border-width: 1px;
 	--itx-button-border-style: solid;
 	--itx-button-radius-default: var(--itx-radius-nominal);
-	--itx-button-corner-shape: squircle;
+	--itx-button-corner-shape: unset;
 
 	/* transition */
 	--itx-button-transition-property: background-color, border-color, box-shadow;
@@ -41,7 +42,7 @@
 	--itx-button-box-shadow: none;
 
 	/* Hover state */
-	--itx-button-background-hover: var(--itx-neutral-7);
+	--itx-button-background-hover: var(--itx-neutral-8);
 
 	/* Active state */
 	--itx-button-background-active: var(--itx-neutral-6);
@@ -53,24 +54,10 @@
 	--itx-button-outline-offset: 2px;
 }
 
-/* Padding calc lives on the button itself so var() substitution resolves
-   against the button's scope — where size selectors override the multiplier.
-   Declaring this on [interop-root] would bake the multiplier into the
-   inherited computed value and freeze it across sizes. */
-
-:where(button[interop-button]) {
-	--itx-button-padding-block: calc(
-		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier)
-	);
-	--itx-button-padding-inline: calc(
-		var(--itx-button-padding-block) * var(--itx-button-padding-consequent)
-	);
-}
-
 /* ── Variants ────────────────────────────────────────────────────────────── */
 
 :where(button[interop-button~="fancy"]) {
-	--itx-button-max-width: none;
+	/*--itx-button-max-width: none;
 	--itx-button-background: var(--itx-neutral-3);
 	--itx-button-foreground: var(--itx-neutral-12);
 	--itx-button-corner-shape: none;
@@ -82,7 +69,7 @@
 		hsl(0 60 25) 0%,
 		hsl(0 70 25) 55%,
 		hsl(0 50 32) 57%
-	);
+	);*/
 	/*--itx-button-box-shadow: 0 6px 0 0 black, inset 0 1px 0 0 hsl(0 0 100 / 0.2);
 	--itx-button-box-shadow-hover:
 		0 4px 0 0 black, inset 0 1px 0 0 hsl(0 0 100 / 0.2);
@@ -107,25 +94,32 @@
 }*/
 
 :where(button[interop-button~="protocol"]) {
-	--itx-button-sizing-multiplier: 1.5;
+	/*--itx-button-sizing-multiplier: 1.5;*/
 	/*--itx-button-background: var(--itx-neutral-);*/
-	--itx-button-radius-default: var(--itx-radius-2);
-	--itx-button-border-style: solid;
+	/*--itx-button-radius-default: var(--itx-radius-2);*/
+	/*--itx-button-border-style: solid;
 	--itx-button-border-color: var(--itx-neutral-1);
 	--itx-button-background-hover: var(--itx-neutral-5);
 	--itx-button-foreground-hover: var(--itx-neutral-10);
-	--itx-button-border-color-hover: var(--itx-neutral-3);
+	--itx-button-border-color-hover: var(--itx-neutral-3);*/
 }
 
+
+
+:where(button[interop-button~="default"]) {
+	--itx-button-background: var(--itx-colorway-8);
+	--itx-button-font-weight: 500;
+	--itx-button-foreground: var(--itx-neutral-2);
+	--itx-button-background-hover: #FADA38;
+	--itx-button-foreground-hover: var(--itx-neutral-1);
+	--itx-button-background-active: #CCA633;
+	--itx-button-foreground-active: var(--itx-neutral-3);
+}
 :where(button[interop-button~="action"]) {
-	--itx-button-font-size: var(--itx-fs-base);
-	--itx-button-sizing-multiplier: 3;
+	/* Variant sets colour/edge only; size comes from itx-size (default md). */
+	/*--itx-button-radius-default: var(--itx-radius-2);*/
 
-	--itx-button-radius-default: calc(
-		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 1
-	);
-
-	--itx-button-background: var(--itx-neutral-5);
+	/*--itx-button-background: var(--itx-neutral-5);
 	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-color: var(--itx-neutral-3);
 	--itx-button-border-width: 2px;
@@ -137,7 +131,30 @@
 
 	--itx-button-background-active: var(--itx-neutral-5);
 	--itx-button-foreground-active: var(--itx-neutral-11);
-	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.2);
+	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.2);*/
+}
+
+:where(button[interop-button*="buttz"]) {
+	/*--itx-button-font-size: var(--itx-fs-base);
+	--itx-button-sizing-multiplier: 3;*/
+
+	/*--itx-button-radius-default: calc(
+		var(--itx-button-padding-step) * var(--itx-button-sizing-multiplier) * 1
+	);*/
+/*
+	--itx-button-background: var(--itx-neutral-10);
+	--itx-button-foreground: var(--itx-neutral-2);
+	--itx-button-border-color: var(--itx-neutral-3);
+	--itx-button-border-width: 2px;
+	--itx-button-box-shadow: 0 0.25em 0 rgb(0 0 0 / 0.1);
+
+	--itx-button-background-hover: var(--itx-neutral-12);
+	--itx-button-foreground-hover: var(--itx-neutral-3);
+	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
+
+	--itx-button-background-active: var(--itx-neutral-11);
+	--itx-button-foreground-active: var(--itx-neutral-2);
+	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.2);*/
 }
 /*
 :where(button[interop-button~="action-colorway"]) {
@@ -156,7 +173,7 @@
 	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.15);
 }*/
 
-/*:where(button[interop-button~="action-minus"]) {
+:where(button[interop-button~="action-minus"]) {
 	--itx-button-max-width: none;
 	--itx-button-flex: 0;
 	--itx-button-background: var(--itx-neutral-3);
@@ -173,53 +190,62 @@
 		inset 0 0.075em 0 rgb(255 255 255 / 0.08),
 		0 0.075em 0 rgb(255 255 255 / 0.12);
 
-	--itx-button-background-active: var(--itx-neutral-3_5);
+	/*--itx-button-background-active: var(--itx-neutral-3_5);*/
 	--itx-button-box-shadow-active:
 		inset 0 3px 0 rgb(0 0 0 / 0.15), 0 0.075em 0 rgb(255 255 255 / 0.12);
 
 	--itx-button-outline-width: 3px;
 	--itx-button-outline-color: var(--itx-colorway-8);
 	--itx-button-outline-offset: 1px;
-}*/
+}
 
 :where(button[interop-button~="icon"]) {
-	/* square: inline matches block (skip the consequent) */
-	--itx-button-padding-inline: var(--itx-button-padding-block);
-	--itx-button-radius-default: var(--itx-radius-md);
+	/* Square — inline padding matches the height-derived block padding. */
+	--itx-button-padding-inline: calc(
+		(var(--itx-button-height, 2.5rem) - 1em) / 2
+	);
+	--itx-button-padding-block: var(--itx-button-padding-inline);
+	--itx-button-radius-default: var(--itx-radius-full);
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
-/* Multiplier steps the step-unit (0.125rem). Inline = block × consequent.
-   xs  1 →  2 / 3px
-   sm  2 →  4 / 6px
-   md  3 →  6 / 9px
-   lg  4 →  8 / 12px
-   xl  6 → 12 / 18px                                                          */
+/* One rule: height = 8 × n on an 8pt grid, md = 40 the anchor. The label rides
+   at a ~0.4 ratio; block padding is derived from the height in the foundation.
+       xs  24 / label 12
+       sm  32 / label 14
+       md  40 / label 16   ← default (declared on the base)
+       lg  48 / label 20
+       xl  56 / label 24                                                      */
 
 :where(button[interop-button][itx-size="xs"]) {
-	--itx-button-font-size: var(--itx-fs-xs);
-	--itx-button-sizing-multiplier: 1.5;
-	--itx-button-padding-consequent: 2.5;
+	--itx-button-height: 1.75rem;
+	--itx-button-font-size: 0.75rem;
+	--itx-button-padding-inline: 0.75rem;
 }
 
 :where(button[interop-button][itx-size="sm"]) {
-	--itx-button-font-size: var(--itx-fs-sm);
-	--itx-button-sizing-multiplier: 2;
+	--itx-button-height: 2rem;
+	--itx-button-font-size: 0.875rem;
+	--itx-button-padding-inline: 1rem;
 }
 
 :where(button[interop-button][itx-size="md"]) {
-	--itx-button-font-size: var(--itx-font-size-label);
-	--itx-button-sizing-multiplier: 3;
+	--itx-button-height: 2.5rem;
+	--itx-button-font-size: 1rem;
+	--itx-button-padding-inline: 1.25rem;
 }
 
 :where(button[interop-button][itx-size="lg"]) {
-	--itx-button-font-size: var(--itx-font-size-label);
-	--itx-button-sizing-multiplier: 4;
+	--itx-button-height: 3rem;
+	--itx-button-font-size: 1.25rem;
+	--itx-button-padding-inline: 1.5rem;
 }
 
 :where(button[interop-button][itx-size="xl"]) {
-	--itx-button-font-size: var(--itx-font-size-body);
-	--itx-button-sizing-multiplier: 6;
+	--itx-button-height: 3.5rem;
+	--itx-button-font-size: 1.375rem;
+	--itx-button-font-weight: 400;
+	--itx-button-padding-inline: 1.75rem;
 }
 
 /* ── Layer ───────────────────────────────────────────────────────────────── */
@@ -265,6 +291,13 @@
 /* a pseudo, so the attribute reaches it via the --_itx-button-radius bridge on    */
 /* the host (see components/button.css). Set --itx-button-border-radius directly    */
 /* only to force a single instance to an absolute value past the attribute.        */
+
+/* "full" means a stadium/pill. The default squircle corner-shape can't form one —
+   a maxed squircle is a superellipse, not a rounded end — so switch to round here
+   while every other radius keeps the squircle curve. */
+:where(button[interop-button][itx-radius="full"]) {
+	--itx-button-corner-shape: round;
+}
 
 :where(button[interop-button~="action"]:disabled),
 :where(button[interop-button~="action"][aria-disabled="true"]) {

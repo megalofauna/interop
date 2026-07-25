@@ -23,9 +23,10 @@
  *   Layout / structure
  *   --itx-button-display
  *   --itx-button-align-items
- *   --itx-button-padding-block
+ *   --itx-button-height           Visual pill height; block padding derives from it
+ *   --itx-button-padding-block    Escape hatch — overrides the height-derived block padding
  *   --itx-button-padding-inline
- *   --itx-button-touch-inset      Extra block space between pill and touch boundary
+ *   --itx-button-touch-inset      Invisible block space added on coarse pointers to floor the touch target
  *   --itx-button-width            Set to 100% to force a full-width button
  *   --itx-button-max-width
  *   --itx-button-gap
@@ -88,8 +89,17 @@
 	 * that paints its radius on a pseudo-element. */
 	--_itx-button-radius: var(--itx-radius);
 
+	/* Height is the spec. Block padding is derived as (height − 1em) / 2 so the
+	   visible pill lands at exactly --itx-button-height and the label:height
+	   ratio holds across the scale. --itx-button-padding-block remains an
+	   escape hatch (e.g. toolbar compaction) — set it to override the
+	   derivation. The touch-inset adds invisible block space on coarse pointers
+	   (see the pointer:coarse rule below). */
 	padding-block: calc(
-		var(--itx-button-padding-block) + var(--itx-button-touch-inset, 0.25em)
+		var(
+				--itx-button-padding-block,
+				(var(--itx-button-height, 2.5rem) - 1em) / 2
+			) + var(--itx-button-touch-inset, 0px)
 	);
 	padding-inline: var(--itx-button-padding-inline);
 	width: var(--itx-button-width, auto);
@@ -98,6 +108,7 @@
 
 	font-family: var(--itx-button-font-family, var(--itx-font-family));
 	font-size: var(--itx-button-font-size, inherit);
+	font-weight: var(--itx-button-font-weight, 500);
 	line-height: var(--itx-button-line-height, unset);
 	letter-spacing: var(--itx-button-letter-spacing, initial);
 
@@ -161,7 +172,8 @@
 :where(button[interop-button])::before {
 	content: "";
 	position: absolute;
-	inset-block: var(--itx-button-touch-inset, 0.25em);
+	box-sizing: border-box;
+	inset-block: var(--itx-button-touch-inset, 0px);
 	inset-inline: 0;
 	z-index: -1;
 	pointer-events: none;
@@ -243,10 +255,19 @@
 	flex: 0 0 auto;
 }
 
-/* ── Pointer fine: collapse touch inset so hit area = visual pill ────────── */
+/* ── Coarse pointer: floor the hit area to a 44px touch target ───────────── */
+/* On coarse pointers the inset adds invisible block space so buttons shorter
+   than 44px still clear the target size. The pill's inset-block matches, so the
+   visible height never changes — only the hit box grows. On fine pointers the
+   inset is 0 (the default) and the hit box equals the pill. Elements that opt
+   out (e.g. the stepper nav-trigger) set --itx-button-touch-inset: 0 and win on
+   later source order. */
 
-@media (pointer: fine) {
+@media (pointer: coarse) {
 	:where(button[interop-button]) {
-		--itx-button-touch-inset: 0em;
+		--itx-button-touch-inset: max(
+			0px,
+			(2.75rem - var(--itx-button-height, 2.5rem)) / 2
+		);
 	}
 }

@@ -105,6 +105,10 @@ export class DemoNav {
 			label: "Primitives",
 			items: [{ label: "Code Renderer", route: "/components/code-renderer" }],
 		},
+		{
+			label: "Experiments",
+			items: [{ label: "Amber Lab", route: "/experiments/amber-lab" }],
+		},
 		{ label: "Rigs", disabled: true, items: [] },
 		{ label: "Services", disabled: true, items: [] },
 		{ label: "Composites", disabled: true, items: [] },

@@ -24,7 +24,7 @@
 	--itx-cmdp-max-block-size: min(28rem, 70vh);
 	--itx-cmdp-offset-block-start: 12vh;
 	--itx-cmdp-aside-inline-size: 12rem;
-	--itx-cmdp-background: var(--itx-surface-above);
+	--itx-cmdp-background: var(--itx-surface);
 	--itx-cmdp-color: var(--itx-on-surface);
 	--itx-cmdp-border-width: 1px;
 	--itx-cmdp-border-color: var(--itx-border);
