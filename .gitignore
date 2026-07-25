@@ -15,6 +15,9 @@ yarn-error.log
 # Agent notes
 /ignore_for_now
 
+# Claude Code local settings and stray agent scratch
+.claude/
+
 # IDEs and editors
 .idea/
 .project

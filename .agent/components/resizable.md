@@ -134,12 +134,55 @@ Removes inline `width` and `height` styles from the host, then re-applies `initi
 | `data-aspect-locked` | `''` when aspect-locked, absent otherwise |
 | `style.container-type` | bound to `containerType()` input |
 
-## CSS structure (summary)
+## CSS — strategy conformance & token surface
 
-Tier 0: `resize` property driven by `data-axis`.
-Tier 1: `resize: none; position: relative` + handle positioned at BR corner.
-Handle hover/active colours and readout badge in the theme file.
-`touch-action: none` on handle for Pointer Events compatibility.
+Runs the two-file split per [css-strategy](../css-strategy.md). Structural
+(`styles/components/resizable.css`) owns layout, state *selectors*, and
+motion; theme (`styles/themes/protocol/components/resizable.css`) owns values
+only. Every selector is `:where()`-wrapped → specificity `(0,0,0)`, so any
+consumer override wins.
+
+- **No structural fallbacks.** Base declarations are bare `var(--token)`; the
+  theme guarantees a value. Only per-state tokens fall back — and always to
+  their *base* token (`var(--x-hover, var(--x))`), never a literal.
+- **Handle is one nested block.** Base → `&:where(:hover)` (recolour +
+  `scale(1.02)` from center) → `&:where(:focus-visible)` (the a11y ring,
+  structural-owned). The **active** colour is ancestor-driven (host
+  `.interop-resizable--dragging` class), so it can't self-nest — it's a
+  descendant rule beside the base, per the strategy's one exception. Same
+  pattern for the readout's drag-reveal (`opacity: 1`).
+- **Theme scoped to the host:** `:where([interop-root] [interop-resizable])`,
+  grouped by part — matches the current canonical form (command-palette), not
+  the older bare-`[interop-root]` files.
+
+This is a low-level directive, so the lever set is deliberately small — only
+what a consumer plausibly needs to restyle:
+
+| Group | Tokens | Notes |
+|---|---|---|
+| Bounds | `--itx-resizable-{min,max}-{width,height}` | One token per bound, two ways to set it — see *Bounds: two paths* below. |
+| Frame | `--itx-resizable-border-{color,width,style,radius}` | **`-border-color` is `transparent` by default** — frame off until opted in. Width stays `1px` so revealing it costs no reflow. |
+| Handle | `--itx-resizable-handle-{size,color,color-hover,color-active,corner-radius}` + `-focus-outline-{color,width,offset}` | Corner-drag affordance. `-handle-color` is the primary lever. |
+| Readout | `--itx-resizable-readout-{background-color,foreground,padding,border-radius,font-family,font-size,offset}` | Tier-1 `[showDimensions]` badge only. |
+
+Not themeable by design: axis cursors, `touch-action: none`, z-index,
+transition timings, the drag/rAF behavior — all structural constants.
+
+### Bounds: two paths, one token
+
+Each bound resolves to a single custom property (e.g. `--itx-resizable-min-width`), settable two ways:
+
+- **CSS token** on an ancestor (or the host) — a scoped default for many instances.
+- **`[min]` / `[max]` inputs** — a per-instance override. The directive writes the same custom property inline on the host via a `boundVar(bound, axis)` host binding, so the input wins over an ancestor default through the normal cascade.
+
+Both tiers read the result identically: Tier 0's native `resize` honours the `min`/`max-inline-size` the token feeds (no JS in the loop); the Tier-1 drag loop reads the same inputs when clamping. This is the reason the inputs work in both tiers — they don't *enforce* bounds in JS, they *feed the CSS*.
+
+This is the first [[project_disambiguation_notes]] case. The reader-facing explainer is filed as an `interop-expansion-panel` disclosure (summary = "Why can I set bounds in two places?") in the demo page's "Setting size bounds" section (`projects/demo/src/app/pages/resizable/resizable-page.html`).
+
+**Bug fixed during this run:** dead selector
+`:where([interop-resizable--dragging] …)` matched a nonexistent *attribute*,
+not the `.interop-resizable--dragging` class — removed; the class-based
+descendant rule is now the sole active-state hook.
 
 ## Container queries
 
