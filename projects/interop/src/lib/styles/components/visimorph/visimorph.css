@@ -99,6 +99,7 @@
 	box-sizing: border-box;
 	border: var(--_border-width) solid var(--_border-color);
 	background-color: var(--_bg);
+	corner-shape: var(--itx-corner-shape, none);
 	transition:
 		border-color var(--_transition),
 		background-color var(--_transition),
@@ -110,6 +111,7 @@
 
 :where(interop-visimorph[itx-visimorph="radio"]) {
 	border-radius: 50%;
+	--itx-corner-shape: none;
 }
 
 :where(interop-visimorph[itx-visimorph="radio"])::after {
@@ -182,7 +184,7 @@
 /* ── TYPE: toggle ────────────────────────────────────────────────────────── */
 
 :where(interop-visimorph[itx-visimorph="toggle"]) {
-	--_toggle-width: var(--itx-control-toggle-width, 1.5rem);
+	--_toggle-width: var(--itx-control-toggle-width, 1.75rem);
 	--_toggle-height: var(--itx-control-toggle-height, 1.25rem);
 	--_toggle-thumb-size: var(
 		--itx-control-toggle-thumb-size,

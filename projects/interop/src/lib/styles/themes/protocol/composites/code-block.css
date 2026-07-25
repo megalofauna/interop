@@ -50,24 +50,28 @@
 :where([interop-root] itx-code-block) {
 	/* Host — participates in managed-radius: inherit the context radius when one
 	   is set, else fall back to the static radius-2 step. */
-	--itx-cb-radius: var(--itx-context-radius, var(--itx-radius-2));
-	--itx-cb-body-background: yellow;
 
 	/* Header */
-	--itx-cb-header-background: var(--itx-neutral-3);
+	--itx-cb-header-background: transparent;
 	--itx-cb-header-background-image: none;
 	--itx-cb-header-padding-block: var(--itx-spacing-2);
-	--itx-cb-header-padding-inline: var(--itx-spacing-2);
+	--itx-cb-header-padding-inline: var(--itx-cb-header-padding-block);
 	--itx-cb-header-gap: var(--itx-spacing-2);
 
 	/* Tablist */
-	--itx-cb-tablist-border-width: 1px;
-	--itx-cb-tablist-border-color: var(--itx-border);
+	--itx-cb-tablist-border-width: 2px;
+	--itx-cb-tablist-border-style: solid;
+	--itx-cb-tablist-border-color: var(--itx-neutral-5);
+	--itx-cb-tablist-background: var(--itx-neutral-3);
+	--itx-cb-tablist-border-radius: var(--itx-radius-full);
+	--itx-cb-tablist-box-shadow: inset 0px 2px 2px 0 rgb(0 0 0 / 15%);
 
 	/* Tab */
-	--itx-cb-tab-padding-block: var(--itx-spacing-2);
-	--itx-cb-tab-padding-inline: var(--itx-spacing-3);
-	--itx-cb-tab-radius: 0;
+	--itx-cb-tab-background: transparent;
+	--itx-cb-tab-border: 2px solid transparent;
+	--itx-cb-tab-padding-block: var(--itx-spacing-0_5);
+	--itx-cb-tab-padding-inline: var(--itx-spacing-2);
+	--itx-cb-tab-radius: var(--itx-radius-full);
 	--itx-cb-tab-font-family: var(--itx-font-family-mono);
 	--itx-cb-tab-font-size: var(--itx-font-size-caption);
 	--itx-cb-tab-foreground: var(--itx-muted);
@@ -80,6 +84,14 @@
 	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
 	--itx-cb-tab-transition-timing: var(--itx-easing-standard);
 
+	/* Tab:Hover  */
+	--itx-cb-tab-background-hover: var(--itx-neutral-4);
+	--itx-cb-tab-foreground-hover: var(--itx-neutral-7);
+
+	/* Tab:Current  */
+	--itx-cb-tab-background-current: var(--itx-neutral-6);
+	--itx-cb-tab-foreground-current: var(--itx-neutral-12);
+
 	/* Label */
 	--itx-cb-label-padding-inline: initial;
 	--itx-cb-label-foreground: var(--itx-muted);
@@ -88,7 +100,7 @@
 	--itx-cb-label-letter-spacing: 0.05em;
 
 	/* Actions */
-	--itx-cb-actions-radius: var(--itx-radius-1);
+	--itx-cb-actions-radius: 0;
 	--itx-cb-actions-gap: var(--itx-spacing-1);
 	--itx-cb-button-size: 1.5em;
 }

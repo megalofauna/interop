@@ -11,64 +11,40 @@
  *                        keyboard, snap, dimension readout, aspect lock.
  *
  * The host is a container-query container by default (`container-type:
- * inline-size`), set as an inline style by the directive. Every selector
- * is wrapped in :where() to keep specificity at zero — consumer overrides
- * always win.
+ * inline-size`), set as an inline style by the directive.
  *
- * Public tokens (set on any ancestor, e.g. [interop-root]):
- *
- *   Bounds (default min/max — superseded by the per-instance [min] / [max]
- *   inputs when those write inline styles)
- *   --itx-resizable-min-width
- *   --itx-resizable-min-height
- *   --itx-resizable-max-width
- *   --itx-resizable-max-height
- *
- *   Handle (Tier 1 only)
- *   --itx-resizable-handle-size            both-axis corner; thickness for edge
- *   --itx-resizable-handle-color
- *   --itx-resizable-handle-color-hover
- *   --itx-resizable-handle-color-active
- *   --itx-resizable-handle-corner-radius
- *   --itx-resizable-handle-focus-outline-color
- *   --itx-resizable-handle-focus-outline-width
- *   --itx-resizable-handle-focus-outline-offset
- *
- *   Readout badge (Tier 1, with [showDimensions])
- *   --itx-resizable-readout-background-color
- *   --itx-resizable-readout-foreground
- *   --itx-resizable-readout-padding
- *   --itx-resizable-readout-border-radius
- *   --itx-resizable-readout-font-family
- *   --itx-resizable-readout-font-size
- *   --itx-resizable-readout-offset         distance from edge
- *
- *   Border (subtle frame so the resize boundary is visible)
- *   --itx-resizable-border-color
- *   --itx-resizable-border-width
- *   --itx-resizable-border-style
- *   --itx-resizable-border-radius
+ * Contract: every selector is wrapped in :where() so specificity stays
+ * (0,0,0) — consumer overrides always win. This file owns layout, state
+ * *selectors*, and motion; the theme owns every value. Base declarations
+ * reference `var(--token)` with NO fallback (the theme guarantees a value);
+ * only per-state tokens fall back — always to their base token, never a
+ * literal. See themes/protocol/components/resizable.css for the token surface.
  */
 
 /* ── Host (both tiers) ───────────────────────────────────────────────────── */
 
 :where([interop-resizable]) {
 	overflow: hidden;
-	min-inline-size: var(--itx-resizable-min-width, 0);
-	min-block-size: var(--itx-resizable-min-height, 0);
-	max-inline-size: var(--itx-resizable-max-width, none);
-	max-block-size: var(--itx-resizable-max-height, none);
+	min-inline-size: var(--itx-resizable-min-width);
+	min-block-size: var(--itx-resizable-min-height);
+	max-inline-size: var(--itx-resizable-max-width);
+	max-block-size: var(--itx-resizable-max-height);
 
-	border-color: var(--itx-resizable-border-color, transparent);
-	border-width: var(--itx-resizable-border-width, 0);
-	border-style: var(--itx-resizable-border-style, solid);
-	border-radius: var(--itx-resizable-border-radius, 0);
+	background-color: var(--itx-resizable-background-color, transparent);
+	background-image: var(--itx-resizable-background-image, none);
+	backdrop-filter: var(--itx-resizable-backdrop-filter, none);
+
+	border-color: var(--itx-resizable-border-color);
+	border-width: var(--itx-resizable-border-width);
+	border-style: var(--itx-resizable-border-style);
+	border-radius: var(--itx-resizable-border-radius);
 }
 
 /* ── Tier 0: native CSS resize ───────────────────────────────────────────── */
 /*
  * `resize` requires `overflow != visible` (already set above). Each
- * data-axis variant maps directly to the CSS keyword.
+ * data-axis variant maps directly to the CSS keyword. Bounds come from the
+ * host min/max tokens above — the only sizing constraint in this tier.
  */
 
 :where([interop-resizable][data-tier="native"][data-axis="horizontal"]) {
@@ -94,46 +70,53 @@
 	position: relative;
 }
 
-/* Handle base — corner footprint by default. Edge variants below override
-   the placement and size for axis-locked modes. */
+/* Handle — corner footprint by default. One nested block: base, then per-
+   state deltas. Active is ancestor-driven (host `.--dragging`) so it lives
+   in a descendant rule below rather than a self-nested pseudo. Axis-locked
+   edge placement follows further down. */
 :where(.interop-resizable__handle) {
 	position: absolute;
 	inset-block-end: 0;
 	inset-inline-end: 0;
-	inline-size: var(--itx-resizable-handle-size, 14px);
-	block-size: var(--itx-resizable-handle-size, 14px);
-	background-color: var(--itx-resizable-handle-color, currentColor);
-	border-radius: var(--itx-resizable-handle-corner-radius, 0);
+	inline-size: var(--itx-resizable-handle-size);
+	block-size: var(--itx-resizable-handle-size);
+	background-color: var(--itx-resizable-handle-color);
+	border-radius: var(--itx-resizable-handle-corner-radius);
 	cursor: nwse-resize;
 	touch-action: none;
 	user-select: none;
 	z-index: 1;
-	transition: background-color 96ms ease-in-out;
+	transform-origin: center;
+	transition:
+		background-color 96ms ease-in-out,
+		transform 96ms ease-in-out;
+
+	&:where(:hover) {
+		background-color: var(
+			--itx-resizable-handle-color-hover,
+			var(--itx-resizable-handle-color)
+		);
+		transform: scale(1.02);
+	}
+
+	&:where(:focus) {
+		outline: none;
+	}
+
+	&:where(:focus-visible) {
+		outline: var(--itx-resizable-handle-focus-outline-width) solid
+			var(--itx-resizable-handle-focus-outline-color);
+		outline-offset: var(--itx-resizable-handle-focus-outline-offset);
+	}
 }
 
-:where(.interop-resizable__handle:hover) {
-	background-color: var(
-		--itx-resizable-handle-color-hover,
-		var(--itx-resizable-handle-color, currentColor)
-	);
-}
-
-:where([interop-resizable--dragging] .interop-resizable__handle),
-:where(.interop-resizable--dragging) :where(.interop-resizable__handle) {
+/* Active — driven by the host's `.--dragging` class (an ancestor state), so
+   it cannot self-nest; kept beside the base rule per the strategy exception. */
+:where(.interop-resizable--dragging .interop-resizable__handle) {
 	background-color: var(
 		--itx-resizable-handle-color-active,
-		var(--itx-resizable-handle-color, currentColor)
+		var(--itx-resizable-handle-color)
 	);
-}
-
-:where(.interop-resizable__handle:focus) {
-	outline: none;
-}
-
-:where(.interop-resizable__handle:focus-visible) {
-	outline: var(--itx-resizable-handle-focus-outline-width, 2px) solid
-		var(--itx-resizable-handle-focus-outline-color, currentColor);
-	outline-offset: var(--itx-resizable-handle-focus-outline-offset, 2px);
 }
 
 /* Axis-specific cursors and edge-spanning handle for the keyboard story
@@ -155,17 +138,14 @@
 
 :where(.interop-resizable__readout) {
 	position: absolute;
-	inset-block-start: var(--itx-resizable-readout-offset, 8px);
-	inset-inline-end: var(--itx-resizable-readout-offset, 8px);
-	padding: var(--itx-resizable-readout-padding, 2px 6px);
-	background-color: var(
-		--itx-resizable-readout-background-color,
-		rgb(0 0 0 / 0.65)
-	);
-	color: var(--itx-resizable-readout-foreground, white);
-	border-radius: var(--itx-resizable-readout-border-radius, 4px);
-	font-family: var(--itx-resizable-readout-font-family, monospace);
-	font-size: var(--itx-resizable-readout-font-size, 0.75rem);
+	inset-block-start: var(--itx-resizable-readout-offset);
+	inset-inline-end: var(--itx-resizable-readout-offset);
+	padding: var(--itx-resizable-readout-padding);
+	background-color: var(--itx-resizable-readout-background-color);
+	color: var(--itx-resizable-readout-foreground);
+	border-radius: var(--itx-resizable-readout-border-radius);
+	font-family: var(--itx-resizable-readout-font-family);
+	font-size: var(--itx-resizable-readout-font-size);
 	font-variant-numeric: tabular-nums;
 	pointer-events: none;
 	opacity: 0;
@@ -175,7 +155,7 @@
 
 /* Readout fades in only during drag, then fades back out. Keyboard-driven
    resizes don't show the readout (the focus-visible ring on the handle is
-   the affordance there). */
+   the affordance there). Ancestor-driven — kept beside the base rule. */
 :where(.interop-resizable--dragging .interop-resizable__readout) {
 	opacity: 1;
 }
@@ -186,5 +166,9 @@
 	:where(.interop-resizable__handle),
 	:where(.interop-resizable__readout) {
 		transition: none;
+	}
+
+	:where(.interop-resizable__handle:hover) {
+		transform: none;
 	}
 }

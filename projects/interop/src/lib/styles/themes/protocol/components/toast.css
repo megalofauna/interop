@@ -5,7 +5,7 @@
  * [interop-root]; the per-`data-type` blocks rebind only the colour tokens and
  * pull from the status-colour palette (--itx-success / --itx-danger /
  * --itx-warning / --itx-info + their -surface + on-surface pairs), so a toast
- * re-skins with the active data-status-palette.
+ * re-skins with the active itx-status-palette.
  *
  * Custom properties only — never a real CSS property.
  */
