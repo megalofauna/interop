@@ -1,0 +1,57 @@
+/*
+ * InteropTree — Protocol theme.
+ *
+ * Sets values for the indentation step, the row surface across its four
+ * states, the guide rails, the twisty, the focus ring, and motion.
+ *
+ * Structural rules live in `styles/components/tree.css` — this file only
+ * declares values.
+ *
+ * Visual target:
+ *   A quiet file-explorer rail. Rows are transparent at rest and full-bleed
+ *   on hover so the highlight reaches both edges of the tree regardless of
+ *   depth. Selection is a colorway tint rather than a solid fill, so a long
+ *   multi-selection does not turn the panel into a block of colour. Guide
+ *   rails are present but barely — enough to trace a branch, not enough to
+ *   read as a table.
+ */
+
+:where([interop-root]) {
+	/* ── Layout ─────────────────────────────────────────────────────────── */
+	--itx-tree-indent: var(--itx-spacing-4);
+	--itx-tree-indent-narrow: var(--itx-spacing-2);
+	--itx-tree-item-content-visibility: auto;
+	--itx-tree-row-block-size: var(--itx-spacing-7);
+	--itx-tree-row-padding-inline: var(--itx-spacing-2);
+	--itx-tree-row-gap: var(--itx-spacing-1);
+	--itx-tree-row-radius: var(--itx-radius-sm);
+
+	/* ── Row surface ────────────────────────────────────────────────────── */
+	--itx-tree-row-background: transparent;
+	--itx-tree-row-background-hover: var(--itx-surface-hover);
+	--itx-tree-row-background-selected: var(--itx-colorway-3);
+	--itx-tree-row-background-current: var(--itx-neutral-4);
+	--itx-tree-row-color: var(--itx-on-surface);
+	--itx-tree-row-color-selected: var(--itx-colorway-11);
+	--itx-tree-row-disabled-opacity: 0.5;
+
+	/* ── Guide rails ────────────────────────────────────────────────────── */
+	--itx-tree-guide-color: var(--itx-neutral-5);
+	--itx-tree-guide-width: 1px;
+
+	/* ── Twisty ─────────────────────────────────────────────────────────── */
+	--itx-tree-toggle-size: 0.375em;
+	--itx-tree-toggle-hit-area: var(--itx-spacing-6);
+	--itx-tree-toggle-color: var(--itx-neutral-9);
+	--itx-tree-toggle-color-hover: var(--itx-on-surface);
+	--itx-tree-toggle-stroke: 1.5px;
+
+	/* ── Focus ──────────────────────────────────────────────────────────── */
+	--itx-tree-focus-color: var(--itx-colorway-8);
+	--itx-tree-focus-width: 2px;
+	--itx-tree-focus-offset: -2px;
+
+	/* ── Motion ─────────────────────────────────────────────────────────── */
+	--itx-tree-transition-duration: var(--itx-duration-fast);
+	--itx-tree-transition-easing: var(--itx-easing-standard);
+}

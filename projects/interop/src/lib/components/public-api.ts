@@ -41,5 +41,6 @@ export * from "./interop-slider/public-api";
 export * from "./interop-callout/public-api";
 export * from "./interop-kbd/public-api";
 export * from "./interop-toast/public-api";
+export * from "./interop-tree/public-api";
 export * from "../directives/manage-attrs.directive";
 export * from "../services/interop-attribute.service";

@@ -58,6 +58,7 @@
 @import "./protocol/components/table.css";
 @import "./protocol/components/toast.css";
 @import "./protocol/components/tooltip.css";
+@import "./protocol/components/tree.css";
 @import "./protocol/components/resizable.css";
 @import "./protocol/components/visimorph/visimorph.css";
 @import "./protocol/components/visimorph/label.css";
