@@ -18,6 +18,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Tooltip component deep-dive | [components/tooltip.md](components/tooltip.md) |
 | Indicator component deep-dive | [components/indicator.md](components/indicator.md) |
 | Segmented-control deep-dive | [components/segmented-control.md](components/segmented-control.md) |
+| Tree component deep-dive | [components/tree.md](components/tree.md) |
 | Visimorph (faux-control surface) deep-dive | [components/visimorph.md](components/visimorph.md) |
 | Collection service deep-dive | [services/collection.md](services/collection.md) |
 | Adding a demo page (workflow) | [workflows/new-demo-page.md](workflows/new-demo-page.md) |
