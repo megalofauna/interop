@@ -94,6 +94,7 @@ export class DemoNav {
 				{ label: "Toggle", route: "/components/toggle" },
 				{ label: "Toast", route: "/components/toast" },
 				{ label: "Tooltip", route: "/components/tooltip" },
+				{ label: "Tree", route: "/components/tree" },
 				{ label: "Visimorph", route: "/components/visimorph" },
 			],
 		},

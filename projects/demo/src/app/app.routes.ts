@@ -134,6 +134,11 @@ export const routes: Routes = [
 			import("./pages/tooltip/tooltip-page").then((m) => m.TooltipPage),
 	},
 	{
+		path: "components/tree",
+		title: "Tree — Interop",
+		loadComponent: () => import("./pages/tree/tree-page").then((m) => m.TreePage),
+	},
+	{
 		path: "components/stepper",
 		title: "Stepper — Interop",
 		loadComponent: () =>
