@@ -93,6 +93,36 @@ the group turns into a real expand so component state matches what the user is
 looking at. Non-supporting browsers treat any `hidden` value as hidden — there
 is nothing to feature-detect and no fallback to write.
 
+## Rendering nested items: use a component, never `ngTemplateOutlet`
+
+Depth and the tree reference both come from DI up the ancestor chain, so *how*
+nested items are rendered is load-bearing.
+
+An embedded view created by `ngTemplateOutlet` resolves DI from where the
+template was **declared**, not where it was **inserted**. A recursive
+`<ng-template>` therefore fails with a bare `NG0201: No provider found for
+InjectionToken INTEROP_TREE` — and even if the tree were found, every item
+would compute depth 1, because none of them can see an ancestor item either.
+
+Render recursively with a **component**, whose element injector sits at its
+insertion point. Put the selector on the *list element* so no wrapper lands
+between a `<ul>` and its `<li>` children:
+
+```html
+<ul interop-tree-group my-nodes [nodes]="node.children"></ul>
+```
+
+See `projects/demo/src/app/pages/tree/tree-node.ts` for the worked version.
+Covered by the "recursive rendering" specs so it stays fixed.
+
+## Linking rows in an app with `<base href="/">`
+
+A bare `href="#section"` resolves against the *document base URL*, not the
+current path — so in any Angular app with `<base href="/">` it navigates to the
+site root, not to a fragment of the current page. Use `[routerLink]` (with
+`fragment` when you want an in-page target). The demo hit this and it looked
+like the tree was "redirecting to the index".
+
 ## Anchor positioning — considered, declined
 
 For the hierarchy itself. You *can* `anchor-name` a parent's toggle and the last

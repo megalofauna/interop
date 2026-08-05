@@ -4,7 +4,7 @@ import {
 	signal,
 	viewChild,
 } from "@angular/core";
-import { NgTemplateOutlet } from "@angular/common";
+import { RouterLink } from "@angular/router";
 import {
 	InteropButton,
 	InteropTree,
@@ -20,6 +20,7 @@ import {
 	type CodeFile,
 	type TableColumn,
 } from "interop";
+import { DemoTreeNodes, type TreeNode } from "./tree-node";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
@@ -39,12 +40,6 @@ interface ApiEntry {
 	required?: boolean;
 }
 
-interface TreeNode {
-	key: string;
-	label: string;
-	children?: TreeNode[];
-}
-
 /** Branching factor per level for the scale demo. */
 const SCALE_SHAPE = [18, 14, 12];
 
@@ -52,7 +47,7 @@ const SCALE_SHAPE = [18, 14, 12];
 	selector: "tree-page",
 	standalone: true,
 	imports: [
-		NgTemplateOutlet,
+		RouterLink,
 		InteropButton,
 		InteropTree,
 		InteropTreeItem,
@@ -64,6 +59,7 @@ const SCALE_SHAPE = [18, 14, 12];
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
+		DemoTreeNodes,
 		DemoSection,
 		DemoExample,
 		DemoState,
@@ -112,11 +108,14 @@ export class TreePage {
     <li interop-tree-item key="guide">
       <span interop-tree-row>
         <button interop-tree-toggle></button>
-        <a href="/guide">Guide</a>
+        <a routerLink="/guide">Guide</a>
       </span>
       <ul interop-tree-group>
         <li interop-tree-item key="install">
-          <span interop-tree-row><span></span><a href="/guide/install">Install</a></span>
+          <span interop-tree-row>
+            <span interop-tree-toggle></span>
+            <a routerLink="/guide/install" aria-current="page">Install</a>
+          </span>
         </li>
       </ul>
     </li>

@@ -65,31 +65,31 @@
 					<li interop-tree-item key="guide" [expanded]="true">
 						<span interop-tree-row>
 							<button interop-tree-toggle></button>
-							<a href="#guide">Guide</a>
+							<a [routerLink]="[]" fragment="guide">Guide</a>
 						</span>
 						<ul interop-tree-group>
 							<li interop-tree-item key="install">
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
-									<a href="#install" aria-current="page">Installation</a>
+									<a [routerLink]="[]" fragment="install" aria-current="page">Installation</a>
 								</span>
 							</li>
 							<li interop-tree-item key="theming">
 								<span interop-tree-row>
 									<button interop-tree-toggle></button>
-									<a href="#theming">Theming</a>
+									<a [routerLink]="[]" fragment="theming">Theming</a>
 								</span>
 								<ul interop-tree-group>
 									<li interop-tree-item key="tokens">
 										<span interop-tree-row>
 											<span interop-tree-toggle></span>
-											<a href="#tokens">Tokens</a>
+											<a [routerLink]="[]" fragment="tokens">Tokens</a>
 										</span>
 									</li>
 									<li interop-tree-item key="dark">
 										<span interop-tree-row>
 											<span interop-tree-toggle></span>
-											<a href="#dark">Dark mode</a>
+											<a [routerLink]="[]" fragment="dark">Dark mode</a>
 										</span>
 									</li>
 								</ul>
@@ -99,19 +99,19 @@
 					<li interop-tree-item key="components">
 						<span interop-tree-row>
 							<button interop-tree-toggle></button>
-							<a href="#components">Components</a>
+							<a [routerLink]="[]" fragment="components">Components</a>
 						</span>
 						<ul interop-tree-group>
 							<li interop-tree-item key="button">
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
-									<a href="#button">Button</a>
+									<a [routerLink]="[]" fragment="button">Button</a>
 								</span>
 							</li>
 							<li interop-tree-item key="tree">
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
-									<a href="#tree">Tree</a>
+									<a [routerLink]="[]" fragment="tree">Tree</a>
 								</span>
 							</li>
 						</ul>
@@ -119,7 +119,7 @@
 					<li interop-tree-item key="changelog">
 						<span interop-tree-row>
 							<span interop-tree-toggle></span>
-							<a href="#changelog">Changelog</a>
+							<a [routerLink]="[]" fragment="changelog">Changelog</a>
 						</span>
 					</li>
 				</ul>
@@ -252,11 +252,12 @@
 			</p>
 
 			<div class="tree-page__panel tree-page__panel--tall">
-				<ul #scaleTree="interopTree" interop-tree="select" aria-label="Generated tree">
-					<ng-container
-						[ngTemplateOutlet]="nodeTpl"
-						[ngTemplateOutletContext]="{ $implicit: scaleNodes }" />
-				</ul>
+				<ul
+					#scaleTree="interopTree"
+					interop-tree="select"
+					aria-label="Generated tree"
+					demo-tree-nodes
+					[nodes]="scaleNodes"></ul>
 			</div>
 
 			<itx-code-block [files]="cssFiles" />
@@ -269,25 +270,6 @@
 				body: 'content-visibility skips layout and paint, not component instantiation — Angular still creates one directive instance per node up front. That is the trade: a virtualizer wins on instantiation cost and loses find-in-page, Ctrl+A, and honest item counts. For trees in the low thousands, keeping the DOM is the better trade. Past that, render the branches lazily inside @if and set [expandable] on the items.'
 			}]" />
 	</demo-section>
-
-	<!-- Recursive renderer for the generated tree. -->
-	<ng-template #nodeTpl let-nodes>
-		@for (node of nodes; track node.key) {
-			<li interop-tree-item [key]="node.key" [label]="node.label">
-				<span interop-tree-row>
-					<span interop-tree-toggle></span>
-					<span>{{ node.label }}</span>
-				</span>
-				@if (node.children) {
-					<ul interop-tree-group>
-						<ng-container
-							[ngTemplateOutlet]="nodeTpl"
-							[ngTemplateOutletContext]="{ $implicit: node.children }" />
-					</ul>
-				}
-			</li>
-		}
-	</ng-template>
 
 	<demo-section id="api-inputs" heading="API — Inputs">
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">

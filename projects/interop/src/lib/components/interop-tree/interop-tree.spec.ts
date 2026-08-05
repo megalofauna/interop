@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, forwardRef, input, signal } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { InteropTree } from "./interop-tree";
 import { InteropTreeItem } from "./interop-tree-item";
@@ -97,6 +97,47 @@ class TreeHost {
 })
 class NavHost {}
 
+/**
+ * Depth is derived from the ancestor chain via DI, so *how* nested items are
+ * rendered matters. A recursive component's element injector sits at its
+ * insertion point and resolves correctly; an `ngTemplateOutlet` embedded view
+ * resolves from where the template was declared and cannot see the tree at all.
+ */
+@Component({
+  selector: "[recursive-nodes]",
+  standalone: true,
+  imports: [
+    InteropTreeItem,
+    InteropTreeToggle,
+    InteropTreeGroup,
+    forwardRef(() => RecursiveNodes),
+  ],
+  template: `
+    @for (node of nodes(); track node.key) {
+      <li interop-tree-item [key]="node.key" [expanded]="true">
+        <span interop-tree-row><span interop-tree-toggle></span>{{ node.key }}</span>
+        @if (node.children) {
+          <ul interop-tree-group recursive-nodes [nodes]="node.children"></ul>
+        }
+      </li>
+    }
+  `,
+})
+class RecursiveNodes {
+  readonly nodes = input.required<{ key: string; children?: unknown[] }[]>();
+}
+
+@Component({
+  standalone: true,
+  imports: [InteropTree, RecursiveNodes],
+  template: `
+    <ul interop-tree="select" aria-label="Generated" recursive-nodes [nodes]="nodes"></ul>
+  `,
+})
+class RecursiveHost {
+  nodes = [{ key: "r1", children: [{ key: "r2", children: [{ key: "r3" }] }] }];
+}
+
 // ── Tier semantics ─────────────────────────────────────────────────────────
 
 describe("InteropTree — tier semantics", () => {
@@ -143,6 +184,38 @@ describe("InteropTree — tier semantics", () => {
     expect(item(fixture, "src").getAttribute("aria-expanded")).toBe("false");
     expect(item(fixture, "main.ts").getAttribute("aria-expanded")).toBeNull();
     expect(item(fixture, "main.ts").hasAttribute("data-leaf")).toBe(true);
+  });
+});
+
+describe("InteropTree — recursive rendering", () => {
+  it("derives depth through a recursive component, not just static markup", () => {
+    const fixture = TestBed.createComponent(RecursiveHost);
+    fixture.detectChanges();
+
+    // `[key]` is an input, not a DOM attribute, so these are read in DOM order.
+    const items = Array.from(
+      fixture.nativeElement.querySelectorAll("[interop-tree-item]"),
+    ) as HTMLElement[];
+
+    expect(items.map((el) => el.getAttribute("aria-level"))).toEqual([
+      "1",
+      "2",
+      "3",
+    ]);
+    expect(items[2].style.getPropertyValue("--itx-tree-level")).toBe("3");
+  });
+
+  it("keeps <li> as the direct child of its list — no wrapper element", () => {
+    const fixture = TestBed.createComponent(RecursiveHost);
+    fixture.detectChanges();
+
+    for (const group of Array.from(
+      fixture.nativeElement.querySelectorAll("[interop-tree], [interop-tree-group]"),
+    ) as HTMLElement[]) {
+      for (const child of Array.from(group.children)) {
+        expect(child.tagName).toBe("LI");
+      }
+    }
   });
 });
 
