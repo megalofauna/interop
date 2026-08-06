@@ -103,7 +103,7 @@
 }
 
 :where(itx-page-nav.itx-pn--vertical .itx-pn__label) {
-	font-weight: 600;
+	font-weight: 400;
 	text-transform: uppercase;
 }
 
@@ -197,7 +197,7 @@
 }
 
 :where([interop-root] itx-page-nav.itx-pn--stuck) {
-	box-shadow: 0 var(--itx-spacing-3) 4px 0 rgb(0 0 0  / 0.15);
+	box-shadow: 0 var(--itx-spacing-3) 4px 0 rgb(20 20 20  / 0.10);
 }
 
 @media (prefers-reduced-motion: reduce) {
