@@ -188,7 +188,7 @@
 	--_toggle-height: var(--itx-control-toggle-height, 1.25rem);
 	--_toggle-thumb-size: var(
 		--itx-control-toggle-thumb-size,
-		calc(var(--_toggle-height) - 4px)
+		calc(var(--_toggle-height) - 8px)
 	);
 	--_toggle-thumb-width: var(
 		--itx-control-toggle-thumb-width,
@@ -210,8 +210,8 @@
 	border-radius: 999px;
 	background-color: var(--_toggle-thumb-color);
 	top: 50%;
-	left: 0;
-	transform: translateY(-50%);
+	left: 2px;
+	transform: translate(0, calc(-50%));
 	transition: transform var(--_transition);
 	box-shadow: var(
 		--itx-control-toggle-thumb-shadow,
@@ -229,15 +229,16 @@
 		--itx-control-toggle-thumb-color-on,
 		var(--itx-neutral-1)
 	);
-	border-color: var(--_accent);
-	background-color: var(--_accent);
+	border-color: var(--itx-control-toggle-border-color-checked);
+	/*background-color: var(--_accent);*/
+	background-color: var(--itx-colorway-8);
 }
 
 :where(interop-visimorph[itx-visimorph="toggle"][data-checked])::after {
 	transform: translateY(-50%)
 		translateX(
 			calc(
-				var(--_toggle-width) - var(--_toggle-thumb-width) - 2 *
+				var(--_toggle-width) - var(--_toggle-thumb-width) - 4 *
 					var(--_border-width)
 			)
 		);
