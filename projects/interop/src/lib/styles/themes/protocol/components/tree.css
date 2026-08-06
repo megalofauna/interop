@@ -36,8 +36,8 @@
 	--itx-tree-row-disabled-opacity: 0.5;
 
 	/* ── Guide rails ────────────────────────────────────────────────────── */
-	--itx-tree-guide-color: var(--itx-neutral-5);
-	--itx-tree-guide-width: 1px;
+	--itx-tree-guide-color: var(--itx-neutral-8);
+	--itx-tree-guide-width: 2px;
 
 	/* ── Twisty ─────────────────────────────────────────────────────────── */
 	--itx-tree-toggle-size: 0.375em;
