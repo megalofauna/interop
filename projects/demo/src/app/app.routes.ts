@@ -199,6 +199,12 @@ export const routes: Routes = [
 			import("./pages/content/content-page").then((m) => m.ContentPage),
 	},
 	{
+		path: "foundation/principles",
+		title: "Principles — Interop",
+		loadComponent: () =>
+			import("./pages/principles/principles-page").then((m) => m.PrinciplesPage),
+	},
+	{
 		path: "foundation/typography",
 		title: "Typography — Interop",
 		loadComponent: () =>

@@ -63,7 +63,10 @@ export class DemoNav {
 	groups: NavGroup[] = [
 		{
 			label: "Foundations",
-			items: [{ label: "Typography", route: "/foundation/typography" }],
+			items: [
+				{ label: "Principles", route: "/foundation/principles" },
+				{ label: "Typography", route: "/foundation/typography" },
+			],
 		},
 		{
 			label: "Components",

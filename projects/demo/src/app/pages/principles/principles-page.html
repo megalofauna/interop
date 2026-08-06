@@ -1,0 +1,224 @@
+<demo-page>
+	<demo-masthead category="Foundations" title="Principles">
+		Interop is built on the premise that the web platform already implements
+		most of what a component library wants to ship. These are the principles
+		that follow from it.
+	</demo-masthead>
+
+	<!-- ── Prefer the platform ────────────────────────────────────────────── -->
+	<demo-section heading="Prefer the platform">
+		<div class="principles-page__prose">
+			<p>
+				"Platform-native" means a component's behavior derives from the
+				browser. If a behavior can be so derived, it should be.
+			</p>
+			<p>
+				The web platform already implements most of what a component library
+				wants to ship. Dialogs, popovers, disclosure, focus management, form
+				semantics, and the accessibility tree are all browser features. Interop
+				reaches for those first and adds coordination, tokens, and ergonomics
+				on top, with the semantics left intact.
+			</p>
+			<p>
+				A popover trigger sets <code>popovertarget</code> and the browser does
+				the rest. No JavaScript sits in the click path.
+			</p>
+			<p>In the rare cases where the platform is lacking, Interop patches it.</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/popover" fragment="usage"
+					>See a trigger with no click handler</a
+				>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── Use ARIA last ──────────────────────────────────────────────────── -->
+	<demo-section heading="Use ARIA last">
+		<div class="principles-page__prose">
+			<p>
+				The Accessible Rich Internet Applications standard (ARIA) supplies
+				attributes for roles, states, and relationships that the HTML vocabulary
+				cannot express on its own. It is an enormously useful addition to the
+				web platform.
+			</p>
+			<p>
+				It is also the last thing a developer should reach for. The W3C's own
+				guidance leads with it:
+				<a
+					href="https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/"
+					rel="noopener"
+					>no ARIA is better than bad ARIA</a
+				>.
+			</p>
+			<p>
+				Every role you write is a promise about behavior that you now own.
+				<code>role="tree"</code> commits you to roving focus, typeahead,
+				arrow-key expansion and collapse, and a selection model. Write the role,
+				inherit the contract.
+			</p>
+			<p>Chances are the platform has you covered.</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/tree" fragment="navigate"
+					>See the tree tier that authors no ARIA at all</a
+				>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── Accessibility is design input ──────────────────────────────────── -->
+	<demo-section heading="Accessibility is design input">
+		<div class="principles-page__prose">
+			<p>
+				In Interop, accessibility is an input to the component design process,
+				applied while the API shape is being formed. It decides what a component
+				is, and the labelling follows from that.
+			</p>
+			<p>
+				The tree is the clearest case. <code>role="tree"</code> promises a
+				keyboard contract that a navigation sidebar cannot honour, so Interop
+				ships two tiers and asks you to pick one. The default is a nested list
+				with real links and a natural tab order. The opt-in tier is a full APG
+				treeview. Putting a link inside a row of the second tier makes it
+				unreachable, so Interop says so in devMode and points at the first.
+			</p>
+			<p>The decision lands in the API, at the call site, where you can see it.</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/tree" fragment="tier">Choosing a tier</a>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── The element is the component ───────────────────────────────────── -->
+	<demo-section heading="The element is the component">
+		<div class="principles-page__prose">
+			<p>
+				Interop eschews extraneous wrappers. When semantics count, which is
+				nearly always, components attach to standard HTML elements through
+				attribute selectors.
+			</p>
+			<p>The element you write is the element that ships.</p>
+			<itx-code-block [files]="hostFiles" />
+			<p>
+				Those accustomed to libraries built from custom elements may find this
+				odd, or even off-putting. Does Interop expect me to ship a bare,
+				unwrapped <code>&lt;label&gt;</code> as a componentized radio control?
+			</p>
+			<p>Yes. Here's why.</p>
+			<p>
+				There is no generated wrapper and no shadow root, so the semantics come
+				standard. <code>&lt;fieldset&gt;</code> groups.
+				<code>&lt;label&gt;</code> associates. <code>&lt;progress&gt;</code>
+				announces. <code>&lt;button&gt;</code> handles keyboard activation and
+				form participation. None of it is restated in ARIA, because none of it
+				needs to be.
+			</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/radio" fragment="usage"
+					>See a radio control hosted on a label</a
+				>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── Embrace the cascade ────────────────────────────────────────────── -->
+	<demo-section heading="Embrace the cascade">
+		<div class="principles-page__prose">
+			<p>
+				Restyling a component library should not feel like a fight. Interop
+				ships every rule inside the <code>interop</code> cascade layer, with
+				every selector wrapped in <code>:where()</code>.
+			</p>
+			<itx-code-block [files]="cascadeFiles" />
+			<p>
+				Two mechanisms doing two jobs. <code>:where()</code> holds every library
+				rule at zero specificity, so ordering inside the library never depends
+				on selector weight. The layer settles ordering against you: unlayered
+				CSS beats layered CSS regardless of specificity, so anything you write
+				outside a layer wins on contact.
+			</p>
+			<p>
+				Zero specificity on its own would not have been enough. A library that
+				ships unlayered rules at <code>(0,0,0)</code> still beats a Tailwind
+				utility at <code>(0,1,0)</code>, because the utility is layered and the
+				library is not. The layer is what makes the promise true.
+			</p>
+			<p>
+				Override once. Override again a layer down. Override a single instance
+				inline. No <code>!important</code>, and no <code>::ng-deep</code>.
+			</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/button" fragment="appearance"
+					>See the token surface on a button</a
+				>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── Complexity is opt-in ───────────────────────────────────────────── -->
+	<demo-section heading="Complexity is opt-in">
+		<div class="principles-page__prose">
+			<p>
+				A component should cost what you actually use. Interop splits its
+				surface into tiers you import separately, and the bare attribute needs
+				no import at all.
+			</p>
+			<itx-code-block [files]="tiersFiles" />
+			<p>
+				Three tiers, three separate decisions. A button that only needs to look
+				right carries none of the code that makes one behave.
+			</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/button" fragment="activation"
+					>See the activation guards</a
+				>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── Adopt, then delete ─────────────────────────────────────────────── -->
+	<demo-section heading="Adopt, then delete">
+		<div class="principles-page__prose">
+			<p>
+				Where the platform is close but not yet everywhere, Interop ships the
+				supporting code and the native attributes side by side, so adoption
+				becomes a deletion rather than a rewrite.
+			</p>
+			<p>
+				Popover placement is the working example.
+				<code>InteropPopover</code> delegates to a position strategy that
+				defaults to Floating UI, while the directive already writes
+				<code>anchor-name</code> and <code>position-anchor</code> on the
+				elements. When CSS anchor positioning reaches baseline, the provider
+				swaps and the JavaScript strategy becomes a no-op.
+				<code>interop-indicator</code> already ships both paths behind
+				<code>&#64;supports</code>, and the fallback removes itself wherever
+				support exists.
+			</p>
+			<p>A good Interop release removes more code than it adds.</p>
+			<p class="principles-page__proof">
+				<a routerLink="/components/popover" fragment="placement"
+					>See the placement system</a
+				>
+			</p>
+		</div>
+	</demo-section>
+
+	<!-- ── Documentation is part of the product ───────────────────────────── -->
+	<demo-section heading="Documentation is part of the product">
+		<div class="principles-page__prose">
+			<p>
+				Docs are written alongside the component rather than after it. This site
+				is built from the library it documents. The API tables are
+				<code>interop-table</code>, the code samples are the
+				<code>code-block</code> composite, the section nav derives its links
+				from the sections themselves, and on a narrow viewport the nav drawer is
+				a native popover toggled by an invoker command.
+			</p>
+			<p>
+				The standard being aimed at is that reading these docs teaches you how
+				to document your own library. That is a long-running goal rather than a
+				claim about today.
+			</p>
+		</div>
+	</demo-section>
+</demo-page>
