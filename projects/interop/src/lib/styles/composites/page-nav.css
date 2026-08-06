@@ -64,6 +64,17 @@
 	display: flex;
 }
 
+/* The component reveals the active link by scrolling this port with no explicit
+ * `behavior`, which defers to `scroll-behavior` — so motion is decided here, not
+ * in TypeScript. `scroll-padding` (unset by default) is honoured too: set it to
+ * hold the active link clear of the scroll-area's edge shadows. */
+:where(
+	itx-page-nav.itx-pn--horizontal interop-scroll-area,
+	itx-page-nav.itx-pn--vertical .itx-pn__list
+) {
+	scroll-behavior: smooth;
+}
+
 :where(itx-page-nav.itx-pn--horizontal ul) {
 	display: flex;
 	margin: unset;
@@ -196,5 +207,13 @@
 		itx-page-nav.itx-pn--vertical .itx-pn__indicator
 	) {
 		transition: none;
+	}
+
+	/* The active link still gets revealed — it just jumps rather than glides. */
+	:where(
+		itx-page-nav.itx-pn--horizontal interop-scroll-area,
+		itx-page-nav.itx-pn--vertical .itx-pn__list
+	) {
+		scroll-behavior: auto;
 	}
 }
