@@ -1,0 +1,319 @@
+<article class="demo-page">
+	<demo-masthead category="Components" title="Tree">
+		A collapsible hierarchy in one of two tiers. Bare
+		<code>[interop-tree]</code> is a nested-list disclosure structure with real
+		links and a natural tab order. <code>interop-tree="select"</code> is a
+		<code>role="tree"</code> widget with one tab stop, roving focus and
+		typeahead. Neither uses a virtualizer, so collapsed branches stay findable
+		by find-in-page.
+	</demo-masthead>
+
+	<!-- ── Which tier? ───────────────────────────────────────────────────── -->
+	<demo-section id="tier" heading="Choosing a tier">
+		<interop-expansion-panel style="width: 100%">
+			<h3>
+				<button interop-button="assert neutral" interop-expansion-trigger>
+					Do I want <code>interop-tree</code> or
+					<code>interop-tree="select"</code>?
+				</button>
+			</h3>
+			<div interop-expansion-body>
+				<div class="tree-page__prose">
+					<p>
+						<code>role="tree"</code> is not a label, it is a
+						<strong>behaviour contract</strong>: one tab stop for the entire
+						widget, roving focus, typeahead, arrow keys that expand and
+						collapse, and a selection model. Signing that contract and then not
+						honouring it is worse than not signing it — which is why Interop
+						will not apply it for you.
+					</p>
+					<p><strong>Use the navigate tier (the default) when</strong></p>
+					<ul>
+						<li>rows are links that take the user somewhere;</li>
+						<li>rows contain form controls, buttons, or other interactives;</li>
+						<li>
+							the hierarchy is a way to <em>get to</em> content, not the thing
+							being operated on — nav sidebars, docs contents, browse lists.
+						</li>
+					</ul>
+					<p><strong>Use the select tier when</strong></p>
+					<ul>
+						<li>the user operates <em>on</em> the hierarchy — picks nodes, checks them, reorders them;</li>
+						<li>a single tab stop is what you want, because the tree is one control among many;</li>
+						<li>rows carry no other interactive content.</li>
+					</ul>
+					<p>
+						The tier decides several downstream questions for you. Checkboxes
+						are real <code>&lt;input&gt;</code> elements in the navigate tier
+						(free form participation, free tri-state via
+						<code>indeterminate</code>) and <code>aria-checked</code> in the
+						select tier, where interactive descendants are unreachable. The
+						twisty is a real <code>&lt;button&gt;</code> in the navigate tier
+						and an <code>aria-hidden</code> affordance in the select tier. Put
+						the wrong thing in either and devMode says so.
+					</p>
+				</div>
+			</div>
+		</interop-expansion-panel>
+	</demo-section>
+
+	<!-- ── Navigate tier ─────────────────────────────────────────────────── -->
+	<demo-section id="navigate" heading="Navigate tier (default)">
+		<demo-example label="Documentation sidebar">
+			<nav aria-label="Documentation" class="tree-page__panel">
+				<ul interop-tree>
+					<li interop-tree-item key="guide" [expanded]="true">
+						<span interop-tree-row>
+							<button interop-tree-toggle></button>
+							<a [routerLink]="[]" fragment="guide">Guide</a>
+						</span>
+						<ul interop-tree-group>
+							<li interop-tree-item key="install">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<a [routerLink]="[]" fragment="install" aria-current="page">Installation</a>
+								</span>
+							</li>
+							<li interop-tree-item key="theming">
+								<span interop-tree-row>
+									<button interop-tree-toggle></button>
+									<a [routerLink]="[]" fragment="theming">Theming</a>
+								</span>
+								<ul interop-tree-group>
+									<li interop-tree-item key="tokens">
+										<span interop-tree-row>
+											<span interop-tree-toggle></span>
+											<a [routerLink]="[]" fragment="tokens">Tokens</a>
+										</span>
+									</li>
+									<li interop-tree-item key="dark">
+										<span interop-tree-row>
+											<span interop-tree-toggle></span>
+											<a [routerLink]="[]" fragment="dark">Dark mode</a>
+										</span>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li interop-tree-item key="components">
+						<span interop-tree-row>
+							<button interop-tree-toggle></button>
+							<a [routerLink]="[]" fragment="components">Components</a>
+						</span>
+						<ul interop-tree-group>
+							<li interop-tree-item key="button">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<a [routerLink]="[]" fragment="button">Button</a>
+								</span>
+							</li>
+							<li interop-tree-item key="tree">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<a [routerLink]="[]" fragment="tree">Tree</a>
+								</span>
+							</li>
+						</ul>
+					</li>
+					<li interop-tree-item key="changelog">
+						<span interop-tree-row>
+							<span interop-tree-toggle></span>
+							<a [routerLink]="[]" fragment="changelog">Changelog</a>
+						</span>
+					</li>
+				</ul>
+			</nav>
+
+			<itx-code-block [files]="navFiles" />
+		</demo-example>
+
+		<demo-notes
+			[notes]="[{
+				type: 'note',
+				label: 'Tab order',
+				body: 'Every link and every twisty is its own tab stop, exactly as a nested list of links would be. There is no authored keyboard model here — nothing to fight, nothing to preventDefault. The current page is marked with aria-current on the link, not aria-selected on the row.'
+			}]" />
+	</demo-section>
+
+	<!-- ── Select tier ───────────────────────────────────────────────────── -->
+	<demo-section id="select" heading="Select tier">
+		<demo-example label="Multi-select file tree">
+			<div class="tree-page__panel">
+				<ul
+					#selectTree="interopTree"
+					interop-tree="select"
+					aria-label="Project files"
+					[multiselectable]="true"
+					[(selected)]="picked"
+					(expandedChange)="onExpanded($event)">
+					<li interop-tree-item key="src" label="src" [expanded]="true">
+						<span interop-tree-row>
+							<span interop-tree-toggle></span>
+							<span>src</span>
+						</span>
+						<ul interop-tree-group>
+							<li interop-tree-item key="lib" label="lib">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<span>lib</span>
+								</span>
+								<ul interop-tree-group>
+									<li interop-tree-item key="tree.ts" label="tree.ts">
+										<span interop-tree-row>
+											<span interop-tree-toggle></span>
+											<span>tree.ts</span>
+										</span>
+									</li>
+									<li interop-tree-item key="tree.css" label="tree.css">
+										<span interop-tree-row>
+											<span interop-tree-toggle></span>
+											<span>tree.css</span>
+										</span>
+									</li>
+								</ul>
+							</li>
+							<li interop-tree-item key="main.ts" label="main.ts">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<span>main.ts</span>
+								</span>
+							</li>
+							<li interop-tree-item key="vendor" label="vendor" [disabled]="true">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<span>vendor (read-only)</span>
+								</span>
+							</li>
+						</ul>
+					</li>
+					<li interop-tree-item key="docs" label="docs">
+						<span interop-tree-row>
+							<span interop-tree-toggle></span>
+							<span>docs</span>
+						</span>
+						<ul interop-tree-group>
+							<li interop-tree-item key="readme.md" label="readme.md">
+								<span interop-tree-row>
+									<span interop-tree-toggle></span>
+									<span>readme.md</span>
+								</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+
+			<demo-state>
+				<demo-state-item label="selected">{{ picked().join(", ") || "—" }}</demo-state-item>
+				<demo-state-item label="last expandedChange">{{ lastExpanded() }}</demo-state-item>
+			</demo-state>
+
+			<itx-code-block [files]="selectFiles" />
+		</demo-example>
+
+		<demo-notes
+			[notes]="[{
+				type: 'note',
+				label: 'Try it',
+				body: 'Tab once — the whole tree is a single stop. Then arrows to move, → to open, ← to close or go to the parent, Home/End for the ends, * to expand every sibling, Enter to select, Cmd/Ctrl+Enter or Space to add to the selection, and type a few letters to jump. The disabled node stays focusable so it is still discoverable; it just refuses activation.'
+			}]" />
+	</demo-section>
+
+	<demo-section id="keyboard" heading="Keyboard (select tier)">
+		<interop-table [collection]="keyboardEntries" [columns]="keyboardColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── Scale ─────────────────────────────────────────────────────────── -->
+	<demo-section id="scale" heading="Scale, without a virtualizer">
+		<demo-example label="{{ scaleCount }} nodes, all in the DOM">
+			<div class="tree-page__actions">
+				<button interop-button="assert neutral" itx-size="xs" (click)="revealBuried()">
+					reveal() the deepest leaf
+				</button>
+				<button interop-button="assert neutral" itx-size="xs" (click)="collapseScale()">
+					Collapse all
+				</button>
+			</div>
+
+			<p class="tree-page__hint">
+				Everything below is collapsed, and every node is really there. Press
+				<kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>F</kbd> and search for
+				<code>{{ buriedLabel }}</code> — a leaf three levels down inside a
+				collapsed branch. A browser supporting
+				<code>hidden="until-found"</code> will find it, reveal the path, and
+				scroll to it; the tree adopts that as real expansion. A virtualized
+				tree cannot do this, because the node would not be in the document at
+				all.
+			</p>
+
+			<div class="tree-page__panel tree-page__panel--tall">
+				<ul
+					#scaleTree="interopTree"
+					interop-tree="select"
+					aria-label="Generated tree"
+					demo-tree-nodes
+					[nodes]="scaleNodes"></ul>
+			</div>
+
+			<itx-code-block [files]="cssFiles" />
+		</demo-example>
+
+		<demo-notes
+			[notes]="[{
+				type: 'note',
+				label: 'Honest limits',
+				body: 'content-visibility skips layout and paint, not component instantiation — Angular still creates one directive instance per node up front. That is the trade: a virtualizer wins on instantiation cost and loses find-in-page, Ctrl+A, and honest item counts. For trees in the low thousands, keeping the DOM is the better trade. Past that, render the branches lazily inside @if and set [expandable] on the items.'
+			}]" />
+	</demo-section>
+
+	<demo-section id="api-inputs" heading="API — Inputs">
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-name">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api-outputs" heading="API — Outputs">
+		<interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-name">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api-methods" heading="API — Methods">
+		<interop-table [collection]="methodEntries" [columns]="methodColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="notes" heading="Notes">
+		<demo-notes [notes]="notes" />
+	</demo-section>
+</article>

@@ -72,7 +72,7 @@
 	--itx-control-label-border-width: 2px;
 	--itx-control-label-border-color: transparent;
 	--itx-control-label-radius: var(--itx-radius-md);
-	--itx-control-label-corner-shape: round;
+	--itx-control-label-corner-shape: squircle;
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-control-label-transition: var(--itx-duration-fast, 75ms)

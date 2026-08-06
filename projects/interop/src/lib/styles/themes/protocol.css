@@ -31,48 +31,58 @@
  * ── Adding tokens for a new component ─────────────────────────────────────
  *
  *   1. Create protocol/components/<component-name>.css
- *   2. Add one @import line below
+ *   2. Add one @import line below, carrying layer(interop.theme)
+ *
+ * ── Cascade layer ──────────────────────────────────────────────────────────
+ *
+ *   Theme values ship in `interop.theme`, which sits above
+ *   `interop.foundation` and below everything a consumer writes. See the
+ *   cascade contract in ../interop.css for the full explanation and for the
+ *   one line Tailwind v4 consumers should add.
  */
+
+@layer interop.foundation, interop.theme;
 
 /* ── Foundation ─────────────────────────────────────────────────────────── */
 
 @import "../interop.css";
-@import "./protocol/foundation.css";
-@import "./protocol/status-palettes.css";
+@import "./protocol/foundation.css" layer(interop.theme);
+@import "./protocol/status-palettes.css" layer(interop.theme);
 
 /* ── Components ─────────────────────────────────────────────────────────── */
 
-@import "./protocol/components/button.css";
-@import "./protocol/components/chip.css";
-@import "./protocol/components/command-palette.css";
-@import "./protocol/components/dialog.css";
-@import "./protocol/components/expansion-panel.css";
-@import "./protocol/components/icon.css";
-@import "./protocol/components/indicator.css";
-@import "./protocol/components/kbd.css";
-@import "./protocol/components/list.css";
-@import "./protocol/components/popover.css";
-@import "./protocol/components/progress.css";
-@import "./protocol/components/segmented-control.css";
-@import "./protocol/components/stepper.css";
-@import "./protocol/components/table.css";
-@import "./protocol/components/toast.css";
-@import "./protocol/components/tooltip.css";
-@import "./protocol/components/resizable.css";
-@import "./protocol/components/visimorph/visimorph.css";
-@import "./protocol/components/visimorph/label.css";
+@import "./protocol/components/button.css" layer(interop.theme);
+@import "./protocol/components/chip.css" layer(interop.theme);
+@import "./protocol/components/command-palette.css" layer(interop.theme);
+@import "./protocol/components/dialog.css" layer(interop.theme);
+@import "./protocol/components/expansion-panel.css" layer(interop.theme);
+@import "./protocol/components/icon.css" layer(interop.theme);
+@import "./protocol/components/indicator.css" layer(interop.theme);
+@import "./protocol/components/kbd.css" layer(interop.theme);
+@import "./protocol/components/list.css" layer(interop.theme);
+@import "./protocol/components/popover.css" layer(interop.theme);
+@import "./protocol/components/progress.css" layer(interop.theme);
+@import "./protocol/components/segmented-control.css" layer(interop.theme);
+@import "./protocol/components/stepper.css" layer(interop.theme);
+@import "./protocol/components/table.css" layer(interop.theme);
+@import "./protocol/components/toast.css" layer(interop.theme);
+@import "./protocol/components/tooltip.css" layer(interop.theme);
+@import "./protocol/components/tree.css" layer(interop.theme);
+@import "./protocol/components/resizable.css" layer(interop.theme);
+@import "./protocol/components/visimorph/visimorph.css" layer(interop.theme);
+@import "./protocol/components/visimorph/label.css" layer(interop.theme);
 
 /* ── Composites ─────────────────────────────────────────────────────────── */
 
-@import "./protocol/composites/code-block.css";
-@import "./protocol/composites/inline-code.css";
-@import "./protocol/composites/page-nav.css";
-@import "./protocol/composites/terminal.css";
+@import "./protocol/composites/code-block.css" layer(interop.theme);
+@import "./protocol/composites/inline-code.css" layer(interop.theme);
+@import "./protocol/composites/page-nav.css" layer(interop.theme);
+@import "./protocol/composites/terminal.css" layer(interop.theme);
 
 /* ── Rigs ───────────────────────────────────────────────────────────────── */
 
-@import "./protocol/rigs/toolbar.css";
+@import "./protocol/rigs/toolbar.css" layer(interop.theme);
 
 /* ── Experiments (opt-in, self-scoped; safe to remove) ──────────────────── */
 
-@import "./protocol/experiments/amber-lab.css";
+@import "./protocol/experiments/amber-lab.css" layer(interop.theme);

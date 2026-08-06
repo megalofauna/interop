@@ -14,69 +14,98 @@
  *   @import 'interop/styles/interop.css';
  *
  * All tokens are scoped to [interop-root] at zero specificity via :where().
- * Consumer overrides always win regardless of where they are declared.
+ *
+ * ── Cascade contract ───────────────────────────────────────────────────────
+ *
+ * Everything Interop ships lives inside the `interop` cascade layer, and every
+ * selector is wrapped in :where() for zero specificity. Two mechanisms doing
+ * two different jobs:
+ *
+ *   :where()   settles ordering INSIDE the library.
+ *   @layer     settles ordering AGAINST the consumer.
+ *
+ * Zero specificity alone is not enough. Unlayered rules beat layered rules
+ * regardless of specificity, so a library that ships unlayered CSS wins over
+ * a consumer's layered utilities no matter how low its specificity goes. That
+ * is backwards, and the layer is what fixes it.
+ *
+ * The result: any rule a consumer writes outside a layer wins on contact.
+ * Consumers who use layers themselves (Tailwind v4, or anything else emitting
+ * native @layer) should declare the order explicitly, naming interop first:
+ *
+ *   @layer interop, theme, base, components, utilities;
+ *
+ * Without that line, layer order follows first appearance, so importing
+ * Interop before Tailwind produces the same result.
+ *
+ * Sub-layers, in precedence order: `interop.foundation` (this file) then
+ * `interop.theme` (the active theme). A custom theme that needs to outrank
+ * the shipped one can claim `@layer interop.theme` and stay below consumer CSS.
  */
 
-@import "./tokens/primitives.css";
-@import "./tokens/color.css";
-@import "./tokens/spacing.css";
-@import "./tokens/shape.css";
-@import "./tokens/managed-radius.css";
-@import "./tokens/motion.css";
-@import "./tokens/typography.css";
-@import "./tokens/elevation.css";
+@layer interop.foundation, interop.theme;
+
+@import "./tokens/primitives.css" layer(interop.foundation);
+@import "./tokens/color.css" layer(interop.foundation);
+@import "./tokens/spacing.css" layer(interop.foundation);
+@import "./tokens/shape.css" layer(interop.foundation);
+@import "./tokens/managed-radius.css" layer(interop.foundation);
+@import "./tokens/motion.css" layer(interop.foundation);
+@import "./tokens/typography.css" layer(interop.foundation);
+@import "./tokens/elevation.css" layer(interop.foundation);
 
 /* ── Typography (base-element prose) ────────────────────────────────────── */
 /*    Sizes, leads, and spaces flowing content under [interop-typography-root].*/
 /*    See .agent/typography.md.                                               */
 
-@import "./typography/prose.css";
+@import "./typography/prose.css" layer(interop.foundation);
 
 /* ── Components (structural foundation) ─────────────────────────────────── */
 /*    Rendering rules for each component, decoupled from Angular imports.   */
 /*    Token values are layered on top by the active theme.                  */
 
-@import "./components/button.css";
-@import "./components/chip.css";
-@import "./components/command-palette.css";
-@import "./components/dialog.css";
-@import "./components/expansion-panel.css";
-@import "./components/icon.css";
-@import "./components/indicator.css";
-@import "./components/kbd.css";
-@import "./components/list.css";
-@import "./components/popover.css";
-@import "./components/segment.css";
-@import "./components/stepper.css";
-@import "./components/table.css";
-@import "./components/toast.css";
-@import "./components/tooltip.css";
-@import "./components/resizable.css";
-@import "./components/visimorph/visimorph.css";
-@import "./components/visimorph/label.css";
+@import "./components/button.css" layer(interop.foundation);
+@import "./components/chip.css" layer(interop.foundation);
+@import "./components/command-palette.css" layer(interop.foundation);
+@import "./components/dialog.css" layer(interop.foundation);
+@import "./components/expansion-panel.css" layer(interop.foundation);
+@import "./components/icon.css" layer(interop.foundation);
+@import "./components/indicator.css" layer(interop.foundation);
+@import "./components/kbd.css" layer(interop.foundation);
+@import "./components/list.css" layer(interop.foundation);
+@import "./components/popover.css" layer(interop.foundation);
+@import "./components/segment.css" layer(interop.foundation);
+@import "./components/stepper.css" layer(interop.foundation);
+@import "./components/table.css" layer(interop.foundation);
+@import "./components/toast.css" layer(interop.foundation);
+@import "./components/tooltip.css" layer(interop.foundation);
+@import "./components/tree.css" layer(interop.foundation);
+@import "./components/resizable.css" layer(interop.foundation);
+@import "./components/visimorph/visimorph.css" layer(interop.foundation);
+@import "./components/visimorph/label.css" layer(interop.foundation);
 
 /* ── Motion (structural foundation + presets) ───────────────────────────── */
 /*    Property-agnostic substrate plus self-contained preset modules used by  */
 /*    the InteropMotion directive family. See .agent/motion.md.               */
 
-@import "./motion/motion-surface.css";
-@import "./motion/presets/spin.css";
-@import "./motion/presets/pop.css";
+@import "./motion/motion-surface.css" layer(interop.foundation);
+@import "./motion/presets/spin.css" layer(interop.foundation);
+@import "./motion/presets/pop.css" layer(interop.foundation);
 
 /* ── Composites (structural foundation) ─────────────────────────────────── */
 /*    Higher-level assemblies built atop component primitives. Loaded         */
 /*    globally so consumer overrides via :where() work the same as components.*/
 
-@import "./composites/code-block.css";
-@import "./composites/inline-code.css";
-@import "./composites/page-nav.css";
+@import "./composites/code-block.css" layer(interop.foundation);
+@import "./composites/inline-code.css" layer(interop.foundation);
+@import "./composites/page-nav.css" layer(interop.foundation);
 
 /* ── Rigs (structural foundation) ───────────────────────────────────────── */
 /*    Container/layout components that coordinate child controls (toolbars,   */
 /*    etc). Same authoring pattern as components.                             */
 
-@import "./rigs/toolbar.css";
+@import "./rigs/toolbar.css" layer(interop.foundation);
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */
 
-@import "./utilities/rule.css";
+@import "./utilities/rule.css" layer(interop.foundation);

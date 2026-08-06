@@ -63,7 +63,10 @@ export class DemoNav {
 	groups: NavGroup[] = [
 		{
 			label: "Foundations",
-			items: [{ label: "Typography", route: "/foundation/typography" }],
+			items: [
+				{ label: "Principles", route: "/foundation/principles" },
+				{ label: "Typography", route: "/foundation/typography" },
+			],
 		},
 		{
 			label: "Components",
@@ -94,6 +97,7 @@ export class DemoNav {
 				{ label: "Toggle", route: "/components/toggle" },
 				{ label: "Toast", route: "/components/toast" },
 				{ label: "Tooltip", route: "/components/tooltip" },
+				{ label: "Tree", route: "/components/tree" },
 				{ label: "Visimorph", route: "/components/visimorph" },
 			],
 		},

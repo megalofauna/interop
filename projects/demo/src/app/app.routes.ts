@@ -134,6 +134,11 @@ export const routes: Routes = [
 			import("./pages/tooltip/tooltip-page").then((m) => m.TooltipPage),
 	},
 	{
+		path: "components/tree",
+		title: "Tree — Interop",
+		loadComponent: () => import("./pages/tree/tree-page").then((m) => m.TreePage),
+	},
+	{
 		path: "components/stepper",
 		title: "Stepper — Interop",
 		loadComponent: () =>
@@ -192,6 +197,12 @@ export const routes: Routes = [
 		title: "Content (djot) — Interop",
 		loadComponent: () =>
 			import("./pages/content/content-page").then((m) => m.ContentPage),
+	},
+	{
+		path: "foundation/principles",
+		title: "Principles — Interop",
+		loadComponent: () =>
+			import("./pages/principles/principles-page").then((m) => m.PrinciplesPage),
 	},
 	{
 		path: "foundation/typography",

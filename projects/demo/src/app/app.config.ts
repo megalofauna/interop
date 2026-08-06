@@ -22,9 +22,16 @@ export const appConfig: ApplicationConfig = {
 		// Without this the document scroll persists across route changes, so every
 		// page loads already scrolled past its <h1> — leaving the header breadcrumb
 		// (driven by the h1's view-timeline) stuck permanently on.
+		// `anchorScrolling` makes cross-page fragment links land on the section
+		// they name (the Principles page links each principle to the demo section
+		// that proves it). `demo-section` already carries a `scroll-margin-top`,
+		// so the landing target clears the sticky page nav.
 		provideRouter(
 			routes,
-			withInMemoryScrolling({ scrollPositionRestoration: "enabled" }),
+			withInMemoryScrolling({
+				scrollPositionRestoration: "enabled",
+				anchorScrolling: "enabled",
+			}),
 		),
 		provideHighlighter(highlighter),
 	],

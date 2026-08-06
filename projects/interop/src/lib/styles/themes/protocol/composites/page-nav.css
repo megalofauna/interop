@@ -53,9 +53,9 @@
 	--itx-pn-nav-rule-color: var(--itx-neutral-4);
 
 	/* links */
-	--itx-pn-font-size: var(--itx-font-size-body-lg);
+	--itx-pn-font-size: var(--itx-font-size-body);
 	--itx-pn-font-weight: 400;
-	--itx-pn-font-weight-active: 600;
+	--itx-pn-font-weight-active: 400;
 
 	--itx-pn-link-border-color: transparent;
 	--itx-pn-link-border-width: 2px;

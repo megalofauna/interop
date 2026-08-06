@@ -58,6 +58,18 @@ There is **no built-in scroll-spy**. `activeHref()` is an input; the consumer de
 
 Note `fade` forces `behavior: "instant"` (the transition does the animation) — `fade` wins over `smooth`.
 
+### Revealing the active link
+
+A constructor `afterRenderEffect` tracks `activeHref()` and keeps the current link visible inside the nav's **own** scrollport, so a long horizontal bar scrolls itself as the reader moves down the page. Three deliberate choices:
+
+- **Bounded search.** `navScrollport(link, host)` walks up from the link looking for an actually-overflowing `overflow: auto|scroll` ancestor, and gives up at the host. Plain `scrollIntoView({ block: "nearest" })` would have been one line, but it walks *every* ancestor — with a nav taller than the viewport it yanks the document out from under the reader. No scrollport → no-op.
+- **Minimal delta.** `nearestDelta()` reimplements `nearest` semantics against `getBoundingClientRect()`, honouring the port's `scroll-padding-*` (unset by default; set it to hold the active link clear of the scroll-area's edge shadows).
+- **CSS owns the motion.** `port.scrollBy({left, top})` is called with **no `behavior`**, which defers to the port's `scroll-behavior`. The structural file sets `smooth` on `interop-scroll-area` / `.itx-pn__list` and flips it to `auto` under `prefers-reduced-motion` — the reveal still happens, it just jumps.
+
+Matching is on the raw `href` attribute, not the freshly-written `[aria-current]`, so it carries no dependency on binding order.
+
+**This is not scroll-spy** — it reacts to `activeHref` changing, it doesn't decide what's active.
+
 ## CSS strategy
 
 Two-file split, both loaded globally; **all selectors wrapped in `:where()`** for zero specificity. Follows the **code-block no-fallback contract**: structural references `--itx-pn-*` tokens directly, the theme is the single source of truth for every value. Global foundation tokens (spacing, motion) are referenced directly in structural.
@@ -103,7 +115,8 @@ Stuck-state values are set on `:where([interop-root] itx-page-nav.itx-pn--stuck)
 
 ## Things to know when editing
 
-- **No scroll-spy.** If you want the nav to self-highlight on scroll, that's a new feature — currently `activeHref` must be fed in.
+- **No scroll-spy.** If you want the nav to self-highlight on scroll, that's a new feature — currently `activeHref` must be fed in. (The nav *reveals* the active link on its own; it doesn't *choose* it.)
+- **The reveal can't be done in CSS.** There is no property that scrolls a container to a descendant — `scroll-behavior` only styles a scroll something else initiates. Near-misses considered and rejected: scroll-driven animations translating the `ul` (needs per-page generated keyframes, fights user drag, blinds the scroll-area's `scrollLeft` shadow logic) and `::scroll-marker` / `scroll-marker-group` (does exactly this natively, but the sections must live in the scroller, labels come from `content:`, and support is Chromium-only). A third, unused but relevant next door: `timeline-scope` + `view()` gives pure-CSS active *highlighting*, though it can't express "last visible section wins".
 - **`scrollParent()` requires an explicitly scrollable ancestor.** If the page scrolls on `<html>`/`<body>` without `overflow-y: auto|scroll`, the observer root falls back to `null` (viewport) — usually fine, but nested scroll containers need the overflow set for stuck detection to fire.
 - **Horizontal children are ignored.** `PageNavLink.children` only renders in the vertical branch.
 - **`href` is a `querySelector` argument,** not necessarily a URL hash — any valid selector works, but IDs (`#section`) are the norm.

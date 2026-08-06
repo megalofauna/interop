@@ -1,0 +1,358 @@
+/*
+ * InteropTree — structural foundation.
+ *
+ * Rendering rules for `[interop-tree]`, `[interop-tree-item]`,
+ * `[interop-tree-row]`, `[interop-tree-toggle]` and `[interop-tree-group]`.
+ * The directives wire ARIA, roving focus, and expansion; this file owns
+ * layout, indentation, guide rails, the twisty, and motion.
+ *
+ * Contract: every selector is wrapped in :where() so specificity stays
+ * (0,0,0) — consumer overrides always win. Base declarations reference
+ * `var(--token)` with NO fallback (the theme guarantees a value); only
+ * per-state tokens fall back — always to their base token, never a literal.
+ * See themes/protocol/components/tree.css for the token surface.
+ *
+ * ── Indentation model ───────────────────────────────────────────────────────
+ *
+ * Nested lists carry the *semantics* and have no padding of their own. Depth
+ * is a number the item already computes for `aria-level`, published as
+ * `--itx-tree-level` and consumed here as the row's inline padding.
+ *
+ * This is why the row can be full-bleed: hover and selection backgrounds
+ * span the tree's whole width while the content sits at its depth. Indenting
+ * with `ul ul { padding-inline-start: … }` — the reflex — makes that
+ * impossible, because the row's box starts at the indent.
+ *
+ * There is no pure-CSS depth counter to replace the published number:
+ * `--depth: calc(var(--depth) + 1)` is a self-reference, which CSS treats as
+ * a dependency cycle regardless of inheritance, so it goes invalid at
+ * computed-value time.
+ *
+ * ── Required markup hook ────────────────────────────────────────────────────
+ *
+ * `[interop-tree-row]` is a plain attribute (no directive) marking the row
+ * box inside an item. It is what gets indented, backgrounded and aligned.
+ *
+ * ── Public tokens ───────────────────────────────────────────────────────────
+ *
+ *   Layout
+ *   --itx-tree-indent                   inline size of one depth step
+ *   --itx-tree-indent-narrow            indent used below the container query
+ *   --itx-tree-item-content-visibility  `auto` to skip offscreen subtrees
+ *   --itx-tree-row-block-size           row height + contain-intrinsic-size
+ *   --itx-tree-row-padding-inline
+ *   --itx-tree-row-gap
+ *   --itx-tree-row-radius
+ *
+ *   Row surface (rest / hover / selected / current)
+ *   --itx-tree-row-background
+ *   --itx-tree-row-background-hover
+ *   --itx-tree-row-background-selected
+ *   --itx-tree-row-background-current
+ *   --itx-tree-row-color
+ *   --itx-tree-row-color-hover
+ *   --itx-tree-row-color-selected
+ *   --itx-tree-row-color-current
+ *   --itx-tree-row-disabled-opacity
+ *
+ *   Guide rails
+ *   --itx-tree-guide-color
+ *   --itx-tree-guide-width              set 0 to remove the rails
+ *
+ *   Twisty
+ *   --itx-tree-toggle-size              glyph size
+ *   --itx-tree-toggle-hit-area          ≥24px per WCAG 2.2 SC 2.5.8
+ *   --itx-tree-toggle-color
+ *   --itx-tree-toggle-color-hover
+ *   --itx-tree-toggle-stroke
+ *
+ *   Focus
+ *   --itx-tree-focus-color / -width / -offset
+ *
+ *   Motion
+ *   --itx-tree-transition-duration
+ *   --itx-tree-transition-easing
+ */
+
+/* ── Tree host ───────────────────────────────────────────────────────────── */
+
+:where([interop-tree]) {
+	container-type: inline-size;
+	container-name: tree;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	color: var(--itx-tree-row-color);
+}
+
+/* ── Group (the child list) ──────────────────────────────────────────────── */
+/*
+ * Zero padding is load-bearing, not a reset: the indent lives on the row so
+ * the row can span the full width. See the indentation model above.
+ *
+ * The reveal transition uses `allow-discrete` + `@starting-style` so the
+ * group can animate in from `display: none` without any JS measuring pass.
+ * `content-visibility` is in the list because `hidden="until-found"` hides
+ * via content-visibility rather than display.
+ */
+
+:where([interop-tree-group]) {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	opacity: 1;
+	transition:
+		opacity var(--itx-tree-transition-duration) var(--itx-tree-transition-easing),
+		display var(--itx-tree-transition-duration) allow-discrete,
+		content-visibility var(--itx-tree-transition-duration) allow-discrete;
+
+	@starting-style {
+		opacity: 0;
+	}
+}
+
+/* ── Item ────────────────────────────────────────────────────────────────── */
+/*
+ * `content-visibility: auto` skips layout and paint for offscreen subtrees.
+ * It is the reason this tree needs no virtualizer — and unlike a virtualizer
+ * it leaves the content in the DOM, in the accessibility tree, and findable
+ * by find-in-page. `contain-intrinsic-size: auto <size>` gives the skipped
+ * content a placeholder height and remembers the real one once measured, so
+ * the scrollbar does not jump.
+ */
+
+:where([interop-tree-item]) {
+	content-visibility: var(--itx-tree-item-content-visibility);
+	contain-intrinsic-size: auto var(--itx-tree-row-block-size);
+}
+
+:where([interop-tree-item][aria-disabled="true"]) {
+	opacity: var(--itx-tree-row-disabled-opacity);
+}
+
+/* The treeitem is the focus target in the select tier; its row shows the ring. */
+:where([interop-tree-item]) {
+	outline: none;
+
+	&:where(:focus-visible) > :where([interop-tree-row]) {
+		outline: var(--itx-tree-focus-width) solid var(--itx-tree-focus-color);
+		outline-offset: var(--itx-tree-focus-offset);
+	}
+}
+
+/* ── Row ─────────────────────────────────────────────────────────────────── */
+/*
+ * Columns: twisty | label (grows) | trailing actions. Declared here so every
+ * row at every depth shares one shape.
+ *
+ * The guide rails are a repeating gradient sized to the indent region: one
+ * vertical rule per ancestor level, at every indent step. This scales to any
+ * depth without a pseudo-element per level and without knowing the depth at
+ * author time — the level number does the work.
+ */
+
+:where([interop-tree-row]) {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	gap: var(--itx-tree-row-gap);
+	min-block-size: var(--itx-tree-row-block-size);
+	padding-block: 0;
+	padding-inline: calc(
+			(var(--itx-tree-level, 1) - 1) * var(--itx-tree-indent) +
+				var(--itx-tree-row-padding-inline)
+		)
+		var(--itx-tree-row-padding-inline);
+	border-radius: var(--itx-tree-row-radius);
+	background-color: var(--itx-tree-row-background);
+	background-image: repeating-linear-gradient(
+		to right,
+		var(--itx-tree-guide-color) 0 var(--itx-tree-guide-width),
+		transparent var(--itx-tree-guide-width) var(--itx-tree-indent)
+	);
+	background-size: calc((var(--itx-tree-level, 1) - 1) * var(--itx-tree-indent))
+		100%;
+	background-repeat: no-repeat;
+	background-position: calc(var(--itx-tree-row-padding-inline) / 2) 0;
+	color: var(--itx-tree-row-color);
+	cursor: default;
+	transition:
+		background-color var(--itx-tree-transition-duration)
+			var(--itx-tree-transition-easing),
+		color var(--itx-tree-transition-duration) var(--itx-tree-transition-easing);
+
+	&:where(:hover) {
+		background-color: var(
+			--itx-tree-row-background-hover,
+			var(--itx-tree-row-background)
+		);
+		color: var(--itx-tree-row-color-hover, var(--itx-tree-row-color));
+	}
+}
+
+/* RTL: the rails grow from the inline-end edge. */
+:where([interop-tree-row]:dir(rtl)) {
+	background-image: repeating-linear-gradient(
+		to left,
+		var(--itx-tree-guide-color) 0 var(--itx-tree-guide-width),
+		transparent var(--itx-tree-guide-width) var(--itx-tree-indent)
+	);
+	background-position: right calc(var(--itx-tree-row-padding-inline) / 2) top 0;
+}
+
+/*
+ * Selected and current are ancestor-driven — the state lives on the item (or
+ * on the consumer's own link), not on the row — so these cannot self-nest.
+ */
+:where([interop-tree-item][aria-selected="true"]) > :where([interop-tree-row]) {
+	background-color: var(
+		--itx-tree-row-background-selected,
+		var(--itx-tree-row-background)
+	);
+	color: var(--itx-tree-row-color-selected, var(--itx-tree-row-color));
+}
+
+:where([interop-tree-row]:has([aria-current])) {
+	background-color: var(
+		--itx-tree-row-background-current,
+		var(--itx-tree-row-background)
+	);
+	color: var(--itx-tree-row-color-current, var(--itx-tree-row-color));
+}
+
+/* Links fill the label column so the whole row is the hit target. */
+:where([interop-tree-row] a) {
+	color: inherit;
+	text-decoration: none;
+	min-inline-size: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ── Twisty ──────────────────────────────────────────────────────────────── */
+/*
+ * The hit area is decoupled from the glyph: WCAG 2.2 SC 2.5.8 wants ≥24px of
+ * target, which is larger than any tasteful chevron.
+ */
+
+:where([interop-tree-toggle]) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--itx-tree-toggle-hit-area);
+	block-size: var(--itx-tree-toggle-hit-area);
+	padding: 0;
+	border: none;
+	background: none;
+	color: var(--itx-tree-toggle-color);
+	cursor: pointer;
+
+	&:where(:hover) {
+		color: var(--itx-tree-toggle-color-hover, var(--itx-tree-toggle-color));
+	}
+
+	&:where(:focus-visible) {
+		outline: var(--itx-tree-focus-width) solid var(--itx-tree-focus-color);
+		outline-offset: var(--itx-tree-focus-offset);
+		border-radius: var(--itx-tree-row-radius);
+	}
+}
+
+/*
+ * A leaf keeps its toggle box so labels stay aligned down the column, but
+ * paints nothing and takes no pointer.
+ */
+:where([interop-tree-toggle][data-leaf]) {
+	visibility: hidden;
+	cursor: default;
+}
+
+/*
+ * Default chevron, drawn only when nothing is projected. Two borders on a
+ * rotated box: no background-image, so it survives forced-colors mode, and
+ * it inherits currentColor for free.
+ */
+:where([interop-tree-toggle]:empty)::before {
+	content: "";
+	inline-size: var(--itx-tree-toggle-size);
+	block-size: var(--itx-tree-toggle-size);
+	border-block-start: var(--itx-tree-toggle-stroke) solid currentColor;
+	border-inline-end: var(--itx-tree-toggle-stroke) solid currentColor;
+	rotate: 45deg;
+	transition: rotate var(--itx-tree-transition-duration)
+		var(--itx-tree-transition-easing);
+}
+
+:where([interop-tree-toggle][data-expanded]:empty)::before {
+	rotate: 135deg;
+}
+
+:where([interop-tree-toggle]:empty:dir(rtl))::before {
+	rotate: -135deg;
+}
+
+:where([interop-tree-toggle][data-expanded]:empty:dir(rtl))::before {
+	rotate: 135deg;
+}
+
+/* ── Narrow containers ───────────────────────────────────────────────────── */
+/*
+ * A deep tree at 400% zoom overflows fast (WCAG 1.4.10). Below the threshold
+ * the indent step shrinks rather than the tree scrolling sideways.
+ * @container parens cannot read custom properties, so the threshold is a
+ * literal by necessity.
+ */
+
+@container tree (max-width: 320px) {
+	:where([interop-tree-row]) {
+		--itx-tree-indent: var(--itx-tree-indent-narrow);
+	}
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+/*
+ * Removed, not shortened. The group's discrete transitions go too, so expand
+ * and collapse are instantaneous rather than briefly-animated.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+	:where([interop-tree-group]),
+	:where([interop-tree-row]),
+	:where([interop-tree-toggle]:empty)::before {
+		transition: none;
+	}
+
+	:where([interop-tree-group]) {
+		@starting-style {
+			opacity: 1;
+		}
+	}
+}
+
+/* ── Forced colors ───────────────────────────────────────────────────────── */
+/*
+ * Backgrounds are dropped by the UA in forced-colors, taking the row's
+ * selection affordance with it. Restore it with system colors, and keep the
+ * guide rails visible by repainting the gradient in CanvasText.
+ */
+
+@media (forced-colors: active) {
+	:where([interop-tree-row]) {
+		background-image: repeating-linear-gradient(
+			to right,
+			CanvasText 0 var(--itx-tree-guide-width),
+			transparent var(--itx-tree-guide-width) var(--itx-tree-indent)
+		);
+	}
+
+	:where([interop-tree-item][aria-selected="true"]) > :where([interop-tree-row]) {
+		background-color: Highlight;
+		color: HighlightText;
+		forced-color-adjust: none;
+	}
+
+	:where([interop-tree-item]:focus-visible) > :where([interop-tree-row]) {
+		outline-color: CanvasText;
+	}
+}

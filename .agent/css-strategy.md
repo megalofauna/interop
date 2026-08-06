@@ -13,6 +13,36 @@ Both are imported globally — no per-component `styleUrl`. Consumers get compon
 
 The theme assigns **custom properties only** — never a real CSS property. Base values go on `[interop-root] X`; values may also be scoped to host-level variant/state selectors (e.g. `X.--stuck`). The theme never owns element interaction-state selectors (`:hover`, `:focus-visible`, `[aria-current]`) — those live in structural. See *Stateful parts* and *Host-level state & variants*.
 
+## Cascade layers
+
+Everything the library ships is imported into the `interop` cascade layer, split into two sub-layers declared in precedence order:
+
+```css
+@layer interop.foundation, interop.theme;
+
+@import "./components/button.css" layer(interop.foundation);
+@import "./protocol/components/button.css" layer(interop.theme);
+```
+
+**Every new `@import` in `interop.css` or a theme file must carry its `layer()`.** An import without one lands unlayered and silently outranks every consumer stylesheet.
+
+Why the layer is load-bearing, and not redundant with `:where()`: **unlayered rules beat layered rules regardless of specificity.** Zero specificity alone therefore does *not* deliver "consumer overrides always win" — against a consumer using Tailwind v4 (or any native `@layer`), unlayered library CSS at `(0,0,0)` wins over a layered utility at `(0,1,0)`. The layer is what makes the contract true.
+
+The division of labour:
+
+| Mechanism | Settles ordering |
+|---|---|
+| `:where()` | *inside* the library |
+| `@layer` | *against* the consumer |
+
+Consumers who use layers should declare the order explicitly, naming interop first. Otherwise order follows first appearance, so importing Interop before Tailwind gives the same result:
+
+```css
+@layer interop, theme, base, components, utilities;
+```
+
+A custom theme that needs to outrank the shipped one claims `@layer interop.theme` and still sits below all consumer CSS.
+
 ## Zero specificity
 
 Every selector in structural CSS is wrapped in `:where()`:
@@ -21,7 +51,7 @@ Every selector in structural CSS is wrapped in `:where()`:
 :where(interop-stepper > .interop-stepper__nav) { ... }
 ```
 
-This means specificity = `(0,0,0)` for every library rule. Consumer overrides always win regardless of declaration order. No `!important` needed.
+This means specificity = `(0,0,0)` for every library rule, so ordering within the layer never depends on selector weight and no `!important` is needed.
 
 **Critical exception — pseudo-elements**: Pseudo-elements cannot go inside `:where()`. The spec disallows it and browsers silently drop the rule. The correct pattern:
 

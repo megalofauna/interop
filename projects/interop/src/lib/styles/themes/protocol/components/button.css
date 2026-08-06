@@ -42,7 +42,7 @@
 	--itx-button-box-shadow: none;
 
 	/* Hover state */
-	--itx-button-background-hover: var(--itx-neutral-8);
+	--itx-button-background-hover: var(--itx-neutral-7);
 
 	/* Active state */
 	--itx-button-background-active: var(--itx-neutral-6);
