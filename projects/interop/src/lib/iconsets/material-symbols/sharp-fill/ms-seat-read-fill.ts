@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSeatReadFill: InteropIconDefinition = {
+  name: "ms-seat-read-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M275-680q-32 0-55.5-23.5T196-759q0-33 23.5-57t55.5-24q33 0 57 24t24 57q0 32-24 55.5T275-680ZM762-20 644-225H330q-26 0-46.5-15T258-280l-48-250q-9-46 22.5-80.5T312-645q22 0 41.5 9t32.5 26l102 134 108-78-33-16q-5-3-7-9t0-11l47-99q3-6 8.5-8t11.5 1l53 26q5 3 7 9t0 11l-41 89 21 32-187 139-42-32 19 96h165q20 0 35 12t25 29L815-50l-53 30ZM522-120H241q-26 0-44.5-17T173-180L80-645h63l87 465h292v60Z\"/></g>",
+} as const;

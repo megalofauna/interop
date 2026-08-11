@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsKeyboardFill: InteropIconDefinition = {
+  name: "ms-keyboard-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-200v-560h800v560H80Zm220-125h360v-60H300v60Zm-97-125h60v-60h-60v60Zm124 0h60v-60h-60v60Zm123 0h60v-60h-60v60Zm124 0h60v-60h-60v60Zm123 0h60v-60h-60v60ZM203-575h60v-60h-60v60Zm124 0h60v-60h-60v60Zm123 0h60v-60h-60v60Zm124 0h60v-60h-60v60Zm123 0h60v-60h-60v60Z\"/></g>",
+} as const;

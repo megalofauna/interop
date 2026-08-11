@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsApprovalDelegationOffFill: InteropIconDefinition = {
+  name: "ms-approval-delegation-off-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M570-531 406-695l43-43 121 122 234-233 42 41-276 277ZM890-69l-42 42L39-836l42-42L890-69Zm-595-68v-337h83q5 0 10.5 1t10.5 3l145 55 134 134h-63q-23 0-45.5-3.5T525-295l-73-24-10 28 75 26q26 9 54 11.5t56 2.5h81l131 131-232 72-312-89ZM80-80v-394h154v394H80Z\"/></g>",
+} as const;

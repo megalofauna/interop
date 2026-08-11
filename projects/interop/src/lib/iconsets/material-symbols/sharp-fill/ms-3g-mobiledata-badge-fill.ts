@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const Ms3gMobiledataBadgeFill: InteropIconDefinition = {
+  name: "ms-3g-mobiledata-badge-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M490-280h270v-232H640v60h61v112H550v-280h210v-60H490v400Zm-290 0h227v-170l-30-29 30-31v-170H200v60h167v110H202v60h165v110H200v60ZM40-120v-720h880v720H40Z\"/></g>",
+} as const;

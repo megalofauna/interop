@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMeetingRoomFill: InteropIconDefinition = {
+  name: "ms-meeting-room-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-60h92v-660h390v45h147v615h91v60H689v-615h-87v615H120Zm359.5-331.5Q491-463 491-480t-11.5-28.5Q468-520 451-520t-28.5 11.5Q411-497 411-480t11.5 28.5Q434-440 451-440t28.5-11.5Z\"/></g>",
+} as const;

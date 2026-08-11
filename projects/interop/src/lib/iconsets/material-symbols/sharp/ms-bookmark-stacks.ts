@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBookmarkStacks: InteropIconDefinition = {
+  name: "ms-bookmark-stacks",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-245 65-467l63-34 352 188 353-188 63 34-416 222Zm0 165L65-302l63-34 352 188 353-188 63 34L480-80Zm0-330L41-645l439-235 32 17-2 188h354l56 30-440 235Zm0-69 259-136H450v-180L166-645l314 166Zm-30-136Z\"/></g>",
+} as const;

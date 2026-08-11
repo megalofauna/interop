@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMilitaryTech: InteropIconDefinition = {
+  name: "ms-military-tech",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M280-880h400v381L496-392l26 97h134l-109 81 42 134-109-81-110 81 42-134-109-81h135.11L463-392 280-499v-381Zm60 60v273q0 7 4.5 13t13.5 11l96 53v-350H340Zm280 0H514v350l88-53q9-5 13.5-11t4.5-13v-273ZM484-637Zm-30-8Zm60 0Z\"/></g>",
+} as const;

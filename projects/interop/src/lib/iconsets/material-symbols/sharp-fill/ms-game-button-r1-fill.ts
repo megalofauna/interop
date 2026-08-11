@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsGameButtonR1Fill: InteropIconDefinition = {
+  name: "ms-game-button-r1-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M880-800v486q0 64-44.5 109T727-160H233q-64 0-108.5-45T80-314v-486h800ZM622-339h48v-282h-40l-91 72 25 33 58-47v224Zm-331 1h50v-109h43l64 109h58l-77-124q26-11 39-29t13-44q0-41-26-62.5T378-619h-87v281Zm50-153v-83h35q26 0 40 11t14 31q0 20-15 30.5T371-491h-30Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsWash: InteropIconDefinition = {
+  name: "ms-wash",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M647.5-687.45Q620-714.9 620-750q0-34 21-73.5t69-99.5q48 60 69 99.5t21 73.5q0 35.1-27.43 62.55Q745.14-660 710.07-660t-62.57-27.45ZM760-80H80v-427l374-241 54 54-84 134h376v60H316l91-147-267 174v333h620v60ZM480-360v-60h400v60H480Zm0 140v-60h360v60H480ZM310-333Z\"/></g>",
+} as const;

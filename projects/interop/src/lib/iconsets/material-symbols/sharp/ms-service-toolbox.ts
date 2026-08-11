@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsServiceToolbox: InteropIconDefinition = {
+  name: "ms-service-toolbox",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M303-729v-111h352v111h105l120 285v284H80v-284l118-285h105Zm60 0h232v-51H363v51Zm-79 260v-46h60v46h272v-46h60v46h127l-83-200H240l-83 200h127Zm0 60H140v189h680v-189H676v46h-60v-46H344v46h-60v-46Zm196-30Zm0-30Zm0 60Z\"/></g>",
+} as const;

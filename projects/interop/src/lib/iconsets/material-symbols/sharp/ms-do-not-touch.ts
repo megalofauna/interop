@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsDoNotTouch: InteropIconDefinition = {
+  name: "ms-do-not-touch",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m840-206-60-60v-534h60v594ZM340-705l-60-60v-75h60v135Zm167 166-60-59v-322h60v381Zm167 59h-60v-400h60v400ZM375-100h399L340-534v252L166-410l209 310Zm-31 60L54-468l62-53 164 124v-197L26-848l43-43L916-44 873-1l-39-39H344Zm222-440Zm-9 163Z\"/></g>",
+} as const;

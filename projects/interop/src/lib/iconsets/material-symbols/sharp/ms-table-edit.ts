@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTableEdit: InteropIconDefinition = {
+  name: "ms-table-edit",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M180-430h270v-190H180v190Zm0-250h600v-100H180v100Zm-60 560v-720h720v280h-60L649-430 450-232.38V-120H120Zm60-60h270v-190H180v190Zm330-250h139l131-130v-60H510v190Zm10 350v-123l263-262 122 122L643-80H520Zm300-263-37-37 37 37ZM580-140h38l121-122-37-37-122 121v38Zm141-141-19-18 37 37-18-19Z\"/></g>",
+} as const;

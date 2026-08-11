@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsNfc: InteropIconDefinition = {
+  name: "ms-nfc",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M240-240h480v-480H510q-26 0-43 17t-17 43v128q-15 8.56-22.5 21.78T420-480q0 26 17 43t43 17q26 0 43-17t17-43q0-17.35-8-30.18Q524-523 510-532v-128h150v360H300v-360h113v-60H240v480ZM120-120v-720h720v720H120Zm60-60h600v-600H180v600Zm0 0v-600 600Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMusicNoteAdd: InteropIconDefinition = {
+  name: "ms-music-note-add",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M369.5-163.5Q326-207 326-270t43.5-106.5Q413-420 476-420q28 0 50.5 8t39.5 22v-450h234v135H626v435q0 63-43.5 106.5T476-120q-63 0-106.5-43.5ZM290-520v-130H160v-60h130v-130h60v130h130v60H350v130h-60Z\"/></g>",
+} as const;

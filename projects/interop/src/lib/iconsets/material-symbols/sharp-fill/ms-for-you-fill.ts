@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsForYouFill: InteropIconDefinition = {
+  name: "ms-for-you-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M648.5-492Q734-505 800-533v388q-62 29-149.5 47T480-80q-83 0-170.5-18T160-145v-388q66 28 151.5 41T480-479q83 0 168.5-13Zm-59-343.5Q634-791 634-726t-44.5 109.5Q545-572 480-572t-109.5-44.5Q326-661 326-726t44.5-109.5Q415-880 480-880t109.5 44.5Z\"/></g>",
+} as const;

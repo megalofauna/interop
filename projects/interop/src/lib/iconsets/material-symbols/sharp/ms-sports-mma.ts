@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSportsMma: InteropIconDefinition = {
+  name: "ms-sports-mma",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M280-120v-135h400v135H280Zm-40-204-40-190v-326h490v160h70v166l-40 190H240Zm48.57-60H671l29-147v-37h-70v-212H260v249l28.57 147ZM335-568h220v-134H335v134Zm145-14Z\"/></g>",
+} as const;

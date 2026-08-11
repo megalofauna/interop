@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCategorySearchFill: InteropIconDefinition = {
+  name: "ms-category-search-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-145v-304h304v304H80Zm141-421 220-354 220 354H221ZM870-51 769-152q-22 15-48 23.5t-55 8.5q-74 0-124-50t-50-124q0-74 50-124t124-50q74 0 124 50t50 124q0 28-7.5 52.5T811-196L913-94l-43 43ZM747-213q33-33 33-81t-33-81q-33-33-81-33t-81 33q-33 33-33 81t33 81q33 33 81 33t81-33Z\"/></g>",
+} as const;

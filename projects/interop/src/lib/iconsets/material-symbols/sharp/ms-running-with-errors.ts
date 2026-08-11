@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsRunningWithErrors: InteropIconDefinition = {
+  name: "ms-running-with-errors",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M478-80q-83 0-156-31.5T195-197q-54-54-85.5-127T78-480q0-83 31.5-156T195-763q54-54 127-85.5T478-880q88 0 166.5 36T780-742L478-440v-380q-142 0-241 99t-99 241q0 142 98.81 241 98.82 99 241.19 99 81 0 153.5-36.5T757-276v83q-57 54-129 83.5T478-80Zm339-147v-327h60v327h-60Zm9.5 130.52q-9.5-9.48-9.5-23.5t9.48-23.52q9.48-9.5 23.5-9.5t23.52 9.48q9.5 9.48 9.5 23.5t-9.48 23.52q-9.48 9.5-23.5 9.5t-23.52-9.48Z\"/></g>",
+} as const;

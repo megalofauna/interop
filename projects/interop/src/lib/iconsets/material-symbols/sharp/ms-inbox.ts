@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsInbox: InteropIconDefinition = {
+  name: "ms-inbox",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-720h720v720H120Zm60-60h600v-136H634q-26 40-67.5 61.5T480-233q-45 0-86.5-21.5T326-316H180v136Zm374-136.5q33-23.5 56-59.5h170v-404H180v404h170q23 36 56 59.5t74 23.5q41 0 74-23.5ZM180-180h600-600Z\"/></g>",
+} as const;

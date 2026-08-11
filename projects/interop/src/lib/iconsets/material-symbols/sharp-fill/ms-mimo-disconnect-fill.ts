@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMimoDisconnectFill: InteropIconDefinition = {
+  name: "ms-mimo-disconnect-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M818-77 655-240h-3l48 46v74H260v-73l47-47H80v-600h60v86L28-866l43-43 790 789-43 43Zm7-163L225-840h656v600h-56Z\"/></g>",
+} as const;

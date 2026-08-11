@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsWindowSensorFill: InteropIconDefinition = {
+  name: "ms-window-sensor-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M858.5-618.63Q850-627.25 850-640v-160q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v160q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM120-120v-720h640v720H120Zm90-390h190v-40h80v40h190v-240H210v240Zm0 300h460v-240H210v240Zm-30 30h520v-600H180v600Z\"/></g>",
+} as const;

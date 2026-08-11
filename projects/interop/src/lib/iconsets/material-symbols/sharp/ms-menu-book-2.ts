@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMenuBook2: InteropIconDefinition = {
+  name: "ms-menu-book-2",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M160-80v-164h-40v-60h40v-146h-40v-60h40v-146h-40v-60h40v-164h640v800H160Zm60-60h520v-680H220v104h40v60h-40v146h40v60h-40v146h40v60h-40v104Zm165-140h50v-160q28.17-6.86 46.58-27.93Q500-489 500-516.69V-680h-40v151h-30v-151h-40v151h-30v-151h-40v163q0 28 18.42 49.07Q356.83-446.86 385-440v160Zm225 0h50v-400q-50 0-80 30t-30 80v130h60v160ZM220-140v-680 680Z\"/></g>",
+} as const;

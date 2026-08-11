@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSynagogueFill: InteropIconDefinition = {
+  name: "ms-synagogue-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M750-630v-50q0-36 24.5-60.5T835-765q36 0 60.5 24.5T920-680v50H750Zm-710 0v-50q0-36 24.5-60.5T125-765q36 0 60.5 24.5T210-680v50H40Zm0 510v-480h170v480H40Zm200 0v-520l240-200 240 200v520H560v-280H400v280H240Zm510 0v-480h170v480H750ZM519-521q16-16 16-39t-16-39q-16-16-39-16t-39 16q-16 16-16 39t16 39q16 16 39 16t39-16Z\"/></g>",
+} as const;

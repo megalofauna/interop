@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsPinDropFill: InteropIconDefinition = {
+  name: "ms-pin-drop-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-200Q338-303 269-406t-69-194q0-123 78.5-201.5T480-880q123 0 201.5 78.5T760-600q0 91-69 194T480-200Zm-1-320q34 0 57.5-23.5T560-600q0-33-23.5-56.5T479-680q-33 0-56 23.5T400-600q0 33 23 56.5t56 23.5ZM200-80v-60h560v60H200Z\"/></g>",
+} as const;

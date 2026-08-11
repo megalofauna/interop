@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsReplaceImageFill: InteropIconDefinition = {
+  name: "ms-replace-image-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M347-190h266l-86-113-66 78-44-59-70 94ZM240-80v-480h480v480H240ZM131-620q32-118 129.5-189T480-880q91 0 170.5 42.5T780-719v-131h60v230H610v-60h124q-42-66-109-103t-145-37q-97 0-176 54.5T193-620h-62Z\"/></g>",
+} as const;

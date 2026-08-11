@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBorg: InteropIconDefinition = {
+  name: "ms-borg",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-277v-406l360-206 360 206v406L480-71 120-277Zm206-50v-123H180v138l270 155v-170H326Zm0-306h124v-170L180-648v138h146v-123Zm60 246h187v-186H386v186Zm247 60H510v170l270-155v-138H633v123Zm0-306v123h147v-138L510-803v170h123Z\"/></g>",
+} as const;

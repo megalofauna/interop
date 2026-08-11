@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMarginFill: InteropIconDefinition = {
+  name: "ms-margin-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-720h720v720H120Zm155-487h78v-78h-78v78Zm166-1 79 1 1-79-79-1-1 79Zm167 1h78v-78h-78v78ZM275-441h78v-78h-78v78Zm166-1 79 1 1-79-79-1-1 79Zm167 1h78v-78h-78v78Z\"/></g>",
+} as const;

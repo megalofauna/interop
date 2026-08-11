@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsVideoFrameCopyFill: InteropIconDefinition = {
+  name: "ms-video-frame-copy-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M40-120v-580h60v520h700v60H40Zm820-530v-130H730v-60h190v190h-60Zm-700 0v-190h190v60H220v130h-60Zm570 410v-60h130v-130h60v190H730Zm-570 0v-190h60v130h130v60H160Zm310-152 231-149-231-148v297Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAndroidCellDual4Bar: InteropIconDefinition = {
+  name: "ms-android-cell-dual-4-bar",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M60-384v-184h100v184H60Zm247 0v-247h100v247H307Zm246 0v-331h100v331H553Zm247 0v-415h100v415H800ZM60-160v-164h100v164H60Zm247 0v-164h100v164H307Zm246 0v-164h100v164H553Zm247 0v-164h100v164H800Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsYakitoriFill: InteropIconDefinition = {
+  name: "ms-yakitori-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M858-60 678-240 531-92 371-252l59-60-75-75-59 59-160-160 59-59L77-665l89-88L60-858l43-42 105 106 88-89 118 118 58-59 162 161-59 58 74 75 59-59 161 160-148 147 179 180-42 42Z\"/></g>",
+} as const;

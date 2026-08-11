@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsRequestQuote: InteropIconDefinition = {
+  name: "ms-request-quote",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-201h60v-40h90v-190H420v-70h180v-60h-90v-40h-60v40h-90v190h180v70H360v60h90v40ZM160-80v-800h421l219 219v581H160Zm60-60h520v-494H554v-186H220v680Zm0-680v186-186 680-680Z\"/></g>",
+} as const;

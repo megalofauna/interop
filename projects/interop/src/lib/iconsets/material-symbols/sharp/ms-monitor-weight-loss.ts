@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMonitorWeightLoss: InteropIconDefinition = {
+  name: "ms-monitor-weight-loss",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M600-230h320v60H600v-60Zm-420 50v-600 600Zm-60 60v-720h720v421h-60v-361H180v600h361v60H120Zm443.5-403.38q34.5-34.38 34.5-83.5t-34.38-83.62q-34.38-34.5-83.5-34.5t-83.62 34.38q-34.5 34.38-34.5 83.5t34.38 83.62q34.38 34.5 83.5 34.5t83.62-34.38ZM397-587v-40h40v40h-40Zm63 0v-40h40v40h-40Zm63 0v-40h40v40h-40Z\"/></g>",
+} as const;

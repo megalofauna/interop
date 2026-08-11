@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSyncDesktop: InteropIconDefinition = {
+  name: "ms-sync-desktop",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M736-520q-11-51-38-93.5T626-694v124h-60v-230h230v60H665q49 41 86.5 100.5T797-520h-61ZM577-260h243v-120H577v120Zm-60 60v-240h363v240H517Zm-350 40v-60h130q-64-48-100.5-108.5T160-477q0-100 59-186.5T387-784v62q-71 26-119 93.01-48 67-48 151.99 0 63.68 27.5 117.34Q275-306 337-266v-124h60v230H167Zm310 80v-60h443v60H477Zm100-180v-120 120Z\"/></g>",
+} as const;

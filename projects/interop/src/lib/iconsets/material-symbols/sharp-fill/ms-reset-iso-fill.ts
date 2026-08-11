@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsResetIsoFill: InteropIconDefinition = {
+  name: "ms-reset-iso-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-351v-129h128L480-351Zm0 161v-85l205-205h84L480-190Zm0 70 361-360h39v45L525-80h-45v-40Zm126 40 274-274v85L691-80h-85Zm162 0 112-112v112H768Zm67-460h-62q-23-102-104-171t-189-69q-125 0-212.5 87.5T180-480q0 81 38.5 147.5T320-226v-114h60v220H160v-60h121q-73-48-117-127t-44-173q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q134 0 233.5 86T835-540Z\"/></g>",
+} as const;

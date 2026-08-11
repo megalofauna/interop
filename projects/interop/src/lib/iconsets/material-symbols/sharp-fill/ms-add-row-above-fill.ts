@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAddRowAboveFill: InteropIconDefinition = {
+  name: "ms-add-row-above-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-80v-329h720v329H120Zm0-389v-331h152q-1 7.5-1.5 14.62-.5 7.13-.5 15.38 0 88 60.9 149T480-560q88.2 0 149.1-61.5Q690-683 690-770q0-8.25-.5-15.38-.5-7.12-1.5-14.62h152v331H120Zm330-191v-80h-80v-60h80v-80h60v80h80v60h-80v80h-60Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsHourglassArrowDown: InteropIconDefinition = {
+  name: "ms-hourglass-arrow-down",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M337-517q48 0 82-34t34-82v-107H220v107q0 48 34.5 82t82.5 34ZM220-220h233v-109q0-48-34-82t-82-34q-48 0-82.5 34T220-329v109Zm-120 60v-60h60v-108q0-47.89 25-88.95Q210-458 252-481q-42-23-67-63t-25-88v-108h-60v-60h473v60h-60v108q0 48-24.5 88T422-481q42 23 66.5 64.05Q513-375.89 513-328v108h60v60H100Zm692 0L663-289l42-42 56 56v-525h60v526l57-57 42 42-128 129ZM337-740Zm0 520Z\"/></g>",
+} as const;

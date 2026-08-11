@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMusicVideo: InteropIconDefinition = {
+  name: "ms-music-video",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M494-316.5q26-26.5 26-63.5v-218h108v-72H484v216q-10-7-25.5-11.5T430-470q-37.8 0-63.9 26.5T340-380q0 37 26.14 63.5t64 26.5Q468-290 494-316.5ZM80-160v-640h800v640H80Zm60-60h680v-520H140v520Zm0 0v-520 520Z\"/></g>",
+} as const;

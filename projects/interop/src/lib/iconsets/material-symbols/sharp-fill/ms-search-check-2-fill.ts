@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSearchCheck2Fill: InteropIconDefinition = {
+  name: "ms-search-check-2-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m356-430 208-208-42-43-166 166-87-88-43 42 130 131Zm45 189q-133 0-226.5-93.5T81-561q0-133 93.5-226T401-880q133 0 226 93.5T720-560q0 59-19.5 110T646-357l234 234-42 43-234-234q-42 35-93.5 54T401-241Z\"/></g>",
+} as const;

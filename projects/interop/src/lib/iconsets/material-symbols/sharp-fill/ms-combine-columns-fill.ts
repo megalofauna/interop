@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCombineColumnsFill: InteropIconDefinition = {
+  name: "ms-combine-columns-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-720h330v193q-61 11-100.5 57.5T310-480q0 63 39.5 109.5T450-313v193H120Zm390 0v-193q61-11 100.5-57.5T650-480q0-63-39.5-109.5T510-647v-193h330v720H510Zm-60-250v-80h-80v-60h80v-80h60v80h80v60h-80v80h-60Z\"/></g>",
+} as const;

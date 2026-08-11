@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsElevatorFill: InteropIconDefinition = {
+  name: "ms-elevator-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M280-230h120v-170h40v-190H240v190h40v170Zm99.5-410.5Q396-657 396-680t-16.5-39.5Q363-736 340-736t-39.5 16.5Q284-703 284-680t16.5 39.5Q317-624 340-624t39.5-16.5ZM515-530h200L615-690 515-530Zm100 260 100-160H515l100 160ZM120-120v-720h720v720H120Z\"/></g>",
+} as const;

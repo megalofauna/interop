@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsEditOffFill: InteropIconDefinition = {
+  name: "ms-edit-off-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M584-455 456-583l281-281 128 128-281 281ZM817-55 500-371 249-120H121v-128l251-251L55-817l42-42L859-97l-42 42Zm-78-642 40-40-41-41-40 40 41 41Z\"/></g>",
+} as const;

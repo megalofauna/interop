@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAccountBoxFill: InteropIconDefinition = {
+  name: "ms-account-box-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M580-441q40-40 40-98t-40-98q-40-40-98-40t-98 40q-40 40-40 98t40 98q40 40 98 40t98-40ZM120-120v-720h720v720H120Zm60-60h600v-37q-60-56-136-90.5T480-342q-88 0-164 34.5T180-217v37Z\"/></g>",
+} as const;

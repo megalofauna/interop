@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBatteryAndroidBolt: InteropIconDefinition = {
+  name: "ms-battery-android-bolt",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M40-240v-480h707l-48 60H100v360h549l-10 60H40Zm60-60v-360 360Zm607 20 28-160H600l192-240h21l-28 160h135L728-280h-21Z\"/></g>",
+} as const;

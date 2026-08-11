@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const Ms1kPlusFill: InteropIconDefinition = {
+  name: "ms-1k-plus-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M676-400h40v-63h64v-33h-64v-64h-40v64h-63v33h63v63Zm-240 40h50v-90l84 90h66L524-480l112-120h-66l-84 90v-90h-50v240Zm-140 0h50v-240H233v50h63v190ZM120-120v-720h720v720H120Z\"/></g>",
+} as const;

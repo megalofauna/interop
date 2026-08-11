@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsEditArrowDownFill: InteropIconDefinition = {
+  name: "ms-edit-arrow-down-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M792-160 663-289l42-42 56 56v-525h60v526l57-57 42 42-128 129Zm-672-84v-154l309-310q18-18 43-18t42 18l68 69q17 17 17 42t-17 42L273-244H120Zm351-283 59-61-67-67-60 59 68 69Z\"/></g>",
+} as const;

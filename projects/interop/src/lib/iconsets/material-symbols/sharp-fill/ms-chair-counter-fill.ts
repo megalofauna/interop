@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsChairCounterFill: InteropIconDefinition = {
+  name: "ms-chair-counter-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M283-80v-43q38-27 79.5-40.5T450-180v-105H325v-60h125v-269H340l-15-42H160v-66q0-66 43.5-112T313-880h333q66 0 110 46t44 112v66H634l-15 42H510v269h124v60H510v105q45 3 87 16.5t79 40.5v43H283Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMobileTheftFill: InteropIconDefinition = {
+  name: "ms-mobile-theft-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m619-297-43-43 95-94-44-45-152 153-42-43 151-152-44-44-180 182-44-44 182-181-43-44-125 125-41-44 209-209-111-61v-77h330l154 153q23 23 34 51t11 57q0 29-11 57t-34 51L619-297ZM533-32 30-107l116-786h25l228 127-194 194 84 88-58 57 129 129 29-30 163 170-19 126Zm172-8-33-34 126-127H689v-48h191v191h-48v-109L705-40Z\"/></g>",
+} as const;

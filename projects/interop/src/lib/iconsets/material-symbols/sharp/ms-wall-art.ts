@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsWallArt: InteropIconDefinition = {
+  name: "ms-wall-art",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M81-80v-640h240l160-160 160 160h240v640H81Zm60-60h680v-520H141v520Zm113-100h460L572-427 446-260l-92-114-100 134Zm481.5-224.62q14.5-14.62 14.5-35.5 0-20.88-14.62-35.38-14.62-14.5-35.5-14.5-20.88 0-35.38 14.62-14.5 14.62-14.5 35.5 0 20.88 14.62 35.38 14.62 14.5 35.5 14.5 20.88 0 35.38-14.62ZM387-720h188l-94-94-94 94ZM141-140v-520 520Z\"/></g>",
+} as const;

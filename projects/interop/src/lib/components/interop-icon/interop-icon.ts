@@ -171,6 +171,23 @@ export class InteropIcon {
               "Register it via provideInteropIcons() at the app, module, or component level.",
           );
         }
+        // [strokeWidth] on a fill-only icon is a silent no-op: the attribute is
+        // emitted, but there is no stroke for it to act on. Material Symbols and
+        // Carbon are drawn as filled contours — even their "outline" styles are
+        // frames, two nested contours filled by winding rule, not stroked lines.
+        // Weight there is fixed when the icon is generated, not at runtime.
+        const icon = this.icon();
+        if (
+          icon &&
+          this.strokeWidth() !== undefined &&
+          icon.defaultStrokeWidth === undefined
+        ) {
+          console.warn(
+            `InteropIcon: [strokeWidth] has no effect on "${icon.name}" — it is a ` +
+              "fill-only icon with no stroke to widen. Use a stroked set (Tabler, " +
+              "Phosphor regular) for a runtime weight axis.",
+          );
+        }
       });
     }
   }

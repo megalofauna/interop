@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsIfl: InteropIconDefinition = {
+  name: "ms-ifl",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M690-270q17-17 17-42t-17-42q-17-17-42-17t-42 17q-17 17-17 42t17 42q17 17 42 17t42-17ZM520-440q17-17 17-42t-17-42q-17-17-42-17t-42 17q-17 17-17 42t17 42q17 17 42 17t42-17ZM354-606q17-17 17-42t-17-42q-17-17-42-17t-42 17q-17 17-17 42t17 42q17 17 42 17t42-17ZM120-120v-720h720v720H120Zm60-60h600v-600H180v600Zm0 0v-600 600Z\"/></g>",
+} as const;

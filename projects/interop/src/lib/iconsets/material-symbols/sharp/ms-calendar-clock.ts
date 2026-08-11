@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCalendarClock: InteropIconDefinition = {
+  name: "ms-calendar-clock",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M180-630h600v-130H180v130Zm0 0v-130 130ZM120-80v-740h125v-60h65v60h340v-60h65v60h125v367q-14.17-7.29-29.08-12.14Q796-470 780-473v-97H180v430h319q6 17 14 31.5T532-80H120Zm477.5-15.5Q542-151 542-229t55.5-133.5Q653-418 731-418t133.5 55.5Q920-307 920-229T864.5-95.5Q809-40 731-40T597.5-95.5ZM789.24-128 817-156l-75-75v-112h-39v126l86.24 89Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMassageFill: InteropIconDefinition = {
+  name: "ms-massage-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M224-427 80-765l239-116 85 122h264l292 279-76 76-355-187-104-8-5 60 92 6 127 67-39 80-376-41Zm-97 307-17-58 204-51q78-20 155.5-35.5T628-280q75 0 143.5 28.5T897-173l-41 44q-47-44-105.5-67.5T629-220q-80 0-156.5 16T319-169l-192 49Z\"/></g>",
+} as const;

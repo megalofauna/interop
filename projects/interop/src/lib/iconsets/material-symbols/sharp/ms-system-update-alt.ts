@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSystemUpdateAlt: InteropIconDefinition = {
+  name: "ms-system-update-alt",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-160v-640h310v60H140v520h680v-520H570v-60h310v640H80Zm400-185L280-545l43-43 127 127v-339h60v339l127-127 43 43-200 200Z\"/></g>",
+} as const;

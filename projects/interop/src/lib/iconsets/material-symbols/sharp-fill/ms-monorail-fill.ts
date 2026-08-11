@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMonorailFill: InteropIconDefinition = {
+  name: "ms-monorail-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-263h60v123h207v60H243v-60h207v-123ZM280-880h400q49.5 0 84.75 35.25T800-760v455q0 44.25-30.75 74.62Q738.5-200 695-200H570v-120H390v120H265q-44.25 0-74.62-30.38Q160-260.75 160-305v-455q0-49.5 34.5-84.75T280-880Zm-60 180v150h520v-150H220Z\"/></g>",
+} as const;

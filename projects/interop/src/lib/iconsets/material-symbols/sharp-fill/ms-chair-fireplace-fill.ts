@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsChairFireplaceFill: InteropIconDefinition = {
+  name: "ms-chair-fireplace-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M596-418q23 0 40.5-14.5T656-470q4-34-21.5-51T595-564q-3 8-3.5 14.5T593-533q3 18 6 29t1 24q-3 16-15.5 29T555-433q9 7 19.5 11t21.5 4Zm-89 90-34-60q-14-23-20.5-48.5T446-489q0-70 42.5-127T616-718q5 39 24.5 71.5T697-582q32 28 44 50.5t12 54.5q0 25-7 45.5T722-388h98v-432H388v404h-60v-464h552v552H507ZM160-120v-116h-41L80-673h60l30 317h257v120h-41v116h-40v-116H200v116h-40Z\"/></g>",
+} as const;

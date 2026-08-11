@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSportsTennisFill: InteropIconDefinition = {
+  name: "ms-sports-tennis-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m123-159-43-43 174-174q33-33 47-82.5T315-597q0-57 25-112t76-106q88-88 193-100t173 56q68 68 56 174T738-491q-51 51-106 75t-112 24q-89 0-139.5 13T297-333L123-159Zm290-332q49 49 133 36.5T697-534q67-67 80-149.5T741-815q-49-49-132.5-36.5T458-772q-67 67-80.5 149.5T413-491ZM634-82q-42-42-42-102t42-102q42-42 102-42t102 42q42 42 42 102T838-82q-42 42-102 42T634-82Z\"/></g>",
+} as const;

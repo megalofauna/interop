@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsDriveExportFill: InteropIconDefinition = {
+  name: "ms-drive-export-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m676-74-42-42 133-134H650v-60h220v220h-60v-118L676-74Zm-412-46q-48 0-88.5-23.5T111-208q-23-41-23.5-87t23.5-87l40-68h180l191 330H264Zm-78-390 142-243q24-41 64-64t88-23q47 0 87 23t64 64l52 88-89 155H186Zm400 132 132-228 90 156q-61-8-119 10t-103 62Z\"/></g>",
+} as const;

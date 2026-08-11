@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSendAndArchive: InteropIconDefinition = {
+  name: "ms-send-and-archive",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m690-156 113-113-21-21-77 77v-171h-30v171l-77-77-21 21 113 113Zm-570-4v-640l664 280h-59q-24 0-45.5 1t-37.5 4L180-710v168l242 62-242 60v167l282-118q-8 17-13.5 39.5T441-295L120-160Zm436 24.5Q500-191 500-269q0-79 56-135t134-56q78 0 134 56t56 135q0 78-56 133.5T690-80q-78 0-134-55.5ZM180-371v-339 457-118Z\"/></g>",
+} as const;

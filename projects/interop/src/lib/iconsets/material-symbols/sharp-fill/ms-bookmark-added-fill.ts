@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBookmarkAddedFill: InteropIconDefinition = {
+  name: "ms-bookmark-added-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M716-605 610-711l42-43 64 64 148-149 43 43-191 191ZM200-120v-725h396q-23 26-34.5 55.5T550-725q0 67 43 117t107 61q17 2 30 2t30-2v427L480-240 200-120Z\"/></g>",
+} as const;

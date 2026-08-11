@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsIos: InteropIconDefinition = {
+  name: "ms-ios",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M160-615v-60h60v60h-60Zm0 335v-275h60v275h-60Zm127 0v-400h225v400H287Zm60-60h105v-280H347v280Zm228 60v-60h165v-114H575v-226h225v60H635v106h165v234H575Z\"/></g>",
+} as const;

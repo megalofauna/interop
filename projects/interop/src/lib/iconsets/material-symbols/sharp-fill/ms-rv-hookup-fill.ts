@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsRvHookupFill: InteropIconDefinition = {
+  name: "ms-rv-hookup-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m784-101-43-43 63-63H470q-10 39-42.5 62.5T356-121q-39 0-71.5-23.5T242-207H80v-356h241v-137H80v-60h580v493h144l-63-63 43-43 136 136-136 136ZM381-563h219v-136H381v136Zm16.5 365.5Q414-214 414-239t-16.5-41.5Q381-297 356-297t-41.5 16.5Q298-264 298-239t16.5 41.5Q331-181 356-181t41.5-16.5Z\"/></g>",
+} as const;

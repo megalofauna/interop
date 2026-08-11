@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTwoPagerStoreFill: InteropIconDefinition = {
+  name: "ms-two-pager-store-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M580-80v-130h300v130H580ZM80-160v-640h800v320h-60v-260H510v249h-60v331H80Zm453-80 36-180h322l36 180H533Zm-343-77h210v-60H190v60Zm0-129h210v-60H190v60Zm0-129h210v-60H190v60Zm370 0v-60h210v60H560Z\"/></g>",
+} as const;

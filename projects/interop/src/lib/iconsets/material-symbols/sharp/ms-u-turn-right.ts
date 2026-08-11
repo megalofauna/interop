@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsUTurnRight: InteropIconDefinition = {
+  name: "ms-u-turn-right",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M252-120v-486q0-97 68.5-165.5T486-840q97 0 165.5 68.5T720-606v214l90-90 42 42-162 162-162-162 42-42 90 90v-214q0-72-51-123t-123-51q-72 0-123 51t-51 123v486h-60Z\"/></g>",
+} as const;

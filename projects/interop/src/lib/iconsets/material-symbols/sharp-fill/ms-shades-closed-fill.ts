@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsShadesClosedFill: InteropIconDefinition = {
+  name: "ms-shades-closed-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-80v-740H80v-60h800v60h-40v740h-75q-14.04-39.38-47.52-64.69Q684-170 640.05-170 595-170 562-144.5T516-80h-73q-12.81-39.38-45.91-64.69Q364-170 320.05-170q-45.05 0-78.53 25.31Q208.04-119.38 194-80h-74Zm390-740h-60v593h60v-593Z\"/></g>",
+} as const;

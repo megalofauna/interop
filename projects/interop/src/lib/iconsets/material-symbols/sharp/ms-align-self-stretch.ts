@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAlignSelfStretch: InteropIconDefinition = {
+  name: "ms-align-self-stretch",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-820v-60h800v60H80Zm0 740v-60h800v60H80Zm350-190v-440h100v440H430Z\"/></g>",
+} as const;

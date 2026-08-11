@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsPlagiarism: InteropIconDefinition = {
+  name: "ms-plagiarism",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M448-294q20 0 40.5-5.5T528-317l110 110 40-40-111-111q11-17 15.5-36t4.5-39q0-59-40-99t-99-40q-59 0-99 40t-40 99q0 59 40 99t99 40Zm-56.5-82.5Q369-399 369-433t22.5-56.5Q414-512 448-512t56.5 22.5Q527-467 527-433t-22.5 56.5Q482-354 448-354t-56.5-22.5ZM160-80v-800h421l219 219v581H160Zm391-554v-186H220v680h520v-494H551ZM220-820v186-186 680-680Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTableEditFill: InteropIconDefinition = {
+  name: "ms-table-edit-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-400v-220h330v220H120Zm0-280v-160h720v160H120Zm0 560v-220h330v220H120Zm390-280v-220h330L619-400H510Zm10 320v-123l263-262 122 122L643-80H520Zm263-224 37-39-37-37-38 38 38 38Z\"/></g>",
+} as const;
