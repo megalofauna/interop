@@ -7,15 +7,6 @@
 	& + * {
 		margin-block-start: var(--itx-spacing-6);
 	}
-
-	&::before {
-		content: "";
-		margin-right: var(--itx-spacing-2);
-		flex: 0 0 var(--itx-spacing-2);
-		height: var(--itx-spacing-2);
-		align-self: center;
-		background-color: orange;
-	}
 }
 
 .dialog-page__actions {

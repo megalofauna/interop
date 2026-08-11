@@ -135,13 +135,13 @@
 	--itx-button-border-radius: 0;
 	transition-property: background-color, background, color;
 	--itx-button-background: var(--itx-neutral-4);
-	--itx-button-foreground: var(--itx-neutral-9);
+	--itx-button-foreground: var(--itx-neutral-10);
 	--itx-button-transition-duration: 300ms;
 	--itx-button-transition-timing-function: ease-out;
 
 	&:hover {
-		--itx-button-background-hover: var(--itx-neutral-4);
-		--itx-button-foreground-hover: var(--itx-colorway-11);
+		--itx-button-background-hover: var(--itx-neutral-5);
+		--itx-button-foreground-hover: var(--itx-colorway-12);
 		--itx-button-transition-duration: 75ms;
 		transition-duration: var(--itx-button-transition-duration);
 		--itx-button-transition-timing-function: ease-in;
