@@ -9,7 +9,7 @@
 	</demo-masthead>
 
 	<!-- ── Which tier? ───────────────────────────────────────────────────── -->
-	<demo-section id="tier" heading="Choosing a tier">
+	<!--<demo-section id="tier" heading="Choosing a tier">
 		<interop-expansion-panel style="width: 100%">
 			<h3>
 				<button interop-button="assert neutral" interop-expansion-trigger>
@@ -38,8 +38,14 @@
 					</ul>
 					<p><strong>Use the select tier when</strong></p>
 					<ul>
-						<li>the user operates <em>on</em> the hierarchy — picks nodes, checks them, reorders them;</li>
-						<li>a single tab stop is what you want, because the tree is one control among many;</li>
+						<li>
+							the user operates <em>on</em> the hierarchy — picks nodes, checks
+							them, reorders them;
+						</li>
+						<li>
+							a single tab stop is what you want, because the tree is one
+							control among many;
+						</li>
 						<li>rows carry no other interactive content.</li>
 					</ul>
 					<p>
@@ -55,41 +61,71 @@
 				</div>
 			</div>
 		</interop-expansion-panel>
-	</demo-section>
+	</demo-section>-->
 
 	<!-- ── Navigate tier ─────────────────────────────────────────────────── -->
-	<demo-section id="navigate" heading="Navigate tier (default)">
+	<demo-section id="navigate" heading="As navigation">
 		<demo-example label="Documentation sidebar">
 			<nav aria-label="Documentation" class="tree-page__panel">
 				<ul interop-tree>
 					<li interop-tree-item key="guide" [expanded]="true">
 						<span interop-tree-row>
 							<button interop-tree-toggle></button>
-							<a [routerLink]="[]" fragment="guide">Guide</a>
+							<a
+								[routerLink]="[]"
+								fragment="guide"
+								(click)="currentDoc.set('guide')"
+								[attr.aria-current]="currentDoc() === 'guide' ? 'page' : null"
+								>Guide</a
+							>
 						</span>
 						<ul interop-tree-group>
 							<li interop-tree-item key="install">
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
-									<a [routerLink]="[]" fragment="install" aria-current="page">Installation</a>
+									<a
+										[routerLink]="[]"
+										fragment="install"
+										(click)="currentDoc.set('install')"
+										[attr.aria-current]="currentDoc() === 'install' ? 'page' : null"
+										>Installation</a
+									>
 								</span>
 							</li>
 							<li interop-tree-item key="theming">
 								<span interop-tree-row>
 									<button interop-tree-toggle></button>
-									<a [routerLink]="[]" fragment="theming">Theming</a>
+									<a
+										[routerLink]="[]"
+										fragment="theming"
+										(click)="currentDoc.set('theming')"
+										[attr.aria-current]="currentDoc() === 'theming' ? 'page' : null"
+										>Theming</a
+									>
 								</span>
 								<ul interop-tree-group>
 									<li interop-tree-item key="tokens">
 										<span interop-tree-row>
 											<span interop-tree-toggle></span>
-											<a [routerLink]="[]" fragment="tokens">Tokens</a>
+											<a
+												[routerLink]="[]"
+												fragment="tokens"
+												(click)="currentDoc.set('tokens')"
+												[attr.aria-current]="currentDoc() === 'tokens' ? 'page' : null"
+												>Tokens</a
+											>
 										</span>
 									</li>
 									<li interop-tree-item key="dark">
 										<span interop-tree-row>
 											<span interop-tree-toggle></span>
-											<a [routerLink]="[]" fragment="dark">Dark mode</a>
+											<a
+												[routerLink]="[]"
+												fragment="dark"
+												(click)="currentDoc.set('dark')"
+												[attr.aria-current]="currentDoc() === 'dark' ? 'page' : null"
+												>Dark mode</a
+											>
 										</span>
 									</li>
 								</ul>
@@ -99,19 +135,37 @@
 					<li interop-tree-item key="components">
 						<span interop-tree-row>
 							<button interop-tree-toggle></button>
-							<a [routerLink]="[]" fragment="components">Components</a>
+							<a
+								[routerLink]="[]"
+								fragment="components"
+								(click)="currentDoc.set('components')"
+								[attr.aria-current]="currentDoc() === 'components' ? 'page' : null"
+								>Components</a
+							>
 						</span>
 						<ul interop-tree-group>
 							<li interop-tree-item key="button">
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
-									<a [routerLink]="[]" fragment="button">Button</a>
+									<a
+										[routerLink]="[]"
+										fragment="button"
+										(click)="currentDoc.set('button')"
+										[attr.aria-current]="currentDoc() === 'button' ? 'page' : null"
+										>Button</a
+									>
 								</span>
 							</li>
 							<li interop-tree-item key="tree">
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
-									<a [routerLink]="[]" fragment="tree">Tree</a>
+									<a
+										[routerLink]="[]"
+										fragment="tree"
+										(click)="currentDoc.set('tree')"
+										[attr.aria-current]="currentDoc() === 'tree' ? 'page' : null"
+										>Tree</a
+									>
 								</span>
 							</li>
 						</ul>
@@ -119,7 +173,13 @@
 					<li interop-tree-item key="changelog">
 						<span interop-tree-row>
 							<span interop-tree-toggle></span>
-							<a [routerLink]="[]" fragment="changelog">Changelog</a>
+							<a
+								[routerLink]="[]"
+								fragment="changelog"
+								(click)="currentDoc.set('changelog')"
+								[attr.aria-current]="currentDoc() === 'changelog' ? 'page' : null"
+								>Changelog</a
+							>
 						</span>
 					</li>
 				</ul>
@@ -128,12 +188,13 @@
 			<itx-code-block [files]="navFiles" />
 		</demo-example>
 
-		<demo-notes
+		<!--<demo-notes
 			[notes]="[{
 				type: 'note',
 				label: 'Tab order',
 				body: 'Every link and every twisty is its own tab stop, exactly as a nested list of links would be. There is no authored keyboard model here — nothing to fight, nothing to preventDefault. The current page is marked with aria-current on the link, not aria-selected on the row.'
-			}]" />
+			}]"
+		/>-->
 	</demo-section>
 
 	<!-- ── Select tier ───────────────────────────────────────────────────── -->
@@ -146,7 +207,8 @@
 					aria-label="Project files"
 					[multiselectable]="true"
 					[(selected)]="picked"
-					(expandedChange)="onExpanded($event)">
+					(expandedChange)="onExpanded($event)"
+				>
 					<li interop-tree-item key="src" label="src" [expanded]="true">
 						<span interop-tree-row>
 							<span interop-tree-toggle></span>
@@ -179,7 +241,12 @@
 									<span>main.ts</span>
 								</span>
 							</li>
-							<li interop-tree-item key="vendor" label="vendor" [disabled]="true">
+							<li
+								interop-tree-item
+								key="vendor"
+								label="vendor"
+								[disabled]="true"
+							>
 								<span interop-tree-row>
 									<span interop-tree-toggle></span>
 									<span>vendor (read-only)</span>
@@ -204,20 +271,25 @@
 				</ul>
 			</div>
 
-			<demo-state>
-				<demo-state-item label="selected">{{ picked().join(", ") || "—" }}</demo-state-item>
-				<demo-state-item label="last expandedChange">{{ lastExpanded() }}</demo-state-item>
-			</demo-state>
+			<!--<demo-state>
+				<demo-state-item label="selected"
+					>{{ picked().join(", ") || "—" }}</demo-state-item
+				>
+				<demo-state-item label="last expandedChange"
+					>{{ lastExpanded() }}</demo-state-item
+				>
+			</demo-state>-->
 
 			<itx-code-block [files]="selectFiles" />
 		</demo-example>
-
+<!--
 		<demo-notes
 			[notes]="[{
 				type: 'note',
 				label: 'Try it',
 				body: 'Tab once — the whole tree is a single stop. Then arrows to move, → to open, ← to close or go to the parent, Home/End for the ends, * to expand every sibling, Enter to select, Cmd/Ctrl+Enter or Space to add to the selection, and type a few letters to jump. The disabled node stays focusable so it is still discoverable; it just refuses activation.'
-			}]" />
+			}]"
+		/>-->
 	</demo-section>
 
 	<demo-section id="keyboard" heading="Keyboard (select tier)">
@@ -232,23 +304,28 @@
 	<demo-section id="scale" heading="Scale, without a virtualizer">
 		<demo-example label="{{ scaleCount }} nodes, all in the DOM">
 			<div class="tree-page__actions">
-				<button interop-button="assert neutral" itx-size="xs" (click)="revealBuried()">
+				<button
+					interop-button="primary"
+					(click)="revealBuried()"
+				>
 					reveal() the deepest leaf
 				</button>
-				<button interop-button="assert neutral" itx-size="xs" (click)="collapseScale()">
+				<button
+					interop-button="secondary"
+					(click)="collapseScale()"
+				>
 					Collapse all
 				</button>
 			</div>
 
 			<p class="tree-page__hint">
 				Everything below is collapsed, and every node is really there. Press
-				<kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>F</kbd> and search for
+				<kbd interop-kbd>Ctrl</kbd>/<kbd interop-kbd>Cmd</kbd>+<kbd interop-kbd>F</kbd> and search for
 				<code>{{ buriedLabel }}</code> — a leaf three levels down inside a
 				collapsed branch. A browser supporting
 				<code>hidden="until-found"</code> will find it, reveal the path, and
-				scroll to it; the tree adopts that as real expansion. A virtualized
-				tree cannot do this, because the node would not be in the document at
-				all.
+				scroll to it; the tree adopts that as real expansion. A virtualized tree
+				cannot do this, because the node would not be in the document at all.
 			</p>
 
 			<div class="tree-page__panel tree-page__panel--tall">
@@ -257,21 +334,24 @@
 					interop-tree="select"
 					aria-label="Generated tree"
 					demo-tree-nodes
-					[nodes]="scaleNodes"></ul>
+					[nodes]="scaleNodes"
+				></ul>
 			</div>
 
 			<itx-code-block [files]="cssFiles" />
 		</demo-example>
 
-		<demo-notes
+		<!--<demo-notes
 			[notes]="[{
 				type: 'note',
 				label: 'Honest limits',
 				body: 'content-visibility skips layout and paint, not component instantiation — Angular still creates one directive instance per node up front. That is the trade: a virtualizer wins on instantiation cost and loses find-in-page, Ctrl+A, and honest item counts. For trees in the low thousands, keeping the DOM is the better trade. Past that, render the branches lazily inside @if and set [expandable] on the items.'
-			}]" />
+			}]"
+		/>-->
 	</demo-section>
 
-	<demo-section id="api-inputs" heading="API — Inputs">
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-name">{{ entry.component }}</code>
@@ -286,9 +366,8 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
 
-	<demo-section id="api-outputs" heading="API — Outputs">
+		<h3 class="demo-page__api-heading">Outputs</h3>
 		<interop-table [collection]="outputEntries" [columns]="outputColumns">
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-name">{{ entry.component }}</code>
@@ -300,9 +379,8 @@
 				<code class="demo-page__api-type">{{ entry.type }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
 
-	<demo-section id="api-methods" heading="API — Methods">
+		<h3 class="demo-page__api-heading">Methods</h3>
 		<interop-table [collection]="methodEntries" [columns]="methodColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
@@ -311,9 +389,5 @@
 				<code class="demo-page__api-type">{{ entry.type }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
-
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
 	</demo-section>
 </article>

@@ -188,6 +188,23 @@ for(const [t,f] of decl) if(!read.has(t)&&t.startsWith("--itx-<component>"))
 |---|---|---|---|---|
 | 1 | Tag | Chip | 2026-08-11 | 2 of 3 sizes (32/24); dropped the border on presentational + dismissible; selectable took Carbon's inverse-fill selected state; colour variants deferred; 208px truncation deferred (needs a label wrapper span) |
 | 2 | Accordion | Expansion Panel | 2026-08-11 | Header IS the button (Carbon's `__heading` model) — the panel now styles `button[interop-expansion-trigger]` itself instead of delegating to `interop-button`. Full-width 40px row, `$layer-hover` fill behind `@media (any-hover: hover)`, all backgrounds transparent, expanded state no longer restyles the frame. Chevron and the sm/lg steps not taken. |
+| 3 | TreeView | Tree | 2026-08-11 | Filled-triangle caret (borders on a zero-size box) replacing the stroked chevron; selected/current fuses Carbon's two states — low tint **plus** a 4px colorway-8 bar at the inline-start edge, drawn as an inset box-shadow so it costs no layout. Backgrounds already transparent. Guide rails kept (Carbon has none). Carbon's `$layer-01` tree fill deliberately NOT taken — transparent goes further, consistent with round 2. |
+
+### Round 3 note — prose leaking into component internals
+
+A globally-declared `interop-typography-root` turns `prose.css`'s bare element
+selectors into de-facto global element styles. It reads `<li>` as running text;
+a tree reads it as a row. The collision is quiet because it lands on properties
+the component never declared — a `max-inline-size: var(--itx-measure)` cap on a
+full-bleed row, `li + li` rhythm margins between rows, a fluid `font-size` on a
+fixed-height control.
+
+Fixed generally rather than per-component: `interop-typography-isolate` on any
+element stops prose at that subtree, implemented as one `revert` rule at the
+foot of `prose.css`. Components that own their own layout set it as a static
+host attribute. **Check this first** when a borrowed component looks subtly
+wrong in ways the component's own CSS doesn't explain — anything built from
+`li`, `p`, `dt`/`dd`, or a heading is exposed.
 
 ### Round 2 note — when a borrow legitimately needs the foundation
 

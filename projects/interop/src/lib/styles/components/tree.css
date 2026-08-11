@@ -55,16 +55,25 @@
  *   --itx-tree-row-color-current
  *   --itx-tree-row-disabled-opacity
  *
+ *   Accent bar (inline-start edge; marks selected/current, costs no layout)
+ *   --itx-tree-row-accent-width
+ *   --itx-tree-row-accent-color            rest — transparent
+ *   --itx-tree-row-accent-color-selected
+ *   --itx-tree-row-accent-color-current
+ *
  *   Guide rails
  *   --itx-tree-guide-color
  *   --itx-tree-guide-width              set 0 to remove the rails
  *
- *   Twisty
- *   --itx-tree-toggle-size              glyph size
+ *   Twisty — a filled triangle
+ *   --itx-tree-toggle-size              rendered block size (height)
+ *   --itx-tree-toggle-aspect            width ÷ height; <1 is a taller caret
  *   --itx-tree-toggle-hit-area          ≥24px per WCAG 2.2 SC 2.5.8
+ *                                       also sets the guide-rail column
  *   --itx-tree-toggle-color
  *   --itx-tree-toggle-color-hover
- *   --itx-tree-toggle-stroke
+ *   --itx-tree-toggle-rotation          collapsed (0deg — points inline-end)
+ *   --itx-tree-toggle-rotation-expanded (90deg — points down; mirrored in RTL)
  *
  *   Focus
  *   --itx-tree-focus-color / -width / -offset
@@ -102,7 +111,8 @@
 	list-style: none;
 	opacity: 1;
 	transition:
-		opacity var(--itx-tree-transition-duration) var(--itx-tree-transition-easing),
+		opacity var(--itx-tree-transition-duration)
+			var(--itx-tree-transition-easing),
 		display var(--itx-tree-transition-duration) allow-discrete,
 		content-visibility var(--itx-tree-transition-duration) allow-discrete;
 
@@ -173,11 +183,39 @@
 	background-size: calc((var(--itx-tree-level, 1) - 1) * var(--itx-tree-indent))
 		100%;
 	background-repeat: no-repeat;
-	background-position: calc(var(--itx-tree-row-padding-inline) / 2) 0;
+	/*
+	 * A rail marks an ancestor's caret column, so it has to land on the centre
+	 * of that caret — one indent step further in than the row's own edge. Rail
+	 * k sits at position + (k−1)·indent, and the caret of level k is centred at
+	 * padding-inline + hit-area/2 + (k−1)·indent, so the two agree exactly when
+	 * the image starts at padding-inline + hit-area/2, less half the rail's own
+	 * width to centre the stroke rather than left-align it.
+	 *
+	 * Getting this wrong is quiet but ugly: the rails stay evenly spaced, they
+	 * just sit a whole indent to the left, which parks a stray rail against the
+	 * container edge with no caret above it and slides every other rail out
+	 * from under the one it belongs to.
+	 */
+	background-position: calc(
+			var(--itx-tree-row-padding-inline) + var(--itx-tree-toggle-hit-area) / 2 -
+				var(--itx-tree-guide-width) / 2
+		)
+		0;
 	color: var(--itx-tree-row-color);
 	cursor: default;
+	/*
+	 * Accent bar at the inline-start edge, marking selected/current. An inset
+	 * box-shadow rather than a border or a ::before: it costs no layout, so
+	 * turning it on shifts nothing — not the label, not the guide rails, whose
+	 * position is measured from the padding box a border would move. It rests
+	 * transparent and only changes colour, which also makes it transition.
+	 */
+	box-shadow: inset var(--itx-tree-row-accent-width) 0 0 0
+		var(--itx-tree-row-accent-color);
 	transition:
 		background-color var(--itx-tree-transition-duration)
+			var(--itx-tree-transition-easing),
+		box-shadow var(--itx-tree-transition-duration)
 			var(--itx-tree-transition-easing),
 		color var(--itx-tree-transition-duration) var(--itx-tree-transition-easing);
 
@@ -190,14 +228,22 @@
 	}
 }
 
-/* RTL: the rails grow from the inline-end edge. */
+/* RTL: the rails grow from the inline-end edge, and the accent bar moves with
+   them — box-shadow takes physical offsets, so the sign has to be flipped. */
 :where([interop-tree-row]:dir(rtl)) {
 	background-image: repeating-linear-gradient(
 		to left,
 		var(--itx-tree-guide-color) 0 var(--itx-tree-guide-width),
 		transparent var(--itx-tree-guide-width) var(--itx-tree-indent)
 	);
-	background-position: right calc(var(--itx-tree-row-padding-inline) / 2) top 0;
+	background-position: right
+		calc(
+			var(--itx-tree-row-padding-inline) + var(--itx-tree-toggle-hit-area) / 2 -
+				var(--itx-tree-guide-width) / 2
+		)
+		top 0;
+	box-shadow: inset calc(-1 * var(--itx-tree-row-accent-width)) 0 0 0
+		var(--itx-tree-row-accent-color);
 }
 
 /*
@@ -205,6 +251,7 @@
  * on the consumer's own link), not on the row — so these cannot self-nest.
  */
 :where([interop-tree-item][aria-selected="true"]) > :where([interop-tree-row]) {
+	--itx-tree-row-accent-color: var(--itx-tree-row-accent-color-selected);
 	background-color: var(
 		--itx-tree-row-background-selected,
 		var(--itx-tree-row-background)
@@ -212,7 +259,10 @@
 	color: var(--itx-tree-row-color-selected, var(--itx-tree-row-color));
 }
 
-:where([interop-tree-row]:has([aria-current])) {
+/* `aria-current="false"` is the spec's way of saying "not current", so a bare
+   [aria-current] would paint a row the author explicitly marked as inactive. */
+:where([interop-tree-row]:has([aria-current]:not([aria-current="false"]))) {
+	--itx-tree-row-accent-color: var(--itx-tree-row-accent-color-current);
 	background-color: var(
 		--itx-tree-row-background-current,
 		var(--itx-tree-row-background)
@@ -269,31 +319,44 @@
 }
 
 /*
- * Default chevron, drawn only when nothing is projected. Two borders on a
- * rotated box: no background-image, so it survives forced-colors mode, and
- * it inherits currentColor for free.
+ * Default caret, drawn only when nothing is projected. A solid triangle made
+ * from borders on a zero-size box: no background-image and no glyph, so it
+ * survives forced-colors mode, and it inherits currentColor for free.
+ *
+ * The filled form is Carbon's. It reads at a smaller size than an outlined
+ * chevron does — a stroked angle needs enough length for the eye to resolve
+ * two lines, a filled triangle only needs its silhouette.
+ *
+ * --itx-tree-toggle-size is the caret's rendered block size, halved onto the
+ * two transparent block borders; --itx-tree-toggle-aspect is its width as a
+ * fraction of that height. Stating the height directly beats stating a border
+ * width, because the border width is half of one dimension and all of the
+ * other — a number that means nothing on its own.
+ *
+ * `border-inline-start` means RTL flips the triangle to point inline-start
+ * with no extra rule — only the expanded rotation has to be mirrored, since
+ * a clockwise quarter turn takes a left-pointing caret up rather than down.
  */
 :where([interop-tree-toggle]:empty)::before {
 	content: "";
-	inline-size: var(--itx-tree-toggle-size);
-	block-size: var(--itx-tree-toggle-size);
-	border-block-start: var(--itx-tree-toggle-stroke) solid currentColor;
-	border-inline-end: var(--itx-tree-toggle-stroke) solid currentColor;
-	rotate: 45deg;
+	inline-size: 0;
+	block-size: 0;
+	border-block: calc(var(--itx-tree-toggle-size) / 2) solid transparent;
+	border-inline-start: calc(
+			var(--itx-tree-toggle-size) * var(--itx-tree-toggle-aspect)
+		)
+		solid currentColor;
+	rotate: var(--itx-tree-toggle-rotation);
 	transition: rotate var(--itx-tree-transition-duration)
 		var(--itx-tree-transition-easing);
 }
 
 :where([interop-tree-toggle][data-expanded]:empty)::before {
-	rotate: 135deg;
-}
-
-:where([interop-tree-toggle]:empty:dir(rtl))::before {
-	rotate: -135deg;
+	rotate: var(--itx-tree-toggle-rotation-expanded);
 }
 
 :where([interop-tree-toggle][data-expanded]:empty:dir(rtl))::before {
-	rotate: 135deg;
+	rotate: calc(-1 * var(--itx-tree-toggle-rotation-expanded));
 }
 
 /* ── Narrow containers ───────────────────────────────────────────────────── */
@@ -346,7 +409,8 @@
 		);
 	}
 
-	:where([interop-tree-item][aria-selected="true"]) > :where([interop-tree-row]) {
+	:where([interop-tree-item][aria-selected="true"])
+		> :where([interop-tree-row]) {
 		background-color: Highlight;
 		color: HighlightText;
 		forced-color-adjust: none;

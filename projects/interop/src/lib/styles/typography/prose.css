@@ -30,12 +30,24 @@
 }
 
 /* Font-size roles (consume the semantic scale, never raw primitives). */
-:where([interop-typography-root] h1) { font-size: var(--itx-font-size-display); }
-:where([interop-typography-root] h2) { font-size: var(--itx-font-size-heading); }
-:where([interop-typography-root] h3) { font-size: var(--itx-font-size-subheading); }
-:where([interop-typography-root] h4) { font-size: var(--itx-font-size-body-lg); }
-:where([interop-typography-root] h5) { font-size: var(--itx-font-size-body); }
-:where([interop-typography-root] h6) { font-size: var(--itx-font-size-body); }
+:where([interop-typography-root] h1) {
+	font-size: var(--itx-font-size-display);
+}
+:where([interop-typography-root] h2) {
+	font-size: var(--itx-font-size-heading);
+}
+:where([interop-typography-root] h3) {
+	font-size: var(--itx-font-size-subheading);
+}
+:where([interop-typography-root] h4) {
+	font-size: var(--itx-font-size-body-lg);
+}
+:where([interop-typography-root] h5) {
+	font-size: var(--itx-font-size-body);
+}
+:where([interop-typography-root] h6) {
+	font-size: var(--itx-font-size-body);
+}
 :where([interop-typography-root] :where(p, li, dd, blockquote)) {
 	font-size: var(--itx-font-size-body);
 }
@@ -44,8 +56,11 @@
 }
 
 /* All headings share one weight — reads well with IBM Plex Sans. */
-:where([interop-typography-root] :where(h1, h2, h3, h4, h5, h6, [data-label="display"])) {
-	--itx-line-height: 1.125 ;
+:where(
+	[interop-typography-root]
+		:where(h1, h2, h3, h4, h5, h6, [data-label="display"])
+) {
+	--itx-line-height: 1.125;
 }
 
 /* All headings share one weight — reads well with IBM Plex Sans. */
@@ -78,7 +93,33 @@
 	margin-block-start: var(--itx-rhythm-tight);
 }
 
-
-h2 {
-	margin: 0;
+/* ── Isolate — opting a subtree out of prose ────────────────────────────────
+ *
+ * `interop-typography-root` is meant to sit high — often on <body> — which
+ * turns the rules above into de-facto global element styles. That is correct
+ * for flowing content and wrong for component internals: prose reads <li> as
+ * running text, while a tree, a chip list, or a menu reads it as a row. The
+ * damage is quiet, because it lands on properties a component never thought
+ * to declare — a measure cap on a full-bleed row, rhythm margins between
+ * rows, a fluid font-size on a fixed-height control.
+ *
+ * Put `interop-typography-isolate` on any element and prose stops at it.
+ *
+ * Why a revert rather than a `:not()` on all twelve selectors above: this is
+ * ONE place to maintain, and it stays correct as prose grows. `revert` drops
+ * the author-origin value for these properties — but it is an ordinary
+ * declaration competing at zero specificity from a file imported BEFORE every
+ * component stylesheet, so a component's own rules still win outright. It
+ * undoes prose and nothing else.
+ *
+ * Only the properties prose actually sets are listed. `font` shorthand is
+ * deliberately avoided: it would revert font-family to the UA's, not the
+ * app's.
+ */
+:where([interop-typography-isolate], [interop-typography-isolate] *) {
+	margin: revert;
+	font-size: revert;
+	font-weight: revert;
+	line-height: revert;
+	max-inline-size: revert;
 }

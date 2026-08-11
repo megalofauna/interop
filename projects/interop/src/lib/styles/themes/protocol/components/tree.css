@@ -7,13 +7,18 @@
  * Structural rules live in `styles/components/tree.css` — this file only
  * declares values.
  *
- * Visual target:
- *   A quiet file-explorer rail. Rows are transparent at rest and full-bleed
- *   on hover so the highlight reaches both edges of the tree regardless of
- *   depth. Selection is a colorway tint rather than a solid fill, so a long
- *   multi-selection does not turn the panel into a block of colour. Guide
- *   rails are present but barely — enough to trace a branch, not enough to
- *   read as a table.
+ * Visual target — borrowed from Carbon's TreeView:
+ *   Nothing is painted until you interact with it. Rows are transparent at
+ *   rest and full-bleed on hover so the highlight reaches both edges of the
+ *   tree regardless of depth. The selected row states itself twice — a low
+ *   tint plus a colorway bar at the inline-start edge — because the tint
+ *   alone has to stay quiet enough that a long multi-selection doesn't turn
+ *   the panel into a block of colour, and the bar carries the emphasis the
+ *   tint gives up. Guide rails are present but barely: enough to trace a
+ *   branch, not enough to read as a table.
+ *
+ * Carbon fuses two of its own states here. It separates "selected" (a fill)
+ * from "active" (a 4px bar); Interop has one selected state, so it takes both.
  */
 
 :where([interop-root]) {
@@ -21,30 +26,45 @@
 	--itx-tree-indent: var(--itx-spacing-4);
 	--itx-tree-indent-narrow: var(--itx-spacing-2);
 	--itx-tree-item-content-visibility: auto;
-	--itx-tree-row-block-size: var(--itx-spacing-7);
+	--itx-tree-row-block-size: var(--itx-spacing-8);
 	--itx-tree-row-padding-inline: var(--itx-spacing-2);
 	--itx-tree-row-gap: var(--itx-spacing-1);
-	--itx-tree-row-radius: var(--itx-radius-sm);
+	--itx-tree-row-radius: var(--itx-radius-none);
 
-	/* ── Row surface ────────────────────────────────────────────────────── */
+	/* ── Row surface ──────────────────────────────────────────────────────
+	 * Hover is the only paint a resting tree ever applies.               */
 	--itx-tree-row-background: transparent;
 	--itx-tree-row-background-hover: var(--itx-surface-hover);
-	--itx-tree-row-background-selected: var(--itx-colorway-3);
-	--itx-tree-row-background-current: var(--itx-neutral-4);
+	--itx-tree-row-background-selected: var(--itx-colorway-2);
+	--itx-tree-row-background-current: var(--itx-neutral-3);
 	--itx-tree-row-color: var(--itx-on-surface);
 	--itx-tree-row-color-selected: var(--itx-colorway-11);
 	--itx-tree-row-disabled-opacity: 0.5;
 
+	/* ── Accent bar ───────────────────────────────────────────────────────
+	 * Carbon draws 4px. It reads as an edge marker rather than a border,
+	 * which is why the tint underneath can stay as low as it does.       */
+	--itx-tree-row-accent-width: 4px;
+	--itx-tree-row-accent-color: transparent;
+	--itx-tree-row-accent-color-selected: var(--itx-colorway-8);
+	--itx-tree-row-accent-color-current: var(--itx-colorway-8);
+
 	/* ── Guide rails ────────────────────────────────────────────────────── */
-	--itx-tree-guide-color: var(--itx-neutral-8);
+	--itx-tree-guide-color: transparent;
 	--itx-tree-guide-width: 2px;
 
-	/* ── Twisty ─────────────────────────────────────────────────────────── */
-	--itx-tree-toggle-size: 0.375em;
+	/* ── Twisty — filled triangle ─────────────────────────────────────────
+	 * -size is the caret's height, -aspect its width as a fraction of that.
+	 * 0.75 keeps it a little taller than wide, which is the resting shape of
+	 * a caret pointing along the inline axis; at 1 it reads as a fat arrow.
+	 * Sized in em so it tracks the row's own type.                        */
+	--itx-tree-toggle-size: 0.75em;
+	--itx-tree-toggle-aspect: 0.75;
 	--itx-tree-toggle-hit-area: var(--itx-spacing-6);
 	--itx-tree-toggle-color: var(--itx-neutral-9);
 	--itx-tree-toggle-color-hover: var(--itx-on-surface);
-	--itx-tree-toggle-stroke: 1.5px;
+	--itx-tree-toggle-rotation: 0deg;
+	--itx-tree-toggle-rotation-expanded: 90deg;
 
 	/* ── Focus ──────────────────────────────────────────────────────────── */
 	--itx-tree-focus-color: var(--itx-colorway-8);
