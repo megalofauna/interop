@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCompassCalibrationFill: InteropIconDefinition = {
+  name: "ms-compass-calibration-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M344.5-135.5Q288-192 288-271t56.5-135.5Q401-463 480-463t135.5 56.5Q672-350 672-271t-56.5 135.5Q559-79 480-79t-135.5-56.5ZM263-491 80-674q81-74 184-120t216-46q113 0 216 46t184 120L697-491q-45-41-99.5-65T480-580q-63 0-117.5 24T263-491Z\"/></g>",
+} as const;

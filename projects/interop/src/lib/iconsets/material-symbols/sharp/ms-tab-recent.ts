@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTabRecent: InteropIconDefinition = {
+  name: "ms-tab-recent",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M591-104q-57-57-57-136t57-136q57-57 136-57t136 57q57 57 57 136t-57 136q-57 57-136 57t-136-57Zm210-35 27-27-84-76v-124h-42v136l99 91ZM520-560h300v84q17 6 31.5 14.5T880-442v-358H80v640h407q-5-14-7.5-29t-4.5-31H140v-520h380v180ZM140-220v-19 19-520 520Z\"/></g>",
+} as const;

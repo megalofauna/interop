@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsLaptopCar: InteropIconDefinition = {
+  name: "ms-laptop-car",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M180-250v-490 490ZM413-80v-249l63-185h341l63 185v249h-66v-67H479v67h-66Zm53-279h361l-38.06-115H504l-38 115Zm74 146q16.58 0 27.79-11T579-252q0-17-11-28t-28-11q-17 0-28 11t-11 28q0 17 11.21 28T540-213Zm213 0q16.58 0 27.79-11T792-252q0-17-11-28t-28-11q-17 0-28 11t-11 28q0 17 11.21 28T753-213Zm-300 26h387v-132H453v132ZM40-160v-90h80v-550h680v226h-60v-166H180v490h173v90H40Zm413-27v-132 132Z\"/></g>",
+} as const;

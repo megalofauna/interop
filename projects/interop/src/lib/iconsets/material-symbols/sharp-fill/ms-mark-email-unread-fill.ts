@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMarkEmailUnreadFill: InteropIconDefinition = {
+  name: "ms-mark-email-unread-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M682-682q-32-32-32-78t32-78q32-32 78-32t78 32q32 32 32 78t-32 78q-32 32-78 32t-78-32ZM80-160v-640h494q-3 15-4 30t1 30q4 35 19.5 65.5T631-621l-151 99-340-221v58l340 223 195-128q20 10 41 15t44 5q33 0 63.5-11t56.5-32v453H80Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsDevicesOffFill: InteropIconDefinition = {
+  name: "ms-devices-off-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M838-37 715-160H561v-154l-60-60v94H120v-475l-82-82 42-42L881-79l-43 42ZM501-544 245-800h595v60H501v196Zm60-136h319v515L561-484.28V-680Zm160 160q12 0 21-9t9-21q0-12-9-21t-21-9q-12 0-21 9t-9 21q0 12 9 21t21 9ZM80-160v-60h421v60H80Z\"/></g>",
+} as const;

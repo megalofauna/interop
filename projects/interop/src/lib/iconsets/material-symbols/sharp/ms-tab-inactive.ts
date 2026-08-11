@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTabInactive: InteropIconDefinition = {
+  name: "ms-tab-inactive",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M250-80v-170H80v-135h60v75h110v-400h400v-110h-75v-60h135v170h170v630H250Zm60-60h510v-510H310v510Zm0 0v-510 510ZM80-485v-160h60v160H80Zm0-260v-135h135v60h-75v75H80Zm235-75v-60h160v60H315Z\"/></g>",
+} as const;

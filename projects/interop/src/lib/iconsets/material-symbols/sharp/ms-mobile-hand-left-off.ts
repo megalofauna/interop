@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMobileHandLeftOff: InteropIconDefinition = {
+  name: "ms-mobile-hand-left-off",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m800-251-60-60v-509H342v111l-60-60v-111h518v629Zm38 208-37-37H398l50-60h293L581-300 394-76q-15 18-36.5 27T313-40h-43q-63 0-106.5-43.5T120-190v-318l127-127L31-850l43-43L881-86l-43 43ZM541-566Zm21.5-122.5Q571-697 571-710t-8.5-21.5Q554-740 541-740t-21.5 8.5Q511-723 511-710t8.5 21.5Q528-680 541-680t21.5-8.5ZM270-100h42q11 0 21.5-4.5T351-118l152-183-221 100v-383L180-482v292q0 37 26 63.5t64 26.5Zm471-40ZM342-299l171-69-171-171v240Z\"/></g>",
+} as const;

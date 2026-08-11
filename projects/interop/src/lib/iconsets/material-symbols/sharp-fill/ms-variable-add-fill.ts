@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsVariableAddFill: InteropIconDefinition = {
+  name: "ms-variable-add-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-280v-400h720v162q-8-1-14.97-1.5-6.96-.5-15.03-.5-87.5 0-148.75 61.25T600-310q0 8.07.5 15.03Q601-288 602-280H120Zm660 120v-120H660v-60h120v-120h60v120h120v60H840v120h-60Z\"/></g>",
+} as const;

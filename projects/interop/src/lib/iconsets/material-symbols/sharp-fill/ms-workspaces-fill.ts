@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsWorkspacesFill: InteropIconDefinition = {
+  name: "ms-workspaces-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M123.5-163.5Q80-207 80-270t43.5-106.5Q167-420 230-420t106.5 43.5Q380-333 380-270t-43.5 106.5Q293-120 230-120t-106.5-43.5Zm501 0Q581-207 581-270t43.5-106.5Q668-420 731-420t106.5 43.5Q881-333 881-270t-43.5 106.5Q794-120 731-120t-106.5-43.5Zm-250-421Q331-628 331-691t43.5-106.5Q418-841 481-841t106.5 43.5Q631-754 631-691t-43.5 106.5Q544-541 481-541t-106.5-43.5Z\"/></g>",
+} as const;

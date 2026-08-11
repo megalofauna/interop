@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSwitchAccountFill: InteropIconDefinition = {
+  name: "ms-switch-account-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M623.5-514.38q34.5-34.38 34.5-83.5t-34.38-83.62q-34.38-34.5-83.5-34.5t-83.62 34.38q-34.5 34.38-34.5 83.5t34.38 83.62q34.38 34.5 83.5 34.5t83.62-34.38ZM200-200v-680h680v680H200ZM80-80v-630h60v570h570v60H80Zm180-180h560q-51-65-124-102.5T540-400q-83 0-156 37.5T260-260Z\"/></g>",
+} as const;

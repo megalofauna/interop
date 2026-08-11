@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsChairUmbrellaFill: InteropIconDefinition = {
+  name: "ms-chair-umbrella-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M508-120v-447q-15-22-40-35t-54.5-13q-29.5 0-54.5 14.5T318-563h-58q0-115 80.92-196T538-840q116.58 0 197.79 81T817-563h-58q-16-23-40.85-37.5T663-615q-29 0-54 13t-41 36v446h-60Zm140 0v-236h232v236h-60v-176H708v176h-60Zm-488 0v-116h-41L80-673h60l29.73 317H427v120h-41v116h-40v-116H200v116h-40Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCommentsDisabledFill: InteropIconDefinition = {
+  name: "ms-comments-disabled-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M833-41 634-240H80v-554l-54-54 43-43L876-84l-43 43Zm47-125L646-400h74v-60H586l-70-70h204v-60H456l-70-70h334v-60H326L166-880h714v714ZM240-400h234l-60-60H240v60Zm0-130h104l-60-60h-44v60Z\"/></g>",
+} as const;

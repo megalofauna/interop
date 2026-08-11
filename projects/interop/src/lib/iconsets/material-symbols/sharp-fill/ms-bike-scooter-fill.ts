@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBikeScooterFill: InteropIconDefinition = {
+  name: "ms-bike-scooter-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M0-196v-60h174q8-72 55.5-124.5T347-447l-58-272H132v-60h205l83 387h-21q-68 0-116 47.5T235-229v33H0Zm322 44q-32-32-32-77t32-77q32-32 77-32t77 32q32 32 32 77t-32 77q-32 32-77 32t-77-32Zm448-87q-72 0-127-44.5T577-398H475l-8-60h110q5-30 18-57t35-46H441l-14-60h236l-54-159H507v-60h144l75 216h44q79 0 134.5 56T960-433q0 80-55 137t-135 57Zm-35-189 56-20-41-113-56 22 41 111Z\"/></g>",
+} as const;

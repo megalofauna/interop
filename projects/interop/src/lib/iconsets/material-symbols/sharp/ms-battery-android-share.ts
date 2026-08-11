@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBatteryAndroidShare: InteropIconDefinition = {
+  name: "ms-battery-android-share",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m760-626 146 146-146 146-43-43 74-73H590v120h-60v-180h261l-73-74 42-42ZM40-240v-480h732l-61 60H100v360h370v60H40Zm60-60v-360 360Z\"/></g>",
+} as const;

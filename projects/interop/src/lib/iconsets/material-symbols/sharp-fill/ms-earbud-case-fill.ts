@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsEarbudCaseFill: InteropIconDefinition = {
+  name: "ms-earbud-case-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-492v218q0 63.52 45.24 108.76T274-120h413q64 0 108.5-45.24T840-274v-218H675v165H285v-165H120Zm225 0v105h270v-105H345Zm-225-60h720v-135q0-63.11-44.94-108.06Q750.11-840 687-840H274q-63.52 0-108.76 44.5T120-687v135Z\"/></g>",
+} as const;

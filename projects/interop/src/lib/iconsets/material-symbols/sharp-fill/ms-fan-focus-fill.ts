@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsFanFocusFill: InteropIconDefinition = {
+  name: "ms-fan-focus-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-80 352-209l42-42 56 56v-272h60v272l56-56 42 42L480-80ZM233-233 105-362l42-42 56 56v-272h60v272l56-56 42 42-128 129Zm494 0L599-362l42-42 56 56v-272h60v272l56-56 42 42-128 129ZM80-531v-309h800v309h-60v-249H140v249H80Z\"/></g>",
+} as const;

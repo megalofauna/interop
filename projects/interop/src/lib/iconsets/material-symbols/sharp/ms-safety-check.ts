@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSafetyCheck: InteropIconDefinition = {
+  name: "ms-safety-check",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M616-345q57-57 57-136t-57-136q-57-57-136-57t-136 57q-57 57-57 136t57 136q57 57 136 57t136-57Zm-62-35-99-91v-136h42v124l84 76-27 27ZM480-81q-140-35-230-162.5T160-523v-238l320-120 320 120v238q0 152-90 279.5T480-81Zm0-62q115-38 187.5-143.5T740-523v-196l-260-98-260 98v196q0 131 72.5 236.5T480-143Zm0-337Z\"/></g>",
+} as const;

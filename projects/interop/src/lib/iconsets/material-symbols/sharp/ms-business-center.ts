@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBusinessCenter: InteropIconDefinition = {
+  name: "ms-business-center",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-120v-600h240v-160h320v160h240v600H80Zm300-600h200v-100H380v100Zm440 349H571v60H391v-60H140v191h680v-191Zm-369 0h60v-60h-60v60Zm-311-60h251v-60h180v60h249v-229H140v229Zm340 30Z\"/></g>",
+} as const;

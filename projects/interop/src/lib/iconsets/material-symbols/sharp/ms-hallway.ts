@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsHallway: InteropIconDefinition = {
+  name: "ms-hallway",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-80v-720h201l160-160 161 160h198v720H120Zm60-60h600v-600H180v600Zm55-99h492L579-438 447-264l-93-129-119 154Zm153-561h186l-93-93-93 93ZM180-140v-600 600Z\"/></g>",
+} as const;

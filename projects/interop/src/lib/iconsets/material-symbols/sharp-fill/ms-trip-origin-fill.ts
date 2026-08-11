@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTripOriginFill: InteropIconDefinition = {
+  name: "ms-trip-origin-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M324-111.5Q251-143 197-197t-85.5-127Q80-397 80-480t31.5-156Q143-709 197-763t127-85.5Q397-880 480-880t156 31.5Q709-817 763-763t85.5 127Q880-563 880-480t-31.5 156Q817-251 763-197t-127 85.5Q563-80 480-80t-156-31.5Zm335.5-189Q733-374 733-480t-73.5-179.5Q586-733 480-733t-179.5 73.5Q227-586 227-480t73.5 179.5Q374-227 480-227t179.5-73.5Z\"/></g>",
+} as const;

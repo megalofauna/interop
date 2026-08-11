@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMobileHandLeftFill: InteropIconDefinition = {
+  name: "ms-mobile-hand-left-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m438-80 203-242-94-98-165 66v-346H282v-180h518v800H438Zm-158 0q-50 0-85-35t-35-85v-318l122-122h40v376l210-86 29 30-180 215q-11 13-26 19t-32 6h-43Zm282.5-608.5Q571-697 571-710t-8.5-21.5Q554-740 541-740t-21.5 8.5Q511-723 511-710t8.5 21.5Q528-680 541-680t21.5-8.5Z\"/></g>",
+} as const;

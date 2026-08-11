@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBlurShort: InteropIconDefinition = {
+  name: "ms-blur-short",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M699-381q41-41 41-99t-41-99q-41-41-99-41t-99 41q-41 41-41 99t41 99q41 41 99 41t99-41Zm-99 101q-74 0-130-48.5T402-450H240v-60h162q4-32 18-60t37-50H160v-60h440q83 0 141.5 58.5T800-480q0 83-58.5 141.5T600-280Z\"/></g>",
+} as const;

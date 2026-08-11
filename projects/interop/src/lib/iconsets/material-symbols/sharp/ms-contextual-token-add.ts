@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsContextualTokenAdd: InteropIconDefinition = {
+  name: "ms-contextual-token-add",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-160v-640h520v60H140v520h680v-347h60v407H80Zm164-165h266v-102H244v102Zm0-207h266v-102H244v102Zm370 207h102v-242H614v242ZM140-220v-520 520Zm600-400v-80h-80v-60h80v-80h60v80h80v60h-80v80h-60Z\"/></g>",
+} as const;

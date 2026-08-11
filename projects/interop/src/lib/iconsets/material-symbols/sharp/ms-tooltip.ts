@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTooltip: InteropIconDefinition = {
+  name: "ms-tooltip",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-80 376-237H80v-643h800v643H584L480-80Zm0-108 72-109h268v-523H140v523h268l72 109Zm0-371Z\"/></g>",
+} as const;

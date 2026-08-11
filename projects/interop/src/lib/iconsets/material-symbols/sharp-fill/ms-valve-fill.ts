@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsValveFill: InteropIconDefinition = {
+  name: "ms-valve-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-620v-160H290v-60h380v60H510v160h-60ZM160-120v-310h60v40h150v-140h-40v-60h300v60h-40v140h150v-40h60v310h-60v-40H220v40h-60Z\"/></g>",
+} as const;

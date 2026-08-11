@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsLineEndCircleFill: InteropIconDefinition = {
+  name: "ms-line-end-circle-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M640-240q-92 0-159.5-60.5T402-450H80v-60h322q11-89 78.5-149.5T640-720q100 0 170 70t70 170q0 100-70 170t-170 70Z\"/></g>",
+} as const;

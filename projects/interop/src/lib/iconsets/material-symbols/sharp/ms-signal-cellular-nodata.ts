@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSignalCellularNodata: InteropIconDefinition = {
+  name: "ms-signal-cellular-nodata",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m676-114-42-42 84-84-84-84 42-42 84 84 84-84 42 42-83 84 83 84-42 42-84-83-84 83ZM80-80l800-800v466q-14-9-28.5-16.5T820-443v-293L224-140h350q9 17 21.5 32T622-80H80Zm144-60 596-596-183 183-140.5 140.5-128 128L224-140Z\"/></g>",
+} as const;

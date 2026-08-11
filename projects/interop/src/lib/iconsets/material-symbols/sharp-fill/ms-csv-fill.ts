@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCsvFill: InteropIconDefinition = {
+  name: "ms-csv-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M188-357h160v-50H238v-146h110v-50H188v246Zm199 0h170v-142H437v-54h120v-50H387v144h120v52H387v50Zm271 0h57l75-246h-50l-53 183-47-183h-50l68 246ZM80-160v-640h800v640H80Z\"/></g>",
+} as const;

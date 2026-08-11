@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsListAltCheckFill: InteropIconDefinition = {
+  name: "ms-list-alt-check-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-720h720v452L702-250l-89-88-125 128 89 90H120Zm150-330h60v-60h-60v60Zm0-164h60v-60h-60v60Zm162 164h244v-60H432v60Zm0-164h244v-60H432v60ZM702-80 572-210l42-43 88 88 175-175 43 42L702-80Z\"/></g>",
+} as const;

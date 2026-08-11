@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMovieEditOff: InteropIconDefinition = {
+  name: "ms-movie-edit-off",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M470-404Zm170-2ZM80-160v-640h80l212 212H140v368h360v60H80Zm800-640v212H458L246-800h78l74 152h130l-74-152h130l74 152h130l-74-152h166Zm-20 417-37-37 37 37Zm-56 141L682-364l141-141 122 122-141 141Zm-184 62h38l18-18-38-38-18 18v38ZM886-74l-43 43-125-125-35 36H560v-123l36-35L31-843l43-43L886-74Z\"/></g>",
+} as const;

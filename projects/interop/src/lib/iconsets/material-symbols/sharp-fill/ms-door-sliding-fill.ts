@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsDoorSlidingFill: InteropIconDefinition = {
+  name: "ms-door-sliding-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M393.5-459.5Q404-470 404-484t-10.5-24.5Q383-519 369-519t-24.5 10.5Q334-498 334-484t10.5 24.5Q355-449 369-449t24.5-10.5Zm223 0Q627-470 627-484t-10.5-24.5Q606-519 592-519t-24.5 10.5Q557-498 557-484t10.5 24.5Q578-449 592-449t24.5-10.5ZM120-120v-60h46v-660h299v660h30v-660h299v660h46v60H120Z\"/></g>",
+} as const;

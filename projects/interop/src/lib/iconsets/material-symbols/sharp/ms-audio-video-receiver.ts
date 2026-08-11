@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAudioVideoReceiver: InteropIconDefinition = {
+  name: "ms-audio-video-receiver",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M140-340h680v-360H140v360Zm-60 60v-480h800v480h-80v80h-60v-80H220v80h-60v-80H80Zm60-60v-360 360Zm596.5-123.5Q760-487 760-520t-23.5-56.5Q713-600 680-600t-56.5 23.5Q600-553 600-520t23.5 56.5Q647-440 680-440t56.5-23.5ZM240-440h300v-160H240v160Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSeatWindow: InteropIconDefinition = {
+  name: "ms-seat-window",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m561-620-75-260h325l75 260H561Zm45-60h200l-40-140H566l40 140Zm-341 0q-29 0-49-20t-20-49q0-29 20-50t49-21q29 0 50 21t21 50q0 29-21 49t-50 20Zm-80 560L80-645h63l87 465h292v60H185Zm83-105-57-303q-9-46 23-81.5t80-35.5q35 0 60 22.5t32 56.5l46 240h202L815-50l-53 30-118-205H268Zm338-455-40-140 40 140Z\"/></g>",
+} as const;

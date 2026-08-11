@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCardsStack: InteropIconDefinition = {
+  name: "ms-cards-stack",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M390-608h320v-60H390v60Zm0 140h199v-60H390v60Zm313 232h67l7 52-603 72-74-537 59-7 67 478 477-58Zm-483-60v-544h660v544H220Zm60-60h540v-424H280v424Zm0 0v-424 424Zm-54 178Z\"/></g>",
+} as const;

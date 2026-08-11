@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTextureMinusFill: InteropIconDefinition = {
+  name: "ms-texture-minus-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M161-120h-41v-45l678-675h42v44L161-120Zm237 0 122-122v122H398Zm182-60v-60h300v60H580ZM120-398v-86l356-356h86L120-398Zm458 98 262-262v86L664-300h-86ZM120-718v-122h122L120-718Z\"/></g>",
+} as const;

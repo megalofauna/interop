@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsPermScanWifiFill: InteropIconDefinition = {
+  name: "ms-perm-scan-wifi-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-120 0-600q99-94 221-147t259-53q137 0 259 53t221 147L480-120Zm-30-225h60v-220h-60v220Zm51-279q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAmbulanceFill: InteropIconDefinition = {
+  name: "ms-ambulance-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-810v-150h60v150h-60Zm-187 53L152-869l42-43 112 112-43 43Zm-13 503h150v-60H250v60Zm460 0v-60H560v60h150Zm-12-256 141-142-28-28-113 114-59-60-28 29 87 87Zm-110.5 52.5Q531-514 531-595t56.5-137.5Q644-789 725-789t137.5 56.5Q919-676 919-595t-56.5 137.5Q806-401 725-401t-137.5-56.5ZM120-40v-354l98-286h157v-75h153q-23 29-37.5 63T472-620H258l-60 176h323q36 49 89.5 76T725-341q30 0 59-7t56-21v329h-81v-84H200v84h-80Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsContrastSquareFill: InteropIconDefinition = {
+  name: "ms-contrast-square-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-720h720v720H120Zm60-60h600v-600L180-180Zm44-430h76v76h50v-76h76v-50h-76v-76h-50v76h-76v50Zm496 300H494v-50h226v50Z\"/></g>",
+} as const;

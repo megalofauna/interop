@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsAddComment: InteropIconDefinition = {
+  name: "ms-add-comment",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-400h60v-130h130v-60H510v-130h-60v130H320v60h130v130ZM80-80v-800h800v640H240L80-80Zm134-220h606v-520H140v600l74-80Zm-74 0v-520 520Z\"/></g>",
+} as const;

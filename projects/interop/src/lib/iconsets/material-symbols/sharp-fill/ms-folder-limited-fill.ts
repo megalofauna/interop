@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsFolderLimitedFill: InteropIconDefinition = {
+  name: "ms-folder-limited-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-160v-640h341l60 60h399v580H80Zm513-177q47-47 47-113t-47-113q-47-47-113-47t-113 47q-47 47-47 113t47 113q47 47 113 47t113-47ZM422-543q13-8 27.5-12.5T480-560q46 0 78 32t32 78q0 16-4.5 30.5T573-392L422-543Zm58 203q-45 0-77.5-32.5T370-450q0-16 4.5-30.5T387-508l151 151q-13 8-27.5 12.5T480-340Z\"/></g>",
+} as const;

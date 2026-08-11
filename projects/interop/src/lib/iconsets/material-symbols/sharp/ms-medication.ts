@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMedication: InteropIconDefinition = {
+  name: "ms-medication",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M440-269h79v-111h114v-80H519v-111h-79v111H327v80h113v111ZM200-120v-599h560v599H200Zm60-60h440v-479H260v479Zm-20-600v-60h481v60H240Zm20 121v479-479Z\"/></g>",
+} as const;

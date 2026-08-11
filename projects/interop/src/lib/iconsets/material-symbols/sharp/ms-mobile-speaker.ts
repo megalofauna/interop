@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMobileSpeaker: InteropIconDefinition = {
+  name: "ms-mobile-speaker",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M180-140v-680 680Zm-60 60v-800h518v270l-60 60v-270H180v680h247l60 60H120Zm238-120v-140h94l126-126v392L452-200h-94Zm320 33v-206q31 12 51 40t20 63q0 35-20 63t-51 40Zm0 134v-61q63-11 102-61t39-115q0-64-39-114t-102-61v-61q88 11 144.5 79T879-270q0 89-56.5 157T678-33ZM400-689q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9Z\"/></g>",
+} as const;

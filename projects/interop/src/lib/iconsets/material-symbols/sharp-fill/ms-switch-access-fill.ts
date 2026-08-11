@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsSwitchAccessFill: InteropIconDefinition = {
+  name: "ms-switch-access-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M285-285v-390h390v390H285Zm-165 0v-60h60v60h-60Zm0-330v-60h60v60h-60Zm165 495v-60h60v60h-60Zm0-660v-60h60v60h-60Zm330 660v-60h60v60h-60Zm0-660v-60h60v60h-60Zm165 495v-60h60v60h-60Zm0-330v-60h60v60h-60Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsProgressActivity: InteropIconDefinition = {
+  name: "ms-progress-activity",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M323-111q-73-31-127-85t-85-127q-31-73-31-157t31-157q31-73 85-127t127-85q73-31 157-31v60q-141 0-240.5 99.5T140-480q0 141 99.5 240.5T480-140q141 0 240.5-99.5T820-480h60q0 84-31 157t-85 127q-54 54-127 85T480-80q-84 0-157-31Z\"/></g>",
+} as const;

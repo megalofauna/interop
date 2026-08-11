@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTabletCameraFill: InteropIconDefinition = {
+  name: "ms-tablet-camera-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M40-160v-640h880v640H770v-580H190v580H40Zm260 80v-280h100l40-40h80l40 40h100v280H300Zm229.5-90.5Q550-191 550-220t-20.5-49.5Q509-290 480-290t-49.5 20.5Q410-249 410-220t20.5 49.5Q451-150 480-150t49.5-20.5Z\"/></g>",
+} as const;

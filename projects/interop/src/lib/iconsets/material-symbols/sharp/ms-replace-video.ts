@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsReplaceVideo: InteropIconDefinition = {
+  name: "ms-replace-video",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M260-140h360v-360H260v360ZM131-620q32-118 129.5-189T480-880q91 0 170.5 42.5T780-719v-131h60v230H610v-60h124q-42-66-109-103t-145-37q-97 0-176 54.5T193-620h-62Zm69 540v-480h480v200l120-120v320L680-280v200H200Zm60-60v-360 360Z\"/></g>",
+} as const;

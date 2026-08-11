@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsStackStarFill: InteropIconDefinition = {
+  name: "ms-stack-star-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m516-243 84-50 84 50-22-95 73-64-97-8-38-90-38 90-97 8 73 64-22 95ZM260-380v60H80v-560h560v180h-60v-120H140v440h120Zm60 300v-560h560v560H320Z\"/></g>",
+} as const;

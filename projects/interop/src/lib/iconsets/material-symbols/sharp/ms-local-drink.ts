@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsLocalDrink: InteropIconDefinition = {
+  name: "ms-local-drink",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m208-80-88-800h720L752-80H208Zm6-500 48 440h436l48-440H214Zm-7-60h546l20-180H187l20 180Zm239 373.5Q432-280 432-299q0-24 12.5-53t35.5-59q23 30 35.5 59t12.5 53q0 19-14 32.5T480-253q-20 0-34-13.5ZM556.5-224q31.5-31 31.5-75 0-47-28.5-100T480-500q-51 48-79.5 101T372-299q0 44 31.5 75t76.5 31q45 0 76.5-31ZM262-140h436-436Z\"/></g>",
+} as const;

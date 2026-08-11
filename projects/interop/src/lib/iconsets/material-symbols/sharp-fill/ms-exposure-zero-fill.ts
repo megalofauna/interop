@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsExposureZeroFill: InteropIconDefinition = {
+  name: "ms-exposure-zero-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M320-279.5Q260-359 260-480t60-200.5Q380-760 480-760t160 79.5Q700-601 700-480t-60 200.5Q580-200 480-200t-160-79.5Zm274-48Q632-393 632-480t-38-152.5Q556-698 480-698t-114 65.5Q328-567 328-480t38 152.5Q404-262 480-262t114-65.5Z\"/></g>",
+} as const;

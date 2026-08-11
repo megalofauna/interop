@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsPageInfoFill: InteropIconDefinition = {
+  name: "ms-page-info-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M603.5-183.5Q560-227 560-290t43.5-106.5Q647-440 710-440t106.5 43.5Q860-353 860-290t-43.5 106.5Q773-140 710-140t-106.5-43.5ZM120-260v-60h360v60H120Zm23.5-303.5Q100-607 100-670t43.5-106.5Q187-820 250-820t106.5 43.5Q400-733 400-670t-43.5 106.5Q313-520 250-520t-106.5-43.5ZM480-640v-60h360v60H480Z\"/></g>",
+} as const;

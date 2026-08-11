@@ -38,7 +38,18 @@ import { fileURLToPath } from "url";
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SVG_ROOT = join(ROOT, "IconSetsSVG");
-const OUT_ROOT = join(ROOT, "src/lib/iconsets");
+const OUT_ROOT = join(ROOT, "projects/interop/src/lib/iconsets");
+
+/**
+ * Material Symbols comes from npm rather than IconSetsSVG. The generated .ts is
+ * the committed artifact either way — the SVGs are only build input — and a
+ * dependency is a version bump instead of a 7,792-file vendoring commit.
+ *
+ * Weight is chosen by which package this points at (svg-100 … svg-700). These
+ * are font-derived filled contours, so weight cannot vary at runtime the way
+ * Tabler's stroke-width can; see the note on defaultStrokeWidth below.
+ */
+const MS_ROOT = join(ROOT, "node_modules/@material-symbols/svg-400");
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -174,6 +185,56 @@ const PROCESSORS = {
     wrap: `fill="currentColor"`,
     nameFromFile: (file) => basename(file, ".svg"),
   },
+
+  /*
+   * Material Symbols — Sharp. Both variants live in ONE source directory
+   * (`sharp/face.svg` and `sharp/face-fill.svg`), so each variant selects its
+   * half with fileFilter rather than pointing at its own folder.
+   *
+   * Both are `fill="currentColor"` wrapped and carry no defaultStrokeWidth,
+   * because BOTH are filled contours — the "outline" look is a frame: two
+   * nested contours filled by winding rule, not a stroked line. Nothing here
+   * responds to stroke-width, which is why InteropIcon emits none.
+   *
+   * Names use `_` between words and `-fill` for the variant, so word
+   * separators are normalised to `-` to match every other set:
+   *   arrow_back.svg       → ms-arrow-back
+   *   arrow_back-fill.svg  → ms-arrow-back-fill
+   */
+  "material-symbols/sharp": {
+    srcDir: join(MS_ROOT, "sharp"),
+    outDir: join(OUT_ROOT, "material-symbols/sharp"),
+    registryPrefix: "ms-",
+    variantSuffix: "",
+    exportPrefix: "Ms",
+    defaultStrokeWidth: undefined,
+    viewBox: "0 -960 960 960",
+    fileFilter: (file) => !file.endsWith("-fill.svg"),
+    process(inner) {
+      return normalise(inner);
+    },
+    wrap: `fill="currentColor"`,
+    nameFromFile: (file) => basename(file, ".svg").replace(/_/g, "-"),
+  },
+
+  "material-symbols/sharp-fill": {
+    srcDir: join(MS_ROOT, "sharp"),
+    outDir: join(OUT_ROOT, "material-symbols/sharp-fill"),
+    registryPrefix: "ms-",
+    variantSuffix: "-fill",
+    exportPrefix: "Ms",
+    defaultStrokeWidth: undefined,
+    viewBox: "0 -960 960 960",
+    fileFilter: (file) => file.endsWith("-fill.svg"),
+    process(inner) {
+      return normalise(inner);
+    },
+    wrap: `fill="currentColor"`,
+    nameFromFile: (file) =>
+      basename(file, ".svg")
+        .replace(/-fill$/, "")
+        .replace(/_/g, "-"),
+  },
 };
 
 // ── File generator ─────────────────────────────────────────────────────────────
@@ -181,7 +242,9 @@ const PROCESSORS = {
 function processVariant(key, cfg) {
   ensureDir(cfg.outDir);
 
-  const files = readdirSync(cfg.srcDir).filter((f) => f.endsWith(".svg"));
+  const files = readdirSync(cfg.srcDir)
+    .filter((f) => f.endsWith(".svg"))
+    .filter(cfg.fileFilter ?? (() => true));
   const exports = []; // { exportName, registryName, fileName }
 
   for (const file of files) {
@@ -246,9 +309,7 @@ function writeVariantIndex(cfg, exports) {
 
 function writeSetIndex(setKey, variantConfigs, variantExports) {
   const setDir = join(OUT_ROOT, setKey);
-  const setPrefix = setKey === "phosphor" ? "Phosphor" : "Tabler";
-  const providerAlias =
-    setKey === "phosphor" ? "providePhosphorIcons" : "provideTablerIcons";
+  const { label: setPrefix, provider: providerAlias } = SETS[setKey];
 
   const lines = [
     `// Auto-generated — do not edit. Re-run scripts/generate-icons.mjs to update.`,
@@ -298,37 +359,58 @@ function writeSetIndex(setKey, variantConfigs, variantExports) {
 
 // ── Main ───────────────────────────────────────────────────────────────────────
 
-console.log("Generating icons…\n");
-
-const phosphorVariants = {
-  "phosphor/regular": PROCESSORS["phosphor/regular"],
-  "phosphor/fill": PROCESSORS["phosphor/fill"],
-  "phosphor/duotone": PROCESSORS["phosphor/duotone"],
+/**
+ * Usage: node scripts/generate-icons.mjs [set…]
+ *
+ * With no arguments every set is regenerated. Name sets to regenerate only
+ * those — each set is thousands of files, and rewriting one is no reason to
+ * churn the diff of the others.
+ */
+const SETS = {
+  phosphor: {
+    label: "Phosphor",
+    provider: "providePhosphorIcons",
+    variants: ["phosphor/regular", "phosphor/fill", "phosphor/duotone"],
+  },
+  tabler: {
+    label: "Tabler",
+    provider: "provideTablerIcons",
+    variants: ["tabler/outline", "tabler/filled"],
+  },
+  "material-symbols": {
+    label: "MaterialSymbols",
+    provider: "provideMaterialSymbolsIcons",
+    variants: ["material-symbols/sharp", "material-symbols/sharp-fill"],
+  },
 };
 
-const tablerVariants = {
-  "tabler/outline": PROCESSORS["tabler/outline"],
-  "tabler/filled": PROCESSORS["tabler/filled"],
-};
-
-const phosphorExports = {};
-for (const [key, cfg] of Object.entries(phosphorVariants)) {
-  console.log(`  phosphor/${key.split("/")[1]}…`);
-  const exps = processVariant(key, cfg);
-  writeVariantIndex(cfg, exps);
-  phosphorExports[key] = exps;
-  console.log(`    → ${exps.length} icons`);
+const requested = process.argv.slice(2);
+const unknown = requested.filter((s) => !SETS[s]);
+if (unknown.length) {
+  console.error(
+    `Unknown set(s): ${unknown.join(", ")}\nKnown: ${Object.keys(SETS).join(", ")}`,
+  );
+  process.exit(1);
 }
-writeSetIndex("phosphor", phosphorVariants, phosphorExports);
+const selected = requested.length ? requested : Object.keys(SETS);
 
-const tablerExports = {};
-for (const [key, cfg] of Object.entries(tablerVariants)) {
-  console.log(`  tabler/${key.split("/")[1]}…`);
-  const exps = processVariant(key, cfg);
-  writeVariantIndex(cfg, exps);
-  tablerExports[key] = exps;
-  console.log(`    → ${exps.length} icons`);
+console.log(`Generating icons (${selected.join(", ")})…\n`);
+
+for (const setKey of selected) {
+  const variantConfigs = Object.fromEntries(
+    SETS[setKey].variants.map((v) => [v, PROCESSORS[v]]),
+  );
+  const setExports = {};
+
+  for (const [key, cfg] of Object.entries(variantConfigs)) {
+    console.log(`  ${key}…`);
+    const exps = processVariant(key, cfg);
+    writeVariantIndex(cfg, exps);
+    setExports[key] = exps;
+    console.log(`    → ${exps.length} icons`);
+  }
+
+  writeSetIndex(setKey, variantConfigs, setExports);
 }
-writeSetIndex("tabler", tablerVariants, tablerExports);
 
 console.log("\nDone.");

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsLocationSearching: InteropIconDefinition = {
+  name: "ms-location-searching",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-40v-75q-137-14-228-105T117-448H42v-60h75q14-137 105-228t228-105v-75h60v75q137 14 228 105t105 228h75v60h-75q-14 137-105 228T510-115v75h-60Zm244.5-223.5Q784-353 784-478t-89.5-214.5Q605-782 480-782t-214.5 89.5Q176-603 176-478t89.5 214.5Q355-174 480-174t214.5-89.5Z\"/></g>",
+} as const;

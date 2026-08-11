@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsEmojiFoodBeverageFill: InteropIconDefinition = {
+  name: "ms-emoji-food-beverage-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M160-120v-60h640v60H160Zm564-500h96v-160h-96v160ZM160-260v-580h197v93l-81 65v185h201v-185l-80-65v-93h423q24.75 0 42.38 17.62Q880-804.75 880-780v160q0 24.75-17.62 42.37Q844.75-560 820-560h-96v300H160Z\"/></g>",
+} as const;

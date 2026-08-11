@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsFrameExclamationFill: InteropIconDefinition = {
+  name: "ms-frame-exclamation-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M450-380v-380h60v380h-60Zm0 180v-60h60v60h-60ZM40-40v-183h60v123h123v60H40Zm697 0v-60h123v-123h60v183H737ZM40-737v-183h183v60H100v123H40Zm820 0v-123H737v-60h183v183h-60Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBoltBoost: InteropIconDefinition = {
+  name: "ms-bolt-boost",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m536-120 42-289H338l316-431h22l-42 288h241L559-120h-23ZM120-244v-60h335l-9 60H120ZM80-450v-60h199l-40 60H80Zm80-207v-60h271l-44 60H160Z\"/></g>",
+} as const;

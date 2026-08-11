@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCurtainsFill: InteropIconDefinition = {
+  name: "ms-curtains-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-120v-60h80v-660h640v660h80v60H80Zm162-360q94 29 146.5 117.5T449-180h62q8-94 60-182.5T717-480q-94-29-146-117.5T511-780h-63q-8 94-60 182.5T242-480Z\"/></g>",
+} as const;

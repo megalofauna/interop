@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsDataCheckFill: InteropIconDefinition = {
+  name: "ms-data-check-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"m612-550 141-142-28-28-113 113-57-57-28 29 85 85ZM120-160v-60h480v60H120Zm385.5-345.61q-55.5-55.6-55.5-134.5 0-78.89 55.61-134.39 55.6-55.5 134.5-55.5 78.89 0 134.39 55.61 55.5 55.6 55.5 134.5 0 78.89-55.61 134.39-55.6 55.5-134.5 55.5-78.89 0-134.39-55.61ZM120-500v-60h262q5.32 16.32 12.16 31.16T409-500H120Zm0 170v-60h419q13.8 6.36 29.4 10.68Q584-375 600-373v43H120Z\"/></g>",
+} as const;

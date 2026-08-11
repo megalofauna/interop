@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsArrowsLeftRightCircleFill: InteropIconDefinition = {
+  name: "ms-arrows-left-right-circle-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M324-111.5Q251-143 197-197t-85.5-127Q80-397 80-480t31.5-156Q143-709 197-763t127-85.5Q397-880 480-880t156 31.5Q709-817 763-763t85.5 127Q880-563 880-480t-31.5 156Q817-251 763-197t-127 85.5Q563-80 480-80t-156-31.5ZM380-334l42-42-74-74h264l-74 74 42 42 146-146-146-146-42 42 74 74H348l74-74-42-42-146 146 146 146Z\"/></g>",
+} as const;

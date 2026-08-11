@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBook4Fill: InteropIconDefinition = {
+  name: "ms-book-4-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M280-320h60v-500h-60v500ZM240-80q-50 0-85-35t-35-85v-560q0-50 35-85t85-35h420v620H240q-25 0-42.5 17.5T180-200q0 25 17.5 42.5T240-140h540v-660h60v720H240Z\"/></g>",
+} as const;

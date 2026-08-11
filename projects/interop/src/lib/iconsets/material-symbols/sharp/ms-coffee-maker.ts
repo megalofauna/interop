@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsCoffeeMaker: InteropIconDefinition = {
+  name: "ms-coffee-maker",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M160-80v-800h640v60H693v100H329v-100H220v680h188q-38-26-58.5-63T329-293v-193h364v193q0 53-21 90t-59 63h187v60H160Zm350.5-86q51.5 0 87-37.04T633-293v-133H389v133q0 52.92 35 89.96Q459-166 510.5-166ZM538-571q11-11 11-28t-11-28q-11-11-28-11t-28 11q-11 11-11 28t11 28q11 11 28 11t28-11Zm-27 145Z\"/></g>",
+} as const;

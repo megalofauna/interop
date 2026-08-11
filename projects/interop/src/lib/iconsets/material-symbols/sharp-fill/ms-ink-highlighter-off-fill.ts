@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsInkHighlighterOffFill: InteropIconDefinition = {
+  name: "ms-ink-highlighter-off-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M636-404 436-604l262-262 200 200-262 262ZM817-55 552-320 353-121h-43l-42-42-43 43H70l120-120-38-38v-42l200-200L55-817l42-42L859-97l-42 42Z\"/></g>",
+} as const;

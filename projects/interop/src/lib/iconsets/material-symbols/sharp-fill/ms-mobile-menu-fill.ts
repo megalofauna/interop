@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMobileMenuFill: InteropIconDefinition = {
+  name: "ms-mobile-menu-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M310-50q-13 0-21.5-8.5T280-80q0-12 8.5-21t21.5-9q12 0 21 9t9 21q0 13-9 21.5T310-50Zm148.5-8.5Q450-67 450-80t8.5-21.5Q467-110 480-110t21.5 8.5Q510-93 510-80t-8.5 21.5Q493-50 480-50t-21.5-8.5Zm170 0Q620-67 620-80q0-12 8.5-21t21.5-9q13 0 21.5 9t8.5 21q0 13-8.5 21.5T650-50q-13 0-21.5-8.5ZM500-729q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9ZM241-200v-720h479v166h32v141h-32v413H241Z\"/></g>",
+} as const;

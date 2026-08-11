@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsUnsubscribe: InteropIconDefinition = {
+  name: "ms-unsubscribe",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M480-463 140-680v460h386q0 14 2.5 30.5T535-160H80v-640h800v351q-11-6-28.5-11.5T820-469v-211L480-463Zm0-64 340-213H140l340 213ZM640.5-94Q586-148 586-226.01q0-78.02 54.5-133Q695-414 773-414t132.5 54.99q54.5 54.98 54.5 133Q960-148 905.5-94 851-40 773-40T640.5-94ZM660-210h226v-40H660v40Zm-520-10v-520 520Z\"/></g>",
+} as const;

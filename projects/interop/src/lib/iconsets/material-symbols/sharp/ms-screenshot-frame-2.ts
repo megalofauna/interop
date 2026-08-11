@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsScreenshotFrame2: InteropIconDefinition = {
+  name: "ms-screenshot-frame-2",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M820-570v-130H690v-60h190v190h-60Zm-740 0v-190h190v60H140v130H80Zm610 370v-60h130v-130h60v190H690Zm-610 0v-190h60v130h130v60H80Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMobileTicketFill: InteropIconDefinition = {
+  name: "ms-mobile-ticket-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M200-40v-880h558v210h42v173h-42v497H200Zm120-280h320v-120q-17 0-28.5-11.5T600-480q0-17 11.5-28.5T640-520v-120H320v120q17 0 28.5 11.5T360-480q0 17-11.5 28.5T320-440v120Zm146-66q-6-6-6-14t6-14q6-6 14-6t14 6q6 6 6 14t-6 14q-6 6-14 6t-14-6Zm0-80q-6-6-6-14t6-14q6-6 14-6t14 6q6 6 6 14t-6 14q-6 6-14 6t-14-6Zm0-80q-6-6-6-14t6-14q6-6 14-6t14 6q6 6 6 14t-6 14q-6 6-14 6t-14-6Z\"/></g>",
+} as const;

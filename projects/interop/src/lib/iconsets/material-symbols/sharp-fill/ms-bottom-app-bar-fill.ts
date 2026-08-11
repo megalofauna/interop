@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBottomAppBarFill: InteropIconDefinition = {
+  name: "ms-bottom-app-bar-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-120v-720h720v720H120Zm381-242q9-9 9-21t-9-21q-9-9-21-9t-21 9q-9 9-9 21t9 21q9 9 21 9t21-9Zm-321-21h210q0-36 27-63t63-27q36 0 63 27t27 63h210v-397H180v397Z\"/></g>",
+} as const;

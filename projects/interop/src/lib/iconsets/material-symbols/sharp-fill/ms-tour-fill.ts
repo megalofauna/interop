@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsTourFill: InteropIconDefinition = {
+  name: "ms-tour-fill",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M200-80v-800h60v84h580l-81 193 81 193H260v330h-60Zm352-472.21q21-21.21 21-51T551.79-654q-21.21-21-51-21T450-653.79q-21 21.21-21 51T450.21-552q21.21 21 51 21T552-552.21Z\"/></g>",
+} as const;

@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsBookmarkBag: InteropIconDefinition = {
+  name: "ms-bookmark-bag",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M350-390h40v40h60v-40h60v40h60v-40h40v-250h-60v-90H410v90h-60v250Zm100-250v-50h60v50h-60ZM200-120v-725h560v725L480-240 200-120Zm60-91 220-93 220 93v-574H260v574Zm0-574h440-440Z\"/></g>",
+} as const;

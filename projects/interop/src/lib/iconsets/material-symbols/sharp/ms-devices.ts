@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsDevices: InteropIconDefinition = {
+  name: "ms-devices",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M501-540ZM80-160v-60h421v60H80Zm40-120v-520h720v60H180v400h321v60H120Zm700 60v-400H621v400h199Zm-259 60v-520h319v520H561Zm160-360q12 0 21-9t9-21q0-12-9-21t-21.48-9Q709-580 700-571t-9 21.48q0 11.52 9 20.52t21 9Zm0 100Z\"/></g>",
+} as const;

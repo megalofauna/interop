@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsMedicationLiquid: InteropIconDefinition = {
+  name: "ms-medication-liquid",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M120-780v-60h480v60H120Zm190 510h100v-100h100v-100H410v-100H310v100H210v100h100v100ZM80-120v-600h560v600H80Zm60-60h440v-480H140v480Zm640-246q-35-17-57.5-55T700-570q0-63 32-106.5t78-43.5q46 0 78 43.5T920-570q0 51-22.5 89T840-426v306h-60v-306Zm62.5-78q17.5-24 17.5-66t-17.5-66Q825-660 810-660t-32.5 24Q760-612 760-570t17.5 66q17.5 24 32.5 24t32.5-24ZM360-420Zm450-150Z\"/></g>",
+} as const;

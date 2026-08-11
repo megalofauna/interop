@@ -1,0 +1,7 @@
+import type { InteropIconDefinition } from "../../core";
+
+export const MsPhotoCameraFront: InteropIconDefinition = {
+  name: "ms-photo-camera-front",
+  viewBox: "0 -960 960 960",
+  svgContent: "<g fill=\"currentColor\"><path d=\"M80-120v-633h207l73-87h240l73 87h207v633H80Zm60-60h680v-513H645l-73-87H388l-73 87H140v513Zm340-257ZM320-286h320v-19q0-42-42.5-65T480-393q-75 0-117.5 23T320-305v19Zm211.5-195.5Q553-503 553-533t-21.5-51.5Q510-606 480-606t-51.5 21.5Q407-563 407-533t21.5 51.5Q450-460 480-460t51.5-21.5Z\"/></g>",
+} as const;
