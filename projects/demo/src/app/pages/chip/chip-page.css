@@ -28,7 +28,7 @@
 
 .card__group {
 	list-style-type: none;
-	gap: var(--itx-spacing-6);
+	/*gap: var(--itx-spacing-6);*/
 	margin-block-start: var(--itx-spacing-5);
 	padding: unset;
 	display: grid;
@@ -37,12 +37,12 @@
 	.card {
 		background-color: var(--itx-neutral-3_5);
 		margin: unset;
-		border-radius: var(--itx-radius-md);
+		/*border-radius: var(--itx-radius-md);*/
 		display: flex;
 		gap: var(--itx-spacing-2);
 		flex-direction: column;
 		padding: var(--itx-spacing-5);
-		border: 2px solid var(--itx-neutral-4);
+		/*border: 2px solid var(--itx-neutral-4);*/
 		box-shadow: 0 2px 2px 0 rgb(8% 8% 8% / 0.25);
 
 	}

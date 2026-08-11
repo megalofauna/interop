@@ -22,6 +22,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Visimorph (faux-control surface) deep-dive | [components/visimorph.md](components/visimorph.md) |
 | Collection service deep-dive | [services/collection.md](services/collection.md) |
 | Adding a demo page (workflow) | [workflows/new-demo-page.md](workflows/new-demo-page.md) |
+| Borrowing visual language from IBM Carbon (workflow) | [workflows/carbon-borrow.md](workflows/carbon-borrow.md) |
 | Terminal composite deep-dive | [composites/terminal.md](composites/terminal.md) |
 | InlineCode composite deep-dive | [composites/inline-code.md](composites/inline-code.md) |
 | CodeBlock composite deep-dive | [composites/code-block.md](composites/code-block.md) |
