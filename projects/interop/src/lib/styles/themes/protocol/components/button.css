@@ -57,10 +57,10 @@
 
 /* ── Variants ────────────────────────────────────────────────────────────── */
 
-/*:where(button[interop-button~="grow"]) {
-	--itx-button-flex: 1;
-	--itx-button-max-width: none;
-}*/
+	:where(button[interop-button~="grow"]) {
+		--itx-button-flex: 1;
+		--itx-button-max-width: none;
+	}
 
 :where(button[interop-button~="primary"]) {
 	--itx-button-background: var(--itx-colorway-5);

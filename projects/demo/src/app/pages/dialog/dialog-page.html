@@ -22,22 +22,14 @@
 				<p>Vessel ID: UCS-7741 requests permission to dock at Bay 3.</p>
 				<p>ETA: 14 minutes. Cargo: general supply run.</p>
 				<div class="dialog-page__actions">
-					<button interop-button="action" itx-size="lg" (click)="basicOpen.set(false)">
+					<button interop-button="secondary grow" (click)="basicOpen.set(false)">
 						Deny
 					</button>
-					<button interop-button="action plus" itx-size="lg" (click)="basicOpen.set(false)">
+					<button interop-button="primary grow" (click)="basicOpen.set(false)">
 						Approve
 					</button>
 				</div>
 			</dialog>
-
-			<demo-state>
-				<demo-state-item label="Open">{{ basicOpen() }}</demo-state-item>
-				<demo-state-item label="Last closed by"
-					>{{ closeReason() }}</demo-state-item
-				>
-			</demo-state>
-
 			<itx-code-block [files]="basicFiles" />
 		</demo-example>
 
@@ -60,7 +52,7 @@
 					proceeding.
 				</p>
 				<div class="dialog-page__actions">
-					<button interop-button="action-plus" (click)="lockedOpen.set(false)">
+					<button interop-button="primary" (click)="lockedOpen.set(false)">
 						Confirm evacuation
 					</button>
 				</div>
@@ -69,7 +61,7 @@
 			<itx-code-block [files]="lockedFiles" />
 		</demo-example>
 
-		<demo-example label="Auto-close on form submit">
+		<!--<demo-example label="Auto-close on form submit">
 			<button interop-button (click)="formOpen.set(true)">
 				File mission report
 			</button>
@@ -89,7 +81,7 @@
 						<input type="text" name="summary" />
 					</label>
 					<div class="dialog-page__actions">
-						<button interop-button="action-plus" type="submit">
+						<button interop-button="primary" type="submit">
 							Submit report
 						</button>
 					</div>
@@ -97,11 +89,12 @@
 			</dialog>
 
 			<itx-code-block [files]="autoCloseFiles" />
-		</demo-example>
+		</demo-example>-->
 	</demo-section>
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
+	<demo-section id="api-inputs" heading="API">
+		<h3>Inputs</h3>
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
@@ -114,10 +107,8 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
 
-	<!-- ── API — Outputs ─────────────────────────────────────────────────── -->
-	<demo-section id="api-outputs" heading="API — Outputs">
+		<h3>Outputs</h3>
 		<interop-table [collection]="outputEntries" [columns]="outputColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
@@ -127,9 +118,8 @@
 			</ng-template>
 		</interop-table>
 	</demo-section>
-
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
+	<!--<demo-section id="notes" heading="Notes">
 		<demo-notes [notes]="notes" />
-	</demo-section>
+	</demo-section>-->
 </article>
