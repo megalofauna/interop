@@ -85,6 +85,11 @@ const TYPEAHEAD_RESET_MS = 500;
     { provide: NG_VALUE_ACCESSOR, useExisting: InteropTree, multi: true },
   ],
   host: {
+    // The tree owns every dimension of its rows, so it opts its whole subtree
+    // out of prose. Without this, a globally-declared `interop-typography-root`
+    // reads each <li> as running text and caps the row at --itx-measure,
+    // adds rhythm margins between rows, and overrides the row's type.
+    "interop-typography-isolate": "",
     "[attr.role]": 'isSelectTier() ? "tree" : null',
     "[attr.aria-multiselectable]":
       'isSelectTier() && multiselectable() ? "true" : null',

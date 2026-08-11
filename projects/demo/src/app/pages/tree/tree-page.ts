@@ -25,10 +25,7 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
+import { DemoNotes } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -75,6 +72,14 @@ export class TreePage {
 	protected readonly selectTree = viewChild<InteropTree>("selectTree");
 	protected readonly scaleTree = viewChild<InteropTree>("scaleTree");
 
+	// ── Navigate-tier state ───────────────────────────────────────────────────
+	// The navigate tier has no selection model — it is a list of links, and the
+	// current page is whatever the router says it is. This signal stands in for
+	// the router so the demo can actually move the marker; a real app binds
+	// routerLinkActive + ariaCurrentWhenActive and writes none of this.
+
+	protected readonly currentDoc = signal<string>("install");
+
 	// ── Select-tier state ─────────────────────────────────────────────────────
 
 	protected readonly picked = signal<string[]>([]);
@@ -114,7 +119,9 @@ export class TreePage {
         <li interop-tree-item key="install">
           <span interop-tree-row>
             <span interop-tree-toggle></span>
-            <a routerLink="/guide/install" aria-current="page">Install</a>
+            <a routerLink="/guide/install"
+               routerLinkActive
+               ariaCurrentWhenActive="page">Install</a>
           </span>
         </li>
       </ul>
@@ -379,38 +386,6 @@ export class TreePage {
 		},
 	];
 
-	protected readonly notes: DemoNote[] = [
-		{
-			type: "release",
-			label: "v0.1.x",
-			title: "Two tiers, one directive family",
-			body: 'role="tree" is a behaviour contract — one tab stop, roving focus, typeahead, arrow-key expansion, a selection model. Nav sidebars honour none of it, so Interop does not assume it. Bare [interop-tree] is a nested-list disclosure structure; interop-tree="select" opts into the widget.',
-		},
-		{
-			type: "note",
-			label: "Performance",
-			title: "No virtualizer",
-			body: "Offscreen subtrees are skipped with content-visibility: auto rather than removed from the DOM. Unlike a virtualizer, the content stays in the accessibility tree, stays selectable by Ctrl+A, and stays findable by find-in-page — and item counts are computed by the browser from real list semantics instead of hand-authored aria-setsize.",
-		},
-		{
-			type: "note",
-			label: "Findability",
-			title: "Collapsed is not gone",
-			body: 'Collapsed groups use hidden="until-found". Supporting browsers reveal a match and fire beforematch, which the group turns into a real expand so the component state matches what the user is looking at. Browsers without support treat any hidden value as hidden, so there is nothing to feature-detect.',
-		},
-		{
-			type: "note",
-			label: "Indentation",
-			title: "Depth is one number, used twice",
-			body: "The item computes its depth for aria-level and publishes the same number as --itx-tree-level. Indent lives on the row, not on nested list padding — which is what lets the row box span the full width so hover and selection bleed to both edges at any depth.",
-		},
-		{
-			type: "note",
-			label: "Guardrails",
-			title: "devMode catches the composite-widget trap",
-			body: "Putting a link, a form control, or a <button> twisty inside a select-tier row makes it unreachable for screen-reader users, because a composite widget has exactly one tab stop. Interop warns at dev time and points at the navigate tier.",
-		},
-	];
 }
 
 // ── Scale-demo data ─────────────────────────────────────────────────────────

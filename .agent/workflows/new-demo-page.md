@@ -29,7 +29,7 @@ The page follows a fixed top-to-bottom rhythm. Every demo page mirrors this so u
 1. **Masthead** — category, title, lead paragraph
 2. **Usage** section — practical examples
 3. *Optional component-specific sections* — placement, modes, sizes, keyboard, etc.
-4. **API** section — one section holding the Inputs table and the Outputs table
+4. **API** section — one section holding every API table (Inputs, Outputs, Methods…)
 
 ```html
 <article class="demo-page">
@@ -59,7 +59,7 @@ The page follows a fixed top-to-bottom rhythm. Every demo page mirrors this so u
 </article>
 ```
 
-### One API section, two tables
+### One API section, every table
 
 Inputs and Outputs are one subject, so they get one section and one anchor
 (`id="api"`). Split across two `demo-section`s they read as unrelated topics and
@@ -67,19 +67,28 @@ consume two slots in the page nav for what is really one destination.
 
 `.demo-page__api-heading` (defined in `styles/_demo-page.scss`) labels each
 table. It is deliberately quieter than a `demo-section` heading — it divides a
-section rather than starting one. Omit the Outputs heading and table entirely
-when the component has none; don't render an empty table.
+section rather than starting one. Omit a heading and its table entirely when
+the component has nothing for it; don't render an empty table.
+
+Inputs and Outputs are the common pair, but the section takes **whatever tables
+the component's surface needs** — tree adds **Methods** for its imperative API
+(`reveal()`, `collapseAll()`). Same section, same heading class, one more table.
 
 Note that a `model()` input produces **both** an input and an output. If the
 component exposes `foo = model<T>()`, document `foo` under Inputs *and*
 `fooChange` under Outputs.
 
-### No Notes section
+### No trailing Notes section
 
-Demo pages no longer end with a `<demo-notes>` block. Don't add one to a new
-page, and drop it from pages you touch. The `DemoNotes` component still exists
-and is still used by older pages; it is being held for repurposing rather than
-removed.
+Demo pages no longer end with a page-level `<demo-section id="notes">`. Don't
+add one to a new page, and drop it from pages you touch, along with the `notes`
+array that fed it. It is being held for repurposing rather than removed.
+
+**This is about the trailing block only.** `<demo-notes>` used *inside* a
+section — a caveat attached to the thing it explains, like tree's "Tab order"
+note under the navigate example — is a different tool and stays. The test is
+placement, not the component: a note that belongs to a section lives in it, and
+a pile of notes with no home was the thing that stopped earning its keep.
 
 ## Demo helper components
 
@@ -307,10 +316,11 @@ Then visit `/components/<component>` in the demo app and walk through each examp
 - [ ] At least one `<demo-example>` per major usage variant — walk the component's
       inputs and confirm each one is shown somewhere
 - [ ] Every `<demo-example>` has an `<itx-code-block>` with matching code
-- [ ] One `id="api"` section containing both tables; Outputs omitted if there are none
+- [ ] One `id="api"` section containing every API table (Inputs, Outputs, and
+      Methods where the component has an imperative surface); omit any with no rows
 - [ ] Every `model()` input documented in *both* tables (`foo` and `fooChange`)
 - [ ] API tables use the standard `name` / `type` / `default` cell templates
-- [ ] No `<demo-notes>` block
+- [ ] No trailing `id="notes"` section or `notes` array (in-section `<demo-notes>` is fine)
 - [ ] `tsc --noEmit` clean
 - [ ] `ng build demo` succeeds
 - [ ] Manual smoke test in the browser

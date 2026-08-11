@@ -2,9 +2,9 @@
 	inline-size: 100%;
 	max-inline-size: 32rem;
 	padding-block: var(--itx-spacing-2);
-	border: 1px solid var(--itx-border);
+	border: 2px solid transparent;
 	border-radius: var(--itx-radius-md);
-	background: var(--itx-surface-above);
+	background: transparent;
 }
 
 .tree-page__panel--tall {
@@ -41,5 +41,6 @@
 
 	li {
 		margin-block-end: var(--itx-spacing-1);
+		margin-block-start: var(--itx-spacing-5);
 	}
 }
