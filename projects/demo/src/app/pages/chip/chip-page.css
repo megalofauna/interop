@@ -26,3 +26,77 @@
 	margin: 0;
 }
 
+.card__group {
+	list-style-type: none;
+	gap: var(--itx-spacing-6);
+	margin-block-start: var(--itx-spacing-5);
+	padding: unset;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+
+	.card {
+		background-color: var(--itx-neutral-3_5);
+		margin: unset;
+		border-radius: var(--itx-radius-md);
+		display: flex;
+		gap: var(--itx-spacing-2);
+		flex-direction: column;
+		padding: var(--itx-spacing-5);
+		border: 2px solid var(--itx-neutral-4);
+		box-shadow: 0 2px 2px 0 rgb(8% 8% 8% / 0.25);
+
+	}
+	.card__heading {
+		margin-block-start: var(--itx-spacing-2);
+		font-size: var(--itx-font-size-body-lg);
+		line-height: var(--itx-line-height-body-lg);
+		display: flex;
+		flex-direction: column;
+		/*padding-inline: var(--itx-spacing-4);*/
+
+		& > span {
+			font-size: var(--itx-font-size-fine-print);
+		}
+	}
+
+	.card__body {
+		/*background-color: var(--itx-neutral-3);*/
+		margin-block-start: var(--itx-spacing-5);
+		height: 100%;
+
+		border-radius: 4px;
+		/*padding-block: var(--itx-spacing-5);
+		padding-inline: var(--itx-spacing-4);*/
+	}
+
+	.technical {
+		display: flex;
+		flex-direction: column;
+
+		font-family: "IBM Plex Mono", mono;
+
+		font-size: var(--itx-font-size-body);
+		position: relative;
+
+		a.technical__item {
+			--itx-icon-color: var(--itx-colorway-7);
+
+			display: flex;
+			align-items: center;
+			column-gap: var(--itx-spacing-3);
+			color: var(--itx-colorway-8);
+			text-decoration: underline;
+			text-underline-offset: 6px;
+			text-decoration-style: solid;
+			text-decoration-color: var(--itx-colorway-8);
+			transition: text-decoration-style 500ms ease-in-out;
+
+
+
+			&:hover {
+				color: var(--itx-colorway-8);
+				text-decoration-style: dashed;
+			}
+		}
+	}
+}

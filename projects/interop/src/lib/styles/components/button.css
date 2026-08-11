@@ -103,12 +103,13 @@
 	);
 	padding-inline: var(--itx-button-padding-inline);
 	width: var(--itx-button-width, auto);
+	min-width: var(--itx-button-min-width, initial);
 	max-width: var(--itx-button-max-width, initial);
 	flex: var(--itx-button-flex, initial);
 
 	font-family: var(--itx-button-font-family, var(--itx-font-family));
 	font-size: var(--itx-button-font-size, inherit);
-	font-weight: var(--itx-button-font-weight, 500);
+	font-weight: var(--itx-button-font-weight, 400);
 	line-height: var(--itx-button-line-height, unset);
 	letter-spacing: var(--itx-button-letter-spacing, initial);
 

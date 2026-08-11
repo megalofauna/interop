@@ -3,16 +3,18 @@
 :where([interop-root]) {
 	/* sizing — multiplier × step drives padding. Single fixed size; consumers
 	   can override --itx-chip-padding directly to bypass the formula.           */
-	--itx-chip-padding-step: 0.1875rem;
+	--itx-chip-padding-step: 0.25rem;
 	--itx-chip-sizing-multiplier: 1;
+	--itx-chip-padding-inline: var(--itx-spacing-2_5) ;
+	--itx-chip-padding-block: 0;
 
 	/* appearance */
-	--itx-chip-background: var(--itx-neutral-5);
-	--itx-chip-color: var(--itx-neutral-12);
-	--itx-chip-border: 2px solid var(--itx-neutral-6);
-	--itx-chip-font-size: var(--itx-font-size-caption);
+	--itx-chip-background: var(--itx-neutral-4);
+	--itx-chip-color: var(--itx-neutral-11);
+	--itx-chip-border: 2px solid var(--itx-neutral-8);
+	--itx-chip-font-size: var(--itx-font-size-label);
 	--itx-chip-font-weight: 500;
-	--itx-chip-line-height: 1.4;
+	--itx-chip-line-height: auto;
 	--itx-chip-gap: var(--itx-spacing-2);
 
 	/* hover */
@@ -20,7 +22,7 @@
 	--itx-chip-color-hover: inherit;
 
 	/* selected / checked */
-	--itx-chip-accent: var(--itx-neutral-5);
+	--itx-chip-accent: var(--itx-colorway-8);
 	--itx-chip-on-accent: var(--itx-neutral-12);
 	--itx-chip-background-selected: var(--itx-chip-accent);
 	--itx-chip-color-selected: var(--itx-chip-on-accent);
@@ -29,7 +31,7 @@
 
 	/* focus ring (chip-option) */
 	--itx-chip-outline-color: var(--itx-chip-accent);
-	--itx-chip-outline-width: 2px;
+	--itx-chip-outline-width: 3px;
 	--itx-chip-outline-style: solid;
 	--itx-chip-outline-offset: 2px;
 

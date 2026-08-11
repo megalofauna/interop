@@ -1,12 +1,63 @@
 <article class="demo-page">
 	<demo-masthead category="Components" title="Chip">
-		Chip primitives — inline badges, display tags, filter checkboxes, and
-		free-form input. All built on native HTML with no custom ARIA roles.
+		Inline badges, display tags, filter checkboxes, and free-form input.
 	</demo-masthead>
 
+	<!-- disambiguation  -->
+	<demo-section id="disambiguation" heading="Pick the right pattern">
+		<p description class="demo-section__lede">
+			Interop chip components are built atop platform-native controls and
+			express the native semantics and keyboard handling of those controls.
+		</p>
+		<ul class="card__group">
+			<li class="card">
+				<span interop-chip-badge>Display</span>
+				<p class="card__heading">User views standalone chip</p>
+				<p class="card__body technical">
+					<a class="technical__item" href="#chip-badge">
+						<interop-icon [size]="48" [strokeWidth]="1" name="tabler-badge" />
+						chip-badge</a
+					>
+				</p>
+			</li>
+
+			<li class="card">
+				<span interop-chip-badge>Display</span>
+				<p class="card__heading">User reads supplied values</p>
+				<p class="card__body technical">
+					<a class="technical__item" href="#chip-list">
+						<interop-icon [size]="48" [strokeWidth]="1" name="tabler-list" />chip-list</a
+					>
+				</p>
+			</li>
+
+			<li class="card">
+				<span interop-chip-badge>Input</span>
+				<p class="card__heading">User creates chips from text input</p>
+				<p class="card__body technical">
+					<a class="technical__item" href="#chip-input">
+						<interop-icon [size]="48" [strokeWidth]="1" name="tabler-input-check" />
+						chip-input</a
+					>
+				</p>
+			</li>
+
+			<li class="card">
+				<span interop-chip-badge>Input</span>
+				<p class="card__heading">User chooses what chip values apply</p>
+				<p class="card__body technical">
+					<a class="technical__item" href="#chip-list">
+						<interop-icon [size]="48" [strokeWidth]="1" name="tabler-list-check" />
+						chip-filter</a
+					>
+				</p>
+			</li>
+		</ul>
+	</demo-section>
+
 	<!-- ── Standalone badges ─────────────────────────────────────────────── -->
-	<demo-section id="badge" heading="Standalone badges">
-		<demo-example label="Inline within prose">
+	<demo-section id="chip-badge" heading="Standalone chip (badge)">
+		<demo-example label="Inline">
 			<div class="chip-page__prose">
 				<p>Mission status: <span interop-chip-badge>Operational</span></p>
 				<p>
@@ -14,11 +65,7 @@
 					<span interop-chip-badge>prod</span> at <time>14:02</time>.
 				</p>
 			</div>
-			<div class="demo-example__notes">
-				<ul>
-					<li>item 1</li>
-				</ul>
-			</div>
+
 			<itx-code-block language="html" [code]="badgeInlineCode" />
 		</demo-example>
 

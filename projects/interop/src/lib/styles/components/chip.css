@@ -91,8 +91,19 @@
 	font-size: var(--itx-chip-font-size, inherit);
 	font-weight: var(--itx-chip-font-weight, inherit);
 	line-height: var(--itx-chip-line-height, 1.4);
-	padding: var(
-		--itx-chip-padding,
+	padding-inline: var(
+		--itx-chip-padding-inline,
+		calc(
+				var(--itx-chip-padding-step, 0.25rem) *
+					var(--itx-chip-sizing-multiplier, 2)
+			)
+			calc(
+				var(--itx-chip-padding-step, 0.25rem) *
+					var(--itx-chip-sizing-multiplier, 2) * 2
+			)
+	);
+	padding-block: var(
+		--itx-chip-padding-block,
 		calc(
 				var(--itx-chip-padding-step, 0.25rem) *
 					var(--itx-chip-sizing-multiplier, 2)
