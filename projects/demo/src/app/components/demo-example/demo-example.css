@@ -11,9 +11,9 @@
 }
 
 .demo-example__heading {
-	margin: var(--itx-spacing-16) 0 0 0;
-	font-size: var(--itx-font-size-subheading);
-	font-weight: 500;
+	margin: var(--itx-spacing-2) 0 0 0;
+	font-size: var(--itx-font-size-body-lg);
+	font-weight: 400;
 	color: var(--itx-neutral-12);
 
 	& + p {
@@ -24,10 +24,10 @@
 .demo-example__preview {
 	display: flex;
 	flex-wrap: wrap;
-	margin-block-start: var(--itx-spacing-8);
+	margin-block-start: var(--itx-spacing-5);
 	align-items: center;
 	justify-content: start;
-	gap: var(--itx-spacing-5);
+	gap: var(--itx-spacing-2);
 	padding: var(--itx-spacing-10) var(--itx-spacing-10);
 	background-color: var(--itx-neutral-3_5);
 	border-radius: var(--itx-radius-lg) var(--itx-radius-lg) 0 0;

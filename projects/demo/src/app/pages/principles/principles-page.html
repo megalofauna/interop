@@ -6,7 +6,7 @@
 	</demo-masthead>
 
 	<!-- ── Prefer the platform ────────────────────────────────────────────── -->
-	<demo-section heading="Prefer the platform">
+	<demo-section heading="The platform does it better">
 		<div class="principles-page__prose">
 			<p>
 				"Platform-native" means a component's behavior derives from the
@@ -65,23 +65,20 @@
 		</div>
 	</demo-section>
 
-	<!-- ── Accessibility is design input ──────────────────────────────────── -->
-	<demo-section heading="Accessibility is design input">
+	<!-- ── Accessibility is a design constraint ───────────────────────────── -->
+	<demo-section heading="Accessibility is a design constraint">
 		<div class="principles-page__prose">
 			<p>
-				In Interop, accessibility is an input to the component design process,
-				applied while the API shape is being formed. It decides what a component
-				is, and the labelling follows from that.
+				In design, constraints aren't what's left over once the good ideas have
+				been had. They're what makes the good ideas findable at all. Fourteen
+				lines is not what the sonnet has to put up with. It's what the sonnet
+				is.
 			</p>
 			<p>
-				The tree is the clearest case. <code>role="tree"</code> promises a
-				keyboard contract that a navigation sidebar cannot honour, so Interop
-				ships two tiers and asks you to pick one. The default is a nested list
-				with real links and a natural tab order. The opt-in tier is a full APG
-				treeview. Putting a link inside a row of the second tier makes it
-				unreachable, so Interop says so in devMode and points at the first.
+				Accessibility is a constraint of that kind. It applies early, and to the
+				API rather than the output. It rules things out, which is the point. A
+				design only some people can use never becomes a component.
 			</p>
-			<p>The decision lands in the API, at the call site, where you can see it.</p>
 			<p class="principles-page__proof">
 				<a routerLink="/components/tree" fragment="tier">Choosing a tier</a>
 			</p>

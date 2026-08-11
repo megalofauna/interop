@@ -1,19 +1,20 @@
-/*:host:not(:first-of-type) {
+:host:not(:first-of-type) {
 	display: block;
 	margin-top: var(--itx-spacing-32);
-}*/
+}
 
 :host {
 	display: block;
-	margin-block-start: var(--itx-spacing-32);
+	margin-block-start: var(--itx-spacing-16);
 }
-
 
 .demo-section__heading {
 	margin: 0;
 	font-size: var(--itx-font-size-heading);
-	font-weight: 400;
-	color: var(--itx-on-surface);
+	font-weight:400;
+	display: flex;
+	gap: var(--itx-spacing-4);
+	align-items: center;
 }
 
 .demo-section__anchor {
@@ -24,6 +25,13 @@
 	text-decoration: none;
 	opacity: 0;
 	transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
+}
+.demo-section__heading {
+	margin-block-end: var(--itx-spacing-5);
+}
+
+.demo-section__lede {
+	color: var(--itx-neutral-10);
 }
 
 .demo-section__heading:hover .demo-section__anchor {
