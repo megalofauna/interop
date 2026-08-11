@@ -32,7 +32,13 @@
 	z-index: 20;
 	block-size: var(--header-h);
 	display: grid;
-	grid-template-columns: 1fr auto 1fr;
+	// minmax(0, 1fr), not 1fr: a bare `fr` track is minmax(auto, 1fr), and that
+	// auto minimum is the cell's min-content width. The left cell holds the
+	// breadcrumb, which is always in flow and always nowrap, so a long page
+	// title would floor the track and the header could not fit. The header
+	// spans every column of the shell grid, so that minimum propagated outward
+	// and widened the entire app past the viewport.
+	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 	align-items: center;
 	gap: var(--itx-spacing-4);
 	padding-inline: var(--itx-spacing-4);
@@ -41,10 +47,15 @@
 	backdrop-filter: none;
 }
 
+// Both end cells need min-inline-size: 0 for the same reason the tracks do —
+// a flex container's automatic minimum is its min-content size, so without it
+// the cell re-establishes the floor the track just gave up.
+
 .shell__header-start {
 	display: flex;
 	align-items: center;
 	gap: var(--itx-spacing-3);
+	min-inline-size: 0;
 }
 
 .shell__header-end {
@@ -52,6 +63,7 @@
 	align-items: center;
 	gap: var(--itx-spacing-3);
 	justify-content: flex-end;
+	min-inline-size: 0;
 }
 
 .shell__cmdk {
@@ -168,6 +180,11 @@
 	font-size: 1.125rem;
 	color: var(--itx-muted);
 	white-space: nowrap;
+	// Staying in flow is the point (it reserves width so the centred nav doesn't
+	// shift when the crumb appears), but nowrap text must clip rather than push:
+	// otherwise the longest page title in the app sets the header's minimum.
+	min-inline-size: 0;
+	overflow: hidden;
 	animation: shell-crumb-in steps(1, jump-end) both;
 	animation-timeline: --page-title;
 	animation-range: exit 0% exit 25%;
@@ -175,6 +192,9 @@
 
 .shell__crumb-title {
 	color: var(--itx-on-surface);
+	min-inline-size: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .shell__crumb-sep {

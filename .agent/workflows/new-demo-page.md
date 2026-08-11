@@ -13,7 +13,7 @@ Every demo page consists of **3 source files** (page itself) + **2 wiring update
 ```
 projects/demo/src/app/pages/<component>/
   <component>-page.ts       Component class (ChangeDetectionStrategy.OnPush, standalone)
-  <component>-page.html     Template — header + sections + API tables + notes
+  <component>-page.html     Template — masthead + sections + API tables
   <component>-page.scss     Page-local styles for example layout (NOT for theming the component)
 ```
 
@@ -26,45 +26,60 @@ projects/demo/src/app/components/demo-nav/demo-nav.ts              + add the nav
 
 The page follows a fixed top-to-bottom rhythm. Every demo page mirrors this so users learn one shape and apply it to all:
 
-1. **Header** — category, title, lead paragraph
+1. **Masthead** — category, title, lead paragraph
 2. **Usage** section — practical examples
 3. *Optional component-specific sections* — placement, modes, sizes, keyboard, etc.
-4. **API — Inputs** section — table of inputs
-5. **API — Outputs** section — table of outputs (omit if no outputs)
-6. **Notes** section — release/note items
+4. **API** section — one section holding the Inputs table and the Outputs table
 
 ```html
 <article class="demo-page">
-  <header class="demo-page__header">
-    <p class="demo-page__category">Components</p>
-    <h1 class="demo-page__title">{Component}</h1>
-    <p class="demo-page__lead">One-paragraph description.</p>
-  </header>
+  <demo-masthead category="Components" title="{Component}">
+    One-paragraph description.
+  </demo-masthead>
 
   <demo-section id="usage" heading="Usage">
+    <p description class="demo-section__lede">What this section is for.</p>
     <demo-example label="Basic">...</demo-example>
     <demo-example label="With variant">...</demo-example>
   </demo-section>
 
   <!-- component-specific sections here -->
 
-  <demo-section id="api-inputs" heading="API — Inputs">
+  <demo-section id="api" heading="API">
+    <h3 class="demo-page__api-heading">Inputs</h3>
     <interop-table [collection]="apiEntries" [columns]="apiColumns">
       <ng-template itxCell="name" let-entry>...</ng-template>
       <ng-template itxCell="type" let-entry>...</ng-template>
       <ng-template itxCell="default" let-entry>...</ng-template>
     </interop-table>
-  </demo-section>
 
-  <demo-section id="api-outputs" heading="API — Outputs">
+    <h3 class="demo-page__api-heading">Outputs</h3>
     <interop-table [collection]="outputEntries" [columns]="outputColumns">...</interop-table>
-  </demo-section>
-
-  <demo-section id="notes" heading="Notes">
-    <demo-notes [notes]="notes" />
   </demo-section>
 </article>
 ```
+
+### One API section, two tables
+
+Inputs and Outputs are one subject, so they get one section and one anchor
+(`id="api"`). Split across two `demo-section`s they read as unrelated topics and
+consume two slots in the page nav for what is really one destination.
+
+`.demo-page__api-heading` (defined in `styles/_demo-page.scss`) labels each
+table. It is deliberately quieter than a `demo-section` heading — it divides a
+section rather than starting one. Omit the Outputs heading and table entirely
+when the component has none; don't render an empty table.
+
+Note that a `model()` input produces **both** an input and an output. If the
+component exposes `foo = model<T>()`, document `foo` under Inputs *and*
+`fooChange` under Outputs.
+
+### No Notes section
+
+Demo pages no longer end with a `<demo-notes>` block. Don't add one to a new
+page, and drop it from pages you touch. The `DemoNotes` component still exists
+and is still used by older pages; it is being held for repurposing rather than
+removed.
 
 ## Demo helper components
 
@@ -74,7 +89,7 @@ The demo app provides a small set of layout components that every page composes.
 |---|---|
 | `<demo-section id heading>` | Numbered/anchored content section. Renders a heading with `#anchor` link and a body slot. |
 | `<demo-example label>` | A bordered "canvas" for an example. The label appears above; children are the live UI. |
-| `<demo-notes [notes]>` | List of typed notes (release / bugfix / breaking / deprecated / note). Pre-styled with icons. |
+| `<demo-masthead category title>` | Page header — category eyebrow, title, and a lead paragraph as projected content. |
 | `<demo-state>` / `<demo-state-item>` | Side panel within a `<demo-example>` that displays live state (signals, last event, etc.). |
 | `<interop-table>` | Used for API tables — collection of `{ name, type, default, description }` entries. |
 
@@ -85,23 +100,19 @@ Every `<demo-example>` must include a syntax-highlighted code block showing the 
 **Imports required in the page component:**
 
 ```typescript
-import { computed, inject, resource } from "@angular/core";
 import { CodeBlock, type CodeFile } from "interop";
-import { HighlightService } from "../../services/highlight.service";
 ```
 
-Add `CodeBlock` to the component's `imports` array. `HighlightService` is `providedIn: 'root'` — inject it.
+Add `CodeBlock` to the component's `imports` array. Nothing else — `itx-code-block`
+tokenizes a raw string itself whenever `language` is set and a highlighter is
+registered. Pages do **not** inject `HighlightService` or wrap snippets in
+`resource()`; the `[tokens]` input still exists for pre-tokenized content, but a
+demo page has no reason to reach for it.
 
-**One code string + one resource per example:**
+**One code string per example:**
 
 ```typescript
-private readonly hl = inject(HighlightService);
-
 readonly basicCode = `<interop-foo [bar]="baz" />`;
-
-readonly basicTokens = resource({
-  loader: () => this.hl.highlight(this.basicCode, "html"),
-});
 ```
 
 **Template — single language (HTML):**
@@ -109,20 +120,18 @@ readonly basicTokens = resource({
 ```html
 <demo-example label="Basic">
   <interop-foo [bar]="baz" />
-  <itx-code-block language="html" [tokens]="basicTokens.value() ?? null">
-    <pre><code [textContent]="basicCode"></code></pre>
-  </itx-code-block>
+  <itx-code-block language="html" [code]="basicCode" />
 </demo-example>
 ```
 
 **Template — multi-file (HTML + TypeScript):**
 
-Use the `[files]` input when the example requires TypeScript context (column definitions, signal setup, component class members) to be meaningful:
+Use the `[files]` input when the example requires TypeScript context (column definitions, signal setup, component class members) to be meaningful. Each file carries its own raw `code`:
 
 ```typescript
 readonly sortFiles = computed<CodeFile[]>(() => [
-  { label: "template.html", language: "html",  tokens: this.sortHtmlTokens.value() ?? null },
-  { label: "component.ts",  language: "ts",    tokens: this.sortTsTokens.value() ?? null },
+  { label: "template.html", language: "html", code: this.sortHtml },
+  { label: "component.ts",  language: "ts",   code: this.sortTs },
 ]);
 ```
 
@@ -134,7 +143,7 @@ readonly sortFiles = computed<CodeFile[]>(() => [
 ```
 
 **Rules:**
-- Code strings must be literal template strings defined on the component class — never computed or dynamic. `HighlightService.highlight()` takes a plain string.
+- Code strings must be literal template strings defined on the component class — never assembled at runtime from the live example's state. A snippet that can drift from what it documents is worse than no snippet.
 - The code shown must match what the live example actually renders — keep them in sync.
 - **Default to `[files]` (multi-tab).** Use single-language `language="html"` only when the template uses no bound properties, or when every bound value is a self-evident literal (a plain string, a boolean flag). If the template binds to *any* TypeScript value a reader couldn't reconstruct — a `TableColumn[]` definition, a data interface, a signal, an event handler — show the TypeScript tab too. The goal is directly transferable code: a developer should be able to copy both tabs and have a working example with no guesswork.
 - HTML tab: show only the template markup, trimmed to the minimum needed to reproduce the output.
@@ -144,18 +153,17 @@ readonly sortFiles = computed<CodeFile[]>(() => [
 ## Component class shape
 
 ```typescript
-import { Component, ChangeDetectionStrategy, computed, inject, resource, signal } from "@angular/core";
+import { Component, ChangeDetectionStrategy, computed, signal } from "@angular/core";
 import {
   /* component imports */
   InteropTable, InteropCellDef, type TableColumn,
-} from "src/public-api";
-import { CodeBlock, type CodeFile } from "interop";
-import { HighlightService } from "../../services/highlight.service";
+  CodeBlock, type CodeFile,
+} from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
-interface ApiEntry {
+interface ApiInputRow {
   component?: string;       // present when documenting multi-directive surfaces
   name: string;
   type: string;
@@ -164,42 +172,46 @@ interface ApiEntry {
   required?: boolean;
 }
 
+interface ApiOutputRow {
+  component?: string;
+  name: string;
+  type: string;
+  description: string;
+}
+
 @Component({
   selector: "<component>-page",
   standalone: true,
   imports: [
     /* component being demoed */,
-    InteropTable, InteropCellDef,
-    DemoSection, DemoExample, DemoNotes,
+    InteropTable, InteropCellDef, CodeBlock,
+    DemoSection, DemoExample, DemoMasthead,
   ],
   templateUrl: "./<component>-page.html",
   styleUrl: "./<component>-page.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class <Component>Page {
-  apiColumns: TableColumn<ApiEntry>[] = [
+  readonly basicCode = `<interop-foo [bar]="baz" />`;
+
+  apiColumns: TableColumn<ApiInputRow>[] = [
     { key: "name", label: "Input" },
     { key: "type", label: "Type" },
     { key: "default", label: "Default" },
     { key: "description", label: "Description" },
   ];
 
-  apiEntries: ApiEntry[] = [
+  apiEntries: ApiInputRow[] = [
     { name: "...", type: "...", default: "...", description: "..." },
   ];
 
-  outputColumns: TableColumn<ApiEntry>[] = [
+  outputColumns: TableColumn<ApiOutputRow>[] = [
     { key: "name", label: "Output" },
     { key: "type", label: "Type" },
     { key: "description", label: "Description" },
   ];
 
-  outputEntries: ApiEntry[] = [];
-
-  notes: DemoNote[] = [
-    { type: "release", label: "v0.1.x", title: "...", body: "..." },
-    { type: "note", label: "...", body: "..." },
-  ];
+  outputEntries: ApiOutputRow[] = [];
 }
 ```
 
@@ -239,20 +251,6 @@ API tables should always project custom templates for `name`, `type`, and `defau
 ```
 
 The demo app's global stylesheet (`projects/demo/src/app/styles/_demo-page.scss`) defines `.demo-page__api-name`, `__api-type`, `__api-default`, `__required`. Use those classes; don't restyle.
-
-## Notes section — types and conventions
-
-`DemoNote` is a discriminated union:
-
-| `type` | Icon | Use for |
-|---|---|---|
-| `release` | rocket | New version / new component / new feature |
-| `bugfix` | bug | Fix announcement |
-| `breaking` | bolt | Breaking API change |
-| `deprecated` | archive | Deprecation notice |
-| `note` | info-circle | General guidance, gotchas, mental-model context |
-
-Each note: `{ type, label, title?, body }`. `label` is short ("v0.1.x", "Performance", "Keyboard contract"). `title` is optional bold heading; `body` is the prose.
 
 ## SCSS scope
 
@@ -302,14 +300,17 @@ Then visit `/components/<component>` in the demo app and walk through each examp
 ## Checklist
 
 - [ ] `<component>-page.ts` exists with the standard imports and structure
-- [ ] `<component>-page.html` follows the header → usage → API inputs → API outputs → notes rhythm
+- [ ] `<component>-page.html` follows the masthead → usage → API rhythm
 - [ ] `<component>-page.scss` exists (even if minimal)
 - [ ] Route added in `app.routes.ts`
 - [ ] Nav entry added in `demo-nav.ts` (alphabetically placed)
-- [ ] At least one `<demo-example>` per major usage variant
+- [ ] At least one `<demo-example>` per major usage variant — walk the component's
+      inputs and confirm each one is shown somewhere
 - [ ] Every `<demo-example>` has an `<itx-code-block>` with matching code
+- [ ] One `id="api"` section containing both tables; Outputs omitted if there are none
+- [ ] Every `model()` input documented in *both* tables (`foo` and `fooChange`)
 - [ ] API tables use the standard `name` / `type` / `default` cell templates
-- [ ] Notes section includes a `release`-type note and at least one `note`-type for guidance
+- [ ] No `<demo-notes>` block
 - [ ] `tsc --noEmit` clean
 - [ ] `ng build demo` succeeds
 - [ ] Manual smoke test in the browser

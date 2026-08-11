@@ -1,0 +1,15 @@
+/*
+ * Page-local layout only — never theming for the component under demo.
+ *
+ * demo-example lays its children out with flex, so a panel needs to be told to
+ * take the whole line. `min-width: 0` goes with it: a flex item's automatic
+ * minimum size is its min-content width, which stops it shrinking to fit and
+ * pushes it past the example's frame — the panel is only as narrow as its
+ * longest unbreakable trigger label unless the floor is lifted.
+ */
+
+.expansion-panel-page__panel {
+	flex: 1 1 100%;
+	min-width: 0;
+	width: 100%;
+}

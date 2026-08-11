@@ -6,8 +6,14 @@
 
 	<!-- ── Standalone ────────────────────────────────────────────────────── -->
 	<demo-section id="standalone" heading="Standalone">
+		<p description class="demo-section__lede">
+			A panel is a heading containing the trigger, plus a body. The trigger is
+			the header — it needs no other attribute to render, and the heading level
+			is yours to choose so the panel lands correctly in the document outline.
+		</p>
+
 		<demo-example label="Single panel">
-			<interop-expansion-panel style="width: 100%">
+			<interop-expansion-panel class="expansion-panel-page__panel">
 				<h3><button interop-expansion-trigger>Docking procedure</button></h3>
 				<div interop-expansion-body>
 					<p>
@@ -16,15 +22,15 @@
 					</p>
 				</div>
 			</interop-expansion-panel>
+			<itx-code-block language="html" [code]="singleCode" />
 		</demo-example>
 
 		<demo-example label="Default open">
-			<interop-expansion-panel [expanded]="true" style="width: 100%">
-				<h3>
-					<button interop-button="assert neutral" itx-size="xs" interop-expansion-trigger>
-						Emergency protocols
-					</button>
-				</h3>
+			<interop-expansion-panel
+				[expanded]="true"
+				class="expansion-panel-page__panel"
+			>
+				<h3><button interop-expansion-trigger>Emergency protocols</button></h3>
 				<div interop-expansion-body>
 					<p>
 						In the event of hull breach: seal bulkheads, activate emergency O2,
@@ -32,13 +38,92 @@
 					</p>
 				</div>
 			</interop-expansion-panel>
+			<itx-code-block language="html" [code]="defaultOpenCode" />
+		</demo-example>
+
+		<demo-example label="Disabled">
+			<interop-expansion-panel
+				[disabled]="true"
+				class="expansion-panel-page__panel"
+			>
+				<h3>
+					<button interop-expansion-trigger>Reactor core (locked)</button>
+				</h3>
+				<div interop-expansion-body>
+					<p>Requires level 4 clearance.</p>
+				</div>
+			</interop-expansion-panel>
+			<itx-code-block language="html" [code]="disabledCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Controlled ────────────────────────────────────────────────────── -->
+	<demo-section id="controlled" heading="Controlled state">
+		<p description class="demo-section__lede">
+			Left unbound, the panel manages its own state. Bind
+			<code>[expanded]</code> and <code>(expandedChange)</code> — or
+			<code>[(expanded)]</code> — to drive it from the parent and observe every
+			transition, including the ones an accordion triggers.
+		</p>
+
+		<demo-example label="Two-way binding">
+			<interop-expansion-panel
+				[expanded]="reactorOpen()"
+				(expandedChange)="onReactorExpandedChange($event)"
+				class="expansion-panel-page__panel"
+			>
+				<h3><button interop-expansion-trigger>Reactor telemetry</button></h3>
+				<div interop-expansion-body>
+					<p>
+						Core temperature 3,200 K. Containment field stable. Coolant flow
+						nominal across all four loops.
+					</p>
+				</div>
+			</interop-expansion-panel>
+			<itx-terminal
+				variant="plain"
+				[entries]="reactorLog()"
+				(reset)="reactorLog.set([])"
+			/>
+			<itx-code-block [files]="controlledFiles()" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Peek ──────────────────────────────────────────────────────────── -->
+	<demo-section id="peek" heading="Peek">
+		<p description class="demo-section__lede">
+			Peek keeps a slice of the body visible while collapsed, faded out at the
+			bottom edge, so the panel advertises its content instead of hiding it
+			entirely. Set on the body, not the panel.
+		</p>
+
+		<demo-example label="Collapsed with a visible slice">
+			<interop-expansion-panel class="expansion-panel-page__panel">
+				<h3><button interop-expansion-trigger>Flight log</button></h3>
+				<div interop-expansion-body [peek]="true">
+					<p>
+						Cycle 4471 — departed Ceres Station at 0600. Course laid in for the
+						Jovian relay. Minor attitude drift corrected at 0740.
+					</p>
+					<p>
+						Cycle 4472 — passed inspection buoy. Cargo seals verified. Crew
+						rotation completed without incident.
+					</p>
+				</div>
+			</interop-expansion-panel>
+			<itx-code-block language="html" [code]="peekCode" />
 		</demo-example>
 	</demo-section>
 
 	<!-- ── Accordion ─────────────────────────────────────────────────────── -->
 	<demo-section id="accordion" heading="Accordion">
+		<p description class="demo-section__lede">
+			Wrapping panels in an accordion coordinates them as a group and adds
+			Up/Down, Home, and End navigation between triggers per the APG pattern.
+		</p>
+
 		<demo-example label="Mutually exclusive panels">
-			<interop-accordion style="width: 100%">
+			<interop-accordion class="expansion-panel-page__panel">
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Navigation systems</button></h3>
 					<div interop-expansion-body>
@@ -69,10 +154,14 @@
 					</div>
 				</interop-expansion-panel>
 			</interop-accordion>
+			<itx-code-block language="html" [code]="exclusiveCode" />
 		</demo-example>
 
 		<demo-example label="Multiple open allowed">
-			<interop-accordion [exclusive]="false" style="width: 100%">
+			<interop-accordion
+				[exclusive]="false"
+				class="expansion-panel-page__panel"
+			>
 				<interop-expansion-panel>
 					<h3><button interop-expansion-trigger>Cargo manifest</button></h3>
 					<div interop-expansion-body>
@@ -93,12 +182,18 @@
 					</div>
 				</interop-expansion-panel>
 			</interop-accordion>
+			<itx-code-block language="html" [code]="multipleCode" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+	<!-- ── API ───────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-default">{{ entry.component }}</code>
 			</ng-template>
@@ -113,9 +208,22 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
+
+		<h3 class="demo-page__api-heading">Outputs</h3>
+		<interop-table
+			[collection]="outputEntries"
+			[columns]="outputColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
 	</demo-section>
 </article>

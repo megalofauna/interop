@@ -4,20 +4,32 @@
  * Rendering rules for `interop-expansion-panel`, `[interop-expansion-body]`,
  * and `interop-accordion`. The Angular components/directives wire ARIA,
  * accordion coordination, and toggle behaviour; this file owns the visual
- * layer: card chrome on the panel host, height animation and interior on
- * the body, peek mode, and the disabled affordance.
+ * layer: the frame on the panel host, the trigger row, height animation and
+ * interior on the body, peek mode, and the disabled affordance.
  *
- * Token values (colors, durations, peek geometry, contextual button
- * overrides for the trigger) are set by the active theme — see
- * `themes/protocol/components/expansion-panel.css`. This file only uses
- * them, with neutral defaults so an un-themed panel still renders.
+ * Token values (colors, durations, trigger geometry, peek geometry) are set
+ * by the active theme — see `themes/protocol/components/expansion-panel.css`.
+ * This file only uses them, with neutral defaults so an un-themed panel still
+ * renders.
  *
  * Host-as-chrome model:
- *   The panel host owns the bordered/elevated card look. The trigger is a
- *   nested `<button interop-button interop-expansion-trigger>` whose
- *   appearance is driven by the existing `--itx-button-*` tokens
- *   contextually re-assigned in the theme. The body is the animated
- *   content region inside the card.
+ *   The panel host owns the frame. The trigger is a nested
+ *   `<button interop-expansion-trigger>` that the panel styles directly —
+ *   see "Why the panel owns the trigger" below. The body is the animated
+ *   content region inside the frame.
+ *
+ * Why the panel owns the trigger:
+ *   The APG accordion pattern requires the trigger to be a button inside a
+ *   heading, and this component mandates both. An element the panel demanded
+ *   is not a guest it can leave unstyled — the same argument already made for
+ *   the heading below. Delegating to `interop-button` meant a bare
+ *   `<button interop-expansion-trigger>` rendered as a UA button, so every
+ *   consumer had to know to add a second attribute to get a usable panel.
+ *   Borrowed from Carbon, where `.cds--accordion__heading` IS the button and
+ *   carries its own rules rather than reusing the button component.
+ *
+ *   This file is imported after `button.css`, so a trigger that also carries
+ *   `interop-button` gets the panel's paint. Don't combine them.
  *
  * All selectors use :where() for zero specificity. The peek-fade `::after`
  * sits outside :where() per the CSS spec (pseudo-elements cannot appear
@@ -31,7 +43,8 @@
  *   --itx-expansion-panel-foreground            cascades to text color inside
  *   --itx-expansion-panel-border-width
  *   --itx-expansion-panel-border-style
- *   --itx-expansion-panel-border-color
+ *   --itx-expansion-panel-border-block-color     top/bottom — the stacking rule
+ *   --itx-expansion-panel-border-inline-color    left/right — closes the frame
  *   --itx-expansion-panel-border-radius
  *   --itx-expansion-panel-box-shadow
  *   --itx-expansion-panel-padding               outer pad around trigger+body
@@ -39,7 +52,8 @@
  *   Expanded state (cascades to the base token when unset)
  *   --itx-expansion-panel-background-expanded
  *   --itx-expansion-panel-background-image-expanded
- *   --itx-expansion-panel-border-color-expanded
+ *   --itx-expansion-panel-border-block-color-expanded
+ *   --itx-expansion-panel-border-inline-color-expanded
  *   --itx-expansion-panel-box-shadow-expanded
  *
  *   Disabled state
@@ -50,6 +64,37 @@
  *   --itx-expansion-panel-transition-duration
  *   --itx-expansion-panel-transition-timing-function
  *
+ * ── Public tokens — trigger (the panel header) ──────────────────────────────
+ *
+ *   Box
+ *   --itx-expansion-panel-trigger-height        min-block-size; the row height
+ *   --itx-expansion-panel-trigger-padding-inline
+ *   --itx-expansion-panel-trigger-gap
+ *   --itx-expansion-panel-trigger-justify-content
+ *   --itx-expansion-panel-trigger-radius
+ *
+ *   Type
+ *   --itx-expansion-panel-trigger-font-size
+ *   --itx-expansion-panel-trigger-font-weight
+ *   --itx-expansion-panel-trigger-line-height
+ *
+ *   Paint
+ *   --itx-expansion-panel-trigger-background
+ *   --itx-expansion-panel-trigger-background-hover
+ *   --itx-expansion-panel-trigger-color
+ *
+ *   Focus ring (also drawn on :active)
+ *   --itx-expansion-panel-trigger-outline-color
+ *   --itx-expansion-panel-trigger-outline-width
+ *   --itx-expansion-panel-trigger-outline-style
+ *   --itx-expansion-panel-trigger-outline-offset
+ *
+ *   Arrow (decorative pseudo-element; aria-expanded carries the state)
+ *   --itx-expansion-panel-trigger-arrow-size
+ *   --itx-expansion-panel-trigger-arrow-stroke
+ *   --itx-expansion-panel-trigger-arrow-rotation
+ *   --itx-expansion-panel-trigger-arrow-rotation-expanded
+ *
  * ── Public tokens — body ────────────────────────────────────────────────────
  *
  *   Interior surface
@@ -57,10 +102,11 @@
  *   --itx-expansion-panel-body-background-image
  *   --itx-expansion-panel-body-padding          inner pad around content
  *
- *   Divider (top edge of body, only painted when expanded)
+ *   Divider (top edge of body; rests transparent, fades in when expanded)
  *   --itx-expansion-panel-body-divider-width
  *   --itx-expansion-panel-body-divider-style
- *   --itx-expansion-panel-body-divider-color
+ *   --itx-expansion-panel-body-divider-color            rest — transparent
+ *   --itx-expansion-panel-body-divider-color-expanded   the visible rule
  *
  *   Animation (unchanged)
  *   --itx-expansion-panel-body-transition-duration
@@ -77,12 +123,18 @@
  * `overflow: clip` lets the host's border-radius clip the trigger's and
  * body's painted edges so a square-cornered trigger appears rounded by
  * the parent. Box-shadow is painted outside the host's clip box, so card
- * elevation is unaffected. Trigger focus rings are kept visible by
- * setting `--itx-button-outline-offset` negative in the theme (so the
- * ring lives just inside the trigger's painted edge).
+ * elevation is unaffected. Trigger focus rings are kept visible by the
+ * negative `--itx-expansion-panel-trigger-outline-offset` (so the ring
+ * lives just inside the trigger's painted edge rather than being clipped).
  */
 
 :where(interop-expansion-panel) {
+	/* The host carries both a border and a padding token, and consumers give it
+	   an explicit width often enough (`width: 100%` in a flex row, a sized
+	   sidebar) that content-box sizing would push it past its container by the
+	   border and padding. There is no global reset in this stylesheet — each
+	   component declares its own. */
+	box-sizing: border-box;
 	display: block;
 	overflow: clip;
 	background-color: var(--itx-expansion-panel-background, transparent);
@@ -90,13 +142,26 @@
 	color: var(--itx-expansion-panel-foreground, inherit);
 	border-width: var(--itx-expansion-panel-border-width, 0);
 	border-style: var(--itx-expansion-panel-border-style, solid);
-	border-color: var(--itx-expansion-panel-border-color, transparent);
+	/* Block and inline edges are coloured separately: the block edges are the
+	   rules that separate stacked panels and carry the weight, while the inline
+	   edges only close the frame. Logical longhands, so this holds in vertical
+	   writing modes too. */
+	border-block-color: var(
+		--itx-expansion-panel-border-block-color,
+		transparent
+	);
+	border-inline-color: var(
+		--itx-expansion-panel-border-inline-color,
+		transparent
+	);
 	border-radius: var(--itx-expansion-panel-border-radius, 0);
 	box-shadow: var(--itx-expansion-panel-box-shadow, none);
 	padding: var(--itx-expansion-panel-padding, 0);
 	transition-property: var(
 		--itx-expansion-panel-transition-property,
-		background-color, border-color, box-shadow
+		background-color,
+		border-color,
+		box-shadow
 	);
 	transition-duration: var(--itx-expansion-panel-transition-duration, 200ms);
 	transition-timing-function: var(
@@ -125,6 +190,125 @@
 	font: inherit;
 }
 
+/* ── Trigger (the panel header) ──────────────────────────────────────────── */
+/*
+ * Carbon's model: the heading IS the button. The trigger fills the panel's
+ * full inline size and states its own row height, so the header reads as one
+ * pressable band rather than a button parked inside a header.
+ *
+ * `font: inherit` first resets the UA button font wholesale (family, size,
+ * weight, line-height, and the `font-stretch`/`font-kerning` longhands the
+ * shorthand also resets); the three type tokens then re-state the pieces the
+ * theme owns. Without the shorthand the button would keep the UA's 13px
+ * system-ui face even after setting font-size.
+ */
+
+:where(button[interop-expansion-trigger]) {
+	-webkit-appearance: none;
+	appearance: none;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: var(--itx-expansion-panel-trigger-justify-content);
+	gap: var(--itx-expansion-panel-trigger-gap);
+	inline-size: 100%;
+	min-block-size: var(--itx-expansion-panel-trigger-height);
+	margin: 0;
+	padding-block: 0;
+	padding-inline: var(--itx-expansion-panel-trigger-padding-inline);
+	background: var(--itx-expansion-panel-trigger-background);
+	border: none;
+	border-radius: var(--itx-expansion-panel-trigger-radius);
+	color: var(--itx-expansion-panel-trigger-color);
+	font: inherit;
+	font-size: var(--itx-expansion-panel-trigger-font-size);
+	font-weight: var(--itx-expansion-panel-trigger-font-weight);
+	line-height: var(--itx-expansion-panel-trigger-line-height);
+	text-align: start;
+	cursor: pointer;
+	transition: background var(--itx-expansion-panel-transition-duration)
+		var(--itx-expansion-panel-transition-timing-function);
+}
+
+/*
+ * Carbon guards the hover fill behind `any-hover` so a tap on a touch device
+ * doesn't leave the row painted as if the pointer were still resting on it.
+ */
+@media (any-hover: hover) {
+	:where(button[interop-expansion-trigger]:hover:not(:disabled)) {
+		--itx-expansion-panel-trigger-background: var(
+			--itx-expansion-panel-trigger-background-hover
+		);
+	}
+}
+
+/*
+ * The host clips to its border-radius, so a positive outline offset would be
+ * cut off. A negative offset keeps the ring just inside the painted edge.
+ *
+ * `:active` draws the same ring, following Carbon. The ring is doing two jobs:
+ * marking keyboard focus, and giving the press itself a visible edge on a row
+ * whose only other feedback is a hover fill. It shows for the duration of the
+ * press only — it is not a persistent marker of which panel is open.
+ */
+:where(
+	button[interop-expansion-trigger]:focus-visible,
+	button[interop-expansion-trigger]:active
+) {
+	outline: var(--itx-expansion-panel-trigger-outline-width)
+		var(--itx-expansion-panel-trigger-outline-style)
+		var(--itx-expansion-panel-trigger-outline-color);
+	outline-offset: var(--itx-expansion-panel-trigger-outline-offset);
+}
+
+:where(button[interop-expansion-trigger]:disabled) {
+	cursor: not-allowed;
+}
+
+/* ── Trigger arrow ───────────────────────────────────────────────────────── */
+/*
+ * Two borders on a rotated box — the same twisty the tree draws. No
+ * background-image, so it survives forced-colors mode, and it inherits
+ * currentColor for free.
+ *
+ * Purely decorative: the trigger already carries `aria-expanded`, which is
+ * what announces the state. Drawn as a pseudo-element so it stays out of the
+ * accessibility tree entirely and needs no markup.
+ *
+ * Points down when closed, up when open — a half turn, so the rotation reads
+ * as one continuous movement in both directions. Direction is on the block
+ * axis, so unlike the tree's chevron this needs no RTL handling.
+ *
+ * Pseudo-elements cannot appear inside :where(); it hangs off the outside.
+ */
+:where(button[interop-expansion-trigger])::after {
+	content: "";
+	flex: none;
+	inline-size: var(--itx-expansion-panel-trigger-arrow-size);
+	block-size: var(--itx-expansion-panel-trigger-arrow-size);
+	border-block-start: var(--itx-expansion-panel-trigger-arrow-stroke) solid
+		currentColor;
+	border-inline-end: var(--itx-expansion-panel-trigger-arrow-stroke) solid
+		currentColor;
+	rotate: var(--itx-expansion-panel-trigger-arrow-rotation);
+	transition: rotate var(--itx-expansion-panel-transition-duration)
+		var(--itx-expansion-panel-transition-timing-function);
+}
+
+:where(button[interop-expansion-trigger][aria-expanded="true"])::after {
+	rotate: var(--itx-expansion-panel-trigger-arrow-rotation-expanded);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(button[interop-expansion-trigger]) {
+		transition: none;
+	}
+
+	:where(button[interop-expansion-trigger])::after {
+		transition: none;
+	}
+}
+
 /* ── Panel host (expanded state) ─────────────────────────────────────────── */
 /*
  * Each expanded-state token cascades to its base token as the final
@@ -141,9 +325,13 @@
 		--itx-expansion-panel-background-image-expanded,
 		var(--itx-expansion-panel-background-image, none)
 	);
-	border-color: var(
-		--itx-expansion-panel-border-color-expanded,
-		var(--itx-expansion-panel-border-color, transparent)
+	border-block-color: var(
+		--itx-expansion-panel-border-block-color-expanded,
+		var(--itx-expansion-panel-border-block-color, transparent)
+	);
+	border-inline-color: var(
+		--itx-expansion-panel-border-inline-color-expanded,
+		var(--itx-expansion-panel-border-inline-color, transparent)
 	);
 	box-shadow: var(
 		--itx-expansion-panel-box-shadow-expanded,
@@ -164,6 +352,14 @@
 	display: block;
 }
 
+/*
+ * Stacked panels each paint their own frame, so adjacent panels would show a
+ * doubled rule between them. Collapse the shared edge onto the upper panel.
+ */
+:where(interop-accordion > interop-expansion-panel + interop-expansion-panel) {
+	border-block-start-width: 0;
+}
+
 /* ── Body: grid-rows height animation ────────────────────────────────────── */
 /*
  * Grid-rows trick: animates from/to natural content height without
@@ -175,6 +371,11 @@
  * top divider live on the inner wrapper so both animate with the content
  * reveal — putting them on the host would leave painted edges visible
  * even while collapsed.
+ *
+ * Living on the inner wrapper is necessary but not sufficient: the wrapper is
+ * the grid item, and a grid item's padding floors the track's automatic
+ * minimum. See the collapsed-state rule below — without it, the panel never
+ * fully closes.
  */
 
 :where([interop-expansion-body]) {
@@ -200,6 +401,65 @@
 	border-top-width: var(--itx-expansion-panel-body-divider-width, 0);
 	border-top-style: var(--itx-expansion-panel-body-divider-style, solid);
 	border-top-color: var(--itx-expansion-panel-body-divider-color, transparent);
+	transition:
+		padding-block var(--itx-expansion-panel-body-transition-duration, 200ms)
+			var(--itx-expansion-panel-body-transition-easing, ease),
+		border-top-width var(--itx-expansion-panel-body-transition-duration, 200ms)
+			var(--itx-expansion-panel-body-transition-easing, ease),
+		border-top-color var(--itx-expansion-panel-body-transition-duration, 200ms)
+			var(--itx-expansion-panel-body-transition-easing, ease);
+}
+
+/*
+ * Divider between the trigger and the body, painted only while open.
+ *
+ * The rule is always declared; what changes is its paint. It rests at
+ * `transparent` and fades to the muted colour as the panel opens, so the
+ * separation appears with the content rather than snapping in ahead of it —
+ * and fades back out symmetrically on close.
+ *
+ * Width is zeroed while collapsed by the rule below, for the same reason the
+ * padding is: a grid item's border floors the track's automatic minimum, so a
+ * standing 1px rule would hold the closed panel 1px open. Both properties
+ * transition together, so the rule grows and fades as one movement.
+ */
+:where([interop-expansion-body][data-expanded] .itx-expansion-body-inner) {
+	border-top-color: var(
+		--itx-expansion-panel-body-divider-color-expanded,
+		var(--itx-expansion-panel-body-divider-color, transparent)
+	);
+}
+
+/*
+ * Collapse the interior's block-direction box while closed.
+ *
+ * `grid-template-rows: 0fr` expands to `minmax(auto, 0fr)`, and that auto
+ * minimum resolves to the grid item's minimum contribution. `min-height: 0`
+ * zeroes the item's *content* box, but padding and border-top sit outside it —
+ * so the track can never shrink below `padding-block + border-top`, and that
+ * much of the content shows through a closed panel. Zeroing both while
+ * collapsed is what actually closes it; they transition in step with the row
+ * animation so the interior still opens as one movement.
+ *
+ * The divider's geometry is zeroed here; its paint is handled above. Both
+ * fade in together on open.
+ *
+ * Peek mode is excluded — it deliberately shows a slice of the interior, and
+ * that slice wants its padding.
+ */
+:where(
+	[interop-expansion-body]:not([data-expanded]):not([data-peek])
+		.itx-expansion-body-inner
+) {
+	padding-block: 0;
+	border-top-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where([interop-expansion-body]),
+	:where([interop-expansion-body] .itx-expansion-body-inner) {
+		transition: none;
+	}
 }
 
 /* ── Peek mode ───────────────────────────────────────────────────────────── */
