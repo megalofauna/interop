@@ -8,49 +8,103 @@
  * Structural rules live in `styles/components/expansion-panel.css` — this
  * file only declares values.
  *
- * Visual target:
- *   Subtly bordered card with a transparent rest background, a slightly
- *   raised expanded state (colorway-tinted border + soft shadow), full-
- *   width trigger that reads as part of the card (no chrome of its own
- *   until hovered), and a 1px hairline divider between trigger and body
- *   when open.
+ * Visual target — borrowed from Carbon's Accordion:
+ *   No surface colour anywhere. A hairline frame, a full-width 40px trigger
+ *   row that reads as the header itself, and a hover fill as the only paint
+ *   the component ever applies. Expanding changes nothing about the chrome —
+ *   the disclosure is the animation and the chevron, not a colour shift.
+ *
+ * Backgrounds are transparent by design. Stacking a panel surface, an
+ * expanded surface, and a trigger tint produced three layers of near-neutral
+ * colour that read as noise; Carbon paints none of them.
  */
 
 :where([interop-root]) {
 	/* ── Panel host — frame (rest) ──────────────────────────────────────── */
-	--itx-expansion-panel-background: var(--itx-surface-above);
+	--itx-expansion-panel-background: transparent;
 	--itx-expansion-panel-background-image: none;
 	--itx-expansion-panel-foreground: var(--itx-on-surface);
 	--itx-expansion-panel-border-width: 1px;
 	--itx-expansion-panel-border-style: solid;
-	--itx-expansion-panel-border-color: var(--itx-border);
-	--itx-expansion-panel-border-radius: var(--itx-radius-0);
+	/* The block edges do the structural work — they are the rules a reader
+	   scans down a stack of panels — so they carry real weight. The inline
+	   edges only close the frame and stay at the standard hairline. */
+	--itx-expansion-panel-border-block-color: var(--itx-neutral-5);
+	--itx-expansion-panel-border-inline-color: transparent;
+	--itx-expansion-panel-border-radius: 0;
 	--itx-expansion-panel-box-shadow: none;
 	--itx-expansion-panel-padding: 0;
 
-	/* ── Panel host — expanded state ────────────────────────────────────── */
-	--itx-expansion-panel-background-expanded: var(--itx-surface);
-	--itx-expansion-panel-border-color-expanded: transparent;
-	--itx-expansion-panel-box-shadow-expanded: 0 4px 12px rgb(0 0 0 / 0.06);
+	/* ── Panel host — expanded state ──────────────────────────────────────
+	 * Deliberately identical to rest. Each token still exists as a seam, but
+	 * Carbon's accordion doesn't restyle the frame on open and neither do we.
+	 */
+	--itx-expansion-panel-background-expanded: transparent;
+	--itx-expansion-panel-background-image-expanded: none;
+	--itx-expansion-panel-border-block-color-expanded: var(--itx-neutral-6);
+	--itx-expansion-panel-border-inline-color-expanded: inherit;
+	--itx-expansion-panel-box-shadow-expanded: none;
 
 	/* ── Disabled state ─────────────────────────────────────────────────── */
 	--itx-expansion-panel-disabled-opacity: 0.5;
 
 	/* ── Transition ─────────────────────────────────────────────────────── */
-	--itx-expansion-panel-transition-property: background-color, border-color,
-		box-shadow;
+	--itx-expansion-panel-transition-property:
+		background-color, border-color, box-shadow;
 	--itx-expansion-panel-transition-duration: var(--itx-duration-fast);
 	--itx-expansion-panel-transition-timing-function: var(--itx-easing-standard);
 
-	/* ── Body — interior ────────────────────────────────────────────────── */
+	/* ── Trigger — the panel header ───────────────────────────────────────
+	 * Carbon's md accordion row: 40px tall, 16px inline padding, $body-01
+	 * type (14px/400), transparent until hovered. The row height is the whole
+	 * "increase" — the label rides centred in it, so nothing about the type
+	 * has to grow for the header to gain presence.                          */
+	--itx-expansion-panel-trigger-height: var(--itx-spacing-10); /* 40px */
+	--itx-expansion-panel-trigger-padding-inline: var(--itx-spacing-4); /* 16px */
+	--itx-expansion-panel-trigger-gap: var(--itx-spacing-4); /* 16px */
+	--itx-expansion-panel-trigger-justify-content: space-between;
+	--itx-expansion-panel-trigger-radius: 0;
+
+	--itx-expansion-panel-trigger-font-size: 0.875rem; /* Carbon $body-01 */
+	--itx-expansion-panel-trigger-font-weight: 400;
+	--itx-expansion-panel-trigger-line-height: 1.4286; /* 20/14 */
+
+	--itx-expansion-panel-trigger-background: transparent;
+	/* Elevation, not shading: --itx-surface-above resolves lighter than the
+	   page in both schemes (neutral-1 in light, neutral-4 in dark), so the
+	   hovered row lifts toward the viewer rather than darkening. */
+	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
+	--itx-expansion-panel-trigger-color: var(--itx-on-surface);
+
+	--itx-expansion-panel-trigger-outline-color: var(--itx-colorway);
+	--itx-expansion-panel-trigger-outline-width: 2px;
+	--itx-expansion-panel-trigger-outline-style: solid;
+	--itx-expansion-panel-trigger-outline-offset: -2px;
+
+	/* Arrow — sized in em so it tracks the trigger's own type, matching the
+	   tree's twisty. 135deg points the corner down; +180 flips it up. */
+	--itx-expansion-panel-trigger-arrow-size: 0.375em;
+	--itx-expansion-panel-trigger-arrow-stroke: 1.5px;
+	--itx-expansion-panel-trigger-arrow-rotation: 135deg;
+	--itx-expansion-panel-trigger-arrow-rotation-expanded: 315deg;
+
+	/* ── Body — interior ──────────────────────────────────────────────────
+	 * Carbon's panel padding: 8px top, 16px inline, 24px bottom. The deeper
+	 * bottom pad separates one item's content from the next item's trigger. */
 	--itx-expansion-panel-body-background: transparent;
 	--itx-expansion-panel-body-background-image: none;
-	--itx-expansion-panel-body-padding: var(--itx-spacing-1);
+	--itx-expansion-panel-body-padding: var(--itx-spacing-2) var(--itx-spacing-4)
+		var(--itx-spacing-6);
 
-	/* ── Body — divider ─────────────────────────────────────────────────── */
-	--itx-expansion-panel-body-divider-width: 0;
+	/* ── Body — divider ───────────────────────────────────────────────────
+	 * A muted hairline between the trigger and the content, present only
+	 * while open. It rests transparent and fades to --itx-border as the panel
+	 * expands — lighter than the neutral-10 frame, so it separates the two
+	 * regions without competing with the rules that separate the panels. */
+	--itx-expansion-panel-body-divider-width: 1px;
 	--itx-expansion-panel-body-divider-style: solid;
-	--itx-expansion-panel-body-divider-color: var(--itx-border);
+	--itx-expansion-panel-body-divider-color: transparent;
+	--itx-expansion-panel-body-divider-color-expanded: var(--itx-neutral-5);
 
 	/* ── Body — animation ───────────────────────────────────────────────── */
 	--itx-expansion-panel-body-transition-duration: var(--itx-duration-base);
@@ -62,47 +116,13 @@
 	--itx-expansion-panel-body-peek-fade-color: var(--itx-page);
 }
 
-/* ── Trigger — contextual button-token overrides ────────────────────────── */
 /*
- * The trigger is a `<button interop-button interop-expansion-trigger>`.
- * Re-assigning button tokens inside the panel scope styles it without
- * inventing a parallel `--itx-expansion-panel-trigger-*` token line.
- * `--itx-button-outline-offset: -2px` tucks the focus ring inside the
- * panel's clipped border-radius so it remains visible.
+ * The `--itx-button-*` re-assignment block that used to live here is gone.
+ * It only reached triggers that opted into `interop-button`, and the panel
+ * now styles `button[interop-expansion-trigger]` directly — so the block was
+ * both incomplete and, for the triggers it did reach, overridden.
+ *
+ * The trigger tint on [data-expanded] went with it: a colour shift on open is
+ * exactly the layering Carbon's accordion avoids, and the body animation
+ * already signals the state.
  */
-
-:where(interop-expansion-panel) {
-	/* Layout — full width, left-aligned content, optional chevron on right */
-	--itx-button-width: 100%;
-	--itx-button-max-width: none;
-	--itx-button-flex: 1 1 100%;
-	--itx-button-justify-content: space-between;
-	--itx-button-border-radius: 0;
-	--itx-button-outline-offset: -2px;
-
-	/* Rest */
-	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-on-surface);
-	--itx-button-border-color: transparent;
-
-	/* Hover */
-	--itx-button-background-hover: var(--itx-surface-hover);
-	--itx-button-foreground-hover: var(--itx-on-surface);
-
-	/* Active */
-	--itx-button-background-active: var(--itx-neutral-4);
-	--itx-button-foreground-active: var(--itx-on-surface);
-}
-
-/*
- * Expanded state — subtle trigger tint so the user reads the trigger as
- * "the heading of the open card". Same tokens are re-assigned; the more
- * specific (two-attribute) selector wins for source-order reasons inside
- * :where() — both rules are zero-specificity so the later declaration
- * applies when the state is active.
- */
-
-:where(interop-expansion-panel[data-expanded]) {
-	--itx-button-background: var(--itx-neutral-3);
-	--itx-button-foreground: var(--itx-on-surface);
-}

@@ -79,6 +79,22 @@
 	margin-left: var(--itx-spacing-1);
 }
 
+/*
+ * Sub-heading inside the single API section, labelling the Inputs and Outputs
+ * tables. Quieter than a demo-section heading — it divides one section rather
+ * than starting a new one. The first one sits flush; later ones open a gap.
+ */
+.demo-page__api-heading {
+	margin: var(--itx-spacing-8) 0 var(--itx-spacing-3);
+	font-size: var(--itx-font-size-label);
+	font-weight: 500;
+	color: var(--itx-muted);
+
+	&:first-child {
+		margin-block-start: 0;
+	}
+}
+
 .demo-page__api-type {
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
