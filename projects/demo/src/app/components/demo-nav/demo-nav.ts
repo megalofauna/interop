@@ -9,14 +9,25 @@ import {
 } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 import { RouterLink, RouterLinkActive } from "@angular/router";
-import { InteropButton, InteropIcon, provideInteropIcons } from "interop";
+import {
+	InteropButton,
+	InteropChipBadge,
+	InteropIcon,
+	provideInteropIcons,
+} from "interop";
 import { TablerLayoutSidebarRightExpand } from "interop/lib/iconsets/tabler";
 import { DEMO_CATALOG, type CatalogGroup } from "./demo-nav.catalog";
 
 @Component({
 	selector: "demo-nav",
 	standalone: true,
-	imports: [RouterLink, RouterLinkActive, InteropButton, InteropIcon],
+	imports: [
+		RouterLink,
+		RouterLinkActive,
+		InteropButton,
+		InteropIcon,
+		InteropChipBadge,
+	],
 	templateUrl: "./demo-nav.html",
 	styleUrl: "./demo-nav.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,68 @@
+<demo-page>
+	<demo-masthead category="Composites" title="Inline Code">
+		Short code fragments inside running prose, with a copy affordance. Sits on
+		the same highlighter as
+		<code>itx-code-block</code>, so a fragment and a block render the same
+		tokens.
+	</demo-masthead>
+
+	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			Built for one line or less. Anything longer belongs in a code block, where
+			it gets a header, a filename, and room to wrap.
+		</p>
+
+		<demo-example label="Basic">
+			<itx-inline-code code="npm i interop" />
+			<itx-code-block language="html" [code]="basicCode" />
+		</demo-example>
+
+		<demo-example label="With a language">
+			<itx-inline-code language="bash" code="npx ng build interop" />
+			<itx-code-block language="html" [code]="languageCode" />
+		</demo-example>
+
+		<demo-example label="Separate copy text">
+			<itx-inline-code code="ng serve demo" copyText="npm run demo" />
+			<itx-code-block language="html" [code]="copyTextCode" />
+		</demo-example>
+
+		<demo-example label="In prose">
+			<p>
+				Run <itx-inline-code code="npm run demo" /> to start the dev server on
+				port 1337.
+			</p>
+			<itx-code-block language="html" [code]="proseCode" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+</demo-page>

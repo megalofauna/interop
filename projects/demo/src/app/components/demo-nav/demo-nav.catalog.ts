@@ -54,6 +54,13 @@ export interface CatalogItem {
 	navOnly?: boolean;
 
 	/**
+	 * Not part of the consumer-facing surface — a primitive or shared layer that
+	 * exists to serve another component. Rendered with an "internal" chip in the
+	 * sidebar and on the page masthead so nobody builds against it by accident.
+	 */
+	internal?: boolean;
+
+	/**
 	 * One line, shown under the label on the directory card. Condensed from the
 	 * target page's own masthead lead, which is already curated and is
 	 * maintained next to the thing it describes.
@@ -70,6 +77,13 @@ export interface CatalogGroup {
 
 	/** Anchor slug for the directory page's section. */
 	id: string;
+
+	/**
+	 * Directory page for this group. When set, the masthead renders the category
+	 * eyebrow as a link to it, so "Components" on any component page returns to
+	 * the index. Groups without their own index leave this unset.
+	 */
+	landingRoute?: string;
 
 	/** Rendered in the sidebar as an empty, dimmed heading — a promise, not a
 	 *  link. Such groups have no items and are skipped by the directory. */
@@ -104,6 +118,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 	{
 		label: "Components",
 		id: "components",
+		landingRoute: "/components",
 		items: [
 			{
 				label: "All components",
@@ -141,9 +156,6 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 				description:
 					"Inline badges, display tags, filter checkboxes, and free-form input.",
 			},
-			// No route: no demo page yet. Placeholder in the sidebar, absent from
-			// the directory. The fix is a demo page, not a greyed-out card.
-			{ label: "Code Block" },
 			{
 				label: "Dialog",
 				route: "/components/dialog",
@@ -273,6 +285,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 			{
 				label: "Visimorph",
 				route: "/components/visimorph",
+				internal: true,
 				description:
 					"Shared visual indicator layer for radio, checkbox, and toggle controls, rendered entirely in CSS.",
 			},
@@ -297,6 +310,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 			{
 				label: "Code Renderer",
 				route: "/components/code-renderer",
+				internal: true,
 				description:
 					"Minimal tokenized code primitive. Takes pre-tokenized [tokens], or falls back to projected <pre><code>.",
 			},
@@ -316,7 +330,43 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 	},
 	{ label: "Rigs", id: "rigs", disabled: true, items: [] },
 	{ label: "Services", id: "services", disabled: true, items: [] },
-	{ label: "Composites", id: "composites", disabled: true, items: [] },
+	{
+		label: "Composites",
+		id: "composites",
+		landingRoute: "/composites",
+		items: [
+			{
+				label: "All composites",
+				route: "/composites",
+				exact: true,
+				navOnly: true,
+			},
+			{
+				label: "Code Block",
+				route: "/composites/code-block",
+				description:
+					"Tabbed code viewer with copy, optional line numbers, and a word-wrap toggle. Blocks sharing a syncKey switch tabs together.",
+			},
+			{
+				label: "Inline Code",
+				route: "/composites/inline-code",
+				description:
+					"Short code fragments inside running prose, with a copy affordance and the same highlighter as the block.",
+			},
+			{
+				label: "Page Nav",
+				route: "/composites/page-nav",
+				description:
+					"In-page anchor navigation in either orientation, with an optional sticky reveal. Renders active state rather than tracking it.",
+			},
+			{
+				label: "Terminal",
+				route: "/composites/terminal",
+				description:
+					"Append-only log panel with a console treatment, relative timestamps, and a bounded entry count.",
+			},
+		],
+	},
 ];
 
 /**
@@ -325,10 +375,23 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
  *
  * Derived rather than maintained, so an item can never be in one consumer and
  * not the other — which was the whole reason for this module.
+ *
+ * Pass group ids to select and order them; omit for all. Each landing page
+ * names the groups it owns, so adding a new group makes someone decide where it
+ * belongs instead of having it appear on whichever directory happens to render
+ * everything.
  */
-export function directoryGroups(): CatalogGroup[] {
-	return DEMO_CATALOG.map((group) => ({
-		...group,
-		items: group.items.filter((item) => item.route && !item.navOnly),
-	})).filter((group) => !group.disabled && group.items.length > 0);
+export function directoryGroups(ids?: readonly string[]): CatalogGroup[] {
+	const wanted = ids
+		? ids
+				.map((id) => DEMO_CATALOG.find((g) => g.id === id))
+				.filter((g): g is CatalogGroup => g !== undefined)
+		: DEMO_CATALOG;
+
+	return wanted
+		.map((group) => ({
+			...group,
+			items: group.items.filter((item) => item.route && !item.navOnly),
+		}))
+		.filter((group) => !group.disabled && group.items.length > 0);
 }

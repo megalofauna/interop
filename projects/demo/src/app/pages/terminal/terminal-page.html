@@ -1,0 +1,79 @@
+<demo-page>
+	<demo-masthead category="Composites" title="Terminal">
+		Append-only log panel with a console treatment. Built for streaming output —
+		build steps, command results, live status — where the reader cares about
+		order and recency.
+	</demo-masthead>
+
+	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			The terminal renders what you give it and nothing else. It holds no
+			entries of its own, so clearing, appending, and persistence stay in your
+			component where the data already lives.
+		</p>
+
+		<demo-example label="Static entries">
+			<itx-terminal [entries]="staticEntries" />
+			<itx-code-block [files]="basicFiles" />
+		</demo-example>
+
+		<demo-example label="Live log with timestamps">
+			<div class="terminal-page__controls">
+				<button interop-button="primary" (click)="emit()">Emit entry</button>
+				<button interop-button="secondary" (click)="onReset()">Clear</button>
+			</div>
+			<itx-terminal [entries]="log()" (reset)="onReset()" />
+			<itx-code-block [files]="timestampFiles" />
+		</demo-example>
+
+		<demo-example label="Plain variant">
+			<itx-terminal variant="plain" [entries]="plainEntries" />
+			<itx-code-block language="html" [code]="plainCode" />
+		</demo-example>
+
+		<demo-example label="Scan lines">
+			<itx-terminal [entries]="staticEntries" [scanLines]="true" prompt="$" />
+			<itx-code-block language="html" [code]="scanLinesCode" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Outputs</h3>
+		<interop-table [collection]="outputEntries" [columns]="outputColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+</demo-page>

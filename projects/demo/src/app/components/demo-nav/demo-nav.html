@@ -35,6 +35,11 @@
 									(click)="closeDrawer()"
 								>
 									{{ item.label }}
+									@if (item.internal) {
+										<span interop-chip-badge itx-size="sm" class="nav__tag"
+											>internal</span
+										>
+									}
 								</a>
 							} @else {
 								<span class="nav__link nav__link--placeholder">

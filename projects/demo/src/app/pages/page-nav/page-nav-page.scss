@@ -1,0 +1,9 @@
+:host {
+	display: block;
+}
+
+/* Constrains the vertical example so it reads as a sidebar rather than
+   stretching across the full example canvas. */
+.page-nav-page__sidebar {
+	max-inline-size: 16rem;
+}

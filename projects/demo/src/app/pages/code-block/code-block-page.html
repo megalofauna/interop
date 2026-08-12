@@ -1,0 +1,97 @@
+<demo-page>
+	<demo-masthead category="Composites" title="Code Block">
+		Tabbed code viewer with copy, optional line numbers, and a word-wrap toggle.
+		Assembles <code>interop-code-renderer</code>, the toolbar rig, and
+		<code>interop-button</code> into one accessible surface.
+	</demo-masthead>
+
+	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			Every example on this site is rendered by this component, including the
+			ones below.
+		</p>
+
+		<demo-example label="Single file">
+			<itx-code-block language="html" [code]="sampleHtml" />
+			<itx-code-block language="html" [code]="singleCode" />
+		</demo-example>
+
+		<demo-example label="With a filename">
+			<itx-code-block
+				language="ts"
+				filename="activation.ts"
+				[code]="sampleTs"
+			/>
+			<itx-code-block language="html" [code]="filenameCode" />
+		</demo-example>
+
+		<demo-example label="Multiple files">
+			<itx-code-block [files]="multiFiles" />
+			<itx-code-block [files]="multiFilesSnippet" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="chrome" heading="Line numbers and wrapping">
+		<p description class="demo-section__lede">
+			Both are opt-in. Line numbers earn their space in a long excerpt and waste
+			it in a three-line one; wrapping is off by default so a long line scrolls
+			instead of reflowing the block.
+		</p>
+
+		<demo-example label="Line numbers and word-wrap toggle">
+			<itx-code-block
+				language="ts"
+				filename="activation.ts"
+				[code]="longSample"
+				[lineNumbers]="true"
+				[wrapToggle]="true"
+			/>
+			<itx-code-block language="html" [code]="chromeCode" />
+		</demo-example>
+
+		<demo-notes [notes]="notes" />
+	</demo-section>
+
+	<demo-section id="sync" heading="Synchronised tabs">
+		<p description class="demo-section__lede">
+			Blocks that share a <code>syncKey</code> switch tabs together. Choose a
+			language on one and the rest of the page follows.
+		</p>
+
+		<demo-example label="Two blocks, one key">
+			<itx-code-block syncKey="demo-sync" [files]="multiFiles" />
+			<itx-code-block syncKey="demo-sync" [files]="multiFiles" />
+			<itx-code-block language="html" [code]="syncCode" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+</demo-page>

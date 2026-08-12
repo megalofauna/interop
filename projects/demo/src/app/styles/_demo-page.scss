@@ -5,7 +5,6 @@
 // namespace instead of per-page classes like `.checkbox-page__*`.
 // ─────────────────────────────────────────────────────────────────────────────
 
-
 .demo-page {
 	max-width: 64rem;
 	margin-inline: auto;
@@ -31,6 +30,25 @@
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 	color: var(--itx-muted);
+}
+
+/* The eyebrow becomes a link back to that category's directory page when one
+   exists (see DemoMasthead.categoryRoute). It inherits the eyebrow's colour and
+   underlines only on hover, so it reads as an eyebrow first and a link second. */
+.demo-page__category-link {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover {
+		color: var(--itx-on-surface);
+		text-decoration: underline;
+		text-underline-offset: 0.25em;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
 }
 
 .demo-page__title {

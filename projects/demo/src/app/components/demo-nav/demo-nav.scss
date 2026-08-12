@@ -87,7 +87,11 @@
 	}
 
 	&--active {
-		background-image: linear-gradient(to right, var(--itx-surface-above) 0%, transparent 100%);
+		background-image: linear-gradient(
+			to right,
+			var(--itx-surface-above) 0%,
+			transparent 100%
+		);
 		/* background: var(--itx-surface-above); */
 		color: var(--itx-on-surface);
 		border-inline-start-color: var(--itx-colorway);
@@ -133,8 +137,7 @@
 		// the exit slide so it animates out, not just in.
 		transform: translateX(-100%);
 		transition:
-			transform var(--itx-duration-base, 200ms)
-				var(--itx-easing-standard, ease),
+			transform var(--itx-duration-base, 200ms) var(--itx-easing-standard, ease),
 			overlay var(--itx-duration-base, 200ms) allow-discrete,
 			display var(--itx-duration-base, 200ms) allow-discrete;
 	}
@@ -154,4 +157,13 @@
 	.nav__panel[popover]::backdrop {
 		background: oklch(0 0 0 / 0.5);
 	}
+}
+
+/* "internal" marker on primitives and shared layers — components that exist to
+   serve another component rather than to be consumed directly. 8px from the
+   label; `vertical-align` sits it on the text baseline instead of the top of
+   the line box, since .nav__link is a block and the chip is inline-flex. */
+.nav__tag {
+	margin-inline-start: var(--itx-spacing-2);
+	vertical-align: middle;
 }

@@ -1,0 +1,78 @@
+<demo-page>
+	<demo-masthead category="Composites" title="Page Nav">
+		In-page navigation for long documents. Renders a list of anchors in either
+		orientation, marks the current one, and optionally pins itself to the top of
+		its scroll container.
+	</demo-masthead>
+
+	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			The nav renders state rather than tracking it. You pass
+			<code>activeHref</code> from your own scroll-spy, which keeps the
+			component free of an observer it would have to guess the root for. Every
+			demo page in this app uses one — the nav at the top of this page is the
+			component documenting itself.
+		</p>
+
+		<demo-example label="Horizontal">
+			<itx-page-nav [links]="links" [activeHref]="'#usage'" />
+			<itx-code-block [files]="basicFiles" />
+		</demo-example>
+
+		<demo-example label="Sticky">
+			<itx-page-nav [links]="links" [sticky]="true" [fade]="true" />
+			<itx-code-block language="html" [code]="stickyCode" />
+		</demo-example>
+	</demo-section>
+
+	<demo-section id="orientation" heading="Vertical orientation">
+		<p description class="demo-section__lede">
+			Vertical adds a visible heading, one level of nesting, and a dot marking
+			the active item. Children render in this orientation only.
+		</p>
+
+		<demo-example label="Vertical with nesting">
+			<div class="page-nav-page__sidebar">
+				<itx-page-nav
+					orientation="vertical"
+					label="On this page"
+					[links]="nestedLinks"
+					[activeHref]="'#install'"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="verticalCode" />
+		</demo-example>
+
+		<demo-notes [notes]="notes" />
+	</demo-section>
+
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+</demo-page>
