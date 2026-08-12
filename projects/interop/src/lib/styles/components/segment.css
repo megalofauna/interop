@@ -77,6 +77,13 @@
 	padding-inline: var(--itx-segment-padding-inline, 0rem);
 	min-width: var(--itx-segment-min-width, 0);
 
+	/* A segment label is a control label, never prose — it does not wrap.
+	   `min-width: 0` above is what makes Carbon's equal-width segments work, but
+	   it also lets a segment shrink below its own text; without this the label
+	   would break to a second line and take the segment's height with it. Not
+	   tokenised: a wrapping segment is a bug, not a configuration. */
+	white-space: nowrap;
+
 	font-family: var(--itx-segment-font-family, inherit);
 	font-size: var(--itx-segment-font-size, inherit);
 	font-weight: var(--_font-weight);

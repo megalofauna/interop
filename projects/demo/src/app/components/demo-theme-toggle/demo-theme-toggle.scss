@@ -1,30 +1,44 @@
+// Demo theme toggle — an icon button that opens a native `popover` listbox.
+//
+// The panel deliberately reads the LIBRARY's --itx-popover-* tokens rather than
+// stating its own chrome. This is a hand-rolled popover living beside a real
+// <interop-popover>, and two floating panels in the same app that disagree
+// about their border, radius and shadow is exactly the drift the Carbon rounds
+// spent fourteen passes removing. Reading the tokens means the toggle follows
+// the popover component for free — including in dark mode, and including the
+// next time popover's values move.
+//
+// (The honest fix is to use <interop-popover> here and delete this chrome
+//  entirely. That is a rewire, not a restyle, so it is not this pass.)
+
 :host {
 	display: inline-flex;
 	align-items: center;
 }
 
-// ── Trigger button ───────────────────────────────────────────────────────────
-
 // ── Popover panel ────────────────────────────────────────────────────────────
 
 .theme-popover {
-	// Reset browser popover defaults so FloatingUI top/left take effect
+	// Reset the UA popover defaults so the FloatingUI top/left take effect.
+	// `inset: unset` is the load-bearing one — a popover is fixed and centred by
+	// default, which would fight the computed position.
 	position: fixed;
 	inset: unset;
-	border: none;
-	padding: 0;
-	background: transparent;
-	color: inherit;
 	margin: 0;
-
-	// Panel chrome
-	background: var(--itx-surface-above);
-	border: 1px solid var(--itx-neutral-6);
-	border-radius: var(--itx-radius-lg);
-	box-shadow: var(--itx-shadow-md);
 	padding: 0;
-	min-width: 10rem;
-	box-shadow: 0 10px 0 0 rgb(0 0 0 / 0.0925);
+	color: inherit;
+
+	// Panel chrome, borrowed wholesale from the popover component's token
+	// surface. Previously: a --itx-neutral-6 border, --itx-radius-lg corners and
+	// TWO box-shadow declarations, of which only the second applied — a hard
+	// `0 10px 0 0` offset with no blur, in rgb() where the rest of the library
+	// is oklch(). The first (var(--itx-shadow-md)) had never once rendered.
+	background: var(--itx-popover-background);
+	border: var(--itx-popover-border-width) var(--itx-popover-border-style)
+		var(--itx-popover-border-color);
+	border-radius: var(--itx-popover-border-radius);
+	box-shadow: var(--itx-popover-shadow);
+	min-inline-size: 10rem;
 }
 
 // ── Listbox inside panel ─────────────────────────────────────────────────────

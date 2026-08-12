@@ -8,6 +8,20 @@ export const routes: Routes = [
 		loadComponent: () =>
 			import("./pages/home/home-page").then((m) => m.HomePage),
 	},
+	// The components landing page. `pathMatch: "full"` is belt-and-braces: a
+	// terminal route (no children / loadChildren) never consumes a URL with
+	// segments left over, so `components` cannot shadow `components/badge` at
+	// any position — but stating it makes that independent of the router's
+	// matching rules rather than reliant on them.
+	{
+		path: "components",
+		title: "Components — Interop",
+		pathMatch: "full",
+		loadComponent: () =>
+			import("./pages/components/components-page").then(
+				(m) => m.ComponentsPage,
+			),
+	},
 	{
 		path: "components/badge",
 		title: "Badge — Interop",
@@ -103,9 +117,7 @@ export const routes: Routes = [
 		path: "components/resizable",
 		title: "Resizable — Interop",
 		loadComponent: () =>
-			import("./pages/resizable/resizable-page").then(
-				(m) => m.ResizablePage,
-			),
+			import("./pages/resizable/resizable-page").then((m) => m.ResizablePage),
 	},
 	{
 		path: "components/scroll-area",
@@ -136,7 +148,8 @@ export const routes: Routes = [
 	{
 		path: "components/tree",
 		title: "Tree — Interop",
-		loadComponent: () => import("./pages/tree/tree-page").then((m) => m.TreePage),
+		loadComponent: () =>
+			import("./pages/tree/tree-page").then((m) => m.TreePage),
 	},
 	{
 		path: "components/stepper",
@@ -202,7 +215,9 @@ export const routes: Routes = [
 		path: "foundation/principles",
 		title: "Principles — Interop",
 		loadComponent: () =>
-			import("./pages/principles/principles-page").then((m) => m.PrinciplesPage),
+			import("./pages/principles/principles-page").then(
+				(m) => m.PrinciplesPage,
+			),
 	},
 	{
 		path: "foundation/typography",
@@ -219,7 +234,10 @@ export const routes: Routes = [
 			import("./pages/amber-lab/amber-lab-page").then((m) => m.AmberLabPage),
 	},
 	{
+		// Unknown URL → the component directory, not an arbitrary component.
+		// This was `components/checkbox`, which dropped anyone who mistyped a
+		// route onto a page with no relationship to what they asked for.
 		path: "**",
-		redirectTo: "components/checkbox",
+		redirectTo: "components",
 	},
 ];

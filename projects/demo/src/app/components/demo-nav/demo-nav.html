@@ -5,43 +5,46 @@
 	class="nav__panel"
 >
 	@if (drawer()) {
-	<div class="nav__panel-header">
-		<button
-			type="button"
-			interop-button="icon"
-			itx-radius="lg"
-			class="nav__close"
-			command="hide-popover"
-			commandfor="site-nav"
-			aria-label="Close navigation"
-		>
-			<interop-icon name="tabler-layout-sidebar-right-expand" [size]="24" />
-		</button>
-	</div>
+		<div class="nav__panel-header">
+			<button
+				type="button"
+				interop-button="icon"
+				itx-radius="lg"
+				class="nav__close"
+				command="hide-popover"
+				commandfor="site-nav"
+				aria-label="Close navigation"
+			>
+				<interop-icon name="tabler-layout-sidebar-right-expand" [size]="24" />
+			</button>
+		</div>
 	}
 	@for (group of groups; track group.label) {
-	<div class="nav__group" [class.nav__group--disabled]="group.disabled">
-		<h3 class="nav__group-label">{{ group.label }}</h3>
-		@if (!group.disabled && group.items.length) {
-		<ul class="nav__list">
-			@for (item of group.items; track item.label) {
-			<li>
-				@if (item.route) {
-				<a
-					class="nav__link"
-					[routerLink]="item.route"
-					routerLinkActive="nav__link--active"
-					(click)="closeDrawer()"
-				>
-					{{ item.label }}
-				</a>
-				} @else {
-				<span class="nav__link nav__link--placeholder"> {{ item.label }} </span>
-				}
-			</li>
+		<div class="nav__group" [class.nav__group--disabled]="group.disabled">
+			<h3 class="nav__group-label">{{ group.label }}</h3>
+			@if (!group.disabled && group.items.length) {
+				<ul class="nav__list">
+					@for (item of group.items; track item.label) {
+						<li>
+							@if (item.route) {
+								<a
+									class="nav__link"
+									[routerLink]="item.route"
+									routerLinkActive="nav__link--active"
+									[routerLinkActiveOptions]="{ exact: !!item.exact }"
+									(click)="closeDrawer()"
+								>
+									{{ item.label }}
+								</a>
+							} @else {
+								<span class="nav__link nav__link--placeholder">
+									{{ item.label }}
+								</span>
+							}
+						</li>
+					}
+				</ul>
 			}
-		</ul>
-		}
-	</div>
+		</div>
 	}
 </nav>

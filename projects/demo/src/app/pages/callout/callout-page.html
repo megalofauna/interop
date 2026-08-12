@@ -1,89 +1,105 @@
-<article class="demo-page" [attr.itx-status-palette]="palette()">
+<demo-page [attr.itx-status-palette]="palette()">
 	<demo-masthead category="Components" title="Callout">
 		Semantic status admonition for inline notices, warnings, and alerts.
-		Automatically themed via status color tokens with full dark-mode support.
+		Automatically themed via status colour tokens, with full dark-mode support.
 	</demo-masthead>
 
-	<!-- ── Palette switcher (preview) ──────────────────────────────────────── -->
-	<div class="palette-switch" role="group" aria-label="Status colour palette">
-		<span class="palette-switch__label">Palette</span>
-		@for (p of palettes; track p.id) {
-			<button
-				type="button"
-				class="palette-switch__option"
-				[class.is-active]="palette() === p.id"
-				[attr.aria-pressed]="palette() === p.id"
-				(click)="palette.set(p.id)"
-			>
-				{{ p.label }}
-			</button>
-		}
-	</div>
-
-	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			Four statuses, each a tinted panel with an accent rule on its inline-start
+			edge. The tint carries the status; the rule carries the emphasis.
+		</p>
+
 		<demo-example label="Info (default)">
 			<interop-callout>
-				Hull integrity check scheduled for 0600. All non-essential crew to standby.
+				Hull integrity check scheduled for 0600. All non-essential crew to
+				standby.
 			</interop-callout>
 			<itx-code-block language="html" [code]="infoCode" />
 		</demo-example>
 
 		<demo-example label="With heading">
 			<interop-callout type="info" heading="Docking protocol">
-				Extend mag-lock clamps before engaging the docking collar. Verify pressure seal before releasing airlock.
+				Extend mag-lock clamps before engaging the docking collar. Verify
+				pressure seal before releasing airlock.
 			</interop-callout>
 			<itx-code-block language="html" [code]="headingCode" />
 		</demo-example>
 
 		<demo-example label="Warning">
 			<interop-callout type="warning" heading="Radiation zone">
-				Sector 7-G is currently above safe exposure limits. EVA suits required beyond this point.
+				Sector 7-G is currently above safe exposure limits. EVA suits required
+				beyond this point.
 			</interop-callout>
 			<itx-code-block language="html" [code]="warningCode" />
 		</demo-example>
 
 		<demo-example label="Success">
 			<interop-callout type="success" heading="Cargo secured">
-				All requisition items verified and locked in bay 4. Transit clearance granted.
+				All requisition items verified and locked in bay 4. Transit clearance
+				granted.
 			</interop-callout>
 			<itx-code-block language="html" [code]="successCode" />
 		</demo-example>
 
 		<demo-example label="Danger">
 			<interop-callout type="danger" heading="Hull breach detected">
-				Emergency bulkhead engaged on deck 3. Evacuate immediately and await decompression protocol.
+				Emergency bulkhead engaged on deck 3. Evacuate immediately and await
+				decompression protocol.
 			</interop-callout>
 			<itx-code-block language="html" [code]="dangerCode" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── Treatments (70s colour preview) ─────────────────────────────────── -->
-	<demo-section id="treatments" heading="Treatments">
-		<demo-example
-			label="Solid fill — for alerts / toasts (short text, full-strength accent)"
-		>
-			<div class="callout-fills">
-				<div class="callout-fill callout-fill--info">Info — sensors nominal</div>
-				<div class="callout-fill callout-fill--warning">
-					Warning — radiation zone
-				</div>
-				<div class="callout-fill callout-fill--success">
-					Success — cargo secured
-				</div>
-				<div class="callout-fill callout-fill--danger">
-					Danger — hull breach on deck 3
-				</div>
-			</div>
+	<demo-section id="palettes" heading="Status palettes">
+		<p description class="demo-section__lede">
+			The callout reads only semantic status tokens, so swapping
+			<code>itx-status-palette</code> on any ancestor re-skins every callout on
+			the page — along with badges, toasts, and anything else on the same
+			tokens. Switch the palette to re-paint the examples above.
+		</p>
+
+		<demo-example label="Live palette switch">
+			<fieldset
+				interop-segmented-control
+				label="Status palette"
+				[value]="palette()"
+				(valueChange)="onPaletteChange($event)"
+			>
+				@for (p of palettes; track p.id) {
+					<button interop-segment [value]="p.id">{{ p.label }}</button>
+				}
+			</fieldset>
+			<demo-state>
+				<demo-state-item label="Palette">{{ palette() }}</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="paletteFiles()" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -92,10 +108,7 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
 
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
+		<demo-notes [notes]="accessibilityNotes" />
 	</demo-section>
-</article>
+</demo-page>

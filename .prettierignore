@@ -1,0 +1,10 @@
+# Mental-model cards and workflow docs.
+#
+# Prettier's markdown printer repads every table to full width and reindents
+# code fences, which turns a one-line addition to a card into a whole-file
+# rewrite and leaves it out of step with its siblings. These are documents
+# written for humans to diff, not source.
+.agent/
+
+# Build output.
+dist/

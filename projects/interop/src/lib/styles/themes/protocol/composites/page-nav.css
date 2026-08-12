@@ -36,8 +36,8 @@
 	/* surface */
 	--itx-pn-background-opacity: 100%;
 
-  --itx-pn-background-color: color-mix(in srgb, currentColor 0%, transparent);
-  --itx-pn-background-image: none;
+	--itx-pn-background-color: color-mix(in srgb, currentColor 0%, transparent);
+	--itx-pn-background-image: none;
 	--itx-pn-backdrop-filter: none;
 
 	--itx-pn-radius: 0;
@@ -63,8 +63,12 @@
 	--itx-pn-link-color: var(--itx-muted);
 	--itx-pn-link-color-active: var(--itx-neutral-12);
 	--itx-pn-link-background-hover: var(--itx-surface-hover);
-	--itx-pn-link-padding-block: var(--itx-spacing-4);
-	--itx-pn-link-padding-inline: var(--itx-spacing-8);
+	/* One size, in every state. These were 16/32 at rest and 12/16 once stuck,
+	   so the whole bar resized under the reader mid-scroll — motion that drew
+	   attention to the chrome rather than the content, and shifted the link the
+	   pointer was over. The stuck (smaller) pair is now the only pair. */
+	--itx-pn-link-padding-block: var(--itx-spacing-3);
+	--itx-pn-link-padding-inline: var(--itx-spacing-4);
 	--itx-pn-link-radius: var(--itx-radius-sm);
 
 	/* Hover */
@@ -78,7 +82,11 @@
 	--itx-pn-focus-offset: -4px;
 	--itx-pn-link-border-color-current: var(--itx-colorway);
 	--itx-pn-link-background-color-current: var(--itx-neutral-3_5);
-	--itx-pn-link-background-image-current: radial-gradient(circle at 0 0 25%, #ff9c56, transparent);
+	--itx-pn-link-background-image-current: radial-gradient(
+		circle at 0 0 25%,
+		#ff9c56,
+		transparent
+	);
 
 	/* vertical */
 	--itx-pn-label-color: var(--itx-muted);
@@ -91,12 +99,20 @@
 	--itx-pn-indicator-color: var(--itx-colorway);
 }
 
-/* Stuck — reveal a solid bar when pinned to the scroll container's top. */
+/*
+ * Stuck — reveal a solid bar when pinned to the scroll container's top.
+ *
+ * Paint only. The links do not change size here: this block used to also drop
+ * the link padding from 16/32 to 12/16, and re-declare --itx-pn-font-size to
+ * the value it already had (a no-op that read as an intentional size change and
+ * wasn't one). Both are gone, and the base block carries the single size.
+ */
 :where([interop-root] itx-page-nav.itx-pn--stuck) {
-	--itx-pn-background-color: color-mix(in srgb, var(--itx-page) 100%, transparent);
+	--itx-pn-background-color: color-mix(
+		in srgb,
+		var(--itx-page) 100%,
+		transparent
+	);
 	--itx-pn-backdrop-filter: blur(12px);
 	--itx-pn-border-color: var(--itx-page);
-	--itx-pn-link-padding-block: var(--itx-spacing-3);
-	--itx-pn-link-padding-inline: var(--itx-spacing-4);
-	--itx-pn-font-size: var(--itx-font-size-body);
 }

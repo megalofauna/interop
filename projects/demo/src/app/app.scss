@@ -72,16 +72,26 @@
 	align-items: center;
 	gap: var(--itx-spacing-2);
 	padding: var(--itx-spacing-1) var(--itx-spacing-2);
-	border: 1px solid var(--itx-border);
-	border-radius: var(--itx-radius-md);
+	// Squared, house hairline, fixed type — the same three corrections as the
+	// palette's own panel and its landing cards, so the trigger and the thing it
+	// opens read as one component.
+	border: 1px solid var(--itx-neutral-7);
+	border-radius: var(--itx-radius-none);
 	background: none;
 	color: var(--itx-muted);
-	font-size: var(--itx-font-size-caption);
+	font-size: 0.75rem;
+	line-height: 1.3333;
 	cursor: pointer;
 
 	&:hover {
 		background: var(--itx-surface-hover);
 		color: var(--itx-on-surface);
+	}
+
+	// It is a <button> and it had no focus treatment.
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
 	}
 }
 
@@ -134,10 +144,16 @@
 	flex-direction: column;
 	flex: 1 1 auto; // never shrink — overflow instead of squashing
 	padding: var(--itx-spacing-3) var(--itx-spacing-4);
-	border: 2px solid var(--itx-border);
-	border-radius: var(--itx-radius-nominal);
+	// 1px --itx-neutral-7, the house hairline. Was 2px --itx-border: the weight
+	// made a row of cards read as a row of buttons, and --itx-border resolves to
+	// neutral-5, a sub-0.1 luminance delta that reads as no edge at all.
+	border: 1px solid var(--itx-neutral-7);
+	border-radius: var(--itx-radius-none);
 	color: var(--itx-on-surface);
-	font-size: var(--itx-font-size-caption);
+	// Fixed rem. --itx-font-size-caption is a fluid clamp() value, which reflows
+	// a card whose whole layout depends on `white-space: nowrap` holding.
+	font-size: 0.75rem;
+	line-height: 1.3333;
 	font-weight: 500;
 	white-space: nowrap;
 	text-align: center;
@@ -148,10 +164,21 @@
 		background: var(--itx-surface-hover);
 	}
 
+	// These are links in a scrolling panel and a keyboard user tabs through all
+	// of them, so they need a visible ring — there was none. Semantic
+	// --itx-colorway, not the light-only -8 step, so it holds in dark mode.
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
+
 	// Current section — derived from the router, so it is correct on every
 	// open with no retained state.
 	&--active {
-		border-color: var(--itx-colorway-8);
+		// Was --itx-colorway-8, which is the light-mode step: in dark mode the
+		// active card's edge dropped to roughly the same value as the resting
+		// one. --itx-colorway is the light-dark() pair.
+		border-color: var(--itx-colorway);
 		background: var(--itx-surface-hover);
 		color: var(--itx-on-surface);
 	}

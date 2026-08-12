@@ -24,6 +24,12 @@ export interface SegmentedControlRef {
 export interface SegmentRef {
 	readonly value: InputSignal<string>;
 	readonly disabled: InputSignal<boolean>;
+	/**
+	 * False until Angular has applied this segment's inputs. The container MUST
+	 * check this before reading `value()`, which is a required input and throws
+	 * NG0950 if read early — see the note on `InteropSegment.ready`.
+	 */
+	readonly ready: Signal<boolean>;
 	focus(): void;
 }
 

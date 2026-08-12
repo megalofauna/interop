@@ -1,11 +1,62 @@
 /*
+ * InteropListbox — option list styling.
+ *
+ * Proportions follow the house language the Carbon rounds converged on
+ * (.agent/workflows/carbon-borrow.md): a 40px row, 16px inline padding, 14/18
+ * type, squared corners, and paint only on state.
+ *
+ * ── Squared, and the row gap removed ───────────────────────────────────────
+ *
+ * `--itx-option-radius` was --itx-radius-md. Rounded highlights inside a
+ * squared library read as an oversight; the highlight now shares its edge with
+ * the row above and below, which is what makes a list read as a list.
+ *
+ * The gap between rows was never declared here — the host is `display: block`
+ * and nothing set `gap`. It came from prose: a global [interop-typography-root]
+ * turns prose.css's bare element selectors into de-facto global element styles,
+ * and `li + li` carries a rhythm margin. The component now sets
+ * `interop-typography-isolate` on its host (see interop-listbox.ts), which also
+ * lifts the --itx-measure cap and the fluid font-size off rows that are
+ * neither prose nor flexible.
+ *
+ * ── The token surface below is new, and the old one was fiction ────────────
+ *
+ * This file used to document five tokens — --itx-option-active-bg,
+ * -focus-ring, -selected-bg, -selected-color, -active-selected-bg. Not one was
+ * read: every colour was a hardcoded --itx-neutral-* and the only mention of
+ * -focus-ring was inside a commented-out block. A consumer setting any of them
+ * would have seen nothing happen. Every token below is read exactly once, at
+ * the point of use.
+ *
  * Available tokens (set on any ancestor, e.g. [interop-root]):
  *
- *   --itx-option-active-bg          Active option background (default: oklch(0.95 0 0))
- *   --itx-option-focus-ring         Active option focus ring color (default: oklch(0.6 0.15 250))
- *   --itx-option-selected-bg        Selected option background (default: oklch(0.9 0.05 250))
- *   --itx-option-selected-color     Selected option text color (default: oklch(0.3 0.1 250))
- *   --itx-option-active-selected-bg Active+selected background (default: oklch(0.85 0.08 250))
+ *   --itx-option-min-block-size      Row height floor (40px)
+ *   --itx-option-padding-inline      Inline padding (16px)
+ *   --itx-option-padding-block       Gutter for a WRAPPED row (8px)
+ *   --itx-option-gap                 Gap between icon / label / description
+ *   --itx-option-font-size           Row type (14px) · fixed rem, see below
+ *   --itx-option-line-height         Row leading (18/14)
+ *   --itx-option-radius              Row corner radius (none)
+ *   --itx-option-color               Row text
+ *   --itx-option-background-hover    Pointer hover
+ *   --itx-option-background-active   Keyboard active descendant
+ *   --itx-option-accent-width        Active-row edge bar thickness (4px)
+ *   --itx-option-accent-color-selected  Selected-row edge bar colour (colorway)
+ *   --itx-option-background-selected            Selected
+ *   --itx-option-background-active-selected     Selected AND active
+ *   --itx-option-disabled-opacity    Disabled fade (matches the palette)
+ *   --itx-option-description-color   Trailing description text
+ *   --itx-option-description-font-size
+ *   --itx-option-transition-duration --itx-option-transition-timing
+ *
+ * Type is FIXED rem, never --itx-font-size-*: those are fluid clamp() values,
+ * and a fluid label inside a row with a pinned height overflows it.
+ *
+ * NOTE — this component is styled from its own `styleUrl` rather than the
+ * global `styles/components/*.css` + theme split, so a CSS-only consumer gets
+ * no listbox styling, and the injected sheet is unlayered and therefore
+ * outranks the whole `interop` layer. One of fifteen — see
+ * `.agent/todo/styleurl-components-migration.md`.
  */
 
 :where([interop-listbox]) {
@@ -20,38 +71,104 @@
 .interop-option {
 	display: flex;
 	align-items: center;
-	gap: 0.5rem;
-	padding: 0.5rem 0.75rem;
+	gap: var(--itx-option-gap, 0.5rem);
+
+	/* The row height is a FLOOR, not the padding sum: a single-line row snaps to
+	   40px and only a wrapped one grows. Same model as the table, where Carbon
+	   sizes the row rather than the cell. */
+	min-block-size: var(--itx-option-min-block-size, 2.5rem);
+	padding-block: var(--itx-option-padding-block, 0.5rem);
+	padding-inline: var(--itx-option-padding-inline, 1rem);
+
+	font-size: var(--itx-option-font-size, 0.875rem);
+	line-height: var(--itx-option-line-height, 1.2857);
+	color: var(--itx-option-color, var(--itx-on-surface));
+
+	border-radius: var(--itx-option-radius, var(--itx-radius-none));
 	cursor: default;
 	user-select: none;
-	border-radius: var(--itx-radius-md);
 
+	/*
+	 * Accent bar at the inline-start edge, marking SELECTION. Rests transparent
+	 * and only changes colour, so it costs no layout and it transitions. Same
+	 * mechanism the tree uses for its current row.
+	 *
+	 * On selected, not on active: `mouseenter` sets the active descendant, so
+	 * putting it on active meant every row grew a bar as the pointer passed
+	 * over it — a persistent marker doing a transient job. Selection is the
+	 * state worth marking permanently.
+	 *
+	 * It also solves what fill alone could not. The three states sit within
+	 * 0.08 lightness of each other (selected 0.91, active 0.86, active+selected
+	 * 0.83) — legible when one row is tinted, invisible when six are. With the
+	 * bar carrying selection, the remaining fill difference only has to say
+	 * "this is the cursor", which it can.
+	 */
+	box-shadow: inset var(--itx-option-accent-width, 4px) 0 0 0
+		var(--itx-option-accent-color, transparent);
+
+	transition:
+		background-color
+			var(--itx-option-transition-duration, var(--itx-duration-fast))
+			var(--itx-option-transition-timing, var(--itx-easing-standard)),
+		box-shadow var(--itx-option-transition-duration, var(--itx-duration-fast))
+			var(--itx-option-transition-timing, var(--itx-easing-standard));
+
+	/* Pointer hover only, and only when it is not already the active
+	   descendant — otherwise moving the mouse over the keyboard-highlighted row
+	   would quietly downgrade its paint. */
 	&:not(&--active):hover {
-		background-color: var(--itx-neutral-1);
+		background-color: var(
+			--itx-option-background-hover,
+			var(--itx-surface-above)
+		);
 	}
 
+	/* Keyboard active descendant. Stronger than hover: this one is telling you
+	   where Enter will land. */
 	&--active {
-		background-color: var(--itx-neutral-4_5);
-		/* background-color: blue; */
-		/* background-color: var(--itx-neutral-4_5); */
-		/* outline: 1px solid var(--itx-option-focus-ring, var(--itx-neutral-7));
-		outline-offset: -2px; */
+		background-color: var(
+			--itx-option-background-active,
+			var(--itx-neutral-4_5)
+		);
 	}
 
+	/* RTL: box-shadow takes PHYSICAL offsets, so the sign flips. Same handling
+	   as the tree's accent bar. */
+	&:dir(rtl) {
+		box-shadow: inset calc(-1 * var(--itx-option-accent-width, 4px)) 0 0 0
+			var(--itx-option-accent-color, transparent);
+	}
+
+	/*
+	 * Selected keeps the HOVER fill and adds the bar. That makes the two
+	 * channels orthogonal rather than a four-step ramp: the fill says where the
+	 * pointer or keyboard cursor is, the bar says what is chosen. A selected row
+	 * therefore reads as "lifted" the way a hovered one does, and hovering a
+	 * selected row changes nothing — there is nothing left to change.
+	 */
 	&--selected {
-		background-color: var(--itx-neutral-3_5);
-		/* border-color: var(--itx-neutral-4); */
-		/* color: var(--itx-netural-2);
-		font-weight: 500; */
+		background-color: var(
+			--itx-option-background-selected,
+			var(--itx-surface-above)
+		);
+		--itx-option-accent-color: var(
+			--itx-option-accent-color-selected,
+			var(--itx-colorway)
+		);
 	}
 
+	/* Selected AND the cursor: same fill as plain active, and the bar carries
+	   the selection. No third value needed. */
 	&--active#{&}--selected {
-		background-color: var(--itx-neutral-5);
-		/* background-color: rebeccapurple; */
+		background-color: var(
+			--itx-option-background-active-selected,
+			var(--itx-neutral-4_5)
+		);
 	}
 
 	&--disabled {
-		opacity: 0.4;
+		opacity: var(--itx-option-disabled-opacity, 0.4);
 		cursor: not-allowed;
 		pointer-events: none;
 	}
@@ -71,10 +188,13 @@
 	white-space: nowrap;
 }
 
+/* Colour, not opacity. A faded row smears every layer at once — the same
+   reason the slider round replaced its disabled `opacity` with painted grey —
+   and a description is secondary text, which is what --itx-muted means. */
 .interop-option__description {
 	flex-shrink: 0;
-	font-size: 0.8125em;
-	opacity: 0.65;
+	font-size: var(--itx-option-description-font-size, 0.75rem);
+	color: var(--itx-option-description-color, var(--itx-muted));
 	white-space: nowrap;
 }
 

@@ -109,7 +109,8 @@
 
 /* Divider only when populated — an empty slot must leave no painted trace. */
 :where(.itx-cmdp__aside:has(> *)) {
-	border-block-end: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
+	border-block-end: var(--itx-cmdp-border-width) solid
+		var(--itx-cmdp-border-color);
 }
 
 @container itx-cmdp (min-width: 34rem) {
@@ -150,6 +151,47 @@
 
 :where(.itx-cmdp__input)::placeholder {
 	color: var(--itx-cmdp-muted);
+}
+
+/* ── Clear button ─────────────────────────────────────────────────────────── *
+ * A filled disc with an X, at the trailing edge of the field.
+ *
+ * The painted disc and the hit target are deliberately different sizes. The
+ * disc reads best at 20px, but a 20px target fails WCAG 2.2 SC 2.5.8, so the
+ * box is 24px and the difference is taken out as a TRANSPARENT border, with
+ * `background-clip: content-box` keeping the fill off it. Same trick the
+ * slider thumb uses. `box-sizing: border-box` is load-bearing — without it the
+ * border would be added to 24px rather than taken out of it.
+ */
+
+:where(.itx-cmdp__clear) {
+	flex: 0 0 auto;
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--itx-cmdp-clear-target);
+	block-size: var(--itx-cmdp-clear-target);
+	padding: 0;
+	border: calc((var(--itx-cmdp-clear-target) - var(--itx-cmdp-clear-size)) / 2)
+		solid transparent;
+	border-radius: var(--itx-cmdp-clear-radius);
+	background-color: var(--itx-cmdp-clear-background);
+	background-clip: content-box;
+	color: var(--itx-cmdp-clear-color);
+	cursor: pointer;
+	transition: background-color var(--itx-duration-fast)
+		var(--itx-easing-standard);
+}
+
+:where(.itx-cmdp__clear:hover) {
+	background-color: var(--itx-cmdp-clear-background-hover);
+}
+
+:where(.itx-cmdp__clear:focus-visible) {
+	outline: var(--itx-cmdp-clear-outline-width) solid
+		var(--itx-cmdp-clear-outline-color);
+	outline-offset: var(--itx-cmdp-clear-outline-offset);
 }
 
 /* ── Results listbox ──────────────────────────────────────────────────────── */

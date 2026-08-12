@@ -1,0 +1,9 @@
+{
+	"useTabs": true,
+	"overrides": [
+		{
+			"files": ["projects/**/*.html"],
+			"options": { "parser": "angular" }
+		}
+	]
+}

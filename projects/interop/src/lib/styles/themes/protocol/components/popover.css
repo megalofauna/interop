@@ -105,10 +105,11 @@
 	 * against an --itx-surface-above panel is a sub-0.1 luminance delta and
 	 * reads as no edge at all. --itx-neutral-7 is the house hairline.
 	 *
-	 * NOT --itx-border: that global is currently overwritten app-wide by
-	 * themes/protocol/components/dialog.css (see .agent/todo/dialog-theme-
-	 * stomps-itx-border.md), so reading it here would make the popover's frame
-	 * a hostage to the dialog file.
+	 * NOT --itx-border. This round found that global being overwritten app-wide
+	 * by themes/protocol/components/dialog.css, which declared it on
+	 * [interop-root] to lighten its own edge and won on import order — since
+	 * fixed. Even fixed, --itx-border is neutral-5 and too light for a frame
+	 * that has to hold against arbitrary page content.
 	 */
 	--itx-popover-border-color: var(--itx-neutral-7);
 

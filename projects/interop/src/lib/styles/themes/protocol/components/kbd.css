@@ -14,7 +14,7 @@
 	/* box */
 	--itx-kbd-padding-block: 0.3em;
 	--itx-kbd-padding-inline: 0.45em;
-	--itx-kbd-radius: var(--itx-radius-sm);
+	--itx-kbd-radius: var(--itx-radius-none);
 
 	/* type — monospace key caps */
 	--itx-kbd-font-family: var(--itx-font-family-mono);
@@ -34,6 +34,6 @@
 	--itx-kbd-shadow-color: var(--itx-border);
 
 	/* 3D tilt — viewed from above and front */
-	--itx-kbd-perspective: 8em; /* smaller = stronger recede */
+	--itx-kbd-perspective: unset; /* smaller = stronger recede */
 	--itx-kbd-tilt: 20deg;
 }

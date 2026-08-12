@@ -62,8 +62,23 @@
 	flex-direction: column;
 	align-items: flex-start;
 
-	/* Don't expand to fill the parent — the control sizes to its content. */
-	flex: 0 1 fit-content;
+	/*
+	 * Don't expand to fill the parent, and don't let it squeeze either — the
+	 * control sizes to its content, full stop.
+	 *
+	 * This was `0 1 fit-content`. The shrink factor of 1, combined with the
+	 * `min-inline-size: 0` reset above and the segments' own `min-width: 0`,
+	 * meant any flex parent could compress the control until its labels wrapped
+	 * to two lines. A wrapped label in a fixed-height segment is always wrong:
+	 * the height is the line box plus block padding, so wrapping breaks the
+	 * size step as well as the reading.
+	 *
+	 * `0 0 auto` states the intent the comment always claimed. In a container
+	 * genuinely narrower than the control, it now overflows rather than wraps —
+	 * the honest failure for a control whose whole job is showing its options
+	 * side by side.
+	 */
+	flex: 0 0 auto;
 }
 
 /* ── Legend ──────────────────────────────────────────────────────────────── */

@@ -1,0 +1,25 @@
+<demo-page>
+	<demo-masthead category="Overview" title="Components">
+		Every demo page in the library, grouped the way the sidebar groups them.
+		Follow a card for that component's examples, tokens, and API.
+	</demo-masthead>
+
+	@for (group of groups; track group.id) {
+		<demo-section [id]="group.id" [heading]="group.label">
+			<ul class="components-page__grid">
+				@for (entry of group.items; track entry.route) {
+					<li class="components-page__cell">
+						<a class="components-page__card" [routerLink]="entry.route">
+							<span class="components-page__name">{{ entry.label }}</span>
+							@if (entry.description) {
+								<span class="components-page__desc">{{
+									entry.description
+								}}</span>
+							}
+						</a>
+					</li>
+				}
+			</ul>
+		</demo-section>
+	}
+</demo-page>

@@ -14,7 +14,7 @@
  * Proportions and paint follow IBM Carbon's Content Switcher (the default
  * "high contrast" flavour), see .agent/workflows/carbon-borrow.md:
  *
- *   - transparent track inside a 1px frame, 4px radius
+ *   - transparent track inside a 1px frame (Carbon's 4px radius declined)
  *   - equal-width segments, 14px/18px label, 16px inline padding
  *   - three height steps: sm 32 / md 40 / lg 48
  *   - the SELECTED segment inverts: near-black fill, near-white label
@@ -61,7 +61,12 @@
 	--itx-segmented-control-track-box-shadow: inset 0 0 0 1px
 		var(--itx-neutral-12);
 
-	--itx-segmented-control-track-border-radius: var(--itx-radius-1);
+	/* Squared. Carbon's Content Switcher specifies a 4px radius and we decline
+	   it, as rounds 2–14 declined every other one: the library is square, and a
+	   4px curve on a control that sits beside squared tabs, fields and tables
+	   reads as an oversight rather than a choice. Set --itx-radius-1 to restore
+	   Carbon's value exactly. */
+	--itx-segmented-control-track-border-radius: var(--itx-radius-none);
 	--itx-segmented-control-track-padding: 0;
 	--itx-segmented-control-track-max-width: none;
 
@@ -85,21 +90,21 @@
 	--itx-segment-font-family: var(--itx-font-family-sans);
 	--itx-segment-font-size: 0.875rem;
 	--itx-segment-line-height: 1.2857;
-	--itx-segment-font-weight: 400;
+	--itx-segment-font-weight: 500;
 	/* Carbon holds the selected label at 400 in this flavour so selection
 	   never reflows the segment widths. Set 600 for the low-contrast look. */
-	--itx-segment-font-weight-selected: 400;
+	--itx-segment-font-weight-selected: 500;
 
 	/* ── Segment — visual structure (no state variants) ─────────────────── */
 	/* No per-segment border: the frame lives on the track, the dividers are
 	   the ::before hairline below. */
 	--itx-segment-border-width: 0;
-	--itx-segment-border-radius: var(--itx-radius-1);
+	--itx-segment-border-radius: var(--itx-radius-none);
 
 	/* ── Segment — rest state ───────────────────────────────────────────── */
 	/* $text-secondary — unselected labels are quieter than the selected one. */
 	--itx-segment-background: transparent;
-	--itx-segment-foreground: var(--itx-neutral-9);
+	--itx-segment-foreground: var(--itx-neutral-10);
 	--itx-segment-border-color: transparent;
 
 	/* ── Segment — hover state ──────────────────────────────────────────── */
@@ -167,7 +172,9 @@
 	   falls back to the same token. */
 	--itx-indicator-background-color: var(--itx-neutral-12);
 	--itx-indicator-border-width: 0;
-	--itx-indicator-border-radius: var(--itx-radius-1);
+	/* The pill matches the track. All three radii move together or the
+	   selection sits visibly proud of the frame at the ends. */
+	--itx-indicator-border-radius: var(--itx-radius-none);
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
