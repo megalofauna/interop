@@ -1,4 +1,4 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Progress">
 		Semantic progress bar built on the native
 		<code>&lt;progress&gt;</code> element. Correct indeterminate ARIA,
@@ -83,6 +83,56 @@
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Size ───────────────────────────────────────────────────────────── -->
+	<demo-section id="size" heading="Size">
+		<p description class="demo-section__lede">
+			<code>itx-size</code> steps the bar's thickness. <code>md</code> (8px) is
+			the default; <code>sm</code> (4px) is for when progress is supporting
+			information rather than the subject of the view.
+		</p>
+
+		<demo-example label="md and sm">
+			<div class="progress-demo">
+				<span interop-progress-label>Default (md)</span>
+				<progress interop-progress [value]="60" [max]="100"></progress>
+				<span interop-progress-label>Compact (sm)</span>
+				<progress
+					interop-progress
+					itx-size="sm"
+					[value]="60"
+					[max]="100"
+				></progress>
+			</div>
+			<itx-code-block language="html" [code]="sizeCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Labelling ──────────────────────────────────────────────────────── -->
+	<demo-section id="labelling" heading="Labelling">
+		<p description class="demo-section__lede">
+			<code>[interop-progress-label]</code> wires
+			<code>aria-labelledby</code> for you. It labels the next
+			<code>&lt;progress&gt;</code> in document order, or an explicit one via
+			<code>target</code> when the two are not siblings.
+		</p>
+
+		<demo-example label="Explicit target">
+			<div class="progress-demo">
+				<span interop-progress-label target="cooling-bar">Coolant flow</span>
+				<p class="progress-demo__interstitial">
+					Any amount of markup can sit between the label and its bar.
+				</p>
+				<progress
+					interop-progress
+					id="cooling-bar"
+					[value]="82"
+					[max]="100"
+				></progress>
+			</div>
+			<itx-code-block language="html" [code]="targetCode" />
+		</demo-example>
+	</demo-section>
+
 	<!-- ── Orientation ────────────────────────────────────────────────────── -->
 	<demo-section id="orientation" heading="Orientation">
 		<demo-example label="Vertical">
@@ -139,9 +189,33 @@
 		</demo-example>
 	</demo-section>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+	<!-- ── Tokens ─────────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ────────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) { <span class="demo-page__required">*</span> }
@@ -153,10 +227,25 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
 
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
+		<h3 class="demo-page__api-heading">Attributes</h3>
+		<interop-table
+			[collection]="attrEntries"
+			[columns]="attrColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
 	</demo-section>
-</article>
+</demo-page>

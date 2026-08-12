@@ -29,10 +29,11 @@ The page follows a fixed top-to-bottom rhythm. Every demo page mirrors this so u
 1. **Masthead** — category, title, lead paragraph
 2. **Usage** section — practical examples
 3. *Optional component-specific sections* — placement, modes, sizes, keyboard, etc.
-4. **API** section — one section holding every API table (Inputs, Outputs, Methods…)
+4. **CSS tokens** section — the component's public token surface
+5. **API** section — one section holding every API table (Inputs, Outputs, Methods…)
 
 ```html
-<article class="demo-page">
+<demo-page>
   <demo-masthead category="Components" title="{Component}">
     One-paragraph description.
   </demo-masthead>
@@ -45,6 +46,13 @@ The page follows a fixed top-to-bottom rhythm. Every demo page mirrors this so u
 
   <!-- component-specific sections here -->
 
+  <demo-section id="tokens" heading="CSS tokens">
+    <interop-table [collection]="tokenEntries" [columns]="tokenColumns" [scrollable]="true">
+      <ng-template itxCell="property" let-entry>...</ng-template>
+      <ng-template itxCell="default" let-entry>...</ng-template>
+    </interop-table>
+  </demo-section>
+
   <demo-section id="api" heading="API">
     <h3 class="demo-page__api-heading">Inputs</h3>
     <interop-table [collection]="apiEntries" [columns]="apiColumns">
@@ -56,8 +64,24 @@ The page follows a fixed top-to-bottom rhythm. Every demo page mirrors this so u
     <h3 class="demo-page__api-heading">Outputs</h3>
     <interop-table [collection]="outputEntries" [columns]="outputColumns">...</interop-table>
   </demo-section>
-</article>
+</demo-page>
 ```
+
+### Wrap the page in `<demo-page>`, not a bare `<article>`
+
+`<demo-page>` is the shell: it renders the `<article class="demo-page">`, drops
+in an `<itx-page-nav>`, and runs the scroll-spy that highlights the current
+section. `<demo-section>` registers itself with the enclosing shell on init, so
+**the nav builds itself from the sections you already wrote** — no links array
+to maintain and no second place for section names to drift.
+
+A section used outside `<demo-page>` still renders; it just injects the
+registry optionally and skips registering. That is why a page written with a
+bare `<article class="demo-page">` looks fine and silently has no page nav —
+the failure is invisible, so check for the nav rather than assuming.
+
+Anchors default to a slug of the heading. Pass `id` explicitly where the anchor
+is part of the documented surface (`id="api"`, `id="tokens"`).
 
 ### One API section, every table
 
@@ -78,6 +102,35 @@ Note that a `model()` input produces **both** an input and an output. If the
 component exposes `foo = model<T>()`, document `foo` under Inputs *and*
 `fooChange` under Outputs.
 
+### CSS tokens section
+
+Every component with a public `--itx-*` surface documents it, in its own
+section before the API. Two columns — `property` and `default` — both rendered
+as `<code>`:
+
+```typescript
+type TokenEntry = { property: string; default: string };
+
+tokenEntries: TokenEntry[] = [
+  { property: "--itx-foo-height", default: "var(--itx-spacing-8) — 32px" },
+];
+```
+
+Give the resolved value alongside the token where the token alone says nothing
+(`var(--itx-spacing-8) — 32px`, `30 (percent of track, unitless)`). A reader
+scanning the table is trying to learn the *size*, not the indirection.
+
+Keep it in sync with the theme file. A token table that lies is worse than no
+table, and the drift is invisible — nothing fails when a default changes.
+
+### Attributes are not inputs
+
+A component may configure itself through plain attributes rather than Angular
+inputs — `itx-size` on progress, `itx-marker` on list. These have no
+`input()` declaration, so they belong in their own **Attributes** table under
+the API section, not smuggled into Inputs. Columns match Inputs, with `type`
+holding the accepted values (`"sm" | "md"`).
+
 ### No trailing Notes section
 
 Demo pages no longer end with a page-level `<demo-section id="notes">`. Don't
@@ -96,6 +149,7 @@ The demo app provides a small set of layout components that every page composes.
 
 | Selector | Purpose |
 |---|---|
+| `<demo-page>` | Page shell. Renders the `<article>`, the `<itx-page-nav>`, and the scroll-spy. Sections self-register with it. |
 | `<demo-section id heading>` | Numbered/anchored content section. Renders a heading with `#anchor` link and a body slot. |
 | `<demo-example label>` | A bordered "canvas" for an example. The label appears above; children are the live UI. |
 | `<demo-masthead category title>` | Page header — category eyebrow, title, and a lead paragraph as projected content. |
@@ -171,6 +225,7 @@ import {
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
+import { DemoPage } from "../../components/demo-page/demo-page";
 
 interface ApiInputRow {
   component?: string;       // present when documenting multi-directive surfaces
@@ -194,7 +249,7 @@ interface ApiOutputRow {
   imports: [
     /* component being demoed */,
     InteropTable, InteropCellDef, CodeBlock,
-    DemoSection, DemoExample, DemoMasthead,
+    DemoPage, DemoSection, DemoExample, DemoMasthead,
   ],
   templateUrl: "./<component>-page.html",
   styleUrl: "./<component>-page.scss",
@@ -309,13 +364,16 @@ Then visit `/components/<component>` in the demo app and walk through each examp
 ## Checklist
 
 - [ ] `<component>-page.ts` exists with the standard imports and structure
-- [ ] `<component>-page.html` follows the masthead → usage → API rhythm
+- [ ] `<component>-page.html` is wrapped in `<demo-page>` (bare `<article class="demo-page">` renders fine but has no page nav)
+- [ ] `<component>-page.html` follows the masthead → usage → tokens → API rhythm
 - [ ] `<component>-page.scss` exists (even if minimal)
 - [ ] Route added in `app.routes.ts`
 - [ ] Nav entry added in `demo-nav.ts` (alphabetically placed)
 - [ ] At least one `<demo-example>` per major usage variant — walk the component's
       inputs and confirm each one is shown somewhere
 - [ ] Every `<demo-example>` has an `<itx-code-block>` with matching code
+- [ ] `id="tokens"` section documenting the public `--itx-*` surface, matching the theme file
+- [ ] Attribute-driven configuration (`itx-*`) documented in an Attributes table, not as Inputs
 - [ ] One `id="api"` section containing every API table (Inputs, Outputs, and
       Methods where the component has an imperative surface); omit any with no rows
 - [ ] Every `model()` input documented in *both* tables (`foo` and `fooChange`)

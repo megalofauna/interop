@@ -13,16 +13,18 @@ import {
 } from 'interop';
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
+import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
+
+type TokenEntry = { property: string; default: string };
 
 interface ApiEntry {
+	/** Present because the surface spans three directives — see the sticky
+	    leading column in apiColumns. */
+	component?: string;
 	name: string;
 	type: string;
 	default: string;
@@ -41,11 +43,11 @@ interface ApiEntry {
 		InteropCellDef,
 		CodeBlock,
 		DemoMasthead,
+		DemoPage,
 		DemoSection,
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
 	],
 	templateUrl: "./progress-page.html",
 	styleUrl: "./progress-page.scss",
@@ -98,6 +100,14 @@ export class ProgressPage {
 	readonly stepBasedComponentCode = `readonly totalSteps = 7;
 currentStep = signal(1);`;
 
+	readonly sizeCode = `<progress interop-progress [value]="60" [max]="100"></progress>
+<progress interop-progress itx-size="sm" [value]="60" [max]="100"></progress>`;
+
+	readonly targetCode = `<!-- target wins when label and bar are not siblings -->
+<span interop-progress-label target="cooling-bar">Coolant flow</span>
+<p>Any amount of markup can sit between the label and its bar.</p>
+<progress interop-progress id="cooling-bar" [value]="82" [max]="100"></progress>`;
+
 	readonly verticalCode = `<progress interop-progress
           [value]="75"
           [orientation]="'vertical'"
@@ -121,6 +131,7 @@ currentStep = signal(1);`;
 	// ── API tables ───────────────────────────────────────────────────────
 
 	apiColumns: TableColumn<ApiEntry>[] = [
+		{ key: "component", label: "Directive", sticky: true },
 		{ key: "name", label: "Input" },
 		{ key: "type", label: "Type" },
 		{ key: "default", label: "Default" },
@@ -129,12 +140,14 @@ currentStep = signal(1);`;
 
 	apiEntries: ApiEntry[] = [
 		{
+			component: "progress[interop-progress]",
 			name: "value",
 			type: "number",
 			default: "0",
 			description: "Current progress value. Must be between [min] and [max].",
 		},
 		{
+			component: "progress[interop-progress]",
 			name: "min",
 			type: "number",
 			default: "0",
@@ -142,12 +155,14 @@ currentStep = signal(1);`;
 				"Minimum value. Affects ARIA and fill normalization. The native progress element always starts at 0 visually.",
 		},
 		{
+			component: "progress[interop-progress]",
 			name: "max",
 			type: "number",
 			default: "100",
 			description: "Maximum value.",
 		},
 		{
+			component: "progress[interop-progress]",
 			name: "indeterminate",
 			type: "boolean",
 			default: "false",
@@ -155,6 +170,7 @@ currentStep = signal(1);`;
 				"When true, omits aria-valuenow entirely so assistive technology announces in-progress rather than a percentage. Takes precedence over [value].",
 		},
 		{
+			component: "progress[interop-progress]",
 			name: "valueText",
 			type: "string | null",
 			default: "null",
@@ -162,6 +178,7 @@ currentStep = signal(1);`;
 				"Human-readable description of the current value, announced by screen readers instead of the raw number. Use for step-based or labelled-quantity progress.",
 		},
 		{
+			component: "progress[interop-progress]",
 			name: "orientation",
 			type: "'horizontal' | 'vertical'",
 			default: "'horizontal'",
@@ -170,27 +187,51 @@ currentStep = signal(1);`;
 		},
 	];
 
-	notes: DemoNote[] = [
+	// ── Attributes (not Angular inputs) ──────────────────────────────────
+
+	attrColumns: TableColumn<ApiEntry>[] = [
+		{ key: "component", label: "Directive", sticky: true },
+		{ key: "name", label: "Attribute" },
+		{ key: "type", label: "Values" },
+		{ key: "default", label: "Default" },
+		{ key: "description", label: "Description" },
+	];
+
+	attrEntries: ApiEntry[] = [
 		{
-			type: "release",
-			label: "v0.1.0",
-			title: "Progress component added",
-			body: "InteropProgress, InteropProgressLabel, and InteropProgressStatus are now available. Built on the native <progress> element for correct semantics and AT support.",
+			component: "progress[interop-progress]",
+			name: "itx-size",
+			type: '"sm" | "md"',
+			default: '"md"',
+			description:
+				"Track thickness. md is 8px, sm is 4px. A plain attribute rather than an input — it selects theme tokens and needs no component state.",
 		},
 		{
-			type: "note",
-			label: "Labelling",
-			body: "Use <span interop-progress-label> adjacent to the progress element for auto-wired aria-labelledby. The <progress> element is not a labelable element — native <label for> is unreliable across AT. The directive handles the correct ARIA association.",
-		},
-		{
-			type: "note",
-			label: "Indeterminate ARIA",
-			body: 'When [indeterminate]="true", aria-valuenow is omitted entirely — not set to 0 or 50. This is the spec-correct signal for an in-progress state with no known completion percentage.',
-		},
-		{
-			type: "note",
-			label: "Live regions",
-			body: "The progress bar itself is intentionally silent to avoid spamming assistive technology on every value tick. Add <interop-progress-status> to announce at meaningful milestones such as completion or error.",
+			component: "[interop-progress-label]",
+			name: "target",
+			type: "string (element id)",
+			default: "next <progress>",
+			description:
+				"Id of the progress element to label. Omit it and the directive labels the next <progress> in document order, which covers the sibling case.",
 		},
 	];
+
+	// ── CSS tokens ───────────────────────────────────────────────────────
+
+	tokenColumns: TableColumn<TokenEntry>[] = [
+		{ key: "property", label: "Property" },
+		{ key: "default", label: "Default" },
+	];
+
+	tokenEntries: TokenEntry[] = [
+		{ property: "--itx-progress-track", default: "var(--itx-border)" },
+		{ property: "--itx-progress-fill", default: "var(--itx-colorway)" },
+		{ property: "--itx-progress-height", default: "var(--itx-spacing-2) — 8px" },
+		{ property: "--itx-progress-length", default: "var(--itx-spacing-32) — 8rem, vertical only" },
+		{ property: "--itx-progress-radius", default: "var(--itx-radius-none)" },
+		{ property: "--itx-progress-duration", default: "var(--itx-duration-fast)" },
+		{ property: "--itx-progress-indeterminate-duration", default: "1000ms" },
+		{ property: "--itx-progress-indeterminate-band", default: "30 (percent of track, unitless)" },
+	];
+
 }

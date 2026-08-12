@@ -64,7 +64,16 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 			}
 			<ng-content select="[description]" />
 		</hgroup>
-		<div class="demo-example__preview"><ng-content /></div>
+		<div class="demo-example__preview">
+			<ng-content />
+			<!-- Own slot, wrapped in an element this component owns. A projected
+			     node carries the *page's* encapsulation attribute, so
+			     demo-example's stylesheet cannot select <demo-state> directly —
+			     it can only style a wrapper of its own. -->
+			@if (state()) {
+				<div class="demo-example__state"><ng-content select="demo-state" /></div>
+			}
+		</div>
 		@if (table()) {
 			<div class="demo-example__reference">
 				<ng-content select="interop-table" />

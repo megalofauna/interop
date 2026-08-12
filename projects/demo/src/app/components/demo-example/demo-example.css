@@ -31,7 +31,29 @@
 	padding: var(--itx-spacing-10) var(--itx-spacing-10);
 	background-color: var(--itx-neutral-3_5);
 	border-radius: var(--itx-radius-none);
+}
 
+/*
+ * The state panel sits at the inline end, with the example itself keeping the
+ * start. An auto margin rather than `justify-content: space-between`: that
+ * would spread *every* child apart, so a row of three buttons would end up
+ * strewn across the full width. The auto margin absorbs the free space in
+ * front of one element and leaves the rest packed at the start.
+ *
+ * Auto margins are also resolved before flex-grow, so the panel sizes to its
+ * content here instead of stretching, without having to fight
+ * --demo-state-flex.
+ *
+ * This targets the wrapper, not <demo-state> itself. Projected content keeps
+ * the encapsulation attribute of the template that WROTE it — the page — so a
+ * rule here for `demo-state` compiles to `demo-state[_ngcontent-demo-example]`
+ * and matches nothing. Styling a wrapper this component renders is the way to
+ * position projected content from the outside.
+ */
+.demo-example__state {
+	margin-inline-start: auto;
+	display: flex;
+	align-self: stretch;
 }
 
 .demo-example__reference,

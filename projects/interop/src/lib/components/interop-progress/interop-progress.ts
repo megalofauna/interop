@@ -74,6 +74,12 @@ export function generateProgressId(): string {
 		"[attr.aria-valuetext]": "valueText() ?? null",
 		// Data attributes for CSS hooks
 		"[attr.data-orientation]": "orientation()",
+		// The fill is painted by our own stylesheet from this number, not by the
+		// UA's ::-webkit-progress-value. That pseudo-element sizes itself along
+		// the physical inline axis, so it fills left-to-right no matter what
+		// writing-mode the host is in — which is why vertical bars used to
+		// reorient their box but not their fill.
+		"[style.--itx-progress-percent]": "indeterminate() ? 0 : normalizedNativeValue()",
 	},
 })
 export class InteropProgress {
