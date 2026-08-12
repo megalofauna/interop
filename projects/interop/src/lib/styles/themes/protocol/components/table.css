@@ -73,10 +73,21 @@
 	--itx-table-sort-indicator-idle-opacity: 0.4;
 
 	/* ── Borders ────────────────────────────────────────────────────────── */
-	/* Carbon `$border-subtle-01`. Taken as `--itx-border` rather than the
-	   literal neutral-4 mapping so the table and the contained list are ruled
-	   by the same colour. */
-	--itx-table-border: var(--itx-border);
+	/*
+	 * Carbon's `$border-subtle-01` maps to `--itx-border`
+	 * (light-dark(neutral-5, neutral-6)), and at that value the row rules were
+	 * effectively invisible: neutral-5 is oklch 0.83 against a 0.91–0.96
+	 * surface, a delta of under 0.1.
+	 *
+	 * Carbon can afford a rule that faint because its table sits on white with
+	 * a grey header slab doing the structural work. We declined the slab, so
+	 * the rules ARE the structure and have to carry it — two steps down the
+	 * ramp, which reads as a hairline rather than a border.
+	 *
+	 * Drives the header rule and the sticky-column seam as well as the row
+	 * rules; they should stay one language.
+	 */
+	--itx-table-border: var(--itx-neutral-7);
 
 	/* ── Sticky columns ─────────────────────────────────────────────────── */
 	/* No Carbon counterpart — an Interop affordance. The seam is drawn in the

@@ -1,13 +1,19 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Table">
-		Semantic table for structured data. Column definitions drive header and
-		cell rendering; custom cell templates allow arbitrary markup per column.
+		Semantic table for structured data. Column definitions drive header and cell
+		rendering; custom cell templates allow arbitrary markup per column. Density,
+		sorting and sticky columns are all opt-in.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			A collection plus a set of column definitions is the whole minimum. Any
+			column can then be taken over by a projected template.
+		</p>
+
 		<demo-example label="Basic">
-			<interop-table [collection]="cargoManifest" [columns]="columns"></interop-table>
+			<interop-table [collection]="cargoManifest" [columns]="columns" />
 			<itx-code-block [files]="basicFiles" />
 		</demo-example>
 
@@ -17,7 +23,9 @@
 					<code class="demo-page__api-name">{{ entry.id }}</code>
 				</ng-template>
 				<ng-template itxCell="status" let-entry>
-					<span [class]="'table-page__status table-page__status--' + entry.status">
+					<span
+						[class]="'table-page__status table-page__status--' + entry.status"
+					>
 						{{ entry.status }}
 					</span>
 				</ng-template>
@@ -26,9 +34,56 @@
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Density ────────────────────────────────────────────────────────── -->
+	<demo-section id="density" heading="Density">
+		<p description class="demo-section__lede">
+			<code>itx-size</code> sets the row height — 32 / 40 / 48 / 64px for
+			<code>sm</code> / <code>md</code> / <code>lg</code> / <code>xl</code>,
+			with 48px the default. The height is set by <code>block-size</code> on the
+			row rather than by cell padding, so a single-line row snaps to the step
+			and a wrapping cell grows past it. <code>xl</code> top-aligns its cells,
+			on the assumption that a 64px row is there to hold two lines.
+		</p>
+
+		<demo-example label="Row density">
+			<div
+				class="table-page__density-switch"
+				role="group"
+				aria-label="Row density"
+			>
+				@for (size of sizes; track size) {
+					<button
+						interop-button="action"
+						[attr.aria-pressed]="density() === size"
+						(click)="setDensity(size)"
+					>
+						{{ size }}
+					</button>
+				}
+			</div>
+			<interop-table
+				[collection]="cargoManifest"
+				[columns]="columns"
+				[attr.itx-size]="density()"
+			/>
+			<demo-state>
+				<demo-state-item label="itx-size">{{ density() }}</demo-state-item>
+				<demo-state-item label="row height">
+					{{ sizeHeights[density()] }}
+				</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="densityFiles" />
+		</demo-example>
+	</demo-section>
 
 	<!-- ── Sorting ───────────────────────────────────────────────────────── -->
 	<demo-section id="sorting" heading="Sorting">
+		<p description class="demo-section__lede">
+			Sorting is the separate <code>[itxSort]</code> directive. Tables that
+			don't import it render plain headers and pay no bundle cost. Mark the
+			participating columns with <code>sortable: true</code>.
+		</p>
+
 		<demo-example label="Auto sort — table sorts its own items">
 			<interop-table
 				[collection]="cargoManifest"
@@ -37,26 +92,78 @@
 				(sortChange)="onSortChange($event)"
 			>
 				<ng-template itxCell="status" let-entry>
-					<span [class]="'table-page__status table-page__status--' + entry.status">
+					<span
+						[class]="'table-page__status table-page__status--' + entry.status"
+					>
 						{{ entry.status }}
 					</span>
 				</ng-template>
 			</interop-table>
 			<demo-state>
 				<demo-state-item label="last sortChange">
-					{{ lastSortEvent() ? (lastSortEvent()!.key + ' ' + lastSortEvent()!.direction) : '—' }}
+					{{ lastSortEvent() ? lastSortEvent()!.key + " " +
+					lastSortEvent()!.direction : "—" }}
 				</demo-state-item>
 			</demo-state>
 			<itx-code-block [files]="sortFiles" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+	<!-- ── Scrolling ─────────────────────────────────────────────────────── -->
+	<demo-section id="scrolling" heading="Scrolling and sticky columns">
+		<p description class="demo-section__lede">
+			The scroll wrapper is on by default, so a table wider than its container
+			overflows rather than crushing its columns. Naming it with
+			<code>scrollRegionLabel</code> is what promotes the wrapper to an ARIA
+			landmark — an unnamed region would only pollute the landmark list.
+			<code>sticky: true</code> pins a column to the inline-start edge, and it
+			gains a seam shadow once the wrapper has scrolled.
+		</p>
+
+		<demo-example label="Sticky first column in a narrow container">
+			<div class="table-page__narrow">
+				<interop-table
+					[collection]="cargoManifest"
+					[columns]="stickyColumns"
+					scrollRegionLabel="Cargo manifest"
+				/>
+			</div>
+			<itx-code-block [files]="stickyFiles" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Tokens ────────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ───────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -65,9 +172,42 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
+
+		<h3 class="demo-page__api-heading">Attributes</h3>
+		<interop-table
+			[collection]="attrEntries"
+			[columns]="attrColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Outputs</h3>
+		<interop-table
+			[collection]="outputEntries"
+			[columns]="outputColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
 	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
-	</demo-section>
-</article>
+</demo-page>

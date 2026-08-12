@@ -7,7 +7,9 @@ src/lib/components/interop-table/
   interop-table.ts             component, TableColumn, TableGroupRow, isTableGroupRow
   interop-table.html           template (scroll wrapper + table + state rows)
   interop-cell-def.ts          [itxCell] directive + InteropCellContext interface
-  public-api.ts                barrel
+  interop-table-sort.ts        [itxSort] directive + TableSortEvent
+  interop-table-sort.token.ts  InteropTableSortApi (the registration contract)
+                               no local barrel — re-exported by components/public-api.ts
 src/lib/styles/components/table.css            structural rules (zero-specificity :where(), tokens)
 src/lib/styles/themes/protocol/components/table.css  token values
 projects/demo/src/app/pages/table/             demo page
@@ -51,7 +53,9 @@ projects/demo/src/app/pages/table/             demo page
 | `scrollable` | `boolean` | `true` | Wraps the table in a horizontal-scroll container (overflow-x + touch-action). Set false to opt out entirely |
 | `scrollRegionLabel` | `string \| null` | `null` | **Providing a label promotes the wrapper to an ARIA landmark** (`role="region"`, `tabindex="0"`, focus ring). Without a label the wrapper still scrolls but is not announced as a landmark |
 
-No `(closed)`-style outputs — the table is read-only at this stage.
+The table itself has no outputs. Sorting is opt-in via the separate `[itxSort]` directive (`interop-table-sort.ts`), which adds `sortMode` / `sortActive` / `sortDirection` inputs and a `(sortChange)` output emitting `TableSortEvent`. Tables that don't import it pay no bundle cost and render plain headers.
+
+Density is set by the `itx-size` **attribute**, not an input — see [Size axis](#size-axis--itx-size).
 
 ### Content children
 
@@ -76,6 +80,8 @@ interface TableColumn<T = any> {
   hidden?: boolean;          // omitted from resolvedColumns()
   sticky?: boolean;          // pin to inline-start during horizontal scroll
   stickyLeft?: number;       // explicit pixel offset; required only for the 2nd+ sticky column
+  sortable?: boolean;        // participates in sorting; inert without [itxSort]
+  comparator?: (a: T, b: T) => number;  // replaces the default locale-aware sort for this column
 }
 ```
 
@@ -169,9 +175,39 @@ The active scroll wrapper sets `touch-action: pan-x`. Horizontal pans are claime
 
 ## Tokens
 
-24 public tokens, all set on `[interop-root]` by Protocol. Categories: typography (3), body (6), header (4), borders (1), sticky (2), state (1), focus (1), group label (6).
+30 public tokens, all set on `[interop-root]` by Protocol. Categories: typography (5), body (7), header (4), sort (2), borders (1), sticky (2), state (2), focus (1), group label (6).
 
-The `--itx-table-empty-color` token from the previous component-scoped CSS was renamed to `--itx-table-state-color` (it covers loading, error, AND empty — the old name was misleading).
+Values are borrowed from IBM Carbon's Data Table: `body-compact-01` type (14px / 1.2857 / 400), rows ruled by a single 1px hairline with no vertical rules and no fill, and 16px inline cell padding at every density. Two departures are deliberate:
+
+- **Header emphasis is type, not a slab.** Carbon separates head from body with a solid gray-20 band and no rule at all. Protocol keeps the lighter lift (`--itx-table-header-bg: var(--itx-surface-above)`) and carries the emphasis in 600-weight type (`--itx-table-header-font-weight`) — a slab would put a heavy band across a component whose whole borrowed language is "transparent, hairlines only". For Carbon's actual header, set `--itx-table-header-bg: var(--itx-neutral-4)`.
+- **Body text stays full-strength.** `--itx-table-body-color: var(--itx-on-surface)`, not Carbon's muted secondary.
+
+Striping follows Carbon in being an opt-in modifier rather than a default: `--itx-table-stripe-bg` is `transparent` (set it to `var(--itx-neutral-2)` for the Carbon stripe). `--itx-table-header-border-width` is `1px` — one hairline weight everywhere; the old 2px underline was a second, heavier border language competing with the row rules. The foundation's inline fallback is still `2px`, but the theme is what you get.
+
+`--itx-table-line-height` is declared on the table rather than inherited: `prose.css` leads per text element and never on a container, so a bare `<td>` would otherwise take whatever line-height happened to be in scope — and row height is a function of it.
+
+The `--itx-table-empty-color` token from the previous component-scoped CSS was renamed to `--itx-table-state-color` (it covers loading, error, AND empty — the old name was misleading). State rows also gained their own `--itx-table-state-padding`, rather than composing the cell padding into a shorthand — that expanded to three values and silently mis-assigned the inline and block-end sides.
+
+### Size axis — `itx-size`
+
+**Row height is set by `block-size` on the `tr`, not by cell padding.** Carbon sizes the ROW, so density is one number per step instead of a padding formula. On a table row `block-size` is a *floor*: single-line rows snap to the step, wrapping cells grow past it. Per-step `padding-block` is therefore the wrap gutter, a secondary minimum rather than the height driver — each step is chosen to stay comfortably under its own row height (2 × padding + 18px line box < step) so it never fights the snap on single-line rows.
+
+`itx-size` is a plain attribute on `<interop-table>`, matched by the theme as `:where(interop-table[itx-size="…"])`. There is no Angular input.
+
+| `itx-size` | Row height | Cell padding | Vertical align |
+|---|---|---|---|
+| `sm` | 32px (`--itx-spacing-8`) | `4px 16px` | `middle` |
+| `md` | 40px (`--itx-spacing-10`) | `8px 16px` | `middle` |
+| `lg` / unset | **48px** (`--itx-spacing-12`) | `12px 16px` | `middle` |
+| `xl` | 64px (`--itx-spacing-16`) | `16px 16px` | `top` |
+
+48px is declared at `[interop-root]` and is what you get with no attribute; the other steps are opt-in. It is Carbon's own default (their `lg`) and the same step as the contained list's row height, which is why the two now read as one family. The steps are written as literals rather than derived from `--itx-table-row-block-size`, because `--a: var(--b)` resolves `--b` where `--a` is declared and would freeze them at the root value.
+
+`xl` top-aligns because Carbon recommends it only where a row is expected to hold two lines — the text sets from the top of a tall row rather than floating in the middle of it.
+
+**Carbon's `xs` (24px) was deliberately not taken.** It exists for spreadsheet-dense grids and leaves a 2px block gutter; with a sortable header button inside it, the hit target lands *exactly* on the WCAG 2.2 SC 2.5.8 target-size floor, with nothing in hand.
+
+`--itx-table-cell-vertical-align` is `middle` (it was a hardcoded `top` in the foundation). Centring is what makes the density steps read as steps rather than as text with a lot of air under it. The trade is mixed-height rows: where one column wraps to three lines and its neighbours are single-line, the short cells float. Set it back to `top` for a table that is mostly prose — which is what the `xl` step does for you.
 
 ## Notes
 

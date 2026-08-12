@@ -76,7 +76,7 @@
 	--itx-pn-focus-color: var(--itx-colorway);
 	--itx-pn-focus-width: 1px;
 	--itx-pn-focus-offset: -4px;
-	--itx-pn-link-border-color-current: #ff9c56;
+	--itx-pn-link-border-color-current: var(--itx-colorway);
 	--itx-pn-link-background-color-current: var(--itx-neutral-3_5);
 	--itx-pn-link-background-image-current: radial-gradient(circle at 0 0 25%, #ff9c56, transparent);
 

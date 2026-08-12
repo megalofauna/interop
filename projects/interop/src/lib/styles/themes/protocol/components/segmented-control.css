@@ -103,8 +103,22 @@
 	--itx-segment-border-color: transparent;
 
 	/* ── Segment — hover state ──────────────────────────────────────────── */
-	/* $layer-hover + $text-primary: a light wash, label goes to full strength. */
-	--itx-segment-background-hover: var(--itx-surface-hover);
+	/*
+	 * Label only: the rest label sits at a secondary grey and comes up to full
+	 * strength, and nothing is painted behind it.
+	 *
+	 * Carbon washes the segment with $layer-hover here, and we deliberately
+	 * don't. The track's frame is an INSET box-shadow on the container, so it
+	 * is drawn inside the same box the segments occupy — an opaque segment fill
+	 * paints over it, and the first and last segments clip the frame at exactly
+	 * the corners where it is most visible. Carbon gets away with it because
+	 * its frame is an `outline`, which paints above the children.
+	 *
+	 * Luminance alone is also enough here: unlike a bare button, the segment
+	 * has the track and its neighbours as constant reference, so a label
+	 * shifting from grey to full strength is unambiguous.
+	 */
+	--itx-segment-background-hover: transparent;
 	--itx-segment-foreground-hover: var(--itx-neutral-12);
 
 	/* ── Segment — selected state ───────────────────────────────────────── */

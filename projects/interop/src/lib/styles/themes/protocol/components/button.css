@@ -88,58 +88,60 @@
 	--itx-button-max-width: none;
 }
 
-/* Carbon primary: blue-60 → blue-70 → blue-80, white label throughout.
-   Expressed as the semantic colorway +0 / +1 / +2, which keeps the
-   --itx-on-colorway pairing intact in both colour schemes. */
+/* ── primary ─────────────────────────────────────────────────────────────
+   Interop's own colorway ramp (5 / 7 / 6), reinstated after the Carbon
+   round. Carbon's semantic +0/+1/+2 mapping was correct as a translation of
+   blue-60/70/80 but read heavier here than intended. */
+
 :where(button[interop-button~="primary"]) {
-	--itx-button-background: var(--itx-colorway);
-	--itx-button-foreground: var(--itx-on-colorway);
+	--itx-button-background: var(--itx-colorway-5);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-colorway-hover);
-	--itx-button-foreground-hover: var(--itx-on-colorway);
+	--itx-button-background-hover: var(--itx-colorway-7);
 
-	--itx-button-background-active: light-dark(
-		var(--itx-colorway-10),
-		var(--itx-colorway-11)
-	);
-	--itx-button-foreground-active: var(--itx-on-colorway);
+	--itx-button-background-active: var(--itx-colorway-6);
 }
 
-/* Carbon secondary is a *dark* solid (gray-80), not a light one, and it moves
-   back toward the page on hover/press — the opposite direction to primary. */
+/* ── secondary ───────────────────────────────────────────────────────────
+   A light neutral, not Carbon's dark solid. */
+
 :where(button[interop-button~="secondary"]) {
-	--itx-button-background: var(--itx-neutral-10_5);
-	--itx-button-foreground: var(--itx-neutral-1);
+	--itx-button-background: var(--itx-neutral-5);
+	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-neutral-10);
-	--itx-button-foreground-hover: var(--itx-neutral-1);
+	--itx-button-background-hover: var(--itx-neutral-7);
 
-	--itx-button-background-active: var(--itx-neutral-9);
-	--itx-button-foreground-active: var(--itx-neutral-1);
+	--itx-button-background-active: var(--itx-neutral-6);
 }
 
-/* Carbon tertiary: a hairline colorway outline that *fills* on hover and
-   flips the label to the on-colour. Press drops the border entirely. */
+/* ── tertiary ────────────────────────────────────────────────────────────
+   A neutral outline that stays an outline — the label darkens and the fill
+   never arrives. Carbon's tertiary fills with brand colour on hover; this
+   does not.
+
+   NOTE: restored from the pre-Carbon values with one deliberate correction.
+   The original was missing a semicolon after --itx-button-border-color-hover,
+   which voided BOTH that declaration and the --itx-button-foreground-active
+   that followed it. So the hover border and the active label had never
+   actually applied. Reinstating the values means reinstating what they were
+   meant to do, not the typo. */
+
 :where(button[interop-button~="tertiary"]) {
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-colorway);
-	--itx-button-border-color: var(--itx-colorway);
+	--itx-button-foreground: var(--itx-neutral-10);
+	--itx-button-border-color: var(--itx-neutral-8);
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-colorway-hover);
-	--itx-button-foreground-hover: var(--itx-on-colorway);
-	--itx-button-border-color-hover: var(--itx-colorway-hover);
+	--itx-button-foreground-hover: var(--itx-neutral-12);
+	--itx-button-background-hover: var(--itx-button-background);
+	--itx-button-border-color-hover: var(--itx-neutral-8);
 
-	--itx-button-background-active: light-dark(
-		var(--itx-colorway-10),
-		var(--itx-colorway-11)
-	);
-	--itx-button-foreground-active: var(--itx-on-colorway);
-	--itx-button-border-color-active: transparent;
+	--itx-button-foreground-active: var(--itx-neutral-10);
+	--itx-button-border-color-active: var(--itx-neutral-8);
+	--itx-button-background-active: transparent;
 }
 
 :where(button[interop-button~="icon"]) {

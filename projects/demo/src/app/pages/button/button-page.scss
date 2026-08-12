@@ -1,0 +1,18 @@
+/* Page-local styles for the Button demo.
+ *
+ * The one rule here is the `interop-demo` variant used by the Variants example.
+ * It is not theming the component — it *is* the example: the point of that
+ * section is that a variant is nothing more than a bundle of button custom
+ * properties grouped under a name, with no registry and no component code to
+ * amend. Keep it in sync with `variantCss` in button-page.ts, which shows this
+ * exact block to the reader.
+ */
+
+:where([interop-button~="interop-demo"]) {
+	--itx-button-background: hsl(250 60% 55%);
+	--itx-button-foreground: white;
+	--itx-button-border-color: hsl(250 60% 45%);
+
+	--itx-button-background-hover: hsl(250 60% 60%);
+	--itx-button-background-active: hsl(250 60% 50%);
+}

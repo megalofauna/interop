@@ -2,19 +2,51 @@
 	display: block;
 }
 
-/* Palette switcher — swaps itx-status-palette on the page so queued toasts
- * (rendered by the viewport inside this article) preview each palette. */
-.palette-switch {
-	display: flex;
-	align-items: center;
-	gap: var(--itx-spacing-2);
-	margin-block-end: var(--itx-spacing-6);
+/* The viewport is position: fixed, so this wrapper exists only to scope
+ * `itx-status-palette` over it. `display: contents` keeps it out of layout
+ * while custom properties still inherit through. */
+.toast-page__viewport-scope {
+	display: contents;
 }
 
+/* Row of trigger buttons inside an example. */
+.toast-page__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-3);
+	align-items: center;
+}
+
+/* Grouped control strips (position, maxVisible). */
+.toast-page__controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-4);
+	margin-block-end: var(--itx-spacing-4);
+}
+
+.toast-page__control {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+}
+
+.toast-page__control-label,
 .palette-switch__label {
 	font-size: var(--itx-font-size-label);
 	font-weight: 600;
 	color: var(--itx-muted);
+}
+
+/* Palette switcher — swaps itx-status-palette on the viewport scope so
+ * queued toasts preview each palette. */
+.palette-switch {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	margin-block-start: var(--itx-spacing-4);
 }
 
 .palette-switch__option {

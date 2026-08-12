@@ -1,0 +1,12 @@
+// Page-local layout only — never theming for the component being demoed.
+
+// Stacks the three size steps so their heights can be compared directly.
+// align-items: flex-start keeps each control at its own intrinsic width
+// rather than stretching them to a common one, which would hide the fact
+// that `flex: 1 1 0` sizes segments to the widest label.
+.segmented-control-page__stack {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--itx-spacing-4);
+}

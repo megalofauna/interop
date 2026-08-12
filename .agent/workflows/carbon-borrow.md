@@ -144,6 +144,8 @@ Sizes are per-component: chip `md` is 32px while button `md` is 40px. That's cor
 ## Step 5 — Verify
 
 1. `npx prettier --use-tabs --write <files>` — the repo has **no** prettier config and uses tabs. Bare `prettier --write` will silently convert to spaces.
+
+   **CSS, TS and HTML only.** Do NOT run prettier over `.agent/*.md`: it repads every markdown table to full width and reindents code fences, turning a small additive diff into a whole-file rewrite and leaving the card out of step with its siblings. It also flattens Angular control-flow blocks (`@for`, `@if`) in templates, which its HTML parser does not understand — reindent those by hand if it touches them.
 2. Confirm every `var()` read resolves. Foundation carries no fallbacks (see `css-strategy.md`), so a token you renamed and forgot leaves the property unset rather than falling back:
 
 ```bash
@@ -197,6 +199,43 @@ changes.
 
 | 4 | Contained List | List (`itx-variant="contained"`) | 2026-08-11 | 48px ruled rows, horizontal rules only, transparent, hover → surface-above. Built as a VARIANT, not a change to the base: Carbon keeps List and Contained List apart for the same reason — the base still has to serve prose lists. |
 | 5 | Progress Bar | Progress | 2026-08-12 | Squared (Carbon defines no radius), track → $border-subtle, 1400ms→1000ms indeterminate, sm size step. Rewrote the fill as a gradient driven by a published percentage — see the round 5 note. |
+
+| 6 | Button | Button | 2026-08-12 | Squared (radius 0), 1px borders, Carbon's flat type ramp — 14px at EVERY size, replacing Interop's 12/14/16/20/22 scale. Secondary became a dark solid, tertiary a colorway outline that fills on hover, icon buttons lost their circle. Default size stayed md/40 rather than Carbon's lg/48. |
+| 7 | Data Table | Table | 2026-08-12 | 48px rows via `block-size` on `tr` (Carbon sizes the row, not the cell), sm/md/lg/xl density on `itx-size`, one 1px hairline language. DECLINED Carbon's grey header slab — emphasis moved into 600-weight type — to stay consistent with rounds 2/3/4. |
+| 8 | Notification | Toast | 2026-08-12 | Squared 288px panel, 3px status bar kept as `border-inline-start` (not the tree's box-shadow — see note), 14/18 600-over-400 type pair, description un-dimmed. |
+| 9 | Content Switcher | Segmented control | 2026-08-12 | Inverted selected pill (Carbon's high-contrast default; Interop's previous look was effectively Carbon's low-contrast variant), transparent hairline-framed track, equal-width segments, sm/md/lg 32/40/48. |
+
+### Round 6–9 note — what four parallel borrows found
+
+Run as four concurrent agents, one per component, each owning exactly its two
+CSS files. That worked: zero collisions, because the file sets are disjoint.
+The ledger is the one shared file, so agents were told not to touch it.
+
+Every one of the four found a **live bug** in the component it was borrowing
+into, none of which were visual:
+
+- **toast** — `--itx-toast-font-size` was a fluid `clamp()`; and `max-width`
+  ignored the padded border-box viewport, so a "25rem" panel rendered ~256px.
+- **table** — `padding: 2rem var(--itx-table-cell-padding, 1rem)` where the
+  inner token is itself two values, silently producing a three-value shorthand
+  with the wrong sides; focus ring on a light-only `--itx-colorway-8`.
+- **segmented control** — the theme set `--itx-rule-color: transparent` on
+  `[interop-root]`, stomping the global `<hr itx-rule>` utility invisible
+  **app-wide**; a duplicate `border-radius` declaration where the second won.
+- **button** — a missing semicolon voiding two declarations; a token declared
+  singular and read plural, so it had never once applied; `gap: none`, invalid.
+
+The lesson worth keeping: **a borrow is a code review that happens to be about
+colour.** Reading a component closely enough to restate its values is reading
+it closely enough to find what was already wrong. Budget for that — the visual
+diff is not the whole diff.
+
+Corollary on scope: two of the four needed foundation changes to express the
+borrow at all (table's row `block-size`, segment's `line-height`), both because
+a dimension the borrow depends on was an emergent side-effect rather than a
+declared property. That is the same finding as round 1's `--itx-chip-height`,
+now three times over — when a component has no token for its own height, that
+is the bug, and the borrow is just what surfaces it.
 
 ### Round 3 note — prose leaking into component internals
 
