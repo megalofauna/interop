@@ -143,6 +143,35 @@ note under the navigate example — is a different tool and stays. The test is
 placement, not the component: a note that belongs to a section lives in it, and
 a pile of notes with no home was the thing that stopped earning its keep.
 
+## Buttons inside examples carry the real hierarchy
+
+Demo pages are the library's shop window, so the buttons *in* an example are
+themselves a demonstration. Use the variant that the action's importance would
+actually call for, rather than reaching for whatever renders:
+
+| Buttons in the example | Variants |
+|---|---|
+| one | `primary` |
+| two | `primary` + `secondary` |
+| three or more | `primary` + `secondary`, then `tertiary` for the rest |
+
+```html
+<button interop-button="primary" (click)="next()">Next</button>
+<button interop-button="secondary" (click)="back()">Back</button>
+```
+
+The point is that a reader scanning any page sees the hierarchy applied
+consistently and can infer the rule without being told it. A page whose
+examples are a row of identical bare buttons teaches the opposite — that
+variant choice is arbitrary.
+
+Two caveats. An example whose *subject* is the button component itself is
+exempt: the button page has to show every variant side by side, and the
+hierarchy rule would make that impossible. And where an example's buttons are
+genuinely peer actions with no primary among them (`+10` / `Reset` on a
+progress demo, a size switcher), leave them peers — inventing a primary to
+satisfy the table would be worse than the inconsistency.
+
 ## Demo helper components
 
 The demo app provides a small set of layout components that every page composes. Don't reinvent these:
@@ -372,6 +401,7 @@ Then visit `/components/<component>` in the demo app and walk through each examp
 - [ ] At least one `<demo-example>` per major usage variant — walk the component's
       inputs and confirm each one is shown somewhere
 - [ ] Every `<demo-example>` has an `<itx-code-block>` with matching code
+- [ ] Buttons inside examples follow the variant hierarchy (1 → primary; 2 → primary + secondary; 3+ → add tertiary), unless they are genuine peers or the page *is* the button page
 - [ ] `id="tokens"` section documenting the public `--itx-*` surface, matching the theme file
 - [ ] Attribute-driven configuration (`itx-*`) documented in an Attributes table, not as Inputs
 - [ ] One `id="api"` section containing every API table (Inputs, Outputs, and

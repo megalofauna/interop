@@ -15,17 +15,32 @@ src/lib/styles/themes/protocol/components/segmented-control.css   token values (
 projects/demo/src/app/pages/segmented-control/              demo page
 ```
 
+> **Filename trap — the two style files are not named the same thing.** The
+> structural file is `styles/components/segment.css` — singular, and no
+> `segmented-control.css` exists under `components/` at all; the theme file is
+> `styles/themes/protocol/components/segmented-control.css`. Searching for
+> `segmented-control.css` finds only the theme and makes the structural half
+> look missing; searching for `segment.css` finds only the structure. The
+> container's own component-scoped styles are a third file again,
+> `interop-segmented-control.css`, colocated with the TypeScript.
+
 ## DOM structure
 
 ```html
-<fieldset interop-segmented-control label="View" [value]="view()" (valueChange)="view.set($event)">
-  <legend [class.interop-sr-only]="labelHidden()">View</legend>
-  <div class="interop-segmented-control__track">
-    <interop-indicator />            <!-- only when hasResolvedSelection() -->
-    <button interop-segment value="list">List</button>
-    <button interop-segment value="grid">Grid</button>
-    <button interop-segment value="detail">Detail</button>
-  </div>
+<fieldset
+	interop-segmented-control
+	label="View"
+	[value]="view()"
+	(valueChange)="view.set($event)"
+>
+	<legend [class.interop-sr-only]="labelHidden()">View</legend>
+	<div class="interop-segmented-control__track">
+		<interop-indicator />
+		<!-- only when hasResolvedSelection() -->
+		<button interop-segment value="list">List</button>
+		<button interop-segment value="grid">Grid</button>
+		<button interop-segment value="detail">Detail</button>
+	</div>
 </fieldset>
 ```
 
@@ -56,12 +71,12 @@ Each `InteropSegment.tabIndex` is a computed that returns `0` iff its own index 
 
 Keyboard handler on the fieldset (`(keydown)`):
 
-| Key | Action |
-|---|---|
-| ArrowRight, ArrowDown | move forward, skipping disabled, wrap |
-| ArrowLeft, ArrowUp | move backward, skipping disabled, wrap |
-| Home | first non-disabled |
-| End | last non-disabled |
+| Key                   | Action                                 |
+| --------------------- | -------------------------------------- |
+| ArrowRight, ArrowDown | move forward, skipping disabled, wrap  |
+| ArrowLeft, ArrowUp    | move backward, skipping disabled, wrap |
+| Home                  | first non-disabled                     |
+| End                   | last non-disabled                      |
 
 Movement calls `onSegmentSelect(value, index)` (which fires `valueChange`) AND `target.focus()`. There is no "focus-only" navigation mode — arrow keys both move focus and commit selection. Mouse click also calls `onSegmentSelect`.
 
@@ -81,11 +96,11 @@ readonly effectiveValue = computed(() => this.value() ?? this._selectedValue());
 
 ## Animated selection pill (CSS Anchor Positioning)
 
-The pill is a separate `<interop-indicator>` child, rendered conditionally when `effectiveValue() !== null`. It is *not* a pseudo-element on the host.
+The pill is a separate `<interop-indicator>` child of the track, rendered conditionally on `hasResolvedSelection()` — which is stricter than `effectiveValue() !== null`: it also requires that a _mounted_ segment actually carries that value. A value with no matching segment would anchor the indicator to nothing and collapse it to a small artefact in the corner, so the existence check is the parent's half of the anchor contract (see `indicator.md`). It is _not_ a pseudo-element on the host.
 
 Wiring:
 
-1. The container CSS sets `--itx-indicator-anchor-name: --itx-segment-active` on the fieldset.
+1. The container CSS sets `--itx-indicator-anchor-name: --itx-segment-active` on the **track wrapper** (`.interop-segmented-control__track`), not on the fieldset — the track is the indicator's containing block (`position: relative`), so the binding and the positioning context are the same element.
 2. The segment CSS, inside `@supports (anchor-name: none)`, applies `anchor-name: --itx-segment-active` to `button[interop-segment][aria-pressed="true"]` — i.e. the active segment exposes that anchor.
 3. The indicator's own styles consume `--itx-indicator-anchor-name` via `position-anchor`, then position absolutely against it.
 4. The active segment clears its own background/border so the pill shows through.
@@ -100,20 +115,22 @@ Dividers are rendered as a `::before` pseudo-element on every non-first segment,
 
 ```css
 :where(
-  button[interop-segment]:not([aria-pressed="true"])
-  + button[interop-segment]:not([aria-pressed="true"])
+	button[interop-segment]:not([aria-pressed="true"])
+		+ button[interop-segment]:not([aria-pressed="true"])
 )::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: var(--itx-rule-width, 0);
-  background-color: var(--itx-rule-color, currentColor);
-  pointer-events: none;
+	content: "";
+	position: absolute;
+	inset-block: 0;
+	inset-inline-start: 0;
+	width: var(--itx-rule-width, 0);
+	background-color: var(--itx-rule-color, currentColor);
+	pointer-events: none;
 }
 ```
 
-`:not([aria-pressed="true"])` on both sides suppresses the divider whenever an adjacent segment is selected, so the rule never overlays the indicator pill. Default `--itx-rule-width` in the Protocol theme is `0px` (invisible); consumers raise it to opt in.
+`:not([aria-pressed="true"])` on both sides suppresses the divider whenever an adjacent segment is selected, so the rule never overlays the indicator pill.
+
+The structural file's _fallback_ is `--itx-rule-width: 0` (invisible), but the Protocol theme now **opts in**: `--itx-rule-width: 1px` and `--itx-rule-color: var(--itx-neutral-4)`, declared on `fieldset[interop-segmented-control]` rather than on `[interop-root]`. That scoping is deliberate — `--itx-rule-*` also drives the standalone `<hr itx-rule>` utility, so declaring it at root would have re-themed every rule in the app.
 
 This replaced an earlier imperative approach (`<hr itx-rule>` injection via `Renderer2.insertBefore` inside an `effect`), which had timing fragility against Angular's content-projection lifecycle — when `contentChildren` reported new segments before their DOM elements were placed as direct children of the fieldset, the injection could land separators at the wrong DOM positions. CSS sibling combinators don't have this hazard.
 
@@ -133,23 +150,32 @@ To avoid circular imports between container and segment:
 
 ### `InteropSegmentedControl`
 
-| Input | Type | Default | Notes |
-|---|---|---|---|
-| `label` | `string` | required | Rendered as `<legend>` text |
-| `labelHidden` | `boolean` | `false` | Visually hides legend; remains AT-readable |
-| `value` | `string \| null` | `null` | Controlled selection; pair with `(valueChange)` |
-| `disabled` | `boolean` | `false` | Disables whole group |
+| Input         | Type             | Default  | Notes                                           |
+| ------------- | ---------------- | -------- | ----------------------------------------------- |
+| `label`       | `string`         | required | Rendered as `<legend>` text                     |
+| `labelHidden` | `boolean`        | `false`  | Visually hides legend; remains AT-readable      |
+| `value`       | `string \| null` | `null`   | Controlled selection; pair with `(valueChange)` |
+| `disabled`    | `boolean`        | `false`  | Disables whole group                            |
 
-| Output | Type | Notes |
-|---|---|---|
+| Output        | Type     | Notes                                   |
+| ------------- | -------- | --------------------------------------- |
 | `valueChange` | `string` | Emitted on click + arrow-key activation |
 
 ### `InteropSegment`
 
-| Input | Type | Default | Notes |
-|---|---|---|---|
-| `value` | `string` | required | Identity of this option |
-| `disabled` | `boolean` | `false` | Skipped by arrow keys; pointer-events:none |
+| Input      | Type      | Default  | Notes                                      |
+| ---------- | --------- | -------- | ------------------------------------------ |
+| `value`    | `string`  | required | Identity of this option                    |
+| `disabled` | `boolean` | `false`  | Skipped by arrow keys; pointer-events:none |
+
+### Attributes (not inputs)
+
+Neither of these has an `input()` declaration — they are plain attributes read only by CSS selectors, so they take a literal string and cannot be bound to a signal without `attr.` binding.
+
+| Attribute         | On                  | Values                 | Notes                                                         |
+| ----------------- | ------------------- | ---------------------- | ------------------------------------------------------------- |
+| `itx-size`        | fieldset or segment | `sm` \| `md` \| `lg`   | 32 / 40 / 48px. Unset = md                                    |
+| `interop-segment` | segment             | space-separated tokens | `interop-segment="icon"` squares the segment for a 16px glyph |
 
 ## DevMode warnings
 
@@ -165,11 +191,78 @@ Two-file split per `css-strategy.md`. Container styles use `:host { ... }` (comp
 
 Public token namespaces:
 
-- `--itx-segmented-control-track-*` — fieldset track (background, border, radius, padding, flex layout knobs)
-- `--itx-segment-*` — segment button (typography, padding, state variants for rest/hover/selected, focus ring, disabled)
-- `--itx-indicator-*` — shared with the indicator pill; selected-segment fallback path reads these too
+- `--itx-segmented-control-track-*` — the track `<div>` (background, border, radius, **box-shadow**, padding, max-width, flex layout knobs). 15 tokens.
+- `--itx-segment-*` — segment button (layout, typography, state variants for rest/hover/selected, focus ring, transition, disabled). 25 tokens.
+- `--itx-rule-*` — inter-segment divider, scoped to the fieldset. 2 tokens.
+- `--itx-indicator-*` — shared with the indicator pill, scoped to the fieldset; the selected-segment fallback path reads these too. 3 tokens.
+
+The Protocol theme declares **47 distinct tokens** in total (53 declarations — the three size steps re-declare `--itx-segment-padding-block`, and the icon-only rules re-declare `--itx-segment-padding-inline`). The remaining 2 of the 47 are the managed radii below.
 
 State activation lives in the structural file (`segment.css`) via selectors like `:where(button[interop-segment]:hover:not([aria-pressed="true"]):not(:disabled))`. Theme file declares values only.
+
+## Visual language — Carbon Content Switcher borrow
+
+Proportions and paint follow IBM Carbon's Content Switcher, in its **default "high contrast" flavour** (see `.agent/workflows/carbon-borrow.md`). What Interop had before the borrow was effectively Carbon's _low contrast_ variant — filled track, light pill, weight shift on the selected label. The component has no variant axis, so only one flavour is expressed; the theme's inline comments name the single value that walks each decision back.
+
+**Selection inverts.** The selected segment takes a near-black fill (`--itx-indicator-background-color: var(--itx-neutral-12)`) with a near-white label (`--itx-segment-foreground-selected: var(--itx-neutral-1)`). Both anchor-positioning paths read the same fill token, so the enhancement path (indicator pill) and the fallback path (segment paints its own background) can't disagree about the colour.
+
+**The track is transparent, framed by an inset box-shadow.**
+
+```css
+--itx-segmented-control-track-background-color: transparent;
+--itx-segmented-control-track-border-width: 0;
+--itx-segmented-control-track-box-shadow: inset 0 0 0 1px var(--itx-neutral-12);
+--itx-segmented-control-track-border-radius: var(--itx-radius-1); /* 4px */
+--itx-segmented-control-track-padding: 0;
+```
+
+Carbon draws this frame as an `outline` with `-1px` offset so the 1px edge costs no layout. An inset `box-shadow` is the same trick — **zero layout cost, so the control measures exactly its size step** — with one difference that drives the hover decision below: box-shadow paints _under_ the children, where outline paints above them.
+
+**Size axis — sm 32 / md 40 / lg 48.** There is no height token. The control's height _is_ the line box plus block padding, so each step is expressed as `padding = (height − 18px) / 2`:
+
+| `itx-size`     | `--itx-segment-padding-block` | height              |
+| -------------- | ----------------------------- | ------------------- |
+| `sm`           | `0.4375rem` (7px)             | 7 + 18 + 7 = 32px   |
+| `md` (default) | `0.6875rem` (11px)            | 11 + 18 + 11 = 40px |
+| `lg`           | `0.9375rem` (15px)            | 15 + 18 + 15 = 48px |
+
+`itx-size` is a **plain attribute, not an Angular input** — no `input()` declares it. It is matched on `fieldset[interop-segmented-control][itx-size]` to size a whole control, or on `button[interop-segment][itx-size]` to size one segment. The md value is also the unqualified default, so md is declared twice by design.
+
+**Segments are equal-width.** `--itx-segment-flex: 1 1 0` — Carbon: "each container that makes up the content switcher is equal in size". Because the fieldset is `flex: 0 1 fit-content` (shrink-to-fit), `1 1 0` sizes every segment to the widest label rather than stretching the control. `0 0 fit-content` reverts to content-width segments.
+
+**Type is fixed, not fluid.** `$body-compact-01` — `--itx-segment-font-size: 0.875rem` / `--itx-segment-line-height: 1.2857` / `--itx-segment-font-weight: 400`, in `--itx-font-family-sans`. A fluid `clamp()` font-size is **forbidden in a fixed-height box**: the height arithmetic above only holds if the 18px line box is constant, and a clamp() label would drift the pinned heights with the viewport. Note that `--itx-segment-line-height` did not previously exist as a token at all — the segment inherited its line box from prose, which under a typography root is exactly such a clamp(). Its structural fallback is `inherit`, so leaving it unset restores the old drifting behaviour.
+
+**Selected weight stays 400.** `--itx-segment-font-weight-selected: 400`. Carbon holds the weight constant in this flavour so selection can never reflow segment widths; `600` is the low-contrast look.
+
+**Hover moves the label only — no background wash.**
+
+```css
+--itx-segment-background-hover: transparent;
+--itx-segment-foreground-hover: var(
+	--itx-neutral-12
+); /* from --itx-neutral-9 at rest */
+```
+
+Carbon washes the segment with `$layer-hover` here and we deliberately don't, for the box-shadow reason above: the frame is drawn _inside_ the same box the segments occupy, so an opaque segment fill paints over it — and the first and last segments clip the frame at exactly the corners where it reads most. Carbon gets away with the wash because its frame is an `outline`, which paints above the children. Luminance alone carries the affordance anyway: unlike a bare button, a segment has the track and its neighbours as constant reference, so grey → full strength is unambiguous.
+
+**Focus** is a 2px inset ring (`--itx-segment-outline-offset: -2px`) in `var(--itx-colorway)` — Carbon draws an inset ring in its brand blue; we keep our colorway. The negative offset keeps the ring inside the frame instead of spilling onto the neighbouring segment.
+
+### Trap — `--itx-outer-radius` / `--itx-inner-radius` are homed in the wrong file
+
+```css
+/* themes/protocol/components/segmented-control.css */
+--itx-outer-radius: var(--itx-radius-2);
+--itx-inner-radius: calc(
+	var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
+);
+```
+
+These are **declared here but read elsewhere**, on `[interop-root]`:
+
+- `themes/protocol/components/indicator.css` → `--itx-indicator-border-radius: var(--itx-inner-radius)`
+- `themes/protocol/components/visimorph/visimorph.css` → `--itx-control-radius: var(--itx-inner-radius, 4px)`, which is the shared radius for **checkbox, radio, and toggle**.
+
+So retuning these two "for the segmented control" silently changes checkbox and radio corners across the app. Worse, it doesn't even change _this_ component: the borrow sets `--itx-indicator-border-radius: var(--itx-radius-1)` scoped to `fieldset[interop-segmented-control]`, which wins over the root-level indicator value by inheritance proximity — so the segmented control ignores both tokens entirely. They are generic managed radii that happen to live in this file; they belong in the foundation or a shape theme file. Left in place by the borrow rather than moved, to keep that change out of a visual-only commit.
 
 ## Known structural constraints
 
@@ -183,19 +276,30 @@ Tooltips for icon-only segments: use the `[interopTooltip]` directive form, whic
 
 ## Icon-only segments
 
-Use `interop-segment="icon"` (the segment attribute accepts a space-separated token list; `~="icon"` selector adds `aspect-ratio: 1/1` so the segment is square) combined with the `[interopTooltip]` directive for an accessible label:
+Use `interop-segment="icon"` — the segment attribute accepts a space-separated token list, matched with `[interop-segment~="icon"]`. Combine it with the `[interopTooltip]` directive for an accessible label:
 
 ```html
 <button
-  interop-segment="icon"
-  value="left"
-  [interopTooltip]="'Align left'"
-  [interopTooltipSemantic]="'label'">
-  <interop-icon name="tabler-align-left" />
+	interop-segment="icon"
+	value="left"
+	[interopTooltip]="'Align left'"
+	[interopTooltipSemantic]="'label'"
+>
+	<interop-icon name="tabler-align-left" />
 </button>
 ```
 
 `semantic="label"` wires `aria-labelledby` so the tooltip text becomes the button's accessible name — no separate `aria-label` needed. The directive form is required here because `<interop-tooltip>` as a wrapper would interpose between the fieldset and its segment children.
+
+**There is no `aspect-ratio` rule.** An earlier version of this card claimed `~="icon"` sets `aspect-ratio: 1/1`; that block exists in `segment.css` but every declaration in it is commented out, so it does nothing. Squareness comes from the _theme_ instead, which matches the inline padding to the block padding around an assumed **16px** glyph:
+
+| Size         | inline padding                | resulting box |
+| ------------ | ----------------------------- | ------------- |
+| `sm`         | `var(--itx-spacing-2)` — 8px  | 32 × 32       |
+| md (default) | `var(--itx-spacing-3)` — 12px | 40 × 40       |
+| `lg`         | `var(--itx-spacing-4)` — 16px | 48 × 48       |
+
+The consequence: the square only holds if the glyph really is 16px. An `<interop-icon [size]="20">` inside an icon segment silently makes it 4px wider than tall. Carbon's own icon steps are 16 at sm/md and 20 at lg; icons here are left at their inherited size, so the padding above is what squares a 16px glyph at each height, not Carbon's literal 8 / 12 / 14.
 
 ## Open questions / future
 

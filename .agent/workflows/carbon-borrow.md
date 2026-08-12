@@ -144,6 +144,8 @@ Sizes are per-component: chip `md` is 32px while button `md` is 40px. That's cor
 ## Step 5 — Verify
 
 1. `npx prettier --use-tabs --write <files>` — the repo has **no** prettier config and uses tabs. Bare `prettier --write` will silently convert to spaces.
+
+   **CSS, TS and HTML only.** Do NOT run prettier over `.agent/*.md`: it repads every markdown table to full width and reindents code fences, turning a small additive diff into a whole-file rewrite and leaving the card out of step with its siblings. It also flattens Angular control-flow blocks (`@for`, `@if`) in templates, which its HTML parser does not understand — reindent those by hand if it touches them.
 2. Confirm every `var()` read resolves. Foundation carries no fallbacks (see `css-strategy.md`), so a token you renamed and forgot leaves the property unset rather than falling back:
 
 ```bash
@@ -184,11 +186,56 @@ for(const [t,f] of decl) if(!read.has(t)&&t.startsWith("--itx-<component>"))
 
 ## Ledger
 
+Rounds are logged here. When several borrows run in parallel, the agent doing
+the work does NOT edit this table — one writer, appended centrally, or the
+ledger is the one guaranteed merge conflict in an otherwise disjoint set of
+changes.
+
 | Round | Carbon component | Interop component | Date | Notes |
 |---|---|---|---|---|
 | 1 | Tag | Chip | 2026-08-11 | 2 of 3 sizes (32/24); dropped the border on presentational + dismissible; selectable took Carbon's inverse-fill selected state; colour variants deferred; 208px truncation deferred (needs a label wrapper span) |
 | 2 | Accordion | Expansion Panel | 2026-08-11 | Header IS the button (Carbon's `__heading` model) — the panel now styles `button[interop-expansion-trigger]` itself instead of delegating to `interop-button`. Full-width 40px row, `$layer-hover` fill behind `@media (any-hover: hover)`, all backgrounds transparent, expanded state no longer restyles the frame. Chevron and the sm/lg steps not taken. |
 | 3 | TreeView | Tree | 2026-08-11 | Filled-triangle caret (borders on a zero-size box) replacing the stroked chevron; selected/current fuses Carbon's two states — low tint **plus** a 4px colorway-8 bar at the inline-start edge, drawn as an inset box-shadow so it costs no layout. Backgrounds already transparent. Guide rails kept (Carbon has none). Carbon's `$layer-01` tree fill deliberately NOT taken — transparent goes further, consistent with round 2. |
+
+| 4 | Contained List | List (`itx-variant="contained"`) | 2026-08-11 | 48px ruled rows, horizontal rules only, transparent, hover → surface-above. Built as a VARIANT, not a change to the base: Carbon keeps List and Contained List apart for the same reason — the base still has to serve prose lists. |
+| 5 | Progress Bar | Progress | 2026-08-12 | Squared (Carbon defines no radius), track → $border-subtle, 1400ms→1000ms indeterminate, sm size step. Rewrote the fill as a gradient driven by a published percentage — see the round 5 note. |
+
+| 6 | Button | Button | 2026-08-12 | Squared (radius 0), 1px borders, Carbon's flat type ramp — 14px at EVERY size, replacing Interop's 12/14/16/20/22 scale. Secondary became a dark solid, tertiary a colorway outline that fills on hover, icon buttons lost their circle. Default size stayed md/40 rather than Carbon's lg/48. |
+| 7 | Data Table | Table | 2026-08-12 | 48px rows via `block-size` on `tr` (Carbon sizes the row, not the cell), sm/md/lg/xl density on `itx-size`, one 1px hairline language. DECLINED Carbon's grey header slab — emphasis moved into 600-weight type — to stay consistent with rounds 2/3/4. |
+| 8 | Notification | Toast | 2026-08-12 | Squared 288px panel, 3px status bar kept as `border-inline-start` (not the tree's box-shadow — see note), 14/18 600-over-400 type pair, description un-dimmed. |
+| 9 | Content Switcher | Segmented control | 2026-08-12 | Inverted selected pill (Carbon's high-contrast default; Interop's previous look was effectively Carbon's low-contrast variant), transparent hairline-framed track, equal-width segments, sm/md/lg 32/40/48. |
+
+### Round 6–9 note — what four parallel borrows found
+
+Run as four concurrent agents, one per component, each owning exactly its two
+CSS files. That worked: zero collisions, because the file sets are disjoint.
+The ledger is the one shared file, so agents were told not to touch it.
+
+Every one of the four found a **live bug** in the component it was borrowing
+into, none of which were visual:
+
+- **toast** — `--itx-toast-font-size` was a fluid `clamp()`; and `max-width`
+  ignored the padded border-box viewport, so a "25rem" panel rendered ~256px.
+- **table** — `padding: 2rem var(--itx-table-cell-padding, 1rem)` where the
+  inner token is itself two values, silently producing a three-value shorthand
+  with the wrong sides; focus ring on a light-only `--itx-colorway-8`.
+- **segmented control** — the theme set `--itx-rule-color: transparent` on
+  `[interop-root]`, stomping the global `<hr itx-rule>` utility invisible
+  **app-wide**; a duplicate `border-radius` declaration where the second won.
+- **button** — a missing semicolon voiding two declarations; a token declared
+  singular and read plural, so it had never once applied; `gap: none`, invalid.
+
+The lesson worth keeping: **a borrow is a code review that happens to be about
+colour.** Reading a component closely enough to restate its values is reading
+it closely enough to find what was already wrong. Budget for that — the visual
+diff is not the whole diff.
+
+Corollary on scope: two of the four needed foundation changes to express the
+borrow at all (table's row `block-size`, segment's `line-height`), both because
+a dimension the borrow depends on was an emergent side-effect rather than a
+declared property. That is the same finding as round 1's `--itx-chip-height`,
+now three times over — when a component has no token for its own height, that
+is the bug, and the borrow is just what surfaces it.
 
 ### Round 3 note — prose leaking into component internals
 
@@ -211,3 +258,22 @@ wrong in ways the component's own CSS doesn't explain — anything built from
 Step 3 says a borrow should touch the theme only, and that needing the foundation is a signal to stop and decide deliberately. Round 2 hit it: "make the header *be* the button" isn't a value, it's a question of which stylesheet owns the element. The panel had been delegating trigger paint to `interop-button` via contextual `--itx-button-*` re-assignment, so a bare `<button interop-expansion-trigger>` — what the demo actually used almost everywhere — rendered as an unstyled UA button.
 
 The rule of thumb that came out of it: **if the component's own markup contract demands an element, that component styles it.** The file already made this argument for the guest heading; the trigger is the same case and had been missed.
+
+
+### Round 5 note — when the borrow exposes a mechanism bug
+
+Progress had a standing bug: vertical bars filled horizontally. The cause was
+not a wrong value but a wrong mechanism — the fill was delegated to
+`::-webkit-progress-value`, which sizes itself along the *physical* inline axis
+and therefore cannot be reoriented by `writing-mode` at all.
+
+The fix was to stop delegating: the component publishes its percentage as
+`--itx-progress-percent`, and the stylesheet paints track and fill as one
+gradient along a `--_axis` token. Orientation became a single declaration, and
+the `::-webkit-` / `::-moz-` fork, the RTL reversal, and the per-axis keyframes
+all deleted themselves.
+
+The general lesson for these rounds: **when a visual pass keeps needing
+per-case rules to stay correct, the mechanism is wrong, not the values.** A
+borrow is a good moment to notice, because you are already reading the
+component closely enough to see it.

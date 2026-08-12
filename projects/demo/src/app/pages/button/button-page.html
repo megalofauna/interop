@@ -15,14 +15,16 @@
 
 		<demo-example label="Size">
 			<p description>
-				Five opt-in sizes on an 8-point grid — 24, 32, 40, 48, 56px — with
-				<code>md</code> (40) the anchor. Each size pins one value, its height;
-				the block padding is derived from it, so the label-to-height ratio holds
-				across the scale. Omit the attribute to retain the base size (md).
+				Five opt-in sizes on an 8-point grid — 24, 32, 40, 48, 64px — with
+				<code>md</code> (40) the anchor. Each size pins exactly one value, its
+				height; the block padding is derived from it, so the visible box lands
+				at the stated height. The label stays 14px and the side padding stays
+				16px at every step: size changes the box, not the type.
+				<code>xl</code> is the one exception, taking a 16px label. Omit the
+				attribute to retain the base size (md).
 			</p>
 			<button interop-button="" itx-size="xs">Extra small</button>
 			<button interop-button="" itx-size="sm">Small</button>
-			<button interop-button="" itx-size="md">Medium</button>
 			<button interop-button="" itx-size="md">Medium</button>
 			<button interop-button="" itx-size="lg">Large</button>
 			<button interop-button="" itx-size="xl">Extra large</button>
@@ -31,10 +33,13 @@
 
 		<demo-example label="Radius">
 			<p description>
-				Seven opt-in radii, applied through <code>itx-radius</code>. The values
-				draw from the system's semantic radius scale, so a button's corners
-				align with the components around it. Omit the attribute to retain the
-				theme default.
+				Seven opt-in radii, applied through <code>itx-radius</code>. This is a
+				system-wide attribute, not a button-specific one — it resolves the
+				semantic radius scale onto any element that opts in, so a button's
+				corners align with the components around it. Omit the attribute to
+				retain the theme default, which is <code>none</code>.
+				<code>full</code> additionally switches <code>corner-shape</code> to
+				<code>round</code>, since the default squircle cannot form a stadium.
 			</p>
 			<button interop-button itx-radius="none">None</button>
 			<button interop-button itx-radius="nominal">Nominal</button>
@@ -59,23 +64,41 @@
 			<button itx-size="md" interop-button="tertiary">Tertiary</button>
 			<button itx-size="md" interop-button="secondary">Secondary</button>
 			<button itx-size="md" interop-button="primary">Primary</button>
+			<button itx-size="md" interop-button="interop-demo">Custom</button>
 			<itx-code-block [files]="variantFiles" />
 		</demo-example>
 
-		<demo-example label="Custom properties">
+		<demo-example label="Addon slots">
 			<p description>
-				The custom properties a variant or theme may set. The coloured slots
-				have state variants: append <code>-hover</code> or <code>-active</code>
-				to the rest token.
+				<code>interop-button-prefix</code> and
+				<code>interop-button-suffix</code> are marker directives — each adds a
+				class and nothing else. Source order remains layout order, and the
+				button's <code>gap</code> does the spacing; the slot rules only stop an
+				addon from stretching and keep a 1em icon on the label's centre line.
+				Neither sets <code>aria-hidden</code>, because a button's contents can
+				<em>be</em> its accessible name. Mark a decorative addon
+				<code>aria-hidden</code> yourself when a visible label is present; for
+				an icon-only button give the host an <code>aria-label</code> and leave
+				the icon alone.
 			</p>
-			<interop-table [collection]="tokenEntries" [columns]="tokenColumns">
-				<ng-template itxCell="property" let-entry>
-					<code class="demo-page__api-name">{{ entry.property }}</code>
-				</ng-template>
-				<ng-template itxCell="default" let-entry>
-					<code class="demo-page__api-default">{{ entry.default }}</code>
-				</ng-template>
-			</interop-table>
+			<button interop-button="primary">
+				<interop-button-prefix>
+					<interop-icon name="tabler-download" aria-hidden="true" />
+				</interop-button-prefix>
+				Download
+			</button>
+			<button interop-button="tertiary">
+				Next
+				<interop-button-suffix>
+					<interop-icon name="tabler-chevron-right" aria-hidden="true" />
+				</interop-button-suffix>
+			</button>
+			<button interop-button="primary icon" aria-label="Add item">
+				<interop-button-prefix>
+					<interop-icon name="tabler-plus" />
+				</interop-button-prefix>
+			</button>
+			<itx-code-block language="html" [code]="addonHtml" />
 		</demo-example>
 	</demo-section>
 
@@ -83,9 +106,9 @@
 	<demo-section heading="Availability">
 		<p description>
 			A button communicates its availability through three distinct states, each
-			producing a different set of attributes and a different relationship to the
-			tab order. The choice among them is an accessibility decision, not merely a
-			visual one.
+			producing a different set of attributes and a different relationship to
+			the tab order. The choice among them is an accessibility decision, not
+			merely a visual one.
 		</p>
 
 		<interop-table
@@ -118,7 +141,11 @@
 				by form validity, for instance. Interaction remains blocked; the click
 				is suppressed rather than the element withdrawn.
 			</p>
-			<button interop-button="" [disabled]="true" [focusableWhenDisabled]="true">
+			<button
+				interop-button=""
+				[disabled]="true"
+				[focusableWhenDisabled]="true"
+			>
 				Save
 			</button>
 			<itx-code-block language="html" [code]="focusableDisabledCode" />
@@ -126,13 +153,16 @@
 
 		<demo-example label="Loading">
 			<p description>
-				<code>loading</code> marks an operation in progress. It never applies the
-				native <code>disabled</code> attribute: the button stays focusable, so a
-				screen-reader user who reaches it mid-operation hears its busy state
-				rather than silence. <code>aria-busy</code> is set, pointer interaction
-				is suppressed, and the content is replaced by <code>loadingText</code>.
+				<code>loading</code> marks an operation in progress. It never applies
+				the native <code>disabled</code> attribute: the button stays focusable,
+				so a screen-reader user who reaches it mid-operation hears its busy
+				state rather than silence. <code>aria-busy</code> is set, pointer
+				interaction is suppressed, and the content is replaced by
+				<code>loadingText</code>.
 			</p>
-			<button interop-button="" [loading]="true" loadingText="Saving…">Save</button>
+			<button interop-button="" [loading]="true" loadingText="Saving…">
+				Save
+			</button>
 			<itx-code-block [files]="loadingFiles" />
 		</demo-example>
 	</demo-section>
@@ -182,17 +212,63 @@
 		</demo-example>
 	</demo-section>
 
+	<!-- ── CSS tokens ────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<p description>
+			The custom properties the protocol theme declares — 37 in all. A variant
+			is nothing more than a selector that reassigns some of them. The coloured
+			slots carry state variants: append <code>-hover</code> or
+			<code>-active</code> to the rest token, and an unset state token falls
+			back to its rest counterpart rather than to nothing.
+		</p>
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
 	<!-- ── API ───────────────────────────────────────────────────────────── -->
-	<demo-section heading="API">
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Attributes</h3>
+		<p description>
+			Appearance is attribute-driven. These are plain HTML attributes read by
+			CSS, not Angular inputs — they work on a bare
+			<code>&lt;button interop-button&gt;</code> with no component import.
+		</p>
+		<interop-table [collection]="attributeEntries" [columns]="attributeColumns">
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Inputs</h3>
 		<p description>
 			Inputs across <code>InteropButton</code> and
-			<code>InteropButtonActivation</code>.
+			<code>InteropButtonActivation</code>. The two share a selector but are
+			separate imports — import only <code>InteropButton</code> and the
+			activation utilities are never bundled.
+			<code>InteropButtonPrefix</code> and <code>InteropButtonSuffix</code> are
+			marker directives with no inputs.
 		</p>
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) {
-					<span class="demo-page__required">*</span>
+				<span class="demo-page__required">*</span>
 				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>

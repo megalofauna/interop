@@ -4,48 +4,158 @@
  * Sets values for typography, header, body, sticky-column, group-row, and
  * state-row tokens. Structure and state activation live in the component
  * CSS (`styles/components/table.css`) — this file only declares values.
+ *
+ * Proportions borrowed from IBM Carbon's Data Table (round 6). Carbon sizes a
+ * table by fixing the ROW, not the cell: `tr { block-size: 48px }` with cells
+ * centred inside it, so density is one number per step rather than a padding
+ * formula. The rows are ruled by a single 1px hairline with no vertical rules
+ * and no fill — the same vocabulary the contained list variant took from
+ * Carbon's Contained List, and the reason the two now read as one family.
+ *
+ * Carbon's own defaults land on their `lg` step (48px), which is exactly the
+ * contained list's row height. That is the default here too.
  */
 
 :where([interop-root]) {
 	/* ── Typography ─────────────────────────────────────────────────────── */
-	--itx-table-font-size: var(--itx-font-size-caption);
+	/* Carbon `body-compact-01` — 14px / 18px / 400.
+	   Fixed rem, never `--itx-font-size-*`: those are fluid clamp() values and
+	   a fluid label inside a fixed-height row overflows it. */
+	--itx-table-font-size: 0.875rem;
 	--itx-table-font-weight: 400;
+	--itx-table-line-height: 1.2857;
+
+	/* Carbon pads cells inline by $spacing-05 (16px) at every density — only
+	   the block padding moves. See the size axis at the foot of this file. */
 	--itx-table-cell-padding: var(--itx-spacing-3) var(--itx-spacing-4);
 
+	/* Carbon centres cell text in the fixed-height row; it was `top` here.
+	   Centring is what makes the density steps read as steps rather than as
+	   text with a lot of air under it. The trade is mixed-height rows: where
+	   one column wraps to three lines and its neighbours are single-line, the
+	   short cells float. Set this back to `top` if a table is mostly prose. */
+	--itx-table-cell-vertical-align: middle;
+
 	/* ── Body ───────────────────────────────────────────────────────────── */
-	--itx-table-body-color: var(--itx-on-surface, var(--itx-neutral-11));
+	--itx-table-body-color: var(--itx-on-surface);
+
+	/* Carbon's default (their `lg`): 48px. Same step as the contained list. */
+	--itx-table-row-block-size: var(--itx-spacing-12);
+
+	/* Carbon ships zebra striping as an opt-in modifier, not a default, and so
+	   do we. Set this to `var(--itx-neutral-2)` for the Carbon stripe. */
 	--itx-table-stripe-bg: transparent;
-	--itx-table-row-hover-bg: var(--itx-surface-hover, oklch(0 0 0 / 0.03));
+
+	--itx-table-row-hover-bg: var(--itx-surface-hover);
 	--itx-table-row-border-width: 1px;
-	--itx-table-row-transition-duration: var(--itx-duration-fast, 100ms);
-	--itx-table-row-transition-easing: var(--itx-easing-standard, ease);
+	--itx-table-row-transition-duration: var(--itx-duration-fast);
+	--itx-table-row-transition-easing: var(--itx-easing-standard);
 
 	/* ── Header ─────────────────────────────────────────────────────────── */
-	--itx-table-header-bg: var(--itx-surface-above, transparent);
+	/* Carbon separates the header from the body with a solid gray-20 slab and
+	   no rule at all. We keep the lighter lift and carry the emphasis in the
+	   type instead — a slab would put a heavy band across a component whose
+	   whole borrowed language is "transparent, hairlines only". For Carbon's
+	   actual header, set `--itx-table-header-bg: var(--itx-neutral-4)`. */
+	--itx-table-header-bg: var(--itx-surface-above);
 	--itx-table-header-color: var(--itx-neutral-12);
-	--itx-table-header-font-weight: 500;
-	--itx-table-header-border-width: 2px;
+	/* Carbon `heading-compact-01` — same 14/18 as the body, weight 600. */
+	--itx-table-header-font-weight: 600;
+	/* One hairline weight everywhere; the old 2px underline was a second,
+	   heavier border language competing with the row rules. */
+	--itx-table-header-border-width: 1px;
+
+	/* Sort indicator. These two were read by the foundation but never given a
+	   value here — they were surviving on inline fallbacks, which is exactly
+	   the dead-fallback shape the layering contract rules out. Gap moved onto
+	   the 4px grid (was an off-grid 0.375rem). */
+	--itx-table-sort-gap: var(--itx-spacing-2);
+	--itx-table-sort-indicator-idle-opacity: 0.4;
 
 	/* ── Borders ────────────────────────────────────────────────────────── */
-	--itx-table-border: var(--itx-border, var(--itx-neutral-5));
+	/*
+	 * Carbon's `$border-subtle-01` maps to `--itx-border`
+	 * (light-dark(neutral-5, neutral-6)), and at that value the row rules were
+	 * effectively invisible: neutral-5 is oklch 0.83 against a 0.91–0.96
+	 * surface, a delta of under 0.1.
+	 *
+	 * Carbon can afford a rule that faint because its table sits on white with
+	 * a grey header slab doing the structural work. We declined the slab, so
+	 * the rules ARE the structure and have to carry it — two steps down the
+	 * ramp, which reads as a hairline rather than a border.
+	 *
+	 * Drives the header rule and the sticky-column seam as well as the row
+	 * rules; they should stay one language.
+	 */
+	--itx-table-border: var(--itx-neutral-7);
 
 	/* ── Sticky columns ─────────────────────────────────────────────────── */
-	--itx-table-sticky-bg: var(--itx-surface, var(--itx-neutral-1));
+	/* No Carbon counterpart — an Interop affordance. The seam is drawn in the
+	   same hairline as the row rules so it reads as part of the same grid. */
+	--itx-table-sticky-bg: var(--itx-surface);
 	--itx-table-sticky-shadow:
-		inset -1px 0 0 var(--itx-table-border),
-		4px 0 8px -2px oklch(0 0 0 / 0.1);
+		inset -1px 0 0 var(--itx-table-border), 4px 0 8px -2px oklch(0 0 0 / 0.1);
 
 	/* ── State rows (loading / error / empty) ───────────────────────────── */
-	--itx-table-state-color: var(--itx-muted, var(--itx-neutral-9));
+	--itx-table-state-color: var(--itx-muted);
+	--itx-table-state-padding: var(--itx-spacing-8) var(--itx-spacing-4);
 
 	/* ── Scroll-region focus ring ───────────────────────────────────────── */
-	--itx-table-focus-outline-color: var(--itx-colorway-8);
+	/* Focus is where the brand survives an otherwise neutral component. The
+	   semantic `--itx-colorway` rather than the light-only `-8` step, so the
+	   ring holds its contrast in dark mode — matches the contained list. */
+	--itx-table-focus-outline-color: var(--itx-colorway);
 
 	/* ── Group rows ─────────────────────────────────────────────────────── */
+	/* No Carbon counterpart. Fixed rem for the same reason as the body type. */
 	--itx-table-group-label-padding-block-start: var(--itx-spacing-6);
-	--itx-table-group-label-color: var(--itx-muted, var(--itx-neutral-9));
-	--itx-table-group-label-font-size: var(--itx-font-size-fine-print);
+	--itx-table-group-label-color: var(--itx-muted);
+	--itx-table-group-label-font-size: 0.75rem;
 	--itx-table-group-label-font-weight: 500;
 	--itx-table-group-label-letter-spacing: 0.06em;
 	--itx-table-group-label-text-transform: uppercase;
+}
+
+/* ── Size axis ───────────────────────────────────────────────────────────── */
+/*
+ * Carbon's density steps: xs 24 / sm 32 / md 40 / lg 48 / xl 64. `lg` is the
+ * default and is declared above; the rest are opt-in via `itx-size`.
+ *
+ * xs (24px) is not taken. It exists in Carbon for spreadsheet-dense grids and
+ * leaves a 2px block gutter — with a sortable header its hit target lands on
+ * the WCAG 2.2 SC 2.5.8 floor exactly, with nothing in hand.
+ *
+ * `--itx-table-row-block-size` is a floor, so the padding-block below is not
+ * the thing setting the height — it is the gutter a WRAPPED cell gets. Each
+ * step is therefore chosen to stay comfortably under its own row height
+ * (2 × padding + 18px line box < step), so single-line rows snap to the step
+ * and only multi-line rows grow.
+ *
+ * Written as literals, not derived from --itx-table-row-block-size: `--a:
+ * var(--b)` resolves --b where --a is declared, which would freeze these at
+ * the [interop-root] value.
+ */
+
+:where(interop-table[itx-size="sm"]) {
+	--itx-table-row-block-size: var(--itx-spacing-8); /* 32px */
+	--itx-table-cell-padding: var(--itx-spacing-1) var(--itx-spacing-4);
+}
+
+:where(interop-table[itx-size="md"]) {
+	--itx-table-row-block-size: var(--itx-spacing-10); /* 40px */
+	--itx-table-cell-padding: var(--itx-spacing-2) var(--itx-spacing-4);
+}
+
+:where(interop-table[itx-size="lg"]) {
+	--itx-table-row-block-size: var(--itx-spacing-12); /* 48px — the default */
+	--itx-table-cell-padding: var(--itx-spacing-3) var(--itx-spacing-4);
+}
+
+/* Carbon recommends xl only where a row is expected to hold two lines, and
+   top-aligns it accordingly — the text sets from the top of a tall row rather
+   than floating in the middle of it. */
+:where(interop-table[itx-size="xl"]) {
+	--itx-table-row-block-size: var(--itx-spacing-16); /* 64px */
+	--itx-table-cell-padding: var(--itx-spacing-4) var(--itx-spacing-4);
+	--itx-table-cell-vertical-align: top;
 }

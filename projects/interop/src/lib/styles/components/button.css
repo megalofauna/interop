@@ -107,7 +107,7 @@
 	max-width: var(--itx-button-max-width, initial);
 	flex: var(--itx-button-flex, initial);
 
-	font-family: var(--itx-button-font-family, var(--itx-font-family));
+	font-family: var(--itx-button-font-family, var(--itx-font-family-sans));
 	font-size: var(--itx-button-font-size, inherit);
 	font-weight: var(--itx-button-font-weight, 400);
 	line-height: var(--itx-button-line-height, unset);

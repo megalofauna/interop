@@ -22,3 +22,18 @@
 		background: var(--itx-danger-surface);
 	}
 }
+
+/* Density switcher — a row of size buttons above the live table. */
+.table-page__density-switch {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+	margin-block-end: var(--itx-spacing-4);
+}
+
+/* Forces the scroll wrapper to actually overflow so the sticky column and its
+   seam shadow are visible in the example. Page-local staging, not theming. */
+.table-page__narrow {
+	max-inline-size: 24rem;
+}

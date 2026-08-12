@@ -1,43 +1,290 @@
-<article class="demo-page" [attr.itx-status-palette]="palette()">
+<demo-page>
 	<demo-masthead category="Components" title="Toast">
-		Imperative notification toasts via <code>InteropToastService</code>. Place
-		one <code>&lt;interop-toast-viewport /&gt;</code> in the app shell; call
-		the service from anywhere to queue notifications.
+		Transient notifications, driven from code rather than markup. Place one
+		<code>&lt;interop-toast-viewport /&gt;</code> in the app shell, then call
+		<code>InteropToastService</code> from anywhere. Each toast is its own live
+		region, is reachable by keyboard, and pauses its timer while you read it.
 	</demo-masthead>
 
-	<interop-toast-viewport />
-
-	<!-- ── Palette switcher (preview) ──────────────────────────────────────── -->
-	<div class="palette-switch" role="group" aria-label="Status colour palette">
-		<span class="palette-switch__label">Palette</span>
-		@for (p of palettes; track p.id) {
-			<button
-				type="button"
-				class="palette-switch__option"
-				[class.is-active]="palette() === p.id"
-				[attr.aria-pressed]="palette() === p.id"
-				(click)="palette.set(p.id)"
-			>
-				{{ p.label }}
-			</button>
-		}
+	<!-- The one viewport for this page. Scoped so the palette switcher below
+	     re-skins the toasts it renders. -->
+	<div class="toast-page__viewport-scope" [attr.itx-status-palette]="palette()">
+		<interop-toast-viewport
+			[position]="position()"
+			[maxVisible]="maxVisible()"
+		/>
 	</div>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
-		<demo-example label="Toast types">
-			<div style="display: flex; gap: 0.75rem; flex-wrap: wrap">
-				<button interop-button (click)="showSuccess()">Success</button>
-				<button interop-button (click)="showError()">Error</button>
-				<button interop-button (click)="showInfo()">Info</button>
-				<button interop-button (click)="showWarning()">Warning</button>
+		<p description class="demo-section__lede">
+			One viewport, then an imperative call. Every creation method returns an
+			<code>InteropToastHandle</code> you can dismiss, patch, or subscribe to.
+		</p>
+
+		<demo-example label="Basic">
+			<div class="toast-page__row">
+				<button interop-button (click)="showBasic()">Show toast</button>
 			</div>
+			<itx-code-block [files]="setupFiles()" />
+		</demo-example>
+
+		<demo-example label="With a description">
+			<div class="toast-page__row">
+				<button interop-button (click)="showDescription()">
+					Show with description
+				</button>
+			</div>
+			<p description>
+				The description is the same 14px as the message — only the weight
+				separates them (600 over 400), and there is no gap between the two
+				lines, so the pair reads as one block rather than a heading with a
+				caption.
+			</p>
+			<itx-code-block language="ts" [code]="descriptionCode" />
+		</demo-example>
+
+		<demo-example label="With an action">
+			<div class="toast-page__row">
+				<button interop-button (click)="showAction()">Jettison crate</button>
+			</div>
+			<demo-state>
+				<demo-state-item label="last action id">
+					{{ lastAction() }}
+				</demo-state-item>
+				<demo-state-item label="last dismiss reason">
+					{{ lastDismissReason() }}
+				</demo-state-item>
+			</demo-state>
+			<itx-code-block language="ts" [code]="actionCode" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+	<!-- ── Types ──────────────────────────────────────────────────────────── -->
+	<demo-section id="types" heading="Types">
+		<p description class="demo-section__lede">
+			The type sets the tinted background and the 3px status bar on the
+			inline-start edge, and for <code>error</code> it also raises the ARIA role
+			from <code>status</code> to <code>alert</code>. Colours come from the
+			active status palette, so the whole set re-skins together.
+		</p>
+
+		<demo-example label="Every type">
+			<div class="toast-page__row">
+				<button interop-button (click)="showDefault()">Default</button>
+				<button interop-button (click)="showSuccess()">Success</button>
+				<button interop-button (click)="showError()">Error</button>
+				<button interop-button (click)="showWarning()">Warning</button>
+				<button interop-button (click)="showInfo()">Info</button>
+				<button interop-button (click)="showLoading()">Loading</button>
+			</div>
+
+			<div
+				class="palette-switch"
+				role="group"
+				aria-label="Status colour palette"
+			>
+				<span class="palette-switch__label">Palette</span>
+				@for (p of palettes; track p.id) {
+				<button
+					type="button"
+					class="palette-switch__option"
+					[class.is-active]="palette() === p.id"
+					[attr.aria-pressed]="palette() === p.id"
+					(click)="palette.set(p.id)"
+				>
+					{{ p.label }}
+				</button>
+				}
+			</div>
+
+			<p description>
+				<code>error</code>, <code>warning</code> and
+				<code>loading</code> resolve to <code>duration: 0</code> — they persist
+				until dismissed, and so are given a close button automatically.
+			</p>
+			<itx-code-block language="ts" [code]="typesCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Async ──────────────────────────────────────────────────────────── -->
+	<demo-section id="async" heading="Async toasts">
+		<p description class="demo-section__lede">
+			<code>observe()</code> and <code>promise()</code> open a
+			<code>loading</code> toast and patch it into <code>success</code> or
+			<code>error</code> when the work settles. The success and error messages
+			may be strings or factories receiving the resolved value or the thrown
+			error.
+		</p>
+
+		<demo-example label="observe() — Observable">
+			<div class="toast-page__row">
+				<button interop-button (click)="observeSuccess()">
+					Upload (resolves)
+				</button>
+				<button interop-button (click)="observeFailure()">
+					Contact relay (fails)
+				</button>
+			</div>
+			<p description>
+				<code>cancelBehavior</code> decides what dismissing the loading toast
+				does to the work behind it: <code>'detach'</code> (the default) lets it
+				finish, <code>'unsubscribe'</code> cancels the subscription, and
+				<code>'prevent'</code> refuses to let the user dismiss it at all —
+				<code>dismissAll()</code> still can.
+			</p>
+			<itx-code-block language="ts" [code]="observeCode" />
+		</demo-example>
+
+		<demo-example label="promise() — Promise">
+			<div class="toast-page__row">
+				<button interop-button (click)="promiseExample()">Count crates</button>
+			</div>
+			<itx-code-block language="ts" [code]="promiseCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Lifecycle ──────────────────────────────────────────────────────── -->
+	<demo-section id="lifecycle" heading="Duration and dismissal">
+		<p description class="demo-section__lede">
+			The rule underneath both defaults: anything that will not leave on its own
+			must offer a way out, and anything that will should not add a button for
+			it. So a plain six-second success toast has <em>no</em> close button, and
+			that is correct — pass <code>dismissible: true</code> when you want one
+			anyway.
+		</p>
+
+		<demo-example label="Persistent, forced, and programmatic">
+			<div class="toast-page__row">
+				<button interop-button (click)="showPersistent()">duration: 0</button>
+				<button interop-button (click)="showDismissibleSuccess()">
+					dismissible: true
+				</button>
+				<button interop-button (click)="showThenDismiss()">
+					dismiss() after 1.5s
+				</button>
+				<button interop-button (click)="dismissAll()">Dismiss all</button>
+			</div>
+			<demo-state>
+				<demo-state-item label="last dismiss reason">
+					{{ lastDismissReason() }}
+				</demo-state-item>
+				<demo-state-item label="toast.count()">
+					{{ toastCount() }}
+				</demo-state-item>
+			</demo-state>
+			<p description>
+				A toast can also be dismissed by swiping it in any direction, or by
+				pressing Escape while it has focus. Every route reports a distinct
+				reason through <code>afterDismissed()</code>.
+			</p>
+			<itx-code-block language="ts" [code]="lifecycleCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Placement ──────────────────────────────────────────────────────── -->
+	<demo-section id="placement" heading="Placement and stacking">
+		<p description class="demo-section__lede">
+			<code>position</code> anchors the stack to one of six corners.
+			<code>maxVisible</code> caps how many render at once — the rest stay in
+			service state and begin their countdown only once they become visible, so
+			nothing expires unseen.
+		</p>
+
+		<demo-example label="position and maxVisible">
+			<div class="toast-page__controls">
+				<div class="toast-page__control" role="group" aria-label="Position">
+					<span class="toast-page__control-label">position</span>
+					@for (p of positions; track p) {
+					<button
+						type="button"
+						class="palette-switch__option"
+						[class.is-active]="position() === p"
+						[attr.aria-pressed]="position() === p"
+						(click)="position.set(p)"
+					>
+						{{ p }}
+					</button>
+					}
+				</div>
+				<div class="toast-page__control" role="group" aria-label="Max visible">
+					<span class="toast-page__control-label">maxVisible</span>
+					@for (n of maxVisibleChoices; track n) {
+					<button
+						type="button"
+						class="palette-switch__option"
+						[class.is-active]="maxVisible() === n"
+						[attr.aria-pressed]="maxVisible() === n"
+						(click)="maxVisible.set(n)"
+					>
+						{{ n }}
+					</button>
+					}
+				</div>
+			</div>
+			<div class="toast-page__row">
+				<button interop-button (click)="fillStack()">Queue 5 toasts</button>
+				<button interop-button (click)="dismissAll()">Dismiss all</button>
+			</div>
+			<demo-state>
+				<demo-state-item label="toast.count()">
+					{{ toastCount() }}
+				</demo-state-item>
+				<demo-state-item label="rendered">
+					{{ renderedCount() }}
+				</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="placementFiles()" />
+		</demo-example>
+
+		<demo-example label="Application-wide defaults">
+			<p description>
+				<code>INTEROP_TOAST_CONFIG</code> takes a partial, so you only state
+				what you want to change. Component inputs still win over it, and it wins
+				over the built-in defaults.
+			</p>
+			<itx-code-block language="ts" [code]="configCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Keyboard ───────────────────────────────────────────────────────── -->
+	<demo-section id="keyboard" heading="Keyboard and screen readers">
+		<p description class="demo-section__lede">
+			Toasts are usually unreachable by keyboard and gone before they are read.
+			These four behaviours are the answer to that.
+		</p>
+		<demo-notes [notes]="keyboardNotes" />
+	</demo-section>
+
+	<!-- ── Tokens ─────────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<p description class="demo-section__lede">
+			Set on <code>[interop-root]</code> or any ancestor. The per-type variants
+			rebind only the colour tokens, so overriding a size or spacing value here
+			applies to every type.
+		</p>
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ────────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-default">{{ entry.component }}</code>
 			</ng-template>
@@ -52,9 +299,59 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
+
+		<h3 class="demo-page__api-heading">Methods</h3>
+		<interop-table
+			[collection]="methodEntries"
+			[columns]="methodColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="signature" let-entry>
+				<code class="demo-page__api-type">{{ entry.signature }}</code>
+			</ng-template>
+			<ng-template itxCell="returns" let-entry>
+				<code class="demo-page__api-default">{{ entry.returns }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Options — InteropToastOptions</h3>
+		<interop-table
+			[collection]="optionEntries"
+			[columns]="optionColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Global config — INTEROP_TOAST_CONFIG</h3>
+		<interop-table
+			[collection]="configEntries"
+			[columns]="configColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
 	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
-	</demo-section>
-</article>
+</demo-page>

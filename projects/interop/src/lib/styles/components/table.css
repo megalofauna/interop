@@ -18,10 +18,15 @@
  *   Typography
  *   --itx-table-font-size
  *   --itx-table-font-weight
+ *   --itx-table-line-height
  *   --itx-table-cell-padding
+ *   --itx-table-cell-vertical-align
  *
  *   Body
  *   --itx-table-body-color
+ *   --itx-table-row-block-size         nominal row height; a MINIMUM, because
+ *                                      `block-size` on a table row is treated
+ *                                      as such. Wrapping cells grow past it.
  *   --itx-table-stripe-bg              even-row stripe (transparent default)
  *   --itx-table-row-hover-bg
  *   --itx-table-row-border-width
@@ -45,6 +50,7 @@
  *
  *   State rows (loading / error / empty)
  *   --itx-table-state-color
+ *   --itx-table-state-padding
  *
  *   Scroll-region focus ring
  *   --itx-table-focus-outline-color
@@ -100,6 +106,10 @@
 	border-spacing: 0;
 	font-size: var(--itx-table-font-size, 0.875rem);
 	font-weight: var(--itx-table-font-weight, 400);
+	/* Declared here rather than inherited: `prose.css` leads per text element,
+	   never on a container, so a bare <td> would otherwise take whatever
+	   line-height happens to be in scope — and row height is a function of it. */
+	line-height: var(--itx-table-line-height, 1.2857);
 	color: var(--itx-table-body-color, inherit);
 }
 
@@ -114,11 +124,13 @@
 /* ── Header ──────────────────────────────────────────────────────────────── */
 
 :where(interop-table .interop-table-header-row) {
+	block-size: var(--itx-table-row-block-size);
 	background: var(--itx-table-header-bg, transparent);
 }
 
 :where(interop-table .interop-table-header-cell) {
 	padding: var(--itx-table-cell-padding, 0.75rem 1rem);
+	vertical-align: var(--itx-table-cell-vertical-align, middle);
 	font-weight: var(--itx-table-header-font-weight, 400);
 	color: var(--itx-table-header-color, inherit);
 	text-align: start;
@@ -130,10 +142,14 @@
 /* ── Body ────────────────────────────────────────────────────────────────── */
 
 :where(interop-table .interop-table-row) {
+	/* On a table row `block-size` is a floor, not a fixed height — single-line
+	   rows snap to the density step, multi-line rows grow. Cell padding-block
+	   is the wrap gutter and is always set below the step so it never fights
+	   this value on single-line rows. */
+	block-size: var(--itx-table-row-block-size);
 	border-block-end: var(--itx-table-row-border-width, 1px) solid
 		var(--itx-table-border, currentColor);
-	transition: background-color
-		var(--itx-table-row-transition-duration, 100ms)
+	transition: background-color var(--itx-table-row-transition-duration, 100ms)
 		var(--itx-table-row-transition-easing, ease);
 
 	&:hover {
@@ -151,7 +167,7 @@
 
 :where(interop-table .interop-table-cell) {
 	padding: var(--itx-table-cell-padding, 0.75rem 1rem);
-	vertical-align: top;
+	vertical-align: var(--itx-table-cell-vertical-align, middle);
 }
 
 /* ── Sticky columns ──────────────────────────────────────────────────────── */
@@ -181,8 +197,16 @@
    default shadow combines an inline-end-edge hairline (clean seam between
    sticky and scrolled content) with a soft offset blur (depth cue). The
    theme can replace the entire shadow declaration via the token. */
-:where(interop-table .interop-table__scroll--active[data-scrolled] .interop-table-header-cell[data-sticky]),
-:where(interop-table .interop-table__scroll--active[data-scrolled] .interop-table-cell[data-sticky]) {
+:where(
+	interop-table
+		.interop-table__scroll--active[data-scrolled]
+		.interop-table-header-cell[data-sticky]
+),
+:where(
+	interop-table
+		.interop-table__scroll--active[data-scrolled]
+		.interop-table-cell[data-sticky]
+) {
 	box-shadow: var(
 		--itx-table-sticky-shadow,
 		inset -1px 0 0 var(--itx-table-border, currentColor),
@@ -252,12 +276,16 @@
 }
 
 /* Active indicators — full opacity, direction-specific glyph. */
-:where(interop-table [aria-sort="ascending"] .interop-table-sort-button)::after {
+:where(
+	interop-table [aria-sort="ascending"] .interop-table-sort-button
+)::after {
 	content: "↑";
 	font-size: 0.85em;
 }
 
-:where(interop-table [aria-sort="descending"] .interop-table-sort-button)::after {
+:where(
+	interop-table [aria-sort="descending"] .interop-table-sort-button
+)::after {
 	content: "↓";
 	font-size: 0.85em;
 }
@@ -272,7 +300,10 @@
 :where(interop-table .interop-table-loading-cell),
 :where(interop-table .interop-table-error-cell),
 :where(interop-table .interop-table-empty-cell) {
-	padding: 2rem var(--itx-table-cell-padding, 1rem);
+	/* Its own token, not `2rem var(--itx-table-cell-padding)` — that expanded to
+	   a three-value shorthand and silently mis-assigned the inline and
+	   block-end sides. */
+	padding: var(--itx-table-state-padding, 2rem 1rem);
 	text-align: center;
 	color: var(--itx-table-state-color, inherit);
 	font-style: italic;

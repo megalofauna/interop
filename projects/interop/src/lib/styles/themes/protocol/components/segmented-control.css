@@ -8,10 +8,30 @@
  *
  * No state selectors here — the component CSS owns state activation. This
  * file only declares values.
+ *
+ * ── Borrowed visual language ────────────────────────────────────────────────
+ *
+ * Proportions and paint follow IBM Carbon's Content Switcher (the default
+ * "high contrast" flavour), see .agent/workflows/carbon-borrow.md:
+ *
+ *   - transparent track inside a 1px frame, 4px radius
+ *   - equal-width segments, 14px/18px label, 16px inline padding
+ *   - three height steps: sm 32 / md 40 / lg 48
+ *   - the SELECTED segment inverts: near-black fill, near-white label
+ *   - unselected labels sit at a secondary grey and darken on hover
+ *   - a 1px hairline divides adjacent unselected segments
+ *
+ * Carbon's second flavour ("low contrast" — filled track, light pill, weight
+ * shift on the selected label) is not expressed: the component has no variant
+ * axis. It is roughly what this file declared before the borrow, so the notes
+ * on each token below name the single value that walks it back.
  */
 
 :where([interop-root]) {
 	/* ── Managed radii ──────────────────────────────────────────────── */
+	/* Generic, deliberately not segmented-control-specific: also read by the
+	   indicator and visimorph themes. Left at their existing values — the
+	   control now states its own radii below rather than moving these. */
 	--itx-outer-radius: var(--itx-radius-2);
 	--itx-inner-radius: calc(
 		var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
@@ -24,62 +44,96 @@
 	--itx-segmented-control-track-row-gap: 0;
 	--itx-segmented-control-track-column-gap: 0;
 	--itx-segmented-control-track-flex-direction: row;
-	--itx-segmented-control-track-background-color: var(--itx-neutral-3);
+
+	/* Carbon paints no track fill; the frame alone carries the group.
+	   Restore a filled track by setting this to var(--itx-neutral-3). */
+	--itx-segmented-control-track-background-color: transparent;
 	--itx-segmented-control-track-background-image: none;
+
+	/* The frame is drawn as an inset ring, not a border: Carbon uses
+	   `outline` with a -1px offset so the 1px edge costs no layout and the
+	   control measures exactly its size step. An inset box-shadow is the
+	   same trick, and it paints *under* the segments, so the selected pill
+	   covers the frame at the ends the way Carbon's does. */
 	--itx-segmented-control-track-border-color: transparent;
 	--itx-segmented-control-track-border-width: 0;
 	--itx-segmented-control-track-border-style: solid;
-	--itx-segmented-control-track-border-radius: var(--itx-outer-radius);
-	--itx-segmented-control-track-border-radius: 0;
+	--itx-segmented-control-track-box-shadow: inset 0 0 0 1px
+		var(--itx-neutral-12);
+
+	--itx-segmented-control-track-border-radius: var(--itx-radius-1);
 	--itx-segmented-control-track-padding: 0;
 	--itx-segmented-control-track-max-width: none;
 
-	/*--itx-segmented-control-track-box-shadow: inset 0 4px 2px 0 rgb(0 0 0 / 0.1);*/
-
-	/* ── Inter-segment rule ─────────────────────────────────────────────── */
-	/* Consumed by the segment ::before divider and by any <hr itx-rule>
-	   the consumer places explicitly. Override locally on a specific control
-	   if the divider needs to differ from the default. */
-	--itx-rule-color: transparent;
-	--itx-rule-width: 0;
-
-	/* ── Segment — layout / typography ──────────────────────────────────── */
+	/* ── Segment — layout ───────────────────────────────────────────────── */
 	--itx-segment-display: flex;
-	--itx-segment-padding-block: 0;
-	--itx-segment-padding-inline: 0;
-	--itx-segment-min-width: 0;
-	--itx-segment-flex: 0 0 fit-content;
 
+	/* Carbon: "each container that makes up the content switcher is equal in
+	   size". `1 1 0` in a shrink-to-fit track sizes every segment to the
+	   widest label. Revert to `0 0 fit-content` for content-width segments. */
+	--itx-segment-flex: 1 1 0;
+	--itx-segment-min-width: 0;
+
+	/* $spacing-05 (16px) each side; block padding is the size step minus the
+	   18px line box, so the segment IS the control's height. */
+	--itx-segment-padding-inline: var(--itx-spacing-4);
+	--itx-segment-padding-block: 0.6875rem; /* md → 11 + 18 + 11 = 40px */
+
+	/* ── Segment — typography ───────────────────────────────────────────── */
+	/* $body-compact-01 — 14 / 18 / 400. Fixed rem, not --itx-font-size-*:
+	   a fluid clamp() label would drift the pinned heights. */
 	--itx-segment-font-family: var(--itx-font-family-sans);
-	--itx-segment-font-size: var(--itx-font-size-label);
+	--itx-segment-font-size: 0.875rem;
+	--itx-segment-line-height: 1.2857;
 	--itx-segment-font-weight: 400;
-	--itx-segment-font-weight-selected: 500;
+	/* Carbon holds the selected label at 400 in this flavour so selection
+	   never reflows the segment widths. Set 600 for the low-contrast look. */
+	--itx-segment-font-weight-selected: 400;
 
 	/* ── Segment — visual structure (no state variants) ─────────────────── */
-	--itx-segment-border-width: 2px;
-	--itx-segment-border-radius: var(--itx-inner-radius);
+	/* No per-segment border: the frame lives on the track, the dividers are
+	   the ::before hairline below. */
+	--itx-segment-border-width: 0;
+	--itx-segment-border-radius: var(--itx-radius-1);
 
 	/* ── Segment — rest state ───────────────────────────────────────────── */
+	/* $text-secondary — unselected labels are quieter than the selected one. */
 	--itx-segment-background: transparent;
-	--itx-segment-foreground: var(--itx-neutral-12);
+	--itx-segment-foreground: var(--itx-neutral-9);
 	--itx-segment-border-color: transparent;
 
 	/* ── Segment — hover state ──────────────────────────────────────────── */
-	--itx-segment-background-hover: var(--itx-neutral-6);
+	/*
+	 * Label only: the rest label sits at a secondary grey and comes up to full
+	 * strength, and nothing is painted behind it.
+	 *
+	 * Carbon washes the segment with $layer-hover here, and we deliberately
+	 * don't. The track's frame is an INSET box-shadow on the container, so it
+	 * is drawn inside the same box the segments occupy — an opaque segment fill
+	 * paints over it, and the first and last segments clip the frame at exactly
+	 * the corners where it is most visible. Carbon gets away with it because
+	 * its frame is an `outline`, which paints above the children.
+	 *
+	 * Luminance alone is also enough here: unlike a bare button, the segment
+	 * has the track and its neighbours as constant reference, so a label
+	 * shifting from grey to full strength is unambiguous.
+	 */
+	--itx-segment-background-hover: transparent;
 	--itx-segment-foreground-hover: var(--itx-neutral-12);
-	/*--itx-segment-border-color-hover: var(--itx-neutral-7);*/
 
 	/* ── Segment — selected state ───────────────────────────────────────── */
-	/* Background defaults to the indicator pill colour via the component CSS
-	   fallback chain — only set this if you want the selected segment to
-	   diverge from the pill (rare). */
-	--itx-segment-foreground-selected: var(--itx-neutral-3);
+	/* $text-inverse. The fill comes from the indicator pill (below), so the
+	   two anchor-positioning paths can't disagree about the colour. */
+	--itx-segment-foreground-selected: var(--itx-neutral-1);
 
 	/* ── Segment — focus ring ───────────────────────────────────────────── */
+	/* Carbon draws focus as an inset ring in its brand blue; ours keeps the
+	   colorway. Negative offset keeps it inside the frame instead of
+	   spilling over the neighbouring segment. */
 	--itx-segment-outline-width: 2px;
 	--itx-segment-outline-style: solid;
-	--itx-segment-outline-color: var(--itx-neutral-12);
-	--itx-segment-outline-offset: 1px;
+	--itx-segment-outline-color: var(--itx-colorway);
+	--itx-segment-outline-offset: -2px;
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
 	--itx-segment-transition-duration: 48ms;
@@ -87,4 +141,84 @@
 
 	/* ── Segment — disabled ─────────────────────────────────────────────── */
 	--itx-segment-disabled-opacity: 0.4;
+}
+
+/* ── Control-scoped values ───────────────────────────────────────────────── */
+/*
+ * Set on the control, not on [interop-root], because both token families are
+ * shared: --itx-rule-* also drives the standalone <hr itx-rule> utility, and
+ * --itx-indicator-* also drives every other sliding-pill surface. Declaring
+ * them here keeps the borrow inside this component.
+ *
+ * Safe against the layer order: no foundation rule declares either family on
+ * an element, it only reads them, so these inherit down without shadowing a
+ * state rule.
+ */
+
+:where(fieldset[interop-segmented-control]) {
+	/* Divider — $border-subtle, 1px. segment.css already suppresses it on
+	   either side of the selected segment. */
+	--itx-rule-color: var(--itx-neutral-4);
+	--itx-rule-width: 1px;
+
+	/* Selection pill — $layer-selected-inverse, squared off at 4px with no
+	   border. This is the one lever for selected paint: with anchor
+	   positioning the <interop-indicator> draws it, and without, the segment
+	   falls back to the same token. */
+	--itx-indicator-background-color: var(--itx-neutral-12);
+	--itx-indicator-border-width: 0;
+	--itx-indicator-border-radius: var(--itx-radius-1);
+}
+
+/* ── Sizes ───────────────────────────────────────────────────────────────── */
+/*
+ * Carbon's three steps — sm 32 / md 40 / lg 48 — expressed as block padding
+ * around the fixed 18px line box: padding = (height − 18px) / 2. Set
+ * itx-size on the fieldset to size a whole control, or on one segment.
+ *
+ * Carbon's icon steps go to 16px at sm/md and 20px at lg; icons are left at
+ * their inherited size here, so the icon-only inline padding below is the
+ * value that squares a 16px glyph inside each height, not Carbon's literal
+ * 8 / 12 / 14.
+ */
+
+:where(
+	fieldset[interop-segmented-control][itx-size="sm"],
+	button[interop-segment][itx-size="sm"]
+) {
+	--itx-segment-padding-block: 0.4375rem; /* 7 + 18 + 7 = 32px */
+}
+
+:where(
+	fieldset[interop-segmented-control][itx-size="md"],
+	button[interop-segment][itx-size="md"]
+) {
+	--itx-segment-padding-block: 0.6875rem; /* 11 + 18 + 11 = 40px */
+}
+
+:where(
+	fieldset[interop-segmented-control][itx-size="lg"],
+	button[interop-segment][itx-size="lg"]
+) {
+	--itx-segment-padding-block: 0.9375rem; /* 15 + 18 + 15 = 48px */
+}
+
+/* ── Icon-only segments ──────────────────────────────────────────────────── */
+/* Equal inline and block padding around a 16px glyph, so the segment is square
+   at each height: 8 / 32, 12 / 40, 16 / 48. */
+
+:where(button[interop-segment~="icon"]) {
+	--itx-segment-padding-inline: var(--itx-spacing-3); /* 12 → 40px square */
+}
+
+:where(fieldset[interop-segmented-control][itx-size="sm"])
+	:where(button[interop-segment~="icon"]),
+:where(button[interop-segment~="icon"][itx-size="sm"]) {
+	--itx-segment-padding-inline: var(--itx-spacing-2); /* 8 → 32px square */
+}
+
+:where(fieldset[interop-segmented-control][itx-size="lg"])
+	:where(button[interop-segment~="icon"]),
+:where(button[interop-segment~="icon"][itx-size="lg"]) {
+	--itx-segment-padding-inline: var(--itx-spacing-4); /* 16 → 48px square */
 }

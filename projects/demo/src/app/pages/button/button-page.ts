@@ -1,30 +1,42 @@
-import {
-	Component,
-	ChangeDetectionStrategy,
-	signal,
-} from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import {
 	InteropButton,
+	InteropButtonPrefix,
+	InteropButtonSuffix,
+	InteropIcon,
 	InteropTable,
 	InteropCellDef,
 	CodeBlock,
 	Terminal,
+	provideInteropIcons,
 	type TableColumn,
 	type TableGroupRow,
 	type TerminalEntry,
 	type CodeFile,
 } from "interop";
 import { createActivationHandler } from "interop/lib/utils/activation";
+import { TablerDownload } from "interop/lib/iconsets/tabler/outline/tabler-download";
+import { TablerChevronRight } from "interop/lib/iconsets/tabler/outline/tabler-chevron-right";
+import { TablerPlus } from "interop/lib/iconsets/tabler/outline/tabler-plus";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
+
 interface ApiEntry {
+	component: string;
 	name: string;
 	type: string;
 	default: string;
 	description: string;
 	required?: boolean;
+}
+
+interface AttributeEntry {
+	name: string;
+	type: string;
+	default: string;
+	description: string;
 }
 
 interface AvailabilityEntry {
@@ -42,6 +54,9 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	standalone: true,
 	imports: [
 		InteropButton,
+		InteropButtonPrefix,
+		InteropButtonSuffix,
+		InteropIcon,
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
@@ -52,8 +67,11 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		DemoMasthead,
 	],
 	templateUrl: "./button-page.html",
-	styleUrl: "./button-page.css",
+	styleUrl: "./button-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [
+		provideInteropIcons(TablerDownload, TablerChevronRight, TablerPlus),
+	],
 })
 export class ButtonPage {
 	// ── Throttle demo ────────────────────────────────────────────────────────
@@ -153,19 +171,21 @@ export class ButtonPage {
 	// ── Code snippets ────────────────────────────────────────────────────────
 	readonly sizeCode = `<button interop-button itx-size="xs">Extra small</button>
 <button interop-button itx-size="sm">Small</button>
-<button interop-button="default" itx-size="md">Medium</button>
+<button interop-button itx-size="md">Medium</button>
 <button interop-button itx-size="lg">Large</button>
 <button interop-button itx-size="xl">Extra large</button>`;
 
 	readonly radiusCode = `<button interop-button itx-radius="none">None</button>
 <button interop-button itx-radius="nominal">Nominal</button>
-<button interop-button="default" itx-radius="sm">Small</button>
+<button interop-button itx-radius="sm">Small</button>
 <button interop-button itx-radius="md">Medium</button>
 <button interop-button itx-radius="lg">Large</button>
 <button interop-button itx-radius="xl">Extra large</button>
 <button interop-button itx-radius="full">Full</button>`;
 
-	readonly variantCss = `:where([interop-button~="interop-demo"]) {
+	readonly variantCss = `/* A variant is a bundle of button custom properties under a name.
+   Any token left unset inherits from the base. */
+:where([interop-button~="interop-demo"]) {
   --itx-button-background: hsl(250 60% 55%);
   --itx-button-foreground: white;
   --itx-button-border-color: hsl(250 60% 45%);
@@ -174,7 +194,37 @@ export class ButtonPage {
   --itx-button-background-active: hsl(250 60% 50%);
 }`;
 
-	readonly variantHtml = `<button interop-button="interop-demo">Custom</button>`;
+	readonly variantHtml = `<!-- Shipped by the protocol theme -->
+<button interop-button="tertiary">Tertiary</button>
+<button interop-button="secondary">Secondary</button>
+<button interop-button="primary">Primary</button>
+
+<!-- Declared in this page's stylesheet — see the CSS tab -->
+<button interop-button="interop-demo">Custom</button>`;
+
+	// ── Addon slot snippets ──────────────────────────────────────────────────
+	readonly addonHtml = `<!-- Leading icon alongside a visible label -->
+<button interop-button="primary">
+  <interop-button-prefix>
+    <interop-icon name="tabler-download" aria-hidden="true" />
+  </interop-button-prefix>
+  Download
+</button>
+
+<!-- Trailing icon -->
+<button interop-button="tertiary">
+  Next
+  <interop-button-suffix>
+    <interop-icon name="tabler-chevron-right" aria-hidden="true" />
+  </interop-button-suffix>
+</button>
+
+<!-- Icon-only: the host carries the accessible name, the icon is left alone -->
+<button interop-button="primary icon" aria-label="Add item">
+  <interop-button-prefix>
+    <interop-icon name="tabler-plus" />
+  </interop-button-prefix>
+</button>`;
 
 	readonly throttleCode = `readonly handler = createActivationHandler(
   () => this.save(),
@@ -231,8 +281,8 @@ async save() {
 	];
 
 	readonly variantFiles: CodeFile[] = [
-		{ label: "styles.css", language: "css", code: this.variantCss },
 		{ label: "markup.html", language: "html", code: this.variantHtml },
+		{ label: "styles.css", language: "css", code: this.variantCss },
 	];
 
 	readonly loadingFiles: CodeFile[] = [
@@ -295,66 +345,92 @@ async save() {
 	];
 
 	tokenEntries: TokenEntry[] = [
-		{ groupLabel: "Layout" },
-		{ property: "--itx-button-sizing-multiplier", default: "1" },
-		{ property: "--itx-button-display", default: "inline-flex" },
-		{ property: "--itx-button-align-items", default: "center" },
-		{ property: "--itx-button-justify-content", default: "center" },
-		{ property: "--itx-button-gap", default: "var(--itx-spacing-2)" },
-
-		{ groupLabel: "Spacing" },
+		{ groupLabel: "Sizing" },
 		{
-			property: "--itx-button-padding-block",
-			default: "calc(var(--itx-button-sizing-multiplier) * 0.5em)",
+			property: "--itx-button-height",
+			default: "2.5rem — 40px (the md step)",
 		},
 		{
 			property: "--itx-button-padding-inline",
-			default: "calc(var(--itx-button-sizing-multiplier) * 0.75em)",
+			default: "var(--itx-spacing-4) — 16px, constant at every size",
 		},
+		{
+			property: "--itx-button-padding-block",
+			default: "derived — (height − 1em) / 2; set it to bypass",
+		},
+		{
+			property: "--itx-button-gap",
+			default: "var(--itx-spacing-2) — 8px",
+		},
+
+		{ groupLabel: "Layout" },
+		{ property: "--itx-button-display", default: "inline-flex" },
+		{ property: "--itx-button-align-items", default: "center" },
+		{ property: "--itx-button-justify-content", default: "flex-start" },
+		{ property: "--itx-button-width", default: "auto" },
+		{ property: "--itx-button-min-width", default: "max-content" },
+		{
+			property: "--itx-button-max-width",
+			default: "var(--itx-spacing-80) — 320px",
+		},
+		{ property: "--itx-button-flex", default: "1 1 auto" },
 
 		{ groupLabel: "Typography" },
 		{
 			property: "--itx-button-font-family",
-			default: 'var(--itx-font-family-sans)',
+			default: "var(--itx-font-family-sans)",
 		},
-		{ property: "--itx-button-font-size", default: "var(--itx-fs-label)" },
+		{
+			property: "--itx-button-font-size",
+			default: "0.875rem — 14px (1rem — 16px at xl)",
+		},
+		{ property: "--itx-button-font-weight", default: "400" },
+		{
+			property: "--itx-button-line-height",
+			default: "1 — the padding derivation measures against 1em",
+		},
 
 		{ groupLabel: "Edge" },
-		{ property: "--itx-button-border-width", default: "2px" },
+		{ property: "--itx-button-border-width", default: "1px" },
 		{ property: "--itx-button-border-style", default: "solid" },
-		{ property: "--itx-button-border-radius", default: "8px" },
-		{ property: "--itx-button-corner-shape", default: "unset" },
+		{
+			property: "--itx-button-radius-default",
+			default: "var(--itx-radius-none) — 0; itx-radius overrides it",
+		},
+		{ property: "--itx-button-corner-shape", default: "unset (round at full)" },
 
 		{ groupLabel: "Transition" },
 		{
-			property: "--itx-button-transition-property",
+			property: "--itx-button-transition-properties",
 			default: "background-color, border-color, box-shadow",
 		},
-		{ property: "--itx-button-transition-duration", default: "75ms" },
+		{
+			property: "--itx-button-transition-duration",
+			default: "var(--itx-duration-fast) — 100ms",
+		},
 		{
 			property: "--itx-button-transition-timing-function",
-			default: "ease-in-out",
+			default: "var(--itx-easing-decelerate) — cubic-bezier(0, 0, 0.2, 1)",
 		},
 
 		{ groupLabel: "Rest" },
-		{ property: "--itx-button-background", default: "var(--itx-neutral-3)" },
-		{ property: "--itx-button-foreground", default: "var(--itx-neutral-10)" },
+		{ property: "--itx-button-background", default: "var(--itx-neutral-5)" },
+		{ property: "--itx-button-foreground", default: "var(--itx-neutral-12)" },
 		{ property: "--itx-button-border-color", default: "transparent" },
-
-		{ groupLabel: "Focus outline" },
-		{ property: "--itx-button-outline-width", default: "2px" },
-		{ property: "--itx-button-outline-style", default: "solid" },
-		{ property: "--itx-button-outline-color", default: "var(--itx-neutral-8)" },
-		{ property: "--itx-button-outline-offset", default: "2px" },
+		{ property: "--itx-button-box-shadow", default: "none" },
 
 		{ groupLabel: "Hover" },
 		{
 			property: "--itx-button-background-hover",
-			default: "var(--itx-neutral-5)",
+			default: "var(--itx-neutral-6)",
 		},
 		{
 			property: "--itx-button-foreground-hover",
-			default: "var(--itx-neutral-11)",
+			default: "unset — falls back to --itx-button-foreground",
+		},
+		{
+			property: "--itx-button-border-color-hover",
+			default: "unset — falls back to --itx-button-border-color",
 		},
 
 		{ groupLabel: "Active" },
@@ -364,13 +440,65 @@ async save() {
 		},
 		{
 			property: "--itx-button-foreground-active",
-			default: "var(--itx-neutral-12)",
+			default: "unset — falls back to --itx-button-foreground",
+		},
+		{
+			property: "--itx-button-border-color-active",
+			default: "unset — falls back to --itx-button-border-color",
+		},
+
+		{ groupLabel: "Focus outline" },
+		{ property: "--itx-button-outline-width", default: "2px" },
+		{ property: "--itx-button-outline-style", default: "solid" },
+		{
+			property: "--itx-button-outline-color",
+			default: "var(--itx-colorway-7)",
+		},
+		{ property: "--itx-button-outline-offset", default: "2px" },
+
+		{ groupLabel: "Disabled" },
+		{
+			property: "--itx-button-disabled-opacity",
+			default: "0.4 — 1 on primary / secondary / tertiary",
+		},
+	];
+
+	// ── Attributes table ─────────────────────────────────────────────────────
+	attributeColumns: TableColumn<AttributeEntry>[] = [
+		{ key: "name", label: "Attribute", sticky: true },
+		{ key: "type", label: "Values" },
+		{ key: "default", label: "Default" },
+		{ key: "description", label: "Description" },
+	];
+
+	attributeEntries: AttributeEntry[] = [
+		{
+			name: "interop-button",
+			type: '"" | "primary" | "secondary" | "tertiary" | "icon" | "grow"',
+			default: '""',
+			description:
+				'Identity and variant. Matched with ~= (word match), so tokens compose — interop-button="primary icon" is valid. icon squares the box; grow releases the max-width so the button fills its track.',
+		},
+		{
+			name: "itx-size",
+			type: '"xs" | "sm" | "md" | "lg" | "xl"',
+			default: '"md"',
+			description:
+				"Sets --itx-button-height only — 24 / 32 / 40 / 48 / 64px. The label and side padding are constant across the scale; xl alone also raises the font-size to 16px.",
+		},
+		{
+			name: "itx-radius",
+			type: '"none" | "nominal" | "sm" | "md" | "lg" | "xl" | "full"',
+			default: '"none"',
+			description:
+				"System-wide radius attribute from tokens/shape.css, not a button-specific one. Resolves the semantic scale onto --itx-radius; full also switches corner-shape to round so the ends form a stadium.",
 		},
 	];
 
 	// ── API table ────────────────────────────────────────────────────────────
 	apiColumns: TableColumn<ApiEntry>[] = [
-		{ key: "name", label: "Input", sticky: true },
+		{ key: "component", label: "Directive", sticky: true },
+		{ key: "name", label: "Input" },
 		{ key: "type", label: "Type" },
 		{ key: "default", label: "Default" },
 		{ key: "description", label: "Description" },
@@ -378,6 +506,46 @@ async save() {
 
 	apiEntries: ApiEntry[] = [
 		{
+			component: "InteropButton",
+			name: "loading",
+			type: "boolean",
+			default: "false",
+			description:
+				"Replaces button content with loadingText, sets aria-busy, and suppresses interaction. Never applies the native disabled attribute — the button stays focusable.",
+		},
+		{
+			component: "InteropButton",
+			name: "loadingText",
+			type: "string",
+			default: "'Loading...'",
+			description: "Text shown when loading is true.",
+		},
+		{
+			component: "InteropButton",
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description:
+				"Applies the native disabled attribute and removes the button from the tab order.",
+		},
+		{
+			component: "InteropButton",
+			name: "focusableWhenDisabled",
+			type: "boolean",
+			default: "false",
+			description:
+				"Substitutes aria-disabled for the native attribute, keeping the button in the tab order while interaction stays blocked.",
+		},
+		{
+			component: "InteropButton",
+			name: "type",
+			type: "'button' | 'submit' | 'reset'",
+			default: "'button'",
+			description:
+				'Native button type. Not currently bound to the host — set type="submit" on the <button> directly.',
+		},
+		{
+			component: "InteropButtonActivation",
 			name: "onActivate",
 			type: "ActivationHandler | null",
 			default: "null",
@@ -385,6 +553,7 @@ async save() {
 				"Handler function called on click. Enables activation guardrails when provided.",
 		},
 		{
+			component: "InteropButtonActivation",
 			name: "activationOptions",
 			type: "ActivationOptions",
 			default: "{}",
@@ -392,6 +561,7 @@ async save() {
 				"Guardrail options: debounceMs, throttleMs, reentrant, once.",
 		},
 		{
+			component: "InteropButtonActivation",
 			name: "activationId",
 			type: "string | null",
 			default: "null",
@@ -399,43 +569,12 @@ async save() {
 				"Cross-component trigger ID. Activates all handlers registered under this ID via InteropActivation.",
 		},
 		{
+			component: "InteropButtonActivation",
 			name: "payload",
 			type: "unknown",
 			default: "undefined",
 			description:
 				"Value passed to the handler or broadcast with the activation event.",
-		},
-		{
-			name: "loading",
-			type: "boolean",
-			default: "false",
-			description:
-				"Replaces button content with loadingText and disables the button.",
-		},
-		{
-			name: "loadingText",
-			type: "string",
-			default: "'Loading...'",
-			description: "Text shown when loading is true.",
-		},
-		{
-			name: "disabled",
-			type: "boolean",
-			default: "false",
-			description: "Disables the button and prevents activation.",
-		},
-		{
-			name: "focusableWhenDisabled",
-			type: "boolean",
-			default: "false",
-			description:
-				"Uses aria-disabled instead of the native disabled attribute, keeping the button in the tab order.",
-		},
-		{
-			name: "type",
-			type: "'button' | 'submit' | 'reset'",
-			default: "'button'",
-			description: "Native button type attribute.",
 		},
 	];
 }
