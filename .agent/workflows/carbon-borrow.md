@@ -184,11 +184,19 @@ for(const [t,f] of decl) if(!read.has(t)&&t.startsWith("--itx-<component>"))
 
 ## Ledger
 
+Rounds are logged here. When several borrows run in parallel, the agent doing
+the work does NOT edit this table — one writer, appended centrally, or the
+ledger is the one guaranteed merge conflict in an otherwise disjoint set of
+changes.
+
 | Round | Carbon component | Interop component | Date | Notes |
 |---|---|---|---|---|
 | 1 | Tag | Chip | 2026-08-11 | 2 of 3 sizes (32/24); dropped the border on presentational + dismissible; selectable took Carbon's inverse-fill selected state; colour variants deferred; 208px truncation deferred (needs a label wrapper span) |
 | 2 | Accordion | Expansion Panel | 2026-08-11 | Header IS the button (Carbon's `__heading` model) — the panel now styles `button[interop-expansion-trigger]` itself instead of delegating to `interop-button`. Full-width 40px row, `$layer-hover` fill behind `@media (any-hover: hover)`, all backgrounds transparent, expanded state no longer restyles the frame. Chevron and the sm/lg steps not taken. |
 | 3 | TreeView | Tree | 2026-08-11 | Filled-triangle caret (borders on a zero-size box) replacing the stroked chevron; selected/current fuses Carbon's two states — low tint **plus** a 4px colorway-8 bar at the inline-start edge, drawn as an inset box-shadow so it costs no layout. Backgrounds already transparent. Guide rails kept (Carbon has none). Carbon's `$layer-01` tree fill deliberately NOT taken — transparent goes further, consistent with round 2. |
+
+| 4 | Contained List | List (`itx-variant="contained"`) | 2026-08-11 | 48px ruled rows, horizontal rules only, transparent, hover → surface-above. Built as a VARIANT, not a change to the base: Carbon keeps List and Contained List apart for the same reason — the base still has to serve prose lists. |
+| 5 | Progress Bar | Progress | 2026-08-12 | Squared (Carbon defines no radius), track → $border-subtle, 1400ms→1000ms indeterminate, sm size step. Rewrote the fill as a gradient driven by a published percentage — see the round 5 note. |
 
 ### Round 3 note — prose leaking into component internals
 
@@ -211,3 +219,22 @@ wrong in ways the component's own CSS doesn't explain — anything built from
 Step 3 says a borrow should touch the theme only, and that needing the foundation is a signal to stop and decide deliberately. Round 2 hit it: "make the header *be* the button" isn't a value, it's a question of which stylesheet owns the element. The panel had been delegating trigger paint to `interop-button` via contextual `--itx-button-*` re-assignment, so a bare `<button interop-expansion-trigger>` — what the demo actually used almost everywhere — rendered as an unstyled UA button.
 
 The rule of thumb that came out of it: **if the component's own markup contract demands an element, that component styles it.** The file already made this argument for the guest heading; the trigger is the same case and had been missed.
+
+
+### Round 5 note — when the borrow exposes a mechanism bug
+
+Progress had a standing bug: vertical bars filled horizontally. The cause was
+not a wrong value but a wrong mechanism — the fill was delegated to
+`::-webkit-progress-value`, which sizes itself along the *physical* inline axis
+and therefore cannot be reoriented by `writing-mode` at all.
+
+The fix was to stop delegating: the component publishes its percentage as
+`--itx-progress-percent`, and the stylesheet paints track and fill as one
+gradient along a `--_axis` token. Orientation became a single declaration, and
+the `::-webkit-` / `::-moz-` fork, the RTL reversal, and the per-axis keyframes
+all deleted themselves.
+
+The general lesson for these rounds: **when a visual pass keeps needing
+per-case rules to stay correct, the mechanism is wrong, not the values.** A
+borrow is a good moment to notice, because you are already reading the
+component closely enough to see it.

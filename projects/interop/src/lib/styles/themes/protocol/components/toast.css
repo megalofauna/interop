@@ -1,69 +1,130 @@
 /*
  * Toast — Protocol theme values.
  *
+ * Visual target — borrowed from Carbon's Notification (toast variant, the
+ * low-contrast treatment):
+ *
+ *   A squared 288px panel with no frame, sitting on a tint of its own status
+ *   colour, marked by a 3px bar of the full-strength status colour at the
+ *   inline-start edge. Title and subtitle are the SAME 14px/18px type — only
+ *   the weight separates them (600 vs 400), and they stack with no gap, so the
+ *   pair reads as one block of text rather than a heading with a caption. The
+ *   panel is square because Carbon gives notifications no radius at all: a
+ *   rounded toast reads as a floating card, a square one reads as a message
+ *   the system has posted, which is what it is.
+ *
  * Token surface for components/toast.css. Base values are inheritable on
  * [interop-root]; the per-`data-type` blocks rebind only the colour tokens and
  * pull from the status-colour palette (--itx-success / --itx-danger /
  * --itx-warning / --itx-info + their -surface + on-surface pairs), so a toast
- * re-skins with the active itx-status-palette.
+ * re-skins with the active itx-status-palette. That mapping already matched
+ * Carbon's structure — their `$notification-background-*` is a tint of the
+ * status hue and their `$support-*` is the full-strength accent — so the
+ * variant blocks are unchanged by the borrow.
  *
  * Custom properties only — never a real CSS property.
  */
 
 :where([interop-root]) {
-	/* Viewport */
+	/* ── Viewport ─────────────────────────────────────────────────────────
+	 * Carbon states the width of the notification itself (288px, 352px at
+	 * their `max` breakpoint / 1584px). The viewport is padded and
+	 * border-box, so the panel width has to be grossed up by the offset on
+	 * both sides to land on Carbon's number.                              */
 	--itx-toast-z-index: 9999;
 	--itx-toast-gap: var(--itx-spacing-3);
-	--itx-toast-max-width: 25rem;
 	--itx-toast-offset: var(--itx-spacing-4);
+	--itx-toast-width: 18rem; /* 288px */
+	--itx-toast-max-width: calc(
+		var(--itx-toast-width) + 2 * var(--itx-toast-offset)
+	);
 
-	/* Item — container */
+	/* ── Item — container ─────────────────────────────────────────────────
+	 * No frame: Carbon's toast carries a border on the inline-start edge
+	 * only (the inline notification is the variant that gets all four).   */
 	--itx-toast-background: var(--itx-surface-above);
 	--itx-toast-foreground: var(--itx-on-surface);
 	--itx-toast-border-width: 0px;
 	--itx-toast-border-color: var(--itx-border);
-	--itx-toast-border-radius: var(--itx-radius-sm);
+	--itx-toast-border-radius: var(--itx-radius-none);
+
+	/* Carbon's status bar is 3px on the notification (the tree's edge marker
+	   is 4px — different components, different weights in Carbon too). It
+	   stays a real border rather than the tree's inset box-shadow: the toast
+	   already budgets layout for it, and `border-inline-start` flips in RTL
+	   where a box-shadow offset would not. */
 	--itx-toast-accent-width: 3px;
 	--itx-toast-accent-color: var(--itx-border);
+
+	/* Carbon insets content 16px on every side (13px padding + the 3px bar on
+	   the inline-start edge). We keep the padding uniform, so the start edge
+	   sits 3px wider — the alternative is a physical 4-value shorthand, which
+	   would strand the reduced side on the left in RTL. */
 	--itx-toast-padding: var(--itx-spacing-4);
-	--itx-toast-item-gap: var(--itx-spacing-3);
-	--itx-toast-shadow: var(--itx-shadow-lg);
+	--itx-toast-item-gap: var(--itx-spacing-4);
 
-	/* Item — typography */
-	--itx-toast-font-size: var(--itx-font-size-body);
-	--itx-toast-line-height: 1.5;
-	--itx-toast-message-font-weight: 500;
-	--itx-toast-description-font-size: var(--itx-font-size-caption);
-	--itx-toast-description-margin-block-start: var(--itx-spacing-1);
-	--itx-toast-description-opacity: 0.8;
+	/* Carbon: 0 2px 6px 0 rgb(0 0 0 / 0.2) — a tight, close elevation, not
+	   the wide diffuse one. Mapped onto our shared mid-elevation token rather
+	   than hardcoded, so it keeps its light-dark() pair. */
+	--itx-toast-shadow: var(--itx-shadow-md);
 
-	/* Item — motion */
+	/* ── Item — typography ────────────────────────────────────────────────
+	 * $heading-compact-01 (14/18/600) over $body-compact-01 (14/18/400).
+	 * Fixed rem, not --itx-font-size-*: those are fluid clamp() values and
+	 * overflow a fixed-height row. Both lines are full-strength text in
+	 * Carbon — the subtitle is $text-primary, not a muted colour.         */
+	--itx-toast-font-size: 0.875rem;
+	--itx-toast-line-height: 1.2857;
+	--itx-toast-message-font-weight: 600;
+	--itx-toast-description-font-size: 0.875rem;
+	--itx-toast-description-margin-block-start: var(--itx-spacing-0);
+	--itx-toast-description-opacity: 1;
+
+	/* ── Item — motion ──────────────────────────────────────────────────── */
 	--itx-toast-enter-duration: var(--itx-duration-base);
 	--itx-toast-enter-easing: var(--itx-easing-decelerate);
 
-	/* Actions */
+	/* ── Actions ──────────────────────────────────────────────────────────
+	 * Carbon's action is a 32px ghost button in $body-compact-01. The 1px
+	 * frame is ours, not theirs — see the note at the foot of this file.  */
 	--itx-toast-actions-gap: var(--itx-spacing-2);
-	--itx-toast-action-padding-block: var(--itx-spacing-1);
+	--itx-toast-action-padding-block: var(--itx-spacing-2);
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
 	--itx-toast-action-border-width: 1px;
 	--itx-toast-action-border-color: var(--itx-border);
-	--itx-toast-action-border-radius: var(--itx-radius-sm);
-	--itx-toast-action-font-size: var(--itx-font-size-label);
-	--itx-toast-action-font-weight: 500;
+	--itx-toast-action-border-radius: var(--itx-radius-none);
+	--itx-toast-action-font-size: 0.875rem;
+	--itx-toast-action-font-weight: 400;
 	--itx-toast-action-background-hover: var(--itx-surface-hover);
 
-	/* Close */
-	--itx-toast-close-size: 1.5rem;
-	--itx-toast-close-border-radius: var(--itx-radius-sm);
-	--itx-toast-close-opacity: 0.5;
+	/* ── Close ────────────────────────────────────────────────────────────
+	 * Carbon's close is a 48px flush-corner hit area with a 16px glyph. Ours
+	 * sits inside the padded content row, so 48 would set the height of the
+	 * whole panel; 32 is the largest step that leaves the toast the height
+	 * of its text and still clears WCAG 2.2 SC 2.5.8. The glyph itself is
+	 * full-strength in Carbon ($icon-primary) — hover moves the background,
+	 * not the fill.                                                       */
+	--itx-toast-close-size: var(--itx-spacing-8); /* 32px */
+	--itx-toast-close-border-radius: var(--itx-radius-none);
+	--itx-toast-close-opacity: 1;
 	--itx-toast-close-opacity-hover: 1;
 	--itx-toast-close-background-hover: var(--itx-surface-hover);
 
-	/* Focus */
+	/* ── Focus ────────────────────────────────────────────────────────────
+	 * Carbon's is 2px inset blue. Kept on --itx-colorway and kept outside
+	 * the box: focus is where our brand survives an otherwise neutral
+	 * component.                                                          */
 	--itx-toast-focus-width: 2px;
 	--itx-toast-focus-color: var(--itx-colorway);
 	--itx-toast-focus-offset: 2px;
 	--itx-toast-focus-offset-tight: 1px;
+}
+
+/* Carbon's `max` breakpoint (1584px) widens the notification to 352px. */
+@media (min-width: 99rem) {
+	:where([interop-root]) {
+		--itx-toast-width: 22rem; /* 352px */
+	}
 }
 
 /* ── Variants (rebind colour tokens from the status palette) ─────────────── */
@@ -99,3 +160,21 @@
 :where([interop-root] interop-toast-item[data-type="loading"]) {
 	--itx-toast-accent-color: var(--itx-muted);
 }
+
+/*
+ * NOT taken from Carbon
+ * ─────────────────────
+ * - The status ICON. Carbon's status language is a triple: the edge bar, the
+ *   tinted background, and a glyph in the full-strength status colour. Our
+ *   toast markup has no icon slot, so we take two of the three. Adding the
+ *   third is a component change, not a value.
+ * - The high-contrast (inverse) treatment — a dark panel with inverse support
+ *   colours. We express one contrast level, not two.
+ * - The ghost action button. Carbon's action has no border and leans on link
+ *   colour to read as interactive; our foundation sets `color: inherit` on it
+ *   with no token to redirect, so dropping the frame would leave the action
+ *   indistinguishable from the message. The 1px frame stays until there is a
+ *   colour token to trade it for. Carbon's 32px height is approximated by the
+ *   padding above.
+ * - The caption row and the inline/callout variants — no equivalent here.
+ */

@@ -24,6 +24,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Adding a demo page (workflow) | [workflows/new-demo-page.md](workflows/new-demo-page.md) |
 | Borrowing visual language from IBM Carbon (workflow) | [workflows/carbon-borrow.md](workflows/carbon-borrow.md) |
 | TODO — iconsets aren't consumable from the published package | [todo/iconset-entry-points.md](todo/iconset-entry-points.md) |
+| TODO — 26 demo pages have no in-page nav | [todo/demo-pages-missing-nav.md](todo/demo-pages-missing-nav.md) |
 | Terminal composite deep-dive | [composites/terminal.md](composites/terminal.md) |
 | InlineCode composite deep-dive | [composites/inline-code.md](composites/inline-code.md) |
 | CodeBlock composite deep-dive | [composites/code-block.md](composites/code-block.md) |

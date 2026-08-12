@@ -1,11 +1,27 @@
+/*
+ * InteropButton — protocol theme values.
+ *
+ * Borrowed from IBM Carbon's Button (round 6). Carbon's model in one line:
+ * **size changes the height and nothing else** — the label is $body-compact-01
+ * (14px) and the side padding is $spacing-05 (16px) at every step, so the box
+ * grows around a constant label rather than scaling with it. The size blocks
+ * below therefore carry a height and nothing more.
+ *
+ * Assigns custom properties only. Structure, state selectors and the focus
+ * ring live in `components/button.css`.
+ */
+
 /* ── Base (default, no variant) ──────────────────────────────────────────── */
 
 :where([interop-root]) {
 	/* Sizing — pin the height; the foundation derives block padding as
-	   (height − 1em) / 2, so the visible pill lands at exactly the height and
-	   the label:height ratio holds. Default size = md (40 / label 16). */
+	   (height − 1em) / 2, so the visible pill lands at exactly the height.
+	   Default size = md (40), Carbon's medium step. */
 	--itx-button-height: 2.5rem;
-	--itx-button-padding-inline: 1rem;
+
+	/* Carbon $spacing-05 — "a button cannot have a label or any element within
+	   16px of its borders", constant across the whole size scale. */
+	--itx-button-padding-inline: var(--itx-spacing-4);
 
 	/* layout */
 	--itx-button-display: inline-flex;
@@ -13,25 +29,35 @@
 	--itx-button-width: auto;
 	--itx-button-flex: 1 1 auto;
 	--itx-button-min-width: max-content;
-	--itx-button-max-width: var(--itx-spacing-40);
+	--itx-button-max-width: var(--itx-spacing-80);
 	--itx-button-justify-content: flex-start;
-	--itx-button-gap: none;
 
-	/* typography — fixed label sizes keep the pinned heights from drifting */
+	/* Carbon $spacing-03 — the gap it uses between label and icon wherever the
+	   icon is laid out in flow rather than pinned to the trailing edge. */
+	--itx-button-gap: var(--itx-spacing-2);
+
+	/* typography — Carbon $body-compact-01 (14 / 400), fixed at every size.
+	   line-height stays 1: the foundation derives block padding from 1em, so
+	   Carbon's 18/14 leading would push the pill past --itx-button-height. */
 	--itx-button-font-family: var(--itx-font-family-sans);
-	--itx-button-font-size: 1rem;
+	--itx-button-font-size: 0.875rem;
+	--itx-button-font-weight: 400;
 	--itx-button-line-height: 1;
 
-	/* edge */
-	--itx-button-border-width: 2px;
+	/* edge — Carbon $button-outline-width is 1px, and every variant carries a
+	   border (transparent on the filled ones) so the box never shifts. Radius
+	   is 0: Carbon has no rounded buttons. */
+	--itx-button-border-width: 1px;
 	--itx-button-border-style: solid;
-	--itx-button-radius-default: 0;
+	--itx-button-radius-default: var(--itx-radius-none);
 	--itx-button-corner-shape: unset;
 
-	/* transition */
-	--itx-button-transition-property: background-color, border-color, box-shadow;
-	--itx-button-transition-duration: 65ms;
-	--itx-button-transition-timing-function: ease-in-out;
+	/* transition — Carbon $duration-fast-01 (70ms) on a productive entrance
+	   curve; rounded onto our motion scale. */
+	--itx-button-transition-properties:
+		background-color, border-color, box-shadow;
+	--itx-button-transition-duration: var(--itx-duration-fast);
+	--itx-button-transition-timing-function: var(--itx-easing-decelerate);
 
 	/* Rest state — defaults declared at root so any ancestor can override
 	   the same token via inheritance. Variant rules below stay on
@@ -42,13 +68,13 @@
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
-	/* Hover state */
-	--itx-button-background-hover: var(--itx-neutral-7);
+	/* Hover / active — Carbon's state ramps are monotonic: each state sits one
+	   step further from the page than the one before it. */
+	--itx-button-background-hover: var(--itx-neutral-6);
+	--itx-button-background-active: var(--itx-neutral-7);
 
-	/* Active state */
-	--itx-button-background-active: var(--itx-neutral-6);
-
-	/* Focused/selected state */
+	/* Focused/selected state — kept on --itx-colorway rather than Carbon's
+	   inset double ring; see the note at the foot of this file. */
 	--itx-button-outline-width: 2px;
 	--itx-button-outline-style: solid;
 	--itx-button-outline-color: var(--itx-colorway-7);
@@ -57,49 +83,64 @@
 
 /* ── Variants ────────────────────────────────────────────────────────────── */
 
-	:where(button[interop-button~="grow"]) {
-		--itx-button-flex: 1;
-		--itx-button-max-width: none;
-	}
+:where(button[interop-button~="grow"]) {
+	--itx-button-flex: 1;
+	--itx-button-max-width: none;
+}
 
+/* Carbon primary: blue-60 → blue-70 → blue-80, white label throughout.
+   Expressed as the semantic colorway +0 / +1 / +2, which keeps the
+   --itx-on-colorway pairing intact in both colour schemes. */
 :where(button[interop-button~="primary"]) {
-	--itx-button-background: var(--itx-colorway-5);
+	--itx-button-background: var(--itx-colorway);
+	--itx-button-foreground: var(--itx-on-colorway);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
-	/* Hover state */
-	--itx-button-background-hover: var(--itx-colorway-7);
-	/* Active state */
-	--itx-button-background-active: var(--itx-colorway-6);
+
+	--itx-button-background-hover: var(--itx-colorway-hover);
+	--itx-button-foreground-hover: var(--itx-on-colorway);
+
+	--itx-button-background-active: light-dark(
+		var(--itx-colorway-10),
+		var(--itx-colorway-11)
+	);
+	--itx-button-foreground-active: var(--itx-on-colorway);
 }
 
+/* Carbon secondary is a *dark* solid (gray-80), not a light one, and it moves
+   back toward the page on hover/press — the opposite direction to primary. */
 :where(button[interop-button~="secondary"]) {
-	--itx-button-background: var(--itx-neutral-5);
-	--itx-button-foreground: var(--itx-neutral-11);
+	--itx-button-background: var(--itx-neutral-10_5);
+	--itx-button-foreground: var(--itx-neutral-1);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
-	/* Hover state */
-	--itx-button-background-hover: var(--itx-neutral-7);
-	/* Active state */
-	--itx-button-background-active: var(--itx-neutral-6);
+
+	--itx-button-background-hover: var(--itx-neutral-10);
+	--itx-button-foreground-hover: var(--itx-neutral-1);
+
+	--itx-button-background-active: var(--itx-neutral-9);
+	--itx-button-foreground-active: var(--itx-neutral-1);
 }
 
+/* Carbon tertiary: a hairline colorway outline that *fills* on hover and
+   flips the label to the on-colour. Press drops the border entirely. */
 :where(button[interop-button~="tertiary"]) {
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-neutral-10);
-	--itx-button-border-color: var(--itx-neutral-8);
+	--itx-button-foreground: var(--itx-colorway);
+	--itx-button-border-color: var(--itx-colorway);
 	--itx-button-box-shadow: none;
 
+	--itx-button-background-hover: var(--itx-colorway-hover);
+	--itx-button-foreground-hover: var(--itx-on-colorway);
+	--itx-button-border-color-hover: var(--itx-colorway-hover);
 
-	--itx-button-foreground-hover: var(--itx-neutral-12);
-	--itx-button-background-hover: var(--itx-button-background);
-	--itx-button-border-color-hover: var(--itx-neutral-8)
-
-	--itx-button-foreground-active: var(--itx-neutral-10);
-	--itx-button-border-color-active: var(--itx-neutral-8);
-	--itx-button-background-active: transparent;
+	--itx-button-background-active: light-dark(
+		var(--itx-colorway-10),
+		var(--itx-colorway-11)
+	);
+	--itx-button-foreground-active: var(--itx-on-colorway);
+	--itx-button-border-color-active: transparent;
 }
-
-
 
 :where(button[interop-button~="icon"]) {
 	/* Square — inline padding matches the height-derived block padding. */
@@ -107,48 +148,41 @@
 		(var(--itx-button-height, 2.5rem) - 1em) / 2
 	);
 	--itx-button-padding-block: var(--itx-button-padding-inline);
-	--itx-button-radius-default: var(--itx-radius-full);
-	--itx-button-max-width: auto;
+	--itx-button-radius-default: var(--itx-radius-none);
+	--itx-button-max-width: none;
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
-/* One rule: height = 8 × n on an 8pt grid, md = 40 the anchor. The label rides
-   at a ~0.4 ratio; block padding is derived from the height in the foundation.
-       xs  24 / label 12
-       sm  32 / label 14
-       md  40 / label 16   ← default (declared on the base)
-       lg  48 / label 20
-       xl  56 / label 24                                                      */
+/* Carbon's layout size ramp, verbatim. Only the height changes — the label
+   and the side padding are constants (see the base block).
+       xs  24
+       sm  32
+       md  40   ← default (declared on the base)
+       lg  48
+       xl  64   ← Carbon's "full bleed" step; takes the expressive 16px label
+   Carbon's 2xl (80) is not taken — Interop's axis stops at xl.                */
 
 :where(button[interop-button][itx-size="xs"]) {
-	--itx-button-height: 1.75rem;
-	--itx-button-font-size: 0.75rem;
-	--itx-button-padding-inline: 0.75rem;
+	--itx-button-height: 1.5rem;
 }
 
 :where(button[interop-button][itx-size="sm"]) {
 	--itx-button-height: 2rem;
-	--itx-button-font-size: 0.875rem;
-	--itx-button-padding-inline: 1rem;
 }
 
 :where(button[interop-button][itx-size="md"]) {
 	--itx-button-height: 2.5rem;
-	--itx-button-font-size: 1rem;
-	--itx-button-padding-inline: 1rem;
 }
 
 :where(button[interop-button][itx-size="lg"]) {
 	--itx-button-height: 3rem;
-	--itx-button-font-size: 1.25rem;
-	--itx-button-padding-inline: 1.5rem;
 }
 
 :where(button[interop-button][itx-size="xl"]) {
-	--itx-button-height: 3.5rem;
-	--itx-button-font-size: 1.375rem;
-	--itx-button-font-weight: 400;
-	--itx-button-padding-inline: 1.75rem;
+	--itx-button-height: 4rem;
+	/* Carbon $body-compact-02 — the one step that changes the label, and only
+	   because Carbon's expressive large does the same. */
+	--itx-button-font-size: 1rem;
 }
 
 /* ── Layer ───────────────────────────────────────────────────────────────── */
@@ -202,11 +236,60 @@
 	--itx-button-corner-shape: round;
 }
 
-:where(button[interop-button~="action"]:disabled),
-:where(button[interop-button~="action"][aria-disabled="true"]) {
+/* ── Disabled ────────────────────────────────────────────────────────────── */
+/* Carbon paints disabled as a flat gray-30 fill with gray-50 text and no
+   opacity change. Scoped to the variants Carbon actually defines it for — the
+   bare button's rest fill *is* gray-30, so a global rule would make a disabled
+   bare button indistinguishable from a live one. It keeps the foundation's
+   opacity treatment instead.                                                  */
+
+:where(
+	button[interop-button~="primary"]:disabled,
+	button[interop-button~="primary"][aria-disabled="true"],
+	button[interop-button~="secondary"]:disabled,
+	button[interop-button~="secondary"][aria-disabled="true"],
+	button[interop-button~="tertiary"]:disabled,
+	button[interop-button~="tertiary"][aria-disabled="true"],
+	button[interop-button~="action"]:disabled,
+	button[interop-button~="action"][aria-disabled="true"]
+) {
 	--itx-button-disabled-opacity: 1;
-	--itx-button-background: var(--itx-neutral-3_5);
+	--itx-button-background: var(--itx-neutral-5);
 	--itx-button-foreground: var(--itx-neutral-8);
-	--itx-button-border-color: var(--itx-neutral-3_5);
+	--itx-button-border-color: var(--itx-neutral-5);
 	--itx-button-box-shadow: none;
+
+	--itx-button-background-hover: var(--itx-neutral-5);
+	--itx-button-foreground-hover: var(--itx-neutral-8);
+	--itx-button-border-color-hover: var(--itx-neutral-5);
+
+	--itx-button-background-active: var(--itx-neutral-5);
+	--itx-button-foreground-active: var(--itx-neutral-8);
+	--itx-button-border-color-active: var(--itx-neutral-5);
 }
+
+/* Carbon's outline variants stay transparent when disabled — only the border
+   and the label go gray. */
+:where(
+	button[interop-button~="tertiary"]:disabled,
+	button[interop-button~="tertiary"][aria-disabled="true"]
+) {
+	--itx-button-background: transparent;
+	--itx-button-foreground: var(--itx-neutral-5);
+	--itx-button-background-hover: transparent;
+	--itx-button-foreground-hover: var(--itx-neutral-5);
+	--itx-button-background-active: transparent;
+	--itx-button-foreground-active: var(--itx-neutral-5);
+}
+
+/* ── Not taken from Carbon ───────────────────────────────────────────────── */
+/* Focus: Carbon draws an inset double ring (1px $focus at the edge plus a 2px
+   background-coloured ring inside it). That needs a box-shadow the foundation
+   only resolves for rest/hover/active, so it isn't expressible from the theme —
+   and the outset ring is the better floor anyway, since it survives on any
+   fill. Kept as-is on --itx-colorway.
+   Also skipped: ghost and danger (no such variants here), the 2xl size step,
+   the 16/64 asymmetric padding (it exists to reserve room for Carbon's
+   absolutely-pinned trailing icon; our addons sit in flow), and the
+   `@media (any-hover: hover)` gate on tertiary's hover fill (the hover
+   selector is structural). */

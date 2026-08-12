@@ -29,6 +29,7 @@
  *   Typography
  *   --itx-segment-font-family
  *   --itx-segment-font-size
+ *   --itx-segment-line-height
  *   --itx-segment-font-weight              --itx-segment-font-weight-selected
  *
  *   Visual — state tokens (rest / hover / selected)
@@ -79,6 +80,13 @@
 	font-family: var(--itx-segment-font-family, inherit);
 	font-size: var(--itx-segment-font-size, inherit);
 	font-weight: var(--_font-weight);
+	/* The segment has no height token: the control's height IS the line box
+	   plus block padding. Left inherited, that line box is whatever prose is
+	   using — a fluid clamp() under a typography root — so the height would
+	   drift with the viewport. Declaring it makes the theme's size steps
+	   exact. Default `inherit` is what the segment already did, so leaving
+	   the token unset changes nothing. */
+	line-height: var(--itx-segment-line-height, inherit);
 
 	background: var(--_background);
 	color: var(--_foreground);
