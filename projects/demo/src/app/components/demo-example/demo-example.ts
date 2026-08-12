@@ -16,7 +16,7 @@ import {
 	provideInteropIcons,
 	Terminal,
 } from "interop";
-import { TablerReload } from "interop/lib/iconsets/tabler";
+import { TablerReload } from "interop/lib/iconsets/tabler/outline/tabler-reload";
 import { demoSlug } from "../demo-page/demo-page.registry";
 
 // ─── Example frame ───────────────────────────────────────────────────────────

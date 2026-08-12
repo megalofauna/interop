@@ -9,59 +9,6 @@
 	</demo-masthead>
 
 	<!-- ── Which tier? ───────────────────────────────────────────────────── -->
-	<!--<demo-section id="tier" heading="Choosing a tier">
-		<interop-expansion-panel style="width: 100%">
-			<h3>
-				<button interop-button="assert neutral" interop-expansion-trigger>
-					Do I want <code>interop-tree</code> or
-					<code>interop-tree="select"</code>?
-				</button>
-			</h3>
-			<div interop-expansion-body>
-				<div class="tree-page__prose">
-					<p>
-						<code>role="tree"</code> is not a label, it is a
-						<strong>behaviour contract</strong>: one tab stop for the entire
-						widget, roving focus, typeahead, arrow keys that expand and
-						collapse, and a selection model. Signing that contract and then not
-						honouring it is worse than not signing it — which is why Interop
-						will not apply it for you.
-					</p>
-					<p><strong>Use the navigate tier (the default) when</strong></p>
-					<ul>
-						<li>rows are links that take the user somewhere;</li>
-						<li>rows contain form controls, buttons, or other interactives;</li>
-						<li>
-							the hierarchy is a way to <em>get to</em> content, not the thing
-							being operated on — nav sidebars, docs contents, browse lists.
-						</li>
-					</ul>
-					<p><strong>Use the select tier when</strong></p>
-					<ul>
-						<li>
-							the user operates <em>on</em> the hierarchy — picks nodes, checks
-							them, reorders them;
-						</li>
-						<li>
-							a single tab stop is what you want, because the tree is one
-							control among many;
-						</li>
-						<li>rows carry no other interactive content.</li>
-					</ul>
-					<p>
-						The tier decides several downstream questions for you. Checkboxes
-						are real <code>&lt;input&gt;</code> elements in the navigate tier
-						(free form participation, free tri-state via
-						<code>indeterminate</code>) and <code>aria-checked</code> in the
-						select tier, where interactive descendants are unreachable. The
-						twisty is a real <code>&lt;button&gt;</code> in the navigate tier
-						and an <code>aria-hidden</code> affordance in the select tier. Put
-						the wrong thing in either and devMode says so.
-					</p>
-				</div>
-			</div>
-		</interop-expansion-panel>
-	</demo-section>-->
 
 	<!-- ── Navigate tier ─────────────────────────────────────────────────── -->
 	<demo-section id="navigate" heading="As navigation">
@@ -188,13 +135,6 @@
 			<itx-code-block [files]="navFiles" />
 		</demo-example>
 
-		<!--<demo-notes
-			[notes]="[{
-				type: 'note',
-				label: 'Tab order',
-				body: 'Every link and every twisty is its own tab stop, exactly as a nested list of links would be. There is no authored keyboard model here — nothing to fight, nothing to preventDefault. The current page is marked with aria-current on the link, not aria-selected on the row.'
-			}]"
-		/>-->
 	</demo-section>
 
 	<!-- ── Select tier ───────────────────────────────────────────────────── -->
@@ -271,25 +211,8 @@
 				</ul>
 			</div>
 
-			<!--<demo-state>
-				<demo-state-item label="selected"
-					>{{ picked().join(", ") || "—" }}</demo-state-item
-				>
-				<demo-state-item label="last expandedChange"
-					>{{ lastExpanded() }}</demo-state-item
-				>
-			</demo-state>-->
-
 			<itx-code-block [files]="selectFiles" />
 		</demo-example>
-<!--
-		<demo-notes
-			[notes]="[{
-				type: 'note',
-				label: 'Try it',
-				body: 'Tab once — the whole tree is a single stop. Then arrows to move, → to open, ← to close or go to the parent, Home/End for the ends, * to expand every sibling, Enter to select, Cmd/Ctrl+Enter or Space to add to the selection, and type a few letters to jump. The disabled node stays focusable so it is still discoverable; it just refuses activation.'
-			}]"
-		/>-->
 	</demo-section>
 
 	<demo-section id="keyboard" heading="Keyboard (select tier)">
@@ -341,13 +264,6 @@
 			<itx-code-block [files]="cssFiles" />
 		</demo-example>
 
-		<!--<demo-notes
-			[notes]="[{
-				type: 'note',
-				label: 'Honest limits',
-				body: 'content-visibility skips layout and paint, not component instantiation — Angular still creates one directive instance per node up front. That is the trade: a virtualizer wins on instantiation cost and loses find-in-page, Ctrl+A, and honest item counts. For trees in the low thousands, keeping the DOM is the better trade. Past that, render the branches lazily inside @if and set [expandable] on the items.'
-			}]"
-		/>-->
 	</demo-section>
 
 	<demo-section id="api" heading="API">

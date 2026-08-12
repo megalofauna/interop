@@ -6,8 +6,6 @@ import {
 	InteropChipFilter,
 	InteropChipOption,
 	InteropChipInput,
-	InteropIcon,
-	provideInteropIcons,
 	type ChipInputItem,
 	InteropTable,
 	InteropCellDef,
@@ -19,7 +17,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import { TablerList, TablerBadge, TablerListCheck, TablerInputCheck } from "interop/lib/iconsets/tabler";
 
 interface ApiInputRow {
 	name: string;
@@ -53,7 +50,6 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
-		InteropIcon,
 		Terminal,
 		DemoSection,
 		DemoExample,
@@ -62,8 +58,7 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	],
 	templateUrl: "./chip-page.html",
 	styleUrl: "./chip-page.css",
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [provideInteropIcons(TablerList, TablerBadge, TablerListCheck, TablerInputCheck)]
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChipPage {
 	cargoTags = signal(['plasma-conduit', 'mag-lock', 'hull-epoxy']);

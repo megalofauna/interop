@@ -11,9 +11,6 @@ import {
 	InteropTreeItem,
 	InteropTreeToggle,
 	InteropTreeGroup,
-	InteropExpansionPanel,
-	InteropExpansionTrigger,
-	InteropExpansionBody,
 	InteropTable,
 	InteropCellDef,
 	CodeBlock,
@@ -23,9 +20,6 @@ import {
 import { DemoTreeNodes, type TreeNode } from "./tree-node";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoState } from "../../components/demo-state/demo-state";
-import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import { DemoNotes } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -50,18 +44,12 @@ const SCALE_SHAPE = [18, 14, 12];
 		InteropTreeItem,
 		InteropTreeToggle,
 		InteropTreeGroup,
-		InteropExpansionPanel,
-		InteropExpansionTrigger,
-		InteropExpansionBody,
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
 		DemoTreeNodes,
 		DemoSection,
 		DemoExample,
-		DemoState,
-		DemoStateItem,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./tree-page.html",

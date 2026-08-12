@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
-import { JsonPipe } from "@angular/common";
 import {
 	InteropListbox,
 	InteropOption,
@@ -13,7 +12,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -28,7 +26,6 @@ interface ApiEntry {
 	selector: "listbox-page",
 	standalone: true,
 	imports: [
-		JsonPipe,
 		InteropListbox,
 		InteropOption,
 		InteropTable,
@@ -38,7 +35,6 @@ interface ApiEntry {
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./listbox-page.html",
@@ -161,22 +157,4 @@ selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
 		{ name: "closeRequest", type: "void", default: "", description: "Emitted when the listbox requests to close (e.g. Enter or Escape pressed). Useful when embedded in a dropdown." },
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Listbox added to manifest',
-			body: 'InteropListbox is the foundational selection primitive. Single-select by default; set [multiselectable]="true" for multi. Implements ControlValueAccessor for forms integration.',
-		},
-		{
-			type: 'note',
-			label: 'Keyboard',
-			body: 'Arrow keys move focus and selection in single mode. In multi-select, arrow keys move focus; Space toggles selection of the focused option.',
-		},
-		{
-			type: 'note',
-			label: 'Projection',
-			body: 'For custom option markup beyond what SelectControl supports (icons, badges, multi-line content), project <li interop-option> children instead of using [controls].',
-		},
-	];
 }

@@ -3,7 +3,6 @@ import { InteropList, InteropTable, InteropCellDef, type TableColumn } from 'int
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -17,7 +16,7 @@ interface ApiEntry {
 @Component({
 	selector: "list-page",
 	standalone: true,
-	imports: [InteropList, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
+	imports: [InteropList, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoMasthead],
 	templateUrl: "./list-page.html",
 	styleUrl: "./list-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -86,17 +85,4 @@ export class ListPage {
 		{ name: "attrsPreset", type: "PresetKey | null", default: "null", description: "Optional preset key to apply semantic conformity attributes to the list." },
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'List component added to manifest',
-			body: 'InteropList supports ul, ol, dl, and a standalone selector. Accepts a [collection] input (array, observable, or promise) or static projected content.',
-		},
-		{
-			type: 'note',
-			label: 'Templates',
-			body: 'Provide a [listItemTemplate] ng-template for custom item rendering, receiving $implicit (item) and index.',
-		},
-	];
 }

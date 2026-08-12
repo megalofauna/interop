@@ -14,9 +14,6 @@ import {
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoState } from "../../components/demo-state/demo-state";
-import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -38,9 +35,6 @@ interface ApiEntry {
 		CodeBlock,
 		DemoSection,
 		DemoExample,
-		DemoState,
-		DemoStateItem,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./dialog-page.html",
@@ -218,22 +212,4 @@ formOpen = signal(false);`;
 		},
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: "release",
-			label: "v0.1.0",
-			title: "Dialog component added to manifest",
-			body: "InteropDialog is a directive on a native <dialog> element. Uses showModal() for top-layer promotion, correct focus trapping, and backdrop rendering via CSS ::backdrop.",
-		},
-		{
-			type: "note",
-			label: "Close reasons",
-			body: 'The (closed) output emits a reason: "backdrop", "escape", "programmatic", or "form-submit". Always respond by setting [isOpen]="false" to keep signal state in sync.',
-		},
-		{
-			type: "note",
-			label: "autoClose + forms",
-			body: 'Do not use <form method="dialog"> when [autoClose]="true". The browser closes the dialog before the directive\'s submit listener fires. Use a plain <form> with no method attribute.',
-		},
-	];
 }

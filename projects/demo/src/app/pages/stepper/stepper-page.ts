@@ -23,10 +23,8 @@ import {
 	type DemoNote,
 } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import {
-	TablerCircleX,
-	TablerMessageLanguage,
-} from "interop/lib/iconsets/tabler";
+import { TablerCircleX } from "interop/lib/iconsets/tabler/outline/tabler-circle-x";
+import { TablerMessageLanguage } from "interop/lib/iconsets/tabler/outline/tabler-message-language";
 
 interface ApiEntry {
 	component?: string;

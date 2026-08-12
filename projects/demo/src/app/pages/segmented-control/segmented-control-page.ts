@@ -26,11 +26,9 @@ import {
 	DemoNotes,
 	type DemoNote,
 } from "../../components/demo-notes/demo-notes";
-import {
-	TablerAlignCenter,
-	TablerAlignLeft,
-	TablerAlignRight,
-} from "interop/lib/iconsets/tabler";
+import { TablerAlignCenter } from "interop/lib/iconsets/tabler/outline/tabler-align-center";
+import { TablerAlignLeft } from "interop/lib/iconsets/tabler/outline/tabler-align-left";
+import { TablerAlignRight } from "interop/lib/iconsets/tabler/outline/tabler-align-right";
 
 type TokenEntry = { property: string; default: string };
 

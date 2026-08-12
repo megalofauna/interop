@@ -1,8 +1,6 @@
 import { Component, computed, inject, signal } from "@angular/core";
 import {
 	Router,
-	RouterLink,
-	RouterLinkActive,
 	RouterOutlet,
 } from "@angular/router";
 import { DemoNav } from "./components/demo-nav/demo-nav";
@@ -16,15 +14,13 @@ import {
 } from "interop";
 import { DemoThemeToggle } from "./components/demo-theme-toggle/demo-theme-toggle";
 import { DemoPageMeta } from "./services/page-meta";
-import { TablerLayoutSidebarLeftExpand } from "interop/lib/iconsets/tabler";
+import { TablerLayoutSidebarLeftExpand } from "interop/lib/iconsets/tabler/outline/tabler-layout-sidebar-left-expand";
 
 @Component({
 	selector: "app-root",
 	standalone: true,
 	imports: [
 		RouterOutlet,
-		RouterLink,
-		RouterLinkActive,
 		DemoNav,
 		DemoThemeToggle,
 		InteropIcon,
