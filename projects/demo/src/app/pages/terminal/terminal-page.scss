@@ -1,0 +1,9 @@
+:host {
+	display: block;
+}
+
+.terminal-page__controls {
+	display: flex;
+	gap: var(--itx-spacing-2);
+	margin-block-end: var(--itx-spacing-3);
+}

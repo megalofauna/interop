@@ -1,4 +1,4 @@
-// Components landing page — page-local layout only.
+// Directory listing — shared by the Components and Composites landing pages.
 //
 // Visual language follows the Carbon borrow rounds the library has converged
 // on (see .agent/workflows/carbon-borrow.md): squared, transparent, hairlines
@@ -10,7 +10,7 @@
 // to neutral-5, a sub-0.1 luminance delta against our surfaces, and reads as
 // nothing at 1px.
 
-.components-page__grid {
+.directory__grid {
 	display: grid;
 	// auto-fill, so a short group (Directives has one entry) keeps the same
 	// column width as a long one instead of stretching to fill the row.
@@ -25,11 +25,11 @@
 	}
 }
 
-.components-page__cell {
+.directory__cell {
 	display: grid;
 }
 
-.components-page__card {
+.directory__card {
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-spacing-1);
@@ -61,13 +61,13 @@
 
 // Fixed rem, never --itx-font-size-*: those are fluid clamp() values, and a
 // card title that grows with the viewport fights the fixed grid track.
-.components-page__name {
+.directory__name {
 	font-size: 0.875rem;
 	line-height: 1.2857;
 	font-weight: 600;
 }
 
-.components-page__desc {
+.directory__desc {
 	font-size: 0.75rem;
 	line-height: 1.3333;
 	color: var(--itx-muted);
@@ -75,7 +75,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.components-page__card {
+	.directory__card {
 		transition: none;
 	}
 }

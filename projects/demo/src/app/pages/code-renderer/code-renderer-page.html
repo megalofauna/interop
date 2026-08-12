@@ -1,8 +1,8 @@
 <article class="demo-page">
-	<demo-masthead category="Components" title="Code Renderer">
-		Minimal tokenized code primitive for syntax-highlighted output.
-		Accepts pre-tokenized <code>[tokens]</code> from a Shiki adapter or
-		falls back to projected <code>&lt;pre&gt;&lt;code&gt;</code> content.
+	<demo-masthead category="Components" title="Code Renderer" [internal]="true">
+		Minimal tokenized code primitive for syntax-highlighted output. Accepts
+		pre-tokenized <code>[tokens]</code> from a Shiki adapter or falls back to
+		projected <code>&lt;pre&gt;&lt;code&gt;</code> content.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
@@ -33,7 +33,12 @@ export class CargoService &#123;
 		</demo-example>
 
 		<demo-example label="With line numbers">
-			<figure interop-code-renderer language="scss" filename="_tokens.scss" [lineNumbers]="true">
+			<figure
+				interop-code-renderer
+				language="scss"
+				filename="_tokens.scss"
+				[lineNumbers]="true"
+			>
 				<pre><code>:root &#123;
   --itx-control-accent:  var(--itx-primary);
   --itx-control-size:    1rem;

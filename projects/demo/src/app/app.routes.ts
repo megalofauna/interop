@@ -23,6 +23,41 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "composites",
+		title: "Composites — Interop",
+		loadComponent: () =>
+			import("./pages/composites/composites-page").then(
+				(m) => m.CompositesPage,
+			),
+		pathMatch: "full",
+	},
+	{
+		path: "composites/code-block",
+		title: "Code Block — Interop",
+		loadComponent: () =>
+			import("./pages/code-block/code-block-page").then((m) => m.CodeBlockPage),
+	},
+	{
+		path: "composites/inline-code",
+		title: "Inline Code — Interop",
+		loadComponent: () =>
+			import("./pages/inline-code/inline-code-page").then(
+				(m) => m.InlineCodePage,
+			),
+	},
+	{
+		path: "composites/page-nav",
+		title: "Page Nav — Interop",
+		loadComponent: () =>
+			import("./pages/page-nav/page-nav-page").then((m) => m.PageNavPage),
+	},
+	{
+		path: "composites/terminal",
+		title: "Terminal — Interop",
+		loadComponent: () =>
+			import("./pages/terminal/terminal-page").then((m) => m.TerminalPage),
+	},
+	{
 		path: "components/badge",
 		title: "Badge — Interop",
 		loadComponent: () =>

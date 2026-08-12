@@ -142,7 +142,22 @@ export class CodeBlock {
 
 	// ── Internal state ───────────────────────────────────────────────────────────
 
+	/**
+	 * Content comes from `files` rather than from `code`/`tokens`. True for one
+	 * file as well as many — this is about where the source is read from.
+	 */
 	readonly isMultiFile = computed(() => this.files().length > 0);
+
+	/**
+	 * Render a tablist. Requires at least TWO files.
+	 *
+	 * Separate from `isMultiFile` because a single file is a labelling question,
+	 * not a navigation one. A one-tab tablist is an interactive control that
+	 * cannot do anything: it takes a tab stop, announces itself as "tab, 1 of 1,
+	 * selected", and offers arrow keys that move nowhere. The file's label still
+	 * shows — as a label.
+	 */
+	readonly isTabbed = computed(() => this.files().length > 1);
 
 	/** Active tab key. Resets to the first file whenever `files` changes. */
 	readonly activeKey = linkedSignal<string | null>(() => {
@@ -180,9 +195,23 @@ export class CodeBlock {
 
 	readonly isCopied = computed(() => this.copyState() === "copied");
 
-	readonly displayLabel = computed(
-		() => this.filename() ?? canonicalizeLanguage(this.language()),
-	);
+	/**
+	 * Header label in every non-tabbed case. With exactly one file it prefers
+	 * that file's own label, so `[files]` with a single entry reads the same as
+	 * it would have as a tab — minus the interactivity.
+	 */
+	readonly displayLabel = computed(() => {
+		const files = this.files();
+		if (files.length === 1) {
+			const only = files[0];
+			return (
+				only.label ??
+				only.filename ??
+				canonicalizeLanguage(only.language ?? null)
+			);
+		}
+		return this.filename() ?? canonicalizeLanguage(this.language());
+	});
 
 	// ── Tab button refs for keyboard focus management ─────────────────────────────
 
@@ -203,7 +232,7 @@ export class CodeBlock {
 	// ── ARIA label helpers ───────────────────────────────────────────────────────
 
 	actionsLabel(): string {
-		const label = this.isMultiFile()
+		const label = this.isTabbed()
 			? (this.activeFile()?.label ?? "code")
 			: (this.displayLabel() ?? "code");
 		return `${label} — actions`;

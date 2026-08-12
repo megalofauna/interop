@@ -25,7 +25,6 @@ import {
 	standalone: true,
 	imports: [RouterLink, DemoPage, DemoSection, DemoMasthead],
 	templateUrl: "./components-page.html",
-	styleUrl: "./components-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComponentsPage {
@@ -44,5 +43,11 @@ export class ComponentsPage {
 	 * Computed once at construction. The catalog is a module constant, so there
 	 * is nothing for it to react to.
 	 */
-	readonly groups: readonly CatalogGroup[] = directoryGroups();
+	readonly groups: readonly CatalogGroup[] = directoryGroups([
+		"foundations",
+		"components",
+		"directives",
+		"primitives",
+		"experiments",
+	]);
 }

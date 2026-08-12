@@ -1,5 +1,5 @@
 <div class="itx-cb__header">
-	@if (isMultiFile()) {
+	@if (isTabbed()) {
 		<div
 			role="tablist"
 			class="itx-cb__tablist"
@@ -70,7 +70,7 @@
 	</div>
 </div>
 
-@if (isMultiFile()) {
+@if (isTabbed()) {
 	@for (file of files(); track fileKey(file)) {
 		<div
 			role="tabpanel"
@@ -86,6 +86,15 @@
 			></figure>
 		</div>
 	}
+} @else if (isMultiFile()) {
+	<!-- Exactly one file. Same source resolution as a tab panel, but no
+	     role="tabpanel" — a panel with no tablist is orphaned ARIA. -->
+	<figure
+		interop-code-renderer
+		[tokens]="tokensFor(files()[0])"
+		[lineNumbers]="lineNumbers()"
+		[wrap]="isWrapped()"
+	></figure>
 } @else {
 	<figure
 		interop-code-renderer
