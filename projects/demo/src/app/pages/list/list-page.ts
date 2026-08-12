@@ -51,6 +51,11 @@ export class ListPage {
 
 	readonly orderedCode = `<ol interop-list [collection]="crewMembers"></ol>`;
 
+	readonly filledCode = `<!-- tokens are space-separated: "filled" layers onto "enclosed" -->
+<ol interop-list itx-marker="enclosed filled" [collection]="launchSteps"></ol>`;
+
+	readonly containedCode = `<ul interop-list itx-variant="contained" [collection]="cargoItems"></ul>`;
+
 	readonly enclosedCode = `<ol interop-list itx-marker="enclosed" [collection]="launchSteps"></ol>`;
 
 	readonly templateCode = `<ng-template #itemTpl let-item>

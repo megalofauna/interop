@@ -15,9 +15,9 @@
 				[(value)]="selectedBay"
 				style="max-width: 22rem"
 			></ul>
-			<demo-state>
+			<!--<demo-state>
 				<demo-state-item label="Bay">{{ selectedBay() }}</demo-state-item>
-			</demo-state>
+			</demo-state>-->
 			<itx-code-block [files]="singleSelectFiles" />
 		</demo-example>
 	</demo-section>
@@ -33,11 +33,11 @@
 				[(value)]="selectedRoles"
 				style="max-width: 22rem"
 			></ul>
-			<demo-state>
+			<!--<demo-state>
 				<demo-state-item label="Roles"
 					>{{ selectedRoles() | json }}</demo-state-item
 				>
-			</demo-state>
+			</demo-state>-->
 			<itx-code-block [files]="multiSelectFiles" />
 		</demo-example>
 	</demo-section>
@@ -109,9 +109,5 @@
 				<code class="demo-page__api-type">{{ entry.type }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
 	</demo-section>
 </article>

@@ -22,7 +22,7 @@
  *   --itx-layout-direction   --itx-layout-justify   --itx-layout-align
  *   --itx-layout-wrap        --itx-layout-gap
  *
- *   Enclosed marker variant — ol[interop-list][itx-marker="enclosed"]
+ *   Enclosed marker variant — ol[interop-list][itx-marker~="enclosed"]
  *   --itx-list-marker-gap          Space between marker and item text
  *   --itx-list-marker-align        Cross-axis alignment of marker vs text
  *   --itx-list-marker-size         Marker box diameter
@@ -31,18 +31,23 @@
  *   --itx-list-marker-radius       Shape (default: full circle)
  *   --itx-list-marker-font-size     --itx-list-marker-font-weight
  *   --itx-list-marker-style        counter() style (decimal, upper-roman, …)
+ *
+ *   Contained variant — [interop-list][itx-variant="contained"]
+ *   --itx-list-row-block-size      Row height (Carbon's lg step is 48px)
+ *   --itx-list-row-padding-inline
+ *   --itx-list-row-background       --itx-list-row-background-hover
+ *   --itx-list-row-rule-width       --itx-list-row-rule-color
+ *   --itx-list-row-outline-color    --itx-list-row-outline-width
+ *   --itx-list-row-outline-style    --itx-list-row-outline-offset
+ *   --itx-list-row-transition-duration
+ *   --itx-list-row-transition-timing-function
  */
 
 /* ── Base: layout-capable list container ─────────────────────────────────── */
 /* Mirrors the InteropLayout `layout-capable` mixin, but lists default to a
    vertical stack (column) rather than a row. */
 
-:where(
-		ul[interop-list],
-		ol[interop-list],
-		dl[interop-list],
-		interop-list
-	) {
+:where(ul[interop-list], ol[interop-list], dl[interop-list], interop-list) {
 	display: flex;
 	flex-direction: var(--itx-layout-direction, column);
 	justify-content: var(--itx-layout-justify, flex-start);
@@ -65,21 +70,29 @@
 	margin-inline-end: 0;
 }
 
-/* ── Opt-in: enclosed numeral markers (itx-marker="enclosed") ─────────────── */
-/* Renders each ordinal as a styled box — a stroked circle by default — with
-   the numeral centred inside. The base rule above sets list-style:none, so the
-   native marker is gone; a named counter on the row reinstates the ordinal and
-   the ::before paints it.
+/* ── Opt-in: enclosed numeral markers (itx-marker~="enclosed") ─────────────── */
+/*
+ * Renders each ordinal as a styled box — a stroked circle by default — with
+ * the numeral centred inside. The base rule above sets list-style:none, so the
+ * native marker is gone; a named counter on the row reinstates the ordinal and
+ * the ::before paints it.
+ *
+ * Selectors use `~=`, not `=`, so the attribute holds a space-separated list of
+ * tokens — the same shape as `interop-button~="assert neutral"`, and what lets
+ * `itx-marker="enclosed filled"` layer a modifier on the variant. `=` is an
+ * exact-string match, so any second token makes the selector match nothing and
+ * the markers vanish outright rather than degrading.
+ *
+ * Trade-off: the row becomes a flex container, so native ordering attributes
+ * (`<ol start>`, `reversed`, `<li value>`) are not reflected — ordering comes
+ * from source order, which is the common case for collection-rendered lists.
+ */
 
-   Trade-off: the row becomes a flex container, so native ordering attributes
-   (`<ol start>`, `reversed`, `<li value>`) are not reflected — ordering comes
-   from source order, which is the common case for collection-rendered lists. */
-
-:where(ol[interop-list][itx-marker="enclosed"]) {
+:where(ol[interop-list][itx-marker~="enclosed"]) {
 	counter-reset: itx-list-marker;
 }
 
-:where(ol[interop-list][itx-marker="enclosed"] > li) {
+:where(ol[interop-list][itx-marker~="enclosed"] > li) {
 	counter-increment: itx-list-marker;
 	display: flex;
 	align-items: var(--itx-list-marker-align, center);
@@ -88,7 +101,7 @@
 
 /* Pseudo-element lives OUTSIDE :where() — browsers silently drop a
    pseudo-element nested inside it (see css-strategy.md). */
-:where(ol[interop-list][itx-marker="enclosed"] > li)::before {
+:where(ol[interop-list][itx-marker~="enclosed"] > li)::before {
 	content: counter(itx-list-marker, var(--itx-list-marker-style, decimal));
 	flex: 0 0 auto;
 	display: grid;
@@ -104,4 +117,76 @@
 	font-weight: var(--itx-list-marker-font-weight, 600);
 	font-variant-numeric: tabular-nums;
 	line-height: 1;
+}
+
+/* ── Opt-in: contained rows (itx-variant="contained") ─────────────────────── */
+/*
+ * Borrowed from Carbon's Contained List — the row treatment, not the whole
+ * component (Carbon's also owns a header, an optional search, and action
+ * slots; this is only the list).
+ *
+ * A variant rather than a change to the base, for the same reason Carbon keeps
+ * List and Contained List apart: the base is layout-only and still has to serve
+ * ordinary prose lists. Turning every `ul[interop-list]` into 48px ruled rows
+ * would be a very loud default.
+ *
+ * Rules are horizontal only and sit on the row's block-end, so the divider
+ * belongs to the item above it. The last row drops its rule: a list ends, it
+ * is not divided again — and a trailing rule reads as a container edge the
+ * list does not have.
+ */
+
+:where([interop-list][itx-variant="contained"]) {
+	align-items: stretch;
+	inline-size: 100%;
+}
+
+:where([interop-list][itx-variant="contained"] > li) {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-list-row-gap);
+	box-sizing: border-box;
+	min-block-size: var(--itx-list-row-block-size);
+	/* Zeroed, not inherited: a globally-declared interop-typography-root reads
+	   these as prose and puts --itx-rhythm-tight between every pair, which is
+	   the block gap that has no business in a ruled row. Scoped to the variant
+	   so prose inside an ordinary list item is left alone. */
+	margin-block: 0;
+	padding-block: 0;
+	padding-inline: var(--itx-list-row-padding-inline);
+	background-color: var(--itx-list-row-background);
+	border-radius: 0;
+	border-block-end: var(--itx-list-row-rule-width) solid
+		var(--itx-list-row-rule-color);
+	transition: background-color var(--itx-list-row-transition-duration)
+		var(--itx-list-row-transition-timing-function);
+}
+
+:where([interop-list][itx-variant="contained"] > li:last-child) {
+	border-block-end-width: 0;
+}
+
+/* Guarded behind any-hover so a tap doesn't leave the row painted as though
+   the pointer were still resting on it. */
+@media (any-hover: hover) {
+	:where([interop-list][itx-variant="contained"] > li:hover) {
+		background-color: var(--itx-list-row-background-hover);
+	}
+}
+
+/*
+ * The row is not focusable on its own, so :active fires for the duration of a
+ * press and nothing more. If rows become interactive — a link or button filling
+ * the row — add :has(:focus-visible) here so keyboard users get the same mark.
+ */
+:where([interop-list][itx-variant="contained"] > li:active) {
+	outline: var(--itx-list-row-outline-width) var(--itx-list-row-outline-style)
+		var(--itx-list-row-outline-color);
+	outline-offset: var(--itx-list-row-outline-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where([interop-list][itx-variant="contained"] > li) {
+		transition: none;
+	}
 }

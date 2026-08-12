@@ -3,19 +3,70 @@
    enclosed-marker variant below is the one piece carrying visual opinion. */
 
 /* ── enclosed marker variant ─────────────────────────────────────────────── */
-/* Stroked circle in the active colorway, with a slightly smaller bold numeral
-   centred inside. Tokens are set on the row; the marker pseudo-element
-   inherits them. */
+/* Stroked circle with a slightly smaller bold numeral centred inside. Tokens
+   are set on the row; the marker pseudo-element inherits them.
 
-:where(ol[interop-list][itx-marker="enclosed"] > li) {
+   Mid-luminance neutral rather than the colorway: an ordinal is structure, not
+   emphasis, and a column of colourway rings down the side of a procedure reads
+   as a column of badges demanding attention. --itx-neutral-8 is the one step
+   that stays genuinely mid in both schemes (0.58 light / 0.55 dark), so the
+   ring holds the same weight either way. */
+
+:where(ol[interop-list][itx-marker~="enclosed"] > li) {
 	--itx-list-marker-gap: var(--itx-spacing-3);
 	--itx-list-marker-align: center;
 	--itx-list-marker-size: 2em;
 	--itx-list-marker-radius: var(--itx-radius-full);
-	--itx-list-marker-border: 2px solid var(--itx-colorway);
+	--itx-list-marker-border: 2px solid var(--itx-neutral-8);
 	--itx-list-marker-background: transparent;
-	--itx-list-marker-color: var(--itx-colorway);
+	--itx-list-marker-color: var(--itx-neutral-8);
 	--itx-list-marker-font-size: 0.8em;
 	--itx-list-marker-font-weight: 600;
 	--itx-list-marker-style: decimal;
+}
+
+/* ── filled marker modifier ──────────────────────────────────────────────── */
+/* `itx-marker="enclosed filled"` — the enclosed ring reversed out: the stroke
+   colour becomes the fill, and the numeral goes dark against it.
+
+   The text is held dark in BOTH schemes rather than riding the neutral ramp.
+   Against a mid-luminance disc the dark end of the ramp is the higher-contrast
+   choice either way (~5.5:1 vs ~3:1 for the light end), so flipping it per
+   scheme would trade contrast away for no gain.
+
+   Declared after the enclosed block so it wins at equal (zero) specificity —
+   it is a modifier layered on that variant, not a replacement for it. */
+
+:where(ol[interop-list][itx-marker~="filled"] > li) {
+	--itx-list-marker-background: var(--itx-neutral-8);
+	--itx-list-marker-border: 2px solid var(--itx-neutral-8);
+	--itx-list-marker-color: light-dark(
+		var(--itx-neutral-12),
+		var(--itx-neutral-1)
+	);
+}
+
+/* ── contained variant ───────────────────────────────────────────────────── */
+/* Carbon's Contained List row: 48px tall, transparent, divided by a single
+   muted horizontal hairline. No vertical rules, no radius, no fill — the only
+   paint is the hover lift. */
+
+:where([interop-list][itx-variant="contained"]) {
+	--itx-list-row-block-size: var(--itx-spacing-12); /* 48px — Carbon's lg */
+	--itx-list-row-padding-inline: var(--itx-spacing-4); /* 16px */
+	--itx-list-row-gap: var(--itx-spacing-3);
+
+	--itx-list-row-background: transparent;
+	--itx-list-row-background-hover: var(--itx-surface-above);
+
+	--itx-list-row-rule-width: 1px;
+	--itx-list-row-rule-color: var(--itx-border);
+
+	--itx-list-row-outline-color: var(--itx-colorway);
+	--itx-list-row-outline-width: 2px;
+	--itx-list-row-outline-style: solid;
+	--itx-list-row-outline-offset: -2px;
+
+	--itx-list-row-transition-duration: var(--itx-duration-fast);
+	--itx-list-row-transition-timing-function: var(--itx-easing-standard);
 }

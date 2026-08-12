@@ -1,7 +1,8 @@
 <article class="demo-page">
 	<demo-masthead category="Components" title="List">
-		Semantic list component for <code>ul</code>, <code>ol</code>, and <code>dl</code>.
-		Accepts a <code>[collection]</code> input or static projected content.
+		Semantic list component for <code>ul</code>, <code>ol</code>, and
+		<code>dl</code>. Accepts a <code>[collection]</code> input or static
+		projected content.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
@@ -20,7 +21,11 @@
 			<ng-template #itemTpl let-item>
 				<li>{{ item.label }}</li>
 			</ng-template>
-			<ul interop-list [collection]="cargoItems" [listItemTemplate]="itemTpl"></ul>
+			<ul
+				interop-list
+				[collection]="cargoItems"
+				[listItemTemplate]="itemTpl"
+			></ul>
 			<itx-code-block language="html" [code]="templateCode" />
 		</demo-example>
 
@@ -35,14 +40,37 @@
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Contained rows ─────────────────────────────────────────────────── -->
+	<demo-section id="contained" heading="Contained rows">
+		<p description class="demo-section__lede">
+			<code>itx-variant="contained"</code> turns the list into ruled rows — 48px
+			tall, transparent, divided by a single muted horizontal hairline with no
+			vertical rules and no radius. A variant rather than the default, because
+			the base list still has to serve ordinary prose lists.
+		</p>
+
+		<demo-example label="Ruled rows">
+			<ul interop-list itx-variant="contained" [collection]="cargoItems"></ul>
+			<itx-code-block language="html" [code]="containedCode" />
+		</demo-example>
+	</demo-section>
+
 	<!-- ── Enclosed markers ───────────────────────────────────────────────── -->
 	<demo-section id="enclosed-markers" heading="Enclosed markers">
 		<demo-example label="Stroked-circle numerals (itx-marker)">
 			<ol interop-list itx-marker="enclosed" [collection]="launchSteps"></ol>
 			<itx-code-block language="html" [code]="enclosedCode" />
 		</demo-example>
-	</demo-section>
 
+		<demo-example label="Reversed out (enclosed filled)">
+			<ol
+				interop-list
+				itx-marker="enclosed filled"
+				[collection]="launchSteps"
+			></ol>
+			<itx-code-block language="html" [code]="filledCode" />
+		</demo-example>
+	</demo-section>
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
@@ -58,9 +86,5 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
 	</demo-section>
 </article>
