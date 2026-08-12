@@ -11,6 +11,10 @@
 	overflow-y: auto;
 }
 
+.nav__group + .nav__group {
+	margin-block-start: var(--itx-spacing-4);
+}
+
 .nav__backdrop {
 	display: none;
 }
@@ -40,7 +44,7 @@
 }
 
 .nav__group-label {
-	margin: 0 0 var(--itx-spacing-1) 0;
+	margin: 0 0 var(--itx-spacing-2) 0;
 	padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	font-size: 0.6875rem;
 	font-weight: 600;

@@ -1,4 +1,4 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Slider">
 		Semantic single-thumb and range sliders built on real
 		<code>&lt;input type="range"&gt;</code>
@@ -32,7 +32,23 @@
 				>
 				<demo-state-item label="aria-valuetext">(none)</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [code]="basicCode" />
+			<itx-code-block [files]="basicFiles" />
+		</demo-example>
+
+		<demo-example label="Disabled">
+			<div class="slider-demo">
+				<div class="slider-demo__row">
+					<label for="locked">Sensor gain (locked)</label>
+				</div>
+				<input
+					type="range"
+					interop-slider
+					id="locked"
+					[value]="40"
+					[disabled]="true"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="disabledCode" />
 		</demo-example>
 	</demo-section>
 
@@ -69,7 +85,7 @@
 					>(unset — SR announces raw number)</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block language="html" [code]="currencyCode" />
+			<itx-code-block [files]="currencyFiles" />
 		</demo-example>
 
 		<demo-example
@@ -97,7 +113,7 @@
 					>{{ sizeFormatter(sizeIndex()) }}</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block language="html" [code]="sizesCode" />
+			<itx-code-block [files]="sizesFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -130,7 +146,7 @@
 			<demo-state>
 				<demo-state-item label="value">{{ quality() }}</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [code]="marksCode" />
+			<itx-code-block [files]="marksFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -183,13 +199,13 @@
 				>
 				<demo-state-item label="end">{{ priceRange().end }}</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [code]="rangeCode" />
+			<itx-code-block [files]="rangeFiles" />
 		</demo-example>
 	</demo-section>
 
 	<!-- ── Vertical ──────────────────────────────────────────────────────── -->
 	<demo-section id="vertical" heading="Vertical orientation">
-		<demo-example label="writing-mode: vertical-lr">
+		<demo-example label="writing-mode: vertical-lr, minimum at the bottom">
 			<div class="slider-demo slider-demo--vertical">
 				<input
 					type="range"
@@ -203,7 +219,7 @@
 					Temp: {{ temperature() }}°
 				</div>
 			</div>
-			<itx-code-block language="html" [code]="verticalCode" />
+			<itx-code-block [files]="verticalFiles" />
 		</demo-example>
 	</demo-section>
 
@@ -225,7 +241,7 @@
 					name="volume"
 				/>
 				<button
-					interop-button="assert neutral"
+					interop-button="primary"
 					type="submit"
 					class="slider-demo__submit"
 				>
@@ -237,13 +253,37 @@
 					>{{ lastSubmittedFormData() }}</demo-state-item
 				>
 			</demo-state>
-			<itx-code-block language="html" [code]="formCode" />
+			<itx-code-block [files]="formFiles" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── API — InteropSlider ───────────────────────────────────────────── -->
-	<demo-section id="api-slider" heading="API — InteropSlider">
-		<interop-table [collection]="sliderApi" [columns]="apiColumns">
+	<!-- ── Tokens ────────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ───────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="directive" let-entry>
+				<code class="demo-page__api-default">{{ entry.directive }}</code>
+			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) { <span class="demo-page__required">*</span> }
@@ -255,42 +295,22 @@
 				<code class="demo-page__api-default">{{ entry.default }}</code>
 			</ng-template>
 		</interop-table>
-	</demo-section>
 
-	<!-- ── API — InteropSliderRange ──────────────────────────────────────── -->
-	<demo-section id="api-range" heading="API — InteropSliderRange">
-		<interop-table [collection]="rangeApi" [columns]="apiColumns">
+		<h3 class="demo-page__api-heading">Outputs</h3>
+		<interop-table
+			[collection]="outputEntries"
+			[columns]="outputColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="directive" let-entry>
+				<code class="demo-page__api-default">{{ entry.directive }}</code>
+			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
 			</ng-template>
-			<ng-template itxCell="default" let-entry>
-				<code class="demo-page__api-default">{{ entry.default }}</code>
-			</ng-template>
 		</interop-table>
 	</demo-section>
-
-	<!-- ── API — InteropSliderValue ──────────────────────────────────────── -->
-	<demo-section id="api-value" heading="API — InteropSliderValue">
-		<interop-table [collection]="valueApi" [columns]="apiColumns">
-			<ng-template itxCell="name" let-entry>
-				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
-			</ng-template>
-			<ng-template itxCell="type" let-entry>
-				<code class="demo-page__api-type">{{ entry.type }}</code>
-			</ng-template>
-			<ng-template itxCell="default" let-entry>
-				<code class="demo-page__api-default">{{ entry.default }}</code>
-			</ng-template>
-		</interop-table>
-	</demo-section>
-
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
-	</demo-section>
-</article>
+</demo-page>

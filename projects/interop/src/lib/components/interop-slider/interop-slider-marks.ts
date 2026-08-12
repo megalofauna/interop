@@ -13,12 +13,24 @@ import {
 
 export type SliderMark = number | { value: number; label?: string };
 
-const MAJOR_COLOR = "var(--itx-slider-mark-color, currentColor)";
-const MINOR_COLOR =
-	"var(--itx-slider-mark-minor-color, color-mix(in srgb, currentColor 30%, transparent))";
+/**
+ * Gradient direction. Published by the slider's stylesheet as
+ * `--itx-slider-axis` (`to right` / `to left` / `to bottom`), so a tick can
+ * never disagree with the fill about which way "along the track" is. A tick
+ * gradient that hard-coded `to right` painted stripes ACROSS a vertical track.
+ */
+const AXIS = "var(--itx-slider-axis, to right)";
+
+/**
+ * Carbon's tick is `$border-subtle` sitting clear of the track. Ours has to
+ * read against both the unfilled track (neutral-4) and the filled one
+ * (neutral-12), so it takes the house hairline step instead — `currentColor`,
+ * the previous default, is the page's text colour and vanished into the fill.
+ */
+const MAJOR_COLOR = "var(--itx-slider-mark-color, var(--itx-neutral-7))";
+const MINOR_COLOR = "var(--itx-slider-mark-minor-color, var(--itx-neutral-5))";
 const MAJOR_THICKNESS = "var(--itx-slider-mark-thickness, 2px)";
-const MINOR_THICKNESS =
-	"var(--itx-slider-mark-minor-thickness, var(--itx-slider-mark-thickness, 1px))";
+const MINOR_THICKNESS = "var(--itx-slider-mark-minor-thickness, 1px)";
 
 const TOL = 1e-9;
 
@@ -49,13 +61,20 @@ const TOL = 1e-9;
  * whenever possible.
  *
  * ## Tokens
- *   --itx-slider-mark-color           Major tick stripe color.
- *   --itx-slider-mark-thickness       Major tick stripe width (default 2px).
- *   --itx-slider-mark-minor-color     Minor tick color (default ~30% currentColor).
- *   --itx-slider-mark-minor-thickness Minor tick width (default = major thickness).
+ *   --itx-slider-mark-color           Major tick color (default --itx-neutral-7).
+ *   --itx-slider-mark-thickness       Major tick width along the track (2px).
+ *   --itx-slider-mark-minor-color     Minor tick color (default --itx-neutral-5).
+ *   --itx-slider-mark-minor-thickness Minor tick width along the track (1px).
+ *   --itx-slider-mark-length          Tick extent ACROSS the track (0.5rem),
+ *                                     declared in interop-slider.css.
+ *
+ * Ticks are painted on the input's own background, behind the track, so they
+ * read above and below the 2px track rather than through it — which is where
+ * Carbon puts its own mid-point notch.
  *
  * @remarks Range sliders — marks on `[interop-slider-thumb]` are not
- * visible: the thumb's track is transparent (the parent draws the track).
+ * visible: a thumb inside `<interop-slider-range>` paints no background of
+ * its own, because the parent owns the track.
  *
  * @example Major + minor (dimmed) ticks
  * ```html
@@ -154,7 +173,11 @@ export class InteropSliderMarks {
 		// Minors at 0% and 100% are visually covered by major edge ticks, so
 		// we don't bother enhancing them — the half-clipped repeating output
 		// hides under the majors. Middle minors are centered correctly.
-		return repeatingCenteredTicks(majorStride / subs, MINOR_COLOR, MINOR_THICKNESS);
+		return repeatingCenteredTicks(
+			majorStride / subs,
+			MINOR_COLOR,
+			MINOR_THICKNESS,
+		);
 	});
 
 	constructor() {
@@ -190,7 +213,7 @@ export class InteropSliderMarks {
  * at 0%" that the repeating-gradient pattern can't paint correctly.
  */
 function edgeTickStart(color: string, thickness: string): string {
-	return `linear-gradient(to right, ${color} 0 ${thickness}, transparent ${thickness})`;
+	return `linear-gradient(${AXIS}, ${color} 0 ${thickness}, transparent ${thickness})`;
 }
 
 /**
@@ -199,7 +222,7 @@ function edgeTickStart(color: string, thickness: string): string {
  */
 function edgeTickEnd(color: string, thickness: string): string {
 	return (
-		`linear-gradient(to right, ` +
+		`linear-gradient(${AXIS}, ` +
 		`transparent calc(100% - ${thickness}), ` +
 		`${color} calc(100% - ${thickness}) 100%)`
 	);
@@ -218,7 +241,7 @@ function repeatingCenteredTicks(
 ): string {
 	const half = `calc(${thickness} / 2)`;
 	return (
-		`repeating-linear-gradient(to right, ` +
+		`repeating-linear-gradient(${AXIS}, ` +
 		`${color} 0 ${half}, ` +
 		`transparent ${half} calc(${stridePct}% - ${half}), ` +
 		`${color} calc(${stridePct}% - ${half}) ${stridePct}%)`
@@ -235,11 +258,11 @@ function perTickGradient(
 	return positions
 		.map(
 			(pct) =>
-				`linear-gradient(to right, ` +
-					`transparent calc(${pct}% - ${half}), ` +
-					`${color} calc(${pct}% - ${half}), ` +
-					`${color} calc(${pct}% + ${half}), ` +
-					`transparent calc(${pct}% + ${half}))`,
+				`linear-gradient(${AXIS}, ` +
+				`transparent calc(${pct}% - ${half}), ` +
+				`${color} calc(${pct}% - ${half}), ` +
+				`${color} calc(${pct}% + ${half}), ` +
+				`transparent calc(${pct}% + ${half}))`,
 		)
 		.join(", ");
 }

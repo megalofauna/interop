@@ -1,6 +1,7 @@
 import {
 	Component,
 	ChangeDetectionStrategy,
+	computed,
 	signal,
 } from "@angular/core";
 import {
@@ -11,14 +12,17 @@ import {
 	InteropIcon,
 	InteropTable,
 	InteropCellDef,
+	CodeBlock,
 	provideInteropIcons,
+	type CodeFile,
 	type PopoverPlacement,
 	type TableColumn,
-} from 'interop';
+} from "interop";
 import { TablerCaretUp } from "interop/lib/iconsets/tabler/outline/tabler-caret-up";
 import { TablerInfoCircle } from "interop/lib/iconsets/tabler/outline/tabler-info-circle";
 import { TablerTarget } from "interop/lib/iconsets/tabler/outline/tabler-target";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
+import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import {
@@ -35,6 +39,11 @@ interface ApiEntry {
 	required?: boolean;
 }
 
+interface TokenEntry {
+	property: string;
+	default: string;
+}
+
 @Component({
 	selector: "popover-page",
 	standalone: true,
@@ -46,6 +55,8 @@ interface ApiEntry {
 		InteropIcon,
 		InteropTable,
 		InteropCellDef,
+		CodeBlock,
+		DemoPage,
 		DemoMasthead,
 		DemoSection,
 		DemoExample,
@@ -84,62 +95,77 @@ export class PopoverPage {
 	// ── Code snippets ────────────────────────────────────────────────────────
 
 	readonly basicHtml = `\
-<button
-  interop-button="action"
-  [interop-popover-trigger]="basic"
-  type="button"
->
+<button interop-button="primary" [interop-popover-trigger]="basic" type="button">
   Open panel
 </button>
+
 <div #basic="interopPopover" interop-popover>
   <p>Click the trigger again or press <kbd>Esc</kbd> to dismiss.</p>
 </div>`;
 
 	readonly builtinArrowHtml = `\
-<button
-  interop-button="action"
-  [interop-popover-trigger]="arrowed"
-  type="button"
->
+<button interop-button="primary" [interop-popover-trigger]="arrowed" type="button">
   Show with arrow
 </button>
+
 <div #arrowed="interopPopover" interop-popover [showArrow]="true">
-  <p>CSS-triangle arrow points at the trigger.</p>
+  <p>A 12 × 6 caret, bordered to match the panel frame.</p>
 </div>`;
 
 	readonly customArrowHtml = `\
 <button
-  interop-button="action"
+  interop-button="primary"
   [interop-popover-trigger]="iconArrow"
   [popoverHaspopup]="'menu'"
   type="button"
 >
   More options
 </button>
-<div
-  #iconArrow="interopPopover"
-  interop-popover
-  placement="bottom-start"
->
+
+<div #iconArrow="interopPopover" interop-popover placement="bottom-start">
   <span interop-popover-arrow>
     <interop-icon name="tabler-caret-up" [size]="14" />
   </span>
   <p>Custom arrow auto-rotates per resolved placement.</p>
 </div>`;
 
-	readonly placementHtml = `\
-@for (p of placements; track p) {
-  <button interop-button itx-size="xs" (click)="showPlacement(p, placedRef)">
-    {{ p }}
-  </button>
-}
+	readonly customArrowTs = `\
+@Component({
+  providers: [provideInteropIcons(TablerCaretUp)],
+  imports: [InteropPopover, InteropPopoverTrigger, InteropPopoverArrow, InteropIcon],
+  // …
+})
+export class Example {}`;
 
-<button
-  interop-button="action-plus icon"
-  [interop-popover-trigger]="placedRef"
->
-  Anchor
-</button>
+	readonly customArrowFiles = computed<CodeFile[]>(() => [
+		{ label: "template.html", language: "html", code: this.customArrowHtml },
+		{ label: "component.ts", language: "ts", code: this.customArrowTs },
+	]);
+
+	readonly placementHtml = `\
+<div class="placement-grid">
+  @for (p of placements; track p) {
+    <button
+      interop-button="icon"
+      itx-size="xs"
+      [attr.aria-label]="p"
+      (click)="showPlacement(p, placedRef)"
+      type="button"
+    >
+      <interop-icon name="tabler-target" [size]="16" />
+    </button>
+  }
+
+  <button
+    interop-button="primary icon"
+    [interop-popover-trigger]="placedRef"
+    aria-label="Anchor"
+    type="button"
+  >
+    <interop-icon name="tabler-info-circle" [size]="16" />
+  </button>
+</div>
+
 <div
   #placedRef="interopPopover"
   interop-popover
@@ -147,18 +173,15 @@ export class PopoverPage {
   [placement]="selectedPlacement()"
   [showArrow]="true"
 >
-  <p>Placement: <strong>{{ selectedPlacement() }}</strong></p>
+  Placement: <strong>{{ selectedPlacement() }}</strong>
 </div>`;
 
 	readonly placementTs = `\
-import { signal } from '@angular/core';
-import { InteropPopover, type PopoverPlacement } from 'interop';
-
 readonly placements: PopoverPlacement[] = [
-  'top', 'top-start', 'top-end',
-  'bottom', 'bottom-start', 'bottom-end',
-  'left', 'left-start', 'left-end',
-  'right', 'right-start', 'right-end',
+  'top-end',    'top',    'top-start',
+  'right-end',  'right',  'right-start',
+  'bottom-end', 'bottom', 'bottom-start',
+  'left-end',   'left',   'left-start',
 ];
 
 readonly selectedPlacement = signal<PopoverPlacement>('bottom');
@@ -168,22 +191,124 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
   if (!ref.isOpen()) ref.open();
 }`;
 
+	readonly placementFiles = computed<CodeFile[]>(() => [
+		{ label: "template.html", language: "html", code: this.placementHtml },
+		{ label: "component.ts", language: "ts", code: this.placementTs },
+	]);
+
 	readonly modesHtml = `\
 <!-- auto: light-dismiss + Escape (default) -->
-<button interop-button="action" [interop-popover-trigger]="autoMode">
+<button interop-button="primary" [interop-popover-trigger]="autoMode" type="button">
   auto (light-dismiss)
 </button>
 <div #autoMode="interopPopover" interop-popover>
-  <p>Click outside or press Esc to dismiss.</p>
+  <p>Click outside or press <kbd>Esc</kbd> to dismiss.</p>
 </div>
 
-<!-- manual: stays open until trigger clicked again -->
-<button interop-button="action" [interop-popover-trigger]="manualMode">
+<!-- manual: stays open until the trigger is clicked again -->
+<button interop-button="secondary" [interop-popover-trigger]="manualMode" type="button">
   manual (no light-dismiss)
 </button>
 <div #manualMode="interopPopover" interop-popover [popoverType]="'manual'">
   <p>Stays open until you click the trigger again.</p>
 </div>`;
+
+	// ── In-section notes ─────────────────────────────────────────────────────
+
+	readonly modeNotes: DemoNote[] = [
+		{
+			type: "note",
+			label: "hint mode",
+			body: "popoverType='hint' is Chrome 131+ tooltip-mode: it closes on any pointer event outside the panel and stacks separately from 'auto'. Browsers without support ignore the value and fall back to 'auto' semantics, so it is safe to ship — but do not rely on the separate stack.",
+		},
+		{
+			type: "note",
+			label: "Role is yours",
+			body: "InteropPopover assumes no role for its content. Set role on the popover element or a child as appropriate (menu, listbox, region, dialog), and declare the relationship from the trigger with [popoverHaspopup].",
+		},
+	];
+
+	// ── CSS tokens ───────────────────────────────────────────────────────────
+
+	tokenColumns: TableColumn<TokenEntry>[] = [
+		{ key: "property", label: "Property" },
+		{ key: "default", label: "Default" },
+	];
+
+	tokenEntries: TokenEntry[] = [
+		{ property: "--itx-popover-min-width", default: "0" },
+		{
+			property: "--itx-popover-max-width",
+			default: "min(90vw, 23rem) — 368px cap",
+		},
+		{ property: "--itx-popover-max-height", default: "70vh" },
+		{
+			property: "--itx-popover-padding",
+			default: "var(--itx-spacing-4) — 16px",
+		},
+		{ property: "--itx-popover-font-size", default: "0.875rem — 14px" },
+		{ property: "--itx-popover-line-height", default: "1.4286 — 20px at 14px" },
+		{
+			property: "--itx-popover-background",
+			default: "var(--itx-surface-above)",
+		},
+		{ property: "--itx-popover-foreground", default: "var(--itx-on-surface)" },
+		{
+			property: "--itx-popover-border-radius",
+			default: "var(--itx-radius-none) — 0",
+		},
+		{ property: "--itx-popover-border-width", default: "1px" },
+		{ property: "--itx-popover-border-style", default: "solid" },
+		{
+			property: "--itx-popover-border-color",
+			default: "var(--itx-neutral-7)",
+		},
+		{
+			property: "--itx-popover-shadow",
+			default: "0 2px 2px oklch(0 0 0 / 0.2)",
+		},
+		{
+			property: "--itx-popover-enter-duration",
+			default: "var(--itx-duration-fast)",
+		},
+		{
+			property: "--itx-popover-exit-duration",
+			default: "var(--itx-duration-fast)",
+		},
+		{
+			property: "--itx-popover-enter-easing",
+			default: "var(--itx-easing-decelerate)",
+		},
+		{
+			property: "--itx-popover-exit-easing",
+			default: "var(--itx-easing-accelerate)",
+		},
+		{ property: "--itx-popover-enter-translate", default: "0 -0.25rem" },
+		{ property: "--itx-popover-exit-translate", default: "0 -0.25rem" },
+		{
+			property: "--itx-popover-arrow-size",
+			default: "6px — half-width and depth, so a 12 × 6 caret",
+		},
+		{
+			property: "--itx-popover-arrow-color",
+			default: "unset — resolves --itx-popover-background at the panel",
+		},
+		{
+			property: "--itx-popover-arrow-border-color",
+			default: "unset — resolves --itx-popover-border-color at the panel",
+		},
+		{
+			property: "--itx-popover-arrow-offset",
+			default: "0px — positive moves the arrow into the panel",
+		},
+		{
+			property: "--itx-backdrop-color",
+			default: "var(--itx-overlay) — global, shared with dialog",
+		},
+		{ property: "--itx-backdrop-blur", default: "0px — global" },
+	];
+
+	// ── API ──────────────────────────────────────────────────────────────────
 
 	apiColumns: TableColumn<ApiEntry>[] = [
 		{ key: "component", label: "Directive", sticky: true },
@@ -215,7 +340,8 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 			name: "offset",
 			type: "number",
 			default: "8",
-			description: "Gap between trigger edge and panel, in pixels.",
+			description:
+				"Gap between trigger edge and panel, in pixels. With [showArrow] the 6px caret eats most of it — Carbon uses 10 for its equivalent.",
 		},
 		{
 			component: "[interop-popover]",
@@ -223,7 +349,7 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 			type: "boolean",
 			default: "false",
 			description:
-				"Render the built-in CSS-triangle arrow on the panel edge nearest the trigger. Suppressed automatically when an [interop-popover-arrow] marker child is present.",
+				"Render the built-in caret on the panel edge nearest the trigger. Suppressed automatically when an [interop-popover-arrow] marker child is present.",
 		},
 		{
 			component: "[interop-popover]",
@@ -285,27 +411,43 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 		},
 	];
 
-	notes: DemoNote[] = [
+	methodColumns: TableColumn<ApiEntry>[] = [
+		{ key: "component", label: "Directive", sticky: true },
+		{ key: "name", label: "Method" },
+		{ key: "type", label: "Signature" },
+		{ key: "description", label: "Description" },
+	];
+
+	methodEntries: ApiEntry[] = [
 		{
-			type: "release",
-			label: "v0.1.x",
-			title: "InteropPopover added",
-			body: "Two-directive primitive built on the native HTML popover API. Top-layer promotion and light-dismiss are browser-native; positioning is handled by the same INTEROP_POSITION_STRATEGY infrastructure as InteropTooltip (FloatingUI by default).",
+			component: "[interop-popover]",
+			name: "open",
+			type: "(): void",
+			default: "",
+			description: "Open the panel programmatically. Idempotent.",
 		},
 		{
-			type: "note",
-			label: "Role-agnostic",
-			body: "InteropPopover does not assume a role for its content. Set role on the popover element or on a child as appropriate (menu, listbox, region, dialog, etc.). The trigger's aria-haspopup input declares the relationship.",
+			component: "[interop-popover]",
+			name: "close",
+			type: "(): void",
+			default: "",
+			description:
+				"Close the panel programmatically. The (closed) reason is 'programmatic'.",
 		},
 		{
-			type: "note",
-			label: "Native popover modes",
-			body: "popoverType='auto' is the default and right for menus/dropdowns (light-dismiss + Escape). popoverType='manual' for panels that should NOT auto-dismiss. popoverType='hint' is Chrome 131+ tooltip-mode; it falls back gracefully on unsupported browsers.",
+			component: "[interop-popover]",
+			name: "toggle",
+			type: "(): void",
+			default: "",
+			description: "Toggle the panel.",
 		},
 		{
-			type: "note",
-			label: "Arrow modes",
-			body: 'Three modes: no arrow (default), built-in CSS triangle ([showArrow]="true"), or a custom element with [interop-popover-arrow]. The structural CSS positions and auto-rotates a custom arrow per placement, so a single icon (caret-up) reorients correctly for any side.',
+			component: "[interop-popover]",
+			name: "isOpen",
+			type: "Signal<boolean>",
+			default: "",
+			description:
+				"True while the panel is open. Read by the trigger to drive aria-expanded.",
 		},
 	];
 }

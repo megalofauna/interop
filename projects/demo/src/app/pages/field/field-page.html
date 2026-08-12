@@ -1,94 +1,271 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Field">
-		Accessible form fields with automatic ARIA wiring, validation error display,
-		and Angular Forms integration. Covers text inputs and textareas.
+		A field is the whole unit — visible label, control, helper text, validation
+		errors, and the ARIA wiring between them. Two components ship:
+		<code>&lt;interop-field-input&gt;</code> and
+		<code>&lt;interop-field-textarea&gt;</code>. Both implement
+		<code>ControlValueAccessor</code>, so they drop into reactive forms
+		unchanged.
 	</demo-masthead>
 
 	<!-- ── Input ──────────────────────────────────────────────────────────── -->
 	<demo-section id="input" heading="Input">
+		<p description class="demo-section__lede">
+			A filled slab with a single rule along its bottom edge — the shape is
+			borrowed from IBM Carbon's text input. The label sits above at 12px, the
+			value inside at 14px, helper text below at 12px.
+		</p>
+
 		<demo-example label="Basic">
-			<interop-field-input
-				id="callsign"
-				label="Callsign"
-				placeholder="e.g. Viper-7"
-				style="max-width: 24rem;"
-			/>
+			<div class="field-page__field">
+				<interop-field-input
+					id="callsign"
+					label="Callsign"
+					placeholder="e.g. Viper-7"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="basicCode" />
 		</demo-example>
 
-		<demo-example label="Required">
-			<interop-field-input
-				id="destination"
-				label="Destination"
-				placeholder="Sector coordinates"
-				[required]="true"
-				[fieldNotes]="'Enter target sector in format A1-C3'"
-				style="max-width: 24rem;"
-			/>
+		<demo-example label="Required, with helper text">
+			<div class="field-page__field">
+				<interop-field-input
+					id="destination"
+					label="Destination"
+					placeholder="Sector coordinates"
+					[required]="true"
+					[fieldNotes]="'Enter target sector in format A1-C3'"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="requiredCode" />
 		</demo-example>
 
 		<demo-example label="With prefix and suffix">
-			<interop-field-input
-				id="fuel-cost"
-				label="Fuel cost"
-				type="number"
-				placeholder="0"
-				style="max-width: 14rem;">
-				<span interop-field-prefix>⬡</span>
-				<span interop-field-suffix>credits</span>
-			</interop-field-input>
+			<div class="field-page__field field-page__field--narrow">
+				<interop-field-input
+					id="fuel-cost"
+					label="Fuel cost"
+					type="number"
+					placeholder="0"
+				>
+					<span interop-field-prefix>⬡</span>
+					<span interop-field-suffix>credits</span>
+				</interop-field-input>
+			</div>
+			<itx-code-block language="html" [code]="addonCode" />
 		</demo-example>
 
 		<demo-example label="Disabled">
-			<interop-field-input
-				id="vessel-id"
-				label="Vessel ID"
-				[disabled]="true"
-				placeholder="Auto-assigned"
-				style="max-width: 24rem;"
-			/>
+			<div class="field-page__field">
+				<interop-field-input
+					id="vessel-id"
+					label="Vessel ID"
+					placeholder="Auto-assigned"
+					[disabled]="true"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="disabledCode" />
 		</demo-example>
 
-		<demo-example label="With validation errors">
-			<interop-field-input
-				id="cargo-mass"
-				label="Cargo mass (kg)"
-				type="number"
-				[required]="true"
-				[fieldErrors]="[{ key: 'max', message: 'Exceeds bay capacity of 8,500 kg' }]"
-				style="max-width: 24rem;"
-			/>
+		<demo-example label="Read-only">
+			<div class="field-page__field">
+				<interop-field-input
+					id="registry"
+					label="Registry"
+					[readonly]="true"
+					[fieldNotes]="
+						'Assigned at commissioning. Contact fleet command to amend.'
+					"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="readonlyCode" />
 		</demo-example>
+
+		<demo-notes [notes]="inputNotes" />
 	</demo-section>
 
 	<!-- ── Textarea ───────────────────────────────────────────────────────── -->
 	<demo-section id="textarea" heading="Textarea">
+		<p description class="demo-section__lede">
+			Identical to the input in every respect but three: 11px of block padding
+			instead of a fixed height, a 40px minimum so an empty textarea lines up
+			with an input beside it, and slightly looser leading for multi-line text.
+		</p>
+
 		<demo-example label="Basic">
-			<interop-field-textarea
-				id="mission-brief"
-				label="Mission briefing"
-				placeholder="Describe the mission objectives…"
-				style="max-width: 32rem;"
-			/>
+			<div class="field-page__field field-page__field--wide">
+				<interop-field-textarea
+					id="mission-brief"
+					label="Mission briefing"
+					[rows]="4"
+					placeholder="Describe the mission objectives…"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="textareaCode" />
 		</demo-example>
 
-		<demo-example label="With notes">
-			<interop-field-textarea
-				id="incident-log"
-				label="Incident log"
-				[required]="true"
-				[fieldNotes]="'Describe the incident in detail. All logs are transmitted to fleet command.'"
-				style="max-width: 32rem;"
-			/>
+		<demo-example label="Auto-resize">
+			<div class="field-page__field field-page__field--wide">
+				<interop-field-textarea
+					id="incident-log"
+					label="Incident log"
+					[required]="true"
+					[autoResize]="true"
+					[rows]="2"
+					[fieldNotes]="
+						'Grows as you type. All logs are transmitted to fleet command.'
+					"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="autoResizeCode" />
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Validation ─────────────────────────────────────────────────────── -->
+	<demo-section id="validation" heading="Validation">
+		<p description class="demo-section__lede">
+			The most distinctive state. An invalid field takes a 2px inset ring, a
+			recoloured underline, an inline error glyph, and the message below in the
+			same red. Focus outranks the error ring — a focus indicator that can be
+			one of two colours is a worse focus indicator.
+		</p>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+		<demo-example label="Angular Forms">
+			<form class="field-page__form">
+				<interop-field-input
+					id="pilot-email"
+					type="email"
+					label="Pilot email"
+					[required]="true"
+					[formControl]="email"
+					[errorMessages]="{ email: 'That is not a routable address.' }"
+				/>
+
+				<interop-field-textarea
+					id="cargo-manifest"
+					label="Cargo manifest"
+					[required]="true"
+					[rows]="3"
+					[formControl]="manifest"
+					errorDisplay="all"
+				/>
+
+				<div class="field-page__actions">
+					<button interop-button="primary" type="button" (click)="submit()">
+						Submit
+					</button>
+					<button interop-button="secondary" type="button" (click)="reset()">
+						Reset
+					</button>
+				</div>
+			</form>
+			<demo-state>
+				<demo-state-item label="email.status">
+					{{ email.status }}
+				</demo-state-item>
+				<demo-state-item label="email.touched">
+					{{ email.touched }}
+				</demo-state-item>
+				<demo-state-item label="manifest.status">
+					{{ manifest.status }}
+				</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="formsFiles" />
+		</demo-example>
+
+		<demo-example label="Without Angular Forms">
+			<div class="field-page__field">
+				<interop-field-input
+					id="cargo-mass"
+					label="Cargo mass (kg)"
+					type="number"
+					[required]="true"
+					[fieldErrors]="massErrors"
+				/>
+			</div>
+			<itx-code-block [files]="manualFiles" />
+		</demo-example>
+
+		<demo-notes [notes]="formsNotes" />
+	</demo-section>
+
+	<!-- ── Sizes ──────────────────────────────────────────────────────────── -->
+	<demo-section id="sizes" heading="Sizes">
+		<p description class="demo-section__lede">
+			<code>itx-size</code> steps the control height — <code>sm</code> 32px,
+			<code>md</code> 40px (the default), <code>lg</code> 48px. Inline padding
+			and type size hold at every step; density is a separate axis. On a
+			textarea the attribute sets the <em>minimum</em> height, since content
+			decides the rest.
+		</p>
+
+		<demo-example label="sm / md / lg">
+			<div class="field-page__sizes">
+				<interop-field-input itx-size="sm" id="size-sm" label="Small (32px)" />
+				<interop-field-input itx-size="md" id="size-md" label="Medium (40px)" />
+				<interop-field-input itx-size="lg" id="size-lg" label="Large (48px)" />
+				<interop-field-textarea
+					itx-size="lg"
+					id="size-textarea"
+					label="Large textarea"
+				/>
+			</div>
+			<itx-code-block language="html" [code]="sizesHtml" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Tokens ─────────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<p description class="demo-section__lede">
+			One <code>--itx-field-*</code> namespace covers both components. Set any
+			of these on an ancestor — <code>[interop-root]</code>, a form wrapper, or
+			the field host itself.
+		</p>
+
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ────────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+				<span class="demo-page__required">*</span>
+				}
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Attributes</h3>
+		<interop-table
+			[collection]="attrEntries"
+			[columns]="attrColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -98,8 +275,4 @@
 			</ng-template>
 		</interop-table>
 	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
-	</demo-section>
-</article>
+</demo-page>

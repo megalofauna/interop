@@ -1,0 +1,22 @@
+/*
+ * Badge demo page — example layout only. Nothing here themes the component;
+ * badge's own token surface is documented in the CSS tokens section.
+ *
+ * Both rules exist for the same reason: the indicator is `position: fixed` and
+ * bleeds past its anchor's corner, so examples need room around the anchors or
+ * neighbouring badges overlap each other's buttons.
+ */
+
+.badge-page__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-4);
+	align-items: center;
+}
+
+.badge-page__grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-8);
+	align-items: center;
+}

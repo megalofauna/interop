@@ -53,6 +53,10 @@ import {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 
 	host: {
+		// See the equivalent note on InteropFieldInput: the field owns its own
+		// fixed type scale, so prose stops at this subtree.
+		"interop-typography-isolate": "",
+
 		"[attr.data-invalid]": 'hasVisibleErrors() ? "" : null',
 		"[attr.data-disabled]": 'disabled() ? "" : null',
 		"[attr.data-required]": 'required() ? "" : null',

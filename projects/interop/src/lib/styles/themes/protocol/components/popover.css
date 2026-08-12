@@ -1,55 +1,177 @@
 /*
  * InteropPopover — Protocol theme.
  *
- * Sets values for sizing, appearance, animation, and arrow tokens. Layout
- * and animation mechanism live in the component CSS
+ * Sets values for sizing, typography, appearance, animation, and arrow
+ * tokens. Layout and animation mechanism live in the component CSS
  * (`styles/components/popover.css`) — this file only declares values.
  *
  * Backdrop tokens (`--itx-backdrop-color`, `--itx-backdrop-blur`) are global
  * and live in `protocol/foundation.css`. The popover's [showBackdrop]
  * opt-in consumes those globals directly; no per-component override needed
  * unless a popover wants to diverge.
+ *
+ * ── Borrowed visual language ────────────────────────────────────────────────
+ *
+ * Proportions and paint follow IBM Carbon's Popover container — the same
+ * surface Carbon builds Tooltip and Toggletip on. See
+ * .agent/workflows/carbon-borrow.md.
+ *
+ *   - 16px padding on both axes ($spacing-05), where we had 12/16
+ *   - 368px max width (Carbon's SCSS; their style.mdx says 352 — SCSS wins)
+ *   - $body-01 type: 14 / 20 / 400, previously undeclared
+ *   - a 12 × 6 caret — Carbon's exact caret box, with a matching 1px border
+ *   - $layer fill, $text-primary label, 1px hairline frame
+ *
+ * Carbon's high-contrast flavour (inverse fill + inverse text, which is what
+ * their Toggletip uses) is not expressed — the component has no variant axis,
+ * and the inverse pill is already our Tooltip's job. Each token below names
+ * the single value that walks the borrow back where one exists.
  */
 
 :where([interop-root]) {
 	/* ── Sizing ─────────────────────────────────────────────────────────── */
 	--itx-popover-min-width: 0;
-	--itx-popover-max-width: min(90vw, 24rem);
+
+	/*
+	 * Carbon: `max-inline-size: to-rem(368px)` = 23rem. Their spec page claims
+	 * 352px / 22rem; the shipped SCSS is 368 and the SCSS wins. The min(90vw, …)
+	 * guard is ours — Carbon has no small-viewport clamp because its popover is
+	 * flow-positioned inside a container rather than promoted to the top layer.
+	 */
+	--itx-popover-max-width: min(90vw, 23rem);
+
+	/* Not a Carbon value — their popover has no height ceiling. Kept because a
+	   top-layer panel with arbitrary projected content needs one. */
 	--itx-popover-max-height: 70vh;
-	--itx-popover-padding: var(--itx-spacing-3) var(--itx-spacing-4);
+
+	/* $spacing-05 (16px) on both axes. Carbon sets this on the *content* of
+	   tooltip/toggletip rather than the popover container, which is the same
+	   box for us. Was `var(--itx-spacing-3) var(--itx-spacing-4)` (12/16).
+	   One value, not a pair: the foundation feeds it straight to `padding`, so
+	   a two-value token here is a shorthand waiting to be mis-split. */
+	--itx-popover-padding: var(--itx-spacing-4);
+
+	/* ── Typography ─────────────────────────────────────────────────────── */
+	/*
+	 * $body-01 — 14 / 20 / 400. Carbon's Toggletip and Tooltip both set this
+	 * on the popover surface; our popover declared no type at all and simply
+	 * inherited whatever the trigger's context happened to be.
+	 *
+	 * Fixed rem, never --itx-font-size-*: those are fluid clamp() values, and
+	 * a panel with a pinned max-width should not reflow with the viewport.
+	 *
+	 * This is the panel's BASELINE. Projected prose still wins over it —
+	 * prose.css targets `p`/`li` directly, and an inherited value cannot beat
+	 * a direct declaration. That is deliberate: see the note in the mental
+	 * model card on why popover does NOT set interop-typography-isolate.
+	 */
+	--itx-popover-font-size: 0.875rem;
+	--itx-popover-line-height: 1.4286; /* 20 / 14 */
 
 	/* ── Appearance ─────────────────────────────────────────────────────── */
+	/*
+	 * Carbon's `theme.$layer` — one step off the page in their layer model.
+	 * Mapped to our elevation semantic rather than literally to $layer's
+	 * #f4f4f4 (= --itx-neutral-2): Carbon steps *darker* to lift a surface in
+	 * its white theme, Interop steps *lighter*, and --itx-surface-above is the
+	 * token that means "one stop up" in both colour schemes. Dialog resolves
+	 * its surface the same way, so the two floating surfaces agree.
+	 */
 	--itx-popover-background: var(--itx-surface-above);
-	--itx-popover-foreground: var(--itx-on-surface);
-	--itx-popover-border-radius: var(--itx-radius-md);
+	--itx-popover-foreground: var(--itx-on-surface); /* $text-primary */
+
+	/*
+	 * Carbon specifies `$popover-border-radius: 2px`, which we DECLINE.
+	 *
+	 * Nine rounds of this borrow have converged on square corners, and our
+	 * tooltip — the sibling surface Carbon builds on this same container — is
+	 * already at --itx-radius-none. Taking the literal 2px would put the two
+	 * members of one family a hair apart for no expressive gain. Set
+	 * --itx-radius-nominal (2px) to restore Carbon's value exactly.
+	 *
+	 * NB --itx-radius-0 does not exist; --itx-radius-none is the zero token.
+	 */
+	--itx-popover-border-radius: var(--itx-radius-none);
+
 	--itx-popover-border-width: 1px;
 	--itx-popover-border-style: solid;
-	--itx-popover-border-color: var(--itx-border);
-	--itx-popover-shadow: var(--itx-shadow-md);
+
+	/*
+	 * Carbon's `$border-subtle` (#e0e0e0) maps to --itx-neutral-4 by the
+	 * conversion table, and we go two steps darker on purpose.
+	 *
+	 * A popover floats over arbitrary page content, so its frame is the only
+	 * thing separating the panel from whatever is behind it. --itx-neutral-4
+	 * against an --itx-surface-above panel is a sub-0.1 luminance delta and
+	 * reads as no edge at all. --itx-neutral-7 is the house hairline.
+	 *
+	 * NOT --itx-border: that global is currently overwritten app-wide by
+	 * themes/protocol/components/dialog.css (see .agent/todo/dialog-theme-
+	 * stomps-itx-border.md), so reading it here would make the popover's frame
+	 * a hostage to the dialog file.
+	 */
+	--itx-popover-border-color: var(--itx-neutral-7);
+
+	/*
+	 * Carbon: `drop-shadow(0 $spacing-01 $spacing-01 rgba(0, 0, 0, 0.2))` —
+	 * 0 2px 2px at 20% black. Tight and dark, quite unlike our
+	 * --itx-shadow-md (a soft 4/6 spread at 8%), which is what this was.
+	 *
+	 * Written as a box-shadow, not Carbon's `filter: drop-shadow()`. Their
+	 * filter wraps the caret silhouette too, because they hang it off an
+	 * intermediate wrapper element; we have no wrapper and putting `filter`
+	 * on the panel itself would make it a containing block for every
+	 * positioned descendant. The cost is that the caret casts no shadow.
+	 */
+	--itx-popover-shadow: 0 var(--itx-spacing-0_5) var(--itx-spacing-0_5)
+		oklch(0 0 0 / 0.2);
 
 	/* ── Animation ──────────────────────────────────────────────────────── */
-	--itx-popover-enter-duration: var(--itx-duration-fast);
-	--itx-popover-exit-duration: var(--itx-duration-fast);
-	--itx-popover-enter-easing: var(--itx-easing-decelerate);
-	--itx-popover-exit-easing: var(--itx-easing-accelerate);
 	/*
+	 * Ours, not Carbon's — their popover has no transition at all, it toggles
+	 * `display`. Nothing to borrow, so nothing changed here.
+	 *
 	 * Entry/exit translate values are written as a 2-axis translate vector.
 	 * Default: subtle 0.25rem upward fade-in (suitable for `bottom` placement).
 	 * For other placements the translate axis still works visually — the panel
 	 * fades in from the trigger axis with a slight slide.
 	 */
+	--itx-popover-enter-duration: var(--itx-duration-fast);
+	--itx-popover-exit-duration: var(--itx-duration-fast);
+	--itx-popover-enter-easing: var(--itx-easing-decelerate);
+	--itx-popover-exit-easing: var(--itx-easing-accelerate);
 	--itx-popover-enter-translate: 0 -0.25rem;
 	--itx-popover-exit-translate: 0 -0.25rem;
 
 	/* ── Arrow ──────────────────────────────────────────────────────────── */
 	/*
-	 * Built-in CSS-triangle uses --itx-popover-arrow-size as the side length
-	 * of the triangle. Custom arrows (consumer-supplied [interop-popover-arrow]
-	 * marker children) use the same token to compute their negative offset
-	 * from the panel edge — keeping the visual rhythm consistent between the
-	 * two arrow modes.
+	 * Carbon's caret is 12px wide × 6px deep ($popover-caret-width /
+	 * $popover-caret-height), with a 1px border caret stacked behind it when
+	 * the container is bordered — which ours always is.
+	 *
+	 * The foundation builds the triangle with the border trick, where one
+	 * value produces a box 2× wide and 1× deep. So 6px here IS Carbon's
+	 * 12 × 6 exactly. Previously 8px, i.e. a 16 × 8 triangle — half again as
+	 * large as Carbon's and noticeably blunter.
+	 *
+	 * Deliberately NOT declared here:
+	 *
+	 *   --itx-popover-arrow-color         derives from -background
+	 *   --itx-popover-arrow-border-color  derives from -border-color
+	 *
+	 * Both are read at the point of use in the foundation as
+	 * `var(--itx-popover-arrow-color, var(--itx-popover-background))`. Setting
+	 * them here would resolve --itx-popover-background AT [interop-root] and
+	 * freeze it (the var() gotcha in the borrow workflow): a consumer who
+	 * re-points --itx-popover-background on one panel would get that panel's
+	 * caret still painted in the root's colour. That was the previous
+	 * behaviour. They remain public tokens — an ancestor that sets either one
+	 * still wins, it just is not set by default.
 	 */
-	--itx-popover-arrow-size: 8px;
-	--itx-popover-arrow-color: var(--itx-popover-background);
+	--itx-popover-arrow-size: 6px;
+
+	/* Nudge the arrow along its own axis; positive moves it INTO the panel.
+	   Carbon's equivalent lever is `$popover-offset`, which moves the panel
+	   rather than the caret — that is our [offset] input, not this token. */
 	--itx-popover-arrow-offset: 0px;
 }

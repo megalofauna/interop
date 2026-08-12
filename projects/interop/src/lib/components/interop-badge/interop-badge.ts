@@ -101,7 +101,14 @@ export class InteropBadge implements OnDestroy {
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly announcer = inject(InteropAnnouncer);
 
-  /** The numeric count to display. null hides the badge entirely. */
+  /**
+   * The numeric count to display.
+   *
+   * null does NOT hide the badge — it renders an empty indicator, i.e. a bare
+   * coloured circle, which is a legitimate "something is here" affordance but
+   * is not the same thing as absence. Use [hidden] to remove the indicator, or
+   * [dot] if the bare circle is what you wanted.
+   */
   count = input<number | null>(null);
 
   /** Display cap. When count exceeds this, the indicator shows "${max}+". */

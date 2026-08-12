@@ -18,12 +18,27 @@ Most pages skip the shell and open with a bare `<article class="demo-page">`,
 which renders identically and silently has **no page nav**:
 
 ```
-<demo-page> wrapper:             8 pages
-bare <article class="demo-page">: 24 pages
+<demo-page> wrapper:             13 pages
+bare <article class="demo-page">: 20 pages
 ```
 
-(Was 4 / 26. The Carbon sweep converted button, table, toast, segmented control
-and progress on its way past.)
+(Was 4 / 26, then 8 / 24. The Carbon rounds convert pages on their way past:
+rounds 5–9 took button, table, toast, segmented control and progress; rounds
+10–14 took badge, field, popover, slider and tabs.)
+
+Still bare, as of 2026-08-13:
+
+```
+auto-render   chip          callout      checkbox    code-renderer
+expansion-panel  content    dialog       kbd         icon
+list          scroll-area   listbox      radio       stepper
+tooltip       toggle        visimorph    tree        typography
+```
+
+Note that `chip`, `expansion-panel`, `list` and `tree` have **already had their
+Carbon round** (1, 2, 4, 3) — those rounds predated the page-shell rule, so the
+borrow landed without the page conversion. Don't assume a borrowed component
+has a converted page.
 
 `demo-section` injects the registry with `{ optional: true }`, so outside the
 shell it just skips registering. Good for robustness, bad for noticing — no

@@ -12,12 +12,17 @@
 		gap: 1rem;
 
 		label {
+			// Carbon's range label: $body-compact-01, 14/18. Fixed rem, never
+			// --itx-font-size-*, which is a fluid clamp().
+			font-size: 0.875rem;
+			line-height: 1.2857;
 			font-weight: 500;
 		}
 
 		output {
+			font-size: 0.875rem;
 			font-variant-numeric: tabular-nums;
-			color: var(--itx-on-surface-muted, currentColor);
+			color: var(--itx-on-surface-muted);
 		}
 	}
 
@@ -30,15 +35,16 @@
 	&__marks-labels {
 		display: flex;
 		justify-content: space-between;
-		font-size: 0.8rem;
-		color: var(--itx-on-surface-muted, currentColor);
+		// Carbon's slider label: $label-01, 12/16.
+		font-size: 0.75rem;
+		line-height: 1.3333;
+		color: var(--itx-on-surface-muted);
 	}
 
 	&__submit {
+		// Layout only. Padding, type and cursor come from interop-button now —
+		// they were being re-declared here back when this was a bare <button>.
 		align-self: flex-start;
-		padding: 0.5rem 1rem;
-		font: inherit;
-		cursor: pointer;
 	}
 
 	&__vertical-readout {

@@ -1,36 +1,43 @@
+import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
 import {
-	ChangeDetectionStrategy,
-	Component,
-	signal,
-} from "@angular/core";
-import {
+	CodeBlock,
+	InteropButton,
+	InteropCellDef,
 	InteropSlider,
 	InteropSliderMarks,
 	InteropSliderRange,
 	InteropSliderThumb,
 	InteropSliderValue,
 	InteropTable,
-	InteropCellDef,
-	InteropButton,
+	type CodeFile,
 	type SliderRangeValue,
 	type TableColumn,
-} from 'interop';
-import { CodeBlock } from "interop";
-import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import { DemoSection } from "../../components/demo-section/demo-section";
+} from "interop";
 import { DemoExample } from "../../components/demo-example/demo-example";
+import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
+import { DemoPage } from "../../components/demo-page/demo-page";
+import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
+
+type TokenEntry = { property: string; default: string };
+
 interface ApiEntry {
+	/** Present because the surface spans five directives — see the sticky
+	    leading column in apiColumns. */
+	directive: string;
 	name: string;
 	type: string;
 	default: string;
 	description: string;
 	required?: boolean;
+}
+
+interface ApiOutputEntry {
+	directive: string;
+	name: string;
+	type: string;
+	description: string;
 }
 
 const SHIRT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
@@ -46,14 +53,14 @@ const SHIRT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
 		InteropSliderValue,
 		InteropTable,
 		InteropCellDef,
+		InteropButton,
 		CodeBlock,
+		DemoPage,
 		DemoMasthead,
 		DemoSection,
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
-		InteropButton,
 	],
 	templateUrl: "./slider-page.html",
 	styleUrl: "./slider-page.scss",
@@ -79,34 +86,81 @@ export class SliderPage {
 
 	// ── Code snippets ────────────────────────────────────────────────────
 
-	readonly basicCode = `<label for="brightness">Brightness</label>
+	private readonly basicHtml = `<label for="brightness">Brightness</label>
+<output interop-slider-value for="brightness"></output>
+
 <input type="range" interop-slider id="brightness"
        [min]="0" [max]="100" [step]="1"
-       [(value)]="brightness" name="brightness" />
-<output interop-slider-value for="brightness"></output>`;
+       [(value)]="brightness" name="brightness" />`;
 
-	readonly currencyCode = `<label for="price">Budget</label>
+	private readonly basicTs = `brightness = signal(60);`;
+
+	readonly basicFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.basicHtml },
+		{ label: "component.ts", language: "ts", code: this.basicTs },
+	];
+
+	readonly disabledCode = `<label for="locked">Sensor gain (locked)</label>
+<input type="range" interop-slider id="locked"
+       [value]="40" [disabled]="true" />`;
+
+	private readonly currencyHtml = `<label for="price">Budget</label>
+<output interop-slider-value for="price"
+        [format]="currencyFormatter"></output>
+
 <input type="range" interop-slider id="price"
        [min]="0" [max]="5000" [step]="50"
-       [(value)]="price" />
-<output interop-slider-value for="price"
-        [format]="currencyFormatter"></output>`;
+       [(value)]="price" />`;
 
-	readonly sizesCode = `<label for="size">Shirt size</label>
+	private readonly currencyTs = `price = signal(1200);
+
+// Visual only — the slider keeps announcing the raw number, which
+// speech engines pronounce more reliably than "$1,200".
+readonly currencyFormatter = (v: number): string =>
+  "$" + Math.round(v).toLocaleString();`;
+
+	readonly currencyFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.currencyHtml },
+		{ label: "component.ts", language: "ts", code: this.currencyTs },
+	];
+
+	private readonly sizesHtml = `<label for="size">Shirt size</label>
+<output interop-slider-value for="size"></output>
+
 <input type="range" interop-slider id="size"
        [min]="0" [max]="4" [step]="1"
        [(value)]="sizeIndex"
-       [valueText]="sizeFormatter" />
-<output interop-slider-value for="size"></output>`;
+       [valueText]="sizeFormatter" />`;
 
-	readonly marksCode = `<input type="range" interop-slider id="quality"
+	private readonly sizesTs = `const SHIRT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
+
+sizeIndex = signal(2);
+
+// Drives BOTH aria-valuetext and the <output>: the raw index would
+// mislead a screen-reader user, so the formatter belongs on the slider.
+readonly sizeFormatter = (v: number): string =>
+  SHIRT_SIZES[Math.round(v)] ?? "";`;
+
+	readonly sizesFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.sizesHtml },
+		{ label: "component.ts", language: "ts", code: this.sizesTs },
+	];
+
+	private readonly marksHtml = `<input type="range" interop-slider id="quality"
        [min]="0" [max]="100" [step]="5"
        [(value)]="quality"
        [interop-slider-marks]="[0, 25, 50, 75, 100]"
        [interop-slider-marks-subdivisions]="5"
        aria-label="Quality" />`;
 
-	readonly rangeCode = `<interop-slider-range
+	private readonly marksTs = `quality = signal(75);`;
+
+	readonly marksFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.marksHtml },
+		{ label: "component.ts", language: "ts", code: this.marksTs },
+	];
+
+	private readonly rangeHtml = `<interop-slider-range
     [min]="0" [max]="2000" [step]="50"
     [(value)]="priceRange"
     aria-label="Price range">
@@ -120,21 +174,58 @@ export class SliderPage {
 <span aria-hidden="true">&ndash;</span>
 <output interop-slider-value for="price-max" [format]="currencyFormatter"></output>`;
 
-	readonly verticalCode = `<input type="range" interop-slider id="temp"
+	private readonly rangeTs = `priceRange = signal<SliderRangeValue>({ start: 250, end: 1750 });
+
+readonly currencyFormatter = (v: number): string =>
+  "$" + Math.round(v).toLocaleString();`;
+
+	readonly rangeFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.rangeHtml },
+		{ label: "component.ts", language: "ts", code: this.rangeTs },
+	];
+
+	private readonly verticalHtml = `<input type="range" interop-slider
        [orientation]="'vertical'"
        [(value)]="temperature"
        style="--itx-slider-length: 12rem"
        aria-label="Temperature" />`;
 
-	readonly formCode = `<form (submit)="onSubmit($event)">
-  <label for="vol">Volume</label>
-  <input type="range" interop-slider id="vol"
+	private readonly verticalTs = `temperature = signal(72);`;
+
+	readonly verticalFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.verticalHtml },
+		{ label: "component.ts", language: "ts", code: this.verticalTs },
+	];
+
+	private readonly formHtml = `<form (submit)="onSubmit($event)">
+  <label for="vol-form">Volume</label>
+  <output interop-slider-value for="vol-form"></output>
+
+  <input type="range" interop-slider id="vol-form"
          [min]="0" [max]="100" [(value)]="volume"
          name="volume" />
-  <button type="submit">Submit</button>
+
+  <button interop-button="primary" type="submit">Submit form</button>
 </form>
 
 <!-- FormData on submit:  volume=35  -->`;
+
+	private readonly formTs = `volume = signal(35);
+
+lastSubmittedFormData = signal<string>("(not yet submitted)");
+
+onSubmit(event: SubmitEvent): void {
+  event.preventDefault();
+  const fd = new FormData(event.target as HTMLFormElement);
+  const parts: string[] = [];
+  fd.forEach((value, key) => parts.push(\`\${key}=\${value}\`));
+  this.lastSubmittedFormData.set(parts.join(", ") || "(empty)");
+}`;
+
+	readonly formFiles: CodeFile[] = [
+		{ label: "template.html", language: "html", code: this.formHtml },
+		{ label: "component.ts", language: "ts", code: this.formTs },
+	];
 
 	// ── Form demo ────────────────────────────────────────────────────────
 
@@ -148,35 +239,139 @@ export class SliderPage {
 		this.lastSubmittedFormData.set(parts.join(", ") || "(empty)");
 	}
 
+	// ── CSS tokens ───────────────────────────────────────────────────────
+
+	tokenColumns: TableColumn<TokenEntry>[] = [
+		{ key: "property", label: "Property" },
+		{ key: "default", label: "Default" },
+	];
+
+	tokenEntries: TokenEntry[] = [
+		{
+			property: "--itx-slider-track-color",
+			default: "var(--itx-neutral-4)",
+		},
+		{
+			property: "--itx-slider-track-thickness",
+			default: "var(--itx-spacing-0_5) — 2px",
+		},
+		{
+			property: "--itx-slider-fill-color",
+			default: "var(--itx-neutral-12)",
+		},
+		{
+			property: "--itx-slider-thumb-color",
+			default: "var(--itx-neutral-12)",
+		},
+		{
+			property: "--itx-slider-thumb-size",
+			default: "0.875rem — 14px, the painted circle",
+		},
+		{
+			property: "--itx-slider-thumb-size-active",
+			default: "1.25rem — 20px, on hover / focus",
+		},
+		{
+			property: "--itx-slider-thumb-target",
+			default: "1.5rem — 24px; also the control's thickness. Never lower it",
+		},
+		{
+			property: "--itx-slider-thumb-radius",
+			default: "var(--itx-radius-full)",
+		},
+		{
+			property: "--itx-slider-focus-ring-color",
+			default: "var(--itx-colorway) — thumb AND fill when focused",
+		},
+		{
+			property: "--itx-slider-disabled-color",
+			default: "var(--itx-neutral-5)",
+		},
+		{
+			property: "--itx-slider-length",
+			default: "8rem — vertical only",
+		},
+		{
+			property: "--itx-slider-max-length",
+			default: "40rem — Carbon's 640px cap, both axes",
+		},
+		{
+			property: "--itx-slider-duration",
+			default: "110ms",
+		},
+		{
+			property: "--itx-slider-easing",
+			default: "cubic-bezier(0.2, 0, 0.38, 0.9)",
+		},
+		{
+			property: "--itx-slider-mark-color",
+			default: "var(--itx-neutral-7)",
+		},
+		{
+			property: "--itx-slider-mark-thickness",
+			default: "2px — along the track",
+		},
+		{
+			property: "--itx-slider-mark-length",
+			default: "0.5rem — 8px, across the track",
+		},
+		{
+			property: "--itx-slider-mark-minor-color",
+			default: "var(--itx-neutral-5)",
+		},
+		{
+			property: "--itx-slider-mark-minor-thickness",
+			default: "1px — along the track",
+		},
+		{
+			property: "--itx-slider-fill",
+			default: "set by the component — fill fraction 0–1, e.g. 0.6",
+		},
+		{
+			property: "--itx-slider-range-start / -range-end",
+			default:
+				"set by the component — the two handle positions, as 0–1 fractions",
+		},
+		{
+			property: "--itx-slider-axis",
+			default: "set by the component — to right / to left / to bottom",
+		},
+	];
+
 	// ── API tables ───────────────────────────────────────────────────────
 
 	apiColumns: TableColumn<ApiEntry>[] = [
+		{ key: "directive", label: "Directive", sticky: true },
 		{ key: "name", label: "Input" },
 		{ key: "type", label: "Type" },
 		{ key: "default", label: "Default" },
 		{ key: "description", label: "Description" },
 	];
 
-	sliderApi: ApiEntry[] = [
+	apiEntries: ApiEntry[] = [
 		{
+			directive: "input[interop-slider]",
 			name: "min",
 			type: "number",
 			default: "0",
 			description: "Minimum value.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "max",
 			type: "number",
 			default: "100",
 			description: "Maximum value.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "step",
 			type: "number",
 			default: "1",
 			description: "Step granularity.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "value",
 			type: "number (model)",
 			default: "0",
@@ -184,53 +379,59 @@ export class SliderPage {
 				"Current value. Two-way bindable as [(value)]. Updated by user drags / keyboard.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "disabled",
 			type: "boolean",
 			default: "false",
 			description:
-				"Native disabled — prevents focus and interaction; submitted value is omitted from FormData.",
+				"Native disabled — prevents focus and interaction; the value is omitted from FormData.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "name",
 			type: "string | null",
 			default: "null",
 			description: "Form-submission name attribute.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "orientation",
 			type: "'horizontal' | 'vertical'",
 			default: "'horizontal'",
-			description: "Layout. Vertical uses writing-mode: vertical-lr.",
+			description:
+				"Layout. Vertical uses writing-mode: vertical-lr with the minimum at the bottom.",
 		},
 		{
+			directive: "input[interop-slider]",
 			name: "valueText",
 			type: "(v: number) => string | null",
 			default: "null",
 			description:
 				"Drives aria-valuetext. Set ONLY when the raw number would mislead a screen reader (e.g. discrete categories). Leave unset for plain numerics.",
 		},
-	];
-
-	rangeApi: ApiEntry[] = [
 		{
+			directive: "interop-slider-range",
 			name: "min",
 			type: "number",
 			default: "0",
 			description: "Shared minimum across both thumbs.",
 		},
 		{
+			directive: "interop-slider-range",
 			name: "max",
 			type: "number",
 			default: "100",
 			description: "Shared maximum across both thumbs.",
 		},
 		{
+			directive: "interop-slider-range",
 			name: "step",
 			type: "number",
 			default: "1",
 			description: "Shared step granularity.",
 		},
 		{
+			directive: "interop-slider-range",
 			name: "value",
 			type: "{ start, end } (model)",
 			default: "{ start: 0, end: 100 }",
@@ -238,28 +439,62 @@ export class SliderPage {
 				"Two-way bindable. Thumbs clamp against each other so start ≤ end is always preserved.",
 		},
 		{
+			directive: "interop-slider-range",
 			name: "disabled",
 			type: "boolean",
 			default: "false",
 			description: "Disables both thumbs.",
 		},
 		{
+			directive: "interop-slider-range",
+			name: "orientation",
+			type: "'horizontal' | 'vertical'",
+			default: "'horizontal'",
+			description:
+				"Shared orientation. Both thumbs inherit it, so the group and its handles cannot disagree.",
+		},
+		{
+			directive: "interop-slider-range",
 			name: "valueText",
 			type: "(v: number) => string | null",
 			default: "null",
 			description: "Shared aria-valuetext formatter applied to each thumb.",
 		},
 		{
+			directive: "interop-slider-range",
 			name: "aria-label",
 			type: "string | null",
 			default: "null",
 			description:
 				"Accessible name for the range group. Each thumb still needs its own aria-label or label association.",
 		},
-	];
-
-	valueApi: ApiEntry[] = [
 		{
+			directive: "input[interop-slider-thumb]",
+			name: "interop-slider-thumb",
+			type: "'start' | 'end'",
+			default: "—",
+			required: true,
+			description:
+				"Which handle this is, supplied as the attribute's own value. Must be a child of <interop-slider-range>.",
+		},
+		{
+			directive: "input[interop-slider-marks]",
+			name: "interop-slider-marks",
+			type: "(number | { value, label? })[]",
+			default: "[]",
+			description:
+				"Major tick positions. Visual only — ticks do not change snapping ([step] does) or ARIA values. Marks outside [min, max] are dropped.",
+		},
+		{
+			directive: "input[interop-slider-marks]",
+			name: "interop-slider-marks-subdivisions",
+			type: "number",
+			default: "0",
+			description:
+				"N produces N − 1 dimmed minor ticks between each pair of majors. Requires uniformly-spaced majors spanning the full range; 0 or 1 disables them.",
+		},
+		{
+			directive: "output[interop-slider-value]",
 			name: "for",
 			type: "string",
 			default: "—",
@@ -267,6 +502,7 @@ export class SliderPage {
 			description: "ID of the slider input this output mirrors.",
 		},
 		{
+			directive: "output[interop-slider-value]",
 			name: "format",
 			type: "(v: number) => string | null",
 			default: "null",
@@ -275,32 +511,40 @@ export class SliderPage {
 		},
 	];
 
-	notes: DemoNote[] = [
+	outputColumns: TableColumn<ApiOutputEntry>[] = [
+		{ key: "directive", label: "Directive", sticky: true },
+		{ key: "name", label: "Output" },
+		{ key: "type", label: "Type" },
+		{ key: "description", label: "Description" },
+	];
+
+	outputEntries: ApiOutputEntry[] = [
 		{
-			type: "release",
-			label: "v0.1.0",
-			title: "Slider component added",
-			body: 'InteropSlider, InteropSliderRange (with InteropSliderThumb), InteropSliderValue, and InteropSliderMarks. Built on real <input type="range"> for free form participation, keyboard, RTL, and AT support.',
+			directive: "input[interop-slider]",
+			name: "valueChange",
+			type: "number",
+			description:
+				"Paired with the value model. Fires continuously while dragging or keying.",
 		},
 		{
-			type: "note",
-			label: "Form participation",
-			body: "Single-thumb sliders submit via their native [name] attribute. Range sliders use one [name] per thumb (set on each <input interop-slider-thumb>). No ngModel required for the value to land in FormData.",
+			directive: "input[interop-slider]",
+			name: "interactionEnd",
+			type: "number",
+			description:
+				"Fires on the native change event — thumb released, or a keyboard adjustment committed. Use for saves and network calls.",
 		},
 		{
-			type: "note",
-			label: "valueText vs visual format",
-			body: "Set [valueText] on the slider only when the raw number would be misleading (e.g., discrete categories like XS/S/M/L). For purely cosmetic visual formatting (currency, units), set [format] on <output interop-slider-value> instead — that way the screen reader keeps announcing the raw number, which speech engines pronounce more reliably.",
+			directive: "interop-slider-range",
+			name: "valueChange",
+			type: "SliderRangeValue",
+			description:
+				"Paired with the value model. Fires continuously while either thumb moves.",
 		},
 		{
-			type: "note",
-			label: "Range clamp behavior",
-			body: "When the start thumb is dragged past the end (or vice versa), it clamps at the other thumb's value. Predictable and avoids focus jumps.",
-		},
-		{
-			type: "note",
-			label: "Two-way binding vs Reactive Forms",
-			body: "Use [(value)] OR ngModel/formControl on a single slider — not both. Pick one strategy per slider to avoid native value updates fighting each other.",
+			directive: "interop-slider-range",
+			name: "interactionEnd",
+			type: "SliderRangeValue",
+			description: "Fires when either thumb commits a value.",
 		},
 	];
 }

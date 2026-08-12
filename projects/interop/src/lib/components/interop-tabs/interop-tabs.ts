@@ -110,6 +110,15 @@ let _tabsIdCounter = 0;
   host: {
     "[attr.aria-label]": "ariaLabel()",
     "[attr.aria-labelledby]": "ariaLabelledBy()",
+    /*
+     * Reflect `orientation` as a styling hook. `itx-*` is the convention for a
+     * system-configuration axis; the stylesheet reads it as
+     * `:host([itx-orientation="vertical"])` to stand the tablist beside its
+     * panels. Without this, a `[orientation]`-BOUND value never reaches the DOM
+     * — only a statically-written attribute would — and a vertical tab group
+     * renders as a horizontal strip.
+     */
+    "[attr.itx-orientation]": "orientation()",
   },
 })
 export class InteropTabs implements InteropTabsContext {

@@ -70,6 +70,16 @@ import {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 
 	host: {
+		// The field owns its own type scale — 12px label, 14px value, 12px
+		// helper, all fixed rem inside a fixed-height control. A global
+		// `interop-typography-root` turns prose.css's bare element selectors
+		// into de-facto global element styles, which is correct for flowing
+		// content and wrong here: a fluid clamp() font-size or a rhythm margin
+		// landing on the label would break the pinned height. Static attribute,
+		// never conditional — see the round 3 note in
+		// .agent/workflows/carbon-borrow.md.
+		"interop-typography-isolate": "",
+
 		"[attr.data-invalid]": 'hasVisibleErrors() ? "" : null',
 		"[attr.data-disabled]": 'disabled() ? "" : null',
 		"[attr.data-required]": 'required() ? "" : null',
@@ -100,7 +110,7 @@ export class InteropFieldInput extends FieldBase {
 				if (this.type() === "textarea") {
 					console.warn(
 						`[InteropFieldInput] type="textarea" is not supported. ` +
-							`Use <interop-textarea-field> instead.`,
+							`Use <interop-field-textarea> instead.`,
 					);
 				}
 			});

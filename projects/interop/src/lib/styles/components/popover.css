@@ -12,6 +12,15 @@
  * `themes/protocol/components/popover.css`. This file owns layout and
  * animation; the theme owns values.
  *
+ * NO FALLBACKS. Every var() below reads a token the theme declares, with two
+ * deliberate exceptions called out at the arrow rules. Fallbacks here are a
+ * second, silent home for values: they duplicate the theme when they agree and
+ * lie about it when they drift. Before the Carbon round this file carried a
+ * hardcoded default for every token, and three of them had already diverged
+ * from the theme (an 8px arrow written as 12px, a 96ms exit written as
+ * `--itx-duration-fast`, a padding pair the theme states as one value). See
+ * .agent/css-strategy.md.
+ *
  * All selectors use :where() for zero specificity. Pseudo-elements
  * (`::after`, `::before`, `::backdrop`) are written outside :where() per
  * the CSS spec — pseudo-elements cannot appear inside :where().
@@ -23,6 +32,10 @@
  *   --itx-popover-max-width
  *   --itx-popover-max-height
  *   --itx-popover-padding
+ *
+ *   Typography
+ *   --itx-popover-font-size
+ *   --itx-popover-line-height
  *
  *   Appearance
  *   --itx-popover-background
@@ -42,9 +55,11 @@
  *   --itx-popover-exit-translate     ending translate
  *
  *   Arrow (built-in or custom)
- *   --itx-popover-arrow-size         edge length of the triangle (default 8px)
- *   --itx-popover-arrow-color        defaults to --itx-popover-background
- *   --itx-popover-arrow-offset       distance from anchor edge (default 0px)
+ *   --itx-popover-arrow-size          half-width AND depth of the triangle;
+ *                                     6px renders Carbon's 12 × 6 caret
+ *   --itx-popover-arrow-color         unset — derives from -background
+ *   --itx-popover-arrow-border-color  unset — derives from -border-color
+ *   --itx-popover-arrow-offset        nudge along its axis; + moves inward
  *
  *   Backdrop (opt-in via [showBackdrop]="true"; consumes global tokens)
  *   --itx-backdrop-color
@@ -56,47 +71,48 @@
 :where([interop-popover]) {
 	position: relative;
 	margin: 0;
-	padding: var(--itx-popover-padding, 0.75rem 1rem);
-	min-inline-size: var(--itx-popover-min-width, 0);
-	max-inline-size: var(--itx-popover-max-width, min(90vw, 24rem));
-	max-block-size: var(--itx-popover-max-height, 70vh);
+	padding: var(--itx-popover-padding);
+	min-inline-size: var(--itx-popover-min-width);
+	max-inline-size: var(--itx-popover-max-width);
+	max-block-size: var(--itx-popover-max-height);
 	overflow: auto;
 
-	background: var(--itx-popover-background, Canvas);
-	color: var(--itx-popover-foreground, CanvasText);
-	border: var(--itx-popover-border-width, 1px)
-		var(--itx-popover-border-style, solid)
-		var(--itx-popover-border-color, currentColor);
-	border-radius: var(--itx-popover-border-radius, 0.5rem);
-	box-shadow: var(--itx-popover-shadow, 0 4px 16px rgba(0 0 0 / 0.12));
+	/*
+	 * The panel's own type baseline. Projected prose deliberately still wins:
+	 * prose.css targets `p` / `li` directly and an inherited value cannot beat
+	 * a direct declaration. The popover does NOT set
+	 * `interop-typography-isolate` — unlike a tree row or a table cell, its
+	 * content genuinely may be running text, and isolating would make a
+	 * hover-card unable to read as prose. This is the baseline for everything
+	 * prose does not claim: labels, buttons, bare spans, listbox rows.
+	 */
+	font-size: var(--itx-popover-font-size);
+	line-height: var(--itx-popover-line-height);
+
+	background: var(--itx-popover-background);
+	color: var(--itx-popover-foreground);
+	border: var(--itx-popover-border-width) var(--itx-popover-border-style)
+		var(--itx-popover-border-color);
+	border-radius: var(--itx-popover-border-radius);
+	box-shadow: var(--itx-popover-shadow);
 
 	opacity: 1;
 	translate: 0 0;
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-popover-enter-easing, ease-out),
-			translate
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-popover-enter-easing, ease-out),
-			overlay
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				allow-discrete,
-			display
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				allow-discrete;
+			opacity var(--itx-popover-enter-duration) var(--itx-popover-enter-easing),
+			translate var(--itx-popover-enter-duration)
+				var(--itx-popover-enter-easing),
+			overlay var(--itx-popover-enter-duration) allow-discrete,
+			display var(--itx-popover-enter-duration) allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-popover-enter-easing, ease-out),
-			translate
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-popover-enter-easing, ease-out);
+			opacity var(--itx-popover-enter-duration) var(--itx-popover-enter-easing),
+			translate var(--itx-popover-enter-duration)
+				var(--itx-popover-enter-easing);
 	}
 }
 
@@ -104,39 +120,27 @@
 @starting-style {
 	:where([interop-popover]:popover-open) {
 		opacity: 0;
-		translate: var(--itx-popover-enter-translate, 0 -0.25rem);
+		translate: var(--itx-popover-enter-translate);
 	}
 }
 
 /* Exit: panel slides slightly back along its axis as it fades out. */
 :where([interop-popover]:not(:popover-open)) {
 	opacity: 0;
-	translate: var(--itx-popover-exit-translate, 0 -0.25rem);
+	translate: var(--itx-popover-exit-translate);
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity
-				var(--itx-popover-exit-duration, var(--itx-duration-fast, 96ms))
-				var(--itx-popover-exit-easing, ease-in),
-			translate
-				var(--itx-popover-exit-duration, var(--itx-duration-fast, 96ms))
-				var(--itx-popover-exit-easing, ease-in),
-			overlay
-				var(--itx-popover-exit-duration, var(--itx-duration-fast, 96ms))
-				allow-discrete,
-			display
-				var(--itx-popover-exit-duration, var(--itx-duration-fast, 96ms))
-				allow-discrete;
+			opacity var(--itx-popover-exit-duration) var(--itx-popover-exit-easing),
+			translate var(--itx-popover-exit-duration) var(--itx-popover-exit-easing),
+			overlay var(--itx-popover-exit-duration) allow-discrete,
+			display var(--itx-popover-exit-duration) allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity
-				var(--itx-popover-exit-duration, var(--itx-duration-fast, 96ms))
-				var(--itx-popover-exit-easing, ease-in),
-			translate
-				var(--itx-popover-exit-duration, var(--itx-duration-fast, 96ms))
-				var(--itx-popover-exit-easing, ease-in);
+			opacity var(--itx-popover-exit-duration) var(--itx-popover-exit-easing),
+			translate var(--itx-popover-exit-duration) var(--itx-popover-exit-easing);
 	}
 }
 
@@ -148,23 +152,17 @@
  */
 
 [interop-popover][data-backdrop]::backdrop {
-	background: var(--itx-backdrop-color, rgba(0 0 0 / 0.4));
-	backdrop-filter: blur(var(--itx-backdrop-blur, 0px));
+	background: var(--itx-backdrop-color);
+	backdrop-filter: blur(var(--itx-backdrop-blur));
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			background
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-popover-enter-easing, ease-out),
-			backdrop-filter
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-popover-enter-easing, ease-out),
-			overlay
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				allow-discrete,
-			display
-				var(--itx-popover-enter-duration, var(--itx-duration-fast, 120ms))
-				allow-discrete;
+			background var(--itx-popover-enter-duration)
+				var(--itx-popover-enter-easing),
+			backdrop-filter var(--itx-popover-enter-duration)
+				var(--itx-popover-enter-easing),
+			overlay var(--itx-popover-enter-duration) allow-discrete,
+			display var(--itx-popover-enter-duration) allow-discrete;
 	}
 }
 
@@ -177,7 +175,7 @@
 
 /* ── Arrow overflow fix ──────────────────────────────────────────────────── */
 /*
- * Arrows (built-in ::after or custom .interop-popover__arrow) are
+ * Arrows (built-in ::before/::after or custom .interop-popover__arrow) are
  * position:absolute children placed at negative offsets to appear at the
  * panel edge. overflow:auto on the panel clips them. Override to visible
  * whenever arrows are in play so they can bleed outside the panel box.
@@ -193,15 +191,37 @@
 
 /* ── Built-in arrow (opt-in via [showArrow]) ─────────────────────────────── */
 /*
- * Pure-CSS triangle on `::after`. Suppressed automatically when an
- * `[interop-popover-arrow]` marker child is present (consumer's custom
- * element wins).
+ * Two stacked pure-CSS triangles, following Carbon's caret construction:
  *
- * The triangle is built with the classic border-trick: zero size, three
- * transparent borders, one colored border = a triangle pointing AWAY from
- * the colored side. Positioned so the colored side faces the trigger.
+ *   ::before   the BORDER caret, in the panel's frame colour, sitting flush
+ *              against the panel edge
+ *   ::after    the FILL caret, in the panel's background colour, shifted one
+ *              border-width further INTO the panel
+ *
+ * The one-border-width offset is what makes the frame read as a continuous
+ * hairline around the caret rather than stopping dead at the panel edge, and
+ * it lets the fill caret's base overlap the panel's own top border so the two
+ * shapes merge. Carbon does exactly this (`::before` full size, `::after` with
+ * `inset-block-start: 1px`); before this round our caret was a single
+ * unbordered triangle on a bordered panel, which read as a detached tab.
+ *
+ * Both are suppressed automatically when an `[interop-popover-arrow]` marker
+ * child is present (consumer's custom element wins).
+ *
+ * Each triangle is the classic border trick: a zero-size box, three
+ * transparent borders, one coloured border = a triangle pointing AWAY from
+ * the coloured side. `--itx-popover-arrow-size` is therefore BOTH the depth
+ * and the half-width — 6px renders Carbon's 12 × 6 caret.
+ *
+ * The two arrow colours are the only var() fallbacks in this file, and they
+ * are deliberate. Resolving them here rather than declaring them in the theme
+ * means they read --itx-popover-background / --itx-popover-border-color AT
+ * THE PANEL, so a per-instance override of either is picked up by the caret.
+ * A theme-side `--itx-popover-arrow-color: var(--itx-popover-background)`
+ * freezes at [interop-root] — the var() gotcha in the borrow workflow.
  */
 
+[interop-popover][data-arrow]:not([data-custom-arrow])::before,
 [interop-popover][data-arrow]:not([data-custom-arrow])::after {
 	content: "";
 	position: absolute;
@@ -211,43 +231,119 @@
 }
 
 /* placement = bottom* — popover BELOW trigger, arrow points UP (top of panel) */
-[interop-popover][data-arrow][data-placement^="bottom"]:not([data-custom-arrow])::after {
-	top: calc(-1 * var(--itx-popover-arrow-size, 8px));
+[interop-popover][data-arrow][data-placement^="bottom"]:not(
+		[data-custom-arrow]
+	)::before,
+[interop-popover][data-arrow][data-placement^="bottom"]:not(
+		[data-custom-arrow]
+	)::after {
+	top: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset)
+	);
 	left: 50%;
 	transform: translateX(-50%);
-	border-inline: var(--itx-popover-arrow-size, 8px) solid transparent;
-	border-block-end: var(--itx-popover-arrow-size, 8px) solid
-		var(--itx-popover-arrow-color, var(--itx-popover-background, Canvas));
+	border-inline: var(--itx-popover-arrow-size) solid transparent;
+	border-block-end: var(--itx-popover-arrow-size) solid
+		var(--itx-popover-arrow-border-color, var(--itx-popover-border-color));
+}
+[interop-popover][data-arrow][data-placement^="bottom"]:not(
+		[data-custom-arrow]
+	)::after {
+	top: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
+			var(--itx-popover-border-width)
+	);
+	border-block-end-color: var(
+		--itx-popover-arrow-color,
+		var(--itx-popover-background)
+	);
 }
 
 /* placement = top* — popover ABOVE trigger, arrow points DOWN (bottom of panel) */
-[interop-popover][data-arrow][data-placement^="top"]:not([data-custom-arrow])::after {
-	bottom: calc(-1 * var(--itx-popover-arrow-size, 8px));
+[interop-popover][data-arrow][data-placement^="top"]:not(
+		[data-custom-arrow]
+	)::before,
+[interop-popover][data-arrow][data-placement^="top"]:not(
+		[data-custom-arrow]
+	)::after {
+	bottom: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset)
+	);
 	left: 50%;
 	transform: translateX(-50%);
-	border-inline: var(--itx-popover-arrow-size, 8px) solid transparent;
-	border-block-start: var(--itx-popover-arrow-size, 8px) solid
-		var(--itx-popover-arrow-color, var(--itx-popover-background, Canvas));
+	border-inline: var(--itx-popover-arrow-size) solid transparent;
+	border-block-start: var(--itx-popover-arrow-size) solid
+		var(--itx-popover-arrow-border-color, var(--itx-popover-border-color));
+}
+[interop-popover][data-arrow][data-placement^="top"]:not(
+		[data-custom-arrow]
+	)::after {
+	bottom: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
+			var(--itx-popover-border-width)
+	);
+	border-block-start-color: var(
+		--itx-popover-arrow-color,
+		var(--itx-popover-background)
+	);
 }
 
 /* placement = left* — popover to LEFT of trigger, arrow points RIGHT */
-[interop-popover][data-arrow][data-placement^="left"]:not([data-custom-arrow])::after {
-	right: calc(-1 * var(--itx-popover-arrow-size, 8px));
+[interop-popover][data-arrow][data-placement^="left"]:not(
+		[data-custom-arrow]
+	)::before,
+[interop-popover][data-arrow][data-placement^="left"]:not(
+		[data-custom-arrow]
+	)::after {
+	right: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset)
+	);
 	top: 50%;
 	transform: translateY(-50%);
-	border-block: var(--itx-popover-arrow-size, 8px) solid transparent;
-	border-inline-start: var(--itx-popover-arrow-size, 8px) solid
-		var(--itx-popover-arrow-color, var(--itx-popover-background, Canvas));
+	border-block: var(--itx-popover-arrow-size) solid transparent;
+	border-inline-start: var(--itx-popover-arrow-size) solid
+		var(--itx-popover-arrow-border-color, var(--itx-popover-border-color));
+}
+[interop-popover][data-arrow][data-placement^="left"]:not(
+		[data-custom-arrow]
+	)::after {
+	right: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
+			var(--itx-popover-border-width)
+	);
+	border-inline-start-color: var(
+		--itx-popover-arrow-color,
+		var(--itx-popover-background)
+	);
 }
 
 /* placement = right* — popover to RIGHT of trigger, arrow points LEFT */
-[interop-popover][data-arrow][data-placement^="right"]:not([data-custom-arrow])::after {
-	left: calc(-1 * var(--itx-popover-arrow-size, 8px));
+[interop-popover][data-arrow][data-placement^="right"]:not(
+		[data-custom-arrow]
+	)::before,
+[interop-popover][data-arrow][data-placement^="right"]:not(
+		[data-custom-arrow]
+	)::after {
+	left: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset)
+	);
 	top: 50%;
 	transform: translateY(-50%);
-	border-block: var(--itx-popover-arrow-size, 8px) solid transparent;
-	border-inline-end: var(--itx-popover-arrow-size, 8px) solid
-		var(--itx-popover-arrow-color, var(--itx-popover-background, Canvas));
+	border-block: var(--itx-popover-arrow-size) solid transparent;
+	border-inline-end: var(--itx-popover-arrow-size) solid
+		var(--itx-popover-arrow-border-color, var(--itx-popover-border-color));
+}
+[interop-popover][data-arrow][data-placement^="right"]:not(
+		[data-custom-arrow]
+	)::after {
+	left: calc(
+		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
+			var(--itx-popover-border-width)
+	);
+	border-inline-end-color: var(
+		--itx-popover-arrow-color,
+		var(--itx-popover-background)
+	);
 }
 
 /* ── Custom arrow (consumer-provided element) ────────────────────────────── */
@@ -257,8 +353,17 @@
  * a single icon (e.g. caret-up) points the right direction for any side.
  *
  * The element itself owns its dimensions, color, and shape. The structural
- * CSS only sets position + rotation. Override `--itx-popover-arrow-offset` to
- * push the element further inside / outside the panel along its axis.
+ * CSS only sets position + rotation.
+ *
+ * The pull-out is a percentage TRANSLATE, not a negative offset in
+ * --itx-popover-arrow-size. Transform percentages resolve against the
+ * element's own border box, so a custom arrow of any size lands flush against
+ * the panel edge without the consumer having to keep a token in step with
+ * their icon. The previous rules read --itx-popover-arrow-size for this and
+ * hardcoded a 12px fallback against a theme that said 8px — two different
+ * meanings for one token, and neither matched.
+ *
+ * --itx-popover-arrow-offset nudges along the axis; positive moves INWARD.
  */
 
 :where([interop-popover] .interop-popover__arrow) {
@@ -267,52 +372,37 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	color: var(
-		--itx-popover-arrow-color,
-		var(--itx-popover-background, currentColor)
-	);
+	color: var(--itx-popover-arrow-color, var(--itx-popover-background));
 }
 
 /* Bottom placement → arrow on top edge of panel, no rotation needed (icon assumed
    to default-point upward). */
 :where([interop-popover][data-placement^="bottom"] .interop-popover__arrow) {
-	top: calc(
-		-1 * var(--itx-popover-arrow-size, 12px) +
-			var(--itx-popover-arrow-offset, 0px)
-	);
+	top: var(--itx-popover-arrow-offset);
 	left: 50%;
-	transform: translateX(-50%);
+	transform: translate(-50%, -100%);
 }
 
 /* Top placement → arrow on bottom edge, rotate 180deg so an upward-pointing
    icon points down toward the trigger. */
 :where([interop-popover][data-placement^="top"] .interop-popover__arrow) {
-	bottom: calc(
-		-1 * var(--itx-popover-arrow-size, 12px) +
-			var(--itx-popover-arrow-offset, 0px)
-	);
+	bottom: var(--itx-popover-arrow-offset);
 	left: 50%;
-	transform: translateX(-50%) rotate(180deg);
+	transform: translate(-50%, 100%) rotate(180deg);
 }
 
 /* Left placement → arrow on right edge, rotate 90deg clockwise. */
 :where([interop-popover][data-placement^="left"] .interop-popover__arrow) {
-	right: calc(
-		-1 * var(--itx-popover-arrow-size, 12px) +
-			var(--itx-popover-arrow-offset, 0px)
-	);
+	right: var(--itx-popover-arrow-offset);
 	top: 50%;
-	transform: translateY(-50%) rotate(90deg);
+	transform: translate(100%, -50%) rotate(90deg);
 }
 
 /* Right placement → arrow on left edge, rotate 270deg (-90deg). */
 :where([interop-popover][data-placement^="right"] .interop-popover__arrow) {
-	left: calc(
-		-1 * var(--itx-popover-arrow-size, 12px) +
-			var(--itx-popover-arrow-offset, 0px)
-	);
+	left: var(--itx-popover-arrow-offset);
 	top: 50%;
-	transform: translateY(-50%) rotate(-90deg);
+	transform: translate(-100%, -50%) rotate(-90deg);
 }
 
 /* ── Reduced motion ──────────────────────────────────────────────────────── */

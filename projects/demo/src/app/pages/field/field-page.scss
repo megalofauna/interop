@@ -1,0 +1,45 @@
+/*
+ * Page-local layout only. Nothing here themes the field — the component's own
+ * --itx-field-* surface is documented in the tokens section and is deliberately
+ * left at its defaults so the page shows what a consumer actually gets.
+ *
+ * The width caps exist because a field stretches to fill its track by design;
+ * a full-bleed input inside a demo canvas reads as a page-wide bar rather than
+ * as a form control.
+ */
+
+.field-page__field {
+	max-inline-size: 24rem;
+
+	&--narrow {
+		max-inline-size: 14rem;
+	}
+
+	&--wide {
+		max-inline-size: 32rem;
+	}
+}
+
+/* Stacked fields sit a full step apart, not at the field's own 4px internal
+   gap — the gap between two fields has to beat the gap between a control and
+   its own helper text or the two groupings read the same. */
+.field-page__form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-5);
+	max-inline-size: 28rem;
+}
+
+.field-page__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+}
+
+.field-page__sizes {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-5);
+	max-inline-size: 24rem;
+}

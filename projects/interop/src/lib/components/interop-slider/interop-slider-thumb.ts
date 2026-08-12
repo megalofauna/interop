@@ -16,6 +16,7 @@ import {
 	INTEROP_SLIDER_RANGE_TOKEN,
 	INTEROP_SLIDER_TOKEN,
 	type InteropSliderApi,
+	type SliderOrientation,
 	type SliderRangeThumbRef,
 } from "./interop-slider.token";
 
@@ -46,12 +47,21 @@ import {
 		"[attr.aria-valuetext]": "computedValueText()",
 		"[attr.data-thumb-role]": "role()",
 		"[attr.data-orientation]": "orientation()",
-		"[style.--itx-slider-fill]": "fillPercent() + '%'",
+		// 0–1 fraction, matching interop-slider.ts — this component shares
+		// interop-slider.css, where --itx-slider-fill is registered as <number>.
+		// A "60%" string here would be invalid at computed-value time and fall
+		// back to the initial 0. The thumb's own track is transparent inside a
+		// range (the [data-thumb-role] block), so nothing paints from it today,
+		// but a wrong-typed value that silently resolves to 0 is exactly the
+		// kind of thing that surfaces later as a bug with no obvious cause.
+		"[style.--itx-slider-fill]": "fillPercent() / 100",
 		"(input)": "onInput($event)",
 		"(change)": "onChange($event)",
 	},
 })
-export class InteropSliderThumb implements SliderRangeThumbRef, InteropSliderApi {
+export class InteropSliderThumb
+	implements SliderRangeThumbRef, InteropSliderApi
+{
 	private readonly elementRef = inject(ElementRef<HTMLInputElement>);
 	private readonly parent = inject(INTEROP_SLIDER_RANGE_TOKEN, {
 		optional: true,
@@ -72,8 +82,13 @@ export class InteropSliderThumb implements SliderRangeThumbRef, InteropSliderApi
 	readonly step = computed(() => this.parent?.step() ?? 1);
 	readonly disabled = computed(() => this.parent?.disabled() ?? false);
 	readonly valueText = computed(() => this.parent?.valueText() ?? null);
+	/**
+	 * Inherited from the parent group. Hard-coding this to `"horizontal"` meant
+	 * `<interop-slider-range [orientation]="'vertical'">` reoriented its track
+	 * and left both handles running the other way.
+	 */
 	readonly orientation = computed(
-		(): "horizontal" | "vertical" => "horizontal",
+		(): SliderOrientation => this.parent?.orientation() ?? "horizontal",
 	);
 
 	readonly ownValue = computed(() => {
@@ -150,7 +165,7 @@ export class InteropSliderThumb implements SliderRangeThumbRef, InteropSliderApi
 		if (!this.parent) {
 			console.warn(
 				"[InteropSliderThumb] must be a child of <interop-slider-range>. " +
-					"Use <input type=\"range\" interop-slider> for a single-thumb slider.",
+					'Use <input type="range" interop-slider> for a single-thumb slider.',
 			);
 		}
 

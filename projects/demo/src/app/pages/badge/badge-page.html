@@ -1,80 +1,152 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Badge">
-		Overlay notification counter for buttons, avatars, and any interactive element.
-		Uses CSS anchor positioning — no JavaScript layout required.
+		Overlay notification counter for buttons, avatars, and any interactive
+		element. Placement is CSS Anchor Positioning — the indicator is
+		<code>position: fixed</code>, so it escapes every overflow context without a
+		line of layout JavaScript.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
-		<demo-example label="Counter badge">
+		<p description class="demo-section__lede">
+			The visible indicator is <code>aria-hidden</code> — a number on its own
+			means nothing. A visually-hidden sibling carries
+			<code>[accessibleLabel]</code> and is wired to the first interactive child
+			via <code>aria-describedby</code>, so always provide one. Omitting it logs
+			a dev-mode warning.
+		</p>
+
+		<demo-example label="Counter">
 			<interop-badge
 				[count]="alertCount()"
-				[accessibleLabel]="alertCount() + ' unread alerts'">
-				<button interop-button>Alerts</button>
+				[accessibleLabel]="alertCount() + ' unread alerts'"
+			>
+				<button interop-button="primary">Alerts</button>
 			</interop-badge>
 			<demo-state>
-				<demo-state-item label="Count">{{ alertCount() }}</demo-state-item>
+				<demo-state-item label="count">{{ alertCount() }}</demo-state-item>
 			</demo-state>
+			<itx-code-block [files]="counterFiles" />
 		</demo-example>
 
-		<demo-example label="Increment / reset">
-			<div style="display: flex; gap: 0.5rem; align-items: center;">
+		<demo-example label="Live count and announcement">
+			<div class="badge-page__row">
 				<interop-badge
 					[count]="alertCount()"
-					[accessibleLabel]="alertCount() + ' unread alerts'">
-					<button interop-button (click)="increment()">+ Alert</button>
+					[announce]="true"
+					[accessibleLabel]="alertLabel"
+				>
+					<button interop-button="primary" (click)="increment()">
+						Add alert
+					</button>
 				</interop-badge>
-				<button interop-button (click)="reset()">Reset</button>
+				<button interop-button="secondary" (click)="reset()">Reset</button>
 			</div>
+			<demo-state>
+				<demo-state-item label="count">{{ alertCount() }}</demo-state-item>
+				<demo-state-item label="announce">true</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="liveFiles" />
 		</demo-example>
 
-		<demo-example label="Count cap (max)">
+		<demo-example label="Count cap">
 			<interop-badge
 				[count]="150"
 				[max]="99"
-				[accessibleLabel]="'More than 99 alerts'">
-				<button interop-button>Comms</button>
+				[accessibleLabel]="'More than 99 alerts'"
+			>
+				<button interop-button="primary">Comms</button>
 			</interop-badge>
+			<itx-code-block language="html" [code]="maxCode" />
 		</demo-example>
 
-		<demo-example label="Dot indicator">
-			<interop-badge
-				[dot]="true"
-				[accessibleLabel]="'New activity'">
-				<button interop-button>Status</button>
+		<demo-example label="Dot">
+			<interop-badge [dot]="true" [accessibleLabel]="'New activity'">
+				<button interop-button="primary">Status</button>
 			</interop-badge>
+			<itx-code-block language="html" [code]="dotCode" />
 		</demo-example>
 
 		<demo-example label="Hidden">
-			<interop-badge
-				[count]="0"
-				[hidden]="true"
-				[accessibleLabel]="'No alerts'">
-				<button interop-button>Quiet bay</button>
-			</interop-badge>
+			<div class="badge-page__row">
+				<interop-badge
+					[count]="2"
+					[hidden]="cartHidden()"
+					[accessibleLabel]="'2 items in cart'"
+				>
+					<button interop-button="primary">Cart</button>
+				</interop-badge>
+				<button interop-button="secondary" (click)="toggleCart()">
+					{{ cartHidden() ? "Show" : "Hide" }} badge
+				</button>
+			</div>
+			<demo-state>
+				<demo-state-item label="hidden">{{ cartHidden() }}</demo-state-item>
+			</demo-state>
+			<itx-code-block [files]="hiddenFiles" />
 		</demo-example>
 	</demo-section>
 
-	<!-- ── Positions ─────────────────────────────────────────────────────── -->
+	<!-- ── Positions ──────────────────────────────────────────────────────── -->
 	<demo-section id="positions" heading="Positions">
+		<p description class="demo-section__lede">
+			The indicator is <strong>centred on</strong> the named corner, half in and
+			half out. Set <code>--itx-badge-offset</code> to a positive length to push
+			it further out, or a negative one to tuck it inside — see
+			<a href="#tokens">CSS tokens</a>.
+		</p>
+
 		<demo-example label="All four corners">
-			<div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+			<div class="badge-page__grid">
 				@for (pos of positions; track pos) {
-					<interop-badge [count]="3" [position]="pos" [accessibleLabel]="'3 items'">
-						<button interop-button>{{ pos }}</button>
+					<interop-badge
+						[count]="3"
+						[position]="pos"
+						[accessibleLabel]="'3 items'"
+					>
+						<button interop-button="tertiary">{{ pos }}</button>
 					</interop-badge>
 				}
 			</div>
+			<itx-code-block [files]="positionFiles" />
 		</demo-example>
 	</demo-section>
 
+	<!-- ── CSS tokens ─────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<p description class="demo-section__lede">
+			Proportions and paint follow IBM Carbon's badge-indicator: a 16px count
+			bubble, an 8px dot, both fully round, both painted from the status
+			palette's <code>--itx-danger</code> — so switching
+			<code>itx-status-palette</code> reskins the badge with everything else.
+			Badge is styled from its own component stylesheet rather than the
+			foundation/theme split, so these tokens are read with inline fallbacks;
+			set them on any ancestor.
+		</p>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ────────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Inputs</h3>
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -84,8 +156,4 @@
 			</ng-template>
 		</interop-table>
 	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
-	</demo-section>
-</article>
+</demo-page>

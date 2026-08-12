@@ -1,37 +1,189 @@
 /*
- * Available tokens (set on any ancestor, e.g. [interop-root]):
+ * InteropTabs — styles for section[interop-tabs] and its generated tablist.
+ *
+ * ── NOTE: this component is styled from its own `styleUrl` ─────────────────
+ *
+ * Every other component splits into `styles/components/X.css` (structure) and
+ * `styles/themes/protocol/components/X.css` (values), both imported globally.
+ * Tabs has neither file; the whole surface lives here, in a component-scoped
+ * stylesheet that Angular injects unlayered.
+ *
+ * Two consequences, both real:
+ *   1. A CSS-only consumer — someone writing `<section interop-tabs>` markup
+ *      without importing the Angular component — gets NO tab styling at all,
+ *      which is the one thing the global stylesheet exists to provide.
+ *   2. Because the injected sheet is unlayered, it outranks the entire
+ *      `interop` cascade layer, so a consumer's layered override cannot reach
+ *      it. That inverts the contract in css-strategy.md.
+ *
+ * Migrating means: swap `:host` for `section[interop-tabs]`, move the tab /
+ * tablist rules onto the real selectors the template emits, split the values
+ * out into a protocol theme file, and register BOTH in `interop.css` and
+ * `themes/protocol.css` with their `layer()`. Not done here: this round was
+ * visual only, and both index files are shared. Tracked in
+ * `.agent/todo/styleurl-components-migration.md`.
+ *
+ * Because there is no theme partner, defaults live in each `var()`'s fallback
+ * slot rather than in a theme file. That is the same shape progress uses.
+ *
+ * This file uses no SCSS features — no `@use`, no `$variables`, no mixins. The
+ * nesting is native CSS nesting. It is plain CSS wearing a `.scss` extension,
+ * and renaming it to `.css` would be a no-op. Left alone this round to keep
+ * the diff visual.
+ *
+ * ── Borrowed visual language ───────────────────────────────────────────────
+ *
+ * Proportions and paint follow IBM Carbon's Tabs, `line` flavour only — see
+ * `.agent/workflows/carbon-borrow.md`:
+ *
+ *   - 40px tab, 14/18 label, 16px inline padding, no fill, no radius
+ *   - a rule along the whole tab list
+ *   - the SELECTED tab is marked by a 2px bar sitting IN that rule, not by a
+ *     fill; unselected labels sit at a secondary grey and come to full
+ *     strength on hover, where the bar also darkens
+ *
+ * Carbon ships two other flavours we do not express, because tabs has no
+ * variant axis:
+ *
+ *   - `contained` — a filled slab per tab ($layer-accent), a 1px divider
+ *     between them, the selected tab lifted to $layer with a 2px bar on its
+ *     TOP edge, and a taller 48px step. Taking it would mean a variant
+ *     attribute on the host (`itx-variant="contained"`), a background + inset
+ *     box-shadow per tab, and moving the indicator to `inset-block-start`.
+ *     Declined outright: rounds 2/3/4/7 all removed filled slabs in favour of
+ *     transparent-plus-hairline, and a slab flavour would drag tabs onto the
+ *     segmented control's turf (see the distinction note below).
+ *   - `icon-only` — a square tab at the size step with a tooltip. Interop's
+ *     tabs have no icon-only concept; the `interopTabLabel` template already
+ *     lets a consumer put a glyph in a tab, and it sizes itself.
+ *
+ * Also declined from Carbon:
+ *   - Disabled tabs ($text-disabled label, $border-disabled bar). Neither
+ *     `interop-tabs` nor `interop-tab-panel` has a `disabled` input, so there
+ *     is no state to paint. Add the input first.
+ *   - Scroll-overflow buttons and the gradient masks either side of the list.
+ *     The tablist here does not scroll; it wraps if `--itx-tabs-tablist-flex-
+ *     wrap` is set. Real overflow handling is a component change, not paint.
+ *   - The 1px `margin-inline-start` Carbon puts between adjacent tabs. It
+ *     exists to separate `contained`'s slabs; with no fill there is nothing
+ *     for it to separate.
+ *   - `$heading-compact-01` (600 weight) on the selected label — see
+ *     `--itx-tab-font-weight-selected` below.
+ *
+ * ── Tabs vs. the segmented control ─────────────────────────────────────────
+ *
+ * Both are a horizontal row of exclusive-choice labels, and they mean
+ * different things — tabs navigate between views, a segmented control filters
+ * one. Carbon draws them apart on purpose and so do we. What they SHARE is
+ * the type ramp (0.875rem / 1.2857 / 400) and the hover relationship (the
+ * label comes to full strength; nothing is painted behind it). What separates
+ * them:
+ *
+ *   |             | tabs                       | segmented control          |
+ *   |-------------|----------------------------|----------------------------|
+ *   | selected    | 2px colorway bar in the    | inverted near-black filled |
+ *   |             | list rule                  | pill                       |
+ *   | container   | one open rule along the    | closed 1px frame on all    |
+ *   |             | block-end edge             | four sides                 |
+ *   | width       | content-width tabs         | equal-width segments       |
+ *   | radius      | none                       | 4px                        |
+ *
+ * The single most important line of that table is the first: a bar, never a
+ * fill. Any future change that gives a selected tab a background collapses
+ * the distinction, which is why `--itx-tab-active-background` is transparent
+ * and documented as such rather than simply left out.
+ *
+ * ── Available tokens (set on any ancestor, e.g. [interop-root]) ────────────
  *
  * Tablist
- *   --itx-tabs-tablist-display      Display (default: flex)
- *   --itx-tabs-tablist-flex-wrap    Flex-wrap (default: nowrap)
- *   --itx-tabs-gap                  Gap between tabs (default: 0)
- *   --itx-tabs-border-bottom        Tablist bottom border (default: 1px solid currentColor)
+ *   --itx-tabs-tablist-display        Display (default: flex)
+ *   --itx-tabs-tablist-flex-wrap      Flex-wrap (default: nowrap)
+ *   --itx-tabs-gap                    Gap between tabs (default: 0)
+ *   --itx-tabs-rule-width             List rule thickness (default: 1px)
+ *   --itx-tabs-rule-color             List rule colour (default: neutral-7)
  *
- * Tab button
- *   --itx-tab-gap                   Gap between icon and label (default: var(--itx-spacing-1))
- *   --itx-tab-padding-block         Block padding (default: var(--itx-spacing-2))
- *   --itx-tab-padding-inline        Inline padding (default: var(--itx-spacing-4))
- *   --itx-tab-background            Background (inactive, default: transparent)
- *   --itx-tab-foreground            Text color (inactive, default: inherit)
- *   --itx-tab-border-width          Border width (default: 0)
- *   --itx-tab-border-color          Border color (default: transparent)
- *   --itx-tab-border-radius         Border radius (default: var(--itx-radius-sm))
- *   --itx-tab-font                  Font shorthand (default: inherit)
- *   --itx-tab-letter-spacing        Letter spacing (default: inherit)
- *   --itx-tab-active-background     Background (selected, default: transparent)
- *   --itx-tab-active-foreground     Text color (selected, default: inherit)
- *   --itx-tab-active-indicator-height  Indicator bar height (default: 2px)
- *   --itx-tab-active-indicator-color   Indicator bar color (default: currentColor)
- *   --itx-tab-transition-duration   Transition duration (default: var(--itx-duration-fast))
- *   --itx-tab-focus-outline         Focus outline (default: 2px solid currentColor)
- *   --itx-tab-focus-outline-offset  Focus outline offset (default: -2px)
+ * Tab — box
+ *   --itx-tab-min-block-size          Tab height (default: 40px)
+ *   --itx-tab-gap                     Gap between icon and label (default: 4px)
+ *   --itx-tab-padding-block           Block padding (default: 8px)
+ *   --itx-tab-padding-inline          Inline padding (default: 16px)
+ *   --itx-tab-border-width            Border width (default: 0)
+ *   --itx-tab-border-color            Border colour (default: transparent)
+ *   --itx-tab-border-radius           Corner radius (default: 0)
+ *
+ * Tab — type
+ *   --itx-tab-font-family             Family (default: inherited sans)
+ *   --itx-tab-font-size               Size (default: 0.875rem — FIXED, see below)
+ *   --itx-tab-font-weight             Weight (default: 400)
+ *   --itx-tab-line-height             Leading (default: 1.2857 → 18px)
+ *   --itx-tab-letter-spacing          Tracking (default: normal)
+ *
+ * Tab — rest / hover / selected
+ *   --itx-tab-background              Background, rest (default: transparent)
+ *   --itx-tab-foreground              Label colour, rest (default: neutral-9)
+ *   --itx-tab-background-hover        Background, hover (default: transparent)
+ *   --itx-tab-foreground-hover        Label colour, hover (default: neutral-12)
+ *   --itx-tab-active-background       Background, selected (default: transparent)
+ *   --itx-tab-active-foreground       Label colour, selected (default: neutral-12)
+ *   --itx-tab-font-weight-selected    Weight, selected (default: 400)
+ *
+ * Tab — indicator bar
+ *   --itx-tab-indicator-size          Bar thickness, hover + selected (default: 2px)
+ *   --itx-tab-indicator-color-hover   Bar colour, hover (default: neutral-10)
+ *   --itx-tab-active-indicator-color  Bar colour, selected (default: colorway)
+ *
+ * Tab — focus + motion
+ *   --itx-tab-focus-outline-width     (default: 2px)
+ *   --itx-tab-focus-outline-style     (default: solid)
+ *   --itx-tab-focus-outline-color     (default: --itx-colorway)
+ *   --itx-tab-focus-outline-offset    (default: -2px, inset)
+ *   --itx-tab-transition-duration     (default: --itx-duration-fast)
+ *
+ * Panel tokens live in interop-tab-panel.scss.
+ *
+ * REMOVED this round, because a shorthand token cannot be partially
+ * overridden and each of these was also wrong at rest:
+ *   --itx-tabs-border-bottom  was `1px solid currentColor` → the list rule
+ *                             rendered at full TEXT strength, a near-black
+ *                             line under every tab group. Replaced by
+ *                             --itx-tabs-rule-width / --itx-tabs-rule-color.
+ *   --itx-tab-font            was `font: inherit`. The `font` shorthand also
+ *                             resets font-variant / stretch, and it cannot
+ *                             express "inherit the family, pin the size".
+ *                             Replaced by the four discrete type tokens.
+ *   --itx-tab-focus-outline   was `2px solid currentColor`. Replaced by
+ *                             width / style / colour.
+ *   --itx-tab-active-indicator-height  → --itx-tab-indicator-size, because the
+ *                             bar is no longer selected-only (hover draws it
+ *                             too) and it is a thickness on both axes.
  */
 
 :host {
 	display: block;
 }
 
-/* UA reset for tab buttons */
+/*
+ * Vertical orientation.
+ *
+ * `orientation="vertical"` has always set `aria-orientation` and swapped the
+ * arrow keys, and has never had a single visual rule — a vertical tab group
+ * rendered as a horizontal strip. The host reflects the input as
+ * `itx-orientation` (see interop-tabs.ts) purely so this rule can exist.
+ *
+ * Side-by-side rather than stacked: a column of tabs sitting above its panels
+ * reads as a menu, not as tabs. `align-items: start` keeps the list from
+ * stretching to the tallest panel.
+ */
+:host([itx-orientation="vertical"]) {
+	display: flex;
+	flex-direction: row;
+	align-items: start;
+	gap: var(--itx-tabs-gap, 0);
+}
+
+/* UA reset for tab buttons. Type is set on the tab rule below, not inherited,
+   so `font-size: inherit` is gone from here — it would have re-inherited a
+   fluid prose size. */
 :host [role="tab"] {
 	appearance: none;
 	-webkit-appearance: none;
@@ -41,55 +193,208 @@
 	user-select: none;
 	-webkit-user-select: none;
 	box-sizing: border-box;
-	font-family: inherit;
-	font-size: inherit;
-	line-height: inherit;
-	color: inherit;
 }
 
+/* ── Tablist ─────────────────────────────────────────────────────────────── */
+/*
+ * The rule runs along the WHOLE list, not per-tab. Carbon puts its resting
+ * underline on each tab link, so the rule stops where the tabs stop; a
+ * continuous baseline is the better shape and it is what this component
+ * already drew. The per-tab bar below is positioned to sit IN it, so a
+ * selected tab reads as the rule turning colorway for that span rather than
+ * as a second line stacked on top of one.
+ *
+ * Carbon's resting underline is 2px solid $border-subtle. We take 1px at
+ * neutral-7 instead:
+ *   - 1px because every structural rule in the library is a 1px hairline.
+ *   - neutral-7 rather than the $border-subtle → neutral-4 mapping in the
+ *     conversion table, because neutral-4 sits ~0.10 luminance from our page
+ *     surface and reads as invisible. That is round 7's lesson, and it is
+ *     what --itx-border (neutral-5) already gets wrong.
+ * To restore Carbon literally: --itx-tabs-rule-width: 2px and
+ * --itx-tabs-rule-color: var(--itx-neutral-4).
+ */
 [role="tablist"] {
 	display: var(--itx-tabs-tablist-display, flex);
 	flex-wrap: var(--itx-tabs-tablist-flex-wrap, nowrap);
 	gap: var(--itx-tabs-gap, 0);
-	border-block-end: var(--itx-tabs-border-bottom, 1px solid currentColor);
+	border-block-end: var(--itx-tabs-rule-width, 1px) solid
+		var(--itx-tabs-rule-color, var(--itx-neutral-7));
 }
 
+/*
+ * Vertical: the list becomes a column and the rule moves to the inline-end
+ * edge — the seam between the list and the panels it controls. The selected
+ * bar follows it there (below), which keeps the horizontal relationship
+ * intact: the bar is always the rule, recoloured.
+ *
+ * Carbon's own vertical tabs split the two — rule on the inline-end, marker
+ * on the inline-start — because their vertical flavour is a `contained`
+ * derivative with a filled list. With no fill there is nothing to anchor a
+ * far-edge marker to, and splitting them would break the one relationship
+ * this borrow is for.
+ */
+[role="tablist"][aria-orientation="vertical"] {
+	flex-direction: column;
+	border-block-end: none;
+	border-inline-end: var(--itx-tabs-rule-width, 1px) solid
+		var(--itx-tabs-rule-color, var(--itx-neutral-7));
+}
+
+/* ── Tab ─────────────────────────────────────────────────────────────────── */
+/*
+ * 40px is Carbon's `md` layout size, which is what `.cds--tabs` defaults to
+ * for the line flavour — matching button md and segmented-control md. (The
+ * 48px figure in Carbon's docs is the `contained` default, not this one.)
+ * Height comes from min-block-size with the label centred, so a tab with a
+ * two-line or icon label grows instead of clipping.
+ *
+ * Type is $body-compact-01 — 14 / 18 / 400 — written as fixed rem, NOT
+ * --itx-font-size-*. Those are fluid clamp() values, and a label that grows
+ * with the viewport inside a pinned 40px box overflows it.
+ */
 [role="tab"] {
 	display: inline-flex;
 	align-items: center;
+	min-block-size: var(--itx-tab-min-block-size, var(--itx-spacing-10));
 	gap: var(--itx-tab-gap, var(--itx-spacing-1));
 	padding-block: var(--itx-tab-padding-block, var(--itx-spacing-2));
 	padding-inline: var(--itx-tab-padding-inline, var(--itx-spacing-4));
+
+	font-family: var(--itx-tab-font-family, inherit);
+	font-size: var(--itx-tab-font-size, 0.875rem);
+	font-weight: var(--itx-tab-font-weight, 400);
+	line-height: var(--itx-tab-line-height, 1.2857);
+	letter-spacing: var(--itx-tab-letter-spacing, normal);
+
 	background: var(--itx-tab-background, transparent);
-	color: var(--itx-tab-foreground, inherit);
-	border: var(--itx-tab-border-width, 0) solid var(--itx-tab-border-color, transparent);
-	border-radius: var(--itx-tab-border-radius, var(--itx-radius-sm));
-	font: var(--itx-tab-font, inherit);
-	letter-spacing: var(--itx-tab-letter-spacing, inherit);
+	color: var(--itx-tab-foreground, var(--itx-neutral-9));
+	border: var(--itx-tab-border-width, 0) solid
+		var(--itx-tab-border-color, transparent);
+
+	/* Squared. --itx-radius-none, not --itx-radius-0, which does not exist and
+	   would silently invalidate the declaration. */
+	border-radius: var(--itx-tab-border-radius, var(--itx-radius-none));
+
 	cursor: pointer;
 	position: relative;
+	transition:
+		color var(--itx-tab-transition-duration, var(--itx-duration-fast)) ease,
+		background-color
+			var(--itx-tab-transition-duration, var(--itx-duration-fast)) ease;
 
+	/*
+	 * The indicator bar. Absolutely positioned, so thickness and colour are
+	 * free to change on state without reflowing the strip.
+	 *
+	 * Pulled DOWN by the rule's width so it overlaps the list rule instead of
+	 * sitting on top of it: a 2px bar at inset-block-end: -1px covers the 1px
+	 * rule and stands 1px proud of it. That is what makes selection read as
+	 * "the rule went colorway here", which is the whole borrow.
+	 */
 	&::after {
-		content: '';
+		content: "";
 		position: absolute;
 		inset-inline: 0;
-		inset-block-end: 0;
-		block-size: var(--itx-tab-active-indicator-height, 2px);
+		inset-block-end: calc(-1 * var(--itx-tabs-rule-width, 1px));
+		block-size: var(--itx-tab-indicator-size, 2px);
 		background: transparent;
-		transition: background var(--itx-tab-transition-duration, var(--itx-duration-fast)) ease;
+		transition: background
+			var(--itx-tab-transition-duration, var(--itx-duration-fast)) ease;
 	}
 
-	&[aria-selected="true"] {
-		color: var(--itx-tab-active-foreground, var(--itx-tab-foreground, inherit));
-		background: var(--itx-tab-active-background, transparent);
+	/*
+	 * Hover — label to full strength, bar darkens, NOTHING is painted behind
+	 * the tab.
+	 *
+	 * Deliberately not the house `--itx-surface-above` hover fill. A filled
+	 * hover on a squared, gapless row of labels is the segmented control's
+	 * shape, and the two components have to stay legibly apart. Carbon agrees:
+	 * its `line` tabs paint no hover background either, and reserve the
+	 * $layer-hover wash for `contained`, which we are not taking.
+	 *
+	 * `--itx-tab-background-hover` exists anyway so the decision is a lever
+	 * rather than an omission — set it to var(--itx-surface-above) for the
+	 * house fill.
+	 *
+	 * Behind `any-hover: hover` so a touch device does not latch the hover
+	 * paint after a tap (round 2 set this precedent on the expansion panel).
+	 */
+	@media (any-hover: hover) {
+		&:where(:hover) {
+			background: var(--itx-tab-background-hover, transparent);
+			color: var(--itx-tab-foreground-hover, var(--itx-neutral-12));
 
-		&::after {
-			background: var(--itx-tab-active-indicator-color, currentColor);
+			&::after {
+				background: var(--itx-tab-indicator-color-hover, var(--itx-neutral-10));
+			}
 		}
 	}
 
+	/*
+	 * Selected.
+	 *
+	 * Carbon shifts the selected label to $heading-compact-01, i.e. 600
+	 * weight. DECLINED: a weight change on a content-width tab re-measures it,
+	 * so selecting a tab nudges every tab after it sideways. Reserving the
+	 * bold width needs a hidden `::after { content: attr(data-label) }` twin,
+	 * which cannot work for the `interopTabLabel` branch — that label is a
+	 * projected template, not a string — and half-working is worse than not.
+	 * Selection already carries two signals here: the label at full strength
+	 * and a colorway bar. Walk it back with one value:
+	 *   --itx-tab-font-weight-selected: 600;
+	 *
+	 * Background stays transparent on purpose; see the tabs-vs-segmented-
+	 * control note at the top of this file.
+	 */
+	&[aria-selected="true"] {
+		color: var(--itx-tab-active-foreground, var(--itx-neutral-12));
+		background: var(--itx-tab-active-background, transparent);
+		font-weight: var(
+			--itx-tab-font-weight-selected,
+			var(--itx-tab-font-weight, 400)
+		);
+
+		&::after {
+			background: var(--itx-tab-active-indicator-color, var(--itx-colorway));
+		}
+	}
+
+	/*
+	 * Focus. --itx-colorway, not --itx-colorway-8: the semantic token is a
+	 * light-dark() pair, so the ring survives dark mode. Inset offset keeps
+	 * the ring inside the tab rather than spilling over its neighbour in a
+	 * gapless strip.
+	 */
 	&:focus-visible {
-		outline: var(--itx-tab-focus-outline, 2px solid currentColor);
+		outline: var(--itx-tab-focus-outline-width, 2px)
+			var(--itx-tab-focus-outline-style, solid)
+			var(--itx-tab-focus-outline-color, var(--itx-colorway));
 		outline-offset: var(--itx-tab-focus-outline-offset, -2px);
+	}
+}
+
+/*
+ * Vertical tabs — full-width rows, bar on the inline-end edge, in the rule.
+ * `inset-inline: auto` first, because the horizontal rule above sets both
+ * inline insets and a lone `inset-inline-end` would not clear the start one.
+ */
+[role="tablist"][aria-orientation="vertical"] [role="tab"] {
+	inline-size: 100%;
+	justify-content: start;
+
+	&::after {
+		inset-inline: auto;
+		inset-block: 0;
+		inset-inline-end: calc(-1 * var(--itx-tabs-rule-width, 1px));
+		block-size: auto;
+		inline-size: var(--itx-tab-indicator-size, 2px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[role="tab"],
+	[role="tab"]::after {
+		transition: none;
 	}
 }
