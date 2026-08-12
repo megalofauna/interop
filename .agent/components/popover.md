@@ -105,9 +105,15 @@ Three orthogonal modes:
 </div>
 ```
 
-The structural CSS suppresses the built-in triangle automatically when `[interop-popover-arrow]` is present (`:has()` selector). Consumers don't have to set `[showArrow]="false"`.
+The structural CSS suppresses the built-in triangle automatically when `[interop-popover-arrow]` is present (the directive sets `[data-custom-arrow]` on the panel; the built-in rules are `:not([data-custom-arrow])`). Consumers don't have to set `[showArrow]="false"`.
 
 For custom arrows, the structural CSS rotates the marker by 0/90/180/270deg based on `[data-placement]`, so a single icon (e.g. `caret-up`) reorients correctly for all four sides.
+
+**The built-in arrow is two stacked triangles, not one.** `::before` paints the caret in the panel's *border* colour flush with the panel edge; `::after` paints it in the panel's *background* colour, shifted inward by exactly one `--itx-popover-border-width`. That one-border-width offset is what makes the frame read as a continuous hairline around the caret instead of stopping dead at the panel edge, and it lets the fill triangle's base overlap — and therefore hide — the panel's own border across the caret's width. Lifted from Carbon, which builds its caret the same way.
+
+Each triangle is the border trick (zero-size box, three transparent borders, one coloured), so **`--itx-popover-arrow-size` is both the half-width and the depth**: `6px` renders a 12 × 6 caret, which is Carbon's exact caret box.
+
+The custom arrow is pulled out of the panel by a percentage `translate`, which resolves against the element's own border box. A consumer's icon of any size lands flush against the panel edge with no token to keep in step. `--itx-popover-arrow-offset` nudges along the axis; positive moves *inward*.
 
 ## Position strategy
 
@@ -138,13 +144,84 @@ Default is **off**. Backdrops on popovers are usually wrong — the value of an 
 
 ```
 Sizing            min-width, max-width, max-height, padding
+Typography        font-size, line-height
 Appearance        background, foreground, border-{radius,width,style,color}, shadow
 Animation         enter/exit duration + easing, enter/exit translate vector
-Arrow             arrow-size, arrow-color, arrow-offset
+Arrow             arrow-size, arrow-color, arrow-border-color, arrow-offset
 Backdrop (global) --itx-backdrop-color, --itx-backdrop-blur
 ```
 
-24 component-scoped tokens + 2 global backdrop tokens.
+| Token | Value |
+|---|---|
+| `--itx-popover-min-width` | `0` |
+| `--itx-popover-max-width` | `min(90vw, 23rem)` — Carbon's 368px cap |
+| `--itx-popover-max-height` | `70vh` (ours; Carbon has no ceiling) |
+| `--itx-popover-padding` | `var(--itx-spacing-4)` — 16px, one value |
+| `--itx-popover-font-size` | `0.875rem` |
+| `--itx-popover-line-height` | `1.4286` — 20/14 |
+| `--itx-popover-background` | `var(--itx-surface-above)` |
+| `--itx-popover-foreground` | `var(--itx-on-surface)` |
+| `--itx-popover-border-radius` | `var(--itx-radius-none)` |
+| `--itx-popover-border-width` | `1px` |
+| `--itx-popover-border-style` | `solid` |
+| `--itx-popover-border-color` | `var(--itx-neutral-7)` |
+| `--itx-popover-shadow` | `0 2px 2px oklch(0 0 0 / 0.2)` |
+| `--itx-popover-enter/exit-duration` | `var(--itx-duration-fast)` |
+| `--itx-popover-enter-easing` | `var(--itx-easing-decelerate)` |
+| `--itx-popover-exit-easing` | `var(--itx-easing-accelerate)` |
+| `--itx-popover-enter/exit-translate` | `0 -0.25rem` |
+| `--itx-popover-arrow-size` | `6px` → a 12 × 6 caret |
+| `--itx-popover-arrow-color` | **unset** — derives from `-background` at the panel |
+| `--itx-popover-arrow-border-color` | **unset** — derives from `-border-color` at the panel |
+| `--itx-popover-arrow-offset` | `0px` |
+
+23 component-scoped tokens (21 declared, 2 derived) + 2 global backdrop tokens.
+
+### The two arrow colours are deliberately undeclared
+
+They are the **only** `var()` fallbacks the foundation carries, and they are the point of the exercise. `--itx-popover-arrow-color: var(--itx-popover-background)` written in the theme resolves `--itx-popover-background` *at `[interop-root]`* and then inherits the frozen result — so re-pointing the background on one panel left that panel's caret painted in the root's colour. Reading them at the point of use instead (`var(--itx-popover-arrow-color, var(--itx-popover-background))`) resolves at the panel, so a per-instance override is picked up. Both remain public tokens; an ancestor that sets either one still wins.
+
+This is the `var()` gotcha from `.agent/workflows/carbon-borrow.md`, and it had been live here.
+
+### Foundation carries no other fallbacks
+
+Everything else in `styles/components/popover.css` reads a bare `var(--itx-popover-*)`. Before the Carbon round every token had a hardcoded fallback in the foundation, three of which had already drifted from the theme (an 8px arrow written as `12px`, a `--itx-duration-fast` exit written as `96ms`, a one-value padding written as a pair). See `.agent/css-strategy.md`.
+
+## Typography — why popover does NOT isolate
+
+A globally-declared `interop-typography-root` makes `prose.css`'s bare element selectors act as global element styles, and a popover full of projected content is exposed to them. The general fix is the static host attribute `interop-typography-isolate`.
+
+**The popover deliberately does not set it.** Unlike a tree row or a table cell, a popover's content genuinely may be running text — a hover-card, a definition panel, a help bubble — and isolating would make prose inside a popover unable to read as prose.
+
+Instead the panel declares its own baseline (`--itx-popover-font-size` / `-line-height`, Carbon's `$body-01` at 14/20). Projected `<p>` and `<li>` still win, because prose targets them directly and an inherited value cannot beat a direct declaration. The baseline covers everything prose does not claim: labels, buttons, bare spans, listbox rows.
+
+Consequence worth knowing: a bare `<p>` inside a popover inside a typography root renders at the *fluid* `--itx-font-size-body`, not 14px. If a specific panel must be pinned, put `interop-typography-isolate` on that panel in the consumer's template — it is a plain attribute, not an input.
+
+## Borrowed visual language — IBM Carbon Popover
+
+Round 10 of `.agent/workflows/carbon-borrow.md`.
+
+| Taken | Carbon | Resolves to |
+|---|---|---|
+| Padding | `$spacing-05` both axes | `var(--itx-spacing-4)` (was 12/16) |
+| Max width | `to-rem(368px)` | `min(90vw, 23rem)` |
+| Type | `$body-01` 14/20/400 | `0.875rem` / `1.4286` (was undeclared) |
+| Caret box | 12 wide × 6 deep | `--itx-popover-arrow-size: 6px` (was 8 → 16 × 8) |
+| Caret border | `::before` in `$popover-border-color`, `::after` inset 1px | same construction |
+| Fill | `theme.$layer` | `var(--itx-surface-above)` |
+| Text | `theme.$text-primary` | `var(--itx-on-surface)` |
+| Frame | `1px solid $border-subtle` | `1px solid var(--itx-neutral-7)` |
+| Shadow | `drop-shadow(0 2px 2px rgba(0,0,0,.2))` | `0 2px 2px oklch(0 0 0 / 0.2)` |
+
+**Declined:**
+
+- **Carbon's 2px `$popover-border-radius`.** Nine rounds have converged on square corners and our tooltip — the sibling surface Carbon builds on this same container — is already at `--itx-radius-none`. Walk back with `--itx-radius-nominal`.
+- **`filter: drop-shadow()`.** Carbon hangs it off an intermediate wrapper so the shadow wraps the caret silhouette. We have no wrapper, and putting `filter` on the panel would make it a containing block for every positioned descendant. Cost: the caret casts no shadow.
+- **Carbon's literal `$border-subtle` (`--itx-neutral-4`).** Two steps too light against `--itx-surface-above`; `--itx-neutral-7` is the house hairline. Also avoids reading `--itx-border`, which this round found was being stomped app-wide by the dialog theme (fixed in the same commit — `dialog.css` was declaring the global `--itx-border` on `[interop-root]` to lighten its own edge, and won on import order).
+- **`will-change: transform` on the caret.** Carbon adds it against a subpixel seam between a *sibling* caret and the content. Ours is a pseudo-element of the panel itself, so the seam case differs; not paying for a compositor layer speculatively.
+- **High-contrast (inverse fill/text) and tab-tip variants.** No variant axis on the component, and the inverse pill is already the tooltip's job.
+
+**Popover and tooltip in one voice:** squared corners, one hairline language, the same `--itx-duration-fast` / decelerate-in / accelerate-out motion pair. They differ where Carbon's own family differs — the tooltip is the inverse pill (`--itx-shadow-sm` is enough behind it), the popover is the light `$layer` surface and takes Carbon's tighter, darker `0 2px 2px` shadow. When tooltip's own borrow round runs, that shadow is the value to reconcile.
 
 ## DevMode warnings
 

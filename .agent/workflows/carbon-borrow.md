@@ -204,6 +204,11 @@ changes.
 | 7 | Data Table | Table | 2026-08-12 | 48px rows via `block-size` on `tr` (Carbon sizes the row, not the cell), sm/md/lg/xl density on `itx-size`, one 1px hairline language. DECLINED Carbon's grey header slab — emphasis moved into 600-weight type — to stay consistent with rounds 2/3/4. |
 | 8 | Notification | Toast | 2026-08-12 | Squared 288px panel, 3px status bar kept as `border-inline-start` (not the tree's box-shadow — see note), 14/18 600-over-400 type pair, description un-dimmed. |
 | 9 | Content Switcher | Segmented control | 2026-08-12 | Inverted selected pill (Carbon's high-contrast default; Interop's previous look was effectively Carbon's low-contrast variant), transparent hairline-framed track, equal-width segments, sm/md/lg 32/40/48. |
+| 10 | Badge Indicator | Badge | 2026-08-13 | 16px count bubble / 8px dot, both round — Carbon names the radius, so this is the one component the house doesn't square off. Paint moved off a hardcoded `#d32f2f` onto `--itx-danger`/`--itx-on-danger`, so it follows `itx-status-palette` and dark mode for the first time. Offset 4px → 0 (corner-centred). SC 2.5.8 does not reach it: the indicator is `aria-hidden` and non-interactive, which is why 16px is legitimate here where chip stops at 24. |
+| 11 | Text Input + Text Area | Field | 2026-08-13 | Fill-plus-underline: filled slab, single 1px neutral-8 bottom rule, no other borders, squared. sm/md/lg 32/40/48 on `itx-size`; 12/16 label above, helper below; 2px inset rings for focus (colorway) and invalid (danger). Error glyph drawn as a CSS mask on `::after` — no template change. Fill polarity INVERTED to `--itx-surface-above`: Carbon recesses the field below a white page, our elevation model raises it. Declined Carbon's xs step (24px, on the SC 2.5.8 floor) and its gray-40 placeholder (a known contrast failure). |
+| 12 | Popover | Popover | 2026-08-13 | Squared 368px panel, 16px padding, `$body-01` 14/20 (the type was previously undeclared), Carbon's 12 × 6 caret rebuilt as two stacked triangles so the 1px frame runs continuously around it. Foundation stripped of all fallbacks — three had drifted from the theme — and the arrow colours moved to point-of-use derivation, fixing a live `var()` freeze. DECLINED Carbon's 2px radius to stay in one voice with tooltip, and its `filter: drop-shadow` (no wrapper to hang it on; `filter` would make the panel a containing block). |
+| 13 | Slider | Slider | 2026-08-13 | 2px squared track, near-black fill (`$layer-selected-inverse`, not the brand hue), 14px round thumb growing to 20px, focus turns thumb AND fill colorway. Carbon's 14px thumb is under SC 2.5.8, so the painted circle and the 24px hit target were separated: growth is a transparent-border-width change, not Carbon's `scale()`, which would scale the target too. Found the round 5 mechanism bug a second time — see the note below. |
+| 14 | Tabs | Tabs | 2026-08-13 | `line` flavour only; `contained` declined outright (filled slabs, against rounds 2/3/4/7). 40px tab — Carbon's `line` default is `md`, not the 48px `contained` step. Selection is a 2px colorway bar sitting IN the list rule rather than stacked on it, so selection reads as the rule turning colorway for that span. That bar-not-fill relationship is what keeps tabs legibly apart from round 9's segmented control; the house hover fill was declined for the same reason. |
 
 ### Round 6–9 note — what four parallel borrows found
 
@@ -236,6 +241,65 @@ a dimension the borrow depends on was an emergent side-effect rather than a
 declared property. That is the same finding as round 1's `--itx-chip-height`,
 now three times over — when a component has no token for its own height, that
 is the bug, and the borrow is just what surfaces it.
+
+### Rounds 10–14 note — the global-token stomp is now a standing check
+
+Three rounds have now found the same bug, and it is always the same shape: a
+**component** theme file declaring a **global** token on `:where([interop-root])`
+because it wanted that value for itself.
+
+- Round 9 — `segmented-control.css` set `--itx-rule-color: transparent`,
+  making the standalone `<hr itx-rule>` utility invisible app-wide.
+- Round 12 — `dialog.css` set `--itx-border: var(--itx-neutral-3)` to lighten
+  its own edge. `foundation.css` declares the same token on the same selector
+  in the same layer, and dialog is imported later, so dialog won: every
+  component reading `--itx-border` got neutral-3 (oklch 0.93, a 0.03 delta
+  against the page) instead of the declared neutral-5.
+
+That second one is why round 7's table rules were invisible, and the diagnosis
+at the time — "Carbon can afford a fainter rule than we can" — was only half
+right. The rule was not faint by design; it was being overwritten by a dialog.
+
+**The check, before you write a value:** if the token you are about to declare
+does not start with `--itx-<your-component>-`, you are writing someone else's
+token. Three ways out, in order of preference:
+
+1. The component almost always already has its own token for this
+   (`--itx-dialog-border-color` existed and read `var(--itx-border)`). State the
+   value on that instead — the component looks identical, nothing else moves.
+2. If the family is genuinely shared (`--itx-rule-*`, `--itx-indicator-*`),
+   declare it on a **component-scoped selector**, not on `[interop-root]`. See
+   the "Control-scoped values" block in `segmented-control.css`.
+3. If the global value is actually wrong for everyone, change it in
+   `foundation.css` deliberately, in its own commit.
+
+It is silent in every direction: no error, no warning, and the component that
+caused it looks correct. Grep is the only detector —
+`grep -rn -- "--itx-<token>\s*:" styles/` and check for more than one home.
+
+### Round 13 note — the round 5 mechanism bug, a second time
+
+Round 5 found that vertical progress bars filled horizontally because the fill
+was delegated to `::-webkit-progress-value`, which sizes along the *physical*
+inline axis and cannot be reoriented by `writing-mode`.
+
+Slider had the identical class of bug, arrived at differently: the track was
+sized with **`height`** — a physical property — on a pseudo-element inheriting
+`writing-mode: vertical-lr`, where `height` is the track's *length*. A vertical
+slider drew a 6px stub instead of an 8rem track. Firefox never received the
+gradient-direction patch WebKit had, and the marks directive hard-coded
+`to right`, painting ticks across a vertical track.
+
+The fix was the same shape as round 5's, which is the point: every cross-axis
+dimension became a **logical** property, and the axis became a published token
+(`--itx-slider-axis`) that the marks directive reads too, so ticks cannot
+disagree with the fill about which way "along" is. The vendor forks and the
+per-orientation overrides deleted themselves.
+
+**Generalised: an orientation axis built on physical properties is a bug
+waiting for someone to rotate it.** When a component has a vertical mode, the
+question is not "are the values right" but "is any dimension stated
+physically". Two rounds, two components, same answer.
 
 ### Round 3 note — prose leaking into component internals
 

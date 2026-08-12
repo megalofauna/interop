@@ -1,13 +1,24 @@
-<article class="demo-page">
+<demo-page>
 	<demo-masthead category="Components" title="Tabs">
-		Accessible tab container with roving tabindex, ARIA wiring, and state-preserving panels.
-		Inactive panels stay in the DOM — no destroy/recreate on tab switch.
+		Accessible tab group built on the ARIA tabs pattern — roving tabindex,
+		generated tablist, full ARIA wiring from the panels you write. Inactive
+		panels stay in the DOM under <code>hidden</code>, so switching a tab never
+		destroys the state inside it.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
+		<p description class="demo-section__lede">
+			Write the panels; the tab strip generates itself. Each panel contributes
+			its label, its id, and its <code>aria-controls</code> pairing.
+		</p>
+
 		<demo-example label="Basic">
-			<section interop-tabs aria-label="Station systems" style="width: 100%;">
+			<section
+				interop-tabs
+				aria-label="Station systems"
+				class="tabs-page__group"
+			>
 				<section interop-tab-panel label="Navigation">
 					<p>Heading: 042° / Speed: 0.4c / ETA: 6h 14m</p>
 					<p>Next waypoint: Kepler Station — sector A4.</p>
@@ -21,33 +32,356 @@
 					<p>Next offload: Kepler Station, berth 12.</p>
 				</section>
 			</section>
-		</demo-example>
 
-		<demo-example label="Vertical orientation">
-			<section interop-tabs aria-label="Crew roster" orientation="vertical" style="width: 100%;">
-				<section interop-tab-panel label="Bridge">
-					<p>Commander Reyes, Pilot Tanaka, Navigator Osei</p>
-				</section>
-				<section interop-tab-panel label="Engineering">
-					<p>Chief Voskov, Technician Ahuja, Technician Park</p>
-				</section>
-				<section interop-tab-panel label="Medical">
-					<p>Dr. Mbeki, Medic Chen</p>
-				</section>
-			</section>
+			<itx-code-block language="html" [code]="basicCode" />
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Driving the selection ──────────────────────────────────────────── -->
+	<demo-section id="selection" heading="Driving the selection">
+		<p description class="demo-section__lede">
+			Left alone, the group owns its own state. Two ways to take it over: bind
+			<code>[(active)]</code> when the parent already holds the value, or
+			register an <code>activationId</code> when the caller is somewhere else
+			entirely.
+		</p>
 
-	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
-	<demo-section id="api-inputs" heading="API — Inputs">
-		<interop-table [collection]="apiEntries" [columns]="apiColumns">
+		<demo-example label="Two-way binding with [(active)]">
+			<section
+				interop-tabs
+				[(active)]="activeSystem"
+				aria-label="Station systems, controlled"
+				class="tabs-page__group"
+			>
+				<section interop-tab-panel key="navigation" label="Navigation">
+					<p>Heading: 042° / Speed: 0.4c / ETA: 6h 14m</p>
+				</section>
+				<section interop-tab-panel key="engineering" label="Engineering">
+					<p>Reactor output: 94% / Shields: nominal / Hull: 100%</p>
+				</section>
+				<section interop-tab-panel key="cargo" label="Cargo">
+					<p>Bay utilisation: 62% / Manifest items: 47 / Hazmat: 3</p>
+				</section>
+			</section>
+
+			<div class="tabs-page__actions">
+				<button interop-button="primary" (click)="select('cargo')">
+					Show cargo
+				</button>
+				<button interop-button="secondary" (click)="select('navigation')">
+					Reset
+				</button>
+			</div>
+
+			<demo-state>
+				<demo-state-item label="active">{{ activeSystem() }}</demo-state-item>
+			</demo-state>
+
+			<itx-code-block [files]="controlledFiles" />
+		</demo-example>
+
+		<demo-example label="Programmatic switching with activationId">
+			<section
+				interop-tabs
+				activationId="ops-console"
+				aria-label="Ops console"
+				class="tabs-page__group"
+			>
+				<section interop-tab-panel key="navigation" label="Navigation">
+					<p>Course locked. Autopilot engaged.</p>
+				</section>
+				<section interop-tab-panel key="engineering" label="Engineering">
+					<p>Coolant loop B running 4° above nominal.</p>
+				</section>
+			</section>
+
+			<div class="tabs-page__actions">
+				<button interop-button="primary" (click)="jumpTo('engineering')">
+					Open engineering
+				</button>
+				<button interop-button="secondary" (click)="jumpTo('navigation')">
+					Back to navigation
+				</button>
+			</div>
+
+			<itx-code-block [files]="activationFiles" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Rich labels ────────────────────────────────────────────────────── -->
+	<demo-section id="labels" heading="Rich labels">
+		<p description class="demo-section__lede">
+			The <code>label</code> input covers plain text. For a glyph, a count, or
+			anything else that is markup rather than a string, put an
+			<code>ng-template interop-tab-label</code> inside the panel — it wins over
+			<code>label</code> when both are present.
+		</p>
+
+		<demo-example label="Icons and counts">
+			<section
+				interop-tabs
+				aria-label="Station systems, illustrated"
+				class="tabs-page__group"
+			>
+				<section interop-tab-panel key="navigation">
+					<ng-template interop-tab-label>
+						<interop-icon [size]="16" name="tabler-route" />
+						Navigation
+					</ng-template>
+					<p>Heading: 042° / Speed: 0.4c / ETA: 6h 14m</p>
+				</section>
+
+				<section interop-tab-panel key="engineering">
+					<ng-template interop-tab-label>
+						<interop-icon [size]="16" name="tabler-bolt" />
+						Engineering
+					</ng-template>
+					<p>Reactor output: 94% / Shields: nominal / Hull: 100%</p>
+				</section>
+
+				<section interop-tab-panel key="cargo">
+					<ng-template interop-tab-label>
+						<interop-icon [size]="16" name="tabler-package" />
+						Cargo
+						<span class="tabs-page__count">47</span>
+					</ng-template>
+					<p>Bay utilisation: 62% / Manifest items: 47 / Hazmat: 3</p>
+				</section>
+			</section>
+
+			<itx-code-block [files]="labelFiles" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Orientation ────────────────────────────────────────────────────── -->
+	<demo-section id="orientation" heading="Orientation">
+		<p description class="demo-section__lede">
+			<code>orientation="vertical"</code> swaps the arrow keys to up and down,
+			sets <code>aria-orientation</code>, and stands the tab list beside its
+			panels. The rule moves with it: the list is separated from its panels by
+			one hairline, and the selected tab is the point where that hairline turns
+			<em>colorway</em>.
+		</p>
+
+		<demo-example label="Vertical, labelled by a visible heading">
+			<div class="tabs-page__labelled">
+				<h3 id="crew-heading" class="tabs-page__heading">Crew roster</h3>
+
+				<section
+					interop-tabs
+					orientation="vertical"
+					ariaLabelledBy="crew-heading"
+					class="tabs-page__group"
+				>
+					<section interop-tab-panel label="Bridge">
+						<p>Commander Reyes, Pilot Tanaka, Navigator Osei</p>
+					</section>
+					<section interop-tab-panel label="Engineering">
+						<p>Chief Voskov, Technician Ahuja, Technician Park</p>
+					</section>
+					<section interop-tab-panel label="Medical">
+						<p>Dr. Mbeki, Medic Chen</p>
+					</section>
+				</section>
+			</div>
+
+			<itx-code-block language="html" [code]="verticalCode" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Panel lifecycle ────────────────────────────────────────────────── -->
+	<demo-section id="state" heading="Panel lifecycle">
+		<p description class="demo-section__lede">
+			The default is lazy once, then permanent: a panel renders on its first
+			activation and stays in the DOM afterwards under <code>hidden</code>. Type
+			into the first field, switch away, come back — the text is still there. Do
+			the same in the second and it is gone.
+		</p>
+
+		<demo-example label="Preserved, destroyed, and pre-rendered">
+			<section
+				interop-tabs
+				aria-label="Panel lifecycle"
+				class="tabs-page__group"
+			>
+				<section interop-tab-panel key="preserved" label="Preserved">
+					<p>Default behaviour — rendered once, then kept.</p>
+					<input
+						class="tabs-page__field"
+						type="text"
+						placeholder="Type here, switch away, come back"
+					/>
+				</section>
+
+				<section
+					interop-tab-panel
+					key="volatile"
+					label="Destroy on hide"
+					[destroyOnHide]="true"
+				>
+					<p>Torn down every time you leave this tab.</p>
+					<input
+						class="tabs-page__field"
+						type="text"
+						placeholder="This clears on every switch"
+					/>
+				</section>
+
+				<section
+					interop-tab-panel
+					key="warm"
+					label="Pre-rendered"
+					[preRender]="true"
+				>
+					<p>
+						Already in the DOM before you clicked it — <code>preRender</code>
+						warms a panel that is expensive to build.
+					</p>
+				</section>
+			</section>
+
+			<itx-code-block [files]="stateFiles" />
+		</demo-example>
+	</demo-section>
+
+	<!-- ── Keyboard ───────────────────────────────────────────────────────── -->
+	<demo-section id="keyboard" heading="Keyboard">
+		<p description class="demo-section__lede">
+			Two activation models. <code>auto</code> — the default — switches the
+			panel as focus moves, which is right when panels are cheap.
+			<code>manual</code> separates the two, so a keyboard user can pass over a
+			heavy panel without paying to build it.
+		</p>
+
+		<demo-example label="Manual activation">
+			<section
+				interop-tabs
+				activationMode="manual"
+				aria-label="Diagnostics, manual activation"
+				class="tabs-page__group"
+			>
+				<section interop-tab-panel label="Telemetry">
+					<p>Focus this tab strip, then arrow across. Nothing switches.</p>
+					<p>Press Enter or Space to commit.</p>
+				</section>
+				<section interop-tab-panel label="Diagnostics">
+					<p>14 warnings, 0 faults. Last sweep 00:12 ago.</p>
+				</section>
+				<section interop-tab-panel label="Archive">
+					<p>Retention 90 days. 1.4 TB stored.</p>
+				</section>
+			</section>
+
+			<itx-code-block language="html" [code]="manualCode" />
+		</demo-example>
+
+		<demo-notes [notes]="keyboardNotes" />
+	</demo-section>
+
+	<!-- ── CSS tokens ─────────────────────────────────────────────────────── -->
+	<demo-section id="tokens" heading="CSS tokens">
+		<p description class="demo-section__lede">
+			Set any of these on an ancestor — <code>[interop-root]</code>, a wrapper,
+			the group itself. Tabs has no theme file of its own yet, so these defaults
+			live in the component stylesheet's fallback slots rather than in
+			<code>themes/protocol/</code>.
+		</p>
+
+		<interop-table
+			[collection]="tokenEntries"
+			[columns]="tokenColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="property" let-entry>
+				<code class="demo-page__api-name">{{ entry.property }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+	</demo-section>
+
+	<!-- ── API ────────────────────────────────────────────────────────────── -->
+	<demo-section id="api" heading="API">
+		<h3 class="demo-page__api-heading">Directives</h3>
+		<interop-table
+			[collection]="directiveEntries"
+			[columns]="directiveColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="element" let-entry>
+				<code class="demo-page__api-type">{{ entry.element }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Inputs</h3>
+		<interop-table
+			[collection]="apiEntries"
+			[columns]="apiColumns"
+			[scrollable]="true"
+		>
 			<ng-template itxCell="component" let-entry>
 				<code class="demo-page__api-default">{{ entry.component }}</code>
 			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+				<span class="demo-page__required">*</span>
+				}
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+			<ng-template itxCell="default" let-entry>
+				<code class="demo-page__api-default">{{ entry.default }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Outputs</h3>
+		<interop-table
+			[collection]="outputEntries"
+			[columns]="outputColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Methods</h3>
+		<interop-table
+			[collection]="methodEntries"
+			[columns]="methodColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="component" let-entry>
+				<code class="demo-page__api-default">{{ entry.component }}</code>
+			</ng-template>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
+			</ng-template>
+			<ng-template itxCell="type" let-entry>
+				<code class="demo-page__api-type">{{ entry.type }}</code>
+			</ng-template>
+		</interop-table>
+
+		<h3 class="demo-page__api-heading">Attributes</h3>
+		<interop-table
+			[collection]="attrEntries"
+			[columns]="attrColumns"
+			[scrollable]="true"
+		>
+			<ng-template itxCell="name" let-entry>
+				<code class="demo-page__api-name">{{ entry.name }}</code>
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -57,8 +391,4 @@
 			</ng-template>
 		</interop-table>
 	</demo-section>
-	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
-	</demo-section>
-</article>
+</demo-page>

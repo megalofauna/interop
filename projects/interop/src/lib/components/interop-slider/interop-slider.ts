@@ -90,7 +90,12 @@ export function generateSliderId(): string {
 		"[attr.aria-orientation]":
 			"orientation() === 'vertical' ? 'vertical' : null",
 		"[attr.data-orientation]": "orientation()",
-		"[style.--itx-slider-fill]": "fillPercent() + '%'",
+		// A 0–1 FRACTION, not a percentage string. The stylesheet has to map this
+		// onto the thumb's travel — `half-target + (100% - target) * fill` — and
+		// calc() can multiply a length-percentage by a number but cannot divide
+		// by a percentage. `fillPercent()` stays a percentage: it is the public,
+		// documented computed, and only this one binding needed to change.
+		"[style.--itx-slider-fill]": "fillPercent() / 100",
 		"(input)": "onInput($event)",
 		"(change)": "onChange($event)",
 	},

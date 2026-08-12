@@ -80,8 +80,11 @@ export interface SliderRangeValue {
 		"[attr.aria-label]": "ariaLabel()",
 		"[attr.aria-disabled]": "disabled() ? 'true' : null",
 		"[attr.data-orientation]": "orientation()",
-		"[style.--itx-slider-range-start]": "startPercent() + '%'",
-		"[style.--itx-slider-range-end]": "endPercent() + '%'",
+		// 0–1 fractions, not percentage strings — see the note on the equivalent
+		// binding in interop-slider.ts. The public `startPercent()` /
+		// `endPercent()` computeds are unchanged.
+		"[style.--itx-slider-range-start]": "startPercent() / 100",
+		"[style.--itx-slider-range-end]": "endPercent() / 100",
 	},
 })
 export class InteropSliderRange implements InteropSliderRangeApi {

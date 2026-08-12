@@ -1,0 +1,67 @@
+/*
+ * Tabs page — example-local layout only.
+ *
+ * Nothing here themes the component. The tab group's own paint comes from
+ * interop-tabs.scss / interop-tab-panel.scss; if an example needs a different
+ * value it sets an --itx-tab-* token, it does not restyle the element.
+ */
+
+/* Tab groups are block-level and want the full width of the example canvas.
+   Replaces the inline `style="width: 100%"` the old page repeated per
+   example. */
+.tabs-page__group {
+	inline-size: 100%;
+}
+
+/* Action rows sitting below an example's tab group. */
+.tabs-page__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+	margin-block-start: var(--itx-spacing-4);
+}
+
+/* The rich-label count pip. Deliberately plain — the point of the example is
+   that a tab label can hold arbitrary markup, not that we ship a badge. */
+.tabs-page__count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-inline-size: var(--itx-spacing-5);
+	padding-inline: var(--itx-spacing-1);
+	border: 1px solid var(--itx-neutral-7);
+	border-radius: var(--itx-radius-full);
+	font-size: 0.6875rem;
+	line-height: 1.4545;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Vertical example — the heading that ariaLabelledBy points at. */
+.tabs-page__labelled {
+	inline-size: 100%;
+}
+
+.tabs-page__heading {
+	margin-block: 0 var(--itx-spacing-3);
+}
+
+/* Lifecycle example — a focusable control inside each panel, so the
+   preserved / destroyed difference is something you can type into. */
+.tabs-page__field {
+	inline-size: 100%;
+	max-inline-size: 22rem;
+	margin-block-start: var(--itx-spacing-2);
+	padding: var(--itx-spacing-2);
+	border: 1px solid var(--itx-neutral-7);
+	border-radius: var(--itx-radius-none);
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 0.875rem;
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: -2px;
+	}
+}

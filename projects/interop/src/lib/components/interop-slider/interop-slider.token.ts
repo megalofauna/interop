@@ -43,6 +43,12 @@ export interface InteropSliderRangeApi {
 	readonly max: Signal<number>;
 	readonly step: Signal<number>;
 	readonly disabled: Signal<boolean>;
+	/**
+	 * Shared orientation. Thumbs read it so the group and its handles cannot
+	 * disagree — a vertical range whose thumbs stayed horizontal drew a vertical
+	 * track with two handles sliding across it.
+	 */
+	readonly orientation: Signal<SliderOrientation>;
 	readonly valueText: Signal<SliderValueFormatter | null>;
 	readonly start: Signal<number>;
 	readonly end: Signal<number>;
