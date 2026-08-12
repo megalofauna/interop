@@ -1,21 +1,62 @@
 /*
  * InteropProgress — styles for progress[interop-progress]
  *
- * Visual approach: appearance: none strips browser chrome; fill and track
- * are styled via WebKit pseudo-elements. Firefox's ::-moz-progress-bar
- * handles the fill; indeterminate mode falls back to Firefox's native
- * animation (which is acceptable) rather than duplicating shimmer logic.
+ * Visual approach: `appearance: none` strips the browser chrome, and the host
+ * paints BOTH track and fill itself as a single gradient driven by
+ * --itx-progress-percent, which the component publishes.
+ *
+ * ── Why not the UA pseudo-elements ────────────────────────────────────────
+ *
+ * The obvious implementation delegates the fill to `::-webkit-progress-value`
+ * (and `::-moz-progress-bar`) and lets the UA size it. That works horizontally
+ * and cannot be made to work vertically: those pseudo-elements size themselves
+ * along the *physical* inline axis, so the fill runs left-to-right regardless
+ * of the host's `writing-mode`. A vertical bar built that way reorients its
+ * box — you get a tall thin track — while the fill still creeps across it.
+ *
+ * Painting the fill ourselves makes orientation a gradient direction, which is
+ * a property we control, and removes the ::-webkit- / ::-moz- fork entirely.
+ * The element stays a real <progress>, so semantics and AT are untouched.
+ *
+ * The UA pseudo-elements are still zeroed out below — `appearance: none` does
+ * not stop them being painted, and their default backgrounds would sit on top
+ * of the gradient.
  *
  * Available tokens (set on any ancestor, e.g. [interop-root]):
  *
  *   --itx-progress-track        Track background color
  *   --itx-progress-fill         Fill / indicator color
  *   --itx-progress-height       Track thickness (horizontal) / width (vertical)
- *   --itx-progress-length       Track length when vertical (width when horizontal
- *                               is always 100% of container)
+ *   --itx-progress-length       Track length when vertical (horizontal always
+ *                               takes the full inline size of its container)
  *   --itx-progress-radius       Track corner radius
  *   --itx-progress-duration     Fill transition duration
+ *   --itx-progress-indeterminate-duration
+ *                               Shimmer cycle length (Carbon: 1400ms linear)
+ *
+ * Set by the component, not by consumers:
+ *   --itx-progress-percent      Fill percentage as a plain number, 0–100
+ *
+ * NOTE — this component is styled from its own `styleUrl` rather than the
+ * global `styles/components/*.css` + theme split every other component uses.
+ * The consequence is that a CSS-only consumer — someone writing the markup
+ * without importing the Angular component — gets no progress styling at all,
+ * which is the one thing the global stylesheet exists to provide. Migrating
+ * means swapping `:host` for `progress[interop-progress]` and registering the
+ * file in `interop.css`. Not done here: this round was visual only.
  */
+
+/*
+ * Registering the property is what makes the fill animate. A gradient colour
+ * stop built from an unregistered custom property jumps between values,
+ * because the browser has no type for it to interpolate; declared as a
+ * <number> it tweens, and the gradient follows.
+ */
+@property --itx-progress-percent {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
 
 :host {
 	-webkit-appearance: none;
@@ -24,66 +65,122 @@
 	width: 100%;
 	height: var(--itx-progress-height, 0.5rem);
 	border: none;
-	border-radius: var(--itx-progress-radius, var(--itx-radius-full, 9999px));
+	border-radius: var(--itx-progress-radius, 0);
 	overflow: hidden;
+
+	/* Fill direction. Horizontal runs along the inline axis; vertical runs
+	   bottom-to-top, because a vertical meter that fills downward reads as
+	   draining rather than progressing. */
+	--_axis: to right;
+
+	background-color: var(--itx-progress-track, var(--itx-border));
+	background-image: linear-gradient(
+		var(--_axis),
+		var(--itx-progress-fill, var(--itx-colorway)) 0
+			calc(var(--itx-progress-percent, 0) * 1%),
+		transparent calc(var(--itx-progress-percent, 0) * 1%) 100%
+	);
+
+	transition: --itx-progress-percent var(--itx-progress-duration, 200ms) ease;
 }
 
-/* ── Track ───────────────────────────────────────────────────────────────── */
-
-:host::-webkit-progress-bar {
-	background-color: var(--itx-progress-track, var(--itx-neutral-4));
-	border-radius: inherit;
+/* RTL: the inline axis reverses, so the fill does too. */
+:host(:dir(rtl)) {
+	--_axis: to left;
 }
 
-/* ── Determinate fill ────────────────────────────────────────────────────── */
+/* ── UA pseudo-elements ──────────────────────────────────────────────────── */
+/*
+ * Zeroed, not styled. The host owns both track and fill; these would otherwise
+ * paint their own backgrounds over it.
+ */
 
+:host::-webkit-progress-bar,
 :host::-webkit-progress-value {
-	background-color: var(--itx-progress-fill, var(--itx-colorway));
-	border-radius: inherit;
-	transition: width var(--itx-progress-duration, 200ms) ease;
+	background: transparent;
 }
 
-/* Firefox */
 :host::-moz-progress-bar {
-	background-color: var(--itx-progress-fill, var(--itx-colorway));
-	border-radius: inherit;
+	background: transparent;
 }
 
 /* ── Indeterminate ───────────────────────────────────────────────────────── */
+/*
+ * The component pins --itx-progress-percent to 0 while indeterminate, so the
+ * determinate gradient collapses to nothing and this one takes over.
+ *
+ * A single band, traversing. Hard-edged, because the stops are doubled up
+ * (`transparent 0 X, fill X Y`) — coincident positions leave nothing for the
+ * browser to interpolate across, so the band's edges are as crisp as the
+ * square track around it.
+ *
+ * What moves is the STOP POSITIONS, not background-position. That matters:
+ * background-position is physical, so it needs different keyframes per axis and
+ * gets the direction wrong the moment the bar is vertical. Gradient stops run
+ * along --_axis — the same token the determinate fill uses — so one animation
+ * is automatically correct in every orientation and in RTL, with no per-axis
+ * rules at all.
+ *
+ * --_sweep is the band's leading edge, travelling 0 → 100 + band so the band
+ * both enters from before the start and fully exits past the end. Stops below
+ * 0 or above 100 simply fall outside the paint area.
+ */
 
-@keyframes itx-progress-shimmer {
-	0%   { background-position: 200% center; }
-	100% { background-position: -200% center; }
+@property --_sweep {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
 }
 
-:host(:indeterminate)::-webkit-progress-bar {
+@keyframes itx-progress-sweep {
+	to {
+		--_sweep: calc(100 + var(--_band));
+	}
+}
+
+:host(:indeterminate) {
+	--_band: var(--itx-progress-indeterminate-band, 30);
+
 	background-image: linear-gradient(
-		90deg,
-		var(--itx-progress-track, var(--itx-neutral-4)) 25%,
-		var(--itx-progress-fill, var(--itx-colorway)) 50%,
-		var(--itx-progress-track, var(--itx-neutral-4)) 75%
+		var(--_axis),
+		transparent 0 calc((var(--_sweep) - var(--_band)) * 1%),
+		var(--itx-progress-fill, var(--itx-colorway))
+			calc((var(--_sweep) - var(--_band)) * 1%) calc(var(--_sweep) * 1%),
+		transparent calc(var(--_sweep) * 1%) 100%
 	);
-	background-size: 200% 100%;
-	animation: itx-progress-shimmer 1.5s linear infinite;
+	animation: itx-progress-sweep
+		var(--itx-progress-indeterminate-duration, 1000ms) linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	:host(:indeterminate)::-webkit-progress-bar {
+	:host(:indeterminate) {
+		/* Motion removed, presence kept: the band parks mid-track so the bar
+		   still reads as "working, amount unknown" rather than as empty. */
 		animation: none;
-		/* Replace motion with a static split that still reads as "active". */
-		background-image: linear-gradient(
-			90deg,
-			var(--itx-progress-track, var(--itx-neutral-4)) 50%,
-			var(--itx-progress-fill, var(--itx-colorway)) 50%
-		);
+		--_sweep: 65;
 		opacity: 0.6;
+	}
+
+	:host {
+		transition: none;
 	}
 }
 
 /* ── Vertical orientation ────────────────────────────────────────────────── */
+/*
+ * writing-mode still swaps the box's block and inline axes, which is what
+ * gives the track its height; the gradient direction is what actually fills it.
+ */
 
+/*
+ * Setting --_axis is the whole of it. Both the determinate fill and the
+ * indeterminate sweep are built from gradient stops along that axis, so
+ * reorienting the bar reorients everything on it — no per-orientation
+ * keyframes, no RTL reversal, nothing to keep in sync.
+ */
 :host([data-orientation="vertical"]) {
 	writing-mode: vertical-lr;
 	width: var(--itx-progress-height, 0.5rem);
 	height: var(--itx-progress-length, 8rem);
+	--_axis: to top;
 }

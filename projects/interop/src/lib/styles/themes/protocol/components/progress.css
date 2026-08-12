@@ -1,8 +1,55 @@
+/*
+ * InteropProgress — Protocol theme.
+ *
+ * Visual target — borrowed from Carbon's Progress Bar:
+ *   A flat 8px rule. Square, because Carbon gives the bar no border-radius at
+ *   all — a pill-shaped 8px track reads as a UI *object*, where a square one
+ *   reads as a measurement, which is what it is. The track is the same subtle
+ *   hairline value used for borders elsewhere, so an empty bar is a rule on
+ *   the page rather than a filled trough waiting to be noticed.
+ *
+ * NOTE: the component still carries its own `styleUrl` rather than the global
+ * two-file split every other component uses, so these tokens are consumed by
+ * `components/interop-progress/interop-progress.css`. See the note in that
+ * file — a CSS-only consumer gets no progress styling today.
+ */
+
 :where([interop-root]) {
-	--itx-progress-track: var(--itx-neutral-3);
+	/* Track + fill — Carbon's $border-subtle and $interactive. */
+	--itx-progress-track: var(--itx-border);
 	--itx-progress-fill: var(--itx-colorway);
-	--itx-progress-height: 0.5rem;
-	--itx-progress-radius: var(--itx-radius-full);
-	--itx-progress-duration: 200ms;
-	--itx-progress-length: 8rem;
+
+	/* 8px, Carbon's default/big step. */
+	--itx-progress-height: var(--itx-spacing-2);
+
+	/* Square. Carbon defines no radius on the bar. */
+	--itx-progress-radius: var(--itx-radius-none);
+
+	/* Length along the fill axis when vertical; ignored when horizontal,
+	   where the bar takes the full inline size of its container. */
+	--itx-progress-length: var(--itx-spacing-32); /* 8rem */
+
+	/* Determinate fill easing. Carbon's indeterminate is 1400ms, but that pace
+	   was set for a soft shimmer spanning the whole track; a single hard-edged
+	   band reads as sluggish at the same speed, so this runs quicker. */
+	--itx-progress-duration: var(--itx-duration-fast);
+	--itx-progress-indeterminate-duration: 1000ms;
+
+	/* Length of the travelling band, as a percentage of the track. Unitless,
+	   because it is multiplied into gradient stop positions — the band scales
+	   with the bar rather than being a fixed size on a short one and a sliver
+	   on a long one. */
+	--itx-progress-indeterminate-band: 30;
+}
+
+/* ── Size axis ───────────────────────────────────────────────────────────── */
+/* Carbon ships one step down from the default: a 4px bar for when progress is
+   supporting information rather than the subject of the view. */
+
+:where(progress[interop-progress][itx-size="sm"]) {
+	--itx-progress-height: var(--itx-spacing-1); /* 4px */
+}
+
+:where(progress[interop-progress][itx-size="md"]) {
+	--itx-progress-height: var(--itx-spacing-2); /* 8px */
 }

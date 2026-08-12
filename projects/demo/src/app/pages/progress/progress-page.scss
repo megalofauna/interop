@@ -17,3 +17,11 @@
 		width: auto;
 	}
 }
+
+/* Filler between a label and its explicit target, to show that the two need
+   not be siblings for the labelling directive to find each other. */
+.progress-demo__interstitial {
+	margin: 0;
+	color: var(--itx-muted);
+	font-size: var(--itx-font-size-caption);
+}
