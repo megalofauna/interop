@@ -1,41 +1,43 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  ViewEncapsulation,
-  afterNextRender,
-  computed,
-  contentChildren,
-  inject,
-  input,
-  isDevMode,
-  output,
-  signal,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	ViewEncapsulation,
+	afterNextRender,
+	computed,
+	contentChildren,
+	effect,
+	inject,
+	input,
+	isDevMode,
+	output,
+	signal,
+	untracked,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { InteropOption } from "./interop-option.directive";
 import {
-  INTEROP_LISTBOX_TOKEN,
-  type IInteropListbox,
-  type SelectControlValue,
+	INTEROP_LISTBOX_TOKEN,
+	type IInteropListbox,
+	type SelectControlValue,
 } from "./interop-listbox.token";
 
 export type { SelectControlValue } from "./interop-listbox.token";
 
 export type SelectControl = {
-  value: SelectControlValue;
-  label: string;
-  disabled?: boolean;
-  icon?: string;
-  description?: string;
+	value: SelectControlValue;
+	label: string;
+	disabled?: boolean;
+	icon?: string;
+	description?: string;
 };
 
 /** Unified shape used internally for keyboard navigation regardless of mode. */
 interface NavOption {
-  value: SelectControlValue;
-  label: string;
-  disabled: boolean;
-  id: string;
+	value: SelectControlValue;
+	label: string;
+	disabled: boolean;
+	id: string;
 }
 
 let nextListboxId = 0;
@@ -91,357 +93,439 @@ let nextListboxId = 0;
  * ```
  */
 @Component({
-  selector: "ul[interop-listbox], ol[interop-listbox]",
-  standalone: true,
-  templateUrl: "./interop-listbox.html",
-  styleUrl: "./interop-listbox.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: InteropListbox,
-      multi: true,
-    },
-    {
-      provide: INTEROP_LISTBOX_TOKEN,
-      useExisting: InteropListbox,
-    },
-  ],
-  host: {
-    role: "listbox",
-    tabindex: "0",
-    "[attr.aria-multiselectable]": "multiselectable() || null",
-    "[attr.aria-disabled]": "disabled() || null",
-    "[attr.aria-activedescendant]": "activeOptionId()",
-    "[attr.aria-label]": "ariaLabel() || null",
-    "[attr.aria-labelledby]": "ariaLabelledby() || null",
-    "(keydown)": "onKeydown($event)",
-    "(focus)": "onFocus()",
-    "(blur)": "onBlur()",
-  },
+	selector: "ul[interop-listbox], ol[interop-listbox]",
+	standalone: true,
+	templateUrl: "./interop-listbox.html",
+	styleUrl: "./interop-listbox.scss",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.None,
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: InteropListbox,
+			multi: true,
+		},
+		{
+			provide: INTEROP_LISTBOX_TOKEN,
+			useExisting: InteropListbox,
+		},
+	],
+	host: {
+		/*
+		 * The options are <li>, and a global [interop-typography-root] makes
+		 * prose.css's bare element selectors behave like global element styles:
+		 * `li + li` puts a rhythm margin between every row, and the measure cap and
+		 * fluid font-size land on rows that are neither prose nor flexible.
+		 * Isolating stops prose at this subtree. See the round 3 note in
+		 * .agent/workflows/carbon-borrow.md.
+		 */
+		"interop-typography-isolate": "",
+		role: "listbox",
+		tabindex: "0",
+		"[attr.aria-multiselectable]": "multiselectable() || null",
+		"[attr.aria-disabled]": "disabled() || null",
+		"[attr.aria-activedescendant]": "activeOptionId()",
+		"[attr.aria-label]": "ariaLabel() || null",
+		"[attr.aria-labelledby]": "ariaLabelledby() || null",
+		"(keydown)": "onKeydown($event)",
+		"(focus)": "onFocus()",
+		"(blur)": "onBlur()",
+	},
 })
 export class InteropListbox implements ControlValueAccessor, IInteropListbox {
-  private readonly hostEl = inject(ElementRef<HTMLElement>);
+	private readonly hostEl = inject(ElementRef<HTMLElement>);
 
-  constructor() {
-    if (isDevMode()) {
-      afterNextRender(() => {
-        const tag = this.hostEl.nativeElement.tagName.toLowerCase();
-        if (tag !== "ul" && tag !== "ol") {
-          console.warn(
-            `interop-listbox: expected a <ul> or <ol> host element, got <${tag}>. ` +
-            "Use <ul interop-listbox> or <ol interop-listbox> for correct list semantics.",
-          );
-        }
-      });
-    }
-  }
+	constructor() {
+		/*
+		 * Controlled `value` input → internal state.
+		 *
+		 * This sync did not exist. `internalValue` started at null and was only
+		 * ever written by a click or by writeValue(), so a consumer binding
+		 * `[value]` / `[(value)]` — the documented API, and what both demo
+		 * examples use — got a listbox that rendered nothing as selected.
+		 *
+		 * Single-select mostly hid it: the first click set the internal state and
+		 * from then on it looked right. Multi-select could not, because
+		 * toggleOrSetValue() starts from `internalValue` — so with it stuck at
+		 * null, the first click began from an EMPTY array and silently dropped
+		 * every pre-existing selection instead of adding to it. Hence "doesn't
+		 * persist".
+		 *
+		 * Idempotent against local toggles: a click sets internalValue, emits,
+		 * the parent writes the same value back, and this effect re-sets it to
+		 * what it already is. The array is copied so a consumer mutating theirs
+		 * in place cannot reach into ours.
+		 */
+		effect(() => {
+			const v = this.value();
+			untracked(() => {
+				// Yields to Angular Forms. The two drivers are mutually exclusive —
+				// a consumer uses [value] OR a formControl, never both — and under a
+				// form the `value` input is never bound, so without this the effect
+				// would run with a null input and wipe out what writeValue() set.
+				if (this.formsDriven) return;
+				this.internalValue.set(
+					this.multiselectable()
+						? Array.isArray(v)
+							? [...v]
+							: []
+						: (v ?? null),
+				);
+			});
+		});
 
-  // ── Inputs ────────────────────────────────────────────────────────────────
+		if (isDevMode()) {
+			afterNextRender(() => {
+				const tag = this.hostEl.nativeElement.tagName.toLowerCase();
+				if (tag !== "ul" && tag !== "ol") {
+					console.warn(
+						`interop-listbox: expected a <ul> or <ol> host element, got <${tag}>. ` +
+							"Use <ul interop-listbox> or <ol interop-listbox> for correct list semantics.",
+					);
+				}
+			});
+		}
+	}
 
-  /** Declarative option list. Controls win over content projection when non-empty. */
-  controls = input<SelectControl[]>();
+	// ── Inputs ────────────────────────────────────────────────────────────────
 
-  /** Current selected value (single) or values (multi). Two-way bindable. */
-  value = input<SelectControlValue | SelectControlValue[] | null>(null);
+	/** Declarative option list. Controls win over content projection when non-empty. */
+	controls = input<SelectControl[]>();
 
-  /** Enables multi-select. CVA value becomes SelectControlValue[]. */
-  multiselectable = input<boolean>(false);
+	/** Current selected value (single) or values (multi). Two-way bindable. */
+	value = input<SelectControlValue | SelectControlValue[] | null>(null);
 
-  /** Disables the entire listbox. */
-  disabled = input<boolean>(false);
+	/** Enables multi-select. CVA value becomes SelectControlValue[]. */
+	multiselectable = input<boolean>(false);
 
-  /** Accessible label when no visible label element is associated. */
-  ariaLabel = input<string | null>(null, { alias: "aria-label" });
+	/** Disables the entire listbox. */
+	disabled = input<boolean>(false);
 
-  /** ID of an external element that labels this listbox. */
-  ariaLabelledby = input<string | null>(null, { alias: "aria-labelledby" });
+	/** Accessible label when no visible label element is associated. */
+	ariaLabel = input<string | null>(null, { alias: "aria-label" });
 
-  // ── Outputs ───────────────────────────────────────────────────────────────
+	/** ID of an external element that labels this listbox. */
+	ariaLabelledby = input<string | null>(null, { alias: "aria-labelledby" });
 
-  /** Emitted when the selection changes. */
-  valueChange = output<SelectControlValue | SelectControlValue[] | null>();
+	// ── Outputs ───────────────────────────────────────────────────────────────
 
-  /** Emitted when the active (keyboard-focused) option changes. */
-  activeItemChange = output<SelectControlValue | null>();
+	/** Emitted when the selection changes. */
+	valueChange = output<SelectControlValue | SelectControlValue[] | null>();
 
-  /**
-   * Emitted when Escape is pressed.
-   * No-op when standalone; used by parent popup components to close.
-   */
-  closeRequest = output<void>();
+	/** Emitted when the active (keyboard-focused) option changes. */
+	activeItemChange = output<SelectControlValue | null>();
 
-  // ── Content children ──────────────────────────────────────────────────────
+	/**
+	 * Emitted when Escape is pressed.
+	 * No-op when standalone; used by parent popup components to close.
+	 */
+	closeRequest = output<void>();
 
-  private readonly projectedOptions = contentChildren(InteropOption);
+	// ── Content children ──────────────────────────────────────────────────────
 
-  // ── Internal state ────────────────────────────────────────────────────────
+	private readonly projectedOptions = contentChildren(InteropOption);
 
-  private readonly instanceId = `interop-listbox-${nextListboxId++}`;
-  private readonly activeIndex = signal<number>(-1);
-  private readonly internalValue = signal<
-    SelectControlValue | SelectControlValue[] | null
-  >(null);
+	// ── Internal state ────────────────────────────────────────────────────────
 
-  private typeaheadBuffer = "";
-  private typeaheadTimer: ReturnType<typeof setTimeout> | null = null;
+	private readonly instanceId = `interop-listbox-${nextListboxId++}`;
+	private readonly activeIndex = signal<number>(-1);
+	private readonly internalValue = signal<
+		SelectControlValue | SelectControlValue[] | null
+	>(null);
 
-  private onChangeFn: (value: unknown) => void = () => {};
-  private onTouchedFn: () => void = () => {};
+	private typeaheadBuffer = "";
+	private typeaheadTimer: ReturnType<typeof setTimeout> | null = null;
 
-  // ── Computed ──────────────────────────────────────────────────────────────
+	/** Set the first time writeValue() runs: this listbox is under a formControl,
+	 *  so the `value` input is not the source of truth. See the constructor. */
+	private formsDriven = false;
 
-  isDeclarativeMode = computed(() => {
-    const controls = this.controls();
-    return Array.isArray(controls) && controls.length > 0;
-  });
+	private onChangeFn: (value: unknown) => void = () => {};
+	private onTouchedFn: () => void = () => {};
 
-  /**
-   * Unified option list for navigation. Abstracts over declarative vs. projected mode.
-   * All keyboard nav and type-ahead operate on this.
-   */
-  private optionsForNav = computed((): NavOption[] => {
-    if (this.isDeclarativeMode()) {
-      return (this.controls() ?? []).map((c, i) => ({
-        value: c.value,
-        label: c.label,
-        disabled: !!c.disabled,
-        id: this.optionId(i),
-      }));
-    }
-    return this.projectedOptions().map((opt) => ({
-      value: opt.value(),
-      label: opt.label(),
-      disabled: opt.disabled(),
-      id: opt.optionId,
-    }));
-  });
+	// ── Computed ──────────────────────────────────────────────────────────────
 
-  /** ID of the currently active (keyboard-navigated) option. */
-  activeOptionId = computed((): string | null => {
-    const idx = this.activeIndex();
-    if (idx === -1) return null;
-    return this.optionsForNav()[idx]?.id ?? null;
-  });
+	isDeclarativeMode = computed(() => {
+		const controls = this.controls();
+		return Array.isArray(controls) && controls.length > 0;
+	});
 
-  /** The currently active option's value. Exposed for InteropOption directives. */
-  private activeValue = computed((): SelectControlValue | null => {
-    const idx = this.activeIndex();
-    if (idx === -1) return null;
-    return this.optionsForNav()[idx]?.value ?? null;
-  });
+	/**
+	 * Unified option list for navigation. Abstracts over declarative vs. projected mode.
+	 * All keyboard nav and type-ahead operate on this.
+	 */
+	private optionsForNav = computed((): NavOption[] => {
+		if (this.isDeclarativeMode()) {
+			return (this.controls() ?? []).map((c, i) => ({
+				value: c.value,
+				label: c.label,
+				disabled: !!c.disabled,
+				id: this.optionId(i),
+			}));
+		}
+		return this.projectedOptions().map((opt) => ({
+			value: opt.value(),
+			label: opt.label(),
+			disabled: opt.disabled(),
+			id: opt.optionId,
+		}));
+	});
 
-  // ── IInteropListbox interface (consumed by InteropOption directives) ───────
+	/** ID of the currently active (keyboard-navigated) option. */
+	activeOptionId = computed((): string | null => {
+		const idx = this.activeIndex();
+		if (idx === -1) return null;
+		return this.optionsForNav()[idx]?.id ?? null;
+	});
 
-  isSelected(value: SelectControlValue): boolean {
-    const iv = this.internalValue();
-    if (Array.isArray(iv)) return iv.includes(value);
-    return iv === value;
-  }
+	/** The currently active option's value. Exposed for InteropOption directives. */
+	private activeValue = computed((): SelectControlValue | null => {
+		const idx = this.activeIndex();
+		if (idx === -1) return null;
+		return this.optionsForNav()[idx]?.value ?? null;
+	});
 
-  isActiveValue(value: SelectControlValue): boolean {
-    return this.activeValue() === value;
-  }
+	// ── IInteropListbox interface (consumed by InteropOption directives) ───────
 
-  selectValue(value: SelectControlValue): void {
-    if (this.disabled()) return;
-    this.toggleOrSetValue(value);
-    this.onTouchedFn();
-  }
+	isSelected(value: SelectControlValue): boolean {
+		const iv = this.internalValue();
+		if (Array.isArray(iv)) return iv.includes(value);
+		return iv === value;
+	}
 
-  setActiveValue(value: SelectControlValue): void {
-    const idx = this.optionsForNav().findIndex((o) => o.value === value);
-    if (idx !== -1) this.activeIndex.set(idx);
-  }
+	isActiveValue(value: SelectControlValue): boolean {
+		return this.activeValue() === value;
+	}
 
-  // ── Keyboard navigation ───────────────────────────────────────────────────
+	selectValue(value: SelectControlValue): void {
+		if (this.disabled()) return;
+		this.toggleOrSetValue(value);
+		this.onTouchedFn();
+	}
 
-  onKeydown(event: Event): void {
-    if (!(event instanceof KeyboardEvent)) return;
-    if (this.disabled()) return;
+	/**
+	 * Declarative-mode click. Mirrors InteropOption.onClick(), which has always
+	 * had this guard — the template used to call selectValue() straight, and
+	 * selectValue() only checks whether the LISTBOX is disabled, never the
+	 * option. The single thing stopping a disabled row being chosen was
+	 * `pointer-events: none` in CSS, which suppresses real pointer hit-testing
+	 * and nothing else: a programmatic .click(), an assistive-technology
+	 * activation, or any synthesised event all went straight through. The two
+	 * modes now behave identically.
+	 */
+	protected onDeclarativeClick(control: {
+		value: SelectControlValue;
+		disabled?: boolean;
+	}): void {
+		if (control.disabled) return;
+		this.selectValue(control.value);
+	}
 
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        this.moveActive(1);
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        this.moveActive(-1);
-        break;
-      case "Home":
-        event.preventDefault();
-        this.setActiveFirst();
-        break;
-      case "End":
-        event.preventDefault();
-        this.setActiveLast();
-        break;
-      case "Enter":
-      case " ":
-        event.preventDefault();
-        this.selectActive();
-        break;
-      case "Escape":
-        event.preventDefault();
-        this.closeRequest.emit();
-        break;
-      default:
-        if (event.key.length === 1) {
-          this.handleTypeahead(event.key);
-        }
-    }
-  }
+	/** Same asymmetry, same fix: the directive guards hover, the template did not. */
+	protected onDeclarativeHover(control: {
+		value: SelectControlValue;
+		disabled?: boolean;
+	}): void {
+		if (control.disabled) return;
+		this.setActiveValue(control.value);
+	}
 
-  private moveActive(delta: number): void {
-    const options = this.optionsForNav();
-    let idx = this.activeIndex() + delta;
-    // Skip disabled options
-    while (idx >= 0 && idx < options.length && options[idx].disabled) {
-      idx += delta;
-    }
-    if (idx >= 0 && idx < options.length) {
-      this.activeIndex.set(idx);
-      this.scrollActiveIntoView();
-      this.activeItemChange.emit(options[idx].value);
-    }
-  }
+	setActiveValue(value: SelectControlValue): void {
+		const idx = this.optionsForNav().findIndex((o) => o.value === value);
+		if (idx !== -1) this.activeIndex.set(idx);
+	}
 
-  private setActiveFirst(): void {
-    const options = this.optionsForNav();
-    const idx = options.findIndex((o) => !o.disabled);
-    if (idx !== -1) {
-      this.activeIndex.set(idx);
-      this.scrollActiveIntoView();
-      this.activeItemChange.emit(options[idx].value);
-    }
-  }
+	// ── Keyboard navigation ───────────────────────────────────────────────────
 
-  private setActiveLast(): void {
-    const options = this.optionsForNav();
-    let idx = options.length - 1;
-    while (idx >= 0 && options[idx].disabled) idx--;
-    if (idx >= 0) {
-      this.activeIndex.set(idx);
-      this.scrollActiveIntoView();
-      this.activeItemChange.emit(options[idx].value);
-    }
-  }
+	onKeydown(event: Event): void {
+		if (!(event instanceof KeyboardEvent)) return;
+		if (this.disabled()) return;
 
-  private selectActive(): void {
-    const idx = this.activeIndex();
-    if (idx === -1) return;
-    const option = this.optionsForNav()[idx];
-    if (!option || option.disabled) return;
-    this.toggleOrSetValue(option.value);
-    this.onTouchedFn();
-  }
+		switch (event.key) {
+			case "ArrowDown":
+				event.preventDefault();
+				this.moveActive(1);
+				break;
+			case "ArrowUp":
+				event.preventDefault();
+				this.moveActive(-1);
+				break;
+			case "Home":
+				event.preventDefault();
+				this.setActiveFirst();
+				break;
+			case "End":
+				event.preventDefault();
+				this.setActiveLast();
+				break;
+			case "Enter":
+			case " ":
+				event.preventDefault();
+				this.selectActive();
+				break;
+			case "Escape":
+				event.preventDefault();
+				this.closeRequest.emit();
+				break;
+			default:
+				if (event.key.length === 1) {
+					this.handleTypeahead(event.key);
+				}
+		}
+	}
 
-  private handleTypeahead(char: string): void {
-    if (this.typeaheadTimer !== null) clearTimeout(this.typeaheadTimer);
-    this.typeaheadBuffer += char.toLowerCase();
+	private moveActive(delta: number): void {
+		const options = this.optionsForNav();
+		let idx = this.activeIndex() + delta;
+		// Skip disabled options
+		while (idx >= 0 && idx < options.length && options[idx].disabled) {
+			idx += delta;
+		}
+		if (idx >= 0 && idx < options.length) {
+			this.activeIndex.set(idx);
+			this.scrollActiveIntoView();
+			this.activeItemChange.emit(options[idx].value);
+		}
+	}
 
-    const options = this.optionsForNav();
-    const start = this.activeIndex() + 1;
-    const len = options.length;
+	private setActiveFirst(): void {
+		const options = this.optionsForNav();
+		const idx = options.findIndex((o) => !o.disabled);
+		if (idx !== -1) {
+			this.activeIndex.set(idx);
+			this.scrollActiveIntoView();
+			this.activeItemChange.emit(options[idx].value);
+		}
+	}
 
-    // Search forward from current position, wrapping around
-    for (let i = 0; i < len; i++) {
-      const idx = (start + i) % len;
-      const opt = options[idx];
-      if (!opt.disabled && opt.label.toLowerCase().startsWith(this.typeaheadBuffer)) {
-        this.activeIndex.set(idx);
-        this.scrollActiveIntoView();
-        this.activeItemChange.emit(opt.value);
-        break;
-      }
-    }
+	private setActiveLast(): void {
+		const options = this.optionsForNav();
+		let idx = options.length - 1;
+		while (idx >= 0 && options[idx].disabled) idx--;
+		if (idx >= 0) {
+			this.activeIndex.set(idx);
+			this.scrollActiveIntoView();
+			this.activeItemChange.emit(options[idx].value);
+		}
+	}
 
-    this.typeaheadTimer = setTimeout(() => {
-      this.typeaheadBuffer = "";
-    }, 500);
-  }
+	private selectActive(): void {
+		const idx = this.activeIndex();
+		if (idx === -1) return;
+		const option = this.optionsForNav()[idx];
+		if (!option || option.disabled) return;
+		this.toggleOrSetValue(option.value);
+		this.onTouchedFn();
+	}
 
-  private scrollActiveIntoView(): void {
-    const id = this.activeOptionId();
-    if (!id) return;
-    const el = this.hostEl.nativeElement.querySelector(`#${id}`);
-    el?.scrollIntoView({ block: "nearest" });
-  }
+	private handleTypeahead(char: string): void {
+		if (this.typeaheadTimer !== null) clearTimeout(this.typeaheadTimer);
+		this.typeaheadBuffer += char.toLowerCase();
 
-  // ── Focus / blur ──────────────────────────────────────────────────────────
+		const options = this.optionsForNav();
+		const start = this.activeIndex() + 1;
+		const len = options.length;
 
-  onFocus(): void {
-    if (this.activeIndex() !== -1) return;
-    // On first focus: activate the selected option, or the first enabled one
-    const options = this.optionsForNav();
-    const selectedIdx = options.findIndex(
-      (o) => !o.disabled && this.isSelected(o.value),
-    );
-    if (selectedIdx !== -1) {
-      this.activeIndex.set(selectedIdx);
-    } else {
-      const firstIdx = options.findIndex((o) => !o.disabled);
-      this.activeIndex.set(firstIdx);
-    }
-  }
+		// Search forward from current position, wrapping around
+		for (let i = 0; i < len; i++) {
+			const idx = (start + i) % len;
+			const opt = options[idx];
+			if (
+				!opt.disabled &&
+				opt.label.toLowerCase().startsWith(this.typeaheadBuffer)
+			) {
+				this.activeIndex.set(idx);
+				this.scrollActiveIntoView();
+				this.activeItemChange.emit(opt.value);
+				break;
+			}
+		}
 
-  onBlur(): void {
-    this.activeIndex.set(-1);
-    this.onTouchedFn();
-  }
+		this.typeaheadTimer = setTimeout(() => {
+			this.typeaheadBuffer = "";
+		}, 500);
+	}
 
-  // ── Value management ──────────────────────────────────────────────────────
+	private scrollActiveIntoView(): void {
+		const id = this.activeOptionId();
+		if (!id) return;
+		const el = this.hostEl.nativeElement.querySelector(`#${id}`);
+		el?.scrollIntoView({ block: "nearest" });
+	}
 
-  private toggleOrSetValue(value: SelectControlValue): void {
-    if (this.multiselectable()) {
-      const current = Array.isArray(this.internalValue())
-        ? [...(this.internalValue() as SelectControlValue[])]
-        : [];
-      const idx = current.indexOf(value);
-      if (idx > -1) {
-        current.splice(idx, 1);
-      } else {
-        current.push(value);
-      }
-      this.internalValue.set(current);
-    } else {
-      this.internalValue.set(value);
-    }
-    const next = this.internalValue();
-    this.valueChange.emit(next);
-    this.onChangeFn(next);
-  }
+	// ── Focus / blur ──────────────────────────────────────────────────────────
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+	onFocus(): void {
+		if (this.activeIndex() !== -1) return;
+		// On first focus: activate the selected option, or the first enabled one
+		const options = this.optionsForNav();
+		const selectedIdx = options.findIndex(
+			(o) => !o.disabled && this.isSelected(o.value),
+		);
+		if (selectedIdx !== -1) {
+			this.activeIndex.set(selectedIdx);
+		} else {
+			const firstIdx = options.findIndex((o) => !o.disabled);
+			this.activeIndex.set(firstIdx);
+		}
+	}
 
-  /** Generates a stable, unique ID for a declarative option by index. */
-  optionId(index: number): string {
-    return `${this.instanceId}-option-${index}`;
-  }
+	onBlur(): void {
+		this.activeIndex.set(-1);
+		this.onTouchedFn();
+	}
 
-  // ── ControlValueAccessor ──────────────────────────────────────────────────
+	// ── Value management ──────────────────────────────────────────────────────
 
-  writeValue(value: SelectControlValue | SelectControlValue[] | null): void {
-    this.internalValue.set(
-      this.multiselectable()
-        ? Array.isArray(value)
-          ? value
-          : []
-        : (value ?? null),
-    );
-  }
+	private toggleOrSetValue(value: SelectControlValue): void {
+		if (this.multiselectable()) {
+			const current = Array.isArray(this.internalValue())
+				? [...(this.internalValue() as SelectControlValue[])]
+				: [];
+			const idx = current.indexOf(value);
+			if (idx > -1) {
+				current.splice(idx, 1);
+			} else {
+				current.push(value);
+			}
+			this.internalValue.set(current);
+		} else {
+			this.internalValue.set(value);
+		}
+		const next = this.internalValue();
+		this.valueChange.emit(next);
+		this.onChangeFn(next);
+	}
 
-  registerOnChange(fn: (value: unknown) => void): void {
-    this.onChangeFn = fn;
-  }
+	// ── Helpers ───────────────────────────────────────────────────────────────
 
-  registerOnTouched(fn: () => void): void {
-    this.onTouchedFn = fn;
-  }
+	/** Generates a stable, unique ID for a declarative option by index. */
+	optionId(index: number): string {
+		return `${this.instanceId}-option-${index}`;
+	}
 
-  setDisabledState(): void {
-    // Driven by the [disabled] input
-  }
+	// ── ControlValueAccessor ──────────────────────────────────────────────────
+
+	writeValue(value: SelectControlValue | SelectControlValue[] | null): void {
+		this.formsDriven = true;
+		this.internalValue.set(
+			this.multiselectable()
+				? Array.isArray(value)
+					? value
+					: []
+				: (value ?? null),
+		);
+	}
+
+	registerOnChange(fn: (value: unknown) => void): void {
+		this.onChangeFn = fn;
+	}
+
+	registerOnTouched(fn: () => void): void {
+		this.onTouchedFn = fn;
+	}
+
+	setDisabledState(): void {
+		// Driven by the [disabled] input
+	}
 }

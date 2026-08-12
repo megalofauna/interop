@@ -69,7 +69,6 @@
 		height: var(--itx-cb-tablist-border-bottom-width);
 		background-color: var(--itx-cb-tablist-border-bottom-color);
 		inset: auto 0 0px 0;
-
 	}
 }
 
@@ -131,29 +130,37 @@
 	--itx-toolbar-gap: var(--itx-cb-actions-gap);
 }
 
+/*
+ * Maps the composite's --itx-cb-button-* tokens onto the button component's
+ * own --itx-button-* surface. Values live in the theme, per this file's
+ * contract — they used to be literal --itx-neutral-* reads right here.
+ */
 :where(itx-code-block .itx-cb__btn) {
 	--itx-button-border-radius: 0;
 	transition-property: background-color, background, color;
-	--itx-button-background: var(--itx-neutral-4);
-	--itx-button-foreground: var(--itx-neutral-10);
+	--itx-button-background: var(--itx-cb-button-background);
+	--itx-button-foreground: var(--itx-cb-button-foreground);
 	--itx-button-transition-duration: 300ms;
 	--itx-button-transition-timing-function: ease-out;
 
 	&:hover {
-		--itx-button-background-hover: var(--itx-neutral-5);
-		--itx-button-foreground-hover: var(--itx-colorway-12);
+		--itx-button-background-hover: var(--itx-cb-button-background-hover);
+		--itx-button-foreground-hover: var(--itx-cb-button-foreground-hover);
 		--itx-button-transition-duration: 75ms;
 		transition-duration: var(--itx-button-transition-duration);
 		--itx-button-transition-timing-function: ease-in;
 	}
 
+	/* Applies to the word-wrap toggle, which is still a stroked Tabler pair.
+	   Inert for the copy/check pair — those are Material Symbols, whose glyphs
+	   are filled paths with no stroke to weight. */
 	interop-icon {
 		--itx-icon-stroke-width: 2px;
 	}
 
 	&[aria-pressed="true"] {
-		--itx-button-background: var(--itx-neutral-6);
-		--itx-button-foreground: var(--itx-neutral-12);
+		--itx-button-background: var(--itx-cb-button-background-pressed);
+		--itx-button-foreground: var(--itx-cb-button-foreground-pressed);
 	}
 }
 

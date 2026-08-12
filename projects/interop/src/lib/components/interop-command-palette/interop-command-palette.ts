@@ -16,7 +16,8 @@ import { InteropDialog } from "../interop-dialog/interop-dialog";
 import { InteropIcon } from "../interop-icon/interop-icon";
 import { InteropKbd } from "../interop-kbd/interop-kbd";
 import { provideInteropIcons } from "../../iconsets/core";
-import { TablerSearch } from "../../iconsets/tabler";
+import { TablerSearch } from "../../iconsets/tabler/outline/tabler-search";
+import { TablerX } from "../../iconsets/tabler/outline/tabler-x";
 import {
 	interopCollection,
 	type InteropCollectionInput,
@@ -58,7 +59,7 @@ let paletteSeq = 0;
 	templateUrl: "./interop-command-palette.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,
-	providers: [provideInteropIcons(TablerSearch)],
+	providers: [provideInteropIcons(TablerSearch, TablerX)],
 	hostDirectives: [
 		{
 			directive: InteropDialog,
@@ -67,6 +68,15 @@ let paletteSeq = 0;
 		},
 	],
 	host: {
+		/*
+		 * The options are <li>, and a global [interop-typography-root] turns
+		 * prose.css's bare element selectors into de-facto global element styles:
+		 * `li + li` rhythm margins put a gap between every result, and the
+		 * measure cap and fluid font-size land on rows that are neither prose nor
+		 * flexible. Isolating stops prose at this subtree. See the round 3 note
+		 * in .agent/workflows/carbon-borrow.md.
+		 */
+		"interop-typography-isolate": "",
 		"[attr.aria-label]": "label()",
 		"(cancel)": "onCancel($event)",
 	},
@@ -108,8 +118,7 @@ export class InteropCommandPalette {
 		return item ? this.optionId(item) : null;
 	});
 
-	private readonly inputEl =
-		viewChild<ElementRef<HTMLInputElement>>("inputEl");
+	private readonly inputEl = viewChild<ElementRef<HTMLInputElement>>("inputEl");
 
 	// ── Live-region announcement (WCAG 4.1.3) ───────────────────────────────────
 	readonly announcement = computed<string>(() => {
@@ -120,16 +129,25 @@ export class InteropCommandPalette {
 	});
 
 	constructor() {
-		// Fresh open: clear query + reset active to the first item.
+		/*
+		 * Fresh open: clear the query and reset to the first item.
+		 *
+		 * Resets on OPEN rather than on close, deliberately. Clearing on dismiss
+		 * would empty the field while the close transition is still running — the
+		 * user watches their own text vanish — and it only covers the paths that
+		 * actually run the close handler, so a programmatic close or a destroy
+		 * would leave the next open showing stale text.
+		 *
+		 * Goes through clearQuery() rather than repeating its body, which is the
+		 * fix for a real bug: this block used to set the signal and the DOM value
+		 * but NOT emit queryChange. The consumer owns filtering, so it never heard
+		 * about the reset and kept serving [commands] filtered by the previous
+		 * query — the palette reopened with an empty field over stale results.
+		 */
 		effect(
 			() => {
 				if (this.dialog.isOpen()) {
-					untracked(() => {
-						this.query.set("");
-						this.activeIndex.set(0);
-						const el = this.inputEl()?.nativeElement;
-						if (el) el.value = "";
-					});
+					untracked(() => this.clearQuery());
 				}
 			},
 			{ allowSignalWrites: true },
@@ -207,7 +225,8 @@ export class InteropCommandPalette {
 		const n = this.items().length;
 		if (n === 0) return;
 		let next = this.activeIndex() + delta;
-		if (next < 0) next = n - 1; // wrap
+		if (next < 0)
+			next = n - 1; // wrap
 		else if (next >= n) next = 0;
 		this.setActive(next);
 	}
@@ -219,7 +238,22 @@ export class InteropCommandPalette {
 		this.scrollActiveIntoView();
 	}
 
-	private clearQuery(): void {
+	/**
+	 * Clear from the in-field button.
+	 *
+	 * Returning focus to the input is not a nicety — it is required. The button
+	 * only exists while `query()` is non-empty, so clearing removes the very
+	 * element the click focused. A focused element that unmounts drops focus to
+	 * <body>, which is outside the dialog's focus containment: the next Tab
+	 * would start from the top of the document and Escape would no longer reach
+	 * the palette.
+	 */
+	onClearClick(): void {
+		this.clearQuery();
+		this.inputEl()?.nativeElement.focus();
+	}
+
+	clearQuery(): void {
 		this.query.set("");
 		this.activeIndex.set(0);
 		const el = this.inputEl()?.nativeElement;

@@ -44,12 +44,26 @@
  *   Actions toolbar
  *     --itx-cb-actions-radius               Actions toolbar border-radius
  *     --itx-cb-actions-gap                  Gap between action buttons
- *     --itx-cb-button-size                  Action button square size
+ *     --itx-cb-button-background            Action button rest fill (transparent)
+ *     --itx-cb-button-foreground            Action button rest icon colour
+ *     --itx-cb-button-background-hover      Action button hover fill
+ *     --itx-cb-button-foreground-hover      Action button hover icon colour
+ *     --itx-cb-button-background-pressed    aria-pressed fill (word-wrap "on")
+ *     --itx-cb-button-foreground-pressed    aria-pressed icon colour
  */
 
 :where([interop-root] itx-code-block) {
-	/* Host — participates in managed-radius: inherit the context radius when one
-	   is set, else fall back to the static radius-2 step. */
+	/*
+	 * Host.
+	 *
+	 * This comment used to describe a managed-radius behaviour with no
+	 * declaration under it — `--itx-cb-radius` was read by the foundation and
+	 * never set here, so `border-radius: var(--itx-cb-radius)` was invalid at
+	 * computed-value time and resolved to the initial 0. Squared by accident.
+	 * Now squared on purpose, which is also the house default; the rendering is
+	 * unchanged.
+	 */
+	--itx-cb-radius: var(--itx-radius-none);
 
 	/* Header */
 	--itx-cb-header-background: transparent;
@@ -69,7 +83,6 @@
 	--itx-cb-tablist-box-shadow: none;
 	--itx-cb-tablist-border-bottom-color: var(--itx-neutral-6);
 
-
 	/* Tab */
 	--itx-cb-tab-background: transparent;
 	--itx-cb-tab-border: none;
@@ -77,6 +90,10 @@
 	--itx-cb-tab-padding-block: var(--itx-spacing-2);
 	--itx-cb-tab-padding-inline: var(--itx-spacing-4);
 	--itx-cb-tab-radius: 0;
+	/* Also read-but-never-declared. font-family inherits, so an invalid var()
+	   resolved to `unset` → inherit anyway; stating it is a no-op that stops the
+	   property silently failing. */
+	--itx-cb-tab-font-family: inherit;
 	--itx-cb-tab-font-size: var(--itx-font-size-caption);
 	--itx-cb-tab-foreground: var(--itx-muted);
 	--itx-cb-tab-foreground-active: var(--itx-on-surface);
@@ -111,5 +128,27 @@
 	/* Actions */
 	--itx-cb-actions-radius: 0;
 	--itx-cb-actions-gap: var(--itx-spacing-1);
-	--itx-cb-button-size: 1.5em;
+
+	/*
+	 * Action buttons (copy, word-wrap).
+	 *
+	 * These five were hardcoded as literal --itx-neutral-* reads inside the
+	 * FOUNDATION file, which that file's own header explicitly rules out: it
+	 * states it carries no values and that the theme is the single source of
+	 * truth for every --itx-cb-* token. They are tokens now.
+	 *
+	 * Transparent at rest. The header already has its own fill, so a second
+	 * filled rectangle sitting on it made the toolbar read as a control strip
+	 * bolted onto the block rather than part of it. The button appears on hover,
+	 * which is also when it is wanted.
+	 */
+	--itx-cb-button-background: transparent;
+	--itx-cb-button-foreground: var(--itx-neutral-10);
+	--itx-cb-button-background-hover: var(--itx-surface-above);
+	--itx-cb-button-foreground-hover: var(--itx-neutral-12);
+
+	/* Pressed is the word-wrap toggle's "on" state — the one action here with a
+	   persistent state, so it keeps a fill to say so. */
+	--itx-cb-button-background-pressed: var(--itx-neutral-5);
+	--itx-cb-button-foreground-pressed: var(--itx-neutral-12);
 }

@@ -1,50 +1,56 @@
 <div class="itx-cb__header">
 	@if (isMultiFile()) {
-	<div
-		role="tablist"
-		class="itx-cb__tablist"
-		(keydown)="onTablistKeydown($event)"
-	>
-		@for (file of files(); track fileKey(file)) {
-		<button
-			#tabBtn
-			role="tab"
-			class="itx-cb__tab"
-			[id]="tabId(fileKey(file))"
-			[attr.aria-selected]="activeKey() === fileKey(file)"
-			[attr.aria-controls]="panelId(fileKey(file))"
-			[tabindex]="activeKey() === fileKey(file) ? 0 : -1"
-			(click)="selectTab(fileKey(file))"
-			(keydown)="onTabKeydown($event, fileKey(file))"
+		<div
+			role="tablist"
+			class="itx-cb__tablist"
+			(keydown)="onTablistKeydown($event)"
 		>
-			{{ file.label }}
-		</button>
+			@for (file of files(); track fileKey(file)) {
+				<button
+					#tabBtn
+					role="tab"
+					class="itx-cb__tab"
+					[id]="tabId(fileKey(file))"
+					[attr.aria-selected]="activeKey() === fileKey(file)"
+					[attr.aria-controls]="panelId(fileKey(file))"
+					[tabindex]="activeKey() === fileKey(file) ? 0 : -1"
+					(click)="selectTab(fileKey(file))"
+					(keydown)="onTabKeydown($event, fileKey(file))"
+				>
+					{{ file.label }}
+				</button>
+			}
+		</div>
+	} @else {
+		@if (displayLabel()) {
+			<span class="itx-cb__label">{{ displayLabel() }}</span>
 		}
-	</div>
-	} @else { @if (displayLabel()) {
-	<span class="itx-cb__label">{{ displayLabel() }}</span>
-	} }
+	}
 
 	<div class="itx-cb__actions" interop-toolbar [label]="actionsLabel()">
 		@if (wrapToggle()) {
-		<interop-tooltip
-			[label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
-		>
-			<button
-				interop-button="icon"
-				class="itx-cb__btn"
-				type="button"
-				[attr.aria-pressed]="isWrapped()"
-				[attr.aria-label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
-				[onActivate]="handleWrapToggle"
+			<interop-tooltip
+				[label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
 			>
-				<interop-icon
-					[size]="16"
-					[name]="isWrapped() ? 'tabler-text-wrap' : 'tabler-text-wrap-disabled'"
+				<button
+					interop-button="icon"
+					class="itx-cb__btn"
+					type="button"
+					[attr.aria-pressed]="isWrapped()"
+					[attr.aria-label]="
+						isWrapped() ? 'Disable word wrap' : 'Enable word wrap'
+					"
+					[onActivate]="handleWrapToggle"
 				>
-				</interop-icon>
-			</button>
-		</interop-tooltip>
+					<interop-icon
+						[size]="20"
+						[name]="
+							isWrapped() ? 'tabler-text-wrap' : 'tabler-text-wrap-disabled'
+						"
+					>
+					</interop-icon>
+				</button>
+			</interop-tooltip>
 		}
 		<interop-tooltip label="Copy">
 			<button
@@ -56,39 +62,43 @@
 				[activationOptions]="copyOptions"
 			>
 				<interop-icon
-					[name]="isCopied() ? 'tabler-check-filled' : 'tabler-copy-filled'"
-					[size]="16"
+					[name]="isCopied() ? 'ms-check' : 'ms-content-copy'"
+					[size]="20"
 				/>
 			</button>
 		</interop-tooltip>
 	</div>
 </div>
 
-@if (isMultiFile()) { @for (file of files(); track fileKey(file)) {
-<div
-	role="tabpanel"
-	[id]="panelId(fileKey(file))"
-	[attr.aria-labelledby]="tabId(fileKey(file))"
-	[hidden]="activeKey() !== fileKey(file)"
->
+@if (isMultiFile()) {
+	@for (file of files(); track fileKey(file)) {
+		<div
+			role="tabpanel"
+			[id]="panelId(fileKey(file))"
+			[attr.aria-labelledby]="tabId(fileKey(file))"
+			[hidden]="activeKey() !== fileKey(file)"
+		>
+			<figure
+				interop-code-renderer
+				[tokens]="tokensFor(file)"
+				[lineNumbers]="lineNumbers()"
+				[wrap]="isWrapped()"
+			></figure>
+		</div>
+	}
+} @else {
 	<figure
 		interop-code-renderer
-		[tokens]="tokensFor(file)"
+		[tokens]="singleDisplayTokens()"
 		[lineNumbers]="lineNumbers()"
 		[wrap]="isWrapped()"
-	></figure>
-</div>
-} } @else {
-<figure
-	interop-code-renderer
-	[tokens]="singleDisplayTokens()"
-	[lineNumbers]="lineNumbers()"
-	[wrap]="isWrapped()"
->
-	<ng-content />
-</figure>
+	>
+		<ng-content />
+	</figure>
 }
 
 <span class="itx-cb__sr" aria-live="polite" aria-atomic="true">
-	@if (isCopied()) { Copied to clipboard }
+	@if (isCopied()) {
+		Copied to clipboard
+	}
 </span>

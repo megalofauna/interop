@@ -28,8 +28,8 @@ import { type ActivationOptions } from "../../utils/public-api";
 import { provideInteropIcons } from "../../iconsets/core";
 import { InteropToolbar } from "../../rigs/public-api";
 import { PhArrowUDownLeft } from "../../iconsets/phosphor/regular/ph-arrow-u-down-left";
-import { TablerCheckFilled } from "../../iconsets/tabler/filled/tabler-check-filled";
-import { TablerCopyFilled } from "../../iconsets/tabler/filled/tabler-copy-filled";
+import { MsCheck } from "../../iconsets/material-symbols/sharp/ms-check";
+import { MsContentCopy } from "../../iconsets/material-symbols/sharp/ms-content-copy";
 import { TablerTextWrap } from "../../iconsets/tabler/outline/tabler-text-wrap";
 import { TablerTextWrapDisabled } from "../../iconsets/tabler/outline/tabler-text-wrap-disabled";
 
@@ -98,8 +98,8 @@ let _cbIdCounter = 0;
 	providers: [
 		provideInteropIcons(
 			PhArrowUDownLeft,
-			TablerCheckFilled,
-			TablerCopyFilled,
+			MsCheck,
+			MsContentCopy,
 			TablerTextWrap,
 			TablerTextWrapDisabled,
 		),

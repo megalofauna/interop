@@ -126,6 +126,24 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 	);
 
 	/**
+	 * Segments whose inputs Angular has actually applied.
+	 *
+	 * `SegmentRef.value` is a REQUIRED input, so reading it before its first
+	 * binding runs throws NG0950 — and a `contentChildren` query can hand back
+	 * instances before that happens. It does, reliably, whenever the segments
+	 * come from an `@for` with a bound `[value]`: the embedded views bind in a
+	 * later step than the query resolves. Static `value="…"` attributes are set
+	 * at creation, which is why the demo pages using literals never tripped it
+	 * and a generated set did.
+	 *
+	 * Every read of `value()` outside a user-driven event handler goes through
+	 * this, never through `segments()` directly.
+	 */
+	private readonly readySegments = computed(() =>
+		this.segments().filter((s) => s.ready()),
+	);
+
+	/**
 	 * True iff effectiveValue() identifies a segment that is actually mounted.
 	 * Drives the indicator render guard: an effectiveValue with no matching
 	 * segment would leave the indicator anchored to nothing and collapsed to
@@ -135,7 +153,7 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 	protected readonly hasResolvedSelection: Signal<boolean> = computed(() => {
 		const v = this.effectiveValue();
 		if (v === null) return false;
-		return this.segments().some((s) => s.value() === v);
+		return this.readySegments().some((s) => s.value() === v);
 	});
 
 	/**
@@ -177,7 +195,7 @@ export class InteropSegmentedControl implements SegmentedControlRef {
 		// the consumer drives selection externally, Tab focus lands correctly.
 		effect(() => {
 			const effective = this.effectiveValue();
-			const segs = this.segments();
+			const segs = this.readySegments();
 			if (effective === null) return;
 			const idx = segs.findIndex((s) => s.value() === effective);
 			if (idx >= 0) this._roverIndex.set(idx);

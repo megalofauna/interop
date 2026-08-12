@@ -9,12 +9,36 @@
  *   Common   --itx-cmdp-muted  --itx-cmdp-rule-width  --itx-cmdp-rule-color
  *   Field    --itx-cmdp-field-gap  --itx-cmdp-field-padding-inline
  *            --itx-cmdp-input-font-size  --itx-cmdp-input-padding-block
+ *   Clear    --itx-cmdp-clear-size  --itx-cmdp-clear-target  --itx-cmdp-clear-radius
+ *            --itx-cmdp-clear-background(-hover)  --itx-cmdp-clear-color
+ *            --itx-cmdp-clear-outline-width/-color/-offset
  *   List     --itx-cmdp-list-padding
  *   Option   --itx-cmdp-option-gap  --itx-cmdp-option-padding-block/-inline
  *            --itx-cmdp-option-radius  --itx-cmdp-option-color(-active)
  *            --itx-cmdp-option-background-active  --itx-cmdp-option-disabled-opacity
  *            --itx-cmdp-desc-font-size
  *   Message  --itx-cmdp-message-padding  --itx-cmdp-message-font-size
+ *
+ * ── Housekeeping pass, 2026-08-12 ──────────────────────────────────────────
+ *
+ * Brought into line with the fourteen Carbon borrow rounds
+ * (.agent/workflows/carbon-borrow.md). Four classes of change:
+ *
+ *   Squared        --itx-cmdp-radius and -option-radius → --itx-radius-none.
+ *   Hairlines      --itx-cmdp-border-color → --itx-neutral-7, not --itx-border.
+ *   Fixed type     Three font sizes were fluid --itx-font-size-* clamp()
+ *                  values sitting inside fixed-height controls.
+ *   Accent         The rule under the filter field was a literal #ff9c56.
+ *
+ * Also deleted two debug leftovers that had been shipping:
+ *   --itx-ep-background: red        — a token by that name does not exist
+ *                                     anywhere (the real one is
+ *                                     --itx-expansion-panel-background), so it
+ *                                     was inert. Dead, but misleading.
+ *   --itx-expansion-panel-background: blue on the "link-cards" variant — this
+ *                                     one was NOT inert. It painted every
+ *                                     expansion panel inside a link-cards
+ *                                     palette solid blue.
  */
 
 :where([interop-root] dialog[interop-command-palette]) {
@@ -27,45 +51,81 @@
 	--itx-cmdp-background: var(--itx-surface);
 	--itx-cmdp-color: var(--itx-on-surface);
 	--itx-cmdp-border-width: 1px;
-	--itx-cmdp-border-color: var(--itx-border);
-	--itx-cmdp-radius: var(--itx-radius-md);
+	/* The house hairline. NOT --itx-border, which resolves to neutral-5 — a
+	   sub-0.1 luminance delta against our surfaces, i.e. an edge you cannot
+	   see. Same value as the table's row rules and the tab list. */
+	--itx-cmdp-border-color: var(--itx-neutral-7);
+	--itx-cmdp-radius: var(--itx-radius-none);
 	--itx-cmdp-shadow: var(--itx-shadow-lg);
 	--itx-cmdp-backdrop: oklch(0 0 0 / 0.4);
 	--itx-cmdp-backdrop-filter: blur(2px);
 
 	/* common */
 	--itx-cmdp-muted: var(--itx-muted);
+
+	/*
+	 * The rule under the filter field. Was a hardcoded #ff9c56 — light-only,
+	 * palette-blind, and the one place in the component where a literal colour
+	 * had been left in. It is the palette's single accent, so it takes the
+	 * semantic --itx-colorway rather than the light-only -8 step: focus and
+	 * accent are where the brand survives an otherwise neutral component
+	 * (rounds 7 and 9), and the semantic token holds its contrast in dark mode.
+	 *
+	 * 2px is kept deliberately. Everywhere else the house rule is a 1px
+	 * hairline, but this one is not structure — it is the seam between the
+	 * input and the results, and it reads as the palette's accent.
+	 */
 	--itx-cmdp-rule-width: 2px;
-	--itx-cmdp-rule-color: #ff9c56;
+	--itx-cmdp-rule-color: var(--itx-colorway);
 
 	/* field */
 	--itx-cmdp-field-gap: var(--itx-spacing-3);
 	--itx-cmdp-field-padding-inline: var(--itx-spacing-4);
-	--itx-cmdp-input-font-size: var(--itx-font-size-body-lg);
+	/* Fixed rem, never --itx-font-size-*: those are fluid clamp() values, and a
+	   fluid label inside a fixed-height control overflows it. Carbon
+	   $body-compact-02 — 16/22. */
+	--itx-cmdp-input-font-size: 1rem;
 	--itx-cmdp-input-padding-block: var(--itx-spacing-4);
 
+	/* ── Clear button ───────────────────────────────────────────────────── */
+	/* 20px painted disc inside a 24px hit target — see the foundation for how
+	   the two are kept apart. Never take -target below 24px (SC 2.5.8). */
+	--itx-cmdp-clear-size: 1.25rem;
+	--itx-cmdp-clear-target: 1.5rem;
+	--itx-cmdp-clear-radius: var(--itx-radius-full);
+
+	/* The one round thing in a squared component, and deliberately so: it is a
+	   dismiss affordance, not structure, and the disc is what separates it from
+	   the search glyph at the other end of the same field.
+
+	   neutral-10 / neutral-1 is a light-dark() pair on both sides, so the disc
+	   and the X invert together — dark disc with a near-white X in light mode,
+	   light disc with a near-black X in dark. */
+	--itx-cmdp-clear-background: var(--itx-neutral-10);
+	--itx-cmdp-clear-background-hover: var(--itx-neutral-12);
+	--itx-cmdp-clear-color: var(--itx-neutral-1);
+
+	--itx-cmdp-clear-outline-width: 2px;
+	--itx-cmdp-clear-outline-color: var(--itx-colorway);
+	--itx-cmdp-clear-outline-offset: 2px;
+
 	/* list */
-	--itx-cmdp-list-padding: var(--itx-spacing-2);
+	--itx-cmdp-list-padding: var(--itx-spacing-1);
 
 	/* option */
 	--itx-cmdp-option-gap: var(--itx-spacing-3);
 	--itx-cmdp-option-padding-block: var(--itx-spacing-2_5);
 	--itx-cmdp-option-padding-inline: var(--itx-spacing-3);
-	--itx-cmdp-option-radius: var(--itx-radius-sm);
+	--itx-cmdp-option-radius: var(--itx-radius-none);
 	--itx-cmdp-option-color: var(--itx-on-surface);
 	--itx-cmdp-option-color-active: var(--itx-on-surface);
 	--itx-cmdp-option-background-active: var(--itx-surface-hover);
 	--itx-cmdp-option-disabled-opacity: 0.45;
-	--itx-cmdp-desc-font-size: var(--itx-font-size-caption);
+	/* Carbon $label-01 — 12/16. Fixed, for the same reason as the input. */
+	--itx-cmdp-desc-font-size: 0.75rem;
 
 	/* message */
 	--itx-cmdp-message-padding: var(--itx-spacing-8);
-	--itx-cmdp-message-font-size: var(--itx-font-size-body);
-
-	/* expansion panel guest */
-	--itx-ep-background: red;
-}
-
-:where([interop-root] dialog[interop-command-palette="link-cards"]) {
-	--itx-expansion-panel-background: blue;
+	/* Carbon $body-compact-01 — 14/18. */
+	--itx-cmdp-message-font-size: 0.875rem;
 }

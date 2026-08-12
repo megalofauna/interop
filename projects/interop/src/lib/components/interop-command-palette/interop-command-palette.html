@@ -28,6 +28,19 @@
 			(input)="onInput($any($event.target).value)"
 			(keydown)="onKeydown($event)"
 		/>
+
+		<!-- Only while there is something to clear; an always-present button on an
+		     empty field is a permanent no-op and an extra tab stop. -->
+		@if (query()) {
+			<button
+				type="button"
+				class="itx-cmdp__clear"
+				aria-label="Clear search"
+				(click)="onClearClick()"
+			>
+				<interop-icon name="tabler-x" [size]="14" aria-hidden="true" />
+			</button>
+		}
 	</div>
 
 	<!-- Optional consumer-projected aside. The palette positions this slot — a top
@@ -44,39 +57,45 @@
 			[attr.aria-label]="label()"
 		>
 			@for (item of items(); track item.id; let i = $index) {
-			<li
-				[id]="optionId(item)"
-				class="itx-cmdp__option"
-				[class.itx-cmdp__option--active]="isActive(item)"
-				role="option"
-				[attr.aria-selected]="isActive(item)"
-				[attr.aria-disabled]="item.disabled || null"
-				(click)="onOptionClick(item, i)"
-				(pointermove)="onOptionHover(i)"
-			>
-				@if (item.icon) {
-				<interop-icon
-					class="itx-cmdp__option-icon"
-					[name]="item.icon"
-					[size]="18"
-					aria-hidden="true"
-				></interop-icon>
-				}
-				<span class="itx-cmdp__option-label">{{ item.label }}</span>
-				@if (item.description) {
-				<span class="itx-cmdp__option-desc">{{ item.description }}</span>
-				}
-				@if (item.shortcut) {
-				<kbd interop-kbd class="itx-cmdp__option-kbd">{{ item.shortcut }}</kbd>
-				}
-			</li>
+				<li
+					[id]="optionId(item)"
+					class="itx-cmdp__option"
+					[class.itx-cmdp__option--active]="isActive(item)"
+					role="option"
+					[attr.aria-selected]="isActive(item)"
+					[attr.aria-disabled]="item.disabled || null"
+					(click)="onOptionClick(item, i)"
+					(pointermove)="onOptionHover(i)"
+				>
+					@if (item.icon) {
+						<interop-icon
+							class="itx-cmdp__option-icon"
+							[name]="item.icon"
+							[size]="18"
+							aria-hidden="true"
+						></interop-icon>
+					}
+					<span class="itx-cmdp__option-label">{{ item.label }}</span>
+					@if (item.description) {
+						<span class="itx-cmdp__option-desc">{{ item.description }}</span>
+					}
+					@if (item.shortcut) {
+						<kbd interop-kbd class="itx-cmdp__option-kbd">{{
+							item.shortcut
+						}}</kbd>
+					}
+				</li>
 			}
 		</ul>
 
 		@if (loading()) {
-		<div class="itx-cmdp__message itx-cmdp__message--loading">{{ loadingLabel() }}</div>
+			<div class="itx-cmdp__message itx-cmdp__message--loading">
+				{{ loadingLabel() }}
+			</div>
 		} @else if (isEmpty()) {
-		<div class="itx-cmdp__message itx-cmdp__message--empty">{{ emptyLabel() }}</div>
+			<div class="itx-cmdp__message itx-cmdp__message--empty">
+				{{ emptyLabel() }}
+			</div>
 		}
 	</div>
 </div>

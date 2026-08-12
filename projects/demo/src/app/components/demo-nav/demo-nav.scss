@@ -6,7 +6,8 @@
 	--demo-background-blur: 0px;
 
 	display: block;
-	width: 16rem;
+	width: 100%;
+	max-width: 24rem;
 	flex-shrink: 0;
 	overflow-y: auto;
 }
@@ -21,7 +22,7 @@
 
 .nav__panel-header {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	padding-inline: var(--itx-spacing-4);
 	padding-block-end: var(--itx-spacing-2);
 }
@@ -118,8 +119,9 @@
 	// border, auto inset) are reset to pin it as a left drawer.
 	.nav__panel[popover] {
 		position: fixed;
-		inset: 0 auto 0 0;
-		width: 16rem;
+		inset: 0;
+		width: 100%;
+		max-width: 24rem;
 		margin: 0;
 		border: none;
 		border-right: 1px solid var(--itx-border);

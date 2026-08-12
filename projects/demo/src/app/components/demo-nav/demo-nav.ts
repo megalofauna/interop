@@ -11,17 +11,7 @@ import { DOCUMENT } from "@angular/common";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { InteropButton, InteropIcon, provideInteropIcons } from "interop";
 import { TablerLayoutSidebarRightExpand } from "interop/lib/iconsets/tabler";
-
-interface NavGroup {
-	label: string;
-	disabled?: boolean;
-	items: NavItem[];
-}
-
-interface NavItem {
-	label: string;
-	route?: string;
-}
+import { DEMO_CATALOG, type CatalogGroup } from "./demo-nav.catalog";
 
 @Component({
 	selector: "demo-nav",
@@ -60,61 +50,11 @@ export class DemoNav {
 		if (el?.matches(":popover-open")) el.hidePopover();
 	}
 
-	groups: NavGroup[] = [
-		{
-			label: "Foundations",
-			items: [
-				{ label: "Principles", route: "/foundation/principles" },
-				{ label: "Typography", route: "/foundation/typography" },
-			],
-		},
-		{
-			label: "Components",
-			items: [
-				{ label: "Badge", route: "/components/badge" },
-				{ label: "Button", route: "/components/button" },
-				{ label: "Callout", route: "/components/callout" },
-				{ label: "Checkbox", route: "/components/checkbox" },
-				{ label: "Chip", route: "/components/chip" },
-				{ label: "Code Block" },
-				{ label: "Dialog", route: "/components/dialog" },
-				{ label: "Expansion Panel", route: "/components/expansion-panel" },
-				{ label: "Field", route: "/components/field" },
-				{ label: "Icon", route: "/components/icon" },
-				{ label: "Kbd", route: "/components/kbd" },
-				{ label: "List", route: "/components/list" },
-				{ label: "Listbox", route: "/components/listbox" },
-				{ label: "Popover", route: "/components/popover" },
-				{ label: "Progress", route: "/components/progress" },
-				{ label: "Radio", route: "/components/radio" },
-				{ label: "Resizable", route: "/components/resizable" },
-				{ label: "Scroll Area", route: "/components/scroll-area" },
-				{ label: "Segmented Control", route: "/components/segmented-control" },
-				{ label: "Slider", route: "/components/slider" },
-				{ label: "Stepper", route: "/components/stepper" },
-				{ label: "Table", route: "/components/table" },
-				{ label: "Tabs", route: "/components/tabs" },
-				{ label: "Toggle", route: "/components/toggle" },
-				{ label: "Toast", route: "/components/toast" },
-				{ label: "Tooltip", route: "/components/tooltip" },
-				{ label: "Tree", route: "/components/tree" },
-				{ label: "Visimorph", route: "/components/visimorph" },
-			],
-		},
-		{
-			label: "Directives",
-			items: [{ label: "Auto Render", route: "/components/auto-render" }],
-		},
-		{
-			label: "Primitives",
-			items: [{ label: "Code Renderer", route: "/components/code-renderer" }],
-		},
-		{
-			label: "Experiments",
-			items: [{ label: "Amber Lab", route: "/experiments/amber-lab" }],
-		},
-		{ label: "Rigs", disabled: true, items: [] },
-		{ label: "Services", disabled: true, items: [] },
-		{ label: "Composites", disabled: true, items: [] },
-	];
+	/**
+	 * The catalog, verbatim. Shared with the components directory page via
+	 * `demo-nav.catalog.ts` — a plain data module with no Angular imports, so
+	 * that page can read the list without pulling this component and its icon
+	 * provider into its own lazy chunk.
+	 */
+	readonly groups: readonly CatalogGroup[] = DEMO_CATALOG;
 }
