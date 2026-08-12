@@ -1,49 +1,113 @@
-/* ── chip shared tokens ──────────────────────────────────────────────────── */
+/*
+ * Chip — Protocol theme values.
+ *
+ * Visual language borrowed from IBM Carbon's Tag, remapped onto Interop's 4px
+ * spacing scale. Procedure + conversion table: .agent/workflows/carbon-borrow.md
+ *
+ * Size axis (itx-size), two steps:
+ *   md (default)  32px tall / 12px inline padding   ← Carbon "large"
+ *   sm            24px tall /  8px inline padding   ← Carbon "medium"
+ *
+ * Carbon's third step (18px) is skipped: it lands off our 4px grid, and it puts
+ * dismissible/selectable chips under the WCAG 2.2 24px target-size floor.
+ *
+ * The label is 12px at every step — Carbon holds $label-01 across all sizes, so
+ * the size axis moves the box, never the type.
+ */
 
 :where([interop-root]) {
-	/* sizing — multiplier × step drives padding. Single fixed size; consumers
-	   can override --itx-chip-padding directly to bypass the formula.           */
-	--itx-chip-padding-step: 0.25rem;
-	--itx-chip-sizing-multiplier: 1;
-	--itx-chip-padding-inline: var(--itx-spacing-2_5) ;
-	--itx-chip-padding-block: 0;
+	/* ── Size steps — the vocabulary ──────────────────────────────────────
+	 * Each step's values are declared exactly ONCE, here. The three sites
+	 * that assign a step — the default just below, and the two itx-size
+	 * rules at the foot of this file — reference these names and never
+	 * restate a literal. Assignment can drift; values cannot.
+	 *
+	 * They are also the retuning seam: set --itx-chip-md-padding-inline on
+	 * any ancestor and every md chip beneath it follows, which setting
+	 * --itx-chip-padding-inline directly cannot do (the size rules declare
+	 * that one ON the element, so an inherited value always loses).        */
+	--itx-chip-md-height: var(--itx-spacing-8); /* 32px */
+	--itx-chip-md-padding-inline: var(--itx-spacing-3); /* 12px */
+	--itx-chip-md-radius: var(--itx-radius-lg); /* 12px */
 
-	/* appearance */
-	--itx-chip-background: var(--itx-neutral-4);
-	--itx-chip-color: var(--itx-neutral-11);
-	--itx-chip-border: 2px solid var(--itx-neutral-8);
-	--itx-chip-font-size: var(--itx-font-size-label);
-	--itx-chip-font-weight: 500;
-	--itx-chip-line-height: auto;
-	--itx-chip-gap: var(--itx-spacing-2);
+	--itx-chip-sm-height: var(--itx-spacing-6); /* 24px */
+	--itx-chip-sm-padding-inline: var(--itx-spacing-2); /*  8px */
+	--itx-chip-sm-radius: var(--itx-radius-md); /*  8px */
 
-	/* hover */
-	--itx-chip-background-hover: var(--itx-surface-hover);
-	--itx-chip-color-hover: inherit;
+	/* ── Default step — md ────────────────────────────────────────────────
+	 * Inherited from the root rather than declared on the chip, so a bare
+	 * chip carries no size declaration of its own and a container's
+	 * itx-size still reaches it.                                           */
+	--itx-chip-height: var(--itx-chip-md-height);
+	--itx-chip-padding-inline: var(--itx-chip-md-padding-inline);
+	--itx-chip-radius: var(--itx-chip-md-radius);
 
-	/* selected / checked */
-	--itx-chip-accent: var(--itx-colorway-8);
-	--itx-chip-on-accent: var(--itx-neutral-12);
-	--itx-chip-background-selected: var(--itx-chip-accent);
-	--itx-chip-color-selected: var(--itx-chip-on-accent);
-	--itx-chip-border-selected: var(--itx-chip-border);
-	--itx-chip-font-weight-selected: inherit;
+	/* ── Size — not stepped ───────────────────────────────────────────── */
+	--itx-chip-min-width: var(--itx-spacing-8); /* 32px — Carbon floor */
+	--itx-chip-max-width: none; /* Carbon caps at 13rem; see notes */
+	--itx-chip-gap: var(--itx-spacing-4); /* 16px */
 
-	/* focus ring (chip-option) */
-	--itx-chip-outline-color: var(--itx-chip-accent);
-	--itx-chip-outline-width: 3px;
+	/* ── Type — Carbon $label-01: 12px / 16px / 400 ───────────────────── */
+	--itx-chip-font-size: 0.75rem;
+	--itx-chip-font-weight: 400;
+	--itx-chip-line-height: 1.3333;
+
+	/* ── Paint — presentational & dismissible ─────────────────────────────
+	 * Carbon's gray tag is a solid fill with no border at all. Dropping the
+	 * border is most of what makes the shape read as Carbon.               */
+	--itx-chip-background: var(--itx-colorway-6);
+	--itx-chip-color: var(--itx-colorway-12);
+	--itx-chip-border: none;
+	--itx-chip-background-hover: var(--itx-neutral-5);
+	--itx-chip-color-hover: var(--itx-neutral-12);
+
+	/* ── Paint — selectable (chip-option) ─────────────────────────────────
+	 * The one outlined variant: hairline border at rest, inverse fill when
+	 * checked. Neutral by design — Carbon's selectable tag never takes a
+	 * colour. Set --itx-chip-background-selected / -color-selected to brand
+	 * it; those are the seam, at whatever scope you set them.              */
+	--itx-chip-selectable-background: var(--itx-neutral-5);
+	--itx-chip-selectable-color: var(--itx-neutral-12);
+	--itx-chip-selectable-border: 2px solid transparent;
+	--itx-chip-selectable-background-hover: var(--itx-neutral-6);
+	--itx-chip-selectable-color-hover: var(--itx-neutral-12);
+
+	--itx-chip-background-selected: var(--itx-colorway-6);
+	--itx-chip-color-selected: var(--itx-colorway-12);
+	--itx-chip-border-selected: 2px solid var(--itx-colorway-10);
+	--itx-chip-font-weight-selected: 400;
+
+	/* ── Focus ring (chip-option) ─────────────────────────────────────────
+	 * Carbon draws 2px. The colour stays on the colorway — focus is the one
+	 * place brand survives a neutral component.                            */
+	--itx-chip-outline-color: var(--itx-colorway);
+	--itx-chip-outline-width: 2px;
 	--itx-chip-outline-style: solid;
 	--itx-chip-outline-offset: 2px;
 
-	/* disabled */
+	/* ── Remove button (dismissible chips, in chip-item and chip-input) ───
+	 * A flush square the full height of the chip. No border: the chip is a
+	 * solid fill, so the button announces itself by deepening. The focus ring
+	 * insets so it stays inside the pill rather than orbiting it.           */
+	--itx-chip-remove-background: var(--itx-colorway-5);
+	--itx-chip-remove-background-hover: var(--itx-neutral-5);
+	--itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2);
+	--itx-chip-remove-border: none;
+	--itx-chip-remove-radius: var(--itx-chip-radius); /* tracks the chip */
+	--itx-chip-remove-font-size: var(--itx-spacing-3); /* 16px — Carbon icon */
+	--itx-chip-remove-outline-color: var(--itx-colorway);
+	--itx-chip-remove-outline-width: 2px;
+	--itx-chip-remove-outline-offset: -2px;
+
+	/* ── Disabled ─────────────────────────────────────────────────────── */
 	--itx-chip-disabled-opacity: 0.4;
 
-	/* transitions */
+	/* ── Transitions ──────────────────────────────────────────────────── */
 	--itx-chip-transition-duration: 120ms;
 	--itx-chip-transition-timing-function: ease;
 
-	/* chip-list gap */
-	--itx-chip-list-gap: 1rem;
+	/* ── chip-list gap — Carbon's grouped-tag spacing ─────────────────── */
+	--itx-chip-list-gap: var(--itx-spacing-2); /* 8px */
 }
 
 /* ── chip-filter ─────────────────────────────────────────────────────────── */
@@ -53,61 +117,75 @@
 	--itx-chip-filter-border: none;
 	--itx-chip-filter-radius: 0;
 	--itx-chip-filter-padding: 0;
+	--itx-chip-filter-gap: var(--itx-spacing-2); /* 8px */
 }
 
-/* ── chip-item ───────────────────────────────────────────────────────────── */
+/* ── Dismissible hosts ───────────────────────────────────────────────────── */
+/* The remove button carries its own margin, so the chip needs no internal gap
+   — otherwise the two stack and the button drifts off the inline end.       */
 
-:where(li[interop-chip-item]) {
-	/* layout */
-	--itx-chip-item-gap: var(--itx-spacing-3, 0.375rem);
-
-	/* remove button — rest */
-	--itx-chip-remove-background: var(--itx-neutral-4);
-	--itx-chip-remove-border: 2px solid transparent;
-	--itx-chip-remove-radius: var(--itx-radius-full);
-	--itx-chip-remove-font-size: 0.875rem;
-	--itx-chip-remove-padding: var(--itx-spacing-1, 0.125rem);
-	--itx-chip-remove-width: var(--itx-spacing-9, 1.5rem);
-
-	/* remove button — chip hover */
-	--itx-chip-remove-border-hover: 2px solid var(--itx-neutral-10);
-
-	/* remove button — focus ring */
-	--itx-chip-remove-outline-color: var(--itx-neutral-9);
-	--itx-chip-remove-outline-width: 3px;
-	--itx-chip-remove-outline-offset: 1px;
-}
-
-:where(li[interop-chip-item][data-removable]) {
-	padding: 0 0 0 var(--itx-spacing-4);
-}
-
-/* ── chip-badge ──────────────────────────────────────────────────────────── */
-
-/* Badge expresses its inherent smallness by overriding the sizing multiplier. */
-
-:where([interop-chip-badge]) {
-	--itx-chip-sizing-multiplier: 1;
-	--itx-chip-line-height: auto;
+:where(li[interop-chip-item], div[interop-chip-input]) {
+	--itx-chip-gap: 0;
 }
 
 /* ── chip-input ──────────────────────────────────────────────────────────── */
+/* Size comes from the axis below (the container defaults to the sm step), so
+   only the field's own chrome lives here.                                   */
 
 :where(div[interop-chip-input]) {
-	/* container */
-	--itx-chip-input-background: transparent;
-	--itx-chip-input-border: 1px solid var(--itx-border);
-	--itx-chip-input-gap: 0.375rem;
-	--itx-chip-input-padding: 0.375rem 0.5rem;
-	--itx-chip-input-min-height: 2.5rem;
+	--itx-chip-input-background: var(--itx-neutral-3);
+	--itx-chip-input-border: 2px solid transparent;
+	--itx-chip-input-radius: var(--itx-radius-xl); /* 16px — the field's own */
+	--itx-chip-input-gap: var(--itx-spacing-1); /* 4px */
+	--itx-chip-input-padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	--itx-chip-input-min-height: var(--itx-spacing-10); /* 40px */
 
-	/* focus ring (focus-within) */
 	--itx-chip-input-outline-color: var(--itx-colorway);
 	--itx-chip-input-outline-width: 2px;
 	--itx-chip-input-outline-style: solid;
 	--itx-chip-input-outline-offset: 1px;
+}
 
-	/* internal chip layout + remove */
-	--itx-chip-input-chip-gap: 0.5rem;
-	--itx-chip-input-remove-font-size: 0.875rem;
+/* ── Size axis ───────────────────────────────────────────────────────────── */
+/* Set itx-size on a chip or on any chip container — chip-list, chip-filter,
+   chip-input — and the cascading tokens carry it to every chip inside.
+   These rules ASSIGN a step; they never state a value. Every literal lives
+   in the --itx-chip-md-* / --itx-chip-sm-* vocabulary at the top of the
+   file, so md's default (on [interop-root]) and md's override (here) read
+   from the same source and cannot disagree.
+
+   Only elements carrying an explicit itx-size appear here — a bare chip must
+   declare nothing on itself, or it would shadow the container that is trying
+   to size it. chip-badge and chip-input are the exception: they default to
+   sm via :not([itx-size]), which is mutually exclusive with the md rule, so
+   an explicit size still wins with no source-order dependency.             */
+
+:where(
+	label[interop-chip-option][itx-size="md"],
+	li[interop-chip-item][itx-size="md"],
+	[interop-chip-badge][itx-size="md"],
+	ul[interop-chip-list][itx-size="md"],
+	fieldset[interop-chip-filter][itx-size="md"],
+	div[interop-chip-input][itx-size="md"]
+) {
+	--itx-chip-height: var(--itx-chip-md-height);
+	--itx-chip-padding-inline: var(--itx-chip-md-padding-inline);
+	--itx-chip-radius: var(--itx-chip-md-radius);
+	--itx-chip-remove-radius: var(--itx-chip-radius);
+}
+
+:where(
+	label[interop-chip-option][itx-size="sm"],
+	li[interop-chip-item][itx-size="sm"],
+	[interop-chip-badge][itx-size="sm"],
+	ul[interop-chip-list][itx-size="sm"],
+	fieldset[interop-chip-filter][itx-size="sm"],
+	div[interop-chip-input][itx-size="sm"],
+	[interop-chip-badge]:not([itx-size]),
+	div[interop-chip-input]:not([itx-size])
+) {
+	--itx-chip-height: var(--itx-chip-sm-height);
+	--itx-chip-padding-inline: var(--itx-chip-sm-padding-inline);
+	--itx-chip-radius: var(--itx-chip-sm-radius);
+	--itx-chip-remove-radius: var(--itx-chip-radius);
 }

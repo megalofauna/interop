@@ -107,12 +107,33 @@ No per-component `styleUrl` — all rules are globally imported. Components have
 
 ```css
 .my-context {
-  --itx-chip-bg:     var(--itx-surface-elevated);
+  --itx-chip-background: var(--itx-neutral-3);
   --itx-chip-radius: var(--itx-radius-md);
 }
 ```
 
 Sub-component-specific tokens (`--itx-chip-filter-*`, `--itx-chip-input-*`) override the shared tokens for that context only.
+
+## Visual language
+
+Proportions and paint are borrowed from IBM Carbon's Tag component, remapped onto Interop's 4px spacing scale. See `.agent/workflows/carbon-borrow.md` for the procedure and the Carbon → Interop conversion table.
+
+Carbon's variant vocabulary maps onto the existing sub-components without renaming anything:
+
+| Carbon / docs term | Interop shape |
+|---|---|
+| presentational (Carbon: "read-only") | `li[interop-chip-item]` without `[removable]`, or `[interop-chip-badge]` |
+| dismissible | `li[interop-chip-item][removable]` |
+| selectable | `label[interop-chip-option]` inside a `chip-filter` |
+
+Carbon's fourth variant, *operational* (a tag that acts as a button opening a popover), has no Interop equivalent and was skipped. Colour variants are deferred — chips are neutral-only.
+
+The three shapes differ in paint:
+
+- **presentational / dismissible** — solid fill, **no border at all**. Dropping the border is most of what makes the shape read as Carbon.
+- **selectable** — the one outlined variant: transparent fill with a hairline border, flipping to an inverse fill (`--itx-neutral-12` on `--itx-neutral-1`) when checked. Neutral by design; set `--itx-chip-background-selected` / `--itx-chip-color-selected` to brand it.
+
+Focus rings keep `--itx-colorway` throughout — focus is the one place brand survives an otherwise neutral component.
 
 ## State activation pattern
 
@@ -126,42 +147,99 @@ A single shared base rule paints every chip-shaped element using the public `--i
   [interop-chip-badge],
   div[interop-chip-input] .itx-chip
 ) {
-  background: var(--itx-chip-background, transparent);
+  background: var(--itx-chip-background);
   /* … border, color, padding, etc. */
+}
+
+/* variant mapping — must come BEFORE the state rules */
+:where(label[interop-chip-option]) {
+  --itx-chip-background: var(--itx-chip-selectable-background);
+  --itx-chip-background-hover: var(--itx-chip-selectable-background-hover);
 }
 
 /* hover: re-define cascading token; base picks up the new value */
 :where(label[interop-chip-option]:hover:not([data-disabled])) {
-  --itx-chip-background: var(--itx-chip-background-hover, var(--itx-surface-hover));
+  --itx-chip-background: var(--itx-chip-background-hover);
 }
 
 /* checked: same pattern */
 :where(label[interop-chip-option][data-checked]) {
-  --itx-chip-background: var(--itx-chip-background-selected, var(--itx-chip-accent));
+  --itx-chip-background: var(--itx-chip-background-selected);
 }
 ```
 
-The remove button on `chip-item` still uses a private `--_remove-border` slot because two distinct state rules (`hover` and `:has(:focus-visible)`) need to swap its value.
+### Why the variant paint lives in the foundation file
 
-## Remove button — hover/focus state design (chip-item)
+`interop.css` declares `@layer interop.foundation, interop.theme`, so **the theme outranks the foundation at any specificity**. If the theme wrote `--itx-chip-background` directly on `label[interop-chip-option]`, it would beat the foundation's `:hover` rule for that same token and hover would silently stop working.
 
-The remove button border is the one interactive affordance on the chip item. The correct hover/focus interaction:
+The rule that keeps this safe: the theme only writes chip tokens on **`[interop-root]`** (an ancestor — elements inherit the value, and an inherited value always loses to a declaration on the element itself). Where a variant needs different base paint, the theme exposes a named ancestor-level token (`--itx-chip-selectable-*`) and the foundation maps it onto the element, ordered before the state rules. Element-level exceptions in the theme (`chip-badge`, `chip-input`, the size axis) are safe only because the foundation never writes those same tokens on those same elements.
 
-| State | `--_remove-border` |
-|---|---|
-| Default | `var(--itx-chip-remove-border, var(--itx-border))` |
-| Chip hovered, button NOT focused | `2px solid var(--itx-chip-accent)` |
-| Button focused | `2px solid transparent` (outline ring is the indicator) |
+## Remove button (dismissible)
 
-The `--_remove-border` private slot is set on the `li` and inherited by the button. The hover rule uses `:not(:has(.itx-chip-remove:focus-visible))` to exclude the focused case — the two rules are mutually exclusive, but the focus rule is also placed after the hover rule in the CSS so it wins at equal zero specificity if both were to match.
+**One rule set serves both dismissible hosts.** A `li[interop-chip-item][removable]` and a `.itx-chip` inside `chip-input` are the same variant on two different elements, so the foundation keys the rules off the *presence of a remove button* rather than a per-host attribute:
 
-The `li[interop-chip-item]` element itself is NOT focusable. Using `:focus-visible` or `:focus` on the `<li>` would never fire. `:has(.itx-chip-remove:focus-visible)` is the correct selector for detecting button focus.
+```css
+:where(li[interop-chip-item], .itx-chip):where(:has(.itx-chip-remove)) { padding-inline-end: 0; }
+:where(.itx-chip-remove) { /* … */ }
+```
+
+A chip that contains a remove button IS dismissible, wherever it lives. This replaced two hand-maintained copies that had drifted three separate times — a wrong class name (`humb`), a forked `--itx-chip-input-remove-font-size`, and a `--itx-chip-input-remove-radius` that was read but never declared (leaving square corners on an otherwise rounded chip). If you find yourself writing a chip-input-specific paint or layout rule, that's the smell: the rule almost certainly belongs to the shared dismissible set.
+
+The unscoped `.itx-chip-remove` / `.itx-chip-label` / `.itx-chip` selectors are deliberate. Those classes are only ever emitted by chip components, and keeping them unscoped means a CSS-only consumer replicating the markup gets the styling for free — the same goal that motivates having no view encapsulation.
+
+The button is a square of `var(--itx-chip-height)` sitting at the chip's inline end behind its own `--itx-chip-remove-margin`; the chip gives up its end padding so it lands flush. No border — the chip is already a solid fill, so the button announces itself by deepening its background on hover rather than by drawing an edge. Its focus ring is **inset** (`outline-offset: -2px`) so the indicator stays inside the chip instead of orbiting it.
+
+The button sizes itself from `var(--itx-chip-height)` directly rather than owning a token, so it tracks the size axis for free. Note the `var()` resolution rule that forces this: `--a: var(--b)` resolves `--b` at the element where `--a` is *declared*, so a `--itx-chip-remove-size: var(--itx-chip-height)` declared on `[interop-root]` would freeze at 32px and ignore every downstream size override.
+
+The `li[interop-chip-item]` element itself is NOT focusable. Using `:focus-visible` or `:focus` on the `<li>` would never fire; `:has(.itx-chip-remove:focus-visible)` is the correct selector for detecting button focus.
 
 ## Sizing
 
-Chips ship at a single fixed size. Padding is computed from `--itx-chip-padding-step × --itx-chip-sizing-multiplier` (theme defaults: `0.1875rem × 1.25`). `chip-badge` overrides the multiplier to `1` on its own selector for an intrinsically smaller inline-prose appearance.
+Chips ship two steps on the `itx-size` axis. Height is stated, not derived — a chip is a fixed-height pill whose label rides centred, so `padding-block` is zero and `--itx-chip-height` alone drives the axis.
 
-To bypass the formula entirely, override `--itx-chip-padding` or `--itx-chip-radius` directly. Border-radius defaults to `var(--itx-radius-full)` (pill); set `--itx-chip-radius` locally to change it.
+| `itx-size` | Height | Padding-inline | Radius | Carbon equivalent |
+|---|---|---|---|---|
+| `md` (default) | 32px (`--itx-spacing-8`) | 12px (`--itx-spacing-3`) | 12px (`--itx-radius-lg`) | large |
+| `sm` | 24px (`--itx-spacing-6`) | 12px (`--itx-spacing-3`) | 8px (`--itx-radius-md`) | medium |
+
+A step is a **bundle** — height, inline padding, radius, and the remove button's matching radius. `chip-badge` and `chip-input` join the `sm` selector list with `:not([itx-size])` rather than re-declaring anything, so a shape can't pick up three of the four values when the bundle grows.
+
+### Vocabulary vs. assignment
+
+`md` has **two legitimate declaration sites**, and both are load-bearing:
+
+| Site | Why it exists |
+|---|---|
+| `[interop-root]` | The *inherited* default. A bare chip must declare no size of its own — otherwise it shadows the container trying to size it, and `<ul interop-chip-list itx-size="sm">` stops reaching its `<li>`s. |
+| the `[itx-size="md"]` rule | The *explicit* override — so `chip-badge`/`chip-input` can opt up from their `sm` default, and so a chip can re-assert `md` inside an `sm` container. |
+
+Neither is removable, and the second can't reference the first (`--itx-chip-padding-inline: var(--itx-chip-padding-inline)` is a cycle). So the values live under their own names and every assignment site points at them:
+
+```css
+:where([interop-root]) {
+  --itx-chip-md-padding-inline: var(--itx-spacing-3);   /* vocabulary — stated once */
+  --itx-chip-padding-inline: var(--itx-chip-md-padding-inline);   /* default assignment */
+}
+:where(… [itx-size="md"]) {
+  --itx-chip-padding-inline: var(--itx-chip-md-padding-inline);   /* override assignment */
+}
+```
+
+**No size rule ever states a literal.** Assignment can still drift; values cannot. This is what stopped `md` from silently ending up on `--itx-spacing-4` at the root while the size rule said `--itx-spacing-3`.
+
+The step tokens double as the retuning seam. Setting `--itx-chip-md-padding-inline` on any ancestor retunes every `md` chip beneath it; setting `--itx-chip-padding-inline` there does nothing, because the size rules declare that one *on the element* and an inherited value always loses. Same for `-height` and `-radius`. Tokens outside the bundle (`--itx-chip-min-width`, `--itx-chip-gap`, all paint) stay ancestor-tunable as normal.
+
+The label is `0.75rem` at both steps — Carbon holds `$label-01` across all sizes, so the axis moves the box and never the type. It is a fixed rem, not an `--itx-font-size-*` role token, because those are fluid `clamp()` values and a fluid label inside a fixed-height box overflows it (`button.css` set the same precedent).
+
+Carbon's third step (18px) was skipped: it lands off the 4px grid, and it puts dismissible and selectable chips under the WCAG 2.2 SC 2.5.8 minimum target size of 24×24 CSS px.
+
+The attribute works on a chip **or on any chip container** — `chip-list`, `chip-filter`, `chip-input` — because the size tokens cascade to every chip inside. Always put it on the container, never on a descendant selector like `div[interop-chip-input][itx-size="sm"] .itx-chip`: tokens set on a child can't be read by the parent, so the container's own chrome would be left behind.
+
+Border-radius defaults to `var(--itx-radius-full)` (pill); set `--itx-chip-radius` locally to change it.
+
+### Truncation — deferred
+
+Carbon caps a tag at 208px (13rem, exactly `--itx-spacing-52`) and ellipsises the overflow. `--itx-chip-max-width` exists and defaults to `none`. Enabling ellipsis on `chip-item` needs a `<span class="itx-chip-label">` wrapper in its template — its content currently projects as a bare text node, which becomes an anonymous flex item that `text-overflow` cannot target. `chip-input` already has that wrapper and already truncates.
 
 ## Token reference
 
@@ -169,89 +247,107 @@ To bypass the formula entirely, override `--itx-chip-padding` or `--itx-chip-rad
 
 | Token | Default | Description |
 |---|---|---|
-| `--itx-chip-padding-step` | `0.1875rem` | Base unit for the padding formula |
-| `--itx-chip-sizing-multiplier` | `1.25` | Multiplier; padding = step × mult, inline = block × 2 |
-| `--itx-chip-background` | `transparent` | Background (all chip shapes) |
-| `--itx-chip-color` | `inherit` | Text color |
-| `--itx-chip-border` | `2px solid transparent` | Border |
-| `--itx-chip-radius` | `var(--itx-radius-full)` | Border radius |
-| `--itx-chip-padding` | *computed from multiplier* | Set to bypass the multiplier formula |
-| `--itx-chip-font-size` | `var(--itx-font-size-caption)` | Font size |
-| `--itx-chip-font-weight` | `inherit` | Font weight |
-| `--itx-chip-line-height` | `1.4` | Line-box height (badge overrides to `1.2`) |
-| `--itx-chip-gap` | `var(--itx-spacing-2)` | Internal gap |
-| `--itx-chip-background-hover` | `var(--itx-surface-hover)` | Hover background |
-| `--itx-chip-color-hover` | `inherit` | Hover text color |
-| `--itx-chip-accent` | `var(--itx-colorway)` | Selected/checked background |
-| `--itx-chip-on-accent` | `var(--itx-on-colorway)` | Text on selected background |
+| `--itx-chip-md-height` | `var(--itx-spacing-8)` — 32px | md step vocabulary; retune here, not on `--itx-chip-height` |
+| `--itx-chip-md-padding-inline` | `var(--itx-spacing-3)` — 12px | md step vocabulary |
+| `--itx-chip-md-radius` | `var(--itx-radius-lg)` — 12px | md step vocabulary |
+| `--itx-chip-sm-height` | `var(--itx-spacing-6)` — 24px | sm step vocabulary |
+| `--itx-chip-sm-padding-inline` | `var(--itx-spacing-2)` — 8px | sm step vocabulary |
+| `--itx-chip-sm-radius` | `var(--itx-radius-md)` — 8px | sm step vocabulary |
+| `--itx-chip-height` | `var(--itx-chip-md-height)` | Assigned by the size axis; `padding-block` is always `0` |
+| `--itx-chip-padding-inline` | `var(--itx-chip-md-padding-inline)` | Assigned by the size axis |
+| `--itx-chip-min-width` | `var(--itx-spacing-8)` — 32px | Carbon's floor; keeps 1–2 char chips from collapsing |
+| `--itx-chip-max-width` | `none` | Carbon caps at `13rem`; see *Truncation — deferred* |
+| `--itx-chip-gap` | `var(--itx-spacing-4)` — 16px | Internal gap; zeroed on the dismissible hosts, where the remove button's own margin does the spacing |
+| `--itx-chip-radius` | `var(--itx-chip-md-radius)` | Assigned by the size axis |
+| `--itx-chip-font-size` | `0.75rem` | Carbon `$label-01`; fixed, not fluid |
+| `--itx-chip-font-weight` | `400` | Font weight |
+| `--itx-chip-line-height` | `1.3333` | 16/12 — Carbon `$label-01` |
+| `--itx-chip-background` | `var(--itx-colorway-6)` | Fill (presentational + dismissible) |
+| `--itx-chip-color` | `var(--itx-colorway-12)` | Text color |
+| `--itx-chip-border` | `none` | Border — Carbon's filled tags have none |
+| `--itx-chip-background-hover` | `var(--itx-neutral-5)` | Hover background |
+| `--itx-chip-color-hover` | `var(--itx-neutral-12)` | Hover text color |
 | `--itx-chip-disabled-opacity` | `0.4` | Disabled opacity |
 | `--itx-chip-transition-duration` | `120ms` | Transition duration |
 | `--itx-chip-transition-timing-function` | `ease` | Transition timing |
-| `--itx-chip-list-gap` | `0.375rem` | Gap between chips in a chip-list |
+| `--itx-chip-list-gap` | `var(--itx-spacing-2)` — 8px | Gap between chips in a chip-list |
 
-### chip-option tokens
+### chip-option tokens (selectable)
 
-| Token | Description |
-|---|---|
-| `--itx-chip-background-selected` | Checked background (default: `--itx-chip-accent`) |
-| `--itx-chip-color-selected` | Text color when checked (default: `--itx-chip-on-accent`) |
-| `--itx-chip-border-selected` | Border when checked (default: base border) |
-| `--itx-chip-font-weight-selected` | Font weight when checked |
-| `--itx-chip-outline-color` | Focus ring color (default: `--itx-chip-accent`) |
-| `--itx-chip-outline-width` | Focus ring width (default: `2px`) |
-| `--itx-chip-outline-style` | Focus ring style (default: `solid`) |
-| `--itx-chip-outline-offset` | Focus ring offset (default: `2px`) |
+The `--itx-chip-selectable-*` family is read on `[interop-root]` and mapped onto the element by the foundation — see *Why the variant paint lives in the foundation file*.
 
-### chip-item tokens (set on `li[interop-chip-item]`)
+| Token | Default | Description |
+|---|---|---|
+| `--itx-chip-selectable-background` | `var(--itx-neutral-5)` | Rest fill |
+| `--itx-chip-selectable-color` | `var(--itx-neutral-12)` | Rest text color |
+| `--itx-chip-selectable-border` | `2px solid transparent` | Reserves the border box so checking doesn't shift layout |
+| `--itx-chip-selectable-background-hover` | `var(--itx-neutral-6)` | Hover fill |
+| `--itx-chip-selectable-color-hover` | `var(--itx-neutral-12)` | Hover text color |
+| `--itx-chip-background-selected` | `var(--itx-colorway-6)` | Checked background |
+| `--itx-chip-color-selected` | `var(--itx-colorway-12)` | Checked text color |
+| `--itx-chip-border-selected` | `2px solid var(--itx-colorway-10)` | Checked border |
+| `--itx-chip-font-weight-selected` | `400` | Checked font weight |
+| `--itx-chip-outline-color` | `var(--itx-colorway)` | Focus ring color |
+| `--itx-chip-outline-width` | `2px` | Focus ring width |
+| `--itx-chip-outline-style` | `solid` | Focus ring style |
+| `--itx-chip-outline-offset` | `2px` | Focus ring offset |
 
-| Token | Description |
-|---|---|
-| `--itx-chip-item-gap` | Gap between label text and remove button |
-| `--itx-chip-padding-removable` | Padding when remove button is present (asymmetric). Defaults to the multiplier formula; override for absolute values. |
-| `--itx-chip-remove-background` | Remove button background |
-| `--itx-chip-remove-border` | Remove button border (rest state) |
-| `--itx-chip-remove-border-hover` | Remove button border when chip is hovered |
-| `--itx-chip-remove-radius` | Remove button border radius |
-| `--itx-chip-remove-font-size` | Remove button icon size (default: `0.875rem`) |
-| `--itx-chip-remove-padding` | Remove button padding |
-| `--itx-chip-remove-width` | Remove button width |
-| `--itx-chip-remove-outline-color` | Focus ring color on remove button |
-| `--itx-chip-remove-outline-width` | Focus ring width on remove button (default: `3px`) |
-| `--itx-chip-remove-outline-offset` | Focus ring offset on remove button (default: `3px`) |
+### Remove button tokens (both dismissible hosts)
+
+Set on `[interop-root]` so both dismissible contexts read them. The button's box is always `var(--itx-chip-height)` square — it has no size token of its own.
+
+| Token | Default | Description |
+|---|---|---|
+| `--itx-chip-remove-background` | `var(--itx-colorway-5)` | Rest background |
+| `--itx-chip-remove-background-hover` | `var(--itx-neutral-5)` | Hover background |
+| `--itx-chip-remove-border` | `none` | Border |
+| `--itx-chip-remove-radius` | `var(--itx-chip-radius)` | Tracks the chip's own radius through the size bundle |
+| `--itx-chip-remove-margin` | `0 0 0 var(--itx-spacing-2)` | Separates the button from the label; replaces an internal chip gap |
+| `--itx-chip-remove-font-size` | `var(--itx-spacing-4)` — 16px | Glyph size — Carbon's icon size |
+| `--itx-chip-remove-outline-color` | `var(--itx-colorway)` | Focus ring color |
+| `--itx-chip-remove-outline-width` | `2px` | Focus ring width |
+| `--itx-chip-remove-outline-offset` | `-2px` | Inset, so the ring stays inside the chip |
+
+### Dismissible host tokens (`li[interop-chip-item]`, `div[interop-chip-input]`)
+
+| Token | Default | Description |
+|---|---|---|
+| `--itx-chip-gap` | `0` | Overrides the shared gap — the remove button's margin does the spacing instead |
 
 ### chip-filter tokens (set on `fieldset[interop-chip-filter]`)
 
-| Token | Description |
-|---|---|
-| `--itx-chip-filter-background` | Filter container background |
-| `--itx-chip-filter-border` | Filter container border |
-| `--itx-chip-filter-radius` | Filter container border radius |
-| `--itx-chip-filter-padding` | Filter container padding |
-| `--itx-chip-surface` | Semantic fallback for filter background |
+| Token | Default | Description |
+|---|---|---|
+| `--itx-chip-filter-background` | `transparent` | Filter container background |
+| `--itx-chip-filter-border` | `none` | Filter container border |
+| `--itx-chip-filter-radius` | `0` | Filter container border radius |
+| `--itx-chip-filter-padding` | `0` | Filter container padding |
+| `--itx-chip-filter-gap` | `var(--itx-spacing-2)` — 8px | Gap between options |
 
 ### chip-badge tokens
 
-The badge has **no per-component tokens** — it expresses its smaller default by overriding `--itx-chip-sizing-multiplier` to `1` and `--itx-chip-line-height` to `auto` on its own selector. Reuses the shared `--itx-chip-*` family for everything else.
+The badge has **no tokens of its own**. It expresses its inline-prose smallness by joining the `sm` selector list as `[interop-chip-badge]:not([itx-size])` — the same bundle every other `sm` chip gets, not a private copy. An explicit `itx-size` still wins. Everything else comes from the shared `--itx-chip-*` family.
 
 ### chip-input tokens (set on `div[interop-chip-input]`)
 
-| Token | Description |
-|---|---|
-| `--itx-chip-input-background` | Container background |
-| `--itx-chip-input-border` | Container border |
-| `--itx-chip-input-radius` | Container border radius |
-| `--itx-chip-input-gap` | Gap between chips and text input |
-| `--itx-chip-input-padding` | Container padding |
-| `--itx-chip-input-min-height` | Minimum container height |
-| `--itx-chip-input-outline-color` | Focus ring color (`focus-within`) |
-| `--itx-chip-input-outline-width` | Focus ring width (default: `2px`) |
-| `--itx-chip-input-outline-style` | Focus ring style (default: `solid`) |
-| `--itx-chip-input-outline-offset` | Focus ring offset (default: `1px`) |
-| `--itx-chip-input-chip-gap` | Gap inside individual chips in the input |
-| `--itx-chip-input-remove-font-size` | Remove button icon size inside chip-input |
+The container joins the `sm` step the same way the badge does, so the field stays 40px tall and its chips are indistinguishable from dismissible chip-items. Only the field's own chrome lives here — **the chips inside own no tokens at all**.
+
+| Token | Default | Description |
+|---|---|---|
+| `--itx-chip-input-background` | `transparent` | Container background |
+| `--itx-chip-input-border` | `1px solid var(--itx-border)` | Container border |
+| `--itx-chip-input-radius` | `var(--itx-chip-radius)` | Container border radius — tracks its own chips |
+| `--itx-chip-input-gap` | `var(--itx-spacing-1)` | Gap between chips and text input |
+| `--itx-chip-input-padding` | `var(--itx-spacing-1) var(--itx-spacing-2)` | Container padding |
+| `--itx-chip-input-min-height` | `var(--itx-spacing-10)` — 40px | Minimum container height |
+| `--itx-chip-input-outline-color` | `var(--itx-colorway)` | Focus ring color (`focus-within`) |
+| `--itx-chip-input-outline-width` | `2px` | Focus ring width |
+| `--itx-chip-input-outline-style` | `solid` | Focus ring style |
+| `--itx-chip-input-outline-offset` | `1px` | Focus ring offset |
 
 ## Known design decisions
 
 - **Why checkboxes, not ARIA listbox**: Every major library uses ARIA listbox/grid and ships custom keyboard handling + known AT inconsistencies. Native checkboxes solve focus, keyboard (Tab+Space), form submission, and AT announcement for free with zero JS.
 - **Why no view encapsulation**: Follows the Interop CSS strategy — global CSS is the styling engine, components carry no styles. CSS-only consumers get chip styling without importing Angular components.
-- **Chip-input vs chip-list/item**: The chips rendered inside `div[interop-chip-input]` are internal implementation detail (not `li[interop-chip-item]` elements). They reuse the `--itx-chip-*` token family but have different markup and a smaller remove button.
+- **Chip-input vs chip-list/item**: The chips rendered inside `div[interop-chip-input]` are internal implementation detail (not `li[interop-chip-item]` elements). They reuse the `--itx-chip-*` token family and the same flush remove button, but have their own markup and keyboard handling.
+- **Why the sizing formula was deleted**: The old `--itx-chip-padding-step × --itx-chip-sizing-multiplier` model could not express "height 32, padding-inline 12" — the shape Carbon states directly — and the theme had already begun routing around it. Height is now stated, not derived. This was the one structural change the Carbon borrow required; see `.agent/workflows/carbon-borrow.md`.

@@ -5,24 +5,48 @@
  * see themes/protocol/components/chip.css. All selectors use :where() for
  * zero specificity.
  *
+ * Shape borrowed from IBM Carbon's Tag: a fixed-height pill, 12px label, and
+ * three visual variants. See .agent/workflows/carbon-borrow.md.
+ *
+ *   presentational  li[interop-chip-item] (no remove) · [interop-chip-badge]
+ *   dismissible     li[interop-chip-item][removable] · .itx-chip (chip-input)
+ *   selectable      label[interop-chip-option]
+ *
+ * Dismissible is ONE rule set across both hosts, keyed off the presence of a
+ * .itx-chip-remove child rather than a per-host attribute. The chip-input
+ * chips used to carry a hand-copied duplicate; it drifted three times.
+ *
+ * ── Cascade note ─────────────────────────────────────────────────────────
+ * The theme ships in a later cascade layer than this file, so a theme rule
+ * that writes a token ON a chip element outranks the state rules below no
+ * matter how it is written. Element-level token writes therefore live HERE;
+ * the theme supplies values on [interop-root] and through the named variant
+ * tokens (--itx-chip-selectable-*), which this file maps onto the element.
+ *
  * Public tokens (set on any ancestor, e.g. [interop-root]):
  *
- *   Shared (inherited by all chip-shaped elements)
+ *   Size
+ *   --itx-chip-height                        --itx-chip-padding-inline
+ *   --itx-chip-min-width                     --itx-chip-max-width
+ *   --itx-chip-radius                        --itx-chip-gap
+ *
+ *   Type
+ *   --itx-chip-font-size                     --itx-chip-font-weight
+ *   --itx-chip-line-height
+ *
+ *   Paint — presentational & dismissible
  *   --itx-chip-background                    --itx-chip-background-hover
  *   --itx-chip-color                         --itx-chip-color-hover
- *   --itx-chip-border                        --itx-chip-border-selected
- *   --itx-chip-radius                        (defaults to full pill)
- *   --itx-chip-padding                       --itx-chip-padding-step
- *                                            --itx-chip-sizing-multiplier
- *   --itx-chip-font-size                     --itx-chip-font-weight
- *                                            --itx-chip-font-weight-selected
- *   --itx-chip-line-height                   --itx-chip-gap
+ *   --itx-chip-border
  *   --itx-chip-disabled-opacity
  *   --itx-chip-transition-duration           --itx-chip-transition-timing-function
  *
- *   Selected / checked (chip-option)
- *   --itx-chip-accent                        --itx-chip-on-accent
+ *   Paint — selectable (chip-option); mapped onto the element below
+ *   --itx-chip-selectable-background         --itx-chip-selectable-background-hover
+ *   --itx-chip-selectable-color              --itx-chip-selectable-color-hover
+ *   --itx-chip-selectable-border
  *   --itx-chip-background-selected           --itx-chip-color-selected
+ *   --itx-chip-border-selected               --itx-chip-font-weight-selected
  *
  *   Focus ring (chip-option)
  *   --itx-chip-outline-color                 --itx-chip-outline-width
@@ -31,27 +55,26 @@
  *   chip-filter container
  *   --itx-chip-filter-background             --itx-chip-filter-border
  *   --itx-chip-filter-radius                 --itx-chip-filter-padding
- *   --itx-chip-surface                       (semantic fallback)
+ *   --itx-chip-filter-gap                    --itx-chip-surface
  *
  *   chip-list gap
  *   --itx-chip-list-gap
  *
- *   chip-item layout + remove button
- *   --itx-chip-item-gap                      --itx-chip-padding-removable
- *   --itx-chip-remove-background             --itx-chip-remove-border
- *   --itx-chip-remove-border-hover           --itx-chip-remove-radius
- *   --itx-chip-remove-font-size              --itx-chip-remove-padding
- *   --itx-chip-remove-width
+ *   Remove button — shared by both dismissible hosts. The box is always a
+ *   square of --itx-chip-height, so it tracks the size axis with no token.
+ *   --itx-chip-remove-background             --itx-chip-remove-background-hover
+ *   --itx-chip-remove-border                 --itx-chip-remove-radius
+ *   --itx-chip-remove-margin                 --itx-chip-remove-font-size
  *   --itx-chip-remove-outline-color
  *   --itx-chip-remove-outline-width          --itx-chip-remove-outline-offset
  *
- *   chip-input container + internals
+ *   chip-input container (the chips inside it own no tokens — they read the
+ *   shared --itx-chip-* family, sized by the container's step of the axis)
  *   --itx-chip-input-background              --itx-chip-input-border
  *   --itx-chip-input-radius                  --itx-chip-input-padding
  *   --itx-chip-input-gap                     --itx-chip-input-min-height
  *   --itx-chip-input-outline-color           --itx-chip-input-outline-width
  *   --itx-chip-input-outline-style           --itx-chip-input-outline-offset
- *   --itx-chip-input-chip-gap                --itx-chip-input-remove-font-size
  */
 
 /* ── Screen-reader-only utility ──────────────────────────────────────────── */
@@ -71,64 +94,50 @@
 }
 
 /* ── Shared chip base ────────────────────────────────────────────────────── */
-/* Common visual paint for every chip-shaped element. Per-shape rules below
-   layer on display details (gap, list-style, max-width, …) and state. State
-   transitions on chip-option re-define cascading --itx-chip-* tokens directly
-   rather than indirecting through private slots — same effect, less code.   */
+/* Common visual paint for every chip-shaped element. Height is stated, not
+   derived: a chip is a fixed-height pill whose label rides centred, so block
+   padding is zero and --itx-chip-height alone drives the size axis. Per-shape
+   rules below layer on display details; state rules re-define the cascading
+   --itx-chip-* tokens directly, which the base picks up automatically.      */
 
 :where(
 	label[interop-chip-option],
 	li[interop-chip-item],
 	[interop-chip-badge],
-	div[interop-chip-input] .itx-chip
+	.itx-chip
 ) {
+	box-sizing: border-box;
 	display: inline-flex;
 	align-items: center;
-	background: var(--itx-chip-background, transparent);
-	border: var(--itx-chip-border, 1px solid var(--itx-border, currentColor));
-	border-radius: var(--itx-chip-radius, var(--itx-radius-full, 9999px));
-	color: var(--itx-chip-color, inherit);
-	font-size: var(--itx-chip-font-size, inherit);
-	font-weight: var(--itx-chip-font-weight, inherit);
-	line-height: var(--itx-chip-line-height, 1.4);
-	padding-inline: var(
-		--itx-chip-padding-inline,
-		calc(
-				var(--itx-chip-padding-step, 0.25rem) *
-					var(--itx-chip-sizing-multiplier, 2)
-			)
-			calc(
-				var(--itx-chip-padding-step, 0.25rem) *
-					var(--itx-chip-sizing-multiplier, 2) * 2
-			)
-	);
-	padding-block: var(
-		--itx-chip-padding-block,
-		calc(
-				var(--itx-chip-padding-step, 0.25rem) *
-					var(--itx-chip-sizing-multiplier, 2)
-			)
-			calc(
-				var(--itx-chip-padding-step, 0.25rem) *
-					var(--itx-chip-sizing-multiplier, 2) * 2
-			)
-	);
+	gap: var(--itx-chip-gap);
+	min-block-size: var(--itx-chip-height);
+	min-inline-size: var(--itx-chip-min-width);
+	max-inline-size: var(--itx-chip-max-width);
+	padding-block: 0;
+	padding-inline: var(--itx-chip-padding-inline);
+	background: var(--itx-chip-background);
+	border: var(--itx-chip-border);
+	border-radius: var(--itx-chip-radius);
+	color: var(--itx-chip-color);
+	font-size: var(--itx-chip-font-size);
+	font-weight: var(--itx-chip-font-weight);
+	line-height: var(--itx-chip-line-height);
+	white-space: nowrap;
+	margin-block-start: unset;
 }
 
 /* ── chip-filter ─────────────────────────────────────────────────────────── */
 
 :where(fieldset[interop-chip-filter]) {
-	background: var(
-		--itx-chip-filter-background,
-		var(--itx-chip-surface, transparent)
-	);
-	border: var(--itx-chip-filter-border, var(--itx-chip-border, none));
-	border-radius: var(--itx-chip-filter-radius, var(--itx-chip-radius, 0));
-	padding: var(--itx-chip-filter-padding, 0);
+	background: var(--itx-chip-filter-background);
+	border: var(--itx-chip-filter-border);
+	border-radius: var(--itx-chip-filter-radius);
+	padding: var(--itx-chip-filter-padding);
 	margin: 0;
 	min-inline-size: 0;
 	display: flex;
-	gap: 0.5rem;
+	flex-wrap: wrap;
+	gap: var(--itx-chip-filter-gap);
 }
 
 /* Float-clear legend pattern — makes the legend behave as a non-block that
@@ -152,53 +161,48 @@
 	padding: 0;
 	display: flex;
 	flex-wrap: wrap;
-	gap: var(--itx-chip-list-gap, var(--itx-chip-gap, 0.5rem));
+	gap: var(--itx-chip-list-gap);
 }
 
-/* ── chip-option ─────────────────────────────────────────────────────────── */
+/* ── chip-option (selectable) ────────────────────────────────────────────── */
+/* Carbon's selectable tag is the one outlined variant: transparent fill, a
+   hairline border, and an inverse fill once checked. The variant mapping must
+   precede the state rules below — all four rules land at zero specificity in
+   the same layer, so source order decides the winner.                       */
 
 :where(label[interop-chip-option]) {
+	--itx-chip-background: var(--itx-chip-selectable-background);
+	--itx-chip-background-hover: var(--itx-chip-selectable-background-hover);
+	--itx-chip-color: var(--itx-chip-selectable-color);
+	--itx-chip-color-hover: var(--itx-chip-selectable-color-hover);
+	--itx-chip-border: var(--itx-chip-selectable-border);
+
 	position: relative;
 	cursor: pointer;
 	user-select: none;
-	min-width: var(--itx-chip-min-width, 0px);
 	transition:
-		background var(--itx-chip-transition-duration, 120ms)
-			var(--itx-chip-transition-timing-function, ease),
-		color var(--itx-chip-transition-duration, 120ms)
-			var(--itx-chip-transition-timing-function, ease),
-		border-color var(--itx-chip-transition-duration, 120ms)
-			var(--itx-chip-transition-timing-function, ease);
+		background var(--itx-chip-transition-duration)
+			var(--itx-chip-transition-timing-function),
+		color var(--itx-chip-transition-duration)
+			var(--itx-chip-transition-timing-function),
+		border-color var(--itx-chip-transition-duration)
+			var(--itx-chip-transition-timing-function);
 }
 
-/* State changes re-define cascading tokens — the shared base rule picks up
-   the new value via var(--itx-chip-*) automatically.                         */
 :where(label[interop-chip-option]:hover:not([data-disabled])) {
-	--itx-chip-background: var(
-		--itx-chip-background-hover,
-		var(--itx-surface-hover, transparent)
-	);
-	--itx-chip-color: var(--itx-chip-color-hover, inherit);
+	--itx-chip-background: var(--itx-chip-background-hover);
+	--itx-chip-color: var(--itx-chip-color-hover);
 }
 
 :where(label[interop-chip-option][data-checked]) {
-	--itx-chip-background: var(
-		--itx-chip-background-selected,
-		var(--itx-chip-accent, var(--itx-colorway, currentColor))
-	);
-	--itx-chip-color: var(
-		--itx-chip-color-selected,
-		var(--itx-chip-on-accent, var(--itx-on-colorway, white))
-	);
-	--itx-chip-border: var(
-		--itx-chip-border-selected,
-		1px solid var(--itx-border, currentColor)
-	);
-	--itx-chip-font-weight: var(--itx-chip-font-weight-selected, inherit);
+	--itx-chip-background: var(--itx-chip-background-selected);
+	--itx-chip-color: var(--itx-chip-color-selected);
+	--itx-chip-border: var(--itx-chip-border-selected);
+	--itx-chip-font-weight: var(--itx-chip-font-weight-selected);
 }
 
 :where(label[interop-chip-option][data-disabled]) {
-	opacity: var(--itx-chip-disabled-opacity, 0.4);
+	opacity: var(--itx-chip-disabled-opacity);
 	cursor: not-allowed;
 	pointer-events: none;
 }
@@ -206,10 +210,9 @@
 /* Focus ring: label gets the ring when its hidden checkbox receives
    :focus-visible. :has() is a pseudo-class — valid inside :where().         */
 :where(label[interop-chip-option]:has(input:focus-visible)) {
-	outline: var(--itx-chip-outline-width, 2px)
-		var(--itx-chip-outline-style, solid)
-		var(--itx-chip-outline-color, var(--itx-chip-accent, currentColor));
-	outline-offset: var(--itx-chip-outline-offset, 2px);
+	outline: var(--itx-chip-outline-width) var(--itx-chip-outline-style)
+		var(--itx-chip-outline-color);
+	outline-offset: var(--itx-chip-outline-offset);
 }
 
 @media (prefers-contrast: high) {
@@ -227,99 +230,12 @@
 /* ── chip-item ───────────────────────────────────────────────────────────── */
 
 :where(li[interop-chip-item]) {
-	gap: var(--itx-chip-item-gap, var(--itx-spacing-3));
 	list-style: none;
-}
-
-/* Asymmetric padding when a remove button is present — compact inline-end so
-   the remove button sits flush without crowding the label.                  */
-:where(li[interop-chip-item][data-removable]) {
-	padding: var(
-		--itx-chip-padding-removable,
-		calc(
-				var(--itx-chip-padding-step, 0.125rem) *
-					var(--itx-chip-sizing-multiplier, 2)
-			)
-			calc(
-				var(--itx-chip-padding-step, 0.125rem) *
-					var(--itx-chip-sizing-multiplier, 2)
-			)
-			calc(
-				var(--itx-chip-padding-step, 0.125rem) *
-					var(--itx-chip-sizing-multiplier, 2)
-			)
-			calc(
-				var(--itx-chip-padding-step, 0.125rem) *
-					var(--itx-chip-sizing-multiplier, 2) * 2
-			)
-	);
-}
-
-/* Remove button — default state */
-:where(li[interop-chip-item] .itx-chip-remove) {
-	-webkit-appearance: none;
-	appearance: none;
-	background: var(--itx-chip-remove-background, var(--itx-surface-below));
-	border: var(
-		--_remove-border,
-		var(--itx-chip-remove-border, var(--itx-border, currentColor))
-	);
-	border-radius: var(--itx-chip-remove-radius, var(--itx-radius-full));
-	color: inherit;
-	cursor: pointer;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	font-size: var(--itx-chip-remove-font-size, 1rem);
-	line-height: 1;
-	padding: var(--itx-chip-remove-padding, 0);
 	margin: 0;
-	width: var(--itx-chip-remove-width);
-	height: auto;
-	aspect-ratio: 1;
-	transition: opacity var(--itx-chip-transition-duration, 120ms)
-		var(--itx-chip-transition-timing-function, ease);
-}
-
-/* On chip hover (button not focused): show a colored border on the remove
-   button. :has() and :not() are pseudo-classes — valid inside :where().    */
-:where(
-	li[interop-chip-item][data-removable]:hover:not(
-			:has(.itx-chip-remove:focus-visible)
-		)
-) {
-	--itx-chip-remove-background: var(--itx-chip-remove-background-hover);
-	--_remove-border: var(
-		--itx-chip-remove-border-hover,
-		2px solid var(--itx-chip-accent, var(--itx-colorway, currentColor))
-	);
-}
-
-/* When the remove button is focused: suppress the border — the outline ring
-   is the sole focus indicator. Placed after the hover rule; cascade order
-   makes this the winner. The :not() above also excludes this case.         */
-:where(li[interop-chip-item]:has(.itx-chip-remove:focus-visible)) {
-	--_remove-border: 2px solid transparent;
-}
-
-:where(li[interop-chip-item] .itx-chip-remove:disabled) {
-	cursor: not-allowed;
-	pointer-events: none;
 }
 
 :where(li[interop-chip-item][data-disabled]) {
-	opacity: var(--itx-chip-disabled-opacity, 0.4);
-}
-
-/* Focus ring on remove button. */
-:where(li[interop-chip-item] .itx-chip-remove:focus-visible) {
-	outline: var(--itx-chip-remove-outline-width, 3px) solid
-		var(
-			--itx-chip-remove-outline-color,
-			var(--itx-chip-accent, var(--itx-colorway, currentColor))
-		);
-	outline-offset: var(--itx-chip-remove-outline-offset, 3px);
-	border-radius: var(--itx-radius-full);
+	opacity: var(--itx-chip-disabled-opacity);
 }
 
 @media (prefers-contrast: high) {
@@ -328,16 +244,72 @@
 	}
 }
 
+/* ── Dismissible ─────────────────────────────────────────────────────────── */
+/* A removable chip-item and a chip inside chip-input are the same variant on
+   two different hosts, so they share one rule set rather than two hand-kept
+   copies. Keyed off the presence of the remove button, not a per-host
+   attribute — a chip that contains one IS dismissible, wherever it lives.  */
+
+:where(li[interop-chip-item], .itx-chip):where(:has(.itx-chip-remove)) {
+	padding-inline-end: 0;
+}
+
+/* The button is a square the full height of the chip, sitting at the inline
+   end behind its own margin. No border: the chip is a solid fill, so the
+   button announces itself by deepening rather than by drawing an edge.     */
+:where(.itx-chip-remove) {
+	-webkit-appearance: none;
+	appearance: none;
+	box-sizing: border-box;
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: var(--itx-chip-height);
+	block-size: var(--itx-chip-height);
+	padding: 0;
+	margin: var(--itx-chip-remove-margin);
+	background: var(--itx-chip-remove-background);
+	border: var(--itx-chip-remove-border);
+	border-radius: var(--itx-chip-remove-radius);
+	color: inherit;
+	cursor: pointer;
+	font-size: var(--itx-chip-remove-font-size);
+	line-height: 1;
+	transition: background var(--itx-chip-transition-duration)
+		var(--itx-chip-transition-timing-function);
+}
+
+:where(.itx-chip-remove:hover:not(:disabled)) {
+	--itx-chip-remove-background: var(--itx-chip-remove-background-hover);
+}
+
+:where(.itx-chip-remove:disabled) {
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+/* Inset ring (negative offset) so it stays inside the chip, not orbiting it. */
+:where(.itx-chip-remove:focus-visible) {
+	outline: var(--itx-chip-remove-outline-width) solid
+		var(--itx-chip-remove-outline-color);
+	outline-offset: var(--itx-chip-remove-outline-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(.itx-chip-remove) {
+		transition: none;
+	}
+}
+
 /* ── chip-badge ──────────────────────────────────────────────────────────── */
 /* Tag-agnostic selector — the chip-badge attribute can sit on any inline
    element (span, output, mark, div, etc.). Reuses the shared --itx-chip-*
-   family; the theme expresses badge "smallness" by overriding the sizing
-   multiplier on the badge selector itself.                                  */
+   family; the theme expresses badge "smallness" by dropping it to the small
+   step of the size axis.                                                    */
 
 :where([interop-chip-badge]) {
 	max-width: fit-content;
-	gap: var(--itx-chip-gap, 0.5rem);
-	white-space: nowrap;
 	vertical-align: middle;
 }
 
@@ -350,29 +322,23 @@
 /* ── chip-input ──────────────────────────────────────────────────────────── */
 
 :where(div[interop-chip-input]) {
+	box-sizing: border-box;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: var(--itx-chip-input-gap, 0.375rem);
-	background: var(--itx-chip-input-background, transparent);
-	border: var(
-		--itx-chip-input-border,
-		1px solid var(--itx-border, currentColor)
-	);
-	border-radius: var(
-		--itx-chip-input-radius,
-		var(--itx-radius, var(--itx-radius-sm))
-	);
-	padding: var(--itx-chip-input-padding, 0.375rem 0.5rem);
-	min-height: var(--itx-chip-input-min-height, 2.5rem);
+	gap: var(--itx-chip-input-gap);
+	background: var(--itx-chip-input-background);
+	border: var(--itx-chip-input-border);
+	border-radius: var(--itx-chip-input-radius);
+	padding: var(--itx-chip-input-padding);
+	min-height: var(--itx-chip-input-min-height);
 	cursor: text;
 }
 
 :where(div[interop-chip-input]:focus-within) {
-	outline: var(--itx-chip-input-outline-width, 2px)
-		var(--itx-chip-input-outline-style, solid)
-		var(--itx-chip-input-outline-color, var(--itx-colorway, currentColor));
-	outline-offset: var(--itx-chip-input-outline-offset, 1px);
+	outline: var(--itx-chip-input-outline-width)
+		var(--itx-chip-input-outline-style) var(--itx-chip-input-outline-color);
+	outline-offset: var(--itx-chip-input-outline-offset);
 }
 
 /* display:contents so chips flow directly in the container's flex context  */
@@ -383,45 +349,16 @@
 	padding: 0;
 }
 
-/* Internal .itx-chip elements inherit visual paint from the shared chip
-   base above. Only layout differences live here.                            */
-:where(div[interop-chip-input] .itx-chip) {
-	gap: var(--itx-chip-input-chip-gap, 0.25rem);
+/* .itx-chip takes the shared base and the dismissible rules above — nothing
+   about a chip in the input is special enough to restate here.              */
+:where(.itx-chip) {
 	list-style: none;
-	white-space: nowrap;
 }
 
-:where(div[interop-chip-input] .itx-chip-label) {
+:where(.itx-chip-label) {
 	font: inherit;
-}
-
-:where(div[interop-chip-input] .itx-chip-remove) {
-	-webkit-appearance: none;
-	appearance: none;
-	background: transparent;
-	border: none;
-	color: inherit;
-	cursor: pointer;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	font-size: var(--itx-chip-input-remove-font-size, 0.875rem);
-	line-height: 1;
-	padding: 0;
-	margin: 0;
-	opacity: 0.6;
-	transition: opacity var(--itx-chip-transition-duration, 120ms)
-		var(--itx-chip-transition-timing-function, ease);
-}
-
-:where(div[interop-chip-input] .itx-chip-remove:hover) {
-	opacity: 1;
-}
-
-:where(div[interop-chip-input] .itx-chip-remove:focus-visible) {
-	outline: 2px solid currentColor;
-	outline-offset: 1px;
-	border-radius: 2px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 :where(div[interop-chip-input] .itx-chip-text-input) {
@@ -432,7 +369,7 @@
 	color: inherit;
 	font: inherit;
 	outline: none;
-	padding: 0;
+	padding: 0 0 0 var(--itx-spacing-2);
 }
 
 /* ::placeholder is a pseudo-element — must go outside :where()              */
@@ -441,13 +378,7 @@
 }
 
 :where(div[interop-chip-input][data-disabled]) {
-	opacity: var(--itx-chip-disabled-opacity, 0.4);
+	opacity: var(--itx-chip-disabled-opacity);
 	cursor: not-allowed;
 	pointer-events: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	:where(div[interop-chip-input] .itx-chip-remove) {
-		transition: none;
-	}
 }

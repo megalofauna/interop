@@ -4,7 +4,7 @@
 	</demo-masthead>
 
 	<!-- disambiguation  -->
-	<demo-section id="disambiguation" heading="Pick the right pattern">
+	<!--<demo-section id="disambiguation" heading="Pick the right pattern">
 		<p description class="demo-section__lede">
 			Interop chip components are built atop platform-native controls and
 			express the native semantics and keyboard handling of those controls.
@@ -53,7 +53,7 @@
 				</p>
 			</li>
 		</ul>
-	</demo-section>
+	</demo-section>-->
 
 	<!-- ── Standalone badges ─────────────────────────────────────────────── -->
 	<demo-section id="chip-badge" heading="Standalone chip (badge)">
@@ -93,7 +93,7 @@
 		},
 ]"
 	>
-		<demo-example label="Read-only tags">
+		<demo-example label="Presentational">
 			<ul interop-chip-list aria-label="Cargo manifest tags">
 				<li interop-chip-item label="Plasma conduit">Plasma conduit</li>
 				<li interop-chip-item label="Mag-lock">Mag-lock</li>
@@ -102,7 +102,7 @@
 			<itx-code-block language="html" [code]="readOnlyCode" />
 		</demo-example>
 
-		<demo-example label="Removable chips">
+		<demo-example label="Dismissible">
 			<!--<span interop-chip-badge>CSS only</span>-->
 			<ul interop-chip-list aria-label="Active cargo tags">
 				@for (tag of cargoTags(); track tag) {
@@ -125,8 +125,33 @@
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Sizes ──────────────────────────────────────────────────────────── -->
+	<demo-section id="sizes" heading="Sizes">
+		<p description class="demo-section__lede">
+			Two steps on the <code>itx-size</code> axis: <code>md</code> (32px, the
+			default) and <code>sm</code> (24px). The label stays 12px at both — the
+			size axis moves the box, never the type. Set the attribute on a single
+			chip or on any container to size a whole group at once.
+		</p>
+
+		<demo-example label="md — default">
+			<ul interop-chip-list aria-label="Default size tags">
+				<li interop-chip-item label="Plasma conduit">Plasma conduit</li>
+				<li interop-chip-item label="Mag-lock" [removable]="true">Mag-lock</li>
+			</ul>
+		</demo-example>
+
+		<demo-example label="sm — set on the container">
+			<ul interop-chip-list itx-size="sm" aria-label="Compact size tags">
+				<li interop-chip-item label="Plasma conduit">Plasma conduit</li>
+				<li interop-chip-item label="Mag-lock" [removable]="true">Mag-lock</li>
+			</ul>
+			<itx-code-block language="html" [code]="sizeCode" />
+		</demo-example>
+	</demo-section>
+
 	<!-- ── Filter chips ───────────────────────────────────────────────────── -->
-	<demo-section id="filter" heading="Filter chips">
+	<demo-section id="filter" heading="Selectable chips">
 		<demo-example label="Multi-select filter group" icon="tabler-filter-check">
 			<fieldset
 				interop-chip-filter

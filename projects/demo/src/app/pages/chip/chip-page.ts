@@ -154,6 +154,13 @@ export class ChipPage {
   <label interop-chip-option value="oversized" [disabled]="true">Oversized</label>
 </fieldset>`;
 
+	readonly sizeCode = `<!-- itx-size sits on the chip, or on any chip container -->
+<ul interop-chip-list itx-size="sm" aria-label="Compact tags">
+  <li interop-chip-item label="Plasma conduit">Plasma conduit</li>
+</ul>
+
+<span interop-chip-badge itx-size="md">Full-size badge</span>`;
+
 	readonly inputCode = `<div interop-chip-input
   aria-label="Recipients"
   placeholder="Add a recipient…"
@@ -220,87 +227,95 @@ export class ChipPage {
 	];
 
 	tokenEntries: TokenEntry[] = [
-		{ groupLabel: "Shared — appearance" },
-		{ property: "--itx-chip-background", default: "transparent" },
-		{ property: "--itx-chip-color", default: "inherit" },
-		{ property: "--itx-chip-border", default: "2px solid transparent" },
-		{ property: "--itx-chip-radius", default: "var(--itx-radius-full)" },
-		{ property: "--itx-chip-padding", default: "computed: step × mult" },
-		{ property: "--itx-chip-font-size", default: "var(--itx-font-size-caption)" },
-		{ property: "--itx-chip-font-weight", default: "inherit" },
-		{ property: "--itx-chip-gap", default: "var(--itx-spacing-2)" },
+		{ groupLabel: "Size steps — the retuning seam" },
+		{ property: "--itx-chip-md-height", default: "var(--itx-spacing-8) — 32px" },
+		{ property: "--itx-chip-md-padding-inline", default: "var(--itx-spacing-3) — 12px" },
+		{ property: "--itx-chip-md-radius", default: "var(--itx-radius-lg) — 12px" },
+		{ property: "--itx-chip-sm-height", default: "var(--itx-spacing-6) — 24px" },
+		{ property: "--itx-chip-sm-padding-inline", default: "var(--itx-spacing-2) — 8px" },
+		{ property: "--itx-chip-sm-radius", default: "var(--itx-radius-md) — 8px" },
 
-		{ groupLabel: "Shared — hover" },
-		{ property: "--itx-chip-background-hover", default: "var(--itx-surface-hover)" },
-		{ property: "--itx-chip-color-hover", default: "inherit" },
+		{ groupLabel: "Shared — size (assigned from the step above)" },
+		{ property: "--itx-chip-height", default: "var(--itx-chip-md-height)" },
+		{ property: "--itx-chip-padding-inline", default: "var(--itx-chip-md-padding-inline)" },
+		{ property: "--itx-chip-min-width", default: "var(--itx-spacing-8) — 32px" },
+		{ property: "--itx-chip-max-width", default: "none" },
+		{ property: "--itx-chip-gap", default: "var(--itx-spacing-4) — 16px" },
+		{ property: "--itx-chip-radius", default: "var(--itx-chip-md-radius)" },
 
-		{ groupLabel: "Shared — selected / checked" },
-		{ property: "--itx-chip-accent", default: "var(--itx-colorway)" },
-		{ property: "--itx-chip-on-accent", default: "var(--itx-on-colorway)" },
-		{ property: "--itx-chip-background-selected", default: "var(--itx-chip-accent)" },
-		{ property: "--itx-chip-color-selected", default: "var(--itx-chip-on-accent)" },
-		{ property: "--itx-chip-border-selected", default: "var(--itx-chip-border)" },
-		{ property: "--itx-chip-font-weight-selected", default: "inherit" },
+		{ groupLabel: "Shared — type" },
+		{ property: "--itx-chip-font-size", default: "0.75rem" },
+		{ property: "--itx-chip-font-weight", default: "400" },
+		{ property: "--itx-chip-line-height", default: "1.3333" },
 
-		{ groupLabel: "Shared — focus (chip-option)" },
-		{ property: "--itx-chip-outline-color", default: "var(--itx-chip-accent)" },
+		{ groupLabel: "Paint — presentational & dismissible" },
+		{ property: "--itx-chip-background", default: "var(--itx-colorway-6)" },
+		{ property: "--itx-chip-color", default: "var(--itx-colorway-12)" },
+		{ property: "--itx-chip-border", default: "none" },
+		{ property: "--itx-chip-background-hover", default: "var(--itx-neutral-5)" },
+		{ property: "--itx-chip-color-hover", default: "var(--itx-neutral-12)" },
+
+		{ groupLabel: "Paint — selectable (chip-option)" },
+		{ property: "--itx-chip-selectable-background", default: "var(--itx-neutral-5)" },
+		{ property: "--itx-chip-selectable-color", default: "var(--itx-neutral-12)" },
+		{ property: "--itx-chip-selectable-border", default: "2px solid transparent" },
+		{ property: "--itx-chip-selectable-background-hover", default: "var(--itx-neutral-6)" },
+		{ property: "--itx-chip-selectable-color-hover", default: "var(--itx-neutral-12)" },
+
+		{ groupLabel: "Paint — selected / checked" },
+		{ property: "--itx-chip-background-selected", default: "var(--itx-colorway-6)" },
+		{ property: "--itx-chip-color-selected", default: "var(--itx-colorway-12)" },
+		{ property: "--itx-chip-border-selected", default: "2px solid var(--itx-colorway-10)" },
+		{ property: "--itx-chip-font-weight-selected", default: "400" },
+
+		{ groupLabel: "Focus ring (chip-option)" },
+		{ property: "--itx-chip-outline-color", default: "var(--itx-colorway)" },
 		{ property: "--itx-chip-outline-width", default: "2px" },
 		{ property: "--itx-chip-outline-style", default: "solid" },
 		{ property: "--itx-chip-outline-offset", default: "2px" },
 
-		{ groupLabel: "Shared — disabled & transitions" },
+		{ groupLabel: "Remove button (chip-item + chip-input)" },
+		{ property: "--itx-chip-remove-background", default: "var(--itx-colorway-5)" },
+		{ property: "--itx-chip-remove-background-hover", default: "var(--itx-neutral-5)" },
+		{ property: "--itx-chip-remove-border", default: "none" },
+		{ property: "--itx-chip-remove-radius", default: "var(--itx-chip-radius) — tracks the chip" },
+		{ property: "--itx-chip-remove-margin", default: "0 0 0 var(--itx-spacing-2)" },
+		{ property: "--itx-chip-remove-font-size", default: "var(--itx-spacing-4) — 16px" },
+		{ property: "--itx-chip-remove-outline-color", default: "var(--itx-colorway)" },
+		{ property: "--itx-chip-remove-outline-width", default: "2px" },
+		{ property: "--itx-chip-remove-outline-offset", default: "-2px (inset)" },
+
+		{ groupLabel: "Disabled & transitions" },
 		{ property: "--itx-chip-disabled-opacity", default: "0.4" },
 		{ property: "--itx-chip-transition-duration", default: "120ms" },
 		{ property: "--itx-chip-transition-timing-function", default: "ease" },
 
 		{ groupLabel: "chip-list" },
-		{ property: "--itx-chip-list-gap", default: "0.375rem" },
+		{ property: "--itx-chip-list-gap", default: "var(--itx-spacing-2) — 8px" },
 
-		{ groupLabel: "chip-item / chip-badge — shared overrides" },
-		{ property: "--itx-chip-background", default: "var(--itx-neutral-3)" },
-		{ property: "--itx-chip-border", default: "2px solid var(--itx-neutral-7)" },
-		{ property: "--itx-chip-item-gap", default: "var(--itx-spacing-3)" },
-		{
-			property: "--itx-chip-padding-removable",
-			default: "computed: step × mult (left: × 2)",
-		},
-
-		{ groupLabel: "chip-item — remove button" },
-		{ property: "--itx-chip-remove-background", default: "transparent" },
-		{ property: "--itx-chip-remove-border", default: "1px solid transparent" },
-		{ property: "--itx-chip-remove-border-hover", default: "2px solid var(--itx-chip-accent)" },
-		{ property: "--itx-chip-remove-radius", default: "var(--itx-radius-full)" },
-		{ property: "--itx-chip-remove-font-size", default: "0.875rem" },
-		{ property: "--itx-chip-remove-padding", default: "var(--itx-spacing-1, 0.25rem)" },
-		{ property: "--itx-chip-remove-width", default: "var(--itx-spacing-6, 1.5rem)" },
-		{ property: "--itx-chip-remove-outline-color", default: "var(--itx-chip-accent)" },
-		{ property: "--itx-chip-remove-outline-width", default: "3px" },
-		{ property: "--itx-chip-remove-outline-offset", default: "3px" },
+		{ groupLabel: "Dismissible hosts (chip-item + chip-input)" },
+		{ property: "--itx-chip-gap", default: "0 — the remove button owns its margin" },
 
 		{ groupLabel: "chip-filter" },
 		{ property: "--itx-chip-filter-background", default: "transparent" },
 		{ property: "--itx-chip-filter-border", default: "none" },
 		{ property: "--itx-chip-filter-radius", default: "0" },
 		{ property: "--itx-chip-filter-padding", default: "0" },
-
-		{ groupLabel: "chip-badge — own overrides" },
-		{ property: "--itx-chip-line-height", default: "1.2 (tight for prose)" },
+		{ property: "--itx-chip-filter-gap", default: "var(--itx-spacing-2) — 8px" },
 
 		{ groupLabel: "chip-input — container" },
 		{ property: "--itx-chip-input-background", default: "transparent" },
 		{ property: "--itx-chip-input-border", default: "1px solid var(--itx-border)" },
-		{ property: "--itx-chip-input-radius", default: "var(--itx-radius-sm, 4px)" },
-		{ property: "--itx-chip-input-gap", default: "0.375rem" },
-		{ property: "--itx-chip-input-padding", default: "0.375rem 0.5rem" },
-		{ property: "--itx-chip-input-min-height", default: "2.5rem" },
+		{ property: "--itx-chip-input-radius", default: "var(--itx-chip-radius) — tracks its chips" },
+		{ property: "--itx-chip-input-gap", default: "var(--itx-spacing-1)" },
+		{ property: "--itx-chip-input-padding", default: "var(--itx-spacing-1) var(--itx-spacing-2)" },
+		{ property: "--itx-chip-input-min-height", default: "var(--itx-spacing-10) — 40px" },
 
-		{ groupLabel: "chip-input — focus & chips" },
+		{ groupLabel: "chip-input — focus" },
 		{ property: "--itx-chip-input-outline-color", default: "var(--itx-colorway)" },
 		{ property: "--itx-chip-input-outline-width", default: "2px" },
 		{ property: "--itx-chip-input-outline-style", default: "solid" },
 		{ property: "--itx-chip-input-outline-offset", default: "1px" },
-		{ property: "--itx-chip-input-chip-gap", default: "0.25rem" },
-		{ property: "--itx-chip-input-remove-font-size", default: "0.875rem" },
 	];
 
 	notes: DemoNote[] = [
@@ -315,6 +330,17 @@ export class ChipPage {
 			label: 'v0.1.1',
 			title: 'InteropChipBadge — standalone inline chip',
 			body: 'A tag-agnostic [interop-chip-badge] selector for single chips that live outside a list — inline status badges, version tags, key/value pairs. Non-interactive by design; use a one-item chip-list when you need a removable single chip.',
+		},
+		{
+			type: 'release',
+			label: 'v0.1.2',
+			title: 'Carbon-derived visual pass + two-step size axis',
+			body: 'Chip proportions now follow IBM Carbon\'s Tag: a fixed-height pill with a 12px label, a solid borderless fill for presentational and dismissible chips, and a hairline border with an inverse selected fill for selectable ones. The dismissible remove button became a flush square the full height of the chip. Sizes are md (32px) and sm (24px) via itx-size.',
+		},
+		{
+			type: 'note',
+			label: 'Three names, three shapes',
+			body: 'Presentational = a chip-item with no remove button, or a chip-badge. Dismissible = a chip-item with [removable]. Selectable = a chip-option inside a chip-filter. The vocabulary is Carbon\'s; the semantics are ours — each shape is still a plain li, span, or label + checkbox.',
 		},
 		{
 			type: 'note',

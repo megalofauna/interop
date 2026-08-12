@@ -87,7 +87,7 @@ export interface ChipInputItem {
 						<button
 							#removeBtn
 							type="button"
-							class="humb  "
+							class="itx-chip-remove"
 							[attr.aria-label]="'Remove ' + chip.label"
 							(click)="removeChip(i)"
 							(keydown)="onChipKeydown($event, i)"
