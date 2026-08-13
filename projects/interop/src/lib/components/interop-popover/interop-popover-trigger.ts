@@ -98,10 +98,13 @@ export class InteropPopoverTrigger implements AfterViewInit, OnDestroy {
 
 	// ── Lifecycle ─────────────────────────────────────────────────────────────
 
+	/** Removes just this trigger from the popover — see ngOnDestroy. */
+	private unregister: (() => void) | null = null;
+
 	ngAfterViewInit(): void {
 		const target = this.target();
 		if (target) {
-			target.registerTrigger(this.el.nativeElement);
+			this.unregister = target.registerTrigger(this.el.nativeElement);
 		} else if (isDevMode()) {
 			console.warn(
 				"InteropPopoverTrigger: no target popover bound. Pass an InteropPopover " +
@@ -111,6 +114,10 @@ export class InteropPopoverTrigger implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.target()?.registerTrigger(null);
+		// Only this trigger. It used to clear the popover's single slot
+		// outright, so one of two sibling triggers being destroyed left the
+		// other registered in name but forgotten in fact.
+		this.unregister?.();
+		this.unregister = null;
 	}
 }

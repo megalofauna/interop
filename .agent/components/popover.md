@@ -236,3 +236,30 @@ Round 10 of `.agent/workflows/carbon-borrow.md`.
 - **Keyboard contract for menu content** — when the popover wraps `role="menu"` content, the APG mandates arrow-key navigation, Home/End, character search. That's the **content's** responsibility (`InteropListbox` already handles its part). The popover stays out of internal keyboard navigation.
 
 - **CSS anchor positioning support** — currently no automatic detection. Consumers stay on FloatingUI until they explicitly swap the strategy provider. Once browser support is universal, the default flips.
+
+## Multiple triggers, one popover
+
+`registerTrigger()` keeps a **Set**, and returns a function that unregisters
+just that trigger. It used to be a single slot assigned on init and cleared to
+`null` on destroy, which broke in two ways once a component bound two triggers
+to one popover — the pattern the stepper uses, with a nav-trigger at the top
+and an action-bar trigger at the bottom, CSS showing exactly one per viewport:
+
+- the second to register silently replaced the first, and
+- either one being destroyed cleared the slot for both.
+
+**`resolveTriggerForOpen()` must not depend on focus.** It still prefers
+`document.activeElement` when that element targets this popover — the fast,
+exact answer — but that only works in Chrome. Safari and iOS deliberately do
+not focus a `<button>` on click, per the platform convention, so
+`activeElement` stays on `<body>` there and the branch never fires. This is why
+the bug was invisible in Chrome and obvious on an iPhone.
+
+The fallback is therefore geometric: prefer a registered trigger that actually
+measures. A `display: none` trigger is 0×0 at (0, 0), and anchoring to it is
+what parked the panel in the viewport's top-left corner — the reported symptom,
+exactly.
+
+When adding a trigger, nothing is required beyond binding it; when debugging a
+mis-anchored popover, check how many triggers are registered and which of them
+is visible before looking at the position strategy.

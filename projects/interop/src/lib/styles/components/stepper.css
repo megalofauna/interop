@@ -385,6 +385,19 @@
 /* Compact nav-trigger: hidden by default. */
 :where(.interop-stepper__nav-trigger) {
 	display: none;
+	/*
+	 * It is a summary bar spanning the nav, not a content-sized control — so it
+	 * has to opt out of the button's default width cap. The theme sets
+	 * --itx-button-max-width to --itx-spacing-80 (320px) for ordinary buttons,
+	 * and this inherited it: the trigger sat at a fixed 320 beside a step list
+	 * filling the full nav (438 at a 600px viewport, 338 at 500), both flush
+	 * left. The ragged right edge read as accidental because it was.
+	 *
+	 * Through the button's own tokens rather than `inline-size`/`max-inline-size`
+	 * directly, so the button keeps ownership of its box.
+	 */
+	--itx-button-width: 100%;
+	--itx-button-max-width: none;
 }
 
 /* Action-bar menu trigger: hidden by default; opt-in via data-menu="always"
