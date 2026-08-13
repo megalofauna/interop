@@ -7,18 +7,23 @@
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 
+	/* --itx-on-*-surface, not --itx-*-. The plain status token is the standalone
+	   colour, tuned to sit on the page; the -surface pair is the one tuned to sit
+	   on its own tint. Pairing the first with the second put quarantine at 3.97
+	   on a raised row — the same mistake in miniature as a foreground picked for
+	   one background being used on another. */
 	&--loaded {
-		color: var(--itx-success);
+		color: var(--itx-on-success-surface);
 		background: var(--itx-success-surface);
 	}
 
 	&--pending {
-		color: var(--itx-warning);
+		color: var(--itx-on-warning-surface);
 		background: var(--itx-warning-surface);
 	}
 
 	&--quarantine {
-		color: var(--itx-danger);
+		color: var(--itx-on-danger-surface);
 		background: var(--itx-danger-surface);
 	}
 }

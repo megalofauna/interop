@@ -9,10 +9,6 @@ import {
 } from "interop";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 
@@ -40,7 +36,6 @@ interface TokenEntry {
 		DemoSection,
 		DemoExample,
 		DemoMasthead,
-		DemoNotes,
 	],
 	templateUrl: "./page-nav-page.html",
 	styleUrl: "./page-nav-page.scss",
@@ -95,13 +90,6 @@ export class PageNavPage {
 		{ label: "component.ts", language: "ts", code: this.basicTs },
 	];
 
-	readonly notes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Sticky offset",
-			body: "In a stacked-sticky layout, set --itx-pn-sticky-top so the nav pins below a persistent header. The stuck detection reads that offset back, so the solid-bar reveal still fires at the right point.",
-		},
-	];
 
 	tokenColumns: TableColumn<TokenEntry>[] = [
 		{ key: "property", label: "Property" },

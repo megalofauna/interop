@@ -22,10 +22,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 type TokenEntry = { property: string; default: string };
@@ -71,7 +67,6 @@ const POSITIONS: ToastPosition[] = [
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./toast-page.html",
@@ -339,29 +334,6 @@ providers: [
 
 	// ── Keyboard notes (in-section, attached to what they explain) ────────
 
-	readonly keyboardNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "alt + T",
-			title: "Reaching a toast from the keyboard",
-			body: "The viewport registers a global hotkey (default 'alt+KeyT') that moves focus to the first button inside the toast region and remembers where focus came from. Focus is restored when it leaves the region. Every toast is also tabbable in its own right (tabindex 0).",
-		},
-		{
-			type: "note",
-			label: "Escape",
-			body: "Escape on a focused toast dismisses it, but only when that toast is dismissible. A non-dismissible toast ignores it rather than silently swallowing the key.",
-		},
-		{
-			type: "note",
-			label: "Pause",
-			body: "Hovering, focusing inside the viewport, or switching away from the tab pauses every auto-dismiss timer and banks the remaining time. It resumes only when both the pointer and focus have left.",
-		},
-		{
-			type: "note",
-			label: "Announcements",
-			body: "Each toast is its own live region: role='status' with aria-live='polite', or role='alert' with aria-live='assertive' for error toasts. aria-atomic='true' means the message and description are announced as one unit.",
-		},
-	];
 
 	// ── CSS tokens ───────────────────────────────────────────────────────
 

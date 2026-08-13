@@ -14,7 +14,6 @@ import {
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -39,7 +38,6 @@ interface ApiEntry {
 		CodeBlock,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./tooltip-page.html",
@@ -158,17 +156,4 @@ export class TooltipPage {
 		},
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Tooltip component added to manifest',
-			body: 'InteropTooltip uses popover="manual" for top-layer promotion — no z-index fights, no overflow:hidden clipping. Compliant with WCAG 1.4.13 (hoverable, dismissible, persistent).',
-		},
-		{
-			type: 'note',
-			label: 'Rich content',
-			body: 'Use <ng-template interopTooltipContent> for tooltips with formatted text, keyboard shortcut indicators, or any HTML structure the [label] string cannot express.',
-		},
-	];
 }

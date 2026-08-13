@@ -27,10 +27,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 
 type TokenEntry = { property: string; default: string };
 
@@ -83,7 +79,6 @@ interface DirectiveEntry {
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
 	],
 	providers: [provideInteropIcons(TablerRoute, TablerBolt, TablerPackage)],
 	templateUrl: "./tabs-page.html",
@@ -254,18 +249,6 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 
 	// ── In-section notes ─────────────────────────────────────────────────────
 
-	readonly keyboardNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "One tab stop",
-			body: 'The whole tablist is a single tab stop — roving tabindex puts 0 on the selected tab and -1 on the rest. Tab again and focus lands on the panel itself, which carries tabindex="0" so a panel with no focusable content is still reachable. Arrows move between tabs, Home and End jump to the ends.',
-		},
-		{
-			type: "breaking",
-			label: "Manual mode caveat",
-			body: 'Known issue: in activationMode="manual" the arrow keys step from the SELECTED tab rather than the FOCUSED one, so focus cannot walk more than one tab away from the selection. Auto mode is unaffected because focus and selection move together there. Tracked in .agent/todo/tabs-manual-mode-roving-focus.md.',
-		},
-	];
 
 	// ── CSS tokens ───────────────────────────────────────────────────────────
 

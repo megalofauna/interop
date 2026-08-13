@@ -15,7 +15,6 @@ import {
 import { CodeBlock, Terminal, type TerminalEntry } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiInputRow {
@@ -53,7 +52,6 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 		Terminal,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./chip-page.html",
@@ -313,39 +311,4 @@ export class ChipPage {
 		{ property: "--itx-chip-input-outline-offset", default: "1px" },
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Chip components added to manifest',
-			body: 'Three chip patterns: InteropChipList (read-only tags), InteropChipFilter (multi-select checkboxes), and InteropChipInput (free-form entry). Each is built on native HTML — no ARIA listbox or grid.',
-		},
-		{
-			type: 'release',
-			label: 'v0.1.1',
-			title: 'InteropChipBadge — standalone inline chip',
-			body: 'A tag-agnostic [interop-chip-badge] selector for single chips that live outside a list — inline status badges, version tags, key/value pairs. Non-interactive by design; use a one-item chip-list when you need a removable single chip.',
-		},
-		{
-			type: 'release',
-			label: 'v0.1.2',
-			title: 'Carbon-derived visual pass + two-step size axis',
-			body: 'Chip proportions now follow IBM Carbon\'s Tag: a fixed-height pill with a 12px label, a solid borderless fill for presentational and dismissible chips, and a hairline border with an inverse selected fill for selectable ones. The dismissible remove button became a flush square the full height of the chip. Sizes are md (32px) and sm (24px) via itx-size.',
-		},
-		{
-			type: 'note',
-			label: 'Three names, three shapes',
-			body: 'Presentational = a chip-item with no remove button, or a chip-badge. Dismissible = a chip-item with [removable]. Selectable = a chip-option inside a chip-filter. The vocabulary is Carbon\'s; the semantics are ours — each shape is still a plain li, span, or label + checkbox.',
-		},
-		{
-			type: 'note',
-			label: 'Semantics',
-			body: 'Filter chips are checkboxes inside a fieldset, not ARIA listbox/option. This gives correct keyboard behavior and screen reader announcements across all platforms for free.',
-		},
-		{
-			type: 'note',
-			label: 'Badge vs list-of-one',
-			body: 'A one-item <ul interop-chip-list> announces "list, 1 item" — an overclaim if the chip is really a status label. Use <span interop-chip-badge> for inline single-chip use; the list semantic is reserved for actual collections.',
-		},
-	];
 }

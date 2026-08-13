@@ -18,10 +18,6 @@ import {
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { TablerCircleX } from "interop/lib/iconsets/tabler/outline/tabler-circle-x";
 import { TablerMessageLanguage } from "interop/lib/iconsets/tabler/outline/tabler-message-language";
@@ -49,7 +45,6 @@ interface ApiEntry {
 		CodeBlock,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./stepper-page.html",
@@ -381,17 +376,4 @@ onFinish(): void {
 		},
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: "release",
-			label: "v0.1.x",
-			title: "Built-in action bar + responsive menu",
-			body: "InteropStepper now ships with an action bar (Back / Next, optional Cancel) and a popover-driven step menu. The menu is shown by default on narrow viewports (container query, ≥600px hides it) and can be forced on or off via [menu]. Project [interop-stepper-actions] to fully replace the bar.",
-		},
-		{
-			type: "note",
-			label: "Completion semantics",
-			body: "Completion is irreversible by navigation alone — once you advance past a step, going back does not un-complete it. A dev-friendly cancellation API is on the roadmap.",
-		},
-	];
 }

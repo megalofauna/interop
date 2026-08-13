@@ -17,7 +17,6 @@ import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 
 interface ApiEntry {
 	name: string;
@@ -42,7 +41,6 @@ interface ApiEntry {
 		DemoMasthead,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 	],
 	templateUrl: "./resizable-page.html",
 	styleUrl: "./resizable-page.scss",
@@ -145,22 +143,4 @@ export class ResizablePage {
 		{ name: "resizeEnd", type: "{ width, height }", default: "", description: "Fires when a Tier 1 drag (or keyboard press) settles." },
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: "release",
-			label: "v0.1.x",
-			title: "InteropResizable directive added",
-			body: "Drag-to-resize wrapper with implicit two-tier upgrade. Pure CSS by default; keyboard/snap/readout/aspect-lock activate when their inputs are set.",
-		},
-		{
-			type: "note",
-			label: "Performance",
-			body: "Tier 0 has zero JS in the resize loop — the browser owns it natively. Tier 1 writes inline styles directly without invoking Angular change detection; outputs only fire on resize end (or rAF-throttled during drag with liveResize=true).",
-		},
-		{
-			type: "note",
-			label: "Keyboard contract",
-			body: "When [keyboard]=\"true\", the corner handle gets role=\"separator\" and follows the APG keyboard model: arrows step the size (Shift = larger step), Home jumps to min, End jumps to max. Width and height are reported via aria-valuenow / aria-valuemin / aria-valuemax.",
-		},
-	];
 }

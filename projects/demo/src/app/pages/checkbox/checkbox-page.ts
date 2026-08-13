@@ -16,7 +16,6 @@ import {
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -40,7 +39,6 @@ interface ApiEntry {
 		CodeBlock,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 		DemoMasthead,
 	],
 	templateUrl: "./checkbox-page.html",
@@ -184,28 +182,4 @@ selectedItems = signal<string[]>(['plasma-conduit']);`;
 		},
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Checkbox components added to manifest',
-			body: 'InteropCheckbox and InteropCheckboxRig are now available for cargo manifest operations. Supports bulk selection with automatic indeterminate state on partial loads.',
-		},
-		{
-			type: 'bugfix',
-			label: 'v0.1.1',
-			body: 'Fixed indeterminate state not syncing correctly when a requisition order was rescanned mid-cycle.',
-		},
-		{
-			type: 'note',
-			label: 'Usage',
-			body: 'For bulk requisition workflows, prefer InteropCheckboxRig over individual checkboxes — it handles select-all arbitration and ControlValueAccessor wiring automatically.',
-		},
-		{
-			type: 'deprecated',
-			label: 'v0.2.0',
-			title: 'Legacy checked binding',
-			body: 'Direct [checked] binding on the bare label element is deprecated in favor of the rig. Will be removed in v1.0.',
-		},
-	];
 }

@@ -16,10 +16,6 @@ import {
 } from "interop";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoState } from "../../components/demo-state/demo-state";
@@ -54,7 +50,6 @@ type StatusPalette = "seventies" | "eighties";
 		DemoSection,
 		DemoExample,
 		DemoMasthead,
-		DemoNotes,
 		DemoState,
 		DemoStateItem,
 	],
@@ -209,11 +204,4 @@ protected onPaletteChange(value: string): void {
 		},
 	];
 
-	readonly accessibilityNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Accessibility",
-			body: 'The host carries role="note" by default. For a critical alert that should interrupt a screen reader, swap in role="alert" on the host — a callout is not an alert unless you say so.',
-		},
-	];
 }

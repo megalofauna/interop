@@ -22,10 +22,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { TablerAlignCenter } from "interop/lib/iconsets/tabler/outline/tabler-align-center";
 import { TablerAlignLeft } from "interop/lib/iconsets/tabler/outline/tabler-align-left";
 import { TablerAlignRight } from "interop/lib/iconsets/tabler/outline/tabler-align-right";
@@ -67,7 +63,6 @@ interface ApiOutputEntry {
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
 	],
 	templateUrl: "./segmented-control-page.html",
 	styleUrl: "./segmented-control-page.scss",
@@ -241,18 +236,6 @@ export class SegmentedControlPage {
 		{ label: "component.ts", language: "ts", code: this.keyboardTs },
 	]);
 
-	readonly keyboardNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Single Tab stop",
-			body: "The whole control is one Tab stop. Tab moves into the control and lands on the selected segment, not on the first one; Tab again leaves the control entirely.",
-		},
-		{
-			type: "note",
-			label: "Arrow keys select",
-			body: "Arrow Left/Up and Right/Down move focus AND commit the selection, wrapping at the ends and skipping disabled segments. Home and End jump to the first and last non-disabled segment. There is no focus-only navigation mode — this matches the OS-native segmented control, where arrowing through the group changes the value as you go.",
-		},
-	];
 
 	// ── CSS tokens ───────────────────────────────────────────────────────
 
