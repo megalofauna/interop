@@ -74,6 +74,57 @@
 	text-wrap: pretty;
 }
 
+// ── Large tier ──────────────────────────────────────────────────────────────
+//
+// Same vocabulary one size up, for the index page's section cards. It is the
+// same rule, the same squared corner and the same paint-on-state — only the
+// measure changes, so a section card reads as the tier above an entry card
+// rather than as a different component. Kept here rather than in the home
+// page's own sheet so the two tiers cannot drift apart.
+
+// 22rem, not the entry grid's 15rem: at the main column's width that resolves
+// to two tracks rather than three, so the four section cards sit as a balanced
+// 2×2 instead of a row of three with an orphan underneath. Still auto-fill, so
+// it collapses to one column when the column narrows.
+.directory__grid--lg {
+	grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+	gap: var(--itx-spacing-6);
+}
+
+.directory__card--lg {
+	gap: var(--itx-spacing-2);
+	padding: var(--itx-spacing-5) var(--itx-spacing-5) var(--itx-spacing-6);
+	// Heavier than the entry card's hairline. At this size a 1px rule reads as
+	// an accident of layout; 2px reads as a deliberate edge.
+	border-block-start-width: 2px;
+
+	.directory__name {
+		font-size: 1.125rem;
+		line-height: 1.2222;
+	}
+
+	.directory__desc {
+		font-size: 0.875rem;
+		line-height: 1.4286;
+	}
+}
+
+// Entry count, pinned opposite the name. Tabular figures so a two- and a
+// three-digit count occupy the same width and the cards stay on one rhythm.
+.directory__meta {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--itx-spacing-3);
+}
+
+.directory__count {
+	flex: none;
+	font-size: 0.75rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--itx-muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.directory__card {
 		transition: none;

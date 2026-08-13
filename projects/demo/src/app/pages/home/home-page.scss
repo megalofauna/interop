@@ -1,12 +1,25 @@
+// Index page.
+//
+// Centred in the shell's main column like every other page — it was previously
+// left-aligned inside it, which read as a layout bug next to the demo pages.
+// The section cards come from styles/_directory.scss (large tier); only the
+// hero and the pillars are owned here.
+//
+// Visual language follows the Carbon borrow the rest of the app has converged
+// on: squared, transparent, hairline rules, paint only on state. The pillars
+// were filled, rounded slabs — the one place in the app still doing that — and
+// are now ruled blocks like everything else.
+
 .home-page {
-	max-width: 56rem;
+	max-width: 64rem;
+	margin-inline: auto;
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-spacing-16);
 	padding-block: var(--itx-spacing-12);
 }
 
-// ── Hero ──────────────────────────────────────────────────────────────────────
+// ── Hero ─────────────────────────────────────────────────────────────────────
 
 .home-page__hero {
 	display: flex;
@@ -45,52 +58,74 @@
 	color: var(--itx-muted);
 }
 
+// ── Calls to action ──────────────────────────────────────────────────────────
+//
+// GAP: these repeat the button's visual language by hand because there is no
+// way to borrow it. `InteropButton`'s selector is `button[interop-button]` and
+// components/button.css is keyed the same way, so `<a interop-button>` picks up
+// nothing but the appearance reset. Nothing else in the repo does it either, so
+// this is unsupported rather than merely unused. These are navigation, so the
+// anchor is the correct element and the component is the thing that needs to
+// grow a link tier — at which point this block deletes.
+//
+// Until then: squared, hairline, paint on state, matching the theme's own
+// button rather than the rounded filled pills that were here before.
+
 .home-page__actions {
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
 	gap: var(--itx-spacing-3);
-	margin-top: var(--itx-spacing-2);
+	margin-block-start: var(--itx-spacing-2);
 }
 
 .home-page__cta {
 	display: inline-flex;
 	align-items: center;
-	gap: var(--itx-spacing-2);
-	padding: var(--itx-spacing-2) var(--itx-spacing-5);
-	border-radius: var(--itx-radius-sm);
-	font-size: var(--itx-font-size-body);
-	font-weight: 500;
+	block-size: 3rem; // --itx-button-height at itx-size="lg"
+	padding-inline: var(--itx-spacing-4);
+	border: 1px solid transparent;
+	border-radius: var(--itx-radius-none);
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1;
 	text-decoration: none;
-	transition:
-		background 120ms ease,
-		color 120ms ease,
-		border-color 120ms ease;
+	transition: background-color var(--itx-duration-fast)
+		var(--itx-easing-standard);
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
 
 	&--primary {
-		background: var(--itx-colorway);
+		background: var(--itx-colorway-5);
 		color: var(--itx-on-colorway);
-		border: 1px solid transparent;
 
 		&:hover {
-			background: var(--itx-colorway-hover);
+			background: var(--itx-colorway-7);
 		}
 	}
 
 	&--secondary {
-		background: transparent;
-		color: var(--itx-on-surface);
-		border: 1px solid var(--itx-border);
+		border-color: var(--itx-neutral-8);
+		color: var(--itx-neutral-10);
 
 		&:hover {
-			background: var(--itx-surface-hover);
+			color: var(--itx-neutral-12);
 		}
 	}
 }
 
-.home-page__hero-code {
-	margin-top: var(--itx-spacing-4);
+@media (prefers-reduced-motion: reduce) {
+	.home-page__cta {
+		transition: none;
+	}
+}
 
-	/* --itx-cr-body-bg: oklch(0.22 0.02 280); */
+.home-page__hero-code {
+	margin-block-start: var(--itx-spacing-4);
+
 	--itx-cr-body-padding-block: 1.25rem;
 	--itx-cr-code-color: oklch(0.88 0.02 280);
 	--itx-cr-code-font-size: 0.8125rem;
@@ -102,76 +137,57 @@
 	}
 }
 
-// ── Pillars ───────────────────────────────────────────────────────────────────
+// ── Section headings ─────────────────────────────────────────────────────────
 
-.home-page__pillars {
+.home-page__section-heading {
+	margin: 0 0 var(--itx-spacing-5) 0;
+	font-size: 0.6875rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--itx-muted);
+}
+
+// ── Pillars ──────────────────────────────────────────────────────────────────
+
+.home-page__pillar-grid {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: var(--itx-spacing-6);
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--itx-spacing-6) var(--itx-spacing-8);
 
 	@media (max-width: 40em) {
 		grid-template-columns: 1fr;
 	}
 }
 
+// A ruled block, not a slab. Same rule colour and weight as the large
+// directory card, so the two sections read as one system — but no hover, no
+// focus ring, because this is prose and not a link.
 .home-page__pillar {
-	padding: var(--itx-spacing-6);
-	border: 1px solid var(--itx-border);
-	border-radius: var(--itx-radius-md);
-	background: var(--itx-surface-above);
 	display: flex;
 	flex-direction: column;
-	gap: var(--itx-spacing-3);
-}
-
-.home-page__pillar-icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.25rem;
-	height: 2.25rem;
-	border-radius: var(--itx-radius-sm);
-	background: var(--itx-surface-hover);
-	color: var(--itx-colorway);
-	flex-shrink: 0;
+	gap: var(--itx-spacing-2);
+	padding-block-start: var(--itx-spacing-4);
+	border-block-start: 2px solid var(--itx-neutral-7);
 }
 
 .home-page__pillar-heading {
 	margin: 0;
-	font-size: var(--itx-font-size-body-lg);
+	font-size: 1rem;
 	font-weight: 600;
 	color: var(--itx-on-surface);
 }
 
 .home-page__pillar-body {
 	margin: 0;
-	font-size: var(--itx-font-size-body);
-	line-height: 1.65;
+	font-size: 0.875rem;
+	line-height: 1.6;
 	color: var(--itx-muted);
+	text-wrap: pretty;
 
 	code {
 		font-family: var(--itx-font-family-mono);
-		font-size: 0.8em;
+		font-size: 0.9em;
 		color: var(--itx-on-surface);
 	}
-}
-
-// ── Footer strip ──────────────────────────────────────────────────────────────
-
-.home-page__footer-strip {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	gap: var(--itx-spacing-4);
-	padding: var(--itx-spacing-6) var(--itx-spacing-8);
-	border: 1px solid var(--itx-border);
-	border-radius: var(--itx-radius-md);
-	background: var(--itx-surface-above);
-}
-
-.home-page__footer-text {
-	margin: 0;
-	font-size: var(--itx-font-size-body);
-	color: var(--itx-muted);
 }
