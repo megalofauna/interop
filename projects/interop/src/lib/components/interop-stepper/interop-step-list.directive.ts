@@ -29,6 +29,21 @@ import { INTEROP_STEPPER_TOKEN } from "./interop-stepper.token";
   host: {
     class: "interop-step-list",
     "[attr.aria-orientation]": "orientationAttr()",
+    /**
+     * A step list is a row of controls, not running text. The typography root
+     * is declared on the app root, so prose.css reads these `<li>`s as prose
+     * and puts --itx-rhythm-tight between every adjacent pair. Horizontally
+     * that pushed every step after the first down by 16px, so the strip and
+     * its connector line visibly stepped downward; vertically it opened a gap
+     * the component never asked for.
+     *
+     * Isolating is the mechanism prose.css documents for exactly this, and the
+     * one interop-tree, interop-listbox and the field controls already use. It
+     * reverts only what prose sets, and at zero specificity from a file
+     * imported before every component stylesheet — so the stepper's own rules
+     * still win outright.
+     */
+    "interop-typography-isolate": "",
   },
 })
 export class InteropStepList {
