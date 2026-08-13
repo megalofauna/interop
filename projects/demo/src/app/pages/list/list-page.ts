@@ -1,5 +1,12 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropList, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import {
+	InteropList,
+	InteropTable,
+	InteropCellDef,
+	InteropChipBadge,
+	type TableColumn,
+	type CodeFile,
+} from "interop";
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -16,7 +23,16 @@ interface ApiEntry {
 @Component({
 	selector: "list-page",
 	standalone: true,
-	imports: [InteropList, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoMasthead],
+	imports: [
+		InteropList,
+		InteropTable,
+		InteropCellDef,
+		InteropChipBadge,
+		CodeBlock,
+		DemoSection,
+		DemoExample,
+		DemoMasthead,
+	],
 	templateUrl: "./list-page.html",
 	styleUrl: "./list-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,10 +55,10 @@ export class ListPage {
 	];
 
 	cargoItems = [
-		{ id: 1, label: 'Plasma conduit (×4)' },
-		{ id: 2, label: 'Mag-lock coupling (×8)' },
-		{ id: 3, label: 'Hull epoxy Type-7 (×2)' },
-		{ id: 4, label: 'EVA tether (×6)' },
+		{ id: 1, label: "Plasma conduit (×4)", bay: "A2", mass: 96, status: "stowed" },
+		{ id: 2, label: "Mag-lock coupling (×8)", bay: "A2", mass: 44, status: "stowed" },
+		{ id: 3, label: "Hull epoxy Type-7 (×2)", bay: "B1", mass: 12, status: "hazmat" },
+		{ id: 4, label: "EVA tether (×6)", bay: "B4", mass: 8, status: "loading" },
 	];
 
 	// ── Code snippets ────────────────────────────────────────────────────────
@@ -57,11 +73,36 @@ export class ListPage {
 
 	readonly enclosedCode = `<ol interop-list itx-marker="enclosed" [collection]="launchSteps"></ol>`;
 
-	readonly templateCode = `<ng-template #itemTpl let-item>
-  <li>{{ item.label }}</li>
+	// The template supplies the item's CONTENTS. interop-list renders the <li>
+	// around them — a template that provides its own nests a list item inside a
+	// list item, which is what this example used to do.
+	readonly templateHtml = `<ng-template #itemTpl let-item let-i="index" let-last="last">
+  <div class="cargo">
+    <span class="cargo__ord">{{ i + 1 }}</span>
+    <div class="cargo__body">
+      <span class="cargo__name">{{ item.label }}</span>
+      <span class="cargo__meta">
+        Bay {{ item.bay }} · {{ item.mass }} kg
+        @if (last) { · last aboard }
+      </span>
+    </div>
+    <span interop-chip-badge itx-size="sm" [attr.data-status]="item.status"
+      >{{ item.status }}</span
+    >
+  </div>
 </ng-template>
 
 <ul interop-list [collection]="cargoItems" [listItemTemplate]="itemTpl"></ul>`;
+
+	readonly templateTs = `cargoItems = [
+  { id: 1, label: "Plasma conduit (×4)", bay: "A2", mass: 96, status: "stowed" },
+  // …
+];`;
+
+	readonly templateFiles: CodeFile[] = [
+		{ label: "markup.html", language: "html", code: this.templateHtml },
+		{ label: "component.ts", language: "ts", code: this.templateTs },
+	];
 
 	readonly staticCode = `<ul interop-list>
   <li>Bay 1 — Docking ring A</li>
