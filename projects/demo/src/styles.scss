@@ -3,6 +3,32 @@
 
 @import "../../../projects/interop/src/lib/styles/themes/protocol.css";
 
+/* ── Scrollbars ──────────────────────────────────────────────────────────────
+ *
+ * Muted thumb on a transparent track, replacing the UA default — which in dark
+ * mode is a bright bar running the full height of the page, the loudest thing
+ * on screen next to the content.
+ *
+ * On <html>, for two reasons. The document is the scroll container (see the
+ * shell grid), and a scrollbar on the root element is what paints the viewport
+ * bar. And both properties inherit, so declaring them once here also covers
+ * every nested scroller — the sidebar, code blocks, wide tables — without a
+ * rule per element.
+ *
+ * Values are literal rather than --itx-neutral-6, because they have to be:
+ * [interop-root] sits on <app-root>, so the token layer does not exist this far
+ * up the tree. These are that step's two values. `color-scheme` is restated for
+ * the same reason — light-dark() needs it here, and it is also what tells the
+ * UA which way to paint the bar. demo-theme-toggle mirrors the active mode onto
+ * <html> so an explicit light/dark choice reaches this rule.
+ */
+:where(html) {
+	color-scheme: light dark;
+	scrollbar-width: thin;
+	scrollbar-color: light-dark(oklch(0.76 0.012 250), oklch(0.38 0.009 250))
+		transparent;
+}
+
 /* IBM Plex Sans — local-first, variable. The browser walks src left-to-right:
 * if the font is installed it's used with zero network; only otherwise is the
 * self-hosted variable woff2 fetched. One face spans the whole weight axis

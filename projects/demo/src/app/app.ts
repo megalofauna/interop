@@ -1,10 +1,5 @@
 import { Component, computed, inject, signal } from "@angular/core";
-import {
-	Router,
-	RouterLink,
-	RouterLinkActive,
-	RouterOutlet,
-} from "@angular/router";
+import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { DemoNav } from "./components/demo-nav/demo-nav";
 import {
 	InteropIcon,
@@ -16,7 +11,8 @@ import {
 } from "interop";
 import { DemoThemeToggle } from "./components/demo-theme-toggle/demo-theme-toggle";
 import { DemoPageMeta } from "./services/page-meta";
-import { TablerLayoutSidebarLeftExpand } from "interop/lib/iconsets/tabler";
+import { DEMO_CATALOG } from "./components/demo-nav/demo-nav.catalog";
+import { TablerLayoutSidebarLeftExpand } from "interop/lib/iconsets/tabler/outline/tabler-layout-sidebar-left-expand";
 
 @Component({
 	selector: "app-root",
@@ -24,7 +20,6 @@ import { TablerLayoutSidebarLeftExpand } from "interop/lib/iconsets/tabler";
 	imports: [
 		RouterOutlet,
 		RouterLink,
-		RouterLinkActive,
 		DemoNav,
 		DemoThemeToggle,
 		InteropIcon,
@@ -42,6 +37,23 @@ export class App {
 	/** Active page identity (category + title), published by <demo-masthead>.
 	 * Surfaced as a breadcrumb in the header once the page's <h1> scrolls away. */
 	protected readonly meta = inject(DemoPageMeta).meta;
+
+	/**
+	 * Directory route for the current page's category, resolved from the catalog
+	 * by label — so the breadcrumb's "Components" links to /components without
+	 * every route declaring it. Categories with no index (Foundation, Overview)
+	 * resolve to null and that crumb stays plain text.
+	 *
+	 * Same lookup demo-masthead does for its eyebrow. Duplicated rather than
+	 * shared because the two read different sources — the masthead has the
+	 * category as an input, this has it from DemoPageMeta — and a helper taking
+	 * a string to save one line would be indirection for its own sake.
+	 */
+	protected readonly categoryRoute = computed(
+		() =>
+			DEMO_CATALOG.find((g) => g.label === this.meta().category)
+				?.landingRoute ?? null,
+	);
 
 	// ── Command palette (⌘K nav) ────────────────────────────────────────────
 	protected readonly paletteOpen = signal(false);

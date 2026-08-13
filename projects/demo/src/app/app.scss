@@ -1,9 +1,46 @@
 // Landmark app-shell grid. Scroll happens on the document (see styles.scss), so
 // the header and the in-page page-nav share one scroll context.
-//   header (full) ┄ nav | main | aside ┄ footer (full)
-// aside/footer areas are pre-wired but empty until those landmarks are added.
+//
+// ── The centred measure ─────────────────────────────────────────────────────
+// The whole shell — header contents, nav, and main — rides one centred column
+// of --shell-max, with the nav and main tracks summing to exactly that width.
+// The columns are named rather than area-mapped so a landmark can opt into the
+// full viewport (the header, for its background and sticky edge) or the centred
+// measure (everything else) by naming a line pair:
+//
+//   full-start ┊ 1fr ┊ nav-start … nav-end ┊ main-start … main-end ┊ 1fr ┊ full-end
+//              └──────────────── --shell-max ────────────────┘
+//
+// The gutter tracks are minmax(gutter, 1fr): they take the slack on wide
+// viewports to centre the measure, and collapse to a fixed gutter below it, at
+// which point the main track absorbs the remaining shrink.
+//
+// --shell-lead is the distance from the viewport edge to the start of the
+// measure. It is the same expression the gutter track resolves to, exported as
+// a custom property so the nav drawer — which is fixed-positioned in the top
+// layer and therefore outside this grid — can align to the same line. That is
+// what makes the drawer → permanent-nav switch shift-free. Percentages resolve
+// against the fixed element's containing block (the viewport minus scrollbars),
+// so this stays correct where 100vw would be off by the scrollbar width.
 :host {
 	--header-h: 3.5rem;
+	// 20rem (--itx-spacing-80), down one step on the spacing scale from 24rem.
+	--shell-nav-w: var(--itx-spacing-80);
+	// Breathing room between the nav's rule and the content. A real track rather
+	// than padding on either side, so both keep symmetric insets and the sum
+	// below stays readable.
+	--shell-gap: var(--itx-spacing-8);
+	// 20 + 2 + 64. The main track is still exactly 64rem, so the demo page
+	// column fills it rather than floating inside something wider.
+	--shell-max: 86rem;
+	--shell-gutter: var(--itx-spacing-4);
+	// Separation rule on the nav's inline end. --itx-neutral-7 is the house
+	// hairline (--itx-border resolves to neutral-5, a sub-0.1 luminance delta
+	// that reads as nothing at 1px). Shared with the drawer's own border in
+	// demo-nav.scss so the two modes draw the same line.
+	--shell-rule: var(--itx-neutral-7);
+	--shell-lead: max(var(--shell-gutter), calc((100% - var(--shell-max)) / 2));
+
 	// Stack the in-page page-nav beneath the persistent header (the library knob).
 	--itx-pn-sticky-top: var(--header-h);
 	// Bridge the page <h1>'s view-timeline up to this common ancestor so the
@@ -12,59 +49,96 @@
 	timeline-scope: --page-title;
 
 	display: grid;
-	grid-template-columns: auto minmax(0, 1fr) auto;
+	grid-template-columns:
+		[full-start] minmax(var(--shell-gutter), 1fr)
+		[nav-start] var(--shell-nav-w)
+		[nav-end] var(--shell-gap)
+		[main-start] minmax(
+			0,
+			calc(var(--shell-max) - var(--shell-nav-w) - var(--shell-gap))
+		)
+		[main-end] minmax(var(--shell-gutter), 1fr)
+		[full-end];
 	grid-template-rows: auto 1fr auto;
-	grid-template-areas:
-		"header header header"
-		"nav    main   aside"
-		"footer footer footer";
 	min-block-size: 100dvh;
+}
+
+// The host carries [interop-typography-root], and prose.css applies owl rhythm
+// to every direct child after the first:
+//
+//   :where([interop-typography-root]) > :where(* + *) { margin-block-start: … }
+//
+// Its direct children here are landmarks, not prose, so the nav and main were
+// each inheriting --itx-rhythm (32px) as a top margin and row 2 started 32px
+// below the header instead of flush against it. The grid owns the spacing of
+// its own areas; opt them out. Specificity beats the :where() rule at 0,1,0.
+:host > * {
+	margin-block: 0;
 }
 
 // ── Header (full width; persistent sticky bar of fixed height. The large page
 //    title collapses into it on scroll; sidebar + page-nav stack beneath it
 //    via --header-h). ──
 
+// Full bleed, so the background and the sticky edge run to the viewport. The
+// contents are centred by .shell__header-inner instead.
 .shell__header {
-	grid-area: header;
+	grid-column: full;
+	grid-row: 1;
 	position: sticky;
 	top: 0;
 	z-index: 20;
 	block-size: var(--header-h);
-	display: grid;
-	// minmax(0, 1fr), not 1fr: a bare `fr` track is minmax(auto, 1fr), and that
-	// auto minimum is the cell's min-content width. The left cell holds the
-	// breadcrumb, which is always in flow and always nowrap, so a long page
-	// title would floor the track and the header could not fit. The header
-	// spans every column of the shell grid, so that minimum propagated outward
-	// and widened the entire app past the viewport.
-	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	display: flex;
 	align-items: center;
-	gap: var(--itx-spacing-4);
-	padding-inline: var(--itx-spacing-4);
-	/* border-bottom: 1px solid var(--itx-border); */
+	// The gutter lives out here, matching the grid's gutter tracks. Without it
+	// the inner would centre on the raw viewport while the grid centres on the
+	// viewport minus two gutters, so the two measures would agree only above
+	// --shell-max + 2 gutters and drift apart below it.
+	padding-inline: var(--shell-gutter);
 	background-color: var(--itx-page);
 	backdrop-filter: none;
 }
 
-// Both end cells need min-inline-size: 0 for the same reason the tracks do —
-// a flex container's automatic minimum is its min-content size, so without it
-// the cell re-establishes the floor the track just gave up.
+// The centred measure. padding-inline matches the nav group's own inset
+// (spacing-4), so "Interop" sits on the same vertical as the nav's group
+// labels rather than on the raw measure edge.
+.shell__header-inner {
+	// Load-bearing: this project has no global border-box reset, so under the
+	// initial content-box the max-inline-size would cap the *content* box and
+	// the padding would push the border box 32px wider than the measure. The
+	// header would then centre on a different width from the grid beneath it
+	// and the two would not share a left edge.
+	box-sizing: border-box;
+	inline-size: 100%;
+	max-inline-size: var(--shell-max);
+	margin-inline: auto;
+	padding-inline: var(--itx-spacing-4);
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-4);
+	// A flex container's automatic minimum is its min-content size. The start
+	// cell holds the breadcrumb, which is always in flow and always nowrap, so
+	// without this a long page title would floor the header's width and push
+	// the whole shell past the viewport.
+	min-inline-size: 0;
+}
 
 .shell__header-start {
 	display: flex;
 	align-items: center;
 	gap: var(--itx-spacing-3);
+	flex: 1 1 auto;
 	min-inline-size: 0;
 }
 
 .shell__header-end {
-	margin-left: auto;
+	margin-inline-start: auto;
 	display: flex;
 	align-items: center;
 	gap: var(--itx-spacing-3);
 	justify-content: flex-end;
-	min-inline-size: 0;
+	flex: none;
 }
 
 .shell__cmdk {
@@ -108,86 +182,39 @@
 	}
 }
 
-// ── Command-palette landing-page cards (projected into the aside slot) ───────
-// Light, provisional styling — no official link-card component exists yet. The
-// palette places and scrolls the slot; this owns only the cards. The nav fills
-// the slot and scrolls on one axis: a horizontal row when narrow (never wraps —
-// room for many links via horizontal overflow), a vertical column when wide.
-.cmdp-landings {
-	flex: 1 1 auto;
-	min-inline-size: 0;
-	min-block-size: 0;
-	display: flex;
-	gap: var(--itx-spacing-2);
-	padding: var(--itx-spacing-3) var(--itx-spacing-4);
-	overflow-x: auto;
-	overflow-y: hidden;
-	overscroll-behavior: contain;
-}
-
-// Matches the palette's own layout switch — scoped to the palette box width
-// (its `itx-cmdp` query container), not the viewport. Row → column in lockstep
-// with the aside becoming a side column.
-@container itx-cmdp (min-width: 34rem) {
-	.cmdp-landings {
-		flex-direction: column;
-		overflow-x: hidden;
-		overflow-y: auto;
-	}
-}
-
-.cmdp-landings__card {
-	display: inline-flex;
-	height: auto;
-	align-items: center;
-	justify-content: start;
-	flex-direction: column;
-	flex: 1 1 auto; // never shrink — overflow instead of squashing
-	padding: var(--itx-spacing-3) var(--itx-spacing-4);
-	// 1px --itx-neutral-7, the house hairline. Was 2px --itx-border: the weight
-	// made a row of cards read as a row of buttons, and --itx-border resolves to
-	// neutral-5, a sub-0.1 luminance delta that reads as no edge at all.
-	border: 1px solid var(--itx-neutral-7);
-	border-radius: var(--itx-radius-none);
-	color: var(--itx-on-surface);
-	// Fixed rem. --itx-font-size-caption is a fluid clamp() value, which reflows
-	// a card whose whole layout depends on `white-space: nowrap` holding.
-	font-size: 0.75rem;
-	line-height: 1.3333;
-	font-weight: 500;
-	white-space: nowrap;
-	text-align: center;
-	text-decoration: none;
-	transition: background-color var(--itx-duration-fast, 100ms) ease;
-
-	&:hover {
-		background: var(--itx-surface-hover);
-	}
-
-	// These are links in a scrolling panel and a keyboard user tabs through all
-	// of them, so they need a visible ring — there was none. Semantic
-	// --itx-colorway, not the light-only -8 step, so it holds in dark mode.
-	&:focus-visible {
-		outline: 2px solid var(--itx-colorway);
-		outline-offset: 2px;
-	}
-
-	// Current section — derived from the router, so it is correct on every
-	// open with no retained state.
-	&--active {
-		// Was --itx-colorway-8, which is the light-mode step: in dark mode the
-		// active card's edge dropped to roughly the same value as the resting
-		// one. --itx-colorway is the light-dark() pair.
-		border-color: var(--itx-colorway);
-		background: var(--itx-surface-hover);
-		color: var(--itx-on-surface);
-	}
-}
-
 .shell__title {
 	font-weight: 700;
 	font-size: 1.125rem;
 	color: var(--itx-on-surface);
+	text-decoration: none;
+
+	&:hover {
+		color: var(--itx-colorway);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
+}
+
+// Crumb links. Muted at rest like the surrounding crumb, resolving to full
+// contrast on hover so the affordance is the colour change rather than an
+// underline sitting in a dense header bar.
+.shell__crumb-category {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover {
+		color: var(--itx-on-surface);
+		text-decoration: underline;
+		text-underline-offset: 0.25em;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
 }
 
 // Collapsed-state breadcrumb: "Interop › Components › Button". Hidden until the
@@ -199,18 +226,24 @@
 	// Rendered but transparent at rest, hidden via OPACITY not display: an element
 	// based at display:none never runs its animation, so it can never un-hide.
 	// Opacity avoids that trap and still fails hidden (base 0) where scroll-driven
-	// animations aren't supported. It lives in the header's left 1fr cell, so the
-	// reserved width at rest doesn't shift the centered nav.
+	// animations aren't supported.
+	//
+	// `visibility` rides along because the crumbs are links now: opacity alone
+	// would leave them focusable while invisible, so a keyboard user would tab
+	// into something they cannot see. visibility:hidden takes them out of the
+	// tab order without reintroducing the display:none trap above — the element
+	// still runs its animation.
 	display: flex;
 	opacity: 0;
+	visibility: hidden;
 	align-items: center;
 	gap: var(--itx-spacing-2);
 	font-size: 1.125rem;
 	color: var(--itx-muted);
 	white-space: nowrap;
-	// Staying in flow is the point (it reserves width so the centred nav doesn't
-	// shift when the crumb appears), but nowrap text must clip rather than push:
-	// otherwise the longest page title in the app sets the header's minimum.
+	// Staying in flow is the point, but nowrap text must clip rather than push:
+	// otherwise the longest page title in the app sets the header's minimum and
+	// the whole shell widens past the viewport.
 	min-inline-size: 0;
 	overflow: hidden;
 	animation: shell-crumb-in steps(1, jump-end) both;
@@ -232,74 +265,64 @@
 @keyframes shell-crumb-in {
 	from {
 		opacity: 0;
+		visibility: hidden;
 	}
 	to {
 		opacity: 1;
-	}
-}
-
-// ── Header nav ───────────────────────────────────────────────────────────────
-
-.shell__nav {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: var(--itx-spacing-6);
-}
-
-.shell__nav-link {
-	font-size: 0.875rem;
-	font-weight: 500;
-	color: var(--itx-muted);
-	text-decoration: none;
-	padding-block: var(--itx-spacing-1);
-	transition: color var(--itx-duration-fast, 100ms) ease;
-
-	&:hover {
-		color: var(--itx-on-surface);
-	}
-
-	&--active {
-		color: var(--itx-on-surface);
+		visibility: visible;
 	}
 }
 
 // ── Sidebar (sticky; stacks beneath the persistent header) ──────────────────
 
 .shell__sidebar {
-	grid-area: nav;
+	grid-column: nav;
+	grid-row: 2;
 	position: sticky;
 	top: var(--header-h);
 	align-self: start;
 	block-size: calc(100dvh - var(--header-h));
 	overflow-y: auto;
+	// On the host rather than the panel inside it: the host is sticky and
+	// viewport-tall, so the rule holds the full height instead of ending with
+	// the list and scrolling away with it.
+	border-inline-end: 1px solid var(--shell-rule);
+	// Same content-box trap as the header: demo-nav's host sets inline-size:100%,
+	// so without this the rule lands outside --shell-nav-w and the column is
+	// 321px in a 320px track — overflowing the gap, and a pixel wider than the
+	// drawer, which would reopen the seam the previous commit closed.
+	box-sizing: border-box;
 }
 
 // ── Content ─────────────────────────────────────────────────────────────────
 
+// padding-inline matches the header's and the nav group's, so the page title,
+// the nav labels and the shell title all sit on one vertical.
 .shell__content {
-	grid-area: main;
+	grid-column: main;
+	grid-row: 2;
 	min-inline-size: 0;
-	padding: var(--itx-spacing-6);
+	padding-block: var(--itx-spacing-6);
+	padding-inline: var(--itx-spacing-4);
 }
 
 // ── Mobile ──────────────────────────────────────────────────────────────────
+// The nav leaves the grid entirely (it becomes a top-layer popover — see
+// demo-nav.scss), so main takes the whole measure. The gutter tracks stay, so
+// content keeps the same inset from the viewport edge that it had above the
+// breakpoint and the switch reads as the nav sliding away, not a reflow.
 
 @media (max-width: 59.999em) {
 	:host {
-		grid-template-columns: 1fr;
-		grid-template-areas:
-			"header"
-			"main"
-			"footer";
+		grid-template-columns:
+			[full-start] minmax(var(--shell-gutter), 1fr)
+			[nav-start main-start] minmax(0, var(--shell-max))
+			[nav-end main-end] minmax(var(--shell-gutter), 1fr)
+			[full-end];
 	}
 
 	.shell__menu-btn {
 		display: inline-flex;
-	}
-
-	.shell__nav {
-		display: none;
 	}
 }
 

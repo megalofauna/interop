@@ -15,7 +15,7 @@ import {
 	InteropIcon,
 	provideInteropIcons,
 } from "interop";
-import { TablerLayoutSidebarRightExpand } from "interop/lib/iconsets/tabler";
+import { TablerLayoutSidebarRightExpand } from "interop/lib/iconsets/tabler/outline/tabler-layout-sidebar-right-expand";
 import { DEMO_CATALOG, type CatalogGroup } from "./demo-nav.catalog";
 
 @Component({

@@ -1,66 +1,60 @@
+<!-- The header spans the viewport so its background and sticky edge are full
+     bleed, but its contents ride the same centred measure as the nav + main
+     block beneath it — hence the inner wrapper. -->
 <header class="shell__header">
-	<div class="shell__header-start">
-		<button
-			interop-button="icon"
-			itx-radius="lg"
-			class="shell__menu-btn"
-			command="toggle-popover"
-			commandfor="site-nav"
-			aria-label="Toggle navigation"
-		>
-			<interop-icon name="tabler-layout-sidebar-left-expand" [size]="24"></interop-icon>
-		</button>
-		<span class="shell__title">Interop</span>
-		@if (meta().title) {
-		<span class="shell__crumb" aria-hidden="true">
-			<span class="shell__crumb-sep">›</span>
-			@if (meta().category) {
-			<span class="shell__crumb-category">{{ meta().category }}</span>
-			<span class="shell__crumb-sep">›</span>
+	<div class="shell__header-inner">
+		<div class="shell__header-start">
+			<button
+				interop-button="icon"
+				itx-radius="lg"
+				class="shell__menu-btn"
+				command="toggle-popover"
+				commandfor="site-nav"
+				aria-label="Toggle navigation"
+			>
+				<interop-icon
+					name="tabler-layout-sidebar-left-expand"
+					[size]="24"
+				></interop-icon>
+			</button>
+			<a class="shell__title" routerLink="/">Interop</a>
+			@if (meta().title) {
+				<!-- Real navigation now that the crumbs are links, so it is a
+				     breadcrumb landmark rather than the aria-hidden decoration it
+				     was. It is hidden until the page <h1> scrolls away; the CSS
+				     pairs that with `visibility` so these links leave the tab
+				     order while invisible instead of being silent focus targets. -->
+				<nav class="shell__crumb" aria-label="Breadcrumb">
+					<span class="shell__crumb-sep" aria-hidden="true">›</span>
+					@if (meta().category) {
+						@if (categoryRoute(); as route) {
+							<a class="shell__crumb-category" [routerLink]="route">{{
+								meta().category
+							}}</a>
+						} @else {
+							<span class="shell__crumb-category">{{ meta().category }}</span>
+						}
+						<span class="shell__crumb-sep" aria-hidden="true">›</span>
+					}
+					<span class="shell__crumb-title" aria-current="page">{{
+						meta().title
+					}}</span>
+				</nav>
 			}
-			<span class="shell__crumb-title">{{ meta().title }}</span>
-		</span>
-		}
-	</div>
+		</div>
 
-	<nav class="shell__nav" aria-label="Main">
-		<!--<a
-			class="shell__nav-link"
-			routerLink="/Ethos"
-			routerLinkActive="shell__nav-link--active"
-			>Ethos</a
-		>
-		<a
-			class="shell__nav-link"
-			routerLink="/Components"
-			routerLinkActive="shell__nav-link--active"
-			>Components</a
-		>
-		<a
-			class="shell__nav-link"
-			routerLink="/rigs"
-			routerLinkActive="shell__nav-link--active"
-			>Rigs</a
-		>
-		<a
-			class="shell__nav-link"
-			routerLink="/composites"
-			routerLinkActive="shell__nav-link--active"
-			>Composites</a
-		>-->
-	</nav>
-
-	<div class="shell__header-end">
-		<button
-			class="shell__cmdk"
-			type="button"
-			(click)="openPalette()"
-			aria-label="Search — command palette"
-		>
-			<span>Search</span>
-			<kbd interop-kbd>⌘K</kbd>
-		</button>
-		<demo-theme-toggle />
+		<div class="shell__header-end">
+			<button
+				class="shell__cmdk"
+				type="button"
+				(click)="openPalette()"
+				aria-label="Search — command palette"
+			>
+				<span>Search</span>
+				<kbd interop-kbd>⌘K</kbd>
+			</button>
+			<demo-theme-toggle />
+		</div>
 	</div>
 </header>
 
@@ -82,52 +76,4 @@
 	[commands]="filteredCommands()"
 	(queryChange)="query.set($event)"
 	(command)="runCommand($event)"
->
-	<!-- Landing-page quick links, projected into the palette's aside slot. The
-	     palette positions them (top row when narrow, left column when wide) and
-	     owns overflow scrolling; the demo owns the card visuals. Light,
-	     provisional styling — no official link-card component yet. -->
-	<!--<nav class="cmdp-landings" aria-label="Browse sections">
-		<a
-			class="cmdp-landings__card"
-			routerLink="/Components"
-			routerLinkActive="cmdp-landings__card--active"
-			(click)="paletteOpen.set(false)"
-			>
-				<svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15 5.57735C15.6188 5.22008 16.3812 5.22008 17 5.57735L20.1962 7.42265C20.815 7.77992 21.1962 8.44017 21.1962 9.1547V12.8453C21.1962 13.5598 20.815 14.2201 20.1962 14.5774L17 16.4226C16.3812 16.7799 15.6188 16.7799 15 16.4226L11.8038 14.5774C11.185 14.2201 10.8038 13.5598 10.8038 12.8453V9.1547C10.8038 8.44017 11.185 7.77992 11.8038 7.42265L15 5.57735Z" fill="#FF9C56" fill-opacity="0.85"/>
-<path d="M15.25 6.01074C15.7141 5.74279 16.2859 5.74279 16.75 6.01074L17.5488 6.47168L17.7988 6.03906V6.03809L19.3965 6.96094L19.1475 7.39453L19.9463 7.85547C20.4103 8.12335 20.6961 8.61856 20.6963 9.1543V10.0771H21.1963V11.9229H20.6963V12.8457C20.6962 13.3145 20.4769 13.7517 20.1113 14.0332L19.9463 14.1445L19.1475 14.6055L19.3965 15.0381L17.7988 15.9609L17.5488 15.5283L16.75 15.9893C16.3439 16.2237 15.8554 16.253 15.4287 16.0771L15.25 15.9893L14.4512 15.5283L14.2012 15.9609H14.2002L12.6025 15.0381L12.8525 14.6055L12.0537 14.1445L11.8887 14.0332C11.5753 13.7918 11.3697 13.4361 11.3174 13.0439L11.3037 12.8457V11.9229H10.8037V10.0771H11.3037V9.1543C11.3039 8.61856 11.5897 8.12335 12.0537 7.85547L12.8525 7.39453L12.6025 6.96094L14.2002 6.03809L14.2012 6.03906L14.4512 6.47168L15.25 6.01074Z" stroke="#FF9C56" stroke-opacity="0.05" style="mix-blend-mode:screen" stroke-dasharray="3 3"/>
-<path d="M9 15.8423C9.6188 15.485 10.3812 15.485 11 15.8423L14.1962 17.6876C14.815 18.0449 15.1962 18.7051 15.1962 19.4197V23.1103C15.1962 23.8248 14.815 24.485 14.1962 24.8423L11 26.6876C10.3812 27.0449 9.6188 27.0449 9 26.6876L5.80385 24.8423C5.18505 24.485 4.80385 23.8248 4.80385 23.1103V19.4197C4.80385 18.7051 5.18505 18.0449 5.80385 17.6876L9 15.8423Z" fill="#FF9C56" fill-opacity="0.85"/>
-<path d="M9.25 16.2757C9.7141 16.0077 10.2859 16.0077 10.75 16.2757L11.5488 16.7366L11.7988 16.304V16.303L13.3965 17.2259L13.1475 17.6595L13.9463 18.1204C14.4103 18.3883 14.6961 18.8835 14.6963 19.4193V20.3421H15.1963V22.1878H14.6963V23.1107C14.6962 23.5794 14.4769 24.0166 14.1113 24.2982L13.9463 24.4095L13.1475 24.8704L13.3965 25.303L11.7988 26.2259L11.5488 25.7933L10.75 26.2542C10.3439 26.4887 9.85544 26.518 9.42871 26.3421L9.25 26.2542L8.45117 25.7933L8.20117 26.2259H8.2002L6.60254 25.303L6.85254 24.8704L6.05371 24.4095L5.88867 24.2982C5.57527 24.0568 5.36973 23.701 5.31738 23.3089L5.30371 23.1107V22.1878H4.80371V20.3421H5.30371V19.4193C5.30385 18.8835 5.58974 18.3883 6.05371 18.1204L6.85254 17.6595L6.60254 17.2259L8.2002 16.303L8.20117 16.304L8.45117 16.7366L9.25 16.2757Z" stroke="#FF9C56" stroke-opacity="0.05" style="mix-blend-mode:screen" stroke-dasharray="3 3"/>
-<path d="M21 15.8423C21.6188 15.485 22.3812 15.485 23 15.8423L26.1962 17.6876C26.815 18.0449 27.1962 18.7051 27.1962 19.4197V23.1103C27.1962 23.8248 26.815 24.485 26.1962 24.8423L23 26.6876C22.3812 27.0449 21.6188 27.0449 21 26.6876L17.8038 24.8423C17.185 24.485 16.8038 23.8248 16.8038 23.1103V19.4197C16.8038 18.7051 17.185 18.0449 17.8038 17.6876L21 15.8423Z" fill="#FF9C56" fill-opacity="0.85"/>
-<path d="M21.25 16.2757C21.7141 16.0077 22.2859 16.0077 22.75 16.2757L23.5488 16.7366L23.7988 16.304V16.303L25.3965 17.2259L25.1475 17.6595L25.9463 18.1204C26.4103 18.3883 26.6961 18.8835 26.6963 19.4193V20.3421H27.1963V22.1878H26.6963V23.1107C26.6962 23.5794 26.4769 24.0166 26.1113 24.2982L25.9463 24.4095L25.1475 24.8704L25.3965 25.303L23.7988 26.2259L23.5488 25.7933L22.75 26.2542C22.3439 26.4887 21.8554 26.518 21.4287 26.3421L21.25 26.2542L20.4512 25.7933L20.2012 26.2259H20.2002L18.6025 25.303L18.8525 24.8704L18.0537 24.4095L17.8887 24.2982C17.5753 24.0568 17.3697 23.701 17.3174 23.3089L17.3037 23.1107V22.1878H16.8037V20.3421H17.3037V19.4193C17.3039 18.8835 17.5897 18.3883 18.0537 18.1204L18.8525 17.6595L18.6025 17.2259L20.2002 16.303L20.2012 16.304L20.4512 16.7366L21.25 16.2757Z" stroke="#FF9C56" stroke-opacity="0.05" style="mix-blend-mode:screen" stroke-dasharray="3 3"/>
-<path d="M14.75 5.40948C15.475 4.99091 16.3578 4.9643 17.1025 5.33038L17.25 5.40948L18.0488 5.87042L17.7988 6.30304L19.3965 7.22589L19.6475 6.79327L20.4463 7.25421C21.2197 7.70073 21.6961 8.52624 21.6963 9.41925V10.3421H21.1963V12.1878H21.6963V13.1107L21.6904 13.2767C21.6353 14.105 21.1715 14.857 20.4463 15.2757L19.6475 15.7366L19.3965 15.303L17.7988 16.2259L18.0488 16.6595L17.25 17.1204C16.525 17.539 15.6422 17.5656 14.8975 17.1995L14.75 17.1204L13.9512 16.6595L14.2002 16.2259L12.6025 15.303L12.3525 15.7366L11.5537 15.2757C10.7803 14.8292 10.3039 14.0037 10.3037 13.1107V12.1878H10.8037V10.3421H10.3037V9.41925C10.3039 8.52624 10.7803 7.70073 11.5537 7.25421L12.3525 6.79327L12.6025 7.22589L14.2002 6.30304L13.9512 5.87042L14.75 5.40948Z" stroke="#393939" stroke-dasharray="3 3"/>
-<path d="M8.75012 15.4095C9.47515 14.9909 10.3579 14.9642 11.1027 15.3304L11.2501 15.4095L12.049 15.8704L11.799 16.303L13.3966 17.2259L13.6476 16.7933L14.4464 17.2542C15.2198 17.7007 15.6963 18.5263 15.6964 19.4193V20.3421H15.1964V22.1878H15.6964V23.1107L15.6906 23.2767C15.6354 24.105 15.1716 24.857 14.4464 25.2757L13.6476 25.7366L13.3966 25.303L11.799 26.2259L12.049 26.6595L11.2501 27.1204C10.5249 27.5391 9.64152 27.566 8.89661 27.1995L8.75012 27.1204L7.95129 26.6595L8.20032 26.2259L6.60266 25.303L6.35266 25.7366L5.55383 25.2757C4.78045 24.8292 4.30398 24.0037 4.30383 23.1107V22.1878H4.80383V20.3421H4.30383V19.4193C4.30398 18.5262 4.78045 17.7007 5.55383 17.2542L6.35266 16.7933L6.60266 17.2259L8.20032 16.303L7.95129 15.8704L8.75012 15.4095Z" stroke="#393939" stroke-dasharray="3 3"/>
-<path d="M20.75 15.4095C21.475 14.9909 22.3578 14.9643 23.1025 15.3304L23.25 15.4095L24.0488 15.8704L23.7988 16.303L25.3965 17.2259L25.6475 16.7933L26.4463 17.2542C27.2197 17.7007 27.6961 18.5262 27.6963 19.4193V20.3421H27.1963V22.1878H27.6963V23.1107L27.6904 23.2767C27.6353 24.105 27.1715 24.857 26.4463 25.2757L25.6475 25.7366L25.3965 25.303L23.7988 26.2259L24.0488 26.6595L23.25 27.1204C22.525 27.539 21.6422 27.5656 20.8975 27.1995L20.75 27.1204L19.9512 26.6595L20.2002 26.2259L18.6025 25.303L18.3525 25.7366L17.5537 25.2757C16.7803 24.8292 16.3039 24.0037 16.3037 23.1107V22.1878H16.8037V20.3421H16.3037V19.4193C16.3039 18.5262 16.7803 17.7007 17.5537 17.2542L18.3525 16.7933L18.6025 17.2259L20.2002 16.303L19.9512 15.8704L20.75 15.4095Z" stroke="#393939" stroke-dasharray="3 3"/>
-</svg>
-
-				Components</a
-		>
-		<a
-			class="cmdp-landings__card"
-			routerLink="/composites"
-			routerLinkActive="cmdp-landings__card--active"
-			(click)="paletteOpen.set(false)"
-			>Composites</a
-		>
-		<a
-			class="cmdp-landings__card"
-			routerLink="/rigs"
-			routerLinkActive="cmdp-landings__card--active"
-			(click)="paletteOpen.set(false)"
-			>Rigs</a
-		>
-		<a
-			class="cmdp-landings__card"
-			routerLink="/Directives"
-			routerLinkActive="cmdp-landings__card--active"
-			(click)="paletteOpen.set(false)"
-			>Directives</a
-		>
-	</nav>-->
-</dialog>
+></dialog>
