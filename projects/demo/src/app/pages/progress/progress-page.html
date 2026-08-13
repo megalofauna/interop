@@ -17,8 +17,8 @@
 					[max]="100"
 				></progress>
 				<div class="progress-demo__actions">
-					<button interop-button="action" (click)="increment()">+10</button>
-					<button interop-button="action" (click)="reset()">Reset</button>
+					<button interop-button="secondary" (click)="reset()">Reset</button>
+					<button interop-button="primary" (click)="increment()">+10</button>
 				</div>
 			</div>
 			<demo-state>
@@ -51,14 +51,14 @@
 				></progress>
 				<div class="progress-demo__actions">
 					<button
-						interop-button
+						interop-button="secondary"
 						(click)="prevStep()"
 						[disabled]="currentStep() === 1"
 					>
 						Previous
 					</button>
 					<button
-						interop-button
+						interop-button="primary"
 						(click)="nextStep()"
 						[disabled]="currentStep() === totalSteps"
 					>
@@ -171,11 +171,9 @@
 					100) { Sync complete — all systems nominal. }
 				</interop-progress-status>
 				<div class="progress-demo__actions">
-					<button interop-button="action-minus micro" (click)="syncIncrement()">
+					<button interop-button="secondary" (click)="syncReset()">Reset</button>
+					<button interop-button="primary" (click)="syncIncrement()">
 						+20
-					</button>
-					<button interop-button="action-minus micro" (click)="syncReset()">
-						Reset
 					</button>
 				</div>
 			</div>

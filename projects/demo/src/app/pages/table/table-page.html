@@ -53,7 +53,7 @@
 			>
 				@for (size of sizes; track size) {
 					<button
-						interop-button="action"
+						interop-button
 						[attr.aria-pressed]="density() === size"
 						(click)="setDensity(size)"
 					>

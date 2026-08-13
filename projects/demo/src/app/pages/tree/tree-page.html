@@ -227,17 +227,11 @@
 	<demo-section id="scale" heading="Scale, without a virtualizer">
 		<demo-example label="{{ scaleCount }} nodes, all in the DOM">
 			<div class="tree-page__actions">
-				<button
-					interop-button="primary"
-					(click)="revealBuried()"
-				>
-					reveal() the deepest leaf
-				</button>
-				<button
-					interop-button="secondary"
-					(click)="collapseScale()"
-				>
+				<button interop-button="secondary" (click)="collapseScale()">
 					Collapse all
+				</button>
+				<button interop-button="primary" (click)="revealBuried()">
+					reveal() the deepest leaf
 				</button>
 			</div>
 
