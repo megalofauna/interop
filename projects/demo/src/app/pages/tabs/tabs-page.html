@@ -65,11 +65,11 @@
 			</section>
 
 			<div class="tabs-page__actions">
-				<button interop-button="primary" (click)="select('cargo')">
-					Show cargo
-				</button>
 				<button interop-button="secondary" (click)="select('navigation')">
 					Reset
+				</button>
+				<button interop-button="primary" (click)="select('cargo')">
+					Show cargo
 				</button>
 			</div>
 
@@ -96,11 +96,11 @@
 			</section>
 
 			<div class="tabs-page__actions">
-				<button interop-button="primary" (click)="jumpTo('engineering')">
-					Open engineering
-				</button>
 				<button interop-button="secondary" (click)="jumpTo('navigation')">
 					Back to navigation
+				</button>
+				<button interop-button="primary" (click)="jumpTo('engineering')">
+					Open engineering
 				</button>
 			</div>
 
@@ -275,7 +275,6 @@
 			<itx-code-block language="html" [code]="manualCode" />
 		</demo-example>
 
-		<demo-notes [notes]="keyboardNotes" />
 	</demo-section>
 
 	<!-- ── CSS tokens ─────────────────────────────────────────────────────── -->

@@ -18,15 +18,42 @@
 		</demo-example>
 
 		<demo-example label="Custom item template">
-			<ng-template #itemTpl let-item>
-				<li>{{ item.label }}</li>
+			<p description>
+				The template renders the <em>contents</em> of each item —
+				<code>interop-list</code> owns the <code>&lt;li&gt;</code> itself, so
+				supplying another one nests a list item inside a list item. Alongside
+				<code>$implicit</code> the context carries <code>index</code>,
+				<code>first</code> and <code>last</code>, which is what lets a row do
+				more than print a string.
+			</p>
+			<ng-template #itemTpl let-item let-i="index" let-last="last">
+				<div class="cargo">
+					<span class="cargo__ord">{{ i + 1 }}</span>
+					<div class="cargo__body">
+						<span class="cargo__name">{{ item.label }}</span>
+						<span class="cargo__meta">
+							Bay {{ item.bay }} · {{ item.mass }} kg
+							@if (last) {
+								· last aboard
+							}
+						</span>
+					</div>
+					<span
+						interop-chip-badge
+						itx-size="sm"
+						[attr.data-status]="item.status"
+						class="cargo__status"
+						>{{ item.status }}</span
+					>
+				</div>
 			</ng-template>
 			<ul
 				interop-list
+				class="cargo-list"
 				[collection]="cargoItems"
 				[listItemTemplate]="itemTpl"
 			></ul>
-			<itx-code-block language="html" [code]="templateCode" />
+			<itx-code-block [files]="templateFiles" />
 		</demo-example>
 
 		<demo-example label="Static content">

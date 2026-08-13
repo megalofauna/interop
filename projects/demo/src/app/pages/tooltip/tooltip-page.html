@@ -9,14 +9,14 @@
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="String label">
 			<interop-tooltip label="Initiate emergency burn sequence">
-				<button interop-button>Emergency burn</button>
+				<button interop-button="primary">Emergency burn</button>
 			</interop-tooltip>
 			<itx-code-block language="html" [code]="stringLabelHtml" />
 		</demo-example>
 
 		<demo-example label="Rich content">
 			<interop-tooltip>
-				<button interop-button>Save manifest</button>
+				<button interop-button="primary">Save manifest</button>
 				<ng-template interopTooltipContent>
 					Save manifest &nbsp;<kbd interop-kbd>Ctrl</kbd>+<kbd interop-kbd>S</kbd>
 				</ng-template>
@@ -42,7 +42,6 @@
 			<itx-code-block language="html" [code]="placementsHtml" />
 		</demo-example>
 	</demo-section>
-
 
 	<!-- ── API — Inputs ───────────────────────────────────────────────────── -->
 	<demo-section id="api-inputs" heading="API — Inputs">
@@ -80,6 +79,5 @@
 
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
 	<demo-section id="notes" heading="Notes">
-		<demo-notes [notes]="notes" />
 	</demo-section>
 </article>

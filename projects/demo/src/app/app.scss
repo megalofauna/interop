@@ -39,6 +39,18 @@
 	// that reads as nothing at 1px). Shared with the drawer's own border in
 	// demo-nav.scss so the two modes draw the same line.
 	--shell-rule: var(--itx-neutral-7);
+	/* Both nav controls — the header's toggle and the drawer's own close button
+	   — sit at one size, defined once here so they cannot drift apart. They are
+	   in different components, so a shared token is the only thing that can
+	   hold them together.
+
+	   8px around a 24px icon is a 40×40 box. That is smaller than the close
+	   button was (50×50, because the icon variant squares itself against
+	   `height − 1em` and a 24px icon is taller than 1em), and there is room for
+	   it: WCAG 2.5.8 asks 24×24, and on a coarse pointer the button's own
+	   touch-inset floors the hit box at 44 — 2.5.5's enhanced target — while
+	   the painted box stays 40. Visually smaller, no smaller to the thumb. */
+	--shell-nav-btn-pad: var(--itx-spacing-2);
 	--shell-lead: max(var(--shell-gutter), calc((100% - var(--shell-max)) / 2));
 
 	// Stack the in-page page-nav beneath the persistent header (the library knob).
@@ -175,7 +187,11 @@
 	border: none;
 	cursor: pointer;
 	color: var(--itx-on-surface);
-	padding: var(--itx-spacing-1);
+	/* Through the button's own tokens rather than a `padding` shorthand. The
+	   shorthand was a class beating the foundation's :where() rules, which left
+	   this at 4px and 32×32 — a third smaller than the control it toggles. */
+	--itx-button-padding-inline: var(--shell-nav-btn-pad);
+	--itx-button-padding-block: var(--shell-nav-btn-pad);
 
 	&:hover {
 		background: var(--itx-surface-hover);
@@ -324,6 +340,14 @@
 	.shell__menu-btn {
 		display: inline-flex;
 	}
-}
 
-// ── Code block theming (Catppuccin Mocha) ───────────────────────────────────
+	// The inner padding exists to sit the shell title on the same vertical as
+	// the nav's group labels. Below the breakpoint the nav is a drawer, so
+	// there is no column to align to and the inset is only costing edge space —
+	// it stacked with the gutter to hold the search and theme controls 32px off
+	// the right edge, which on a narrow screen reads as drifting inward rather
+	// than sitting flush. The gutter alone carries it here.
+	.shell__header-inner {
+		padding-inline: 0;
+	}
+}

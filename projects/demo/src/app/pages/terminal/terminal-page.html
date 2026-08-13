@@ -19,8 +19,8 @@
 
 		<demo-example label="Live log with timestamps">
 			<div class="terminal-page__controls">
-				<button interop-button="primary" (click)="emit()">Emit entry</button>
 				<button interop-button="secondary" (click)="onReset()">Clear</button>
+				<button interop-button="primary" (click)="emit()">Emit entry</button>
 			</div>
 			<itx-terminal [entries]="log()" (reset)="onReset()" />
 			<itx-code-block [files]="timestampFiles" />

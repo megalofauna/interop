@@ -16,12 +16,15 @@
 		<demo-example label="Size">
 			<p description>
 				Five opt-in sizes on an 8-point grid — 24, 32, 40, 48, 64px — with
-				<code>md</code> (40) the anchor. Each size pins exactly one value, its
-				height; the block padding is derived from it, so the visible box lands
-				at the stated height. The label stays 14px and the side padding stays
-				16px at every step: size changes the box, not the type.
-				<code>xl</code> is the one exception, taking a 16px label. Omit the
-				attribute to retain the base size (md).
+				<code>md</code> (40) the anchor. Each size pins its height; the block
+				padding is derived from it, so the visible box lands at the stated
+				height. The label stays 14px throughout: size changes the box, not the
+				type. <code>xl</code> is the one exception, taking a 16px label. Side
+				padding holds at 16px from <code>md</code> up and steps down at the two
+				small sizes — 12px at <code>sm</code>, 8px at <code>xs</code> — because
+				the block padding scales with the height, and a constant beside it
+				inverts the padding box on a short button. Omit the attribute to retain
+				the base size (md).
 			</p>
 			<button interop-button="" itx-size="xs">Extra small</button>
 			<button interop-button="" itx-size="sm">Small</button>
@@ -268,7 +271,7 @@
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) {
-				<span class="demo-page__required">*</span>
+					<span class="demo-page__required">*</span>
 				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>

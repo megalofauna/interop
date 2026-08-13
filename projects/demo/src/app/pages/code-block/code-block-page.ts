@@ -8,10 +8,6 @@ import {
 } from "interop";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 
@@ -38,7 +34,6 @@ interface TokenEntry {
 		DemoSection,
 		DemoExample,
 		DemoMasthead,
-		DemoNotes,
 	],
 	templateUrl: "./code-block-page.html",
 	styleUrl: "./code-block-page.scss",
@@ -122,13 +117,6 @@ increment(): void {
 		{ label: "component.ts", language: "ts", code: this.multiTs },
 	];
 
-	readonly notes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Highlighting is optional",
-			body: "With no highlighter registered, or no language set, the block renders plain text and keeps its header, copy button and tabs. Tokenization is an enhancement, so nothing is lost when it is absent.",
-		},
-	];
 
 	tokenColumns: TableColumn<TokenEntry>[] = [
 		{ key: "property", label: "Property" },

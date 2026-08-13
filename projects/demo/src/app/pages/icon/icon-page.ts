@@ -25,7 +25,6 @@ import { TablerArrowDown } from "interop/lib/iconsets/tabler/outline/tabler-arro
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -43,7 +42,7 @@ type TokenEntry =
 @Component({
 	selector: "icon-page",
 	standalone: true,
-	imports: [InteropIcon, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoNotes, DemoMasthead],
+	imports: [InteropIcon, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoMasthead],
 	providers: [
 		provideInteropIcons(
 			TablerRocket, TablerBug, TablerBolt, TablerArchive, TablerInfoCircle,
@@ -212,22 +211,4 @@ export const appConfig: ApplicationConfig = {
   ],
 };`;
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Icon component added to manifest',
-			body: 'InteropIcon renders SVG icons from the registry by name, or projects arbitrary third-party icon content as an escape hatch.',
-		},
-		{
-			type: 'note',
-			label: 'Tree shaking',
-			body: 'Icons are never re-exported from the main barrel. Always import individual icons directly from their source paths (e.g. src/lib/iconsets/tabler/outline/tabler-rocket) to keep bundle size minimal.',
-		},
-		{
-			type: 'note',
-			label: 'Default iconset',
-			body: 'Tabler outline icons are the default iconset for the protocol theme. Register them at any DI scope with provideInteropIcons().',
-		},
-	];
 }

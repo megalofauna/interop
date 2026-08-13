@@ -1,0 +1,75 @@
+// Page-local styles for the List demo.
+//
+// The one block here is the cargo row used by the "Custom item template"
+// example. It is not theming the list — it *is* the example: the point of that
+// section is that the template supplies the item's contents, so the contents
+// have to be worth supplying. A row that renders `{{ item.label }}` and nothing
+// else demonstrates the input without demonstrating the reason for it.
+// The base list packs items to the start of the cross axis, so an item is only
+// as wide as its content and a row cannot push anything to its far edge. This
+// row wants a trailing status, so it opts the list into stretch — through the
+// shared layout token rather than a local override, since that is the knob the
+// list already reads.
+// …and the example frame lays its preview out as a flex row, so the list is a
+// flex item sized to its content unless told otherwise. Both are needed: the
+// width makes the list span, the stretch passes that span down to each item.
+.cargo-list {
+	--itx-layout-align: stretch;
+	inline-size: 100%;
+}
+
+.cargo {
+	display: flex;
+	align-items: baseline;
+	gap: var(--itx-spacing-3);
+	inline-size: 100%;
+}
+
+// Fixed width and tabular figures so the ordinals form a column rather than
+// stepping in as they reach two digits.
+.cargo__ord {
+	flex: none;
+	inline-size: 1.5rem;
+	font-size: 0.75rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--itx-muted);
+}
+
+.cargo__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-0_5);
+	min-inline-size: 0;
+	flex: 1 1 auto;
+}
+
+.cargo__name {
+	color: var(--itx-on-surface);
+}
+
+.cargo__meta {
+	font-size: 0.75rem;
+	color: var(--itx-muted);
+}
+
+.cargo__status {
+	flex: none;
+	align-self: center;
+	text-transform: lowercase;
+}
+
+// Status carries meaning, so it gets colour — from the status palette the
+// theme already ships, so no new values are invented here.
+//
+// The tokens are the shared --itx-chip-* family, not a chip-badge-specific
+// one: chip-badge has no palette of its own, it reuses the chip's and expresses
+// "badge" by dropping to the small step of the size axis.
+.cargo__status[data-status="hazmat"] {
+	--itx-chip-background: var(--itx-warning-surface);
+	--itx-chip-color: var(--itx-on-warning-surface);
+}
+
+.cargo__status[data-status="loading"] {
+	--itx-chip-background: var(--itx-info-surface);
+	--itx-chip-color: var(--itx-on-info-surface);
+}

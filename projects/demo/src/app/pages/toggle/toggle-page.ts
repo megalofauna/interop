@@ -4,7 +4,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -18,7 +17,7 @@ interface ApiEntry {
 @Component({
 	selector: "toggle-page",
 	standalone: true,
-	imports: [InteropToggle, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoState, DemoStateItem, DemoNotes, DemoMasthead],
+	imports: [InteropToggle, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoState, DemoStateItem, DemoMasthead],
 	templateUrl: "./toggle-page.html",
 	styleUrl: "./toggle-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,17 +95,4 @@ export class TogglePage {
 		},
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Toggle component added to manifest',
-			body: 'InteropToggle renders as a native checkbox with role="switch". Screen readers announce "on" / "off" rather than "checked" / "unchecked" — matching the physical switch affordance.',
-		},
-		{
-			type: 'note',
-			label: 'Binary only',
-			body: 'A switch is binary by definition. For three-state controls, use interop-checkbox with the indeterminate input instead.',
-		},
-	];
 }

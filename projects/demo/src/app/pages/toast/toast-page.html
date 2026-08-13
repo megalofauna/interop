@@ -24,14 +24,14 @@
 
 		<demo-example label="Basic">
 			<div class="toast-page__row">
-				<button interop-button (click)="showBasic()">Show toast</button>
+				<button interop-button="primary" (click)="showBasic()">Show toast</button>
 			</div>
 			<itx-code-block [files]="setupFiles()" />
 		</demo-example>
 
 		<demo-example label="With a description">
 			<div class="toast-page__row">
-				<button interop-button (click)="showDescription()">
+				<button interop-button="primary" (click)="showDescription()">
 					Show with description
 				</button>
 			</div>
@@ -46,7 +46,7 @@
 
 		<demo-example label="With an action">
 			<div class="toast-page__row">
-				<button interop-button (click)="showAction()">Jettison crate</button>
+				<button interop-button="primary" (click)="showAction()">Jettison crate</button>
 			</div>
 			<demo-state>
 				<demo-state-item label="last action id">
@@ -138,7 +138,7 @@
 
 		<demo-example label="promise() — Promise">
 			<div class="toast-page__row">
-				<button interop-button (click)="promiseExample()">Count crates</button>
+				<button interop-button="primary" (click)="promiseExample()">Count crates</button>
 			</div>
 			<itx-code-block language="ts" [code]="promiseCode" />
 		</demo-example>
@@ -223,8 +223,12 @@
 				</div>
 			</div>
 			<div class="toast-page__row">
-				<button interop-button (click)="fillStack()">Queue 5 toasts</button>
-				<button interop-button (click)="dismissAll()">Dismiss all</button>
+				<button interop-button="secondary" (click)="dismissAll()">
+					Dismiss all
+				</button>
+				<button interop-button="primary" (click)="fillStack()">
+					Queue 5 toasts
+				</button>
 			</div>
 			<demo-state>
 				<demo-state-item label="toast.count()">
@@ -253,7 +257,6 @@
 			Toasts are usually unreachable by keyboard and gone before they are read.
 			These four behaviours are the answer to that.
 		</p>
-		<demo-notes [notes]="keyboardNotes" />
 	</demo-section>
 
 	<!-- ── Tokens ─────────────────────────────────────────────────────────── -->

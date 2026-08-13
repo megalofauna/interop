@@ -5,7 +5,6 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 
 interface ApiEntry {
 	component?: string;
@@ -29,7 +28,6 @@ interface ApiEntry {
 		DemoExample,
 		DemoState,
 		DemoStateItem,
-		DemoNotes,
 	],
 	templateUrl: "./radio-page.html",
 	styleUrl: "./radio-page.scss",
@@ -83,17 +81,4 @@ export class RadioPage {
 		{ component: "interop-radio-rig", name: "valueChange", type: "string | number | boolean | null", default: "", description: "Emitted when the selected option changes." },
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: 'release',
-			label: 'v0.1.0',
-			title: 'Radio components added to manifest',
-			body: 'InteropRadioControl and InteropRadioRig are available. The rig handles mutually exclusive selection and ControlValueAccessor wiring automatically.',
-		},
-		{
-			type: 'note',
-			label: 'Semantic usage',
-			body: 'InteropRadioControl must be placed on a <label> element. The radio input is generated inside the label — no separate <input> is needed.',
-		},
-	];
 }

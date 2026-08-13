@@ -27,6 +27,10 @@
 // corner, opposite the first group label, so it never collides with it and
 // never contributes height. Hidden (and unfocusable) once the nav is permanent.
 .nav__close {
+	/* Matches the header toggle exactly — see --shell-nav-btn-pad in app.scss,
+	   which is where the size and its WCAG justification live. */
+	--itx-button-padding-inline: var(--shell-nav-btn-pad);
+	--itx-button-padding-block: var(--shell-nav-btn-pad);
 	position: absolute;
 	inset-block-start: var(--itx-spacing-2);
 	inset-inline-end: var(--itx-spacing-2);
@@ -99,7 +103,11 @@
 	border-inline-start: 2px solid transparent;
 	/* border-radius: var(--itx-radius-sm); */
 	font-size: var(--itx-font-size-label);
-	color: #bbb;
+	// Was #bbb — a literal picked to sit on a dark page, which meant the nav
+	// went to 1.71:1 in light mode. --itx-neutral-10 is a light-dark() pair and
+	// measures ~7:1 dark / ~8.9:1 light, while staying a clear step below the
+	// active link's --itx-on-surface.
+	color: var(--itx-neutral-10);
 	text-decoration: none;
 	transition: background-color var(--itx-duration-fast)
 		var(--itx-easing-standard);
@@ -167,6 +175,12 @@
 		// panel is one pixel wider as a drawer than as a permanent column.
 		box-sizing: border-box;
 		inline-size: var(--shell-nav-w);
+		// The UA sheet gives [popover] `height: fit-content`, which beats the
+		// inset pair above: the panel grew to its full content height, ran off
+		// the bottom of the screen, and `overflow-y: auto` never engaged because
+		// the box was never constrained. Restoring `auto` lets the insets size
+		// it, so it fills the column and scrolls what does not fit.
+		block-size: auto;
 		max-inline-size: calc(100% - (2 * var(--shell-gutter)));
 		margin: 0;
 		border: none;

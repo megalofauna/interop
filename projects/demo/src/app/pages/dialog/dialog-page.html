@@ -8,7 +8,7 @@
 	<!-- ── Basic ─────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="Basic open/close">
-			<button interop-button="action-minus" (click)="basicOpen.set(true)">
+			<button interop-button="primary" (click)="basicOpen.set(true)">
 				Open docking request
 			</button>
 
@@ -34,7 +34,7 @@
 		</demo-example>
 
 		<demo-example label="Escape locked">
-			<button interop-button (click)="lockedOpen.set(true)">
+			<button interop-button="primary" (click)="lockedOpen.set(true)">
 				Open locked dialog
 			</button>
 
@@ -62,7 +62,7 @@
 		</demo-example>
 
 		<!--<demo-example label="Auto-close on form submit">
-			<button interop-button (click)="formOpen.set(true)">
+			<button interop-button="primary" (click)="formOpen.set(true)">
 				File mission report
 			</button>
 

@@ -81,7 +81,6 @@
 			<itx-code-block language="html" [code]="readonlyCode" />
 		</demo-example>
 
-		<demo-notes [notes]="inputNotes" />
 	</demo-section>
 
 	<!-- ── Textarea ───────────────────────────────────────────────────────── -->
@@ -151,11 +150,11 @@
 				/>
 
 				<div class="field-page__actions">
-					<button interop-button="primary" type="button" (click)="submit()">
-						Submit
-					</button>
 					<button interop-button="secondary" type="button" (click)="reset()">
 						Reset
+					</button>
+					<button interop-button="primary" type="button" (click)="submit()">
+						Submit
 					</button>
 				</div>
 			</form>
@@ -186,7 +185,6 @@
 			<itx-code-block [files]="manualFiles" />
 		</demo-example>
 
-		<demo-notes [notes]="formsNotes" />
 	</demo-section>
 
 	<!-- ── Sizes ──────────────────────────────────────────────────────────── -->

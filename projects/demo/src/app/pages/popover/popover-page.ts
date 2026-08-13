@@ -25,10 +25,6 @@ import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 
 interface ApiEntry {
 	component?: string;
@@ -60,7 +56,6 @@ interface TokenEntry {
 		DemoMasthead,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 	],
 	providers: [
 		provideInteropIcons(TablerCaretUp, TablerInfoCircle, TablerTarget),
@@ -215,18 +210,6 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 
 	// ── In-section notes ─────────────────────────────────────────────────────
 
-	readonly modeNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "hint mode",
-			body: "popoverType='hint' is Chrome 131+ tooltip-mode: it closes on any pointer event outside the panel and stacks separately from 'auto'. Browsers without support ignore the value and fall back to 'auto' semantics, so it is safe to ship — but do not rely on the separate stack.",
-		},
-		{
-			type: "note",
-			label: "Role is yours",
-			body: "InteropPopover assumes no role for its content. Set role on the popover element or a child as appropriate (menu, listbox, region, dialog), and declare the relationship from the trigger with [popoverHaspopup].",
-		},
-	];
 
 	// ── CSS tokens ───────────────────────────────────────────────────────────
 

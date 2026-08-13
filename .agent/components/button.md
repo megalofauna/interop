@@ -127,10 +127,12 @@ the disabled-treatment selector list but has no rest-state block — a leftover.
 
 ## Sizing system
 
-Borrowed wholesale from IBM Carbon's Button. Carbon's model in one line: **size
-changes the height and nothing else.** The label is a constant 14px/400 and the
-side padding is a constant 16px at every step, so the box grows around a fixed
-label rather than scaling with it.
+Borrowed from IBM Carbon's Button. Carbon's model in one line: **size changes
+the height and nothing else.** The label is a constant 14px/400, so the box
+grows around a fixed label rather than scaling with it.
+
+Carbon's constant 16px side padding is kept from `md` up but **not** at the two
+small steps — see "Why the small sizes break the constant" below.
 
 Each `itx-size` block therefore sets exactly one property:
 
@@ -142,14 +144,40 @@ Each `itx-size` block therefore sets exactly one property:
 
 | `itx-size` | `--itx-button-height` | font-size  | padding-inline |
 | ---------- | --------------------- | ---------- | -------------- |
-| `xs`       | `1.5rem` — 24px       | `0.875rem` | 16px           |
-| `sm`       | `2rem` — 32px         | `0.875rem` | 16px           |
+| `xs`       | `1.5rem` — 24px       | `0.875rem` | **8px**        |
+| `sm`       | `2rem` — 32px         | `0.875rem` | **12px**       |
 | `md`       | `2.5rem` — 40px       | `0.875rem` | 16px           |
 | `lg`       | `3rem` — 48px         | `0.875rem` | 16px           |
 | `xl`       | `4rem` — 64px         | **`1rem`** | 16px           |
 
-`xl` is the single exception: it also bumps the font-size to `1rem`, because
-Carbon's expressive large step does the same. Carbon's `2xl` (80px) is not taken.
+`xl` is the single exception on the label: it bumps the font-size to `1rem`,
+because Carbon's expressive large step does the same. Carbon's `2xl` (80px) is
+not taken.
+
+### Why the small sizes break the constant
+
+Only one of the two padding axes is ever a constant. Block padding is derived
+from the height, so across the ramp it runs 5 / 9 / 13 / 17 / 24 — while a
+constant inline padding sits at 16 throughout. The padding box therefore
+inverts: at `xs` it is more than three times wider than it is tall, at `xl` it
+is narrower. A 24px-tall button ended up carrying two thirds of its own height
+in air on each side of the label.
+
+So `xs` and `sm` step down one and two places on the spacing scale (8px, 12px).
+`md` keeps 16 as the anchor; `lg` and `xl` keep it too, where a constant still
+reads correctly against a tall box.
+
+**The `icon` variant is excluded from those two rules, and that exclusion is
+load-bearing.** `icon` squares itself by deriving *both* paddings from the
+height, and it is declared above the size blocks — so at equal (zero)
+specificity a padding set by a size rule wins on source order and would leave
+an icon button 8px wide by 5px tall in its padding. The two size rules carry
+`:not([interop-button~="icon"])` for exactly this.
+
+Worth knowing when weighing whether `xs` earns its place: **every real `xs`
+button in the product is an icon button** — the terminal's reset control and
+the popover placement grid. As a text size it appears only in this component's
+own demo.
 
 **Default size is `md` (40px)**, declared on the base `[interop-root]` block —
 deliberately _not_ Carbon's `lg` (48px), which reads oversized in this system.

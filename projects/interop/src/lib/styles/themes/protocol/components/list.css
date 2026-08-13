@@ -1,6 +1,15 @@
 /* ── list base ───────────────────────────────────────────────────────────── */
 /* The base list is layout-only; Protocol adds no paint to the container. The
-   enclosed-marker variant below is the one piece carrying visual opinion. */
+   enclosed-marker variant below is the one piece carrying visual opinion.
+
+   The one metric it does set is the item's internal spacing. Half of
+   --itx-rhythm-tight (spacing-4), so two adjacent items add up to exactly the
+   gap prose lists get — the rhythm is unchanged, it has just moved inside the
+   box. See the note in components/list.css for why that matters. */
+
+:where([interop-root]) {
+	--itx-list-item-padding-block: var(--itx-spacing-2);
+}
 
 /* ── enclosed marker variant ─────────────────────────────────────────────── */
 /* Stroked circle with a slightly smaller bold numeral centred inside. Tokens

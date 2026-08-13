@@ -23,3 +23,13 @@
         }
     </li>
 }
+
+<!--
+    Static content. With no [collection] the loop above renders nothing, and
+    without this the component would silently discard whatever the consumer
+    wrote between its tags — the list would come out empty. Projecting
+    unconditionally rather than behind an @else also allows the two modes to
+    coexist: authored <li>s follow the generated ones.
+-->
+<ng-content />
+

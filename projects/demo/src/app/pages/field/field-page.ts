@@ -16,10 +16,6 @@ import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import {
-	DemoNotes,
-	type DemoNote,
-} from "../../components/demo-notes/demo-notes";
 import { DemoState } from "../../components/demo-state/demo-state";
 import { DemoStateItem } from "../../components/demo-state/demo-state-item";
 
@@ -61,7 +57,6 @@ interface AttrEntry {
 		DemoPage,
 		DemoSection,
 		DemoExample,
-		DemoNotes,
 		DemoState,
 		DemoStateItem,
 	],
@@ -230,26 +225,7 @@ massErrors = [
 
 	// ── In-section notes ─────────────────────────────────────────────────
 
-	readonly inputNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Disabled vs read-only",
-			body: "Disabled keeps the fill and drops the underline to transparent — the missing rule is the signal. Read-only does the opposite: it drops the fill and keeps a softer rule, because the value is still there to be read and copied, it just is not somewhere to type.",
-		},
-	];
 
-	readonly formsNotes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Error priority",
-			body: 'Errors are resolved in the order Angular reports them, and errorDisplay="single" (the default) shows only the first. Order your validators accordingly — required first, then format.',
-		},
-		{
-			type: "note",
-			label: "Message resolution",
-			body: "Library defaults ← INTEROP_ERROR_MESSAGES (app-wide) ← [errorMessages] (per field). Most specific wins, and each message can be a function of the error value for parametrised text.",
-		},
-	];
 
 	// ── CSS tokens ───────────────────────────────────────────────────────
 

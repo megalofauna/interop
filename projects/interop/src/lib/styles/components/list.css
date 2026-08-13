@@ -18,6 +18,9 @@
  *
  * Public tokens (set on any ancestor, e.g. [interop-root]):
  *
+ *   Item spacing
+ *   --itx-list-item-padding-block  Half the intended gap between two items
+ *
  *   Layout (shared with the InteropLayout directive)
  *   --itx-layout-direction   --itx-layout-justify   --itx-layout-align
  *   --itx-layout-wrap        --itx-layout-gap
@@ -58,6 +61,30 @@
 	list-style: none;
 	margin: 0;
 	padding: 0;
+}
+
+/* ── Item spacing ─────────────────────────────────────────────────────────── */
+/*
+ * Items abut. Nothing separates them from the outside — no margin, no gap —
+ * and the air between two rows is the sum of the padding inside each of them.
+ *
+ * That is the whole reason for doing it this way. An item's box is the thing
+ * that gets painted: a hover fill, a rule, a selected state, a focus ring, a
+ * pointer target. Spacing held outside the box leaves gaps that belong to
+ * nothing, so paint stops short of the next row and the target has holes in
+ * it. Spacing held inside means the box a row draws is the box the reader
+ * sees, and adjacent rows meet exactly.
+ *
+ * Half the intended gap per item, so a pair adds up to the full measure and
+ * the ends of the list carry half — which is what keeps the first and last
+ * rows from looking inset relative to everything between them.
+ *
+ * Variants that own their own vertical metric (contained rows size to
+ * --itx-list-row-block-size) override this.
+ */
+
+:where([interop-list] > li) {
+	padding-block: var(--itx-list-item-padding-block);
 }
 
 /* When laid out as a row, give items inter-item spacing unless a layout gap
@@ -147,11 +174,10 @@
 	gap: var(--itx-list-row-gap);
 	box-sizing: border-box;
 	min-block-size: var(--itx-list-row-block-size);
-	/* Zeroed, not inherited: a globally-declared interop-typography-root reads
-	   these as prose and puts --itx-rhythm-tight between every pair, which is
-	   the block gap that has no business in a ruled row. Scoped to the variant
-	   so prose inside an ordinary list item is left alone. */
-	margin-block: 0;
+	/* The row sizes itself with min-block-size, so it takes neither the base
+	   item padding nor any margin. It used to need `margin-block: 0` to undo
+	   prose rhythm as well; that leak is now closed at the source — see the
+	   li + li rule in typography/prose.css. */
 	padding-block: 0;
 	padding-inline: var(--itx-list-row-padding-inline);
 	background-color: var(--itx-list-row-background);

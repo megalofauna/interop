@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { InteropVisimorph, InteropTable, InteropCellDef, type TableColumn } from 'interop';
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
-import { DemoNotes, type DemoNote } from "../../components/demo-notes/demo-notes";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 
 interface ApiEntry {
@@ -16,7 +15,7 @@ interface ApiEntry {
 @Component({
 	selector: "visimorph-page",
 	standalone: true,
-	imports: [InteropVisimorph, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoNotes, DemoMasthead],
+	imports: [InteropVisimorph, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoMasthead],
 	templateUrl: "./visimorph-page.html",
 	styleUrl: "./visimorph-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,16 +36,4 @@ export class VisiMorphPage {
 		{ name: "focused", type: "boolean", default: "false", description: "Focus ring state. The parent control tracks and passes this in." },
 	];
 
-	notes: DemoNote[] = [
-		{
-			type: "note",
-			label: "Internal use",
-			body: "InteropVisimorph is an internal visual layer used by InteropCheckbox, InteropRadioControl, and InteropToggle. Consumers do not instantiate it directly — it is wired by the parent control.",
-		},
-		{
-			type: "note",
-			label: "Theming",
-			body: "All visual properties (size, accent color, border, check icon) are driven by --itx-control-* tokens. Override at any ancestor to retheme all control types simultaneously.",
-		},
-	];
 }
