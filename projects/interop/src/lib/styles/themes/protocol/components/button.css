@@ -3,9 +3,13 @@
  *
  * Borrowed from IBM Carbon's Button (round 6). Carbon's model in one line:
  * **size changes the height and nothing else** — the label is $body-compact-01
- * (14px) and the side padding is $spacing-05 (16px) at every step, so the box
- * grows around a constant label rather than scaling with it. The size blocks
- * below therefore carry a height and nothing more.
+ * (14px) at every step, so the box grows around a constant label rather than
+ * scaling with it.
+ *
+ * Carbon's side padding is $spacing-05 (16px) at every step too. That is kept
+ * from md up, but the two small steps pull it in: block padding is derived from
+ * the height, so a constant beside it inverts the padding box on a short
+ * button. See the note above the size blocks.
  *
  * Assigns custom properties only. Structure, state selectors and the focus
  * ring live in `components/button.css`.
@@ -20,7 +24,8 @@
 	--itx-button-height: 2.5rem;
 
 	/* Carbon $spacing-05 — "a button cannot have a label or any element within
-	   16px of its borders", constant across the whole size scale. */
+	   16px of its borders". The base, and the value md/lg/xl keep; xs and sm
+	   override it below. */
 	--itx-button-padding-inline: var(--itx-spacing-4);
 
 	/* layout */
@@ -155,8 +160,9 @@
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
-/* Carbon's layout size ramp, verbatim. Only the height changes — the label
-   and the side padding are constants (see the base block).
+/* Carbon's layout size ramp. The label is constant at every step; the height
+   is the one value each block pins (xs and sm also pull in the side padding —
+   see the note below).
        xs  24
        sm  32
        md  40   ← default (declared on the base)
@@ -164,12 +170,40 @@
        xl  64   ← Carbon's "full bleed" step; takes the expressive 16px label
    Carbon's 2xl (80) is not taken — Interop's axis stops at xl.                */
 
+/* ── The two small steps also pull their side padding in ──────────────────
+   Carbon holds 16px at every step. That works from md up, but it breaks down
+   below it, because only one of the two padding axes is a constant: the block
+   padding is derived from the height, so across the ramp it runs 5 / 9 / 13 /
+   17 / 24 while the inline padding sits at 16 throughout. The padding box
+   therefore inverts — at xs it is more than three times wider than it is tall,
+   at xl it is narrower — and a 24px-tall button ends up with two thirds of its
+   own height in air on each side of the label.
+
+   So xs and sm step down one and two places on the spacing scale. md keeps
+   Carbon's 16 as the anchor; lg and xl keep it too, where a constant still
+   reads correctly against a tall box.
+
+   Excluding `icon` is load-bearing. That variant squares itself by deriving
+   BOTH paddings from the height, and it is declared above this block — so at
+   equal (zero) specificity a padding declared here would win on source order
+   and leave an icon button 8px wide by 5px tall in its padding. Every real
+   xs button in the product is an icon button (the terminal's reset, the
+   popover placement grid), so this is the common path, not the edge case. */
+
 :where(button[interop-button][itx-size="xs"]) {
 	--itx-button-height: 1.5rem;
 }
 
+:where(button[interop-button][itx-size="xs"]:not([interop-button~="icon"])) {
+	--itx-button-padding-inline: var(--itx-spacing-2);
+}
+
 :where(button[interop-button][itx-size="sm"]) {
 	--itx-button-height: 2rem;
+}
+
+:where(button[interop-button][itx-size="sm"]:not([interop-button~="icon"])) {
+	--itx-button-padding-inline: var(--itx-spacing-3);
 }
 
 :where(button[interop-button][itx-size="md"]) {
