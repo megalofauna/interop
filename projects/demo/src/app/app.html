@@ -1,42 +1,47 @@
+<!-- The header spans the viewport so its background and sticky edge are full
+     bleed, but its contents ride the same centred measure as the nav + main
+     block beneath it — hence the inner wrapper. -->
 <header class="shell__header">
-	<div class="shell__header-start">
-		<button
-			interop-button="icon"
-			itx-radius="lg"
-			class="shell__menu-btn"
-			command="toggle-popover"
-			commandfor="site-nav"
-			aria-label="Toggle navigation"
-		>
-			<interop-icon name="tabler-layout-sidebar-left-expand" [size]="24"></interop-icon>
-		</button>
-		<span class="shell__title">Interop</span>
-		@if (meta().title) {
-		<span class="shell__crumb" aria-hidden="true">
-			<span class="shell__crumb-sep">›</span>
-			@if (meta().category) {
-			<span class="shell__crumb-category">{{ meta().category }}</span>
-			<span class="shell__crumb-sep">›</span>
+	<div class="shell__header-inner">
+		<div class="shell__header-start">
+			<button
+				interop-button="icon"
+				itx-radius="lg"
+				class="shell__menu-btn"
+				command="toggle-popover"
+				commandfor="site-nav"
+				aria-label="Toggle navigation"
+			>
+				<interop-icon
+					name="tabler-layout-sidebar-left-expand"
+					[size]="24"
+				></interop-icon>
+			</button>
+			<span class="shell__title">Interop</span>
+			@if (meta().title) {
+				<span class="shell__crumb" aria-hidden="true">
+					<span class="shell__crumb-sep">›</span>
+					@if (meta().category) {
+						<span class="shell__crumb-category">{{ meta().category }}</span>
+						<span class="shell__crumb-sep">›</span>
+					}
+					<span class="shell__crumb-title">{{ meta().title }}</span>
+				</span>
 			}
-			<span class="shell__crumb-title">{{ meta().title }}</span>
-		</span>
-		}
-	</div>
+		</div>
 
-	<nav class="shell__nav" aria-label="Main">
-	</nav>
-
-	<div class="shell__header-end">
-		<button
-			class="shell__cmdk"
-			type="button"
-			(click)="openPalette()"
-			aria-label="Search — command palette"
-		>
-			<span>Search</span>
-			<kbd interop-kbd>⌘K</kbd>
-		</button>
-		<demo-theme-toggle />
+		<div class="shell__header-end">
+			<button
+				class="shell__cmdk"
+				type="button"
+				(click)="openPalette()"
+				aria-label="Search — command palette"
+			>
+				<span>Search</span>
+				<kbd interop-kbd>⌘K</kbd>
+			</button>
+			<demo-theme-toggle />
+		</div>
 	</div>
 </header>
 
@@ -58,9 +63,4 @@
 	[commands]="filteredCommands()"
 	(queryChange)="query.set($event)"
 	(command)="runCommand($event)"
->
-	<!-- Landing-page quick links, projected into the palette's aside slot. The
-	     palette positions them (top row when narrow, left column when wide) and
-	     owns overflow scrolling; the demo owns the card visuals. Light,
-	     provisional styling — no official link-card component yet. -->
-</dialog>
+></dialog>

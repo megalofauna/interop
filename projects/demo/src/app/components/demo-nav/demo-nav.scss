@@ -6,9 +6,8 @@
 	--demo-background-blur: 0px;
 
 	display: block;
-	width: 100%;
-	max-width: 24rem;
-	flex-shrink: 0;
+	// Fills the shell's nav column, which is what sets the width (--shell-nav-w).
+	inline-size: 100%;
 	overflow-y: auto;
 }
 
@@ -16,22 +15,23 @@
 	margin-block-start: var(--itx-spacing-4);
 }
 
-.nav__backdrop {
-	display: none;
-}
-
-.nav__panel-header {
-	display: flex;
-	justify-content: flex-start;
-	padding-inline: var(--itx-spacing-4);
-	padding-block-end: var(--itx-spacing-2);
-}
-
 .nav__panel {
+	position: relative;
 	padding: var(--itx-spacing-4) 0;
 	background-color: var(--demo-background-color);
 	background-image: var(--demo-background-image);
 	backdrop-filter: var(--demo-background-blur);
+}
+
+// Out of flow in both modes — see demo-nav.html. Pinned to the panel's top-end
+// corner, opposite the first group label, so it never collides with it and
+// never contributes height. Hidden (and unfocusable) once the nav is permanent.
+.nav__close {
+	position: absolute;
+	inset-block-start: var(--itx-spacing-2);
+	inset-inline-end: var(--itx-spacing-2);
+	z-index: 1;
+	display: none;
 }
 
 // ── Groups ──────────────────────────────────────────────────────────────────
@@ -117,25 +117,53 @@
 		overflow: visible;
 	}
 
+	.nav__close {
+		display: inline-flex;
+	}
+
 	// The nav panel is an `auto` popover in this range (see demo-nav.ts → drawer()).
 	// The top layer handles stacking/positioning; light-dismiss, Esc, and the
 	// backdrop are the platform's job. UA popover defaults (centered margin,
-	// border, auto inset) are reset to pin it as a left drawer.
+	// border, auto inset) are reset to pin it to the shell's nav column.
+	//
+	// It is pinned to --shell-lead, not to the viewport edge: that is the exact
+	// line where the permanent nav's column starts (app.scss owns the property,
+	// and it inherits down here even though the popover paints in the top
+	// layer). Width matches --shell-nav-w for the same reason. So when the
+	// viewport crosses the breakpoint with the drawer open, the panel is already
+	// at its final position and size — the popover simply resolves and the
+	// scrim fades. Nothing moves.
 	.nav__panel[popover] {
 		position: fixed;
-		inset: 0;
-		width: 100%;
-		max-width: 24rem;
+		// Starts below the header, exactly where the permanent nav's column
+		// starts, rather than covering it. Two reasons: the vertical seam closes
+		// as well as the horizontal one, and the header — including the toggle
+		// that opened this — stays reachable while the drawer is up.
+		inset-block: var(--header-h) 0;
+		inset-inline-start: var(--shell-lead);
+		// border-box, or the 1px end border lands outside --shell-nav-w and the
+		// panel is one pixel wider as a drawer than as a permanent column.
+		box-sizing: border-box;
+		inline-size: var(--shell-nav-w);
+		max-inline-size: calc(100% - (2 * var(--shell-gutter)));
 		margin: 0;
 		border: none;
-		border-right: 1px solid var(--itx-border);
+		border-inline-end: 1px solid var(--itx-border);
 		box-shadow: var(--itx-shadow-lg);
 		overflow-y: auto;
 
 		// Offscreen (closed) state; transitioned on open/close. `overlay` and
 		// `display` with allow-discrete keep the panel in the top layer through
 		// the exit slide so it animates out, not just in.
-		transform: translateX(-100%);
+		//
+		// The lead offset is subtracted as well as the panel's own width, or it
+		// would rest with that much of itself still on screen. --shell-gutter,
+		// not --shell-lead: percentages inside `transform` resolve against the
+		// element's own box rather than its containing block, so the `100%` in
+		// --shell-lead would mean the wrong thing here. The two are identical in
+		// this range anyway — the drawer only exists below 60em, and the measure
+		// is 88rem, so the lead is always pinned at its gutter minimum.
+		transform: translateX(calc(-100% - var(--shell-gutter)));
 		transition:
 			transform var(--itx-duration-base, 200ms) var(--itx-easing-standard, ease),
 			overlay var(--itx-duration-base, 200ms) allow-discrete,
@@ -149,7 +177,7 @@
 	// Entry start point — slides in from the left on open.
 	@starting-style {
 		.nav__panel[popover]:popover-open {
-			transform: translateX(-100%);
+			transform: translateX(calc(-100% - var(--shell-gutter)));
 		}
 	}
 
