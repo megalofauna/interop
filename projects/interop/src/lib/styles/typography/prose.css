@@ -88,8 +88,21 @@
 	margin-block-start: var(--itx-rhythm-loose);
 }
 
-/* Nested list / definition flow. */
-:where([interop-typography-root]) :where(li + li, dd + dt) {
+/* Nested list / definition flow.
+ *
+ * Scoped away from [interop-list]. The typography root is declared on the app
+ * root, so this descendant selector otherwise reaches every list in the
+ * product, component lists included — and a component list wants no external
+ * spacing at all. Its items abut, and their separation comes from padding
+ * inside each item, so the box a row paints (hover fill, rule, selection) is
+ * continuous rather than interrupted by dead margin.
+ *
+ * Before this, each variant had to opt out by hand: the contained row carried
+ * its own `margin-block: 0` with a comment explaining the same leak. One
+ * exclusion here replaces that, and the next component list gets it for free.
+ * Prose lists — plain <ul>/<ol> in content — are untouched. */
+:where([interop-typography-root])
+	:where(:not([interop-list]) > li + li, dd + dt) {
 	margin-block-start: var(--itx-rhythm-tight);
 }
 
