@@ -67,7 +67,10 @@
  * both callout and toast pair the colour with a heading and body text, so
  * colour is never the only channel. Do not make them equal-lightness. */
 :where([interop-root], [itx-status-palette="seventies"]) {
-	--itx-danger: light-dark(oklch(0.52 0.105 33), oklch(0.64 0.1 36));
+	/* Light steps down 0.02: at 0.52 the field error message measured 4.44 on a
+	   raised surface — under AA by 0.06. 0.50 gives 4.83. Dark is left alone at
+	   4.55. */
+	--itx-danger: light-dark(oklch(0.5 0.105 33), oklch(0.64 0.1 36));
 	--itx-info: light-dark(oklch(0.53 0.058 218), oklch(0.66 0.056 216));
 	--itx-success: light-dark(oklch(0.53 0.078 122), oklch(0.66 0.074 124));
 	--itx-warning: light-dark(oklch(0.62 0.105 78), oklch(0.78 0.098 78));
