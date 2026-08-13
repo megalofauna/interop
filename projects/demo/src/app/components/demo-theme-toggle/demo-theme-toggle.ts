@@ -13,7 +13,7 @@ import {
 	InteropListbox,
 	InteropOption,
 	provideInteropIcons,
-} from 'interop';
+} from "interop";
 import { TablerSun } from "interop/lib/iconsets/tabler/outline/tabler-sun";
 import { TablerMoon } from "interop/lib/iconsets/tabler/outline/tabler-moon";
 import { TablerDeviceDesktop } from "interop/lib/iconsets/tabler/outline/tabler-device-desktop";
@@ -39,7 +39,9 @@ let nextId = 0;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoThemeToggle implements OnDestroy {
-	private readonly triggerEl = viewChild("triggerEl", { read: ElementRef<HTMLElement> });
+	private readonly triggerEl = viewChild("triggerEl", {
+		read: ElementRef<HTMLElement>,
+	});
 	private readonly popoverEl = viewChild<ElementRef<HTMLElement>>("popoverEl");
 	private cleanupAutoUpdate: (() => void) | null = null;
 
@@ -119,5 +121,11 @@ export class DemoThemeToggle implements OnDestroy {
 			root.setAttribute("itx-theme", mode);
 			localStorage.setItem("itx-theme", mode);
 		}
+		// Mirror onto <html>. [interop-root] is <app-root>, and color-scheme there
+		// cannot reach the viewport: the UA paints the scrollbar and any other
+		// browser-drawn surface from the *root* element's scheme. Without this an
+		// explicit light/dark choice would leave the page themed and the scrollbar
+		// following the OS. "system" clears it, handing the decision back.
+		document.documentElement.style.colorScheme = mode === "system" ? "" : mode;
 	}
 }

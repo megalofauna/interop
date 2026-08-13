@@ -148,7 +148,7 @@
 		max-inline-size: calc(100% - (2 * var(--shell-gutter)));
 		margin: 0;
 		border: none;
-		border-inline-end: 1px solid var(--itx-border);
+		border-inline-end: 1px solid var(--shell-rule);
 		box-shadow: var(--itx-shadow-lg);
 		overflow-y: auto;
 
@@ -162,7 +162,7 @@
 		// element's own box rather than its containing block, so the `100%` in
 		// --shell-lead would mean the wrong thing here. The two are identical in
 		// this range anyway — the drawer only exists below 60em, and the measure
-		// is 88rem, so the lead is always pinned at its gutter minimum.
+		// is 86rem, so the lead is always pinned at its gutter minimum.
 		transform: translateX(calc(-100% - var(--shell-gutter)));
 		transition:
 			transform var(--itx-duration-base, 200ms) var(--itx-easing-standard, ease),

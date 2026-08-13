@@ -24,9 +24,21 @@
 // so this stays correct where 100vw would be off by the scrollbar width.
 :host {
 	--header-h: 3.5rem;
-	--shell-max: 88rem;
-	--shell-nav-w: 24rem;
+	// 20rem (--itx-spacing-80), down one step on the spacing scale from 24rem.
+	--shell-nav-w: var(--itx-spacing-80);
+	// Breathing room between the nav's rule and the content. A real track rather
+	// than padding on either side, so both keep symmetric insets and the sum
+	// below stays readable.
+	--shell-gap: var(--itx-spacing-8);
+	// 20 + 2 + 64. The main track is still exactly 64rem, so the demo page
+	// column fills it rather than floating inside something wider.
+	--shell-max: 86rem;
 	--shell-gutter: var(--itx-spacing-4);
+	// Separation rule on the nav's inline end. --itx-neutral-7 is the house
+	// hairline (--itx-border resolves to neutral-5, a sub-0.1 luminance delta
+	// that reads as nothing at 1px). Shared with the drawer's own border in
+	// demo-nav.scss so the two modes draw the same line.
+	--shell-rule: var(--itx-neutral-7);
 	--shell-lead: max(var(--shell-gutter), calc((100% - var(--shell-max)) / 2));
 
 	// Stack the in-page page-nav beneath the persistent header (the library knob).
@@ -40,7 +52,11 @@
 	grid-template-columns:
 		[full-start] minmax(var(--shell-gutter), 1fr)
 		[nav-start] var(--shell-nav-w)
-		[nav-end main-start] minmax(0, calc(var(--shell-max) - var(--shell-nav-w)))
+		[nav-end] var(--shell-gap)
+		[main-start] minmax(
+			0,
+			calc(var(--shell-max) - var(--shell-nav-w) - var(--shell-gap))
+		)
 		[main-end] minmax(var(--shell-gutter), 1fr)
 		[full-end];
 	grid-template-rows: auto 1fr auto;
@@ -229,6 +245,15 @@
 	align-self: start;
 	block-size: calc(100dvh - var(--header-h));
 	overflow-y: auto;
+	// On the host rather than the panel inside it: the host is sticky and
+	// viewport-tall, so the rule holds the full height instead of ending with
+	// the list and scrolling away with it.
+	border-inline-end: 1px solid var(--shell-rule);
+	// Same content-box trap as the header: demo-nav's host sets inline-size:100%,
+	// so without this the rule lands outside --shell-nav-w and the column is
+	// 321px in a 320px track — overflowing the gap, and a pixel wider than the
+	// drawer, which would reopen the seam the previous commit closed.
+	box-sizing: border-box;
 }
 
 // ── Content ─────────────────────────────────────────────────────────────────
