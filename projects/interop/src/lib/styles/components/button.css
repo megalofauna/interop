@@ -99,7 +99,8 @@
 		var(
 				--itx-button-padding-block,
 				(var(--itx-button-height, 2.5rem) - 1em) / 2
-			) + var(--itx-button-touch-inset, 0px)
+			) +
+			var(--itx-button-touch-inset, 0px)
 	);
 	padding-inline: var(--itx-button-padding-inline);
 	width: var(--itx-button-width, auto);
@@ -131,7 +132,34 @@
 	--_foreground: var(--itx-button-foreground, var(--itx-on-surface));
 	--_border-color: var(--itx-button-border-color, transparent);
 	--_box-shadow: var(--itx-button-box-shadow, none);
-	--_icon-color: var(--itx-button-icon-color, var(--itx-neutral-7));
+	/* currentColor, so an icon tracks the button's own label unless a consumer
+	   names a colour. The state slots below fall back through the rest token
+	   the same way --_background and --_foreground do — they used to fall back
+	   to a literal `black`, which is no colour a light-dark() system can use:
+	   on hover a dark-scheme icon went black against a dark fill. */
+	--_icon-color: var(--itx-button-icon-color, currentColor);
+
+	/* Publish the resolved slot onto interop-icon's OWN public token.
+	 *
+	 * This closes a circuit that was open: the button declared
+	 * --itx-button-icon-color / -hover / -active as public API, resolved them
+	 * into --_icon-color per state, and then applied that to nothing. The
+	 * feature only worked because the stepper reached in and read --_icon-color
+	 * from a template binding — a private slot, from another component, wired
+	 * by hand. Half the mechanism lived outside the component that owned it.
+	 *
+	 * Setting --itx-icon-color here instead means an icon anywhere in the
+	 * button picks the colour up through the icon component's documented API.
+	 * The dependency runs one way — the button knows the icon's public token,
+	 * the icon knows nothing of buttons — and nothing crosses a private
+	 * boundary. Because custom properties inherit, this reaches nested icons
+	 * without naming the tag, and a consumer can still override it on a single
+	 * icon, which is closer and wins.
+	 *
+	 * Declared once here rather than per state: the var() resolves against the
+	 * final cascaded value of --_icon-color on this element, and the state
+	 * rules below rebind exactly that. */
+	--itx-icon-color: var(--_icon-color);
 }
 
 :where(button[interop-button]:hover:not(:active)) {
@@ -148,7 +176,10 @@
 		var(--itx-button-border-color, transparent)
 	);
 	--_box-shadow: var(--itx-button-box-shadow-hover, none);
-	--_icon-color: var(--itx-button-icon-color-hover, black);
+	--_icon-color: var(
+		--itx-button-icon-color-hover,
+		var(--itx-button-icon-color, currentColor)
+	);
 }
 
 :where(button[interop-button]:active) {
@@ -165,7 +196,10 @@
 		var(--itx-button-border-color, transparent)
 	);
 	--_box-shadow: var(--itx-button-box-shadow-active, none);
-	--_icon-color: var(--itx-button-icon-color-active, black);
+	--_icon-color: var(
+		--itx-button-icon-color-active,
+		var(--itx-button-icon-color, currentColor)
+	);
 }
 
 /* ── Visual pill ─────────────────────────────────────────────────────────── */

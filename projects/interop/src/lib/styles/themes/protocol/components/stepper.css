@@ -41,22 +41,6 @@
 	--itx-stepper-actions-padding: var(--itx-spacing-2) 0 0 0;
 	--itx-stepper-actions-gap: var(--itx-spacing-2);
 
-	/* ── Compact nav-trigger (narrow viewports) ─────────────────────────── */
-	/*--itx-stepper-nav-trigger-padding-block: var(--itx-spacing-2);
-	--itx-stepper-nav-trigger-padding-inline: var(--itx-spacing-3);
-	--itx-stepper-nav-trigger-gap: var(--itx-spacing-2);
-	--itx-stepper-nav-trigger-font-size: var(--itx-font-size-label);
-	--itx-stepper-nav-trigger-font-weight: 500;*/
-	/*--itx-stepper-nav-trigger-background-color: var(--itx-neutral-3);
-	--itx-stepper-nav-trigger-foreground: var(--itx-neutral-11);
-	--itx-stepper-nav-trigger-border-color: var(--itx-neutral-4);*/
-	/*--itx-stepper-nav-trigger-border-width: 4px;
-	--itx-stepper-nav-trigger-border-radius: var(--itx-radius-1, 8px);
-	--itx-stepper-nav-trigger-background-color-hover: var(--itx-neutral-4);
-	--itx-stepper-nav-trigger-foreground-hover: var(--itx-neutral-12);
-	--itx-stepper-nav-trigger-progress-color: var(--itx-neutral-9);*/
-	--itx-stepper-nav-trigger-transition-duration: 96ms;
-
 	/* ── Menu (popover) ─────────────────────────────────────────────────── */
 	--itx-stepper-menu-max-width: auto;
 	--itx-stepper-menu-padding: var(--itx-spacing-6);
@@ -66,10 +50,12 @@
 	--itx-stepper-menu-background-color: var(--itx-neutral-3);
 	--itx-stepper-menu-border-color: var(--itx-neutral-4);
 	--itx-stepper-menu-border-width: 1px;
-	--itx-stepper-menu-border-radius: var(--itx-radius-4, 8px);
+	/* Squared, like every other surface the borrow rounds have touched. The old
+	   value also read --itx-radius-4 with an 8px fallback, but that token is
+	   16px — the fallback was describing a different shape from the token. */
+	--itx-stepper-menu-border-radius: var(--itx-radius-none);
 	--itx-stepper-menu-box-shadow:
 		0 4px 12px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06);
-	--itx-stepper-menu-offset: var(--itx-spacing-2);
 
 	/* ── Step list ──────────────────────────────────────────────────────── */
 	--itx-scroll-area-shadow-size: 2.5rem;
@@ -86,7 +72,11 @@
 	--itx-step-indicator-border-radius: 9999px;
 	--itx-step-indicator-border-width: 2px;
 	--itx-step-indicator-border-style: solid;
-	--itx-step-indicator-font-size: var(--itx-font-size-label);
+	/* Fixed rem, not --itx-font-size-*. The role tokens are fluid clamp()
+	   values, and a numeral that grows with the viewport sits inside a fixed
+	   32px circle — the borrow workflow calls this out as the recurring trap.
+	   Was resolving to 15px and climbing. */
+	--itx-step-indicator-font-size: 0.8125rem;
 	--itx-step-indicator-font-weight: 500;
 	--itx-step-indicator-transition-duration: 160ms;
 	--itx-step-indicator-transition-timing-function: ease-in-out;
@@ -98,7 +88,12 @@
 
 	/* ── Step indicator — active ────────────────────────────────────────── */
 	--itx-step-indicator-background-active: var(--itx-neutral-3);
-	--itx-step-indicator-foreground-active: var(--itx-on-neutral, white);
+	/* --itx-on-neutral does not exist, so this resolved to the literal `white`
+	   in the fallback — against --itx-neutral-3, which is light in light mode.
+	   The current step's number measured 1.23:1 there: legible in dark, all but
+	   invisible in light. --itx-on-surface is the light-dark() pair that belongs
+	   opposite a neutral surface. */
+	--itx-step-indicator-foreground-active: var(--itx-on-surface);
 	--itx-step-indicator-border-color-active: var(--itx-neutral-8);
 
 	/* ── Step indicator — active + reviewed (revisited) ────────────────── */
@@ -112,7 +107,7 @@
 
 	/* ── Step indicator — completed ─────────────────────────────────────── */
 	--itx-step-indicator-background-completed: var(--itx-neutral-4);
-	--itx-step-indicator-foreground-completed: var(--itx-on-neutral, black);
+	--itx-step-indicator-foreground-completed: var(--itx-on-surface);
 	--itx-step-indicator-border-color-completed: var(--itx-neutral-12);
 
 	/* ── Step indicator — error ─────────────────────────────────────────── */
@@ -128,7 +123,8 @@
 
 	/* ── Step label ─────────────────────────────────────────────────────── */
 	--itx-step-label-font-family: var(--itx-font-family-sans);
-	--itx-step-label-font-size: var(--itx-font-size-label);
+	/* Carbon $body-compact-01 (14px), fixed for the same reason as above. */
+	--itx-step-label-font-size: 0.875rem;
 	--itx-step-label-font-weight: 500;
 	--itx-step-label-color: var(--itx-neutral-10);
 	--itx-step-label-color-active: var(--itx-neutral-12);
@@ -142,8 +138,22 @@
 
 	/* ── Connector ──────────────────────────────────────────────────────── */
 	--itx-step-connector-thickness: 2px;
-	--itx-step-connector-color: var(--itx-neutral-5);
-	--itx-step-connector-color-completed: var(--itx-neutral-8);
+	/* The rest state was neutral-5, which this codebase repeatedly records as
+	   reading like nothing at 1–2px — the same sub-0.1 luminance delta that made
+	   --itx-border invisible for the directory cards and the command palette.
+	   The line was drawn the whole time; it just could not be seen, which is
+	   indistinguishable from absent.
+
+	   neutral-8 rather than the neutral-7 hairline: the connector carries the
+	   shape of the path, so SC 1.4.11 (non-text contrast, 3:1) applies to it in
+	   a way it does not to a card's top rule. neutral-7 measures 2.26 against
+	   the surface; neutral-8 measures 3.29 dark / 3.28 light — the one step that
+	   clears the bar symmetrically in both schemes.
+
+	   Completed goes two further, to 6.4 / 7.7, so the walked path reads as
+	   legibly brighter than the path ahead rather than one grey beside another. */
+	--itx-step-connector-color: var(--itx-neutral-8);
+	--itx-step-connector-color-completed: var(--itx-neutral-10);
 
 	/* ── Step focus ring ────────────────────────────────────────────────── */
 	--itx-step-outline-width: 2px;

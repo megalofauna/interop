@@ -208,3 +208,102 @@ provideInteropIcons(TablerCheck, TablerAlertCircle, TablerMinus, TablerList)
 This ensures they're available without consumer setup. Consumers can override at any ancestor scope.
 
 Icon names used: `tabler-check` (completed), `tabler-alert-circle` (error), `tabler-minus` (skipped), `tabler-list` (menu trigger).
+
+## Typography and paint — Carbon round 15
+
+Carbon has no "Stepper". Its equivalent is **Progress Indicator**, and the borrow
+was narrow because the shape already agreed: 2px connector line, a round
+indicator per step, label beneath (horizontal) or beside (vertical), and a state
+per step. What round 15 actually did was fix three things it found on the way in.
+
+**Step type is fixed rem, and must stay that way.** Both the label and the
+indicator numeral were reading `--itx-font-size-label`, a fluid `clamp()` role
+token. The numeral sits inside a fixed 32px circle and the label inside a fixed
+track, so both grow toward overflow as the viewport widens — the exact trap the
+borrow workflow warns about. Label is now `0.875rem` (Carbon `$body-compact-01`)
+and the numeral `0.8125rem`. Do not "simplify" these back onto a role token.
+
+**`--itx-on-neutral` never existed.** The theme read it twice, with `white` and
+`black` as literal fallbacks, so the active indicator painted white on
+`--itx-neutral-3` — which is *light* in light mode. The current step's number
+measured **1.23:1**. Both now use `--itx-on-surface`, the `light-dark()` pair
+that belongs opposite a neutral surface: 16.0 light, 13.7 dark. The lesson
+generalises — a fallback on a token that does not exist is not a fallback, it is
+the value, and it cannot follow the scheme.
+
+**The step list is `interop-typography-isolate`d.** It is a row of controls, not
+running text, and prose.css was putting `--itx-rhythm-tight` between every
+adjacent `<li>`. Horizontally that pushed every step after the first down 16px,
+so the strip and its connector visibly stepped downward; vertically it opened a
+gap the component never asked for. The isolate attribute is the documented
+mechanism and the one `interop-tree`, `interop-listbox` and the field controls
+already use.
+
+### Declined from Carbon
+
+- **`$interactive` (brand blue) on the current and completed connector.** The
+  house uses neutral for structure and keeps colour for state that matters —
+  rounds 2, 3 and 4 all went the same way. Our connector stays neutral-5 → 
+  neutral-8, and the indicator fill carries the state instead.
+- **The 16px indicator.** Carbon's holds an icon; ours holds a numeral and needs
+  the 32px box to do it.
+- **Flat label colour** (`$text-primary` on every step). Ours dims per state,
+  which is a real distinction Carbon offloads onto the line colour it paints
+  brand — having declined that, the dimming is doing the work instead.
+
+### Known gaps this surfaced
+
+- **No `--itx-step-label-line-height` token.** The label computes `line-height:
+  normal`; Carbon specifies 1.45 horizontal. Adding one is a foundation change,
+  so it was left out of a theme-only round.
+- **`--itx-step-optional-opacity: 0.65`** paints the optional-step hint with
+  opacity rather than a colour. Opacity multiplies against whatever is behind,
+  so the contrast is unknowable from the token alone; Carbon uses
+  `$text-secondary` (our `--itx-neutral-9`). Switching needs a foundation colour
+  token. No demo currently renders an optional step, so this is untested either
+  way.
+- **The demo page has no CSS-tokens section**, unlike its siblings — so there is
+  no table to keep in sync, and no published surface for the ~60 `--itx-step*`
+  tokens.
+
+## Action bar buttons
+
+`next` is `primary grow`, `back` is `secondary grow`. Both were
+`interop-button="protocol grow"` — and `protocol` is not a variant the theme
+defines, so the whole action bar rendered as the bare default while the markup
+claimed otherwise. The nav-trigger, the action-bar menu trigger and cancel
+carried the same dead token (cancel also carried `caution`, which exists only
+as a commented-out block in the theme). All five are now real variants or
+honestly bare.
+
+Cancel's icon binds `[color]="'var(--_icon-color)'"` — it reaches into a
+**private slot of another component**. That slot lives in `button.css` and is
+declared but never read there, so the stepper is its only consumer. It is worth
+knowing before changing either side: the button has no way to know the stepper
+depends on it.
+
+That coupling is how the icon's hover bug survived. The slot's hover and active
+fallbacks were the literal `black`, so in dark mode the icon went black against
+a dark hover fill. They now fall through to the rest token and finally
+`currentColor`, matching how `--_background` and `--_foreground` cascade — an
+icon in a button tracks the button's label unless a consumer says otherwise.
+
+## The shared menu popover opens downward
+
+One `InteropPopover` instance serves two triggers at **opposite ends** of the
+component: the nav-trigger at the top (narrow viewports) and the action-bar
+trigger at the bottom (`menu="always"`, wide). A single `placement` has to
+serve both.
+
+It was `top-end`, chosen for the action bar. That made the nav-trigger's menu
+fly upward over whatever sat above the stepper — it read as unanchored, because
+nothing connected it to the control that opened it. It is now `bottom-end`:
+correct for the nav-trigger, which is the one that appears on narrow viewports,
+and the position strategy flips it for the action-bar trigger when there is no
+room below.
+
+The menu's width is deliberate and worth not "simplifying": min-inline-size is
+`calc(100cqi - padding * 2)` on a **content-box** element, which resolves to a
+border box of exactly `100cqi` — the nav's width, which is the trigger's width.
+Dropping the subtraction overflows the trigger by 48px. Measured: trigger 268,
+menu 270 (268 + 1px borders).

@@ -37,7 +37,7 @@
 	</div>
 	} @else {
 	<button
-		interop-button="protocol"
+		interop-button
 		itx-size="md"
 		type="button"
 		class="interop-stepper__nav-trigger"
@@ -103,7 +103,7 @@
 	#menuPopover="interopPopover"
 	interop-popover
 	class="interop-stepper__menu"
-	placement="top-end"
+	placement="bottom-end"
 >
 	@if (orientation() === "vertical" && stepListTemplate(); as tpl) {
 	<ng-container
@@ -139,7 +139,7 @@
 
 		<button
 			type="button"
-			interop-button="protocol grow"
+			interop-button="secondary grow"
 			class="interop-stepper__back"
 			[disabled]="!canGoBack()"
 			[focusableWhenDisabled]="true"
@@ -150,7 +150,7 @@
 		</button>
 		<button
 			type="button"
-			interop-button="protocol grow"
+			interop-button="primary grow"
 			class="interop-stepper__next"
 			[disabled]="(!canGoForward() && !canFinish()) || isFinished()"
 			[focusableWhenDisabled]="true"
@@ -163,7 +163,7 @@
 		@if (menu() === "always") {
 		<button
 			type="button"
-			interop-button="protocol icon"
+			interop-button="icon"
 			itx-size="sm"
 			class="interop-stepper__menu-trigger"
 			[interop-popover-trigger]="menuPopover"
@@ -177,16 +177,11 @@
 		} @if (cancellable()) {
 		<button
 			type="button"
-			interop-button="protocol caution"
+			interop-button
 			class="interop-stepper__cancel"
 			(click)="cancel.emit()"
 		>
-			<interop-icon
-				name="tabler-circle-x"
-				[size]="24"
-				[strokeWidth]="2"
-				[color]="'var(--_icon-color)'"
-			/>
+			<interop-icon name="tabler-circle-x" [size]="24" [strokeWidth]="2" />
 			{{ cancelLabel() }}
 		</button>
 		<span spacer style="flex: 1"></span>

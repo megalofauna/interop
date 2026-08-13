@@ -199,7 +199,17 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 
 	// ── Internals ─────────────────────────────────────────────────────────────
 
-	private triggerEl: HTMLElement | null = null;
+	/**
+	 * Every trigger bound to this popover, not just the most recent.
+	 *
+	 * A single slot here was the cause of the popover parking in the viewport's
+	 * top-left corner. Responsive components bind two triggers to one popover —
+	 * the stepper has a nav-trigger at the top and an action-bar trigger at the
+	 * bottom, and CSS shows exactly one of them per viewport — so the second to
+	 * register silently replaced the first. Whichever lost was still the one the
+	 * strategy anchored to, and a `display: none` element measures 0×0 at (0,0).
+	 */
+	private readonly triggers = new Set<HTMLElement>();
 	private previousFocus: HTMLElement | null = null;
 	private stopAutoUpdate: (() => void) | null = null;
 	/** The trigger currently wired into the position strategy. When multiple
@@ -263,12 +273,22 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 	}
 
 	/**
-	 * Internal — called by {@link InteropPopoverTrigger} on init to register
-	 * the trigger element. Used by the position strategy and as the focus
-	 * return target.
+	 * Internal — called by {@link InteropPopoverTrigger} on init to register a
+	 * trigger element. Used by the position strategy and as the focus return
+	 * target. Returns a function that unregisters just this trigger.
+	 *
+	 * Passing `null` clears every registration, preserving the old signature
+	 * for any caller that used it as a reset.
 	 */
-	registerTrigger(trigger: HTMLElement | null): void {
-		this.triggerEl = trigger;
+	registerTrigger(trigger: HTMLElement | null): () => void {
+		if (trigger === null) {
+			this.triggers.clear();
+			return () => {};
+		}
+		this.triggers.add(trigger);
+		return () => {
+			this.triggers.delete(trigger);
+		};
 	}
 
 	// ── Native popover toggle event ───────────────────────────────────────────
@@ -278,7 +298,7 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 		const newState = event.newState;
 		if (newState === "open") {
 			this.previousFocus =
-				(document.activeElement as HTMLElement) ?? this.triggerEl;
+				(document.activeElement as HTMLElement) ?? this.resolveTriggerForOpen();
 			this.isOpen.set(true);
 			this.handleOpen();
 			this.opened.emit();
@@ -350,7 +370,24 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 		) {
 			return active;
 		}
-		return this.triggerEl;
+
+		// Focus is not a reliable signal. Chrome focuses a <button> on click, so
+		// the branch above resolves there — but Safari and iOS deliberately do
+		// not, per the platform convention, which leaves activeElement on
+		// <body>. That is why this only ever failed off-Chrome.
+		//
+		// So fall back on geometry instead: prefer a trigger that is actually
+		// rendered. A hidden one measures 0×0 at the viewport origin, and
+		// anchoring to it is what parked the panel in the corner.
+		const visible = [...this.triggers].find((el) => {
+			const r = el.getBoundingClientRect();
+			return r.width > 0 || r.height > 0;
+		});
+		if (visible) return visible;
+
+		// Nothing measurable — a popover opened before layout, say. Any
+		// registered trigger beats none.
+		return this.triggers.values().next().value ?? null;
 	}
 
 	private handleClose(): void {
@@ -401,7 +438,7 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 	}
 
 	private validateDevWarnings(): void {
-		if (!this.triggerEl) {
+		if (this.triggers.size === 0) {
 			console.warn(
 				`InteropPopover (${this.popoverId}): no [interop-popover-trigger] is targeting this popover at init. ` +
 					"Trigger pairing is required for ARIA wiring (aria-expanded, aria-controls). " +
