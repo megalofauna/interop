@@ -54,6 +54,28 @@
 	color: var(--itx-muted);
 }
 
+// The label is a link for groups with a directory page. It keeps the label's
+// own muted, uppercase treatment at rest — this is a heading first — and only
+// resolves to full contrast on interaction, so the row does not compete with
+// the item links beneath it.
+.nav__group-link {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover {
+		color: var(--itx-on-surface);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
+
+	&--active {
+		color: var(--itx-on-surface);
+	}
+}
+
 // ── List ────────────────────────────────────────────────────────────────────
 
 .nav__list {

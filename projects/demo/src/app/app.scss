@@ -186,6 +186,35 @@
 	font-weight: 700;
 	font-size: 1.125rem;
 	color: var(--itx-on-surface);
+	text-decoration: none;
+
+	&:hover {
+		color: var(--itx-colorway);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
+}
+
+// Crumb links. Muted at rest like the surrounding crumb, resolving to full
+// contrast on hover so the affordance is the colour change rather than an
+// underline sitting in a dense header bar.
+.shell__crumb-category {
+	color: inherit;
+	text-decoration: none;
+
+	&:hover {
+		color: var(--itx-on-surface);
+		text-decoration: underline;
+		text-underline-offset: 0.25em;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--itx-colorway);
+		outline-offset: 2px;
+	}
 }
 
 // Collapsed-state breadcrumb: "Interop › Components › Button". Hidden until the
@@ -198,8 +227,15 @@
 	// based at display:none never runs its animation, so it can never un-hide.
 	// Opacity avoids that trap and still fails hidden (base 0) where scroll-driven
 	// animations aren't supported.
+	//
+	// `visibility` rides along because the crumbs are links now: opacity alone
+	// would leave them focusable while invisible, so a keyboard user would tab
+	// into something they cannot see. visibility:hidden takes them out of the
+	// tab order without reintroducing the display:none trap above — the element
+	// still runs its animation.
 	display: flex;
 	opacity: 0;
+	visibility: hidden;
 	align-items: center;
 	gap: var(--itx-spacing-2);
 	font-size: 1.125rem;
@@ -229,9 +265,11 @@
 @keyframes shell-crumb-in {
 	from {
 		opacity: 0;
+		visibility: hidden;
 	}
 	to {
 		opacity: 1;
+		visibility: visible;
 	}
 }
 

@@ -45,15 +45,6 @@ export interface CatalogItem {
 	exact?: boolean;
 
 	/**
-	 * Sidebar only — never a card in the directory.
-	 *
-	 * For entries that point at the directory itself, or at any page that is
-	 * navigation rather than a destination. Without this the directory would
-	 * list a card linking to the page you are already on.
-	 */
-	navOnly?: boolean;
-
-	/**
 	 * Not part of the consumer-facing surface — a primitive or shared layer that
 	 * exists to serve another component. Rendered with an "internal" chip in the
 	 * sidebar and on the page masthead so nobody builds against it by accident.
@@ -120,12 +111,6 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 		id: "components",
 		landingRoute: "/components",
 		items: [
-			{
-				label: "All components",
-				route: "/components",
-				exact: true,
-				navOnly: true,
-			},
 			{
 				label: "Badge",
 				route: "/components/badge",
@@ -336,12 +321,6 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 		landingRoute: "/composites",
 		items: [
 			{
-				label: "All composites",
-				route: "/composites",
-				exact: true,
-				navOnly: true,
-			},
-			{
 				label: "Code Block",
 				route: "/composites/code-block",
 				description:
@@ -391,7 +370,7 @@ export function directoryGroups(ids?: readonly string[]): CatalogGroup[] {
 	return wanted
 		.map((group) => ({
 			...group,
-			items: group.items.filter((item) => item.route && !item.navOnly),
+			items: group.items.filter((item) => item.route),
 		}))
 		.filter((group) => !group.disabled && group.items.length > 0);
 }

@@ -21,7 +21,25 @@
 	</button>
 	@for (group of groups; track group.label) {
 		<div class="nav__group" [class.nav__group--disabled]="group.disabled">
-			<h3 class="nav__group-label">{{ group.label }}</h3>
+			<!-- The label is the link to the group's directory when it has one —
+			     replacing the "All components" / "All composites" rows that used
+			     to sit at the top of each list. Exact matching: /components is a
+			     prefix of every component route, so the default prefix match
+			     would render it permanently active. -->
+			<h3 class="nav__group-label">
+				@if (group.landingRoute; as landing) {
+					<a
+						class="nav__group-link"
+						[routerLink]="landing"
+						routerLinkActive="nav__group-link--active"
+						[routerLinkActiveOptions]="{ exact: true }"
+						(click)="closeDrawer()"
+						>{{ group.label }}</a
+					>
+				} @else {
+					{{ group.label }}
+				}
+			</h3>
 			@if (!group.disabled && group.items.length) {
 				<ul class="nav__list">
 					@for (item of group.items; track item.label) {
