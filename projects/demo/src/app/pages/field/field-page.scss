@@ -6,9 +6,17 @@
  * The width caps exist because a field stretches to fill its track by design;
  * a full-bleed input inside a demo canvas reads as a page-wide bar rather than
  * as a form control.
+ *
+ * Each wrapper pairs its cap with inline-size: 100%. The cap alone only sets a
+ * ceiling, and these sit in the example frame's flex row, where a block-level
+ * wrapper is a flex item and shrinks to its content. So on a narrow viewport —
+ * where the cap is never reached — the fields were coming out at their
+ * intrinsic input width and leaving most of the row empty. 100% fills the
+ * track; the cap still governs once there is room for it.
  */
 
 .field-page__field {
+	inline-size: 100%;
 	max-inline-size: 24rem;
 
 	&--narrow {
@@ -27,6 +35,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-spacing-5);
+	inline-size: 100%;
 	max-inline-size: 28rem;
 }
 
@@ -41,5 +50,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-spacing-5);
+	inline-size: 100%;
 	max-inline-size: 24rem;
 }

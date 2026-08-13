@@ -324,6 +324,16 @@
 	.shell__menu-btn {
 		display: inline-flex;
 	}
+
+	// The inner padding exists to sit the shell title on the same vertical as
+	// the nav's group labels. Below the breakpoint the nav is a drawer, so
+	// there is no column to align to and the inset is only costing edge space —
+	// it stacked with the gutter to hold the search and theme controls 32px off
+	// the right edge, which on a narrow screen reads as drifting inward rather
+	// than sitting flush. The gutter alone carries it here.
+	.shell__header-inner {
+		padding-inline: 0;
+	}
 }
 
 // ── Code block theming (Catppuccin Mocha) ───────────────────────────────────

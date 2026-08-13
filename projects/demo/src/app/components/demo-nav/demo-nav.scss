@@ -167,6 +167,12 @@
 		// panel is one pixel wider as a drawer than as a permanent column.
 		box-sizing: border-box;
 		inline-size: var(--shell-nav-w);
+		// The UA sheet gives [popover] `height: fit-content`, which beats the
+		// inset pair above: the panel grew to its full content height, ran off
+		// the bottom of the screen, and `overflow-y: auto` never engaged because
+		// the box was never constrained. Restoring `auto` lets the insets size
+		// it, so it fills the column and scrolls what does not fit.
+		block-size: auto;
 		max-inline-size: calc(100% - (2 * var(--shell-gutter)));
 		margin: 0;
 		border: none;
