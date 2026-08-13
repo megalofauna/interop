@@ -526,8 +526,17 @@
  * `popover` attribute, per-instance id, and `anchor-name` / `position-anchor`
  * wiring. Positioning is delegated to the active position strategy
  * (FloatingUI by default) and configured at the template level via
- * placement="top-start" — the menu opens upward from the trigger, matching
- * the action-bar's bottom-of-stepper position.
+ * placement="bottom-end" — the menu opens downward from the trigger.
+ *
+ * It used to be top-end, on the reasoning that it should open upward to match
+ * the action bar's position at the bottom of the stepper. But one popover
+ * instance is shared by two triggers at opposite ends of the component: the
+ * nav-trigger at the top and the action-bar trigger at the bottom. Opening
+ * upward is right for the second and wrong for the first, and the nav-trigger
+ * is the one that appears on narrow viewports — so the menu was flying up over
+ * whatever sat above the stepper, reading as unanchored. Downward is correct
+ * for the common trigger, and the position strategy flips it for the other one
+ * when there is no room below.
  *
  * Rules below override the popover defaults to give the stepper menu its own
  * sizing/appearance tokens.

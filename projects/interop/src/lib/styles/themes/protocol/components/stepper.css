@@ -138,8 +138,22 @@
 
 	/* ── Connector ──────────────────────────────────────────────────────── */
 	--itx-step-connector-thickness: 2px;
-	--itx-step-connector-color: var(--itx-neutral-5);
-	--itx-step-connector-color-completed: var(--itx-neutral-8);
+	/* The rest state was neutral-5, which this codebase repeatedly records as
+	   reading like nothing at 1–2px — the same sub-0.1 luminance delta that made
+	   --itx-border invisible for the directory cards and the command palette.
+	   The line was drawn the whole time; it just could not be seen, which is
+	   indistinguishable from absent.
+
+	   neutral-8 rather than the neutral-7 hairline: the connector carries the
+	   shape of the path, so SC 1.4.11 (non-text contrast, 3:1) applies to it in
+	   a way it does not to a card's top rule. neutral-7 measures 2.26 against
+	   the surface; neutral-8 measures 3.29 dark / 3.28 light — the one step that
+	   clears the bar symmetrically in both schemes.
+
+	   Completed goes two further, to 6.4 / 7.7, so the walked path reads as
+	   legibly brighter than the path ahead rather than one grey beside another. */
+	--itx-step-connector-color: var(--itx-neutral-8);
+	--itx-step-connector-color-completed: var(--itx-neutral-10);
 
 	/* ── Step focus ring ────────────────────────────────────────────────── */
 	--itx-step-outline-width: 2px;

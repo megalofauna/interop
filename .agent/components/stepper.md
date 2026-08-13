@@ -265,3 +265,45 @@ already use.
 - **The demo page has no CSS-tokens section**, unlike its siblings — so there is
   no table to keep in sync, and no published surface for the ~60 `--itx-step*`
   tokens.
+
+## Action bar buttons
+
+`next` is `primary grow`, `back` is `secondary grow`. Both were
+`interop-button="protocol grow"` — and `protocol` is not a variant the theme
+defines, so the whole action bar rendered as the bare default while the markup
+claimed otherwise. The nav-trigger, the action-bar menu trigger and cancel
+carried the same dead token (cancel also carried `caution`, which exists only
+as a commented-out block in the theme). All five are now real variants or
+honestly bare.
+
+Cancel's icon binds `[color]="'var(--_icon-color)'"` — it reaches into a
+**private slot of another component**. That slot lives in `button.css` and is
+declared but never read there, so the stepper is its only consumer. It is worth
+knowing before changing either side: the button has no way to know the stepper
+depends on it.
+
+That coupling is how the icon's hover bug survived. The slot's hover and active
+fallbacks were the literal `black`, so in dark mode the icon went black against
+a dark hover fill. They now fall through to the rest token and finally
+`currentColor`, matching how `--_background` and `--_foreground` cascade — an
+icon in a button tracks the button's label unless a consumer says otherwise.
+
+## The shared menu popover opens downward
+
+One `InteropPopover` instance serves two triggers at **opposite ends** of the
+component: the nav-trigger at the top (narrow viewports) and the action-bar
+trigger at the bottom (`menu="always"`, wide). A single `placement` has to
+serve both.
+
+It was `top-end`, chosen for the action bar. That made the nav-trigger's menu
+fly upward over whatever sat above the stepper — it read as unanchored, because
+nothing connected it to the control that opened it. It is now `bottom-end`:
+correct for the nav-trigger, which is the one that appears on narrow viewports,
+and the position strategy flips it for the action-bar trigger when there is no
+room below.
+
+The menu's width is deliberate and worth not "simplifying": min-inline-size is
+`calc(100cqi - padding * 2)` on a **content-box** element, which resolves to a
+border box of exactly `100cqi` — the nav's width, which is the trigger's width.
+Dropping the subtraction overflows the trigger by 48px. Measured: trigger 268,
+menu 270 (268 + 1px borders).

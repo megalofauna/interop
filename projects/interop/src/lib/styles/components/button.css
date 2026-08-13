@@ -99,7 +99,8 @@
 		var(
 				--itx-button-padding-block,
 				(var(--itx-button-height, 2.5rem) - 1em) / 2
-			) + var(--itx-button-touch-inset, 0px)
+			) +
+			var(--itx-button-touch-inset, 0px)
 	);
 	padding-inline: var(--itx-button-padding-inline);
 	width: var(--itx-button-width, auto);
@@ -131,7 +132,14 @@
 	--_foreground: var(--itx-button-foreground, var(--itx-on-surface));
 	--_border-color: var(--itx-button-border-color, transparent);
 	--_box-shadow: var(--itx-button-box-shadow, none);
-	--_icon-color: var(--itx-button-icon-color, var(--itx-neutral-7));
+	/* currentColor, so an icon tracks the button's own label unless a consumer
+	   names a colour. The state slots below fall back through the rest token
+	   the same way --_background and --_foreground do — they used to fall back
+	   to a literal `black`, which is not a colour any light-dark() system can
+	   use: on hover a dark-scheme icon went black against a dark fill and
+	   disappeared. The stepper's cancel button reads this slot directly and was
+	   where it showed. */
+	--_icon-color: var(--itx-button-icon-color, currentColor);
 }
 
 :where(button[interop-button]:hover:not(:active)) {
@@ -148,7 +156,10 @@
 		var(--itx-button-border-color, transparent)
 	);
 	--_box-shadow: var(--itx-button-box-shadow-hover, none);
-	--_icon-color: var(--itx-button-icon-color-hover, black);
+	--_icon-color: var(
+		--itx-button-icon-color-hover,
+		var(--itx-button-icon-color, currentColor)
+	);
 }
 
 :where(button[interop-button]:active) {
@@ -165,7 +176,10 @@
 		var(--itx-button-border-color, transparent)
 	);
 	--_box-shadow: var(--itx-button-box-shadow-active, none);
-	--_icon-color: var(--itx-button-icon-color-active, black);
+	--_icon-color: var(
+		--itx-button-icon-color-active,
+		var(--itx-button-icon-color, currentColor)
+	);
 }
 
 /* ── Visual pill ─────────────────────────────────────────────────────────── */
