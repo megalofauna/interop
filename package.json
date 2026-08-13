@@ -41,7 +41,8 @@
     "docs:dev": "mkdocs serve",
     "docs:build": "mkdocs build",
     "docs:serve": "mkdocs serve -a localhost:3001",
-    "docs": "npm run docs:api && mkdocs build"
+    "docs": "npm run docs:api && mkdocs build",
+    "lint:tokens": "node scripts/check-private-tokens.mjs"
   },
   "peerDependencies": {
     "@angular/common": "^17.0.0",

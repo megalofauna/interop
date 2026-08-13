@@ -135,11 +135,31 @@
 	/* currentColor, so an icon tracks the button's own label unless a consumer
 	   names a colour. The state slots below fall back through the rest token
 	   the same way --_background and --_foreground do — they used to fall back
-	   to a literal `black`, which is not a colour any light-dark() system can
-	   use: on hover a dark-scheme icon went black against a dark fill and
-	   disappeared. The stepper's cancel button reads this slot directly and was
-	   where it showed. */
+	   to a literal `black`, which is no colour a light-dark() system can use:
+	   on hover a dark-scheme icon went black against a dark fill. */
 	--_icon-color: var(--itx-button-icon-color, currentColor);
+
+	/* Publish the resolved slot onto interop-icon's OWN public token.
+	 *
+	 * This closes a circuit that was open: the button declared
+	 * --itx-button-icon-color / -hover / -active as public API, resolved them
+	 * into --_icon-color per state, and then applied that to nothing. The
+	 * feature only worked because the stepper reached in and read --_icon-color
+	 * from a template binding — a private slot, from another component, wired
+	 * by hand. Half the mechanism lived outside the component that owned it.
+	 *
+	 * Setting --itx-icon-color here instead means an icon anywhere in the
+	 * button picks the colour up through the icon component's documented API.
+	 * The dependency runs one way — the button knows the icon's public token,
+	 * the icon knows nothing of buttons — and nothing crosses a private
+	 * boundary. Because custom properties inherit, this reaches nested icons
+	 * without naming the tag, and a consumer can still override it on a single
+	 * icon, which is closer and wins.
+	 *
+	 * Declared once here rather than per state: the var() resolves against the
+	 * final cascaded value of --_icon-color on this element, and the state
+	 * rules below rebind exactly that. */
+	--itx-icon-color: var(--_icon-color);
 }
 
 :where(button[interop-button]:hover:not(:active)) {

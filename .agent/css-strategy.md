@@ -79,6 +79,18 @@ The `-[state]` suffix is **optional** — declare it only where a state differs 
 
 `--_`-prefixed names are private resolved slots — internal to a rule block, not consumer API. They are a niche tool for composing several public tokens into one value, NOT the default mechanism for states (that is the nested pattern below).
 
+**Nothing enforces that.** Custom properties inherit and have no encapsulation, so any component can read another's `--_` slot, and the compiler will not complain. It has happened once: the stepper's cancel button bound `[color]="'var(--_icon-color)'"`, reaching into `button.css`. It worked, which is why it survived — and it meant half of the button's icon-colour mechanism lived in a different component, so a bug in the button's fallback chain could only be found by reading the stepper.
+
+Two rules follow.
+
+*If you are tempted to read another component's `--_` slot, the owning component has an unfinished public API.* Finish it there. The button now publishes its resolved icon colour onto `--itx-icon-color`, the icon component's own public token, so the value crosses the boundary through documented API in one direction only.
+
+*Cross-boundary private reads are cheap to detect.* `npm run lint:tokens` (`scripts/check-private-tokens.mjs`) fails the build on one.
+
+It keys on the component NAME rather than the directory, because a component's code lives under `lib/components/<name>/` while its stylesheet lives under `lib/styles/components/<name>.css` — a directory comparison reads that split as a violation. It also counts `setProperty("--_x", …)` as a declaration, so a component setting its own private from its own TypeScript (the toast does this for swipe offsets) is correctly not a finding.
+
+Validated in both directions: clean against the current tree, and it exits non-zero on exactly the stepper's `--_icon-color` read when pointed at the commit before that binding was removed.
+
 ## Stateful parts (hover / active / focus / …)
 
 A part that varies by interaction is **one nested block**: the base declares each property once; each state is a nested `&:where(:state)` block redefining only what changes. Structural owns the state *selectors*; the theme provides flat per-state value tokens.
