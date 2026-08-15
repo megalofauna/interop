@@ -93,6 +93,12 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 		id: "foundations",
 		items: [
 			{
+				label: "Colour",
+				route: "/foundation/color",
+				description:
+					"Two relative axes — elevation for the substrate, contrast for everything drawn on it — so a component carries its own depth instead of picking a grey.",
+			},
+			{
 				label: "Principles",
 				route: "/foundation/principles",
 				description:

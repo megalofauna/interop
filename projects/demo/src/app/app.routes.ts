@@ -255,6 +255,12 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "foundation/color",
+		title: "Colour — Interop",
+		loadComponent: () =>
+			import("./pages/color/color-page").then((m) => m.ColorPage),
+	},
+	{
 		path: "foundation/typography",
 		title: "Typography — Interop",
 		loadComponent: () =>
