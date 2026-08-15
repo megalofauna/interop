@@ -700,8 +700,13 @@ function emit() {
 		}
 	}
 
+	// Accent declarations that belong on [interop-root] are spliced INTO this
+	// block rather than opening a second one: .stylelintrc.json sets
+	// no-duplicate-selectors, and stylelint is now installed and enforcing it.
+	const accents = emitAccents();
+	lines.push(...accents.root);
 	lines.push("}", "");
-	lines.push(...emitAccents());
+	lines.push(...accents.scoped);
 	return lines.join("\n");
 }
 
@@ -716,7 +721,33 @@ function accentNumbers(prefix, solved) {
 }
 
 function emitAccents() {
+	/** Declarations for the single [interop-root] block opened by emit(). */
+	const root = [];
+	/** Self-contained blocks for scoped variants. */
 	const out = [];
+
+	/**
+	 * Compose a finished colour from ramp numbers.
+	 *
+	 * MUST be emitted in every block that declares those numbers, not once at the
+	 * root. A custom property is substituted where it is DECLARED, so a variant
+	 * block that re-declares only the numbers leaves the composed value frozen at
+	 * whatever the root resolved — and the variant silently does nothing on any
+	 * element that is not itself a root.
+	 *
+	 * The old status-palettes.css did not have this problem because it declared
+	 * finished colours; splitting into numbers plus composition reintroduces it
+	 * unless composition travels with the numbers. Same rule the layer engine
+	 * follows when it re-declares its whole token set at every boundary.
+	 */
+	const compose = (name, role, schemeless, indent = "\t") =>
+		schemeless
+			? `${indent}--itx-${name}-${role}: oklch(var(--itx-ramp-${name}-${role}-l) var(--itx-ramp-${name}-${role}-c) var(--itx-${name}-hue));`
+			: `${indent}--itx-${name}-${role}: light-dark(\n` +
+				`${indent}\toklch(var(--itx-ramp-${name}-${role}-light-l) var(--itx-ramp-${name}-${role}-light-c) var(--itx-${name}-hue)),\n` +
+				`${indent}\toklch(var(--itx-ramp-${name}-${role}-dark-l) var(--itx-ramp-${name}-${role}-dark-c) var(--itx-${name}-hue))\n${indent});`;
+
+	const SOLID_ROLES = ["solid", "on-solid", "solid-hover", "solid-active"];
 
 	/** The colourway ramp: per layer, per scheme. Re-declared by each variant. */
 	const colorwayRamp = (family, indent = "\t") =>
@@ -742,28 +773,28 @@ function emitAccents() {
 					}),
 				),
 			),
+			// Composition travels with the numbers — see compose().
+			SOLID_ROLES.map((role) => compose("colorway", role, true, indent)),
 		);
 
 	const colorways = families.filter((f) => f.role === "colorway");
 	const base = colorways.find((f) => f.variant === "default");
 
-	out.push(
+	root.push(
 		"",
-		"/*",
-		" * ── Colourway ───────────────────────────────────────────────────────────",
-		" *",
-		" * Seeded with ONE colour. Hue carries through; chroma is an intent clamped",
-		" * to what the hue can actually reach; lightness is honoured for the solid",
-		" * where the gamut allows and solved from contrast targets for everything",
-		" * else. That is why this survives a hue change and a lightness-indexed slot",
-		" * ramp did not.",
-		" *",
-		" * solid and on-solid are scheme-invariant on purpose: a brand colour that",
-		" * shifts between light and dark is not an identity.",
-		" */",
-		":where([interop-root]) {",
+		"\t/*",
+		"\t * Colourway.",
+		"\t *",
+		"\t * Seeded with ONE colour. Hue carries through; chroma is an intent",
+		"\t * clamped to what the hue can actually reach; lightness is honoured for",
+		"\t * the solid where the gamut allows and solved from contrast targets for",
+		"\t * everything else. That is why this survives a hue change and a",
+		"\t * lightness-indexed slot ramp did not.",
+		"\t *",
+		"\t * solid and on-solid are scheme-invariant on purpose: a brand colour",
+		"\t * that shifts between light and dark is not an identity.",
+		"\t */",
 		...colorwayRamp(base),
-		"}",
 	);
 
 	for (const variant of colorways.filter((f) => f.variant !== "default")) {
@@ -802,6 +833,9 @@ function emitAccents() {
 				rows.push(...accentNumbers(`${name}-${role}-${scheme}`, solved));
 			}
 		}
+		// Composition travels with the numbers — see compose().
+		for (const role of SOLID_ROLES) rows.push(compose(name, role, true));
+		for (const role of ACCENT_ROLES) rows.push(compose(name, role, false));
 		return rows;
 	};
 
@@ -827,43 +861,7 @@ function emitAccents() {
 		"}",
 	);
 
-	/* Composition. Statuses are layer-invariant, so they resolve here rather
-	   than in the engine's per-layer blocks. */
-	const compose = (name, role, schemeless) =>
-		schemeless
-			? `\t--itx-${name}-${role}: oklch(var(--itx-ramp-${name}-${role}-l) var(--itx-ramp-${name}-${role}-c) var(--itx-${name}-hue));`
-			: `\t--itx-${name}-${role}: light-dark(\n` +
-				`\t\toklch(var(--itx-ramp-${name}-${role}-light-l) var(--itx-ramp-${name}-${role}-light-c) var(--itx-${name}-hue)),\n` +
-				`\t\toklch(var(--itx-ramp-${name}-${role}-dark-l) var(--itx-ramp-${name}-${role}-dark-c) var(--itx-${name}-hue))\n\t);`;
-
-	out.push(
-		"",
-		"/*",
-		" * Composition for everything that does NOT vary by layer.",
-		" *",
-		" * The colourway's solid and label are composed here rather than in the",
-		" * engine because they are scheme- and layer-invariant. A scoped colourway",
-		" * re-declares the ramp numbers on the same element this reads them from, so",
-		" * the substitution picks up the variant with no second composition needed.",
-		" */",
-		":where([interop-root]) {",
-		compose("colorway", "solid", true),
-		compose("colorway", "on-solid", true),
-		compose("colorway", "solid-hover", true),
-		compose("colorway", "solid-active", true),
-	);
-	for (const name of Object.keys(SEEDS.status.seventies)) {
-		out.push(
-			compose(name, "solid", true),
-			compose(name, "on-solid", true),
-			compose(name, "solid-hover", true),
-			compose(name, "solid-active", true),
-		);
-		for (const role of ACCENT_ROLES) out.push(compose(name, role, false));
-	}
-	out.push("}", "");
-
-	return out;
+	return { root, scoped: out };
 }
 
 /* ── Emit: the engine ───────────────────────────────────────────────────── */

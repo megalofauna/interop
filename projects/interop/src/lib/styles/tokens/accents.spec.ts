@@ -100,8 +100,14 @@ describe("Accent families", () => {
 			}
 		});
 
-		it("swaps the whole set on itx-status-palette", () => {
-			const eighties = makeRoot({ "itx-status-palette": "eighties" });
+		it("swaps the whole set on a PLAIN DESCENDANT carrying itx-status-palette", () => {
+			// Deliberately not a root. The demo binds [attr.itx-status-palette] on an
+			// ordinary <div> wrapping the toast viewport, and an earlier revision
+			// emitted the numbers in the variant block but the composition only on
+			// [interop-root] — so the swap resolved at the root, inherited already
+			// substituted, and did nothing here. Asserting on a root hides this,
+			// because both blocks then land on the same element.
+			const eighties = el(root, { "itx-status-palette": "eighties" });
 
 			for (const status of ["danger", "success", "warning"]) {
 				expect(resolve(`--itx-${status}-solid`, eighties))
@@ -113,7 +119,7 @@ describe("Accent families", () => {
 		it("gives eighties real per-family labels, not one flat value", () => {
 			// seventies documents this as a dark-mode AA failure it had to fix;
 			// eighties still carried the flat values before they were generated.
-			const eighties = makeRoot({ "itx-status-palette": "eighties" });
+			const eighties = el(root, { "itx-status-palette": "eighties" });
 			const labels = ["danger", "info", "success", "warning"].map((s) =>
 				resolve(`--itx-${s}-on-solid`, eighties),
 			);

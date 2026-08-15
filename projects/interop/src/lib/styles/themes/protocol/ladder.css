@@ -133,22 +133,19 @@
 	--itx-ramp-contrast-6-3-dark: 0.920; /* 11.23:1 on its surface */
 	--itx-ramp-contrast-6-4-light: 0.150; /* 19.60:1 on its surface */
 	--itx-ramp-contrast-6-4-dark: 0.920; /* 9.87:1 on its surface */
-}
 
-
-/*
- * ── Colourway ───────────────────────────────────────────────────────────
- *
- * Seeded with ONE colour. Hue carries through; chroma is an intent clamped
- * to what the hue can actually reach; lightness is honoured for the solid
- * where the gamut allows and solved from contrast targets for everything
- * else. That is why this survives a hue change and a lightness-indexed slot
- * ramp did not.
- *
- * solid and on-solid are scheme-invariant on purpose: a brand colour that
- * shifts between light and dark is not an identity.
- */
-:where([interop-root]) {
+	/*
+	 * Colourway.
+	 *
+	 * Seeded with ONE colour. Hue carries through; chroma is an intent
+	 * clamped to what the hue can actually reach; lightness is honoured for
+	 * the solid where the gamut allows and solved from contrast targets for
+	 * everything else. That is why this survives a hue change and a
+	 * lightness-indexed slot ramp did not.
+	 *
+	 * solid and on-solid are scheme-invariant on purpose: a brand colour
+	 * that shifts between light and dark is not an identity.
+	 */
 	--itx-colorway-hue: 264;
 	--itx-ramp-colorway-solid-l: 0.500;
 	--itx-ramp-colorway-solid-c: 0.190;
@@ -270,7 +267,12 @@
 	--itx-ramp-colorway-text-4-light-c: 0.190;
 	--itx-ramp-colorway-text-4-dark-l: 0.695;
 	--itx-ramp-colorway-text-4-dark-c: 0.159;
+	--itx-colorway-solid: oklch(var(--itx-ramp-colorway-solid-l) var(--itx-ramp-colorway-solid-c) var(--itx-colorway-hue));
+	--itx-colorway-on-solid: oklch(var(--itx-ramp-colorway-on-solid-l) var(--itx-ramp-colorway-on-solid-c) var(--itx-colorway-hue));
+	--itx-colorway-solid-hover: oklch(var(--itx-ramp-colorway-solid-hover-l) var(--itx-ramp-colorway-solid-hover-c) var(--itx-colorway-hue));
+	--itx-colorway-solid-active: oklch(var(--itx-ramp-colorway-solid-active-l) var(--itx-ramp-colorway-solid-active-c) var(--itx-colorway-hue));
 }
+
 
 /* Colourway: amber. Re-declares the same ramp numbers, so every
  * consumer follows. Nothing is hand-corrected — the solver derives the
@@ -398,6 +400,10 @@
 	--itx-ramp-colorway-text-4-light-c: 0.145;
 	--itx-ramp-colorway-text-4-dark-l: 0.701;
 	--itx-ramp-colorway-text-4-dark-c: 0.145;
+	--itx-colorway-solid: oklch(var(--itx-ramp-colorway-solid-l) var(--itx-ramp-colorway-solid-c) var(--itx-colorway-hue));
+	--itx-colorway-on-solid: oklch(var(--itx-ramp-colorway-on-solid-l) var(--itx-ramp-colorway-on-solid-c) var(--itx-colorway-hue));
+	--itx-colorway-solid-hover: oklch(var(--itx-ramp-colorway-solid-hover-l) var(--itx-ramp-colorway-solid-hover-c) var(--itx-colorway-hue));
+	--itx-colorway-solid-active: oklch(var(--itx-ramp-colorway-solid-active-l) var(--itx-ramp-colorway-solid-active-c) var(--itx-colorway-hue));
 }
 
 /*
@@ -437,6 +443,26 @@
 	--itx-ramp-danger-text-light-c: 0.105;
 	--itx-ramp-danger-text-dark-l: 0.596;
 	--itx-ramp-danger-text-dark-c: 0.105;
+	--itx-danger-solid: oklch(var(--itx-ramp-danger-solid-l) var(--itx-ramp-danger-solid-c) var(--itx-danger-hue));
+	--itx-danger-on-solid: oklch(var(--itx-ramp-danger-on-solid-l) var(--itx-ramp-danger-on-solid-c) var(--itx-danger-hue));
+	--itx-danger-solid-hover: oklch(var(--itx-ramp-danger-solid-hover-l) var(--itx-ramp-danger-solid-hover-c) var(--itx-danger-hue));
+	--itx-danger-solid-active: oklch(var(--itx-ramp-danger-solid-active-l) var(--itx-ramp-danger-solid-active-c) var(--itx-danger-hue));
+	--itx-danger-tint: light-dark(
+		oklch(var(--itx-ramp-danger-tint-light-l) var(--itx-ramp-danger-tint-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-tint-dark-l) var(--itx-ramp-danger-tint-dark-c) var(--itx-danger-hue))
+	);
+	--itx-danger-on-tint: light-dark(
+		oklch(var(--itx-ramp-danger-on-tint-light-l) var(--itx-ramp-danger-on-tint-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-on-tint-dark-l) var(--itx-ramp-danger-on-tint-dark-c) var(--itx-danger-hue))
+	);
+	--itx-danger-border: light-dark(
+		oklch(var(--itx-ramp-danger-border-light-l) var(--itx-ramp-danger-border-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-border-dark-l) var(--itx-ramp-danger-border-dark-c) var(--itx-danger-hue))
+	);
+	--itx-danger-text: light-dark(
+		oklch(var(--itx-ramp-danger-text-light-l) var(--itx-ramp-danger-text-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-text-dark-l) var(--itx-ramp-danger-text-dark-c) var(--itx-danger-hue))
+	);
 	--itx-info-hue: 218;
 	--itx-ramp-info-solid-l: 0.530;
 	--itx-ramp-info-solid-c: 0.058;
@@ -462,6 +488,26 @@
 	--itx-ramp-info-text-light-c: 0.058;
 	--itx-ramp-info-text-dark-l: 0.579;
 	--itx-ramp-info-text-dark-c: 0.058;
+	--itx-info-solid: oklch(var(--itx-ramp-info-solid-l) var(--itx-ramp-info-solid-c) var(--itx-info-hue));
+	--itx-info-on-solid: oklch(var(--itx-ramp-info-on-solid-l) var(--itx-ramp-info-on-solid-c) var(--itx-info-hue));
+	--itx-info-solid-hover: oklch(var(--itx-ramp-info-solid-hover-l) var(--itx-ramp-info-solid-hover-c) var(--itx-info-hue));
+	--itx-info-solid-active: oklch(var(--itx-ramp-info-solid-active-l) var(--itx-ramp-info-solid-active-c) var(--itx-info-hue));
+	--itx-info-tint: light-dark(
+		oklch(var(--itx-ramp-info-tint-light-l) var(--itx-ramp-info-tint-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-tint-dark-l) var(--itx-ramp-info-tint-dark-c) var(--itx-info-hue))
+	);
+	--itx-info-on-tint: light-dark(
+		oklch(var(--itx-ramp-info-on-tint-light-l) var(--itx-ramp-info-on-tint-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-on-tint-dark-l) var(--itx-ramp-info-on-tint-dark-c) var(--itx-info-hue))
+	);
+	--itx-info-border: light-dark(
+		oklch(var(--itx-ramp-info-border-light-l) var(--itx-ramp-info-border-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-border-dark-l) var(--itx-ramp-info-border-dark-c) var(--itx-info-hue))
+	);
+	--itx-info-text: light-dark(
+		oklch(var(--itx-ramp-info-text-light-l) var(--itx-ramp-info-text-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-text-dark-l) var(--itx-ramp-info-text-dark-c) var(--itx-info-hue))
+	);
 	--itx-success-hue: 122;
 	--itx-ramp-success-solid-l: 0.530;
 	--itx-ramp-success-solid-c: 0.078;
@@ -487,6 +533,26 @@
 	--itx-ramp-success-text-light-c: 0.078;
 	--itx-ramp-success-text-dark-l: 0.579;
 	--itx-ramp-success-text-dark-c: 0.078;
+	--itx-success-solid: oklch(var(--itx-ramp-success-solid-l) var(--itx-ramp-success-solid-c) var(--itx-success-hue));
+	--itx-success-on-solid: oklch(var(--itx-ramp-success-on-solid-l) var(--itx-ramp-success-on-solid-c) var(--itx-success-hue));
+	--itx-success-solid-hover: oklch(var(--itx-ramp-success-solid-hover-l) var(--itx-ramp-success-solid-hover-c) var(--itx-success-hue));
+	--itx-success-solid-active: oklch(var(--itx-ramp-success-solid-active-l) var(--itx-ramp-success-solid-active-c) var(--itx-success-hue));
+	--itx-success-tint: light-dark(
+		oklch(var(--itx-ramp-success-tint-light-l) var(--itx-ramp-success-tint-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-tint-dark-l) var(--itx-ramp-success-tint-dark-c) var(--itx-success-hue))
+	);
+	--itx-success-on-tint: light-dark(
+		oklch(var(--itx-ramp-success-on-tint-light-l) var(--itx-ramp-success-on-tint-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-on-tint-dark-l) var(--itx-ramp-success-on-tint-dark-c) var(--itx-success-hue))
+	);
+	--itx-success-border: light-dark(
+		oklch(var(--itx-ramp-success-border-light-l) var(--itx-ramp-success-border-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-border-dark-l) var(--itx-ramp-success-border-dark-c) var(--itx-success-hue))
+	);
+	--itx-success-text: light-dark(
+		oklch(var(--itx-ramp-success-text-light-l) var(--itx-ramp-success-text-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-text-dark-l) var(--itx-ramp-success-text-dark-c) var(--itx-success-hue))
+	);
 	--itx-warning-hue: 78;
 	--itx-ramp-warning-solid-l: 0.620;
 	--itx-ramp-warning-solid-c: 0.105;
@@ -512,6 +578,26 @@
 	--itx-ramp-warning-text-light-c: 0.104;
 	--itx-ramp-warning-text-dark-l: 0.588;
 	--itx-ramp-warning-text-dark-c: 0.105;
+	--itx-warning-solid: oklch(var(--itx-ramp-warning-solid-l) var(--itx-ramp-warning-solid-c) var(--itx-warning-hue));
+	--itx-warning-on-solid: oklch(var(--itx-ramp-warning-on-solid-l) var(--itx-ramp-warning-on-solid-c) var(--itx-warning-hue));
+	--itx-warning-solid-hover: oklch(var(--itx-ramp-warning-solid-hover-l) var(--itx-ramp-warning-solid-hover-c) var(--itx-warning-hue));
+	--itx-warning-solid-active: oklch(var(--itx-ramp-warning-solid-active-l) var(--itx-ramp-warning-solid-active-c) var(--itx-warning-hue));
+	--itx-warning-tint: light-dark(
+		oklch(var(--itx-ramp-warning-tint-light-l) var(--itx-ramp-warning-tint-light-c) var(--itx-warning-hue)),
+		oklch(var(--itx-ramp-warning-tint-dark-l) var(--itx-ramp-warning-tint-dark-c) var(--itx-warning-hue))
+	);
+	--itx-warning-on-tint: light-dark(
+		oklch(var(--itx-ramp-warning-on-tint-light-l) var(--itx-ramp-warning-on-tint-light-c) var(--itx-warning-hue)),
+		oklch(var(--itx-ramp-warning-on-tint-dark-l) var(--itx-ramp-warning-on-tint-dark-c) var(--itx-warning-hue))
+	);
+	--itx-warning-border: light-dark(
+		oklch(var(--itx-ramp-warning-border-light-l) var(--itx-ramp-warning-border-light-c) var(--itx-warning-hue)),
+		oklch(var(--itx-ramp-warning-border-dark-l) var(--itx-ramp-warning-border-dark-c) var(--itx-warning-hue))
+	);
+	--itx-warning-text: light-dark(
+		oklch(var(--itx-ramp-warning-text-light-l) var(--itx-ramp-warning-text-light-c) var(--itx-warning-hue)),
+		oklch(var(--itx-ramp-warning-text-dark-l) var(--itx-ramp-warning-text-dark-c) var(--itx-warning-hue))
+	);
 }
 
 :where([itx-status-palette="eighties"]) {
@@ -540,6 +626,26 @@
 	--itx-ramp-danger-text-light-c: 0.190;
 	--itx-ramp-danger-text-dark-l: 0.609;
 	--itx-ramp-danger-text-dark-c: 0.190;
+	--itx-danger-solid: oklch(var(--itx-ramp-danger-solid-l) var(--itx-ramp-danger-solid-c) var(--itx-danger-hue));
+	--itx-danger-on-solid: oklch(var(--itx-ramp-danger-on-solid-l) var(--itx-ramp-danger-on-solid-c) var(--itx-danger-hue));
+	--itx-danger-solid-hover: oklch(var(--itx-ramp-danger-solid-hover-l) var(--itx-ramp-danger-solid-hover-c) var(--itx-danger-hue));
+	--itx-danger-solid-active: oklch(var(--itx-ramp-danger-solid-active-l) var(--itx-ramp-danger-solid-active-c) var(--itx-danger-hue));
+	--itx-danger-tint: light-dark(
+		oklch(var(--itx-ramp-danger-tint-light-l) var(--itx-ramp-danger-tint-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-tint-dark-l) var(--itx-ramp-danger-tint-dark-c) var(--itx-danger-hue))
+	);
+	--itx-danger-on-tint: light-dark(
+		oklch(var(--itx-ramp-danger-on-tint-light-l) var(--itx-ramp-danger-on-tint-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-on-tint-dark-l) var(--itx-ramp-danger-on-tint-dark-c) var(--itx-danger-hue))
+	);
+	--itx-danger-border: light-dark(
+		oklch(var(--itx-ramp-danger-border-light-l) var(--itx-ramp-danger-border-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-border-dark-l) var(--itx-ramp-danger-border-dark-c) var(--itx-danger-hue))
+	);
+	--itx-danger-text: light-dark(
+		oklch(var(--itx-ramp-danger-text-light-l) var(--itx-ramp-danger-text-light-c) var(--itx-danger-hue)),
+		oklch(var(--itx-ramp-danger-text-dark-l) var(--itx-ramp-danger-text-dark-c) var(--itx-danger-hue))
+	);
 	--itx-info-hue: 264;
 	--itx-ramp-info-solid-l: 0.500;
 	--itx-ramp-info-solid-c: 0.190;
@@ -565,6 +671,26 @@
 	--itx-ramp-info-text-light-c: 0.190;
 	--itx-ramp-info-text-dark-l: 0.594;
 	--itx-ramp-info-text-dark-c: 0.190;
+	--itx-info-solid: oklch(var(--itx-ramp-info-solid-l) var(--itx-ramp-info-solid-c) var(--itx-info-hue));
+	--itx-info-on-solid: oklch(var(--itx-ramp-info-on-solid-l) var(--itx-ramp-info-on-solid-c) var(--itx-info-hue));
+	--itx-info-solid-hover: oklch(var(--itx-ramp-info-solid-hover-l) var(--itx-ramp-info-solid-hover-c) var(--itx-info-hue));
+	--itx-info-solid-active: oklch(var(--itx-ramp-info-solid-active-l) var(--itx-ramp-info-solid-active-c) var(--itx-info-hue));
+	--itx-info-tint: light-dark(
+		oklch(var(--itx-ramp-info-tint-light-l) var(--itx-ramp-info-tint-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-tint-dark-l) var(--itx-ramp-info-tint-dark-c) var(--itx-info-hue))
+	);
+	--itx-info-on-tint: light-dark(
+		oklch(var(--itx-ramp-info-on-tint-light-l) var(--itx-ramp-info-on-tint-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-on-tint-dark-l) var(--itx-ramp-info-on-tint-dark-c) var(--itx-info-hue))
+	);
+	--itx-info-border: light-dark(
+		oklch(var(--itx-ramp-info-border-light-l) var(--itx-ramp-info-border-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-border-dark-l) var(--itx-ramp-info-border-dark-c) var(--itx-info-hue))
+	);
+	--itx-info-text: light-dark(
+		oklch(var(--itx-ramp-info-text-light-l) var(--itx-ramp-info-text-light-c) var(--itx-info-hue)),
+		oklch(var(--itx-ramp-info-text-dark-l) var(--itx-ramp-info-text-dark-c) var(--itx-info-hue))
+	);
 	--itx-success-hue: 145;
 	--itx-ramp-success-solid-l: 0.620;
 	--itx-ramp-success-solid-c: 0.190;
@@ -590,6 +716,26 @@
 	--itx-ramp-success-text-light-c: 0.151;
 	--itx-ramp-success-text-dark-l: 0.567;
 	--itx-ramp-success-text-dark-c: 0.178;
+	--itx-success-solid: oklch(var(--itx-ramp-success-solid-l) var(--itx-ramp-success-solid-c) var(--itx-success-hue));
+	--itx-success-on-solid: oklch(var(--itx-ramp-success-on-solid-l) var(--itx-ramp-success-on-solid-c) var(--itx-success-hue));
+	--itx-success-solid-hover: oklch(var(--itx-ramp-success-solid-hover-l) var(--itx-ramp-success-solid-hover-c) var(--itx-success-hue));
+	--itx-success-solid-active: oklch(var(--itx-ramp-success-solid-active-l) var(--itx-ramp-success-solid-active-c) var(--itx-success-hue));
+	--itx-success-tint: light-dark(
+		oklch(var(--itx-ramp-success-tint-light-l) var(--itx-ramp-success-tint-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-tint-dark-l) var(--itx-ramp-success-tint-dark-c) var(--itx-success-hue))
+	);
+	--itx-success-on-tint: light-dark(
+		oklch(var(--itx-ramp-success-on-tint-light-l) var(--itx-ramp-success-on-tint-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-on-tint-dark-l) var(--itx-ramp-success-on-tint-dark-c) var(--itx-success-hue))
+	);
+	--itx-success-border: light-dark(
+		oklch(var(--itx-ramp-success-border-light-l) var(--itx-ramp-success-border-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-border-dark-l) var(--itx-ramp-success-border-dark-c) var(--itx-success-hue))
+	);
+	--itx-success-text: light-dark(
+		oklch(var(--itx-ramp-success-text-light-l) var(--itx-ramp-success-text-light-c) var(--itx-success-hue)),
+		oklch(var(--itx-ramp-success-text-dark-l) var(--itx-ramp-success-text-dark-c) var(--itx-success-hue))
+	);
 	--itx-warning-hue: 85;
 	--itx-ramp-warning-solid-l: 0.750;
 	--itx-ramp-warning-solid-c: 0.154;
@@ -615,81 +761,6 @@
 	--itx-ramp-warning-text-light-c: 0.102;
 	--itx-ramp-warning-text-dark-l: 0.588;
 	--itx-ramp-warning-text-dark-c: 0.121;
-}
-
-/*
- * Composition for everything that does NOT vary by layer.
- *
- * The colourway's solid and label are composed here rather than in the
- * engine because they are scheme- and layer-invariant. A scoped colourway
- * re-declares the ramp numbers on the same element this reads them from, so
- * the substitution picks up the variant with no second composition needed.
- */
-:where([interop-root]) {
-	--itx-colorway-solid: oklch(var(--itx-ramp-colorway-solid-l) var(--itx-ramp-colorway-solid-c) var(--itx-colorway-hue));
-	--itx-colorway-on-solid: oklch(var(--itx-ramp-colorway-on-solid-l) var(--itx-ramp-colorway-on-solid-c) var(--itx-colorway-hue));
-	--itx-colorway-solid-hover: oklch(var(--itx-ramp-colorway-solid-hover-l) var(--itx-ramp-colorway-solid-hover-c) var(--itx-colorway-hue));
-	--itx-colorway-solid-active: oklch(var(--itx-ramp-colorway-solid-active-l) var(--itx-ramp-colorway-solid-active-c) var(--itx-colorway-hue));
-	--itx-danger-solid: oklch(var(--itx-ramp-danger-solid-l) var(--itx-ramp-danger-solid-c) var(--itx-danger-hue));
-	--itx-danger-on-solid: oklch(var(--itx-ramp-danger-on-solid-l) var(--itx-ramp-danger-on-solid-c) var(--itx-danger-hue));
-	--itx-danger-solid-hover: oklch(var(--itx-ramp-danger-solid-hover-l) var(--itx-ramp-danger-solid-hover-c) var(--itx-danger-hue));
-	--itx-danger-solid-active: oklch(var(--itx-ramp-danger-solid-active-l) var(--itx-ramp-danger-solid-active-c) var(--itx-danger-hue));
-	--itx-danger-tint: light-dark(
-		oklch(var(--itx-ramp-danger-tint-light-l) var(--itx-ramp-danger-tint-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-tint-dark-l) var(--itx-ramp-danger-tint-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-on-tint: light-dark(
-		oklch(var(--itx-ramp-danger-on-tint-light-l) var(--itx-ramp-danger-on-tint-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-on-tint-dark-l) var(--itx-ramp-danger-on-tint-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-border: light-dark(
-		oklch(var(--itx-ramp-danger-border-light-l) var(--itx-ramp-danger-border-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-border-dark-l) var(--itx-ramp-danger-border-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-text: light-dark(
-		oklch(var(--itx-ramp-danger-text-light-l) var(--itx-ramp-danger-text-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-text-dark-l) var(--itx-ramp-danger-text-dark-c) var(--itx-danger-hue))
-	);
-	--itx-info-solid: oklch(var(--itx-ramp-info-solid-l) var(--itx-ramp-info-solid-c) var(--itx-info-hue));
-	--itx-info-on-solid: oklch(var(--itx-ramp-info-on-solid-l) var(--itx-ramp-info-on-solid-c) var(--itx-info-hue));
-	--itx-info-solid-hover: oklch(var(--itx-ramp-info-solid-hover-l) var(--itx-ramp-info-solid-hover-c) var(--itx-info-hue));
-	--itx-info-solid-active: oklch(var(--itx-ramp-info-solid-active-l) var(--itx-ramp-info-solid-active-c) var(--itx-info-hue));
-	--itx-info-tint: light-dark(
-		oklch(var(--itx-ramp-info-tint-light-l) var(--itx-ramp-info-tint-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-tint-dark-l) var(--itx-ramp-info-tint-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-on-tint: light-dark(
-		oklch(var(--itx-ramp-info-on-tint-light-l) var(--itx-ramp-info-on-tint-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-on-tint-dark-l) var(--itx-ramp-info-on-tint-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-border: light-dark(
-		oklch(var(--itx-ramp-info-border-light-l) var(--itx-ramp-info-border-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-border-dark-l) var(--itx-ramp-info-border-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-text: light-dark(
-		oklch(var(--itx-ramp-info-text-light-l) var(--itx-ramp-info-text-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-text-dark-l) var(--itx-ramp-info-text-dark-c) var(--itx-info-hue))
-	);
-	--itx-success-solid: oklch(var(--itx-ramp-success-solid-l) var(--itx-ramp-success-solid-c) var(--itx-success-hue));
-	--itx-success-on-solid: oklch(var(--itx-ramp-success-on-solid-l) var(--itx-ramp-success-on-solid-c) var(--itx-success-hue));
-	--itx-success-solid-hover: oklch(var(--itx-ramp-success-solid-hover-l) var(--itx-ramp-success-solid-hover-c) var(--itx-success-hue));
-	--itx-success-solid-active: oklch(var(--itx-ramp-success-solid-active-l) var(--itx-ramp-success-solid-active-c) var(--itx-success-hue));
-	--itx-success-tint: light-dark(
-		oklch(var(--itx-ramp-success-tint-light-l) var(--itx-ramp-success-tint-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-tint-dark-l) var(--itx-ramp-success-tint-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-on-tint: light-dark(
-		oklch(var(--itx-ramp-success-on-tint-light-l) var(--itx-ramp-success-on-tint-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-on-tint-dark-l) var(--itx-ramp-success-on-tint-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-border: light-dark(
-		oklch(var(--itx-ramp-success-border-light-l) var(--itx-ramp-success-border-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-border-dark-l) var(--itx-ramp-success-border-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-text: light-dark(
-		oklch(var(--itx-ramp-success-text-light-l) var(--itx-ramp-success-text-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-text-dark-l) var(--itx-ramp-success-text-dark-c) var(--itx-success-hue))
-	);
 	--itx-warning-solid: oklch(var(--itx-ramp-warning-solid-l) var(--itx-ramp-warning-solid-c) var(--itx-warning-hue));
 	--itx-warning-on-solid: oklch(var(--itx-ramp-warning-on-solid-l) var(--itx-ramp-warning-on-solid-c) var(--itx-warning-hue));
 	--itx-warning-solid-hover: oklch(var(--itx-ramp-warning-solid-hover-l) var(--itx-ramp-warning-solid-hover-c) var(--itx-warning-hue));
