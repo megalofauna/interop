@@ -1,6 +1,7 @@
 {
   "name": "interop",
   "version": "0.1.0",
+  "private": true,
   "description": "Angular library for interoperable components and data patterns",
   "keywords": [
     "angular",
@@ -47,21 +48,7 @@
     "build:color": "node scripts/generate-color-ladder.mjs",
     "check:color": "node scripts/generate-color-ladder.mjs --check"
   },
-  "peerDependencies": {
-    "@angular/common": "^17.0.0",
-    "@angular/core": "^17.0.0",
-    "@angular/forms": "^17.0.0",
-    "@floating-ui/dom": ">=1.6.0",
-    "rxjs": "^7.8.0",
-    "typescript": "^5.2.0"
-  },
-  "peerDependenciesMeta": {
-    "@floating-ui/dom": {
-      "optional": true
-    }
-  },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^21.0.3",
     "@angular/build": "^21.0.3",
     "@angular/cli": "^21.0.3",
     "@angular/common": "^21.0.3",
