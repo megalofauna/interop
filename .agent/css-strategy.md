@@ -166,6 +166,33 @@ Uniformity is a goal in itself: across every component the two files should read
 
 No dead commented-out tokens or rules land in a committed file: a token with no consumer is cruft, and an undeclared state already degrades to base.
 
+## Linting
+
+`npm run lint` runs three guards; `npm run lint:css` is the stylelint one.
+
+Stylelint was configured long before it was installed, and its config had never
+been executed — `custom-property-pattern` was written as `^--(itx-…)$`, but
+stylelint matches the name **without** the leading `--`, so the rule could never
+pass. First real run reported 6451 errors, essentially all of them spurious.
+Corrected, the same tree reports zero.
+
+Two rules are deliberately shaped around how this codebase is written:
+
+- **`selector-type-no-unknown` ignores custom elements.** The library is built on
+  them — `interop-table`, `itx-code-block`, `interop-field-control` — so without
+  `ignore: ["custom-elements"]` the rule fires on almost every theme file.
+- **`no-duplicate-selectors` is off.** The file skeleton above deliberately
+  repeats a host selector across sections: `:where(button[interop-button])`
+  appears once for layout and again under *State-resolved private slots*, and
+  `:where([interop-tree-item])` once for the item and again for the focus
+  target. Merging those to satisfy the rule would flatten the structure this
+  document prescribes. The rule encodes an assumption we knowingly violate, so
+  it is disabled rather than suppressed file by file.
+
+The custom-property pattern allows the `_` half-step suffix (`--itx-spacing-0_5`,
+`--itx-radius-0_5`) and the `--interop-content-*` namespace, both of which are
+existing, intentional conventions.
+
 ## Container queries for responsive behavior
 
 The component host declares a container:
