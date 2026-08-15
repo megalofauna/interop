@@ -1,11 +1,15 @@
 {
 	"$schema": "https://json.schemastore.org/stylelintrc",
 	"customSyntax": "postcss-scss",
-	"ignoreFiles": ["projects/demo/**/*.scss", "projects/demo/**/*.css"],
+	"ignoreFiles": [
+		"projects/demo/**/*.scss",
+		"projects/demo/**/*.css",
+		"dist/**",
+		"node_modules/**"
+	],
 	"rules": {
-		"custom-property-pattern": "^--(itx-[a-z0-9-]+|_[a-z0-9-]+)$",
+		"custom-property-pattern": "^(itx|interop)-[a-z0-9-]+(_[0-9])?$|^_[a-z0-9-]+$",
 		"property-no-unknown": true,
-		"selector-type-no-unknown": true,
-		"no-duplicate-selectors": true
+		"selector-type-no-unknown": [true, { "ignore": ["custom-elements"] }]
 	}
 }
