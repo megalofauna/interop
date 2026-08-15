@@ -65,4 +65,22 @@ export class ColorPage {
 	protected swatch(l: number): string {
 		return `oklch(${l} 0.006 250)`;
 	}
+
+	/** Every seeded family, in the order the generator reports them. */
+	protected readonly families = [
+		{ id: "colorway", label: "Colourway", seed: "#0066CC" },
+		{ id: "danger", label: "Danger", seed: "oklch(.50 .105 33)" },
+		{ id: "info", label: "Info", seed: "oklch(.53 .058 218)" },
+		{ id: "success", label: "Success", seed: "oklch(.53 .078 122)" },
+		{ id: "warning", label: "Warning", seed: "oklch(.62 .105 78)" },
+	];
+
+	/** The roles that re-derive against whatever surface they land on. */
+	protected readonly accentRoles = ["tint", "border", "text"];
+
+	/** Shown side by side to prove a colourway switch leaves nothing behind. */
+	protected readonly colorways = [
+		{ id: "", label: "Default — blue" },
+		{ id: "amber", label: "Amber" },
+	];
 }

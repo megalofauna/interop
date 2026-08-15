@@ -208,6 +208,118 @@
 		</table>
 	</demo-section>
 
+	<demo-section id="accents" heading="Accent families">
+		<p description class="demo-section__lede">
+			Five families, each generated from <em>one</em> seed colour. The hue
+			carries through; the chroma is an intent clamped to what that hue can
+			actually reach in sRGB; the lightness is honoured for the solid where the
+			gamut allows and solved from contrast targets everywhere else.
+		</p>
+
+		<div class="color-families">
+			@for (family of families; track family.id) {
+				<figure class="color-families__item">
+					<div
+						class="color-families__solid"
+						[style.background-color]="'var(--itx-' + family.id + '-solid)'"
+						[style.color]="'var(--itx-' + family.id + '-on-solid)'"
+					>
+						Aa
+					</div>
+					<figcaption>
+						<strong>{{ family.label }}</strong>
+						<span>{{ family.seed }}</span>
+					</figcaption>
+				</figure>
+			}
+		</div>
+
+		<p>
+			The label on each fill is <em>derived</em>, not chosen. Amber comes out
+			with dark text because white on vivid orange measures about 1.7:1 — a
+			correction that used to live in a comment and had to be remembered by
+			whoever added the next hue.
+		</p>
+	</demo-section>
+
+	<demo-section id="accent-depth" heading="Accents at depth">
+		<p description class="demo-section__lede">
+			The identity holds; the surface-relative roles move. A solid fill is the
+			same colour at every depth and in both schemes, because a brand colour
+			that drifts as it nests is not a brand colour. Its tint, border and text
+			re-solve against whatever surface they land on.
+		</p>
+
+		@for (layer of layers; track layer) {
+			<div [attr.itx-layer]="layer" class="color-accent-row">
+				<span class="color-accent-row__caption">Layer {{ layer }}</span>
+				<span
+					class="color-accent-row__solid"
+					[style.background-color]="'var(--itx-colorway-solid)'"
+					[style.color]="'var(--itx-colorway-on-solid)'"
+					>solid</span
+				>
+				@for (role of accentRoles; track role) {
+					<span
+						class="color-accent-row__chip"
+						[style.background-color]="
+							role === 'tint' ? 'var(--itx-colorway-tint)' : 'transparent'
+						"
+						[style.border-color]="'var(--itx-colorway-border)'"
+						[style.color]="
+							role === 'tint'
+								? 'var(--itx-colorway-on-tint)'
+								: 'var(--itx-colorway-text)'
+						"
+						>{{ role }}</span
+					>
+				}
+			</div>
+		}
+	</demo-section>
+
+	<demo-section id="switching" heading="Switching a colourway">
+		<p description class="demo-section__lede">
+			The same components under two seeds. Everything moves together — which is
+			the point. The previous slot-based ramp re-pointed its accent by hand and
+			left the consumers reading a fixed slot index behind, so a handful of
+			components stayed the old colour while the rest changed.
+		</p>
+
+		<div class="color-switch">
+			@for (way of colorways; track way.label) {
+				<div
+					class="color-switch__frame"
+					interop-root
+					[attr.itx-colorway]="way.id || null"
+				>
+					<span class="color-switch__caption">{{ way.label }}</span>
+					<div class="color-switch__body">
+						<span
+							class="color-accent-row__solid"
+							[style.background-color]="'var(--itx-colorway-solid)'"
+							[style.color]="'var(--itx-colorway-on-solid)'"
+							>solid</span
+						>
+						<span
+							class="color-accent-row__chip"
+							[style.background-color]="'var(--itx-colorway-tint)'"
+							[style.border-color]="'var(--itx-colorway-border)'"
+							[style.color]="'var(--itx-colorway-on-tint)'"
+							>tint</span
+						>
+						<button interop-button="primary" type="button">Primary</button>
+						<interop-field-input
+							[id]="'switch-field-' + (way.id || 'default')"
+							label="Focus me"
+							placeholder="ring follows the seed"
+						/>
+					</div>
+				</div>
+			}
+		</div>
+	</demo-section>
+
 	<demo-section id="overriding" heading="Overriding">
 		<p description class="demo-section__lede">
 			The rules precede the componentry, so components cohere without agreeing
