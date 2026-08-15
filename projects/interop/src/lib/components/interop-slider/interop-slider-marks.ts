@@ -27,8 +27,8 @@ const AXIS = "var(--itx-slider-axis, to right)";
  * (neutral-12), so it takes the house hairline step instead — `currentColor`,
  * the previous default, is the page's text colour and vanished into the fill.
  */
-const MAJOR_COLOR = "var(--itx-slider-mark-color, var(--itx-neutral-7))";
-const MINOR_COLOR = "var(--itx-slider-mark-minor-color, var(--itx-neutral-5))";
+const MAJOR_COLOR = "var(--itx-slider-mark-color, var(--itx-contrast-3))";
+const MINOR_COLOR = "var(--itx-slider-mark-minor-color, var(--itx-contrast-2))";
 const MAJOR_THICKNESS = "var(--itx-slider-mark-thickness, 2px)";
 const MINOR_THICKNESS = "var(--itx-slider-mark-minor-thickness, 1px)";
 
@@ -61,9 +61,9 @@ const TOL = 1e-9;
  * whenever possible.
  *
  * ## Tokens
- *   --itx-slider-mark-color           Major tick color (default --itx-neutral-7).
+ *   --itx-slider-mark-color           Major tick color (default --itx-contrast-3).
  *   --itx-slider-mark-thickness       Major tick width along the track (2px).
- *   --itx-slider-mark-minor-color     Minor tick color (default --itx-neutral-5).
+ *   --itx-slider-mark-minor-color     Minor tick color (default --itx-contrast-2).
  *   --itx-slider-mark-minor-thickness Minor tick width along the track (1px).
  *   --itx-slider-mark-length          Tick extent ACROSS the track (0.5rem),
  *                                     declared in interop-slider.css.

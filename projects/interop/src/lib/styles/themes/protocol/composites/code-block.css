@@ -77,11 +77,11 @@
 	--itx-cd-tablist-padding-inline: 0;
 	--itx-cb-tablist-border-bottom-width: 2px;
 	--itx-cb-tablist-border-bottom-style: solid;
-	--itx-cb-tablist-border-bottom-color: var(--itx-neutral-8);
+	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-4);
 	--itx-cb-tablist-background: transparent;
 	--itx-cb-tablist-border-radius: 0;
 	--itx-cb-tablist-box-shadow: none;
-	--itx-cb-tablist-border-bottom-color: var(--itx-neutral-6);
+	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-3);
 
 	/* Tab */
 	--itx-cb-tab-background: transparent;
@@ -95,8 +95,8 @@
 	   property silently failing. */
 	--itx-cb-tab-font-family: inherit;
 	--itx-cb-tab-font-size: var(--itx-font-size-caption);
-	--itx-cb-tab-foreground: var(--itx-muted);
-	--itx-cb-tab-foreground-active: var(--itx-on-surface);
+	--itx-cb-tab-foreground: var(--itx-contrast-4);
+	--itx-cb-tab-foreground-active: var(--itx-contrast-6);
 	/*--itx-cb-tab-indicator-color: var(--itx-colorway-8);*/
 
 	--itx-cb-tab-indicator-width: 1px;
@@ -108,19 +108,19 @@
 
 	/* Tab:Hover  */
 	--itx-cb-tab-background-hover: inherit;
-	--itx-cb-tab-foreground-hover: var(--itx-neutral-8);
+	--itx-cb-tab-foreground-hover: var(--itx-contrast-4);
 	--itx-cb-tab-border-bottom-width: 2px;
 	--itx-cb-tab-border-bottom-style: solid;
-	--itx-cb-tab-border-bottom-color-hover: var(--itx-neutral-8);
+	--itx-cb-tab-border-bottom-color-hover: var(--itx-contrast-4);
 
 	/* Tab:Current  */
 	--itx-cb-tab-background-current: transparent;
-	--itx-cb-tab-foreground-current: var(--itx-neutral-12);
+	--itx-cb-tab-foreground-current: var(--itx-contrast-6);
 	--itx-cb-tab-border-bottom-color: var(--itx-colorway-8);
 
 	/* Label */
 	--itx-cb-label-padding-inline: initial;
-	--itx-cb-label-foreground: var(--itx-muted);
+	--itx-cb-label-foreground: var(--itx-contrast-4);
 	--itx-cb-label-font-size: var(--itx-font-size-caption);
 	--itx-cb-label-font-weight: 500;
 	--itx-cb-label-letter-spacing: 0.05em;
@@ -143,12 +143,12 @@
 	 * which is also when it is wanted.
 	 */
 	--itx-cb-button-background: transparent;
-	--itx-cb-button-foreground: var(--itx-neutral-10);
+	--itx-cb-button-foreground: var(--itx-contrast-5);
 	--itx-cb-button-background-hover: var(--itx-surface-above);
-	--itx-cb-button-foreground-hover: var(--itx-neutral-12);
+	--itx-cb-button-foreground-hover: var(--itx-contrast-6);
 
 	/* Pressed is the word-wrap toggle's "on" state — the one action here with a
 	   persistent state, so it keeps a fill to say so. */
-	--itx-cb-button-background-pressed: var(--itx-neutral-5);
-	--itx-cb-button-foreground-pressed: var(--itx-neutral-12);
+	--itx-cb-button-background-pressed: var(--itx-contrast-2);
+	--itx-cb-button-foreground-pressed: var(--itx-contrast-6);
 }

@@ -241,7 +241,7 @@ massErrors = [
 			default: "var(--itx-spacing-1) — 4px",
 		},
 		// Label
-		{ property: "--itx-field-label-color", default: "var(--itx-neutral-9)" },
+		{ property: "--itx-field-label-color", default: "var(--itx-contrast-4)" },
 		{ property: "--itx-field-label-font-size", default: "0.75rem" },
 		{ property: "--itx-field-label-font-weight", default: "400" },
 		{ property: "--itx-field-label-line-height", default: "1.3333" },
@@ -266,12 +266,12 @@ massErrors = [
 		{ property: "--itx-field-background", default: "var(--itx-surface-above)" },
 		{
 			property: "--itx-field-background-hover",
-			default: "var(--itx-surface-hover)",
+			default: "var(--itx-contrast-1)",
 		},
 		{ property: "--itx-field-underline-width", default: "1px" },
 		{
 			property: "--itx-field-underline-color",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-contrast-4)",
 		},
 		{
 			property: "--itx-field-border-radius",
@@ -283,9 +283,9 @@ massErrors = [
 		{ property: "--itx-field-invalid-icon-size", default: "1rem — 16px" },
 		{
 			property: "--itx-field-readonly-underline-color",
-			default: "var(--itx-neutral-4)",
+			default: "var(--itx-contrast-2)",
 		},
-		{ property: "--itx-field-disabled-color", default: "var(--itx-neutral-7)" },
+		{ property: "--itx-field-disabled-color", default: "var(--itx-contrast-3)" },
 		{
 			property: "--itx-field-transition-duration",
 			default: "var(--itx-duration-fast) — 100ms",
@@ -294,7 +294,7 @@ massErrors = [
 			property: "--itx-field-addon-gap",
 			default: "var(--itx-spacing-2) — 8px",
 		},
-		{ property: "--itx-field-addon-color", default: "var(--itx-muted)" },
+		{ property: "--itx-field-addon-color", default: "var(--itx-contrast-4)" },
 		// Value text
 		{
 			property: "--itx-field-font-family",
@@ -305,10 +305,10 @@ massErrors = [
 			property: "--itx-field-line-height",
 			default: "1.2857 on input, 1.4286 on textarea",
 		},
-		{ property: "--itx-field-color", default: "var(--itx-on-surface)" },
+		{ property: "--itx-field-color", default: "var(--itx-contrast-6)" },
 		{
 			property: "--itx-field-placeholder-color",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-contrast-4)",
 		},
 		// Textarea only
 		{
@@ -321,7 +321,7 @@ massErrors = [
 		},
 		{ property: "--itx-field-textarea-resize", default: "vertical" },
 		// Notes / errors
-		{ property: "--itx-field-note-color", default: "var(--itx-muted)" },
+		{ property: "--itx-field-note-color", default: "var(--itx-contrast-4)" },
 		{ property: "--itx-field-note-font-size", default: "0.75rem — 12px" },
 		{ property: "--itx-field-note-line-height", default: "1.3333" },
 		{

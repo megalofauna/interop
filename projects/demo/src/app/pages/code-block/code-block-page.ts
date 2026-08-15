@@ -135,16 +135,16 @@ increment(): void {
 		{ property: "--itx-cb-tablist-border-bottom-width", default: "2px" },
 		{
 			property: "--itx-cb-tablist-border-bottom-color",
-			default: "var(--itx-neutral-6)",
+			default: "var(--itx-contrast-3)",
 		},
 		{
 			property: "--itx-cb-tab-padding-inline",
 			default: "var(--itx-spacing-4)",
 		},
-		{ property: "--itx-cb-tab-foreground", default: "var(--itx-muted)" },
+		{ property: "--itx-cb-tab-foreground", default: "var(--itx-contrast-4)" },
 		{
 			property: "--itx-cb-tab-foreground-current",
-			default: "var(--itx-neutral-12)",
+			default: "var(--itx-contrast-6)",
 		},
 		{
 			property: "--itx-cb-tab-border-bottom-color",
@@ -154,7 +154,7 @@ increment(): void {
 			property: "--itx-cb-tab-outline-color",
 			default: "var(--itx-colorway-8)",
 		},
-		{ property: "--itx-cb-label-foreground", default: "var(--itx-muted)" },
+		{ property: "--itx-cb-label-foreground", default: "var(--itx-contrast-4)" },
 		{ property: "--itx-cb-actions-gap", default: "var(--itx-spacing-1) — 4px" },
 		{ property: "--itx-cb-button-background", default: "transparent" },
 		{
@@ -163,7 +163,7 @@ increment(): void {
 		},
 		{
 			property: "--itx-cb-button-background-pressed",
-			default: "var(--itx-neutral-5) — word-wrap toggle when on",
+			default: "var(--itx-contrast-2) — word-wrap toggle when on",
 		},
 	];
 

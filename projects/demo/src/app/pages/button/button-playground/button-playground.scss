@@ -17,16 +17,16 @@
 	gap: var(--itx-spacing-4);
 	padding: var(--itx-spacing-4);
 	min-height: 8rem;
-	background: var(--itx-neutral-3_5);
-	border: 1px solid var(--itx-neutral-2);
+	background: var(--itx-surface-above);
+	border: 1px solid var(--itx-contrast-1);
 	border-radius: var(--itx-radius-md);
 }
 
 .playground__attr {
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-fs-base);
-	color: var(--itx-neutral-11);
-	background: var(--itx-neutral-3);
+	color: var(--itx-contrast-5);
+	background: var(--itx-surface);
 	padding: var(--itx-spacing-4);
 	border-radius: var(--itx-radius-sm);
 	user-select: all;

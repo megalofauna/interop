@@ -12,7 +12,7 @@
 	display: contents;
 
 	/* — Body — */
-	--interop-content-color: var(--itx-on-surface);
+	--interop-content-color: var(--itx-contrast-6);
 	--interop-content-font-family: var(--itx-font-family-sans);
 	--interop-content-font-size: var(--itx-fs-base);
 	--interop-content-line-height: 1.5;
@@ -37,10 +37,10 @@
 	/* — Inline code & code blocks — */
 	--interop-content-code-family: var(--itx-font-family-mono);
 	--interop-content-code-font-size: 0.875em;
-	--interop-content-code-color: var(--itx-neutral-12);
-	--interop-content-code-bg: var(--itx-neutral-5);
+	--interop-content-code-color: var(--itx-contrast-6);
+	--interop-content-code-bg: var(--itx-surface-above-2);
 	--interop-content-code-padding: 0.125em 0.275em;
-	--interop-content-code-border: 2px solid var(--itx-neutral-6);
+	--interop-content-code-border: 2px solid var(--itx-contrast-3);
 	--interop-content-code-radius: 6px;
 
 	/* — Links — */
@@ -49,16 +49,16 @@
 	--interop-content-link-underline-offset: 0.2em;
 
 	/* — Quotes — */
-	--interop-content-quote-border-color: var(--itx-neutral-5);
+	--interop-content-quote-border-color: var(--itx-contrast-2);
 	--interop-content-quote-border-width: 2px;
-	--interop-content-quote-color: var(--itx-neutral-10);
+	--interop-content-quote-color: var(--itx-contrast-5);
 	--interop-content-quote-padding: var(--itx-spacing-4);
 
 	/* — Tables — */
-	--interop-content-table-border-color: var(--itx-neutral-4);
+	--interop-content-table-border-color: var(--itx-contrast-2);
 	--interop-content-table-cell-padding: var(--itx-spacing-2)
 		var(--itx-spacing-3);
-	--interop-content-table-header-bg: var(--itx-neutral-2);
+	--interop-content-table-header-bg: var(--itx-surface-below);
 
 	max-width: var(--interop-content-max-width);
 }
@@ -130,7 +130,7 @@ em {
 	font-style: italic;
 }
 mark {
-	background: var(--itx-neutral-3);
+	background: var(--itx-surface);
 	color: var(--interop-content-color);
 	padding: 0 0.15em;
 	border-radius: 2px;
@@ -141,7 +141,7 @@ del {
 }
 ins {
 	text-decoration: none;
-	background: var(--itx-neutral-3);
+	background: var(--itx-surface);
 }
 sup,
 sub {
@@ -166,7 +166,7 @@ code {
 pre {
 	margin: 0 0 var(--interop-content-paragraph-gap) 0;
 	padding: var(--itx-spacing-4);
-	background: var(--itx-neutral-2);
+	background: var(--itx-surface-below);
 	border-radius: 6px;
 	overflow-x: auto;
 }
@@ -245,7 +245,7 @@ th {
 caption {
 	caption-side: top;
 	padding-bottom: var(--itx-spacing-2);
-	color: var(--itx-neutral-10);
+	color: var(--itx-contrast-5);
 	font-size: var(--itx-font-size-label);
 	text-align: left;
 }
@@ -255,5 +255,5 @@ caption {
 hr {
 	margin: var(--itx-spacing-6) 0;
 	border: 0;
-	border-top: 1px solid var(--itx-neutral-4);
+	border-top: 1px solid var(--itx-contrast-2);
 }

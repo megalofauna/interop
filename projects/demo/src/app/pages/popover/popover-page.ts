@@ -235,7 +235,7 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 			property: "--itx-popover-background",
 			default: "var(--itx-surface-above)",
 		},
-		{ property: "--itx-popover-foreground", default: "var(--itx-on-surface)" },
+		{ property: "--itx-popover-foreground", default: "var(--itx-contrast-6)" },
 		{
 			property: "--itx-popover-border-radius",
 			default: "var(--itx-radius-none) — 0",
@@ -244,7 +244,7 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 		{ property: "--itx-popover-border-style", default: "solid" },
 		{
 			property: "--itx-popover-border-color",
-			default: "var(--itx-neutral-7)",
+			default: "var(--itx-contrast-3)",
 		},
 		{
 			property: "--itx-popover-shadow",

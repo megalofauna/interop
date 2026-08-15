@@ -414,15 +414,15 @@ async save() {
 		},
 
 		{ groupLabel: "Rest" },
-		{ property: "--itx-button-background", default: "var(--itx-neutral-5)" },
-		{ property: "--itx-button-foreground", default: "var(--itx-neutral-12)" },
+		{ property: "--itx-button-background", default: "var(--itx-contrast-2)" },
+		{ property: "--itx-button-foreground", default: "var(--itx-contrast-6)" },
 		{ property: "--itx-button-border-color", default: "transparent" },
 		{ property: "--itx-button-box-shadow", default: "none" },
 
 		{ groupLabel: "Hover" },
 		{
 			property: "--itx-button-background-hover",
-			default: "var(--itx-neutral-6)",
+			default: "var(--itx-contrast-3)",
 		},
 		{
 			property: "--itx-button-foreground-hover",
@@ -436,7 +436,7 @@ async save() {
 		{ groupLabel: "Active" },
 		{
 			property: "--itx-button-background-active",
-			default: "var(--itx-neutral-7)",
+			default: "var(--itx-contrast-3)",
 		},
 		{
 			property: "--itx-button-foreground-active",

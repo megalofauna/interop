@@ -36,7 +36,7 @@
 .palette-switch__label {
 	font-size: var(--itx-font-size-label);
 	font-weight: 600;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 /* Palette switcher — swaps itx-status-palette on the viewport scope so
@@ -51,7 +51,7 @@
 
 .palette-switch__option {
 	padding: var(--itx-spacing-1) var(--itx-spacing-3);
-	border: 1px solid var(--itx-border);
+	border: 1px solid var(--itx-contrast-3);
 	border-radius: var(--itx-radius-sm);
 	background: transparent;
 	color: var(--itx-text);

@@ -23,13 +23,13 @@
 	/* ── Panel host — frame (rest) ──────────────────────────────────────── */
 	--itx-expansion-panel-background: transparent;
 	--itx-expansion-panel-background-image: none;
-	--itx-expansion-panel-foreground: var(--itx-on-surface);
+	--itx-expansion-panel-foreground: var(--itx-contrast-6);
 	--itx-expansion-panel-border-width: 1px;
 	--itx-expansion-panel-border-style: solid;
 	/* The block edges do the structural work — they are the rules a reader
 	   scans down a stack of panels — so they carry real weight. The inline
 	   edges only close the frame and stay at the standard hairline. */
-	--itx-expansion-panel-border-block-color: var(--itx-neutral-5);
+	--itx-expansion-panel-border-block-color: var(--itx-contrast-2);
 	--itx-expansion-panel-border-inline-color: transparent;
 	--itx-expansion-panel-border-radius: 0;
 	--itx-expansion-panel-box-shadow: none;
@@ -41,7 +41,7 @@
 	 */
 	--itx-expansion-panel-background-expanded: transparent;
 	--itx-expansion-panel-background-image-expanded: none;
-	--itx-expansion-panel-border-block-color-expanded: var(--itx-neutral-6);
+	--itx-expansion-panel-border-block-color-expanded: var(--itx-contrast-3);
 	--itx-expansion-panel-border-inline-color-expanded: inherit;
 	--itx-expansion-panel-box-shadow-expanded: none;
 
@@ -74,7 +74,7 @@
 	   page in both schemes (neutral-1 in light, neutral-4 in dark), so the
 	   hovered row lifts toward the viewer rather than darkening. */
 	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
-	--itx-expansion-panel-trigger-color: var(--itx-on-surface);
+	--itx-expansion-panel-trigger-color: var(--itx-contrast-6);
 
 	--itx-expansion-panel-trigger-outline-color: var(--itx-colorway);
 	--itx-expansion-panel-trigger-outline-width: 2px;
@@ -98,13 +98,13 @@
 
 	/* ── Body — divider ───────────────────────────────────────────────────
 	 * A muted hairline between the trigger and the content, present only
-	 * while open. It rests transparent and fades to --itx-border as the panel
+	 * while open. It rests transparent and fades to --itx-contrast-3 as the panel
 	 * expands — lighter than the neutral-10 frame, so it separates the two
 	 * regions without competing with the rules that separate the panels. */
 	--itx-expansion-panel-body-divider-width: 1px;
 	--itx-expansion-panel-body-divider-style: solid;
 	--itx-expansion-panel-body-divider-color: transparent;
-	--itx-expansion-panel-body-divider-color-expanded: var(--itx-neutral-5);
+	--itx-expansion-panel-body-divider-color-expanded: var(--itx-contrast-2);
 
 	/* ── Body — animation ───────────────────────────────────────────────── */
 	--itx-expansion-panel-body-transition-duration: var(--itx-duration-base);
@@ -113,7 +113,7 @@
 	/* ── Body — peek mode ───────────────────────────────────────────────── */
 	--itx-expansion-panel-body-peek-height: 4rem;
 	--itx-expansion-panel-body-peek-fade-height: 2.5rem;
-	--itx-expansion-panel-body-peek-fade-color: var(--itx-page);
+	--itx-expansion-panel-body-peek-fade-color: var(--itx-surface);
 }
 
 /*

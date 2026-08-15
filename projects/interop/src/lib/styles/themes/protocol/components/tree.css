@@ -34,10 +34,10 @@
 	/* ── Row surface ──────────────────────────────────────────────────────
 	 * Hover is the only paint a resting tree ever applies.               */
 	--itx-tree-row-background: transparent;
-	--itx-tree-row-background-hover: var(--itx-surface-hover);
+	--itx-tree-row-background-hover: var(--itx-contrast-1);
 	--itx-tree-row-background-selected: var(--itx-colorway-2);
-	--itx-tree-row-background-current: var(--itx-neutral-3);
-	--itx-tree-row-color: var(--itx-on-surface);
+	--itx-tree-row-background-current: var(--itx-surface);
+	--itx-tree-row-color: var(--itx-contrast-6);
 	--itx-tree-row-color-selected: var(--itx-colorway-11);
 	--itx-tree-row-disabled-opacity: 0.5;
 
@@ -61,8 +61,8 @@
 	--itx-tree-toggle-size: 0.75em;
 	--itx-tree-toggle-aspect: 0.75;
 	--itx-tree-toggle-hit-area: var(--itx-spacing-6);
-	--itx-tree-toggle-color: var(--itx-neutral-9);
-	--itx-tree-toggle-color-hover: var(--itx-on-surface);
+	--itx-tree-toggle-color: var(--itx-contrast-4);
+	--itx-tree-toggle-color-hover: var(--itx-contrast-6);
 	--itx-tree-toggle-rotation: 0deg;
 	--itx-tree-toggle-rotation-expanded: 90deg;
 

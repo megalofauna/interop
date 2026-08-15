@@ -4,13 +4,13 @@
 	gap: var(--itx-spacing-4);
 }
 
-/* Each frame is its own pinned-scheme root. Foundation tokens (--itx-page,
-   --itx-border, …) resolve to the frame's itx-theme; the --r-* role vars are
+/* Each frame is its own pinned-scheme root. Foundation tokens (--itx-surface,
+   --itx-contrast-3, …) resolve to the frame's itx-theme; the --r-* role vars are
    mapped from one strategy's lab tokens by the strategy class below. */
 .lab-frame {
-	background: var(--itx-page);
-	color: var(--itx-on-surface);
-	border: 1px solid var(--itx-border);
+	background: var(--itx-surface);
+	color: var(--itx-contrast-6);
+	border: 1px solid var(--itx-contrast-3);
 	border-radius: var(--itx-radius-3, 8px);
 	padding: var(--itx-spacing-5);
 	display: flex;
@@ -23,7 +23,7 @@
 	letter-spacing: 0.08em;
 	font-size: var(--itx-fs-xs);
 	font-family: var(--itx-font-family-mono);
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 /* ── Strategy → role-var mapping ─────────────────────────────────────────── */
@@ -79,7 +79,7 @@
 .lab-swatch__name {
 	font-size: 11px;
 	font-family: var(--itx-font-family-mono);
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 /* ── Contextual mini-card (roles doing their jobs) ───────────────────────── */

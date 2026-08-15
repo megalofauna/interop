@@ -64,7 +64,11 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 			}
 			<ng-content select="[description]" />
 		</hgroup>
-		<div class="demo-example__preview">
+		<!-- itx-layer, not just a raised colour: painting one step up with a token
+		     leaves everything inside still resolving against the page, so a field
+		     asking for --itx-surface-below would land on the frame's own colour.
+		     Declaring the layer is what makes the contents relative to the frame. -->
+		<div class="demo-example__preview" itx-layer>
 			<ng-content />
 			<!-- Own slot, wrapped in an element this component owns. A projected
 			     node carries the *page's* encapsulation attribute, so
@@ -80,7 +84,7 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 			</div>
 		}
 		@if (codeBlock()) {
-			<div class="demo-example__code">
+			<div class="demo-example__code" itx-layer>
 				<ng-content select="itx-code-block" />
 			</div>
 		}

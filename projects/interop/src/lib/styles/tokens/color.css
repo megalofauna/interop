@@ -6,6 +6,7 @@
  */
 
 :where([interop-root]) {
-	--itx-on-surface-muted: var(--itx-muted);
+	--itx-contrast-4: var(--itx-contrast-4);
 	--itx-focus: var(--itx-colorway);
+	--itx-radius: var(--itx-radius-nominal);
 }

@@ -21,7 +21,7 @@
 	display: none;
 	position: relative;
 	margin-left: -16px;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 	text-decoration: none;
 	opacity: 0;
 	transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
@@ -31,7 +31,7 @@
 }
 
 .demo-section__lede {
-	color: var(--itx-neutral-10);
+	color: var(--itx-contrast-5);
 }
 
 .demo-section__heading:hover .demo-section__anchor {
@@ -49,6 +49,6 @@
 :host ::ng-deep [description] {
 	margin: var(--itx-spacing-3) 0 0;
 	font-size: var(--itx-font-size-body);
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 	line-height: 1.6;
 }

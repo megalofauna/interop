@@ -62,7 +62,7 @@ export class InlineCodePage {
 
 	tokenEntries: TokenEntry[] = [
 		{ property: "--itx-ic-background", default: "var(--itx-surface-above)" },
-		{ property: "--itx-ic-foreground", default: "var(--itx-on-surface)" },
+		{ property: "--itx-ic-foreground", default: "var(--itx-contrast-6)" },
 		{
 			property: "--itx-ic-font-family",
 			default: "var(--itx-font-family-mono)",

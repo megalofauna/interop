@@ -263,7 +263,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tabs-tablist-flex-wrap", default: "nowrap" },
 		{ property: "--itx-tabs-gap", default: "0" },
 		{ property: "--itx-tabs-rule-width", default: "1px" },
-		{ property: "--itx-tabs-rule-color", default: "var(--itx-neutral-7)" },
+		{ property: "--itx-tabs-rule-color", default: "var(--itx-contrast-3)" },
 		// Tab — box
 		{
 			property: "--itx-tab-min-block-size",
@@ -295,19 +295,19 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tab-letter-spacing", default: "normal" },
 		// Tab — states
 		{ property: "--itx-tab-background", default: "transparent" },
-		{ property: "--itx-tab-foreground", default: "var(--itx-neutral-9)" },
+		{ property: "--itx-tab-foreground", default: "var(--itx-contrast-4)" },
 		{
 			property: "--itx-tab-background-hover",
 			default: "transparent — set var(--itx-surface-above) for a hover fill",
 		},
 		{
 			property: "--itx-tab-foreground-hover",
-			default: "var(--itx-neutral-12)",
+			default: "var(--itx-contrast-6)",
 		},
 		{ property: "--itx-tab-active-background", default: "transparent" },
 		{
 			property: "--itx-tab-active-foreground",
-			default: "var(--itx-neutral-12)",
+			default: "var(--itx-contrast-6)",
 		},
 		{
 			property: "--itx-tab-font-weight-selected",
@@ -317,7 +317,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tab-indicator-size", default: "2px" },
 		{
 			property: "--itx-tab-indicator-color-hover",
-			default: "var(--itx-neutral-10)",
+			default: "var(--itx-contrast-5)",
 		},
 		{
 			property: "--itx-tab-active-indicator-color",

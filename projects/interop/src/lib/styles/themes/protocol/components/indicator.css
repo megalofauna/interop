@@ -12,11 +12,11 @@
 :where([interop-root]) {
 	/* ── Visual surface ─────────────────────────────────────────────────── */
 	--itx-indicator-background-color: light-dark(
-		var(--itx-neutral-1),
-		var(--itx-neutral-12)
+		var(--itx-contrast-1),
+		var(--itx-contrast-6)
 	);
 
-	--itx-indicator-border-color: var(--itx-neutral-12);
+	--itx-indicator-border-color: var(--itx-contrast-6);
 	--itx-indicator-border-width: 2px;
 	--itx-indicator-border-style: solid;
 	--itx-indicator-border-radius: var(--itx-inner-radius);

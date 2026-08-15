@@ -35,7 +35,7 @@
  *                         #512500 (AA 4.5:1) — still amber at chroma 0.08, vs
  *                         S2's desaturated #321e11. The synthesis of 2 and 3.
  *
- * Reference surface for the solve: --itx-page (neutral-2 light / neutral-3 dark).
+ * Reference surface for the solve: --itx-surface (neutral-2 light / neutral-3 dark).
  * Roles: bg-subtle, bg-muted, bg-bold, border-muted, border-bold, text, on-bold.
  */
 

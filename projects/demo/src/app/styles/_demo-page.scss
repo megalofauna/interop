@@ -29,7 +29,7 @@
 	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 /* The eyebrow becomes a link back to that category's directory page when one
@@ -40,7 +40,7 @@
 	text-decoration: none;
 
 	&:hover {
-		color: var(--itx-on-surface);
+		color: var(--itx-contrast-6);
 		text-decoration: underline;
 		text-underline-offset: 0.25em;
 	}
@@ -55,7 +55,7 @@
 	margin: 0 0 var(--itx-spacing-2) 0;
 	font-size: var(--itx-font-size-display);
 	font-weight: 400;
-	color: var(--itx-on-surface);
+	color: var(--itx-contrast-6);
 	// Drives the shell header's collapsed breadcrumb as this heading scrolls off
 	// the top (see app.scss → .shell__crumb / shell-crumb-in).
 	view-timeline-name: --page-title;
@@ -65,7 +65,7 @@
 .demo-page__lead {
 	margin: 0;
 	font-size: var(--itx-font-size-body);
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 	line-height: 1.6;
 }
 
@@ -75,7 +75,7 @@
 	display: block;
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
-	color: var(--itx-on-surface);
+	color: var(--itx-contrast-6);
 	/* padding: var(--itx-spacing-2) var(--itx-spacing-4); */
 	/* background: hsla(0 0 100 / 0.05); */
 	/* backdrop-filter: blur(3px); */
@@ -88,7 +88,7 @@
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
 	font-weight: 500;
-	color: var(--itx-on-surface);
+	color: var(--itx-contrast-6);
 }
 
 .demo-page__required {
@@ -106,7 +106,7 @@
 	margin: var(--itx-spacing-8) 0 var(--itx-spacing-3);
 	font-size: var(--itx-font-size-label);
 	font-weight: 500;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 
 	&:first-child {
 		margin-block-start: 0;
@@ -122,7 +122,7 @@
 .demo-page__api-default {
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 /*
  * Available tokens (set on any ancestor, e.g. [interop-root]):

@@ -454,7 +454,7 @@
 ) {
 	--itx-scroll-area-scrollbar-width: none;
 	inline-size: 100%;
-	/*background-color: var(--itx-neutral-3_5);*/
+	/*background-color: var(--itx-contrast-1);*/
 }
 
 /* Vertical orientation: the step list lives in the popover via

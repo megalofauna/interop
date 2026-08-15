@@ -29,7 +29,7 @@
 	color: inherit;
 
 	// Panel chrome, borrowed wholesale from the popover component's token
-	// surface. Previously: a --itx-neutral-6 border, --itx-radius-lg corners and
+	// surface. Previously: a --itx-contrast-3 border, --itx-radius-lg corners and
 	// TWO box-shadow declarations, of which only the second applied — a hard
 	// `0 10px 0 0` offset with no blur, in rgb() where the rest of the library
 	// is oklch(). The first (var(--itx-shadow-md)) had never once rendered.

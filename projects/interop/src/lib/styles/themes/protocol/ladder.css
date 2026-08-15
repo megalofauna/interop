@@ -1,0 +1,136 @@
+/*
+ * Colour ladder — GENERATED, do not edit by hand.
+ *
+ *   node scripts/generate-color-ladder.mjs
+ *
+ * Surfaces are art-directed; contrast ranks are solved against their own
+ * surface for a contrast floor. See the script for the reasoning, and
+ * .agent/color.md for the model.
+ *
+ * Both schemes live in one light-dark() per token. That is not a style
+ * choice: color-scheme is `light dark` on [interop-root], and while it
+ * computes to that, nothing in CSS can observe which scheme is actually in
+ * use — not @supports, not a style query, not @container. Only light-dark()
+ * knows. So scheme-varying NUMBERS have to ride inside a colour function.
+ *
+ * Chroma and hue stay live via the tint packs, so a whole-palette retint is
+ * one declaration on any ancestor. Lightness is baked per layer.
+ */
+
+:where([interop-root]) {
+	/* ── Tint packs — chroma + hue, per scheme. The retint knob. ────── */
+	--itx-tint-light: 0.006 250;
+	--itx-tint-dark: 0.006 250;
+
+	/* ── Elevation: the neutral substrate ───────────────────────────── */
+	--itx-ramp-surface-n2-light: 0.812;
+	--itx-ramp-surface-n2-dark: 0.110;
+	--itx-ramp-surface-n1-light: 0.855;
+	--itx-ramp-surface-n1-dark: 0.155;
+	--itx-ramp-surface-0-light: 0.898;
+	--itx-ramp-surface-0-dark: 0.200;
+	--itx-ramp-surface-1-light: 0.926;
+	--itx-ramp-surface-1-dark: 0.238;
+	--itx-ramp-surface-2-light: 0.953;
+	--itx-ramp-surface-2-dark: 0.275;
+	--itx-ramp-surface-3-light: 0.978;
+	--itx-ramp-surface-3-dark: 0.313;
+	--itx-ramp-surface-4-light: 1.000;
+	--itx-ramp-surface-4-dark: 0.350;
+
+	/* ── Contrast rank 1 — wash — hover fills, stripes ─────── */
+	--itx-ramp-contrast-1-n2-light: 0.774; /* 1.14:1 on its surface */
+	--itx-ramp-contrast-1-n2-dark: 0.160; /* 1.05:1 on its surface */
+	--itx-ramp-contrast-1-n1-light: 0.817; /* 1.14:1 on its surface */
+	--itx-ramp-contrast-1-n1-dark: 0.205; /* 1.09:1 on its surface */
+	--itx-ramp-contrast-1-0-light: 0.860; /* 1.13:1 on its surface */
+	--itx-ramp-contrast-1-0-dark: 0.250; /* 1.13:1 on its surface */
+	--itx-ramp-contrast-1-1-light: 0.888; /* 1.13:1 on its surface */
+	--itx-ramp-contrast-1-1-dark: 0.288; /* 1.16:1 on its surface */
+	--itx-ramp-contrast-1-2-light: 0.915; /* 1.12:1 on its surface */
+	--itx-ramp-contrast-1-2-dark: 0.325; /* 1.19:1 on its surface */
+	--itx-ramp-contrast-1-3-light: 0.940; /* 1.12:1 on its surface */
+	--itx-ramp-contrast-1-3-dark: 0.363; /* 1.22:1 on its surface */
+	--itx-ramp-contrast-1-4-light: 0.962; /* 1.11:1 on its surface */
+	--itx-ramp-contrast-1-4-dark: 0.400; /* 1.22:1 on its surface */
+
+	/* ── Contrast rank 2 — hairline, dividers ──────────────── */
+	--itx-ramp-contrast-2-n2-light: 0.699; /* 1.50:1 on its surface */
+	--itx-ramp-contrast-2-n2-dark: 0.302; /* 1.52:1 on its surface */
+	--itx-ramp-contrast-2-n1-light: 0.738; /* 1.50:1 on its surface */
+	--itx-ramp-contrast-2-n1-dark: 0.312; /* 1.50:1 on its surface */
+	--itx-ramp-contrast-2-0-light: 0.776; /* 1.50:1 on its surface */
+	--itx-ramp-contrast-2-0-dark: 0.334; /* 1.51:1 on its surface */
+	--itx-ramp-contrast-2-1-light: 0.801; /* 1.50:1 on its surface */
+	--itx-ramp-contrast-2-1-dark: 0.357; /* 1.51:1 on its surface */
+	--itx-ramp-contrast-2-2-light: 0.824; /* 1.50:1 on its surface */
+	--itx-ramp-contrast-2-2-dark: 0.384; /* 1.51:1 on its surface */
+	--itx-ramp-contrast-2-3-light: 0.845; /* 1.51:1 on its surface */
+	--itx-ramp-contrast-2-3-dark: 0.414; /* 1.51:1 on its surface */
+	--itx-ramp-contrast-2-4-light: 0.863; /* 1.51:1 on its surface */
+	--itx-ramp-contrast-2-4-dark: 0.447; /* 1.50:1 on its surface */
+
+	/* ── Contrast rank 3 — border, emphasis edge ───────────── */
+	--itx-ramp-contrast-3-n2-light: 0.524; /* 3.04:1 on its surface */
+	--itx-ramp-contrast-3-n2-dark: 0.472; /* 3.04:1 on its surface */
+	--itx-ramp-contrast-3-n1-light: 0.559; /* 3.02:1 on its surface */
+	--itx-ramp-contrast-3-n1-dark: 0.479; /* 3.00:1 on its surface */
+	--itx-ramp-contrast-3-0-light: 0.593; /* 3.01:1 on its surface */
+	--itx-ramp-contrast-3-0-dark: 0.500; /* 3.04:1 on its surface */
+	--itx-ramp-contrast-3-1-light: 0.613; /* 3.03:1 on its surface */
+	--itx-ramp-contrast-3-1-dark: 0.521; /* 3.00:1 on its surface */
+	--itx-ramp-contrast-3-2-light: 0.633; /* 3.03:1 on its surface */
+	--itx-ramp-contrast-3-2-dark: 0.546; /* 3.02:1 on its surface */
+	--itx-ramp-contrast-3-3-light: 0.653; /* 3.01:1 on its surface */
+	--itx-ramp-contrast-3-3-dark: 0.577; /* 3.02:1 on its surface */
+	--itx-ramp-contrast-3-4-light: 0.666; /* 3.03:1 on its surface */
+	--itx-ramp-contrast-3-4-dark: 0.614; /* 3.04:1 on its surface */
+
+	/* ── Contrast rank 4 — secondary text ──────────────────── */
+	--itx-ramp-contrast-4-n2-light: 0.431; /* 4.52:1 on its surface */
+	--itx-ramp-contrast-4-n2-dark: 0.567; /* 4.53:1 on its surface */
+	--itx-ramp-contrast-4-n1-light: 0.464; /* 4.53:1 on its surface */
+	--itx-ramp-contrast-4-n1-dark: 0.577; /* 4.54:1 on its surface */
+	--itx-ramp-contrast-4-0-light: 0.496; /* 4.52:1 on its surface */
+	--itx-ramp-contrast-4-0-dark: 0.594; /* 4.50:1 on its surface */
+	--itx-ramp-contrast-4-1-light: 0.517; /* 4.52:1 on its surface */
+	--itx-ramp-contrast-4-1-dark: 0.617; /* 4.51:1 on its surface */
+	--itx-ramp-contrast-4-2-light: 0.535; /* 4.52:1 on its surface */
+	--itx-ramp-contrast-4-2-dark: 0.647; /* 4.56:1 on its surface */
+	--itx-ramp-contrast-4-3-light: 0.552; /* 4.52:1 on its surface */
+	--itx-ramp-contrast-4-3-dark: 0.679; /* 4.50:1 on its surface */
+	--itx-ramp-contrast-4-4-light: 0.566; /* 4.53:1 on its surface */
+	--itx-ramp-contrast-4-4-dark: 0.718; /* 4.50:1 on its surface */
+
+	/* ── Contrast rank 5 — body text ───────────────────────── */
+	--itx-ramp-contrast-5-n2-light: 0.322; /* 7.01:1 on its surface */
+	--itx-ramp-contrast-5-n2-dark: 0.677; /* 7.04:1 on its surface */
+	--itx-ramp-contrast-5-n1-light: 0.360; /* 7.02:1 on its surface */
+	--itx-ramp-contrast-5-n1-dark: 0.687; /* 7.01:1 on its surface */
+	--itx-ramp-contrast-5-0-light: 0.393; /* 7.02:1 on its surface */
+	--itx-ramp-contrast-5-0-dark: 0.710; /* 7.07:1 on its surface */
+	--itx-ramp-contrast-5-1-light: 0.413; /* 7.05:1 on its surface */
+	--itx-ramp-contrast-5-1-dark: 0.734; /* 7.00:1 on its surface */
+	--itx-ramp-contrast-5-2-light: 0.431; /* 7.06:1 on its surface */
+	--itx-ramp-contrast-5-2-dark: 0.764; /* 7.02:1 on its surface */
+	--itx-ramp-contrast-5-3-light: 0.449; /* 7.02:1 on its surface */
+	--itx-ramp-contrast-5-3-dark: 0.802; /* 7.05:1 on its surface */
+	--itx-ramp-contrast-5-4-light: 0.463; /* 7.01:1 on its surface */
+	--itx-ramp-contrast-5-4-dark: 0.846; /* 7.06:1 on its surface */
+
+	/* ── Contrast rank 6 — maximum ─────────────────────────── */
+	--itx-ramp-contrast-6-n2-light: 0.150; /* 11.01:1 on its surface */
+	--itx-ramp-contrast-6-n2-dark: 0.920; /* 16.15:1 on its surface */
+	--itx-ramp-contrast-6-n1-light: 0.150; /* 12.69:1 on its surface */
+	--itx-ramp-contrast-6-n1-dark: 0.920; /* 15.49:1 on its surface */
+	--itx-ramp-contrast-6-0-light: 0.150; /* 14.56:1 on its surface */
+	--itx-ramp-contrast-6-0-dark: 0.920; /* 14.33:1 on its surface */
+	--itx-ramp-contrast-6-1-light: 0.150; /* 15.87:1 on its surface */
+	--itx-ramp-contrast-6-1-dark: 0.920; /* 13.06:1 on its surface */
+	--itx-ramp-contrast-6-2-light: 0.150; /* 17.19:1 on its surface */
+	--itx-ramp-contrast-6-2-dark: 0.920; /* 11.72:1 on its surface */
+	--itx-ramp-contrast-6-3-light: 0.150; /* 18.50:1 on its surface */
+	--itx-ramp-contrast-6-3-dark: 0.920; /* 10.32:1 on its surface */
+	--itx-ramp-contrast-6-4-light: 0.150; /* 19.60:1 on its surface */
+	--itx-ramp-contrast-6-4-dark: 0.920; /* 8.91:1 on its surface */
+}

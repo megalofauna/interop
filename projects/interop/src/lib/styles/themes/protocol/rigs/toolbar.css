@@ -56,7 +56,7 @@
 	--itx-button-border-style: solid;
 
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-on-surface);
+	--itx-button-foreground: var(--itx-contrast-6);
 
 	--itx-button-background-hover: unset;
 	--itx-button-foreground-hover: unset;

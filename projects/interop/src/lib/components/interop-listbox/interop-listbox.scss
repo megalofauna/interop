@@ -82,7 +82,7 @@
 
 	font-size: var(--itx-option-font-size, 0.875rem);
 	line-height: var(--itx-option-line-height, 1.2857);
-	color: var(--itx-option-color, var(--itx-on-surface));
+	color: var(--itx-option-color, var(--itx-contrast-6));
 
 	border-radius: var(--itx-option-radius, var(--itx-radius-none));
 	cursor: default;
@@ -129,7 +129,7 @@
 	&--active {
 		background-color: var(
 			--itx-option-background-active,
-			var(--itx-neutral-4_5)
+			var(--itx-contrast-2)
 		);
 	}
 
@@ -163,7 +163,7 @@
 	&--active#{&}--selected {
 		background-color: var(
 			--itx-option-background-active-selected,
-			var(--itx-neutral-4_5)
+			var(--itx-contrast-2)
 		);
 	}
 
@@ -190,11 +190,11 @@
 
 /* Colour, not opacity. A faded row smears every layer at once — the same
    reason the slider round replaced its disabled `opacity` with painted grey —
-   and a description is secondary text, which is what --itx-muted means. */
+   and a description is secondary text, which is what --itx-contrast-4 means. */
 .interop-option__description {
 	flex-shrink: 0;
 	font-size: var(--itx-option-description-font-size, 0.75rem);
-	color: var(--itx-option-description-color, var(--itx-muted));
+	color: var(--itx-option-description-color, var(--itx-contrast-4));
 	white-space: nowrap;
 }
 

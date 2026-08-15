@@ -303,7 +303,7 @@ density = signal<TableSize>('lg');`;
 		{ property: "--itx-table-cell-vertical-align", default: "middle" },
 
 		{ groupLabel: "Body" },
-		{ property: "--itx-table-body-color", default: "var(--itx-on-surface)" },
+		{ property: "--itx-table-body-color", default: "var(--itx-contrast-6)" },
 		{
 			property: "--itx-table-row-block-size",
 			default: "var(--itx-spacing-12) — 48px",
@@ -311,7 +311,7 @@ density = signal<TableSize>('lg');`;
 		{ property: "--itx-table-stripe-bg", default: "transparent" },
 		{
 			property: "--itx-table-row-hover-bg",
-			default: "var(--itx-surface-hover)",
+			default: "var(--itx-contrast-1)",
 		},
 		{ property: "--itx-table-row-border-width", default: "1px" },
 		{
@@ -325,7 +325,7 @@ density = signal<TableSize>('lg');`;
 
 		{ groupLabel: "Header" },
 		{ property: "--itx-table-header-bg", default: "var(--itx-surface-above)" },
-		{ property: "--itx-table-header-color", default: "var(--itx-neutral-12)" },
+		{ property: "--itx-table-header-color", default: "var(--itx-contrast-6)" },
 		{ property: "--itx-table-header-font-weight", default: "600" },
 		{ property: "--itx-table-header-border-width", default: "1px" },
 
@@ -337,7 +337,7 @@ density = signal<TableSize>('lg');`;
 		{ property: "--itx-table-sort-indicator-idle-opacity", default: "0.4" },
 
 		{ groupLabel: "Borders" },
-		{ property: "--itx-table-border", default: "var(--itx-border)" },
+		{ property: "--itx-table-border", default: "var(--itx-contrast-3)" },
 
 		{ groupLabel: "Sticky columns" },
 		{ property: "--itx-table-sticky-bg", default: "var(--itx-surface)" },
@@ -348,7 +348,7 @@ density = signal<TableSize>('lg');`;
 		},
 
 		{ groupLabel: "State rows (loading / error / empty)" },
-		{ property: "--itx-table-state-color", default: "var(--itx-muted)" },
+		{ property: "--itx-table-state-color", default: "var(--itx-contrast-4)" },
 		{
 			property: "--itx-table-state-padding",
 			default: "var(--itx-spacing-8) var(--itx-spacing-4) — 32px 16px",
@@ -365,7 +365,7 @@ density = signal<TableSize>('lg');`;
 			property: "--itx-table-group-label-padding-block-start",
 			default: "var(--itx-spacing-6) — 24px",
 		},
-		{ property: "--itx-table-group-label-color", default: "var(--itx-muted)" },
+		{ property: "--itx-table-group-label-color", default: "var(--itx-contrast-4)" },
 		{
 			property: "--itx-table-group-label-font-size",
 			default: "0.75rem — 12px",

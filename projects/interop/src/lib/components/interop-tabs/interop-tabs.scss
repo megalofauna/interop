@@ -210,16 +210,16 @@
  *   - neutral-7 rather than the $border-subtle → neutral-4 mapping in the
  *     conversion table, because neutral-4 sits ~0.10 luminance from our page
  *     surface and reads as invisible. That is round 7's lesson, and it is
- *     what --itx-border (neutral-5) already gets wrong.
+ *     what --itx-contrast-3 (neutral-5) already gets wrong.
  * To restore Carbon literally: --itx-tabs-rule-width: 2px and
- * --itx-tabs-rule-color: var(--itx-neutral-4).
+ * --itx-tabs-rule-color: var(--itx-contrast-2).
  */
 [role="tablist"] {
 	display: var(--itx-tabs-tablist-display, flex);
 	flex-wrap: var(--itx-tabs-tablist-flex-wrap, nowrap);
 	gap: var(--itx-tabs-gap, 0);
 	border-block-end: var(--itx-tabs-rule-width, 1px) solid
-		var(--itx-tabs-rule-color, var(--itx-neutral-7));
+		var(--itx-tabs-rule-color, var(--itx-contrast-3));
 }
 
 /*
@@ -238,7 +238,7 @@
 	flex-direction: column;
 	border-block-end: none;
 	border-inline-end: var(--itx-tabs-rule-width, 1px) solid
-		var(--itx-tabs-rule-color, var(--itx-neutral-7));
+		var(--itx-tabs-rule-color, var(--itx-contrast-3));
 }
 
 /* ── Tab ─────────────────────────────────────────────────────────────────── */
@@ -268,7 +268,7 @@
 	letter-spacing: var(--itx-tab-letter-spacing, normal);
 
 	background: var(--itx-tab-background, transparent);
-	color: var(--itx-tab-foreground, var(--itx-neutral-9));
+	color: var(--itx-tab-foreground, var(--itx-contrast-4));
 	border: var(--itx-tab-border-width, 0) solid
 		var(--itx-tab-border-color, transparent);
 
@@ -323,10 +323,10 @@
 	@media (any-hover: hover) {
 		&:where(:hover) {
 			background: var(--itx-tab-background-hover, transparent);
-			color: var(--itx-tab-foreground-hover, var(--itx-neutral-12));
+			color: var(--itx-tab-foreground-hover, var(--itx-contrast-6));
 
 			&::after {
-				background: var(--itx-tab-indicator-color-hover, var(--itx-neutral-10));
+				background: var(--itx-tab-indicator-color-hover, var(--itx-surface-below));
 			}
 		}
 	}
@@ -348,7 +348,7 @@
 	 * control note at the top of this file.
 	 */
 	&[aria-selected="true"] {
-		color: var(--itx-tab-active-foreground, var(--itx-neutral-12));
+		color: var(--itx-tab-active-foreground, var(--itx-contrast-6));
 		background: var(--itx-tab-active-background, transparent);
 		font-weight: var(
 			--itx-tab-font-weight-selected,

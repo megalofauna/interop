@@ -73,7 +73,7 @@
 	   draining rather than progressing. */
 	--_axis: to right;
 
-	background-color: var(--itx-progress-track, var(--itx-border));
+	background-color: var(--itx-progress-track, var(--itx-contrast-3));
 	background-image: linear-gradient(
 		var(--_axis),
 		var(--itx-progress-fill, var(--itx-colorway)) 0
