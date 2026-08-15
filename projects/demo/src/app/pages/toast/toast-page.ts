@@ -357,15 +357,15 @@ providers: [
 		},
 		// Item container
 		{ property: "--itx-toast-background", default: "var(--itx-surface-above)" },
-		{ property: "--itx-toast-foreground", default: "var(--itx-on-surface)" },
+		{ property: "--itx-toast-foreground", default: "var(--itx-contrast-6)" },
 		{ property: "--itx-toast-border-width", default: "0px" },
-		{ property: "--itx-toast-border-color", default: "var(--itx-border)" },
+		{ property: "--itx-toast-border-color", default: "var(--itx-contrast-3)" },
 		{
 			property: "--itx-toast-border-radius",
 			default: "var(--itx-radius-none) — 0",
 		},
 		{ property: "--itx-toast-accent-width", default: "3px" },
-		{ property: "--itx-toast-accent-color", default: "var(--itx-border)" },
+		{ property: "--itx-toast-accent-color", default: "var(--itx-contrast-3)" },
 		{ property: "--itx-toast-padding", default: "var(--itx-spacing-4) — 16px" },
 		{
 			property: "--itx-toast-item-gap",
@@ -413,7 +413,7 @@ providers: [
 		{ property: "--itx-toast-action-border-width", default: "1px" },
 		{
 			property: "--itx-toast-action-border-color",
-			default: "var(--itx-border)",
+			default: "var(--itx-contrast-3)",
 		},
 		{
 			property: "--itx-toast-action-border-radius",
@@ -423,7 +423,7 @@ providers: [
 		{ property: "--itx-toast-action-font-weight", default: "400" },
 		{
 			property: "--itx-toast-action-background-hover",
-			default: "var(--itx-surface-hover)",
+			default: "var(--itx-contrast-1)",
 		},
 		// Close button
 		{
@@ -438,11 +438,11 @@ providers: [
 		{ property: "--itx-toast-close-opacity-hover", default: "1" },
 		{
 			property: "--itx-toast-close-background-hover",
-			default: "var(--itx-surface-hover)",
+			default: "var(--itx-contrast-1)",
 		},
 		// Focus
 		{ property: "--itx-toast-focus-width", default: "2px" },
-		{ property: "--itx-toast-focus-color", default: "var(--itx-colorway)" },
+		{ property: "--itx-toast-focus-color", default: "var(--itx-colorway-solid)" },
 		{
 			property: "--itx-toast-focus-offset",
 			default: "2px — the toast item itself",

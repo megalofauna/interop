@@ -16,8 +16,8 @@
 
 :where([interop-root]) {
 	/* Track + fill — Carbon's $border-subtle and $interactive. */
-	--itx-progress-track: var(--itx-border);
-	--itx-progress-fill: var(--itx-colorway);
+	--itx-progress-track: var(--itx-contrast-3);
+	--itx-progress-fill: var(--itx-colorway-solid);
 
 	/* 8px, Carbon's default/big step. */
 	--itx-progress-height: var(--itx-spacing-2);

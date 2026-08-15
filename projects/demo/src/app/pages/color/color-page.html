@@ -1,0 +1,346 @@
+<demo-page>
+	<demo-masthead category="Foundations" title="Colour">
+		Two axes, and nothing in between. A component declares <em>that it is a
+		layer</em> — never which grey it is — and its surface, borders and text all
+		follow from the depth it happens to sit at.
+	</demo-masthead>
+
+	<demo-section id="axes" heading="The two axes">
+		<p description class="demo-section__lede">
+			Elevation is the substrate you stand on. Contrast is everything drawn on
+			top of it. They are different kinds of thing, so they are written
+			differently: elevation is always a spatial word, contrast is always a bare
+			scalar. You cannot spell one in the other's notation.
+		</p>
+
+		<div class="color-axes">
+			<div class="color-axes__card">
+				<h3>Elevation</h3>
+				<code>--itx-surface</code>
+				<code>--itx-surface-above</code>
+				<code>--itx-surface-above-2</code>
+				<code>--itx-surface-below</code>
+				<p>
+					Moves toward light in <strong>both</strong> schemes. The light page is
+					a mid-grey climbing to white; the dark page is near-black climbing to
+					charcoal. Backgrounds only.
+				</p>
+			</div>
+			<div class="color-axes__card">
+				<h3>Contrast</h3>
+				<code>--itx-contrast-1 … --itx-contrast-6</code>
+				<code>--itx-contrast-&lt;family&gt;-N</code>
+				<p>
+					Moves <strong>away from the current surface</strong>, so its direction
+					flips per scheme — darker in light, lighter in dark. A rank is a
+					contrast target against whatever it sits on, not a fixed grey, which
+					is why it stays correct at every depth and survives a hue change.
+				</p>
+			</div>
+		</div>
+	</demo-section>
+
+	<demo-section id="layers" heading="Layers compound">
+		<p description class="demo-section__lede">
+			Nothing below sets a colour. Each box carries only
+			<code>itx-layer</code>, and the engine counts the depth by asking its
+			nearest ancestor — so intermediate markup is transparent to the count.
+		</p>
+
+		<div itx-layer class="color-stack">
+			<span class="color-stack__label">itx-layer — depth 1</span>
+			<div itx-layer class="color-stack">
+				<span class="color-stack__label">itx-layer — depth 2</span>
+				<div class="color-stack__filler">
+					<p>A plain wrapper. It changes nothing.</p>
+					<div itx-layer class="color-stack">
+						<span class="color-stack__label">itx-layer — depth 3</span>
+						<div itx-sink class="color-stack">
+							<span class="color-stack__label">itx-sink — back to depth 2</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</demo-section>
+
+	<demo-section id="steps" heading="Step size — dark">
+		<p description class="demo-section__lede">
+			Four candidate ramps for the dark scheme, each starting from the same
+			page at L .200 and climbing five layers. Switch to dark mode to judge
+			them. Nested, not adjacent — a step that reads fine as two flat swatches
+			can still fail as a card inside a card, which is how it is actually used.
+		</p>
+
+		<div class="color-steps">
+			@for (candidate of darkCandidates; track candidate.label) {
+				<figure class="color-steps__item">
+					<figcaption>{{ candidate.label }}</figcaption>
+					<div
+						class="color-steps__nest"
+						[style.background-color]="swatch(candidate.steps[0])"
+					>
+						<div
+							class="color-steps__nest"
+							[style.background-color]="swatch(candidate.steps[1])"
+						>
+							<div
+								class="color-steps__nest"
+								[style.background-color]="swatch(candidate.steps[2])"
+							>
+								<div
+									class="color-steps__nest"
+									[style.background-color]="swatch(candidate.steps[3])"
+								>
+									<div
+										class="color-steps__nest color-steps__nest--last"
+										[style.background-color]="swatch(candidate.steps[4])"
+									></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</figure>
+			}
+		</div>
+
+		<p>
+			Wider steps cost layers. Above roughly L .44 rank 5 can no longer reach
+			7:1 against pure white, so the ceiling is fixed and a coarser step simply
+			runs out of room sooner — ΔL .060 reaches it at layer 4, ΔL .030 would
+			leave headroom for eight. Whichever reads best goes into
+			<code>SURFACES</code> in the generator, which re-solves every contrast
+			rank against the new surfaces.
+		</p>
+	</demo-section>
+
+	<demo-section id="ranks" heading="Ranks hold at every depth">
+		<p description class="demo-section__lede">
+			The same six tokens, rendered on each layer. Every swatch is solved for
+			its contrast floor against <em>its own</em> surface, so a rank never has
+			to be re-picked when a component moves. Toggle the colour scheme — the
+			relationships hold, the values do not.
+		</p>
+
+		@for (layer of layers; track layer) {
+			<div [attr.itx-layer]="layer" class="color-ranks">
+				<span class="color-ranks__caption">Layer {{ layer }}</span>
+
+				<div class="color-ranks__body">
+					<div class="color-ranks__col">
+						<div class="color-ranks__row">
+							@for (entry of ranks; track entry.rank) {
+								<div class="color-ranks__cell">
+									<span
+										class="color-ranks__swatch"
+										[style.background-color]="
+											'var(--itx-contrast-' + entry.rank + ')'
+										"
+									></span>
+									<span class="color-ranks__n">{{ entry.rank }}</span>
+								</div>
+							}
+						</div>
+						<p class="color-ranks__text">
+							Body text at rank 6,
+							<span class="color-ranks__muted">secondary at rank 4</span>,
+							separated by a rank-2 hairline.
+						</p>
+					</div>
+
+					<!-- Real componentry, not swatches. A field is a sink, a button is
+					     a rank-2 fill, a popover pins its own layer — three different
+					     relationships to the same surface, all of which have to stay
+					     legible as this block moves up the ladder. -->
+					<div class="color-ranks__col color-ranks__components">
+						<interop-field-input
+							[id]="'color-field-' + layer"
+							label="Callsign"
+							placeholder="e.g. Viper-7"
+						/>
+						<div class="color-ranks__actions">
+							<button interop-button="primary" type="button">Primary</button>
+							<button interop-button="secondary" type="button">Secondary</button>
+						</div>
+						<button
+							interop-button
+							type="button"
+							[interop-popover-trigger]="depthPopover"
+						>
+							Open popover
+						</button>
+						<div #depthPopover="interopPopover" interop-popover>
+							<p>
+								Pinned to its own layer, so it reads the same whatever depth
+								it is opened from.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</demo-section>
+
+	<demo-section id="table" heading="What each rank is for">
+		<p description class="demo-section__lede">
+			You do not choose a rank by eye. You choose the one whose job you are
+			doing, and the generator guarantees it clears that floor on every layer,
+			in both schemes — or the build fails.
+		</p>
+
+		<table class="color-table">
+			<thead>
+				<tr>
+					<th scope="col">Rank</th>
+					<th scope="col">Intent</th>
+					<th scope="col">Floor against its own surface</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (entry of ranks; track entry.rank) {
+					<tr>
+						<td><code>--itx-contrast-{{ entry.rank }}</code></td>
+						<td>{{ entry.intent }}</td>
+						<td>{{ entry.floor }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</demo-section>
+
+	<demo-section id="accents" heading="Accent families">
+		<p description class="demo-section__lede">
+			Five families, each generated from <em>one</em> seed colour. The hue
+			carries through; the chroma is an intent clamped to what that hue can
+			actually reach in sRGB; the lightness is honoured for the solid where the
+			gamut allows and solved from contrast targets everywhere else.
+		</p>
+
+		<div class="color-families">
+			@for (family of families; track family.id) {
+				<figure class="color-families__item">
+					<div
+						class="color-families__solid"
+						[style.background-color]="'var(--itx-' + family.id + '-solid)'"
+						[style.color]="'var(--itx-' + family.id + '-on-solid)'"
+					>
+						Aa
+					</div>
+					<figcaption>
+						<strong>{{ family.label }}</strong>
+						<span>{{ family.seed }}</span>
+					</figcaption>
+				</figure>
+			}
+		</div>
+
+		<p>
+			The label on each fill is <em>derived</em>, not chosen. Amber comes out
+			with dark text because white on vivid orange measures about 1.7:1 — a
+			correction that used to live in a comment and had to be remembered by
+			whoever added the next hue.
+		</p>
+	</demo-section>
+
+	<demo-section id="accent-depth" heading="Accents at depth">
+		<p description class="demo-section__lede">
+			The identity holds; the surface-relative roles move. A solid fill is the
+			same colour at every depth and in both schemes, because a brand colour
+			that drifts as it nests is not a brand colour. Its tint, border and text
+			re-solve against whatever surface they land on.
+		</p>
+
+		@for (layer of layers; track layer) {
+			<div [attr.itx-layer]="layer" class="color-accent-row">
+				<span class="color-accent-row__caption">Layer {{ layer }}</span>
+				<span
+					class="color-accent-row__solid"
+					[style.background-color]="'var(--itx-colorway-solid)'"
+					[style.color]="'var(--itx-colorway-on-solid)'"
+					>solid</span
+				>
+				@for (role of accentRoles; track role) {
+					<span
+						class="color-accent-row__chip"
+						[style.background-color]="
+							role === 'tint' ? 'var(--itx-colorway-tint)' : 'transparent'
+						"
+						[style.border-color]="'var(--itx-colorway-border)'"
+						[style.color]="
+							role === 'tint'
+								? 'var(--itx-colorway-on-tint)'
+								: 'var(--itx-colorway-text)'
+						"
+						>{{ role }}</span
+					>
+				}
+			</div>
+		}
+	</demo-section>
+
+	<demo-section id="switching" heading="Switching a colourway">
+		<p description class="demo-section__lede">
+			The same components under two seeds. Everything moves together — which is
+			the point. The previous slot-based ramp re-pointed its accent by hand and
+			left the consumers reading a fixed slot index behind, so a handful of
+			components stayed the old colour while the rest changed.
+		</p>
+
+		<div class="color-switch">
+			@for (way of colorways; track way.label) {
+				<div
+					class="color-switch__frame"
+					interop-root
+					[attr.itx-colorway]="way.id || null"
+				>
+					<span class="color-switch__caption">{{ way.label }}</span>
+					<div class="color-switch__body">
+						<span
+							class="color-accent-row__solid"
+							[style.background-color]="'var(--itx-colorway-solid)'"
+							[style.color]="'var(--itx-colorway-on-solid)'"
+							>solid</span
+						>
+						<span
+							class="color-accent-row__chip"
+							[style.background-color]="'var(--itx-colorway-tint)'"
+							[style.border-color]="'var(--itx-colorway-border)'"
+							[style.color]="'var(--itx-colorway-on-tint)'"
+							>tint</span
+						>
+						<button interop-button="primary" type="button">Primary</button>
+						<interop-field-input
+							[id]="'switch-field-' + (way.id || 'default')"
+							label="Focus me"
+							placeholder="ring follows the seed"
+						/>
+					</div>
+				</div>
+			}
+		</div>
+	</demo-section>
+
+	<demo-section id="overriding" heading="Overriding">
+		<p description class="demo-section__lede">
+			The rules precede the componentry, so components cohere without agreeing
+			on anything. That must never make overriding harder — every library
+			selector is zero-specificity and sits inside the <code>interop</code>
+			cascade layer, so any rule you write wins on contact.
+		</p>
+		<p>
+			Override through a component's own namespace
+			(<code>--itx-dialog-background</code>), which no layer block ever touches.
+			The generic <code>--itx-surface</code> and <code>--itx-contrast-*</code>
+			are written by the engine at every boundary, so setting those on an
+			ancestor is overwritten one layer down — by design, and asserted in the
+			spec so the reason stays visible.
+		</p>
+		<p>
+			To move the whole palette instead, set <code>--itx-tint-light</code> /
+			<code>--itx-tint-dark</code> (chroma and hue) or any
+			<code>--itx-ramp-*-light</code> / <code>-dark</code> lightness number on
+			any ancestor. Those stay unresolved until each layer composes them, so an
+			override reaches every layer below it.
+		</p>
+	</demo-section>
+</demo-page>

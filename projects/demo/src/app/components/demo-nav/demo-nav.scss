@@ -1,7 +1,7 @@
 // ── Desktop: always-visible sidebar ─────────────────────────────────────────
 
 :host {
-	--demo-background-color: var(--itx-page);
+	--demo-background-color: var(--itx-surface);
 	--demo-background-image: none;
 	--demo-background-blur: 0px;
 
@@ -55,7 +55,7 @@
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 // The label is a link for groups with a directory page. It keeps the label's
@@ -67,16 +67,16 @@
 	text-decoration: none;
 
 	&:hover {
-		color: var(--itx-on-surface);
+		color: var(--itx-contrast-6);
 	}
 
 	&:focus-visible {
-		outline: 2px solid var(--itx-colorway);
+		outline: 2px solid var(--itx-focus);
 		outline-offset: 2px;
 	}
 
 	&--active {
-		color: var(--itx-on-surface);
+		color: var(--itx-contrast-6);
 	}
 }
 
@@ -104,16 +104,16 @@
 	/* border-radius: var(--itx-radius-sm); */
 	font-size: var(--itx-font-size-label);
 	// Was #bbb — a literal picked to sit on a dark page, which meant the nav
-	// went to 1.71:1 in light mode. --itx-neutral-10 is a light-dark() pair and
+	// went to 1.71:1 in light mode. --itx-contrast-5 is a light-dark() pair and
 	// measures ~7:1 dark / ~8.9:1 light, while staying a clear step below the
-	// active link's --itx-on-surface.
-	color: var(--itx-neutral-10);
+	// active link's --itx-contrast-6.
+	color: var(--itx-contrast-5);
 	text-decoration: none;
 	transition: background-color var(--itx-duration-fast)
 		var(--itx-easing-standard);
 
 	&:hover:not(.nav__link--placeholder) {
-		/* background: var(--itx-surface-hover); */
+		/* background: var(--itx-contrast-1); */
 	}
 
 	&--active {
@@ -123,16 +123,16 @@
 			transparent 100%
 		);
 		/* background: var(--itx-surface-above); */
-		color: var(--itx-on-surface);
-		border-inline-start-color: var(--itx-colorway);
+		color: var(--itx-contrast-6);
+		border-inline-start-color: var(--itx-colorway-solid);
 
 		&:hover {
-			/* background: var(--itx-colorway-hover); */
+			/* background: var(--itx-colorway-solid); */
 		}
 	}
 
 	&--placeholder {
-		color: var(--itx-muted);
+		color: var(--itx-contrast-4);
 		cursor: default;
 	}
 }

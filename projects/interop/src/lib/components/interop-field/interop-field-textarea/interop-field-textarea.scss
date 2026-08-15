@@ -70,7 +70,7 @@
  * itself. Carbon holds the label at 400 so it never competes with the value.
  */
 :where(.interop-field-label) {
-	color: var(--itx-field-label-color, var(--itx-neutral-9));
+	color: var(--itx-field-label-color, var(--itx-contrast-4));
 	font-size: var(--itx-field-label-font-size, 0.75rem);
 	font-weight: var(--itx-field-label-font-weight, 400);
 	line-height: var(--itx-field-label-line-height, 1.3333);
@@ -81,7 +81,7 @@
    --itx-field-required-indicator to "" to suppress it. */
 :host([data-required]) :where(.interop-field-label)::after {
 	content: var(--itx-field-required-indicator, " *");
-	color: var(--itx-field-required-indicator-color, var(--itx-danger));
+	color: var(--itx-field-required-indicator-color, var(--itx-danger-solid));
 }
 
 /* ─── Control row ────────────────────────────────────────────────────────── */
@@ -121,18 +121,18 @@
 	 * already use. Polarity inverted, figure/ground relationship preserved,
 	 * and it survives dark mode for free — a hand-mapped grey would not.
 	 */
-	background-color: var(--itx-field-background, var(--itx-surface-above));
+	background-color: var(--itx-field-background, var(--itx-surface));
 
 	/*
-	 * ONE border. $border-strong maps to --itx-neutral-8 — deliberately
-	 * stronger than the --itx-neutral-7 hairline the other borrow rounds use
+	 * ONE border. $border-strong maps to --itx-contrast-4 — deliberately
+	 * stronger than the --itx-contrast-3 hairline the other borrow rounds use
 	 * for structural rules, because here the rule is the affordance rather
-	 * than a divider. (--itx-border is neutral-5, invisible against our
+	 * than a divider. (--itx-contrast-3 is neutral-5, invisible against our
 	 * surfaces.)
 	 */
 	border: none;
 	border-block-end: var(--itx-field-underline-width, 1px) solid
-		var(--itx-field-underline-color, var(--itx-neutral-8));
+		var(--itx-field-underline-color, var(--itx-contrast-4));
 
 	/* Squared. Carbon specifies no radius on any field. */
 	border-radius: var(--itx-field-border-radius, var(--itx-radius-none));
@@ -151,7 +151,7 @@
  * Hover. Carbon's text area has NO hover state — the fill is permanent, so
  * there is nothing to reveal. This is an Interop addition for consistency with
  * the rest of the library, and it moves in Carbon's direction ($field-hover is
- * a step DARKER than $field) using --itx-surface-hover.
+ * a step DARKER than $field) using --itx-contrast-1.
  *
  * Behind `any-hover: hover` so a touch device never gets a stuck fill, and
  * excluded on disabled/readonly, where the control is not interactive paint.
@@ -160,7 +160,7 @@
 	:where(interop-field-control:not(.disabled, .readonly):hover) {
 		background-color: var(
 			--itx-field-background-hover,
-			var(--itx-surface-hover)
+			var(--itx-contrast-1)
 		);
 	}
 }
@@ -168,12 +168,12 @@
 /*
  * Focus — a 2px ring inset into the field (`outline-offset: -2px`), so the
  * control still measures exactly its box and stacked fields don't collide.
- * Carbon's geometry, --itx-colorway for the colour: the semantic token, not
- * --itx-colorway-8, so the ring survives dark mode.
+ * Carbon's geometry, --itx-colorway-solid for the colour: the semantic token, not
+ * --itx-colorway-solid, so the ring survives dark mode.
  */
 :where(interop-field-control.focused) {
 	outline: var(--itx-field-focus-width, 2px) solid
-		var(--itx-field-focus-color, var(--itx-colorway));
+		var(--itx-field-focus-color, var(--itx-colorway-solid));
 	outline-offset: calc(-1 * var(--itx-field-focus-width, 2px));
 }
 
@@ -184,12 +184,12 @@
  * ours, so the control still carries an error signal while it is focused.
  */
 :where(interop-field-control.invalid) {
-	border-block-end-color: var(--itx-field-invalid-color, var(--itx-danger));
+	border-block-end-color: var(--itx-field-invalid-color, var(--itx-danger-solid));
 }
 
 :where(interop-field-control.invalid:not(.focused)) {
 	outline: var(--itx-field-focus-width, 2px) solid
-		var(--itx-field-invalid-color, var(--itx-danger));
+		var(--itx-field-invalid-color, var(--itx-danger-solid));
 	outline-offset: calc(-1 * var(--itx-field-focus-width, 2px));
 }
 
@@ -208,7 +208,7 @@
 	flex: 0 0 auto;
 	inline-size: var(--itx-field-invalid-icon-size, 1rem);
 	block-size: var(--itx-field-invalid-icon-size, 1rem);
-	background-color: var(--itx-field-invalid-color, var(--itx-danger));
+	background-color: var(--itx-field-invalid-color, var(--itx-danger-solid));
 	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm-.75 3h1.5v5h-1.5V4Zm.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
 	mask-repeat: no-repeat;
 	mask-position: center;
@@ -228,19 +228,19 @@
 
 :host([data-disabled]) :where(.interop-field-label),
 :host([data-disabled]) :where(.interop-field-note) {
-	color: var(--itx-field-disabled-color, var(--itx-neutral-7));
+	color: var(--itx-field-disabled-color, var(--itx-contrast-3));
 }
 
 /*
  * Read-only. Carbon drops the fill entirely and softens the rule to
- * $border-subtle (--itx-neutral-4): the value is still there to be read and
+ * $border-subtle (--itx-contrast-2): the value is still there to be read and
  * copied, but the box stops advertising itself as somewhere to type.
  */
 :where(interop-field-control.readonly) {
 	background-color: transparent;
 	border-block-end-color: var(
 		--itx-field-readonly-underline-color,
-		var(--itx-neutral-4)
+		var(--itx-contrast-2)
 	);
 }
 
@@ -271,28 +271,28 @@
 	font-family: var(--itx-field-font-family, var(--itx-font-family-sans));
 	font-size: var(--itx-field-font-size, 0.875rem);
 	line-height: var(--itx-field-line-height, 1.4286);
-	color: var(--itx-field-color, var(--itx-on-surface));
+	color: var(--itx-field-color, var(--itx-contrast-6));
 	resize: var(--itx-field-textarea-resize, vertical);
 }
 
 /*
  * Carbon's $text-placeholder is gray-40 (#a8a8a8), a documented contrast
- * failure against $field. We take one step darker — --itx-neutral-8, the same
+ * failure against $field. We take one step darker — --itx-contrast-4, the same
  * value as the underline. `opacity: 1` resets Firefox's UA default.
  */
 :where(.interop-text-area)::placeholder {
-	color: var(--itx-field-placeholder-color, var(--itx-neutral-8));
+	color: var(--itx-field-placeholder-color, var(--itx-contrast-4));
 	opacity: 1;
 }
 
 :where(.interop-text-area):disabled {
-	color: var(--itx-field-disabled-color, var(--itx-neutral-7));
+	color: var(--itx-field-disabled-color, var(--itx-contrast-3));
 	cursor: not-allowed;
 	resize: none;
 	/* Safari ignores `color` on a disabled control without this. */
 	-webkit-text-fill-color: var(
 		--itx-field-disabled-color,
-		var(--itx-neutral-7)
+		var(--itx-contrast-3)
 	);
 }
 
@@ -306,7 +306,7 @@
 :where(.interop-field-prefix),
 :where(.interop-field-suffix) {
 	flex: 0 0 auto;
-	color: var(--itx-field-addon-color, var(--itx-muted));
+	color: var(--itx-field-addon-color, var(--itx-contrast-4));
 	line-height: 1;
 	user-select: none;
 }
@@ -316,7 +316,7 @@
 /* $helper-text-01 — 12 / 16, at $text-helper. Same metrics as the label, so
    the block above and the block below the control are one voice. */
 :where(.interop-field-note) {
-	color: var(--itx-field-note-color, var(--itx-muted));
+	color: var(--itx-field-note-color, var(--itx-contrast-4));
 	font-size: var(--itx-field-note-font-size, 0.75rem);
 	line-height: var(--itx-field-note-line-height, 1.3333);
 }
@@ -326,7 +326,7 @@
 /* $text-error on Carbon's `.--form-requirement`, at helper-text-01 and
    weight 400 — the colour carries it, not the weight. */
 :where(.interop-field-error) {
-	color: var(--itx-field-error-color, var(--itx-danger));
+	color: var(--itx-field-error-color, var(--itx-danger-solid));
 	font-size: var(--itx-field-error-font-size, 0.75rem);
 	line-height: var(--itx-field-error-line-height, 1.3333);
 }

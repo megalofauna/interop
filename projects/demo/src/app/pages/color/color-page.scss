@@ -1,0 +1,302 @@
+/*
+ * Colour page — layout only.
+ *
+ * Deliberately sets no colour of its own beyond reading the two axes: the page
+ * has to demonstrate that the system paints itself, so anything hardcoded here
+ * would be cheating.
+ */
+
+.color-axes {
+	display: grid;
+	gap: var(--itx-spacing-4);
+	grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-spacing-2);
+		padding: var(--itx-spacing-4);
+		border: 1px solid var(--itx-contrast-2);
+		border-radius: var(--itx-radius-md);
+
+		h3 {
+			margin: 0;
+			font-size: var(--itx-font-size-label);
+		}
+
+		code {
+			font-family: var(--itx-font-family-mono);
+			font-size: var(--itx-font-size-caption);
+			color: var(--itx-contrast-4);
+		}
+
+		p {
+			margin: var(--itx-spacing-2) 0 0;
+			font-size: var(--itx-font-size-caption);
+		}
+	}
+}
+
+.color-stack {
+	padding: var(--itx-spacing-4);
+	border-radius: var(--itx-radius-md);
+
+	& + & {
+		margin-block-start: var(--itx-spacing-3);
+	}
+
+	&__label {
+		display: block;
+		font-family: var(--itx-font-family-mono);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+		margin-block-end: var(--itx-spacing-3);
+	}
+
+	&__filler {
+		padding-block: var(--itx-spacing-3);
+
+		p {
+			margin: 0 0 var(--itx-spacing-3);
+			font-size: var(--itx-font-size-caption);
+			color: var(--itx-contrast-4);
+		}
+	}
+}
+
+.color-ranks {
+	padding: var(--itx-spacing-4);
+	border-radius: var(--itx-radius-md);
+
+	& + & {
+		margin-block-start: var(--itx-spacing-2);
+	}
+
+	&__caption {
+		display: block;
+		font-family: var(--itx-font-family-mono);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+		margin-block-end: var(--itx-spacing-2);
+	}
+
+	/*
+	 * Swatches and live componentry sit side by side and wrap together, so the
+	 * abstract ladder and the thing it actually paints are read in one glance.
+	 * `start` alignment rather than stretch: the field sets the column width and
+	 * the swatch grid should not be dragged to match its height.
+	 */
+	&__body {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--itx-spacing-6);
+		align-items: start;
+	}
+
+	&__col {
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-spacing-3);
+		flex: 1 1 18rem;
+		min-inline-size: 0;
+	}
+
+	&__components {
+		flex: 0 1 16rem;
+	}
+
+	&__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--itx-spacing-2);
+	}
+
+	&__row {
+		display: flex;
+		gap: var(--itx-spacing-2);
+	}
+
+	&__cell {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--itx-spacing-1);
+	}
+
+	&__swatch {
+		inline-size: var(--itx-sz-10);
+		block-size: var(--itx-sz-8);
+		border-radius: var(--itx-radius-sm);
+		/* A rank-2 hairline, so low ranks stay visible against their own surface. */
+		border: 1px solid var(--itx-contrast-2);
+	}
+
+	&__n {
+		font-family: var(--itx-font-family-mono);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+	}
+
+	&__text {
+		/* No block margin — the column's gap already spaces this. Keeping the
+		   old top margin here would double it. */
+		margin: 0;
+		padding-block-start: var(--itx-spacing-3);
+		border-block-start: 1px solid var(--itx-contrast-2);
+		font-size: var(--itx-font-size-caption);
+	}
+
+	&__muted {
+		color: var(--itx-contrast-4);
+	}
+}
+
+/*
+ * Step-size comparison. Nested rather than laid out in a row: adjacent swatches
+ * flatter a ramp, because the eye reads an edge far better than it reads two
+ * areas separated by other content. Nesting is how layers actually appear.
+ */
+.color-steps {
+	display: grid;
+	gap: var(--itx-spacing-4);
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+
+	&__item {
+		margin: 0;
+
+		figcaption {
+			font-family: var(--itx-font-family-mono);
+			font-size: var(--itx-font-size-caption);
+			color: var(--itx-contrast-4);
+			margin-block-end: var(--itx-spacing-2);
+		}
+	}
+
+	&__nest {
+		padding: var(--itx-spacing-4);
+		border-radius: var(--itx-radius-sm);
+
+		&--last {
+			padding: var(--itx-spacing-5);
+		}
+	}
+}
+
+.color-families {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-spacing-4);
+
+	&__item {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-spacing-2);
+	}
+
+	&__solid {
+		display: grid;
+		place-items: center;
+		inline-size: var(--itx-sz-20);
+		block-size: var(--itx-sz-16);
+		border-radius: var(--itx-radius-sm);
+		font-weight: 600;
+	}
+
+	figcaption {
+		display: flex;
+		flex-direction: column;
+		font-size: var(--itx-font-size-caption);
+
+		span {
+			font-family: var(--itx-font-family-mono);
+			color: var(--itx-contrast-4);
+		}
+	}
+}
+
+.color-accent-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-spacing-2);
+	padding: var(--itx-spacing-4);
+	border-radius: var(--itx-radius-md);
+
+	& + & {
+		margin-block-start: var(--itx-spacing-2);
+	}
+
+	&__caption {
+		font-family: var(--itx-font-family-mono);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+		min-inline-size: 5rem;
+	}
+
+	&__solid,
+	&__chip {
+		padding: var(--itx-spacing-1) var(--itx-spacing-3);
+		border-radius: var(--itx-radius-sm);
+		font-size: var(--itx-font-size-caption);
+		font-family: var(--itx-font-family-mono);
+	}
+
+	&__chip {
+		border: 1px solid;
+	}
+}
+
+/*
+ * Each frame is its own pinned root, so the two colourways resolve side by side
+ * on the same page — the only way to see that a switch moves everything rather
+ * than most things.
+ */
+.color-switch {
+	display: grid;
+	gap: var(--itx-spacing-4);
+	grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+
+	&__frame {
+		padding: var(--itx-spacing-4);
+		border: 1px solid var(--itx-contrast-2);
+		border-radius: var(--itx-radius-md);
+	}
+
+	&__caption {
+		display: block;
+		font-family: var(--itx-font-family-mono);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+		margin-block-end: var(--itx-spacing-3);
+	}
+
+	&__body {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--itx-spacing-3);
+	}
+}
+
+.color-table {
+	inline-size: 100%;
+	border-collapse: collapse;
+	font-size: var(--itx-font-size-caption);
+
+	th,
+	td {
+		text-align: start;
+		padding: var(--itx-spacing-2) var(--itx-spacing-3);
+		border-block-end: 1px solid var(--itx-contrast-2);
+	}
+
+	th {
+		color: var(--itx-contrast-4);
+		font-weight: 600;
+	}
+
+	code {
+		font-family: var(--itx-font-family-mono);
+	}
+}

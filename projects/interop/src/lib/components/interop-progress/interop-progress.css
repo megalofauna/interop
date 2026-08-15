@@ -73,10 +73,10 @@
 	   draining rather than progressing. */
 	--_axis: to right;
 
-	background-color: var(--itx-progress-track, var(--itx-border));
+	background-color: var(--itx-progress-track, var(--itx-contrast-3));
 	background-image: linear-gradient(
 		var(--_axis),
-		var(--itx-progress-fill, var(--itx-colorway)) 0
+		var(--itx-progress-fill, var(--itx-colorway-solid)) 0
 			calc(var(--itx-progress-percent, 0) * 1%),
 		transparent calc(var(--itx-progress-percent, 0) * 1%) 100%
 	);
@@ -144,7 +144,7 @@
 	background-image: linear-gradient(
 		var(--_axis),
 		transparent 0 calc((var(--_sweep) - var(--_band)) * 1%),
-		var(--itx-progress-fill, var(--itx-colorway))
+		var(--itx-progress-fill, var(--itx-colorway-solid))
 			calc((var(--_sweep) - var(--_band)) * 1%) calc(var(--_sweep) * 1%),
 		transparent calc(var(--_sweep) * 1%) 100%
 	);

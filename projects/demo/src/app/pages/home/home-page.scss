@@ -33,7 +33,7 @@
 	font-weight: 600;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	color: var(--itx-colorway);
+	color: var(--itx-colorway-solid);
 }
 
 .home-page__headline {
@@ -41,13 +41,13 @@
 	font-size: clamp(2rem, 5vw, 3rem);
 	font-weight: 600;
 	line-height: 1.15;
-	color: var(--itx-on-surface);
+	color: var(--itx-contrast-6);
 	letter-spacing: -0.02em;
 }
 
 .home-page__headline-em {
 	font-style: italic;
-	color: var(--itx-colorway);
+	color: var(--itx-colorway-solid);
 }
 
 .home-page__lead {
@@ -55,7 +55,7 @@
 	max-width: 42rem;
 	font-size: var(--itx-font-size-body-lg);
 	line-height: 1.7;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 // ── Calls to action ──────────────────────────────────────────────────────────
@@ -94,31 +94,31 @@
 		var(--itx-easing-standard);
 
 	&:focus-visible {
-		outline: 2px solid var(--itx-colorway);
+		outline: 2px solid var(--itx-focus);
 		outline-offset: 2px;
 	}
 
 	&--primary {
-		background: var(--itx-colorway-5);
-		// --itx-neutral-12, not --itx-on-colorway. That token pairs with the
-		// *semantic* --itx-colorway, which is bright in dark mode and so wants
-		// dark text; this uses --itx-colorway-5, the button's fill, which is a
+		background: var(--itx-colorway-solid);
+		// --itx-contrast-6, not --itx-colorway-on-solid. That token pairs with the
+		// *semantic* --itx-colorway-solid, which is bright in dark mode and so wants
+		// dark text; this uses --itx-colorway-solid, the button's fill, which is a
 		// dark blue in that scheme. Pairing the two put near-black on dark blue
 		// at 1.78:1. The primary button's own foreground is neutral-12, and
 		// matching it is the point of this block — it measures 8.75:1.
-		color: var(--itx-neutral-12);
+		color: var(--itx-contrast-6);
 
 		&:hover {
-			background: var(--itx-colorway-7);
+			background: var(--itx-colorway-solid);
 		}
 	}
 
 	&--secondary {
-		border-color: var(--itx-neutral-8);
-		color: var(--itx-neutral-10);
+		border-color: var(--itx-contrast-4);
+		color: var(--itx-contrast-5);
 
 		&:hover {
-			color: var(--itx-neutral-12);
+			color: var(--itx-contrast-6);
 		}
 	}
 }
@@ -151,7 +151,7 @@
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 }
 
 // ── Pillars ──────────────────────────────────────────────────────────────────
@@ -174,26 +174,26 @@
 	flex-direction: column;
 	gap: var(--itx-spacing-2);
 	padding-block-start: var(--itx-spacing-4);
-	border-block-start: 2px solid var(--itx-neutral-7);
+	border-block-start: 2px solid var(--itx-contrast-3);
 }
 
 .home-page__pillar-heading {
 	margin: 0;
 	font-size: 1rem;
 	font-weight: 600;
-	color: var(--itx-on-surface);
+	color: var(--itx-contrast-6);
 }
 
 .home-page__pillar-body {
 	margin: 0;
 	font-size: 0.875rem;
 	line-height: 1.6;
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 	text-wrap: pretty;
 
 	code {
 		font-family: var(--itx-font-family-mono);
 		font-size: 0.9em;
-		color: var(--itx-on-surface);
+		color: var(--itx-contrast-6);
 	}
 }

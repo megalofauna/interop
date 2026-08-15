@@ -13,18 +13,18 @@
 	   on a raised row — the same mistake in miniature as a foreground picked for
 	   one background being used on another. */
 	&--loaded {
-		color: var(--itx-on-success-surface);
-		background: var(--itx-success-surface);
+		color: var(--itx-success-on-tint);
+		background: var(--itx-success-tint);
 	}
 
 	&--pending {
-		color: var(--itx-on-warning-surface);
-		background: var(--itx-warning-surface);
+		color: var(--itx-warning-on-tint);
+		background: var(--itx-warning-tint);
 	}
 
 	&--quarantine {
-		color: var(--itx-on-danger-surface);
-		background: var(--itx-danger-surface);
+		color: var(--itx-danger-on-tint);
+		background: var(--itx-danger-tint);
 	}
 }
 

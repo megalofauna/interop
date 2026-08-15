@@ -17,7 +17,7 @@
 
    Mid-luminance neutral rather than the colorway: an ordinal is structure, not
    emphasis, and a column of colourway rings down the side of a procedure reads
-   as a column of badges demanding attention. --itx-neutral-8 is the one step
+   as a column of badges demanding attention. --itx-contrast-4 is the one step
    that stays genuinely mid in both schemes (0.58 light / 0.55 dark), so the
    ring holds the same weight either way. */
 
@@ -26,9 +26,9 @@
 	--itx-list-marker-align: center;
 	--itx-list-marker-size: 2em;
 	--itx-list-marker-radius: var(--itx-radius-full);
-	--itx-list-marker-border: 2px solid var(--itx-neutral-8);
+	--itx-list-marker-border: 2px solid var(--itx-contrast-4);
 	--itx-list-marker-background: transparent;
-	--itx-list-marker-color: var(--itx-neutral-8);
+	--itx-list-marker-color: var(--itx-contrast-4);
 	--itx-list-marker-font-size: 0.8em;
 	--itx-list-marker-font-weight: 600;
 	--itx-list-marker-style: decimal;
@@ -47,11 +47,11 @@
    it is a modifier layered on that variant, not a replacement for it. */
 
 :where(ol[interop-list][itx-marker~="filled"] > li) {
-	--itx-list-marker-background: var(--itx-neutral-8);
-	--itx-list-marker-border: 2px solid var(--itx-neutral-8);
+	--itx-list-marker-background: var(--itx-contrast-2);
+	--itx-list-marker-border: 2px solid var(--itx-contrast-4);
 	--itx-list-marker-color: light-dark(
-		var(--itx-neutral-12),
-		var(--itx-neutral-1)
+		var(--itx-contrast-6),
+		var(--itx-contrast-1)
 	);
 }
 
@@ -69,9 +69,9 @@
 	--itx-list-row-background-hover: var(--itx-surface-above);
 
 	--itx-list-row-rule-width: 1px;
-	--itx-list-row-rule-color: var(--itx-border);
+	--itx-list-row-rule-color: var(--itx-contrast-3);
 
-	--itx-list-row-outline-color: var(--itx-colorway);
+	--itx-list-row-outline-color: var(--itx-focus);
 	--itx-list-row-outline-width: 2px;
 	--itx-list-row-outline-style: solid;
 	--itx-list-row-outline-offset: -2px;

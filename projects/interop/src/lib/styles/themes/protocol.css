@@ -46,8 +46,8 @@
 /* ── Foundation ─────────────────────────────────────────────────────────── */
 
 @import "../interop.css";
+@import "./protocol/ladder.css" layer(interop.theme);
 @import "./protocol/foundation.css" layer(interop.theme);
-@import "./protocol/status-palettes.css" layer(interop.theme);
 
 /* ── Components ─────────────────────────────────────────────────────────── */
 
@@ -82,7 +82,3 @@
 /* ── Rigs ───────────────────────────────────────────────────────────────── */
 
 @import "./protocol/rigs/toolbar.css" layer(interop.theme);
-
-/* ── Experiments (opt-in, self-scoped; safe to remove) ──────────────────── */
-
-@import "./protocol/experiments/amber-lab.css" layer(interop.theme);

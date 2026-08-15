@@ -64,8 +64,8 @@
 	block-size: var(--itx-slider-thumb-target, 1.5rem);
 	max-inline-size: var(--itx-slider-max-length, 40rem);
 
-	--_track-color: var(--itx-slider-track-color, var(--itx-neutral-4));
-	--_fill-color: var(--itx-slider-fill-color, var(--itx-neutral-12));
+	--_track-color: var(--itx-slider-track-color, var(--itx-contrast-2));
+	--_fill-color: var(--itx-slider-fill-color, var(--itx-contrast-6));
 	--_track-thickness: var(--itx-slider-track-thickness, var(--itx-spacing-0_5));
 	--_start: var(--itx-slider-range-start, 0);
 	--_end: var(--itx-slider-range-end, 1);
@@ -121,8 +121,8 @@
  */
 :host([aria-disabled="true"]) {
 	cursor: not-allowed;
-	--_track-color: var(--itx-slider-disabled-color, var(--itx-neutral-5));
-	--_fill-color: var(--itx-slider-disabled-color, var(--itx-neutral-5));
+	--_track-color: var(--itx-slider-disabled-color, var(--itx-contrast-2));
+	--_fill-color: var(--itx-slider-disabled-color, var(--itx-contrast-2));
 }
 
 /* ── Vertical orientation ─────────────────────────────────────────────────── *

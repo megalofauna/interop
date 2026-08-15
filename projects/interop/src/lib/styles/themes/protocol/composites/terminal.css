@@ -17,13 +17,13 @@
 /* ── plain variant (minimal, no-frills log) ──────────────────────────────── */
 
 :where([interop-root] itx-terminal.itx-term--plain) {
-	--itx-term-background: var(--itx-neutral-2);
-	--itx-term-color: var(--itx-on-surface);
+	--itx-term-background: var(--itx-surface-below);
+	--itx-term-color: var(--itx-contrast-6);
 	--itx-term-glow: none;
-	--itx-term-prompt-color: var(--itx-muted);
-	--itx-term-delta-color: var(--itx-muted);
-	--itx-term-caret-color: var(--itx-on-surface);
-	--itx-term-scrollbar-color: var(--itx-neutral-5);
+	--itx-term-prompt-color: var(--itx-contrast-4);
+	--itx-term-delta-color: var(--itx-contrast-4);
+	--itx-term-caret-color: var(--itx-contrast-6);
+	--itx-term-scrollbar-color: var(--itx-contrast-2);
 	--itx-term-radius: 0;
 	--itx-term-font-family: var(--itx-font-family-mono);
 }

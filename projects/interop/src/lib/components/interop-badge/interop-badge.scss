@@ -19,8 +19,8 @@
  *   min-block-size $spacing-03         8px        → the dot
  *   padding 0 $spacing-02 $spacing-01  0 4px 2px  → inline breathing room
  *   border-radius 100px                           → round, at both shapes
- *   background $support-error         red-60      → --itx-danger
- *   color $text-on-color              white       → --itx-on-danger
+ *   background $support-error         red-60      → --itx-danger-solid
+ *   color $text-on-color              white       → --itx-danger-on-solid
  *
  * Round is kept deliberately. The house style squares everything off unless
  * Carbon names a radius, and Carbon names one here — a badge is a spot, and a
@@ -65,7 +65,7 @@
  * - **No transition, no hover, no focus ring.** The indicator is
  *   `aria-hidden` and non-interactive, so WCAG 2.2 SC 2.5.8's 24×24 target
  *   floor — which is why chip stops at 24px — does not reach it, and 16px is
- *   safe. Nothing here is focusable, so the house `--itx-colorway` focus ring
+ *   safe. Nothing here is focusable, so the house `--itx-colorway-solid` focus ring
  *   has nowhere to land.
  *
  * ── Token surface (set on any ancestor, e.g. [interop-root]) ────────────────
@@ -77,8 +77,8 @@
  *   --itx-badge-padding-inline  Inline padding around the count
  *                               (default: var(--itx-spacing-1) — 4px)
  *   --itx-badge-radius          Corner radius (default: var(--itx-radius-full))
- *   --itx-badge-background      Fill (default: var(--itx-danger))
- *   --itx-badge-color           Label colour (default: var(--itx-on-danger))
+ *   --itx-badge-background      Fill (default: var(--itx-danger-solid))
+ *   --itx-badge-color           Label colour (default: var(--itx-danger-on-solid))
  *   --itx-badge-font-size       Count type size (default: 0.75rem)
  *   --itx-badge-font-weight     Count type weight (default: 400)
  *   --itx-badge-line-height     Count line box (default: 1.3333 — 16/12)
@@ -157,8 +157,8 @@
 	padding-inline: var(--itx-badge-padding-inline, var(--itx-spacing-1));
 	box-sizing: border-box;
 
-	background: var(--itx-badge-background, var(--itx-danger));
-	color: var(--itx-badge-color, var(--itx-on-danger));
+	background: var(--itx-badge-background, var(--itx-danger-solid));
+	color: var(--itx-badge-color, var(--itx-danger-on-solid));
 
 	/* Carbon $helper-text-01 — 12 / 16 / 400. Fixed rem, never
 	   --itx-font-size-*: those are fluid clamp() values and a fluid label

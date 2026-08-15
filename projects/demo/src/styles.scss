@@ -15,7 +15,7 @@
  * every nested scroller — the sidebar, code blocks, wide tables — without a
  * rule per element.
  *
- * Values are literal rather than --itx-neutral-6, because they have to be:
+ * Values are literal rather than --itx-contrast-3, because they have to be:
  * [interop-root] sits on <app-root>, so the token layer does not exist this far
  * up the tree. These are that step's two values. `color-scheme` is restated for
  * the same reason — light-dark() needs it here, and it is also what tells the

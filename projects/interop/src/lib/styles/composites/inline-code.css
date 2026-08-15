@@ -24,7 +24,7 @@
 	gap: var(--itx-ic-gap, var(--itx-spacing-1));
 	padding-block: var(--itx-ic-padding-block, 0);
 	padding-inline: var(--itx-ic-padding-inline, var(--itx-spacing-2));
-	background: var(--itx-ic-background, var(--itx-neutral-3));
+	background: var(--itx-ic-background, var(--itx-surface));
 	color: var(--itx-ic-foreground, inherit);
 	border-radius: var(
 		--itx-ic-radius,

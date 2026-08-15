@@ -29,8 +29,8 @@ selection appears below; the full surface and its defaults are catalogued in the
 ```css
 :where([interop-button]) {
   /* Colour — each also takes -hover and -active variants */
-  --itx-button-background: var(--itx-neutral-5);
-  --itx-button-foreground: var(--itx-neutral-12);
+  --itx-button-background: var(--itx-surface-below);
+  --itx-button-foreground: var(--itx-contrast-6);
   --itx-button-border-color: transparent;
 
   /* Edge */
@@ -42,7 +42,7 @@ selection appears below; the full surface and its defaults are catalogued in the
   --itx-button-sizing-multiplier: 2;
 
   /* Focus ring */
-  --itx-button-outline-color: var(--itx-neutral-8);
+  --itx-button-outline-color: var(--itx-contrast-4);
 }
 ```
 

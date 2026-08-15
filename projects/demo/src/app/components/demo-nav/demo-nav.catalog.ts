@@ -93,6 +93,12 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 		id: "foundations",
 		items: [
 			{
+				label: "Colour",
+				route: "/foundation/color",
+				description:
+					"Two relative axes — elevation for the substrate, contrast for everything drawn on it — so a component carries its own depth instead of picking a grey.",
+			},
+			{
 				label: "Principles",
 				route: "/foundation/principles",
 				description:
@@ -305,12 +311,6 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 		label: "Experiments",
 		id: "experiments",
 		items: [
-			{
-				label: "Amber Lab",
-				route: "/experiments/amber-lab",
-				description:
-					"Role-derived colorway experiment: contrast-anchored against anchor-and-mix, across light and dark.",
-			},
 		],
 	},
 	{ label: "Rigs", id: "rigs", disabled: true, items: [] },

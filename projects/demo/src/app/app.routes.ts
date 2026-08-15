@@ -255,18 +255,18 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "foundation/color",
+		title: "Colour — Interop",
+		loadComponent: () =>
+			import("./pages/color/color-page").then((m) => m.ColorPage),
+	},
+	{
 		path: "foundation/typography",
 		title: "Typography — Interop",
 		loadComponent: () =>
 			import("./pages/typography/typography-page").then(
 				(m) => m.TypographyPage,
 			),
-	},
-	{
-		path: "experiments/amber-lab",
-		title: "Amber Lab — Interop",
-		loadComponent: () =>
-			import("./pages/amber-lab/amber-lab-page").then((m) => m.AmberLabPage),
 	},
 	{
 		// Unknown URL → the component directory, not an arbitrary component.

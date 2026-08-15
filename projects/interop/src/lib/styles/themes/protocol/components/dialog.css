@@ -14,16 +14,16 @@
 
 	/* ── Appearance ─────────────────────────────────────────────────────── */
 	--itx-dialog-background: var(--itx-surface-above);
-	--itx-dialog-foreground: var(--itx-on-surface);
+	--itx-dialog-foreground: var(--itx-contrast-6);
 	--itx-dialog-border-radius: var(--itx-radius-none);
 	--itx-dialog-border-width: 2px;
 	/*
-	 * Stated directly, NOT as var(--itx-border).
+	 * Stated directly, NOT as var(--itx-contrast-3).
 	 *
 	 * This file used to lighten the dialog's edge by declaring the GLOBAL
-	 * `--itx-border: var(--itx-neutral-3)` on [interop-root]. Same layer, same
+	 * `--itx-contrast-3: var(--itx-contrast-1)` on [interop-root]. Same layer, same
 	 * selector as foundation.css, imported later — so it won, and every
-	 * component in the library that read --itx-border silently got neutral-3
+	 * component in the library that read --itx-contrast-3 silently got neutral-3
 	 * instead of the declared neutral-5. At oklch 0.93 against a 0.96 surface
 	 * that is a 0.03 delta: an edge you cannot see. It is why the table's row
 	 * rules had vanished, and the same shape as the segmented control stomping
@@ -32,7 +32,7 @@
 	 * The dialog's own appearance is unchanged — this is the value it was
 	 * getting all along, now scoped to the one component that wanted it.
 	 */
-	--itx-dialog-border-color: var(--itx-neutral-3);
+	--itx-dialog-border-color: var(--itx-contrast-1);
 	--itx-dialog-shadow: 0 8px 0 rgba(0 0 0 / 0.2);
 
 	/* ── Backdrop ───────────────────────────────────────────────────────── */

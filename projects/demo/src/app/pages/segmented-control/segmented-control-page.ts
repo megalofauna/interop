@@ -281,7 +281,7 @@ export class SegmentedControlPage {
 		{
 			property: "--itx-segmented-control-track-box-shadow",
 			default:
-				"inset 0 0 0 1px var(--itx-neutral-12) — the 1px frame, drawn inset so it costs no layout",
+				"inset 0 0 0 1px var(--itx-contrast-6) — the 1px frame, drawn inset so it costs no layout",
 		},
 		{
 			property: "--itx-segmented-control-track-border-radius",
@@ -333,7 +333,7 @@ export class SegmentedControlPage {
 		{ property: "--itx-segment-background", default: "transparent" },
 		{
 			property: "--itx-segment-foreground",
-			default: "var(--itx-neutral-9) — secondary grey",
+			default: "var(--itx-contrast-4) — secondary grey",
 		},
 		{ property: "--itx-segment-border-color", default: "transparent" },
 
@@ -344,13 +344,13 @@ export class SegmentedControlPage {
 		},
 		{
 			property: "--itx-segment-foreground-hover",
-			default: "var(--itx-neutral-12) — label comes up to full strength",
+			default: "var(--itx-contrast-6) — label comes up to full strength",
 		},
 
 		// Segment — selected
 		{
 			property: "--itx-segment-foreground-selected",
-			default: "var(--itx-neutral-1) — inverse label on the dark pill",
+			default: "var(--itx-contrast-1) — inverse label on the dark pill",
 		},
 
 		// Segment — focus ring
@@ -358,7 +358,7 @@ export class SegmentedControlPage {
 		{ property: "--itx-segment-outline-style", default: "solid" },
 		{
 			property: "--itx-segment-outline-color",
-			default: "var(--itx-colorway)",
+			default: "var(--itx-colorway-solid)",
 		},
 		{
 			property: "--itx-segment-outline-offset",
@@ -378,14 +378,14 @@ export class SegmentedControlPage {
 		// Divider — scoped to the fieldset
 		{
 			property: "--itx-rule-color",
-			default: "var(--itx-neutral-4) — set on the fieldset, not at root",
+			default: "var(--itx-contrast-2) — set on the fieldset, not at root",
 		},
 		{ property: "--itx-rule-width", default: "1px" },
 
 		// Selection pill — scoped to the fieldset
 		{
 			property: "--itx-indicator-background-color",
-			default: "var(--itx-neutral-12) — near-black fill",
+			default: "var(--itx-contrast-6) — near-black fill",
 		},
 		{ property: "--itx-indicator-border-width", default: "0" },
 		{

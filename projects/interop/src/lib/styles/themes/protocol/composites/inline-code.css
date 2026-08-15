@@ -23,15 +23,15 @@
  */
 
 :where([interop-root] itx-inline-code) {
-	--itx-ic-background: var(--itx-neutral-4);
-	--itx-ic-foreground: var(--itx-on-surface);
+	--itx-ic-background: var(--itx-surface-above);
+	--itx-ic-foreground: var(--itx-contrast-6);
 
 	--itx-ic-radius: var(--itx-radius-full);
 
 	--itx-button-background: transparent;
 	--itx-button-border-radius: var(--itx-radius-full);
-	--itx-button-background-hover: var(--itx-neutral-11);
-	--itx-button-foreground-hover: var(--itx-neutral-3);
+	--itx-button-background-hover: var(--itx-surface-below);
+	--itx-button-foreground-hover: var(--itx-contrast-6);
 
 	/*--itx-button-background: purple;
 	--itx-button-foreground: white;*/

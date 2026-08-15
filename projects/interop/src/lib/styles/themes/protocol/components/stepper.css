@@ -34,7 +34,7 @@
 	   `thin` (or `auto`); the thumb/track values below give it a themed
 	   appearance that blends with the surface. */
 	--itx-stepper-viewport-scrollbar-width: none;
-	--itx-stepper-viewport-scrollbar-thumb-color: var(--itx-neutral-5);
+	--itx-stepper-viewport-scrollbar-thumb-color: var(--itx-contrast-2);
 	--itx-stepper-viewport-scrollbar-track-color: transparent;
 
 	/* ── Actions region ─────────────────────────────────────────────────── */
@@ -47,8 +47,8 @@
 	--itx-stepper-menu-min-width: calc(
 		100cqi - var(--itx-stepper-menu-padding) * 2
 	);
-	--itx-stepper-menu-background-color: var(--itx-neutral-3);
-	--itx-stepper-menu-border-color: var(--itx-neutral-4);
+	--itx-stepper-menu-background-color: var(--itx-surface);
+	--itx-stepper-menu-border-color: var(--itx-contrast-2);
 	--itx-stepper-menu-border-width: 1px;
 	/* Squared, like every other surface the borrow rounds have touched. The old
 	   value also read --itx-radius-4 with an 8px fallback, but that token is
@@ -82,55 +82,55 @@
 	--itx-step-indicator-transition-timing-function: ease-in-out;
 
 	/* ── Step indicator — pending (rest) ────────────────────────────────── */
-	--itx-step-indicator-background: var(--itx-neutral-3_5);
-	--itx-step-indicator-foreground: var(--itx-neutral-9);
-	--itx-step-indicator-border-color: var(--itx-neutral-7);
+	--itx-step-indicator-background: var(--itx-contrast-2);
+	--itx-step-indicator-foreground: var(--itx-contrast-4);
+	--itx-step-indicator-border-color: var(--itx-contrast-3);
 
 	/* ── Step indicator — active ────────────────────────────────────────── */
-	--itx-step-indicator-background-active: var(--itx-neutral-3);
+	--itx-step-indicator-background-active: var(--itx-surface);
 	/* --itx-on-neutral does not exist, so this resolved to the literal `white`
-	   in the fallback — against --itx-neutral-3, which is light in light mode.
+	   in the fallback — against --itx-contrast-1, which is light in light mode.
 	   The current step's number measured 1.23:1 there: legible in dark, all but
-	   invisible in light. --itx-on-surface is the light-dark() pair that belongs
+	   invisible in light. --itx-contrast-6 is the light-dark() pair that belongs
 	   opposite a neutral surface. */
-	--itx-step-indicator-foreground-active: var(--itx-on-surface);
-	--itx-step-indicator-border-color-active: var(--itx-neutral-8);
+	--itx-step-indicator-foreground-active: var(--itx-contrast-6);
+	--itx-step-indicator-border-color-active: var(--itx-contrast-4);
 
 	/* ── Step indicator — active + reviewed (revisited) ────────────────── */
 	/* Outlined variant: keeps the neutral hue (so you know it's a step
 	   you've completed) while clearly differentiating from the solid-fill
 	   "current first-visit" treatment. The number is shown in neutral,
 	   the indicator is transparent with a neutral-8 border. */
-	--itx-step-indicator-background-active-reviewed: var(--itx-neutral-12);
-	--itx-step-indicator-foreground-active-reviewed: var(--itx-neutral-2);
-	--itx-step-indicator-border-color-active-reviewed: var(--itx-neutral-12);
+	--itx-step-indicator-background-active-reviewed: var(--itx-surface-below);
+	--itx-step-indicator-foreground-active-reviewed: var(--itx-contrast-6);
+	--itx-step-indicator-border-color-active-reviewed: var(--itx-contrast-6);
 
 	/* ── Step indicator — completed ─────────────────────────────────────── */
-	--itx-step-indicator-background-completed: var(--itx-neutral-4);
-	--itx-step-indicator-foreground-completed: var(--itx-on-surface);
-	--itx-step-indicator-border-color-completed: var(--itx-neutral-12);
+	--itx-step-indicator-background-completed: var(--itx-contrast-2);
+	--itx-step-indicator-foreground-completed: var(--itx-contrast-6);
+	--itx-step-indicator-border-color-completed: var(--itx-contrast-6);
 
 	/* ── Step indicator — error ─────────────────────────────────────────── */
 	/* Errors are a deliberate signal — a coloured fill is appropriate here. */
-	--itx-step-indicator-background-error: var(--itx-danger);
-	--itx-step-indicator-foreground-error: var(--itx-neutral-1);
-	--itx-step-indicator-border-color-error: var(--itx-danger);
+	--itx-step-indicator-background-error: var(--itx-danger-solid);
+	--itx-step-indicator-foreground-error: var(--itx-danger-on-solid);
+	--itx-step-indicator-border-color-error: var(--itx-danger-solid);
 
 	/* ── Step indicator — skipped ───────────────────────────────────────── */
-	--itx-step-indicator-background-skipped: var(--itx-neutral-3);
-	--itx-step-indicator-foreground-skipped: var(--itx-neutral-8);
-	--itx-step-indicator-border-color-skipped: var(--itx-neutral-5);
+	--itx-step-indicator-background-skipped: var(--itx-surface);
+	--itx-step-indicator-foreground-skipped: var(--itx-contrast-4);
+	--itx-step-indicator-border-color-skipped: var(--itx-contrast-2);
 
 	/* ── Step label ─────────────────────────────────────────────────────── */
 	--itx-step-label-font-family: var(--itx-font-family-sans);
 	/* Carbon $body-compact-01 (14px), fixed for the same reason as above. */
 	--itx-step-label-font-size: 0.875rem;
 	--itx-step-label-font-weight: 500;
-	--itx-step-label-color: var(--itx-neutral-10);
-	--itx-step-label-color-active: var(--itx-neutral-12);
-	--itx-step-label-color-active-reviewed: var(--itx-neutral-8);
-	--itx-step-label-color-completed: var(--itx-neutral-11);
-	--itx-step-label-color-locked: var(--itx-neutral-8);
+	--itx-step-label-color: var(--itx-contrast-5);
+	--itx-step-label-color-active: var(--itx-contrast-6);
+	--itx-step-label-color-active-reviewed: var(--itx-contrast-4);
+	--itx-step-label-color-completed: var(--itx-contrast-5);
+	--itx-step-label-color-locked: var(--itx-contrast-4);
 	--itx-step-label-text-align: center;
 
 	--itx-step-optional-font-size: 0.75em;
@@ -140,7 +140,7 @@
 	--itx-step-connector-thickness: 2px;
 	/* The rest state was neutral-5, which this codebase repeatedly records as
 	   reading like nothing at 1–2px — the same sub-0.1 luminance delta that made
-	   --itx-border invisible for the directory cards and the command palette.
+	   --itx-contrast-3 invisible for the directory cards and the command palette.
 	   The line was drawn the whole time; it just could not be seen, which is
 	   indistinguishable from absent.
 
@@ -152,12 +152,12 @@
 
 	   Completed goes two further, to 6.4 / 7.7, so the walked path reads as
 	   legibly brighter than the path ahead rather than one grey beside another. */
-	--itx-step-connector-color: var(--itx-neutral-8);
-	--itx-step-connector-color-completed: var(--itx-neutral-10);
+	--itx-step-connector-color: var(--itx-contrast-4);
+	--itx-step-connector-color-completed: var(--itx-contrast-5);
 
 	/* ── Step focus ring ────────────────────────────────────────────────── */
 	--itx-step-outline-width: 2px;
 	--itx-step-outline-style: solid;
-	--itx-step-outline-color: var(--itx-neutral-8);
+	--itx-step-outline-color: var(--itx-contrast-4);
 	--itx-step-outline-offset: 3px;
 }

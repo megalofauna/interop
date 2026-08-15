@@ -72,13 +72,13 @@
 	/*
 	 * Carbon's `theme.$layer` — one step off the page in their layer model.
 	 * Mapped to our elevation semantic rather than literally to $layer's
-	 * #f4f4f4 (= --itx-neutral-2): Carbon steps *darker* to lift a surface in
+	 * #f4f4f4 (= --itx-contrast-1): Carbon steps *darker* to lift a surface in
 	 * its white theme, Interop steps *lighter*, and --itx-surface-above is the
 	 * token that means "one stop up" in both colour schemes. Dialog resolves
 	 * its surface the same way, so the two floating surfaces agree.
 	 */
 	--itx-popover-background: var(--itx-surface-above);
-	--itx-popover-foreground: var(--itx-on-surface); /* $text-primary */
+	--itx-popover-foreground: var(--itx-contrast-6); /* $text-primary */
 
 	/*
 	 * Carbon specifies `$popover-border-radius: 2px`, which we DECLINE.
@@ -97,21 +97,21 @@
 	--itx-popover-border-style: solid;
 
 	/*
-	 * Carbon's `$border-subtle` (#e0e0e0) maps to --itx-neutral-4 by the
+	 * Carbon's `$border-subtle` (#e0e0e0) maps to --itx-contrast-2 by the
 	 * conversion table, and we go two steps darker on purpose.
 	 *
 	 * A popover floats over arbitrary page content, so its frame is the only
-	 * thing separating the panel from whatever is behind it. --itx-neutral-4
+	 * thing separating the panel from whatever is behind it. --itx-contrast-2
 	 * against an --itx-surface-above panel is a sub-0.1 luminance delta and
-	 * reads as no edge at all. --itx-neutral-7 is the house hairline.
+	 * reads as no edge at all. --itx-contrast-3 is the house hairline.
 	 *
-	 * NOT --itx-border. This round found that global being overwritten app-wide
+	 * NOT --itx-contrast-3. This round found that global being overwritten app-wide
 	 * by themes/protocol/components/dialog.css, which declared it on
 	 * [interop-root] to lighten its own edge and won on import order — since
-	 * fixed. Even fixed, --itx-border is neutral-5 and too light for a frame
+	 * fixed. Even fixed, --itx-contrast-3 is neutral-5 and too light for a frame
 	 * that has to hold against arbitrary page content.
 	 */
-	--itx-popover-border-color: var(--itx-neutral-7);
+	--itx-popover-border-color: var(--itx-contrast-3);
 
 	/*
 	 * Carbon: `drop-shadow(0 $spacing-01 $spacing-01 rgba(0, 0, 0, 0.2))` —

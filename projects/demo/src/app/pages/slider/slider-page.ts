@@ -249,7 +249,7 @@ onSubmit(event: SubmitEvent): void {
 	tokenEntries: TokenEntry[] = [
 		{
 			property: "--itx-slider-track-color",
-			default: "var(--itx-neutral-4)",
+			default: "var(--itx-contrast-2)",
 		},
 		{
 			property: "--itx-slider-track-thickness",
@@ -257,11 +257,11 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-fill-color",
-			default: "var(--itx-neutral-12)",
+			default: "var(--itx-contrast-6)",
 		},
 		{
 			property: "--itx-slider-thumb-color",
-			default: "var(--itx-neutral-12)",
+			default: "var(--itx-contrast-6)",
 		},
 		{
 			property: "--itx-slider-thumb-size",
@@ -281,11 +281,11 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-focus-ring-color",
-			default: "var(--itx-colorway) — thumb AND fill when focused",
+			default: "var(--itx-colorway-solid) — thumb AND fill when focused",
 		},
 		{
 			property: "--itx-slider-disabled-color",
-			default: "var(--itx-neutral-5)",
+			default: "var(--itx-contrast-2)",
 		},
 		{
 			property: "--itx-slider-length",
@@ -305,7 +305,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-color",
-			default: "var(--itx-neutral-7)",
+			default: "var(--itx-contrast-3)",
 		},
 		{
 			property: "--itx-slider-mark-thickness",
@@ -317,7 +317,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-minor-color",
-			default: "var(--itx-neutral-5)",
+			default: "var(--itx-contrast-2)",
 		},
 		{
 			property: "--itx-slider-mark-minor-thickness",

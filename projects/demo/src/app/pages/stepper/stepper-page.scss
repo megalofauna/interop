@@ -1,7 +1,7 @@
 :host {
 	interop-stepper {
 		--itx-stepper-padding: var(--itx-spacing-6);
-		--itx-stepper-background-color: var(--itx-neutral-3_5);
+		--itx-stepper-background-color: var(--itx-surface-above);
 		--itx-stepper-border-radius: var(--itx-radius-4);
 	}
 
@@ -14,7 +14,7 @@
 	}
 
 	[interop-step-panel] p {
-		color: var(--itx-neutral-8);
+		color: var(--itx-contrast-4);
 	}
 
 	.actions {
@@ -29,8 +29,8 @@
 			letter-spacing: 0.125em;
 			font-size: var(--itx-font-size-caption);
 			padding-bottom: 0.75em;
-			color: var(--itx-neutral-8);
-			border-bottom: 1px solid var(--itx-neutral-5);
+			color: var(--itx-contrast-4);
+			border-bottom: 1px solid var(--itx-contrast-2);
 		}
 		h2 {
 			font-size: var(--itx-fs-2xl);

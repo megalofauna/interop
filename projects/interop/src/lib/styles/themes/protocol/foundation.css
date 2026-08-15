@@ -15,79 +15,55 @@
 		"IBM Plex Mono", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
 		Consolas, monospace;
 
-	/* ── Neutral palette ─────────────────────────────────────────────── */
-	/*    light: 1 = lightest → 12 = darkest                             */
-	/*    dark:  1 = darkest  → 12 = lightest                            */
-	--itx-neutral-1: light-dark(oklch(0.99 0.003 250), oklch(0.1 0.003 250));
-	--itx-neutral-2: light-dark(oklch(0.96 0.005 250), oklch(0.15 0.004 250));
-	--itx-neutral-3: light-dark(oklch(0.93 0.007 250), oklch(0.22 0.005 250));
-	--itx-neutral-3_5: light-dark(oklch(0.91 0.007 250), oklch(0.25 0.005 250));
-	--itx-neutral-4: light-dark(oklch(0.89 0.008 250), oklch(0.27 0.006 250));
-	--itx-neutral-4_5: light-dark(oklch(0.86 0.008 250), oklch(0.3 0.006 250));
-	--itx-neutral-5: light-dark(oklch(0.83 0.012 250), oklch(0.33 0.007 250));
-	--itx-neutral-6: light-dark(oklch(0.76 0.012 250), oklch(0.38 0.009 250));
-	--itx-neutral-7: light-dark(oklch(0.68 0.012 250), oklch(0.46 0.01 250));
-	--itx-neutral-8: light-dark(oklch(0.58 0.011 250), oklch(0.55 0.01 250));
-	/* Muted text lives on this step (--itx-muted), and it was tuned against
-	   --itx-page. Most muted text does not sit on the page — it sits on a
-	   raised surface (a card, an example frame, a field), which is nearer to
-	   it, and there the ratio fell to ~4.5 in dark and read faint on a phone.
-	   Half a step brighter in dark and half a step darker in light: 6.0 / 5.6
-	   dark and 6.3 / 5.8 light, page and raised. Still clearly muted against
-	   on-surface, which is 13.7. */
-	--itx-neutral-9: light-dark(oklch(0.46 0.01 250), oklch(0.68 0.011 250));
-	--itx-neutral-10: light-dark(oklch(0.38 0.009 250), oklch(0.72 0.01 250));
-	--itx-neutral-10_5: light-dark(oklch(0.33 0.009 250), oklch(0.77 0.01 250));
-	--itx-neutral-11: light-dark(oklch(0.28 0.008 250), oklch(0.82 0.008 250));
-	--itx-neutral-12: light-dark(oklch(0.15 0.005 250), oklch(0.92 0.004 250));
+	/* ── Neutrals ────────────────────────────────────────────────────────────
+	 * There is no neutral palette any more. The 12-step ramp is gone, and with
+	 * it the question it forced on every author — "do I need neutral-6 here, or
+	 * 7?" — which had no principled answer and so got a different one each time.
+	 *
+	 * Neutrals now come from two relative axes, generated into ladder.css and
+	 * selected by the layer engine in tokens/elevation.css:
+	 *
+	 *   --itx-surface / -above / -above-2 / -below   the substrate (elevation)
+	 *   --itx-contrast-1 … -6                        marks on it (contrast)
+	 *
+	 * Both are relative to whatever layer the component is on, so a component
+	 * carries its own depth and never picks a grey. See .agent/color.md.
+	 *
+	 * The muted-text tuning that used to live here is obsolete: --itx-contrast-4
+	 * is SOLVED for 4.5:1 against its own surface at every layer, so the "muted
+	 * text was tuned against the page but mostly sits on a raised surface"
+	 * problem cannot recur.
+	 * ──────────────────────────────────────────────────────────────────────── */
 
-	/* ── Colorway palette ────────────────────────────────────────────── */
-	/*    Anchored to Science Blue (#0066CC) at slot 8 in light mode     */
-	--itx-colorway-1: light-dark(oklch(0.97 0.01 264), oklch(0.12 0.022 264));
-	--itx-colorway-2: light-dark(oklch(0.93 0.022 264), oklch(0.17 0.038 264));
-	--itx-colorway-3: light-dark(oklch(0.87 0.05 264), oklch(0.22 0.06 264));
-	--itx-colorway-4: light-dark(oklch(0.8 0.088 264), oklch(0.28 0.088 264));
-	--itx-colorway-5: light-dark(oklch(0.72 0.13 264), oklch(0.36 0.118 264));
-	--itx-colorway-6: light-dark(oklch(0.63 0.162 264), oklch(0.44 0.15 264));
-	--itx-colorway-7: light-dark(oklch(0.56 0.182 264), oklch(0.52 0.17 264));
-	--itx-colorway-8: light-dark(oklch(0.5 0.19 264), oklch(0.6 0.178 264));
-	--itx-colorway-9: light-dark(oklch(0.43 0.182 264), oklch(0.68 0.172 264));
-	--itx-colorway-10: light-dark(oklch(0.36 0.165 264), oklch(0.76 0.148 264));
-	--itx-colorway-11: light-dark(oklch(0.28 0.135 264), oklch(0.84 0.105 264));
-	--itx-colorway-12: light-dark(oklch(0.19 0.088 264), oklch(0.92 0.048 264));
+	/* ── Colourway ───────────────────────────────────────────────────────────
+	 * The 12-slot ramp is gone, along with the hand corrections it forced. It is
+	 * generated into ladder.css now from a single seed, because a lightness SLOT
+	 * cannot survive a hue change and a contrast TARGET can:
+	 *
+	 *   --itx-colorway-solid / -on-solid    scheme- and layer-invariant identity
+	 *   --itx-colorway-tint / -on-tint      a wash of the hue, per layer
+	 *   --itx-colorway-border / -text       solved for 3:1 / 4.5:1, per layer
+	 *
+	 * Adding a colourway is adding a seed to SEEDS in
+	 * scripts/generate-color-ladder.mjs. See .agent/color.md.
+	 * ──────────────────────────────────────────────────────────────────────── */
 
-	/* ── Elevation slots ─────────────────────────────────────────────── */
-	--_e-n5: light-dark(var(--itx-neutral-7), var(--itx-neutral-1));
-	--_e-n4: light-dark(var(--itx-neutral-6), var(--itx-neutral-1));
-	--_e-n3: light-dark(var(--itx-neutral-5), var(--itx-neutral-1));
-	--_e-n2: light-dark(var(--itx-neutral-4), var(--itx-neutral-2));
-	--_e-n1: light-dark(var(--itx-neutral-3), var(--itx-neutral-2));
-	--_e-0: light-dark(var(--itx-neutral-2), var(--itx-neutral-3));
-	--_e-p1: light-dark(var(--itx-neutral-1), var(--itx-neutral-4));
-	--_e-p2: light-dark(var(--itx-neutral-1), var(--itx-neutral-5));
-	--_e-p3: light-dark(var(--itx-neutral-1), var(--itx-neutral-6));
-	--_e-p4: light-dark(var(--itx-neutral-1), var(--itx-neutral-7));
-	--_e-p5: light-dark(var(--itx-neutral-1), var(--itx-neutral-8));
-
-	/* ── Semantic — surface & text ───────────────────────────────────── */
-	--itx-page: light-dark(var(--itx-neutral-2), var(--itx-neutral-3));
-	--itx-on-surface: var(--itx-neutral-12);
-	--itx-muted: var(--itx-neutral-9);
-	--itx-border: light-dark(var(--itx-neutral-5), var(--itx-neutral-6));
-	--itx-surface-hover: light-dark(var(--itx-neutral-3), var(--itx-neutral-3_5));
-
-	/* ── Semantic — colorway ─────────────────────────────────────────── */
-	--itx-colorway: light-dark(var(--itx-colorway-8), var(--itx-colorway-9));
-	--itx-colorway-hover: light-dark(
-		var(--itx-colorway-9),
-		var(--itx-colorway-10)
-	);
-	--itx-on-colorway: light-dark(var(--itx-neutral-1), var(--itx-neutral-2));
+	/* ── Elevation ───────────────────────────────────────────────────────────
+	 * The eleven --_e-* slots are gone. They were private names declared here in
+	 * the theme but read from the foundation, and the "sliding window" that
+	 * shifted them could not work: every slot in a rule block resolves against
+	 * the SAME element, so the window collapsed to whichever slot the block did
+	 * not redeclare, and three of the six blocks contained a literal self-edge
+	 * that took the whole subtree to transparent.
+	 *
+	 * The replacement is the public --itx-ramp-* contract in ladder.css, driven
+	 * by @container style() queries in tokens/elevation.css.
+	 * ──────────────────────────────────────────────────────────────────────── */
 
 	/* ── Status colours ──────────────────────────────────────────────────────
-	 * Palette-scoped: danger/info/success/warning + -surface + on-surface live
-	 * in status-palettes.css so the whole set swaps via `itx-status-palette`.
-	 * Default = "seventies"; "eighties" = bright 80s-OS. ──────────────────── */
+	 * Four more seeded families, generated into ladder.css alongside the
+	 * colourway. Both palettes survive as seed sets, so `itx-status-palette`
+	 * still swaps the whole group. ─────────────────────────────────────────── */
 
 	/* ── Atmosphere ──────────────────────────────────────────────────── */
 	--itx-overlay: light-dark(oklch(0.15 0 0 / 0.5), oklch(0.05 0 0 / 0.65));
@@ -118,44 +94,6 @@
 		0 10px 15px -3px oklch(0 0 0 / 0.4),
 		0 4px 6px -4px oklch(0 0 0 / 0.3)
 	);
-}
-
-/* ── Colorway — Amber (alternate, opt-in) ─────────────────────────────────────
- * Warm-orange colorway. Opt in per subtree via [interop-root][itx-colorway="amber"];
- * it redefines the --itx-colorway-* ramp, so every colorway consumer follows.
- *
- * Keeps the default ramp's lightness values slot-for-slot, so components read
- * the same contrast whichever colorway is active — only hue and chroma change.
- * Hue is 54.35: the provided base #FE9C55 ≈ oklch(0.78 0.145 54.35), which lands
- * around slots 4–5. Chroma is tuned to orange's sRGB gamut — unlike blue, orange
- * cannot sustain high chroma once it darkens, so slots 6–12 are bronzed (in-gamut)
- * rather than clipped to the boundary.
- *
- * Accent re-point: orange peaks light, so the default slot-8/9 accent would be a
- * burnt caramel. This colorway points --itx-colorway at the vivid slots (5 / 9)
- * instead, and flips --itx-on-colorway to dark text — white on vivid orange is
- * ~1.7:1 (unreadable); dark text is 5.7–11:1. */
-:where([interop-root][itx-colorway="amber"]) {
-	--itx-colorway-1: light-dark(oklch(0.97 0.01 54.35), oklch(0.12 0.021 54.35));
-	--itx-colorway-2: light-dark(oklch(0.93 0.027 54.35), oklch(0.17 0.033 54.35));
-	--itx-colorway-3: light-dark(oklch(0.87 0.065 54.35), oklch(0.22 0.047 54.35));
-	--itx-colorway-4: light-dark(oklch(0.8 0.119 54.35), oklch(0.28 0.062 54.35));
-	--itx-colorway-5: light-dark(oklch(0.72 0.165 54.35), oklch(0.36 0.081 54.35));
-	--itx-colorway-6: light-dark(oklch(0.63 0.145 54.35), oklch(0.44 0.099 54.35));
-	--itx-colorway-7: light-dark(oklch(0.56 0.129 54.35), oklch(0.52 0.117 54.35));
-	--itx-colorway-8: light-dark(oklch(0.5 0.115 54.35), oklch(0.6 0.135 54.35));
-	--itx-colorway-9: light-dark(oklch(0.43 0.097 54.35), oklch(0.68 0.153 54.35));
-	--itx-colorway-10: light-dark(oklch(0.36 0.079 54.35), oklch(0.76 0.148 54.35));
-	--itx-colorway-11: light-dark(oklch(0.28 0.059 54.35), oklch(0.84 0.088 54.35));
-	--itx-colorway-12: light-dark(oklch(0.19 0.038 54.35), oklch(0.92 0.039 54.35));
-
-	/* Vivid-accent re-point (see note above) */
-	--itx-colorway: light-dark(var(--itx-colorway-5), var(--itx-colorway-9));
-	--itx-colorway-hover: light-dark(
-		var(--itx-colorway-6),
-		var(--itx-colorway-10)
-	);
-	--itx-on-colorway: light-dark(var(--itx-neutral-12), var(--itx-neutral-1));
 }
 
 /* ── Explicit mode pins ──────────────────────────────────────────────────── */

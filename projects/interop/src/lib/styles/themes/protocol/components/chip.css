@@ -55,32 +55,32 @@
 	/* ── Paint — presentational & dismissible ─────────────────────────────
 	 * Carbon's gray tag is a solid fill with no border at all. Dropping the
 	 * border is most of what makes the shape read as Carbon.               */
-	--itx-chip-background: var(--itx-colorway-6);
-	--itx-chip-color: var(--itx-colorway-12);
+	--itx-chip-background: var(--itx-colorway-solid);
+	--itx-chip-color: var(--itx-colorway-on-solid);
 	--itx-chip-border: none;
-	--itx-chip-background-hover: var(--itx-neutral-5);
-	--itx-chip-color-hover: var(--itx-neutral-12);
+	--itx-chip-background-hover: var(--itx-contrast-2);
+	--itx-chip-color-hover: var(--itx-contrast-6);
 
 	/* ── Paint — selectable (chip-option) ─────────────────────────────────
 	 * The one outlined variant: hairline border at rest, inverse fill when
 	 * checked. Neutral by design — Carbon's selectable tag never takes a
 	 * colour. Set --itx-chip-background-selected / -color-selected to brand
 	 * it; those are the seam, at whatever scope you set them.              */
-	--itx-chip-selectable-background: var(--itx-neutral-5);
-	--itx-chip-selectable-color: var(--itx-neutral-12);
+	--itx-chip-selectable-background: var(--itx-contrast-2);
+	--itx-chip-selectable-color: var(--itx-contrast-6);
 	--itx-chip-selectable-border: 2px solid transparent;
-	--itx-chip-selectable-background-hover: var(--itx-neutral-6);
-	--itx-chip-selectable-color-hover: var(--itx-neutral-12);
+	--itx-chip-selectable-background-hover: var(--itx-contrast-2);
+	--itx-chip-selectable-color-hover: var(--itx-contrast-6);
 
-	--itx-chip-background-selected: var(--itx-colorway-6);
-	--itx-chip-color-selected: var(--itx-colorway-12);
-	--itx-chip-border-selected: 2px solid var(--itx-colorway-10);
+	--itx-chip-background-selected: var(--itx-colorway-solid);
+	--itx-chip-color-selected: var(--itx-colorway-on-solid);
+	--itx-chip-border-selected: 2px solid var(--itx-colorway-border);
 	--itx-chip-font-weight-selected: 400;
 
 	/* ── Focus ring (chip-option) ─────────────────────────────────────────
 	 * Carbon draws 2px. The colour stays on the colorway — focus is the one
 	 * place brand survives a neutral component.                            */
-	--itx-chip-outline-color: var(--itx-colorway);
+	--itx-chip-outline-color: var(--itx-focus);
 	--itx-chip-outline-width: 2px;
 	--itx-chip-outline-style: solid;
 	--itx-chip-outline-offset: 2px;
@@ -89,13 +89,13 @@
 	 * A flush square the full height of the chip. No border: the chip is a
 	 * solid fill, so the button announces itself by deepening. The focus ring
 	 * insets so it stays inside the pill rather than orbiting it.           */
-	--itx-chip-remove-background: var(--itx-colorway-5);
-	--itx-chip-remove-background-hover: var(--itx-neutral-5);
+	--itx-chip-remove-background: var(--itx-colorway-solid);
+	--itx-chip-remove-background-hover: var(--itx-contrast-2);
 	--itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2);
 	--itx-chip-remove-border: none;
 	--itx-chip-remove-radius: var(--itx-chip-radius); /* tracks the chip */
 	--itx-chip-remove-font-size: var(--itx-spacing-3); /* 16px — Carbon icon */
-	--itx-chip-remove-outline-color: var(--itx-colorway);
+	--itx-chip-remove-outline-color: var(--itx-focus);
 	--itx-chip-remove-outline-width: 2px;
 	--itx-chip-remove-outline-offset: -2px;
 
@@ -133,14 +133,14 @@
    only the field's own chrome lives here.                                   */
 
 :where(div[interop-chip-input]) {
-	--itx-chip-input-background: var(--itx-neutral-3);
+	--itx-chip-input-background: var(--itx-surface);
 	--itx-chip-input-border: 2px solid transparent;
 	--itx-chip-input-radius: var(--itx-radius-xl); /* 16px — the field's own */
 	--itx-chip-input-gap: var(--itx-spacing-1); /* 4px */
 	--itx-chip-input-padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	--itx-chip-input-min-height: var(--itx-spacing-10); /* 40px */
 
-	--itx-chip-input-outline-color: var(--itx-colorway);
+	--itx-chip-input-outline-color: var(--itx-focus);
 	--itx-chip-input-outline-width: 2px;
 	--itx-chip-input-outline-style: solid;
 	--itx-chip-input-outline-offset: 1px;

@@ -46,7 +46,7 @@
 	--itx-segmented-control-track-flex-direction: row;
 
 	/* Carbon paints no track fill; the frame alone carries the group.
-	   Restore a filled track by setting this to var(--itx-neutral-3). */
+	   Restore a filled track by setting this to var(--itx-contrast-1). */
 	--itx-segmented-control-track-background-color: transparent;
 	--itx-segmented-control-track-background-image: none;
 
@@ -59,7 +59,7 @@
 	--itx-segmented-control-track-border-width: 0;
 	--itx-segmented-control-track-border-style: solid;
 	--itx-segmented-control-track-box-shadow: inset 0 0 0 1px
-		var(--itx-neutral-12);
+		var(--itx-contrast-6);
 
 	/* Squared. Carbon's Content Switcher specifies a 4px radius and we decline
 	   it, as rounds 2–14 declined every other one: the library is square, and a
@@ -104,7 +104,7 @@
 	/* ── Segment — rest state ───────────────────────────────────────────── */
 	/* $text-secondary — unselected labels are quieter than the selected one. */
 	--itx-segment-background: transparent;
-	--itx-segment-foreground: var(--itx-neutral-10);
+	--itx-segment-foreground: var(--itx-contrast-5);
 	--itx-segment-border-color: transparent;
 
 	/* ── Segment — hover state ──────────────────────────────────────────── */
@@ -124,12 +124,12 @@
 	 * shifting from grey to full strength is unambiguous.
 	 */
 	--itx-segment-background-hover: transparent;
-	--itx-segment-foreground-hover: var(--itx-neutral-12);
+	--itx-segment-foreground-hover: var(--itx-contrast-6);
 
 	/* ── Segment — selected state ───────────────────────────────────────── */
 	/* $text-inverse. The fill comes from the indicator pill (below), so the
 	   two anchor-positioning paths can't disagree about the colour. */
-	--itx-segment-foreground-selected: var(--itx-neutral-1);
+	--itx-segment-foreground-selected: var(--itx-contrast-6);
 
 	/* ── Segment — focus ring ───────────────────────────────────────────── */
 	/* Carbon draws focus as an inset ring in its brand blue; ours keeps the
@@ -137,7 +137,7 @@
 	   spilling over the neighbouring segment. */
 	--itx-segment-outline-width: 2px;
 	--itx-segment-outline-style: solid;
-	--itx-segment-outline-color: var(--itx-colorway);
+	--itx-segment-outline-color: var(--itx-focus);
 	--itx-segment-outline-offset: -2px;
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
@@ -163,14 +163,14 @@
 :where(fieldset[interop-segmented-control]) {
 	/* Divider — $border-subtle, 1px. segment.css already suppresses it on
 	   either side of the selected segment. */
-	--itx-rule-color: var(--itx-neutral-4);
+	--itx-rule-color: var(--itx-contrast-2);
 	--itx-rule-width: 1px;
 
 	/* Selection pill — $layer-selected-inverse, squared off at 4px with no
 	   border. This is the one lever for selected paint: with anchor
 	   positioning the <interop-indicator> draws it, and without, the segment
 	   falls back to the same token. */
-	--itx-indicator-background-color: var(--itx-neutral-12);
+	--itx-indicator-background-color: var(--itx-surface-below);
 	--itx-indicator-border-width: 0;
 	/* The pill matches the track. All three radii move together or the
 	   selection sits visibly proud of the frame at the ends. */

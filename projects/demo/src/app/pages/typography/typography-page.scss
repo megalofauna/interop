@@ -18,7 +18,7 @@
 	position: relative;
 
 	--label-gutter: 5.5rem;
-	--label-color: color-mix(in srgb, var(--itx-on-surface) 80%, transparent);
+	--label-color: color-mix(in srgb, var(--itx-contrast-6) 80%, transparent);
 	--label-font: "IBM Plex Mono", var(--itx-font-family-mono);
 }
 
@@ -31,7 +31,7 @@
 .specimen__note {
 	max-inline-size: 60ch;
 	margin-block-end: var(--itx-spacing-6);
-	color: var(--itx-muted);
+	color: var(--itx-contrast-4);
 	font-size: var(--itx-font-size-body);
 	line-height: var(--itx-line-height);
 }

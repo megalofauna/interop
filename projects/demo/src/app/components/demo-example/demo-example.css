@@ -2,7 +2,7 @@
 	display: block;
 	position: relative;
 	overflow: clip;
-	border: 1px solid var(--itx-neutral-3);
+	border: 1px solid var(--itx-contrast-1);
 	border-radius: var(--itx-radius-none);
 }
 
@@ -14,7 +14,7 @@
 	margin: var(--itx-spacing-2) 0 0 0;
 	font-size: var(--itx-font-size-body-lg);
 	font-weight: 400;
-	color: var(--itx-neutral-12);
+	color: var(--itx-contrast-6);
 
 	& + p {
 		margin-block-start: var(--itx-spacing-4);
@@ -29,7 +29,8 @@
 	justify-content: start;
 	gap: var(--itx-spacing-2);
 	padding: var(--itx-spacing-6);
-	background-color: var(--itx-neutral-3_5);
+	/* No background here — [itx-layer] on the host element paints it, and the
+	   engine keeps it in step with whatever depth the frame ends up at. */
 	border-radius: var(--itx-radius-none);
 }
 
@@ -59,11 +60,10 @@
 .demo-example__reference,
 .demo-example__code,
 .demo-example__output {
-	border-top: 1px solid var(--itx-neutral-3);
+	border-top: 1px solid var(--itx-contrast-1);
 }
 
 .demo-example__code {
-	background: var(--itx-neutral-3_5);
 	padding: var(--itx-spacing-6);
 	--itx-cr-body-padding-block: 0;
 	--itx-cr-body-padding-inline: 0;

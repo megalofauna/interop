@@ -22,26 +22,26 @@
 
 	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-control-border-color: light-dark(
-		var(--itx-neutral-7),
-		var(--itx-neutral-6)
+		var(--itx-contrast-3),
+		var(--itx-contrast-3)
 	);
-	--itx-control-bg: light-dark(var(--itx-neutral-1), var(--itx-neutral-3));
-	--itx-control-accent: var(--itx-neutral-12);
+	--itx-control-bg: light-dark(var(--itx-surface-below), var(--itx-surface-below));
+	--itx-control-accent: var(--itx-contrast-6);
 	--itx-control-indicator: light-dark(
-		var(--itx-neutral-1),
-		var(--itx-neutral-12-on)
+		var(--itx-contrast-1),
+		var(--itx-contrast-6-on)
 	);
 
 	/* ── Toggle-specific ────────────────────────────────────────────────── */
 	--itx-control-toggle-width: 2.5rem;
 	--itx-control-toggle-height: 1.25rem;
-	--itx-control-toggle-thumb-color: var(--itx-neutral-7);
-	--itx-control-toggle-thumb-color-on: var(--itx-colorway-12);
+	--itx-control-toggle-thumb-color: var(--itx-contrast-3);
+	--itx-control-toggle-thumb-color-on: var(--itx-colorway-on-solid);
 	--itx-control-toggle-thumb-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.18);
-	--itx-control-toggle-border-color-checked: var(--itx-colorway-9);
+	--itx-control-toggle-border-color-checked: var(--itx-colorway-border);
 
 	/* ── Focus ring ─────────────────────────────────────────────────────── */
-	--itx-control-focus-ring-color: var(--itx-colorway, var(--itx-neutral-8));
+	--itx-control-focus-ring-color: var(--itx-focus, var(--itx-contrast-4));
 	--itx-control-focus-ring-width: 3px;
 	--itx-control-focus-ring-offset: 3px;
 	--itx-control-focus-scale: 0.875;
