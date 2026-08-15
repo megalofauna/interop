@@ -66,7 +66,6 @@ import {
 	standalone: true,
 	imports: [FieldControlElement, FieldErrorsElement, FieldNotesElement],
 	templateUrl: "./interop-field-input.html",
-	styleUrl: "./interop-field-input.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 
 	host: {

@@ -122,17 +122,22 @@ Squared throughout (`--itx-radius-none`; Carbon specifies no radius on any field
 
 Disabled keeps the fill and drops the underline to transparent (the missing rule is the signal); read-only does the opposite — no fill, softer `--itx-neutral-4` rule.
 
-### Where the styles live — and the debt
+### Where the styles live
 
-**Field is not on the library's two-file split.** Both sub-components are styled from their own `styleUrl` in SCSS, like `interop-progress`. There is no `styles/components/field.css` and no `themes/protocol/components/field.css`.
+**On the two-file split since 2026-08-15.** The two `styleUrl` SCSS files are gone; 875 lines of near-duplicate became:
 
-Consequence: **a CSS-only consumer gets no field styling at all.** That is the one thing the global stylesheet exists to provide, and it matters more here than elsewhere given the framework-portability direction in `project_angular_waystation`.
+- `styles/components/field.css` — structure, states, the focus ring
+- `styles/themes/protocol/components/field.css` — values
 
-Neither `.scss` file uses a single SCSS feature — they are plain CSS wearing a `.scss` extension. The one thing SCSS *would* buy (a shared `_field-shared.scss` partial) is exactly what would fix the duplication below, and it is not used.
+Both are imported globally with their `layer()`, so a CSS-only consumer now gets full field styling by writing the markup, and a consumer who declares `@layer interop, …` can override it — neither was true while the sheets were injected unlayered.
 
-The two files are near-identical by design and must stay that way. Values that have to agree are named as tokens and read through `var()` so the shared block is byte-identical and a diff shows drift; the literal defaults are still typed twice. Migration steps are written out in the header of `interop-field-input.scss`.
+`:host` became `:where(interop-field-input, interop-field-textarea)`. The input and text area share one file; the text area's four structural deltas (`align-items`, block padding, min inline size, `resize`) sit in one block at the foot, and its looser line-height is a value, so it lives in the theme.
 
-Both files belong on the shared ledger in `.agent/todo/styleurl-components-migration.md` — that list was compiled from a different round and does not name them yet.
+Two things about this component made the migration non-mechanical, and both are worth knowing before touching it:
+
+**The theme has two blocks, not one.** `<interop-field-control>` declares `itx-sink` — it is a recess, a layer of its own. A custom property is substituted where it is *declared*, so `--itx-field-underline-color: var(--itx-contrast-4)` written on `[interop-root]` would solve rank 4 against the **page** and inherit that finished colour past the recess. Every surface-relative token is therefore declared on `interop-field-control`, where the sink has already happened; geometry, type, and the label / notes / errors that sit outside the control stay on the root. `--itx-field-disabled-color` is declared in *both*, deliberately: the label reads it at the host's layer, the value text at the control's.
+
+**Prefix and suffix match the attribute as well as the class.** `.interop-field-prefix` only exists because the Angular directive's host adds it. A consumer writes `<span interop-field-prefix>`, so matching the class alone would have left the CSS-only consumer — the point of the migration — with unstyled addons.
 
 ### Token surface
 
@@ -294,9 +299,8 @@ Also corrected: the dev-mode warning on `type="textarea"` pointed at `<interop-t
 
 ## Known gaps
 
-- **Not on the two-file CSS split** — see *Where the styles live* above. This is the largest piece of debt on the component.
 - **`setDisabledState` no-op** — see above.
-- **Focus ring is JS-driven.** The ring keys off a `.focused` class set by `(focus)`/`(blur)` handlers rather than `:focus-visible`. For a text control the two are equivalent (browsers always match `:focus-visible` on elements that expect keyboard input), so this is a tidiness issue, not a behaviour one — but it means the ring is one more thing that stops working for a CSS-only consumer.
+- **Focus ring is JS-driven.** The ring keys off a `.focused` class set by `(focus)`/`(blur)` handlers rather than `:focus-visible`. For a text control the two are equivalent (browsers always match `:focus-visible` on elements that expect keyboard input), so this is a tidiness issue, not a behaviour one — but it means the ring is the one part of the component a CSS-only consumer still does not get, now that everything else is in the global sheet.
 - **No `<select>` variant** — the abstraction would extend cleanly; not done.
 - **No prefix/suffix outside the field components** — these are field-only primitives. Buttons want their own (see `button.md` and the prefix/suffix design discussion).
 - **ID uniqueness** — required, not validated. Consumers passing duplicates will silently break `<label for>` and ARIA wiring.
