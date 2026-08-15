@@ -109,6 +109,22 @@ for (const file of walk(ROOT)) {
 
 			const [, name, value] = decl;
 			const isCustom = name.startsWith("--");
+
+			/*
+			 * `--x: var(--x)` is a cycle: guaranteed-invalid, and it INHERITS, so it
+			 * takes the subtree with it. This codebase has now produced one three
+			 * times — twice by hand and once from a codemod that mapped both sides
+			 * of a rename — and the last one shipped, surviving only because a later
+			 * import happened to re-declare the token. Cheap to detect, so detect it.
+			 */
+			if (isCustom && new RegExp(`var\\(\\s*${name}\\s*[,)]`).test(value)) {
+				findings.push({
+					file,
+					line: i + 1,
+					text: line.trim(),
+					why: `${name} references itself — a cycle, which computes to guaranteed-invalid and inherits`,
+				});
+			}
 			const base = isCustom ? name.replace(STATE_SUFFIX, "") : name;
 			const wantsSubstrate = isCustom ? SUBSTRATE_TOKEN.test(base) : SUBSTRATE_PROPERTY.test(base);
 			const wantsMark = !wantsSubstrate && (isCustom ? MARK_TOKEN.test(base) : MARK_PROPERTY.test(base));

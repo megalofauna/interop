@@ -1,12 +1,12 @@
 /*
- * Color — semantic aliases only.
+ * Color — cross-cutting aliases.
  *
- * Palette values (--itx-neutral-*, --itx-colorway-*) and all semantic token
- * assignments are defined in the active theme file.
+ * The two relative axes live in tokens/elevation.css (mechanism) and the
+ * theme's ladder.css (values); this file only names things that sit across
+ * them. See .agent/color.md.
  */
 
 :where([interop-root]) {
-	--itx-contrast-4: var(--itx-contrast-4);
 	--itx-focus: var(--itx-colorway);
 	--itx-radius: var(--itx-radius-nominal);
 }
