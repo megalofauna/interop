@@ -452,7 +452,7 @@ async save() {
 		{ property: "--itx-button-outline-style", default: "solid" },
 		{
 			property: "--itx-button-outline-color",
-			default: "var(--itx-colorway-7)",
+			default: "var(--itx-colorway-solid)",
 		},
 		{ property: "--itx-button-outline-offset", default: "2px" },
 

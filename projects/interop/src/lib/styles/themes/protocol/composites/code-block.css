@@ -97,10 +97,10 @@
 	--itx-cb-tab-font-size: var(--itx-font-size-caption);
 	--itx-cb-tab-foreground: var(--itx-contrast-4);
 	--itx-cb-tab-foreground-active: var(--itx-contrast-6);
-	/*--itx-cb-tab-indicator-color: var(--itx-colorway-8);*/
+	/*--itx-cb-tab-indicator-color: var(--itx-colorway-solid);*/
 
 	--itx-cb-tab-indicator-width: 1px;
-	--itx-cb-tab-outline-color: var(--itx-colorway-8);
+	--itx-cb-tab-outline-color: var(--itx-focus);
 	--itx-cb-tab-outline-width: 2px;
 	--itx-cb-tab-outline-offset: 2px;
 	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
@@ -116,7 +116,7 @@
 	/* Tab:Current  */
 	--itx-cb-tab-background-current: transparent;
 	--itx-cb-tab-foreground-current: var(--itx-contrast-6);
-	--itx-cb-tab-border-bottom-color: var(--itx-colorway-8);
+	--itx-cb-tab-border-bottom-color: var(--itx-colorway-solid);
 
 	/* Label */
 	--itx-cb-label-padding-inline: initial;

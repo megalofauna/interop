@@ -76,7 +76,7 @@
 	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
 	--itx-expansion-panel-trigger-color: var(--itx-contrast-6);
 
-	--itx-expansion-panel-trigger-outline-color: var(--itx-colorway);
+	--itx-expansion-panel-trigger-outline-color: var(--itx-focus);
 	--itx-expansion-panel-trigger-outline-width: 2px;
 	--itx-expansion-panel-trigger-outline-style: solid;
 	--itx-expansion-panel-trigger-outline-offset: -2px;

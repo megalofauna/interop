@@ -71,7 +71,7 @@
  *   --itx-field-label-gap             Extra space under the label, on top of
  *                                     --itx-field-gap (default: 4px → 8px total)
  *   --itx-field-required-indicator    Required marker (default: " *")
- *   --itx-field-required-indicator-color  (default: var(--itx-danger))
+ *   --itx-field-required-indicator-color  (default: var(--itx-danger-solid))
  *
  * Control row
  *   --itx-field-height                Control height (default: var(--itx-spacing-10) — 40px)
@@ -81,10 +81,10 @@
  *   --itx-field-underline-width       (default: 1px)
  *   --itx-field-underline-color       (default: var(--itx-contrast-4))
  *   --itx-field-border-radius         (default: var(--itx-radius-none) — 0)
- *   --itx-field-focus-color           (default: var(--itx-colorway))
+ *   --itx-field-focus-color           (default: var(--itx-colorway-solid))
  *   --itx-field-focus-width           (default: 2px)
  *   --itx-field-invalid-color         Underline + ring + icon when invalid
- *                                     (default: var(--itx-danger))
+ *                                     (default: var(--itx-danger-solid))
  *   --itx-field-invalid-icon-size     (default: 1rem)
  *   --itx-field-readonly-underline-color  (default: var(--itx-contrast-2))
  *   --itx-field-disabled-color        Disabled text / label / notes
@@ -105,7 +105,7 @@
  *   --itx-field-note-font-size        (default: 0.75rem)
  *   --itx-field-note-line-height      (default: 1.3333)
  *   --itx-field-notes-gap             (default: var(--itx-spacing-1) — 4px)
- *   --itx-field-error-color           (default: var(--itx-danger))
+ *   --itx-field-error-color           (default: var(--itx-danger-solid))
  *   --itx-field-error-font-size       (default: 0.75rem)
  *   --itx-field-error-line-height     (default: 1.3333)
  *   --itx-field-errors-gap            (default: var(--itx-spacing-1) — 4px)
@@ -164,7 +164,7 @@
  */
 :host([data-required]) :where(.interop-field-label)::after {
 	content: var(--itx-field-required-indicator, " *");
-	color: var(--itx-field-required-indicator-color, var(--itx-danger));
+	color: var(--itx-field-required-indicator-color, var(--itx-danger-solid));
 }
 
 /* ─── Control row ────────────────────────────────────────────────────────── */
@@ -263,8 +263,8 @@
  * Focus. Carbon draws a 2px ring INSET into the field (`outline` with
  * `outline-offset: -2px`) rather than a halo around it, so the control still
  * measures exactly its size step and adjacent fields in a stacked form don't
- * collide. We take the geometry and keep --itx-colorway for the colour — the
- * semantic token, not --itx-colorway-8, so the ring survives dark mode.
+ * collide. We take the geometry and keep --itx-colorway-solid for the colour — the
+ * semantic token, not --itx-colorway-solid, so the ring survives dark mode.
  *
  * The `.focused` class is driven by the component's (focus)/(blur) handlers.
  * For a text control that is equivalent to :focus-visible, which browsers
@@ -276,7 +276,7 @@
  */
 :where(interop-field-control.focused) {
 	outline: var(--itx-field-focus-width, 2px) solid
-		var(--itx-field-focus-color, var(--itx-colorway));
+		var(--itx-field-focus-color, var(--itx-colorway-solid));
 	outline-offset: calc(-1 * var(--itx-field-focus-width, 2px));
 }
 
@@ -296,12 +296,12 @@
  *    of two colours is a worse focus indicator than one that is always one.
  */
 :where(interop-field-control.invalid) {
-	border-block-end-color: var(--itx-field-invalid-color, var(--itx-danger));
+	border-block-end-color: var(--itx-field-invalid-color, var(--itx-danger-solid));
 }
 
 :where(interop-field-control.invalid:not(.focused)) {
 	outline: var(--itx-field-focus-width, 2px) solid
-		var(--itx-field-invalid-color, var(--itx-danger));
+		var(--itx-field-invalid-color, var(--itx-danger-solid));
 	outline-offset: calc(-1 * var(--itx-field-focus-width, 2px));
 }
 
@@ -324,7 +324,7 @@
 	flex: 0 0 auto;
 	inline-size: var(--itx-field-invalid-icon-size, 1rem);
 	block-size: var(--itx-field-invalid-icon-size, 1rem);
-	background-color: var(--itx-field-invalid-color, var(--itx-danger));
+	background-color: var(--itx-field-invalid-color, var(--itx-danger-solid));
 	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm-.75 3h1.5v5h-1.5V4Zm.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
 	mask-repeat: no-repeat;
 	mask-position: center;
@@ -446,7 +446,7 @@
 /* $text-error on Carbon's `.--form-requirement`, at helper-text-01 and
    weight 400 — the colour carries it, not the weight. */
 :where(.interop-field-error) {
-	color: var(--itx-field-error-color, var(--itx-danger));
+	color: var(--itx-field-error-color, var(--itx-danger-solid));
 	font-size: var(--itx-field-error-font-size, 0.75rem);
 	line-height: var(--itx-field-error-line-height, 1.3333);
 }

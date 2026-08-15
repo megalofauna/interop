@@ -38,9 +38,9 @@
 	--itx-resizable-handle-size: 14px;
 	--itx-resizable-handle-color: var(--itx-contrast-3);
 	--itx-resizable-handle-color-hover: var(--itx-contrast-4);
-	--itx-resizable-handle-color-active: var(--itx-colorway-8);
+	--itx-resizable-handle-color-active: var(--itx-colorway-solid);
 	--itx-resizable-handle-corner-radius: 2px 0 var(--itx-radius-2) 0;
-	--itx-resizable-handle-focus-outline-color: var(--itx-colorway-8);
+	--itx-resizable-handle-focus-outline-color: var(--itx-focus);
 	--itx-resizable-handle-focus-outline-width: 2px;
 	--itx-resizable-handle-focus-outline-offset: 2px;
 

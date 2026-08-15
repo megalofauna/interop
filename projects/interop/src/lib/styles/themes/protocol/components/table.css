@@ -102,9 +102,9 @@
 
 	/* ── Scroll-region focus ring ───────────────────────────────────────── */
 	/* Focus is where the brand survives an otherwise neutral component. The
-	   semantic `--itx-colorway` rather than the light-only `-8` step, so the
+	   semantic `--itx-colorway-solid` rather than the light-only `-8` step, so the
 	   ring holds its contrast in dark mode — matches the contained list. */
-	--itx-table-focus-outline-color: var(--itx-colorway);
+	--itx-table-focus-outline-color: var(--itx-focus);
 
 	/* ── Group rows ─────────────────────────────────────────────────────── */
 	/* No Carbon counterpart. Fixed rem for the same reason as the body type. */

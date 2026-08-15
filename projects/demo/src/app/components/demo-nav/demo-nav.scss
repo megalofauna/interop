@@ -71,7 +71,7 @@
 	}
 
 	&:focus-visible {
-		outline: 2px solid var(--itx-colorway);
+		outline: 2px solid var(--itx-colorway-solid);
 		outline-offset: 2px;
 	}
 
@@ -124,10 +124,10 @@
 		);
 		/* background: var(--itx-surface-above); */
 		color: var(--itx-contrast-6);
-		border-inline-start-color: var(--itx-colorway);
+		border-inline-start-color: var(--itx-colorway-solid);
 
 		&:hover {
-			/* background: var(--itx-colorway-hover); */
+			/* background: var(--itx-colorway-solid); */
 		}
 	}
 

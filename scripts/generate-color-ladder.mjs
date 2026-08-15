@@ -127,7 +127,7 @@ const RAMP = {
 	// trips the separation guard. .95 decelerates enough to feel like it is
 	// approaching a ceiling while keeping every step ≥ .02.
 	light: { page: 0.898, up: 0.028, ease: 0.95, down: 0.043, min: 0.6, max: 1.0 },
-	dark: { page: 0.2, up: 0.0375, ease: 1.0, down: 0.045, min: 0.03, max: 0.44 },
+	dark: { page: 0.175, up: 0.0375, ease: 1.0, down: 0.045, min: 0.03, max: 0.44 },
 };
 
 const round3 = (n) => Math.round(n * 1000) / 1000;
@@ -190,6 +190,71 @@ const RANKS = [
 
 /** Minimum lightness separation between adjacent surfaces, so layers read apart. */
 const MIN_SURFACE_STEP = 0.02;
+
+/**
+ * Accent families, each SEEDED WITH ONE COLOUR as [lightness, chroma, hue].
+ *
+ * A seed's three components are used very differently, and that asymmetry is
+ * the whole point:
+ *
+ *   hue        carried through untouched. Every role is this hue.
+ *   chroma     an INTENT, clamped to what the hue can actually reach. Blue holds
+ *              .28 at L .50; teal cannot exceed .146 anywhere. Without the clamp
+ *              a teal seed has no solution at any lightness.
+ *   lightness  honoured for the solid where the gamut allows, moved only when it
+ *              does not. The per-layer roles ignore it entirely and solve their
+ *              own from contrast targets.
+ *
+ * That last line is why this replaces --itx-colorway-1..12. A lightness SLOT
+ * cannot survive a hue change: the old amber colourway needed three hand
+ * corrections (chroma bronzed at slots 6-12, the accent repointed from slot 8 to
+ * 5, the label flipped to dark) and still left slot-8 consumers behind, so tree,
+ * code-block, resizable and visimorph render burnt caramel while everything else
+ * moves. A contrast TARGET survives, because it is a relationship rather than a
+ * position.
+ */
+const SEEDS = {
+	colorway: {
+		// Science Blue #0066CC, the long-standing default.
+		default: [0.5, 0.19, 264],
+		// #FE9C55. Peaks light, which is exactly what broke the slot model.
+		amber: [0.78, 0.145, 54.35],
+	},
+	status: {
+		seventies: {
+			danger: [0.5, 0.105, 33],
+			info: [0.53, 0.058, 218],
+			success: [0.53, 0.078, 122],
+			warning: [0.62, 0.105, 78],
+		},
+		eighties: {
+			danger: [0.55, 0.19, 25],
+			info: [0.5, 0.19, 264],
+			success: [0.62, 0.19, 145],
+			warning: [0.75, 0.17, 85],
+		},
+	},
+};
+
+/** Contrast floors for the accent roles, mirroring the neutral rank table. */
+const ACCENT = {
+	/** Label on a solid fill. The constraint amber failed at 1.7:1. */
+	onSolid: 4.5,
+	/** A wash of the hue: perceptible, not legible. */
+	tint: { minDeltaL: 0.02, delta: { light: 0.05, dark: 0.06 } },
+	/** Text sitting on that wash. */
+	onTint: 4.5,
+	/** Ring, rule, accent bar. */
+	border: 3.0,
+	/** Link, icon, accent text on the plain surface. */
+	text: 4.5,
+	/**
+	 * How much of the seed's chroma must survive before the solver gives up on
+	 * the seed's lightness and moves. Higher = more faithful colour, more
+	 * lightness drift; lower = stays put and desaturates.
+	 */
+	keepChroma: 0.8,
+};
 
 /* ── Colour maths: OKLCH → sRGB → WCAG relative luminance ───────────────── */
 
@@ -268,6 +333,110 @@ function solveRank(surfaceL, target, dir, { c, h }) {
 	return clamp01(snapped);
 }
 
+/* ── Gamut ──────────────────────────────────────────────────────────────── */
+
+const inGamut = (L, C, H) => oklchToLinearSrgb(L, C, H).every((v) => v >= -1e-4 && v <= 1 + 1e-4);
+
+/**
+ * Greatest chroma this (lightness, hue) can actually display in sRGB.
+ *
+ * This is the function the slot model never had. Max chroma varies enormously
+ * with both arguments — blue reaches .285 at L .49 but only .048 at L .90;
+ * green is the reverse — so "slot 8" is a different amount of colour in every
+ * hue. Clamping here is what lets one seed drive a whole family.
+ */
+function maxChroma(L, H) {
+	let lo = 0;
+	let hi = 0.5;
+	for (let i = 0; i < 30; i++) {
+		const mid = (lo + hi) / 2;
+		if (inGamut(L, mid, H)) lo = mid;
+		else hi = mid;
+	}
+	return lo;
+}
+
+/** The most chroma this hue can reach at ANY lightness. */
+function peakChroma(H) {
+	let peak = 0;
+	for (let L = 0.15; L <= 0.97; L += 0.01) peak = Math.max(peak, maxChroma(L, H));
+	return peak;
+}
+
+/* ── The solid solver ───────────────────────────────────────────────────── */
+
+/** Near-white and near-black, in the family's own hue, for label candidates. */
+const labelPoles = (H) => [
+	{ name: "light", L: 0.99, C: 0.006 },
+	{ name: "dark", L: 0.18, C: 0.02 },
+];
+
+/**
+ * Solve a family's solid fill and its label from one seed.
+ *
+ * Keeps saturation and moves lightness, rather than the reverse: a brand colour
+ * that has been desaturated to hit a contrast target is no longer the brand
+ * colour (amber-lab Strategy 2 produced "a barely-amber dark brown"), whereas
+ * one that has shifted lightness still reads as itself. Strategy 4, adopted.
+ *
+ * Scheme-invariant by design. A solid that changes between light and dark is
+ * not an identity, and holding it constant is what avoids dark-mode mud.
+ */
+function solveSolid([seedL, seedC, H], label) {
+	// Advisory, not absolute — see maxChroma. Teal tops out at .146.
+	const intent = Math.min(seedC, peakChroma(H));
+
+	const attempt = (L) => {
+		const C = Math.min(intent, maxChroma(L, H));
+		if (C < intent * ACCENT.keepChroma) return null;
+
+		const y = luminance(L, C, H);
+		const scored = labelPoles(H)
+			.map((p) => ({ ...p, ratio: contrast(luminance(p.L, p.C, H), y) }))
+			.sort((a, b) => b.ratio - a.ratio);
+
+		return scored[0].ratio >= ACCENT.onSolid ? { L, C, label: scored[0], ratio: scored[0].ratio } : null;
+	};
+
+	const atSeed = attempt(seedL);
+	if (atSeed) return { ...atSeed, moved: 0 };
+
+	// Nearest lightness that works, searched outward so the result stays as
+	// close to the seed as the gamut permits.
+	for (let d = 0.005; d <= 0.6; d += 0.005) {
+		for (const L of [seedL + d, seedL - d]) {
+			if (L < 0.15 || L > 0.97) continue;
+			const hit = attempt(L);
+			if (hit) return { ...hit, moved: round3(L - seedL) };
+		}
+	}
+
+	findings.push(`${label}: no solid clears ${ACCENT.onSolid}:1 with a label at any lightness (hue ${H})`);
+	return null;
+}
+
+/**
+ * Solve one accent role against a surface: move away from the surface in the
+ * family's hue only as far as the floor requires, keeping as much chroma as the
+ * new lightness allows. Same shape as solveRank, but gamut-clamped per step.
+ */
+function solveAccentRole(surfaceL, surfaceC, surfaceH, H, intent, target, dir) {
+	const surfaceY = luminance(surfaceL, surfaceC, surfaceH);
+
+	let near = surfaceL;
+	let far = dir > 0 ? 1 : 0;
+	for (let i = 0; i < 40; i++) {
+		const mid = (near + far) / 2;
+		const C = Math.min(intent, maxChroma(mid, H));
+		if (contrast(luminance(mid, C, H), surfaceY) >= target) far = mid;
+		else near = mid;
+	}
+
+	const L = clamp01(dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000);
+	const C = Math.min(intent, maxChroma(L, H));
+	return { L, C: round3(C), ratio: contrast(luminance(L, C, H), surfaceY) };
+}
+
 /* ── Build the ladder ───────────────────────────────────────────────────── */
 
 const findings = [];
@@ -342,6 +511,103 @@ function buildScheme(scheme) {
 
 const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
 
+/* ── Build the accent families ──────────────────────────────────────────── */
+
+/** Every family that gets generated: the colourways plus each status set. */
+function familyList() {
+	const out = [];
+	for (const [name, seed] of Object.entries(SEEDS.colorway)) {
+		out.push({ id: name === "default" ? "colorway" : `colorway-${name}`, role: "colorway", variant: name, seed });
+	}
+	for (const [palette, set] of Object.entries(SEEDS.status)) {
+		for (const [status, seed] of Object.entries(set)) {
+			out.push({ id: palette === "seventies" ? status : `${status}-${palette}`, role: status, variant: palette, seed });
+		}
+	}
+	return out;
+}
+
+/**
+ * Which families get per-layer roles, and which are solved once.
+ *
+ * Only the colourway varies by layer. It is read everywhere and at every depth
+ * — links, indicators, selected rows, focus on every component — so a tint that
+ * was solved against the page is wrong inside a dialog.
+ *
+ * Statuses are solved against layer 0 and left there. Their consumers (toast,
+ * callout, badge, field errors) are self-contained, they use one value per
+ * status today, and making all eight layer-aware would multiply the emitted CSS
+ * roughly sixfold for a correction nothing currently asks for. Solving against
+ * the page also errs safe: a status tint carried onto a higher layer has MORE
+ * contrast than its floor, not less.
+ */
+const perLayer = (family) => family.role === "colorway";
+
+function buildFamily(family) {
+	const [, seedC, H] = family.seed;
+	const intent = Math.min(seedC, peakChroma(H));
+	const solid = solveSolid(family.seed, family.id);
+	if (!solid) return null;
+
+	const layers = { light: {}, dark: {} };
+
+	for (const scheme of ["light", "dark"]) {
+		const dir = scheme === "light" ? -1 : 1;
+		const tint = TINT[scheme];
+
+		for (const layer of perLayer(family) ? LAYERS : ["0"]) {
+			const surfaceL = SURFACES[scheme][layer];
+
+			// A tint is a wash: perceptible against its surface, not legible.
+			const tintL = clamp01(surfaceL + dir * ACCENT.tint.delta[scheme]);
+			const tintC = Math.min(intent, maxChroma(tintL, H));
+			const tintY = luminance(tintL, tintC, H);
+
+			if (Math.abs(tintL - surfaceL) < ACCENT.tint.minDeltaL) {
+				findings.push(`${family.id} ${scheme} layer ${layer}: tint is only ${Math.abs(tintL - surfaceL).toFixed(3)} L from its surface`);
+			}
+
+			// Text ON the tint is solved against the tint, not against the surface.
+			let onTint = null;
+			{
+				let near = tintL;
+				let far = dir > 0 ? 1 : 0;
+				for (let i = 0; i < 40; i++) {
+					const mid = (near + far) / 2;
+					const c = Math.min(intent, maxChroma(mid, H));
+					if (contrast(luminance(mid, c, H), tintY) >= ACCENT.onTint) far = mid;
+					else near = mid;
+				}
+				const L = clamp01(dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000);
+				const C = Math.min(intent, maxChroma(L, H));
+				const ratio = contrast(luminance(L, C, H), tintY);
+				if (ratio < ACCENT.onTint) {
+					findings.push(`${family.id} ${scheme} layer ${layer}: on-tint lands at ${ratio.toFixed(2)}:1, under ${ACCENT.onTint}:1`);
+				}
+				onTint = { L, C: round3(C), ratio };
+			}
+
+			const border = solveAccentRole(surfaceL, tint.c, tint.h, H, intent, ACCENT.border, dir);
+			const text = solveAccentRole(surfaceL, tint.c, tint.h, H, intent, ACCENT.text, dir);
+
+			for (const [role, solved, floor] of [
+				["border", border, ACCENT.border],
+				["text", text, ACCENT.text],
+			]) {
+				if (solved.ratio < floor) {
+					findings.push(`${family.id} ${scheme} layer ${layer}: ${role} lands at ${solved.ratio.toFixed(2)}:1, under ${floor}:1`);
+				}
+			}
+
+			layers[scheme][layer] = { tint: { L: tintL, C: round3(tintC) }, onTint, border, text };
+		}
+	}
+
+	return { ...family, hue: H, intent: round3(intent), solid, layers };
+}
+
+const families = familyList().map(buildFamily).filter(Boolean);
+
 /* ── Emit ───────────────────────────────────────────────────────────────── */
 
 /**
@@ -412,7 +678,154 @@ function emit() {
 	}
 
 	lines.push("}", "");
+	lines.push(...emitAccents());
 	return lines.join("\n");
+}
+
+/* ── Emit: accent families ──────────────────────────────────────────────── */
+
+const ACCENT_ROLES = ["tint", "on-tint", "border", "text"];
+const roleOf = (cell, role) => (role === "on-tint" ? cell.onTint : cell[role]);
+
+/** A solved (L, C) pair as the two numbers the engine will compose. */
+function accentNumbers(prefix, solved) {
+	return [`\t--itx-ramp-${prefix}-l: ${solved.L.toFixed(3)};`, `\t--itx-ramp-${prefix}-c: ${solved.C.toFixed(3)};`];
+}
+
+function emitAccents() {
+	const out = [];
+
+	/** The colourway ramp: per layer, per scheme. Re-declared by each variant. */
+	const colorwayRamp = (family, indent = "\t") =>
+		[
+			`${indent}--itx-${family.role === "colorway" ? "colorway" : family.id}-hue: ${family.hue};`,
+			`${indent}--itx-ramp-colorway-solid-l: ${family.solid.L.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-solid-c: ${family.solid.C.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-on-solid-l: ${family.solid.label.L.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-on-solid-c: ${family.solid.label.C.toFixed(3)};`,
+		].concat(
+			LAYERS.flatMap((layer) =>
+				ACCENT_ROLES.flatMap((role) =>
+					["light", "dark"].flatMap((scheme) => {
+						const solved = roleOf(family.layers[scheme][layer], role);
+						return [
+							`${indent}--itx-ramp-colorway-${role}-${layer}-${scheme}-l: ${solved.L.toFixed(3)};`,
+							`${indent}--itx-ramp-colorway-${role}-${layer}-${scheme}-c: ${solved.C.toFixed(3)};`,
+						];
+					}),
+				),
+			),
+		);
+
+	const colorways = families.filter((f) => f.role === "colorway");
+	const base = colorways.find((f) => f.variant === "default");
+
+	out.push(
+		"",
+		"/*",
+		" * ── Colourway ───────────────────────────────────────────────────────────",
+		" *",
+		" * Seeded with ONE colour. Hue carries through; chroma is an intent clamped",
+		" * to what the hue can actually reach; lightness is honoured for the solid",
+		" * where the gamut allows and solved from contrast targets for everything",
+		" * else. That is why this survives a hue change and a lightness-indexed slot",
+		" * ramp did not.",
+		" *",
+		" * solid and on-solid are scheme-invariant on purpose: a brand colour that",
+		" * shifts between light and dark is not an identity.",
+		" */",
+		":where([interop-root]) {",
+		...colorwayRamp(base),
+		"}",
+	);
+
+	for (const variant of colorways.filter((f) => f.variant !== "default")) {
+		out.push(
+			"",
+			`/* Colourway: ${variant.variant}. Re-declares the same ramp numbers, so every`,
+			" * consumer follows. Nothing is hand-corrected — the solver derives the",
+			" * label and the gamut-clamped chroma from the seed.",
+			" */",
+			`:where([interop-root][itx-colorway="${variant.variant}"]) {`,
+			...colorwayRamp(variant),
+			"}",
+		);
+	}
+
+	/** Statuses: solved once against layer 0, grouped by palette. */
+	const statusOf = (palette) =>
+		families.filter((f) => f.role !== "colorway" && f.variant === palette);
+
+	const statusBlock = (family) => {
+		const name = family.role;
+		const rows = [
+			`\t--itx-${name}-hue: ${family.hue};`,
+			`\t--itx-ramp-${name}-solid-l: ${family.solid.L.toFixed(3)};`,
+			`\t--itx-ramp-${name}-solid-c: ${family.solid.C.toFixed(3)};`,
+			`\t--itx-ramp-${name}-on-solid-l: ${family.solid.label.L.toFixed(3)};`,
+			`\t--itx-ramp-${name}-on-solid-c: ${family.solid.label.C.toFixed(3)};`,
+		];
+		for (const role of ACCENT_ROLES) {
+			for (const scheme of ["light", "dark"]) {
+				const solved = roleOf(family.layers[scheme]["0"], role);
+				rows.push(...accentNumbers(`${name}-${role}-${scheme}`, solved));
+			}
+		}
+		return rows;
+	};
+
+	out.push(
+		"",
+		"/*",
+		" * ── Status families ─────────────────────────────────────────────────────",
+		" *",
+		" * Same solver, four more seeds per palette. Solved against layer 0 rather",
+		" * than per layer — see perLayer() in the generator for why.",
+		" *",
+		" * The labels are derived, which retires two recorded defects: warning used",
+		" * to sit at 4.71:1 with 'neither much margin', and the eighties palette used",
+		" * flat on-* values, the exact pattern seventies documents as a dark-mode AA",
+		" * failure it already had to fix.",
+		" */",
+		':where([interop-root], [itx-status-palette="seventies"]) {',
+		...statusOf("seventies").flatMap(statusBlock),
+		"}",
+		"",
+		':where([itx-status-palette="eighties"]) {',
+		...statusOf("eighties").flatMap(statusBlock),
+		"}",
+	);
+
+	/* Composition. Statuses are layer-invariant, so they resolve here rather
+	   than in the engine's per-layer blocks. */
+	const compose = (name, role, schemeless) =>
+		schemeless
+			? `\t--itx-${name}-${role}: oklch(var(--itx-ramp-${name}-${role}-l) var(--itx-ramp-${name}-${role}-c) var(--itx-${name}-hue));`
+			: `\t--itx-${name}-${role}: light-dark(\n` +
+				`\t\toklch(var(--itx-ramp-${name}-${role}-light-l) var(--itx-ramp-${name}-${role}-light-c) var(--itx-${name}-hue)),\n` +
+				`\t\toklch(var(--itx-ramp-${name}-${role}-dark-l) var(--itx-ramp-${name}-${role}-dark-c) var(--itx-${name}-hue))\n\t);`;
+
+	out.push(
+		"",
+		"/*",
+		" * Composition for everything that does NOT vary by layer.",
+		" *",
+		" * The colourway's solid and label are composed here rather than in the",
+		" * engine because they are scheme- and layer-invariant. A scoped colourway",
+		" * re-declares the ramp numbers on the same element this reads them from, so",
+		" * the substitution picks up the variant with no second composition needed.",
+		" */",
+		":where([interop-root]) {",
+		compose("colorway", "solid", true),
+		compose("colorway", "on-solid", true),
+	);
+	for (const name of Object.keys(SEEDS.status.seventies)) {
+		out.push(compose(name, "solid", true), compose(name, "on-solid", true));
+		for (const role of ACCENT_ROLES) out.push(compose(name, role, false));
+	}
+	out.push("}", "");
+
+	return out;
 }
 
 /* ── Emit: the engine ───────────────────────────────────────────────────── */
@@ -448,6 +861,24 @@ function tokenSet(i, indent) {
 	for (const spec of RANKS) {
 		out.push(`${t}--itx-contrast-${spec.rank}: ${compose(`contrast-${spec.rank}-${key(i)}`)};`);
 	}
+
+	/*
+	 * Colourway roles re-derive per layer for the same reason the neutral ranks
+	 * do: a tint solved against the page is wrong inside a dialog. Composed from
+	 * the ramp numbers, so the active colourway (default or a scoped variant)
+	 * re-points them all by re-declaring numbers, with no hand corrections.
+	 *
+	 * solid / on-solid are absent here on purpose — they are scheme- and
+	 * layer-invariant, and live in ladder.css.
+	 */
+	for (const role of ACCENT_ROLES) {
+		out.push(
+			`${t}--itx-colorway-${role}: light-dark(\n` +
+				`${t}\toklch(var(--itx-ramp-colorway-${role}-${key(i)}-light-l) var(--itx-ramp-colorway-${role}-${key(i)}-light-c) var(--itx-colorway-hue)),\n` +
+				`${t}\toklch(var(--itx-ramp-colorway-${role}-${key(i)}-dark-l) var(--itx-ramp-colorway-${role}-${key(i)}-dark-c) var(--itx-colorway-hue))\n${t});`,
+		);
+	}
+
 	return out.join("\n");
 }
 
@@ -610,8 +1041,54 @@ function report() {
 
 const check = process.argv.includes("--check");
 
+function accentReport() {
+	const rows = ["\n  ACCENT FAMILIES — solid (scheme-invariant) + per-layer roles at layer 0"];
+	rows.push(`  ${"family".padEnd(18)}${"solid".padStart(22)}${"label".padStart(9)}${"on-solid".padStart(11)}${"seed L".padStart(10)}`);
+	for (const f of families) {
+		const s = f.solid;
+		const moved = s.moved === 0 ? "kept" : `${s.moved > 0 ? "+" : ""}${s.moved}`;
+		rows.push(
+			`  ${f.id.padEnd(18)}` +
+				`oklch(${s.L.toFixed(3)} ${s.C.toFixed(3)} ${f.hue})`.padStart(22) +
+				`${s.label.name}`.padStart(9) +
+				`${s.ratio.toFixed(2)}:1`.padStart(11) +
+				`${moved}`.padStart(10),
+		);
+	}
+	return rows.join("\n");
+}
+
+/**
+ * Sweep the hue circle to prove an arbitrary seed resolves.
+ *
+ * A warning rather than a failure: an unusable hue is information for whoever
+ * is choosing a colourway, not a defect in the ones currently shipped. It
+ * exists because teal genuinely returned null during design — its chroma tops
+ * out at .146 anywhere, so a .19 intent has no solution at any lightness, and
+ * that failure mode is invisible until someone seeds a muted hue.
+ */
+function hueSweep(seedL = 0.55, seedC = 0.19) {
+	const failed = [];
+	for (let H = 0; H < 360; H += 15) {
+		if (!solveSolid([seedL, seedC, H], `sweep-${H}`)) failed.push(H);
+	}
+	// solveSolid records its own findings; the sweep is advisory, so drop them.
+	for (let i = findings.length - 1; i >= 0; i--) {
+		if (findings[i].startsWith("sweep-")) findings.splice(i, 1);
+	}
+	return failed;
+}
+
 console.log("Colour ladder — lightness / measured contrast against own surface");
 console.log(report());
+console.log(accentReport());
+
+const unusable = hueSweep();
+console.log(
+	unusable.length
+		? `\n  note: at L .55 / C .19, ${unusable.length} of 24 hues need a lightness shift or a lower chroma intent: ${unusable.join(", ")}`
+		: "\n  every hue on the circle resolves at the default seed strength",
+);
 
 if (findings.length) {
 	console.error(`\n✗ ${findings.length} contrast failure${findings.length === 1 ? "" : "s"}:`);

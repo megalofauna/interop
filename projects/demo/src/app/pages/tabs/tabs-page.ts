@@ -321,14 +321,14 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		},
 		{
 			property: "--itx-tab-active-indicator-color",
-			default: "var(--itx-colorway)",
+			default: "var(--itx-colorway-solid)",
 		},
 		// Tab — focus + motion
 		{ property: "--itx-tab-focus-outline-width", default: "2px" },
 		{ property: "--itx-tab-focus-outline-style", default: "solid" },
 		{
 			property: "--itx-tab-focus-outline-color",
-			default: "var(--itx-colorway)",
+			default: "var(--itx-colorway-solid)",
 		},
 		{ property: "--itx-tab-focus-outline-offset", default: "-2px — inset" },
 		{
@@ -348,7 +348,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tab-panel-focus-outline-style", default: "solid" },
 		{
 			property: "--itx-tab-panel-focus-outline-color",
-			default: "var(--itx-colorway)",
+			default: "var(--itx-colorway-solid)",
 		},
 		{
 			property: "--itx-tab-panel-focus-outline-offset",

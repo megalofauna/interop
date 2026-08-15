@@ -269,12 +269,6 @@ export const routes: Routes = [
 			),
 	},
 	{
-		path: "experiments/amber-lab",
-		title: "Amber Lab — Interop",
-		loadComponent: () =>
-			import("./pages/amber-lab/amber-lab-page").then((m) => m.AmberLabPage),
-	},
-	{
 		// Unknown URL → the component directory, not an arbitrary component.
 		// This was `components/checkbox`, which dropped anyone who mistyped a
 		// route onto a page with no relationship to what they asked for.

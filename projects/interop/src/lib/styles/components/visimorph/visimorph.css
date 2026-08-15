@@ -82,7 +82,7 @@
 	);
 	--_focus-ring-color: var(
 		--itx-control-focus-ring-color,
-		var(--itx-colorway, #0066cc)
+		var(--itx-colorway-solid, #0066cc)
 	);
 	--_focus-ring-width: var(--itx-control-focus-ring-width, 3px);
 	--_focus-ring-offset: var(--itx-control-focus-ring-offset, 3px);
@@ -231,7 +231,7 @@
 	);
 	border-color: var(--itx-control-toggle-border-color-checked);
 	/*background-color: var(--_accent);*/
-	background-color: var(--itx-colorway-8);
+	background-color: var(--itx-colorway-solid);
 }
 
 :where(interop-visimorph[itx-visimorph="toggle"][data-checked])::after {

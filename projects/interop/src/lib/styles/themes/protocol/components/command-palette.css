@@ -67,7 +67,7 @@
 	 * The rule under the filter field. Was a hardcoded #ff9c56 — light-only,
 	 * palette-blind, and the one place in the component where a literal colour
 	 * had been left in. It is the palette's single accent, so it takes the
-	 * semantic --itx-colorway rather than the light-only -8 step: focus and
+	 * semantic --itx-colorway-solid rather than the light-only -8 step: focus and
 	 * accent are where the brand survives an otherwise neutral component
 	 * (rounds 7 and 9), and the semantic token holds its contrast in dark mode.
 	 *
@@ -76,7 +76,7 @@
 	 * input and the results, and it reads as the palette's accent.
 	 */
 	--itx-cmdp-rule-width: 2px;
-	--itx-cmdp-rule-color: var(--itx-colorway);
+	--itx-cmdp-rule-color: var(--itx-colorway-solid);
 
 	/* field */
 	--itx-cmdp-field-gap: var(--itx-spacing-3);
@@ -106,7 +106,7 @@
 	--itx-cmdp-clear-color: var(--itx-contrast-1);
 
 	--itx-cmdp-clear-outline-width: 2px;
-	--itx-cmdp-clear-outline-color: var(--itx-colorway);
+	--itx-cmdp-clear-outline-color: var(--itx-focus);
 	--itx-cmdp-clear-outline-offset: 2px;
 
 	/* list */

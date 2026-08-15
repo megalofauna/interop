@@ -15,8 +15,8 @@
  *
  * Token surface for components/toast.css. Base values are inheritable on
  * [interop-root]; the per-`data-type` blocks rebind only the colour tokens and
- * pull from the status-colour palette (--itx-success / --itx-danger /
- * --itx-warning / --itx-info + their -surface + on-surface pairs), so a toast
+ * pull from the status-colour palette (--itx-success-solid / --itx-danger-solid /
+ * --itx-warning-solid / --itx-info-solid + their -surface + on-surface pairs), so a toast
  * re-skins with the active itx-status-palette. That mapping already matched
  * Carbon's structure — their `$notification-background-*` is a tint of the
  * status hue and their `$support-*` is the full-strength accent — so the
@@ -111,11 +111,11 @@
 	--itx-toast-close-background-hover: var(--itx-contrast-1);
 
 	/* ── Focus ────────────────────────────────────────────────────────────
-	 * Carbon's is 2px inset blue. Kept on --itx-colorway and kept outside
+	 * Carbon's is 2px inset blue. Kept on --itx-colorway-solid and kept outside
 	 * the box: focus is where our brand survives an otherwise neutral
 	 * component.                                                          */
 	--itx-toast-focus-width: 2px;
-	--itx-toast-focus-color: var(--itx-colorway);
+	--itx-toast-focus-color: var(--itx-focus);
 	--itx-toast-focus-offset: 2px;
 	--itx-toast-focus-offset-tight: 1px;
 }
@@ -130,31 +130,31 @@
 /* ── Variants (rebind colour tokens from the status palette) ─────────────── */
 
 :where([interop-root] interop-toast-item[data-type="success"]) {
-	--itx-toast-background: var(--itx-success-surface);
-	--itx-toast-foreground: var(--itx-on-success-surface);
-	--itx-toast-border-color: var(--itx-success);
-	--itx-toast-accent-color: var(--itx-success);
+	--itx-toast-background: var(--itx-success-tint);
+	--itx-toast-foreground: var(--itx-success-on-tint);
+	--itx-toast-border-color: var(--itx-success-solid);
+	--itx-toast-accent-color: var(--itx-success-solid);
 }
 
 :where([interop-root] interop-toast-item[data-type="error"]) {
-	--itx-toast-background: var(--itx-danger-surface);
-	--itx-toast-foreground: var(--itx-on-danger-surface);
-	--itx-toast-border-color: var(--itx-danger);
-	--itx-toast-accent-color: var(--itx-danger);
+	--itx-toast-background: var(--itx-danger-tint);
+	--itx-toast-foreground: var(--itx-danger-on-tint);
+	--itx-toast-border-color: var(--itx-danger-solid);
+	--itx-toast-accent-color: var(--itx-danger-solid);
 }
 
 :where([interop-root] interop-toast-item[data-type="warning"]) {
-	--itx-toast-background: var(--itx-warning-surface);
-	--itx-toast-foreground: var(--itx-on-warning-surface);
-	--itx-toast-border-color: var(--itx-warning);
-	--itx-toast-accent-color: var(--itx-warning);
+	--itx-toast-background: var(--itx-warning-tint);
+	--itx-toast-foreground: var(--itx-warning-on-tint);
+	--itx-toast-border-color: var(--itx-warning-solid);
+	--itx-toast-accent-color: var(--itx-warning-solid);
 }
 
 :where([interop-root] interop-toast-item[data-type="info"]) {
-	--itx-toast-background: var(--itx-info-surface);
-	--itx-toast-foreground: var(--itx-on-info-surface);
-	--itx-toast-border-color: var(--itx-info);
-	--itx-toast-accent-color: var(--itx-info);
+	--itx-toast-background: var(--itx-info-tint);
+	--itx-toast-foreground: var(--itx-info-on-tint);
+	--itx-toast-border-color: var(--itx-info-solid);
+	--itx-toast-accent-color: var(--itx-info-solid);
 }
 
 :where([interop-root] interop-toast-item[data-type="loading"]) {

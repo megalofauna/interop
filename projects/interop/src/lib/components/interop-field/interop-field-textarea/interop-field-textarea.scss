@@ -81,7 +81,7 @@
    --itx-field-required-indicator to "" to suppress it. */
 :host([data-required]) :where(.interop-field-label)::after {
 	content: var(--itx-field-required-indicator, " *");
-	color: var(--itx-field-required-indicator-color, var(--itx-danger));
+	color: var(--itx-field-required-indicator-color, var(--itx-danger-solid));
 }
 
 /* ─── Control row ────────────────────────────────────────────────────────── */
@@ -168,12 +168,12 @@
 /*
  * Focus — a 2px ring inset into the field (`outline-offset: -2px`), so the
  * control still measures exactly its box and stacked fields don't collide.
- * Carbon's geometry, --itx-colorway for the colour: the semantic token, not
- * --itx-colorway-8, so the ring survives dark mode.
+ * Carbon's geometry, --itx-colorway-solid for the colour: the semantic token, not
+ * --itx-colorway-solid, so the ring survives dark mode.
  */
 :where(interop-field-control.focused) {
 	outline: var(--itx-field-focus-width, 2px) solid
-		var(--itx-field-focus-color, var(--itx-colorway));
+		var(--itx-field-focus-color, var(--itx-colorway-solid));
 	outline-offset: calc(-1 * var(--itx-field-focus-width, 2px));
 }
 
@@ -184,12 +184,12 @@
  * ours, so the control still carries an error signal while it is focused.
  */
 :where(interop-field-control.invalid) {
-	border-block-end-color: var(--itx-field-invalid-color, var(--itx-danger));
+	border-block-end-color: var(--itx-field-invalid-color, var(--itx-danger-solid));
 }
 
 :where(interop-field-control.invalid:not(.focused)) {
 	outline: var(--itx-field-focus-width, 2px) solid
-		var(--itx-field-invalid-color, var(--itx-danger));
+		var(--itx-field-invalid-color, var(--itx-danger-solid));
 	outline-offset: calc(-1 * var(--itx-field-focus-width, 2px));
 }
 
@@ -208,7 +208,7 @@
 	flex: 0 0 auto;
 	inline-size: var(--itx-field-invalid-icon-size, 1rem);
 	block-size: var(--itx-field-invalid-icon-size, 1rem);
-	background-color: var(--itx-field-invalid-color, var(--itx-danger));
+	background-color: var(--itx-field-invalid-color, var(--itx-danger-solid));
 	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm-.75 3h1.5v5h-1.5V4Zm.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
 	mask-repeat: no-repeat;
 	mask-position: center;
@@ -326,7 +326,7 @@
 /* $text-error on Carbon's `.--form-requirement`, at helper-text-01 and
    weight 400 — the colour carries it, not the weight. */
 :where(.interop-field-error) {
-	color: var(--itx-field-error-color, var(--itx-danger));
+	color: var(--itx-field-error-color, var(--itx-danger-solid));
 	font-size: var(--itx-field-error-font-size, 0.75rem);
 	line-height: var(--itx-field-error-line-height, 1.3333);
 }

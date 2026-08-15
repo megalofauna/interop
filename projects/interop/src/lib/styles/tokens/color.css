@@ -7,6 +7,6 @@
  */
 
 :where([interop-root]) {
-	--itx-focus: var(--itx-colorway);
+	--itx-focus: var(--itx-colorway-solid);
 	--itx-radius: var(--itx-radius-nominal);
 }

@@ -137,7 +137,7 @@
 	   spilling over the neighbouring segment. */
 	--itx-segment-outline-width: 2px;
 	--itx-segment-outline-style: solid;
-	--itx-segment-outline-color: var(--itx-colorway);
+	--itx-segment-outline-color: var(--itx-focus);
 	--itx-segment-outline-offset: -2px;
 
 	/* ── Segment — transition ───────────────────────────────────────────── */

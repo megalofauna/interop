@@ -51,10 +51,10 @@
 	}
 
 	// The whole grid is a tab sequence, so the ring has to be unmissable. The
-	// semantic --itx-colorway, not the light-only -8 step, so it survives dark
+	// semantic --itx-colorway-solid, not the light-only -8 step, so it survives dark
 	// mode. Negative offset keeps the ring off the neighbouring card's rule.
 	&:focus-visible {
-		outline: 2px solid var(--itx-colorway);
+		outline: 2px solid var(--itx-colorway-solid);
 		outline-offset: -2px;
 	}
 }

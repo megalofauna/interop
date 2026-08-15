@@ -127,7 +127,7 @@ export class IconPage {
 		{ groupLabel: "Missing-icon placeholder (dev)" },
 		{
 			property: "--itx-icon-missing-color",
-			default: "var(--itx-danger)",
+			default: "var(--itx-danger-solid)",
 			description: "Tint of the X-mark shown when a registry name has no match. Visible in dev.",
 		},
 		{
@@ -196,10 +196,10 @@ export class IconPage {
 <interop-icon name="tabler-star" [size]="32" [strokeWidth]="2" />
 <interop-icon name="tabler-star" [size]="32" [strokeWidth]="3" />`;
 
-	readonly colorCode = `<interop-icon name="tabler-check" [size]="28" color="var(--itx-success)" />
-<interop-icon name="tabler-info-circle" [size]="28" color="var(--itx-info)" />
-<interop-icon name="tabler-bolt" [size]="28" color="var(--itx-warning)" />
-<interop-icon name="tabler-x" [size]="28" color="var(--itx-danger)" />`;
+	readonly colorCode = `<interop-icon name="tabler-check" [size]="28" color="var(--itx-success-solid)" />
+<interop-icon name="tabler-info-circle" [size]="28" color="var(--itx-info-solid)" />
+<interop-icon name="tabler-bolt" [size]="28" color="var(--itx-warning-solid)" />
+<interop-icon name="tabler-x" [size]="28" color="var(--itx-danger-solid)" />`;
 
 	readonly registerCode = `// app.config.ts
 import { provideInteropIcons } from '@interop/ui';

@@ -54,7 +54,7 @@
  *   --itx-tab-panel-padding-inline        Inline padding (default: 16px)
  *   --itx-tab-panel-focus-outline-width   (default: 2px)
  *   --itx-tab-panel-focus-outline-style   (default: solid)
- *   --itx-tab-panel-focus-outline-color   (default: --itx-colorway)
+ *   --itx-tab-panel-focus-outline-color   (default: --itx-colorway-solid)
  *   --itx-tab-panel-focus-outline-offset  (default: -2px, inset)
  */
 
@@ -79,12 +79,12 @@
 	min-inline-size: 0;
 
 	/* Inset, so the ring sits inside the panel rather than colliding with the
-	   tab list rule directly above it. --itx-colorway, not --itx-colorway-8:
+	   tab list rule directly above it. --itx-colorway-solid, not --itx-colorway-solid:
 	   the semantic token is a light-dark() pair and survives dark mode. */
 	&:focus-visible {
 		outline: var(--itx-tab-panel-focus-outline-width, 2px)
 			var(--itx-tab-panel-focus-outline-style, solid)
-			var(--itx-tab-panel-focus-outline-color, var(--itx-colorway));
+			var(--itx-tab-panel-focus-outline-color, var(--itx-colorway-solid));
 		outline-offset: var(--itx-tab-panel-focus-outline-offset, -2px);
 	}
 }

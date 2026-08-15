@@ -65,11 +65,11 @@
 // one: chip-badge has no palette of its own, it reuses the chip's and expresses
 // "badge" by dropping to the small step of the size axis.
 .cargo__status[data-status="hazmat"] {
-	--itx-chip-background: var(--itx-warning-surface);
-	--itx-chip-color: var(--itx-on-warning-surface);
+	--itx-chip-background: var(--itx-warning-tint);
+	--itx-chip-color: var(--itx-warning-on-tint);
 }
 
 .cargo__status[data-status="loading"] {
-	--itx-chip-background: var(--itx-info-surface);
-	--itx-chip-color: var(--itx-on-info-surface);
+	--itx-chip-background: var(--itx-info-tint);
+	--itx-chip-color: var(--itx-info-on-tint);
 }

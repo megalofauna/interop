@@ -357,7 +357,7 @@ density = signal<TableSize>('lg');`;
 		{ groupLabel: "Scroll-region focus ring" },
 		{
 			property: "--itx-table-focus-outline-color",
-			default: "var(--itx-colorway)",
+			default: "var(--itx-colorway-solid)",
 		},
 
 		{ groupLabel: "Group rows" },

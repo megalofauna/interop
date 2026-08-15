@@ -52,7 +52,7 @@ increment(): void {
 
 	readonly sampleCss = `:where(progress[interop-progress]) {
   --itx-progress-height: 0.5rem;
-  --itx-progress-fill: var(--itx-colorway);
+  --itx-progress-fill: var(--itx-colorway-solid);
 }`;
 
 	readonly longSample = `export function createActivationHandler(fn, options = {}) {
@@ -148,11 +148,11 @@ increment(): void {
 		},
 		{
 			property: "--itx-cb-tab-border-bottom-color",
-			default: "var(--itx-colorway-8) — active tab underline",
+			default: "var(--itx-colorway-solid) — active tab underline",
 		},
 		{
 			property: "--itx-cb-tab-outline-color",
-			default: "var(--itx-colorway-8)",
+			default: "var(--itx-colorway-solid)",
 		},
 		{ property: "--itx-cb-label-foreground", default: "var(--itx-contrast-4)" },
 		{ property: "--itx-cb-actions-gap", default: "var(--itx-spacing-1) — 4px" },

@@ -442,7 +442,7 @@ providers: [
 		},
 		// Focus
 		{ property: "--itx-toast-focus-width", default: "2px" },
-		{ property: "--itx-toast-focus-color", default: "var(--itx-colorway)" },
+		{ property: "--itx-toast-focus-color", default: "var(--itx-colorway-solid)" },
 		{
 			property: "--itx-toast-focus-offset",
 			default: "2px — the toast item itself",

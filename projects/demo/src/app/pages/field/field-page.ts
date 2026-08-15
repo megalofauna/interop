@@ -252,7 +252,7 @@ massErrors = [
 		{ property: "--itx-field-required-indicator", default: '" *"' },
 		{
 			property: "--itx-field-required-indicator-color",
-			default: "var(--itx-danger)",
+			default: "var(--itx-danger-solid)",
 		},
 		// Control row
 		{
@@ -277,9 +277,9 @@ massErrors = [
 			property: "--itx-field-border-radius",
 			default: "var(--itx-radius-none) — 0",
 		},
-		{ property: "--itx-field-focus-color", default: "var(--itx-colorway)" },
+		{ property: "--itx-field-focus-color", default: "var(--itx-colorway-solid)" },
 		{ property: "--itx-field-focus-width", default: "2px" },
-		{ property: "--itx-field-invalid-color", default: "var(--itx-danger)" },
+		{ property: "--itx-field-invalid-color", default: "var(--itx-danger-solid)" },
 		{ property: "--itx-field-invalid-icon-size", default: "1rem — 16px" },
 		{
 			property: "--itx-field-readonly-underline-color",
@@ -328,7 +328,7 @@ massErrors = [
 			property: "--itx-field-notes-gap",
 			default: "var(--itx-spacing-1) — 4px",
 		},
-		{ property: "--itx-field-error-color", default: "var(--itx-danger)" },
+		{ property: "--itx-field-error-color", default: "var(--itx-danger-solid)" },
 		{ property: "--itx-field-error-font-size", default: "0.75rem — 12px" },
 		{ property: "--itx-field-error-line-height", default: "1.3333" },
 		{

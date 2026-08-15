@@ -358,7 +358,7 @@ export class SegmentedControlPage {
 		{ property: "--itx-segment-outline-style", default: "solid" },
 		{
 			property: "--itx-segment-outline-color",
-			default: "var(--itx-colorway)",
+			default: "var(--itx-colorway-solid)",
 		},
 		{
 			property: "--itx-segment-outline-offset",

@@ -44,7 +44,7 @@
 	--interop-content-code-radius: 6px;
 
 	/* — Links — */
-	--interop-content-link-color: var(--itx-colorway);
+	--interop-content-link-color: var(--itx-colorway-solid);
 	--interop-content-link-decoration: underline;
 	--interop-content-link-underline-offset: 0.2em;
 

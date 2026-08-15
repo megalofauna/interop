@@ -132,7 +132,7 @@ export class PageNavPage {
 			property: "--itx-pn-link-padding-inline",
 			default: "var(--itx-spacing-4) — 16px",
 		},
-		{ property: "--itx-pn-focus-color", default: "var(--itx-colorway)" },
+		{ property: "--itx-pn-focus-color", default: "var(--itx-colorway-solid)" },
 		{ property: "--itx-pn-indent", default: "Vertical: child indent" },
 		{ property: "--itx-pn-item-gap", default: "Vertical: gap between items" },
 		{
@@ -143,7 +143,7 @@ export class PageNavPage {
 			property: "--itx-pn-indicator-size",
 			default: "5px — vertical active dot",
 		},
-		{ property: "--itx-pn-indicator-color", default: "var(--itx-colorway)" },
+		{ property: "--itx-pn-indicator-color", default: "var(--itx-colorway-solid)" },
 	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [

@@ -35,8 +35,8 @@
  *   Carbon's inset focus rings (`inset 0 0 0 2px $interactive, 0 0 0 3px
  *   $layer`). Inset shadows are measured from the border box, which for us is
  *   the 24px target, not the 14px circle — the rings would float clear of the
- *   thumb. Focus is instead: thumb turns --itx-colorway, circle grows to 20px,
- *   and the filled track turns --itx-colorway (which Carbon also does, via
+ *   thumb. Focus is instead: thumb turns --itx-colorway-solid, circle grows to 20px,
+ *   and the filled track turns --itx-colorway-solid (which Carbon also does, via
  *   `.slider__thumb:focus ~ .slider__filled-track`). Three simultaneous
  *   changes, none of them hue-only.
  *
@@ -133,7 +133,7 @@
  *                                   SC 2.5.8.
  *   --itx-slider-thumb-radius       Thumb corner radius. (--itx-radius-full)
  *   --itx-slider-focus-ring-color   Thumb + fill colour when focused.
- *                                   (--itx-colorway)
+ *                                   (--itx-colorway-solid)
  *   --itx-slider-disabled-color     Track, fill and thumb when disabled.
  *                                   (--itx-contrast-2)
  *   --itx-slider-length             Length of a vertical slider. (8rem)
@@ -277,8 +277,8 @@
 }
 
 :host:focus-visible {
-	--_thumb-color: var(--itx-slider-focus-ring-color, var(--itx-colorway));
-	--_fill-color: var(--itx-slider-focus-ring-color, var(--itx-colorway));
+	--_thumb-color: var(--itx-slider-focus-ring-color, var(--itx-colorway-solid));
+	--_fill-color: var(--itx-slider-focus-ring-color, var(--itx-colorway-solid));
 	--_thumb-size: var(--_thumb-size-active);
 }
 

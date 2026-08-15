@@ -79,22 +79,22 @@
 		position: relative;
 
 		a.technical__item {
-			--itx-icon-color: var(--itx-colorway-7);
+			--itx-icon-color: var(--itx-colorway-solid);
 
 			display: flex;
 			align-items: center;
 			column-gap: var(--itx-spacing-3);
-			color: var(--itx-colorway-8);
+			color: var(--itx-colorway-solid);
 			text-decoration: underline;
 			text-underline-offset: 6px;
 			text-decoration-style: solid;
-			text-decoration-color: var(--itx-colorway-8);
+			text-decoration-color: var(--itx-colorway-solid);
 			transition: text-decoration-style 500ms ease-in-out;
 
 
 
 			&:hover {
-				color: var(--itx-colorway-8);
+				color: var(--itx-colorway-solid);
 				text-decoration-style: dashed;
 			}
 		}

@@ -37,7 +37,7 @@
 /* Closing link on each principle — points at the demo section that proves it. */
 .principles-page__proof a {
 	font-weight: 500;
-	color: var(--itx-colorway);
+	color: var(--itx-colorway-solid);
 	text-decoration: none;
 	border-bottom: 1px solid transparent;
 

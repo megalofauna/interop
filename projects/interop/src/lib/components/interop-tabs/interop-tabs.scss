@@ -135,7 +135,7 @@
  * Tab — focus + motion
  *   --itx-tab-focus-outline-width     (default: 2px)
  *   --itx-tab-focus-outline-style     (default: solid)
- *   --itx-tab-focus-outline-color     (default: --itx-colorway)
+ *   --itx-tab-focus-outline-color     (default: --itx-colorway-solid)
  *   --itx-tab-focus-outline-offset    (default: -2px, inset)
  *   --itx-tab-transition-duration     (default: --itx-duration-fast)
  *
@@ -356,12 +356,12 @@
 		);
 
 		&::after {
-			background: var(--itx-tab-active-indicator-color, var(--itx-colorway));
+			background: var(--itx-tab-active-indicator-color, var(--itx-colorway-solid));
 		}
 	}
 
 	/*
-	 * Focus. --itx-colorway, not --itx-colorway-8: the semantic token is a
+	 * Focus. --itx-colorway-solid, not --itx-colorway-solid: the semantic token is a
 	 * light-dark() pair, so the ring survives dark mode. Inset offset keeps
 	 * the ring inside the tab rather than spilling over its neighbour in a
 	 * gapless strip.
@@ -369,7 +369,7 @@
 	&:focus-visible {
 		outline: var(--itx-tab-focus-outline-width, 2px)
 			var(--itx-tab-focus-outline-style, solid)
-			var(--itx-tab-focus-outline-color, var(--itx-colorway));
+			var(--itx-tab-focus-outline-color, var(--itx-colorway-solid));
 		outline-offset: var(--itx-tab-focus-outline-offset, -2px);
 	}
 }

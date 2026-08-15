@@ -112,9 +112,9 @@
 
 	/* ── Step indicator — error ─────────────────────────────────────────── */
 	/* Errors are a deliberate signal — a coloured fill is appropriate here. */
-	--itx-step-indicator-background-error: var(--itx-danger);
+	--itx-step-indicator-background-error: var(--itx-danger-solid);
 	--itx-step-indicator-foreground-error: var(--itx-contrast-1);
-	--itx-step-indicator-border-color-error: var(--itx-danger);
+	--itx-step-indicator-border-color-error: var(--itx-danger-solid);
 
 	/* ── Step indicator — skipped ───────────────────────────────────────── */
 	--itx-step-indicator-background-skipped: var(--itx-surface);

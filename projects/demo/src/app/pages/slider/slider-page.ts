@@ -281,7 +281,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-focus-ring-color",
-			default: "var(--itx-colorway) — thumb AND fill when focused",
+			default: "var(--itx-colorway-solid) — thumb AND fill when focused",
 		},
 		{
 			property: "--itx-slider-disabled-color",

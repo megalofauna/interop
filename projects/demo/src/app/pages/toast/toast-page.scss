@@ -60,8 +60,8 @@
 	cursor: pointer;
 
 	&.is-active {
-		background: var(--itx-colorway);
-		border-color: var(--itx-colorway);
-		color: var(--itx-on-colorway);
+		background: var(--itx-colorway-solid);
+		border-color: var(--itx-colorway-solid);
+		color: var(--itx-colorway-on-solid);
 	}
 }

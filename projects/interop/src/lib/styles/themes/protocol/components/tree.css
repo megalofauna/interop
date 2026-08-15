@@ -35,10 +35,10 @@
 	 * Hover is the only paint a resting tree ever applies.               */
 	--itx-tree-row-background: transparent;
 	--itx-tree-row-background-hover: var(--itx-contrast-1);
-	--itx-tree-row-background-selected: var(--itx-colorway-2);
+	--itx-tree-row-background-selected: var(--itx-colorway-tint);
 	--itx-tree-row-background-current: var(--itx-surface);
 	--itx-tree-row-color: var(--itx-contrast-6);
-	--itx-tree-row-color-selected: var(--itx-colorway-11);
+	--itx-tree-row-color-selected: var(--itx-colorway-text);
 	--itx-tree-row-disabled-opacity: 0.5;
 
 	/* ── Accent bar ───────────────────────────────────────────────────────
@@ -46,8 +46,8 @@
 	 * which is why the tint underneath can stay as low as it does.       */
 	--itx-tree-row-accent-width: 4px;
 	--itx-tree-row-accent-color: transparent;
-	--itx-tree-row-accent-color-selected: var(--itx-colorway-8);
-	--itx-tree-row-accent-color-current: var(--itx-colorway-8);
+	--itx-tree-row-accent-color-selected: var(--itx-colorway-solid);
+	--itx-tree-row-accent-color-current: var(--itx-colorway-solid);
 
 	/* ── Guide rails ────────────────────────────────────────────────────── */
 	--itx-tree-guide-color: transparent;
@@ -67,7 +67,7 @@
 	--itx-tree-toggle-rotation-expanded: 90deg;
 
 	/* ── Focus ──────────────────────────────────────────────────────────── */
-	--itx-tree-focus-color: var(--itx-colorway-8);
+	--itx-tree-focus-color: var(--itx-focus);
 	--itx-tree-focus-width: 2px;
 	--itx-tree-focus-offset: -2px;
 

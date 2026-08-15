@@ -33,7 +33,7 @@
 	font-weight: 600;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	color: var(--itx-colorway);
+	color: var(--itx-colorway-solid);
 }
 
 .home-page__headline {
@@ -47,7 +47,7 @@
 
 .home-page__headline-em {
 	font-style: italic;
-	color: var(--itx-colorway);
+	color: var(--itx-colorway-solid);
 }
 
 .home-page__lead {
@@ -94,22 +94,22 @@
 		var(--itx-easing-standard);
 
 	&:focus-visible {
-		outline: 2px solid var(--itx-colorway);
+		outline: 2px solid var(--itx-colorway-solid);
 		outline-offset: 2px;
 	}
 
 	&--primary {
-		background: var(--itx-colorway-5);
-		// --itx-contrast-6, not --itx-on-colorway. That token pairs with the
-		// *semantic* --itx-colorway, which is bright in dark mode and so wants
-		// dark text; this uses --itx-colorway-5, the button's fill, which is a
+		background: var(--itx-colorway-solid);
+		// --itx-contrast-6, not --itx-colorway-on-solid. That token pairs with the
+		// *semantic* --itx-colorway-solid, which is bright in dark mode and so wants
+		// dark text; this uses --itx-colorway-solid, the button's fill, which is a
 		// dark blue in that scheme. Pairing the two put near-black on dark blue
 		// at 1.78:1. The primary button's own foreground is neutral-12, and
 		// matching it is the point of this block — it measures 8.75:1.
 		color: var(--itx-contrast-6);
 
 		&:hover {
-			background: var(--itx-colorway-7);
+			background: var(--itx-colorway-solid);
 		}
 	}
 
