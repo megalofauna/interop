@@ -87,9 +87,15 @@ The repo already carries several documentation surfaces:
 - the MMCs in `.agent/`
 - three component `README.md` files — one of which `button.md` records as
   **out of sync** with the code
-- `npm run docs` → typedoc + mkdocs
+- ~~`npm run docs` → typedoc + mkdocs~~ — removed. The MkDocs site deployed to
+  GitHub Pages via a workflow that uploaded a directory MkDocs never wrote
+  (`docs/site`, while `site_dir` was `site`), and whose path filter watched a
+  `src/**` that does not exist in this workspace — so the generated API pages
+  had stopped regenerating on merge. It was a documentation surface that had
+  quietly stopped being derived, which is precisely the failure this document
+  argues against.
 
-That is four, and one is already documented as lying. A fifth hand-maintained
+That is three, and one is already documented as lying. A fourth hand-maintained
 surface would be actively harmful: it would drift, and unlike a demo example —
 which breaks *visibly* when it goes stale — a prose contract fails silently and
 confidently, which is the worst possible failure mode for something an agent
