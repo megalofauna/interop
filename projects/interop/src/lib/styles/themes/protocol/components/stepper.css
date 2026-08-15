@@ -102,7 +102,7 @@
 	   "current first-visit" treatment. The number is shown in neutral,
 	   the indicator is transparent with a neutral-8 border. */
 	--itx-step-indicator-background-active-reviewed: var(--itx-surface-below);
-	--itx-step-indicator-foreground-active-reviewed: var(--itx-contrast-1);
+	--itx-step-indicator-foreground-active-reviewed: var(--itx-contrast-6);
 	--itx-step-indicator-border-color-active-reviewed: var(--itx-contrast-6);
 
 	/* ── Step indicator — completed ─────────────────────────────────────── */
@@ -113,7 +113,7 @@
 	/* ── Step indicator — error ─────────────────────────────────────────── */
 	/* Errors are a deliberate signal — a coloured fill is appropriate here. */
 	--itx-step-indicator-background-error: var(--itx-danger-solid);
-	--itx-step-indicator-foreground-error: var(--itx-contrast-1);
+	--itx-step-indicator-foreground-error: var(--itx-danger-on-solid);
 	--itx-step-indicator-border-color-error: var(--itx-danger-solid);
 
 	/* ── Step indicator — skipped ───────────────────────────────────────── */

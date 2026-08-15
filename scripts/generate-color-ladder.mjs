@@ -254,6 +254,18 @@ const ACCENT = {
 	 * lightness drift; lower = stays put and desaturates.
 	 */
 	keepChroma: 0.8,
+
+	/**
+	 * Lightness steps for the solid's hover and active states.
+	 *
+	 * Moved AWAY from the label, always. A light label means the fill darkens on
+	 * hover; a dark label means it lightens. That is not a style preference — it
+	 * guarantees the label's contrast can only improve, so a state can never
+	 * quietly break what solveSolid proved about the rest state. Carbon darkens
+	 * its blue primary on hover for the same reason its label is white.
+	 */
+	solidHover: 0.05,
+	solidActive: 0.09,
 };
 
 /* ── Colour maths: OKLCH → sRGB → WCAG relative luminance ───────────────── */
@@ -398,8 +410,19 @@ function solveSolid([seedL, seedC, H], label) {
 		return scored[0].ratio >= ACCENT.onSolid ? { L, C, label: scored[0], ratio: scored[0].ratio } : null;
 	};
 
+	/** Hover and active, stepped away from the label so contrast only improves. */
+	const withStates = (solved) => {
+		const away = solved.label.name === "light" ? -1 : 1;
+		const state = (delta) => {
+			const L = clamp01(solved.L + away * delta);
+			const C = Math.min(intent, maxChroma(L, H));
+			return { L: round3(L), C: round3(C) };
+		};
+		return { ...solved, hover: state(ACCENT.solidHover), active: state(ACCENT.solidActive) };
+	};
+
 	const atSeed = attempt(seedL);
-	if (atSeed) return { ...atSeed, moved: 0 };
+	if (atSeed) return withStates({ ...atSeed, moved: 0 });
 
 	// Nearest lightness that works, searched outward so the result stays as
 	// close to the seed as the gamut permits.
@@ -407,7 +430,7 @@ function solveSolid([seedL, seedC, H], label) {
 		for (const L of [seedL + d, seedL - d]) {
 			if (L < 0.15 || L > 0.97) continue;
 			const hit = attempt(L);
-			if (hit) return { ...hit, moved: round3(L - seedL) };
+			if (hit) return withStates({ ...hit, moved: round3(L - seedL) });
 		}
 	}
 
@@ -703,6 +726,10 @@ function emitAccents() {
 			`${indent}--itx-ramp-colorway-solid-c: ${family.solid.C.toFixed(3)};`,
 			`${indent}--itx-ramp-colorway-on-solid-l: ${family.solid.label.L.toFixed(3)};`,
 			`${indent}--itx-ramp-colorway-on-solid-c: ${family.solid.label.C.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-solid-hover-l: ${family.solid.hover.L.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-solid-hover-c: ${family.solid.hover.C.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-solid-active-l: ${family.solid.active.L.toFixed(3)};`,
+			`${indent}--itx-ramp-colorway-solid-active-c: ${family.solid.active.C.toFixed(3)};`,
 		].concat(
 			LAYERS.flatMap((layer) =>
 				ACCENT_ROLES.flatMap((role) =>
@@ -764,6 +791,10 @@ function emitAccents() {
 			`\t--itx-ramp-${name}-solid-c: ${family.solid.C.toFixed(3)};`,
 			`\t--itx-ramp-${name}-on-solid-l: ${family.solid.label.L.toFixed(3)};`,
 			`\t--itx-ramp-${name}-on-solid-c: ${family.solid.label.C.toFixed(3)};`,
+			`\t--itx-ramp-${name}-solid-hover-l: ${family.solid.hover.L.toFixed(3)};`,
+			`\t--itx-ramp-${name}-solid-hover-c: ${family.solid.hover.C.toFixed(3)};`,
+			`\t--itx-ramp-${name}-solid-active-l: ${family.solid.active.L.toFixed(3)};`,
+			`\t--itx-ramp-${name}-solid-active-c: ${family.solid.active.C.toFixed(3)};`,
 		];
 		for (const role of ACCENT_ROLES) {
 			for (const scheme of ["light", "dark"]) {
@@ -818,9 +849,16 @@ function emitAccents() {
 		":where([interop-root]) {",
 		compose("colorway", "solid", true),
 		compose("colorway", "on-solid", true),
+		compose("colorway", "solid-hover", true),
+		compose("colorway", "solid-active", true),
 	);
 	for (const name of Object.keys(SEEDS.status.seventies)) {
-		out.push(compose(name, "solid", true), compose(name, "on-solid", true));
+		out.push(
+			compose(name, "solid", true),
+			compose(name, "on-solid", true),
+			compose(name, "solid-hover", true),
+			compose(name, "solid-active", true),
+		);
 		for (const role of ACCENT_ROLES) out.push(compose(name, role, false));
 	}
 	out.push("}", "");

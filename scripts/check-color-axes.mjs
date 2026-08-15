@@ -99,11 +99,27 @@ function walk(dir, out = []) {
 const findings = [];
 
 for (const file of walk(ROOT)) {
+	// Block comments span many lines here — whole variant blocks sit commented
+	// out awaiting a re-derive — so tracking the state matters. Without it the
+	// guard reports on code nobody ships.
+	let inComment = false;
+
 	readFileSync(file, "utf8")
 		.split("\n")
 		.forEach((line, i) => {
-			// Comments describe the model constantly; they are not declarations.
-			const code = line.replace(/\/\*.*?\*\//g, "").replace(/^\s*\*.*$/, "");
+			let code = line.replace(/\/\*.*?\*\//g, "");
+
+			if (inComment) {
+				const end = code.indexOf("*/");
+				if (end === -1) return;
+				code = code.slice(end + 2);
+				inComment = false;
+			}
+			const open = code.lastIndexOf("/*");
+			if (open !== -1) {
+				inComment = true;
+				code = code.slice(0, open);
+			}
 			const decl = code.match(/^\s*(--[a-z0-9-]+|[a-z-]+)\s*:\s*(.+)$/i);
 			if (!decl) return;
 
@@ -137,6 +153,28 @@ for (const file of walk(ROOT)) {
 					why: `elevation token on a mark (${name}) — a border or glyph is not a substrate, and this will not hold its contrast when the layer moves. Use --itx-contrast-N.`,
 				});
 			}
+			/*
+			 * Ranks 1–2 are washes and hairlines: 1.1:1 and 1.5:1 against their own
+			 * surface. As a text colour they are illegible by construction.
+			 *
+			 * This exists because the round-one codemod produced exactly that, in
+			 * six places. The old --itx-neutral-1 meant "the light pole" and was
+			 * used for a LABEL sitting on a dark or coloured fill; mapped by
+			 * lightness it became --itx-contrast-1, which means "barely distinct
+			 * from the surface". Same number, opposite job, and invisible text.
+			 */
+			// Text only — a border SHOULD use rank 2; that is its stated job.
+			const isText = isCustom ? /-(foreground|ink|text-color|icon-color)$/.test(base) : base === "color";
+
+			if (isText && /--itx-contrast-[12](?![0-9])/.test(value)) {
+				findings.push({
+					file,
+					line: i + 1,
+					text: line.trim(),
+					why: `wash-level rank as a label (${name}) — ranks 1–2 are ~1.1:1 and ~1.5:1. Use a higher rank, or the fill's own on-solid.`,
+				});
+			}
+
 			if (wantsSubstrate && CONTRAST_FILL.test(value)) {
 				findings.push({
 					file,

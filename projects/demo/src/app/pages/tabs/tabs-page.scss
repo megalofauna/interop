@@ -61,7 +61,7 @@
 	font-size: 0.875rem;
 
 	&:focus-visible {
-		outline: 2px solid var(--itx-colorway-solid);
+		outline: 2px solid var(--itx-focus);
 		outline-offset: -2px;
 	}
 }

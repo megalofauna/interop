@@ -31,7 +31,7 @@
 	--itx-button-background: transparent;
 	--itx-button-border-radius: var(--itx-radius-full);
 	--itx-button-background-hover: var(--itx-surface-below);
-	--itx-button-foreground-hover: var(--itx-contrast-1);
+	--itx-button-foreground-hover: var(--itx-contrast-6);
 
 	/*--itx-button-background: purple;
 	--itx-button-foreground: white;*/

@@ -103,7 +103,7 @@
 	   light disc with a near-black X in dark. */
 	--itx-cmdp-clear-background: var(--itx-surface-below);
 	--itx-cmdp-clear-background-hover: var(--itx-surface-below);
-	--itx-cmdp-clear-color: var(--itx-contrast-1);
+	--itx-cmdp-clear-color: var(--itx-contrast-6);
 
 	--itx-cmdp-clear-outline-width: 2px;
 	--itx-cmdp-clear-outline-color: var(--itx-focus);

@@ -46,7 +46,7 @@
 
 	/* ── Readout badge (Tier 1, with [showDimensions]) ─────────────────── */
 	--itx-resizable-readout-background-color: var(--itx-surface-below);
-	--itx-resizable-readout-foreground: var(--itx-contrast-1);
+	--itx-resizable-readout-foreground: var(--itx-contrast-6);
 	--itx-resizable-readout-padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	--itx-resizable-readout-border-radius: var(--itx-radius-2);
 	--itx-resizable-readout-font-family: var(--itx-font-family-mono);

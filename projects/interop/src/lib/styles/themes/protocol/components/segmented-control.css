@@ -129,7 +129,7 @@
 	/* ── Segment — selected state ───────────────────────────────────────── */
 	/* $text-inverse. The fill comes from the indicator pill (below), so the
 	   two anchor-positioning paths can't disagree about the colour. */
-	--itx-segment-foreground-selected: var(--itx-contrast-1);
+	--itx-segment-foreground-selected: var(--itx-contrast-6);
 
 	/* ── Segment — focus ring ───────────────────────────────────────────── */
 	/* Carbon draws focus as an inset ring in its brand blue; ours keeps the
