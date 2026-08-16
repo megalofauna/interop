@@ -75,8 +75,8 @@
 	--itx-control-label-corner-shape: squircle;
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
-	--itx-control-label-transition: var(--itx-duration-fast, 75ms)
-		var(--itx-easing-standard, ease-in);
+	--itx-control-label-transition: var(--itx-duration-fast)
+		var(--itx-easing-standard);
 }
 
 /* ── Per-type deltas ──────────────────────────────────────────────────────── */

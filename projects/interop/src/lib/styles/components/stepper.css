@@ -695,11 +695,8 @@
 		var(--itx-step-indicator-border-style, solid) var(--_indicator-border-color);
 
 	transition-property: background-color, color, border-color;
-	transition-duration: var(--itx-step-indicator-transition-duration, 160ms);
-	transition-timing-function: var(
-		--itx-step-indicator-transition-timing-function,
-		ease-in-out
-	);
+	transition-duration: var(--itx-step-indicator-transition-duration);
+	transition-timing-function: var(--itx-step-indicator-transition-timing-function);
 }
 
 /* ── State-resolved private slots ────────────────────────────────────────── */
@@ -904,8 +901,8 @@
 	position: absolute;
 	background: var(--_connector-color);
 	transition: background-color
-		var(--itx-step-indicator-transition-duration, 160ms)
-		var(--itx-step-indicator-transition-timing-function, ease-in-out);
+		var(--itx-step-indicator-transition-duration)
+		var(--itx-step-indicator-transition-timing-function);
 	z-index: 0;
 }
 

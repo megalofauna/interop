@@ -100,8 +100,8 @@
 	--itx-chip-disabled-opacity: 0.4;
 
 	/* ── Transitions ──────────────────────────────────────────────────── */
-	--itx-chip-transition-duration: 120ms;
-	--itx-chip-transition-timing-function: ease;
+	--itx-chip-transition-duration: var(--itx-duration-fast);
+	--itx-chip-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── chip-list gap — Carbon's grouped-tag spacing ─────────────────── */
 	--itx-chip-list-gap: var(--itx-spacing-2); /* 8px */

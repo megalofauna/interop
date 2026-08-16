@@ -78,7 +78,7 @@
 	--_check-weight: var(--itx-control-check-weight, 3px);
 	--_transition: var(
 		--itx-control-transition,
-		var(--itx-duration-fast, 100ms) var(--itx-easing-standard)
+		var(--itx-duration-fast) var(--itx-easing-standard)
 	);
 	--_focus-ring-color: var(
 		--itx-control-focus-color,

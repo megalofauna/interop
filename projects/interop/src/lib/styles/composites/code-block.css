@@ -142,15 +142,15 @@
 	transition-property: background-color, background, color;
 	--itx-button-background: var(--itx-cb-button-background);
 	--itx-button-foreground: var(--itx-cb-button-foreground);
-	--itx-button-transition-duration: 300ms;
-	--itx-button-transition-timing-function: ease-out;
+	--itx-button-transition-duration: var(--itx-duration-base);
+	--itx-button-transition-timing-function: var(--itx-easing-decelerate);
 
 	&:hover {
 		--itx-button-background-hover: var(--itx-cb-button-background-hover);
 		--itx-button-foreground-hover: var(--itx-cb-button-foreground-hover);
-		--itx-button-transition-duration: 75ms;
+		--itx-button-transition-duration: var(--itx-duration-fast);
 		transition-duration: var(--itx-button-transition-duration);
-		--itx-button-transition-timing-function: ease-in;
+		--itx-button-transition-timing-function: var(--itx-easing-accelerate);
 	}
 
 	/* Applies to the word-wrap toggle, which is still a stroked Tabler pair.

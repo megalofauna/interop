@@ -82,11 +82,8 @@
 		left: calc(anchor(left) + var(--itx-indicator-inset));
 
 		transition-property: top, right, bottom, left;
-		transition-duration: var(--itx-indicator-transition-duration, 150ms);
-		transition-timing-function: var(
-			--itx-indicator-transition-timing-function,
-			ease
-		);
+		transition-duration: var(--itx-indicator-transition-duration);
+		transition-timing-function: var(--itx-indicator-transition-timing-function);
 	}
 }
 

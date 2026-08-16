@@ -59,20 +59,20 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease),
-			transform var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease),
-			overlay var(--itx-tooltip-enter-duration, 120ms) allow-discrete,
-			display var(--itx-tooltip-enter-duration, 120ms) allow-discrete;
+			opacity var(--itx-tooltip-enter-duration)
+				var(--itx-tooltip-enter-easing),
+			transform var(--itx-tooltip-enter-duration)
+				var(--itx-tooltip-enter-easing),
+			overlay var(--itx-tooltip-enter-duration) allow-discrete,
+			display var(--itx-tooltip-enter-duration) allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease),
-			transform var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease);
+			opacity var(--itx-tooltip-enter-duration)
+				var(--itx-tooltip-enter-easing),
+			transform var(--itx-tooltip-enter-duration)
+				var(--itx-tooltip-enter-easing);
 	}
 }
 

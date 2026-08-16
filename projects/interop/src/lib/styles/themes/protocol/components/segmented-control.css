@@ -141,8 +141,8 @@
 	   spilling over the neighbouring segment. */
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
-	--itx-segment-transition-duration: 48ms;
-	--itx-segment-transition-timing-function: ease-in-out;
+	--itx-segment-transition-duration: var(--itx-duration-speedy);
+	--itx-segment-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── Segment — disabled ─────────────────────────────────────────────── */
 	--itx-segment-disabled-opacity: 0.4;

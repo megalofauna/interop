@@ -13,7 +13,7 @@
 	:where([itx-motion-preset="pop"]:not(:has([data-itx-motion-target]))),
 	:where([itx-motion-preset="pop"]:has([data-itx-motion-target]))
 		[data-itx-motion-target] {
-		transition: transform 100ms ease-out;
+		transition: transform var(--itx-duration-fast) var(--itx-easing-decelerate);
 	}
 
 	:where(

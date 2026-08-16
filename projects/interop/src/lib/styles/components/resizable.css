@@ -88,8 +88,8 @@
 	z-index: 1;
 	transform-origin: center;
 	transition:
-		background-color 96ms ease-in-out,
-		transform 96ms ease-in-out;
+		background-color var(--itx-duration-fast) var(--itx-easing-standard),
+		transform var(--itx-duration-fast) var(--itx-easing-standard);
 
 	&:where(:hover) {
 		background-color: var(
@@ -150,7 +150,7 @@
 	font-variant-numeric: tabular-nums;
 	pointer-events: none;
 	opacity: 0;
-	transition: opacity 160ms ease-in-out;
+	transition: opacity var(--itx-duration-fast) var(--itx-easing-standard);
 	z-index: 2;
 }
 

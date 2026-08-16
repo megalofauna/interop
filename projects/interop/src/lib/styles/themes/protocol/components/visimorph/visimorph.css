@@ -44,7 +44,7 @@
 	--itx-control-focus-scale: 0.875;
 
 	/* ── Motion / a11y ──────────────────────────────────────────────────── */
-	--itx-control-transition: var(--itx-duration-fast, 100ms)
-		var(--itx-easing-standard, ease);
+	--itx-control-transition: var(--itx-duration-fast)
+		var(--itx-easing-standard);
 	--itx-control-disabled-opacity: 0.5;
 }

@@ -117,11 +117,8 @@
 	color: var(--_foreground);
 
 	transition-property: color;
-	transition-duration: var(--itx-button-transition-duration, 96ms);
-	transition-timing-function: var(
-		--itx-button-transition-timing-function,
-		ease-in
-	);
+	transition-duration: var(--itx-button-transition-duration);
+	transition-timing-function: var(--itx-button-transition-timing-function);
 }
 
 /* ── State-resolved private slots ────────────────────────────────────────── */
@@ -233,11 +230,8 @@
 		background-color,
 		border-color
 	);
-	transition-duration: var(--itx-button-transition-duration, 96ms);
-	transition-timing-function: var(
-		--itx-button-transition-timing-function,
-		ease-in
-	);
+	transition-duration: var(--itx-button-transition-duration);
+	transition-timing-function: var(--itx-button-transition-timing-function);
 }
 
 /* ── Focus ring ──────────────────────────────────────────────────────────── */

@@ -78,8 +78,8 @@
 	   Was resolving to 15px and climbing. */
 	--itx-step-indicator-font-size: 0.8125rem;
 	--itx-step-indicator-font-weight: 500;
-	--itx-step-indicator-transition-duration: 160ms;
-	--itx-step-indicator-transition-timing-function: ease-in-out;
+	--itx-step-indicator-transition-duration: var(--itx-duration-fast);
+	--itx-step-indicator-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── Step indicator — pending (rest) ────────────────────────────────── */
 	--itx-step-indicator-background: var(--itx-contrast-2);

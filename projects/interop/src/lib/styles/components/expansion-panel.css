@@ -163,11 +163,8 @@
 		border-color,
 		box-shadow
 	);
-	transition-duration: var(--itx-expansion-panel-transition-duration, 200ms);
-	transition-timing-function: var(
-		--itx-expansion-panel-transition-timing-function,
-		ease
-	);
+	transition-duration: var(--itx-expansion-panel-transition-duration);
+	transition-timing-function: var(--itx-expansion-panel-transition-timing-function);
 }
 
 /* ── Guest heading normalization ─────────────────────────────────────────── */
@@ -386,8 +383,8 @@
 	background-color: var(--itx-expansion-panel-body-background, transparent);
 	background-image: var(--itx-expansion-panel-body-background-image, none);
 	transition: grid-template-rows
-		var(--itx-expansion-panel-body-transition-duration, 200ms)
-		var(--itx-expansion-panel-body-transition-easing, ease);
+		var(--itx-expansion-panel-body-transition-duration)
+		var(--itx-expansion-panel-body-transition-easing);
 }
 
 :where([interop-expansion-body][data-expanded]) {
@@ -402,12 +399,12 @@
 	border-top-style: var(--itx-expansion-panel-body-divider-style, solid);
 	border-top-color: var(--itx-expansion-panel-body-divider-color, transparent);
 	transition:
-		padding-block var(--itx-expansion-panel-body-transition-duration, 200ms)
-			var(--itx-expansion-panel-body-transition-easing, ease),
-		border-top-width var(--itx-expansion-panel-body-transition-duration, 200ms)
-			var(--itx-expansion-panel-body-transition-easing, ease),
-		border-top-color var(--itx-expansion-panel-body-transition-duration, 200ms)
-			var(--itx-expansion-panel-body-transition-easing, ease);
+		padding-block var(--itx-expansion-panel-body-transition-duration)
+			var(--itx-expansion-panel-body-transition-easing),
+		border-top-width var(--itx-expansion-panel-body-transition-duration)
+			var(--itx-expansion-panel-body-transition-easing),
+		border-top-color var(--itx-expansion-panel-body-transition-duration)
+			var(--itx-expansion-panel-body-transition-easing);
 }
 
 /*

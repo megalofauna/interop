@@ -59,24 +59,24 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out),
+			opacity var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing),
 			translate
-				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out),
-			overlay var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing),
+			overlay var(--itx-dialog-enter-duration)
 				allow-discrete,
-			display var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+			display var(--itx-dialog-enter-duration)
 				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out),
+			opacity var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing),
 			translate
-				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out);
+				var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing);
 	}
 }
 
@@ -95,22 +95,22 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in),
-			translate var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in),
-			overlay var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+			opacity var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing),
+			translate var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing),
+			overlay var(--itx-dialog-exit-duration)
 				allow-discrete,
-			display var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+			display var(--itx-dialog-exit-duration)
 				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in),
-			translate var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in);
+			opacity var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing),
+			translate var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing);
 	}
 }
 
@@ -128,25 +128,25 @@
 	@supports (transition-behavior: allow-discrete) {
 		transition:
 			background
-				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out),
+				var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing),
 			backdrop-filter
-				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out),
-			overlay var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+				var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing),
+			overlay var(--itx-dialog-enter-duration)
 				allow-discrete,
-			display var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
+			display var(--itx-dialog-enter-duration)
 				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
 			background
-				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out),
+				var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing),
 			backdrop-filter
-				var(--itx-dialog-enter-duration, var(--itx-duration-base, 200ms))
-				var(--itx-dialog-enter-easing, ease-out);
+				var(--itx-dialog-enter-duration)
+				var(--itx-dialog-enter-easing);
 	}
 }
 
@@ -171,24 +171,24 @@
 	@supports (transition-behavior: allow-discrete) {
 		transition:
 			background
-				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in),
+				var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing),
 			backdrop-filter
-				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in),
-			overlay var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+				var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing),
+			overlay var(--itx-dialog-exit-duration)
 				allow-discrete,
-			display var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
+			display var(--itx-dialog-exit-duration)
 				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
 			background
-				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in),
+				var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing),
 			backdrop-filter
-				var(--itx-dialog-exit-duration, var(--itx-duration-fast, 120ms))
-				var(--itx-dialog-exit-easing, ease-in);
+				var(--itx-dialog-exit-duration)
+				var(--itx-dialog-exit-easing);
 	}
 }
