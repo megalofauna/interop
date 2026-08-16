@@ -277,8 +277,8 @@
 }
 
 :host:focus-visible {
-	--_thumb-color: var(--itx-slider-focus-ring-color, var(--itx-colorway-solid));
-	--_fill-color: var(--itx-slider-focus-ring-color, var(--itx-colorway-solid));
+	--_thumb-color: var(--itx-slider-focus-color, var(--itx-focus-color));
+	--_fill-color: var(--itx-slider-focus-color, var(--itx-focus-color));
 	--_thumb-size: var(--_thumb-size-active);
 }
 

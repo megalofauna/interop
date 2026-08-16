@@ -76,10 +76,6 @@
 	--itx-pn-link-border-color-hover: var(--itx-contrast-4);
 
 	/* focus */
-	--itx-pn-focus-background-color: var(--itx-surface-below);
-	--itx-pn-focus-color: var(--itx-focus);
-	--itx-pn-focus-width: 1px;
-	--itx-pn-focus-offset: -4px;
 	--itx-pn-link-border-color-current: var(--itx-colorway-solid);
 	--itx-pn-link-background-color-current: var(--itx-contrast-1);
 	--itx-pn-link-background-image-current: radial-gradient(

@@ -16,6 +16,10 @@
  */
 
 :where([interop-root]) {
+	/* Focus — the only deviation from the system ring. Inset: the remove button is a small target inside the chip's own edge.
+	   Colour, width and style come from tokens/focus.css. */
+	--itx-chip-remove-focus-offset: -2px;
+
 	/* ── Size steps — the vocabulary ──────────────────────────────────────
 	 * Each step's values are declared exactly ONCE, here. The three sites
 	 * that assign a step — the default just below, and the two itx-size
@@ -80,10 +84,6 @@
 	/* ── Focus ring (chip-option) ─────────────────────────────────────────
 	 * Carbon draws 2px. The colour stays on the colorway — focus is the one
 	 * place brand survives a neutral component.                            */
-	--itx-chip-outline-color: var(--itx-focus);
-	--itx-chip-outline-width: 2px;
-	--itx-chip-outline-style: solid;
-	--itx-chip-outline-offset: 2px;
 
 	/* ── Remove button (dismissible chips, in chip-item and chip-input) ───
 	 * A flush square the full height of the chip. No border: the chip is a
@@ -95,9 +95,6 @@
 	--itx-chip-remove-border: none;
 	--itx-chip-remove-radius: var(--itx-chip-radius); /* tracks the chip */
 	--itx-chip-remove-font-size: var(--itx-spacing-3); /* 16px — Carbon icon */
-	--itx-chip-remove-outline-color: var(--itx-focus);
-	--itx-chip-remove-outline-width: 2px;
-	--itx-chip-remove-outline-offset: -2px;
 
 	/* ── Disabled ─────────────────────────────────────────────────────── */
 	--itx-chip-disabled-opacity: 0.4;
@@ -140,10 +137,6 @@
 	--itx-chip-input-padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	--itx-chip-input-min-height: var(--itx-spacing-10); /* 40px */
 
-	--itx-chip-input-outline-color: var(--itx-focus);
-	--itx-chip-input-outline-width: 2px;
-	--itx-chip-input-outline-style: solid;
-	--itx-chip-input-outline-offset: 1px;
 }
 
 /* ── Size axis ───────────────────────────────────────────────────────────── */

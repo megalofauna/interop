@@ -1,0 +1,81 @@
+/*
+ * Focus — one definition of what a focus ring is.
+ *
+ * Before this file, focus was defined in 36 rules across ~20 component
+ * stylesheets, backed by ~30 separate component-local tokens. Width had drifted
+ * three ways (2px, 3px, 1px), offset five (2px, -2px, 1px, 3px, -4px), and the
+ * colour came from four different sources — including two rings that hardcoded
+ * the old Science Blue and eight that used `currentColor`, so a colourway
+ * change never reached them.
+ *
+ * ─── Consumer API ───────────────────────────────────────────────────────────
+ *
+ *   --itx-focus-color    The ring colour. Defaults to the colourway's solid,
+ *                        so focus follows the brand — this is the one place
+ *                        brand survives an otherwise neutral component.
+ *   --itx-focus-width    Ring thickness.
+ *   --itx-focus-style    Ring line style.
+ *   --itx-focus-offset   Distance from the element's edge. NEGATIVE draws the
+ *                        ring inside the box, which is what tight controls
+ *                        need so a stacked list of them does not collide.
+ *
+ * Set any of these on [interop-root] for a global change, or on ANY ancestor
+ * to change a subtree — they are plain inherited custom properties, so scope
+ * is wherever you declare them.
+ *
+ * ─── Component participation ────────────────────────────────────────────────
+ *
+ *   A component's focus rule reads a three-tier chain: its own token, then the
+ *   system token. Never a literal.
+ *
+ *     :where(button[interop-button]:focus-visible) {
+ *       outline: var(--itx-button-focus-width, var(--itx-focus-width))
+ *                var(--itx-button-focus-style, var(--itx-focus-style))
+ *                var(--itx-button-focus-color, var(--itx-focus-color));
+ *       outline-offset: var(--itx-button-focus-offset, var(--itx-focus-offset));
+ *     }
+ *
+ *   That gives three override levels for free, in increasing specificity of
+ *   intent:
+ *
+ *     --itx-focus-color          on any ancestor   → everything below
+ *     --itx-button-focus-color   anywhere          → every button
+ *     --itx-button-focus-color   on one element    → that instance
+ *
+ *   The component token is declared only when the component genuinely differs
+ *   — a deliberate inset ring, say. A component with nothing to say declares
+ *   nothing and inherits the system default, which is the point.
+ *
+ * ─── Why the RULE is not shared ─────────────────────────────────────────────
+ *
+ *   Only the VALUES live here. Each component still writes its own
+ *   `:focus-visible` block, per the "Focus stays structural" rule in
+ *   .agent/css-strategy.md: the ring is an accessibility floor the component
+ *   must guarantee. A single shared rule over a selector list would centralise
+ *   the definition at the cost of the one failure mode a focus ring must never
+ *   have — a component missing from the list ships with no ring at all, and
+ *   nothing about the CSS says so.
+ *
+ *   `scripts/check-focus.mjs` is what keeps the rules honest instead: a focus
+ *   rule that reads a raw colour, or draws a visible ring on bare `:focus`
+ *   rather than `:focus-visible`, fails the build.
+ *
+ * ─── :focus-visible, not :focus ─────────────────────────────────────────────
+ *
+ *   A ring on bare `:focus` fires on mouse click, which is visual noise for
+ *   pointer users and is why so many teams end up deleting focus styles
+ *   wholesale. `outline: none` on `:focus` paired with a `:focus-visible` rule
+ *   is the correct reset and is explicitly allowed.
+ *
+ *   The exception is a control whose focus is JS-driven (the field sets a
+ *   `.focused` class from its own focus/blur handlers). For a text control the
+ *   two are equivalent, because browsers always match `:focus-visible` on
+ *   elements that expect keyboard input.
+ */
+
+:where([interop-root]) {
+	--itx-focus-color: var(--itx-colorway-solid);
+	--itx-focus-width: 2px;
+	--itx-focus-style: solid;
+	--itx-focus-offset: 2px;
+}

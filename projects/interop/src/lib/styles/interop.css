@@ -53,6 +53,7 @@
 @import "./tokens/motion.css" layer(interop.foundation);
 @import "./tokens/typography.css" layer(interop.foundation);
 @import "./tokens/elevation.css" layer(interop.foundation);
+@import "./tokens/focus.css" layer(interop.foundation);
 
 /* ── Typography (base-element prose) ────────────────────────────────────── */
 /*    Sizes, leads, and spaces flowing content under [interop-typography-root].*/

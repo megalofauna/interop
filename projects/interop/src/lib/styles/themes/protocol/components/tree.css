@@ -22,6 +22,10 @@
  */
 
 :where([interop-root]) {
+	/* Focus — the only deviation from the system ring. Inset: rows are flush, so an outset ring would overlap its neighbour.
+	   Colour, width and style come from tokens/focus.css. */
+	--itx-tree-focus-offset: -2px;
+
 	/* ── Layout ─────────────────────────────────────────────────────────── */
 	--itx-tree-indent: var(--itx-spacing-4);
 	--itx-tree-indent-narrow: var(--itx-spacing-2);
@@ -67,9 +71,6 @@
 	--itx-tree-toggle-rotation-expanded: 90deg;
 
 	/* ── Focus ──────────────────────────────────────────────────────────── */
-	--itx-tree-focus-color: var(--itx-focus);
-	--itx-tree-focus-width: 2px;
-	--itx-tree-focus-offset: -2px;
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-tree-transition-duration: var(--itx-duration-fast);

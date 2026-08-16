@@ -20,6 +20,10 @@
  */
 
 :where([interop-root]) {
+	/* Focus — the only deviation from the system ring. Inset: the trigger is full-bleed, so an outset ring would leave the panel.
+	   Colour, width and style come from tokens/focus.css. */
+	--itx-expansion-panel-trigger-focus-offset: -2px;
+
 	/* ── Panel host — frame (rest) ──────────────────────────────────────── */
 	--itx-expansion-panel-background: transparent;
 	--itx-expansion-panel-background-image: none;
@@ -76,10 +80,6 @@
 	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
 	--itx-expansion-panel-trigger-color: var(--itx-contrast-6);
 
-	--itx-expansion-panel-trigger-outline-color: var(--itx-focus);
-	--itx-expansion-panel-trigger-outline-width: 2px;
-	--itx-expansion-panel-trigger-outline-style: solid;
-	--itx-expansion-panel-trigger-outline-offset: -2px;
 
 	/* Arrow — sized in em so it tracks the trigger's own type, matching the
 	   tree's twisty. 135deg points the corner down; +180 flips it up. */

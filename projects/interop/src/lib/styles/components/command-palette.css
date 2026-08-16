@@ -141,8 +141,10 @@
 	min-inline-size: 0;
 	appearance: none;
 	border: none;
-	outline: none;
-	background: transparent;
+	outline: var(--itx-cmdp-clear-focus-width, var(--itx-focus-width))
+		var(--itx-cmdp-clear-focus-style, var(--itx-focus-style))
+		var(--itx-cmdp-clear-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-cmdp-clear-focus-offset, var(--itx-focus-offset));
 	color: inherit;
 	font: inherit;
 	font-size: var(--itx-cmdp-input-font-size);
@@ -189,9 +191,10 @@
 }
 
 :where(.itx-cmdp__clear:focus-visible) {
-	outline: var(--itx-cmdp-clear-outline-width) solid
-		var(--itx-cmdp-clear-outline-color);
-	outline-offset: var(--itx-cmdp-clear-outline-offset);
+	outline: var(--itx-cmdp-clear-focus-width, var(--itx-focus-width))
+		var(--itx-cmdp-clear-focus-style, var(--itx-focus-style))
+		var(--itx-cmdp-clear-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-cmdp-clear-focus-offset, var(--itx-focus-offset));
 }
 
 /* ── Results listbox ──────────────────────────────────────────────────────── */

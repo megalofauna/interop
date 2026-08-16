@@ -61,10 +61,18 @@
     gap: 0.75rem;
 }
 
-/* Focus styles for accessibility - both modes */
-.radio-control input[type="radio"]:focus {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
+/*
+ * Focus ring — :focus-visible, not :focus.
+ *
+ * This drew on bare :focus with a hardcoded #0066cc, so it fired on mouse
+ * click as well as keyboard, and froze the old Science Blue: a colourway
+ * change never reached it. Both fixed by reading the system chain.
+ */
+.radio-control input[type="radio"]:focus-visible {
+    outline: var(--itx-radio-focus-width, var(--itx-focus-width))
+    	var(--itx-radio-focus-style, var(--itx-focus-style))
+    	var(--itx-radio-focus-color, var(--itx-focus-color));
+    outline-offset: var(--itx-radio-focus-offset, var(--itx-focus-offset));
 }
 
 /* Layout helpers for custom mode */
@@ -100,7 +108,7 @@
         border-width: 2px;
     }
 
-    .radio-control input[type="radio"]:focus {
+    .radio-control input[type="radio"]:focus-visible {
         outline-width: 3px;
     }
 }
