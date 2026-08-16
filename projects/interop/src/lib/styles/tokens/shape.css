@@ -1,22 +1,42 @@
 /*
- * Shape — the canonical border-radius system.
+ * Shape — the canonical border-radius and border-width systems.
  *
  * One source of truth for radius across Interop:
  *   1. Primitive ramp  — numeric steps derived from --itx-radius-base.
- *   2. Semantic scale  — the t-shirt vocabulary (none/nominal/sm/md/lg/xl/full)
- *                        that components and the itx-radius attribute speak.
- *   3. itx-radius      — a component-agnostic attribute that resolves the
- *                        semantic scale into --itx-radius for any element.
+ *   2. Semantic scale  — the t-shirt vocabulary (none/nominal/sm/md/lg/xl/full).
+ *   3. --itx-radius    — the GLOBAL KNOB every component falls back to.
+ *   4. itx-radius="…"  — an attribute that applies the semantic scale to one
+ *                        element, via --itx-radius-attr.
  *
- * Components consume radius through their own fallback chain, e.g.:
- *   border-radius: var(--itx-<c>-border-radius,     ← per-instance escape hatch
- *                      var(--itx-radius,            ← itx-radius="…" attribute
- *                          var(--itx-context-radius,  ← managed context
- *                              <theme default>)));    ← final fallback
+ * Border width follows the same two-tier shape, minus the attribute. It had no
+ * primitive at all before: 48 declarations across 30 files wrote 1px, 2px or
+ * 3px by hand, so "how heavy is a border in this library" had no answer and no
+ * single place to change.
  *
- * Put a component's theme DEFAULT in the final fallback slot — never assign it
- * to --itx-<c>-border-radius, which is the escape hatch and would mask the
- * attribute. See project_css_layering_contract.
+ * ─── How a component participates ───────────────────────────────────────────
+ *
+ * The WHOLE chain lives in the component's STRUCTURAL rule, so nothing resolves
+ * until the element itself:
+ *
+ *   border-radius: var(--itx-<c>-border-radius,   ← escape hatch, any level
+ *                    var(--itx-radius-attr,       ← itx-radius="…" on this element
+ *                      var(--itx-radius)));       ← the global knob
+ *
+ * A component that follows the knob declares NO theme default. Absence is how
+ * it says "I have no opinion" — and it is load-bearing, because the obvious
+ * alternative is the bug:
+ *
+ *   /* WRONG — bakes at the root, mid-tree overrides silently do nothing *​/
+ *   :where([interop-root]) { --itx-<c>-border-radius: var(--itx-radius); }
+ *
+ * A custom property is substituted where it is DECLARED. Parked on the root it
+ * freezes at the root's value, and every override below changes an input to a
+ * calculation that already ran. 17 of 29 radius defaults were written that way.
+ * tokens/shape.spec.ts holds both shapes side by side so the difference stays
+ * executable rather than folklore.
+ *
+ * A component PINS instead — declaring its own default — only when the shape is
+ * the point: a chip is a pill, a step indicator is a circle.
  */
 
 :where([interop-root]) {
@@ -40,40 +60,94 @@
 	--itx-radius-md: var(--itx-radius-2); /* 8px */
 	--itx-radius-lg: var(--itx-radius-3); /* 12px */
 	--itx-radius-xl: var(--itx-radius-4); /* 16px */
+
+	/* ── Border width — primitive ramp ───────────────────────────────────── */
+	--itx-border-width-base: 1px;
+	--itx-border-width-1: var(--itx-border-width-base);
+	--itx-border-width-2: calc(var(--itx-border-width-base) * 2);
+	--itx-border-width-3: calc(var(--itx-border-width-base) * 3);
+
+	/* ── Border width — semantic scale ───────────────────────────────────── */
+	--itx-border-width-hairline: var(--itx-border-width-1); /* 1px */
+	--itx-border-width-thick: var(--itx-border-width-2); /* 2px */
+	--itx-border-width-heavy: var(--itx-border-width-3); /* 3px */
 }
 
-/* ── itx-radius — component-agnostic application attribute ────────────────────
+/* Under a high-contrast preference, hairline borders thicken to match the
+   heavier weight. Five components used to write this bump by hand — the two
+   rigs and visimorph — and every other bordered component simply ignored the
+   preference. Thick and heavy already read as deliberate edges, so only the
+   hairline moves; nothing gets thicker than 3px. */
+@media (prefers-contrast: high) {
+	:where([interop-root]) {
+		--itx-border-width-hairline: var(--itx-border-width-2);
+	}
+}
+
+/* ── --itx-radius — THE global radius knob ────────────────────────────────────
  *
- * Resolves the semantic scale into --itx-radius on the element it sits on.
- * Registered non-inheriting so an itx-radius on a container cannot leak into
- * nested radius-bearing children. Any component that includes var(--itx-radius)
- * in its border-radius chain participates automatically — no per-component
- * selectors required.
+ * One value every component falls back to. Set it anywhere and everything
+ * below follows:
+ *
+ *   [interop-root] { --itx-radius: var(--itx-radius-md); }   the whole app
+ *   .settings-card { --itx-radius: var(--itx-radius-lg); }   one subtree
+ *   <dialog style="--itx-radius: 0">                         one instance
+ *
+ * It is a plain inherited custom property, and — critically — each component's
+ * theme default is `var(--itx-radius)` declared ON THE COMPONENT, not on
+ * [interop-root]. A custom property is substituted where it is DECLARED, so an
+ * alias parked at the root would bake there and a mid-tree override would
+ * silently do nothing. That is the bug the focus system was built to fix; the
+ * same shape applies here.
+ *
+ * The default is `none`, so this is a knob rather than a restyle: 29 of the
+ * library's 54 radius values already resolved to zero, and adopting this
+ * changed nothing on screen.
+ *
+ * A component PINS its radius — opts out of the knob — only when the shape is
+ * the point rather than the styling: a chip is a pill, a step indicator is a
+ * circle. "We happen to draw it square" is not a reason to pin; that is
+ * precisely what the knob is for.
  */
 
-@property --itx-radius {
+:where([interop-root]) {
+	--itx-radius: var(--itx-radius-none);
+}
+
+/* ── itx-radius="…" — per-element application attribute ───────────────────────
+ *
+ * Resolves the semantic scale onto ONE element. Kept separate from the global
+ * above, and registered non-inheriting, so `itx-radius="full"` on a container
+ * cannot leak into every nested radius-bearing child — which is the one thing
+ * the global knob is deliberately allowed to do.
+ *
+ * Components read this ahead of the global in their fallback chain, so the
+ * attribute beats the house default on the element that carries it.
+ */
+
+@property --itx-radius-attr {
 	syntax: "*";
 	inherits: false;
 }
 
 :where([itx-radius="none"]) {
-	--itx-radius: var(--itx-radius-none);
+	--itx-radius-attr: var(--itx-radius-none);
 }
 :where([itx-radius="nominal"]) {
-	--itx-radius: var(--itx-radius-nominal);
+	--itx-radius-attr: var(--itx-radius-nominal);
 }
 :where([itx-radius="sm"]) {
-	--itx-radius: var(--itx-radius-sm);
+	--itx-radius-attr: var(--itx-radius-sm);
 }
 :where([itx-radius="md"]) {
-	--itx-radius: var(--itx-radius-md);
+	--itx-radius-attr: var(--itx-radius-md);
 }
 :where([itx-radius="lg"]) {
-	--itx-radius: var(--itx-radius-lg);
+	--itx-radius-attr: var(--itx-radius-lg);
 }
 :where([itx-radius="xl"]) {
-	--itx-radius: var(--itx-radius-xl);
+	--itx-radius-attr: var(--itx-radius-xl);
 }
 :where([itx-radius="full"]) {
-	--itx-radius: var(--itx-radius-full);
+	--itx-radius-attr: var(--itx-radius-full);
 }

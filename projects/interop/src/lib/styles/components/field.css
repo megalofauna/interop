@@ -87,9 +87,9 @@
  * field rather than of the control.
  */
 :where(
-	interop-field-input[data-required],
-	interop-field-textarea[data-required]
-)
+		interop-field-input[data-required],
+		interop-field-textarea[data-required]
+	)
 	:where(.interop-field-label)::after {
 	content: var(--itx-field-required-indicator);
 	color: var(--itx-field-required-indicator-color);
@@ -101,9 +101,9 @@
  * selector kept beside the part's base rule is the documented exception.
  */
 :where(
-	interop-field-input[data-disabled],
-	interop-field-textarea[data-disabled]
-)
+		interop-field-input[data-disabled],
+		interop-field-textarea[data-disabled]
+	)
 	:where(.interop-field-label, .interop-field-note) {
 	color: var(--itx-field-disabled-color);
 }
@@ -150,7 +150,7 @@
 		var(--itx-field-underline-color);
 
 	/* Squared. Carbon specifies no radius on any field. */
-	border-radius: var(--itx-field-border-radius);
+	border-radius: var(--itx-field-border-radius, var(--itx-radius));
 
 	transition:
 		background-color var(--itx-field-transition-duration)
@@ -198,7 +198,10 @@
 	&:where(.invalid:not(.focused)) {
 		outline: var(--itx-field-focus-width, var(--itx-focus-width))
 			var(--itx-field-focus-style, var(--itx-focus-style))
-			var(--itx-field-invalid-color, var(--itx-field-focus-color, var(--itx-focus-color)));
+			var(
+				--itx-field-invalid-color,
+				var(--itx-field-focus-color, var(--itx-focus-color))
+			);
 		outline-offset: var(--itx-field-focus-offset, var(--itx-focus-offset));
 	}
 

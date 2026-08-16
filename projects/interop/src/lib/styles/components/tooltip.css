@@ -47,7 +47,7 @@
 	background: var(--itx-tooltip-background, #333);
 	color: var(--itx-tooltip-foreground, #fff);
 	padding: var(--itx-tooltip-padding, 0.375rem 0.625rem);
-	border-radius: var(--itx-tooltip-border-radius, 0.25rem);
+	border-radius: var(--itx-tooltip-border-radius, var(--itx-radius));
 	font-size: var(--itx-tooltip-font-size, 0.8125rem);
 	max-inline-size: var(--itx-tooltip-max-width, 18rem);
 	box-shadow: var(--itx-tooltip-shadow, 0 2px 8px rgba(0 0 0 / 0.18));
@@ -59,20 +59,18 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease),
-			transform var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease),
-			overlay var(--itx-tooltip-enter-duration, 120ms) allow-discrete,
-			display var(--itx-tooltip-enter-duration, 120ms) allow-discrete;
+			opacity var(--itx-tooltip-enter-duration) var(--itx-tooltip-enter-easing),
+			transform var(--itx-tooltip-enter-duration)
+				var(--itx-tooltip-enter-easing),
+			overlay var(--itx-tooltip-enter-duration) allow-discrete,
+			display var(--itx-tooltip-enter-duration) allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease),
-			transform var(--itx-tooltip-enter-duration, 120ms)
-				var(--itx-tooltip-enter-easing, ease);
+			opacity var(--itx-tooltip-enter-duration) var(--itx-tooltip-enter-easing),
+			transform var(--itx-tooltip-enter-duration)
+				var(--itx-tooltip-enter-easing);
 	}
 }
 
@@ -106,13 +104,5 @@
 	:where(.interop-tooltip__panel:popover-open) {
 		opacity: 0;
 		transform: scale(0.96);
-	}
-}
-
-/* ── Reduced motion ──────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where(.interop-tooltip__panel) {
-		transition: none;
 	}
 }

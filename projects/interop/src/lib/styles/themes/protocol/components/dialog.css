@@ -15,8 +15,7 @@
 	/* ── Appearance ─────────────────────────────────────────────────────── */
 	--itx-dialog-background: var(--itx-surface-above);
 	--itx-dialog-foreground: var(--itx-contrast-6);
-	--itx-dialog-border-radius: var(--itx-radius-none);
-	--itx-dialog-border-width: 2px;
+	--itx-dialog-border-width: var(--itx-border-width-thick);
 	/*
 	 * Stated directly, NOT as var(--itx-contrast-3).
 	 *

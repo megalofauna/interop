@@ -52,9 +52,8 @@
 	/* edge — Carbon $button-outline-width is 1px, and every variant carries a
 	   border (transparent on the filled ones) so the box never shifts. Radius
 	   is 0: Carbon has no rounded buttons. */
-	--itx-button-border-width: 1px;
+	--itx-button-border-width: var(--itx-border-width-hairline);
 	--itx-button-border-style: solid;
-	--itx-button-radius-default: var(--itx-radius-none);
 	--itx-button-corner-shape: unset;
 
 	/* transition — Carbon $duration-fast-01 (70ms) on a productive entrance
@@ -163,7 +162,6 @@
 		(var(--itx-button-height, 2.5rem) - 1em) / 2
 	);
 	--itx-button-padding-block: var(--itx-button-padding-inline);
-	--itx-button-radius-default: var(--itx-radius-none);
 	--itx-button-max-width: none;
 }
 

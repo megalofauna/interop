@@ -65,7 +65,10 @@
 
 :where(interop-visimorph) {
 	--_size: var(--itx-control-size, 1.25rem);
-	--_border-width: var(--itx-control-border-width, 2px);
+	--_border-width: var(
+		--itx-control-border-width,
+		var(--itx-border-width-thick)
+	);
 	--_border-color: var(
 		--itx-control-border-color,
 		var(--itx-contrast-3, var(--itx-contrast-2))
@@ -78,13 +81,13 @@
 	--_check-weight: var(--itx-control-check-weight, 3px);
 	--_transition: var(
 		--itx-control-transition,
-		var(--itx-duration-fast, 100ms) var(--itx-easing-standard)
+		var(--itx-duration-fast) var(--itx-easing-standard)
 	);
 	--_focus-ring-color: var(
 		--itx-control-focus-color,
 		var(--itx-colorway-solid, #0066cc)
 	);
-	--_focus-ring-width: var(--itx-control-focus-width, 3px);
+	--_focus-ring-width: var(--itx-control-focus-width, var(--itx-focus-width));
 	--_focus-ring-offset: var(--itx-control-focus-offset, 3px);
 	--_focus-scale: var(--itx-control-focus-scale, 0.875);
 	--_disabled-opacity: var(--itx-control-disabled-opacity, 0.5);
@@ -262,17 +265,12 @@
 
 @media (prefers-contrast: high) {
 	:where(interop-visimorph) {
-		--itx-control-border-width: 3px;
-		--itx-control-focus-width: 3px;
+		--itx-control-border-width: var(--itx-border-width-heavy);
 	}
 }
 
 @media (prefers-reduced-motion: reduce) {
 	:where(interop-visimorph) {
 		--_focus-scale: 1;
-		transition: none;
-	}
-	:where(interop-visimorph)::after {
-		transition: none;
 	}
 }

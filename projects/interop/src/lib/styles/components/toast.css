@@ -61,17 +61,6 @@
 }
 
 /* Visually hidden live regions (announcement plumbing). */
-:where(interop-toast-viewport .interop-toast-viewport__live-region) {
-	position: absolute;
-	inline-size: 1px;
-	block-size: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
 
 /* ── Toast item ──────────────────────────────────────────────────────────── */
 
@@ -86,7 +75,7 @@
 	border: var(--itx-toast-border-width) solid var(--itx-toast-border-color);
 	border-inline-start: var(--itx-toast-accent-width) solid
 		var(--itx-toast-accent-color);
-	border-radius: var(--itx-toast-border-radius);
+	border-radius: var(--itx-toast-border-radius, var(--itx-radius));
 	background: var(--itx-toast-background);
 	color: var(--itx-toast-foreground);
 	box-shadow: var(--itx-toast-shadow);
@@ -106,7 +95,7 @@
 	transition:
 		opacity var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
 		scale var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
-		translate 150ms ease;
+		translate var(--itx-toast-enter-duration) var(--itx-toast-enter-easing);
 
 	&:where(:focus-visible) {
 		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
@@ -155,7 +144,7 @@
 		var(--itx-toast-action-padding-inline);
 	border: var(--itx-toast-action-border-width) solid
 		var(--itx-toast-action-border-color);
-	border-radius: var(--itx-toast-action-border-radius);
+	border-radius: var(--itx-toast-action-border-radius, var(--itx-radius));
 	background: transparent;
 	color: inherit;
 	font-size: var(--itx-toast-action-font-size);
@@ -182,7 +171,7 @@
 	block-size: var(--itx-toast-close-size);
 	padding: 0;
 	border: none;
-	border-radius: var(--itx-toast-close-border-radius);
+	border-radius: var(--itx-toast-close-border-radius, var(--itx-radius));
 	background: transparent;
 	color: inherit;
 	opacity: var(--itx-toast-close-opacity);
@@ -204,10 +193,6 @@
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-	:where(interop-toast-item) {
-		transition: none;
-	}
-
 	@starting-style {
 		:where(interop-toast-item) {
 			opacity: 1;

@@ -100,7 +100,7 @@
 	border-color: var(--_border-color);
 	border-width: var(--itx-segment-border-width, 0);
 	border-style: var(--itx-segment-border-style, solid);
-	border-radius: var(--itx-segment-border-radius, 4px);
+	border-radius: var(--itx-segment-border-radius, var(--itx-radius));
 
 	cursor: pointer;
 	/* Prevent text selection on rapid clicks. */
@@ -111,11 +111,8 @@
 	z-index: 1;
 
 	transition-property: background-color, color, border-color;
-	transition-duration: var(--itx-segment-transition-duration, 96ms);
-	transition-timing-function: var(
-		--itx-segment-transition-timing-function,
-		ease-in
-	);
+	transition-duration: var(--itx-segment-transition-duration);
+	transition-timing-function: var(--itx-segment-transition-timing-function);
 }
 
 /* ── State-resolved private slots ────────────────────────────────────────── */
@@ -260,6 +257,6 @@
 
 @media (prefers-contrast: high) {
 	:where(button[interop-segment][aria-pressed="true"]) {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }

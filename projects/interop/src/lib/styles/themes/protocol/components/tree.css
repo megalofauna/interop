@@ -33,7 +33,6 @@
 	--itx-tree-row-block-size: var(--itx-spacing-8);
 	--itx-tree-row-padding-inline: var(--itx-spacing-2);
 	--itx-tree-row-gap: var(--itx-spacing-1);
-	--itx-tree-row-radius: var(--itx-radius-none);
 
 	/* ── Row surface ──────────────────────────────────────────────────────
 	 * Hover is the only paint a resting tree ever applies.               */

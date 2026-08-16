@@ -23,7 +23,6 @@
 	--itx-progress-height: var(--itx-spacing-2);
 
 	/* Square. Carbon defines no radius on the bar. */
-	--itx-progress-radius: var(--itx-radius-none);
 
 	/* Length along the fill axis when vertical; ignored when horizontal,
 	   where the bar takes the full inline size of its container. */

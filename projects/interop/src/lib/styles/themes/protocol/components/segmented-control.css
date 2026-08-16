@@ -70,7 +70,6 @@
 	   4px curve on a control that sits beside squared tabs, fields and tables
 	   reads as an oversight rather than a choice. Set --itx-radius-1 to restore
 	   Carbon's value exactly. */
-	--itx-segmented-control-track-border-radius: var(--itx-radius-none);
 	--itx-segmented-control-track-padding: 0;
 	--itx-segmented-control-track-max-width: none;
 
@@ -103,7 +102,6 @@
 	/* No per-segment border: the frame lives on the track, the dividers are
 	   the ::before hairline below. */
 	--itx-segment-border-width: 0;
-	--itx-segment-border-radius: var(--itx-radius-none);
 
 	/* ── Segment — rest state ───────────────────────────────────────────── */
 	/* $text-secondary — unselected labels are quieter than the selected one. */
@@ -141,8 +139,8 @@
 	   spilling over the neighbouring segment. */
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
-	--itx-segment-transition-duration: 48ms;
-	--itx-segment-transition-timing-function: ease-in-out;
+	--itx-segment-transition-duration: var(--itx-duration-speedy);
+	--itx-segment-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── Segment — disabled ─────────────────────────────────────────────── */
 	--itx-segment-disabled-opacity: 0.4;
@@ -174,7 +172,7 @@
 	--itx-indicator-border-width: 0;
 	/* The pill matches the track. All three radii move together or the
 	   selection sits visibly proud of the frame at the ends. */
-	--itx-indicator-border-radius: var(--itx-radius-none);
+	--itx-indicator-border-radius: var(--itx-radius);
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */

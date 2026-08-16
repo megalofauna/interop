@@ -177,7 +177,7 @@
 				var(--itx-tree-row-padding-inline)
 		)
 		var(--itx-tree-row-padding-inline);
-	border-radius: var(--itx-tree-row-radius);
+	border-radius: var(--itx-tree-row-radius, var(--itx-radius));
 	background-color: var(--itx-tree-row-background);
 	background-image: repeating-linear-gradient(
 		to right,
@@ -311,7 +311,7 @@
 			var(--itx-tree-focus-style, var(--itx-focus-style))
 			var(--itx-tree-focus-color, var(--itx-focus-color));
 		outline-offset: var(--itx-tree-focus-offset, var(--itx-focus-offset));
-		border-radius: var(--itx-tree-row-radius);
+		border-radius: var(--itx-tree-row-radius, var(--itx-radius));
 	}
 }
 
@@ -386,12 +386,6 @@
  */
 
 @media (prefers-reduced-motion: reduce) {
-	:where([interop-tree-group]),
-	:where([interop-tree-row]),
-	:where([interop-tree-toggle]:empty)::before {
-		transition: none;
-	}
-
 	:where([interop-tree-group]) {
 		@starting-style {
 			opacity: 1;

@@ -93,17 +93,6 @@ legend {
 }
 
 /* Visually hidden legend — accessible to screen readers */
-.interop-sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
 
 /* ── Track wrapper ───────────────────────────────────────────────────────── */
 
@@ -116,7 +105,10 @@ legend {
 	border-color: var(--itx-segmented-control-track-border-color, transparent);
 	border-width: var(--itx-segmented-control-track-border-width, 0);
 	border-style: var(--itx-segmented-control-track-border-style, solid);
-	border-radius: var(--itx-segmented-control-track-border-radius, 0);
+	border-radius: var(
+		--itx-segmented-control-track-border-radius,
+		var(--itx-radius)
+	);
 	box-shadow: var(--itx-segmented-control-track-box-shadow, none);
 	padding: var(--itx-segmented-control-track-padding, 4px);
 	max-width: var(--itx-segmented-control-track-max-width);
@@ -140,6 +132,6 @@ legend {
 
 @media (prefers-contrast: high) {
 	.interop-segmented-control__track {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }

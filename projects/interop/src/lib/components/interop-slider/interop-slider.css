@@ -234,7 +234,7 @@
 	--_fill-stop: calc(
 		var(--_target) / 2 + (100% - var(--_target)) * var(--_fill)
 	);
-	--_duration: var(--itx-slider-duration, 110ms);
+	--_duration: var(--itx-slider-duration, var(--itx-duration-fast));
 	--_easing: var(--itx-slider-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
 
 	/* Gradient direction. Published as a public custom property because
@@ -459,14 +459,4 @@
 
 :host([data-thumb-role])::-moz-range-thumb {
 	pointer-events: auto;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	:host::-webkit-slider-thumb {
-		transition: none;
-	}
-
-	:host::-moz-range-thumb {
-		transition: none;
-	}
 }

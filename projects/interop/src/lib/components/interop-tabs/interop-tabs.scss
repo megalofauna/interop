@@ -326,7 +326,10 @@
 			color: var(--itx-tab-foreground-hover, var(--itx-contrast-6));
 
 			&::after {
-				background: var(--itx-tab-indicator-color-hover, var(--itx-surface-below));
+				background: var(
+					--itx-tab-indicator-color-hover,
+					var(--itx-surface-below)
+				);
 			}
 		}
 	}
@@ -356,7 +359,10 @@
 		);
 
 		&::after {
-			background: var(--itx-tab-active-indicator-color, var(--itx-colorway-solid));
+			background: var(
+				--itx-tab-active-indicator-color,
+				var(--itx-colorway-solid)
+			);
 		}
 	}
 
@@ -389,12 +395,5 @@
 		inset-inline-end: calc(-1 * var(--itx-tabs-rule-width, 1px));
 		block-size: auto;
 		inline-size: var(--itx-tab-indicator-size, 2px);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	[role="tab"],
-	[role="tab"]::after {
-		transition: none;
 	}
 }

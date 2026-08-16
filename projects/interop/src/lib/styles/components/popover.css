@@ -93,7 +93,7 @@
 	color: var(--itx-popover-foreground);
 	border: var(--itx-popover-border-width) var(--itx-popover-border-style)
 		var(--itx-popover-border-color);
-	border-radius: var(--itx-popover-border-radius);
+	border-radius: var(--itx-popover-border-radius, var(--itx-radius));
 	box-shadow: var(--itx-popover-shadow);
 
 	opacity: 1;
@@ -403,15 +403,4 @@
 	left: var(--itx-popover-arrow-offset);
 	top: 50%;
 	transform: translate(-100%, -50%) rotate(-90deg);
-}
-
-/* ── Reduced motion ──────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where([interop-popover]) {
-		transition: none;
-	}
-	:where([interop-popover]:not(:popover-open)) {
-		transition: none;
-	}
 }

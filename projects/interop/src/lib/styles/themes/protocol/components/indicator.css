@@ -17,7 +17,7 @@
 	);
 
 	--itx-indicator-border-color: var(--itx-contrast-6);
-	--itx-indicator-border-width: 2px;
+	--itx-indicator-border-width: var(--itx-border-width-thick);
 	--itx-indicator-border-style: solid;
 	--itx-indicator-border-radius: var(--itx-inner-radius);
 
@@ -25,6 +25,6 @@
 	--itx-indicator-box-shadow: none;
 
 	/* ── Transition ─────────────────────────────────────────────────────── */
-	--itx-indicator-transition-duration: 150ms;
-	--itx-indicator-transition-timing-function: ease;
+	--itx-indicator-transition-duration: var(--itx-duration-fast);
+	--itx-indicator-transition-timing-function: var(--itx-easing-standard);
 }

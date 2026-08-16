@@ -8,6 +8,31 @@
  *   standard   — symmetric, general-purpose
  *   decelerate — ease-out, for entering elements
  *   accelerate — ease-in, for exiting elements
+ *
+ * ─── Reduced motion ─────────────────────────────────────────────────────────
+ *
+ * Because every duration derives from the base, honouring the user's
+ * preference is one declaration. Before this, it was 28 @media blocks across
+ * 23 files, 26 of whose declarations were the same `transition: none` written
+ * by hand — a component that forgot the block simply ignored the preference,
+ * and nothing said so.
+ *
+ * The zero is set on [interop-root] inside :where(), so it carries the same
+ * zero specificity as the values above. A consumer who wants a component to
+ * keep moving — a loading indicator that has to read as "still working" —
+ * re-declares a duration token on that subtree and wins normally. Nothing is
+ * !important, and nothing is unreachable.
+ *
+ * This is deliberately the blunt reading of the preference: no motion at all.
+ * "Reduced" does not really mean "none" — the accessible answer is usually to
+ * swap distance-travelled for a cross-fade rather than to freeze the UI — and
+ * the presets under styles/motion/ are where that nuance will eventually
+ * live. Until then one rule that is always obeyed beats a per-component
+ * judgement call that is usually forgotten.
+ *
+ * What this does NOT reach is animations, which have their own durations:
+ * progress's indeterminate sweep, the pop/spin presets and the terminal
+ * caret each still stop themselves explicitly.
  */
 
 :where([interop-root]) {
@@ -16,7 +41,13 @@
 	--itx-duration-fast: calc(var(--itx-duration-base) * 0.5);
 	--itx-duration-slow: calc(var(--itx-duration-base) * 2);
 
-	--itx-easing-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+	--itx-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
 	--itx-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
 	--itx-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where([interop-root]) {
+		--itx-duration-base: 0ms;
+	}
 }

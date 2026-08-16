@@ -151,8 +151,8 @@
 	block-size: var(--itx-table-row-block-size);
 	border-block-end: var(--itx-table-row-border-width, 1px) solid
 		var(--itx-table-border, currentColor);
-	transition: background-color var(--itx-table-row-transition-duration, 100ms)
-		var(--itx-table-row-transition-easing, ease);
+	transition: background-color var(--itx-table-row-transition-duration)
+		var(--itx-table-row-transition-easing);
 
 	&:hover {
 		background-color: var(--itx-table-row-hover-bg, transparent);

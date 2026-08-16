@@ -154,7 +154,7 @@
 		--itx-expansion-panel-border-inline-color,
 		transparent
 	);
-	border-radius: var(--itx-expansion-panel-border-radius, 0);
+	border-radius: var(--itx-expansion-panel-border-radius, var(--itx-radius));
 	box-shadow: var(--itx-expansion-panel-box-shadow, none);
 	padding: var(--itx-expansion-panel-padding, 0);
 	transition-property: var(
@@ -163,10 +163,9 @@
 		border-color,
 		box-shadow
 	);
-	transition-duration: var(--itx-expansion-panel-transition-duration, 200ms);
+	transition-duration: var(--itx-expansion-panel-transition-duration);
 	transition-timing-function: var(
-		--itx-expansion-panel-transition-timing-function,
-		ease
+		--itx-expansion-panel-transition-timing-function
 	);
 }
 
@@ -218,7 +217,7 @@
 	padding-inline: var(--itx-expansion-panel-trigger-padding-inline);
 	background: var(--itx-expansion-panel-trigger-background);
 	border: none;
-	border-radius: var(--itx-expansion-panel-trigger-radius);
+	border-radius: var(--itx-expansion-panel-trigger-radius, var(--itx-radius));
 	color: var(--itx-expansion-panel-trigger-color);
 	font: inherit;
 	font-size: var(--itx-expansion-panel-trigger-font-size);
@@ -255,10 +254,16 @@
 	button[interop-expansion-trigger]:focus-visible,
 	button[interop-expansion-trigger]:active
 ) {
-	outline: var(--itx-expansion-panel-trigger-focus-width, var(--itx-focus-width))
+	outline: var(
+			--itx-expansion-panel-trigger-focus-width,
+			var(--itx-focus-width)
+		)
 		var(--itx-expansion-panel-trigger-focus-style, var(--itx-focus-style))
 		var(--itx-expansion-panel-trigger-focus-color, var(--itx-focus-color));
-	outline-offset: var(--itx-expansion-panel-trigger-focus-offset, var(--itx-focus-offset));
+	outline-offset: var(
+		--itx-expansion-panel-trigger-focus-offset,
+		var(--itx-focus-offset)
+	);
 }
 
 :where(button[interop-expansion-trigger]:disabled) {
@@ -298,17 +303,6 @@
 :where(button[interop-expansion-trigger][aria-expanded="true"])::after {
 	rotate: var(--itx-expansion-panel-trigger-arrow-rotation-expanded);
 }
-
-@media (prefers-reduced-motion: reduce) {
-	:where(button[interop-expansion-trigger]) {
-		transition: none;
-	}
-
-	:where(button[interop-expansion-trigger])::after {
-		transition: none;
-	}
-}
-
 /* ── Panel host (expanded state) ─────────────────────────────────────────── */
 /*
  * Each expanded-state token cascades to its base token as the final
@@ -386,8 +380,8 @@
 	background-color: var(--itx-expansion-panel-body-background, transparent);
 	background-image: var(--itx-expansion-panel-body-background-image, none);
 	transition: grid-template-rows
-		var(--itx-expansion-panel-body-transition-duration, 200ms)
-		var(--itx-expansion-panel-body-transition-easing, ease);
+		var(--itx-expansion-panel-body-transition-duration)
+		var(--itx-expansion-panel-body-transition-easing);
 }
 
 :where([interop-expansion-body][data-expanded]) {
@@ -402,12 +396,12 @@
 	border-top-style: var(--itx-expansion-panel-body-divider-style, solid);
 	border-top-color: var(--itx-expansion-panel-body-divider-color, transparent);
 	transition:
-		padding-block var(--itx-expansion-panel-body-transition-duration, 200ms)
-			var(--itx-expansion-panel-body-transition-easing, ease),
-		border-top-width var(--itx-expansion-panel-body-transition-duration, 200ms)
-			var(--itx-expansion-panel-body-transition-easing, ease),
-		border-top-color var(--itx-expansion-panel-body-transition-duration, 200ms)
-			var(--itx-expansion-panel-body-transition-easing, ease);
+		padding-block var(--itx-expansion-panel-body-transition-duration)
+			var(--itx-expansion-panel-body-transition-easing),
+		border-top-width var(--itx-expansion-panel-body-transition-duration)
+			var(--itx-expansion-panel-body-transition-easing),
+		border-top-color var(--itx-expansion-panel-body-transition-duration)
+			var(--itx-expansion-panel-body-transition-easing);
 }
 
 /*
@@ -454,14 +448,6 @@
 	padding-block: 0;
 	border-top-width: 0;
 }
-
-@media (prefers-reduced-motion: reduce) {
-	:where([interop-expansion-body]),
-	:where([interop-expansion-body] .itx-expansion-body-inner) {
-		transition: none;
-	}
-}
-
 /* ── Peek mode ───────────────────────────────────────────────────────────── */
 /*
  * min-height stays on the inner wrapper even when expanded so there is no

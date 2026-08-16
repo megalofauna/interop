@@ -65,7 +65,7 @@
 	width: 100%;
 	height: var(--itx-progress-height, 0.5rem);
 	border: none;
-	border-radius: var(--itx-progress-radius, 0);
+	border-radius: var(--itx-progress-radius, var(--itx-radius));
 	overflow: hidden;
 
 	/* Fill direction. Horizontal runs along the inline axis; vertical runs
@@ -81,7 +81,8 @@
 		transparent calc(var(--itx-progress-percent, 0) * 1%) 100%
 	);
 
-	transition: --itx-progress-percent var(--itx-progress-duration, 200ms) ease;
+	transition: --itx-progress-percent var(--itx-progress-duration)
+		var(--itx-easing-standard);
 }
 
 /* RTL: the inline axis reverses, so the fill does too. */
@@ -148,8 +149,8 @@
 			calc((var(--_sweep) - var(--_band)) * 1%) calc(var(--_sweep) * 1%),
 		transparent calc(var(--_sweep) * 1%) 100%
 	);
-	animation: itx-progress-sweep
-		var(--itx-progress-indeterminate-duration, 1000ms) linear infinite;
+	animation: itx-progress-sweep var(--itx-progress-indeterminate-duration)
+		linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -159,10 +160,6 @@
 		animation: none;
 		--_sweep: 65;
 		opacity: 0.6;
-	}
-
-	:host {
-		transition: none;
 	}
 }
 

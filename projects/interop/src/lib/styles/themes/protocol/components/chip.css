@@ -72,13 +72,14 @@
 	 * it; those are the seam, at whatever scope you set them.              */
 	--itx-chip-selectable-background: var(--itx-contrast-2);
 	--itx-chip-selectable-color: var(--itx-contrast-6);
-	--itx-chip-selectable-border: 2px solid transparent;
+	--itx-chip-selectable-border: var(--itx-border-width-thick) solid transparent;
 	--itx-chip-selectable-background-hover: var(--itx-contrast-2);
 	--itx-chip-selectable-color-hover: var(--itx-contrast-6);
 
 	--itx-chip-background-selected: var(--itx-colorway-solid);
 	--itx-chip-color-selected: var(--itx-colorway-on-solid);
-	--itx-chip-border-selected: 2px solid var(--itx-colorway-border);
+	--itx-chip-border-selected: var(--itx-border-width-thick) solid
+		var(--itx-colorway-border);
 	--itx-chip-font-weight-selected: 400;
 
 	/* ── Focus ring (chip-option) ─────────────────────────────────────────
@@ -100,8 +101,8 @@
 	--itx-chip-disabled-opacity: 0.4;
 
 	/* ── Transitions ──────────────────────────────────────────────────── */
-	--itx-chip-transition-duration: 120ms;
-	--itx-chip-transition-timing-function: ease;
+	--itx-chip-transition-duration: var(--itx-duration-fast);
+	--itx-chip-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── chip-list gap — Carbon's grouped-tag spacing ─────────────────── */
 	--itx-chip-list-gap: var(--itx-spacing-2); /* 8px */
@@ -112,7 +113,7 @@
 :where(fieldset[interop-chip-filter]) {
 	--itx-chip-filter-background: transparent;
 	--itx-chip-filter-border: none;
-	--itx-chip-filter-radius: 0;
+	--itx-chip-filter-radius: var(--itx-radius);
 	--itx-chip-filter-padding: 0;
 	--itx-chip-filter-gap: var(--itx-spacing-2); /* 8px */
 }
@@ -131,12 +132,11 @@
 
 :where(div[interop-chip-input]) {
 	--itx-chip-input-background: var(--itx-surface);
-	--itx-chip-input-border: 2px solid transparent;
+	--itx-chip-input-border: var(--itx-border-width-thick) solid transparent;
 	--itx-chip-input-radius: var(--itx-radius-xl); /* 16px — the field's own */
 	--itx-chip-input-gap: var(--itx-spacing-1); /* 4px */
 	--itx-chip-input-padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	--itx-chip-input-min-height: var(--itx-spacing-10); /* 40px */
-
 }
 
 /* ── Size axis ───────────────────────────────────────────────────────────── */

@@ -1,0 +1,56 @@
+/*
+ * Visually hidden — one definition of "present for assistive tech, absent to
+ * the eye".
+ *
+ * This existed nine times before this file: chip, visimorph's label,
+ * segmented-control, badge, toast's live region, stepper's step status,
+ * code-block, inline-code and the command palette each carried their own copy,
+ * 81 identical declarations in total. The canonical one lived in *chip.css*,
+ * which is not where anyone would look for it.
+ *
+ * `interop-badge.scss` documented the duplication as deliberate-until-fixed:
+ *
+ *   "Duplicated from the global .interop-sr-only in styles/components/chip.css
+ *    … Both fold back into the global rule the moment this file joins the
+ *    foundation/theme split."
+ *
+ * ─── Usage ──────────────────────────────────────────────────────────────────
+ *
+ *   <span class="interop-sr-only">…</span>
+ *   <span interop-sr-only>…</span>
+ *
+ * The attribute form matters for the same reason the rest of the library ships
+ * global CSS: someone writing the markup by hand, or consuming Interop from a
+ * non-Angular app, should get the behaviour without an Angular class binding.
+ *
+ * ─── Why these exact declarations ───────────────────────────────────────────
+ *
+ * `display: none` and `visibility: hidden` both remove the element from the
+ * accessibility tree, which is the opposite of what this is for. The element
+ * has to stay rendered and be clipped to nothing instead.
+ *
+ * `clip` is deprecated but still the only thing some older assistive-tech
+ * pairings honour; `clip-path` is the modern equivalent. Shipping both costs
+ * one line and removes the question. Nine copies previously disagreed about
+ * this — eight used `clip`, the command palette alone used `clip-path`, and
+ * nobody chose that per component.
+ *
+ * `white-space: nowrap` stops a long string wrapping inside the 1px box and
+ * being announced with spurious line breaks by some screen readers.
+ *
+ * A 1px box with a -1px margin, rather than zero size: a zero-size element is
+ * skipped outright by parts of the accessibility tree in some engines.
+ */
+
+:where(.interop-sr-only, [interop-sr-only]) {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}

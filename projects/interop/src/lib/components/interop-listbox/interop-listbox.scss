@@ -197,9 +197,3 @@
 	color: var(--itx-option-description-color, var(--itx-contrast-4));
 	white-space: nowrap;
 }
-
-@media (prefers-reduced-motion: reduce) {
-	.interop-option {
-		transition: none;
-	}
-}

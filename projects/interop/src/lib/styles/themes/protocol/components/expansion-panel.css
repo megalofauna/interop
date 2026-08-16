@@ -28,14 +28,13 @@
 	--itx-expansion-panel-background: transparent;
 	--itx-expansion-panel-background-image: none;
 	--itx-expansion-panel-foreground: var(--itx-contrast-6);
-	--itx-expansion-panel-border-width: 1px;
+	--itx-expansion-panel-border-width: var(--itx-border-width-hairline);
 	--itx-expansion-panel-border-style: solid;
 	/* The block edges do the structural work — they are the rules a reader
 	   scans down a stack of panels — so they carry real weight. The inline
 	   edges only close the frame and stay at the standard hairline. */
 	--itx-expansion-panel-border-block-color: var(--itx-contrast-2);
 	--itx-expansion-panel-border-inline-color: transparent;
-	--itx-expansion-panel-border-radius: 0;
 	--itx-expansion-panel-box-shadow: none;
 	--itx-expansion-panel-padding: 0;
 
@@ -67,7 +66,6 @@
 	--itx-expansion-panel-trigger-padding-inline: var(--itx-spacing-4); /* 16px */
 	--itx-expansion-panel-trigger-gap: var(--itx-spacing-4); /* 16px */
 	--itx-expansion-panel-trigger-justify-content: space-between;
-	--itx-expansion-panel-trigger-radius: 0;
 
 	--itx-expansion-panel-trigger-font-size: 0.875rem; /* Carbon $body-01 */
 	--itx-expansion-panel-trigger-font-weight: 400;
@@ -79,7 +77,6 @@
 	   hovered row lifts toward the viewer rather than darkening. */
 	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
 	--itx-expansion-panel-trigger-color: var(--itx-contrast-6);
-
 
 	/* Arrow — sized in em so it tracks the trigger's own type, matching the
 	   tree's twisty. 135deg points the corner down; +180 flips it up. */

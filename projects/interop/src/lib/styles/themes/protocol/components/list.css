@@ -30,7 +30,8 @@
 	--itx-list-marker-align: center;
 	--itx-list-marker-size: 2em;
 	--itx-list-marker-radius: var(--itx-radius-full);
-	--itx-list-marker-border: 2px solid var(--itx-contrast-4);
+	--itx-list-marker-border: var(--itx-border-width-thick) solid
+		var(--itx-contrast-4);
 	--itx-list-marker-background: transparent;
 	--itx-list-marker-color: var(--itx-contrast-4);
 	--itx-list-marker-font-size: 0.8em;
@@ -52,7 +53,8 @@
 
 :where(ol[interop-list][itx-marker~="filled"] > li) {
 	--itx-list-marker-background: var(--itx-contrast-2);
-	--itx-list-marker-border: 2px solid var(--itx-contrast-4);
+	--itx-list-marker-border: var(--itx-border-width-thick) solid
+		var(--itx-contrast-4);
 	--itx-list-marker-color: light-dark(
 		var(--itx-contrast-6),
 		var(--itx-contrast-1)
@@ -74,7 +76,6 @@
 
 	--itx-list-row-rule-width: 1px;
 	--itx-list-row-rule-color: var(--itx-contrast-3);
-
 
 	--itx-list-row-transition-duration: var(--itx-duration-fast);
 	--itx-list-row-transition-timing-function: var(--itx-easing-standard);
