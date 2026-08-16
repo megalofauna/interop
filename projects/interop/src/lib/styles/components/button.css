@@ -26,7 +26,9 @@
  *   --itx-button-height           Visual pill height; block padding derives from it
  *   --itx-button-padding-block    Escape hatch — overrides the height-derived block padding
  *   --itx-button-padding-inline
- *   --itx-button-touch-inset      Invisible block space added on coarse pointers to floor the touch target
+ *   --itx-button-height           Height floor; the button grows past it for a wrapped label.
+ *                                 Set `auto` to size by padding instead (toolbar does)
+ *   --itx-button-touch-target     Hit-target floor on coarse pointers (default 2.75rem). Set 0 to opt out
  *   --itx-button-width            Set to 100% to force a full-width button
  *   --itx-button-max-width
  *   --itx-button-gap
@@ -66,41 +68,43 @@
 	appearance: none;
 }
 
-/* ── Touch target ────────────────────────────────────────────────────────── */
+/* ── The button ──────────────────────────────────────────────────────────── */
+/*
+ * The button paints itself. It used to paint a ::before "pill" instead, so that
+ * invisible block padding could extend the hit area without changing the
+ * visible height. That bought one thing — a 40px-looking button occupying 44px
+ * on touch — and cost a great deal: a private token bridging --itx-radius-attr
+ * into a pseudo that could not inherit it, a z-index:-1 stacking dance, state
+ * split across two boxes, a focus ring drawn on the pseudo, and a height
+ * derived by arithmetic because a stretched pseudo has no height of its own.
+ *
+ * It also only ever floored the BLOCK axis, so an icon button — the case that
+ * needs a touch target most — came out 32 x 44 and still failed the 44 x 44
+ * guideline on the axis that mattered. The coarse-pointer rule at the bottom of
+ * this file now floors both.
+ */
 
 :where(button[interop-button]) {
+	box-sizing: border-box;
 	display: var(--itx-button-display, inline-flex);
 	align-items: var(--itx-button-align-items, center);
 	justify-content: var(--itx-button-justify-content, center);
 	position: relative;
+	/* Retained for the decoration layer — see styles/utilities/decoration.css.
+	   Its z-index:-1 escapes behind an ancestor's background without this. */
 	isolation: isolate;
 	gap: var(--itx-button-gap);
-	background: none;
-	border: none;
-	corner-shape: var(--itx-button-corner-shape, initial);
 
-	/* Bridge the itx-radius attribute onto the visual pill. `--itx-radius-attr`
-	 * is registered non-inheriting (so a container's radius can't leak into nested
-	 * children), which means the ::before pill — a pseudo of this host — can't
-	 * see it. Copy it here onto an inheriting private token the pill CAN inherit.
-	 * With no itx-radius present this resolves guaranteed-invalid, so the pill
-	 * falls through to its theme default. This is the pattern for any component
-	 * that paints its radius on a pseudo-element. */
-	--_itx-button-radius: var(--itx-radius-attr);
+	/* Height is the spec, stated rather than derived. The old
+	   `(height − 1em) / 2` padding arithmetic existed only because the pill was
+	   a stretched pseudo and padding was the sole lever; it also silently
+	   depended on line-height being 1. A floor rather than a fixed height, so a
+	   wrapped label grows the button instead of overflowing it.
 
-	/* Height is the spec. Block padding is derived as (height − 1em) / 2 so the
-	   visible pill lands at exactly --itx-button-height and the label:height
-	   ratio holds across the scale. --itx-button-padding-block remains an
-	   escape hatch (e.g. toolbar compaction) — set it to override the
-	   derivation. The touch-inset adds invisible block space on coarse pointers
-	   (see the pointer:coarse rule below). */
-	padding-block: calc(
-		var(
-				--itx-button-padding-block,
-				(var(--itx-button-height, 2.5rem) - 1em) / 2
-			) +
-			var(--itx-button-touch-inset, 0px)
-	);
+	   --itx-button-padding-block still applies and is still additive, but it can
+	   now only make a button TALLER. To make one shorter, lower the height. */
+	min-block-size: var(--itx-button-height, 2.5rem);
+	padding-block: var(--itx-button-padding-block, 0);
 	padding-inline: var(--itx-button-padding-inline);
 	width: var(--itx-button-width, auto);
 	min-width: var(--itx-button-min-width, initial);
@@ -114,8 +118,34 @@
 	letter-spacing: var(--itx-button-letter-spacing, initial);
 
 	color: var(--_foreground);
+	background-color: var(--_background, transparent);
+	border-width: var(
+		--itx-button-border-width,
+		var(--itx-border-width-hairline)
+	);
+	border-style: var(--itx-button-border-style, solid);
+	border-color: var(--_border-color);
+	/* Reads --itx-radius-attr directly now. The bridge existed only because a
+	   pseudo cannot see a non-inheriting property declared on its host. */
+	border-radius: var(
+		--itx-button-border-radius,
+		var(
+			--itx-radius-attr,
+			var(
+				--itx-button-radius-default,
+				var(--itx-context-radius, var(--itx-radius))
+			)
+		)
+	);
+	box-shadow: var(--_box-shadow);
+	corner-shape: var(--itx-button-corner-shape, initial);
 
-	transition-property: color;
+	transition-property: var(
+		--itx-button-transition-properties,
+		color,
+		background-color,
+		border-color
+	);
 	transition-duration: var(
 		--itx-button-transition-duration,
 		var(--itx-duration-fast)
@@ -204,53 +234,13 @@
 	);
 }
 
-/* ── Visual pill ─────────────────────────────────────────────────────────── */
-
-:where(button[interop-button])::before {
-	content: "";
-	position: absolute;
-	box-sizing: border-box;
-	inset-block: var(--itx-button-touch-inset, 0px);
-	inset-inline: 0;
-	z-index: -1;
-	pointer-events: none;
-
-	background-color: var(--_background, transparent);
-	border-width: var(--itx-button-border-width, 0);
-	border-style: var(--itx-button-border-style, solid);
-	border-color: var(--_border-color);
-	border-radius: var(
-		--itx-button-border-radius,
-		var(
-			--_itx-button-radius,
-			var(--itx-button-radius-default, var(--itx-context-radius, initial))
-		)
-	);
-	box-shadow: var(--_box-shadow);
-	corner-shape: var(--itx-button-corner-shape, initial);
-
-	transition-property: var(
-		--itx-button-transition-properties,
-		background-color,
-		border-color
-	);
-	transition-duration: var(
-		--itx-button-transition-duration,
-		var(--itx-duration-fast)
-	);
-	transition-timing-function: var(
-		--itx-button-transition-timing-function,
-		var(--itx-easing-decelerate)
-	);
-}
-
 /* ── Focus ring ──────────────────────────────────────────────────────────── */
 
 :where(button[interop-button]:focus) {
 	outline: none;
 }
 
-:where(button[interop-button]:focus-visible:not(:active))::before {
+:where(button[interop-button]:focus-visible:not(:active)) {
 	outline: var(--itx-button-focus-width, var(--itx-focus-width))
 		var(--itx-button-focus-style, var(--itx-focus-style))
 		var(--itx-button-focus-color, var(--itx-focus-color));
@@ -295,18 +285,33 @@
 }
 
 /* ── Coarse pointer: floor the hit area to a 44px touch target ───────────── */
-/* On coarse pointers the inset adds invisible block space so buttons shorter
-   than 44px still clear the target size. The pill's inset-block matches, so the
-   visible height never changes — only the hit box grows. On fine pointers the
-   inset is 0 (the default) and the hit box equals the pill. Elements that opt
-   out (e.g. the stepper nav-trigger) set --itx-button-touch-inset: 0 and win on
-   later source order. */
+/*
+ * Both axes, which the old touch-inset never did — it padded the block axis
+ * only, so a square icon button came out 32 x 44 and still missed the target on
+ * the axis it was failing.
+ *
+ * The button grows to 44px rather than staying visually small inside a larger
+ * hit box. That is the honest reading of the guideline and what touch UIs do
+ * anyway; the alternative bought a constant visual height at the cost of the
+ * whole pseudo-element apparatus.
+ *
+ * Opt out per component with --itx-button-touch-target (the stepper nav-trigger
+ * does), or globally by setting it on any ancestor.
+ */
 
 @media (pointer: coarse) {
 	:where(button[interop-button]) {
-		--itx-button-touch-inset: max(
-			0px,
-			(2.75rem - var(--itx-button-height, 2.5rem)) / 2
+		min-block-size: max(
+			var(--itx-button-height, 2.5rem),
+			var(--itx-button-touch-target, 2.75rem)
 		);
+	}
+
+	/* Inline floor only where it bites. min-inline-size IS min-width, so
+	   applying it to every button would clobber the max-content floor that
+	   keeps labels from wrapping. A labelled button is comfortably past 44px
+	   already; a square icon button is the one that is not. */
+	:where(button[interop-button~="icon"]) {
+		min-inline-size: var(--itx-button-touch-target, 2.75rem);
 	}
 }

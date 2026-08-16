@@ -478,12 +478,10 @@
 	-webkit-appearance: none;
 	appearance: none;
 
-	/* The nav-trigger manages its own padding — bypass the button's
-	   touch-inset calc so the visual pill matches the outer box on coarse
-	   pointers. Without this, the pill is inset by 0.25em (the default
-	   touch inset) but the trigger's padding-block doesn't compensate,
-	   producing visible gaps above and below the pill. */
-	--itx-button-touch-inset: 0em;
+	/* The nav-trigger manages its own geometry — opt out of the coarse-pointer
+	   touch-target floor so it is not pushed to 44px. It spans the full width
+	   of the stepper header, so the target is already comfortable. */
+	--itx-button-touch-target: 0;
 	--itx-button-width: 100%;
 }
 
@@ -697,7 +695,7 @@
 
 	background: var(--_indicator-background);
 	color: var(--_indicator-foreground);
-	border: var(--itx-step-indicator-border-width, 2px)
+	border: var(--itx-step-indicator-border-width, var(--itx-border-width-thick))
 		var(--itx-step-indicator-border-style, solid) var(--_indicator-border-color);
 
 	transition-property: background-color, color, border-color;

@@ -30,6 +30,7 @@
 	/* Matches the header toggle exactly — see --shell-nav-btn-pad in app.scss,
 	   which is where the size and its WCAG justification live. */
 	--itx-button-padding-inline: var(--shell-nav-btn-pad);
+	--itx-button-height: auto;
 	--itx-button-padding-block: var(--shell-nav-btn-pad);
 	position: absolute;
 	inset-block-start: var(--itx-spacing-2);

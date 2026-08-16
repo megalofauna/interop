@@ -191,6 +191,7 @@
 	   shorthand was a class beating the foundation's :where() rules, which left
 	   this at 4px and 32×32 — a third smaller than the control it toggles. */
 	--itx-button-padding-inline: var(--shell-nav-btn-pad);
+	--itx-button-height: auto;
 	--itx-button-padding-block: var(--shell-nav-btn-pad);
 
 	&:hover {
