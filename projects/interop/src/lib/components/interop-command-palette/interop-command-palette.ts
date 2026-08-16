@@ -14,7 +14,6 @@ import {
 } from "@angular/core";
 import { InteropDialog } from "../interop-dialog/interop-dialog";
 import { InteropIcon } from "../interop-icon/interop-icon";
-import { InteropKbd } from "../interop-kbd/interop-kbd";
 import { provideInteropIcons } from "../../iconsets/core";
 import { TablerSearch } from "../../iconsets/tabler/outline/tabler-search";
 import { TablerX } from "../../iconsets/tabler/outline/tabler-x";
@@ -55,7 +54,7 @@ let paletteSeq = 0;
 @Component({
 	selector: "dialog[interop-command-palette]",
 	standalone: true,
-	imports: [InteropIcon, InteropKbd],
+	imports: [InteropIcon],
 	templateUrl: "./interop-command-palette.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,

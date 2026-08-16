@@ -59,7 +59,7 @@
 @import "./protocol/components/field.css" layer(interop.theme);
 @import "./protocol/components/icon.css" layer(interop.theme);
 @import "./protocol/components/indicator.css" layer(interop.theme);
-@import "./protocol/components/kbd.css" layer(interop.theme);
+@import "./protocol/typography/kbd.css" layer(interop.theme);
 @import "./protocol/components/list.css" layer(interop.theme);
 @import "./protocol/components/popover.css" layer(interop.theme);
 @import "./protocol/components/progress.css" layer(interop.theme);

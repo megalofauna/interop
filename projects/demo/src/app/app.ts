@@ -3,7 +3,6 @@ import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { DemoNav } from "./components/demo-nav/demo-nav";
 import {
 	InteropIcon,
-	InteropKbd,
 	InteropCommandPalette,
 	InteropHotkey,
 	provideInteropIcons,
@@ -23,7 +22,6 @@ import { TablerLayoutSidebarLeftExpand } from "interop/lib/iconsets/tabler/outli
 		DemoNav,
 		DemoThemeToggle,
 		InteropIcon,
-		InteropKbd,
 		InteropCommandPalette,
 		InteropHotkey,
 	],

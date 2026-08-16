@@ -12,7 +12,7 @@ export interface CommandItem {
 	label: string;
 	/** Optional leading icon name (interop-icon registry). */
 	icon?: string;
-	/** Optional trailing shortcut hint, rendered in an `interop-kbd`. */
+	/** Optional trailing shortcut hint, rendered in a `<kbd>`. */
 	shortcut?: string;
 	/** Optional secondary/description text shown after the label. */
 	description?: string;

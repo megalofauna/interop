@@ -6,7 +6,6 @@ import {
 	InteropTooltip,
 	InteropTooltipContentDirective,
 	InteropButton,
-	InteropKbd,
 	InteropTable,
 	InteropCellDef,
 	type TableColumn,
@@ -32,7 +31,6 @@ interface ApiEntry {
 		InteropTooltip,
 		InteropTooltipContentDirective,
 		InteropButton,
-		InteropKbd,
 		InteropTable,
 		InteropCellDef,
 		CodeBlock,
@@ -56,7 +54,7 @@ export class TooltipPage {
 <interop-tooltip>
   <button interop-button>Save manifest</button>
   <ng-template interopTooltipContent>
-    Save manifest &nbsp;<kbd interop-kbd>Ctrl</kbd>+<kbd interop-kbd>S</kbd>
+    Save manifest &nbsp;<kbd>Ctrl</kbd>+<kbd>S</kbd>
   </ng-template>
 </interop-tooltip>`;
 
