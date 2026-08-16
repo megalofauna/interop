@@ -1,5 +1,5 @@
 /*
- * InteropKbd — Protocol theme.
+ * kbd — Protocol theme.
  *
  * Token surface:
  *   Box     --itx-kbd-padding-block   --itx-kbd-padding-inline   --itx-kbd-radius
@@ -10,7 +10,7 @@
  *   Tilt    --itx-kbd-perspective     --itx-kbd-tilt
  */
 
-:where([interop-root] kbd[interop-kbd]) {
+:where([interop-root] kbd) {
 	/* box */
 	--itx-kbd-padding-block: 0.3em;
 	--itx-kbd-padding-inline: 0.45em;

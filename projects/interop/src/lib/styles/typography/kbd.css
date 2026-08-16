@@ -1,8 +1,19 @@
 /*
- * InteropKbd — keyboard key-cap indicator.
+ * kbd — keyboard key-cap indicator.
  *
- * Rendering rules for `kbd[interop-kbd]`. Loaded globally via `interop.css`;
- * token *values* live in `themes/protocol/components/kbd.css`.
+ * Typography, not a component. This was an Angular component whose class body
+ * was empty: it existed only to attach a CSS hook that the CSS attaches itself,
+ * while costing an import in every consumer and a component instance per
+ * keycap.
+ *
+ * It styles the BARE element rather than `kbd[interop-kbd]`. The attribute
+ * could never match the place keycaps most naturally appear — prose. Content
+ * comes through `content/*.md` -> marked, and markdown emits a plain `<kbd>`
+ * with no attributes, so every keycap an author wrote in a document went
+ * unstyled. Anyone writing `<kbd>` by hand, in any framework or none, now gets
+ * the treatment.
+ *
+ * Token *values* live in `themes/protocol/typography/kbd.css`.
  *
  * Contract: references theme tokens directly with no inline `var(token, fallback)`
  * defaults — the theme is the single source of truth for every `--itx-kbd-*`
@@ -11,7 +22,7 @@
  * declaration order.
  */
 
-:where(kbd[interop-kbd]) {
+:where(kbd) {
 	display: inline-block;
 	vertical-align: baseline;
 	white-space: nowrap;
