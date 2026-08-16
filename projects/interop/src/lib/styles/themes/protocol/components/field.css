@@ -27,6 +27,12 @@
  */
 
 :where([interop-root]) {
+	/* Focus — the only deviation from the system ring. Carbon insets the
+	   field's ring so the control still measures exactly its size step and
+	   stacked fields in a form do not collide. Colour, width and style come
+	   from tokens/focus.css. */
+	--itx-field-focus-offset: -2px;
+
 	/* ── Container ───────────────────────────────────────────────────────── */
 	--itx-field-gap: var(--itx-spacing-1);
 
@@ -52,7 +58,6 @@
 	--itx-field-underline-width: 1px;
 	/* Squared. Carbon specifies no radius on any field. */
 	--itx-field-border-radius: var(--itx-radius-none);
-	--itx-field-focus-width: 2px;
 	--itx-field-invalid-icon-size: 1rem;
 	/* Carbon transitions at $duration-fast-01 (70ms); 100ms is the nearest step
 	   this system ships. */
@@ -132,7 +137,6 @@
 	--itx-field-addon-color: var(--itx-contrast-4);
 	--itx-field-disabled-color: var(--itx-contrast-3);
 
-	--itx-field-focus-color: var(--itx-focus);
 	--itx-field-invalid-color: var(--itx-danger-solid);
 }
 
