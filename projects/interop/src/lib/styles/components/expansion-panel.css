@@ -154,7 +154,7 @@
 		--itx-expansion-panel-border-inline-color,
 		transparent
 	);
-	border-radius: var(--itx-expansion-panel-border-radius, 0);
+	border-radius: var(--itx-expansion-panel-border-radius, var(--itx-radius));
 	box-shadow: var(--itx-expansion-panel-box-shadow, none);
 	padding: var(--itx-expansion-panel-padding, 0);
 	transition-property: var(
@@ -217,7 +217,7 @@
 	padding-inline: var(--itx-expansion-panel-trigger-padding-inline);
 	background: var(--itx-expansion-panel-trigger-background);
 	border: none;
-	border-radius: var(--itx-expansion-panel-trigger-radius);
+	border-radius: var(--itx-expansion-panel-trigger-radius, var(--itx-radius));
 	color: var(--itx-expansion-panel-trigger-color);
 	font: inherit;
 	font-size: var(--itx-expansion-panel-trigger-font-size);

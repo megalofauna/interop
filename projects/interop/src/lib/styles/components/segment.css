@@ -100,7 +100,7 @@
 	border-color: var(--_border-color);
 	border-width: var(--itx-segment-border-width, 0);
 	border-style: var(--itx-segment-border-style, solid);
-	border-radius: var(--itx-segment-border-radius, 4px);
+	border-radius: var(--itx-segment-border-radius, var(--itx-radius));
 
 	cursor: pointer;
 	/* Prevent text selection on rapid clicks. */

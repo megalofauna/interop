@@ -80,14 +80,14 @@
 	border: none;
 	corner-shape: var(--itx-button-corner-shape, initial);
 
-	/* Bridge the itx-radius attribute onto the visual pill. `--itx-radius` is
-	 * registered non-inheriting (so a container's radius can't leak into nested
+	/* Bridge the itx-radius attribute onto the visual pill. `--itx-radius-attr`
+	 * is registered non-inheriting (so a container's radius can't leak into nested
 	 * children), which means the ::before pill — a pseudo of this host — can't
 	 * see it. Copy it here onto an inheriting private token the pill CAN inherit.
 	 * With no itx-radius present this resolves guaranteed-invalid, so the pill
 	 * falls through to its theme default. This is the pattern for any component
 	 * that paints its radius on a pseudo-element. */
-	--_itx-button-radius: var(--itx-radius);
+	--_itx-button-radius: var(--itx-radius-attr);
 
 	/* Height is the spec. Block padding is derived as (height − 1em) / 2 so the
 	   visible pill lands at exactly --itx-button-height and the label:height

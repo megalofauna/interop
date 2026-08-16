@@ -57,7 +57,6 @@
 	--itx-field-addon-gap: var(--itx-spacing-2);
 	--itx-field-underline-width: 1px;
 	/* Squared. Carbon specifies no radius on any field. */
-	--itx-field-border-radius: var(--itx-radius-none);
 	--itx-field-invalid-icon-size: 1rem;
 	/* Carbon transitions at $duration-fast-01 (70ms); 100ms is the nearest step
 	   this system ships. */

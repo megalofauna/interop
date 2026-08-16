@@ -63,7 +63,7 @@
 	 * Now squared on purpose, which is also the house default; the rendering is
 	 * unchanged.
 	 */
-	--itx-cb-radius: var(--itx-radius-none);
+	--itx-cb-radius: var(--itx-radius);
 
 	/* Header */
 	--itx-cb-header-background: transparent;
@@ -79,7 +79,7 @@
 	--itx-cb-tablist-border-bottom-style: solid;
 	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-4);
 	--itx-cb-tablist-background: transparent;
-	--itx-cb-tablist-border-radius: 0;
+	--itx-cb-tablist-border-radius: var(--itx-radius);
 	--itx-cb-tablist-box-shadow: none;
 	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-3);
 
@@ -89,7 +89,7 @@
 	--itx-cb-tab-border-bottom: var(--itx-border-width-thick) solid transparent;
 	--itx-cb-tab-padding-block: var(--itx-spacing-2);
 	--itx-cb-tab-padding-inline: var(--itx-spacing-4);
-	--itx-cb-tab-radius: 0;
+	--itx-cb-tab-radius: var(--itx-radius);
 	/* Also read-but-never-declared. font-family inherits, so an invalid var()
 	   resolved to `unset` → inherit anyway; stating it is a no-op that stops the
 	   property silently failing. */
@@ -123,7 +123,7 @@
 	--itx-cb-label-letter-spacing: 0.05em;
 
 	/* Actions */
-	--itx-cb-actions-radius: 0;
+	--itx-cb-actions-radius: var(--itx-radius);
 	--itx-cb-actions-gap: var(--itx-spacing-1);
 
 	/*

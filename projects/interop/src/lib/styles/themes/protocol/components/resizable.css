@@ -39,7 +39,8 @@
 	--itx-resizable-handle-color: var(--itx-contrast-3);
 	--itx-resizable-handle-color-hover: var(--itx-contrast-4);
 	--itx-resizable-handle-color-active: var(--itx-colorway-solid);
-	--itx-resizable-handle-corner-radius: 2px 0 var(--itx-radius-2) 0;
+	--itx-resizable-handle-corner-radius: var(--itx-radius-nominal) 0
+		var(--itx-radius-2) 0;
 
 	/* ── Readout badge (Tier 1, with [showDimensions]) ─────────────────── */
 	--itx-resizable-readout-background-color: var(--itx-surface-below);

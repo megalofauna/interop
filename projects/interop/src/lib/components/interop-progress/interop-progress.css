@@ -65,7 +65,7 @@
 	width: 100%;
 	height: var(--itx-progress-height, 0.5rem);
 	border: none;
-	border-radius: var(--itx-progress-radius, 0);
+	border-radius: var(--itx-progress-radius, var(--itx-radius));
 	overflow: hidden;
 
 	/* Fill direction. Horizontal runs along the inline axis; vertical runs

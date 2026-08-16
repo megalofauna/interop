@@ -93,7 +93,7 @@
 	color: var(--itx-popover-foreground);
 	border: var(--itx-popover-border-width) var(--itx-popover-border-style)
 		var(--itx-popover-border-color);
-	border-radius: var(--itx-popover-border-radius);
+	border-radius: var(--itx-popover-border-radius, var(--itx-radius));
 	box-shadow: var(--itx-popover-shadow);
 
 	opacity: 1;

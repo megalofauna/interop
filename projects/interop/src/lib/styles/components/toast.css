@@ -75,7 +75,7 @@
 	border: var(--itx-toast-border-width) solid var(--itx-toast-border-color);
 	border-inline-start: var(--itx-toast-accent-width) solid
 		var(--itx-toast-accent-color);
-	border-radius: var(--itx-toast-border-radius);
+	border-radius: var(--itx-toast-border-radius, var(--itx-radius));
 	background: var(--itx-toast-background);
 	color: var(--itx-toast-foreground);
 	box-shadow: var(--itx-toast-shadow);
@@ -144,7 +144,7 @@
 		var(--itx-toast-action-padding-inline);
 	border: var(--itx-toast-action-border-width) solid
 		var(--itx-toast-action-border-color);
-	border-radius: var(--itx-toast-action-border-radius);
+	border-radius: var(--itx-toast-action-border-radius, var(--itx-radius));
 	background: transparent;
 	color: inherit;
 	font-size: var(--itx-toast-action-font-size);
@@ -171,7 +171,7 @@
 	block-size: var(--itx-toast-close-size);
 	padding: 0;
 	border: none;
-	border-radius: var(--itx-toast-close-border-radius);
+	border-radius: var(--itx-toast-close-border-radius, var(--itx-radius));
 	background: transparent;
 	color: inherit;
 	opacity: var(--itx-toast-close-opacity);

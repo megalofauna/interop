@@ -214,6 +214,32 @@ other legitimate survivors. `scripts/check-motion.mjs` enforces the rest, and a
 `var()` fallback is a chain (allowed) while a literal fallback is a second source
 of truth (rejected).
 
+## Radius
+
+`--itx-radius` is the global knob. A component that follows it puts the whole
+chain in its **structural** rule and declares **no theme default**:
+
+```css
+border-radius: var(--itx-<c>-border-radius, var(--itx-radius-attr, var(--itx-radius)));
+```
+
+Absence of a theme default is how a component says "I have no opinion", and it
+is load-bearing. The obvious alternative is the bug:
+
+```css
+/* WRONG — substitutes on the root and freezes there */
+:where([interop-root]) { --itx-<c>-border-radius: var(--itx-radius); }
+```
+
+17 of 29 radius defaults were written that way. Pin a default only when the
+shape is the point — a chip is a pill, a step indicator is a circle. "We draw it
+square" is not a reason to pin; the knob defaults to `none`.
+
+The same rule governs every cross-cutting token, radius or not: **an alias that
+reads a system token must be declared on the component, never on
+`[interop-root]`.** See `tokens/shape.spec.ts`, which holds both shapes side by
+side.
+
 ## Edges (border width & high contrast)
 
 **Never write a literal border width.** Read the semantic scale in

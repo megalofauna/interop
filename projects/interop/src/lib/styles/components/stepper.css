@@ -153,7 +153,7 @@
 	gap: var(--itx-stepper-gap, var(--itx-spacing-4));
 	padding: var(--itx-stepper-padding, 0);
 	background-color: var(--itx-stepper-background-color, transparent);
-	border-radius: var(--itx-stepper-border-radius, 0);
+	border-radius: var(--itx-stepper-border-radius, var(--itx-radius));
 	min-inline-size: 0;
 	/* Container query for the responsive menu trigger ([data-menu="auto"]). */
 	container-type: inline-size;
@@ -170,7 +170,7 @@
 :where(interop-stepper > .interop-stepper__viewport) {
 	padding: var(--itx-stepper-viewport-padding, 0);
 	background-color: var(--itx-stepper-viewport-background-color, transparent);
-	border-radius: var(--itx-stepper-viewport-border-radius, 0);
+	border-radius: var(--itx-stepper-viewport-border-radius, var(--itx-radius));
 	min-block-size: var(--itx-stepper-viewport-min-height, 0);
 	min-inline-size: 0;
 
@@ -567,7 +567,7 @@
 		var(--itx-border-width-hairline)
 	);
 	border-style: solid;
-	border-radius: var(--itx-stepper-menu-border-radius, 8px);
+	border-radius: var(--itx-stepper-menu-border-radius, var(--itx-radius));
 	box-shadow: var(--itx-stepper-menu-box-shadow, none);
 }
 

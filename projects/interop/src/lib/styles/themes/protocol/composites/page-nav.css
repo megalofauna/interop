@@ -40,7 +40,7 @@
 	--itx-pn-background-image: none;
 	--itx-pn-backdrop-filter: none;
 
-	--itx-pn-radius: 0;
+	--itx-pn-radius: var(--itx-radius);
 	--itx-pn-padding-block: var(--itx-spacing-4);
 	--itx-pn-padding-inline: var(--itx-spacing-2);
 	--itx-pn-border-width: var(--itx-border-width-thick);

@@ -47,7 +47,7 @@
 	background: var(--itx-tooltip-background, #333);
 	color: var(--itx-tooltip-foreground, #fff);
 	padding: var(--itx-tooltip-padding, 0.375rem 0.625rem);
-	border-radius: var(--itx-tooltip-border-radius, 0.25rem);
+	border-radius: var(--itx-tooltip-border-radius, var(--itx-radius));
 	font-size: var(--itx-tooltip-font-size, 0.8125rem);
 	max-inline-size: var(--itx-tooltip-max-width, 18rem);
 	box-shadow: var(--itx-tooltip-shadow, 0 2px 8px rgba(0 0 0 / 0.18));

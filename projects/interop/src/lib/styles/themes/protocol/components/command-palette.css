@@ -55,7 +55,7 @@
 	   sub-0.1 luminance delta against our surfaces, i.e. an edge you cannot
 	   see. Same value as the table's row rules and the tab list. */
 	--itx-cmdp-border-color: var(--itx-contrast-3);
-	--itx-cmdp-radius: var(--itx-radius-none);
+	--itx-cmdp-radius: var(--itx-radius);
 	--itx-cmdp-shadow: var(--itx-shadow-lg);
 	--itx-cmdp-backdrop: oklch(0 0 0 / 0.4);
 	--itx-cmdp-backdrop-filter: blur(2px);
@@ -112,7 +112,7 @@
 	--itx-cmdp-option-gap: var(--itx-spacing-3);
 	--itx-cmdp-option-padding-block: var(--itx-spacing-2_5);
 	--itx-cmdp-option-padding-inline: var(--itx-spacing-3);
-	--itx-cmdp-option-radius: var(--itx-radius-none);
+	--itx-cmdp-option-radius: var(--itx-radius);
 	--itx-cmdp-option-color: var(--itx-contrast-6);
 	--itx-cmdp-option-color-active: var(--itx-contrast-6);
 	--itx-cmdp-option-background-active: var(--itx-contrast-1);

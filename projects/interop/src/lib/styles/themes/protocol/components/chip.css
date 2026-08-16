@@ -113,7 +113,7 @@
 :where(fieldset[interop-chip-filter]) {
 	--itx-chip-filter-background: transparent;
 	--itx-chip-filter-border: none;
-	--itx-chip-filter-radius: 0;
+	--itx-chip-filter-radius: var(--itx-radius);
 	--itx-chip-filter-padding: 0;
 	--itx-chip-filter-gap: var(--itx-spacing-2); /* 8px */
 }

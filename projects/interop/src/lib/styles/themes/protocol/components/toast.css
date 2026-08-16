@@ -46,7 +46,6 @@
 	--itx-toast-foreground: var(--itx-contrast-6);
 	--itx-toast-border-width: 0px;
 	--itx-toast-border-color: var(--itx-contrast-3);
-	--itx-toast-border-radius: var(--itx-radius-none);
 
 	/* Carbon's status bar is 3px on the notification (the tree's edge marker
 	   is 4px — different components, different weights in Carbon too). It
@@ -92,7 +91,6 @@
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
 	--itx-toast-action-border-width: var(--itx-border-width-hairline);
 	--itx-toast-action-border-color: var(--itx-contrast-3);
-	--itx-toast-action-border-radius: var(--itx-radius-none);
 	--itx-toast-action-font-size: 0.875rem;
 	--itx-toast-action-font-weight: 400;
 	--itx-toast-action-background-hover: var(--itx-contrast-1);
@@ -105,7 +103,6 @@
 	 * full-strength in Carbon ($icon-primary) — hover moves the background,
 	 * not the fill.                                                       */
 	--itx-toast-close-size: var(--itx-spacing-8); /* 32px */
-	--itx-toast-close-border-radius: var(--itx-radius-none);
 	--itx-toast-close-opacity: 1;
 	--itx-toast-close-opacity-hover: 1;
 	--itx-toast-close-background-hover: var(--itx-contrast-1);

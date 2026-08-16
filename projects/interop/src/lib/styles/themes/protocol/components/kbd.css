@@ -14,7 +14,7 @@
 	/* box */
 	--itx-kbd-padding-block: 0.3em;
 	--itx-kbd-padding-inline: 0.45em;
-	--itx-kbd-radius: var(--itx-radius-none);
+	--itx-kbd-radius: var(--itx-radius);
 
 	/* type — monospace key caps */
 	--itx-kbd-font-family: var(--itx-font-family-mono);

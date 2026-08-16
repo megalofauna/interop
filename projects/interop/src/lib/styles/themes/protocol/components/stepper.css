@@ -17,14 +17,12 @@
 	--itx-stepper-gap: var(--itx-spacing-5);
 	--itx-stepper-padding: 0;
 	--itx-stepper-background-color: transparent;
-	--itx-stepper-border-radius: 0;
 
 	/* ── Nav region ─────────────────────────────────────────────────────── */
 	--itx-stepper-nav-padding: 0;
 
 	/* ── Viewport region ────────────────────────────────────────────────── */
 	--itx-stepper-viewport-padding: 0;
-	--itx-stepper-viewport-border-radius: 0;
 	--itx-stepper-viewport-min-height: 386px;
 	/* Vertical scroll-snap requires a defined viewport height. Horizontal
 	   mode ignores this and uses natural panel height. */
@@ -53,7 +51,6 @@
 	/* Squared, like every other surface the borrow rounds have touched. The old
 	   value also read --itx-radius-4 with an 8px fallback, but that token is
 	   16px — the fallback was describing a different shape from the token. */
-	--itx-stepper-menu-border-radius: var(--itx-radius-none);
 	--itx-stepper-menu-box-shadow:
 		0 4px 12px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06);
 
@@ -69,7 +66,7 @@
 
 	/* ── Step indicator — structure ─────────────────────────────────────── */
 	/*--itx-step-indicator-size: 1.75rem;*/
-	--itx-step-indicator-border-radius: 9999px;
+	--itx-step-indicator-border-radius: var(--itx-radius-full);
 	--itx-step-indicator-border-width: var(--itx-border-width-thick);
 	--itx-step-indicator-border-style: solid;
 	/* Fixed rem, not --itx-font-size-*. The role tokens are fluid clamp()
