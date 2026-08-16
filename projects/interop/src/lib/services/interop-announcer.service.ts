@@ -96,10 +96,15 @@ export class InteropAnnouncer implements OnDestroy {
     el.setAttribute("aria-live", politeness);
     el.setAttribute("aria-atomic", "true");
     el.setAttribute("aria-relevant", "additions");
-    // Visually hidden — present in DOM and accessible to AT, not visible to sighted users.
-    el.style.cssText =
-      "position:absolute;width:1px;height:1px;padding:0;margin:-1px;" +
-      "overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0";
+    // Visually hidden — present in DOM and accessible to AT, not visible to
+    // sighted users. Reads the shared utility rather than inlining a tenth copy
+    // of the same nine declarations; see styles/utilities/visually-hidden.css.
+    //
+    // This does mean the announcer depends on the library's global stylesheet
+    // being imported. That is already the library's contract — every component
+    // is unstyled without it — and the alternative is a copy that drifts, which
+    // is exactly what happened to the other nine.
+    el.className = "interop-sr-only";
     return el;
   }
 }

@@ -81,17 +81,6 @@
 /* Visually hides content while keeping it in the accessibility tree.
    Used by chip-filter (sr-only legend) and chip-option (sr-only checkbox). */
 
-:where(.interop-sr-only) {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
 
 /* ── Shared chip base ────────────────────────────────────────────────────── */
 /* Common visual paint for every chip-shaped element. Height is stated, not

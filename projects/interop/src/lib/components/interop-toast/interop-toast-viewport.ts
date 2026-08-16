@@ -53,7 +53,7 @@ import { InteropToastItem } from './interop-toast-item';
   template: `
     <!-- Polite live region (pre-rendered, primed before content) -->
     <div
-      class="interop-toast-viewport__live-region"
+      class="interop-sr-only"
       aria-live="polite"
       aria-atomic="true"
       aria-relevant="additions text">
@@ -61,7 +61,7 @@ import { InteropToastItem } from './interop-toast-item';
 
     <!-- Assertive live region for error toasts -->
     <div
-      class="interop-toast-viewport__live-region"
+      class="interop-sr-only"
       aria-live="assertive"
       aria-atomic="true"
       aria-relevant="additions text">

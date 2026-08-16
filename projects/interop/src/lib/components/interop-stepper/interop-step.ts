@@ -96,7 +96,7 @@ import {
 				}
 			</span>
 			@if (statusSuffix(); as suffix) {
-				<span class="interop-step__status">{{ suffix }}</span>
+				<span class="interop-sr-only">{{ suffix }}</span>
 			}
 		</button>
 	`,
