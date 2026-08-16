@@ -81,7 +81,8 @@
 		transparent calc(var(--itx-progress-percent, 0) * 1%) 100%
 	);
 
-	transition: --itx-progress-percent var(--itx-progress-duration)
+	transition: --itx-progress-percent
+		var(--itx-progress-duration, var(--itx-duration-fast))
 		var(--itx-easing-standard);
 }
 

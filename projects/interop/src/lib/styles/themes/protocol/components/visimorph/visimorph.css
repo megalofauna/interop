@@ -14,8 +14,6 @@
 :where([interop-root]) {
 	/* ── Sizing ─────────────────────────────────────────────────────────── */
 	--itx-control-size: 1.25rem;
-	--itx-control-border-width: var(--itx-border-width-thick);
-	--itx-control-radius: var(--itx-inner-radius, 4px);
 	--itx-control-dot-size: 0.625rem;
 	--itx-control-check-weight: 3px;
 	--itx-control-check-weight-indeterminate: 4px;
@@ -47,6 +45,5 @@
 	--itx-control-focus-scale: 0.875;
 
 	/* ── Motion / a11y ──────────────────────────────────────────────────── */
-	--itx-control-transition: var(--itx-duration-fast) var(--itx-easing-standard);
 	--itx-control-disabled-opacity: 0.5;
 }

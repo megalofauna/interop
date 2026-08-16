@@ -92,7 +92,6 @@
 	 * NB --itx-radius-0 does not exist; --itx-radius-none is the zero token.
 	 */
 
-	--itx-popover-border-width: var(--itx-border-width-hairline);
 	--itx-popover-border-style: solid;
 
 	/*
@@ -136,10 +135,6 @@
 	 * For other placements the translate axis still works visually — the panel
 	 * fades in from the trigger axis with a slight slide.
 	 */
-	--itx-popover-enter-duration: var(--itx-duration-fast);
-	--itx-popover-exit-duration: var(--itx-duration-fast);
-	--itx-popover-enter-easing: var(--itx-easing-decelerate);
-	--itx-popover-exit-easing: var(--itx-easing-accelerate);
 	--itx-popover-enter-translate: 0 -0.25rem;
 	--itx-popover-exit-translate: 0 -0.25rem;
 

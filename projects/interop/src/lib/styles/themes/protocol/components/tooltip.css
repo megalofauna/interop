@@ -24,8 +24,4 @@
 	--itx-tooltip-shadow: var(--itx-shadow-sm);
 
 	/* ── Animation ──────────────────────────────────────────────────── */
-	--itx-tooltip-enter-duration: var(--itx-duration-fast);
-	--itx-tooltip-exit-duration: var(--itx-duration-fast);
-	--itx-tooltip-enter-easing: var(--itx-easing-decelerate);
-	--itx-tooltip-exit-easing: var(--itx-easing-accelerate);
 }

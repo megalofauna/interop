@@ -111,10 +111,13 @@
 	list-style: none;
 	opacity: 1;
 	transition:
-		opacity var(--itx-tree-transition-duration)
-			var(--itx-tree-transition-easing),
-		display var(--itx-tree-transition-duration) allow-discrete,
-		content-visibility var(--itx-tree-transition-duration) allow-discrete;
+		opacity var(--itx-tree-transition-duration, var(--itx-duration-fast))
+			var(--itx-tree-transition-easing, var(--itx-easing-standard)),
+		display var(--itx-tree-transition-duration, var(--itx-duration-fast))
+			allow-discrete,
+		content-visibility
+			var(--itx-tree-transition-duration, var(--itx-duration-fast))
+			allow-discrete;
 
 	@starting-style {
 		opacity: 0;
@@ -217,11 +220,13 @@
 	box-shadow: inset var(--itx-tree-row-accent-width) 0 0 0
 		var(--itx-tree-row-accent-color);
 	transition:
-		background-color var(--itx-tree-transition-duration)
-			var(--itx-tree-transition-easing),
-		box-shadow var(--itx-tree-transition-duration)
-			var(--itx-tree-transition-easing),
-		color var(--itx-tree-transition-duration) var(--itx-tree-transition-easing);
+		background-color
+			var(--itx-tree-transition-duration, var(--itx-duration-fast))
+			var(--itx-tree-transition-easing, var(--itx-easing-standard)),
+		box-shadow var(--itx-tree-transition-duration, var(--itx-duration-fast))
+			var(--itx-tree-transition-easing, var(--itx-easing-standard)),
+		color var(--itx-tree-transition-duration, var(--itx-duration-fast))
+			var(--itx-tree-transition-easing, var(--itx-easing-standard));
 
 	&:where(:hover) {
 		background-color: var(
@@ -353,8 +358,9 @@
 		)
 		solid currentColor;
 	rotate: var(--itx-tree-toggle-rotation);
-	transition: rotate var(--itx-tree-transition-duration)
-		var(--itx-tree-transition-easing);
+	transition: rotate
+		var(--itx-tree-transition-duration, var(--itx-duration-fast))
+		var(--itx-tree-transition-easing, var(--itx-easing-standard));
 }
 
 :where([interop-tree-toggle][data-expanded]:empty)::before {

@@ -237,8 +237,28 @@ square" is not a reason to pin; the knob defaults to `none`.
 
 The same rule governs every cross-cutting token, radius or not: **an alias that
 reads a system token must be declared on the component, never on
-`[interop-root]`.** See `tokens/shape.spec.ts`, which holds both shapes side by
-side.
+`[interop-root]`.** `scripts/check-shape.mjs` fails the build on both halves —
+a literal radius, and a system token aliased at the root.
+
+What makes this bug so durable is that it *half*-works. A media override
+(reduced motion, high contrast) also targets the root, lands on the same
+element, and still applies — so the behaviour everyone checks by hand looks
+correct. Only a consumer's subtree override silently fails.
+
+**Rescaling a subtree** needs more than a chain. A derived step
+(`calc(var(--itx-radius-base) * 2)`) substitutes where it is declared, so a base
+override below the root changes an input to a calculation that already ran. The
+ramps are therefore re-declared on `[itx-scale-scope]`:
+
+```html
+<section itx-scale-scope style="--itx-radius-base: 8px">
+```
+
+That rescales radius, border width and duration for the subtree,
+proportionally. It is opt-in rather than on `*` because the alternative is
+re-declaring ~20 custom properties on every element in the document.
+`tokens/baking.spec.ts` and `tokens/shape.spec.ts` hold all of this as
+executable cases.
 
 ## Edges (border width & high contrast)
 
@@ -272,7 +292,7 @@ means following the user's colours, not the brand's.
 
 ## Linting
 
-`npm run lint` runs four guards; `npm run lint:css` is the stylelint one.
+`npm run lint` runs five guards; `npm run lint:css` is the stylelint one.
 
 Stylelint was configured long before it was installed, and its config had never
 been executed — `custom-property-pattern` was written as `^--(itx-…)$`, but

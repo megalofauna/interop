@@ -76,7 +76,10 @@
 	--_bg: var(--itx-control-bg, var(--itx-contrast-1, #ffffff));
 	--_accent: var(--itx-control-accent, var(--itx-contrast-6));
 	--_indicator: var(--itx-control-indicator, var(--itx-contrast-1, #ffffff));
-	--_radius: var(--itx-control-radius, 4px);
+	--_radius: var(
+		--itx-control-radius,
+		var(--itx-inner-radius, var(--itx-radius))
+	);
 	--_dot-size: var(--itx-control-dot-size, 0.625rem);
 	--_check-weight: var(--itx-control-check-weight, 3px);
 	--_transition: var(
@@ -210,7 +213,7 @@
 	position: absolute;
 	width: var(--_toggle-thumb-width);
 	height: var(--_toggle-thumb-size);
-	border-radius: 999px;
+	border-radius: var(--itx-radius-full);
 	background-color: var(--_toggle-thumb-color);
 	top: 50%;
 	left: 2px;

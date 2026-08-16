@@ -36,10 +36,6 @@
 	/* Generic, deliberately not segmented-control-specific: also read by the
 	   indicator and visimorph themes. Left at their existing values — the
 	   control now states its own radii below rather than moving these. */
-	--itx-outer-radius: var(--itx-radius-2);
-	--itx-inner-radius: calc(
-		var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
-	);
 
 	/* ── Container — track ──────────────────────────────────────────────── */
 	--itx-segmented-control-track-display: flex;
@@ -139,8 +135,6 @@
 	   spilling over the neighbouring segment. */
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
-	--itx-segment-transition-duration: var(--itx-duration-speedy);
-	--itx-segment-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── Segment — disabled ─────────────────────────────────────────────── */
 	--itx-segment-disabled-opacity: 0.4;
@@ -159,6 +153,14 @@
  */
 
 :where(fieldset[interop-segmented-control]) {
+	/* Managed radii — declared HERE, not on [interop-root]. Parked on the root
+	   they substituted there and froze, so a consumer rescaling radius for a
+	   subtree could not reach them. The indicator and visimorph read these by
+	   inheritance, which still works: both render inside this element. */
+	--itx-outer-radius: var(--itx-radius-2);
+	--itx-inner-radius: calc(
+		var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
+	);
 	/* Divider — $border-subtle, 1px. segment.css already suppresses it on
 	   either side of the selected segment. */
 	--itx-rule-color: var(--itx-contrast-2);

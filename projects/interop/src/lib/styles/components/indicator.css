@@ -66,7 +66,10 @@
 	border-color: var(--itx-indicator-border-color, transparent);
 	border-width: var(--itx-indicator-border-width, 0);
 	border-style: var(--itx-indicator-border-style, solid);
-	border-radius: var(--itx-indicator-border-radius, 0);
+	border-radius: var(
+		--itx-indicator-border-radius,
+		var(--itx-inner-radius, var(--itx-radius))
+	);
 	box-shadow: var(--itx-indicator-box-shadow, none);
 }
 
@@ -82,8 +85,14 @@
 		left: calc(anchor(left) + var(--itx-indicator-inset));
 
 		transition-property: top, right, bottom, left;
-		transition-duration: var(--itx-indicator-transition-duration);
-		transition-timing-function: var(--itx-indicator-transition-timing-function);
+		transition-duration: var(
+			--itx-indicator-transition-duration,
+			var(--itx-duration-fast)
+		);
+		transition-timing-function: var(
+			--itx-indicator-transition-timing-function,
+			var(--itx-easing-standard)
+		);
 	}
 }
 

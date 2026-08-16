@@ -59,18 +59,22 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration) var(--itx-tooltip-enter-easing),
-			transform var(--itx-tooltip-enter-duration)
-				var(--itx-tooltip-enter-easing),
-			overlay var(--itx-tooltip-enter-duration) allow-discrete,
-			display var(--itx-tooltip-enter-duration) allow-discrete;
+			opacity var(--itx-tooltip-enter-duration, var(--itx-duration-fast))
+				var(--itx-tooltip-enter-easing, var(--itx-easing-decelerate)),
+			transform var(--itx-tooltip-enter-duration, var(--itx-duration-fast))
+				var(--itx-tooltip-enter-easing, var(--itx-easing-decelerate)),
+			overlay var(--itx-tooltip-enter-duration, var(--itx-duration-fast))
+				allow-discrete,
+			display var(--itx-tooltip-enter-duration, var(--itx-duration-fast))
+				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration) var(--itx-tooltip-enter-easing),
-			transform var(--itx-tooltip-enter-duration)
-				var(--itx-tooltip-enter-easing);
+			opacity var(--itx-tooltip-enter-duration, var(--itx-duration-fast))
+				var(--itx-tooltip-enter-easing, var(--itx-easing-decelerate)),
+			transform var(--itx-tooltip-enter-duration, var(--itx-duration-fast))
+				var(--itx-tooltip-enter-easing, var(--itx-easing-decelerate));
 	}
 }
 

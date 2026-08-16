@@ -47,9 +47,6 @@
 	--itx-table-stripe-bg: transparent;
 
 	--itx-table-row-hover-bg: var(--itx-contrast-1);
-	--itx-table-row-border-width: var(--itx-border-width-hairline);
-	--itx-table-row-transition-duration: var(--itx-duration-fast);
-	--itx-table-row-transition-easing: var(--itx-easing-standard);
 
 	/* ── Header ─────────────────────────────────────────────────────────── */
 	/* Carbon separates the header from the body with a solid gray-20 slab and
@@ -63,7 +60,6 @@
 	--itx-table-header-font-weight: 600;
 	/* One hairline weight everywhere; the old 2px underline was a second,
 	   heavier border language competing with the row rules. */
-	--itx-table-header-border-width: var(--itx-border-width-hairline);
 
 	/* Sort indicator. These two were read by the foundation but never given a
 	   value here — they were surviving on inline fallbacks, which is exactly

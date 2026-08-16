@@ -134,7 +134,7 @@ mark {
 	background: var(--itx-surface);
 	color: var(--interop-content-color);
 	padding: 0 0.15em;
-	border-radius: 2px;
+	border-radius: var(--itx-radius);
 }
 del {
 	text-decoration: line-through;
@@ -168,7 +168,7 @@ pre {
 	margin: 0 0 var(--interop-content-paragraph-gap) 0;
 	padding: var(--itx-spacing-4);
 	background: var(--itx-surface-below);
-	border-radius: 6px;
+	border-radius: var(--itx-radius);
 	overflow-x: auto;
 }
 

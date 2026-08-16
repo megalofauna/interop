@@ -93,9 +93,12 @@
 	opacity: 1;
 	scale: 1;
 	transition:
-		opacity var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
-		scale var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
-		translate var(--itx-toast-enter-duration) var(--itx-toast-enter-easing);
+		opacity var(--itx-toast-enter-duration, var(--itx-duration-base))
+			var(--itx-toast-enter-easing, var(--itx-easing-decelerate)),
+		scale var(--itx-toast-enter-duration, var(--itx-duration-base))
+			var(--itx-toast-enter-easing, var(--itx-easing-decelerate)),
+		translate var(--itx-toast-enter-duration, var(--itx-duration-base))
+			var(--itx-toast-enter-easing, var(--itx-easing-decelerate));
 
 	&:where(:focus-visible) {
 		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
@@ -142,8 +145,8 @@
 :where(interop-toast-item .interop-toast-item__action-btn) {
 	padding: var(--itx-toast-action-padding-block)
 		var(--itx-toast-action-padding-inline);
-	border: var(--itx-toast-action-border-width) solid
-		var(--itx-toast-action-border-color);
+	border: var(--itx-toast-action-border-width, var(--itx-border-width-hairline))
+		solid var(--itx-toast-action-border-color);
 	border-radius: var(--itx-toast-action-border-radius, var(--itx-radius));
 	background: transparent;
 	color: inherit;

@@ -15,7 +15,6 @@
 	/* ── Appearance ─────────────────────────────────────────────────────── */
 	--itx-dialog-background: var(--itx-surface-above);
 	--itx-dialog-foreground: var(--itx-contrast-6);
-	--itx-dialog-border-width: var(--itx-border-width-thick);
 	/*
 	 * Stated directly, NOT as var(--itx-contrast-3).
 	 *
@@ -39,8 +38,4 @@
 	--itx-dialog-backdrop-blur: 2px;
 
 	/* ── Animation ──────────────────────────────────────────────────────── */
-	--itx-dialog-enter-duration: var(--itx-duration-base);
-	--itx-dialog-exit-duration: var(--itx-duration-fast);
-	--itx-dialog-enter-easing: var(--itx-easing-decelerate);
-	--itx-dialog-exit-easing: var(--itx-easing-accelerate);
 }

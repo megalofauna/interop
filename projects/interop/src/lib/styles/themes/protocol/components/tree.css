@@ -72,6 +72,4 @@
 	/* ── Focus ──────────────────────────────────────────────────────────── */
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
-	--itx-tree-transition-duration: var(--itx-duration-fast);
-	--itx-tree-transition-easing: var(--itx-easing-standard);
 }

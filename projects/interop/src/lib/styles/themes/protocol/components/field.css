@@ -60,7 +60,6 @@
 	--itx-field-invalid-icon-size: 1rem;
 	/* Carbon transitions at $duration-fast-01 (70ms); 100ms is the nearest step
 	   this system ships. */
-	--itx-field-transition-duration: var(--itx-duration-fast);
 
 	/* ── Value text ──────────────────────────────────────────────────────── */
 	/* Carbon $body-compact-01 — 14 / 18. Fixed rem, pinned box. */

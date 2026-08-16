@@ -80,8 +80,6 @@
 	--itx-toast-description-opacity: 1;
 
 	/* ── Item — motion ──────────────────────────────────────────────────── */
-	--itx-toast-enter-duration: var(--itx-duration-base);
-	--itx-toast-enter-easing: var(--itx-easing-decelerate);
 
 	/* ── Actions ──────────────────────────────────────────────────────────
 	 * Carbon's action is a 32px ghost button in $body-compact-01. The 1px
@@ -89,7 +87,6 @@
 	--itx-toast-actions-gap: var(--itx-spacing-2);
 	--itx-toast-action-padding-block: var(--itx-spacing-2);
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
-	--itx-toast-action-border-width: var(--itx-border-width-hairline);
 	--itx-toast-action-border-color: var(--itx-contrast-3);
 	--itx-toast-action-font-size: 0.875rem;
 	--itx-toast-action-font-weight: 400;

@@ -153,9 +153,10 @@
 	border-radius: var(--itx-field-border-radius, var(--itx-radius));
 
 	transition:
-		background-color var(--itx-field-transition-duration)
+		background-color
+			var(--itx-field-transition-duration, var(--itx-duration-fast))
 			var(--itx-easing-standard),
-		outline-color var(--itx-field-transition-duration)
+		outline-color var(--itx-field-transition-duration, var(--itx-duration-fast))
 			var(--itx-easing-standard);
 
 	/*

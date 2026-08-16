@@ -105,7 +105,7 @@
 	padding-inline: var(--itx-chip-padding-inline);
 	background: var(--itx-chip-background);
 	border: var(--itx-chip-border);
-	border-radius: var(--itx-chip-radius);
+	border-radius: var(--itx-chip-radius, var(--itx-radius-lg));
 	color: var(--itx-chip-color);
 	font-size: var(--itx-chip-font-size);
 	font-weight: var(--itx-chip-font-weight);
@@ -163,18 +163,21 @@
 	--itx-chip-background-hover: var(--itx-chip-selectable-background-hover);
 	--itx-chip-color: var(--itx-chip-selectable-color);
 	--itx-chip-color-hover: var(--itx-chip-selectable-color-hover);
-	--itx-chip-border: var(--itx-chip-selectable-border);
+	--itx-chip-border: var(
+		--itx-chip-selectable-border,
+		var(--itx-border-width-thick) solid transparent
+	);
 
 	position: relative;
 	cursor: pointer;
 	user-select: none;
 	transition:
-		background var(--itx-chip-transition-duration)
-			var(--itx-chip-transition-timing-function),
-		color var(--itx-chip-transition-duration)
-			var(--itx-chip-transition-timing-function),
-		border-color var(--itx-chip-transition-duration)
-			var(--itx-chip-transition-timing-function);
+		background var(--itx-chip-transition-duration, var(--itx-duration-fast))
+			var(--itx-chip-transition-timing-function, var(--itx-easing-standard)),
+		color var(--itx-chip-transition-duration, var(--itx-duration-fast))
+			var(--itx-chip-transition-timing-function, var(--itx-easing-standard)),
+		border-color var(--itx-chip-transition-duration, var(--itx-duration-fast))
+			var(--itx-chip-transition-timing-function, var(--itx-easing-standard));
 }
 
 :where(label[interop-chip-option]:hover:not([data-disabled])) {
@@ -185,7 +188,10 @@
 :where(label[interop-chip-option][data-checked]) {
 	--itx-chip-background: var(--itx-chip-background-selected);
 	--itx-chip-color: var(--itx-chip-color-selected);
-	--itx-chip-border: var(--itx-chip-border-selected);
+	--itx-chip-border: var(
+		--itx-chip-border-selected,
+		var(--itx-border-width-thick) solid var(--itx-colorway-border)
+	);
 	--itx-chip-font-weight: var(--itx-chip-font-weight-selected);
 }
 
@@ -258,8 +264,9 @@
 	cursor: pointer;
 	font-size: var(--itx-chip-remove-font-size);
 	line-height: 1;
-	transition: background var(--itx-chip-transition-duration)
-		var(--itx-chip-transition-timing-function);
+	transition: background
+		var(--itx-chip-transition-duration, var(--itx-duration-fast))
+		var(--itx-chip-transition-timing-function, var(--itx-easing-standard));
 }
 
 :where(.itx-chip-remove:hover:not(:disabled)) {

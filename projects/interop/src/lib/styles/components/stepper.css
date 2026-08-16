@@ -687,7 +687,10 @@
 	flex: none;
 	inline-size: var(--_size);
 	block-size: var(--_size);
-	border-radius: var(--itx-step-indicator-border-radius, 50%);
+	border-radius: var(
+		--itx-step-indicator-border-radius,
+		var(--itx-radius-full)
+	);
 	font-size: var(--itx-step-indicator-font-size, 0.8125rem);
 	font-weight: var(--itx-step-indicator-font-weight, 600);
 	line-height: 1;
@@ -698,9 +701,13 @@
 		var(--itx-step-indicator-border-style, solid) var(--_indicator-border-color);
 
 	transition-property: background-color, color, border-color;
-	transition-duration: var(--itx-step-indicator-transition-duration);
+	transition-duration: var(
+		--itx-step-indicator-transition-duration,
+		var(--itx-duration-fast)
+	);
 	transition-timing-function: var(
-		--itx-step-indicator-transition-timing-function
+		--itx-step-indicator-transition-timing-function,
+		var(--itx-easing-standard)
 	);
 }
 
@@ -905,8 +912,12 @@
 	content: "";
 	position: absolute;
 	background: var(--_connector-color);
-	transition: background-color var(--itx-step-indicator-transition-duration)
-		var(--itx-step-indicator-transition-timing-function);
+	transition: background-color
+		var(--itx-step-indicator-transition-duration, var(--itx-duration-fast))
+		var(
+			--itx-step-indicator-transition-timing-function,
+			var(--itx-easing-standard)
+		);
 	z-index: 0;
 }
 
