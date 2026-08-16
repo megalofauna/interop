@@ -64,7 +64,10 @@
 	background-color: var(--itx-indicator-background-color, transparent);
 	background-image: var(--itx-indicator-background-image, none);
 	border-color: var(--itx-indicator-border-color, transparent);
-	border-width: var(--itx-indicator-border-width, 0);
+	border-width: var(
+		--itx-indicator-border-width,
+		var(--itx-border-width-thick)
+	);
 	border-style: var(--itx-indicator-border-style, solid);
 	border-radius: var(
 		--itx-indicator-border-radius,

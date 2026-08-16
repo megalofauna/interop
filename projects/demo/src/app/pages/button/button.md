@@ -222,7 +222,6 @@ variants: append `-hover` or `-active` to the rest token (for example,
 | Token | Role |
 |---|---|
 | `--itx-button-background` | Fill colour (rest / `-hover` / `-active`) |
-| `--itx-button-background-image` | Gradient or image fill for the pill |
 | `--itx-button-foreground` | Text and icon colour (rest / `-hover` / `-active`) |
 | `--itx-button-border-color` | Border colour (rest / `-hover` / `-active`) |
 | `--itx-button-border-width` | Border thickness |

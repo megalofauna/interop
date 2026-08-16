@@ -1,0 +1,88 @@
+/*
+ * Decoration layer — an opt-in painting surface behind any component's content.
+ *
+ * ─── What it is for ─────────────────────────────────────────────────────────
+ *
+ * Things Interop proper has no opinion about: a gradient wash, a noise texture,
+ * a sheen that sweeps on hover, a brand watermark. Interop ships the wiring;
+ * whether to use it is entirely the consumer's call.
+ *
+ * ─── Why a pseudo-element and not just background-image ─────────────────────
+ *
+ * For a plain image or gradient, it would not be worth it — `background-image:
+ * var(--itx-x-bg)` is already inert when the token is unset, costs one line and
+ * generates no box. The difference is that a background cannot be TRANSFORMED.
+ * A layer that sweeps, rotates, parallaxes or animates independently of the
+ * element needs a box of its own. That is the whole justification; if you only
+ * want a gradient fill, set `background-image` on the component and skip this.
+ *
+ * ─── Usage ──────────────────────────────────────────────────────────────────
+ *
+ *   <button interop-button itx-decoration
+ *           style="--itx-decoration-image: linear-gradient(...)">
+ *
+ * The attribute is the opt-in. Without it, nothing here applies at all — no
+ * box is generated, so the cost of shipping this is stylesheet bytes and
+ * nothing else.
+ *
+ * ─── Tokens ─────────────────────────────────────────────────────────────────
+ *
+ *   --itx-decoration-image       Any <image>: gradient, url(), paint().
+ *   --itx-decoration-size        background-size            (default: cover)
+ *   --itx-decoration-position    background-position        (default: center)
+ *   --itx-decoration-repeat      background-repeat          (default: no-repeat)
+ *   --itx-decoration-blend       mix-blend-mode             (default: normal)
+ *   --itx-decoration-opacity     Layer opacity              (default: 1)
+ *   --itx-decoration-transform   The reason this is a box rather than a
+ *                                background — transforms, and transitions of
+ *                                them, that a background cannot have.
+ *   --itx-decoration-inset       Distance from the host's edges (default: 0)
+ *
+ * Set any of them on the element, or on any ancestor for a whole subtree —
+ * they are plain inherited custom properties.
+ *
+ * ─── The two load-bearing details ───────────────────────────────────────────
+ *
+ * `z-index: -1` puts the layer above the host's OWN background and below its
+ * text. Painting order runs: element background, then negative-z descendants,
+ * then inline content — so -1 is the only value that lands between them.
+ *
+ * That only holds while the host establishes a stacking context. Without one
+ * the layer escapes behind an ancestor's background and disappears, so the
+ * rule below sets `isolation: isolate` on any decorated element. Components
+ * that already isolate (button does) are unaffected.
+ *
+ * `border-radius: inherit` keeps the layer clipped to the host's corners. It
+ * requires the host to carry its own radius — which is why this arrived
+ * alongside flattening the button's pseudo-element pill onto the button
+ * itself. A component that paints its radius on a pseudo cannot use this.
+ */
+
+:where([itx-decoration]) {
+	position: relative;
+	isolation: isolate;
+}
+
+:where([itx-decoration])::before {
+	content: "";
+	position: absolute;
+	inset: var(--itx-decoration-inset, 0);
+	z-index: -1;
+	pointer-events: none;
+
+	border-radius: inherit;
+	background-image: var(--itx-decoration-image);
+	background-size: var(--itx-decoration-size, cover);
+	background-position: var(--itx-decoration-position, center);
+	background-repeat: var(--itx-decoration-repeat, no-repeat);
+	mix-blend-mode: var(--itx-decoration-blend, normal);
+	opacity: var(--itx-decoration-opacity, 1);
+	transform: var(--itx-decoration-transform, none);
+
+	transition-property: opacity, transform;
+	transition-duration: var(--itx-decoration-duration, var(--itx-duration-base));
+	transition-timing-function: var(
+		--itx-decoration-easing,
+		var(--itx-easing-standard)
+	);
+}

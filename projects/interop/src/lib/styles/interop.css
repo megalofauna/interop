@@ -112,3 +112,4 @@
 
 @import "./utilities/rule.css" layer(interop.foundation);
 @import "./utilities/visually-hidden.css" layer(interop.foundation);
+@import "./utilities/decoration.css" layer(interop.foundation);

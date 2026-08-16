@@ -137,8 +137,11 @@
 	color: var(--itx-table-header-color, inherit);
 	text-align: start;
 	white-space: nowrap;
-	border-block-end: var(--itx-table-header-border-width, 2px) solid
-		var(--itx-table-border, currentColor);
+	border-block-end: var(
+			--itx-table-header-border-width,
+			var(--itx-border-width-hairline)
+		)
+		solid var(--itx-table-border, currentColor);
 }
 
 /* ── Body ────────────────────────────────────────────────────────────────── */
@@ -149,8 +152,11 @@
 	   is the wrap gutter and is always set below the step so it never fights
 	   this value on single-line rows. */
 	block-size: var(--itx-table-row-block-size);
-	border-block-end: var(--itx-table-row-border-width, 1px) solid
-		var(--itx-table-border, currentColor);
+	border-block-end: var(
+			--itx-table-row-border-width,
+			var(--itx-border-width-hairline)
+		)
+		solid var(--itx-table-border, currentColor);
 	transition: background-color
 		var(--itx-table-row-transition-duration, var(--itx-duration-fast))
 		var(--itx-table-row-transition-easing, var(--itx-easing-standard));
@@ -224,8 +230,11 @@
  */
 
 :where(interop-table .interop-table-group-row) {
-	border-block-end: var(--itx-table-row-border-width, 1px) solid
-		var(--itx-table-border, currentColor);
+	border-block-end: var(
+			--itx-table-row-border-width,
+			var(--itx-border-width-hairline)
+		)
+		solid var(--itx-table-border, currentColor);
 }
 
 :where(interop-table .interop-table-group-label) {

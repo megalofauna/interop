@@ -154,11 +154,11 @@
 }
 
 :where(button[interop-button~="icon"]) {
-	/* Square — inline padding matches the height-derived block padding. */
-	--itx-button-padding-inline: calc(
-		(var(--itx-button-height, 2.5rem) - 1em) / 2
-	);
-	--itx-button-padding-block: var(--itx-button-padding-inline);
+	/* Square, stated rather than derived: the inline size matches the height
+	   floor. The old version reproduced the block-padding arithmetic on the
+	   inline axis, which only worked while line-height was exactly 1. */
+	--itx-button-min-width: var(--itx-button-height, 2.5rem);
+	--itx-button-padding-inline: 0;
 	--itx-button-max-width: none;
 }
 

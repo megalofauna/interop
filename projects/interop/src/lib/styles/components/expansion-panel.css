@@ -140,7 +140,10 @@
 	background-color: var(--itx-expansion-panel-background, transparent);
 	background-image: var(--itx-expansion-panel-background-image, none);
 	color: var(--itx-expansion-panel-foreground, inherit);
-	border-width: var(--itx-expansion-panel-border-width, 0);
+	border-width: var(
+		--itx-expansion-panel-border-width,
+		var(--itx-border-width-hairline)
+	);
 	border-style: var(--itx-expansion-panel-border-style, solid);
 	/* Block and inline edges are coloured separately: the block edges are the
 	   rules that separate stacked panels and carry the weight, while the inline

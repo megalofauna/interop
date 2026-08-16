@@ -48,6 +48,9 @@
 	--itx-button-font-size: inherit;
 	--itx-button-line-height: 1.25;
 
+	/* Sized by padding, not by the height floor — `auto` opts out of it so the
+	   toolbar keeps its 28px buttons rather than being pushed to the 40px base. */
+	--itx-button-height: auto;
 	--itx-button-padding-block: var(--itx-spacing-1);
 	--itx-button-padding-inline: var(--itx-spacing-1);
 
