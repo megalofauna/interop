@@ -31,7 +31,6 @@
 	/* Determinate fill easing. Carbon's indeterminate is 1400ms, but that pace
 	   was set for a soft shimmer spanning the whole track; a single hard-edged
 	   band reads as sluggish at the same speed, so this runs quicker. */
-	--itx-progress-duration: var(--itx-duration-fast);
 	--itx-progress-indeterminate-duration: 1000ms;
 
 	/* Length of the travelling band, as a percentage of the track. Unitless,

@@ -37,6 +37,14 @@
 
 :where([interop-root]) {
 	--itx-duration-base: 200ms;
+}
+
+/* Derived steps are re-declared on [itx-scale-scope] so a subtree can rescale
+   its own timing, for the same reason the radius ramp is — a calc() resolves
+   where it is declared, so overriding the base below the root would otherwise
+   change an input to a calculation that already ran. See tokens/shape.css for
+   the full rationale, and tokens/baking.spec.ts for the executable version. */
+:where([interop-root], [itx-scale-scope]) {
 	--itx-duration-speedy: calc(var(--itx-duration-base) * 0.125);
 	--itx-duration-fast: calc(var(--itx-duration-base) * 0.5);
 	--itx-duration-slow: calc(var(--itx-duration-base) * 2);

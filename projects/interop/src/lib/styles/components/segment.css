@@ -111,8 +111,14 @@
 	z-index: 1;
 
 	transition-property: background-color, color, border-color;
-	transition-duration: var(--itx-segment-transition-duration);
-	transition-timing-function: var(--itx-segment-transition-timing-function);
+	transition-duration: var(
+		--itx-segment-transition-duration,
+		var(--itx-duration-speedy)
+	);
+	transition-timing-function: var(
+		--itx-segment-transition-timing-function,
+		var(--itx-easing-standard)
+	);
 }
 
 /* ── State-resolved private slots ────────────────────────────────────────── */

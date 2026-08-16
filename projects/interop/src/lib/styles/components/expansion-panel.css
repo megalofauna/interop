@@ -163,9 +163,13 @@
 		border-color,
 		box-shadow
 	);
-	transition-duration: var(--itx-expansion-panel-transition-duration);
+	transition-duration: var(
+		--itx-expansion-panel-transition-duration,
+		var(--itx-duration-fast)
+	);
 	transition-timing-function: var(
-		--itx-expansion-panel-transition-timing-function
+		--itx-expansion-panel-transition-timing-function,
+		var(--itx-easing-standard)
 	);
 }
 
@@ -225,8 +229,12 @@
 	line-height: var(--itx-expansion-panel-trigger-line-height);
 	text-align: start;
 	cursor: pointer;
-	transition: background var(--itx-expansion-panel-transition-duration)
-		var(--itx-expansion-panel-transition-timing-function);
+	transition: background
+		var(--itx-expansion-panel-transition-duration, var(--itx-duration-fast))
+		var(
+			--itx-expansion-panel-transition-timing-function,
+			var(--itx-easing-standard)
+		);
 }
 
 /*
@@ -296,8 +304,12 @@
 	border-inline-end: var(--itx-expansion-panel-trigger-arrow-stroke) solid
 		currentColor;
 	rotate: var(--itx-expansion-panel-trigger-arrow-rotation);
-	transition: rotate var(--itx-expansion-panel-transition-duration)
-		var(--itx-expansion-panel-transition-timing-function);
+	transition: rotate
+		var(--itx-expansion-panel-transition-duration, var(--itx-duration-fast))
+		var(
+			--itx-expansion-panel-transition-timing-function,
+			var(--itx-easing-standard)
+		);
 }
 
 :where(button[interop-expansion-trigger][aria-expanded="true"])::after {
@@ -380,8 +392,14 @@
 	background-color: var(--itx-expansion-panel-body-background, transparent);
 	background-image: var(--itx-expansion-panel-body-background-image, none);
 	transition: grid-template-rows
-		var(--itx-expansion-panel-body-transition-duration)
-		var(--itx-expansion-panel-body-transition-easing);
+		var(
+			--itx-expansion-panel-body-transition-duration,
+			var(--itx-duration-base)
+		)
+		var(
+			--itx-expansion-panel-body-transition-easing,
+			var(--itx-easing-standard)
+		);
 }
 
 :where([interop-expansion-body][data-expanded]) {
@@ -396,12 +414,33 @@
 	border-top-style: var(--itx-expansion-panel-body-divider-style, solid);
 	border-top-color: var(--itx-expansion-panel-body-divider-color, transparent);
 	transition:
-		padding-block var(--itx-expansion-panel-body-transition-duration)
-			var(--itx-expansion-panel-body-transition-easing),
-		border-top-width var(--itx-expansion-panel-body-transition-duration)
-			var(--itx-expansion-panel-body-transition-easing),
-		border-top-color var(--itx-expansion-panel-body-transition-duration)
-			var(--itx-expansion-panel-body-transition-easing);
+		padding-block
+			var(
+				--itx-expansion-panel-body-transition-duration,
+				var(--itx-duration-base)
+			)
+			var(
+				--itx-expansion-panel-body-transition-easing,
+				var(--itx-easing-standard)
+			),
+		border-top-width
+			var(
+				--itx-expansion-panel-body-transition-duration,
+				var(--itx-duration-base)
+			)
+			var(
+				--itx-expansion-panel-body-transition-easing,
+				var(--itx-easing-standard)
+			),
+		border-top-color
+			var(
+				--itx-expansion-panel-body-transition-duration,
+				var(--itx-duration-base)
+			)
+			var(
+				--itx-expansion-panel-body-transition-easing,
+				var(--itx-easing-standard)
+			);
 }
 
 /*

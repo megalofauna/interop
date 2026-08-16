@@ -10,7 +10,7 @@
 	--itx-term-delta-color: oklch(55% 0.12 140);
 	--itx-term-caret-color: oklch(83% 0.26 140);
 	--itx-term-scrollbar-color: oklch(28% 0.08 140);
-	--itx-term-radius: 6px;
+	--itx-term-radius: var(--itx-radius);
 	--itx-term-font-family: var(--itx-font-family-mono);
 }
 

@@ -39,9 +39,37 @@
  * the point: a chip is a pill, a step indicator is a circle.
  */
 
+/*
+ * The ramps are declared on [interop-root] AND on [itx-scale-scope], because a
+ * derived step substitutes where it is declared. `--itx-radius-2:
+ * calc(var(--itx-radius-base) * 2)` on the root resolves against the ROOT's
+ * base; setting --itx-radius-base on a subtree afterwards changes an input to a
+ * calculation that already ran, and silently does nothing.
+ *
+ * Re-declaring the ramp is the only way to re-derive it. So:
+ *
+ *   <section itx-scale-scope style="--itx-radius-base: 8px">
+ *
+ * rescales radius and border width for that subtree, proportionally, keeping
+ * the relationships between steps intact. Without the attribute, a base is
+ * root-only — which is why this is opt-in rather than declared on `*`: the
+ * alternative is re-declaring ~20 custom properties on every element in the
+ * document, and almost no subtree needs it.
+ *
+ * The knob --itx-radius is deliberately NOT re-declared here; doing so would
+ * reset it to `none` and clobber an inherited value. Set it inside the scope if
+ * you want it to follow the rescale.
+ */
+/* The bases live on the root ALONE. Declaring them in the scope block too would
+   reset them on every scoped element, so a scope could never inherit a base
+   from an ancestor — it would always snap back to the default. */
 :where([interop-root]) {
-	/* ── Primitive ramp — a single base rescales the whole system ────────── */
 	--itx-radius-base: 4px;
+	--itx-border-width-base: 1px;
+}
+
+:where([interop-root], [itx-scale-scope]) {
+	/* ── Primitive ramp — a single base rescales the whole system ────────── */
 	--itx-radius-0_5: calc(var(--itx-radius-base) * 0.5);
 	--itx-radius-1: var(--itx-radius-base);
 	--itx-radius-2: calc(var(--itx-radius-base) * 2);
@@ -62,7 +90,6 @@
 	--itx-radius-xl: var(--itx-radius-4); /* 16px */
 
 	/* ── Border width — primitive ramp ───────────────────────────────────── */
-	--itx-border-width-base: 1px;
 	--itx-border-width-1: var(--itx-border-width-base);
 	--itx-border-width-2: calc(var(--itx-border-width-base) * 2);
 	--itx-border-width-3: calc(var(--itx-border-width-base) * 3);

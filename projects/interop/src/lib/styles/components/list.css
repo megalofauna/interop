@@ -137,7 +137,7 @@
 	inline-size: var(--itx-list-marker-size, 2em);
 	block-size: var(--itx-list-marker-size, 2em);
 	border: var(--itx-list-marker-border, 2px solid currentColor);
-	border-radius: var(--itx-list-marker-radius, var(--itx-radius-full, 9999px));
+	border-radius: var(--itx-list-marker-radius, var(--itx-radius-full));
 	background: var(--itx-list-marker-background, transparent);
 	color: var(--itx-list-marker-color, inherit);
 	font-size: var(--itx-list-marker-font-size, 0.8em);

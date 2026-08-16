@@ -150,3 +150,79 @@ describe("Radius system — global knob", () => {
 		expect(radius(el(branch, "widget"))).toEqual("16px"); // the correct shape
 	});
 });
+
+/**
+ * [itx-scale-scope] — rescaling a subtree.
+ *
+ * The knob sets ONE radius. This sets the whole ramp, proportionally, so a
+ * subtree keeps the relationships between sm/md/lg while running bigger or
+ * tighter. It exists because a derived step substitutes where it is declared:
+ * without re-declaring the ramp, `--itx-radius-base` is root-only.
+ */
+
+/* prettier-ignore */
+const SCOPE_CSS = `
+	.sc-root { --itx-radius-base: 4px; }
+	.sc-root, .sc-root [itx-scale-scope] {
+		--itx-radius-1: var(--itx-radius-base);
+		--itx-radius-2: calc(var(--itx-radius-base) * 2);
+		--itx-radius-sm: var(--itx-radius-1);
+		--itx-radius-md: var(--itx-radius-2);
+	}
+	.box { border-radius: var(--itx-radius-md); }
+`;
+
+describe("Radius system — [itx-scale-scope]", () => {
+	let style: HTMLStyleElement;
+	let root: HTMLElement;
+
+	const el = (parent: HTMLElement, cls = "", attr?: string): HTMLElement => {
+		const node = document.createElement("div");
+		if (cls) node.className = cls;
+		if (attr) node.setAttribute(attr, "");
+		parent.appendChild(node);
+		return node;
+	};
+	const radius = (n: HTMLElement) => getComputedStyle(n).borderTopLeftRadius;
+
+	beforeEach(() => {
+		style = document.createElement("style");
+		style.textContent = SCOPE_CSS;
+		document.head.appendChild(style);
+		root = el(document.body, "sc-root");
+	});
+	afterEach(() => {
+		style.remove();
+		root.remove();
+	});
+
+	it("derives the ramp from the base at the root", () => {
+		expect(radius(el(root, "box"))).toEqual("8px");
+	});
+
+	it("rescales a subtree proportionally when the scope carries a new base", () => {
+		const scope = el(root, "", "itx-scale-scope");
+		scope.style.setProperty("--itx-radius-base", "8px");
+
+		expect(radius(el(scope, "box"))).toEqual("16px"); // md re-derived
+		expect(radius(el(root, "box"))).toEqual("8px"); // outside untouched
+	});
+
+	it("does NOT rescale without the attribute — the ramp stays root-derived", () => {
+		// The behaviour that motivated the attribute: a bare base override below
+		// the root changes an input to a calculation that already ran.
+		const plain = el(root);
+		plain.style.setProperty("--itx-radius-base", "8px");
+		expect(radius(el(plain, "box"))).toEqual("8px");
+	});
+
+	it("lets a scope inherit a base from above rather than snapping to the default", () => {
+		// Why the bases are declared on the root ALONE: if the scope block also
+		// declared --itx-radius-base, every scope would reset it to 4px.
+		const outer = el(root);
+		outer.style.setProperty("--itx-radius-base", "10px");
+		const scope = el(outer, "", "itx-scale-scope");
+
+		expect(radius(el(scope, "box"))).toEqual("20px");
+	});
+});

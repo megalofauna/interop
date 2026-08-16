@@ -32,11 +32,9 @@
 	 * that one ON the element, so an inherited value always loses).        */
 	--itx-chip-md-height: var(--itx-spacing-8); /* 32px */
 	--itx-chip-md-padding-inline: var(--itx-spacing-3); /* 12px */
-	--itx-chip-md-radius: var(--itx-radius-lg); /* 12px */
 
 	--itx-chip-sm-height: var(--itx-spacing-6); /* 24px */
 	--itx-chip-sm-padding-inline: var(--itx-spacing-2); /*  8px */
-	--itx-chip-sm-radius: var(--itx-radius-md); /*  8px */
 
 	/* ── Default step — md ────────────────────────────────────────────────
 	 * Inherited from the root rather than declared on the chip, so a bare
@@ -44,7 +42,6 @@
 	 * itx-size still reaches it.                                           */
 	--itx-chip-height: var(--itx-chip-md-height);
 	--itx-chip-padding-inline: var(--itx-chip-md-padding-inline);
-	--itx-chip-radius: var(--itx-chip-md-radius);
 
 	/* ── Size — not stepped ───────────────────────────────────────────── */
 	--itx-chip-min-width: var(--itx-spacing-8); /* 32px — Carbon floor */
@@ -72,14 +69,11 @@
 	 * it; those are the seam, at whatever scope you set them.              */
 	--itx-chip-selectable-background: var(--itx-contrast-2);
 	--itx-chip-selectable-color: var(--itx-contrast-6);
-	--itx-chip-selectable-border: var(--itx-border-width-thick) solid transparent;
 	--itx-chip-selectable-background-hover: var(--itx-contrast-2);
 	--itx-chip-selectable-color-hover: var(--itx-contrast-6);
 
 	--itx-chip-background-selected: var(--itx-colorway-solid);
 	--itx-chip-color-selected: var(--itx-colorway-on-solid);
-	--itx-chip-border-selected: var(--itx-border-width-thick) solid
-		var(--itx-colorway-border);
 	--itx-chip-font-weight-selected: 400;
 
 	/* ── Focus ring (chip-option) ─────────────────────────────────────────
@@ -101,8 +95,6 @@
 	--itx-chip-disabled-opacity: 0.4;
 
 	/* ── Transitions ──────────────────────────────────────────────────── */
-	--itx-chip-transition-duration: var(--itx-duration-fast);
-	--itx-chip-transition-timing-function: var(--itx-easing-standard);
 
 	/* ── chip-list gap — Carbon's grouped-tag spacing ─────────────────── */
 	--itx-chip-list-gap: var(--itx-spacing-2); /* 8px */
@@ -163,7 +155,7 @@
 ) {
 	--itx-chip-height: var(--itx-chip-md-height);
 	--itx-chip-padding-inline: var(--itx-chip-md-padding-inline);
-	--itx-chip-radius: var(--itx-chip-md-radius);
+	--itx-chip-radius: var(--itx-radius-lg);
 	--itx-chip-remove-radius: var(--itx-chip-radius);
 }
 
@@ -179,6 +171,6 @@
 ) {
 	--itx-chip-height: var(--itx-chip-sm-height);
 	--itx-chip-padding-inline: var(--itx-chip-sm-padding-inline);
-	--itx-chip-radius: var(--itx-chip-sm-radius);
+	--itx-chip-radius: var(--itx-radius-md);
 	--itx-chip-remove-radius: var(--itx-chip-radius);
 }

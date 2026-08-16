@@ -91,8 +91,8 @@
 
 	background: var(--itx-popover-background);
 	color: var(--itx-popover-foreground);
-	border: var(--itx-popover-border-width) var(--itx-popover-border-style)
-		var(--itx-popover-border-color);
+	border: var(--itx-popover-border-width, var(--itx-border-width-hairline))
+		var(--itx-popover-border-style) var(--itx-popover-border-color);
 	border-radius: var(--itx-popover-border-radius, var(--itx-radius));
 	box-shadow: var(--itx-popover-shadow);
 
@@ -101,18 +101,22 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-popover-enter-duration) var(--itx-popover-enter-easing),
-			translate var(--itx-popover-enter-duration)
-				var(--itx-popover-enter-easing),
-			overlay var(--itx-popover-enter-duration) allow-discrete,
-			display var(--itx-popover-enter-duration) allow-discrete;
+			opacity var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				var(--itx-popover-enter-easing, var(--itx-easing-decelerate)),
+			translate var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				var(--itx-popover-enter-easing, var(--itx-easing-decelerate)),
+			overlay var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				allow-discrete,
+			display var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-popover-enter-duration) var(--itx-popover-enter-easing),
-			translate var(--itx-popover-enter-duration)
-				var(--itx-popover-enter-easing);
+			opacity var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				var(--itx-popover-enter-easing, var(--itx-easing-decelerate)),
+			translate var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				var(--itx-popover-enter-easing, var(--itx-easing-decelerate));
 	}
 }
 
@@ -131,16 +135,22 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-popover-exit-duration) var(--itx-popover-exit-easing),
-			translate var(--itx-popover-exit-duration) var(--itx-popover-exit-easing),
-			overlay var(--itx-popover-exit-duration) allow-discrete,
-			display var(--itx-popover-exit-duration) allow-discrete;
+			opacity var(--itx-popover-exit-duration, var(--itx-duration-fast))
+				var(--itx-popover-exit-easing, var(--itx-easing-accelerate)),
+			translate var(--itx-popover-exit-duration, var(--itx-duration-fast))
+				var(--itx-popover-exit-easing, var(--itx-easing-accelerate)),
+			overlay var(--itx-popover-exit-duration, var(--itx-duration-fast))
+				allow-discrete,
+			display var(--itx-popover-exit-duration, var(--itx-duration-fast))
+				allow-discrete;
 	}
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-popover-exit-duration) var(--itx-popover-exit-easing),
-			translate var(--itx-popover-exit-duration) var(--itx-popover-exit-easing);
+			opacity var(--itx-popover-exit-duration, var(--itx-duration-fast))
+				var(--itx-popover-exit-easing, var(--itx-easing-accelerate)),
+			translate var(--itx-popover-exit-duration, var(--itx-duration-fast))
+				var(--itx-popover-exit-easing, var(--itx-easing-accelerate));
 	}
 }
 
@@ -157,12 +167,15 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			background var(--itx-popover-enter-duration)
-				var(--itx-popover-enter-easing),
-			backdrop-filter var(--itx-popover-enter-duration)
-				var(--itx-popover-enter-easing),
-			overlay var(--itx-popover-enter-duration) allow-discrete,
-			display var(--itx-popover-enter-duration) allow-discrete;
+			background var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				var(--itx-popover-enter-easing, var(--itx-easing-decelerate)),
+			backdrop-filter
+				var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				var(--itx-popover-enter-easing, var(--itx-easing-decelerate)),
+			overlay var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				allow-discrete,
+			display var(--itx-popover-enter-duration, var(--itx-duration-fast))
+				allow-discrete;
 	}
 }
 
@@ -251,7 +264,7 @@
 	)::after {
 	top: calc(
 		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
-			var(--itx-popover-border-width)
+			var(--itx-popover-border-width, var(--itx-border-width-hairline))
 	);
 	border-block-end-color: var(
 		--itx-popover-arrow-color,
@@ -280,7 +293,7 @@
 	)::after {
 	bottom: calc(
 		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
-			var(--itx-popover-border-width)
+			var(--itx-popover-border-width, var(--itx-border-width-hairline))
 	);
 	border-block-start-color: var(
 		--itx-popover-arrow-color,
@@ -309,7 +322,7 @@
 	)::after {
 	right: calc(
 		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
-			var(--itx-popover-border-width)
+			var(--itx-popover-border-width, var(--itx-border-width-hairline))
 	);
 	border-inline-start-color: var(
 		--itx-popover-arrow-color,
@@ -338,7 +351,7 @@
 	)::after {
 	left: calc(
 		-1 * var(--itx-popover-arrow-size) + var(--itx-popover-arrow-offset) +
-			var(--itx-popover-border-width)
+			var(--itx-popover-border-width, var(--itx-border-width-hairline))
 	);
 	border-inline-end-color: var(
 		--itx-popover-arrow-color,
