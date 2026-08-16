@@ -142,11 +142,15 @@
 
 /* The treeitem is the focus target in the select tier; its row shows the ring. */
 :where([interop-tree-item]) {
-	outline: none;
-
+	outline: var(--itx-tree-focus-width, var(--itx-focus-width))
+		var(--itx-tree-focus-style, var(--itx-focus-style))
+		var(--itx-tree-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-tree-focus-offset, var(--itx-focus-offset));
 	&:where(:focus-visible) > :where([interop-tree-row]) {
-		outline: var(--itx-tree-focus-width) solid var(--itx-tree-focus-color);
-		outline-offset: var(--itx-tree-focus-offset);
+		outline: var(--itx-tree-focus-width, var(--itx-focus-width))
+			var(--itx-tree-focus-style, var(--itx-focus-style))
+			var(--itx-tree-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-tree-focus-offset, var(--itx-focus-offset));
 	}
 }
 
@@ -303,8 +307,10 @@
 	}
 
 	&:where(:focus-visible) {
-		outline: var(--itx-tree-focus-width) solid var(--itx-tree-focus-color);
-		outline-offset: var(--itx-tree-focus-offset);
+		outline: var(--itx-tree-focus-width, var(--itx-focus-width))
+			var(--itx-tree-focus-style, var(--itx-focus-style))
+			var(--itx-tree-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-tree-focus-offset, var(--itx-focus-offset));
 		border-radius: var(--itx-tree-row-radius);
 	}
 }

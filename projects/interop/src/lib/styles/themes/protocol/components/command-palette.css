@@ -105,9 +105,6 @@
 	--itx-cmdp-clear-background-hover: var(--itx-surface-below);
 	--itx-cmdp-clear-color: var(--itx-contrast-6);
 
-	--itx-cmdp-clear-outline-width: 2px;
-	--itx-cmdp-clear-outline-color: var(--itx-focus);
-	--itx-cmdp-clear-outline-offset: 2px;
 
 	/* list */
 	--itx-cmdp-list-padding: var(--itx-spacing-1);

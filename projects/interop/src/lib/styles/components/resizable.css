@@ -104,9 +104,10 @@
 	}
 
 	&:where(:focus-visible) {
-		outline: var(--itx-resizable-handle-focus-outline-width) solid
-			var(--itx-resizable-handle-focus-outline-color);
-		outline-offset: var(--itx-resizable-handle-focus-outline-offset);
+		outline: var(--itx-resizable-handle-focus-width, var(--itx-focus-width))
+			var(--itx-resizable-handle-focus-style, var(--itx-focus-style))
+			var(--itx-resizable-handle-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-resizable-handle-focus-offset, var(--itx-focus-offset));
 	}
 }
 

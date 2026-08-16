@@ -171,8 +171,10 @@
 	 * drawn over the box edge, changing the 1px rule underneath is invisible.
 	 */
 	&:where(.focused) {
-		outline: var(--itx-field-focus-width) solid var(--itx-field-focus-color);
-		outline-offset: calc(-1 * var(--itx-field-focus-width));
+		outline: var(--itx-field-focus-width, var(--itx-focus-width))
+			var(--itx-field-focus-style, var(--itx-focus-style))
+			var(--itx-field-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-field-focus-offset, var(--itx-focus-offset));
 	}
 
 	/*
@@ -194,9 +196,10 @@
 	 * one that is always the same colour.
 	 */
 	&:where(.invalid:not(.focused)) {
-		outline: var(--itx-field-focus-width) solid
-			var(--itx-field-invalid-color, var(--itx-field-focus-color));
-		outline-offset: calc(-1 * var(--itx-field-focus-width));
+		outline: var(--itx-field-focus-width, var(--itx-focus-width))
+			var(--itx-field-focus-style, var(--itx-focus-style))
+			var(--itx-field-invalid-color, var(--itx-field-focus-color, var(--itx-focus-color)));
+		outline-offset: var(--itx-field-focus-offset, var(--itx-focus-offset));
 	}
 
 	/*

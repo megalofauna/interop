@@ -38,7 +38,8 @@
     "start": "ng serve demo",
     "demo": "ng serve demo --open",
     "protocol": "ng serve protocol --open",
-    "lint:tokens": "node scripts/check-private-tokens.mjs && node scripts/check-color-axes.mjs",
+    "lint:tokens": "node scripts/check-private-tokens.mjs && node scripts/check-color-axes.mjs && node scripts/check-focus.mjs",
+    "lint:focus": "node scripts/check-focus.mjs",
     "lint:color": "node scripts/check-color-axes.mjs",
     "build:color": "node scripts/generate-color-ladder.mjs",
     "check:color": "node scripts/generate-color-ladder.mjs --check"

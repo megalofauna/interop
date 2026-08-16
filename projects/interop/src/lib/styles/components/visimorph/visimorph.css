@@ -51,9 +51,9 @@
  *   --itx-control-toggle-thumb-shadow
  *
  *   Focus ring (lands on the host outline)
- *   --itx-control-focus-ring-color
- *   --itx-control-focus-ring-width
- *   --itx-control-focus-ring-offset
+ *   --itx-control-focus-color
+ *   --itx-control-focus-width
+ *   --itx-control-focus-offset
  *   --itx-control-focus-scale           press-in transform on focus
  *
  *   Motion / a11y
@@ -81,11 +81,11 @@
 		var(--itx-duration-fast, 100ms) var(--itx-easing-standard)
 	);
 	--_focus-ring-color: var(
-		--itx-control-focus-ring-color,
+		--itx-control-focus-color,
 		var(--itx-colorway-solid, #0066cc)
 	);
-	--_focus-ring-width: var(--itx-control-focus-ring-width, 3px);
-	--_focus-ring-offset: var(--itx-control-focus-ring-offset, 3px);
+	--_focus-ring-width: var(--itx-control-focus-width, 3px);
+	--_focus-ring-offset: var(--itx-control-focus-offset, 3px);
 	--_focus-scale: var(--itx-control-focus-scale, 0.875);
 	--_disabled-opacity: var(--itx-control-disabled-opacity, 0.5);
 
@@ -247,8 +247,10 @@
 /* ── Shared states ───────────────────────────────────────────────────────── */
 
 :where(interop-visimorph[data-focused]) {
-	outline: var(--_focus-ring-width) solid var(--_focus-ring-color);
-	outline-offset: var(--_focus-ring-offset);
+	outline: var(--itx-control-focus-width, var(--itx-focus-width))
+		var(--itx-control-focus-style, var(--itx-focus-style))
+		var(--itx-control-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-control-focus-offset, var(--itx-focus-offset));
 	transform: scale(var(--_focus-scale));
 }
 
@@ -261,7 +263,7 @@
 @media (prefers-contrast: high) {
 	:where(interop-visimorph) {
 		--itx-control-border-width: 3px;
-		--itx-control-focus-ring-width: 3px;
+		--itx-control-focus-width: 3px;
 	}
 }
 

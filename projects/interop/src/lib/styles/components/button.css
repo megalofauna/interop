@@ -247,10 +247,10 @@
 }
 
 :where(button[interop-button]:focus-visible:not(:active))::before {
-	outline: var(--itx-button-outline-width, 4px)
-		var(--itx-button-outline-style, solid)
-		var(--itx-button-outline-color, var(--itx-contrast-4));
-	outline-offset: var(--itx-button-outline-offset, 3px);
+	outline: var(--itx-button-focus-width, var(--itx-focus-width))
+		var(--itx-button-focus-style, var(--itx-focus-style))
+		var(--itx-button-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-button-focus-offset, var(--itx-focus-offset));
 }
 
 /* ── Prefix / suffix addon slots ─────────────────────────────────────────── */

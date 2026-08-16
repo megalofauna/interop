@@ -41,9 +41,6 @@
 	--itx-control-toggle-border-color-checked: var(--itx-colorway-border);
 
 	/* ── Focus ring ─────────────────────────────────────────────────────── */
-	--itx-control-focus-ring-color: var(--itx-focus, var(--itx-contrast-4));
-	--itx-control-focus-ring-width: 3px;
-	--itx-control-focus-ring-offset: 3px;
 	--itx-control-focus-scale: 0.875;
 
 	/* ── Motion / a11y ──────────────────────────────────────────────────── */

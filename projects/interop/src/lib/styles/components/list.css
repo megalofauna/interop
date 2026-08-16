@@ -206,9 +206,10 @@
  * the row — add :has(:focus-visible) here so keyboard users get the same mark.
  */
 :where([interop-list][itx-variant="contained"] > li:active) {
-	outline: var(--itx-list-row-outline-width) var(--itx-list-row-outline-style)
-		var(--itx-list-row-outline-color);
-	outline-offset: var(--itx-list-row-outline-offset);
+	outline: var(--itx-list-row-focus-width, var(--itx-focus-width))
+		var(--itx-list-row-focus-style, var(--itx-focus-style))
+		var(--itx-list-row-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-list-row-focus-offset, var(--itx-focus-offset));
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -78,22 +78,28 @@
 	--itx-backdrop-color: var(--itx-overlay);
 	--itx-backdrop-blur: 0px;
 
-	--itx-shadow-sm: light-dark(
-		0 1px 2px 0 oklch(0.15 0 0 / 0.06),
-		0 1px 2px 0 oklch(0 0 0 / 0.25)
-	);
-	--itx-shadow-md: light-dark(
-		0 4px 6px -1px oklch(0.15 0 0 / 0.08),
-		0 2px 4px -2px oklch(0.15 0 0 / 0.06),
-		0 4px 6px -1px oklch(0 0 0 / 0.35),
-		0 2px 4px -2px oklch(0 0 0 / 0.3)
-	);
-	--itx-shadow-lg: light-dark(
-		0 10px 15px -3px oklch(0.15 0 0 / 0.1),
-		0 4px 6px -4px oklch(0.15 0 0 / 0.1),
-		0 10px 15px -3px oklch(0 0 0 / 0.4),
-		0 4px 6px -4px oklch(0 0 0 / 0.3)
-	);
+	/*
+	 * Shadows.
+	 *
+	 * light-dark() wraps only the COLOUR of each layer — never the whole shadow.
+	 * It is defined in the <color> grammar, so both its arguments must be
+	 * colours; a shadow value is not one. All three of these previously passed
+	 * full shadow values (and md/lg passed four arguments where the function
+	 * takes two), which made every one of them invalid at computed-value time
+	 * and resolved box-shadow to `none`.
+	 *
+	 * Measured, before the fix: sm -> none, md -> none. So tooltip, toast and
+	 * the command palette were all shipping with no shadow at all, silently,
+	 * because an invalid custom property fails only where it is substituted.
+	 */
+	--itx-shadow-sm: 0 1px 2px 0
+		light-dark(oklch(0.15 0 0 / 0.06), oklch(0 0 0 / 0.25));
+	--itx-shadow-md:
+		0 4px 6px -1px light-dark(oklch(0.15 0 0 / 0.08), oklch(0 0 0 / 0.35)),
+		0 2px 4px -2px light-dark(oklch(0.15 0 0 / 0.06), oklch(0 0 0 / 0.3));
+	--itx-shadow-lg:
+		0 10px 15px -3px light-dark(oklch(0.15 0 0 / 0.1), oklch(0 0 0 / 0.4)),
+		0 4px 6px -4px light-dark(oklch(0.15 0 0 / 0.1), oklch(0 0 0 / 0.3));
 }
 
 /* ── Explicit mode pins ──────────────────────────────────────────────────── */

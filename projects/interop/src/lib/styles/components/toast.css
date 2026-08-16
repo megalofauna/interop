@@ -94,8 +94,10 @@
 	line-height: var(--itx-toast-line-height);
 	pointer-events: auto;
 	touch-action: none;
-	outline: none;
-
+	outline: var(--itx-toast-focus-width, var(--itx-focus-width))
+		var(--itx-toast-focus-style, var(--itx-focus-style))
+		var(--itx-toast-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-toast-focus-offset, var(--itx-focus-offset));
 	/* --_swipe-* are private runtime slots set during a swipe gesture; they
 	   legitimately default to 0 (at rest, no translation). */
 	translate: var(--_swipe-x, 0) var(--_swipe-y, 0);
@@ -107,8 +109,10 @@
 		translate 150ms ease;
 
 	&:where(:focus-visible) {
-		outline: var(--itx-toast-focus-width) solid var(--itx-toast-focus-color);
-		outline-offset: var(--itx-toast-focus-offset);
+		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
+			var(--itx-toast-focus-style, var(--itx-focus-style))
+			var(--itx-toast-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-toast-focus-offset, var(--itx-focus-offset));
 	}
 }
 
@@ -163,8 +167,10 @@
 		background: var(--itx-toast-action-background-hover);
 	}
 	&:where(:focus-visible) {
-		outline: var(--itx-toast-focus-width) solid var(--itx-toast-focus-color);
-		outline-offset: var(--itx-toast-focus-offset-tight);
+		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
+			var(--itx-toast-focus-style, var(--itx-focus-style))
+			var(--itx-toast-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-toast-focus-offset, var(--itx-focus-offset));
 	}
 }
 
@@ -188,8 +194,10 @@
 	}
 	&:where(:focus-visible) {
 		opacity: var(--itx-toast-close-opacity-hover);
-		outline: var(--itx-toast-focus-width) solid var(--itx-toast-focus-color);
-		outline-offset: var(--itx-toast-focus-offset-tight);
+		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
+			var(--itx-toast-focus-style, var(--itx-focus-style))
+			var(--itx-toast-focus-color, var(--itx-focus-color));
+		outline-offset: var(--itx-toast-focus-offset, var(--itx-focus-offset));
 	}
 }
 

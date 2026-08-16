@@ -80,10 +80,6 @@
 
 	/* Focused/selected state — kept on --itx-colorway-solid rather than Carbon's
 	   inset double ring; see the note at the foot of this file. */
-	--itx-button-outline-width: 2px;
-	--itx-button-outline-style: solid;
-	--itx-button-outline-color: var(--itx-focus);
-	--itx-button-outline-offset: 2px;
 }
 
 /* ── Variants ────────────────────────────────────────────────────────────── */

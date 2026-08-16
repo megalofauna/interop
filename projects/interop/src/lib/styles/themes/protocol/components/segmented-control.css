@@ -28,6 +28,10 @@
  */
 
 :where([interop-root]) {
+	/* Focus — the only deviation from the system ring. Inset: segments abut, so an outset ring would cross the divider.
+	   Colour, width and style come from tokens/focus.css. */
+	--itx-segment-focus-offset: -2px;
+
 	/* ── Managed radii ──────────────────────────────────────────────── */
 	/* Generic, deliberately not segmented-control-specific: also read by the
 	   indicator and visimorph themes. Left at their existing values — the
@@ -135,10 +139,6 @@
 	/* Carbon draws focus as an inset ring in its brand blue; ours keeps the
 	   colorway. Negative offset keeps it inside the frame instead of
 	   spilling over the neighbouring segment. */
-	--itx-segment-outline-width: 2px;
-	--itx-segment-outline-style: solid;
-	--itx-segment-outline-color: var(--itx-focus);
-	--itx-segment-outline-offset: -2px;
 
 	/* ── Segment — transition ───────────────────────────────────────────── */
 	--itx-segment-transition-duration: 48ms;

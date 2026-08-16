@@ -241,10 +241,10 @@
 }
 
 :where(button[interop-segment]:focus-visible) {
-	outline: var(--itx-segment-outline-width, 2px)
-		var(--itx-segment-outline-style, solid)
-		var(--itx-segment-outline-color, currentColor);
-	outline-offset: var(--itx-segment-outline-offset, -2px);
+	outline: var(--itx-segment-focus-width, var(--itx-focus-width))
+		var(--itx-segment-focus-style, var(--itx-focus-style))
+		var(--itx-segment-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-segment-focus-offset, var(--itx-focus-offset));
 }
 
 /* ── Disabled ────────────────────────────────────────────────────────────── */

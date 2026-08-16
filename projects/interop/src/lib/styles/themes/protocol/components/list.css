@@ -8,6 +8,10 @@
    box. See the note in components/list.css for why that matters. */
 
 :where([interop-root]) {
+	/* Focus — the only deviation from the system ring. The row ring sits INSIDE the row: a stacked list would collide otherwise.
+	   Colour, width and style come from tokens/focus.css. */
+	--itx-list-row-focus-offset: -2px;
+
 	--itx-list-item-padding-block: var(--itx-spacing-2);
 }
 
@@ -71,10 +75,6 @@
 	--itx-list-row-rule-width: 1px;
 	--itx-list-row-rule-color: var(--itx-contrast-3);
 
-	--itx-list-row-outline-color: var(--itx-focus);
-	--itx-list-row-outline-width: 2px;
-	--itx-list-row-outline-style: solid;
-	--itx-list-row-outline-offset: -2px;
 
 	--itx-list-row-transition-duration: var(--itx-duration-fast);
 	--itx-list-row-transition-timing-function: var(--itx-easing-standard);

@@ -156,8 +156,4 @@
 	--itx-step-connector-color-completed: var(--itx-contrast-5);
 
 	/* ── Step focus ring ────────────────────────────────────────────────── */
-	--itx-step-outline-width: 2px;
-	--itx-step-outline-style: solid;
-	--itx-step-outline-color: var(--itx-contrast-4);
-	--itx-step-outline-offset: 3px;
 }

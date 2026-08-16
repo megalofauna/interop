@@ -119,7 +119,22 @@ A part that varies by interaction is **one nested block**: the base declares eac
 - **Nest with `&:where(:state)`, not `&:state`.** A bare `&:hover` compiles to `:where(…):hover` and leaks `(0,1,0)`. Wrapping the inner pseudo keeps the whole chain at `(0,0,0)`.
 - **Every state value falls back to base:** `var(--x-state, var(--x))`. An undeclared / renamed / commented-out state token then degrades to base, instead of going *invalid at computed-value time* (which silently drops to inherited/initial and renders wrong). Fall back to the *base* token, **never to itself** — `var(--x, var(--x))` is a cycle and computes to invalid.
 - **The theme declares only deltas.** Because undeclared states inherit base, there is no mandatory parallel `-hover`/`-active`/`-focus` per property — only the ones that actually change.
-- **Focus stays structural.** The `:focus-visible` rule lives here (theme only tunes its tokens), never as a theme-side value a theme could forget. The ring is an accessibility floor structural must guarantee.
+- **Focus stays structural, and reads the system chain.** The `:focus-visible` rule lives here — the ring is an accessibility floor structural must guarantee, so it is never a theme-side value a theme could forget. But the VALUES come from `styles/tokens/focus.css`, via a three-tier chain:
+
+  ```css
+  outline: var(--itx-chip-focus-width, var(--itx-focus-width))
+  	var(--itx-chip-focus-style, var(--itx-focus-style))
+  	var(--itx-chip-focus-color, var(--itx-focus-color));
+  outline-offset: var(--itx-chip-focus-offset, var(--itx-focus-offset));
+  ```
+
+  The chain is what makes an override work at any level: both tokens stay unresolved until the element, so `--itx-focus-color` set on any ancestor reaches it. Declaring a theme alias (`--itx-chip-focus-color: var(--itx-focus-color)`) on `[interop-root]` does NOT — a custom property is substituted where it is declared, so it bakes at the root and every other override silently does nothing. That was the previous shape, and it is why 54 theme declarations collapsed to 5.
+
+  A component declares a `--itx-<comp>-focus-*` token only where it genuinely deviates — the inset group (`tree`, `segment`, `list-row`, `expansion-panel`, `chip-remove`, `field`) sets `-2px` because those ring inside their own box so stacked instances don't collide. A component with nothing to say declares nothing.
+
+  Use `:focus-visible`, not `:focus`. A ring on bare `:focus` fires on mouse click, which is the noise that gets focus styles deleted wholesale; `outline: none` on `:focus` paired with a `:focus-visible` rule is the correct reset. `npm run lint:focus` enforces all of this — the chain, no hardcoded colours, and no visible ring on bare `:focus`.
+
+  Rings inside `@media (prefers-contrast)` / `(forced-colors)` are exempt and keep `currentColor`: following the user's colours rather than the brand's is the entire point of high-contrast mode.
 - **Ancestor-driven state is the one exception.** When a part's state comes from an *ancestor* (e.g. an indicator shown by its link's `[aria-current]`), it cannot self-nest — use a descendant selector kept beside the part's base rule:
   ```css
   :where(… .itx-pn__link[aria-current] .itx-pn__indicator) { opacity: 1; }

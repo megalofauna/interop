@@ -100,9 +100,6 @@
 	/*--itx-cb-tab-indicator-color: var(--itx-colorway-solid);*/
 
 	--itx-cb-tab-indicator-width: 1px;
-	--itx-cb-tab-outline-color: var(--itx-focus);
-	--itx-cb-tab-outline-width: 2px;
-	--itx-cb-tab-outline-offset: 2px;
 	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
 	--itx-cb-tab-transition-timing: var(--itx-easing-standard);
 

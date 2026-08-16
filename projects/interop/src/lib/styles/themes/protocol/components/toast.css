@@ -114,9 +114,6 @@
 	 * Carbon's is 2px inset blue. Kept on --itx-colorway-solid and kept outside
 	 * the box: focus is where our brand survives an otherwise neutral
 	 * component.                                                          */
-	--itx-toast-focus-width: 2px;
-	--itx-toast-focus-color: var(--itx-focus);
-	--itx-toast-focus-offset: 2px;
 	--itx-toast-focus-offset-tight: 1px;
 }
 
