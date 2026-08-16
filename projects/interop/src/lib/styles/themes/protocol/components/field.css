@@ -1,0 +1,190 @@
+/*
+ * InteropField — Protocol theme values.
+ *
+ * Assigns custom properties only. Structure, state selectors and the focus
+ * ring live in `styles/components/field.css`.
+ *
+ * ── Why there are two blocks ───────────────────────────────────────────────
+ *
+ * Most components declare every token on `[interop-root]`. Field cannot,
+ * because `<interop-field-control>` carries `itx-sink` — it is a recess, a
+ * layer of its own.
+ *
+ * A custom property is substituted where it is DECLARED. So a token written
+ * `--itx-field-underline-color: var(--itx-contrast-4)` on `[interop-root]`
+ * resolves rank 4 against the PAGE and inherits that finished colour down; the
+ * control's own recessed surface never enters into it. The underline would be
+ * solved for 3:1 against the wrong background.
+ *
+ * Anything whose value is relative to the surface it sits on is therefore
+ * declared on the control, where the sink has already happened. Everything
+ * else — geometry, type, and the label / notes / errors that live OUTSIDE the
+ * control at the host's own layer — stays on the root.
+ *
+ * This is the same rule the layer engine follows when it re-declares its whole
+ * token set at every boundary, and the same one that bit the accent families:
+ * composition has to happen where the numbers are read. See .agent/color.md.
+ */
+
+:where([interop-root]) {
+	/* ── Container ───────────────────────────────────────────────────────── */
+	--itx-field-gap: var(--itx-spacing-1);
+
+	/* ── Label ───────────────────────────────────────────────────────────── */
+	/* Carbon $label-01 — 12 / 16 / 400. Fixed rem: a fluid clamp() label inside
+	   a pinned control is how a field overflows itself. */
+	--itx-field-label-color: var(--itx-contrast-4);
+	--itx-field-label-font-size: 0.75rem;
+	--itx-field-label-font-weight: 400;
+	--itx-field-label-line-height: 1.3333;
+	/* Extra space under the label, on top of --itx-field-gap: 4 + 4 = Carbon's
+	   $spacing-03 between label and control. */
+	--itx-field-label-gap: var(--itx-spacing-1);
+	--itx-field-required-indicator: " *";
+	--itx-field-required-indicator-color: var(--itx-danger-solid);
+
+	/* ── Control row — geometry ──────────────────────────────────────────── */
+	/* md is the default and is restated in the size table at the foot, so the
+	   three steps read as one group. */
+	--itx-field-height: var(--itx-spacing-10);
+	--itx-field-padding-inline: var(--itx-spacing-4);
+	--itx-field-addon-gap: var(--itx-spacing-2);
+	--itx-field-underline-width: 1px;
+	/* Squared. Carbon specifies no radius on any field. */
+	--itx-field-border-radius: var(--itx-radius-none);
+	--itx-field-focus-width: 2px;
+	--itx-field-invalid-icon-size: 1rem;
+	/* Carbon transitions at $duration-fast-01 (70ms); 100ms is the nearest step
+	   this system ships. */
+	--itx-field-transition-duration: var(--itx-duration-fast);
+
+	/* ── Value text ──────────────────────────────────────────────────────── */
+	/* Carbon $body-compact-01 — 14 / 18. Fixed rem, pinned box. */
+	--itx-field-font-family: var(--itx-font-family-sans);
+	--itx-field-font-size: 0.875rem;
+	--itx-field-line-height: 1.2857;
+
+	/* ── Notes ───────────────────────────────────────────────────────────── */
+	/* $helper-text-01 — same metrics as the label, so the block above and the
+	   block below the control are one voice. */
+	--itx-field-note-color: var(--itx-contrast-4);
+	--itx-field-note-font-size: 0.75rem;
+	--itx-field-note-line-height: 1.3333;
+	--itx-field-notes-gap: var(--itx-spacing-1);
+
+	/* ── Errors ──────────────────────────────────────────────────────────── */
+	--itx-field-error-color: var(--itx-danger-solid);
+	--itx-field-error-font-size: 0.75rem;
+	--itx-field-error-line-height: 1.3333;
+	--itx-field-errors-gap: var(--itx-spacing-1);
+
+	/* ── Text area ───────────────────────────────────────────────────────── */
+	--itx-field-textarea-padding-block: 0.6875rem; /* Carbon's 11px */
+	--itx-field-textarea-min-inline-size: 10rem;
+	--itx-field-textarea-resize: vertical;
+
+	/* ── Disabled ────────────────────────────────────────────────────────── */
+	/* Declared here for the LABEL and helper text, which sit outside the
+	   control at the host's layer. The control re-declares it below for the
+	   value text, which sits inside the sink. */
+	--itx-field-disabled-color: var(--itx-contrast-3);
+}
+
+/*
+ * Surface-relative values, declared where the sink has happened.
+ *
+ * Every token below reads --itx-contrast-* or --itx-surface, so it must be
+ * substituted on the control rather than at the root — see the header. The
+ * structural file never declares these, only reads them, so writing them on
+ * the element here cannot stomp a state rule.
+ */
+:where([interop-root] interop-field-control) {
+	/*
+	 * Rest fill. Carbon's $field-01 is a grey slab on a white page — the field
+	 * is RECESSED, and now so is ours. Reading --itx-surface rather than
+	 * --itx-surface-below is the point: the sink already happened, so this is
+	 * the control's OWN surface.
+	 */
+	--itx-field-background: var(--itx-surface);
+
+	/*
+	 * Hover. Carbon's field has no hover state; this is an Interop addition
+	 * moving in Carbon's direction ($field-hover is a step further from the
+	 * surface than $field). A wash, measured from the recessed surface.
+	 */
+	--itx-field-background-hover: var(--itx-contrast-1);
+
+	/*
+	 * The underline is the affordance, not a divider, so it is deliberately
+	 * stronger than the rank-2 hairline the other borrow rounds use for
+	 * structural rules.
+	 */
+	--itx-field-underline-color: var(--itx-contrast-4);
+
+	/* Read-only softens the rule: the value is still there to be read and
+	   copied, but the box stops advertising itself as somewhere to type. */
+	--itx-field-readonly-underline-color: var(--itx-contrast-2);
+
+	--itx-field-color: var(--itx-contrast-6);
+	/* Carbon's $text-placeholder is a documented contrast failure against its
+	   own $field; one step darker keeps placeholder text legible. */
+	--itx-field-placeholder-color: var(--itx-contrast-4);
+	--itx-field-addon-color: var(--itx-contrast-4);
+	--itx-field-disabled-color: var(--itx-contrast-3);
+
+	--itx-field-focus-color: var(--itx-focus);
+	--itx-field-invalid-color: var(--itx-danger-solid);
+}
+
+/* ── Text area — value text ──────────────────────────────────────────────── */
+
+/*
+ * $body-01 (14 / 20) replaces $body-compact-01 (14 / 18). Carbon loosens
+ * leading for multi-line text and it is worth keeping; it is the only
+ * typographic difference between the two components. A consumer who wants them
+ * identical sets --itx-field-line-height once.
+ */
+:where([interop-root] interop-field-textarea) {
+	--itx-field-line-height: 1.4286;
+}
+
+/* ── Sizes ───────────────────────────────────────────────────────────────── */
+
+/*
+ * Carbon's three text-input steps — sm 32 / md 40 / lg 48. Only the height
+ * moves: Carbon keeps the 16px inline padding and the 14px type at every step,
+ * because density and size are separate axes there.
+ *
+ * Carbon also ships xs (24px) and xl (64px). xs is dropped — it sits exactly
+ * on the WCAG 2.2 SC 2.5.8 target-size floor with no margin, and a 24px field
+ * cannot fit a 16px error glyph with any padding at all.
+ *
+ * Carbon ships no size steps for text area, its height being content-driven.
+ * `itx-size` is honoured there anyway because the control's MINIMUM height
+ * reads this same token: a text area beside an `itx-size="sm"` input should
+ * start at the same 32px, not sit 8px proud of it.
+ *
+ * Declared on the host, which is where the attribute lands, so the descendant
+ * read on the control resolves against the override rather than freezing at
+ * the root's value.
+ */
+:where(
+	[interop-root] interop-field-input[itx-size="sm"],
+	[interop-root] interop-field-textarea[itx-size="sm"]
+) {
+	--itx-field-height: var(--itx-spacing-8); /* 32px */
+}
+
+:where(
+	[interop-root] interop-field-input[itx-size="md"],
+	[interop-root] interop-field-textarea[itx-size="md"]
+) {
+	--itx-field-height: var(--itx-spacing-10); /* 40px */
+}
+
+:where(
+	[interop-root] interop-field-input[itx-size="lg"],
+	[interop-root] interop-field-textarea[itx-size="lg"]
+) {
+	--itx-field-height: var(--itx-spacing-12); /* 48px */
+}

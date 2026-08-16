@@ -56,6 +56,7 @@
 @import "./protocol/components/command-palette.css" layer(interop.theme);
 @import "./protocol/components/dialog.css" layer(interop.theme);
 @import "./protocol/components/expansion-panel.css" layer(interop.theme);
+@import "./protocol/components/field.css" layer(interop.theme);
 @import "./protocol/components/icon.css" layer(interop.theme);
 @import "./protocol/components/indicator.css" layer(interop.theme);
 @import "./protocol/components/kbd.css" layer(interop.theme);

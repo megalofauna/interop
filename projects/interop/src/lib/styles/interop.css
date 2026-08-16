@@ -70,6 +70,7 @@
 @import "./components/command-palette.css" layer(interop.foundation);
 @import "./components/dialog.css" layer(interop.foundation);
 @import "./components/expansion-panel.css" layer(interop.foundation);
+@import "./components/field.css" layer(interop.foundation);
 @import "./components/icon.css" layer(interop.foundation);
 @import "./components/indicator.css" layer(interop.foundation);
 @import "./components/kbd.css" layer(interop.foundation);

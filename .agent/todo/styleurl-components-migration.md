@@ -4,6 +4,7 @@
 **Raised:** 2026-08-12 by the round 5 (Progress) Carbon borrow
 **Re-raised:** 2026-08-13 by rounds 10–14 — badge, field, slider and tabs all
 hit it independently in the same sweep, which is how the count reached fifteen.
+**Thirteen remain** — the field pair migrated 2026-08-15, see below.
 
 ## The debt
 
@@ -23,11 +24,27 @@ encapsulation:
 interop-badge            interop-scroll-area
 interop-callout          interop-segmented-control  (partially — has a theme file too)
 interop-code-renderer    interop-slider
-interop-field-input      interop-slider-range
-interop-field-textarea   interop-slider-thumb
-interop-listbox          interop-tabs
-interop-progress         interop-tab-panel
-composites/terminal
+interop-listbox          interop-slider-range
+interop-progress         interop-slider-thumb
+composites/terminal      interop-tabs
+                         interop-tab-panel
+
+DONE — interop-field-input + interop-field-textarea (2026-08-15). The pair
+migrated together, as this file said they had to: they were ~90% byte-identical
+and the duplication only collapses when both move. 875 lines of SCSS became one
+structural file plus one theme file, and the shared surface is now typed once.
+Two things worth carrying to the next component:
+
+  - The field's control declares `itx-sink`, so tokens reading --itx-contrast-*
+    could NOT all be declared on [interop-root]: a custom property substitutes
+    where it is declared, so those would have resolved rank N against the PAGE
+    and inherited a finished colour past the recess. Surface-relative tokens are
+    declared on `interop-field-control` instead. Any component that declares a
+    layer has this problem.
+  - Prefix/suffix had to match the ATTRIBUTE as well as the class. The class
+    only exists because the Angular directive's host adds it, so matching the
+    class alone would have left the CSS-only consumer — the entire point of the
+    migration — with unstyled addons.
 ```
 
 ## Why it matters
@@ -48,7 +65,7 @@ one people forget, and the third is the one that actually inverts the contract:
    layer.** Angular writes component styles into `<head>` with no `@layer`, and
    unlayered rules beat layered ones regardless of specificity. A consumer who
    correctly declares `@layer interop, …` and overrides a value on one of these
-   fifteen components **cannot reach it**. The layer exists to guarantee that
+   these components **cannot reach it**. The layer exists to guarantee that
    consumers win; for these components it guarantees the opposite. This is the
    consequence that makes the debt a contract violation rather than an
    inconvenience — see `css-strategy.md`.
