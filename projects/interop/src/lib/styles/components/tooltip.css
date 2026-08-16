@@ -59,8 +59,7 @@
 
 	@supports (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration)
-				var(--itx-tooltip-enter-easing),
+			opacity var(--itx-tooltip-enter-duration) var(--itx-tooltip-enter-easing),
 			transform var(--itx-tooltip-enter-duration)
 				var(--itx-tooltip-enter-easing),
 			overlay var(--itx-tooltip-enter-duration) allow-discrete,
@@ -69,8 +68,7 @@
 
 	@supports not (transition-behavior: allow-discrete) {
 		transition:
-			opacity var(--itx-tooltip-enter-duration)
-				var(--itx-tooltip-enter-easing),
+			opacity var(--itx-tooltip-enter-duration) var(--itx-tooltip-enter-easing),
 			transform var(--itx-tooltip-enter-duration)
 				var(--itx-tooltip-enter-easing);
 	}
@@ -106,13 +104,5 @@
 	:where(.interop-tooltip__panel:popover-open) {
 		opacity: 0;
 		transform: scale(0.96);
-	}
-}
-
-/* ── Reduced motion ──────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where(.interop-tooltip__panel) {
-		transition: none;
 	}
 }

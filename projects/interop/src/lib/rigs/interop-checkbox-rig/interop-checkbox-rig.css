@@ -125,10 +125,3 @@
 		outline-width: 3px;
 	}
 }
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-	* {
-		transition: none !important;
-	}
-}

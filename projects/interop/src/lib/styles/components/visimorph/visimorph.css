@@ -270,9 +270,5 @@
 @media (prefers-reduced-motion: reduce) {
 	:where(interop-visimorph) {
 		--_focus-scale: 1;
-		transition: none;
-	}
-	:where(interop-visimorph)::after {
-		transition: none;
 	}
 }

@@ -205,14 +205,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	:where(
-		itx-page-nav.itx-pn--horizontal a,
-		itx-page-nav.itx-pn--vertical .itx-pn__link,
-		itx-page-nav.itx-pn--vertical .itx-pn__indicator
-	) {
-		transition: none;
-	}
-
 	/* The active link still gets revealed — it just jumps rather than glides. */
 	:where(
 		itx-page-nav.itx-pn--horizontal interop-scroll-area,

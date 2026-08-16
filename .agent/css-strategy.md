@@ -172,7 +172,7 @@ Uniformity is a goal in itself: across every component the two files should read
 1. Header comment — purpose, the no-fallback contract note, a pointer to the theme for the token surface.
 2. Host — `:where(X)` base, then host-state hooks (`X.--sticky`, `X.--stuck`, orientation).
 3. Regions / parts in **DOM order**. Each stateful part is one nested block (base → `&:where(:state)` deltas → focus). Layout-only parts are plain blocks.
-4. `@media` trailers last (`prefers-reduced-motion`, `prefers-contrast`).
+4. `@media` trailers last (`prefers-contrast`, and `prefers-reduced-motion` **only** for animations — see *Motion* below).
 
 **Theme (`themes/protocol/.../X.css`):**
 1. Header comment listing the full token surface, grouped by part.
@@ -181,9 +181,42 @@ Uniformity is a goal in itself: across every component the two files should read
 
 No dead commented-out tokens or rules land in a committed file: a token with no consumer is cruft, and an undeclared state already degrades to base.
 
+## Motion
+
+**Never write a literal duration.** Read `var(--itx-COMP-duration)`, declared in
+the theme against one of `--itx-duration-speedy | fast | base | slow`. `fast` is
+the house default for a micro-transition; almost everything uses it.
+
+**Do not write a `prefers-reduced-motion` block for a transition.** Every
+duration derives from `--itx-duration-base`, which `tokens/motion.css` sets to
+`0ms` under the preference — so a component that reads the tokens honours it for
+free. This used to be 28 hand-written blocks across 23 files, 26 of whose
+declarations were an identical `transition: none`; a component that forgot the
+block just ignored the preference, and nothing said so.
+
+The reading is deliberately blunt — no motion at all. "Reduced" does not really
+mean "none", and the presets under `styles/motion/` are where that nuance will
+eventually live, but one rule that is always obeyed beats a per-component
+judgement call that is usually forgotten.
+
+**Animations are the exception and still need a block.** They carry their own
+durations, which no token reaches. Stop the animation *and* park it in a sane
+resting state — a caret frozen at `opacity: 0` reads as no caret at all:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+	:where(X) { animation: none; opacity: 1; }
+}
+```
+
+`scroll-behavior`, `@starting-style` compensation and hover `transform`s are the
+other legitimate survivors. `scripts/check-motion.mjs` enforces the rest, and a
+`var()` fallback is a chain (allowed) while a literal fallback is a second source
+of truth (rejected).
+
 ## Linting
 
-`npm run lint` runs three guards; `npm run lint:css` is the stylelint one.
+`npm run lint` runs four guards; `npm run lint:css` is the stylelint one.
 
 Stylelint was configured long before it was installed, and its config had never
 been executed — `custom-property-pattern` was written as `^--(itx-…)$`, but

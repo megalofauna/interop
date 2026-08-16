@@ -696,7 +696,9 @@
 
 	transition-property: background-color, color, border-color;
 	transition-duration: var(--itx-step-indicator-transition-duration);
-	transition-timing-function: var(--itx-step-indicator-transition-timing-function);
+	transition-timing-function: var(
+		--itx-step-indicator-transition-timing-function
+	);
 }
 
 /* ── State-resolved private slots ────────────────────────────────────────── */
@@ -900,8 +902,7 @@
 	content: "";
 	position: absolute;
 	background: var(--_connector-color);
-	transition: background-color
-		var(--itx-step-indicator-transition-duration)
+	transition: background-color var(--itx-step-indicator-transition-duration)
 		var(--itx-step-indicator-transition-timing-function);
 	z-index: 0;
 }
@@ -1000,16 +1001,6 @@
 		display: none;
 	}
 }
-
-/* ── Reduced motion ──────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where(li[interop-step] .interop-step__indicator),
-	:where(li[interop-step]:not(:last-child))::after {
-		transition: none;
-	}
-}
-
 /* ── High contrast ───────────────────────────────────────────────────────── */
 
 @media (prefers-contrast: high) {

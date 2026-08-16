@@ -150,6 +150,16 @@
 	animation: itx-term-blink 1.1s step-start infinite;
 }
 
+/* An animation carries its own duration, so the 0ms in tokens/motion.css does
+   not reach it. The caret stays solid rather than stopping mid-blink — a
+   caret parked at 0 opacity would read as "no caret". */
+@media (prefers-reduced-motion: reduce) {
+	:host(.itx-term--active) :where(.itx-term__caret) {
+		animation: none;
+		opacity: 1;
+	}
+}
+
 @keyframes itx-term-blink {
 	0%,
 	100% {

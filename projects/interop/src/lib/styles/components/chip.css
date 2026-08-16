@@ -81,7 +81,6 @@
 /* Visually hides content while keeping it in the accessibility tree.
    Used by chip-filter (sr-only legend) and chip-option (sr-only checkbox). */
 
-
 /* ── Shared chip base ────────────────────────────────────────────────────── */
 /* Common visual paint for every chip-shaped element. Height is stated, not
    derived: a chip is a fixed-height pill whose label rides centred, so block
@@ -210,13 +209,6 @@
 		outline: 2px solid currentColor;
 	}
 }
-
-@media (prefers-reduced-motion: reduce) {
-	:where(label[interop-chip-option]) {
-		transition: none;
-	}
-}
-
 /* ── chip-item ───────────────────────────────────────────────────────────── */
 
 :where(li[interop-chip-item]) {
@@ -286,13 +278,6 @@
 		var(--itx-chip-remove-focus-color, var(--itx-focus-color));
 	outline-offset: var(--itx-chip-remove-focus-offset, var(--itx-focus-offset));
 }
-
-@media (prefers-reduced-motion: reduce) {
-	:where(.itx-chip-remove) {
-		transition: none;
-	}
-}
-
 /* ── chip-badge ──────────────────────────────────────────────────────────── */
 /* Tag-agnostic selector — the chip-badge attribute can sit on any inline
    element (span, output, mark, div, etc.). Reuses the shared --itx-chip-*

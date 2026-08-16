@@ -269,16 +269,6 @@
 }
 
 /* ── Visually-hidden live-region announcer ────────────────────────────────── */
-
-
-/* ── Reduced motion ───────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where(.itx-cmdp__option) {
-		transition: none;
-	}
-}
-
 /* ── Forced colors — the active option must survive stripped backgrounds ──── */
 
 @media (forced-colors: active) {

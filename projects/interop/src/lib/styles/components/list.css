@@ -211,9 +211,3 @@
 		var(--itx-list-row-focus-color, var(--itx-focus-color));
 	outline-offset: var(--itx-list-row-focus-offset, var(--itx-focus-offset));
 }
-
-@media (prefers-reduced-motion: reduce) {
-	:where([interop-list][itx-variant="contained"] > li) {
-		transition: none;
-	}
-}

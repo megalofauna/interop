@@ -404,14 +404,3 @@
 	top: 50%;
 	transform: translate(-100%, -50%) rotate(-90deg);
 }
-
-/* ── Reduced motion ──────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where([interop-popover]) {
-		transition: none;
-	}
-	:where([interop-popover]:not(:popover-open)) {
-		transition: none;
-	}
-}

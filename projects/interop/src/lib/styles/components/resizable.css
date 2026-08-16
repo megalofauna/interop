@@ -107,7 +107,10 @@
 		outline: var(--itx-resizable-handle-focus-width, var(--itx-focus-width))
 			var(--itx-resizable-handle-focus-style, var(--itx-focus-style))
 			var(--itx-resizable-handle-focus-color, var(--itx-focus-color));
-		outline-offset: var(--itx-resizable-handle-focus-offset, var(--itx-focus-offset));
+		outline-offset: var(
+			--itx-resizable-handle-focus-offset,
+			var(--itx-focus-offset)
+		);
 	}
 }
 
@@ -123,13 +126,15 @@
 /* Axis-specific cursors and edge-spanning handle for the keyboard story
    (the visual handle is still anchored at the BR corner; cursor reflects
    the active drag axis). */
-:where([interop-resizable][data-axis="horizontal"]) :where(.interop-resizable__handle) {
+:where([interop-resizable][data-axis="horizontal"])
+	:where(.interop-resizable__handle) {
 	cursor: ew-resize;
 	block-size: 100%;
 	inset-block-start: 0;
 }
 
-:where([interop-resizable][data-axis="vertical"]) :where(.interop-resizable__handle) {
+:where([interop-resizable][data-axis="vertical"])
+	:where(.interop-resizable__handle) {
 	cursor: ns-resize;
 	inline-size: 100%;
 	inset-inline-start: 0;
@@ -164,11 +169,6 @@
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-	:where(.interop-resizable__handle),
-	:where(.interop-resizable__readout) {
-		transition: none;
-	}
-
 	:where(.interop-resizable__handle:hover) {
 		transform: none;
 	}

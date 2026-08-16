@@ -386,12 +386,6 @@
  */
 
 @media (prefers-reduced-motion: reduce) {
-	:where([interop-tree-group]),
-	:where([interop-tree-row]),
-	:where([interop-tree-toggle]:empty)::before {
-		transition: none;
-	}
-
 	:where([interop-tree-group]) {
 		@starting-style {
 			opacity: 1;

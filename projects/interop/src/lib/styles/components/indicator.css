@@ -96,11 +96,3 @@
 		display: none;
 	}
 }
-
-/* ── Reduced motion ─────────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-	:where(interop-indicator) {
-		transition: none;
-	}
-}

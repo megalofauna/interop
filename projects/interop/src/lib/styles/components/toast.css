@@ -95,7 +95,7 @@
 	transition:
 		opacity var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
 		scale var(--itx-toast-enter-duration) var(--itx-toast-enter-easing),
-		translate 150ms ease;
+		translate var(--itx-toast-enter-duration) var(--itx-toast-enter-easing);
 
 	&:where(:focus-visible) {
 		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
@@ -193,10 +193,6 @@
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-	:where(interop-toast-item) {
-		transition: none;
-	}
-
 	@starting-style {
 		:where(interop-toast-item) {
 			opacity: 1;
