@@ -53,7 +53,7 @@
 	width: var(--itx-toolbar-width, fit-content);
 	padding: var(--itx-toolbar-padding, var(--itx-spacing-1));
 	background-color: var(--itx-toolbar-background, transparent);
-	border-width: var(--itx-toolbar-border-width, 0);
+	border-width: var(--itx-toolbar-border-width, var(--itx-border-width-thick));
 	border-style: var(--itx-toolbar-border-style, solid);
 	border-color: var(--itx-toolbar-border-color, transparent);
 	border-radius: var(--itx-toolbar-border-radius, 0);

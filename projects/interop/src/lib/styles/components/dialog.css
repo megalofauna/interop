@@ -46,7 +46,7 @@
 	width: var(--itx-dialog-width, min(90vw, 32rem));
 	max-height: var(--itx-dialog-max-height, 85dvh);
 	padding: var(--itx-dialog-padding, var(--itx-spacing-6, 1.5rem));
-	border: var(--itx-dialog-border-width, 0) solid
+	border: var(--itx-dialog-border-width, var(--itx-border-width-thick)) solid
 		var(--itx-dialog-border-color, var(--itx-contrast-3, currentColor));
 	border-radius: var(--itx-dialog-border-radius, var(--itx-radius));
 	background: var(--itx-dialog-background, Canvas);
