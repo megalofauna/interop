@@ -90,7 +90,7 @@
 	--itx-toast-actions-gap: var(--itx-spacing-2);
 	--itx-toast-action-padding-block: var(--itx-spacing-2);
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
-	--itx-toast-action-border-width: 1px;
+	--itx-toast-action-border-width: var(--itx-border-width-hairline);
 	--itx-toast-action-border-color: var(--itx-contrast-3);
 	--itx-toast-action-border-radius: var(--itx-radius-none);
 	--itx-toast-action-font-size: 0.875rem;

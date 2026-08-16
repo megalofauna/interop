@@ -42,8 +42,7 @@
  */
 
 :where(
-	[interop-root]
-		label:is([interop-checkbox], [interop-radio], [interop-toggle])
+	[interop-root] label:is([interop-checkbox], [interop-radio], [interop-toggle])
 ) {
 	/* ── Layout ─────────────────────────────────────────────────────────── */
 	--itx-control-label-align: center;
@@ -69,7 +68,7 @@
 	--itx-control-label-bg-focus: var(--itx-control-label-bg-hover);
 
 	/* ── Interaction surface — border + corner ─────────────────────────── */
-	--itx-control-label-border-width: 2px;
+	--itx-control-label-border-width: var(--itx-border-width-thick);
 	--itx-control-label-border-color: transparent;
 	--itx-control-label-radius: var(--itx-radius-md);
 	--itx-control-label-corner-shape: squircle;

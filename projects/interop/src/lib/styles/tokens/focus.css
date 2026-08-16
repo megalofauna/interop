@@ -75,7 +75,19 @@
 
 :where([interop-root]) {
 	--itx-focus-color: var(--itx-colorway-solid);
-	--itx-focus-width: 2px;
+	--itx-focus-width: var(--itx-border-width-thick);
 	--itx-focus-style: solid;
 	--itx-focus-offset: 2px;
+}
+
+/* A heavier ring under a high-contrast preference. Three components used to
+   write this by hand — both rigs and visimorph, each bumping outline-width to
+   3px inside their own @media block — and every other component ignored the
+   preference entirely. Because the ring reads the chain, this reaches all of
+   them, and a component that wants to opt out still declares its own
+   --itx-COMP-focus-width and wins. */
+@media (prefers-contrast: high) {
+	:where([interop-root]) {
+		--itx-focus-width: var(--itx-border-width-heavy);
+	}
 }

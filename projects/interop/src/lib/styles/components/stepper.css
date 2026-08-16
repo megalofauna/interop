@@ -562,7 +562,10 @@
 	max-block-size: var(--itx-stepper-menu-max-height, 60vh);
 	background: var(--itx-stepper-menu-background-color, white);
 	border-color: var(--itx-stepper-menu-border-color, transparent);
-	border-width: var(--itx-stepper-menu-border-width, 1px);
+	border-width: var(
+		--itx-stepper-menu-border-width,
+		var(--itx-border-width-hairline)
+	);
 	border-style: solid;
 	border-radius: var(--itx-stepper-menu-border-radius, 8px);
 	box-shadow: var(--itx-stepper-menu-box-shadow, none);
@@ -1005,6 +1008,6 @@
 
 @media (prefers-contrast: high) {
 	:where(li[interop-step].interop-step--active .interop-step__indicator) {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }

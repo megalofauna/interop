@@ -1,5 +1,5 @@
 /*
- * Shape — the canonical border-radius system.
+ * Shape — the canonical border-radius and border-width systems.
  *
  * One source of truth for radius across Interop:
  *   1. Primitive ramp  — numeric steps derived from --itx-radius-base.
@@ -7,6 +7,11 @@
  *                        that components and the itx-radius attribute speak.
  *   3. itx-radius      — a component-agnostic attribute that resolves the
  *                        semantic scale into --itx-radius for any element.
+ *
+ * Border width follows the same two-tier shape, minus the attribute. It had no
+ * primitive at all before: 48 declarations across 30 files wrote 1px, 2px or
+ * 3px by hand, so "how heavy is a border in this library" had no answer and no
+ * single place to change.
  *
  * Components consume radius through their own fallback chain, e.g.:
  *   border-radius: var(--itx-<c>-border-radius,     ← per-instance escape hatch
@@ -40,6 +45,28 @@
 	--itx-radius-md: var(--itx-radius-2); /* 8px */
 	--itx-radius-lg: var(--itx-radius-3); /* 12px */
 	--itx-radius-xl: var(--itx-radius-4); /* 16px */
+
+	/* ── Border width — primitive ramp ───────────────────────────────────── */
+	--itx-border-width-base: 1px;
+	--itx-border-width-1: var(--itx-border-width-base);
+	--itx-border-width-2: calc(var(--itx-border-width-base) * 2);
+	--itx-border-width-3: calc(var(--itx-border-width-base) * 3);
+
+	/* ── Border width — semantic scale ───────────────────────────────────── */
+	--itx-border-width-hairline: var(--itx-border-width-1); /* 1px */
+	--itx-border-width-thick: var(--itx-border-width-2); /* 2px */
+	--itx-border-width-heavy: var(--itx-border-width-3); /* 3px */
+}
+
+/* Under a high-contrast preference, hairline borders thicken to match the
+   heavier weight. Five components used to write this bump by hand — the two
+   rigs and visimorph — and every other bordered component simply ignored the
+   preference. Thick and heavy already read as deliberate edges, so only the
+   hairline moves; nothing gets thicker than 3px. */
+@media (prefers-contrast: high) {
+	:where([interop-root]) {
+		--itx-border-width-hairline: var(--itx-border-width-2);
+	}
 }
 
 /* ── itx-radius — component-agnostic application attribute ────────────────────

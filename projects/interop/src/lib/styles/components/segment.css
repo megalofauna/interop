@@ -257,6 +257,6 @@
 
 @media (prefers-contrast: high) {
 	:where(button[interop-segment][aria-pressed="true"]) {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }

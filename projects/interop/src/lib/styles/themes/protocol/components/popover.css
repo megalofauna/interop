@@ -93,7 +93,7 @@
 	 */
 	--itx-popover-border-radius: var(--itx-radius-none);
 
-	--itx-popover-border-width: 1px;
+	--itx-popover-border-width: var(--itx-border-width-hairline);
 	--itx-popover-border-style: solid;
 
 	/*

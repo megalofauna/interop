@@ -27,7 +27,8 @@
 
 	/* edge — thicker bottom border is the raised front lip of the cap */
 	--itx-kbd-border-color: var(--itx-contrast-3);
-	--itx-kbd-border-width: 1px 1px 0.35em;
+	--itx-kbd-border-width: var(--itx-border-width-hairline)
+		var(--itx-border-width-hairline) 0.35em;
 
 	/* keycap drop shadow */
 	--itx-kbd-shadow-size: 2px;

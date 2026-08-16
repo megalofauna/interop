@@ -65,7 +65,10 @@
 
 :where(interop-visimorph) {
 	--_size: var(--itx-control-size, 1.25rem);
-	--_border-width: var(--itx-control-border-width, 2px);
+	--_border-width: var(
+		--itx-control-border-width,
+		var(--itx-border-width-thick)
+	);
 	--_border-color: var(
 		--itx-control-border-color,
 		var(--itx-contrast-3, var(--itx-contrast-2))
@@ -84,7 +87,7 @@
 		--itx-control-focus-color,
 		var(--itx-colorway-solid, #0066cc)
 	);
-	--_focus-ring-width: var(--itx-control-focus-width, 3px);
+	--_focus-ring-width: var(--itx-control-focus-width, var(--itx-focus-width));
 	--_focus-ring-offset: var(--itx-control-focus-offset, 3px);
 	--_focus-scale: var(--itx-control-focus-scale, 0.875);
 	--_disabled-opacity: var(--itx-control-disabled-opacity, 0.5);
@@ -262,8 +265,7 @@
 
 @media (prefers-contrast: high) {
 	:where(interop-visimorph) {
-		--itx-control-border-width: 3px;
-		--itx-control-focus-width: 3px;
+		--itx-control-border-width: var(--itx-border-width-heavy);
 	}
 }
 

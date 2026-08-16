@@ -206,7 +206,7 @@
 
 @media (prefers-contrast: high) {
 	:where(label[interop-chip-option][data-checked]) {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }
 /* ── chip-item ───────────────────────────────────────────────────────────── */
@@ -222,7 +222,7 @@
 
 @media (prefers-contrast: high) {
 	:where(li[interop-chip-item]) {
-		outline: 1px solid currentColor;
+		outline: var(--itx-border-width-hairline) solid currentColor;
 	}
 }
 
@@ -291,7 +291,7 @@
 
 @media (prefers-contrast: high) {
 	:where([interop-chip-badge]) {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }
 

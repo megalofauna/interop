@@ -23,7 +23,7 @@
 	/* Frame */
 	--itx-toolbar-padding: var(--itx-spacing-1) var(--itx-spacing-1);
 	--itx-toolbar-background: transparent;
-	--itx-toolbar-border-width: 2px;
+	--itx-toolbar-border-width: var(--itx-border-width-thick);
 	--itx-toolbar-border-color: transparent;
 	/*--itx-toolbar-border-radius: var(--itx-radius-full);*/
 
@@ -52,7 +52,7 @@
 	--itx-button-padding-block: var(--itx-spacing-1);
 	--itx-button-padding-inline: var(--itx-spacing-1);
 
-	--itx-button-border-width: 2px;
+	--itx-button-border-width: var(--itx-border-width-thick);
 	--itx-button-border-style: solid;
 
 	--itx-button-background: transparent;

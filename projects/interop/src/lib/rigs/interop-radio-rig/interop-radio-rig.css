@@ -10,7 +10,7 @@
 
 /* Hands-off mode: Full fieldset structure */
 :host(interop-radio-rig) fieldset {
-	border: 1px solid #ccc;
+	border: var(--itx-border-width-hairline) solid #ccc;
 	border-radius: 4px;
 	padding: 1rem;
 	margin: 0;
@@ -99,15 +99,4 @@
 
 :host(.compact) .radio-rig-content {
 	gap: 0.25rem;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-	:host(interop-radio-rig) fieldset {
-		border-width: 2px;
-	}
-
-	.radio-control input[type="radio"]:focus-visible {
-		outline-width: 3px;
-	}
 }

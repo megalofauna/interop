@@ -28,7 +28,7 @@
 	--itx-expansion-panel-background: transparent;
 	--itx-expansion-panel-background-image: none;
 	--itx-expansion-panel-foreground: var(--itx-contrast-6);
-	--itx-expansion-panel-border-width: 1px;
+	--itx-expansion-panel-border-width: var(--itx-border-width-hairline);
 	--itx-expansion-panel-border-style: solid;
 	/* The block edges do the structural work — they are the rules a reader
 	   scans down a stack of panels — so they carry real weight. The inline
@@ -79,7 +79,6 @@
 	   hovered row lifts toward the viewer rather than darkening. */
 	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
 	--itx-expansion-panel-trigger-color: var(--itx-contrast-6);
-
 
 	/* Arrow — sized in em so it tracks the trigger's own type, matching the
 	   tree's twisty. 135deg points the corner down; +180 flips it up. */

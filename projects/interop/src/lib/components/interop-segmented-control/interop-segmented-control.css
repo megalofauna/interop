@@ -129,6 +129,6 @@ legend {
 
 @media (prefers-contrast: high) {
 	.interop-segmented-control__track {
-		outline: 2px solid currentColor;
+		outline: var(--itx-border-width-thick) solid currentColor;
 	}
 }

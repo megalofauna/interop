@@ -30,7 +30,7 @@
 	/* Transparent by default: the 1px width reserves the frame's space so a
 	   consumer only has to set -border-color to reveal it — no reflow. */
 	--itx-resizable-border-color: transparent;
-	--itx-resizable-border-width: 1px;
+	--itx-resizable-border-width: var(--itx-border-width-hairline);
 	--itx-resizable-border-style: solid;
 	--itx-resizable-border-radius: var(--itx-radius-2);
 

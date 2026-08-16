@@ -75,7 +75,7 @@
 	/* Tablist */
 	--itx-cd-tablist-padding-block: var(--itx-spacing-2) 0;
 	--itx-cd-tablist-padding-inline: 0;
-	--itx-cb-tablist-border-bottom-width: 2px;
+	--itx-cb-tablist-border-bottom-width: var(--itx-border-width-thick);
 	--itx-cb-tablist-border-bottom-style: solid;
 	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-4);
 	--itx-cb-tablist-background: transparent;
@@ -86,7 +86,7 @@
 	/* Tab */
 	--itx-cb-tab-background: transparent;
 	--itx-cb-tab-border: none;
-	--itx-cb-tab-border-bottom: 2px solid transparent;
+	--itx-cb-tab-border-bottom: var(--itx-border-width-thick) solid transparent;
 	--itx-cb-tab-padding-block: var(--itx-spacing-2);
 	--itx-cb-tab-padding-inline: var(--itx-spacing-4);
 	--itx-cb-tab-radius: 0;
@@ -106,7 +106,7 @@
 	/* Tab:Hover  */
 	--itx-cb-tab-background-hover: inherit;
 	--itx-cb-tab-foreground-hover: var(--itx-contrast-4);
-	--itx-cb-tab-border-bottom-width: 2px;
+	--itx-cb-tab-border-bottom-width: var(--itx-border-width-thick);
 	--itx-cb-tab-border-bottom-style: solid;
 	--itx-cb-tab-border-bottom-color-hover: var(--itx-contrast-4);
 

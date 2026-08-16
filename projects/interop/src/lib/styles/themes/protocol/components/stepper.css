@@ -49,7 +49,7 @@
 	);
 	--itx-stepper-menu-background-color: var(--itx-surface);
 	--itx-stepper-menu-border-color: var(--itx-contrast-2);
-	--itx-stepper-menu-border-width: 1px;
+	--itx-stepper-menu-border-width: var(--itx-border-width-hairline);
 	/* Squared, like every other surface the borrow rounds have touched. The old
 	   value also read --itx-radius-4 with an 8px fallback, but that token is
 	   16px — the fallback was describing a different shape from the token. */
@@ -70,7 +70,7 @@
 	/* ── Step indicator — structure ─────────────────────────────────────── */
 	/*--itx-step-indicator-size: 1.75rem;*/
 	--itx-step-indicator-border-radius: 9999px;
-	--itx-step-indicator-border-width: 2px;
+	--itx-step-indicator-border-width: var(--itx-border-width-thick);
 	--itx-step-indicator-border-style: solid;
 	/* Fixed rem, not --itx-font-size-*. The role tokens are fluid clamp()
 	   values, and a numeral that grows with the viewport sits inside a fixed

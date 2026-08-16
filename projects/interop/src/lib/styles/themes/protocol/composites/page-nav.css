@@ -43,7 +43,7 @@
 	--itx-pn-radius: 0;
 	--itx-pn-padding-block: var(--itx-spacing-4);
 	--itx-pn-padding-inline: var(--itx-spacing-2);
-	--itx-pn-border-width: 2px;
+	--itx-pn-border-width: var(--itx-border-width-thick);
 	--itx-pn-border-color: var(--itx-contrast-3);
 	--itx-pn-gap: 0;
 	--itx-pn-z-index: 10;
@@ -58,7 +58,7 @@
 	--itx-pn-font-weight-active: 400;
 
 	--itx-pn-link-border-color: transparent;
-	--itx-pn-link-border-width: 2px;
+	--itx-pn-link-border-width: var(--itx-border-width-thick);
 
 	--itx-pn-link-color: var(--itx-contrast-4);
 	--itx-pn-link-color-active: var(--itx-contrast-6);

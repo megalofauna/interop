@@ -214,6 +214,36 @@ other legitimate survivors. `scripts/check-motion.mjs` enforces the rest, and a
 `var()` fallback is a chain (allowed) while a literal fallback is a second source
 of truth (rejected).
 
+## Edges (border width & high contrast)
+
+**Never write a literal border width.** Read the semantic scale in
+`tokens/shape.css` — `--itx-border-width-hairline` (1px), `-thick` (2px),
+`-heavy` (3px) — or the numeric ramp behind it. There was no primitive at all
+before: 48 declarations across 30 files wrote `1px`/`2px`/`3px` by hand.
+
+A `border-width: 0` stays a literal. That is absence, not a weight, and routing
+it through a token buys nothing.
+
+**Do not write a `prefers-contrast` block to bump a width.** Hairline thickens
+to 2px under the preference (`tokens/shape.css`) and the focus ring goes to
+3px (`tokens/focus.css`), so any component reading those tokens follows. Five
+components used to write those bumps by hand; every other bordered component
+ignored the preference entirely.
+
+**Do write one to add an edge a component only has in high contrast.** Which
+part of a component needs a selection edge — a chip's checked state, a segment's
+`aria-pressed`, the stepper's active indicator — is component knowledge no token
+carries. The shape is:
+
+```css
+@media (prefers-contrast: high) {
+	:where(X[selected]) { outline: var(--itx-border-width-thick) solid currentColor; }
+}
+```
+
+`currentColor` is deliberate here and the focus guard exempts it: high contrast
+means following the user's colours, not the brand's.
+
 ## Linting
 
 `npm run lint` runs four guards; `npm run lint:css` is the stylelint one.

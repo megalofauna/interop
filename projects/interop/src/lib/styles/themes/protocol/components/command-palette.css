@@ -50,7 +50,7 @@
 	--itx-cmdp-aside-inline-size: 12rem;
 	--itx-cmdp-background: var(--itx-surface);
 	--itx-cmdp-color: var(--itx-contrast-6);
-	--itx-cmdp-border-width: 1px;
+	--itx-cmdp-border-width: var(--itx-border-width-hairline);
 	/* The house hairline. NOT --itx-contrast-3, which resolves to neutral-5 — a
 	   sub-0.1 luminance delta against our surfaces, i.e. an edge you cannot
 	   see. Same value as the table's row rules and the tab list. */
@@ -104,7 +104,6 @@
 	--itx-cmdp-clear-background: var(--itx-surface-below);
 	--itx-cmdp-clear-background-hover: var(--itx-surface-below);
 	--itx-cmdp-clear-color: var(--itx-contrast-6);
-
 
 	/* list */
 	--itx-cmdp-list-padding: var(--itx-spacing-1);

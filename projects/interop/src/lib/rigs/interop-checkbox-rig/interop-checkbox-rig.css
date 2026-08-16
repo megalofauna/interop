@@ -10,7 +10,7 @@
 
 /* Hands-off mode: Full fieldset structure */
 :host(interop-checkbox-rig) fieldset {
-	border: 1px solid transparent;
+	border: var(--itx-border-width-hairline) solid transparent;
 	/*border-radius: 4px;*/
 	/*padding: 1rem;*/
 	margin: 0;
@@ -59,7 +59,7 @@
 	/*padding-bottom: 0.5rem;*/
 	/*margin-bottom: 0.75rem;*/
 	/*border-radius: 0;*/
-	border-bottom: 1px solid var(--itx-surface-below);
+	border-bottom: var(--itx-border-width-hairline) solid var(--itx-surface-below);
 	padding-bottom: var(--itx-spacing-2);
 	margin-block: var(--itx-spacing-4);
 }
@@ -109,19 +109,4 @@
 
 :host(.compact) .checkbox-rig-content {
 	gap: 0.25rem;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-	:host(interop-checkbox-rig) fieldset {
-		border-width: 2px;
-	}
-
-	.checkbox-select-all {
-		border-bottom-width: 2px;
-	}
-
-	.checkbox-control input[type="checkbox"]:focus-visible {
-		outline-width: 3px;
-	}
 }
