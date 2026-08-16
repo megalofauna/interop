@@ -43,7 +43,6 @@
  *   --itx-button-border-color        --itx-button-border-color-hover        --itx-button-border-color-active
  *
  *   Visual pill — structure (no state variants)
- *   --itx-button-background-image
  *   --itx-button-border-width
  *   --itx-button-border-style
  *   --itx-button-radius-default    Theme's default radius. The itx-radius="…" attribute overrides it.
@@ -217,7 +216,6 @@
 	pointer-events: none;
 
 	background-color: var(--_background, transparent);
-	background-image: var(--itx-button-background-image, none);
 	border-width: var(--itx-button-border-width, 0);
 	border-style: var(--itx-button-border-style, solid);
 	border-color: var(--_border-color);
