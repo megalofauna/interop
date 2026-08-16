@@ -49,7 +49,6 @@ import {
 	standalone: true,
 	imports: [FieldControlElement, FieldErrorsElement, FieldNotesElement],
 	templateUrl: "./interop-field-textarea.html",
-	styleUrl: "./interop-field-textarea.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 
 	host: {

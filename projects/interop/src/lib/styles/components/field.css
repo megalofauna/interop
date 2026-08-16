@@ -1,0 +1,415 @@
+/*
+ * InteropField — structural foundation.
+ *
+ * Rendering rules for `<interop-field-input>` and `<interop-field-textarea>`,
+ * their shared `<interop-field-control>` row, and the label / notes / errors
+ * around it.
+ *
+ * Loaded globally via `interop.css` so any consumer can apply Interop field
+ * styling by writing the markup — no Angular component import required. This
+ * file replaces the two component-local `styleUrl` sheets the pair used to
+ * carry; those were injected UNLAYERED, which meant a consumer who correctly
+ * declared `@layer interop, …` could not override them. See
+ * .agent/todo/styleurl-components-migration.md.
+ *
+ * ── One file, two components ───────────────────────────────────────────────
+ *
+ * The input and the text area were ~90% byte-identical, duplicated because two
+ * component stylesheets cannot share a declaration without a global sheet.
+ * They share everything here; the text area's genuine deltas are collected in
+ * one block, scoped to `:where(interop-field-textarea)`:
+ *
+ *   - `align-items: flex-start`, so an addon pins to the first line rather
+ *     than floating in the middle of a grown box
+ *   - block padding instead of a fixed height
+ *   - a minimum inline size
+ *   - `resize`
+ *
+ * The looser line-height is the fifth delta and is a VALUE, so it lives in the
+ * theme with the other values.
+ *
+ * ── Borrowed visual language ───────────────────────────────────────────────
+ *
+ * Proportions and paint follow IBM Carbon's Text Input / Text Area, round 10
+ * of .agent/workflows/carbon-borrow.md. Carbon's field is built from four
+ * decisions: a filled slab instead of an outlined box, ONE border along the
+ * bottom edge, a fixed height per size step, and the label above / helper text
+ * below, both quieter than the value. The fill-plus-underline is the whole
+ * idea — the box is legible as an input because it is a different surface from
+ * the page, not because it is ringed.
+ *
+ * Token values live in `themes/protocol/components/field.css`. This file
+ * declares structure and carries NO fallbacks: a renamed token must fail
+ * visibly rather than silently resolve to a default hidden at the point of use.
+ */
+
+/* ─── Host ───────────────────────────────────────────────────────────────── */
+
+/*
+ * Carbon's `.--form-item` is a flex column with `align-items: flex-start`. We
+ * stretch instead — the control fills whatever track the consumer gives the
+ * field, because callers size the field, not the input.
+ *
+ * The gap is the distance from control to helper text and helper to error. The
+ * label sits further clear and takes that extra as its own margin below: one
+ * flex `gap` cannot be two different numbers.
+ */
+:where(interop-field-input, interop-field-textarea) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-field-gap);
+}
+
+/* ─── Label ──────────────────────────────────────────────────────────────── */
+
+/*
+ * Fixed rem, never --itx-font-size-*: those are fluid clamp() values, and a
+ * label that grows with the viewport inside a pinned 40px control is how a
+ * field overflows itself. Carbon holds the label at 400 so it never competes
+ * with the value.
+ */
+:where(.interop-field-label) {
+	color: var(--itx-field-label-color);
+	font-size: var(--itx-field-label-font-size);
+	font-weight: var(--itx-field-label-font-weight);
+	line-height: var(--itx-field-label-line-height);
+	margin-block-end: var(--itx-field-label-gap);
+}
+
+/*
+ * Required marker. Carbon does the opposite by default — it marks OPTIONAL
+ * fields and leaves required ones unmarked, reasoning that most fields in a
+ * form are required and marking the exception is less noise. That needs a
+ * template change to express, so we implement the asterisk instead. Set
+ * --itx-field-required-indicator to "" to suppress it.
+ *
+ * Driven by the host's `data-required`, so the marker is a property of the
+ * field rather than of the control.
+ */
+:where(
+	interop-field-input[data-required],
+	interop-field-textarea[data-required]
+)
+	:where(.interop-field-label)::after {
+	content: var(--itx-field-required-indicator);
+	color: var(--itx-field-required-indicator-color);
+}
+
+/*
+ * Disabled label and helper text. Ancestor-driven state: it comes from the
+ * host, not from the label itself, so it cannot self-nest — a descendant
+ * selector kept beside the part's base rule is the documented exception.
+ */
+:where(
+	interop-field-input[data-disabled],
+	interop-field-textarea[data-disabled]
+)
+	:where(.interop-field-label, .interop-field-note) {
+	color: var(--itx-field-disabled-color);
+}
+
+/* ─── Control row ────────────────────────────────────────────────────────── */
+
+/*
+ * The signature shape. Carbon paints the fill and the single bottom rule on
+ * the <input> itself; we paint them on the wrapper, because the wrapper is
+ * what contains the prefix/suffix addons — an addon outside the fill would
+ * read as floating beside the field rather than inside it. The control below
+ * is transparent and unbordered, so the visual result is the box Carbon draws.
+ *
+ * The element carries `itx-sink` (see internal/field-elements.ts): a field is
+ * a recess, and declaring the sink is what makes every relative token this
+ * element reads — its wash, its underline, its text — resolve against the
+ * recessed surface instead of against whatever contains it.
+ *
+ * `box-sizing: border-box` is not inherited from anywhere — this library sets
+ * it per component — and without it the 1px underline pushes the control to
+ * 41px. `min-block-size` rather than a fixed height lands on exactly the size
+ * step for normal content and degrades by growing rather than clipping.
+ */
+:where(interop-field-control) {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	gap: var(--itx-field-addon-gap);
+
+	min-block-size: var(--itx-field-height);
+	padding-block: 0;
+	padding-inline: var(--itx-field-padding-inline);
+
+	background-color: var(--itx-field-background);
+
+	/*
+	 * ONE border. Carbon writes `border: none` then a single
+	 * `border-block-end`, and that asymmetry is most of why the component is
+	 * recognisable. The rule here is the affordance, not a divider, so it is
+	 * deliberately stronger than the hairline the other borrow rounds use.
+	 */
+	border: none;
+	border-block-end: var(--itx-field-underline-width) solid
+		var(--itx-field-underline-color);
+
+	/* Squared. Carbon specifies no radius on any field. */
+	border-radius: var(--itx-field-border-radius);
+
+	transition:
+		background-color var(--itx-field-transition-duration)
+			var(--itx-easing-standard),
+		outline-color var(--itx-field-transition-duration)
+			var(--itx-easing-standard);
+
+	/*
+	 * Focus — a 2px ring INSET into the field rather than a halo around it, so
+	 * the control still measures exactly its size step and adjacent fields in a
+	 * stacked form don't collide.
+	 *
+	 * `.focused` is driven by the component's (focus)/(blur) handlers. For a
+	 * text control that is equivalent to :focus-visible, which browsers always
+	 * match on elements that expect keyboard input.
+	 *
+	 * The underline is deliberately NOT recoloured on focus: with a 2px ring
+	 * drawn over the box edge, changing the 1px rule underneath is invisible.
+	 */
+	&:where(.focused) {
+		outline: var(--itx-field-focus-width) solid var(--itx-field-focus-color);
+		outline-offset: calc(-1 * var(--itx-field-focus-width));
+	}
+
+	/*
+	 * Invalid. Carbon leaves the underline at $border-strong beneath the red
+	 * ring; we recolour it, so a focused invalid field (whose ring has turned
+	 * colorway) still carries an error signal on the control itself and not
+	 * only in the message below.
+	 */
+	&:where(.invalid) {
+		border-block-end-color: var(
+			--itx-field-invalid-color,
+			var(--itx-field-underline-color)
+		);
+	}
+
+	/*
+	 * Focus outranks error — Carbon's `[data-invalid]:not(:focus)`. A focus
+	 * ring that can be either of two colours is a worse focus indicator than
+	 * one that is always the same colour.
+	 */
+	&:where(.invalid:not(.focused)) {
+		outline: var(--itx-field-focus-width) solid
+			var(--itx-field-invalid-color, var(--itx-field-focus-color));
+		outline-offset: calc(-1 * var(--itx-field-focus-width));
+	}
+
+	/*
+	 * Disabled. Carbon keeps the fill, drops the underline to transparent, and
+	 * mutes the text — the missing rule IS the signal, which reads better than
+	 * a blanket opacity because it doesn't wash out the label above it.
+	 *
+	 * No `opacity` and no `pointer-events: none`: the latter suppressed the
+	 * `not-allowed` cursor set on the control below, so the one affordance the
+	 * disabled state had never showed. The native attribute blocks interaction.
+	 */
+	&:where(.disabled) {
+		border-block-end-color: transparent;
+	}
+
+	/*
+	 * Read-only. Carbon drops the fill entirely and softens the rule: the value
+	 * is still there to be read and copied, but the box stops advertising
+	 * itself as somewhere to type.
+	 */
+	&:where(.readonly) {
+		background-color: transparent;
+		border-block-end-color: var(
+			--itx-field-readonly-underline-color,
+			var(--itx-field-underline-color)
+		);
+	}
+}
+
+/*
+ * Hover. Carbon's field has NO hover state — the fill is permanent, so there
+ * is nothing to reveal. This is an Interop addition for consistency with the
+ * rest of the library, moving in Carbon's direction ($field-hover is a step
+ * further from the surface than $field).
+ *
+ * This is the one place the house "hover fill lifts a layer" convention does
+ * not apply: a field is a filled surface at rest, so rest already occupies
+ * that slot and hover has to move past it.
+ *
+ * Behind `any-hover: hover` so a touch device never gets a stuck fill, and
+ * excluded on disabled/readonly, where the control is not interactive paint.
+ */
+@media (any-hover: hover) {
+	:where(interop-field-control:not(.disabled, .readonly):hover) {
+		background-color: var(
+			--itx-field-background-hover,
+			var(--itx-field-background)
+		);
+	}
+}
+
+/*
+ * The inline error glyph — Carbon's WarningFilled at the inline end.
+ *
+ * Carbon positions it absolutely and pads the control's inline-end to clear
+ * it. We make it a flex item instead, which needs no positioning context, no
+ * reserved padding, and no compensation when a suffix addon is also present.
+ *
+ * Drawn as a mask rather than an inline <svg> so it costs no template change
+ * and its colour comes from a token — `background-color` fills the mask, so
+ * the glyph tracks --itx-field-invalid-color and the colour scheme for free.
+ * `fill-rule="evenodd"` makes the exclamation a hole in the disc rather than a
+ * second shape.
+ *
+ * Outside the nested block above because a pseudo-element cannot sit inside
+ * :where() — the spec forbids it and browsers silently drop the rule.
+ */
+:where(interop-field-control.invalid)::after {
+	content: "";
+	flex: 0 0 auto;
+	inline-size: var(--itx-field-invalid-icon-size);
+	block-size: var(--itx-field-invalid-icon-size);
+	background-color: var(--itx-field-invalid-color);
+	mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm-.75 3h1.5v5h-1.5V4Zm.75 8.25a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E");
+	mask-repeat: no-repeat;
+	mask-position: center;
+	mask-size: contain;
+}
+
+/* ─── Control — the input and the text area ──────────────────────────────── */
+
+/*
+ * Fixed rem for the same reason as the label: this box has a pinned height.
+ *
+ * `align-self: stretch` on the input is not cosmetic — without it the input is
+ * an 18px flex item centred in a 40px row, and the 11px of dead space above
+ * and below it does not focus the field when clicked. Stretching makes the
+ * whole slab the hit target, which is what Carbon gets for free by putting the
+ * fill on the input itself. The text area fills its box already.
+ */
+:where(.interop-text-field, .interop-text-area) {
+	flex: 1 1 auto;
+	min-inline-size: 0;
+	border: none;
+	outline: none;
+	background: transparent;
+	padding: 0;
+	margin: 0;
+	font-family: var(--itx-field-font-family);
+	font-size: var(--itx-field-font-size);
+	line-height: var(--itx-field-line-height);
+	color: var(--itx-field-color);
+
+	/*
+	 * Carbon's $text-placeholder is a documented contrast failure against
+	 * $field; we take one step darker. `opacity: 1` resets Firefox's UA default.
+	 */
+	&::placeholder {
+		color: var(--itx-field-placeholder-color);
+		opacity: 1;
+	}
+
+	&:where(:disabled) {
+		color: var(--itx-field-disabled-color);
+		cursor: not-allowed;
+		/* Safari ignores `color` on a disabled control without this. */
+		-webkit-text-fill-color: var(--itx-field-disabled-color);
+	}
+}
+
+:where(.interop-text-field) {
+	align-self: stretch;
+}
+
+:where(.interop-text-area) {
+	resize: var(--itx-field-textarea-resize);
+
+	/* A box you cannot type in should not offer a grab handle. */
+	&:where(:disabled) {
+		resize: none;
+	}
+}
+
+/* ─── Prefix / Suffix ────────────────────────────────────────────────────── */
+
+/*
+ * Carbon has no addon concept on either control — these are an Interop
+ * primitive. They sit at the label's grey so they read as chrome rather than
+ * as value, and `line-height: 1` keeps a glyph from stretching the row.
+ *
+ * Matched on the ATTRIBUTE as well as the class, unlike the other parts here.
+ * The label, notes and errors carry their classes from this library's own
+ * templates, so replicated markup copies them. Prefix and suffix are the one
+ * pair a CONSUMER authors — they write `<span interop-field-prefix>` and the
+ * class only appears because the Angular directive's host adds it. Matching
+ * the class alone would leave exactly the CSS-only consumer this migration
+ * exists to serve with unstyled addons.
+ */
+:where(
+	.interop-field-prefix,
+	[interop-field-prefix],
+	.interop-field-suffix,
+	[interop-field-suffix]
+) {
+	flex: 0 0 auto;
+	color: var(--itx-field-addon-color);
+	line-height: 1;
+	user-select: none;
+}
+
+/* ─── Notes ──────────────────────────────────────────────────────────────── */
+
+/* Same metrics as the label, so the block above and the block below the
+   control read as one voice. */
+:where(.interop-field-note) {
+	color: var(--itx-field-note-color);
+	font-size: var(--itx-field-note-font-size);
+	line-height: var(--itx-field-note-line-height);
+}
+
+/* ─── Errors ─────────────────────────────────────────────────────────────── */
+
+/* Carbon's `.--form-requirement`, at helper-text metrics and weight 400 — the
+   colour carries it, not the weight. */
+:where(.interop-field-error) {
+	color: var(--itx-field-error-color);
+	font-size: var(--itx-field-error-font-size);
+	line-height: var(--itx-field-error-line-height);
+}
+
+/* ─── Notes & Errors containers ──────────────────────────────────────────── */
+
+/* Two containers, two tokens. Both once read --itx-field-errors-gap, which
+   left the documented --itx-field-notes-gap as a token nothing consulted. */
+:where(interop-field-notes) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-field-notes-gap);
+}
+
+:where(interop-field-errors) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-field-errors-gap);
+}
+
+/* ─── Text area deltas ───────────────────────────────────────────────────── */
+
+/*
+ * The four structural differences between the two components, collected.
+ * Carbon changes exactly these on its Text Area:
+ *
+ *   1. `align-items: flex-start`, so an addon stays on the first line rather
+ *      than floating in the middle of a grown box.
+ *   2. Block padding replaces the fixed height — there is no pinned box to
+ *      centre inside, so the padding is what makes the box.
+ *   3. A minimum inline size.
+ *   4. `min-block-size` still reads --itx-field-height, so an empty text area
+ *      is exactly as tall as a text input and `itx-size` keeps meaning
+ *      something. Above the minimum, rows and content decide.
+ */
+:where(interop-field-textarea) :where(interop-field-control) {
+	align-items: flex-start;
+	min-inline-size: var(--itx-field-textarea-min-inline-size);
+	padding-block: var(--itx-field-textarea-padding-block);
+}
