@@ -53,7 +53,6 @@
 	   border (transparent on the filled ones) so the box never shifts. Radius
 	   is 0: Carbon has no rounded buttons. */
 	--itx-button-border-style: solid;
-	--itx-button-corner-shape: unset;
 
 	/* transition — Carbon $duration-fast-01 (70ms) on a productive entrance
 	   curve; rounded onto our motion scale. */
@@ -264,16 +263,8 @@
 /* ── Radius ───────────────────────────────────────────────────────────────── */
 /* Priority: --itx-button-border-radius (hard override) > itx-radius="…" attribute */
 /* > --itx-button-radius-default (the per-variant defaults set above). The pill is */
-/* a pseudo, so the attribute reaches it via the --_itx-button-radius bridge on    */
-/* the host (see components/button.css). Set --itx-button-border-radius directly    */
+/* Set --itx-button-border-radius directly                                        */
 /* only to force a single instance to an absolute value past the attribute.        */
-
-/* "full" means a stadium/pill. The default squircle corner-shape can't form one —
-   a maxed squircle is a superellipse, not a rounded end — so switch to round here
-   while every other radius keeps the squircle curve. */
-:where(button[interop-button][itx-radius="full"]) {
-	--itx-button-corner-shape: round;
-}
 
 /* ── Disabled ────────────────────────────────────────────────────────────── */
 /* Carbon paints disabled as a flat gray-30 fill with gray-50 text and no

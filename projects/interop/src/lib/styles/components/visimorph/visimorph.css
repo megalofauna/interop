@@ -105,7 +105,7 @@
 	box-sizing: border-box;
 	border: var(--_border-width) solid var(--_border-color);
 	background-color: var(--_bg);
-	corner-shape: var(--itx-corner-shape, none);
+	corner-shape: var(--itx-control-corner-shape, initial);
 	transition:
 		border-color var(--_transition),
 		background-color var(--_transition),
@@ -117,7 +117,6 @@
 
 :where(interop-visimorph[itx-visimorph="radio"]) {
 	border-radius: 50%;
-	--itx-corner-shape: none;
 }
 
 :where(interop-visimorph[itx-visimorph="radio"])::after {

@@ -47,7 +47,7 @@
 /* ── Copy button (size flows through interop-button; chip only sets shape) ── */
 
 :where(itx-inline-code .itx-ic__btn) {
-	corner-shape: initial;
+	corner-shape: var(--itx-ic-corner-shape, initial);
 }
 
 /* ── Screen-reader live region ───────────────────────────────────────────── */
