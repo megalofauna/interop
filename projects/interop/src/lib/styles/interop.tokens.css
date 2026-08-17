@@ -779,7 +779,7 @@
 	/* --itx-control-label-border-color-focus: ; */ /* inherits --itx-control-label-border-color */
 	/* --itx-control-label-border-color-hover: ; */ /* inherits --itx-control-label-border-color */
 	/* --itx-control-label-border-width: var(--itx-border-width-thick); */
-	/* --itx-control-label-color: inherit; */
+	/* --itx-control-label-color: inherit; */ /* (fallback) */
 	/* --itx-control-label-color-active: ; */ /* inherits --itx-control-label-color */
 	/* --itx-control-label-color-focus: ; */ /* inherits --itx-control-label-color */
 	/* --itx-control-label-color-hover: ; */ /* inherits --itx-control-label-color */
