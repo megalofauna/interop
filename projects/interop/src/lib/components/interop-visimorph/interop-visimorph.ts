@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 export type VisiMorphType = "radio" | "checkbox" | "toggle";
 
@@ -39,46 +35,46 @@ export type VisiMorphType = "radio" | "checkbox" | "toggle";
  * ```
  */
 @Component({
-  selector: "interop-visimorph",
-  standalone: true,
-  template: "",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    "[attr.itx-visimorph]": "type()",
-    "[attr.data-selected]": 'type() === "radio" && checked() ? "" : null',
-    "[attr.data-checked]":  'type() !== "radio" && checked() ? "" : null',
-    "[attr.data-disabled]": 'disabled() ? "" : null',
-    "[attr.data-indeterminate]": 'indeterminate() ? "" : null',
-    "[attr.data-focused]": 'focused() ? "" : null',
-    "aria-hidden": "true",
-    "role": "presentation",
-  },
+	selector: "interop-visimorph",
+	standalone: true,
+	template: "",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: {
+		"[attr.itx-visimorph]": "type()",
+		"[attr.data-selected]": 'type() === "radio" && checked() ? "" : null',
+		"[attr.data-checked]": 'type() !== "radio" && checked() ? "" : null',
+		"[attr.data-disabled]": 'disabled() ? "" : null',
+		"[attr.data-indeterminate]": 'indeterminate() ? "" : null',
+		"[attr.data-focused]": 'focused() ? "" : null',
+		"aria-hidden": "true",
+		role: "presentation",
+	},
 })
 export class InteropVisimorph {
-  /**
-   * The control type this instance represents.
-   * Reflected to the `itx-visimorph` host attribute for CSS type-specific styling.
-   */
-  type = input.required<VisiMorphType>();
+	/**
+	 * The control type this instance represents.
+	 * Reflected to the `itx-visimorph` host attribute for CSS type-specific styling.
+	 */
+	type = input.required<VisiMorphType>();
 
-  /**
-   * Whether the associated control is in a checked/selected state.
-   */
-  checked = input<boolean>(false);
+	/**
+	 * Whether the associated control is in a checked/selected state.
+	 */
+	checked = input<boolean>(false);
 
-  /**
-   * Whether the associated control is disabled.
-   */
-  disabled = input<boolean>(false);
+	/**
+	 * Whether the associated control is disabled.
+	 */
+	disabled = input<boolean>(false);
 
-  /**
-   * Whether the associated control is in an indeterminate state (checkbox only).
-   */
-  indeterminate = input<boolean>(false);
+	/**
+	 * Whether the associated control is in an indeterminate state (checkbox only).
+	 */
+	indeterminate = input<boolean>(false);
 
-  /**
-   * Whether the associated native input currently has focus.
-   * The parent control is responsible for tracking this and passing it in.
-   */
-  focused = input<boolean>(false);
+	/**
+	 * Whether the associated native input currently has focus.
+	 * The parent control is responsible for tracking this and passing it in.
+	 */
+	focused = input<boolean>(false);
 }

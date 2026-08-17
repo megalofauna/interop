@@ -5,9 +5,9 @@ they're easy to lift into a "Title + Bullets" Keynote layout. Anything
 under `### Speaker notes` is for the presenter only — paste into the
 notes pane, not the slide body.
 
-The narrative arc is roughly: *Premise → Standards gap → Pattern survey →
+The narrative arc is roughly: _Premise → Standards gap → Pattern survey →
 Pain points → The missing feature → What we'd ship → Self-critique →
-Decisions*.
+Decisions_.
 
 Trim or merge as you wire it into Keynote. Tables that span more than
 ~7 rows are split across two slides on purpose; merge if the audience
@@ -20,8 +20,9 @@ is technical enough to read them in one shot.
 A semantic-first wizard primitive for Angular
 
 ### Speaker notes
+
 Five-minute pitch. We're going to walk a research workflow we use for every
-new Interop component, applied to a component we *already* shipped — so
+new Interop component, applied to a component we _already_ shipped — so
 this doubles as a critique of our own work.
 
 ---
@@ -33,6 +34,7 @@ Interop already ships `InteropStepper`.
 This doc is research **and** review.
 
 ### Speaker notes
+
 We followed the same `new-component-research.md` workflow we'd run for a
 green-field component. Section 6 turns the same checklist back on
 ourselves.
@@ -49,6 +51,7 @@ ourselves.
 - devMode warnings for wrong host tags and missing panel headings
 
 ### Speaker notes
+
 The architecture-card lives at `.agent/components/stepper.md`. The
 headline is: native semantics over ARIA roles wherever possible.
 
@@ -56,9 +59,10 @@ headline is: native semantics over ARIA roles wherever possible.
 
 ## §1 — Semantic correctness
 
-What is the *right* way to mark up a stepper?
+What is the _right_ way to mark up a stepper?
 
 ### Speaker notes
+
 Section 1 of every research run. Before we look at incumbents, we need
 the yardstick: what does correct look like?
 
@@ -71,6 +75,7 @@ the yardstick: what does correct look like?
 32 patterns. None is "Stepper," "Wizard," or "Multi-step form."
 
 ### Speaker notes
+
 The Authoring Practices Guide is the de-facto bible for these decisions.
 There's no canonical stepper recipe. Every library has had to pick a
 pattern — and they disagree.
@@ -79,15 +84,16 @@ pattern — and they disagree.
 
 ## Who picked what
 
-| Library | Step list | Panel |
-|---|---|---|
-| Angular Material | `tablist` / `tab` | `tabpanel` |
-| PrimeNG | `tablist` / `tab` | `tabpanel` |
-| MUI (React) | none | none |
-| Radix / React Aria | — no stepper primitive — | |
-| GOV.UK | **no step indicator at all** | |
+| Library            | Step list                    | Panel      |
+| ------------------ | ---------------------------- | ---------- |
+| Angular Material   | `tablist` / `tab`            | `tabpanel` |
+| PrimeNG            | `tablist` / `tab`            | `tabpanel` |
+| MUI (React)        | none                         | none       |
+| Radix / React Aria | — no stepper primitive —     |            |
+| GOV.UK             | **no step indicator at all** |            |
 
 ### Speaker notes
+
 Material and PrimeNG defaulted to tabs. MUI shipped no role at all.
 Radix and React Aria ducked the question. GOV.UK actively recommends
 against step indicators for multi-step forms.
@@ -100,9 +106,10 @@ against step indicators for multi-step forms.
 - Tabs are **peer alternatives** — order doesn't matter
 - A stepper has **order**, **lock semantics**, **persistent completion**
 - `aria-selected` is the wrong state model
-- Step 2 *depends on* step 1; tabs imply independence
+- Step 2 _depends on_ step 1; tabs imply independence
 
 ### Speaker notes
+
 When you slap `tablist` on a stepper, you import the entire tabs
 interaction contract — and that contract actively lies about what your
 component does.
@@ -120,6 +127,7 @@ aria-current="step"
 — [WAI-ARIA 1.2 §6.6.6](https://www.w3.org/TR/wai-aria-1.2/#aria-current)
 
 ### Speaker notes
+
 The exact token exists. Every major library reaches past it for
 `tablist`. This is the foundational mistake the rest of the deck builds
 on.
@@ -135,6 +143,7 @@ on.
 - **No `tablist`. No `tab`. No `tabpanel`.**
 
 ### Speaker notes
+
 We use what HTML already gave us. This is one of the moments where
 "semantic correctness first" cashes out as a concrete decision.
 
@@ -149,8 +158,10 @@ roving tabindex, arrow keys between steps (Material, PrimeNG)
 Tab traverses, Enter/Space activates (MUI, Interop)
 
 ### Speaker notes
+
 We picked Camp B because:
-- Linear steppers mostly have *disabled* future steps; arrow nav over a
+
+- Linear steppers mostly have _disabled_ future steps; arrow nav over a
   list of disabled buttons is unhelpful
 - The panel is the work surface, not the step list
 - Going from B to A is non-breaking. A to B is not.
@@ -166,6 +177,7 @@ Three navigation events, one rule:
 `preventScroll: true` so the scroll itself stays smooth.
 
 ### Speaker notes
+
 This is the only behaviour the panel directive's docstring describes as
 "missing from every major stepper implementation." More on that in §4.
 
@@ -173,15 +185,16 @@ This is the only behaviour the panel directive's docstring describes as
 
 ## Spec divergence — Interop's positions
 
-| Topic | Mainstream | Interop |
-|---|---|---|
-| Step list role | `tablist` | `<ol>` + `<nav>` |
-| Active step | `aria-selected` | `aria-current="step"` |
-| Panel role | `tabpanel` | `<section>` + `aria-labelledby` |
-| Keyboard | tabs APG | Independent buttons |
-| `aria-controls` step→panel | partial | **add** (currently missing) |
+| Topic                      | Mainstream      | Interop                         |
+| -------------------------- | --------------- | ------------------------------- |
+| Step list role             | `tablist`       | `<ol>` + `<nav>`                |
+| Active step                | `aria-selected` | `aria-current="step"`           |
+| Panel role                 | `tabpanel`      | `<section>` + `aria-labelledby` |
+| Keyboard                   | tabs APG        | Independent buttons             |
+| `aria-controls` step→panel | partial         | **add** (currently missing)     |
 
 ### Speaker notes
+
 The last row is a finding from §6 of our self-review — we don't yet do
 the one thing MUI explicitly documents as required.
 
@@ -192,6 +205,7 @@ the one thing MUI explicitly documents as required.
 What burns developers using existing steppers?
 
 ### Speaker notes
+
 Section 2 mines issue trackers for patterns. We focus on Angular
 Material because it's our most direct comparison.
 
@@ -201,13 +215,14 @@ Material because it's our most direct comparison.
 
 - **#19574** — `tabpanel` had `tabindex="0"`, a meaningless tab stop
 - **#19009** — JAWS reads aria-labels of icons in non-active steps
-- **#31559** — iOS announces every field with "tab" suffix *(open)*
+- **#31559** — iOS announces every field with "tab" suffix _(open)_
 - **#33130** — couldn't set `aria-label` on the stepper container until v21
 - **#32964** — toggling `[linear]` at runtime didn't update the UI
 
 ### Speaker notes
+
 The iOS bug is the strongest argument against the tabs model: it's
-*actively misleading* screen-reader users. Material can't fix it
+_actively misleading_ screen-reader users. Material can't fix it
 without abandoning `tablist`.
 
 ---
@@ -219,6 +234,7 @@ without abandoning `tablist`.
 - **#31788** — locked-step hover affordances inconsistent
 
 ### Speaker notes
+
 The pattern: every architectural shortcut compounds. Animation engine
 dependency, ngIf-driven content, runtime-static inputs.
 
@@ -232,6 +248,7 @@ dependency, ngIf-driven content, runtime-static inputs.
 - **Shadcn** — community variants on top of Radix Tabs (same problems)
 
 ### Speaker notes
+
 The headless ecosystem ducked the problem. Composing one on top of Radix
 Tabs inherits every issue we just listed.
 
@@ -242,11 +259,13 @@ Tabs inherits every issue we just listed.
 GOV.UK Design System: **no step indicator at all.**
 
 Research found:
+
 - One-thing-per-page beats progress indicators
 - Back link + "check your answers" beats numbered steps
 - Visible step counters increase abandonment
 
 ### Speaker notes
+
 Worth pairing in Interop docs as a counterpoint. Not every multi-step
 flow should use a stepper. Steppers are appropriate when steps are
 long, when reviewing earlier steps matters, or when the flow is
@@ -264,7 +283,8 @@ non-linear.
 - Linear-mode toggles that don't react at runtime
 
 ### Speaker notes
-Six themes. Five of the six trace back to *one* architectural choice:
+
+Six themes. Five of the six trace back to _one_ architectural choice:
 treating the stepper as tabs.
 
 ---
@@ -274,8 +294,9 @@ treating the stepper as tabs.
 What do consumers want that no library ships well?
 
 ### Speaker notes
+
 Pain points cover what's broken. This section names what consumers
-*ask for* — a different signal.
+_ask for_ — a different signal.
 
 ---
 
@@ -291,6 +312,7 @@ Filter Material issues for "stepper + validation."
 - ...and nine more
 
 ### Speaker notes
+
 Seven-plus years of friction, all pointing at the same gap.
 
 ---
@@ -302,6 +324,7 @@ Seven-plus years of friction, all pointing at the same gap.
 > and stable reset behaviour.
 
 ### Speaker notes
+
 In plain language: "I have a form on each step. The stepper should know
 when it's invalid, pending, or untouched, and gate Next accordingly —
 without me re-implementing the wiring every project."
@@ -317,8 +340,9 @@ without me re-implementing the wiring every project."
 - **Reset stability** — clearing doesn't forge touched/dirty/invalid
 
 ### Speaker notes
+
 The full feature isn't one boolean. Material's `[stepControl]` is the
-*primitive* — but the surrounding details are what the 12 issues are
+_primitive_ — but the surrounding details are what the 12 issues are
 about.
 
 ---
@@ -331,6 +355,7 @@ about.
 - **Radix / React Aria / Headless UI / Ariakit** — no stepper at all
 
 ### Speaker notes
+
 No incumbent ships this well. Material gets closest and is the most
 complained about. Interop has `[blockOn]` and `[status]` today — the
 surface, not the full feature.
@@ -345,6 +370,7 @@ Not a current Interop strength. Worth elevating from "convenience" to
 "primary surface for form-based wizards."
 
 ### Speaker notes
+
 This is the team's next stepper milestone if we want to claim the
 form-wizard niche.
 
@@ -355,6 +381,7 @@ form-wizard niche.
 What makes Interop's stepper meaningfully different?
 
 ### Speaker notes
+
 "We do it accessibly" is table stakes, not a differentiator. We need
 something a Material refugee would call "finally."
 
@@ -369,6 +396,7 @@ When a panel becomes active, focus moves to its first `<h1>`–`<h6>`.
 Material focuses nothing. MUI focuses nothing. PrimeNG focuses a wrapper.
 
 ### Speaker notes
+
 Screen-reader users in every shipping stepper have no idea the panel
 changed. We're the only ones who fix it. This is the differentiator
 that ships now.
@@ -386,6 +414,7 @@ itself:
 > Interop does not, because Interop is not a tablist."
 
 ### Speaker notes
+
 The headline argument for a comparison post when we're ready to publish.
 
 ---
@@ -398,6 +427,7 @@ The headline argument for a comparison post when we're ready to publish.
 - `[indicatorTemplate]` swaps indicator without losing ARIA wiring
 
 ### Speaker notes
+
 Nice, not killer. They strengthen the story but the heading-focus and
 honest-semantics pair is what people will copy.
 
@@ -408,6 +438,7 @@ honest-semantics pair is what people will copy.
 (Already shipped — included for the workflow's sake.)
 
 ### Speaker notes
+
 This is what the workflow would produce for a green-field component.
 Skim it; the interesting section is the next one.
 
@@ -424,6 +455,7 @@ Skim it; the interesting section is the next one.
 - State: monotonic frontier + auto-status + overridable `[status]`
 
 ### Speaker notes
+
 Seven decisions. Each one falls out of §1 or §4.
 
 ---
@@ -447,6 +479,7 @@ Seven decisions. Each one falls out of §1 or §4.
 ```
 
 ### Speaker notes
+
 Native everything. The only custom-element-only piece is the container
 itself, because no native equivalent exists.
 
@@ -457,6 +490,7 @@ itself, because no native equivalent exists.
 Same checklist. Different target. Us.
 
 ### Speaker notes
+
 Section 6 is why this doc exists. The workflow that finds Material's
 flaws also finds Interop's.
 
@@ -466,25 +500,27 @@ flaws also finds Interop's.
 
 The step button has no `aria-controls` pointing at its panel.
 
-MUI documents this as the *one required* a11y relationship.
+MUI documents this as the _one required_ a11y relationship.
 
 **Fix:** stable id on each panel; `[attr.aria-controls]` on the button.
 
 ### Speaker notes
+
 Embarrassing because MUI calls it out explicitly. Cheap fix.
 
 ---
 
 ## 🔴 Fix — accessible name overrides
 
-Today: `aria-label="Step 1: Profile — Completed"` *replaces* visible content.
+Today: `aria-label="Step 1: Profile — Completed"` _replaces_ visible content.
 
 Sighted users see "1 Profile." SR users hear "Step 1: Profile — Completed."
 
 **Fix:** drop the override. Use visible content + visually-hidden status node.
 
 ### Speaker notes
-Visible label should *be* the accessible name. Status communicated via
+
+Visible label should _be_ the accessible name. Status communicated via
 visually-hidden span — works on every AT.
 
 ---
@@ -498,6 +534,7 @@ Spec says: one element identifies the current item.
 **Fix:** keep on the step indicator only.
 
 ### Speaker notes
+
 Risks double announcement. Easy to remove.
 
 ---
@@ -511,6 +548,7 @@ Risks double announcement. Easy to remove.
 - Document `[indicatorTemplate]` + label interaction
 
 ### Speaker notes
+
 Lower severity. None are actively broken; all are noise reduction.
 
 ---
@@ -524,24 +562,26 @@ Lower severity. None are actively broken; all are noise reduction.
 - Default `aria-label="Progress"` retained — consumer's job to disambiguate
 
 ### Speaker notes
+
 Things we got right. Worth documenting so we don't regress.
 
 ---
 
 ## Recommended changes
 
-| # | Severity | Change |
-|---|---|---|
-| 5.1 | 🔴 | Add `aria-controls` step → panel |
-| 5.2 | 🔴 | Drop `aria-label` override; use visible content + hidden status |
-| 5.3 | 🔴 | Remove `aria-current` from panel |
-| 5.4 | 🟡 | Drop `role="region"` from panel |
-| 5.5 | 🟡 | Drop `aria-disabled` from `<li>` |
-| 5.6 | 🟡 | Add `aria-orientation` |
-| 5.12 | 🟡 | RTL smoke test |
-| 5.13 | 🟡 | Document indicator-template + label |
+| #    | Severity | Change                                                          |
+| ---- | -------- | --------------------------------------------------------------- |
+| 5.1  | 🔴       | Add `aria-controls` step → panel                                |
+| 5.2  | 🔴       | Drop `aria-label` override; use visible content + hidden status |
+| 5.3  | 🔴       | Remove `aria-current` from panel                                |
+| 5.4  | 🟡       | Drop `role="region"` from panel                                 |
+| 5.5  | 🟡       | Drop `aria-disabled` from `<li>`                                |
+| 5.6  | 🟡       | Add `aria-orientation`                                          |
+| 5.12 | 🟡       | RTL smoke test                                                  |
+| 5.13 | 🟡       | Document indicator-template + label                             |
 
 ### Speaker notes
+
 Three red, five yellow. Net effect: less ARIA, not more.
 
 ---
@@ -555,6 +595,7 @@ Three red, five yellow. Net effect: less ARIA, not more.
 5. Multiple steppers per page — no warning; consumer's job to disambiguate.
 
 ### Speaker notes
+
 Five decisions that close the design loop. Two require code changes
 (blockOn input, finish gating); three are doc-only.
 
@@ -568,6 +609,7 @@ Five decisions that close the design loop. Two require code changes
 - Found three real bugs in our own shipped component
 
 ### Speaker notes
+
 Same workflow on a different component would find different things —
 that's the point. The checklist is the value, not any one finding.
 
@@ -585,5 +627,6 @@ that's the point. The checklist is the value, not any one finding.
 - Material #14026 (premature validation) — https://github.com/angular/components/issues/14026
 
 ### Speaker notes
+
 Full list in `prompts/stepper-research.md` §8. These are the load-bearing
 links for anyone who wants to verify the claims.

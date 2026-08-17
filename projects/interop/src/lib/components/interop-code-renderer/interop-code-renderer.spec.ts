@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Component } from "@angular/core";
 import { By } from "@angular/platform-browser";
-import { InteropCodeRenderer, type HighlightedCode } from "./interop-code-renderer";
+import {
+	InteropCodeRenderer,
+	type HighlightedCode,
+} from "./interop-code-renderer";
 
 @Component({
 	standalone: true,
@@ -28,8 +31,20 @@ class TestHost {
 }
 
 const sampleTokens: HighlightedCode = [
-	{ tokens: [{ text: "const ", color: "#569cd6" }, { text: "x", color: "#9cdcfe" }, { text: " = 1;", color: "#d4d4d4" }] },
-	{ tokens: [{ text: "const ", color: "#569cd6" }, { text: "y", color: "#9cdcfe" }, { text: " = 2;", color: "#d4d4d4" }] },
+	{
+		tokens: [
+			{ text: "const ", color: "#569cd6" },
+			{ text: "x", color: "#9cdcfe" },
+			{ text: " = 1;", color: "#d4d4d4" },
+		],
+	},
+	{
+		tokens: [
+			{ text: "const ", color: "#569cd6" },
+			{ text: "y", color: "#9cdcfe" },
+			{ text: " = 2;", color: "#d4d4d4" },
+		],
+	},
 ];
 
 describe("InteropCodeRenderer", () => {
@@ -45,7 +60,9 @@ describe("InteropCodeRenderer", () => {
 		fixture = TestBed.createComponent(TestHost);
 		host = fixture.componentInstance;
 		fixture.detectChanges();
-		figureEl = fixture.debugElement.query(By.directive(InteropCodeRenderer)).nativeElement;
+		figureEl = fixture.debugElement.query(
+			By.directive(InteropCodeRenderer),
+		).nativeElement;
 	});
 
 	// ── Structure ────────────────────────────────────────────────────────────────
@@ -67,20 +84,26 @@ describe("InteropCodeRenderer", () => {
 	it("shows figcaption with filename when set", () => {
 		host.filename = "app.ts";
 		fixture.detectChanges();
-		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe("app.ts");
+		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe(
+			"app.ts",
+		);
 	});
 
 	it("shows canonicalized language when no filename", () => {
 		host.language = "typescript";
 		fixture.detectChanges();
-		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe("TypeScript");
+		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe(
+			"TypeScript",
+		);
 	});
 
 	it("filename takes precedence over language", () => {
 		host.filename = "main.ts";
 		host.language = "typescript";
 		fixture.detectChanges();
-		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe("main.ts");
+		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe(
+			"main.ts",
+		);
 	});
 
 	// ── Language canonicalization ────────────────────────────────────────────────
@@ -88,19 +111,25 @@ describe("InteropCodeRenderer", () => {
 	it("canonicalizes 'ts' → 'TypeScript'", () => {
 		host.language = "ts";
 		fixture.detectChanges();
-		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe("TypeScript");
+		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe(
+			"TypeScript",
+		);
 	});
 
 	it("canonicalizes 'bash' → 'Shell'", () => {
 		host.language = "bash";
 		fixture.detectChanges();
-		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe("Shell");
+		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe(
+			"Shell",
+		);
 	});
 
 	it("passes unknown language through unchanged", () => {
 		host.language = "brainfuck";
 		fixture.detectChanges();
-		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe("brainfuck");
+		expect(figureEl.querySelector("figcaption")?.textContent?.trim()).toBe(
+			"brainfuck",
+		);
 	});
 
 	// ── Content rendering ────────────────────────────────────────────────────────
@@ -119,7 +148,9 @@ describe("InteropCodeRenderer", () => {
 	it("renders correct token spans per line", () => {
 		host.tokens = sampleTokens;
 		fixture.detectChanges();
-		const firstLineTokens = figureEl.querySelectorAll(".itx-cr__line:first-child .itx-cr__token");
+		const firstLineTokens = figureEl.querySelectorAll(
+			".itx-cr__line:first-child .itx-cr__token",
+		);
 		expect(firstLineTokens.length).toBe(sampleTokens[0].tokens.length);
 	});
 
@@ -156,6 +187,8 @@ describe("InteropCodeRenderer", () => {
 	it("sets --itx-cr-white-space to 'pre-wrap' when wrap=true", () => {
 		host.wrap = true;
 		fixture.detectChanges();
-		expect(figureEl.style.getPropertyValue("--itx-cr-white-space")).toBe("pre-wrap");
+		expect(figureEl.style.getPropertyValue("--itx-cr-white-space")).toBe(
+			"pre-wrap",
+		);
 	});
 });

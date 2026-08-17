@@ -4,8 +4,8 @@ import {
 	computed,
 	inject,
 	input,
-} from '@angular/core';
-import { NgComponentOutlet } from '@angular/common';
+} from "@angular/core";
+import { NgComponentOutlet } from "@angular/common";
 import type {
 	Block,
 	ContentNode,
@@ -14,36 +14,42 @@ import type {
 	Heading,
 	Inline,
 	ListItem,
-} from './content-node';
+} from "./content-node";
 import {
 	CONTENT_DIV_RENDERERS,
 	CONTENT_SYMBOL_RENDERER,
 	type DivRenderer,
 	type SymbolRenderer,
-} from './content-renderers';
+} from "./content-renderers";
 
 type ChildArray = readonly (Block | Inline | ListItem)[];
 
 const childrenOf = (node: ContentNode): ChildArray => {
-	if ('children' in node && Array.isArray(node.children)) {
+	if ("children" in node && Array.isArray(node.children)) {
 		return node.children as ChildArray;
 	}
 	return [];
 };
 
-const classListOf = (node: { attributes?: { class?: string } }): readonly string[] => {
+const classListOf = (node: {
+	attributes?: { class?: string };
+}): readonly string[] => {
 	const cls = node.attributes?.class;
 	return cls ? cls.split(/\s+/).filter(Boolean) : [];
 };
 
 const inlineText = (nodes: readonly Inline[]): string => {
-	let out = '';
+	let out = "";
 	for (const n of nodes) {
-		if (n.tag === 'str' || n.tag === 'verbatim' || n.tag === 'smart_punctuation') {
+		if (
+			n.tag === "str" ||
+			n.tag === "verbatim" ||
+			n.tag === "smart_punctuation"
+		) {
 			out += n.text;
-		} else if (n.tag === 'soft_break' || n.tag === 'non_breaking_space') {
-			out += ' ';
-		} else if ('children' in n && Array.isArray(n.children)) {
+		} else if (n.tag === "soft_break" || n.tag === "non_breaking_space") {
+			out += " ";
+		} else if ("children" in n && Array.isArray(n.children)) {
 			out += inlineText(n.children as readonly Inline[]);
 		}
 	}
@@ -64,11 +70,11 @@ const inlineText = (nodes: readonly Inline[]): string => {
  * — the same default behavior as a stock djot HTML renderer.
  */
 @Component({
-	selector: 'interop-content',
+	selector: "interop-content",
 	standalone: true,
 	imports: [NgComponentOutlet],
-	templateUrl: './interop-content.html',
-	styleUrls: ['./interop-content.css'],
+	templateUrl: "./interop-content.html",
+	styleUrls: ["./interop-content.css"],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropContent {
@@ -81,9 +87,9 @@ export class InteropContent {
 	protected readonly children = computed<ChildArray>(() =>
 		childrenOf(this.node()),
 	);
-	protected readonly attrId = computed(() => this.node().attributes?.['id']);
+	protected readonly attrId = computed(() => this.node().attributes?.["id"]);
 	protected readonly attrClass = computed(
-		() => this.node().attributes?.['class'],
+		() => this.node().attributes?.["class"],
 	);
 
 	// Tag-narrowed accessors. Each is only read inside its matching @case so the
@@ -92,7 +98,9 @@ export class InteropContent {
 	protected readonly asDoc = computed(() => this.node() as Doc);
 	protected readonly asDiv = computed(() => this.node() as Div);
 	protected readonly asListItem = computed(() => this.node() as ListItem);
-	protected readonly asAny = computed(() => this.node() as ContentNode & Record<string, unknown>);
+	protected readonly asAny = computed(
+		() => this.node() as ContentNode & Record<string, unknown>,
+	);
 
 	protected readonly headingLevel = computed(() => {
 		const lvl = this.asHeading().level;
@@ -100,7 +108,7 @@ export class InteropContent {
 	});
 
 	protected readonly divRenderer = computed<DivRenderer | null>(() => {
-		if (this.tag() !== 'div') return null;
+		if (this.tag() !== "div") return null;
 		for (const cls of classListOf(this.asDiv())) {
 			const renderer = this.divRenderers.get(cls);
 			if (renderer) return renderer;
@@ -122,7 +130,7 @@ export class InteropContent {
 
 	protected readonly imageAlt = computed(() => {
 		const node = this.asAny();
-		const kids = node['children'] as readonly Inline[] | undefined;
-		return kids ? inlineText(kids) : '';
+		const kids = node["children"] as readonly Inline[] | undefined;
+		return kids ? inlineText(kids) : "";
 	});
 }

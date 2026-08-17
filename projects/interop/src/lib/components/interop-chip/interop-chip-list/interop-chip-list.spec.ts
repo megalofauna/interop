@@ -10,7 +10,14 @@ import { InteropChipItem } from "../interop-chip-item/interop-chip-item";
 		<ul interop-chip-list aria-label="Post tags">
 			<li interop-chip-item label="Angular">Angular</li>
 			<li interop-chip-item label="CSS">CSS</li>
-			<li interop-chip-item label="A11y" [removable]="true" (removed)="onRemove('a11y')">A11y</li>
+			<li
+				interop-chip-item
+				label="A11y"
+				[removable]="true"
+				(removed)="onRemove('a11y')"
+			>
+				A11y
+			</li>
 		</ul>
 	`,
 })
@@ -23,7 +30,9 @@ describe("InteropChipList", () => {
 	let ul: HTMLUListElement;
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({ imports: [TestHost] }).compileComponents();
+		await TestBed.configureTestingModule({
+			imports: [TestHost],
+		}).compileComponents();
 		fixture = TestBed.createComponent(TestHost);
 		fixture.detectChanges();
 		await fixture.whenStable();

@@ -89,8 +89,12 @@ export class ProtocolHighlighter implements Highlighter {
 		const lang = core.getLoadedLanguages().includes(language)
 			? language
 			: "text";
-		const light = fromShikiTokens(core.codeToTokens(code, { lang, theme: LIGHT }).tokens);
-		const dark = fromShikiTokens(core.codeToTokens(code, { lang, theme: DARK }).tokens);
+		const light = fromShikiTokens(
+			core.codeToTokens(code, { lang, theme: LIGHT }).tokens,
+		);
+		const dark = fromShikiTokens(
+			core.codeToTokens(code, { lang, theme: DARK }).tokens,
+		);
 
 		const merged: HighlightedCode = light.map((line, i) => ({
 			tokens: line.tokens.map((token, j): HighlightToken => {

@@ -90,11 +90,11 @@ imports: [InteropButton, InteropButtonActivation]
 
 Appearance is set through three attributes across two namespaces:
 
-| Axis | Attribute | Values |
-|---|---|---|
-| Identity + variant | `interop-button="…"` | bare, or one or more variant names |
-| Size | `itx-size="…"` | `xs` · `sm` · `md` · `lg` · `xl` |
-| Radius | `itx-radius="…"` | `none` · `nominal` · `sm` · `md` · `lg` · `xl` · `full` |
+| Axis               | Attribute            | Values                                                  |
+| ------------------ | -------------------- | ------------------------------------------------------- |
+| Identity + variant | `interop-button="…"` | bare, or one or more variant names                      |
+| Size               | `itx-size="…"`       | `xs` · `sm` · `md` · `lg` · `xl`                        |
+| Radius             | `itx-radius="…"`     | `none` · `nominal` · `sm` · `md` · `lg` · `xl` · `full` |
 
 Variant sits on the identity attribute because it is definitional — a variant is a
 kind of button, not a tuning of one. Size and radius are quantitative axes shared
@@ -107,12 +107,12 @@ Five opt-in sizes on an 8-point grid — 24, 32, 40, 48, 56px — set through
 (md), or to manage sizing independently.
 
 | `itx-size` | height | label |
-|---|---|---|
-| `xs` | 24px | 12px |
-| `sm` | 32px | 14px |
-| `md` | 40px | 16px |
-| `lg` | 48px | 20px |
-| `xl` | 56px | 24px |
+| ---------- | ------ | ----- |
+| `xs`       | 24px   | 12px  |
+| `sm`       | 32px   | 14px  |
+| `md`       | 40px   | 16px  |
+| `lg`       | 48px   | 20px  |
+| `xl`       | 56px   | 24px  |
 
 #### Code example
 
@@ -131,12 +131,12 @@ at exactly the height. Retune a size, or set a height on any button directly:
 ```css
 /* Every size is one token — retune a height directly. */
 [interop-button][itx-size="md"] {
-  --itx-button-height: 2.75rem;
+	--itx-button-height: 2.75rem;
 }
 
 /* Or set a height on any button, no size attribute required. */
 [interop-button].compact {
-  --itx-button-height: 1.75rem;
+	--itx-button-height: 1.75rem;
 }
 ```
 
@@ -166,7 +166,7 @@ instance:
 
 ```css
 [interop-button].my-special-case {
-  --itx-button-border-radius: 10px;
+	--itx-button-border-radius: 10px;
 }
 ```
 
@@ -189,13 +189,13 @@ the tokens of interest. Any token left unset inherits from the base.
 
 ```css
 :where([interop-button~="interop-demo"]) {
-  --itx-button-background: hsl(250 60% 55%);
-  --itx-button-foreground: white;
-  --itx-button-border-color: hsl(250 60% 45%);
+	--itx-button-background: hsl(250 60% 55%);
+	--itx-button-foreground: white;
+	--itx-button-border-color: hsl(250 60% 45%);
 
-  /* State slots — append -hover or -active */
-  --itx-button-background-hover: hsl(250 60% 60%);
-  --itx-button-background-active: hsl(250 60% 50%);
+	/* State slots — append -hover or -active */
+	--itx-button-background-hover: hsl(250 60% 60%);
+	--itx-button-background-active: hsl(250 60% 50%);
 }
 ```
 
@@ -219,27 +219,27 @@ The custom properties a variant or theme may set. The coloured slots have state
 variants: append `-hover` or `-active` to the rest token (for example,
 `--itx-button-background-hover`).
 
-| Token | Role |
-|---|---|
-| `--itx-button-background` | Fill colour (rest / `-hover` / `-active`) |
-| `--itx-button-foreground` | Text and icon colour (rest / `-hover` / `-active`) |
-| `--itx-button-border-color` | Border colour (rest / `-hover` / `-active`) |
-| `--itx-button-border-width` | Border thickness |
-| `--itx-button-border-style` | Border style |
-| `--itx-button-box-shadow` | Pill shadow (rest / `-hover` / `-active`) |
-| `--itx-button-radius-default` | Variant's default corner radius (below `itx-radius`) |
-| `--itx-button-border-radius` | Per-instance radius override |
-| `--itx-button-corner-shape` | `squircle`, `round`, and so on |
-| `--itx-button-font-family` | Type family |
-| `--itx-button-font-size` | Type size |
-| `--itx-button-line-height` | Leading |
-| `--itx-button-height` | Visual pill height (set by `itx-size`); block padding derives from it |
-| `--itx-button-padding-block` | Escape hatch — overrides the height-derived block padding |
-| `--itx-button-padding-inline` | Horizontal padding |
-| `--itx-button-gap` | Gap between projected content items |
-| `--itx-button-touch-inset` | Invisible block space added on coarse pointers to floor the touch target |
-| `--itx-button-outline-{width,style,color,offset}` | Focus ring |
-| `--itx-button-transition-{property,duration,timing-function}` | State transition |
+| Token                                                         | Role                                                                     |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `--itx-button-background`                                     | Fill colour (rest / `-hover` / `-active`)                                |
+| `--itx-button-foreground`                                     | Text and icon colour (rest / `-hover` / `-active`)                       |
+| `--itx-button-border-color`                                   | Border colour (rest / `-hover` / `-active`)                              |
+| `--itx-button-border-width`                                   | Border thickness                                                         |
+| `--itx-button-border-style`                                   | Border style                                                             |
+| `--itx-button-box-shadow`                                     | Pill shadow (rest / `-hover` / `-active`)                                |
+| `--itx-button-radius-default`                                 | Variant's default corner radius (below `itx-radius`)                     |
+| `--itx-button-border-radius`                                  | Per-instance radius override                                             |
+| `--itx-button-corner-shape`                                   | `squircle`, `round`, and so on                                           |
+| `--itx-button-font-family`                                    | Type family                                                              |
+| `--itx-button-font-size`                                      | Type size                                                                |
+| `--itx-button-line-height`                                    | Leading                                                                  |
+| `--itx-button-height`                                         | Visual pill height (set by `itx-size`); block padding derives from it    |
+| `--itx-button-padding-block`                                  | Escape hatch — overrides the height-derived block padding                |
+| `--itx-button-padding-inline`                                 | Horizontal padding                                                       |
+| `--itx-button-gap`                                            | Gap between projected content items                                      |
+| `--itx-button-touch-inset`                                    | Invisible block space added on coarse pointers to floor the touch target |
+| `--itx-button-outline-{width,style,color,offset}`             | Focus ring                                                               |
+| `--itx-button-transition-{property,duration,timing-function}` | State transition                                                         |
 
 ## Availability
 
@@ -247,11 +247,11 @@ A button communicates its availability through three distinct states, each
 producing a different set of attributes and a different relationship to the tab
 order. The choice among them is an accessibility decision, not merely a visual one.
 
-| State | `disabled` | `aria-disabled` | `aria-busy` | In tab order |
-|---|---|---|---|---|
-| Disabled (default) | ✓ | — | — | No |
-| Disabled, focusable | — | `true` | — | Yes |
-| Loading | — | `true` | `true` | Yes |
+| State               | `disabled` | `aria-disabled` | `aria-busy` | In tab order |
+| ------------------- | ---------- | --------------- | ----------- | ------------ |
+| Disabled (default)  | ✓          | —               | —           | No           |
+| Disabled, focusable | —          | `true`          | —           | Yes          |
+| Loading             | —          | `true`          | `true`      | Yes          |
 
 ### Disabled
 
@@ -273,7 +273,9 @@ form validity, for instance. Interaction remains blocked; the click is suppresse
 rather than the element withdrawn.
 
 ```html
-<button interop-button [disabled]="true" [focusableWhenDisabled]="true">Save</button>
+<button interop-button [disabled]="true" [focusableWhenDisabled]="true">
+	Save
+</button>
 ```
 
 ### Loading
@@ -293,14 +295,16 @@ The guards live on `InteropButtonActivation`. Import it alongside `InteropButton
 pass a handler to `[onActivate]`, and configure it with `[activationOptions]`.
 
 ```ts
-imports: [InteropButton, InteropButtonActivation]
+imports: [InteropButton, InteropButtonActivation];
 ```
 
 ```html
-<button interop-button
-        [onActivate]="submit"
-        [activationOptions]="{ throttleMs: 500 }">
-  Submit
+<button
+	interop-button
+	[onActivate]="submit"
+	[activationOptions]="{ throttleMs: 500 }"
+>
+	Submit
 </button>
 ```
 
@@ -316,10 +320,12 @@ repeat the work, such as pagination or a "load more" control.
 #### Code example
 
 ```html
-<button interop-button
-        [onActivate]="loadMore"
-        [activationOptions]="{ throttleMs: 500 }">
-  Load more
+<button
+	interop-button
+	[onActivate]="loadMore"
+	[activationOptions]="{ throttleMs: 500 }"
+>
+	Load more
 </button>
 ```
 
@@ -333,10 +339,12 @@ rapid input.
 #### Code example
 
 ```html
-<button interop-button
-        [onActivate]="recalculate"
-        [activationOptions]="{ debounceMs: 300 }">
-  Recalculate
+<button
+	interop-button
+	[onActivate]="recalculate"
+	[activationOptions]="{ debounceMs: 300 }"
+>
+	Recalculate
 </button>
 ```
 
@@ -349,9 +357,11 @@ default (`reentrant: false`); set `reentrant: true` to permit concurrent runs.
 #### Code example
 
 ```html
-<button interop-button
-        [onActivate]="submitOrder"
-        [activationOptions]="{ reentrant: false }">
-  Place order
+<button
+	interop-button
+	[onActivate]="submitOrder"
+	[activationOptions]="{ reentrant: false }"
+>
+	Place order
 </button>
 ```

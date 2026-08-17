@@ -1,4 +1,13 @@
-import { Directive, OnDestroy, Signal, effect, inject, input, output, signal } from "@angular/core";
+import {
+	Directive,
+	OnDestroy,
+	Signal,
+	effect,
+	inject,
+	input,
+	output,
+	signal,
+} from "@angular/core";
 import { InteropTable, type TableColumn } from "./interop-table";
 import type { InteropTableSortApi } from "./interop-table-sort.token";
 
@@ -142,11 +151,7 @@ export class InteropTableSort implements InteropTableSortApi, OnDestroy {
 	toggle(key: string): void {
 		const current = this._activeKey();
 		const newDir: "asc" | "desc" =
-			current === key
-				? this._direction() === "asc"
-					? "desc"
-					: "asc"
-				: "asc";
+			current === key ? (this._direction() === "asc" ? "desc" : "asc") : "asc";
 
 		this._activeKey.set(key);
 		this._direction.set(newDir);

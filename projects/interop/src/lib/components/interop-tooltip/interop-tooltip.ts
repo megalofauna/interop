@@ -138,9 +138,8 @@ export class InteropTooltip implements OnDestroy {
 
 	// ── View query ──────────────────────────────────────────────────────────
 
-	private readonly tooltipPanelRef = viewChild.required<
-		ElementRef<HTMLElement>
-	>("tooltipPanel");
+	private readonly tooltipPanelRef =
+		viewChild.required<ElementRef<HTMLElement>>("tooltipPanel");
 
 	// ── IDs ─────────────────────────────────────────────────────────────────
 
@@ -242,7 +241,7 @@ export class InteropTooltip implements OnDestroy {
 			console.error(
 				"interop-tooltip: The trigger element has the native [disabled] attribute. " +
 					"Disabled elements cannot receive hover or focus events — the tooltip will never show. " +
-					"Use aria-disabled=\"true\" with an activation guard instead, or wrap the disabled " +
+					'Use aria-disabled="true" with an activation guard instead, or wrap the disabled ' +
 					"element in a focusable container and apply interop-tooltip to that.",
 			);
 		}
@@ -263,11 +262,11 @@ export class InteropTooltip implements OnDestroy {
 			const hasExplicitLabel = triggerEl.hasAttribute("aria-label");
 			if (hasVisibleText && !hasExplicitLabel) {
 				console.warn(
-					"interop-tooltip: [semantic]=\"label\" is set, but the trigger has visible text content. " +
+					'interop-tooltip: [semantic]="label" is set, but the trigger has visible text content. ' +
 						"aria-labelledby will override the element's visible text as its accessible name, " +
 						"suppressing it for screen reader users. " +
-						"Use [semantic]=\"description\" (default) for supplemental information. " +
-						"Reserve [semantic]=\"label\" for icon-only controls with no other accessible name.",
+						'Use [semantic]="description" (default) for supplemental information. ' +
+						'Reserve [semantic]="label" for icon-only controls with no other accessible name.',
 				);
 			}
 		}

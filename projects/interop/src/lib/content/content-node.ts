@@ -69,9 +69,9 @@ export type {
 	Url,
 	Verbatim,
 	Visitor,
-} from '@djot/djot';
+} from "@djot/djot";
 
-import type { AstNode } from '@djot/djot';
+import type { AstNode } from "@djot/djot";
 
 /**
  * Convenience union covering every node the recursive renderer may encounter

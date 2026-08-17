@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive } from "@angular/core";
 
 /**
  * Marker directive that identifies the tooltip trigger within an interop-tooltip.
@@ -18,7 +18,7 @@ import { Directive } from '@angular/core';
  * ```
  */
 @Directive({
-  selector: '[interopTooltipTrigger]',
-  standalone: true,
+	selector: "[interopTooltipTrigger]",
+	standalone: true,
 })
 export class InteropTooltipTriggerDirective {}

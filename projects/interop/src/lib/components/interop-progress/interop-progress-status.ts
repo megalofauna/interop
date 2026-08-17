@@ -31,10 +31,10 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 	template: "<ng-content />",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
-		"role": "status",
+		role: "status",
 		"aria-live": "polite",
 		"aria-atomic": "true",
-		"class": "interop-sr-only",
+		class: "interop-sr-only",
 	},
 })
 export class InteropProgressStatus {}

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 import {
-  INTEROP_ACCORDION_CONTEXT,
-  type InteropAccordionContext,
-} from './interop-accordion.context.token';
-import { type InteropExpansionPanelContext } from './interop-expansion-panel.context.token';
+	INTEROP_ACCORDION_CONTEXT,
+	type InteropAccordionContext,
+} from "./interop-accordion.context.token";
+import { type InteropExpansionPanelContext } from "./interop-expansion-panel.context.token";
 
 /**
  * InteropAccordion — Group coordinator for `interop-expansion-panel` children.
@@ -43,84 +43,89 @@ import { type InteropExpansionPanelContext } from './interop-expansion-panel.con
  * // TODO: Add support for custom trigger ng-template per panel in declarative mode.
  */
 @Component({
-  selector: 'interop-accordion',
-  standalone: true,
-  template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: INTEROP_ACCORDION_CONTEXT,
-      useExisting: InteropAccordion,
-    },
-  ],
+	selector: "interop-accordion",
+	standalone: true,
+	template: "<ng-content />",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [
+		{
+			provide: INTEROP_ACCORDION_CONTEXT,
+			useExisting: InteropAccordion,
+		},
+	],
 })
 export class InteropAccordion implements InteropAccordionContext {
-  /**
-   * When true (default), only one panel may be open at a time.
-   * Opening a panel closes any previously open panel.
-   * Set to false to allow multiple panels open simultaneously.
-   */
-  readonly exclusive = input<boolean>(true);
+	/**
+	 * When true (default), only one panel may be open at a time.
+	 * Opening a panel closes any previously open panel.
+	 * Set to false to allow multiple panels open simultaneously.
+	 */
+	readonly exclusive = input<boolean>(true);
 
-  private readonly _panels = new Map<string, InteropExpansionPanelContext>();
-  private readonly _triggers: HTMLButtonElement[] = [];
+	private readonly _panels = new Map<string, InteropExpansionPanelContext>();
+	private readonly _triggers: HTMLButtonElement[] = [];
 
-  // ── InteropAccordionContext ──────────────────────────────────────────────────
+	// ── InteropAccordionContext ──────────────────────────────────────────────────
 
-  registerPanel(panelId: string, context: InteropExpansionPanelContext): () => void {
-    this._panels.set(panelId, context);
-    return () => this._panels.delete(panelId);
-  }
+	registerPanel(
+		panelId: string,
+		context: InteropExpansionPanelContext,
+	): () => void {
+		this._panels.set(panelId, context);
+		return () => this._panels.delete(panelId);
+	}
 
-  notifyOpened(panelId: string): void {
-    if (!this.exclusive()) return;
-    for (const [id, ctx] of this._panels) {
-      if (id !== panelId) {
-        ctx.close();
-      }
-    }
-  }
+	notifyOpened(panelId: string): void {
+		if (!this.exclusive()) return;
+		for (const [id, ctx] of this._panels) {
+			if (id !== panelId) {
+				ctx.close();
+			}
+		}
+	}
 
-  registerTrigger(button: HTMLButtonElement): () => void {
-    this._triggers.push(button);
-    return () => {
-      const idx = this._triggers.indexOf(button);
-      if (idx !== -1) this._triggers.splice(idx, 1);
-    };
-  }
+	registerTrigger(button: HTMLButtonElement): () => void {
+		this._triggers.push(button);
+		return () => {
+			const idx = this._triggers.indexOf(button);
+			if (idx !== -1) this._triggers.splice(idx, 1);
+		};
+	}
 
-  focusRelativeTrigger(
-    from: HTMLButtonElement,
-    direction: 'prev' | 'next' | 'first' | 'last',
-  ): void {
-    // Sort by DOM order so arrow navigation is correct regardless of
-    // registration order (panels may register in non-sequential order).
-    const sorted = [...this._triggers]
-      .filter((t) => !t.disabled)
-      .sort((a, b) =>
-        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
-      );
+	focusRelativeTrigger(
+		from: HTMLButtonElement,
+		direction: "prev" | "next" | "first" | "last",
+	): void {
+		// Sort by DOM order so arrow navigation is correct regardless of
+		// registration order (panels may register in non-sequential order).
+		const sorted = [...this._triggers]
+			.filter((t) => !t.disabled)
+			.sort((a, b) =>
+				a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
+					? -1
+					: 1,
+			);
 
-    if (!sorted.length) return;
+		if (!sorted.length) return;
 
-    const currentIdx = sorted.indexOf(from);
-    let targetIdx: number;
+		const currentIdx = sorted.indexOf(from);
+		let targetIdx: number;
 
-    switch (direction) {
-      case 'next':
-        targetIdx = (currentIdx + 1) % sorted.length;
-        break;
-      case 'prev':
-        targetIdx = (currentIdx - 1 + sorted.length) % sorted.length;
-        break;
-      case 'first':
-        targetIdx = 0;
-        break;
-      case 'last':
-        targetIdx = sorted.length - 1;
-        break;
-    }
+		switch (direction) {
+			case "next":
+				targetIdx = (currentIdx + 1) % sorted.length;
+				break;
+			case "prev":
+				targetIdx = (currentIdx - 1 + sorted.length) % sorted.length;
+				break;
+			case "first":
+				targetIdx = 0;
+				break;
+			case "last":
+				targetIdx = sorted.length - 1;
+				break;
+		}
 
-    sorted[targetIdx]?.focus();
-  }
+		sorted[targetIdx]?.focus();
+	}
 }

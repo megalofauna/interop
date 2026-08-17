@@ -59,8 +59,7 @@
 	inset-inline: 0;
 	inset-block-start: calc(
 		0px - var(--itx-axis-rule-block-offset, 0px) -
-		var(--itx-axis-rule-gap, 0px) / 2 -
-		var(--itx-axis-rule-width, 0px) / 2
+			var(--itx-axis-rule-gap, 0px) / 2 - var(--itx-axis-rule-width, 0px) / 2
 	);
 	block-size: var(--itx-axis-rule-width, 0);
 }
@@ -72,8 +71,7 @@
 	inset-block: 0;
 	inset-inline-start: calc(
 		0px - var(--itx-axis-rule-inline-offset, 0px) -
-		var(--itx-axis-rule-gap, 0px) / 2 -
-		var(--itx-axis-rule-width, 0px) / 2
+			var(--itx-axis-rule-gap, 0px) / 2 - var(--itx-axis-rule-width, 0px) / 2
 	);
 	inline-size: var(--itx-axis-rule-width, 0);
 }

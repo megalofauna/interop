@@ -24,7 +24,9 @@
 
 		<demo-example label="Basic">
 			<div class="toast-page__row">
-				<button interop-button="primary" (click)="showBasic()">Show toast</button>
+				<button interop-button="primary" (click)="showBasic()">
+					Show toast
+				</button>
 			</div>
 			<itx-code-block [files]="setupFiles()" />
 		</demo-example>
@@ -46,7 +48,9 @@
 
 		<demo-example label="With an action">
 			<div class="toast-page__row">
-				<button interop-button="primary" (click)="showAction()">Jettison crate</button>
+				<button interop-button="primary" (click)="showAction()">
+					Jettison crate
+				</button>
 			</div>
 			<demo-state>
 				<demo-state-item label="last action id">
@@ -86,15 +90,15 @@
 			>
 				<span class="palette-switch__label">Palette</span>
 				@for (p of palettes; track p.id) {
-				<button
-					type="button"
-					class="palette-switch__option"
-					[class.is-active]="palette() === p.id"
-					[attr.aria-pressed]="palette() === p.id"
-					(click)="palette.set(p.id)"
-				>
-					{{ p.label }}
-				</button>
+					<button
+						type="button"
+						class="palette-switch__option"
+						[class.is-active]="palette() === p.id"
+						[attr.aria-pressed]="palette() === p.id"
+						(click)="palette.set(p.id)"
+					>
+						{{ p.label }}
+					</button>
 				}
 			</div>
 
@@ -138,7 +142,9 @@
 
 		<demo-example label="promise() — Promise">
 			<div class="toast-page__row">
-				<button interop-button="primary" (click)="promiseExample()">Count crates</button>
+				<button interop-button="primary" (click)="promiseExample()">
+					Count crates
+				</button>
 			</div>
 			<itx-code-block language="ts" [code]="promiseCode" />
 		</demo-example>
@@ -196,29 +202,29 @@
 				<div class="toast-page__control" role="group" aria-label="Position">
 					<span class="toast-page__control-label">position</span>
 					@for (p of positions; track p) {
-					<button
-						type="button"
-						class="palette-switch__option"
-						[class.is-active]="position() === p"
-						[attr.aria-pressed]="position() === p"
-						(click)="position.set(p)"
-					>
-						{{ p }}
-					</button>
+						<button
+							type="button"
+							class="palette-switch__option"
+							[class.is-active]="position() === p"
+							[attr.aria-pressed]="position() === p"
+							(click)="position.set(p)"
+						>
+							{{ p }}
+						</button>
 					}
 				</div>
 				<div class="toast-page__control" role="group" aria-label="Max visible">
 					<span class="toast-page__control-label">maxVisible</span>
 					@for (n of maxVisibleChoices; track n) {
-					<button
-						type="button"
-						class="palette-switch__option"
-						[class.is-active]="maxVisible() === n"
-						[attr.aria-pressed]="maxVisible() === n"
-						(click)="maxVisible.set(n)"
-					>
-						{{ n }}
-					</button>
+						<button
+							type="button"
+							class="palette-switch__option"
+							[class.is-active]="maxVisible() === n"
+							[attr.aria-pressed]="maxVisible() === n"
+							(click)="maxVisible.set(n)"
+						>
+							{{ n }}
+						</button>
 					}
 				</div>
 			</div>
@@ -293,7 +299,9 @@
 			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>

@@ -21,7 +21,7 @@ and what still needs wiring.
 
 ## Prose and emphasis
 
-A paragraph with **bold**, *italic*, and `inline code`. Text wrap is set to
+A paragraph with **bold**, _italic_, and `inline code`. Text wrap is set to
 pretty, so ragged edges stay tidy. Here is a [link to the home page](/).
 
 > A blockquote, for pulling a line out of the flow.

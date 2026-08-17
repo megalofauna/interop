@@ -1,18 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, ChangeDetectionStrategy, input, signal } from '@angular/core';
-import { parse } from '@djot/djot';
-import { InteropContent } from './interop-content';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import {
+	Component,
+	ChangeDetectionStrategy,
+	input,
+	signal,
+} from "@angular/core";
+import { parse } from "@djot/djot";
+import { InteropContent } from "./interop-content";
 import {
 	provideContentDivRenderers,
 	provideContentSymbolRenderer,
-} from './content-renderers';
-import type { ContentNode, Div, Symb } from './content-node';
+} from "./content-renderers";
+import type { ContentNode, Div, Symb } from "./content-node";
 
 const firstDiv = (src: string): Div => {
 	const ast = parse(src);
-	const div = ast.children.find((c) => c.tag === 'div');
-	if (!div || div.tag !== 'div') {
-		throw new Error('Sample source must contain a top-level :::-div');
+	const div = ast.children.find((c) => c.tag === "div");
+	if (!div || div.tag !== "div") {
+		throw new Error("Sample source must contain a top-level :::-div");
 	}
 	return div;
 };
@@ -29,7 +34,9 @@ class Host {
 
 @Component({
 	standalone: true,
-	template: `<aside data-testid="callout">callout: {{ node().attributes?.id }}</aside>`,
+	template: `<aside data-testid="callout">
+		callout: {{ node().attributes?.id }}
+	</aside>`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class CalloutRenderer {
@@ -60,8 +67,8 @@ const setup = async (
 	return fixture;
 };
 
-describe('InteropContent', () => {
-	it('renders headings, paragraphs, emphasis, and strong', async () => {
+describe("InteropContent", () => {
+	it("renders headings, paragraphs, emphasis, and strong", async () => {
 		const fixture = await setup(`{#x}
 :::
 # Hello
@@ -69,12 +76,12 @@ describe('InteropContent', () => {
 A *strong* and an _italic_ word.
 :::`);
 		const el: HTMLElement = fixture.nativeElement;
-		expect(el.querySelector('h1')?.textContent).toContain('Hello');
-		expect(el.querySelector('strong')?.textContent).toBe('strong');
-		expect(el.querySelector('em')?.textContent).toBe('italic');
+		expect(el.querySelector("h1")?.textContent).toContain("Hello");
+		expect(el.querySelector("strong")?.textContent).toBe("strong");
+		expect(el.querySelector("em")?.textContent).toBe("italic");
 	});
 
-	it('renders bullet lists, ordered lists, and inline code', async () => {
+	it("renders bullet lists, ordered lists, and inline code", async () => {
 		const fixture = await setup(`{#x}
 :::
 - one
@@ -86,40 +93,40 @@ A *strong* and an _italic_ word.
 A \`verbatim\` chunk.
 :::`);
 		const el: HTMLElement = fixture.nativeElement;
-		expect(el.querySelectorAll('ul li').length).toBe(2);
-		expect(el.querySelectorAll('ol li').length).toBe(2);
-		expect(el.querySelector('code')?.textContent).toBe('verbatim');
+		expect(el.querySelectorAll("ul li").length).toBe(2);
+		expect(el.querySelectorAll("ol li").length).toBe(2);
+		expect(el.querySelector("code")?.textContent).toBe("verbatim");
 	});
 
-	it('renders code blocks with language data attribute', async () => {
+	it("renders code blocks with language data attribute", async () => {
 		const fixture = await setup(`{#x}
 :::
 \`\`\` ts
 const x = 1;
 \`\`\`
 :::`);
-		const code = fixture.nativeElement.querySelector('pre code');
+		const code = fixture.nativeElement.querySelector("pre code");
 		expect(code).toBeTruthy();
-		expect(code.getAttribute('data-lang')).toBe('ts');
-		expect(code.textContent).toContain('const x = 1;');
+		expect(code.getAttribute("data-lang")).toBe("ts");
+		expect(code.textContent).toContain("const x = 1;");
 	});
 
-	it('renders block quotes', async () => {
+	it("renders block quotes", async () => {
 		const fixture = await setup(`{#x}
 :::
 > a citation
 :::`);
-		expect(fixture.nativeElement.querySelector('blockquote')).toBeTruthy();
+		expect(fixture.nativeElement.querySelector("blockquote")).toBeTruthy();
 	});
 
-	it('renders links with destination', async () => {
+	it("renders links with destination", async () => {
 		const fixture = await setup(`{#x}
 :::
 [home](https://example.com)
 :::`);
-		const a = fixture.nativeElement.querySelector('a');
-		expect(a?.getAttribute('href')).toBe('https://example.com');
-		expect(a?.textContent).toContain('home');
+		const a = fixture.nativeElement.querySelector("a");
+		expect(a?.getAttribute("href")).toBe("https://example.com");
+		expect(a?.textContent).toContain("home");
 	});
 
 	it('renders symbols as ":alias:" text by default', async () => {
@@ -127,10 +134,10 @@ const x = 1;
 :::
 :icon-shield:
 :::`);
-		expect(fixture.nativeElement.textContent).toContain(':icon-shield:');
+		expect(fixture.nativeElement.textContent).toContain(":icon-shield:");
 	});
 
-	it('routes class-tagged divs through provideContentDivRenderers', async () => {
+	it("routes class-tagged divs through provideContentDivRenderers", async () => {
 		const fixture = await setup(
 			`{#outer}
 :::
@@ -140,11 +147,13 @@ inner content
 :::`,
 			[provideContentDivRenderers({ callout: CalloutRenderer })],
 		);
-		const aside = fixture.nativeElement.querySelector('[data-testid="callout"]');
+		const aside = fixture.nativeElement.querySelector(
+			'[data-testid="callout"]',
+		);
 		expect(aside).toBeTruthy();
 	});
 
-	it('routes symbols through provideContentSymbolRenderer', async () => {
+	it("routes symbols through provideContentSymbolRenderer", async () => {
 		const fixture = await setup(
 			`{#x}
 :::
@@ -154,20 +163,20 @@ inner content
 		);
 		const icon = fixture.nativeElement.querySelector('[data-testid="icon"]');
 		expect(icon).toBeTruthy();
-		expect(icon.getAttribute('data-name')).toBe('bolt');
+		expect(icon.getAttribute("data-name")).toBe("bolt");
 	});
 
-	it('applies id and class attributes from block attributes', async () => {
+	it("applies id and class attributes from block attributes", async () => {
 		const fixture = await setup(`{#hero .lead}
 :::
 hello
 :::`);
-		const div = fixture.nativeElement.querySelector('div');
-		expect(div?.getAttribute('id')).toBe('hero');
-		expect(div?.getAttribute('class')).toBe('lead');
+		const div = fixture.nativeElement.querySelector("div");
+		expect(div?.getAttribute("id")).toBe("hero");
+		expect(div?.getAttribute("class")).toBe("lead");
 	});
 
-	it('renders tables with header rows and alignments', async () => {
+	it("renders tables with header rows and alignments", async () => {
 		const fixture = await setup(`{#x}
 :::
 | L  | C  | R  |
@@ -175,8 +184,8 @@ hello
 | a  | b  | c  |
 :::`);
 		const el: HTMLElement = fixture.nativeElement;
-		expect(el.querySelector('table')).toBeTruthy();
-		expect(el.querySelectorAll('th').length).toBe(3);
-		expect(el.querySelectorAll('td').length).toBe(3);
+		expect(el.querySelector("table")).toBeTruthy();
+		expect(el.querySelectorAll("th").length).toBe(3);
+		expect(el.querySelectorAll("td").length).toBe(3);
 	});
 });

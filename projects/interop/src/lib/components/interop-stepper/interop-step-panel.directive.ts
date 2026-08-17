@@ -1,15 +1,15 @@
 import {
-  Directive,
-  ElementRef,
-  OnDestroy,
-  afterNextRender,
-  computed,
-  inject,
-  isDevMode,
+	Directive,
+	ElementRef,
+	OnDestroy,
+	afterNextRender,
+	computed,
+	inject,
+	isDevMode,
 } from "@angular/core";
 import {
-  INTEROP_STEPPER_TOKEN,
-  type StepPanelRef,
+	INTEROP_STEPPER_TOKEN,
+	type StepPanelRef,
 } from "./interop-stepper.token";
 
 /**
@@ -37,132 +37,131 @@ import {
  * ```
  */
 @Directive({
-  selector: "section[interop-step-panel]",
-  standalone: true,
-  host: {
-    class: "interop-step-panel",
-    "[hidden]": "isLocked()",
-    "[attr.data-step-index]": "index",
-    "[attr.id]": "panelId()",
-    // `<section>` with aria-labelledby already exposes as a region landmark
-    // where it matters; declaring role="region" on every panel pollutes
-    // landmark navigation with "Step 1 / Step 2 / ..." entries. Drop the
-    // explicit role and rely on native section semantics. `aria-current="step"`
-    // lives on the step indicator only — duplicating it here would cause
-    // double-announcement on some screen readers.
-  },
+	selector: "section[interop-step-panel]",
+	standalone: true,
+	host: {
+		class: "interop-step-panel",
+		"[hidden]": "isLocked()",
+		"[attr.data-step-index]": "index",
+		"[attr.id]": "panelId()",
+		// `<section>` with aria-labelledby already exposes as a region landmark
+		// where it matters; declaring role="region" on every panel pollutes
+		// landmark navigation with "Step 1 / Step 2 / ..." entries. Drop the
+		// explicit role and rely on native section semantics. `aria-current="step"`
+		// lives on the step indicator only — duplicating it here would cause
+		// double-announcement on some screen readers.
+	},
 })
 export class InteropStepPanel implements StepPanelRef, OnDestroy {
-  private readonly el = inject(ElementRef<HTMLElement>);
-  private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
+	private readonly el = inject(ElementRef<HTMLElement>);
+	private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
 
-  protected readonly index: number;
+	protected readonly index: number;
 
-  constructor() {
-    this.index = this.stepper?.registerPanel(this) ?? 0;
+	constructor() {
+		this.index = this.stepper?.registerPanel(this) ?? 0;
 
-    afterNextRender(() => {
-      this.wireAriaLabel();
+		afterNextRender(() => {
+			this.wireAriaLabel();
 
-      if (isDevMode()) {
-        if (!this.stepper) {
-          console.warn(
-            "interop-step-panel: must be used inside <interop-stepper>.",
-          );
-        }
+			if (isDevMode()) {
+				if (!this.stepper) {
+					console.warn(
+						"interop-step-panel: must be used inside <interop-stepper>.",
+					);
+				}
 
-        const tag = this.el.nativeElement.tagName.toLowerCase();
-        if (tag !== "section") {
-          console.warn(
-            `interop-step-panel: expected <section>, got <${tag}>. ` +
-              "Use <section interop-step-panel> for correct landmark semantics.",
-          );
-        }
+				const tag = this.el.nativeElement.tagName.toLowerCase();
+				if (tag !== "section") {
+					console.warn(
+						`interop-step-panel: expected <section>, got <${tag}>. ` +
+							"Use <section interop-step-panel> for correct landmark semantics.",
+					);
+				}
 
-        const heading = this.el.nativeElement.querySelector(
-          "h1,h2,h3,h4,h5,h6",
-        );
-        if (!heading) {
-          console.warn(
-            `interop-step-panel (panel ${this.index}): no heading found. ` +
-              "Provide an <h2>–<h6> as the first child to label the panel and " +
-              "enable focus management. The panel element itself will be focused " +
-              "as a fallback.",
-          );
-        }
-      }
-    });
-  }
+				const heading =
+					this.el.nativeElement.querySelector("h1,h2,h3,h4,h5,h6");
+				if (!heading) {
+					console.warn(
+						`interop-step-panel (panel ${this.index}): no heading found. ` +
+							"Provide an <h2>–<h6> as the first child to label the panel and " +
+							"enable focus management. The panel element itself will be focused " +
+							"as a fallback.",
+					);
+				}
+			}
+		});
+	}
 
-  protected readonly isActive = computed(
-    () => this.stepper?.activeIndex() === this.index,
-  );
+	protected readonly isActive = computed(
+		() => this.stepper?.activeIndex() === this.index,
+	);
 
-  /** Locked panels are removed from the DOM via [hidden] so the scroll-snap
-   * viewport cannot reach them — the linear-mode hard-lock. */
-  protected readonly isLocked = computed(
-    () => this.stepper?.isStepLocked(this.index) ?? false,
-  );
+	/** Locked panels are removed from the DOM via [hidden] so the scroll-snap
+	 * viewport cannot reach them — the linear-mode hard-lock. */
+	protected readonly isLocked = computed(
+		() => this.stepper?.isStepLocked(this.index) ?? false,
+	);
 
-  /** Stable per-instance id, sourced from the parent stepper. The step
-   * button's `aria-controls` binds to this same id so AT users can identify
-   * which content the step opens. */
-  protected readonly panelId = computed(
-    () => this.stepper?.getPanelId(this.index),
-  );
+	/** Stable per-instance id, sourced from the parent stepper. The step
+	 * button's `aria-controls` binds to this same id so AT users can identify
+	 * which content the step opens. */
+	protected readonly panelId = computed(() =>
+		this.stepper?.getPanelId(this.index),
+	);
 
-  ngOnDestroy(): void {
-    this.stepper?.unregisterPanel(this.index);
-  }
+	ngOnDestroy(): void {
+		this.stepper?.unregisterPanel(this.index);
+	}
 
-  getElement(): HTMLElement {
-    return this.el.nativeElement;
-  }
+	getElement(): HTMLElement {
+		return this.el.nativeElement;
+	}
 
-  /**
-   * Called by InteropStepper when this panel becomes active. Schedules focus
-   * on the panel's first heading (or the panel itself as a fallback).
-   *
-   * The `preventScroll` option (default true) avoids a focus-induced scroll
-   * adjustment, since the stepper has already programmatically scrolled the
-   * panel into view via `scrollIntoView`. Pass `{ preventScroll: false }` to
-   * fall back to native focus-scroll behaviour.
-   */
-  requestFocus(options?: { preventScroll?: boolean }): void {
-    // requestAnimationFrame defers until after the browser has rendered, so
-    // the panel is laid out by the time we reach for its heading.
-    requestAnimationFrame(() => {
-      const el = this.el.nativeElement;
-      const heading = el.querySelector(
-        "h1,h2,h3,h4,h5,h6",
-      ) as HTMLElement | null;
-      const target = heading ?? el;
+	/**
+	 * Called by InteropStepper when this panel becomes active. Schedules focus
+	 * on the panel's first heading (or the panel itself as a fallback).
+	 *
+	 * The `preventScroll` option (default true) avoids a focus-induced scroll
+	 * adjustment, since the stepper has already programmatically scrolled the
+	 * panel into view via `scrollIntoView`. Pass `{ preventScroll: false }` to
+	 * fall back to native focus-scroll behaviour.
+	 */
+	requestFocus(options?: { preventScroll?: boolean }): void {
+		// requestAnimationFrame defers until after the browser has rendered, so
+		// the panel is laid out by the time we reach for its heading.
+		requestAnimationFrame(() => {
+			const el = this.el.nativeElement;
+			const heading = el.querySelector(
+				"h1,h2,h3,h4,h5,h6",
+			) as HTMLElement | null;
+			const target = heading ?? el;
 
-      // If falling back to the panel element itself, make it programmatically
-      // focusable. Remove tabindex on blur so it doesn't enter the tab order.
-      if (target === el && !el.hasAttribute("tabindex")) {
-        el.setAttribute("tabindex", "-1");
-        el.addEventListener("blur", () => el.removeAttribute("tabindex"), {
-          once: true,
-        });
-      }
+			// If falling back to the panel element itself, make it programmatically
+			// focusable. Remove tabindex on blur so it doesn't enter the tab order.
+			if (target === el && !el.hasAttribute("tabindex")) {
+				el.setAttribute("tabindex", "-1");
+				el.addEventListener("blur", () => el.removeAttribute("tabindex"), {
+					once: true,
+				});
+			}
 
-      target.focus({ preventScroll: options?.preventScroll ?? true });
-    });
-  }
+			target.focus({ preventScroll: options?.preventScroll ?? true });
+		});
+	}
 
-  /**
-   * Auto-wires aria-labelledby to the panel's first heading.
-   * Generates a stable ID on the heading if one isn't already present.
-   */
-  private wireAriaLabel(): void {
-    const el = this.el.nativeElement;
-    const heading = el.querySelector("h1,h2,h3,h4,h5,h6") as HTMLElement | null;
-    if (!heading) return;
+	/**
+	 * Auto-wires aria-labelledby to the panel's first heading.
+	 * Generates a stable ID on the heading if one isn't already present.
+	 */
+	private wireAriaLabel(): void {
+		const el = this.el.nativeElement;
+		const heading = el.querySelector("h1,h2,h3,h4,h5,h6") as HTMLElement | null;
+		if (!heading) return;
 
-    if (!heading.id) {
-      heading.id = `itx-step-panel-label-${this.index}`;
-    }
-    el.setAttribute("aria-labelledby", heading.id);
-  }
+		if (!heading.id) {
+			heading.id = `itx-step-panel-label-${this.index}`;
+		}
+		el.setAttribute("aria-labelledby", heading.id);
+	}
 }

@@ -256,7 +256,7 @@ export class InteropTooltipDirective implements OnDestroy {
 			console.error(
 				"[interopTooltip]: The host element has the native [disabled] attribute. " +
 					"Disabled elements cannot receive hover or focus events — the tooltip will never show. " +
-					"Use aria-disabled=\"true\" with an activation guard instead.",
+					'Use aria-disabled="true" with an activation guard instead.',
 			);
 		}
 
@@ -285,10 +285,10 @@ export class InteropTooltipDirective implements OnDestroy {
 			const hasExplicitLabel = trigger.hasAttribute("aria-label");
 			if (hasVisibleText && !hasExplicitLabel) {
 				console.warn(
-					"[interopTooltip]: [interopTooltipSemantic]=\"label\" is set, but the host " +
+					'[interopTooltip]: [interopTooltipSemantic]="label" is set, but the host ' +
 						"has visible text content. aria-labelledby will override the element's visible " +
 						"text as its accessible name, suppressing it for screen reader users. " +
-						"Reserve semantic=\"label\" for icon-only controls with no other accessible name.",
+						'Reserve semantic="label" for icon-only controls with no other accessible name.',
 				);
 			}
 		}

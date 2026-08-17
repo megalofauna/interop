@@ -1,13 +1,18 @@
 <article class="demo-page">
 	<demo-masthead category="Components" title="Auto Render">
-		CSS-only scroll performance directive. Applies <code>content-visibility: auto</code>
-		to host elements so off-screen items skip layout and paint — no DOM virtualisation required.
+		CSS-only scroll performance directive. Applies
+		<code>content-visibility: auto</code>
+		to host elements so off-screen items skip layout and paint — no DOM
+		virtualisation required.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
 	<demo-section id="usage" heading="Usage">
 		<demo-example label="200 cargo items with interopAutoRender">
-			<interop-scroll-area ariaLabel="Cargo manifest" class="auto-render-page__scroll">
+			<interop-scroll-area
+				ariaLabel="Cargo manifest"
+				class="auto-render-page__scroll"
+			>
 				@for (item of cargoItems; track item.id) {
 					<div class="auto-render-page__row" interopAutoRender="48px">
 						<code class="auto-render-page__id">{{ item.id }}</code>
@@ -35,6 +40,5 @@
 	</demo-section>
 
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-	</demo-section>
+	<demo-section id="notes" heading="Notes"> </demo-section>
 </article>

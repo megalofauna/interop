@@ -1,5 +1,10 @@
 import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
-import { InteropToggle, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import {
+	InteropToggle,
+	InteropTable,
+	InteropCellDef,
+	type TableColumn,
+} from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoState } from "../../components/demo-state/demo-state";
@@ -17,7 +22,16 @@ interface ApiEntry {
 @Component({
 	selector: "toggle-page",
 	standalone: true,
-	imports: [InteropToggle, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoState, DemoStateItem, DemoMasthead],
+	imports: [
+		InteropToggle,
+		InteropTable,
+		InteropCellDef,
+		DemoSection,
+		DemoExample,
+		DemoState,
+		DemoStateItem,
+		DemoMasthead,
+	],
 	templateUrl: "./toggle-page.html",
 	styleUrl: "./toggle-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +53,8 @@ export class TogglePage {
 			name: "id",
 			type: "string",
 			default: "—",
-			description: "Required. Unique identifier wired to the native checkbox input.",
+			description:
+				"Required. Unique identifier wired to the native checkbox input.",
 			required: true,
 		},
 		{
@@ -64,7 +79,8 @@ export class TogglePage {
 			name: "name",
 			type: "string | null",
 			default: "null",
-			description: "Name attribute forwarded to the native input for form submission.",
+			description:
+				"Name attribute forwarded to the native input for form submission.",
 		},
 		{
 			name: "value",
@@ -94,5 +110,4 @@ export class TogglePage {
 			description: "Emitted with the toggle value when switched on.",
 		},
 	];
-
 }

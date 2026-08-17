@@ -1,9 +1,9 @@
 <demo-page>
 	<demo-masthead category="Components" title="Resizable">
-		Drag-to-resize wrapper with two performance tiers. Pure-CSS resize
-		by default (zero JS in the resize loop); enhancement features —
-		keyboard, snap-to-breakpoints, dimension readout, aspect lock —
-		activate implicitly when their inputs are set.
+		Drag-to-resize wrapper with two performance tiers. Pure-CSS resize by
+		default (zero JS in the resize loop); enhancement features — keyboard,
+		snap-to-breakpoints, dimension readout, aspect lock — activate implicitly
+		when their inputs are set.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
@@ -14,8 +14,8 @@
 			<code>resize</code>, nothing in the resize loop. Any of
 			<code>breakpoints</code>, <code>showDimensions</code>,
 			<code>keyboard</code>, <code>aspectLocked</code>, or
-			<code>liveResize</code> upgrades it to <strong>Tier 1</strong>, a
-			custom handle the directive drives itself.
+			<code>liveResize</code> upgrades it to <strong>Tier 1</strong>, a custom
+			handle the directive drives itself.
 		</p>
 
 		<demo-example
@@ -24,11 +24,11 @@
 			(reset)="native.reset()"
 		>
 			<p description>
-				Browser-native <code>resize: both</code> — no pointer listeners
-				and no Angular change detection during the drag. Drag the
-				bottom-right corner. The host is also a container-query container,
-				so content inside can respond to its width. <code>[min]</code> /
-				<code>[max]</code> feed the CSS bounds and <code>[initialSize]</code>
+				Browser-native <code>resize: both</code> — no pointer listeners and no
+				Angular change detection during the drag. Drag the bottom-right corner.
+				The host is also a container-query container, so content inside can
+				respond to its width. <code>[min]</code> / <code>[max]</code> feed the
+				CSS bounds and <code>[initialSize]</code>
 				seeds the starting size.
 			</p>
 			<div
@@ -40,9 +40,9 @@
 			>
 				<div class="resizable-page__demo-content">
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Nullam euismod, nisl eget aliquam ultricies, nunc nisl
-						aliquet nunc, eget aliquam nisl nunc eget nisl.
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+						euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, eget
+						aliquam nisl nunc eget nisl.
 					</p>
 				</div>
 			</div>
@@ -54,13 +54,13 @@
 			(reset)="resetEnhanced(enhanced)"
 		>
 			<p description>
-				Setting an enhancement input swaps the native handle for a custom
-				corner handle with the APG separator keyboard contract, magnetic
-				snap, and a live dimension badge. Drag the corner or focus it and
-				use the arrow keys — <kbd>Shift</kbd> for a larger step,
-				<kbd>Home</kbd> / <kbd>End</kbd> for min / max. It snaps near
-				320 / 480 / 640 / 768px. Double-click the handle, or the reset
-				control on this example, to return to the initial size.
+				Setting an enhancement input swaps the native handle for a custom corner
+				handle with the APG separator keyboard contract, magnetic snap, and a
+				live dimension badge. Drag the corner or focus it and use the arrow keys
+				— <kbd>Shift</kbd> for a larger step, <kbd>Home</kbd> /
+				<kbd>End</kbd> for min / max. It snaps near 320 / 480 / 640 / 768px.
+				Double-click the handle, or the reset control on this example, to return
+				to the initial size.
 			</p>
 			<div
 				#enhanced="interopResizable"
@@ -75,9 +75,9 @@
 			>
 				<div class="resizable-page__demo-content">
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Sed do eiusmod tempor incididunt ut labore et dolore magna
-						aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+						eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+						ad minim veniam, quis nostrud exercitation.
 					</p>
 				</div>
 			</div>
@@ -91,9 +91,9 @@
 			(reset)="aspect.reset()"
 		>
 			<p description>
-				<code>[aspectLocked]</code> captures the width-to-height ratio at
-				drag start and holds it for the whole drag. Holding
-				<kbd>Shift</kbd> mid-drag toggles the lock temporarily.
+				<code>[aspectLocked]</code> captures the width-to-height ratio at drag
+				start and holds it for the whole drag. Holding <kbd>Shift</kbd> mid-drag
+				toggles the lock temporarily.
 			</p>
 			<div
 				#aspect="interopResizable"
@@ -106,9 +106,9 @@
 			>
 				<div class="resizable-page__demo-content">
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						Vestibulum ante ipsum primis in faucibus orci luctus et
-						ultrices posuere cubilia curae.
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
+						ante ipsum primis in faucibus orci luctus et ultrices posuere
+						cubilia curae.
 					</p>
 				</div>
 			</div>
@@ -141,38 +141,41 @@
 					</li>
 				</ul>
 				<p>
-					The Protocol theme sets a default for each. Override it in
-					one of two places.
+					The Protocol theme sets a default for each. Override it in one of two
+					places.
 				</p>
 
 				<p>
-					<strong>CSS — a scoped default.</strong> Declare the
-					property on an ancestor to set every resizable in that
-					scope, or on the host for one:
+					<strong>CSS — a scoped default.</strong> Declare the property on an
+					ancestor to set every resizable in that scope, or on the host for one:
 				</p>
 				<pre><code>[interop-root] &#123; --itx-resizable-min-width: 12rem; &#125;</code></pre>
 
 				<p>
-					<strong><code>[min]</code> / <code>[max]</code> inputs — one
-					instance.</strong> The directive writes the same custom
-					property inline on the host, so the input overrides an
-					ancestor default through the normal cascade:
+					<strong
+						><code>[min]</code> / <code>[max]</code> inputs — one
+						instance.</strong
+					>
+					The directive writes the same custom property inline on the host, so
+					the input overrides an ancestor default through the normal cascade:
 				</p>
 				<pre><code>&lt;div interop-resizable [min]="&#123; width: 200 &#125;" [max]="&#123; width: 720 &#125;"&gt;…&lt;/div&gt;</code></pre>
 
 				<p>
-					Both paths resolve to the same property, so both tiers
-					enforce the bound identically. In Tier 0, native CSS
-					<code>resize</code> reads the <code>min</code>/<code>max-inline-size</code>
-					the token feeds — no script runs during the drag. In Tier 1,
-					the drag loop reads the inputs when it clamps.
+					Both paths resolve to the same property, so both tiers enforce the
+					bound identically. In Tier 0, native CSS
+					<code>resize</code> reads the <code>min</code>/<code
+						>max-inline-size</code
+					>
+					the token feeds — no script runs during the drag. In Tier 1, the drag
+					loop reads the inputs when it clamps.
 				</p>
 
 				<p>Choose by scope:</p>
 				<ul>
 					<li>
-						<strong>CSS token</strong> — a default across many
-						instances, or when you already configure in CSS.
+						<strong>CSS token</strong> — a default across many instances, or
+						when you already configure in CSS.
 					</li>
 					<li>
 						<strong><code>[min]</code> / <code>[max]</code> inputs</strong>
@@ -180,8 +183,8 @@
 					</li>
 				</ul>
 				<p>
-					The input is a per-instance override of the same token.
-					Nothing else differs.
+					The input is a per-instance override of the same token. Nothing else
+					differs.
 				</p>
 			</div>
 		</interop-expansion-panel>
@@ -215,6 +218,5 @@
 	</demo-section>
 
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section heading="Notes">
-	</demo-section>
+	<demo-section heading="Notes"> </demo-section>
 </demo-page>

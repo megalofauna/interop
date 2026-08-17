@@ -1,4 +1,4 @@
-import type { Block, Div, Doc } from '@djot/djot';
+import type { Block, Div, Doc } from "@djot/djot";
 
 export interface ExtractError {
 	readonly message: string;
@@ -9,7 +9,7 @@ export interface ExtractResult {
 	readonly errors: readonly ExtractError[];
 }
 
-const isDiv = (node: Block): node is Div => node.tag === 'div';
+const isDiv = (node: Block): node is Div => node.tag === "div";
 
 /**
  * Picks top-level `:::`-divs that carry an explicit `{#id ...}` block attribute
@@ -25,7 +25,7 @@ export const extractSlots = (ast: Doc): ExtractResult => {
 
 	for (const node of ast.children) {
 		if (!isDiv(node)) continue;
-		const id = node.attributes?.['id'];
+		const id = node.attributes?.["id"];
 		if (!id) continue;
 
 		if (slots.has(id)) {

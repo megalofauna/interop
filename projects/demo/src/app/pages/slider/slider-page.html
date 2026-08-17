@@ -27,9 +27,9 @@
 			</div>
 			<demo-state>
 				<demo-state-item label="value">{{ brightness() }}</demo-state-item>
-				<demo-state-item label="aria-valuenow"
-					>{{ brightness() }}</demo-state-item
-				>
+				<demo-state-item label="aria-valuenow">{{
+					brightness()
+				}}</demo-state-item>
 				<demo-state-item label="aria-valuetext">(none)</demo-state-item>
 			</demo-state>
 			<itx-code-block [files]="basicFiles" />
@@ -78,9 +78,9 @@
 			</div>
 			<demo-state>
 				<demo-state-item label="value">{{ price() }}</demo-state-item>
-				<demo-state-item label="display"
-					>{{ currencyFormatter(price()) }}</demo-state-item
-				>
+				<demo-state-item label="display">{{
+					currencyFormatter(price())
+				}}</demo-state-item>
 				<demo-state-item label="aria-valuetext"
 					>(unset — SR announces raw number)</demo-state-item
 				>
@@ -109,9 +109,9 @@
 			</div>
 			<demo-state>
 				<demo-state-item label="value">{{ sizeIndex() }}</demo-state-item>
-				<demo-state-item label="aria-valuetext"
-					>{{ sizeFormatter(sizeIndex()) }}</demo-state-item
-				>
+				<demo-state-item label="aria-valuetext">{{
+					sizeFormatter(sizeIndex())
+				}}</demo-state-item>
 			</demo-state>
 			<itx-code-block [files]="sizesFiles" />
 		</demo-example>
@@ -194,9 +194,9 @@
 				</interop-slider-range>
 			</div>
 			<demo-state>
-				<demo-state-item label="start"
-					>{{ priceRange().start }}</demo-state-item
-				>
+				<demo-state-item label="start">{{
+					priceRange().start
+				}}</demo-state-item>
 				<demo-state-item label="end">{{ priceRange().end }}</demo-state-item>
 			</demo-state>
 			<itx-code-block [files]="rangeFiles" />
@@ -249,9 +249,9 @@
 				</button>
 			</form>
 			<demo-state>
-				<demo-state-item label="last submitted FormData"
-					>{{ lastSubmittedFormData() }}</demo-state-item
-				>
+				<demo-state-item label="last submitted FormData">{{
+					lastSubmittedFormData()
+				}}</demo-state-item>
 			</demo-state>
 			<itx-code-block [files]="formFiles" />
 		</demo-example>
@@ -286,7 +286,9 @@
 			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>

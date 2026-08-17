@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { InteropRadioRig } from './interop-radio-rig';
+import { InteropRadioRig } from "./interop-radio-rig";
 
-describe('InteropRadioRig', () => {
-  let component: InteropRadioRig;
-  let fixture: ComponentFixture<InteropRadioRig>;
+describe("InteropRadioRig", () => {
+	let component: InteropRadioRig;
+	let fixture: ComponentFixture<InteropRadioRig>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [InteropRadioRig]
-    })
-    .compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			imports: [InteropRadioRig],
+		}).compileComponents();
 
-    fixture = TestBed.createComponent(InteropRadioRig);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
+		fixture = TestBed.createComponent(InteropRadioRig);
+		component = fixture.componentInstance;
+		await fixture.whenStable();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it("should create", () => {
+		expect(component).toBeTruthy();
+	});
 });

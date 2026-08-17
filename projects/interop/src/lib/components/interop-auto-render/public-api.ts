@@ -1,1 +1,1 @@
-export * from './interop-auto-render';
+export * from "./interop-auto-render";

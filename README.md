@@ -23,32 +23,30 @@ npm install interop
 ## Quick Start
 
 ```typescript
-import { InteropModule } from 'interop';
+import { InteropModule } from "interop";
 
 @NgModule({
-  imports: [InteropModule],
-  // ...
+	imports: [InteropModule],
+	// ...
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 ## Basic Usage
 
 ```typescript
-import { CollectionInput } from 'interop';
+import { CollectionInput } from "interop";
 
 @Component({
-  selector: 'app-example',
-  template: `
-    <interop-list [items]="data"></interop-list>
-  `
+	selector: "app-example",
+	template: ` <interop-list [items]="data"></interop-list> `,
 })
 export class ExampleComponent {
-  // Works with any of these data types:
-  data: CollectionInput<any> = [1, 2, 3]; // Array
-  // data = of([1, 2, 3]); // Observable
-  // data = Promise.resolve([1, 2, 3]); // Promise
-  // data = { items: [1, 2, 3], loading: false }; // Collection object
+	// Works with any of these data types:
+	data: CollectionInput<any> = [1, 2, 3]; // Array
+	// data = of([1, 2, 3]); // Observable
+	// data = Promise.resolve([1, 2, 3]); // Promise
+	// data = { items: [1, 2, 3], loading: false }; // Collection object
 }
 ```
 

@@ -6,7 +6,8 @@
 	[class.focused]="focused()"
 	[class.invalid]="hasVisibleErrors()"
 	[class.disabled]="disabled()"
-	[class.readonly]="readonly()">
+	[class.readonly]="readonly()"
+>
 	<ng-content select="[interop-field-prefix]" />
 	<textarea
 		#textareaEl
@@ -24,7 +25,8 @@
 		class="interop-text-area"
 		(input)="onInput($event)"
 		(focus)="focused.set(true)"
-		(blur)="focused.set(false); onTouched()">
+		(blur)="focused.set(false); onTouched()"
+	>
 	</textarea>
 	<ng-content select="[interop-field-suffix]" />
 </interop-field-control>
@@ -40,7 +42,9 @@
 @if (hasVisibleErrors()) {
 	<interop-field-errors role="alert">
 		@for (error of visibleErrors(); track error.key ?? $index) {
-			<span class="interop-field-error" [id]="errorId($index)">{{ error.message }}</span>
+			<span class="interop-field-error" [id]="errorId($index)">{{
+				error.message
+			}}</span>
 		}
 	</interop-field-errors>
 }

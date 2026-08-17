@@ -9,22 +9,13 @@ import {
 	InteropMotionTrigger,
 	InteropSegment,
 	InteropSegmentedControl,
-} from 'interop';
+} from "interop";
 
 type Variant =
-	| "base"
-	| "action-minus"
-	| "action"
-	| "action-plus"
-	| "action-colorway";
+	"base" | "action-minus" | "action" | "action-plus" | "action-colorway";
 type Size = "xs" | "sm" | "md" | "lg";
 type Radius =
-	| "round-xs"
-	| "round-sm"
-	| "round-md"
-	| "round-lg"
-	| "round-xl"
-	| "round-full";
+	"round-xs" | "round-sm" | "round-md" | "round-lg" | "round-xl" | "round-full";
 
 const VARIANTS: ReadonlySet<string> = new Set([
 	"base",

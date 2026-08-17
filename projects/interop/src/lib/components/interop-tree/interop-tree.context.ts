@@ -27,68 +27,68 @@ export type InteropTreeTier = "navigate" | "select";
  * directives free of circular imports.
  */
 export interface InteropTreeItemContext {
-  /** Stable identity. Consumer-supplied via `[key]`, else auto-generated. */
-  readonly key: string;
+	/** Stable identity. Consumer-supplied via `[key]`, else auto-generated. */
+	readonly key: string;
 
-  /** ID of this item's child group — the toggle's `aria-controls` target. */
-  readonly groupId: string;
+	/** ID of this item's child group — the toggle's `aria-controls` target. */
+	readonly groupId: string;
 
-  /** The `<li>` itself. Used for DOM-order sorting and focus. */
-  readonly element: HTMLElement;
+	/** The `<li>` itself. Used for DOM-order sorting and focus. */
+	readonly element: HTMLElement;
 
-  /** Nearest ancestor item, or `null` at the root. */
-  readonly parent: InteropTreeItemContext | null;
+	/** Nearest ancestor item, or `null` at the root. */
+	readonly parent: InteropTreeItemContext | null;
 
-  /** 1-based depth. Emitted as `aria-level` and as `--itx-tree-level`. */
-  readonly level: Signal<number>;
+	/** 1-based depth. Emitted as `aria-level` and as `--itx-tree-level`. */
+	readonly level: Signal<number>;
 
-  readonly isExpanded: Signal<boolean>;
-  readonly isExpandable: Signal<boolean>;
-  readonly isDisabled: Signal<boolean>;
+	readonly isExpanded: Signal<boolean>;
+	readonly isExpandable: Signal<boolean>;
+	readonly isDisabled: Signal<boolean>;
 
-  /** Typeahead text: the `[label]` input, else the row's own text. */
-  label(): string;
+	/** Typeahead text: the `[label]` input, else the row's own text. */
+	label(): string;
 
-  open(): void;
-  close(): void;
-  toggle(): void;
+	open(): void;
+	close(): void;
+	toggle(): void;
 
-  /** Called by `[interop-tree-group]` on init so the item knows it has children. */
-  registerGroup(): () => void;
+	/** Called by `[interop-tree-group]` on init so the item knows it has children. */
+	registerGroup(): () => void;
 }
 
 /**
  * Context the `[interop-tree]` host exposes to every descendant directive.
  */
 export interface InteropTreeContext {
-  readonly tier: Signal<InteropTreeTier>;
+	readonly tier: Signal<InteropTreeTier>;
 
-  /** True when `tier() === "select"`. Gates every tree-role behaviour. */
-  readonly isSelectTier: Signal<boolean>;
+	/** True when `tier() === "select"`. Gates every tree-role behaviour. */
+	readonly isSelectTier: Signal<boolean>;
 
-  readonly multiselectable: Signal<boolean>;
+	readonly multiselectable: Signal<boolean>;
 
-  /** When true, collapsed groups stay findable by the browser's find-in-page. */
-  readonly findable: Signal<boolean>;
+	/** When true, collapsed groups stay findable by the browser's find-in-page. */
+	readonly findable: Signal<boolean>;
 
-  registerItem(context: InteropTreeItemContext): () => void;
+	registerItem(context: InteropTreeItemContext): () => void;
 
-  /** Called by an item whenever its expanded state settles, from any cause. */
-  notifyExpanded(key: string, expanded: boolean): void;
+	/** Called by an item whenever its expanded state settles, from any cause. */
+	notifyExpanded(key: string, expanded: boolean): void;
 
-  /** Roving tabindex: true for the one item that currently owns the tab stop. */
-  isTabbable(context: InteropTreeItemContext): boolean;
+	/** Roving tabindex: true for the one item that currently owns the tab stop. */
+	isTabbable(context: InteropTreeItemContext): boolean;
 
-  isSelected(key: string): boolean;
+	isSelected(key: string): boolean;
 
-  /** Pointer/keyboard activation of a row in the select tier. */
-  activate(context: InteropTreeItemContext, additive: boolean): void;
+	/** Pointer/keyboard activation of a row in the select tier. */
+	activate(context: InteropTreeItemContext, additive: boolean): void;
 }
 
 export const INTEROP_TREE = new InjectionToken<InteropTreeContext>(
-  "INTEROP_TREE",
+	"INTEROP_TREE",
 );
 
 export const INTEROP_TREE_ITEM = new InjectionToken<InteropTreeItemContext>(
-  "INTEROP_TREE_ITEM",
+	"INTEROP_TREE_ITEM",
 );

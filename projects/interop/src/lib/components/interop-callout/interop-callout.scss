@@ -81,13 +81,19 @@
 }
 
 :host([data-type="warning"]) {
-	border-inline-start-color: var(--itx-callout-accent, var(--itx-warning-solid));
+	border-inline-start-color: var(
+		--itx-callout-accent,
+		var(--itx-warning-solid)
+	);
 	background: var(--itx-callout-bg, var(--itx-warning-tint));
 	color: var(--itx-callout-color, var(--itx-warning-on-tint));
 }
 
 :host([data-type="success"]) {
-	border-inline-start-color: var(--itx-callout-accent, var(--itx-success-solid));
+	border-inline-start-color: var(
+		--itx-callout-accent,
+		var(--itx-success-solid)
+	);
 	background: var(--itx-callout-bg, var(--itx-success-tint));
 	color: var(--itx-callout-color, var(--itx-success-on-tint));
 }

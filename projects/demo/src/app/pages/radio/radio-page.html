@@ -59,9 +59,9 @@
 				[(value)]="selectedThruster"
 			/>
 			<demo-state>
-				<demo-state-item label="Selected"
-					>{{ selectedThruster() }}</demo-state-item
-				>
+				<demo-state-item label="Selected">{{
+					selectedThruster()
+				}}</demo-state-item>
 			</demo-state>
 		</demo-example>
 	</demo-section>
@@ -74,7 +74,9 @@
 			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -100,6 +102,5 @@
 		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-	</demo-section>
+	<demo-section id="notes" heading="Notes"> </demo-section>
 </article>

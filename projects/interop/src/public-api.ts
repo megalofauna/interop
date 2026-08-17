@@ -55,9 +55,9 @@ export * from "./lib/utils/public-api";
 //   import { PhCopy } from 'interop/lib/iconsets/phosphor/regular/ph-copy';
 //   import { TablerCamera } from 'interop/lib/iconsets/tabler/outline/tabler-camera';
 export {
-  InteropIconRegistry,
-  provideInteropIcons,
-  provideScopedInteropIcons,
-  fromSvg,
+	InteropIconRegistry,
+	provideInteropIcons,
+	provideScopedInteropIcons,
+	fromSvg,
 } from "./lib/iconsets/core";
 export type { InteropIconDefinition } from "./lib/iconsets/core";

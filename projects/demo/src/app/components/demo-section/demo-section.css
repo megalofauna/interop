@@ -11,7 +11,7 @@
 .demo-section__heading {
 	margin: 0;
 	font-size: var(--itx-font-size-heading);
-	font-weight:400;
+	font-weight: 400;
 	display: flex;
 	gap: var(--itx-spacing-4);
 	align-items: center;

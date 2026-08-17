@@ -25,7 +25,16 @@
 		</demo-example>
 
 		<demo-example label="Placements">
-			<div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: center; padding: 2rem;">
+			<div
+				style="
+					display: flex;
+					gap: 1rem;
+					flex-wrap: wrap;
+					align-items: center;
+					justify-content: center;
+					padding: 2rem;
+				"
+			>
 				<interop-tooltip label="Top" placement="top">
 					<button interop-button>Top</button>
 				</interop-tooltip>
@@ -51,7 +60,9 @@
 			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -78,6 +89,5 @@
 	</demo-section>
 
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-	</demo-section>
+	<demo-section id="notes" heading="Notes"> </demo-section>
 </article>

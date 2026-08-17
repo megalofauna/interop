@@ -4,11 +4,7 @@ import {
 	forwardRef,
 	input,
 } from "@angular/core";
-import {
-	InteropTreeItem,
-	InteropTreeToggle,
-	InteropTreeGroup,
-} from "interop";
+import { InteropTreeItem, InteropTreeToggle, InteropTreeGroup } from "interop";
 
 export interface TreeNode {
 	key: string;

@@ -52,7 +52,9 @@ function walk(dir, out = []) {
 /** Character ranges covered by a high-contrast media block. */
 function highContrastSpans(s) {
 	const spans = [];
-	for (const m of s.matchAll(/@media[^{]*(?:prefers-contrast|forced-colors)[^{]*\{/g)) {
+	for (const m of s.matchAll(
+		/@media[^{]*(?:prefers-contrast|forced-colors)[^{]*\{/g,
+	)) {
 		let i = m.index + m[0].length;
 		let depth = 1;
 		while (i < s.length && depth > 0) {
@@ -84,7 +86,9 @@ for (const file of walk(ROOT)) {
 		// Which rule is this in? Walk back to the nearest selector.
 		const before = clean.slice(0, m.index);
 		const open = before.lastIndexOf("{");
-		const selStart = Math.max(before.lastIndexOf("}", open), before.lastIndexOf(";", open)) + 1;
+		const selStart =
+			Math.max(before.lastIndexOf("}", open), before.lastIndexOf(";", open)) +
+			1;
 		const selector = before.slice(selStart, open).trim().replace(/\s+/g, " ");
 		const line = before.split("\n").length;
 
@@ -92,7 +96,12 @@ for (const file of walk(ROOT)) {
 		if (!focusRule) continue;
 
 		if (HEX.test(value)) {
-			findings.push({ file, line, selector, why: "hardcoded colour in a focus ring" });
+			findings.push({
+				file,
+				line,
+				selector,
+				why: "hardcoded colour in a focus ring",
+			});
 		} else if (!value.includes("--itx-focus-")) {
 			findings.push({
 				file,
@@ -103,7 +112,10 @@ for (const file of walk(ROOT)) {
 		}
 
 		// Rule 3: a VISIBLE ring on bare :focus.
-		if (/:focus(?![-a-z(])/.test(selector) && !/:focus-visible|:focus-within/.test(selector)) {
+		if (
+			/:focus(?![-a-z(])/.test(selector) &&
+			!/:focus-visible|:focus-within/.test(selector)
+		) {
 			findings.push({
 				file,
 				line,
@@ -115,11 +127,15 @@ for (const file of walk(ROOT)) {
 }
 
 if (!findings.length) {
-	console.log("✓ focus rings clean — every ring reads the system chain, none on bare :focus");
+	console.log(
+		"✓ focus rings clean — every ring reads the system chain, none on bare :focus",
+	);
 	process.exit(0);
 }
 
-console.error(`✗ ${findings.length} focus violation${findings.length === 1 ? "" : "s"}:\n`);
+console.error(
+	`✗ ${findings.length} focus violation${findings.length === 1 ? "" : "s"}:\n`,
+);
 for (const f of findings) {
 	console.error(`  ${f.file}:${f.line}`);
 	console.error(`    ${f.selector.slice(0, 90)}`);

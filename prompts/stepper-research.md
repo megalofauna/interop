@@ -56,16 +56,16 @@ Listbox, Menu/Menubar, Menu Button, Meter, Radio Group, Slider, Slider
 Treegrid, Window Splitter.
 ([source — APG patterns index](https://www.w3.org/WAI/ARIA/apg/patterns/))
 
-Consequently every major library has had to *pick* a pattern, and they
+Consequently every major library has had to _pick_ a pattern, and they
 disagree.
 
-| Library | Role chosen for step list | Role chosen for panel |
-|---|---|---|
-| Angular Material | `role="tablist"` + `role="tab"` | `role="tabpanel"` (post-fix; see #19574) |
-| MUI (React) | No `role` on stepper; `aria-controls` on `StepButton` | None documented; recommends `aria-controls` link |
-| PrimeNG | `role="tablist"` / `role="tab"` / `role="tabpanel"` (variant-dependent) |  |
-| Radix / React Aria | No "stepper" primitive ships |  |
-| GOV.UK | **No step indicator at all** — one-thing-per-page + back link + check-answers pattern ([source](https://design-system.service.gov.uk/patterns/check-answers/)) |  |
+| Library            | Role chosen for step list                                                                                                                                      | Role chosen for panel                            |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Angular Material   | `role="tablist"` + `role="tab"`                                                                                                                                | `role="tabpanel"` (post-fix; see #19574)         |
+| MUI (React)        | No `role` on stepper; `aria-controls` on `StepButton`                                                                                                          | None documented; recommends `aria-controls` link |
+| PrimeNG            | `role="tablist"` / `role="tab"` / `role="tabpanel"` (variant-dependent)                                                                                        |                                                  |
+| Radix / React Aria | No "stepper" primitive ships                                                                                                                                   |                                                  |
+| GOV.UK             | **No step indicator at all** — one-thing-per-page + back link + check-answers pattern ([source](https://design-system.service.gov.uk/patterns/check-answers/)) |                                                  |
 
 The `tablist`/`tab`/`tabpanel` choice (Material, PrimeNG) is the most
 common, but it imports the **tabs interaction contract** that doesn't
@@ -77,12 +77,12 @@ actually fit a wizard:
   ([source](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)).
 - A stepper has **order**, **lock semantics**, and **persistent completion
   state**. Tabs explicitly do not. Steps 1 and 2 are not peer alternatives;
-  step 2 *depends on* step 1.
+  step 2 _depends on_ step 1.
 - `aria-selected` (required on `role=tab`) is the wrong state model — a
   step is not "selected", it is "active in a sequence".
 
-The W3C-defined `aria-current="step"` token *exists specifically for this
-case* — its allowed values include `step`, intended for "the current step
+The W3C-defined `aria-current="step"` token _exists specifically for this
+case_ — its allowed values include `step`, intended for "the current step
 within a process"
 ([WAI-ARIA 1.2 §6.6.6 aria-current](https://www.w3.org/TR/wai-aria-1.2/#aria-current)).
 Yet most libraries don't use it; they reach for `tablist` instead.
@@ -96,17 +96,17 @@ we don't ship them.
 
 ### 1.2 Host element & DOM (per [semantics-a11y-checklist §1](research/semantics-a11y-checklist.md#1-host-element--dom))
 
-| Region | Element | Why |
-|---|---|---|
-| Container | `<interop-stepper>` (custom element) | No native equivalent; needs a coordinating root |
-| Step list | `<ol interop-step-list>` | Ordered sequence with meaningful order; native list semantics + numbering |
-| Step item | `<li interop-step>` containing `<button>` | List item is the unit; button is the interactive control |
-| Step panels viewport | `<div #viewport>` | Scroll-snap container; not a landmark |
-| Step panel | `<section interop-step-panel>` | A self-contained part of the document; ideal for `aria-labelledby` to its heading |
-| Action bar | `<div class="interop-stepper__actions">` | Plain region; not `role="toolbar"` unless arrow-key navigation is shipped |
+| Region               | Element                                   | Why                                                                               |
+| -------------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
+| Container            | `<interop-stepper>` (custom element)      | No native equivalent; needs a coordinating root                                   |
+| Step list            | `<ol interop-step-list>`                  | Ordered sequence with meaningful order; native list semantics + numbering         |
+| Step item            | `<li interop-step>` containing `<button>` | List item is the unit; button is the interactive control                          |
+| Step panels viewport | `<div #viewport>`                         | Scroll-snap container; not a landmark                                             |
+| Step panel           | `<section interop-step-panel>`            | A self-contained part of the document; ideal for `aria-labelledby` to its heading |
+| Action bar           | `<div class="interop-stepper__actions">`  | Plain region; not `role="toolbar"` unless arrow-key navigation is shipped         |
 
 `<form>` is **not** the host — a stepper may contain a form, or several,
-but is not itself a submittable form. Form participation happens *inside*
+but is not itself a submittable form. Form participation happens _inside_
 panels.
 
 ### 1.3 ARIA — roles, properties, states
@@ -134,7 +134,7 @@ panels.
   / Step 2 / Step 3" pollute landmark navigation. Either:
   - Drop the role entirely (panel is just a labelled `<section>`,
     `aria-labelledby` to its heading), or
-  - Apply `role="region"` *only* to the active panel
+  - Apply `role="region"` _only_ to the active panel
   - Current Interop default applies it to every panel — see §6
 
 ### 1.4 Keyboard interaction
@@ -150,8 +150,9 @@ Home/End jump to first/last. Inherits tabs UX baggage.
 MUI):** Tab traverses each step button in order; Enter/Space activates.
 Simpler, more discoverable, but slower to navigate many steps.
 
-For Interop, Camp B is correct *by default* because:
-- Linear-mode steps are mostly *disabled*; arrow navigation over a list of
+For Interop, Camp B is correct _by default_ because:
+
+- Linear-mode steps are mostly _disabled_; arrow navigation over a list of
   mostly-disabled buttons is unhelpful UX
 - The step list is not the primary work surface — the panel is. Focusing
   the active panel's heading on entry is the more valuable behaviour
@@ -163,12 +164,12 @@ Recommend documenting "step buttons are independent buttons; Tab
 traverses, Enter/Space activates" as the explicit keyboard contract, and
 listing the Action Bar keyboard model separately:
 
-| Key | Action |
-|---|---|
-| Tab | Move to next focusable (step button, action bar control, panel content) |
-| Enter / Space | Activate focused control |
-| Escape (on popover menu open) | Dismiss menu, return focus to trigger |
-| Arrow keys (inside listbox menu) | Native listbox roving |
+| Key                              | Action                                                                  |
+| -------------------------------- | ----------------------------------------------------------------------- |
+| Tab                              | Move to next focusable (step button, action bar control, panel content) |
+| Enter / Space                    | Activate focused control                                                |
+| Escape (on popover menu open)    | Dismiss menu, return focus to trigger                                   |
+| Arrow keys (inside listbox menu) | Native listbox roving                                                   |
 
 ### 1.5 Focus management
 
@@ -183,7 +184,7 @@ Three distinct focus events:
    but worth verifying behaviour on iOS (see #31559 below — Material's
    stepper has had recent issues with iOS announcement quirks in panels).
 
-The panel-heading focus model is *unusually good* — see §4.
+The panel-heading focus model is _unusually good_ — see §4.
 
 **Initial focus on mount:** the stepper does NOT move focus on init —
 correct. Mounting a component should not steal focus.
@@ -200,7 +201,7 @@ show focus rings via the CSS pseudo-class.
 ### 1.6 Accessible name & description
 
 - **Step button name source today:** `aria-label="Step N: Label —
-  Completed"` *overrides* the visible content (indicator + label).
+Completed"` _overrides_ the visible content (indicator + label).
   Concern: AT users hear "Step 1: Profile — Completed" but the visible
   text reads "1 Profile". The visible label is not the accessible name.
   Best-practice is to make the visible text be the accessible name, and
@@ -247,14 +248,14 @@ custom element would conflate "container of forms" with "form control".
 
 ### 1.9 Spec divergence — explicit positions
 
-| Topic | W3C / spec | APG | Mainstream DS | Interop position |
-|---|---|---|---|---|
-| Role for step list | none specified | not patterned | `tablist` (Material, PrimeNG); none (MUI) | `<ol>` + `<nav aria-label>`, no `tablist` |
-| Role for active step | `aria-current="step"` is the canonical token | n/a | `aria-current` (some); `aria-selected` (when `tablist` used) | `aria-current="step"` |
-| Role for panel | none specified | `tabpanel` (under tabs model) | `tabpanel` (Material, PrimeNG); none (MUI) | `<section>` with `aria-labelledby`; consider dropping or scoping `role="region"` |
-| Keyboard model | n/a | tabs APG when `tablist` used | mostly tabs APG | Independent buttons (Camp B); document explicitly |
-| `aria-controls` step→panel | best practice when relationship matters | n/a | partial; MUI calls it out | Add (currently missing) |
-| Inactive panel state | n/a | `hidden` if not active | `hidden` (Material), conditional render (others) | Active = visible in scroll-snap; locked = `[hidden]` |
+| Topic                      | W3C / spec                                   | APG                           | Mainstream DS                                                | Interop position                                                                 |
+| -------------------------- | -------------------------------------------- | ----------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| Role for step list         | none specified                               | not patterned                 | `tablist` (Material, PrimeNG); none (MUI)                    | `<ol>` + `<nav aria-label>`, no `tablist`                                        |
+| Role for active step       | `aria-current="step"` is the canonical token | n/a                           | `aria-current` (some); `aria-selected` (when `tablist` used) | `aria-current="step"`                                                            |
+| Role for panel             | none specified                               | `tabpanel` (under tabs model) | `tabpanel` (Material, PrimeNG); none (MUI)                   | `<section>` with `aria-labelledby`; consider dropping or scoping `role="region"` |
+| Keyboard model             | n/a                                          | tabs APG when `tablist` used  | mostly tabs APG                                              | Independent buttons (Camp B); document explicitly                                |
+| `aria-controls` step→panel | best practice when relationship matters      | n/a                           | partial; MUI calls it out                                    | Add (currently missing)                                                          |
+| Inactive panel state       | n/a                                          | `hidden` if not active        | `hidden` (Material), conditional render (others)             | Active = visible in scroll-snap; locked = `[hidden]`                             |
 
 ---
 
@@ -269,25 +270,25 @@ The primary comparison. Issues filed against `mat-stepper`:
 - **[#19574 — `tabpanel` should not have `tabindex="0"`](https://github.com/angular/components/issues/19574)**
   Fixed. Material previously made the tabpanel itself a tab stop,
   inserting a meaningless focusable container between step button and
-  first input. *Lesson:* don't make the panel container keyboard-focusable
+  first input. _Lesson:_ don't make the panel container keyboard-focusable
   unless there's no other focus target. Interop's panel directive uses
   `tabindex=-1` only as a fallback when no heading is present, and
   removes it on blur. Correct.
 - **[#19009 — JAWS reads `aria-label` for icons in non-active steps](https://github.com/angular/components/issues/19009)**
   Fixed. The indicator icons inside non-active steps had `aria-label`s
-  that JAWS surfaced redundantly. *Lesson:* indicator graphics inside
+  that JAWS surfaced redundantly. _Lesson:_ indicator graphics inside
   step buttons should be `aria-hidden="true"`. Interop does this
   (`<span class="interop-step__indicator" aria-hidden="true">`). Correct.
 - **[#31559 — iOS announces panel content with "tab" suffix](https://github.com/angular/components/issues/31559)**
   Open. iOS VoiceOver pronounces every label/field inside a panel with
-  "...tab" because the panel has `role="tabpanel"`. *Lesson:* the
-  tablist/tab/tabpanel model is *actively misleading screen-reader users*
+  "...tab" because the panel has `role="tabpanel"`. _Lesson:_ the
+  tablist/tab/tabpanel model is _actively misleading screen-reader users_
   in Material. This is the strongest direct argument against the tabs
   model for steppers. **Interop avoids this entirely by not using the
   role.**
 - **[#33130 — aria-label support on mat-stepper](https://github.com/angular/components/issues/33130)**
   Recently closed. Until v21 you could not set an accessible name on the
-  stepper itself without DOM hackery. *Lesson:* always expose
+  stepper itself without DOM hackery. _Lesson:_ always expose
   `aria-label`/`aria-labelledby` on the container from day one. Interop
   does (defaulted to "Progress").
 - **[#32964 — dynamic [linear] input does not update UI](https://github.com/angular/components/issues/32964)**
@@ -314,7 +315,7 @@ The primary comparison. Issues filed against `mat-stepper`:
   requires an `aria-controls` attribute pointing at the content section
   element" ([source](https://mui.com/material-ui/react-stepper/)).
 - Content unmounts when step closes by default; consumers must opt into
-  `unmountOnExit: false` to preserve state. *Lesson:* Interop's panels
+  `unmountOnExit: false` to preserve state. _Lesson:_ Interop's panels
   stay mounted (and `[hidden]` when locked); state preservation is
   free for the consumer. Correct.
 - Three variants — Horizontal, Vertical, Mobile (text/dots/progress).
@@ -347,20 +348,21 @@ PrimeNG critique, not stepper-specific).
 
 **This is the gap.** A stepper-as-stepper headless primitive does not
 exist in the major React ecosystem. Interop has an opportunity to be
-*the* canonical implementation of a non-tabs stepper.
+_the_ canonical implementation of a non-tabs stepper.
 
 ### 2.5 GOV.UK — the principled minimalist position
 
 [GOV.UK Design System patterns](https://design-system.service.gov.uk/patterns/)
 explicitly does **not** recommend a step indicator for multi-step forms.
 Their research finds:
+
 - One-thing-per-page beats a wizard-with-progress
 - Back link + "check your answers" page beats numbered steps
 - Visible step counters increase abandonment when users see how many
   steps remain
 
-This is worth quoting in the Interop docs as a counterpoint: *not every
-multi-step flow should use a stepper.* The stepper is appropriate when
+This is worth quoting in the Interop docs as a counterpoint: _not every
+multi-step flow should use a stepper._ The stepper is appropriate when
 steps are non-trivially long, when reviewing earlier steps matters, or
 when the process is fundamentally non-linear. For short linear forms,
 prefer no stepper.
@@ -385,8 +387,8 @@ prefer no stepper.
 
 ## 3. The single most-requested feature
 
-Pain points (§2) cover *what's broken*; this section names *what consumers
-want that no library currently ships well*. The signal across surveyed
+Pain points (§2) cover _what's broken_; this section names _what consumers
+want that no library currently ships well_. The signal across surveyed
 libraries is unusually consistent.
 
 ### 3.1 The pattern
@@ -395,18 +397,18 @@ Filter Angular Material's issue tracker for `stepper + validation` and the
 list reads like a single, decade-long conversation. Twelve issues filed
 since 2017, recurring themes:
 
-| # | Filed | Theme |
-|---|---|---|
-| [#29781](https://github.com/angular/components/issues/29781) | 2024 | `reset()` incorrectly marks form controls as touched/dirty |
-| [#29178](https://github.com/angular/components/issues/29178) | 2024 | Feature request: nested stepper inside a step |
-| [#25830](https://github.com/angular/components/issues/25830) | 2022 | Custom input validation messages don't surface inside a stepper |
-| [#20114](https://github.com/angular/components/issues/20114) | 2020 | Min/max validation on datepicker doesn't refresh on step change |
-| [#17355](https://github.com/angular/components/issues/17355) | 2019 | Stepper validates optional/unrequired forms unnecessarily |
-| [#17056](https://github.com/angular/components/issues/17056) | 2019 | `mat-error` doesn't trigger on Next-click |
-| [#16554](https://github.com/angular/components/issues/16554) | 2019 | `updateValueAndValidity` doesn't propagate state change to stepper |
-| [#15859](https://github.com/angular/components/issues/15859) | 2019 | Stepper's `FormControlLike` isn't compatible with `FormGroup` |
-| [#14026](https://github.com/angular/components/issues/14026) | 2018 | Navigation prematurely triggers validation on untouched fields |
-| [#8645](https://github.com/angular/components/issues/8645)  | 2017 | Steps with pending async validators are still considered completed |
+| #                                                            | Filed | Theme                                                              |
+| ------------------------------------------------------------ | ----- | ------------------------------------------------------------------ |
+| [#29781](https://github.com/angular/components/issues/29781) | 2024  | `reset()` incorrectly marks form controls as touched/dirty         |
+| [#29178](https://github.com/angular/components/issues/29178) | 2024  | Feature request: nested stepper inside a step                      |
+| [#25830](https://github.com/angular/components/issues/25830) | 2022  | Custom input validation messages don't surface inside a stepper    |
+| [#20114](https://github.com/angular/components/issues/20114) | 2020  | Min/max validation on datepicker doesn't refresh on step change    |
+| [#17355](https://github.com/angular/components/issues/17355) | 2019  | Stepper validates optional/unrequired forms unnecessarily          |
+| [#17056](https://github.com/angular/components/issues/17056) | 2019  | `mat-error` doesn't trigger on Next-click                          |
+| [#16554](https://github.com/angular/components/issues/16554) | 2019  | `updateValueAndValidity` doesn't propagate state change to stepper |
+| [#15859](https://github.com/angular/components/issues/15859) | 2019  | Stepper's `FormControlLike` isn't compatible with `FormGroup`      |
+| [#14026](https://github.com/angular/components/issues/14026) | 2018  | Navigation prematurely triggers validation on untouched fields     |
+| [#8645](https://github.com/angular/components/issues/8645)   | 2017  | Steps with pending async validators are still considered completed |
 
 The earliest issue is from 2017; the most recent from 2024. **Seven-plus
 years, same friction.** The titles describe different concrete failures,
@@ -418,9 +420,9 @@ but every one of them is a symptom of the same underlying gap.
 async-validator handling, opt-in optional-step semantics, and stable
 reset behaviour.**
 
-In plain language: *"I have a form on each step. The stepper should know
+In plain language: _"I have a form on each step. The stepper should know
 when that form is invalid, pending, or untouched, and gate Next/Finish
-accordingly — without me re-implementing the gating in every consumer."*
+accordingly — without me re-implementing the gating in every consumer."_
 
 The full feature is not just a single boolean. It comprises:
 
@@ -428,7 +430,7 @@ The full feature is not just a single boolean. It comprises:
 - **Async/pending gating** — pending async validators block forward
   navigation while resolving, with a way to surface the pending state
 - **Untouched / dirty awareness** — don't show validation errors until
-  the user has actually interacted with the field, *and* don't mark
+  the user has actually interacted with the field, _and_ don't mark
   fields touched/dirty when the user simply navigates between steps
 - **Optional-step semantics** — declared-optional steps don't gate
 - **Reset stability** — `reset()` clears state without forging
@@ -454,8 +456,8 @@ The full feature is not just a single boolean. It comprises:
 
 ### 3.4 Why the demand persists
 
-Multi-step forms are *the most common reason developers reach for a
-stepper.* The wizard pattern almost always wraps a flow whose individual
+Multi-step forms are _the most common reason developers reach for a
+stepper._ The wizard pattern almost always wraps a flow whose individual
 pages are forms — onboarding, checkout, settings, KYC, multi-page
 surveys. Yet none of the surveyed libraries provide a primitive that
 makes the form-integration part feel done. Consumers re-implement the
@@ -467,7 +469,7 @@ Form participation is one of the [semantics-a11y-checklist](research/semantics-a
 sections we explicitly hold ourselves to. Interop's stepper today exposes
 `[blockOn]` (status-array; blocks forward navigation when a step on the
 forward path has a blocking status) and `[status]` per-step (consumer
-sets `'error' / 'skipped'`). Together these address the *surface* of the
+sets `'error' / 'skipped'`). Together these address the _surface_ of the
 problem — but they require the consumer to translate form-state into
 status-state on every project.
 
@@ -481,7 +483,7 @@ get right.
 
 This is on-ethos: it's form-correctness, the consumer still owns the
 form definition and rendering, and the integration is opt-in. It would
-turn `blockOn` from a small convenience into the *primary* surface for
+turn `blockOn` from a small convenience into the _primary_ surface for
 form-based wizards.
 
 ### 3.6 Recommendation
@@ -502,15 +504,15 @@ Two, both partially in place; one needs to land.
 **This is the bet.** Most libraries focus nothing when the user
 activates a step — the screen reader user has no idea the panel changed.
 Some libraries focus a tabpanel wrapper that's invisible. Interop moves
-focus to the *content's* first `<h1>`–`<h6>` after the scroll-snap
+focus to the _content's_ first `<h1>`–`<h6>` after the scroll-snap
 settles, with `preventScroll: true` so the scrolling stays smooth.
 
 This is correct, accessible, and **rare**. It's also the behaviour the
 panel directive's docstring already claims:
 
-> *"When a panel becomes active (scroll settles on it, or programmatic
+> _"When a panel becomes active (scroll settles on it, or programmatic
 > nav), focus is moved to its first heading. The accessibility behaviour
-> missing from every major stepper implementation."*
+> missing from every major stepper implementation."_
 
 Document this prominently. Demo it on the live demo page with a
 screen-reader-readable example. Write a comparison post that names
@@ -690,7 +692,7 @@ protected readonly ariaLabel = computed(() => {
 ```
 
 This is applied as `[attr.aria-label]` on the inner `<button>`, which
-*replaces* the accessible name computed from the visible content. The
+_replaces_ the accessible name computed from the visible content. The
 visible label is the visible name; an explicit `aria-label` displaces
 it. Per the AccName spec the override is allowed, but doing so when the
 visible content already conveys the name is an anti-pattern — it
@@ -741,8 +743,8 @@ the a11y tree, so in linear mode only "visited so far" panels remain in
 the tree — but in non-linear mode all panels are tree-visible.
 
 **Recommend:** drop the explicit `role="region"`. The `<section>`
-element already does what's needed. If the goal is to *guarantee*
-landmark exposure across browser quirks, do so only on the *active*
+element already does what's needed. If the goal is to _guarantee_
+landmark exposure across browser quirks, do so only on the _active_
 panel via `[attr.role]="isActive() ? 'region' : null"`.
 
 ### 🟡 5.5 `aria-disabled` on `<li>` host duplicates native `[disabled]`
@@ -817,6 +819,7 @@ work in RTL, but Safari has historically had RTL scroll-position quirks
 container with `direction: rtl` to verify.
 
 ### 🟡 5.13 Step button accessible name does not survive
+
 `[indicatorTemplate]` override well
 
 When a consumer provides `[indicatorTemplate]`, the button content
@@ -824,22 +827,22 @@ becomes the template's output. If the template doesn't include the
 label, the visible button has no label — and (after fix 5.2) no
 fallback accessible name. The label-as-suffix is currently outside the
 template; the indicator template only replaces the indicator span. So
-this is OK *today* — but worth a docstring callout in
+this is OK _today_ — but worth a docstring callout in
 `StepIndicatorContext` reminding template authors that the visible
 label is still rendered alongside.
 
 ### Summary of recommended changes
 
-| # | Severity | Change |
-|---|---|---|
-| 5.1 | 🔴 | Add `aria-controls` from step button to panel id |
-| 5.2 | 🔴 | Drop `aria-label` override on step button; use visible content + visually-hidden status |
-| 5.3 | 🔴 | Remove `aria-current="step"` from panel host (keep on step indicator only) |
-| 5.4 | 🟡 | Drop explicit `role="region"` from panel host (or scope to active) |
-| 5.5 | 🟡 | Drop `aria-disabled` from `<li>` host (button's native `[disabled]` suffices) |
-| 5.6 | 🟡 | Add `aria-orientation` to step list, bound to stepper orientation |
-| 5.12 | 🟡 | Explicit RTL smoke test |
-| 5.13 | 🟡 | Document indicator-template + label interaction |
+| #    | Severity | Change                                                                                  |
+| ---- | -------- | --------------------------------------------------------------------------------------- |
+| 5.1  | 🔴       | Add `aria-controls` from step button to panel id                                        |
+| 5.2  | 🔴       | Drop `aria-label` override on step button; use visible content + visually-hidden status |
+| 5.3  | 🔴       | Remove `aria-current="step"` from panel host (keep on step indicator only)              |
+| 5.4  | 🟡       | Drop explicit `role="region"` from panel host (or scope to active)                      |
+| 5.5  | 🟡       | Drop `aria-disabled` from `<li>` host (button's native `[disabled]` suffices)           |
+| 5.6  | 🟡       | Add `aria-orientation` to step list, bound to stepper orientation                       |
+| 5.12 | 🟡       | Explicit RTL smoke test                                                                 |
+| 5.13 | 🟡       | Document indicator-template + label interaction                                         |
 
 ---
 
@@ -868,7 +871,7 @@ Resolved after review:
    have no canonical "last" step; firing `finish` from the highest-index
    panel in free-navigation mode is incidental, not intentional. Update
    `onNextOrFinish()` so the Finish action only triggers when
-   `linear()` is true *and* the active index is the last step. In
+   `linear()` is true _and_ the active index is the last step. In
    non-linear mode, the action stays "Next" on every step (or the next
    button disables on the last index — the natural fallback). Consumers
    driving non-linear flows are expected to wire their own completion
@@ -880,17 +883,18 @@ Resolved after review:
 
 ### Implications for the next implementation pass
 
-| Decision | Code change |
-|---|---|
+| Decision                                         | Code change                                                                                                                                 |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | 6.2 — `blockOn` opt-in for status-based blocking | New input on `<interop-stepper>` (e.g. `blockOn = input<StepStatus[]>(['locked'])`); `goTo()` consults it via `isStepLocked` + status check |
-| 6.4 — `finish` linear-only | Tighten `isOnLastStep` (or add `canFinish`) and gate the `finish.emit()` branch in `onNextOrFinish()` to `linear()` |
-| 6.1, 6.3, 6.5 | Doc-only — no code change |
+| 6.4 — `finish` linear-only                       | Tighten `isOnLastStep` (or add `canFinish`) and gate the `finish.emit()` branch in `onNextOrFinish()` to `linear()`                         |
+| 6.1, 6.3, 6.5                                    | Doc-only — no code change                                                                                                                   |
 
 ---
 
 ## 8. Source references
 
 External:
+
 - ARIA APG patterns index — https://www.w3.org/WAI/ARIA/apg/patterns/
 - ARIA APG Tabs pattern — https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
 - WAI-ARIA 1.2 `aria-current` — https://www.w3.org/TR/wai-aria-1.2/#aria-current
@@ -902,6 +906,7 @@ External:
 - Radix primitives — https://www.radix-ui.com/primitives/docs/overview/introduction
 
 Angular Material issues cited:
+
 - #19574 tabpanel tabindex — https://github.com/angular/components/issues/19574
 - #19009 JAWS icon labels — https://github.com/angular/components/issues/19009
 - #31559 iOS "tab" suffix — https://github.com/angular/components/issues/31559
@@ -912,6 +917,7 @@ Angular Material issues cited:
 - #31788 linear hover behaviour — https://github.com/angular/components/issues/31788
 
 Internal:
+
 - [`.agent/components/stepper.md`](../.agent/components/stepper.md) — implementation mental model
 - [`.agent/playbook.md`](../.agent/playbook.md) — conventions
 - [`.agent/css-strategy.md`](../.agent/css-strategy.md) — CSS split

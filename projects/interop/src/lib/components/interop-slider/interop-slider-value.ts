@@ -80,7 +80,7 @@ export class InteropSliderValue {
 				if (!this.api()) {
 					console.warn(
 						`[InteropSliderValue] no slider found with id "${this.forId()}". ` +
-							"Set the [for] attribute to the id of an <input type=\"range\" " +
+							'Set the [for] attribute to the id of an <input type="range" ' +
 							"interop-slider> or interop-slider-thumb element.",
 					);
 				}

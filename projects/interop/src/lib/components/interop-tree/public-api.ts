@@ -4,7 +4,7 @@ export * from "./interop-tree-toggle";
 export * from "./interop-tree-group";
 export { INTEROP_TREE, INTEROP_TREE_ITEM } from "./interop-tree.context";
 export type {
-  InteropTreeContext,
-  InteropTreeItemContext,
-  InteropTreeTier,
+	InteropTreeContext,
+	InteropTreeItemContext,
+	InteropTreeTier,
 } from "./interop-tree.context";

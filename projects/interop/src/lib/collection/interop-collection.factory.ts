@@ -19,8 +19,10 @@ export type InteropCollectionSource<T> =
 	| Signal<InteropCollectionInput<T> | undefined>
 	| (() => InteropCollectionInput<T> | undefined);
 
-export interface InteropCollectionFactoryOptions
-	extends Omit<InteropCollectionOptions, "destroyRef" | "injector"> {
+export interface InteropCollectionFactoryOptions extends Omit<
+	InteropCollectionOptions,
+	"destroyRef" | "injector"
+> {
 	/** Override the captured `DestroyRef`. Rare — defaults to `inject(DestroyRef)`. */
 	destroyRef?: DestroyRef;
 	/** Override the captured `Injector`. Rare — defaults to `inject(Injector)`. */

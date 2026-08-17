@@ -1,18 +1,18 @@
 import { CommonModule } from "@angular/common";
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  Component,
-  ContentChildren,
-  effect,
-  input,
-  isDevMode,
-  QueryList,
+	AfterContentInit,
+	ChangeDetectionStrategy,
+	Component,
+	ContentChildren,
+	effect,
+	input,
+	isDevMode,
+	QueryList,
 } from "@angular/core";
 import {
-  DevWarningsManager,
-  InteropToolbarBase,
-  KeyboardNavigationManager,
+	DevWarningsManager,
+	InteropToolbarBase,
+	KeyboardNavigationManager,
 } from "./shared/interop-toolbar-base";
 /**
  * InteropToolbar - Context-driven rig for task-specific tools and actions.
@@ -65,131 +65,131 @@ import {
  * ```
  */
 @Component({
-  selector: "interop-toolbar, [interop-toolbar]",
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: "./interop-toolbar.html",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    role: "toolbar",
-    "[attr.aria-orientation]": "orientation()",
-    "[attr.aria-label]": "label()",
-    "[attr.aria-labelledby]": "labelledby()",
-    "(keydown)": "onKeydown($event)",
-    "(focusin)": "onFocusIn($event)",
-  },
+	selector: "interop-toolbar, [interop-toolbar]",
+	standalone: true,
+	imports: [CommonModule],
+	templateUrl: "./interop-toolbar.html",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: {
+		role: "toolbar",
+		"[attr.aria-orientation]": "orientation()",
+		"[attr.aria-label]": "label()",
+		"[attr.aria-labelledby]": "labelledby()",
+		"(keydown)": "onKeydown($event)",
+		"(focusin)": "onFocusIn($event)",
+	},
 })
 export class InteropToolbar
-  extends InteropToolbarBase
-  implements AfterContentInit
+	extends InteropToolbarBase
+	implements AfterContentInit
 {
-  // ARIA inputs implementation
-  /**
-   * Accessible label for the component.
-   * Either this or labelledby should be provided for screen reader users.
-   */
-  label = input<string | null>(null);
+	// ARIA inputs implementation
+	/**
+	 * Accessible label for the component.
+	 * Either this or labelledby should be provided for screen reader users.
+	 */
+	label = input<string | null>(null);
 
-  /**
-   * ID of element that labels this component.
-   * Alternative to label input.
-   */
-  labelledby = input<string | null>(null);
+	/**
+	 * ID of element that labels this component.
+	 * Alternative to label input.
+	 */
+	labelledby = input<string | null>(null);
 
-  /**
-   * Whether the component is disabled.
-   */
-  disabled = input<boolean>(false);
+	/**
+	 * Whether the component is disabled.
+	 */
+	disabled = input<boolean>(false);
 
-  // Toolbar-specific inputs
-  /**
-   * Orientation of the toolbar for screen readers and keyboard navigation.
-   * Affects arrow key behavior: horizontal uses left/right, vertical uses up/down.
-   */
-  orientation = input<"horizontal" | "vertical">("horizontal");
+	// Toolbar-specific inputs
+	/**
+	 * Orientation of the toolbar for screen readers and keyboard navigation.
+	 * Affects arrow key behavior: horizontal uses left/right, vertical uses up/down.
+	 */
+	orientation = input<"horizontal" | "vertical">("horizontal");
 
-  // Internal managers
-  private keyboardNav = new KeyboardNavigationManager(this.elementRef);
+	// Internal managers
+	private keyboardNav = new KeyboardNavigationManager(this.elementRef);
 
-  /**
-   * Query for toolbar groups to coordinate with them
-   */
-  @ContentChildren("interopToolbarGroup", { descendants: true })
-  toolbarGroups!: QueryList<any>;
+	/**
+	 * Query for toolbar groups to coordinate with them
+	 */
+	@ContentChildren("interopToolbarGroup", { descendants: true })
+	toolbarGroups!: QueryList<any>;
 
-  // InteropToolbarBase implementation
-  get componentName(): string {
-    return "InteropToolbar";
-  }
+	// InteropToolbarBase implementation
+	get componentName(): string {
+		return "InteropToolbar";
+	}
 
-  get componentPurpose(): string {
-    return 'Toolbars should describe their purpose (e.g., "Text Formatting", "Image Tools")';
-  }
+	get componentPurpose(): string {
+		return 'Toolbars should describe their purpose (e.g., "Text Formatting", "Image Tools")';
+	}
 
-  constructor() {
-    super();
+	constructor() {
+		super();
 
-    // Update focusable items when content changes
-    effect(() => {
-      this.keyboardNav.updateFocusableElements();
-    });
+		// Update focusable items when content changes
+		effect(() => {
+			this.keyboardNav.updateFocusableElements();
+		});
 
-    // Additional toolbar-specific validation
-    if (isDevMode()) {
-      effect(() => {
-        this.validateToolbarUsage();
-      });
-    }
-  }
+		// Additional toolbar-specific validation
+		if (isDevMode()) {
+			effect(() => {
+				this.validateToolbarUsage();
+			});
+		}
+	}
 
-  ngAfterContentInit() {
-    // Initial scan for focusable items
-    this.keyboardNav.updateFocusableElements();
+	ngAfterContentInit() {
+		// Initial scan for focusable items
+		this.keyboardNav.updateFocusableElements();
 
-    // Re-scan when toolbar groups change
-    this.toolbarGroups.changes.subscribe(() => {
-      this.keyboardNav.updateFocusableElements();
-    });
-  }
+		// Re-scan when toolbar groups change
+		this.toolbarGroups.changes.subscribe(() => {
+			this.keyboardNav.updateFocusableElements();
+		});
+	}
 
-  /**
-   * Handle keyboard navigation within the toolbar
-   */
-  onKeydown(event: KeyboardEvent): void {
-    if (this.disabled()) return;
-    this.keyboardNav.handleKeyboardNavigation(event, this.orientation());
-  }
+	/**
+	 * Handle keyboard navigation within the toolbar
+	 */
+	onKeydown(event: KeyboardEvent): void {
+		if (this.disabled()) return;
+		this.keyboardNav.handleKeyboardNavigation(event, this.orientation());
+	}
 
-  /**
-   * Handle focus entering the toolbar
-   */
-  onFocusIn(event: FocusEvent): void {
-    if (this.disabled()) return;
+	/**
+	 * Handle focus entering the toolbar
+	 */
+	onFocusIn(event: FocusEvent): void {
+		if (this.disabled()) return;
 
-    const target = event.target as HTMLElement;
-    this.keyboardNav.updateFocusIndex(target);
-  }
+		const target = event.target as HTMLElement;
+		this.keyboardNav.updateFocusIndex(target);
+	}
 
-  /**
-   * Toolbar-specific validation and helpful guidance
-   */
-  private validateToolbarUsage(): void {
-    const element = this.elementRef.nativeElement;
+	/**
+	 * Toolbar-specific validation and helpful guidance
+	 */
+	private validateToolbarUsage(): void {
+		const element = this.elementRef.nativeElement;
 
-    // Base validation from parent class
-    super.validateAccessibilityLabels();
+		// Base validation from parent class
+		super.validateAccessibilityLabels();
 
-    // Check for interactive content
-    DevWarningsManager.warnNoInteractiveContent(
-      this.componentName,
-      element,
-      0, // No delay needed for toolbar
-    );
+		// Check for interactive content
+		DevWarningsManager.warnNoInteractiveContent(
+			this.componentName,
+			element,
+			0, // No delay needed for toolbar
+		);
 
-    // Validate semantic usage
-    super.validateElement(
-      ["div", "section", "interop-toolbar"],
-      "interop-toolbar",
-    );
-  }
+		// Validate semantic usage
+		super.validateElement(
+			["div", "section", "interop-toolbar"],
+			"interop-toolbar",
+		);
+	}
 }

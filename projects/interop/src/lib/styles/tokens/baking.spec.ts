@@ -102,7 +102,10 @@ describe("Token baking — why a root alias is not equivalent to a chain", () =>
 		branch.style.setProperty("--itx-duration-base", "1000ms");
 		// What a scope attribute does: re-derive the step HERE, so it substitutes
 		// against this element's base rather than the root's.
-		branch.style.setProperty("--itx-duration-fast", "calc(var(--itx-duration-base) * 0.5)");
+		branch.style.setProperty(
+			"--itx-duration-fast",
+			"calc(var(--itx-duration-base) * 0.5)",
+		);
 
 		expect(dur(el(branch, "chained"))).toEqual("0.5s");
 	});

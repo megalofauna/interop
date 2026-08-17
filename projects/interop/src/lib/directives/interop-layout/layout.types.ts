@@ -9,21 +9,13 @@
  * Supported flex-direction values
  */
 export type LayoutDirection =
-	| "row"
-	| "column"
-	| "row-reverse"
-	| "column-reverse";
+	"row" | "column" | "row-reverse" | "column-reverse";
 
 /**
  * Supported justify-content values
  */
 export type LayoutJustify =
-	| "start"
-	| "end"
-	| "center"
-	| "between"
-	| "around"
-	| "evenly";
+	"start" | "end" | "center" | "between" | "around" | "evenly";
 
 /**
  * Supported align-items values

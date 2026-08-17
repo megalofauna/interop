@@ -22,7 +22,10 @@
 				<p>Vessel ID: UCS-7741 requests permission to dock at Bay 3.</p>
 				<p>ETA: 14 minutes. Cargo: general supply run.</p>
 				<div class="dialog-page__actions">
-					<button interop-button="secondary grow" (click)="basicOpen.set(false)">
+					<button
+						interop-button="secondary grow"
+						(click)="basicOpen.set(false)"
+					>
 						Deny
 					</button>
 					<button interop-button="primary grow" (click)="basicOpen.set(false)">
@@ -98,7 +101,9 @@
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>

@@ -114,13 +114,13 @@ export class InteropCodeRenderer {
 	readonly wrap = input<boolean>(false);
 	readonly tokens = input<HighlightedCode | null>(null);
 
-	readonly languageLabel = computed(() => canonicalizeLanguage(this.language()));
+	readonly languageLabel = computed(() =>
+		canonicalizeLanguage(this.language()),
+	);
 	readonly headerLabel = computed(
 		() => this.filename() ?? this.languageLabel(),
 	);
-	readonly whiteSpaceValue = computed(() =>
-		this.wrap() ? "pre-wrap" : "pre",
-	);
+	readonly whiteSpaceValue = computed(() => (this.wrap() ? "pre-wrap" : "pre"));
 
 	constructor() {
 		if (isDevMode()) {

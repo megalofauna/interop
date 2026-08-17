@@ -1,5 +1,10 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropCodeRenderer, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import {
+	InteropCodeRenderer,
+	InteropTable,
+	InteropCellDef,
+	type TableColumn,
+} from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
@@ -15,7 +20,14 @@ interface ApiEntry {
 @Component({
 	selector: "code-renderer-page",
 	standalone: true,
-	imports: [InteropCodeRenderer, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoMasthead],
+	imports: [
+		InteropCodeRenderer,
+		InteropTable,
+		InteropCellDef,
+		DemoSection,
+		DemoExample,
+		DemoMasthead,
+	],
 	templateUrl: "./code-renderer-page.html",
 	styleUrl: "./code-renderer-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,11 +41,39 @@ export class CodeRendererPage {
 	];
 
 	apiEntries: ApiEntry[] = [
-		{ name: "language", type: "string | null", default: "null", description: "Language identifier for the header label (e.g. 'ts', 'html', 'scss'). Canonicalized to a display name automatically." },
-		{ name: "filename", type: "string | null", default: "null", description: "Filename shown in the header. Takes precedence over the language label when both are set." },
-		{ name: "lineNumbers", type: "boolean", default: "false", description: "Render line numbers alongside the code." },
-		{ name: "wrap", type: "boolean", default: "false", description: "Wrap long lines (white-space: pre-wrap). Default is pre (no wrap)." },
-		{ name: "tokens", type: "HighlightedCode | null", default: "null", description: "Pre-tokenized syntax data from a Shiki adapter. When provided, replaces projected <pre><code> content." },
+		{
+			name: "language",
+			type: "string | null",
+			default: "null",
+			description:
+				"Language identifier for the header label (e.g. 'ts', 'html', 'scss'). Canonicalized to a display name automatically.",
+		},
+		{
+			name: "filename",
+			type: "string | null",
+			default: "null",
+			description:
+				"Filename shown in the header. Takes precedence over the language label when both are set.",
+		},
+		{
+			name: "lineNumbers",
+			type: "boolean",
+			default: "false",
+			description: "Render line numbers alongside the code.",
+		},
+		{
+			name: "wrap",
+			type: "boolean",
+			default: "false",
+			description:
+				"Wrap long lines (white-space: pre-wrap). Default is pre (no wrap).",
+		},
+		{
+			name: "tokens",
+			type: "HighlightedCode | null",
+			default: "null",
+			description:
+				"Pre-tokenized syntax data from a Shiki adapter. When provided, replaces projected <pre><code> content.",
+		},
 	];
-
 }

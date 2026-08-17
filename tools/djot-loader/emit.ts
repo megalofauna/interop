@@ -1,15 +1,55 @@
-import type { Div } from '@djot/djot';
+import type { Div } from "@djot/djot";
 
 const VALID_IDENT = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 
 const RESERVED = new Set([
-	'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
-	'default', 'delete', 'do', 'else', 'enum', 'export', 'extends', 'false',
-	'finally', 'for', 'function', 'if', 'import', 'in', 'instanceof', 'new',
-	'null', 'return', 'super', 'switch', 'this', 'throw', 'true', 'try',
-	'typeof', 'var', 'void', 'while', 'with', 'yield', 'let', 'static',
-	'implements', 'interface', 'package', 'private', 'protected', 'public',
-	'await', 'async',
+	"break",
+	"case",
+	"catch",
+	"class",
+	"const",
+	"continue",
+	"debugger",
+	"default",
+	"delete",
+	"do",
+	"else",
+	"enum",
+	"export",
+	"extends",
+	"false",
+	"finally",
+	"for",
+	"function",
+	"if",
+	"import",
+	"in",
+	"instanceof",
+	"new",
+	"null",
+	"return",
+	"super",
+	"switch",
+	"this",
+	"throw",
+	"true",
+	"try",
+	"typeof",
+	"var",
+	"void",
+	"while",
+	"with",
+	"yield",
+	"let",
+	"static",
+	"implements",
+	"interface",
+	"package",
+	"private",
+	"protected",
+	"public",
+	"await",
+	"async",
 ]);
 
 export class InvalidSlotIdError extends Error {
@@ -20,13 +60,10 @@ export class InvalidSlotIdError extends Error {
 
 const assertValidIdent = (id: string): void => {
 	if (!VALID_IDENT.test(id)) {
-		throw new InvalidSlotIdError(
-			id,
-			'must match /^[A-Za-z_$][A-Za-z0-9_$]*$/',
-		);
+		throw new InvalidSlotIdError(id, "must match /^[A-Za-z_$][A-Za-z0-9_$]*$/");
 	}
 	if (RESERVED.has(id)) {
-		throw new InvalidSlotIdError(id, 'is a reserved JavaScript keyword');
+		throw new InvalidSlotIdError(id, "is a reserved JavaScript keyword");
 	}
 };
 
@@ -43,9 +80,9 @@ export const emitModule = (slots: ReadonlyMap<string, Div>): string => {
 	for (const id of ids) assertValidIdent(id);
 
 	const lines: string[] = [
-		'// AUTO-GENERATED from .djot source. Do not edit by hand.',
+		"// AUTO-GENERATED from .djot source. Do not edit by hand.",
 		"import type { Div } from '@djot/djot';",
-		'',
+		"",
 	];
 
 	// `as unknown as Div` is required because TS narrows JSON literals such
@@ -59,12 +96,12 @@ export const emitModule = (slots: ReadonlyMap<string, Div>): string => {
 		);
 	}
 
-	lines.push('');
+	lines.push("");
 	lines.push(
-		`export const __slots = [${ids.map((id) => JSON.stringify(id)).join(', ')}] as const;`,
+		`export const __slots = [${ids.map((id) => JSON.stringify(id)).join(", ")}] as const;`,
 	);
-	lines.push('export type Slot = typeof __slots[number];');
-	lines.push('');
+	lines.push("export type Slot = typeof __slots[number];");
+	lines.push("");
 
-	return lines.join('\n');
+	return lines.join("\n");
 };

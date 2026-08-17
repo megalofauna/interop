@@ -373,7 +373,6 @@ export class TreePage {
 				"Typeahead — focus the next node whose label starts with the typed buffer. Resets after 500 ms.",
 		},
 	];
-
 }
 
 // ── Scale-demo data ─────────────────────────────────────────────────────────
@@ -392,7 +391,8 @@ function buildTree(shape: number[], prefix = "n"): TreeNode[] {
 
 function countNodes(nodes: TreeNode[]): number {
 	return nodes.reduce(
-		(total, node) => total + 1 + (node.children ? countNodes(node.children) : 0),
+		(total, node) =>
+			total + 1 + (node.children ? countNodes(node.children) : 0),
 		0,
 	);
 }

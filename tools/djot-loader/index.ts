@@ -1,8 +1,8 @@
-import { promises as fs } from 'node:fs';
-import type { Plugin, OnLoadResult } from 'esbuild';
-import { parse } from '@djot/djot';
-import { extractSlots } from './extract';
-import { emitModule, InvalidSlotIdError } from './emit';
+import { promises as fs } from "node:fs";
+import type { Plugin, OnLoadResult } from "esbuild";
+import { parse } from "@djot/djot";
+import { extractSlots } from "./extract";
+import { emitModule, InvalidSlotIdError } from "./emit";
 
 export interface DjotPluginOptions {
 	/** Pattern matched against import paths. Default: /\.djot$/ */
@@ -18,12 +18,12 @@ export interface DjotPluginOptions {
  * agnostic and can also be consumed directly by Vite (`plugins: [djotPlugin()]`).
  */
 export const djotPlugin = (options: DjotPluginOptions = {}): Plugin => ({
-	name: 'interop-djot',
+	name: "interop-djot",
 	setup(build) {
 		const filter = options.filter ?? /\.djot$/;
 
 		build.onLoad({ filter }, async (args): Promise<OnLoadResult> => {
-			const source = await fs.readFile(args.path, 'utf8');
+			const source = await fs.readFile(args.path, "utf8");
 			const ast = parse(source);
 			const { slots, errors } = extractSlots(ast);
 
@@ -40,7 +40,7 @@ export const djotPlugin = (options: DjotPluginOptions = {}): Plugin => ({
 			try {
 				return {
 					contents: emitModule(slots),
-					loader: 'ts',
+					loader: "ts",
 					watchFiles: [args.path],
 				};
 			} catch (err) {

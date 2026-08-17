@@ -6,12 +6,13 @@ import { InteropChipInput, ChipInputItem } from "./interop-chip-input";
 	standalone: true,
 	imports: [InteropChipInput],
 	template: `
-		<div interop-chip-input
+		<div
+			interop-chip-input
 			aria-label="Tags"
 			[value]="chips()"
 			[placeholder]="'Add a tag…'"
-			(valueChange)="onValueChange($event)">
-		</div>
+			(valueChange)="onValueChange($event)"
+		></div>
 	`,
 })
 class TestHost {
@@ -26,14 +27,18 @@ describe("InteropChipInput", () => {
 	let textInput: HTMLInputElement;
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({ imports: [TestHost] }).compileComponents();
+		await TestBed.configureTestingModule({
+			imports: [TestHost],
+		}).compileComponents();
 		fixture = TestBed.createComponent(TestHost);
 		host = fixture.componentInstance;
 		fixture.detectChanges();
 		await fixture.whenStable();
 
 		container = fixture.nativeElement.querySelector("div[interop-chip-input]");
-		textInput = container.querySelector("input[type='text']") as HTMLInputElement;
+		textInput = container.querySelector(
+			"input[type='text']",
+		) as HTMLInputElement;
 	});
 
 	describe("Initial state", () => {
@@ -58,18 +63,24 @@ describe("InteropChipInput", () => {
 	describe("Chip creation — Enter key", () => {
 		it("should create a chip when Enter is pressed with text", async () => {
 			textInput.value = "angular";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
 			const chips = container.querySelectorAll(".itx-chip");
 			expect(chips.length).toBe(1);
-			expect(chips[0].querySelector(".itx-chip-label")?.textContent?.trim()).toBe("angular");
+			expect(
+				chips[0].querySelector(".itx-chip-label")?.textContent?.trim(),
+			).toBe("angular");
 		});
 
 		it("should clear the input after chip creation", async () => {
 			textInput.value = "angular";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
@@ -78,16 +89,22 @@ describe("InteropChipInput", () => {
 
 		it("should emit valueChange with the new chip", async () => {
 			textInput.value = "css";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
-			expect(host.onValueChange).toHaveBeenCalledWith([{ label: "css", value: "css" }]);
+			expect(host.onValueChange).toHaveBeenCalledWith([
+				{ label: "css", value: "css" },
+			]);
 		});
 
 		it("should not create a chip for whitespace-only input", async () => {
 			textInput.value = "   ";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
@@ -98,7 +115,9 @@ describe("InteropChipInput", () => {
 	describe("Chip creation — comma separator", () => {
 		it("should create a chip when comma is pressed", async () => {
 			textInput.value = "typescript";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: ",", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: ",", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
@@ -109,44 +128,58 @@ describe("InteropChipInput", () => {
 	describe("Chip removal", () => {
 		beforeEach(async () => {
 			textInput.value = "one";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			textInput.value = "two";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 		});
 
 		it("should remove a chip when its remove button is clicked", async () => {
-			const removeBtns = container.querySelectorAll<HTMLButtonElement>(".itx-chip-remove");
+			const removeBtns =
+				container.querySelectorAll<HTMLButtonElement>(".itx-chip-remove");
 			removeBtns[0].click();
 			fixture.detectChanges();
 			await fixture.whenStable();
 
 			const chips = container.querySelectorAll(".itx-chip");
 			expect(chips.length).toBe(1);
-			expect(chips[0].querySelector(".itx-chip-label")?.textContent?.trim()).toBe("two");
+			expect(
+				chips[0].querySelector(".itx-chip-label")?.textContent?.trim(),
+			).toBe("two");
 		});
 
 		it("should emit valueChange after chip removal", async () => {
 			host.onValueChange.calls.reset();
-			const removeBtns = container.querySelectorAll<HTMLButtonElement>(".itx-chip-remove");
+			const removeBtns =
+				container.querySelectorAll<HTMLButtonElement>(".itx-chip-remove");
 			removeBtns[1].click();
 			fixture.detectChanges();
 			await fixture.whenStable();
 
-			expect(host.onValueChange).toHaveBeenCalledWith([{ label: "one", value: "one" }]);
+			expect(host.onValueChange).toHaveBeenCalledWith([
+				{ label: "one", value: "one" },
+			]);
 		});
 	});
 
 	describe("Backspace state machine", () => {
 		it("should NOT delete a chip on Backspace when the input has text", async () => {
 			textInput.value = "hello";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 
 			// Now type in input and press Backspace
 			textInput.value = "wo";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Backspace", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
@@ -157,7 +190,10 @@ describe("InteropChipInput", () => {
 
 	describe("Controlled mode", () => {
 		it("should reflect externally provided chips", async () => {
-			host.chips.set([{ label: "Angular", value: "angular" }, { label: "CSS", value: "css" }]);
+			host.chips.set([
+				{ label: "Angular", value: "angular" },
+				{ label: "CSS", value: "css" },
+			]);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
@@ -169,21 +205,27 @@ describe("InteropChipInput", () => {
 	describe("Remove button accessibility", () => {
 		it("should have aria-label='Remove [label]' on each remove button", async () => {
 			textInput.value = "Angular";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
-			const btn = container.querySelector<HTMLButtonElement>(".itx-chip-remove");
+			const btn =
+				container.querySelector<HTMLButtonElement>(".itx-chip-remove");
 			expect(btn?.getAttribute("aria-label")).toBe("Remove Angular");
 		});
 
 		it("should have type='button' on remove buttons", async () => {
 			textInput.value = "Angular";
-			textInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+			textInput.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+			);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
-			const btn = container.querySelector<HTMLButtonElement>(".itx-chip-remove");
+			const btn =
+				container.querySelector<HTMLButtonElement>(".itx-chip-remove");
 			expect(btn?.type).toBe("button");
 		});
 	});
@@ -195,7 +237,11 @@ describe("InteropChipInput", () => {
 					@Component({
 						standalone: true,
 						imports: [InteropChipInput],
-						template: `<div interop-chip-input aria-label="Tags" [disabled]="true"></div>`,
+						template: `<div
+							interop-chip-input
+							aria-label="Tags"
+							[disabled]="true"
+						></div>`,
 					})
 					class DisabledHost {}
 					return DisabledHost;
@@ -204,7 +250,9 @@ describe("InteropChipInput", () => {
 			disabledFixture.detectChanges();
 			await disabledFixture.whenStable();
 
-			const el = disabledFixture.nativeElement.querySelector("div[interop-chip-input]");
+			const el = disabledFixture.nativeElement.querySelector(
+				"div[interop-chip-input]",
+			);
 			expect(el.hasAttribute("data-disabled")).toBeTrue();
 		});
 	});

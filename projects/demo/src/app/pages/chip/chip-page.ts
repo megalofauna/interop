@@ -11,7 +11,7 @@ import {
 	InteropCellDef,
 	type TableColumn,
 	type TableGroupRow,
-} from 'interop';
+} from "interop";
 import { CodeBlock, Terminal, type TerminalEntry } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -56,58 +56,58 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	],
 	templateUrl: "./chip-page.html",
 	styleUrl: "./chip-page.css",
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipPage {
-	cargoTags = signal(['plasma-conduit', 'mag-lock', 'hull-epoxy']);
+	cargoTags = signal(["plasma-conduit", "mag-lock", "hull-epoxy"]);
 	removeLog = signal<TerminalEntry[]>([]);
 
 	removeTag(tag: string) {
-		this.cargoTags.update(tags => tags.filter(t => t !== tag));
-		this.removeLog.update(log => [
+		this.cargoTags.update((tags) => tags.filter((t) => t !== tag));
+		this.removeLog.update((log) => [
 			...log,
 			{ text: `removed "${tag}"`, time: Date.now() },
 		]);
 	}
 
-	activeFilters = signal<string[]>(['hazmat', 'priority']);
+	activeFilters = signal<string[]>(["hazmat", "priority"]);
 	filterLog = signal<TerminalEntry[]>([]);
 
 	onFiltersChange(next: string[]) {
 		const previous = this.activeFilters();
 		this.activeFilters.set(next);
-		const added = next.find(v => !previous.includes(v));
-		const removed = previous.find(v => !next.includes(v));
+		const added = next.find((v) => !previous.includes(v));
+		const removed = previous.find((v) => !next.includes(v));
 		const detail = added
 			? `+${added}`
 			: removed
 				? `-${removed}`
-				: next.join(', ') || '∅';
-		this.filterLog.update(log => [
+				: next.join(", ") || "∅";
+		this.filterLog.update((log) => [
 			...log,
-			{ text: `${detail} → [${next.join(', ')}]`, time: Date.now() },
+			{ text: `${detail} → [${next.join(", ")}]`, time: Date.now() },
 		]);
 	}
 
 	recipients = signal<ChipInputItem[]>([
-		{ label: 'reyes@ares.dock', value: 'reyes@ares.dock' },
-		{ label: 'tanaka@ares.dock', value: 'tanaka@ares.dock' },
+		{ label: "reyes@ares.dock", value: "reyes@ares.dock" },
+		{ label: "tanaka@ares.dock", value: "tanaka@ares.dock" },
 	]);
 	recipientsLog = signal<TerminalEntry[]>([]);
 
 	onRecipientsChange(next: ChipInputItem[]) {
 		const previous = this.recipients();
 		this.recipients.set(next);
-		const prevValues = previous.map(c => c.value ?? c.label);
-		const nextValues = next.map(c => c.value ?? c.label);
-		const added = nextValues.find(v => !prevValues.includes(v));
-		const removed = prevValues.find(v => !nextValues.includes(v));
+		const prevValues = previous.map((c) => c.value ?? c.label);
+		const nextValues = next.map((c) => c.value ?? c.label);
+		const added = nextValues.find((v) => !prevValues.includes(v));
+		const removed = prevValues.find((v) => !nextValues.includes(v));
 		const detail = added
 			? `added "${added}"`
 			: removed
 				? `removed "${removed}"`
 				: `count ${next.length}`;
-		this.recipientsLog.update(log => [
+		this.recipientsLog.update((log) => [
 			...log,
 			{ text: detail, time: Date.now() },
 		]);
@@ -170,30 +170,119 @@ export class ChipPage {
 
 	apiEntries: ApiInputEntry[] = [
 		{ groupLabel: "chip-list" },
-		{ name: "disabled", type: "boolean", default: "false", description: "Whether the entire list is in a disabled presentation state." },
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description:
+				"Whether the entire list is in a disabled presentation state.",
+		},
 
 		{ groupLabel: "chip-item" },
-		{ name: "label", type: "string", default: "—", description: "Required. Accessible label for this chip. Also used as the base for the remove button's aria-label.", required: true },
-		{ name: "removable", type: "boolean", default: "false", description: "When true, renders a remove button inside the chip." },
-		{ name: "disabled", type: "boolean", default: "false", description: "Disables the remove button." },
+		{
+			name: "label",
+			type: "string",
+			default: "—",
+			description:
+				"Required. Accessible label for this chip. Also used as the base for the remove button's aria-label.",
+			required: true,
+		},
+		{
+			name: "removable",
+			type: "boolean",
+			default: "false",
+			description: "When true, renders a remove button inside the chip.",
+		},
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description: "Disables the remove button.",
+		},
 
 		{ groupLabel: "chip-filter" },
-		{ name: "label", type: "string", default: "—", description: "Required. Accessible label rendered as a fieldset legend.", required: true },
-		{ name: "labelHidden", type: "boolean", default: "false", description: "When true, the legend is visually hidden but remains accessible." },
-		{ name: "value", type: "string[]", default: "[]", description: "Currently selected values in controlled mode." },
-		{ name: "disabled", type: "boolean", default: "false", description: "Disables all filter options." },
+		{
+			name: "label",
+			type: "string",
+			default: "—",
+			description: "Required. Accessible label rendered as a fieldset legend.",
+			required: true,
+		},
+		{
+			name: "labelHidden",
+			type: "boolean",
+			default: "false",
+			description:
+				"When true, the legend is visually hidden but remains accessible.",
+		},
+		{
+			name: "value",
+			type: "string[]",
+			default: "[]",
+			description: "Currently selected values in controlled mode.",
+		},
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description: "Disables all filter options.",
+		},
 
 		{ groupLabel: "chip-option" },
-		{ name: "value", type: "string", default: "—", description: "Required. The value this option represents.", required: true },
-		{ name: "disabled", type: "boolean", default: "false", description: "Disables this option independently of the group." },
-		{ name: "name", type: "string | null", default: "null", description: "Name attribute forwarded to the checkbox input. Required for native form submission." },
+		{
+			name: "value",
+			type: "string",
+			default: "—",
+			description: "Required. The value this option represents.",
+			required: true,
+		},
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description: "Disables this option independently of the group.",
+		},
+		{
+			name: "name",
+			type: "string | null",
+			default: "null",
+			description:
+				"Name attribute forwarded to the checkbox input. Required for native form submission.",
+		},
 
 		{ groupLabel: "chip-input" },
-		{ name: "value", type: "ChipInputItem[]", default: "[]", description: "Controlled chip list. Pair with (valueChange) for two-way binding." },
-		{ name: "placeholder", type: "string", default: "''", description: "Placeholder text for the text input." },
-		{ name: "disabled", type: "boolean", default: "false", description: "Disables the control." },
-		{ name: "separators", type: "string[]", default: "['Enter', ',']", description: "Keys that trigger chip creation from the current input text." },
-		{ name: "maxChips", type: "number", default: "0", description: "Maximum number of chips. No limit when 0." },
+		{
+			name: "value",
+			type: "ChipInputItem[]",
+			default: "[]",
+			description:
+				"Controlled chip list. Pair with (valueChange) for two-way binding.",
+		},
+		{
+			name: "placeholder",
+			type: "string",
+			default: "''",
+			description: "Placeholder text for the text input.",
+		},
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description: "Disables the control.",
+		},
+		{
+			name: "separators",
+			type: "string[]",
+			default: "['Enter', ',']",
+			description:
+				"Keys that trigger chip creation from the current input text.",
+		},
+		{
+			name: "maxChips",
+			type: "number",
+			default: "0",
+			description: "Maximum number of chips. No limit when 0.",
+		},
 	];
 
 	outputColumns: TableColumn<ApiOutputEntry>[] = [
@@ -204,13 +293,26 @@ export class ChipPage {
 
 	outputEntries: ApiOutputEntry[] = [
 		{ groupLabel: "chip-item" },
-		{ name: "removed", type: "void", description: "Emitted when the chip's remove button is clicked." },
+		{
+			name: "removed",
+			type: "void",
+			description: "Emitted when the chip's remove button is clicked.",
+		},
 
 		{ groupLabel: "chip-filter" },
-		{ name: "valueChange", type: "string[]", description: "Emitted when the selected filter values change." },
+		{
+			name: "valueChange",
+			type: "string[]",
+			description: "Emitted when the selected filter values change.",
+		},
 
 		{ groupLabel: "chip-input" },
-		{ name: "valueChange", type: "ChipInputItem[]", description: "Emitted when the chip list changes (add, remove, blur-commit)." },
+		{
+			name: "valueChange",
+			type: "ChipInputItem[]",
+			description:
+				"Emitted when the chip list changes (add, remove, blur-commit).",
+		},
 	];
 
 	// ── Token table ──────────────────────────────────────────────────────────
@@ -221,17 +323,38 @@ export class ChipPage {
 
 	tokenEntries: TokenEntry[] = [
 		{ groupLabel: "Size steps — the retuning seam" },
-		{ property: "--itx-chip-md-height", default: "var(--itx-spacing-8) — 32px" },
-		{ property: "--itx-chip-md-padding-inline", default: "var(--itx-spacing-3) — 12px" },
-		{ property: "--itx-chip-md-radius", default: "var(--itx-radius-lg) — 12px" },
-		{ property: "--itx-chip-sm-height", default: "var(--itx-spacing-6) — 24px" },
-		{ property: "--itx-chip-sm-padding-inline", default: "var(--itx-spacing-2) — 8px" },
+		{
+			property: "--itx-chip-md-height",
+			default: "var(--itx-spacing-8) — 32px",
+		},
+		{
+			property: "--itx-chip-md-padding-inline",
+			default: "var(--itx-spacing-3) — 12px",
+		},
+		{
+			property: "--itx-chip-md-radius",
+			default: "var(--itx-radius-lg) — 12px",
+		},
+		{
+			property: "--itx-chip-sm-height",
+			default: "var(--itx-spacing-6) — 24px",
+		},
+		{
+			property: "--itx-chip-sm-padding-inline",
+			default: "var(--itx-spacing-2) — 8px",
+		},
 		{ property: "--itx-chip-sm-radius", default: "var(--itx-radius-md) — 8px" },
 
 		{ groupLabel: "Shared — size (assigned from the step above)" },
 		{ property: "--itx-chip-height", default: "var(--itx-chip-md-height)" },
-		{ property: "--itx-chip-padding-inline", default: "var(--itx-chip-md-padding-inline)" },
-		{ property: "--itx-chip-min-width", default: "var(--itx-spacing-8) — 32px" },
+		{
+			property: "--itx-chip-padding-inline",
+			default: "var(--itx-chip-md-padding-inline)",
+		},
+		{
+			property: "--itx-chip-min-width",
+			default: "var(--itx-spacing-8) — 32px",
+		},
 		{ property: "--itx-chip-max-width", default: "none" },
 		{ property: "--itx-chip-gap", default: "var(--itx-spacing-4) — 16px" },
 		{ property: "--itx-chip-radius", default: "var(--itx-chip-md-radius)" },
@@ -245,36 +368,84 @@ export class ChipPage {
 		{ property: "--itx-chip-background", default: "var(--itx-colorway-solid)" },
 		{ property: "--itx-chip-color", default: "var(--itx-colorway-on-solid)" },
 		{ property: "--itx-chip-border", default: "none" },
-		{ property: "--itx-chip-background-hover", default: "var(--itx-contrast-2)" },
+		{
+			property: "--itx-chip-background-hover",
+			default: "var(--itx-contrast-2)",
+		},
 		{ property: "--itx-chip-color-hover", default: "var(--itx-contrast-6)" },
 
 		{ groupLabel: "Paint — selectable (chip-option)" },
-		{ property: "--itx-chip-selectable-background", default: "var(--itx-contrast-2)" },
-		{ property: "--itx-chip-selectable-color", default: "var(--itx-contrast-6)" },
-		{ property: "--itx-chip-selectable-border", default: "2px solid transparent" },
-		{ property: "--itx-chip-selectable-background-hover", default: "var(--itx-contrast-3)" },
-		{ property: "--itx-chip-selectable-color-hover", default: "var(--itx-contrast-6)" },
+		{
+			property: "--itx-chip-selectable-background",
+			default: "var(--itx-contrast-2)",
+		},
+		{
+			property: "--itx-chip-selectable-color",
+			default: "var(--itx-contrast-6)",
+		},
+		{
+			property: "--itx-chip-selectable-border",
+			default: "2px solid transparent",
+		},
+		{
+			property: "--itx-chip-selectable-background-hover",
+			default: "var(--itx-contrast-3)",
+		},
+		{
+			property: "--itx-chip-selectable-color-hover",
+			default: "var(--itx-contrast-6)",
+		},
 
 		{ groupLabel: "Paint — selected / checked" },
-		{ property: "--itx-chip-background-selected", default: "var(--itx-colorway-solid)" },
-		{ property: "--itx-chip-color-selected", default: "var(--itx-colorway-on-solid)" },
-		{ property: "--itx-chip-border-selected", default: "2px solid var(--itx-colorway-border)" },
+		{
+			property: "--itx-chip-background-selected",
+			default: "var(--itx-colorway-solid)",
+		},
+		{
+			property: "--itx-chip-color-selected",
+			default: "var(--itx-colorway-on-solid)",
+		},
+		{
+			property: "--itx-chip-border-selected",
+			default: "2px solid var(--itx-colorway-border)",
+		},
 		{ property: "--itx-chip-font-weight-selected", default: "400" },
 
 		{ groupLabel: "Focus ring (chip-option)" },
-		{ property: "--itx-chip-outline-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-chip-outline-color",
+			default: "var(--itx-colorway-solid)",
+		},
 		{ property: "--itx-chip-outline-width", default: "2px" },
 		{ property: "--itx-chip-outline-style", default: "solid" },
 		{ property: "--itx-chip-outline-offset", default: "2px" },
 
 		{ groupLabel: "Remove button (chip-item + chip-input)" },
-		{ property: "--itx-chip-remove-background", default: "var(--itx-colorway-solid)" },
-		{ property: "--itx-chip-remove-background-hover", default: "var(--itx-contrast-2)" },
+		{
+			property: "--itx-chip-remove-background",
+			default: "var(--itx-colorway-solid)",
+		},
+		{
+			property: "--itx-chip-remove-background-hover",
+			default: "var(--itx-contrast-2)",
+		},
 		{ property: "--itx-chip-remove-border", default: "none" },
-		{ property: "--itx-chip-remove-radius", default: "var(--itx-chip-radius) — tracks the chip" },
-		{ property: "--itx-chip-remove-margin", default: "0 0 0 var(--itx-spacing-2)" },
-		{ property: "--itx-chip-remove-font-size", default: "var(--itx-spacing-4) — 16px" },
-		{ property: "--itx-chip-remove-outline-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-chip-remove-radius",
+			default: "var(--itx-chip-radius) — tracks the chip",
+		},
+		{
+			property: "--itx-chip-remove-margin",
+			default: "0 0 0 var(--itx-spacing-2)",
+		},
+		{
+			property: "--itx-chip-remove-font-size",
+			default: "var(--itx-spacing-4) — 16px",
+		},
+		{
+			property: "--itx-chip-remove-outline-color",
+			default: "var(--itx-colorway-solid)",
+		},
 		{ property: "--itx-chip-remove-outline-width", default: "2px" },
 		{ property: "--itx-chip-remove-outline-offset", default: "-2px (inset)" },
 
@@ -287,28 +458,48 @@ export class ChipPage {
 		{ property: "--itx-chip-list-gap", default: "var(--itx-spacing-2) — 8px" },
 
 		{ groupLabel: "Dismissible hosts (chip-item + chip-input)" },
-		{ property: "--itx-chip-gap", default: "0 — the remove button owns its margin" },
+		{
+			property: "--itx-chip-gap",
+			default: "0 — the remove button owns its margin",
+		},
 
 		{ groupLabel: "chip-filter" },
 		{ property: "--itx-chip-filter-background", default: "transparent" },
 		{ property: "--itx-chip-filter-border", default: "none" },
 		{ property: "--itx-chip-filter-radius", default: "0" },
 		{ property: "--itx-chip-filter-padding", default: "0" },
-		{ property: "--itx-chip-filter-gap", default: "var(--itx-spacing-2) — 8px" },
+		{
+			property: "--itx-chip-filter-gap",
+			default: "var(--itx-spacing-2) — 8px",
+		},
 
 		{ groupLabel: "chip-input — container" },
 		{ property: "--itx-chip-input-background", default: "transparent" },
-		{ property: "--itx-chip-input-border", default: "1px solid var(--itx-contrast-3)" },
-		{ property: "--itx-chip-input-radius", default: "var(--itx-chip-radius) — tracks its chips" },
+		{
+			property: "--itx-chip-input-border",
+			default: "1px solid var(--itx-contrast-3)",
+		},
+		{
+			property: "--itx-chip-input-radius",
+			default: "var(--itx-chip-radius) — tracks its chips",
+		},
 		{ property: "--itx-chip-input-gap", default: "var(--itx-spacing-1)" },
-		{ property: "--itx-chip-input-padding", default: "var(--itx-spacing-1) var(--itx-spacing-2)" },
-		{ property: "--itx-chip-input-min-height", default: "var(--itx-spacing-10) — 40px" },
+		{
+			property: "--itx-chip-input-padding",
+			default: "var(--itx-spacing-1) var(--itx-spacing-2)",
+		},
+		{
+			property: "--itx-chip-input-min-height",
+			default: "var(--itx-spacing-10) — 40px",
+		},
 
 		{ groupLabel: "chip-input — focus" },
-		{ property: "--itx-chip-input-outline-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-chip-input-outline-color",
+			default: "var(--itx-colorway-solid)",
+		},
 		{ property: "--itx-chip-input-outline-width", default: "2px" },
 		{ property: "--itx-chip-input-outline-style", default: "solid" },
 		{ property: "--itx-chip-input-outline-offset", default: "1px" },
 	];
-
 }

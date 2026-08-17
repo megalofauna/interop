@@ -365,7 +365,10 @@ density = signal<TableSize>('lg');`;
 			property: "--itx-table-group-label-padding-block-start",
 			default: "var(--itx-spacing-6) — 24px",
 		},
-		{ property: "--itx-table-group-label-color", default: "var(--itx-contrast-4)" },
+		{
+			property: "--itx-table-group-label-color",
+			default: "var(--itx-contrast-4)",
+		},
 		{
 			property: "--itx-table-group-label-font-size",
 			default: "0.75rem — 12px",

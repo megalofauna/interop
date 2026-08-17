@@ -210,7 +210,6 @@ showPlacement(p: PopoverPlacement, ref: InteropPopover): void {
 
 	// ── In-section notes ─────────────────────────────────────────────────────
 
-
 	// ── CSS tokens ───────────────────────────────────────────────────────────
 
 	tokenColumns: TableColumn<TokenEntry>[] = [

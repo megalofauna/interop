@@ -28,6 +28,7 @@ Repo conventions (don't restate, reference):
 We are building **[COMPONENT]** for the Interop Angular component library.
 
 Interop's core ethos:
+
 - Semantic correctness first — native elements before ARIA roles
 - Accessibility is non-negotiable, not a feature
 - Minimal opinionated styling — consumers own the look
@@ -85,7 +86,7 @@ The output should answer:
 - What keyboard or focus management bugs appear repeatedly in issue trackers?
 - What unmet needs are visible in GitHub issues, StackOverflow, Discord,
   Reddit (`r/Angular2`, `r/reactjs`), and similar?
-- Where do *patterns* (not products) consistently fail in real apps?
+- Where do _patterns_ (not products) consistently fail in real apps?
 
 For each finding, **link the source** — issue URL, PR URL, blog post,
 mailing-list thread, etc. Pattern: "Angular Material #12345 — focus returns
@@ -100,7 +101,7 @@ representative — run a full critical review of it before moving on.
 Walk [research/pain-point-analysis.md](research/pain-point-analysis.md).
 It defines the seven analysis axes (semantic correctness, API surface,
 state machine, fragility, motion/contrast/focus, customization walls,
-*and* what the incumbent gets right), the source-mining order, and the
+_and_ what the incumbent gets right), the source-mining order, and the
 output format. The resulting report folds back into this section as
 linked evidence and seeds the §3/§4 differentiator argument.
 
@@ -112,8 +113,8 @@ incumbent is dominant enough to justify the focus.
 
 ## 3. The Single Most-Requested Feature
 
-Pain points (§2) cover *what's broken*. This section names *what consumers
-want that none of the existing libraries ship well*. The two often
+Pain points (§2) cover _what's broken_. This section names _what consumers
+want that none of the existing libraries ship well_. The two often
 correlate but are not the same — a feature can be missing without anything
 being technically broken, and a library can have many bugs without anyone
 asking for a new feature.
@@ -128,7 +129,7 @@ Signals to mine:
 - Long-running discussions on a single repo that never landed a PR
   (years-old threads with high engagement)
 - Stack Overflow questions that converge on the same workaround
-- *Workarounds and shims consumers ship on top of the library* — when a
+- _Workarounds and shims consumers ship on top of the library_ — when a
   community keeps re-implementing the same thing, that's a missing
   primitive
 
@@ -141,12 +142,12 @@ The output of this section should:
   age of the longest-running thread, frequency in SO questions
 - Cite at least three independent sources (issues, threads, blog posts,
   RFCs) — link each
-- Note where this feature *does* already exist. Sometimes the demand is
+- Note where this feature _does_ already exist. Sometimes the demand is
   concentrated in one ecosystem because another ecosystem already solved
   it (e.g. React has X built-in; Angular consumers keep asking for it)
 - State whether shipping this aligns with Interop's ethos (semantic
   correctness, native-first, light DOM, zero-specificity CSS). If it
-  would *not* align, say so explicitly — the answer here can be "the
+  would _not_ align, say so explicitly — the answer here can be "the
   most-requested feature is X; we deliberately decline it because Y"
 
 This output frequently feeds the §4 Killer Differentiator decision; when
@@ -204,5 +205,5 @@ Once satisfied with the above, produce:
 
 ---
 
-*Prompt template for the Interop component library.*
-*Execute with a specific component name before beginning any implementation work.*
+_Prompt template for the Interop component library._
+_Execute with a specific component name before beginning any implementation work._

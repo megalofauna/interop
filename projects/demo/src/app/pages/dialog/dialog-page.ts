@@ -1,8 +1,4 @@
-import {
-	Component,
-	ChangeDetectionStrategy,
-	signal,
-} from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import {
 	InteropDialog,
 	InteropButton,
@@ -211,5 +207,4 @@ formOpen = signal(false);`;
 				"Emitted when the dialog closes. The event contains reason: 'backdrop' | 'escape' | 'programmatic' | 'form-submit'.",
 		},
 	];
-
 }

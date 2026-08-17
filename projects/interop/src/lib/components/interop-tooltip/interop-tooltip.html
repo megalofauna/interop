@@ -18,15 +18,16 @@
   available for CSS arrow positioning via attribute selectors.
 -->
 <div
-  #tooltipPanel
-  [id]="tooltipId"
-  role="tooltip"
-  popover="manual"
-  class="interop-tooltip__panel"
-  [attr.data-placement]="resolvedPlacement()">
-  @if (contentTemplate()) {
-    <ng-container [ngTemplateOutlet]="contentTemplate()!" />
-  } @else {
-    {{ label() }}
-  }
+	#tooltipPanel
+	[id]="tooltipId"
+	role="tooltip"
+	popover="manual"
+	class="interop-tooltip__panel"
+	[attr.data-placement]="resolvedPlacement()"
+>
+	@if (contentTemplate()) {
+		<ng-container [ngTemplateOutlet]="contentTemplate()!" />
+	} @else {
+		{{ label() }}
+	}
 </div>

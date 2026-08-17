@@ -27,6 +27,7 @@ When `interop-overlay-badge` applies `aria-describedby` to the projected content
 what is the fallback when no interactive child is found?
 
 Options:
+
 - Warn in devMode and apply `role="img" aria-label="..."` to the wrapper container
 - Silently apply the label to the wrapper regardless
 - Require the consumer to explicitly mark the target with a directive

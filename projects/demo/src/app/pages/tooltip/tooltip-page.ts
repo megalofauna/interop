@@ -1,7 +1,4 @@
-import {
-	Component,
-	ChangeDetectionStrategy,
-} from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
 	InteropTooltip,
 	InteropTooltipContentDirective,
@@ -9,7 +6,7 @@ import {
 	InteropTable,
 	InteropCellDef,
 	type TableColumn,
-} from 'interop';
+} from "interop";
 import { CodeBlock } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -91,49 +88,56 @@ export class TooltipPage {
 			name: "label",
 			type: "string",
 			default: "''",
-			description: "Tooltip text for simple string-only content. Use <ng-template interopTooltipContent> for rich HTML.",
+			description:
+				"Tooltip text for simple string-only content. Use <ng-template interopTooltipContent> for rich HTML.",
 		},
 		{
 			component: "InteropTooltip",
 			name: "placement",
 			type: "Placement | undefined",
 			default: "undefined",
-			description: "Preferred placement relative to the trigger (e.g. 'top', 'bottom-start'). Falls back to auto-placement.",
+			description:
+				"Preferred placement relative to the trigger (e.g. 'top', 'bottom-start'). Falls back to auto-placement.",
 		},
 		{
 			component: "InteropTooltip",
 			name: "showDelay",
 			type: "number | undefined",
 			default: "undefined",
-			description: "Delay in milliseconds before the tooltip appears on hover. Focus always shows immediately.",
+			description:
+				"Delay in milliseconds before the tooltip appears on hover. Focus always shows immediately.",
 		},
 		{
 			component: "InteropTooltip",
 			name: "offset",
 			type: "number | undefined",
 			default: "undefined",
-			description: "Gap in pixels between the trigger edge and the tooltip panel.",
+			description:
+				"Gap in pixels between the trigger edge and the tooltip panel.",
 		},
 		{
 			component: "InteropTooltip",
 			name: "semantic",
 			type: "'description' | 'label' | undefined",
 			default: "undefined",
-			description: "ARIA wiring mode. 'description' adds aria-describedby (default); 'label' adds aria-labelledby. Reserve 'label' for icon-only controls.",
+			description:
+				"ARIA wiring mode. 'description' adds aria-describedby (default); 'label' adds aria-labelledby. Reserve 'label' for icon-only controls.",
 		},
 		{
 			component: "[interopTooltipTrigger]",
 			name: "—",
 			type: "marker",
 			default: "—",
-			description: "Marks a child element as the explicit trigger. Use when auto-detection (first button/a/input/[tabindex]) would pick the wrong element.",
+			description:
+				"Marks a child element as the explicit trigger. Use when auto-detection (first button/a/input/[tabindex]) would pick the wrong element.",
 		},
 		{
 			component: "ng-template[interopTooltipContent]",
 			name: "—",
 			type: "marker",
 			default: "—",
-			description: "Rich-content projection slot. When present, the template is rendered inside the panel instead of the [label] string.",
+			description:
+				"Rich-content projection slot. When present, the template is rendered inside the panel instead of the [label] string.",
 		},
 	];
 
@@ -153,5 +157,4 @@ export class TooltipPage {
 			description: "Emitted when the tooltip shows (true) or hides (false).",
 		},
 	];
-
 }

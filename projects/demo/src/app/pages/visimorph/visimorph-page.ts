@@ -1,5 +1,10 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropVisimorph, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import {
+	InteropVisimorph,
+	InteropTable,
+	InteropCellDef,
+	type TableColumn,
+} from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
@@ -15,7 +20,14 @@ interface ApiEntry {
 @Component({
 	selector: "visimorph-page",
 	standalone: true,
-	imports: [InteropVisimorph, InteropTable, InteropCellDef, DemoSection, DemoExample, DemoMasthead],
+	imports: [
+		InteropVisimorph,
+		InteropTable,
+		InteropCellDef,
+		DemoSection,
+		DemoExample,
+		DemoMasthead,
+	],
 	templateUrl: "./visimorph-page.html",
 	styleUrl: "./visimorph-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,11 +41,40 @@ export class VisiMorphPage {
 	];
 
 	apiEntries: ApiEntry[] = [
-		{ name: "type", type: "'radio' | 'checkbox' | 'toggle'", default: "—", description: "Required. Control type reflected to the itx-visimorph host attribute for CSS styling.", required: true },
-		{ name: "checked", type: "boolean", default: "false", description: "Checked/selected state. Reflects to data-checked (checkbox/toggle) or data-selected (radio)." },
-		{ name: "disabled", type: "boolean", default: "false", description: "Disabled state. Reflects to data-disabled." },
-		{ name: "indeterminate", type: "boolean", default: "false", description: "Indeterminate state (checkbox only). Reflects to data-indeterminate." },
-		{ name: "focused", type: "boolean", default: "false", description: "Focus ring state. The parent control tracks and passes this in." },
+		{
+			name: "type",
+			type: "'radio' | 'checkbox' | 'toggle'",
+			default: "—",
+			description:
+				"Required. Control type reflected to the itx-visimorph host attribute for CSS styling.",
+			required: true,
+		},
+		{
+			name: "checked",
+			type: "boolean",
+			default: "false",
+			description:
+				"Checked/selected state. Reflects to data-checked (checkbox/toggle) or data-selected (radio).",
+		},
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description: "Disabled state. Reflects to data-disabled.",
+		},
+		{
+			name: "indeterminate",
+			type: "boolean",
+			default: "false",
+			description:
+				"Indeterminate state (checkbox only). Reflects to data-indeterminate.",
+		},
+		{
+			name: "focused",
+			type: "boolean",
+			default: "false",
+			description:
+				"Focus ring state. The parent control tracks and passes this in.",
+		},
 	];
-
 }

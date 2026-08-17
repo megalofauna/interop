@@ -1,4 +1,9 @@
-import { Component, ChangeDetectionStrategy, computed, signal } from "@angular/core";
+import {
+	Component,
+	ChangeDetectionStrategy,
+	computed,
+	signal,
+} from "@angular/core";
 import {
 	InteropExpansionPanel,
 	InteropExpansionTrigger,

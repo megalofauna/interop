@@ -1,5 +1,8 @@
 export { InteropPopover } from "./interop-popover";
-export { InteropPopoverTrigger, type PopoverHaspopup } from "./interop-popover-trigger";
+export {
+	InteropPopoverTrigger,
+	type PopoverHaspopup,
+} from "./interop-popover-trigger";
 export { InteropPopoverArrow } from "./interop-popover-arrow";
 export {
 	INTEROP_POPOVER_CONFIG,

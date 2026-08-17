@@ -16,18 +16,18 @@ Research completed. Decisions and open items captured below.
 1. `interop-chip-filter` + `interop-chip-option`
 2. `interop-chip-list` + `interop-chip`
 3. `interop-chip-input`
-4. *(deferred)* Suggestion chips — see TODO below
+4. _(deferred)_ Suggestion chips — see TODO below
 
 ---
 
 ## Real-World Use Cases (one per variant)
 
-| Variant | Example |
-|---|---|
-| Display chips | Tags on a blog post ("Angular", "CSS", "Accessibility") |
-| Filter chips | E-commerce size filter (S, M, L, XL — multi-select, narrows results) |
-| Input chips | Gmail To: field — type address, Enter creates chip, Backspace focuses last chip |
-| Suggestion chips | *(deferred)* |
+| Variant          | Example                                                                         |
+| ---------------- | ------------------------------------------------------------------------------- |
+| Display chips    | Tags on a blog post ("Angular", "CSS", "Accessibility")                         |
+| Filter chips     | E-commerce size filter (S, M, L, XL — multi-select, narrows results)            |
+| Input chips      | Gmail To: field — type address, Enter creates chip, Backspace focuses last chip |
+| Suggestion chips | _(deferred)_                                                                    |
 
 ---
 

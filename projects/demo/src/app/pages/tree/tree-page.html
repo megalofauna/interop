@@ -34,7 +34,9 @@
 										[routerLink]="[]"
 										fragment="install"
 										(click)="currentDoc.set('install')"
-										[attr.aria-current]="currentDoc() === 'install' ? 'page' : null"
+										[attr.aria-current]="
+											currentDoc() === 'install' ? 'page' : null
+										"
 										>Installation</a
 									>
 								</span>
@@ -46,7 +48,9 @@
 										[routerLink]="[]"
 										fragment="theming"
 										(click)="currentDoc.set('theming')"
-										[attr.aria-current]="currentDoc() === 'theming' ? 'page' : null"
+										[attr.aria-current]="
+											currentDoc() === 'theming' ? 'page' : null
+										"
 										>Theming</a
 									>
 								</span>
@@ -58,7 +62,9 @@
 												[routerLink]="[]"
 												fragment="tokens"
 												(click)="currentDoc.set('tokens')"
-												[attr.aria-current]="currentDoc() === 'tokens' ? 'page' : null"
+												[attr.aria-current]="
+													currentDoc() === 'tokens' ? 'page' : null
+												"
 												>Tokens</a
 											>
 										</span>
@@ -70,7 +76,9 @@
 												[routerLink]="[]"
 												fragment="dark"
 												(click)="currentDoc.set('dark')"
-												[attr.aria-current]="currentDoc() === 'dark' ? 'page' : null"
+												[attr.aria-current]="
+													currentDoc() === 'dark' ? 'page' : null
+												"
 												>Dark mode</a
 											>
 										</span>
@@ -86,7 +94,9 @@
 								[routerLink]="[]"
 								fragment="components"
 								(click)="currentDoc.set('components')"
-								[attr.aria-current]="currentDoc() === 'components' ? 'page' : null"
+								[attr.aria-current]="
+									currentDoc() === 'components' ? 'page' : null
+								"
 								>Components</a
 							>
 						</span>
@@ -98,7 +108,9 @@
 										[routerLink]="[]"
 										fragment="button"
 										(click)="currentDoc.set('button')"
-										[attr.aria-current]="currentDoc() === 'button' ? 'page' : null"
+										[attr.aria-current]="
+											currentDoc() === 'button' ? 'page' : null
+										"
 										>Button</a
 									>
 								</span>
@@ -110,7 +122,9 @@
 										[routerLink]="[]"
 										fragment="tree"
 										(click)="currentDoc.set('tree')"
-										[attr.aria-current]="currentDoc() === 'tree' ? 'page' : null"
+										[attr.aria-current]="
+											currentDoc() === 'tree' ? 'page' : null
+										"
 										>Tree</a
 									>
 								</span>
@@ -124,7 +138,9 @@
 								[routerLink]="[]"
 								fragment="changelog"
 								(click)="currentDoc.set('changelog')"
-								[attr.aria-current]="currentDoc() === 'changelog' ? 'page' : null"
+								[attr.aria-current]="
+									currentDoc() === 'changelog' ? 'page' : null
+								"
 								>Changelog</a
 							>
 						</span>
@@ -134,7 +150,6 @@
 
 			<itx-code-block [files]="navFiles" />
 		</demo-example>
-
 	</demo-section>
 
 	<!-- ── Select tier ───────────────────────────────────────────────────── -->
@@ -257,7 +272,6 @@
 
 			<itx-code-block [files]="cssFiles" />
 		</demo-example>
-
 	</demo-section>
 
 	<demo-section id="api" heading="API">

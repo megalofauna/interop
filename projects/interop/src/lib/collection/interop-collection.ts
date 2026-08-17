@@ -220,7 +220,9 @@ export class InteropCollection<T = unknown> {
 		this.mirror = undefined;
 	}
 
-	private handleObservable(source: { subscribe: (...args: any[]) => any }): void {
+	private handleObservable(source: {
+		subscribe: (...args: any[]) => any;
+	}): void {
 		this._loading.set(true);
 		this._error.set(null);
 		this.subscription = (source as any).subscribe({

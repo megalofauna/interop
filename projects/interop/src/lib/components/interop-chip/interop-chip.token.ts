@@ -22,5 +22,6 @@ export interface ChipOptionRef {
 	readonly disabled: InputSignal<boolean>;
 }
 
-export const INTEROP_CHIP_FILTER =
-	new InjectionToken<ChipFilterRef>("INTEROP_CHIP_FILTER");
+export const INTEROP_CHIP_FILTER = new InjectionToken<ChipFilterRef>(
+	"INTEROP_CHIP_FILTER",
+);

@@ -7,9 +7,12 @@ import { InteropChipOption } from "./interop-chip-option";
 	standalone: true,
 	imports: [InteropChipFilter, InteropChipOption],
 	template: `
-		<fieldset interop-chip-filter label="Category"
+		<fieldset
+			interop-chip-filter
+			label="Category"
 			[value]="selected()"
-			(valueChange)="selected.set($event)">
+			(valueChange)="selected.set($event)"
+		>
 			<label interop-chip-option value="a">Alpha</label>
 			<label interop-chip-option value="b">Beta</label>
 			<label interop-chip-option value="c" [disabled]="true">Gamma</label>
@@ -27,14 +30,20 @@ describe("InteropChipOption", () => {
 	let checkboxes: HTMLInputElement[];
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({ imports: [TestHost] }).compileComponents();
+		await TestBed.configureTestingModule({
+			imports: [TestHost],
+		}).compileComponents();
 		fixture = TestBed.createComponent(TestHost);
 		host = fixture.componentInstance;
 		fixture.detectChanges();
 		await fixture.whenStable();
 
-		labels = Array.from(fixture.nativeElement.querySelectorAll("label[interop-chip-option]"));
-		checkboxes = Array.from(fixture.nativeElement.querySelectorAll("input[type='checkbox']"));
+		labels = Array.from(
+			fixture.nativeElement.querySelectorAll("label[interop-chip-option]"),
+		);
+		checkboxes = Array.from(
+			fixture.nativeElement.querySelectorAll("input[type='checkbox']"),
+		);
 	});
 
 	describe("Host element", () => {

@@ -101,8 +101,11 @@
 			</interop-table>
 			<demo-state>
 				<demo-state-item label="last sortChange">
-					{{ lastSortEvent() ? lastSortEvent()!.key + " " +
-					lastSortEvent()!.direction : "—" }}
+					{{
+						lastSortEvent()
+							? lastSortEvent()!.key + " " + lastSortEvent()!.direction
+							: "—"
+					}}
 				</demo-state-item>
 			</demo-state>
 			<itx-code-block [files]="sortFiles" />

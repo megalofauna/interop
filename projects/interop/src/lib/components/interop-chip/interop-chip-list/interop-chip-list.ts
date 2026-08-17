@@ -36,7 +36,7 @@ import {
 		/* VoiceOver + Safari strips list semantics from <ul> elements with
 		   list-style: none applied in CSS. Explicitly restoring role="list"
 		   ensures consistent AT announcement across all browsers. */
-		"role": "list",
+		role: "list",
 	},
 })
 export class InteropChipList {
@@ -55,7 +55,10 @@ export class InteropChipList {
 							`Found on: <${el.tagName.toLowerCase()}>`,
 					);
 				}
-				if (!el.hasAttribute("aria-label") && !el.hasAttribute("aria-labelledby")) {
+				if (
+					!el.hasAttribute("aria-label") &&
+					!el.hasAttribute("aria-labelledby")
+				) {
 					console.warn(
 						`[InteropChipList] Provide an accessible label via aria-label or aria-labelledby ` +
 							`so screen readers can identify the purpose of the chip list.`,

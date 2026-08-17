@@ -1,10 +1,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Component } from "@angular/core";
 
-import {
-	InteropCheckboxRig,
-	CheckboxOption,
-} from "./interop-checkbox-rig";
+import { InteropCheckboxRig, CheckboxOption } from "./interop-checkbox-rig";
 import { InteropAttribute } from "../../services/interop-attribute.service";
 
 const TOPPING_CONTROLS: CheckboxOption[] = [

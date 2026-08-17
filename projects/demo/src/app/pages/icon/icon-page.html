@@ -1,8 +1,7 @@
 <article class="demo-page">
 	<demo-masthead category="Components" title="Icon">
-		Registry-backed SVG icon renderer. Icons are registered at any DI scope
-		and referenced by name in templates. Tabler outline is the default
-		iconset.
+		Registry-backed SVG icon renderer. Icons are registered at any DI scope and
+		referenced by name in templates. Tabler outline is the default iconset.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
@@ -49,7 +48,11 @@
 					[size]="28"
 					color="var(--itx-warning-solid)"
 				/>
-				<interop-icon name="tabler-x" [size]="28" color="var(--itx-danger-solid)" />
+				<interop-icon
+					name="tabler-x"
+					[size]="28"
+					color="var(--itx-danger-solid)"
+				/>
 			</div>
 			<itx-code-block language="html" [code]="colorCode" />
 		</demo-example>
@@ -66,10 +69,10 @@
 	<demo-section id="grid" heading="Icon grid">
 		<div class="icon-page__grid">
 			@for (name of gridIcons; track name) {
-			<div class="icon-page__grid-item">
-				<interop-icon [name]="name" [size]="24" />
-				<span class="icon-page__grid-label">{{ name }}</span>
-			</div>
+				<div class="icon-page__grid-item">
+					<interop-icon [name]="name" [size]="24" />
+					<span class="icon-page__grid-label">{{ name }}</span>
+				</div>
 			}
 		</div>
 	</demo-section>
@@ -95,7 +98,9 @@
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -106,6 +111,5 @@
 		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-	</demo-section>
+	<demo-section id="notes" heading="Notes"> </demo-section>
 </article>

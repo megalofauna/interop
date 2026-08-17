@@ -334,7 +334,6 @@ providers: [
 
 	// ── Keyboard notes (in-section, attached to what they explain) ────────
 
-
 	// ── CSS tokens ───────────────────────────────────────────────────────
 
 	tokenColumns: TableColumn<TokenEntry>[] = [
@@ -442,7 +441,10 @@ providers: [
 		},
 		// Focus
 		{ property: "--itx-toast-focus-width", default: "2px" },
-		{ property: "--itx-toast-focus-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-toast-focus-color",
+			default: "var(--itx-colorway-solid)",
+		},
 		{
 			property: "--itx-toast-focus-offset",
 			default: "2px — the toast item itself",

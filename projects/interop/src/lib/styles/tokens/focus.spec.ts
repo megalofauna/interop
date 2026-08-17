@@ -44,7 +44,11 @@ describe("Focus system — override contract", () => {
 
 	const ring = (node: HTMLElement) => {
 		const s = getComputedStyle(node);
-		return { color: s.outlineColor, width: s.outlineWidth, offset: s.outlineOffset };
+		return {
+			color: s.outlineColor,
+			width: s.outlineWidth,
+			offset: s.outlineOffset,
+		};
 	};
 
 	beforeEach(() => {

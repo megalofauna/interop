@@ -7,7 +7,8 @@
  */
 
 /** Blank comments out rather than deleting them, so offsets stay truthful. */
-export const decomment = (s) => s.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
+export const decomment = (s) =>
+	s.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
 
 /**
  * Remove conditional at-rule blocks — @media, @supports, @container.
@@ -61,7 +62,9 @@ const tidy = (v) => v.trim().replace(/\s+/g, " ");
  * which is correct: there is no base for it.
  */
 export function readDeclaration(src, token) {
-	const m = new RegExp(`${esc(token)}\\s*:\\s*([^;]+);`).exec(stripAtRules(src));
+	const m = new RegExp(`${esc(token)}\\s*:\\s*([^;]+);`).exec(
+		stripAtRules(src),
+	);
 	return m === null ? null : tidy(m[1]);
 }
 
@@ -115,7 +118,9 @@ export function readOverrides(src, token) {
 			else if (src[j] === "}") depth--;
 			j++;
 		}
-		const decl = new RegExp(`${esc(token)}\\s*:\\s*([^;]+);`).exec(src.slice(open + 1, j - 1));
+		const decl = new RegExp(`${esc(token)}\\s*:\\s*([^;]+);`).exec(
+			src.slice(open + 1, j - 1),
+		);
 		if (decl) found.push({ prelude: tidy(m[0]), value: tidy(decl[1]) });
 	}
 	return found;

@@ -56,9 +56,7 @@ import { InteropChipOption } from "../interop-chip-option/interop-chip-option";
 		<ng-content></ng-content>
 	`,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [
-		{ provide: INTEROP_CHIP_FILTER, useExisting: InteropChipFilter },
-	],
+	providers: [{ provide: INTEROP_CHIP_FILTER, useExisting: InteropChipFilter }],
 	host: {
 		"[attr.data-disabled]": 'disabled() ? "" : null',
 	},
@@ -132,9 +130,8 @@ export class InteropChipFilter implements ChipFilterRef {
 	}
 
 	onOptionChange(value: string, checked: boolean): void {
-		const current = this.value().length > 0
-			? [...this.value()]
-			: [...this._selected()];
+		const current =
+			this.value().length > 0 ? [...this.value()] : [...this._selected()];
 
 		if (checked) {
 			if (!current.includes(value)) current.push(value);

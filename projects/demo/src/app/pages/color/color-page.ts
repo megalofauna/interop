@@ -34,7 +34,11 @@ interface RankEntry {
 export class ColorPage {
 	/** Mirrors the RANKS table in scripts/generate-color-ladder.mjs. */
 	protected readonly ranks: readonly RankEntry[] = [
-		{ rank: 1, intent: "Wash — hover fills, stripes, selected tints", floor: "perceptible (≥ 0.02 L)" },
+		{
+			rank: 1,
+			intent: "Wash — hover fills, stripes, selected tints",
+			floor: "perceptible (≥ 0.02 L)",
+		},
 		{ rank: 2, intent: "Hairline, dividers", floor: "1.5:1" },
 		{ rank: 3, intent: "Border, emphasis edge", floor: "3:1" },
 		{ rank: 4, intent: "Secondary text", floor: "4.5:1" },

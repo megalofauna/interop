@@ -39,25 +39,43 @@ interface ApiEntry {
 })
 export class ListPage {
 	crewMembers = [
-		'Commander Reyes',
-		'Pilot Tanaka',
-		'Navigator Osei',
-		'Chief Engineer Voskov',
-		'Dr. Mbeki',
+		"Commander Reyes",
+		"Pilot Tanaka",
+		"Navigator Osei",
+		"Chief Engineer Voskov",
+		"Dr. Mbeki",
 	];
 
 	launchSteps = [
-		'Pressurise the docking collar',
-		'Run pre-flight diagnostics',
-		'Confirm trajectory with navigation',
-		'Release the mag-lock couplings',
-		'Initiate primary burn',
+		"Pressurise the docking collar",
+		"Run pre-flight diagnostics",
+		"Confirm trajectory with navigation",
+		"Release the mag-lock couplings",
+		"Initiate primary burn",
 	];
 
 	cargoItems = [
-		{ id: 1, label: "Plasma conduit (×4)", bay: "A2", mass: 96, status: "stowed" },
-		{ id: 2, label: "Mag-lock coupling (×8)", bay: "A2", mass: 44, status: "stowed" },
-		{ id: 3, label: "Hull epoxy Type-7 (×2)", bay: "B1", mass: 12, status: "hazmat" },
+		{
+			id: 1,
+			label: "Plasma conduit (×4)",
+			bay: "A2",
+			mass: 96,
+			status: "stowed",
+		},
+		{
+			id: 2,
+			label: "Mag-lock coupling (×8)",
+			bay: "A2",
+			mass: 44,
+			status: "stowed",
+		},
+		{
+			id: 3,
+			label: "Hull epoxy Type-7 (×2)",
+			bay: "B1",
+			mass: 12,
+			status: "hazmat",
+		},
 		{ id: 4, label: "EVA tether (×6)", bay: "B4", mass: 8, status: "loading" },
 	];
 
@@ -119,11 +137,41 @@ export class ListPage {
 	];
 
 	apiEntries: ApiEntry[] = [
-		{ name: "collection", type: "InteropCollectionInput<T>", default: "—", description: "Required. Array, Observable, or Promise of items to render.", required: true },
-		{ name: "trackBy", type: "'auto' | 'index' | TrackByFunction<T>", default: "'auto'", description: "Determines how list items are tracked for change detection." },
-		{ name: "trackByField", type: "keyof T | null", default: "null", description: "Field name to use for identity tracking when trackBy is 'auto'." },
-		{ name: "listItemTemplate", type: "TemplateRef<any>", default: "—", description: "Custom template for rendering each list item. Receives $implicit (item) and index." },
-		{ name: "attrsPreset", type: "PresetKey | null", default: "null", description: "Optional preset key to apply semantic conformity attributes to the list." },
+		{
+			name: "collection",
+			type: "InteropCollectionInput<T>",
+			default: "—",
+			description:
+				"Required. Array, Observable, or Promise of items to render.",
+			required: true,
+		},
+		{
+			name: "trackBy",
+			type: "'auto' | 'index' | TrackByFunction<T>",
+			default: "'auto'",
+			description:
+				"Determines how list items are tracked for change detection.",
+		},
+		{
+			name: "trackByField",
+			type: "keyof T | null",
+			default: "null",
+			description:
+				"Field name to use for identity tracking when trackBy is 'auto'.",
+		},
+		{
+			name: "listItemTemplate",
+			type: "TemplateRef<any>",
+			default: "—",
+			description:
+				"Custom template for rendering each list item. Receives $implicit (item) and index.",
+		},
+		{
+			name: "attrsPreset",
+			type: "PresetKey | null",
+			default: "null",
+			description:
+				"Optional preset key to apply semantic conformity attributes to the list.",
+		},
 	];
-
 }

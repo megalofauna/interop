@@ -6,22 +6,22 @@
  * design system consistency through token-based values.
  */
 
-export { InteropLayoutDirective } from './interop-layout.directive';
-export { parseLayoutShorthand, layoutConfigToShorthand } from './layout-parser';
+export { InteropLayoutDirective } from "./interop-layout.directive";
+export { parseLayoutShorthand, layoutConfigToShorthand } from "./layout-parser";
 export {
-  LayoutCapable,
-  checkElementLayoutCapability,
-  getLayoutVariableInfo,
-  isLayoutCapableClass,
-  LAYOUT_CAPABLE_MARKER
-} from './layout-capable';
-export type { LayoutCapable as ILayoutCapable } from './layout-capable';
+	LayoutCapable,
+	checkElementLayoutCapability,
+	getLayoutVariableInfo,
+	isLayoutCapableClass,
+	LAYOUT_CAPABLE_MARKER,
+} from "./layout-capable";
+export type { LayoutCapable as ILayoutCapable } from "./layout-capable";
 export type {
-  LayoutConfig,
-  LayoutDirection,
-  LayoutJustify,
-  LayoutAlign,
-  LayoutWrap,
-  LayoutGap
-} from './layout.types';
-export { LAYOUT_CSS_VARS, LAYOUT_CSS_VALUES } from './layout.types';
+	LayoutConfig,
+	LayoutDirection,
+	LayoutJustify,
+	LayoutAlign,
+	LayoutWrap,
+	LayoutGap,
+} from "./layout.types";
+export { LAYOUT_CSS_VARS, LAYOUT_CSS_VALUES } from "./layout.types";

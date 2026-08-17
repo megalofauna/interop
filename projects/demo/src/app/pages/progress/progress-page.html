@@ -67,13 +67,13 @@
 				</div>
 			</div>
 			<demo-state>
-				<demo-state-item label="aria-valuenow"
-					>{{ currentStep() }}</demo-state-item
-				>
+				<demo-state-item label="aria-valuenow">{{
+					currentStep()
+				}}</demo-state-item>
 				<demo-state-item label="aria-valuemin">1</demo-state-item>
-				<demo-state-item label="aria-valuemax"
-					>{{ totalSteps }}</demo-state-item
-				>
+				<demo-state-item label="aria-valuemax">{{
+					totalSteps
+				}}</demo-state-item>
 				<demo-state-item label="aria-valuetext"
 					>{{ currentStep() }} of {{ totalSteps }} steps
 					complete</demo-state-item
@@ -167,11 +167,17 @@
 					[max]="100"
 				></progress>
 				<interop-progress-status>
-					@if (syncProgress() >= 50) { Half way there! } @if (syncProgress() ===
-					100) { Sync complete — all systems nominal. }
+					@if (syncProgress() >= 50) {
+						Half way there!
+					}
+					@if (syncProgress() === 100) {
+						Sync complete — all systems nominal.
+					}
 				</interop-progress-status>
 				<div class="progress-demo__actions">
-					<button interop-button="secondary" (click)="syncReset()">Reset</button>
+					<button interop-button="secondary" (click)="syncReset()">
+						Reset
+					</button>
 					<button interop-button="primary" (click)="syncIncrement()">
 						+20
 					</button>
@@ -179,8 +185,11 @@
 			</div>
 			<demo-state>
 				<demo-state-item label="AT announces">
-					{{ syncProgress() === 100 ? 'Sync complete — all systems nominal.' :
-					'(silent)' }}
+					{{
+						syncProgress() === 100
+							? "Sync complete — all systems nominal."
+							: "(silent)"
+					}}
 				</demo-state-item>
 			</demo-state>
 			<itx-code-block language="html" [code]="statusTemplateCode" />
@@ -216,7 +225,9 @@
 			</ng-template>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>

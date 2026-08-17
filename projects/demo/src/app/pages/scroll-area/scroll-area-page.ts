@@ -1,5 +1,10 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { InteropScrollArea, InteropTable, InteropCellDef, type TableColumn } from 'interop';
+import {
+	InteropScrollArea,
+	InteropTable,
+	InteropCellDef,
+	type TableColumn,
+} from "interop";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -15,20 +20,27 @@ interface ApiEntry {
 @Component({
 	selector: "scroll-area-page",
 	standalone: true,
-	imports: [InteropScrollArea, InteropTable, InteropCellDef, DemoMasthead, DemoSection, DemoExample],
+	imports: [
+		InteropScrollArea,
+		InteropTable,
+		InteropCellDef,
+		DemoMasthead,
+		DemoSection,
+		DemoExample,
+	],
 	templateUrl: "./scroll-area-page.html",
 	styleUrl: "./scroll-area-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScrollAreaPage {
 	logEntries = Array.from({ length: 30 }, (_, i) => ({
-		time: `0${String(Math.floor(i * 8 / 60)).padStart(2, '0')}:${String((i * 8) % 60).padStart(2, '0')}`,
+		time: `0${String(Math.floor((i * 8) / 60)).padStart(2, "0")}:${String((i * 8) % 60).padStart(2, "0")}`,
 		message: [
-			'Reactor output nominal',
-			'Hull integrity 100%',
-			'Course correction applied',
-			'Comms relay synced',
-			'Fuel reserves at 68%',
+			"Reactor output nominal",
+			"Hull integrity 100%",
+			"Course correction applied",
+			"Comms relay synced",
+			"Fuel reserves at 68%",
 		][i % 5],
 	}));
 
@@ -40,11 +52,37 @@ export class ScrollAreaPage {
 	];
 
 	apiEntries: ApiEntry[] = [
-		{ name: "orientation", type: "'vertical' | 'horizontal' | 'both' | undefined", default: "undefined", description: "Scroll direction(s) to enable. Defaults to vertical." },
-		{ name: "ariaLabel", type: "string", default: "''", description: "Accessible label for the scrollable region." },
-		{ name: "tabIndex", type: "number | null | undefined", default: "undefined", description: "Tab index for the scrollable container." },
-		{ name: "showShadows", type: "boolean | undefined", default: "undefined", description: "When true, inset shadows indicate overflowing content beyond the visible edges." },
-		{ name: "shadowThreshold", type: "number | undefined", default: "undefined", description: "Scroll distance in pixels before shadow indicators appear." },
+		{
+			name: "orientation",
+			type: "'vertical' | 'horizontal' | 'both' | undefined",
+			default: "undefined",
+			description: "Scroll direction(s) to enable. Defaults to vertical.",
+		},
+		{
+			name: "ariaLabel",
+			type: "string",
+			default: "''",
+			description: "Accessible label for the scrollable region.",
+		},
+		{
+			name: "tabIndex",
+			type: "number | null | undefined",
+			default: "undefined",
+			description: "Tab index for the scrollable container.",
+		},
+		{
+			name: "showShadows",
+			type: "boolean | undefined",
+			default: "undefined",
+			description:
+				"When true, inset shadows indicate overflowing content beyond the visible edges.",
+		},
+		{
+			name: "shadowThreshold",
+			type: "number | undefined",
+			default: "undefined",
+			description: "Scroll distance in pixels before shadow indicators appear.",
+		},
 	];
 
 	outputColumns: TableColumn<ApiEntry>[] = [
@@ -54,8 +92,19 @@ export class ScrollAreaPage {
 	];
 
 	outputEntries: ApiEntry[] = [
-		{ name: "scrollState", type: "ScrollStateEvent", default: "", description: "Emitted on scroll with state flags: atTop, atBottom, atStart, atEnd." },
-		{ name: "overflowChange", type: "boolean", default: "", description: "Emitted when the overflow state changes — useful for conditional UI updates." },
+		{
+			name: "scrollState",
+			type: "ScrollStateEvent",
+			default: "",
+			description:
+				"Emitted on scroll with state flags: atTop, atBottom, atStart, atEnd.",
+		},
+		{
+			name: "overflowChange",
+			type: "boolean",
+			default: "",
+			description:
+				"Emitted when the overflow state changes — useful for conditional UI updates.",
+		},
 	];
-
 }

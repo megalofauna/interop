@@ -44,5 +44,6 @@ export interface InteropTableSortApi {
  * Provided automatically by [itxSort]. Can also be provided by a custom
  * implementation for advanced integration (e.g. NgRx, URL params).
  */
-export const INTEROP_TABLE_SORT =
-	new InjectionToken<InteropTableSortApi>("INTEROP_TABLE_SORT");
+export const INTEROP_TABLE_SORT = new InjectionToken<InteropTableSortApi>(
+	"INTEROP_TABLE_SORT",
+);

@@ -15,7 +15,10 @@ describe("Accent families", () => {
 	let style: HTMLStyleElement;
 	let root: HTMLElement;
 
-	const el = (parent: HTMLElement, attrs: Record<string, string> = {}): HTMLElement => {
+	const el = (
+		parent: HTMLElement,
+		attrs: Record<string, string> = {},
+	): HTMLElement => {
 		const node = document.createElement("div");
 		for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
 		parent.appendChild(node);
@@ -29,7 +32,10 @@ describe("Accent families", () => {
 		return getComputedStyle(probe).backgroundColor;
 	};
 
-	const makeRoot = (attrs: Record<string, string> = {}, scheme = "dark"): HTMLElement => {
+	const makeRoot = (
+		attrs: Record<string, string> = {},
+		scheme = "dark",
+	): HTMLElement => {
 		const node = el(document.body, { "interop-root": "", ...attrs });
 		node.style.colorScheme = scheme;
 		return node;
@@ -50,10 +56,16 @@ describe("Accent families", () => {
 	describe("identity is invariant", () => {
 		it("holds the solid fill across layers", () => {
 			// A brand colour that drifts as it gets nested is not an identity.
-			const deep = el(el(el(root, { "itx-layer": "" }), { "itx-layer": "" }), { "itx-layer": "" });
+			const deep = el(el(el(root, { "itx-layer": "" }), { "itx-layer": "" }), {
+				"itx-layer": "",
+			});
 
-			expect(resolve("--itx-colorway-solid", deep)).toEqual(resolve("--itx-colorway-solid", root));
-			expect(resolve("--itx-colorway-on-solid", deep)).toEqual(resolve("--itx-colorway-on-solid", root));
+			expect(resolve("--itx-colorway-solid", deep)).toEqual(
+				resolve("--itx-colorway-solid", root),
+			);
+			expect(resolve("--itx-colorway-on-solid", deep)).toEqual(
+				resolve("--itx-colorway-on-solid", root),
+			);
 		});
 
 		it("holds the solid fill across colour schemes", () => {
@@ -61,8 +73,12 @@ describe("Accent families", () => {
 			// both schemes, rather than dark-mode mud.
 			const light = makeRoot({}, "light");
 
-			expect(resolve("--itx-colorway-solid", light)).toEqual(resolve("--itx-colorway-solid", root));
-			expect(resolve("--itx-colorway-on-solid", light)).toEqual(resolve("--itx-colorway-on-solid", root));
+			expect(resolve("--itx-colorway-solid", light)).toEqual(
+				resolve("--itx-colorway-solid", root),
+			);
+			expect(resolve("--itx-colorway-on-solid", light)).toEqual(
+				resolve("--itx-colorway-on-solid", root),
+			);
 		});
 	});
 
@@ -84,7 +100,9 @@ describe("Accent families", () => {
 
 		it("differs between schemes, unlike the solid", () => {
 			const light = makeRoot({}, "light");
-			expect(resolve("--itx-colorway-tint", light)).not.toEqual(resolve("--itx-colorway-tint", root));
+			expect(resolve("--itx-colorway-tint", light)).not.toEqual(
+				resolve("--itx-colorway-tint", root),
+			);
 		});
 	});
 
@@ -134,7 +152,14 @@ describe("Accent families", () => {
 			// and not others, because the ones reading a slot index kept reading it.
 			const amber = makeRoot({ "itx-colorway": "amber" });
 
-			for (const role of ["solid", "on-solid", "tint", "on-tint", "border", "text"]) {
+			for (const role of [
+				"solid",
+				"on-solid",
+				"tint",
+				"on-tint",
+				"border",
+				"text",
+			]) {
 				const token = `--itx-colorway-${role}`;
 				expect(resolve(token, amber))
 					.withContext(`${token} did not follow the colourway switch`)

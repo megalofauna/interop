@@ -1,9 +1,21 @@
 @if (entries().length > 0) {
-	<button class="itx-term__reset" interop-button="icon" itx-size="xs" (click)="reset.emit()" aria-label="Clear terminal">
+	<button
+		class="itx-term__reset"
+		interop-button="icon"
+		itx-size="xs"
+		(click)="reset.emit()"
+		aria-label="Clear terminal"
+	>
 		<interop-icon name="tabler-eraser" [size]="14" />
 	</button>
 }
-<div class="itx-term__scroll" #scrollEl role="log" aria-live="polite" aria-label="Terminal output">
+<div
+	class="itx-term__scroll"
+	#scrollEl
+	role="log"
+	aria-live="polite"
+	aria-label="Terminal output"
+>
 	<div class="itx-term__log">
 		@for (entry of displayEntries(); track $index) {
 			<div class="itx-term__line">

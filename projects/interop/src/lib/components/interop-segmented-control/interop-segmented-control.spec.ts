@@ -216,8 +216,9 @@ describe("InteropSegmentedControl", () => {
 
 	describe("Disabled state", () => {
 		it("should not emit valueChange when a segment is clicked and control is disabled", async () => {
-			const disabledFixture =
-				TestBed.createComponent(DisabledTestHostComponent);
+			const disabledFixture = TestBed.createComponent(
+				DisabledTestHostComponent,
+			);
 			disabledFixture.detectChanges();
 			await disabledFixture.whenStable();
 
@@ -238,8 +239,9 @@ describe("InteropSegmentedControl", () => {
 
 		it("should skip disabled segments on arrow key navigation", async () => {
 			// Set up: second segment is individually disabled
-			const disabledFixture =
-				TestBed.createComponent(DisabledTestHostComponent);
+			const disabledFixture = TestBed.createComponent(
+				DisabledTestHostComponent,
+			);
 			disabledFixture.detectChanges();
 			await disabledFixture.whenStable();
 			// Disabled control — can't test nav. Individual segment disabled tested in segment spec.

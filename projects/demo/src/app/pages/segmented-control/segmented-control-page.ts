@@ -236,7 +236,6 @@ export class SegmentedControlPage {
 		{ label: "component.ts", language: "ts", code: this.keyboardTs },
 	]);
 
-
 	// ── CSS tokens ───────────────────────────────────────────────────────
 
 	tokenColumns: TableColumn<TokenEntry>[] = [

@@ -1,4 +1,4 @@
-import { Directive } from '@angular/core';
+import { Directive } from "@angular/core";
 
 /**
  * Marks an ng-template as the rich-content projection slot for interop-tooltip.
@@ -30,7 +30,7 @@ import { Directive } from '@angular/core';
  * ```
  */
 @Directive({
-  selector: 'ng-template[interopTooltipContent]',
-  standalone: true,
+	selector: "ng-template[interopTooltipContent]",
+	standalone: true,
 })
 export class InteropTooltipContentDirective {}

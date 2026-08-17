@@ -117,7 +117,6 @@ increment(): void {
 		{ label: "component.ts", language: "ts", code: this.multiTs },
 	];
 
-
 	tokenColumns: TableColumn<TokenEntry>[] = [
 		{ key: "property", label: "Property" },
 		{ key: "default", label: "Default" },

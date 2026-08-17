@@ -1,10 +1,6 @@
-import {
-	Component,
-	ChangeDetectionStrategy,
-	input,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from "@angular/core";
 
-export type CalloutType = 'info' | 'warning' | 'success' | 'danger';
+export type CalloutType = "info" | "warning" | "success" | "danger";
 
 /**
  * InteropCallout — semantic status callout/admonition.
@@ -23,7 +19,7 @@ export type CalloutType = 'info' | 'warning' | 'success' | 'danger';
  * ```
  */
 @Component({
-	selector: 'interop-callout',
+	selector: "interop-callout",
 	standalone: true,
 	template: `
 		@if (heading()) {
@@ -33,16 +29,16 @@ export type CalloutType = 'info' | 'warning' | 'success' | 'danger';
 			<ng-content />
 		</div>
 	`,
-	styleUrl: './interop-callout.scss',
+	styleUrl: "./interop-callout.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
-		'role': 'note',
-		'[attr.data-type]': 'type()',
+		role: "note",
+		"[attr.data-type]": "type()",
 	},
 })
 export class InteropCallout {
 	/** Visual variant — determines status color scheme. */
-	type = input<CalloutType>('info');
+	type = input<CalloutType>("info");
 
 	/** Optional heading text displayed above the body. */
 	heading = input<string | null>(null);

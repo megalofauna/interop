@@ -30,9 +30,9 @@ import { Directive, TemplateRef, inject } from "@angular/core";
  * ```
  */
 @Directive({
-  selector: "[interop-tab-label]",
-  standalone: true,
+	selector: "[interop-tab-label]",
+	standalone: true,
 })
 export class InteropTabLabel {
-  readonly templateRef = inject(TemplateRef<unknown>);
+	readonly templateRef = inject(TemplateRef<unknown>);
 }

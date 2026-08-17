@@ -1,7 +1,7 @@
 import { Directive, Input, OnInit, inject } from "@angular/core";
 import {
-  InteropIconDefinition,
-  InteropIconRegistry,
+	InteropIconDefinition,
+	InteropIconRegistry,
 } from "../../iconsets/core";
 
 /**
@@ -17,19 +17,19 @@ import {
  * ```
  */
 @Directive({
-  selector: "[iconScope]",
-  standalone: true,
-  providers: [InteropIconRegistry],
+	selector: "[iconScope]",
+	standalone: true,
+	providers: [InteropIconRegistry],
 })
 export class IconScopeDirective implements OnInit {
-  private readonly _registry = inject(InteropIconRegistry);
+	private readonly _registry = inject(InteropIconRegistry);
 
-  /** Icons to register in this scope. */
-  @Input() icons: InteropIconDefinition[] = [];
+	/** Icons to register in this scope. */
+	@Input() icons: InteropIconDefinition[] = [];
 
-  ngOnInit(): void {
-    if (this.icons.length > 0) {
-      this._registry.register(this.icons);
-    }
-  }
+	ngOnInit(): void {
+		if (this.icons.length > 0) {
+			this._registry.register(this.icons);
+		}
+	}
 }

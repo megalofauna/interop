@@ -96,11 +96,13 @@ describe("InteropToggle", () => {
 
 		it("should NOT have an indeterminate input (switches are binary)", () => {
 			// Verify the component class has no indeterminate property
-			const toggleInstance = hostFixture.debugElement
-				.query((el) => el.nativeElement === labelElement)
-				?.componentInstance as InteropToggle;
+			const toggleInstance = hostFixture.debugElement.query(
+				(el) => el.nativeElement === labelElement,
+			)?.componentInstance as InteropToggle;
 
-			expect((toggleInstance as unknown as Record<string, unknown>)["indeterminate"]).toBeUndefined();
+			expect(
+				(toggleInstance as unknown as Record<string, unknown>)["indeterminate"],
+			).toBeUndefined();
 		});
 	});
 
@@ -193,18 +195,18 @@ describe("InteropToggle", () => {
 
 	describe("Focus Tracking", () => {
 		it("should set focused signal to true on input focus", () => {
-			const toggleInstance = hostFixture.debugElement
-				.query((el) => el.nativeElement === labelElement)
-				?.componentInstance as InteropToggle;
+			const toggleInstance = hostFixture.debugElement.query(
+				(el) => el.nativeElement === labelElement,
+			)?.componentInstance as InteropToggle;
 
 			inputElement.dispatchEvent(new Event("focus"));
 			expect(toggleInstance.focused()).toBe(true);
 		});
 
 		it("should set focused signal to false on input blur", () => {
-			const toggleInstance = hostFixture.debugElement
-				.query((el) => el.nativeElement === labelElement)
-				?.componentInstance as InteropToggle;
+			const toggleInstance = hostFixture.debugElement.query(
+				(el) => el.nativeElement === labelElement,
+			)?.componentInstance as InteropToggle;
 
 			inputElement.dispatchEvent(new Event("focus"));
 			inputElement.dispatchEvent(new Event("blur"));

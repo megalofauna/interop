@@ -19,8 +19,8 @@ The component uses **flexbox with column-gap** for internal layout, allowing you
 
 ```html
 <button interop-button [onActivate]="save">
-  <span class="icon">💾</span>
-  Save Document
+	<span class="icon">💾</span>
+	Save Document
 </button>
 ```
 
@@ -28,17 +28,15 @@ The component uses **flexbox with column-gap** for internal layout, allowing you
 
 ```html
 <button interop-button [onActivate]="save">
-  Save Document
-  <span class="icon">💾</span>
+	Save Document
+	<span class="icon">💾</span>
 </button>
 ```
 
 ### Text Only (No Icon)
 
 ```html
-<button interop-button [onActivate]="submit">
-  Submit Form
-</button>
+<button interop-button [onActivate]="submit">Submit Form</button>
 ```
 
 ## Layout System
@@ -55,14 +53,15 @@ This ensures consistent spacing regardless of content configuration while preser
 
 ### Available Content Types
 
-| Content Type | Purpose | When Visible |
-|--------------|---------|--------------|
-| Default content | All button content including icons and text | When not loading |
-| `slot="loading"` | Custom loading content | When `loading=true` |
+| Content Type     | Purpose                                     | When Visible        |
+| ---------------- | ------------------------------------------- | ------------------- |
+| Default content  | All button content including icons and text | When not loading    |
+| `slot="loading"` | Custom loading content                      | When `loading=true` |
 
 ### Icon Styling
 
 Icons can be styled using CSS classes or attributes. Common approaches:
+
 - `class="icon"` for semantic icon styling
 - Icon fonts or SVG elements
 - Emoji or Unicode symbols
@@ -70,16 +69,15 @@ Icons can be styled using CSS classes or attributes. Common approaches:
 ### Loading State Behavior
 
 During loading (`loading=true`):
+
 - **Hidden**: Icon slot and default content
 - **Shown**: Loading slot content (or default loading text)
 
 ```html
-<button interop-button 
-        [onActivate]="process" 
-        [loading]="isProcessing">
-  <span class="icon">⚡</span>
-  <span slot="loading">Processing...</span>
-  Quick Action
+<button interop-button [onActivate]="process" [loading]="isProcessing">
+	<span class="icon">⚡</span>
+	<span slot="loading">Processing...</span>
+	Quick Action
 </button>
 ```
 
@@ -90,16 +88,16 @@ During loading (`loading=true`):
 ```html
 <!-- Icon before multiple content elements -->
 <button interop-button [onActivate]="complexAction">
-  <span class="icon">🔔</span>
-  <strong>Notifications</strong>
-  <span class="badge">3</span>
+	<span class="icon">🔔</span>
+	<strong>Notifications</strong>
+	<span class="badge">3</span>
 </button>
 
 <!-- Icon after multiple content elements -->
 <button interop-button [onActivate]="navigate">
-  <span class="badge">5</span>
-  <strong>Messages</strong>
-  <span class="icon">✉️</span>
+	<span class="badge">5</span>
+	<strong>Messages</strong>
+	<span class="icon">✉️</span>
 </button>
 ```
 
@@ -107,9 +105,9 @@ During loading (`loading=true`):
 
 ```html
 <button interop-button [onActivate]="quickAction">
-  <span class="icon">⚡</span>
-  <strong>Quick Action</strong>
-  <small>(Ctrl+Q)</small>
+	<span class="icon">⚡</span>
+	<strong>Quick Action</strong>
+	<small>(Ctrl+Q)</small>
 </button>
 ```
 
@@ -119,8 +117,8 @@ During loading (`loading=true`):
 
 ```html
 <button interop-button [onActivate]="saveDocument">
-  <span class="icon">💾</span>
-  Save
+	<span class="icon">💾</span>
+	Save
 </button>
 ```
 
@@ -139,14 +137,14 @@ Then use it from multiple locations:
 ```html
 <!-- Header -->
 <button interop-button activationId="save">
-  <span class="icon">💾</span>
-  Save
+	<span class="icon">💾</span>
+	Save
 </button>
 
 <!-- Toolbar -->
 <button interop-button activationId="save">
-  Save
-  <span class="icon">💾</span>
+	Save
+	<span class="icon">💾</span>
 </button>
 ```
 
@@ -155,16 +153,18 @@ Then use it from multiple locations:
 Control activation behavior with guardrails:
 
 ```html
-<button interop-button 
-        [onActivate]="submit"
-        [activationOptions]="{
+<button
+	interop-button
+	[onActivate]="submit"
+	[activationOptions]="{
           debounceMs: 250,
           throttleMs: 1000,
           reentrant: false,
           once: false
-        }">
-  <span class="icon">📤</span>
-  Submit Form
+        }"
+>
+	<span class="icon">📤</span>
+	Submit Form
 </button>
 ```
 
@@ -182,35 +182,38 @@ The component provides minimal base styles and relies on CSS custom properties f
 ```css
 /* Override default gap */
 button[interop-button] {
-  column-gap: 0.75rem;
+	column-gap: 0.75rem;
 }
 
 /* Icon-specific styling */
 button[interop-button] .icon {
-  font-size: 1.2em;
-  opacity: 0.8;
+	font-size: 1.2em;
+	opacity: 0.8;
 }
 
 /* Loading state styling */
 button[interop-button] [slot="loading"] {
-  font-style: italic;
-  opacity: 0.9;
+	font-style: italic;
+	opacity: 0.9;
 }
 ```
 
 ## Accessibility Considerations
 
 ### Semantic HTML
+
 - Must be used on `<button>` elements
 - Maintains native button semantics and behavior
 - Preserves keyboard navigation and focus management
 
 ### Reading Order
+
 - Content is projected in natural DOM source order
 - Screen readers announce content in logical sequence
 - Icon position follows document flow
 
 ### Loading States
+
 - Loading content replaces main content
 - Maintains button role and accessibility
 
@@ -219,74 +222,79 @@ button[interop-button] [slot="loading"] {
 ### 1. Icon Placement Guidelines
 
 **Use icon before text for:**
+
 - Actions (Save, Delete, Open)
 - Clear visual metaphors (📁 Open, 💾 Save)
 - Primary actions in forms
 
 **Use icon after text for:**
+
 - Navigation (Go to Settings →)
 - External links (Visit Website 🔗)
 - Expansion/disclosure (Show More ▼)
 
 ### 2. Loading States
 
-```html
+````html
 <!-- Good: Specific loading message -->
 <button interop-button [loading]="isSaving">
-  <span slot="loading">Saving changes...</span>
-  Save Document
+	<span slot="loading">Saving changes...</span>
+	Save Document
 </button>
 
 ```html
 <!-- Good: Preserve icon context during loading -->
 <button interop-button [loading]="isUploading">
-  <span class="icon">⬆️</span>
-  <span slot="loading">Uploading file...</span>
-  Upload
+	<span class="icon">⬆️</span>
+	<span slot="loading">Uploading file...</span>
+	Upload
 </button>
-```
+````
 
 ### 3. Content Organization
 
 ```html
 <!-- Good: Logical content hierarchy -->
 <button interop-button>
-  <span class="icon">🔔</span>
-  <strong>Notifications</strong>
-  <span class="count">3 unread</span>
+	<span class="icon">🔔</span>
+	<strong>Notifications</strong>
+	<span class="count">3 unread</span>
 </button>
 
 <!-- Avoid: Too much content -->
 <button interop-button>
-  <span class="icon">📧</span>
-  <strong>Email</strong>
-  <span>John Doe</span>
-  <span>Subject: Meeting</span>
-  <small>2 minutes ago</small>
+	<span class="icon">📧</span>
+	<strong>Email</strong>
+	<span>John Doe</span>
+	<span>Subject: Meeting</span>
+	<small>2 minutes ago</small>
 </button>
 ```
 
 ## Migration from Standard Buttons
 
 ### Before (Standard Button)
+
 ```html
 <button (click)="save()">
-  <i class="icon-save"></i>
-  Save Document
+	<i class="icon-save"></i>
+	Save Document
 </button>
 ```
 
 ### After (InteropButton)
+
 ```html
 <button interop-button [onActivate]="save">
-  <span class="icon">💾</span>
-  Save Document
+	<span class="icon">💾</span>
+	Save Document
 </button>
 ```
 
 ## Testing
 
 The component includes comprehensive tests for:
+
 - Flexible positioning behavior
 - Content projection in various configurations
 - Loading state transitions
@@ -294,6 +302,7 @@ The component includes comprehensive tests for:
 - Accessibility compliance
 
 Run tests with:
+
 ```bash
 npm test -- --grep "InteropButton"
 ```

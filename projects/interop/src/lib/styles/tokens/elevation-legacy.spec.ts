@@ -110,7 +110,12 @@ describe("Elevation — legacy sliding window (proof of failure)", () => {
 	let root: HTMLElement;
 
 	/** Nest `depth` elements carrying `attr`, return the innermost. */
-	const nest = (parent: HTMLElement, attr: string, value: string, depth: number): HTMLElement => {
+	const nest = (
+		parent: HTMLElement,
+		attr: string,
+		value: string,
+		depth: number,
+	): HTMLElement => {
 		let node = parent;
 		for (let i = 0; i < depth; i++) {
 			const child = document.createElement("div");
@@ -200,7 +205,8 @@ describe("Elevation — legacy sliding window (proof of failure)", () => {
 		const once = nest(root, "itx-raise", "", 1);
 		const thrice = nest(root, "itx-raise", "", 3);
 
-		const read = (el: HTMLElement) => getComputedStyle(el).getPropertyValue("--itx-elevation").trim();
+		const read = (el: HTMLElement) =>
+			getComputedStyle(el).getPropertyValue("--itx-elevation").trim();
 
 		// Registered <integer> with inherits:true, so invalid-at-computed-value-time
 		// resolves to the INHERITED value rather than the initial one. It is 0 at

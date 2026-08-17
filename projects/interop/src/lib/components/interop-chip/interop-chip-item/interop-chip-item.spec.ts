@@ -8,8 +8,23 @@ import { InteropChipItem } from "./interop-chip-item";
 	template: `
 		<ul>
 			<li interop-chip-item label="Angular">Angular</li>
-			<li interop-chip-item label="CSS" [removable]="true" (removed)="onRemove('css')">CSS</li>
-			<li interop-chip-item label="A11y" [removable]="true" [disabled]="true" (removed)="onRemove('a11y')">A11y</li>
+			<li
+				interop-chip-item
+				label="CSS"
+				[removable]="true"
+				(removed)="onRemove('css')"
+			>
+				CSS
+			</li>
+			<li
+				interop-chip-item
+				label="A11y"
+				[removable]="true"
+				[disabled]="true"
+				(removed)="onRemove('a11y')"
+			>
+				A11y
+			</li>
 		</ul>
 	`,
 })
@@ -23,12 +38,16 @@ describe("InteropChipItem", () => {
 	let items: HTMLLIElement[];
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({ imports: [TestHost] }).compileComponents();
+		await TestBed.configureTestingModule({
+			imports: [TestHost],
+		}).compileComponents();
 		fixture = TestBed.createComponent(TestHost);
 		host = fixture.componentInstance;
 		fixture.detectChanges();
 		await fixture.whenStable();
-		items = Array.from(fixture.nativeElement.querySelectorAll("li[interop-chip-item]"));
+		items = Array.from(
+			fixture.nativeElement.querySelectorAll("li[interop-chip-item]"),
+		);
 	});
 
 	describe("Host element", () => {

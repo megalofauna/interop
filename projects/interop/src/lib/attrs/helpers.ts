@@ -21,18 +21,18 @@ import { SetAttrsConfig } from "../services/interop-attribute.service";
  * )
  */
 export function merge(
-  ...configs: Array<SetAttrsConfig | null | undefined>
+	...configs: Array<SetAttrsConfig | null | undefined>
 ): SetAttrsConfig {
-  const out: SetAttrsConfig = {};
-  for (const cfg of configs) {
-    if (!cfg) continue;
-    for (const [selector, attrs] of Object.entries(cfg)) {
-      if (!attrs) continue;
-      out[selector] ??= {};
-      Object.assign(out[selector]!, attrs);
-    }
-  }
-  return out;
+	const out: SetAttrsConfig = {};
+	for (const cfg of configs) {
+		if (!cfg) continue;
+		for (const [selector, attrs] of Object.entries(cfg)) {
+			if (!attrs) continue;
+			out[selector] ??= {};
+			Object.assign(out[selector]!, attrs);
+		}
+	}
+	return out;
 }
 
 /**
@@ -51,30 +51,30 @@ export function merge(
  * }
  */
 export function withOptOut(
-  config: SetAttrsConfig,
-  itemSelectors: string[] = [":host > *"],
+	config: SetAttrsConfig,
+	itemSelectors: string[] = [":host > *"],
 ): SetAttrsConfig {
-  const out: SetAttrsConfig = {};
-  for (const [selector, attrs] of Object.entries(config)) {
-    if (!attrs) continue;
+	const out: SetAttrsConfig = {};
+	for (const [selector, attrs] of Object.entries(config)) {
+		if (!attrs) continue;
 
-    const shouldConstrain =
-      itemSelectors.includes(selector) ||
-      // Also constrain trivial whitespace variants
-      itemSelectors.includes(selector.replace(/\s+/g, " ").trim());
+		const shouldConstrain =
+			itemSelectors.includes(selector) ||
+			// Also constrain trivial whitespace variants
+			itemSelectors.includes(selector.replace(/\s+/g, " ").trim());
 
-    if (shouldConstrain) {
-      // Replace ":host > *" occurrences with an exclusion of opted-out nodes
-      const constrained = selector.replace(
-        /\:host\s*>\s*\*/g,
-        ':host > :not([data-interop-managed="false"])',
-      );
-      out[constrained] = attrs;
-    } else {
-      out[selector] = attrs;
-    }
-  }
-  return out;
+		if (shouldConstrain) {
+			// Replace ":host > *" occurrences with an exclusion of opted-out nodes
+			const constrained = selector.replace(
+				/\:host\s*>\s*\*/g,
+				':host > :not([data-interop-managed="false"])',
+			);
+			out[constrained] = attrs;
+		} else {
+			out[selector] = attrs;
+		}
+	}
+	return out;
 }
 
 /**
@@ -91,35 +91,35 @@ export function withOptOut(
  * <interop-list [manageAttrs]="safe">...</interop-list>
  */
 export function noOverride(
-  host: Element,
-  config: SetAttrsConfig,
+	host: Element,
+	config: SetAttrsConfig,
 ): SetAttrsConfig {
-  const out: SetAttrsConfig = {};
+	const out: SetAttrsConfig = {};
 
-  for (const [selector, attrs] of Object.entries(config)) {
-    if (!attrs) continue;
+	for (const [selector, attrs] of Object.entries(config)) {
+		if (!attrs) continue;
 
-    const targets: Element[] =
-      selector === ":host"
-        ? [host]
-        : // Query within the host subtree only
-          Array.from(host.querySelectorAll(selector));
+		const targets: Element[] =
+			selector === ":host"
+				? [host]
+				: // Query within the host subtree only
+					Array.from(host.querySelectorAll(selector));
 
-    // Build a pruned attribute map: include keys only if at least one target lacks the attribute
-    const prunedAttrs: Record<string, string | number | boolean> = {};
-    for (const [name, value] of Object.entries(attrs)) {
-      const missingOnSomeTarget = targets.some((el) => !el.hasAttribute(name));
-      if (missingOnSomeTarget) {
-        prunedAttrs[name] = value;
-      }
-    }
+		// Build a pruned attribute map: include keys only if at least one target lacks the attribute
+		const prunedAttrs: Record<string, string | number | boolean> = {};
+		for (const [name, value] of Object.entries(attrs)) {
+			const missingOnSomeTarget = targets.some((el) => !el.hasAttribute(name));
+			if (missingOnSomeTarget) {
+				prunedAttrs[name] = value;
+			}
+		}
 
-    if (Object.keys(prunedAttrs).length > 0) {
-      out[selector] = prunedAttrs;
-    }
-  }
+		if (Object.keys(prunedAttrs).length > 0) {
+			out[selector] = prunedAttrs;
+		}
+	}
 
-  return out;
+	return out;
 }
 
 /**
@@ -131,22 +131,22 @@ export function noOverride(
  * { childList: true, subtree: boolean }
  */
 export function deriveObserverOptions(config: SetAttrsConfig): {
-  childList: boolean;
-  subtree: boolean;
+	childList: boolean;
+	subtree: boolean;
 } {
-  const selectors = Object.keys(config);
+	const selectors = Object.keys(config);
 
-  // Consider only ":host" and direct child selectors as "shallow"
-  const isShallowSelector = (sel: string) =>
-    sel === ":host" || /^:host\s*>\s*/.test(sel);
+	// Consider only ":host" and direct child selectors as "shallow"
+	const isShallowSelector = (sel: string) =>
+		sel === ":host" || /^:host\s*>\s*/.test(sel);
 
-  const onlyShallow =
-    selectors.length > 0 && selectors.every(isShallowSelector);
+	const onlyShallow =
+		selectors.length > 0 && selectors.every(isShallowSelector);
 
-  return {
-    childList: true,
-    subtree: !onlyShallow,
-  };
+	return {
+		childList: true,
+		subtree: !onlyShallow,
+	};
 }
 
 /**
@@ -154,7 +154,7 @@ export function deriveObserverOptions(config: SetAttrsConfig): {
  * Can be used for conditional behavior outside of observers (e.g., deciding batching strategy).
  */
 export function hasDeepSelectors(config: SetAttrsConfig): boolean {
-  const selectors = Object.keys(config);
-  if (selectors.length === 0) return false;
-  return selectors.some((sel) => sel !== ":host" && !/^:host\s*>\s*/.test(sel));
+	const selectors = Object.keys(config);
+	if (selectors.length === 0) return false;
+	return selectors.some((sel) => sel !== ":host" && !/^:host\s*>\s*/.test(sel));
 }

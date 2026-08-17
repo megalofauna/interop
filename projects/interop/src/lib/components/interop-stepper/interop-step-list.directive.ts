@@ -1,10 +1,10 @@
 import {
-  Directive,
-  ElementRef,
-  afterNextRender,
-  computed,
-  inject,
-  isDevMode,
+	Directive,
+	ElementRef,
+	afterNextRender,
+	computed,
+	inject,
+	isDevMode,
 } from "@angular/core";
 import { INTEROP_STEPPER_TOKEN } from "./interop-stepper.token";
 
@@ -24,58 +24,58 @@ import { INTEROP_STEPPER_TOKEN } from "./interop-stepper.token";
  * ```
  */
 @Directive({
-  selector: "ol[interop-step-list]",
-  standalone: true,
-  host: {
-    class: "interop-step-list",
-    "[attr.aria-orientation]": "orientationAttr()",
-    /**
-     * A step list is a row of controls, not running text. The typography root
-     * is declared on the app root, so prose.css reads these `<li>`s as prose
-     * and puts --itx-rhythm-tight between every adjacent pair. Horizontally
-     * that pushed every step after the first down by 16px, so the strip and
-     * its connector line visibly stepped downward; vertically it opened a gap
-     * the component never asked for.
-     *
-     * Isolating is the mechanism prose.css documents for exactly this, and the
-     * one interop-tree, interop-listbox and the field controls already use. It
-     * reverts only what prose sets, and at zero specificity from a file
-     * imported before every component stylesheet — so the stepper's own rules
-     * still win outright.
-     */
-    "interop-typography-isolate": "",
-  },
+	selector: "ol[interop-step-list]",
+	standalone: true,
+	host: {
+		class: "interop-step-list",
+		"[attr.aria-orientation]": "orientationAttr()",
+		/**
+		 * A step list is a row of controls, not running text. The typography root
+		 * is declared on the app root, so prose.css reads these `<li>`s as prose
+		 * and puts --itx-rhythm-tight between every adjacent pair. Horizontally
+		 * that pushed every step after the first down by 16px, so the strip and
+		 * its connector line visibly stepped downward; vertically it opened a gap
+		 * the component never asked for.
+		 *
+		 * Isolating is the mechanism prose.css documents for exactly this, and the
+		 * one interop-tree, interop-listbox and the field controls already use. It
+		 * reverts only what prose sets, and at zero specificity from a file
+		 * imported before every component stylesheet — so the stepper's own rules
+		 * still win outright.
+		 */
+		"interop-typography-isolate": "",
+	},
 })
 export class InteropStepList {
-  private readonly el = inject(ElementRef<HTMLElement>);
-  private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
+	private readonly el = inject(ElementRef<HTMLElement>);
+	private readonly stepper = inject(INTEROP_STEPPER_TOKEN, { optional: true });
 
-  /** Mirror the parent stepper's orientation onto the list so AT users
-   * navigating with directional keys know how items are laid out. Defaults
-   * to horizontal when no parent is found (the dev-mode warning will fire
-   * separately). */
-  protected readonly orientationAttr = computed(
-    () => this.stepper?.orientation() ?? "horizontal",
-  );
+	/** Mirror the parent stepper's orientation onto the list so AT users
+	 * navigating with directional keys know how items are laid out. Defaults
+	 * to horizontal when no parent is found (the dev-mode warning will fire
+	 * separately). */
+	protected readonly orientationAttr = computed(
+		() => this.stepper?.orientation() ?? "horizontal",
+	);
 
-  constructor() {
-    if (isDevMode()) {
-      const stepper = this.stepper;
+	constructor() {
+		if (isDevMode()) {
+			const stepper = this.stepper;
 
-      afterNextRender(() => {
-        if (!stepper) {
-          console.warn(
-            "interop-step-list: must be used inside <interop-stepper>.",
-          );
-        }
-        const tag = this.el.nativeElement.tagName.toLowerCase();
-        if (tag !== "ol") {
-          console.warn(
-            `interop-step-list: expected <ol>, got <${tag}>. ` +
-              "Steps have a meaningful order — use <ol> for correct list semantics.",
-          );
-        }
-      });
-    }
-  }
+			afterNextRender(() => {
+				if (!stepper) {
+					console.warn(
+						"interop-step-list: must be used inside <interop-stepper>.",
+					);
+				}
+				const tag = this.el.nativeElement.tagName.toLowerCase();
+				if (tag !== "ol") {
+					console.warn(
+						`interop-step-list: expected <ol>, got <${tag}>. ` +
+							"Steps have a meaningful order — use <ol> for correct list semantics.",
+					);
+				}
+			});
+		}
+	}
 }

@@ -1,27 +1,27 @@
 @for (
-    item of items();
-    track trackByFn($index, item);
-    let i = $index;
-    let first = $first;
-    let last = $last
+	item of items();
+	track trackByFn($index, item);
+	let i = $index;
+	let first = $first;
+	let last = $last
 ) {
-    <li>
-        @if (listItemTemplate()) {
-            <ng-container
-                [ngTemplateOutlet]="listItemTemplate()"
-                [ngTemplateOutletContext]="{
-                    $implicit: item,
-                    item: item,
-                    index: i,
-                    first: first,
-                    last: last,
-                }"
-            >
-            </ng-container>
-        } @else {
-            {{ getItemText(item) }}
-        }
-    </li>
+	<li>
+		@if (listItemTemplate()) {
+			<ng-container
+				[ngTemplateOutlet]="listItemTemplate()"
+				[ngTemplateOutletContext]="{
+					$implicit: item,
+					item: item,
+					index: i,
+					first: first,
+					last: last,
+				}"
+			>
+			</ng-container>
+		} @else {
+			{{ getItemText(item) }}
+		}
+	</li>
 }
 
 <!--
@@ -32,4 +32,3 @@
     coexist: authored <li>s follow the generated ones.
 -->
 <ng-content />
-

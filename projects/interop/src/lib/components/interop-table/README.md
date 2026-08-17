@@ -5,6 +5,7 @@ An **unstyled** table component focused on core functionality: semantic HTML str
 ## Philosophy
 
 InteropTable follows the **bedrock approach**:
+
 - ✅ **Unstyled by design** - Complete styling freedom
 - ✅ **Semantic HTML** - Proper `<table>` structure for accessibility
 - ✅ **Type safety** - Full TypeScript generics support
@@ -15,6 +16,7 @@ InteropTable follows the **bedrock approach**:
 ## Bedrock Features
 
 ### Core Functionality
+
 - Auto-generated columns from data
 - Custom column definitions with labels
 - Loading, error, and empty states (unstyled)
@@ -22,9 +24,10 @@ InteropTable follows the **bedrock approach**:
 - Collection service integration
 
 ### What's NOT Included (By Design)
+
 - ❌ CSS styling or themes
 - ❌ Custom templates (future iteration)
-- ❌ Advanced formatting (future iteration) 
+- ❌ Advanced formatting (future iteration)
 - ❌ Sorting/filtering (future iteration)
 - ❌ Responsive layouts (you handle this)
 
@@ -38,29 +41,26 @@ InteropTable follows the **bedrock approach**:
 
 ```typescript
 export class MyComponent {
-  users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', active: true },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', active: false }
-  ];
+	users = [
+		{ id: 1, name: "John Doe", email: "john@example.com", active: true },
+		{ id: 2, name: "Jane Smith", email: "jane@example.com", active: false },
+	];
 }
 ```
 
 ### Custom Column Definitions
 
 ```html
-<table interop-table 
-       [collection]="users"
-       [columns]="userColumns">
-</table>
+<table interop-table [collection]="users" [columns]="userColumns"></table>
 ```
 
 ```typescript
 export class MyComponent {
-  userColumns: TableColumn<User>[] = [
-    { key: 'name', label: 'Full Name' },
-    { key: 'email', label: 'Email Address' },
-    { key: 'active', label: 'Status' }
-  ];
+	userColumns: TableColumn<User>[] = [
+		{ key: "name", label: "Full Name" },
+		{ key: "email", label: "Email Address" },
+		{ key: "active", label: "Status" },
+	];
 }
 ```
 
@@ -72,11 +72,11 @@ export class MyComponent {
 
 ```typescript
 export class MyComponent {
-  private collectionService = inject(InteropCollectionService);
-  
-  usersCollection = this.collectionService.create({
-    source: this.http.get<User[]>('/api/users')
-  });
+	private collectionService = inject(InteropCollectionService);
+
+	usersCollection = this.collectionService.create({
+		source: this.http.get<User[]>("/api/users"),
+	});
 }
 ```
 
@@ -84,24 +84,24 @@ export class MyComponent {
 
 ### Component Inputs
 
-| Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `collection` | `InteropCollectionInput<T>` | - | Data source (arrays, observables, promises, collections) |
-| `columns` | `TableColumn<T>[]` | `null` | Column definitions (auto-generated if not provided) |
-| `trackBy` | `TrackByFunction<T> \| "auto" \| "index"` | `"auto"` | Row tracking strategy |
-| `trackByField` | `keyof T \| null` | `null` | Field to use for tracking |
-| `showHeaders` | `boolean` | `true` | Whether to show table headers |
-| `emptyText` | `string` | `"No data available"` | Text for empty state |
-| `loadingText` | `string` | `"Loading..."` | Text for loading state |
-| `autoColumns` | `boolean` | `true` | Auto-generate columns from data |
+| Input          | Type                                      | Default               | Description                                              |
+| -------------- | ----------------------------------------- | --------------------- | -------------------------------------------------------- |
+| `collection`   | `InteropCollectionInput<T>`               | -                     | Data source (arrays, observables, promises, collections) |
+| `columns`      | `TableColumn<T>[]`                        | `null`                | Column definitions (auto-generated if not provided)      |
+| `trackBy`      | `TrackByFunction<T> \| "auto" \| "index"` | `"auto"`              | Row tracking strategy                                    |
+| `trackByField` | `keyof T \| null`                         | `null`                | Field to use for tracking                                |
+| `showHeaders`  | `boolean`                                 | `true`                | Whether to show table headers                            |
+| `emptyText`    | `string`                                  | `"No data available"` | Text for empty state                                     |
+| `loadingText`  | `string`                                  | `"Loading..."`        | Text for loading state                                   |
+| `autoColumns`  | `boolean`                                 | `true`                | Auto-generate columns from data                          |
 
 ### TableColumn Interface (Bedrock)
 
 ```typescript
 interface TableColumn<T> {
-  key: keyof T | string;    // Property key from data object
-  label?: string;           // Display label (defaults to formatted key)
-  hidden?: boolean;         // Whether column is hidden
+	key: keyof T | string; // Property key from data object
+	label?: string; // Display label (defaults to formatted key)
+	hidden?: boolean; // Whether column is hidden
 }
 ```
 
@@ -111,43 +111,43 @@ InteropTable outputs semantic HTML that you can style:
 
 ```html
 <table class="your-styles">
-  <!-- Loading state -->
-  <tbody class="interop-table-loading">
-    <tr>
-      <td class="interop-table-loading-cell" colspan="3">
-        <div class="interop-table-loading-content">Loading...</div>
-      </td>
-    </tr>
-  </tbody>
-  
-  <!-- Headers -->
-  <thead class="interop-table-header">
-    <tr class="interop-table-header-row">
-      <th class="interop-table-header-cell" data-column-key="name">
-        <span class="interop-table-header-text">Name</span>
-      </th>
-      <!-- ... more headers -->
-    </tr>
-  </thead>
-  
-  <!-- Data rows -->
-  <tbody class="interop-table-body">
-    <tr class="interop-table-row" data-row-index="0">
-      <td class="interop-table-cell" data-column-key="name" data-cell-index="0">
-        <span class="interop-table-cell-text">John Doe</span>
-      </td>
-      <!-- ... more cells -->
-    </tr>
-  </tbody>
-  
-  <!-- Empty state -->
-  <tbody class="interop-table-empty">
-    <tr>
-      <td class="interop-table-empty-cell" colspan="3">
-        <div class="interop-table-empty-content">No data available</div>
-      </td>
-    </tr>
-  </tbody>
+	<!-- Loading state -->
+	<tbody class="interop-table-loading">
+		<tr>
+			<td class="interop-table-loading-cell" colspan="3">
+				<div class="interop-table-loading-content">Loading...</div>
+			</td>
+		</tr>
+	</tbody>
+
+	<!-- Headers -->
+	<thead class="interop-table-header">
+		<tr class="interop-table-header-row">
+			<th class="interop-table-header-cell" data-column-key="name">
+				<span class="interop-table-header-text">Name</span>
+			</th>
+			<!-- ... more headers -->
+		</tr>
+	</thead>
+
+	<!-- Data rows -->
+	<tbody class="interop-table-body">
+		<tr class="interop-table-row" data-row-index="0">
+			<td class="interop-table-cell" data-column-key="name" data-cell-index="0">
+				<span class="interop-table-cell-text">John Doe</span>
+			</td>
+			<!-- ... more cells -->
+		</tr>
+	</tbody>
+
+	<!-- Empty state -->
+	<tbody class="interop-table-empty">
+		<tr>
+			<td class="interop-table-empty-cell" colspan="3">
+				<div class="interop-table-empty-content">No data available</div>
+			</td>
+		</tr>
+	</tbody>
 </table>
 ```
 
@@ -159,20 +159,20 @@ Since the component is unstyled, you have complete control:
 
 ```css
 table[interop-table] {
-  width: 100%;
-  border-collapse: collapse;
+	width: 100%;
+	border-collapse: collapse;
 }
 
 table[interop-table] th,
 table[interop-table] td {
-  padding: 8px 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+	padding: 8px 12px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
 }
 
 table[interop-table] th {
-  background: #f5f5f5;
-  font-weight: 600;
+	background: #f5f5f5;
+	font-weight: 600;
 }
 ```
 
@@ -180,22 +180,22 @@ table[interop-table] th {
 
 ```css
 .interop-table-loading-cell {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-  font-style: italic;
+	text-align: center;
+	padding: 2rem;
+	color: #666;
+	font-style: italic;
 }
 
 .interop-table-empty-cell {
-  text-align: center;
-  padding: 3rem;
-  color: #999;
+	text-align: center;
+	padding: 3rem;
+	color: #999;
 }
 
 .interop-table-error-cell {
-  text-align: center;
-  padding: 2rem;
-  color: #dc2626;
+	text-align: center;
+	padding: 2rem;
+	color: #dc2626;
 }
 ```
 
@@ -204,54 +204,58 @@ table[interop-table] th {
 ```css
 /* Style specific columns */
 td[data-column-key="price"] {
-  text-align: right;
-  font-weight: 600;
+	text-align: right;
+	font-weight: 600;
 }
 
 td[data-column-key="status"] {
-  text-align: center;
+	text-align: center;
 }
 
 /* Style specific rows */
 tr[data-row-index="0"] {
-  font-weight: 600; /* First row bold */
+	font-weight: 600; /* First row bold */
 }
 ```
 
 ## Comparison with mat-table
 
-| Feature | InteropTable (Bedrock) | mat-table |
-|---------|------------------------|-----------|
-| **Setup** | Zero config works | Requires displayedColumns + dataSource |
-| **TypeScript** | Full generics | Limited type safety |
-| **HTML** | Semantic `<table>` | Custom elements |
-| **Styling** | Completely unstyled | Heavy default styling |
-| **Bundle size** | Minimal | Large |
-| **Data binding** | Any iterable | MatTableDataSource required |
-| **States** | Built-in (unstyled) | Manual implementation |
-| **Learning curve** | Minimal | Steep |
+| Feature            | InteropTable (Bedrock) | mat-table                              |
+| ------------------ | ---------------------- | -------------------------------------- |
+| **Setup**          | Zero config works      | Requires displayedColumns + dataSource |
+| **TypeScript**     | Full generics          | Limited type safety                    |
+| **HTML**           | Semantic `<table>`     | Custom elements                        |
+| **Styling**        | Completely unstyled    | Heavy default styling                  |
+| **Bundle size**    | Minimal                | Large                                  |
+| **Data binding**   | Any iterable           | MatTableDataSource required            |
+| **States**         | Built-in (unstyled)    | Manual implementation                  |
+| **Learning curve** | Minimal                | Steep                                  |
 
 ## Advantages of Bedrock Approach
 
 ### 🚀 **Performance**
+
 - Smaller bundle size
 - No unused CSS
 - Signal-based reactivity
 - Efficient TrackBy functions
 
 ### 🎨 **Styling Freedom**
+
 - No CSS to override
 - Use any framework (Tailwind, Bootstrap, custom)
 - Complete design control
 - Easy theming
 
 ### 🛠️ **Developer Experience**
+
 - Minimal API surface
 - Type-safe column definitions
 - Auto-generated columns work immediately
 - Semantic HTML structure
 
 ### ♿ **Accessibility**
+
 - Proper table semantics
 - Screen reader friendly
 - Keyboard navigation ready

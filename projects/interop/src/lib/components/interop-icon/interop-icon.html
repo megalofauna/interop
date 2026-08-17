@@ -1,50 +1,66 @@
 @if (useRegistry()) {
-  <!-- ── Registry path: icon resolved from name lookup ──────────────────────── -->
-  @if (icon(); as i) {
-    <svg
-      [attr.viewBox]="i.viewBox"
-      [attr.width]="sizeInPx()"
-      [attr.height]="sizeInPx()"
-      [attr.stroke-width]="effectiveStrokeWidth()"
-      [style.color]="color() ?? null"
-      [attr.role]="decorative() ? 'presentation' : 'img'"
-      [attr.aria-hidden]="decorative() ? 'true' : null"
-      [attr.aria-label]="!decorative() ? ariaLabel() : null"
-      xmlns="http://www.w3.org/2000/svg"
-      [innerHTML]="trustedSvgContent()"
-    ></svg>
-  } @else {
-    <!-- Icon not found in registry — renders a placeholder in dev, nothing in prod -->
-    <svg
-      [attr.width]="sizeInPx()"
-      [attr.height]="sizeInPx()"
-      viewBox="0 0 24 24"
-      [attr.role]="decorative() ? 'presentation' : 'img'"
-      [attr.aria-hidden]="decorative() ? 'true' : null"
-      [attr.aria-label]="!decorative() ? (ariaLabel() ?? 'Icon not found') : null"
-      xmlns="http://www.w3.org/2000/svg"
-      class="itx-icon--missing"
-    >
-      <!-- X mark — visible only in development via CSS -->
-      <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>
-      <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="2"/>
-    </svg>
-  }
+	<!-- ── Registry path: icon resolved from name lookup ──────────────────────── -->
+	@if (icon(); as i) {
+		<svg
+			[attr.viewBox]="i.viewBox"
+			[attr.width]="sizeInPx()"
+			[attr.height]="sizeInPx()"
+			[attr.stroke-width]="effectiveStrokeWidth()"
+			[style.color]="color() ?? null"
+			[attr.role]="decorative() ? 'presentation' : 'img'"
+			[attr.aria-hidden]="decorative() ? 'true' : null"
+			[attr.aria-label]="!decorative() ? ariaLabel() : null"
+			xmlns="http://www.w3.org/2000/svg"
+			[innerHTML]="trustedSvgContent()"
+		></svg>
+	} @else {
+		<!-- Icon not found in registry — renders a placeholder in dev, nothing in prod -->
+		<svg
+			[attr.width]="sizeInPx()"
+			[attr.height]="sizeInPx()"
+			viewBox="0 0 24 24"
+			[attr.role]="decorative() ? 'presentation' : 'img'"
+			[attr.aria-hidden]="decorative() ? 'true' : null"
+			[attr.aria-label]="
+				!decorative() ? (ariaLabel() ?? 'Icon not found') : null
+			"
+			xmlns="http://www.w3.org/2000/svg"
+			class="itx-icon--missing"
+		>
+			<!-- X mark — visible only in development via CSS -->
+			<line
+				x1="4"
+				y1="4"
+				x2="20"
+				y2="20"
+				stroke="currentColor"
+				stroke-width="2"
+			/>
+			<line
+				x1="20"
+				y1="4"
+				x2="4"
+				y2="20"
+				stroke="currentColor"
+				stroke-width="2"
+			/>
+		</svg>
+	}
 } @else {
-  <!-- ── Projection path: render content from any third-party icon library ─────
+	<!-- ── Projection path: render content from any third-party icon library ─────
     Size and accessibility are still controlled by interop-icon inputs.
     The consumer is responsible for their library's rendering.
   ────────────────────────────────────────────────────────────────────────────── -->
-  <span
-    [style.width]="sizeInPx()"
-    [style.height]="sizeInPx()"
-    [style.display]="'inline-flex'"
-    [style.align-items]="'center'"
-    [style.justify-content]="'center'"
-    [attr.role]="decorative() ? 'presentation' : 'img'"
-    [attr.aria-hidden]="decorative() ? 'true' : null"
-    [attr.aria-label]="!decorative() ? ariaLabel() : null"
-  >
-    <ng-content />
-  </span>
+	<span
+		[style.width]="sizeInPx()"
+		[style.height]="sizeInPx()"
+		[style.display]="'inline-flex'"
+		[style.align-items]="'center'"
+		[style.justify-content]="'center'"
+		[attr.role]="decorative() ? 'presentation' : 'img'"
+		[attr.aria-hidden]="decorative() ? 'true' : null"
+		[attr.aria-label]="!decorative() ? ariaLabel() : null"
+	>
+		<ng-content />
+	</span>
 }
