@@ -19,7 +19,7 @@ import {
  *
  * ## Registry path (primary)
  * Icons are registered at any DI scope via `provideInteropIcons()` and
- * rendered by name. The registry supports Phosphor, Tabler, and any custom
+ * rendered by name. The registry supports Tabler, Material Symbols, and any custom
  * icons adapted via `fromSvg()`.
  *
  * ```html
@@ -65,8 +65,8 @@ import {
  *
  * @example Stroke weight override
  * ```html
- * <!-- Bolder Phosphor icon (default is 16 in 256-unit space) -->
- * <interop-icon name="ph-copy" [strokeWidth]="24" />
+ * <!-- Bolder stroked icon (Tabler's default is 2 in a 24-unit space) -->
+ * <interop-icon name="tabler-copy" [strokeWidth]="3" />
  * <!-- Lighter Tabler icon (default is 2 in 24-unit space) -->
  * <interop-icon name="tabler-copy" [strokeWidth]="1.5" />
  * ```
@@ -100,7 +100,7 @@ export class InteropIcon {
 	 * Stroke width override in viewBox coordinate units.
 	 * When not provided, the icon's own `defaultStrokeWidth` is used.
 	 *
-	 * Units are viewBox-relative: Phosphor icons use a 256×256 space (default 16),
+	 * Units are viewBox-relative: Tabler icons use a 24×24 space (default 2),
 	 * Tabler uses 24×24 (default 2). These values are not directly comparable.
 	 */
 	readonly strokeWidth = input<number | undefined>(undefined);
@@ -188,7 +188,7 @@ export class InteropIcon {
 					console.warn(
 						`InteropIcon: [strokeWidth] has no effect on "${icon.name}" — it is a ` +
 							"fill-only icon with no stroke to widen. Use a stroked set (Tabler, " +
-							"Phosphor regular) for a runtime weight axis.",
+							"Tabler outline) for a runtime weight axis.",
 					);
 				}
 			});
