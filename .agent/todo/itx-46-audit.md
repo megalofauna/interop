@@ -1,5 +1,46 @@
 # ITX-46 — Library & demo audit
 
+> **STATUS after the ITX-46 branch merged.** Everything below is kept as the
+> record; this header is what is left.
+>
+> **Done** — the CSS-wide-keyword class (16 → 0, now guarded by
+> `check-keywords.mjs`); all four silent failures (kbd tilt, button squircle,
+> toolbar neutralisation, code-block tab hover) plus `--itx-contrast-6-on`, the
+> page-nav gradient and `--itx-layout-gap-N`; prettier + stylelint installed and
+> the repo formatted; the broken npm scripts; ~1,500 files of dead icon
+> pipeline; Phosphor removed entirely (13,618 files); five orphaned files;
+> `lib/attrs/` (docs salvaged first); `corner-shape` as an opinion-free lever;
+> the Angular mechanicals (`allowSignalWrites`, the toolbar's dead effect and
+> leaked subscription, `CommonModule`, `OnPush` on two rigs).
+>
+> **Next, in value order:**
+>
+> 1. **Guards, five remaining** (§7): state-token fallback chains (42 hits) is
+>    the highest yield; then declared-but-unread theme tokens, no-fallback
+>    undeclared reads, hex colours under `styles/components|composites|rigs`,
+>    unimported files under `styles/`, literal border widths.
+> 2. **`generate-color-ladder.mjs` has no drift check.** Its `--check` validates
+>    contrast floors but never compares output to disk, so the config and the
+>    generated CSS silently disagreed until ITX-46 caught it. The other two
+>    generators already do this comparison.
+> 3. **The dark-scheme retune is visually unverified** — `RAMP.dark.page` 0.175
+>    → 0.1925, `up` 0.0375 → 0.0395, `DEPTH.below` 2 → 3. Passes the solver;
+>    nobody has looked at it.
+> 4. **16 components still ship an unlayered `styleUrl`** (§3) — the biggest
+>    remaining architectural hole. `terminal`, `progress`, `segmented-control`
+>    and `listbox` are the cheap ones.
+> 5. **Naming convergence** (§5) — radius, easing, colour, background spellings;
+>    the `interop-` vs `itx-` prefix question; `angular.json` declaring prefixes
+>    that match nothing.
+> 6. **The demo's 45 phantom `--itx-*-outline-*` rows** document tokens that no
+>    longer exist; a consumer copying them gets silence.
+> 7. **`interop.tokens.css` does not cover `typography/`** — kbd dropped out of
+>    the reference silently when it moved there.
+> 8. **Two decisions, not tasks:** does `attrsPreset` get a demo or get removed
+>    (it is public API on three components and demonstrated nowhere), and is
+>    `InteropLayoutDirective` (~470 lines, published, unused) roadmap or
+>    deprecation.
+
 Four parallel read-only reviews (token naming, CSS practices, Angular/TypeScript,
 quick wins), consolidated and deduplicated. **No code was changed.**
 
