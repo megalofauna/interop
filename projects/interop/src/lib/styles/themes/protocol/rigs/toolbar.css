@@ -44,8 +44,13 @@
 :where([interop-toolbar]) {
 	--itx-button-display: inline-flex;
 
-	--itx-button-font-family: inherit;
-	--itx-button-font-size: inherit;
+	/* font-family is deliberately NOT set. The toolbar wants the ambient font,
+	   and there is no token value that expresses "inherit" — a CSS-wide keyword
+	   in a custom property is guaranteed-invalid, so `--itx-button-font-family:
+	   inherit` silently fell through to the sans stack. Achieving it would mean
+	   changing the button's own structural fallback, which is a global call.
+	   font-size needs no declaration either: the structural read already falls
+	   back to `inherit`. */
 	--itx-button-line-height: 1.25;
 
 	/* Sized by padding, not by the height floor — `auto` opts out of it so the
@@ -60,11 +65,22 @@
 	--itx-button-background: transparent;
 	--itx-button-foreground: var(--itx-contrast-6);
 
-	--itx-button-background-hover: unset;
-	--itx-button-foreground-hover: unset;
-	--itx-button-border-color-hover: inherit;
+	/* A wash, not a fill. Rank 1 is defined as "wash — hover fills", which is
+	   exactly this: enough feedback to read as interactive, not enough to stack
+	   visual weight on a toolbar that already supplies the frame. Active goes
+	   one step further, matching the monotonic state ramp the button theme uses
+	   everywhere else.
 
-	--itx-button-background-active: inherit;
-	--itx-button-foreground-active: inherit;
-	--itx-button-border-color-active: inherit;
+	   These were `unset` / `inherit` before. That does not mean "cancel this" —
+	   a CSS-wide keyword in a custom property makes the toolbar INHERIT the
+	   value from its ancestor, which is [interop-root], where the button theme
+	   declares --itx-contrast-2. So the six declarations resolved to the very
+	   fill they were written to suppress, and were exact no-ops. */
+	--itx-button-background-hover: var(--itx-contrast-1);
+	--itx-button-foreground-hover: var(--itx-contrast-6);
+	--itx-button-border-color-hover: transparent;
+
+	--itx-button-background-active: var(--itx-contrast-2);
+	--itx-button-foreground-active: var(--itx-contrast-6);
+	--itx-button-border-color-active: transparent;
 }
