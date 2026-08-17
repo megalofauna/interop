@@ -6,7 +6,7 @@ A comprehensive icon system for Angular applications using the beautiful [Phosph
 
 - 🎯 **Type-safe** - Full TypeScript support with icon name validation
 - 🌳 **Tree-shakeable** - Only bundle the icons you actually use
-- ♿ **Accessible** - Built-in ARIA support and screen reader compatibility  
+- ♿ **Accessible** - Built-in ARIA support and screen reader compatibility
 - 🔧 **Flexible** - Multiple registration strategies for different use cases
 - 📦 **Lightweight** - Minimal runtime overhead with SVG-based rendering
 - 🎨 **Customizable** - Full control over size, colors, and stroke width
@@ -19,37 +19,45 @@ Import any number of Phosphor icons from a single location:
 
 ```typescript
 // main.ts - Import multiple icons from one location
-import { 
-  bootstrapApplication 
-} from '@angular/platform-browser';
-import { 
-  registerGlobalPhosphorIcons,
-  PhUser,
-  PhHome,
-  PhGear,
-  PhHeart,
-  PhStar,
-  PhBell,
-  PhCalendar,
-  PhClock,
-  PhTrash,
-  PhCopy,
-  PhDownload,
-  PhUpload
-} from '@your-org/interop';
+import { bootstrapApplication } from "@angular/platform-browser";
+import {
+	registerGlobalPhosphorIcons,
+	PhUser,
+	PhHome,
+	PhGear,
+	PhHeart,
+	PhStar,
+	PhBell,
+	PhCalendar,
+	PhClock,
+	PhTrash,
+	PhCopy,
+	PhDownload,
+	PhUpload,
+} from "@your-org/interop";
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    registerGlobalPhosphorIcons(
-      PhUser, PhHome, PhGear, PhHeart, PhStar, 
-      PhBell, PhCalendar, PhClock, PhTrash, 
-      PhCopy, PhDownload, PhUpload
-    ),
-  ]
+	providers: [
+		registerGlobalPhosphorIcons(
+			PhUser,
+			PhHome,
+			PhGear,
+			PhHeart,
+			PhStar,
+			PhBell,
+			PhCalendar,
+			PhClock,
+			PhTrash,
+			PhCopy,
+			PhDownload,
+			PhUpload,
+		),
+	],
 });
 ```
 
 **Key Benefits:**
+
 - ✅ **Single Import Location**: All icons available from one import
 - ✅ **Tree-shaking Ready**: Only icons you import are bundled
 - ✅ **TypeScript IntelliSense**: Full autocomplete and type checking
@@ -59,22 +67,29 @@ bootstrapApplication(AppComponent, {
 
 ```typescript
 // main.ts
-import { bootstrapApplication } from '@angular/platform-browser';
-import { 
-  registerGlobalPhosphorIcons, 
-  PhUser, 
-  PhHouse, 
-  PhGear,
-  PhHeart,
-  PhStar,
-  PhBell 
-} from '@your-org/interop';
+import { bootstrapApplication } from "@angular/platform-browser";
+import {
+	registerGlobalPhosphorIcons,
+	PhUser,
+	PhHouse,
+	PhGear,
+	PhHeart,
+	PhStar,
+	PhBell,
+} from "@your-org/interop";
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    registerGlobalPhosphorIcons(PhUser, PhHouse, PhGear, PhHeart, PhStar, PhBell),
-    // other providers...
-  ]
+	providers: [
+		registerGlobalPhosphorIcons(
+			PhUser,
+			PhHouse,
+			PhGear,
+			PhHeart,
+			PhStar,
+			PhBell,
+		),
+		// other providers...
+	],
 });
 ```
 
@@ -92,17 +107,14 @@ bootstrapApplication(AppComponent, {
 <interop-icon name="user" />
 
 <!-- With custom styling -->
-<interop-icon 
-  name="arrow-right" 
-  [size]="32" 
-  [strokeWidth]="2" 
-  color="blue" />
+<interop-icon name="arrow-right" [size]="32" [strokeWidth]="2" color="blue" />
 
 <!-- With accessibility -->
-<interop-icon 
-  name="warning" 
-  [decorative]="false" 
-  ariaLabel="Warning: Check your input" />
+<interop-icon
+	name="warning"
+	[decorative]="false"
+	ariaLabel="Warning: Check your input"
+/>
 ```
 
 ## Registration Strategies
@@ -113,22 +125,30 @@ Register icons globally at application bootstrap. These icons are available thro
 
 ```typescript
 // main.ts
-import { bootstrapApplication } from '@angular/platform-browser';
-import { 
-  registerGlobalPhosphorIcons, 
-  PhUser, 
-  PhHome, 
-  PhSettings,
-  PhBell,
-  PhHeart,
-  PhStar,
-  PhGear 
-} from '@your-org/interop';
+import { bootstrapApplication } from "@angular/platform-browser";
+import {
+	registerGlobalPhosphorIcons,
+	PhUser,
+	PhHome,
+	PhSettings,
+	PhBell,
+	PhHeart,
+	PhStar,
+	PhGear,
+} from "@your-org/interop";
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    registerGlobalPhosphorIcons(PhUser, PhHome, PhSettings, PhBell, PhHeart, PhStar, PhGear),
-  ]
+	providers: [
+		registerGlobalPhosphorIcons(
+			PhUser,
+			PhHome,
+			PhSettings,
+			PhBell,
+			PhHeart,
+			PhStar,
+			PhGear,
+		),
+	],
 });
 ```
 
@@ -138,26 +158,34 @@ Register icons only for specific components or modules. Useful for feature-speci
 
 ```typescript
 // feature.component.ts
-import { Component } from '@angular/core';
-import { 
-  registerScopedPhosphorIcons, 
-  PhChart, 
-  PhGraph, 
-  PhTrendUp,
-  PhCalendar,
-  PhClock 
-} from '@your-org/interop';
+import { Component } from "@angular/core";
+import {
+	registerScopedPhosphorIcons,
+	PhChart,
+	PhGraph,
+	PhTrendUp,
+	PhCalendar,
+	PhClock,
+} from "@your-org/interop";
 
 @Component({
-  selector: 'app-analytics',
-  providers: [registerScopedPhosphorIcons(PhChart, PhGraph, PhTrendUp, PhCalendar, PhClock)],
-  template: `
-    <interop-icon name="chart" />
-    <interop-icon name="graph" />
-    <interop-icon name="trend-up" />
-    <interop-icon name="calendar" />
-    <interop-icon name="clock" />
-  `
+	selector: "app-analytics",
+	providers: [
+		registerScopedPhosphorIcons(
+			PhChart,
+			PhGraph,
+			PhTrendUp,
+			PhCalendar,
+			PhClock,
+		),
+	],
+	template: `
+		<interop-icon name="chart" />
+		<interop-icon name="graph" />
+		<interop-icon name="trend-up" />
+		<interop-icon name="calendar" />
+		<interop-icon name="clock" />
+	`,
 })
 export class AnalyticsComponent {}
 ```
@@ -168,17 +196,17 @@ For loading many icons asynchronously to avoid blocking the initial bundle:
 
 ```typescript
 // main.ts - Async bootstrapping
-import { registerCommonPhosphorIcons } from '@your-org/interop';
+import { registerCommonPhosphorIcons } from "@your-org/interop";
 
 async function bootstrap() {
-  const iconProviders = await registerCommonPhosphorIcons();
-  
-  bootstrapApplication(AppComponent, {
-    providers: [
-      ...iconProviders,
-      // other providers...
-    ]
-  });
+	const iconProviders = await registerCommonPhosphorIcons();
+
+	bootstrapApplication(AppComponent, {
+		providers: [
+			...iconProviders,
+			// other providers...
+		],
+	});
 }
 
 bootstrap();
@@ -190,9 +218,9 @@ Register icons at the template level using the `iconScope` directive:
 
 ```html
 <div iconScope="acorn,tree,leaf">
-  <interop-icon name="acorn" />
-  <interop-icon name="tree" />
-  <interop-icon name="leaf" />
+	<interop-icon name="acorn" />
+	<interop-icon name="tree" />
+	<interop-icon name="leaf" />
 </div>
 ```
 
@@ -223,14 +251,14 @@ const scopedCommonProviders = await registerScopedCommonPhosphorIcons();
 
 ### Input Properties
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `name` | `string` | required | Icon name from registered iconset |
-| `size` | `number` | `24` | Icon size in pixels |
-| `strokeWidth` | `number` | `undefined` | Override icon's default stroke width |
-| `color` | `string` | `undefined` | Icon color (CSS value, defaults to currentColor) |
-| `decorative` | `boolean` | `true` | Whether icon is decorative (hidden from screen readers) |
-| `ariaLabel` | `string` | `undefined` | Accessible label (required when decorative=false) |
+| Property      | Type      | Default     | Description                                             |
+| ------------- | --------- | ----------- | ------------------------------------------------------- |
+| `name`        | `string`  | required    | Icon name from registered iconset                       |
+| `size`        | `number`  | `24`        | Icon size in pixels                                     |
+| `strokeWidth` | `number`  | `undefined` | Override icon's default stroke width                    |
+| `color`       | `string`  | `undefined` | Icon color (CSS value, defaults to currentColor)        |
+| `decorative`  | `boolean` | `true`      | Whether icon is decorative (hidden from screen readers) |
+| `ariaLabel`   | `string`  | `undefined` | Accessible label (required when decorative=false)       |
 
 ### Examples
 
@@ -245,14 +273,16 @@ const scopedCommonProviders = await registerScopedCommonPhosphorIcons();
 <interop-icon name="star" color="gold" />
 
 <!-- Semantic (non-decorative) icon -->
-<interop-icon 
-  name="warning" 
-  [decorative]="false" 
-  ariaLabel="Warning: Invalid input" />
+<interop-icon
+	name="warning"
+	[decorative]="false"
+	ariaLabel="Warning: Invalid input"
+/>
 
 <!-- Icon inheriting color from parent -->
 <span style="color: red;">
-  <interop-icon name="x" /> <!-- Will be red -->
+	<interop-icon name="x" />
+	<!-- Will be red -->
 </span>
 ```
 
@@ -262,30 +292,40 @@ const scopedCommonProviders = await registerScopedCommonPhosphorIcons();
 
 ```typescript
 // ✅ Recommended: Import multiple icons from common index
-import { 
-  registerGlobalPhosphorIcons,
-  PhUser,
-  PhHome,
-  PhGear,
-  PhHeart,
-  PhStar,
-  PhBell,
-  PhCalendar 
-} from '@your-org/interop';
+import {
+	registerGlobalPhosphorIcons,
+	PhUser,
+	PhHome,
+	PhGear,
+	PhHeart,
+	PhStar,
+	PhBell,
+	PhCalendar,
+} from "@your-org/interop";
 
 bootstrapApplication(AppComponent, {
-  providers: [registerGlobalPhosphorIcons(PhUser, PhHome, PhGear, PhHeart, PhStar, PhBell, PhCalendar)]
+	providers: [
+		registerGlobalPhosphorIcons(
+			PhUser,
+			PhHome,
+			PhGear,
+			PhHeart,
+			PhStar,
+			PhBell,
+			PhCalendar,
+		),
+	],
 });
 ```
 
 ```typescript
 // ✅ Also good: Tree-shakeable individual imports (if preferred)
-import { PhUser } from '@your-org/interop/phosphor/user';
-import { PhHome } from '@your-org/interop/phosphor/home';
-import { registerGlobalPhosphorIcons } from '@your-org/interop';
+import { PhUser } from "@your-org/interop/phosphor/user";
+import { PhHome } from "@your-org/interop/phosphor/home";
+import { registerGlobalPhosphorIcons } from "@your-org/interop";
 
 bootstrapApplication(AppComponent, {
-  providers: [registerGlobalPhosphorIcons(PhUser, PhHome)]
+	providers: [registerGlobalPhosphorIcons(PhUser, PhHome)],
 });
 ```
 
@@ -294,7 +334,7 @@ bootstrapApplication(AppComponent, {
 For convenience, we provide a curated set of ~30 commonly used icons:
 
 ```typescript
-import { registerCommonPhosphorIcons } from '@your-org/interop';
+import { registerCommonPhosphorIcons } from "@your-org/interop";
 
 // Includes: user, house, gear, magnifying-glass, plus, minus, x, check,
 // arrows, heart, star, bell, envelope, calendar, clock, and more...
@@ -308,16 +348,13 @@ const iconProviders = await registerCommonPhosphorIcons();
 ```html
 <!-- Decorative: Icon next to text (hidden from screen readers) -->
 <button>
-  <interop-icon name="plus" [decorative]="true" />
-  Add Item
+	<interop-icon name="plus" [decorative]="true" />
+	Add Item
 </button>
 
 <!-- Semantic: Icon without text (needs aria-label) -->
 <button>
-  <interop-icon 
-    name="plus" 
-    [decorative]="false" 
-    ariaLabel="Add new item" />
+	<interop-icon name="plus" [decorative]="false" ariaLabel="Add new item" />
 </button>
 ```
 
@@ -332,31 +369,31 @@ const iconProviders = await registerCommonPhosphorIcons();
 ### Custom Icon Registry
 
 ```typescript
-import { inject } from '@angular/core';
-import { 
-  PhosphorIconRegistry,
-  registerScopedPhosphorIcons,
-  PhUser,
-  PhGear,
-  PhHeart 
-} from '@your-org/interop';
+import { inject } from "@angular/core";
+import {
+	PhosphorIconRegistry,
+	registerScopedPhosphorIcons,
+	PhUser,
+	PhGear,
+	PhHeart,
+} from "@your-org/interop";
 
 @Component({
-  providers: [registerScopedPhosphorIcons(PhUser, PhGear, PhHeart)],
-  // ...
+	providers: [registerScopedPhosphorIcons(PhUser, PhGear, PhHeart)],
+	// ...
 })
 export class MyService {
-  private iconRegistry = inject(PhosphorIconRegistry);
-  
-  // Check if icon exists
-  hasIcon(name: string): boolean {
-    return !!this.iconRegistry.get(name);
-  }
-  
-  // Get all registered icon names
-  getAllIcons(): string[] {
-    return this.iconRegistry.getAllRegistered();
-  }
+	private iconRegistry = inject(PhosphorIconRegistry);
+
+	// Check if icon exists
+	hasIcon(name: string): boolean {
+		return !!this.iconRegistry.get(name);
+	}
+
+	// Get all registered icon names
+	getAllIcons(): string[] {
+		return this.iconRegistry.getAllRegistered();
+	}
 }
 ```
 
@@ -367,20 +404,18 @@ Icons registered in child components override parent icons with the same name:
 ```typescript
 // Parent component
 @Component({
-  providers: [registerScopedPhosphorIcons(PhUserRegular)],
-  template: '<app-child></app-child>'
+	providers: [registerScopedPhosphorIcons(PhUserRegular)],
+	template: "<app-child></app-child>",
 })
 export class ParentComponent {}
 
 // Child component - overrides 'user' icon
 @Component({
-  providers: [registerScopedPhosphorIcons(PhUserBold)],
-  template: '<interop-icon name="user" />' // Uses bold version
+	providers: [registerScopedPhosphorIcons(PhUserBold)],
+	template: '<interop-icon name="user" />', // Uses bold version
 })
 export class ChildComponent {}
 ```
-
-
 
 ## Common Patterns
 
@@ -388,10 +423,7 @@ export class ChildComponent {}
 
 ```html
 <button class="icon-button">
-  <interop-icon 
-    name="gear" 
-    [decorative]="false" 
-    ariaLabel="Open settings" />
+	<interop-icon name="gear" [decorative]="false" ariaLabel="Open settings" />
 </button>
 ```
 
@@ -399,25 +431,25 @@ export class ChildComponent {}
 
 ```html
 <div class="menu-item">
-  <interop-icon name="house" />
-  <span>Home</span>
+	<interop-icon name="house" />
+	<span>Home</span>
 </div>
 ```
 
 ### Conditional Icons
 
 ```html
-<interop-icon 
-  [name]="isExpanded ? 'caret-up' : 'caret-down'" />
+<interop-icon [name]="isExpanded ? 'caret-up' : 'caret-down'" />
 ```
 
 ### Dynamic Sizing
 
 ```html
-<interop-icon 
-  name="star" 
-  [size]="rating * 8" 
-  [color]="rating > 3 ? 'gold' : 'gray'" />
+<interop-icon
+	name="star"
+	[size]="rating * 8"
+	[color]="rating > 3 ? 'gold' : 'gray'"
+/>
 ```
 
 ## Troubleshooting
@@ -425,30 +457,31 @@ export class ChildComponent {}
 ### Icon Not Displaying
 
 1. **Check if icon is registered:**
+
    ```typescript
-   console.log(iconRegistry.get('your-icon-name'));
+   console.log(iconRegistry.get("your-icon-name"));
    ```
 
 2. **Verify import path:**
+
    ```typescript
    // ✅ Correct
-   import { PhUser } from '@your-org/interop/phosphor/user';
-   
+   import { PhUser } from "@your-org/interop/phosphor/user";
+
    // ❌ Might not exist
-   import { PhUser } from '@your-org/interop/phosphor/User';
+   import { PhUser } from "@your-org/interop/phosphor/User";
    ```
 
 3. **Check provider registration:**
    ```typescript
    // Make sure icon is in the provider
-   registerGlobalPhosphorIcons(PhUser) // PhUser must be imported
+   registerGlobalPhosphorIcons(PhUser); // PhUser must be imported
    ```
 
 ### Development Warnings
 
 - **"Icon not found"** - Icon name doesn't match any registered icons
 - **"Missing ariaLabel"** - Non-decorative icon needs accessibility label
-
 
 ### Performance Issues
 

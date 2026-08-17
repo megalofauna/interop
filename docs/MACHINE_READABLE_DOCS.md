@@ -33,7 +33,7 @@ disclosure, and a note about a directive we deleted is noise to somebody who
 never knew it existed.
 
 So the MMCs should stay where they are. They are already optimally placed for
-their audience — a coding agent working *inside this repo*, which finds them via
+their audience — a coding agent working _inside this repo_, which finds them via
 `CLAUDE.md` and the `.agent/` convention. That is a solved problem. The unsolved
 one is different.
 
@@ -44,8 +44,8 @@ There are two audiences and they want different things.
 A **human consumer** wants to see the thing work, then copy a snippet. The demo
 site already serves that well: live examples, a token table, an API table, prose
 that explains the non-obvious lever. Adding a "copy the docs" button to that page
-helps a human who *already knows the resource exists* and is *already on the
-right page* — a narrow win with a low ceiling.
+helps a human who _already knows the resource exists_ and is _already on the
+right page_ — a narrow win with a low ceiling.
 
 An **agent** writing code against Interop wants the contract: what attributes
 exist, what tokens exist, what the accessibility rules are, what the constraints
@@ -61,11 +61,11 @@ available. It is **make them addressable**.
 
 ## 3. Why a URL beats a copy button or a download
 
-| Form | What it costs | Ceiling |
-|---|---|---|
-| Copy button | A component, per page | Human, already on the page, already knows to click |
-| Download | A component + a file on disk | Worse — the agent still has to be told where the file went |
-| **Stable URL** | A build step | Any agent given "use Interop" can discover and fetch it |
+| Form           | What it costs                | Ceiling                                                    |
+| -------------- | ---------------------------- | ---------------------------------------------------------- |
+| Copy button    | A component, per page        | Human, already on the page, already knows to click         |
+| Download       | A component + a file on disk | Worse — the agent still has to be told where the file went |
+| **Stable URL** | A build step                 | Any agent given "use Interop" can discover and fetch it    |
 
 A per-component markdown at a predictable path — `/components/button.md` — plus
 an `/llms.txt` index at the root, means an agent handed nothing but the site can
@@ -97,7 +97,7 @@ The repo already carries several documentation surfaces:
 
 That is three, and one is already documented as lying. A fourth hand-maintained
 surface would be actively harmful: it would drift, and unlike a demo example —
-which breaks *visibly* when it goes stale — a prose contract fails silently and
+which breaks _visibly_ when it goes stale — a prose contract fails silently and
 confidently, which is the worst possible failure mode for something an agent
 trusts.
 
@@ -122,7 +122,7 @@ release.
 
 **Do not hand-write a second contract.** See section 4.
 
-**Do not build this before deciding what the consumer contract *is*.** That is
+**Do not build this before deciding what the consumer contract _is_.** That is
 the actual open question, and it is a design decision rather than an
 implementation one: what does a consumer need to know about a component, in what
 order, and what do we deliberately leave out? The demo pages imply an answer

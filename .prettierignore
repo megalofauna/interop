@@ -16,3 +16,16 @@ projects/interop/src/lib/styles/interop.starter.css
 projects/interop/src/lib/styles/themes/protocol/ladder.css
 projects/interop/src/lib/styles/tokens/elevation.css
 projects/interop/src/lib/styles/interop.tokens.css
+projects/interop/src/lib/styles/tokens/ladder.css-source.ts
+
+# Generated icon components — 18,431 files, ~99% of the repo's file count and
+# every one of them emitted by scripts/generate-icons.mjs. Formatting them would
+# produce an 18k-file diff that the next `npm run build:icons` silently undoes.
+# The generator's output template is the formatter here.
+projects/interop/src/lib/iconsets/
+
+# Superseded icon pipeline, pending deletion (see .agent/todo/itx-46-audit.md).
+Working-Iconset-Files/
+
+# npm owns this file's format; prettier and npm would fight over it on every install.
+package-lock.json

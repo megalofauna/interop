@@ -35,10 +35,10 @@ The sliding window shifted eleven `--_e-*` slots on each `[itx-raise]`:
 
 ```css
 :where([itx-raise]) {
-  --_e-0:  var(--_e-p1);
-  --_e-p1: var(--_e-p2);
-  --_e-p2: var(--_e-p3);
-  /* … */
+	--_e-0: var(--_e-p1);
+	--_e-p1: var(--_e-p2);
+	--_e-p2: var(--_e-p3);
+	/* … */
 }
 ```
 
@@ -51,10 +51,10 @@ that one colour**. In dark mode a single raise jumped L 0.22 → 0.55 instead of
 Three of the six blocks were worse. They contained a literal self-edge:
 
 ```css
---_e-p3: var(--_e-p3);   /* a cycle */
+--_e-p3: var(--_e-p3); /* a cycle */
 ```
 
-Cycles are *invalid at computed-value time*. For an unregistered custom property
+Cycles are _invalid at computed-value time_. For an unregistered custom property
 that means the **guaranteed-invalid value**, which **inherits** — so
 `background-color` computed to `transparent` and every descendant reading
 `--itx-surface` broke with it.
@@ -62,11 +62,13 @@ that means the **guaranteed-invalid value**, which **inherits** — so
 And the depth counter never counted:
 
 ```css
---itx-elevation: calc(var(--itx-elevation) + 1);   /* self-cycle → parent's value */
+--itx-elevation: calc(
+	var(--itx-elevation) + 1
+); /* self-cycle → parent's value */
 ```
 
 Registered as `<integer>` with `inherits: true`, invalid-at-computed-value-time
-resolves to the *inherited* value. It was `0` at the root, so it was `0`
+resolves to the _inherited_ value. It was `0` at the root, so it was `0`
 everywhere, forever.
 
 None of this was noticed because `itx-raise` and `itx-lower` had **zero
