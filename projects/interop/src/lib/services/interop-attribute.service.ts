@@ -24,9 +24,56 @@ export interface SetAttrsConfig {
 export class InteropAttribute {
 	/**
 	 * Presets for common semantic conformity scenarios.
-	 * Authors should bind these via a directive or programmatic application.
 	 *
-	 * Do not apply list presets to native UL/OL/LI — prefer native semantics.
+	 * These exist for one situation: a component that must expose list (or
+	 * similar) semantics when its host is NOT the native element. A native
+	 * `<ul>`/`<ol>` already says what it is; a `<div>` playing the same part
+	 * does not, and that is what these repair.
+	 *
+	 * Design principles:
+	 * - Prefer native semantics. Do NOT apply list presets to a native UL/OL/LI.
+	 * - Minimal and opt-in: reach for a preset only when the host is
+	 *   non-standard.
+	 * - Immediate children by default, so deep descendants are not mislabelled.
+	 * - Opt out per node with `data-interop-managed="false"`.
+	 *
+	 * Applied through `ManageAttributesDirective`, either directly via
+	 * `[setAttrs]` or through a component's `attrsPreset` input
+	 * (interop-list, interop-checkbox, interop-radio-control).
+	 *
+	 * @example Passive list semantics on a non-semantic container
+	 * ```html
+	 * <interop-list [setAttrs]="Presets.ListPassive">
+	 *   <div>Item A</div>
+	 *   <div>Item B</div>
+	 * </interop-list>
+	 * ```
+	 *
+	 * @example Naming the list from an existing heading
+	 * ```html
+	 * <h2 id="myListHeading">Fruits</h2>
+	 * <interop-list
+	 *   [setAttrs]="{
+	 *     ...Presets.ListPassiveWithLabelledBy,
+	 *     ':host': { role: 'list', 'aria-labelledby': 'myListHeading' }
+	 *   }"
+	 * >
+	 *   <div>Apple</div>
+	 * </interop-list>
+	 * ```
+	 * `ListPassiveWithLabelledBy` ships `aria-labelledby: ""` on purpose — an
+	 * empty IDREF is inert, so the author must supply the real ID by spreading
+	 * and overriding as above.
+	 *
+	 * @example Marking nested content explicitly
+	 * ```html
+	 * <div [setAttrs]="Presets.ListNestedPassive">
+	 *   <span>Item 1</span>
+	 *   <div data-nested-list>
+	 *     <span>Nested A</span>
+	 *   </div>
+	 * </div>
+	 * ```
 	 */
 	readonly Presets: Readonly<Record<PresetKey, SetAttrsConfig>> = {
 		ListPassive: {

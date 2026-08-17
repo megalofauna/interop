@@ -1,3 +1,13 @@
+<!--
+  Salvaged from projects/interop/src/lib/attrs/USAGE.md when that directory was
+  deleted (ITX-46). The directory was a byte-identical duplicate of the shipped
+  InteropAttribute service, imported by nothing — but it held the only real
+  documentation of the preset system, which IS live: `attrsPreset` is a public
+  input on interop-list, interop-checkbox and interop-radio-control.
+
+  The service is projects/interop/src/lib/services/interop-attribute.service.ts.
+-->
+
 # Usage guide for attribute presets and helpers
 
 This guide shows how to use the preset registry and helper utilities with the `ManageAttributesDirective` (backed by `AttrsManagerService`) to deliver:
