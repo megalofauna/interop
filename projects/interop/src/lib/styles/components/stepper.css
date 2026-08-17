@@ -1015,7 +1015,7 @@
 }
 /* ── High contrast ───────────────────────────────────────────────────────── */
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where(li[interop-step].interop-step--active .interop-step__indicator) {
 		outline: var(--itx-border-width-thick) solid currentColor;
 	}

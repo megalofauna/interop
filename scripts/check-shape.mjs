@@ -44,8 +44,15 @@ import { join } from "node:path";
 
 const ROOT = process.argv[2] ?? "projects/interop/src";
 
-/** The token files ARE the system; they legitimately define it at the root. */
-const SKIP = /\/tokens\/|\.spec\.ts$/;
+/**
+ * The token files ARE the system; they legitimately define it at the root.
+ *
+ * interop.starter.css is skipped for the opposite reason: it is consumer-facing
+ * config, not library rules. Stating a literal value is exactly what it is for,
+ * and it is generated, so it cannot drift into the patterns this guard exists
+ * to catch.
+ */
+const SKIP = /\/tokens\/|\.spec\.ts$|interop\.starter\.css$/;
 
 /** A reference to a system token, anywhere in a value. */
 const SYSTEM =

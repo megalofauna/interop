@@ -38,11 +38,13 @@
     "start": "ng serve demo",
     "demo": "ng serve demo --open",
     "protocol": "ng serve protocol --open",
-    "lint:tokens": "node scripts/check-private-tokens.mjs && node scripts/check-color-axes.mjs && node scripts/check-focus.mjs && node scripts/check-motion.mjs && node scripts/check-shape.mjs",
+    "lint:tokens": "node scripts/check-private-tokens.mjs && node scripts/check-color-axes.mjs && node scripts/check-focus.mjs && node scripts/check-motion.mjs && node scripts/check-shape.mjs && node scripts/generate-starter.mjs --check && node scripts/generate-token-reference.mjs --check",
     "lint:focus": "node scripts/check-focus.mjs",
     "lint:color": "node scripts/check-color-axes.mjs",
     "build:color": "node scripts/generate-color-ladder.mjs",
-    "check:color": "node scripts/generate-color-ladder.mjs --check"
+    "check:color": "node scripts/generate-color-ladder.mjs --check",
+    "gen:starter": "node scripts/generate-starter.mjs",
+    "gen:tokens": "node scripts/generate-token-reference.mjs"
   },
   "devDependencies": {
     "@angular/build": "^21.2.20",

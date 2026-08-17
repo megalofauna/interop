@@ -46,7 +46,10 @@
 @layer interop.foundation, interop.theme;
 
 @import "./tokens/primitives.css" layer(interop.foundation);
-@import "./tokens/color.css" layer(interop.foundation);
+/* tokens/color.css is gone: its last declaration was --itx-radius, a radius
+   knob in the colour file, silently overridden by tokens/shape.css two imports
+   below at identical specificity. The colour axes live in tokens/elevation.css
+   (mechanism) and themes/protocol/ladder.css (values). See .agent/color.md. */
 @import "./tokens/spacing.css" layer(interop.foundation);
 @import "./tokens/shape.css" layer(interop.foundation);
 @import "./tokens/managed-radius.css" layer(interop.foundation);

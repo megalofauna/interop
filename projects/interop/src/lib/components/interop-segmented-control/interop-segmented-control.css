@@ -130,7 +130,7 @@ legend {
 
 /* ── Accessibility ───────────────────────────────────────────────────────── */
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	.interop-segmented-control__track {
 		outline: var(--itx-border-width-thick) solid currentColor;
 	}

@@ -261,7 +261,7 @@
 
 /* ── High contrast ───────────────────────────────────────────────────────── */
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where(button[interop-segment][aria-pressed="true"]) {
 		outline: var(--itx-border-width-thick) solid currentColor;
 	}

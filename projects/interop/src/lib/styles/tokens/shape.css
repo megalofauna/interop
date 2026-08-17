@@ -105,7 +105,7 @@
    rigs and visimorph — and every other bordered component simply ignored the
    preference. Thick and heavy already read as deliberate edges, so only the
    hairline moves; nothing gets thicker than 3px. */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where([interop-root]) {
 		--itx-border-width-hairline: var(--itx-border-width-2);
 	}
