@@ -812,7 +812,7 @@
 	/* --itx-control-focus-scale: 0.875; */
 	/* --itx-control-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
 	/* --itx-control-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
-	/* --itx-control-indicator: light-dark( var(--itx-contrast-1), var(--itx-contrast-6-on) ); */
+	/* --itx-control-indicator: var(--itx-contrast-1); */
 	/* --itx-control-radius: var(--itx-inner-radius, var(--itx-radius)); */ /* (fallback) */
 	/* --itx-control-size: 1.25rem; */
 	/* --itx-control-toggle-border-color-checked: var(--itx-colorway-border); */
@@ -927,7 +927,7 @@
 	/* --itx-pn-item-gap: var(--itx-spacing-1); */
 	/* --itx-pn-link-background-color-current: var(--itx-contrast-1); */
 	/* --itx-pn-link-background-hover: var(--itx-contrast-1); */
-	/* --itx-pn-link-background-image-current: radial-gradient( circle at 0 0 25%, #ff9c56, transparent ); */
+	/* --itx-pn-link-background-image-current: ; */ /* no default — unset unless you set it */
 	/* --itx-pn-link-border-color: transparent; */
 	/* --itx-pn-link-border-color-current: ; */ /* inherits --itx-pn-link-border-color */
 	/* --itx-pn-link-border-color-hover: ; */ /* inherits --itx-pn-link-border-color */
