@@ -44,7 +44,6 @@
 	--itx-expansion-panel-background-expanded: transparent;
 	--itx-expansion-panel-background-image-expanded: none;
 	--itx-expansion-panel-border-block-color-expanded: var(--itx-contrast-3);
-	--itx-expansion-panel-border-inline-color-expanded: inherit;
 	--itx-expansion-panel-box-shadow-expanded: none;
 
 	/* ── Disabled state ─────────────────────────────────────────────────── */

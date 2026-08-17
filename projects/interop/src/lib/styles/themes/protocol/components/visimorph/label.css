@@ -51,7 +51,6 @@
 	--itx-control-label-padding-inline: 0.5rem;
 
 	/* ── Text colour ────────────────────────────────────────────────────── */
-	--itx-control-label-color: inherit;
 
 	/* ── Interaction surface — background ───────────────────────────────── */
 	--itx-control-label-bg: transparent;

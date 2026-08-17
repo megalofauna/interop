@@ -39,7 +39,6 @@
 
 	/* ── Container — track ──────────────────────────────────────────────── */
 	--itx-segmented-control-track-display: flex;
-	--itx-segmented-control-track-align-items: initial;
 	--itx-segmented-control-track-justify-content: flex-start;
 	--itx-segmented-control-track-row-gap: 0;
 	--itx-segmented-control-track-column-gap: 0;
