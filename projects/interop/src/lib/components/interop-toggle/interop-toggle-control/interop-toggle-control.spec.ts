@@ -194,13 +194,23 @@ describe("InteropToggle", () => {
 	});
 
 	describe("Focus Tracking", () => {
-		it("should set focused signal to true on input focus", () => {
+		it("should mirror :focus-visible into the focused signal on input focus", () => {
 			const toggleInstance = hostFixture.debugElement.query(
 				(el) => el.nativeElement === labelElement,
 			)?.componentInstance as InteropToggle;
 
-			inputElement.dispatchEvent(new Event("focus"));
-			expect(toggleInstance.focused()).toBe(true);
+			// The handler is `focused.set(input.matches(':focus-visible'))`, per the
+			// house pattern for form controls. A synthetic Event("focus") does not
+			// focus anything, so :focus-visible can never match and the old
+			// expectation of `true` was unreachable. Focus for real, then assert the
+			// WIRING — that focused() tracks :focus-visible — rather than a fixed
+			// value, because whether a checkbox matches :focus-visible on a
+			// programmatic focus is a browser heuristic, not something this
+			// component decides.
+			inputElement.focus();
+			expect(toggleInstance.focused()).toBe(
+				inputElement.matches(":focus-visible"),
+			);
 		});
 
 		it("should set focused signal to false on input blur", () => {

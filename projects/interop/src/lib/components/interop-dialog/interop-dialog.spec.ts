@@ -9,6 +9,7 @@ import { InteropDialog } from "./interop-dialog";
 	standalone: true,
 	imports: [InteropDialog],
 	template: `
+		<button id="opener" type="button">Open</button>
 		<dialog
 			interop-dialog
 			[attr.aria-labelledby]="ariaLabelledBy"
@@ -55,6 +56,30 @@ describe("InteropDialog", () => {
 	let component: TestDialogComponent;
 	let fixture: ComponentFixture<TestDialogComponent>;
 	let dialogElement: HTMLDialogElement;
+
+	/**
+	 * `HTMLDialogElement.close()` fires its `close` event as a QUEUED task, not
+	 * synchronously, so an assertion placed straight after the trigger runs too
+	 * early. Waiting on a timer instead is a race — under zone.js the ordering
+	 * is not guaranteed, and it produced a different set of failures on each
+	 * run. Wait on the event itself.
+	 *
+	 * Call this BEFORE the action that closes the dialog, then await it after:
+	 *
+	 *   const closed = whenClosed();
+	 *   dialogElement.dispatchEvent(clickEvent);
+	 *   await closed;
+	 */
+	const whenClosed = () => {
+		const fired = new Promise<void>((resolve) => {
+			dialogElement.addEventListener("close", () => resolve(), {
+				once: true,
+			});
+		});
+		return fired.then(() => {
+			fixture.detectChanges();
+		});
+	};
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
@@ -138,20 +163,17 @@ describe("InteropDialog", () => {
 			expect(dialogElement.showModal).toHaveBeenCalledTimes(1); // still 1, not 2
 		});
 
-		it('should emit closed with reason="programmatic" when isOpen→false', (done) => {
+		it('should emit closed with reason="programmatic" when isOpen→false', async () => {
 			component.isOpen = true;
 			fixture.detectChanges();
 
-			setTimeout(() => {
-				component.isOpen = false;
-				fixture.detectChanges();
+			const closed = whenClosed();
+			component.isOpen = false;
+			fixture.detectChanges();
+			await closed;
 
-				setTimeout(() => {
-					expect(component.lastClosedEvent).toBeDefined();
-					expect(component.lastClosedEvent.reason).toBe("programmatic");
-					done();
-				}, 0);
-			}, 0);
+			expect(component.lastClosedEvent).toBeDefined();
+			expect(component.lastClosedEvent.reason).toBe("programmatic");
 		});
 	});
 
@@ -162,15 +184,17 @@ describe("InteropDialog", () => {
 			await fixture.whenStable();
 		});
 
-		it('should emit closed with reason="backdrop" when clicking dialog itself and dismissOnBackdrop=true', () => {
+		it('should emit closed with reason="backdrop" when clicking dialog itself and dismissOnBackdrop=true', async () => {
 			const clickEvent = new MouseEvent("click", { bubbles: true });
 			Object.defineProperty(clickEvent, "target", {
 				value: dialogElement,
 				enumerable: true,
 			});
 
+			// The component calls dialog.close() itself here.
+			const closed = whenClosed();
 			dialogElement.dispatchEvent(clickEvent);
-			fixture.detectChanges();
+			await closed;
 
 			expect(component.lastClosedEvent.reason).toBe("backdrop");
 		});
@@ -217,18 +241,29 @@ describe("InteropDialog", () => {
 			await fixture.whenStable();
 		});
 
-		it('should emit closed with reason="escape" on cancel when disableEscape=false', () => {
+		it('should emit closed with reason="escape" on cancel when disableEscape=false', async () => {
 			const cancelEvent = new Event("cancel", { bubbles: true });
 			spyOn(cancelEvent, "preventDefault");
 
+			// The component records the reason and lets the browser close the
+			// dialog; a dispatched event does not trigger that native path, so
+			// stand in for it. close() fires the real `close` event, which is the
+			// single emission point for (closed).
+			const closed = whenClosed();
 			dialogElement.dispatchEvent(cancelEvent);
-			fixture.detectChanges();
+			dialogElement.close();
+			await closed;
 
 			expect(component.lastClosedEvent.reason).toBe("escape");
-			expect(cancelEvent.preventDefault).toHaveBeenCalled();
+			// NOT preventDefault: with disableEscape=false the whole point is to
+			// let the native close proceed.
+			expect(cancelEvent.preventDefault).not.toHaveBeenCalled();
 		});
 
-		it("should call preventDefault on cancel always", () => {
+		it("should call preventDefault on cancel only when escape is disabled", () => {
+			component.disableEscape = true;
+			fixture.detectChanges();
+
 			const cancelEvent = new Event("cancel", { bubbles: true });
 			spyOn(cancelEvent, "preventDefault");
 
@@ -300,40 +335,38 @@ describe("InteropDialog", () => {
 	});
 
 	describe("Return focus", () => {
+		let opener: HTMLButtonElement;
+
 		beforeEach(async () => {
+			// Focus BEFORE opening: previousFocus is captured at open time, so a
+			// focus() call afterwards is too late. The opener also has to live
+			// OUTSIDE the dialog — a closed <dialog> hides its contents, so an
+			// element inside it can never receive focus back.
+			opener = fixture.debugElement.query(By.css("#opener")).nativeElement;
+			opener.focus();
+
 			component.isOpen = true;
 			fixture.detectChanges();
 			await fixture.whenStable();
 		});
 
 		it("should return focus to element specified by returnFocus string selector", (done) => {
-			const closeBtn = fixture.debugElement.query(
-				By.css("#close-btn"),
-			).nativeElement;
-			closeBtn.focus();
-
-			component.returnFocus = "#close-btn";
+			component.returnFocus = "#opener";
 			component.isOpen = false;
 			fixture.detectChanges();
 
 			setTimeout(() => {
-				expect(document.activeElement).toBe(closeBtn);
+				expect(document.activeElement).toBe(opener);
 				done();
 			}, 50);
 		});
 
 		it("should return focus to the element that was focused before open", (done) => {
-			const closeBtn = fixture.debugElement.query(
-				By.css("#close-btn"),
-			).nativeElement;
-			closeBtn.focus();
-			const beforeOpen = closeBtn;
-
 			component.isOpen = false;
 			fixture.detectChanges();
 
 			setTimeout(() => {
-				expect(document.activeElement).toBe(beforeOpen);
+				expect(document.activeElement).toBe(opener);
 				done();
 			}, 50);
 		});
@@ -364,14 +397,16 @@ describe("InteropDialog", () => {
 			await fixture.whenStable();
 		});
 
-		it('should emit closed with reason="form-submit" on submit when autoClose=true', () => {
+		it('should emit closed with reason="form-submit" on submit when autoClose=true', async () => {
 			const form = fixture.debugElement.query(
 				By.css("#test-form"),
 			).nativeElement;
 			const submitEvent = new Event("submit", { bubbles: true });
 
+			// The component calls dialog.close() itself here.
+			const closed = whenClosed();
 			form.dispatchEvent(submitEvent);
-			fixture.detectChanges();
+			await closed;
 
 			expect(component.lastClosedEvent.reason).toBe("form-submit");
 		});

@@ -3,6 +3,7 @@ import {
 	ElementRef,
 	HostListener,
 	afterNextRender,
+	Injector,
 	effect,
 	inject,
 	input,
@@ -30,6 +31,12 @@ export interface DialogClosedEvent {
 })
 export class InteropDialog {
 	private readonly el = inject(ElementRef<HTMLDialogElement>);
+	/*
+	 * Needed because the open/close effect below schedules autofocus. An
+	 * effect body runs OUTSIDE the injection context, so afterNextRender()
+	 * throws NG0203 there unless it is handed an injector explicitly.
+	 */
+	private readonly injector = inject(Injector);
 
 	// ── Inputs ─────────────────────────────────────────────────────────────────
 
@@ -120,9 +127,11 @@ export class InteropDialog {
 				this.previousFocus.set(document.activeElement ?? null);
 				if (!dialog.open) {
 					dialog.showModal();
-					// Schedule autoFocus for after the top-layer has been entered
-					afterNextRender(() => {
-						this.applyAutoFocus();
+					// Schedule autoFocus for after the top-layer has been entered.
+					// The injector is required: this runs inside an effect, which
+					// is not an injection context.
+					afterNextRender(() => this.applyAutoFocus(), {
+						injector: this.injector,
 					});
 				}
 			} else {

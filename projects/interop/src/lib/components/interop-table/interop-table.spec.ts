@@ -15,13 +15,12 @@ interface TestUser {
 	standalone: true,
 	imports: [InteropTable],
 	template: `
-		<table
-			interop-table
+		<interop-table
 			[collection]="users"
 			[columns]="columns"
 			[trackBy]="trackBy"
 			[maxRows]="maxRows"
-		></table>
+		></interop-table>
 
 		<ng-template #nameTemplate let-value let-item="item">
 			<strong>{{ value }}</strong> - {{ item.email }}

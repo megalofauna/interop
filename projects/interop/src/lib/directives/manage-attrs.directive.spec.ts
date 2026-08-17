@@ -51,25 +51,51 @@ interface ObserverHandle {
 	triggerMutation: () => void;
 }
 
+/**
+ * Install a constructable MutationObserver stub and collect every instance.
+ *
+ * NOT `spyOn(window, "MutationObserver").and.callFake(...)`. The directive calls
+ * `new MutationObserver(...)`, and a Jasmine spy is not constructable — that
+ * throws "TypeError: target is not a constructor" from inside the effect, which
+ * is what every test in this suite was failing on. A real class works with
+ * `new`.
+ *
+ * The native constructor is restored by the suite-level afterEach; it cannot be
+ * done here, because Jasmine rejects an afterEach registered from inside a test.
+ */
 function spyOnMutationObserver(): ObserverHandle[] {
 	const handles: ObserverHandle[] = [];
 
-	spyOn(window, "MutationObserver").and.callFake((cb: MutationCallback) => {
-		const handle: ObserverHandle = {
-			observe: jasmine.createSpy("observe"),
-			disconnect: jasmine.createSpy("disconnect"),
-			triggerMutation: () => cb([], {} as MutationObserver),
-		};
-		handles.push(handle);
-		return handle as unknown as MutationObserver;
-	});
+	class StubMutationObserver {
+		constructor(cb: MutationCallback) {
+			const handle: ObserverHandle = {
+				observe: jasmine.createSpy("observe"),
+				disconnect: jasmine.createSpy("disconnect"),
+				triggerMutation: () => cb([], this as unknown as MutationObserver),
+			};
+			handles.push(handle);
+			// The directive keeps the instance and calls observe()/disconnect()
+			// on it, so those have to live on the object it receives.
+			Object.assign(this, handle);
+		}
+	}
+
+	window.MutationObserver =
+		StubMutationObserver as unknown as typeof MutationObserver;
 
 	return handles;
 }
 
+/** Captured once, so the suite-level afterEach can always put it back. */
+const NATIVE_MUTATION_OBSERVER = window.MutationObserver;
+
 // ── Suite ─────────────────────────────────────────────────────────────────────
 
 describe("ManageAttributesDirective", () => {
+	afterEach(() => {
+		window.MutationObserver = NATIVE_MUTATION_OBSERVER;
+	});
+
 	let fixture: ComponentFixture<TestHost>;
 	let host: TestHost;
 	let attrsManager: jasmine.SpyObj<InteropAttribute>;
