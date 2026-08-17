@@ -266,7 +266,7 @@
 
 /* ── Accessibility overrides ─────────────────────────────────────────────── */
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where(interop-visimorph) {
 		--itx-control-border-width: var(--itx-border-width-heavy);
 	}

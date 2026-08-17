@@ -86,7 +86,7 @@
    preference entirely. Because the ring reads the chain, this reaches all of
    them, and a component that wants to opt out still declares its own
    --itx-COMP-focus-width and wins. */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where([interop-root]) {
 		--itx-focus-width: var(--itx-border-width-heavy);
 	}

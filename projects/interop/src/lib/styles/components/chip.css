@@ -210,7 +210,7 @@
 	outline-offset: var(--itx-chip-focus-offset, var(--itx-focus-offset));
 }
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where(label[interop-chip-option][data-checked]) {
 		outline: var(--itx-border-width-thick) solid currentColor;
 	}
@@ -226,7 +226,7 @@
 	opacity: var(--itx-chip-disabled-opacity);
 }
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where(li[interop-chip-item]) {
 		outline: var(--itx-border-width-hairline) solid currentColor;
 	}
@@ -296,7 +296,7 @@
 	vertical-align: middle;
 }
 
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more), (prefers-contrast: high) {
 	:where([interop-chip-badge]) {
 		outline: var(--itx-border-width-thick) solid currentColor;
 	}
