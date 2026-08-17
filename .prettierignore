@@ -24,8 +24,5 @@ projects/interop/src/lib/styles/tokens/ladder.css-source.ts
 # The generator's output template is the formatter here.
 projects/interop/src/lib/iconsets/
 
-# Superseded icon pipeline, pending deletion (see .agent/todo/itx-46-audit.md).
-Working-Iconset-Files/
-
 # npm owns this file's format; prettier and npm would fight over it on every install.
 package-lock.json
