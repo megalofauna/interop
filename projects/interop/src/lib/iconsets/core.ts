@@ -19,7 +19,7 @@ import {
  * attributes, and stroke-width.
  *
  * Use `fromSvg()` to create definitions from raw SVG strings, or import
- * pre-built definitions from the Phosphor or Tabler icon packages.
+ * pre-built definitions from the bundled Tabler or Material Symbols sets.
  */
 export interface InteropIconDefinition {
   /** Registry key. Used in templates: `<interop-icon name="ph-copy" />` */
@@ -46,7 +46,7 @@ export interface InteropIconDefinition {
    * Used as the default when no `[strokeWidth]` is passed to InteropIcon.
    * Consumers can override this to achieve lighter or bolder weights.
    *
-   * Note: units are relative to the viewBox — Phosphor uses 256×256
+   * Note: units are relative to the viewBox — Tabler uses 24×24
    * (default 16), Tabler uses 24×24 (default 2). These are not directly
    * comparable, by design.
    */
@@ -161,17 +161,17 @@ export class InteropIconRegistry {
  * available within that component's subtree.
  *
  * This is the generic provider. Set-specific convenience re-exports
- * (`providePhosphorIcons`, `provideTablerIcons`) point here — they are
+ * (`provideTablerIcons`, `provideMaterialSymbolsIcons`) point here — they are
  * identical in behaviour and exist only for discoverability.
  *
  * @example Cherry-pick (tree-shakeable — recommended for production)
  * ```ts
- * providers: [provideInteropIcons(PhCopy, PhCheck, TablerCamera)]
+ * providers: [provideInteropIcons(MsContentCopy, MsCheck, TablerCamera)]
  * ```
  *
  * @example Bulk (not tree-shakeable — use in demos / Storybook)
  * ```ts
- * providers: [providePhosphorRegularIcons()]
+ * providers: [provideTablerOutlineIcons()]
  * ```
  */
 export function provideInteropIcons(

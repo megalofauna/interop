@@ -473,17 +473,14 @@ export class InteropStepper
 	constructor() {
 		// Route programmatic [activeStep] changes through goTo() so focus
 		// management and status auto-calculation remain consistent.
-		effect(
-			() => {
-				const requested = this.activeStep();
-				untracked(() => {
-					if (requested !== this.activeIndex()) {
-						this.goTo(requested);
-					}
-				});
-			},
-			{ allowSignalWrites: true },
-		);
+		effect(() => {
+			const requested = this.activeStep();
+			untracked(() => {
+				if (requested !== this.activeIndex()) {
+					this.goTo(requested);
+				}
+			});
+		});
 	}
 
 	// ── IInteropStepper ────────────────────────────────────────────────────────

@@ -94,8 +94,7 @@ export class InteropHotkey {
 
 function isApplePlatform(doc: Document): boolean {
 	const nav = doc.defaultView?.navigator as
-		| (Navigator & { userAgentData?: { platform?: string } })
-		| undefined;
+		(Navigator & { userAgentData?: { platform?: string } }) | undefined;
 	if (!nav) return false;
 	const platform =
 		nav.userAgentData?.platform || nav.platform || nav.userAgent || "";

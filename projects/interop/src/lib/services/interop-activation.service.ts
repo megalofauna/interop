@@ -149,8 +149,7 @@ export class InteropActivation {
 	 */
 	trigger<TPayload = unknown>(id: string, payload: TPayload): void {
 		const inst = this.registry.get(id) as
-			| ManagedActivation<TPayload>
-			| undefined;
+			ManagedActivation<TPayload> | undefined;
 		if (inst && inst.isEnabled()) {
 			inst(payload);
 		}

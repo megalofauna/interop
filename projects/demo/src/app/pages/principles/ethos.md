@@ -22,7 +22,7 @@ In shipped code that looks like this:
 - `[interop-popover-trigger]` sets `popovertarget` and `popovertargetaction`. The
   browser opens and closes the panel. No JavaScript sits in the click path.
 - `<progress interop-progress>` is a `<progress>`. `<input type="range"
-  interop-slider>` is a range input. Checkbox, radio, toggle, and chip-option are
+interop-slider>` is a range input. Checkbox, radio, toggle, and chip-option are
   each hosted on a real `<label>` with a real `<input>` inside it.
 - Collapsed tree branches use `hidden="until-found"`, so browser find-in-page
   reaches text inside a closed branch and opens it.
@@ -37,11 +37,21 @@ Interop components attach to standard HTML elements through attribute selectors.
 The element you write is the element that ships.
 
 ```html
-<button interop-button>          <dialog interop-dialog>
-<label interop-radio>            <progress interop-progress>
-<ul interop-tree>                <input type="range" interop-slider>
-<ol interop-step-list>           <fieldset interop-chip-filter>
-<li interop-tree-item>           <output interop-slider-value>
+<button interop-button>
+	<dialog interop-dialog>
+		<label interop-radio>
+			<progress interop-progress>
+				<ul interop-tree>
+					<input type="range" interop-slider />
+					<ol interop-step-list>
+						<fieldset interop-chip-filter>
+							<li interop-tree-item><output interop-slider-value></output></li>
+						</fieldset>
+					</ol>
+				</ul></progress
+		></label>
+	</dialog>
+</button>
 ```
 
 There is no generated wrapper and no shadow root. Semantics arrive with the
@@ -131,7 +141,9 @@ selector:
 
 ```css
 /* Retune one state, from any ancestor, with no selector to match. */
-.sidebar { --itx-pn-link-color-hover: var(--itx-accent-11); }
+.sidebar {
+	--itx-pn-link-color-hover: var(--itx-accent-11);
+}
 ```
 
 Every state token falls back to its base token, so a theme declares only the

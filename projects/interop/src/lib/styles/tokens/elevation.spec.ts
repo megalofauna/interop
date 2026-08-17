@@ -18,15 +18,21 @@ describe("Layer engine", () => {
 	let style: HTMLStyleElement;
 	let root: HTMLElement;
 
-	const el = (parent: HTMLElement, attrs: Record<string, string> = {}, tag = "div"): HTMLElement => {
+	const el = (
+		parent: HTMLElement,
+		attrs: Record<string, string> = {},
+		tag = "div",
+	): HTMLElement => {
 		const node = document.createElement(tag);
 		for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
 		parent.appendChild(node);
 		return node;
 	};
 
-	const layerOf = (node: HTMLElement): string => getComputedStyle(node).getPropertyValue("--itx-layer").trim();
-	const surfaceOf = (node: HTMLElement): string => getComputedStyle(node).backgroundColor;
+	const layerOf = (node: HTMLElement): string =>
+		getComputedStyle(node).getPropertyValue("--itx-layer").trim();
+	const surfaceOf = (node: HTMLElement): string =>
+		getComputedStyle(node).backgroundColor;
 
 	/**
 	 * Resolve a ramp entry to a real colour, composing it the same way the engine
@@ -106,16 +112,22 @@ describe("Layer engine", () => {
 		});
 
 		it("clamps at the floor", () => {
+			// The floor is DEPTH.below in scripts/generate-color-ladder.mjs. These
+			// two literals are the only place the spec hardcodes it — the colour
+			// itself is read from the generated source via ramp(), so a ramp
+			// retune does not touch this test, but changing the DEPTH does.
 			let node = root;
-			for (let i = 0; i < 5; i++) node = el(node, { "itx-sink": "" });
+			for (let i = 0; i < 6; i++) node = el(node, { "itx-sink": "" });
 
-			expect(layerOf(node)).toEqual("-2");
-			expect(surfaceOf(node)).toEqual(ramp("surface-n2"));
+			expect(layerOf(node)).toEqual("-3");
+			expect(surfaceOf(node)).toEqual(ramp("surface-n3"));
 		});
 
 		it("honours an absolute pin regardless of inherited depth, and counts on from it", () => {
 			// A dialog must not take its depth from wherever it happens to sit.
-			const deep = el(el(el(root, { "itx-layer": "" }), { "itx-layer": "" }), { "itx-layer": "" });
+			const deep = el(el(el(root, { "itx-layer": "" }), { "itx-layer": "" }), {
+				"itx-layer": "",
+			});
 			expect(layerOf(deep)).toEqual("3");
 
 			const pinned = el(deep, { "itx-layer": "1" });

@@ -11,5 +11,4 @@ import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 	styleUrl: "./kbd-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KbdPage {
-}
+export class KbdPage {}

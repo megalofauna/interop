@@ -46,6 +46,7 @@ in the ecosystem that `[LIBRARY]` could fill?
 ## Summary format
 
 Return findings as a structured markdown report:
+
 - Prioritized list of table-stakes sections (in the order they should appear on a page)
 - Top 10 pain points with evidence
 - Wishlist items ranked by frequency of mention and implementation feasibility
@@ -56,6 +57,7 @@ Return findings as a structured markdown report:
 ## What this informs
 
 Results feed directly into the documentation site architecture:
+
 - Which `doc-*` components to build first
 - What data shapes the API / token / keyboard tables need
 - What content authors must write for every component page
@@ -63,4 +65,4 @@ Results feed directly into the documentation site architecture:
 
 ---
 
-*Saved: 2026-03-13. Replace `[LIBRARY]` before executing.*
+_Saved: 2026-03-13. Replace `[LIBRARY]` before executing._

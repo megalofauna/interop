@@ -8,8 +8,8 @@ with a live demo of the stepper. Targeted at developers.
 ## Framing
 
 The talk is not "look what we built" — every audience has seen that
-deck. It's *"here's a method, here's how it changed as we used it, and
-here's what fell out the other end."* Process is the through-line;
+deck. It's _"here's a method, here's how it changed as we used it, and
+here's what fell out the other end."_ Process is the through-line;
 the stepper is the proof.
 
 **The single big idea:** the research artifact is a working tool, not a
@@ -19,9 +19,9 @@ decisions. That's the loop you can take home.
 
 Pick the right title to set this up:
 
-- *"The Stepper Nobody Wrote: A Research-Driven Component Story"*
-- *"Steppers, ARIA, and the Patterns You'll Never Find in the Spec"*
-- *"Research as a Component"* — short, leans into the process angle
+- _"The Stepper Nobody Wrote: A Research-Driven Component Story"_
+- _"Steppers, ARIA, and the Patterns You'll Never Find in the Spec"_
+- _"Research as a Component"_ — short, leans into the process angle
 
 ---
 
@@ -29,15 +29,15 @@ Pick the right title to set this up:
 
 By the end of the talk they will be able to:
 
-1. Explain why steppers are a *non-trivial* design problem despite
+1. Explain why steppers are a _non-trivial_ design problem despite
    looking simple (one slide of evidence, no hand-waving)
 2. Describe the research artifact and how it's used as a working tool
 3. Recount the three biggest surprises and the design decisions they
    forced
 4. Point at the open opportunity (form integration) and explain why
    it's still unsolved across the industry
-5. See the result running and recognise it as the *thing the research
-   asked for*
+5. See the result running and recognise it as the _thing the research
+   asked for_
 
 Set the contract on the second slide. "By the end of this talk you'll
 know X, Y, Z. If you only remember one thing, let it be the iteration
@@ -49,25 +49,25 @@ loop."
 
 ### 15-minute version (tight)
 
-| Time | Section | Purpose |
-|---|---|---|
-| 0–2 | Hook + framing | Earn attention; set the contract |
-| 2–5 | The research artifact | Show what the tool looks like |
-| 5–9 | Three findings | The substance — concrete, defensible |
-| 9–13 | Live demo | The thing |
-| 13–15 | Take-aways + Q&A buffer | Hand off + invitation |
+| Time  | Section                 | Purpose                              |
+| ----- | ----------------------- | ------------------------------------ |
+| 0–2   | Hook + framing          | Earn attention; set the contract     |
+| 2–5   | The research artifact   | Show what the tool looks like        |
+| 5–9   | Three findings          | The substance — concrete, defensible |
+| 9–13  | Live demo               | The thing                            |
+| 13–15 | Take-aways + Q&A buffer | Hand off + invitation                |
 
 ### 30-minute version (richer)
 
-| Time | Section | Purpose |
-|---|---|---|
-| 0–3 | Hook + framing | Earn attention; set the contract |
-| 3–7 | Why steppers are interesting | The APG gap + the consequences |
-| 7–11 | The research artifact + how it evolved | The method + iteration story |
-| 11–18 | Findings (three surprises + most-requested) | Substance |
-| 18–22 | Research → code | Concrete examples of design decisions |
-| 22–28 | Live demo | Proof |
-| 28–30 | Open questions + invitation + Q&A | Hand off |
+| Time  | Section                                     | Purpose                               |
+| ----- | ------------------------------------------- | ------------------------------------- |
+| 0–3   | Hook + framing                              | Earn attention; set the contract      |
+| 3–7   | Why steppers are interesting                | The APG gap + the consequences        |
+| 7–11  | The research artifact + how it evolved      | The method + iteration story          |
+| 11–18 | Findings (three surprises + most-requested) | Substance                             |
+| 18–22 | Research → code                             | Concrete examples of design decisions |
+| 22–28 | Live demo                                   | Proof                                 |
+| 28–30 | Open questions + invitation + Q&A           | Hand off                              |
 
 I'll outline the 30-minute version below. Trim to the 15-minute
 allocation by collapsing §3 and §5 and dropping the longer demo
@@ -77,34 +77,34 @@ beats.
 
 ## Section-by-section script
 
-### 1. Hook (3 min) — *"Try this on your phone"*
+### 1. Hook (3 min) — _"Try this on your phone"_
 
 Open with a live demo of something **already shipped, by a major
 library**, that fails on iOS in a way the audience will recognise.
 
-> *"Open the Angular Material stepper docs on an iPhone. Turn on
+> _"Open the Angular Material stepper docs on an iPhone. Turn on
 > VoiceOver. Tab through a form field inside one of the steps. You will
 > hear something like: 'name, text field, tab'. Every field announces
 > with 'tab' as a suffix. That's not what your user expected. It's not
 > a Material bug — Material is doing exactly what the tabs ARIA pattern
-> says. The bug is in the choice of pattern."*
+> says. The bug is in the choice of pattern."_
 
 (Source: [angular/components#31559](https://github.com/angular/components/issues/31559)
 — still open at time of writing.)
 
 Then the punch:
 
-> *"That bug exists because nobody at the W3C ever wrote a 'Stepper'
+> _"That bug exists because nobody at the W3C ever wrote a 'Stepper'
 > pattern. ARIA APG has 32 patterns. Stepper isn't one of them. Every
 > design system that ships a stepper picked a pattern themselves —
-> and most of them picked wrong."*
+> and most of them picked wrong."_
 
 Pause. That's the moment that earns attention.
 
 ### 2. Framing & audience contract (1 min)
 
 State what they'll know by the end (the 5 bullets from "Audience
-contract" above). Tell them the through-line is *the method*, not the
+contract" above). Tell them the through-line is _the method_, not the
 component.
 
 ### 3. Why steppers are interesting (4 min)
@@ -117,11 +117,11 @@ Three slides. Move fast.
 - **Slide B — Where everyone disagrees.** A four-column table: library,
   step-list role, panel role, keyboard model. Material and PrimeNG
   picked tablist. MUI picked nothing. Radix doesn't ship one. GOV.UK
-  recommends *no stepper at all*. Five libraries, four different
+  recommends _no stepper at all_. Five libraries, four different
   answers.
 - **Slide C — Why the disagreement matters.** Tabs APG demands roving
   tabindex + arrow nav + auto-activation. None of that fits a wizard:
-  steps have *order*, *lock semantics*, and *persistent state*. Tabs
+  steps have _order_, _lock semantics_, and _persistent state_. Tabs
   are peers; steps are a sequence. `aria-selected` is the wrong
   state for "active in a process". `aria-current="step"` exists in
   the spec for this case — almost nobody uses it.
@@ -134,12 +134,12 @@ on the screen as authority.
 Pull up `prompts/new-component-research.md` in a code editor (or as
 formatted Markdown). Don't read it; describe its shape.
 
-> *"This is the artifact. Five sections: semantic correctness, pain
+> _"This is the artifact. Five sections: semantic correctness, pain
 > points, most-requested feature, killer differentiator, implementation
 > plan. Every new component starts by walking it. The outputs become a
-> research report we file alongside the code."*
+> research report we file alongside the code."_
 
-Then tell the iteration story — this is the *method* part of the talk:
+Then tell the iteration story — this is the _method_ part of the talk:
 
 1. **v1** — One file. Everything inline. Decent.
 2. **v2** — As we ran it more, we noticed two sections kept growing:
@@ -147,7 +147,7 @@ Then tell the iteration story — this is the *method* part of the talk:
    into [research/semantics-a11y-checklist.md](research/semantics-a11y-checklist.md)
    and [research/library-catalog.md](research/library-catalog.md).
    The orchestrator stayed short; the checklists got expansive enough
-   to *be reference docs in their own right.*
+   to _be reference docs in their own right._
 3. **v3** — While building the stepper, we noticed the report was good
    at "what's broken" but didn't surface "what's missing." So we added
    a new §3: **The Single Most-Requested Feature.** Strict scope:
@@ -175,8 +175,8 @@ no `tablist`. Document the divergence loudly so consumers know.
 
 Walk through the focus-management story:
 
-- User clicks a step. The panel changes. Screen reader users have *no
-  signal*.
+- User clicks a step. The panel changes. Screen reader users have _no
+  signal_.
 - Material focuses an empty wrapper.
 - MUI focuses nothing.
 - Radix doesn't have a stepper.
@@ -187,7 +187,7 @@ Show the code snippet. ~12 lines. Cite Material's
 [#19574](https://github.com/angular/components/issues/19574) as
 prior-art-gone-wrong.
 
-#### Surprise 3: The most-requested feature is *still* unsolved (3 min)
+#### Surprise 3: The most-requested feature is _still_ unsolved (3 min)
 
 This is the showstopper. Pull up the Angular Material issue tracker
 filtered for `stepper + validation`. Read the dates:
@@ -202,22 +202,22 @@ filtered for `stepper + validation`. Read the dates:
 - #25830 — 2022
 - #29781 — 2024
 
-> *"This is one conversation, told in twelve issues across seven
+> _"This is one conversation, told in twelve issues across seven
 > years. Every one is a symptom of the same underlying gap: nobody
 > ships first-class, reactive, form-aware navigation gating with
 > reliable async-validator handling. MUI doesn't ship form integration
 > at all. PrimeNG makes you write a predicate. Radix doesn't ship a
 > stepper. This is the ask the industry has not delivered on for a
-> decade."*
+> decade."_
 
 Land the punchline:
 
-> *"We didn't solve this either — yet. We shipped a foundation:
+> _"We didn't solve this either — yet. We shipped a foundation:
 > `[blockOn]` and `[status]` overrides. The full feature is the next
 > milestone. The research artifact named it; the code roadmap accepts
-> it."*
+> it."_
 
-This is honest *and* compelling: you don't pretend to have solved a
+This is honest _and_ compelling: you don't pretend to have solved a
 decade-old problem in a sprint.
 
 ### 6. Research → code (4 min)
@@ -227,7 +227,7 @@ directly produced them. Keep each beat tight (under 60 seconds):
 
 1. **`role="region"` dropped from panels.** Why: the semantics-a11y
    checklist says multiple landmarks with similar names pollute
-   landmark nav. Tell the audience this was a *one-line removal* in
+   landmark nav. Tell the audience this was a _one-line removal_ in
    `interop-step-panel.directive.ts`.
 2. **`aria-controls` wired from each step → its panel id.** Why: MUI's
    docs document this as the one explicit a11y wire and most consumers
@@ -242,7 +242,7 @@ directly produced them. Keep each beat tight (under 60 seconds):
    alone can't express "the last step is done." A user saw the demo and
    said "the last step never completes." We added a flag, clears on
    navigation, drops the `--active` class so the completed colourway
-   wins. **Mention that the *user spotted this* during a demo, not a
+   wins. **Mention that the _user spotted this_ during a demo, not a
    test.** That's part of the loop.
 
 The frame to repeat: **the research said this; we built that; the
@@ -253,8 +253,8 @@ audience can do the same thing on their own components.**
 Open the demo. Walk through the four examples in this order:
 
 1. **Linear wizard (Docking procedure)** — Next through all three.
-   When you land on Secure, click Finish. *Show that step 3 indicator
-   now goes to completed.* (This is the user-feedback moment from §6.)
+   When you land on Secure, click Finish. _Show that step 3 indicator
+   now goes to completed._ (This is the user-feedback moment from §6.)
 2. **Non-linear free navigation (Vessel checklist)** — Click around.
    Show the popover anchoring correctly on the action-bar menu button.
    (Mention that this was a bug last week — `display:none` triggers
@@ -303,7 +303,7 @@ Invite Q&A. Keep an eye on the clock — leave 3 minutes.
   artifact looks like a long markdown file. Audience eyes glaze.
   Describe its shape, don't read it.
 - **Do not narrate the iteration story in chronological order.** Group
-  by *category* — first the split (a11y + library), then the new §3
+  by _category_ — first the split (a11y + library), then the new §3
   (most-requested). Chronology is for the speaker; narrative is for
   the audience.
 - **Do not paste large code blocks.** Show one screenshot per beat in
@@ -343,17 +343,19 @@ Invite Q&A. Keep an eye on the clock — leave 3 minutes.
 ### Two slide skeletons
 
 **Slide: "The APG list" (§3, slide A)**
-- Title: *"32 patterns. Stepper isn't one."*
+
+- Title: _"32 patterns. Stepper isn't one."_
 - Two-column grid showing the 32 patterns, with "Stepper", "Wizard",
   and "Multi-step form" called out below the grid as crossed-out
   pseudo-entries
 - Source link at the bottom
 
 **Slide: "Seven years, one conversation" (§5, surprise 3)**
+
 - Title quotes the line above
 - Three columns: issue #, year, the actual issue title
 - Sorted oldest → newest (2017 → 2024)
-- Caption underneath: *"Same gap. Different symptoms. No solution."*
+- Caption underneath: _"Same gap. Different symptoms. No solution."_
 
 ---
 
@@ -364,7 +366,7 @@ If you only have 15 minutes, cut in this order:
 1. Drop §3 (Why steppers are interesting) — open straight from the
    iOS hook into the artifact
 2. Collapse §4 to two minutes — the iteration story is one sentence:
-   *"We split it, then we added §3."*
+   _"We split it, then we added §3."_
 3. Cut Surprise 1 from §5 (you've already made the point in the hook)
 4. Cut §6 (Research → code) to one example — the `_finished` fix is
    the most relatable because it's user-driven
@@ -386,5 +388,5 @@ A single page link or QR code to the repo:
 - The two checklists in `prompts/research/`
 
 If you can spare 5 minutes after the talk, offer to walk anyone through
-how to start their *own* `new-component-research.md` run. The artifact
+how to start their _own_ `new-component-research.md` run. The artifact
 travels.

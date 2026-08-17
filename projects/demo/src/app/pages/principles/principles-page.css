@@ -8,9 +8,7 @@
  */
 
 .principles-page__prose {
-
 	margin-block-start: var(--itx-spacing-10);
-
 
 	p {
 		font-size: var(--itx-font-size-body-lg);

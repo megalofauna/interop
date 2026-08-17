@@ -2,8 +2,8 @@
 
 Companion to [`library-catalog.md`](library-catalog.md) for the
 **Pain Points in Existing Implementations** phase of new-component research.
-The catalog answers *where* to look; this file answers *what to look for and
-how to structure the verdict*.
+The catalog answers _where_ to look; this file answers _what to look for and
+how to structure the verdict_.
 
 Apply it to a single incumbent at a time — usually the most direct comparison
 (Angular Material first; then whichever Tier-2/3 libraries from the catalog
@@ -16,7 +16,7 @@ backed by linked evidence.
 ## When to run this
 
 - §1 (Semantic Correctness) is settled enough that you know what the
-  *correct* shape looks like — you need that as a yardstick before judging
+  _correct_ shape looks like — you need that as a yardstick before judging
   the incumbent
 - You're about to start §3/§4 (most-requested feature, killer
   differentiator) and need fuel from concrete failures, not vibes
@@ -35,7 +35,7 @@ In rough order of signal density:
 
 1. **The library's own issue tracker** — filter `is:issue` by the component
    label, then by `label:a11y`, `label:bug`, `label:has-pr`. Sort by
-   reactions to surface what *consumers* care about, not what maintainers
+   reactions to surface what _consumers_ care about, not what maintainers
    triaged first.
 2. **Closed PRs that touched the component** — closed-without-merge PRs
    reveal designs the maintainers considered but rejected, and why.
@@ -65,14 +65,15 @@ touched" without a URL is rumor.
 Walk every axis. Not every axis will fire for every component, but
 silence on an axis should be deliberate, not accidental.
 
-### 1. Semantic correctness — is the chosen role *honest*?
+### 1. Semantic correctness — is the chosen role _honest_?
 
 The biggest, most-recurring incumbent failure: forcing a procedural or
 relational UX into the wrong ARIA pattern (tabs for steppers, listbox
 for command palettes, menu for popovers that aren't menus, etc.).
 
 Triggering questions:
-- What does the assistive-tech user *hear* when they encounter this
+
+- What does the assistive-tech user _hear_ when they encounter this
   component? Does it match what the component actually does?
 - Does the chosen role imply behavior the component doesn't honor
   (e.g. `tablist` implies arrow-key roving + independent peers — does
@@ -81,15 +82,16 @@ Triggering questions:
   contain `tab` children directly — putting `tabpanel` inside is a
   spec violation.)
 - Would `<ol>` + `aria-current` / `<nav>` + landmarks / `role="group"`
-  + labelled progress be a closer fit than the chosen role?
+  - labelled progress be a closer fit than the chosen role?
 - Are ARIA attributes applied to elements that don't support them
   (e.g. `aria-expanded` on a `<div>` with no implicit/explicit role)?
 
 ### 2. API surface — bloat, coupling, undocumented matrices
 
 Triggering questions:
+
 - How many ways can a single state be expressed? (Material stepper:
-  `stepControl` validity *vs* `completed` boolean, with silent
+  `stepControl` validity _vs_ `completed` boolean, with silent
   precedence rules. This is a smell.)
 - For inputs A, B, C that interact: does the docs page enumerate every
   (A × B × C) combination, or does it leave the consumer to guess?
@@ -105,6 +107,7 @@ Triggering questions:
 ### 3. State machine & validation behavior
 
 Triggering questions:
+
 - What triggers validation? Touch? Navigation? Both? Inconsistently?
 - Does state mutate on read-only operations like `reset()`? (Material:
   yes — marks controls touched/dirty.)
@@ -112,12 +115,13 @@ Triggering questions:
   at the immediate DOM children?
 - Are there pre-filled / restore-from-server flows the state machine
   refuses to honor? (e.g. linear mode blocking skip-to-valid-step.)
-- Is the state machine *invertible* in the ways consumers need? Can it
+- Is the state machine _invertible_ in the ways consumers need? Can it
   go backwards, partially, with state preserved?
 
 ### 4. Fragility — magic numbers, brittle listeners, perf cliffs
 
 Triggering questions:
+
 - Are there hard-coded timeouts, delays, or animation durations whose
   values are unjustified? (200ms init flicker delays, etc.)
 - Are animation completion events keyed off `transitionend` filtered
@@ -132,11 +136,12 @@ Triggering questions:
 ### 5. Motion, contrast, focus
 
 Triggering questions:
+
 - Does the default animation respect `prefers-reduced-motion`? (Most
   incumbents don't — they expose a duration input as the escape hatch,
   which is not the same thing.)
 - Do the default colors pass WCAG AA contrast against the library's
-  default theme — *especially* the disabled, inactive, and hover
+  default theme — _especially_ the disabled, inactive, and hover
   states? (Linear-mode step headers in Material famously don't.)
 - Where does focus go after each interaction? Is there a focus loss
   between component regions (header → content, trigger → panel)?
@@ -148,6 +153,7 @@ Triggering questions:
 ### 6. Customization walls
 
 Triggering questions:
+
 - What does a consumer have to do to restyle the component? `::ng-deep`?
   Override deeply-nested compound selectors? Fork the template?
 - Is the DOM structure stable enough that consumers can rely on it, or
@@ -159,8 +165,9 @@ Triggering questions:
 ### 7. What it gets right
 
 Mandatory section. Two reasons:
+
 - It calibrates the review — pure complaint reads as bias.
-- It surfaces patterns Interop should *keep*, not just patterns to avoid.
+- It surfaces patterns Interop should _keep_, not just patterns to avoid.
 
 Look for: lazy-rendering opt-ins, orientation flexibility, reactive-form
 hooks, CDK/Material splits, i18n hooks, two-way bindings, explicit reset
@@ -177,40 +184,47 @@ A single markdown report, suitable for pasting into the §2 results of
 # {Incumbent} {Component}: Critical Review
 
 ## What it gets right
+
 - {Bulleted list, 4–8 items, each one sentence}
 
 ## What it gets wrong
 
 ### 1. {Axis name — the biggest failure first}
+
 {Two-sentence framing of the failure.}
+
 - {Specific bug / spec violation / API smell with linked evidence}
 - {…}
 
 ### 2. {Next axis}
+
 {…}
 
 ## Bottom line
+
 {One paragraph: what the foundational mistake is, and what the lessons
 are for an Interop rebuild. Two or three sentences max.}
 
 ## Sources
+
 - [{Issue title}]({URL})
 - […]
 ```
 
 Rules:
+
 - Lead with semantic correctness if it fired — it usually cascades into
   every other axis and frames the rest of the review.
 - Every specific claim links a source. Issue numbers as inline links:
   `([#26444](https://github.com/angular/components/issues/26444))`.
-- Sort axes by severity in *this incumbent's* review, not by the order
+- Sort axes by severity in _this incumbent's_ review, not by the order
   in this checklist.
 - Don't write more than ~800 words of body before the sources list. If
   you're writing more, you're either inventorying source code (move it
   to a separate file) or padding.
 - The **Bottom line** paragraph should be reusable as the §3/§4
   springboard — what does the incumbent's foundational mistake imply
-  Interop should *do differently*?
+  Interop should _do differently_?
 
 ---
 
@@ -220,7 +234,7 @@ Rules:
   not a finding; "Material #14026: navigation triggers validation on
   untouched fields" is.
 - **Surface-level paraphrasing of the issue tracker** — read enough of
-  the thread to understand the *cause*, not just the title. A title
+  the thread to understand the _cause_, not just the title. A title
   describes the symptom; the structural defect lives in the comments
   and the linked PR.
 - **Treating maintainer rebuttals as resolution** — many APG-violating

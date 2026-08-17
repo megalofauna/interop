@@ -39,7 +39,12 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, relative } from "node:path";
-import { decomment, readDeclaration, readFallback, SYSTEM_TOKEN } from "./lib/css-read.mjs";
+import {
+	decomment,
+	readDeclaration,
+	readFallback,
+	SYSTEM_TOKEN,
+} from "./lib/css-read.mjs";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STYLES = join(REPO, "projects/interop/src/lib/styles");
@@ -49,7 +54,8 @@ const OUT = join(STYLES, "interop.tokens.css");
 const SOURCE_DIRS = ["components", "composites", "rigs"];
 
 /** Suffixes that make a token a state OF another token rather than its own dial. */
-const STATE_SUFFIX = /-(hover|active|focus|focused|selected|checked|disabled|current|open|expanded|stuck|invalid|readonly)$/;
+const STATE_SUFFIX =
+	/-(hover|active|focus|focused|selected|checked|disabled|current|open|expanded|stuck|invalid|readonly)$/;
 
 function walk(dir, out = []) {
 	if (!existsSync(dir)) return out;
@@ -86,7 +92,9 @@ for (const dir of SOURCE_DIRS) {
 		if (!tokens.size) continue;
 
 		const themeFile = themeCounterpart(file);
-		const themeSrc = existsSync(themeFile) ? decomment(readFileSync(themeFile, "utf8")) : "";
+		const themeSrc = existsSync(themeFile)
+			? decomment(readFileSync(themeFile, "utf8"))
+			: "";
 
 		const levers = [...tokens].sort().map((token) => {
 			// Where the value actually comes from, in the order the cascade resolves it.
@@ -103,7 +111,10 @@ for (const dir of SOURCE_DIRS) {
 
 			// A state token whose fallback is its own base inherits from it.
 			const base = token.replace(STATE_SUFFIX, "");
-			const inheritsFrom = STATE_SUFFIX.test(token) && tokens.has(base) && base !== token ? base : null;
+			const inheritsFrom =
+				STATE_SUFFIX.test(token) && tokens.has(base) && base !== token
+					? base
+					: null;
 
 			// A fallback that is purely another system token means the component
 			// has no opinion and the GLOBAL knob governs it — worth saying so.
@@ -123,7 +134,14 @@ for (const dir of SOURCE_DIRS) {
 			const derivesFromPrivate = value !== null && value.includes("--_");
 			if (derivesFromPrivate) value = null;
 
-			return { token, value, origin, inheritsFrom, fallsThroughTo, derivesFromPrivate };
+			return {
+				token,
+				value,
+				origin,
+				inheritsFrom,
+				fallsThroughTo,
+				derivesFromPrivate,
+			};
 		});
 
 		components.push({
@@ -184,7 +202,9 @@ const out = [
 ];
 
 for (const c of components) {
-	out.push(`\n/* ${rule(4)} ${c.name} ${rule(Math.max(4, 62 - c.name.length))} ${c.levers.length} levers */`);
+	out.push(
+		`\n/* ${rule(4)} ${c.name} ${rule(Math.max(4, 62 - c.name.length))} ${c.levers.length} levers */`,
+	);
 	out.push(`/*
  * structural: ${c.structural}
  * values:     ${c.theme ?? "— none; this component declares no theme values"}
@@ -193,13 +213,21 @@ for (const c of components) {
 
 	for (const l of c.levers) {
 		if (l.inheritsFrom) {
-			out.push(`\t/* --${l.token.slice(2)}: ; */ /* inherits ${l.inheritsFrom} */`);
+			out.push(
+				`\t/* --${l.token.slice(2)}: ; */ /* inherits ${l.inheritsFrom} */`,
+			);
 		} else if (l.fallsThroughTo) {
-			out.push(`\t/* --${l.token.slice(2)}: ; */ /* falls through to ${l.fallsThroughTo} — set globally in interop.starter.css */`);
+			out.push(
+				`\t/* --${l.token.slice(2)}: ; */ /* falls through to ${l.fallsThroughTo} — set globally in interop.starter.css */`,
+			);
 		} else if (l.derivesFromPrivate) {
-			out.push(`\t/* --${l.token.slice(2)}: ; */ /* default is derived internally — set an explicit value to override */`);
+			out.push(
+				`\t/* --${l.token.slice(2)}: ; */ /* default is derived internally — set an explicit value to override */`,
+			);
 		} else if (l.value === null) {
-			out.push(`\t/* --${l.token.slice(2)}: ; */ /* no default — unset unless you set it */`);
+			out.push(
+				`\t/* --${l.token.slice(2)}: ; */ /* no default — unset unless you set it */`,
+			);
 		} else {
 			const mark = l.origin === "fallback" ? " /* (fallback) */" : "";
 			out.push(`\t/* --${l.token.slice(2)}: ${l.value}; */${mark}`);
@@ -213,16 +241,29 @@ const css = out.join("\n").replace(/\n{3,}/g, "\n\n");
 if (process.argv.includes("--check")) {
 	const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
 	if (current !== css) {
-		console.error("✗ styles/interop.tokens.css is stale — a component's token surface changed.\n  Run: node scripts/generate-token-reference.mjs");
+		console.error(
+			"✗ styles/interop.tokens.css is stale — a component's token surface changed.\n  Run: node scripts/generate-token-reference.mjs",
+		);
 		process.exit(1);
 	}
-	console.log(`✓ token reference is current — ${total} levers across ${components.length} components`);
+	console.log(
+		`✓ token reference is current — ${total} levers across ${components.length} components`,
+	);
 	process.exit(0);
 }
 
 writeFileSync(OUT, css);
-const stated = components.reduce((n, c) => n + c.levers.filter((l) => l.value !== null && !l.inheritsFrom).length, 0);
-const inherited = components.reduce((n, c) => n + c.levers.filter((l) => l.inheritsFrom).length, 0);
+const stated = components.reduce(
+	(n, c) =>
+		n + c.levers.filter((l) => l.value !== null && !l.inheritsFrom).length,
+	0,
+);
+const inherited = components.reduce(
+	(n, c) => n + c.levers.filter((l) => l.inheritsFrom).length,
+	0,
+);
 console.log(`✓ wrote styles/interop.tokens.css`);
 console.log(`  ${total} levers across ${components.length} components`);
-console.log(`  ${stated} with a stated value, ${inherited} inheriting from a base state, ${total - stated - inherited} unset`);
+console.log(
+	`  ${stated} with a stated value, ${inherited} inheriting from a base state, ${total - stated - inherited} unset`,
+);

@@ -5,6 +5,7 @@ new-component research. Walk every section before settling on an implementation
 approach. Where the spec and reality diverge, say so explicitly and recommend a path.
 
 Authoritative sources:
+
 - [W3C WAI-ARIA 1.2](https://www.w3.org/TR/wai-aria-1.2/)
 - [ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/)
 - [HTML Accessibility API Mappings (AAM)](https://www.w3.org/TR/html-aam-1.0/)
@@ -118,7 +119,7 @@ for this widget. Note where APG's "ideal" differs from real-world DS behavior.
 ## 6. Visual / sensory / responsive
 
 - **Reduced motion:** `@media (prefers-reduced-motion: reduce)` — what
-  animations should be disabled, replaced, or shortened? Never just *speed up*.
+  animations should be disabled, replaced, or shortened? Never just _speed up_.
 - **Forced colors / high contrast:** `@media (forced-colors: active)`. Use
   system color keywords (`Canvas`, `CanvasText`, `LinkText`, `ButtonFace`,
   `Highlight`, etc.). Avoid background images/SVG icons that disappear.
@@ -161,6 +162,7 @@ When these disagree, **say so explicitly** in the research output, name the
 camps, recommend a path with reasoning. Don't paper over the disagreement.
 
 Common divergence hotspots to expect:
+
 - `aria-activedescendant` vs roving tabindex (Combobox especially)
 - `role=dialog` + `aria-modal` vs `<dialog>` native (focus trap semantics differ)
 - Tooltip on focus only vs hover+focus, dismiss behavior, `aria-describedby` vs name

@@ -249,7 +249,6 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 
 	// ── In-section notes ─────────────────────────────────────────────────────
 
-
 	// ── CSS tokens ───────────────────────────────────────────────────────────
 
 	tokenColumns: TableColumn<TokenEntry>[] = [

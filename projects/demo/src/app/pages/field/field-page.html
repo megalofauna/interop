@@ -73,14 +73,11 @@
 					id="registry"
 					label="Registry"
 					[readonly]="true"
-					[fieldNotes]="
-						'Assigned at commissioning. Contact fleet command to amend.'
-					"
+					[fieldNotes]="'Assigned at commissioning. Contact fleet command to amend.'"
 				/>
 			</div>
 			<itx-code-block language="html" [code]="readonlyCode" />
 		</demo-example>
-
 	</demo-section>
 
 	<!-- ── Textarea ───────────────────────────────────────────────────────── -->
@@ -111,9 +108,7 @@
 					[required]="true"
 					[autoResize]="true"
 					[rows]="2"
-					[fieldNotes]="
-						'Grows as you type. All logs are transmitted to fleet command.'
-					"
+					[fieldNotes]="'Grows as you type. All logs are transmitted to fleet command.'"
 				/>
 			</div>
 			<itx-code-block language="html" [code]="autoResizeCode" />
@@ -184,7 +179,6 @@
 			</div>
 			<itx-code-block [files]="manualFiles" />
 		</demo-example>
-
 	</demo-section>
 
 	<!-- ── Sizes ──────────────────────────────────────────────────────────── -->
@@ -245,7 +239,7 @@
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
 				@if (entry.required) {
-				<span class="demo-page__required">*</span>
+					<span class="demo-page__required">*</span>
 				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>

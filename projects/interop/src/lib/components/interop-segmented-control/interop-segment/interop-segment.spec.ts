@@ -10,7 +10,9 @@ import { InteropSegment } from "./interop-segment";
 		<fieldset interop-segmented-control label="Density">
 			<button interop-segment value="compact">Compact</button>
 			<button interop-segment value="comfortable">Comfortable</button>
-			<button interop-segment value="spacious" [disabled]="true">Spacious</button>
+			<button interop-segment value="spacious" [disabled]="true">
+				Spacious
+			</button>
 		</fieldset>
 	`,
 })

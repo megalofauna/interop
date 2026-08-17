@@ -1,8 +1,4 @@
-import {
-	Component,
-	ChangeDetectionStrategy,
-	signal,
-} from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import {
 	InteropStepper,
 	InteropDialog,
@@ -375,5 +371,4 @@ onFinish(): void {
 			description: "Emitted when Next is activated on the last step.",
 		},
 	];
-
 }

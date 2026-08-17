@@ -81,10 +81,14 @@ export class InteropChipOption implements ChipOptionRef {
 	readonly inputId = computed(() => `itx-chip-option-${this.value()}`);
 
 	/** Whether this option is currently selected. */
-	readonly isChecked = computed(() => this.parent?.isSelected(this.value()) ?? false);
+	readonly isChecked = computed(
+		() => this.parent?.isSelected(this.value()) ?? false,
+	);
 
 	/** Disabled if either this option or the parent group is disabled. */
-	readonly isDisabled = computed(() => this.disabled() || (this.parent?.disabled() ?? false));
+	readonly isDisabled = computed(
+		() => this.disabled() || (this.parent?.disabled() ?? false),
+	);
 
 	constructor() {
 		if (isDevMode()) {

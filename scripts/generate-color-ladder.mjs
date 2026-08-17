@@ -73,15 +73,24 @@ import { dirname, join } from "node:path";
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** Theme layer — the colour VALUES. */
-const OUT_LADDER = join(REPO, "projects/interop/src/lib/styles/themes/protocol/ladder.css");
+const OUT_LADDER = join(
+	REPO,
+	"projects/interop/src/lib/styles/themes/protocol/ladder.css",
+);
 /** Foundation layer — the MECHANIC that selects which values apply. */
-const OUT_ENGINE = join(REPO, "projects/interop/src/lib/styles/tokens/elevation.css");
+const OUT_ENGINE = join(
+	REPO,
+	"projects/interop/src/lib/styles/tokens/elevation.css",
+);
 /**
  * The same two files as importable strings, so the spec can exercise the REAL
  * generated CSS instead of a hand-copied replica that could drift from it.
  * Not reachable from public-api, so it never lands in the published bundle.
  */
-const OUT_SOURCE = join(REPO, "projects/interop/src/lib/styles/tokens/ladder.css-source.ts");
+const OUT_SOURCE = join(
+	REPO,
+	"projects/interop/src/lib/styles/tokens/ladder.css-source.ts",
+);
 
 /* ── Configuration ──────────────────────────────────────────────────────── */
 
@@ -96,7 +105,7 @@ const OUT_SOURCE = join(REPO, "projects/interop/src/lib/styles/tokens/ladder.css
  * How deep the ladder goes in each direction. Changing these changes how many
  * @container blocks the engine emits; everything downstream follows.
  */
-const DEPTH = { below: 2, above: 4 };
+const DEPTH = { below: 3, above: 4 };
 
 /**
  * The ramp SPEC — five numbers per scheme, not a hand-kept table of seven.
@@ -126,8 +135,22 @@ const RAMP = {
 	// `ease` cannot be aggressive: at .87 the last step compresses to .018 and
 	// trips the separation guard. .95 decelerates enough to feel like it is
 	// approaching a ceiling while keeping every step ≥ .02.
-	light: { page: 0.898, up: 0.028, ease: 0.95, down: 0.043, min: 0.6, max: 1.0 },
-	dark: { page: 0.175, up: 0.0375, ease: 1.0, down: 0.045, min: 0.03, max: 0.44 },
+	light: {
+		page: 0.898,
+		up: 0.028,
+		ease: 0.95,
+		down: 0.043,
+		min: 0.6,
+		max: 1.0,
+	},
+	dark: {
+		page: 0.1925,
+		up: 0.0395,
+		ease: 1.0,
+		down: 0.045,
+		min: 0.03,
+		max: 0.44,
+	},
 };
 
 const round3 = (n) => Math.round(n * 1000) / 1000;
@@ -176,7 +199,12 @@ const TINT = {
  * Rank 6 is not a target either — it is the pole, as far as the scheme goes.
  */
 const RANKS = [
-	{ rank: 1, intent: "wash — hover fills, stripes", delta: { light: 0.038, dark: 0.05 }, minDeltaL: 0.02 },
+	{
+		rank: 1,
+		intent: "wash — hover fills, stripes",
+		delta: { light: 0.038, dark: 0.05 },
+		minDeltaL: 0.02,
+	},
 	{ rank: 2, intent: "hairline, dividers", ratio: 1.5 },
 	{ rank: 3, intent: "border, emphasis edge", ratio: 3.0 },
 	{ rank: 4, intent: "secondary text", ratio: 4.5 },
@@ -293,8 +321,10 @@ function oklchToLinearSrgb(L, C, H) {
 	];
 }
 
-const encodeGamma = (u) => (u <= 0.0031308 ? 12.92 * u : 1.055 * Math.pow(u, 1 / 2.4) - 0.055);
-const decodeGamma = (u) => (u <= 0.04045 ? u / 12.92 : Math.pow((u + 0.055) / 1.055, 2.4));
+const encodeGamma = (u) =>
+	u <= 0.0031308 ? 12.92 * u : 1.055 * Math.pow(u, 1 / 2.4) - 0.055;
+const decodeGamma = (u) =>
+	u <= 0.04045 ? u / 12.92 : Math.pow((u + 0.055) / 1.055, 2.4);
 
 /**
  * WCAG relative luminance of an OKLCH colour, as it would actually be DISPLAYED.
@@ -305,7 +335,9 @@ const decodeGamma = (u) => (u <= 0.04045 ? u / 12.92 : Math.pow((u + 0.055) / 1.
  */
 function luminance(L, C, H) {
 	const linear = oklchToLinearSrgb(L, C, H);
-	const [r, g, b] = linear.map((u) => decodeGamma(Math.round(clamp01(encodeGamma(clamp01(u))) * 255) / 255));
+	const [r, g, b] = linear.map((u) =>
+		decodeGamma(Math.round(clamp01(encodeGamma(clamp01(u))) * 255) / 255),
+	);
 	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
@@ -341,13 +373,15 @@ function solveRank(surfaceL, target, dir, { c, h }) {
 	// Round AWAY from the surface. Rounding to 3dp moves L by up to 0.0005, which
 	// is enough to drop the ratio ~0.02 below its floor — so round in the
 	// direction that can only ever add contrast, never remove it.
-	const snapped = dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000;
+	const snapped =
+		dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000;
 	return clamp01(snapped);
 }
 
 /* ── Gamut ──────────────────────────────────────────────────────────────── */
 
-const inGamut = (L, C, H) => oklchToLinearSrgb(L, C, H).every((v) => v >= -1e-4 && v <= 1 + 1e-4);
+const inGamut = (L, C, H) =>
+	oklchToLinearSrgb(L, C, H).every((v) => v >= -1e-4 && v <= 1 + 1e-4);
 
 /**
  * Greatest chroma this (lightness, hue) can actually display in sRGB.
@@ -371,7 +405,8 @@ function maxChroma(L, H) {
 /** The most chroma this hue can reach at ANY lightness. */
 function peakChroma(H) {
 	let peak = 0;
-	for (let L = 0.15; L <= 0.97; L += 0.01) peak = Math.max(peak, maxChroma(L, H));
+	for (let L = 0.15; L <= 0.97; L += 0.01)
+		peak = Math.max(peak, maxChroma(L, H));
 	return peak;
 }
 
@@ -407,7 +442,9 @@ function solveSolid([seedL, seedC, H], label) {
 			.map((p) => ({ ...p, ratio: contrast(luminance(p.L, p.C, H), y) }))
 			.sort((a, b) => b.ratio - a.ratio);
 
-		return scored[0].ratio >= ACCENT.onSolid ? { L, C, label: scored[0], ratio: scored[0].ratio } : null;
+		return scored[0].ratio >= ACCENT.onSolid
+			? { L, C, label: scored[0], ratio: scored[0].ratio }
+			: null;
 	};
 
 	/** Hover and active, stepped away from the label so contrast only improves. */
@@ -418,7 +455,11 @@ function solveSolid([seedL, seedC, H], label) {
 			const C = Math.min(intent, maxChroma(L, H));
 			return { L: round3(L), C: round3(C) };
 		};
-		return { ...solved, hover: state(ACCENT.solidHover), active: state(ACCENT.solidActive) };
+		return {
+			...solved,
+			hover: state(ACCENT.solidHover),
+			active: state(ACCENT.solidActive),
+		};
 	};
 
 	const atSeed = attempt(seedL);
@@ -434,7 +475,9 @@ function solveSolid([seedL, seedC, H], label) {
 		}
 	}
 
-	findings.push(`${label}: no solid clears ${ACCENT.onSolid}:1 with a label at any lightness (hue ${H})`);
+	findings.push(
+		`${label}: no solid clears ${ACCENT.onSolid}:1 with a label at any lightness (hue ${H})`,
+	);
 	return null;
 }
 
@@ -455,7 +498,9 @@ function solveAccentRole(surfaceL, surfaceC, surfaceH, H, intent, target, dir) {
 		else near = mid;
 	}
 
-	const L = clamp01(dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000);
+	const L = clamp01(
+		dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000,
+	);
 	const C = Math.min(intent, maxChroma(L, H));
 	return { L, C: round3(C), ratio: contrast(luminance(L, C, H), surfaceY) };
 }
@@ -485,7 +530,10 @@ function buildScheme(scheme) {
 				// than rank 5, inverting the ladder. Rank 6 is "maximum", so it takes
 				// whichever is further from the surface.
 				const prior = out[layer].ranks[spec.rank - 1]?.L ?? spec.pole[scheme];
-				L = dir > 0 ? Math.max(spec.pole[scheme], prior) : Math.min(spec.pole[scheme], prior);
+				L =
+					dir > 0
+						? Math.max(spec.pole[scheme], prior)
+						: Math.min(spec.pole[scheme], prior);
 			} else {
 				L = solveRank(surfaceL, spec.ratio, dir, tint);
 				if (L === null) {
@@ -540,11 +588,21 @@ const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
 function familyList() {
 	const out = [];
 	for (const [name, seed] of Object.entries(SEEDS.colorway)) {
-		out.push({ id: name === "default" ? "colorway" : `colorway-${name}`, role: "colorway", variant: name, seed });
+		out.push({
+			id: name === "default" ? "colorway" : `colorway-${name}`,
+			role: "colorway",
+			variant: name,
+			seed,
+		});
 	}
 	for (const [palette, set] of Object.entries(SEEDS.status)) {
 		for (const [status, seed] of Object.entries(set)) {
-			out.push({ id: palette === "seventies" ? status : `${status}-${palette}`, role: status, variant: palette, seed });
+			out.push({
+				id: palette === "seventies" ? status : `${status}-${palette}`,
+				role: status,
+				variant: palette,
+				seed,
+			});
 		}
 	}
 	return out;
@@ -587,7 +645,9 @@ function buildFamily(family) {
 			const tintY = luminance(tintL, tintC, H);
 
 			if (Math.abs(tintL - surfaceL) < ACCENT.tint.minDeltaL) {
-				findings.push(`${family.id} ${scheme} layer ${layer}: tint is only ${Math.abs(tintL - surfaceL).toFixed(3)} L from its surface`);
+				findings.push(
+					`${family.id} ${scheme} layer ${layer}: tint is only ${Math.abs(tintL - surfaceL).toFixed(3)} L from its surface`,
+				);
 			}
 
 			// Text ON the tint is solved against the tint, not against the surface.
@@ -601,28 +661,57 @@ function buildFamily(family) {
 					if (contrast(luminance(mid, c, H), tintY) >= ACCENT.onTint) far = mid;
 					else near = mid;
 				}
-				const L = clamp01(dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000);
+				const L = clamp01(
+					dir > 0
+						? Math.ceil(far * 1000) / 1000
+						: Math.floor(far * 1000) / 1000,
+				);
 				const C = Math.min(intent, maxChroma(L, H));
 				const ratio = contrast(luminance(L, C, H), tintY);
 				if (ratio < ACCENT.onTint) {
-					findings.push(`${family.id} ${scheme} layer ${layer}: on-tint lands at ${ratio.toFixed(2)}:1, under ${ACCENT.onTint}:1`);
+					findings.push(
+						`${family.id} ${scheme} layer ${layer}: on-tint lands at ${ratio.toFixed(2)}:1, under ${ACCENT.onTint}:1`,
+					);
 				}
 				onTint = { L, C: round3(C), ratio };
 			}
 
-			const border = solveAccentRole(surfaceL, tint.c, tint.h, H, intent, ACCENT.border, dir);
-			const text = solveAccentRole(surfaceL, tint.c, tint.h, H, intent, ACCENT.text, dir);
+			const border = solveAccentRole(
+				surfaceL,
+				tint.c,
+				tint.h,
+				H,
+				intent,
+				ACCENT.border,
+				dir,
+			);
+			const text = solveAccentRole(
+				surfaceL,
+				tint.c,
+				tint.h,
+				H,
+				intent,
+				ACCENT.text,
+				dir,
+			);
 
 			for (const [role, solved, floor] of [
 				["border", border, ACCENT.border],
 				["text", text, ACCENT.text],
 			]) {
 				if (solved.ratio < floor) {
-					findings.push(`${family.id} ${scheme} layer ${layer}: ${role} lands at ${solved.ratio.toFixed(2)}:1, under ${floor}:1`);
+					findings.push(
+						`${family.id} ${scheme} layer ${layer}: ${role} lands at ${solved.ratio.toFixed(2)}:1, under ${floor}:1`,
+					);
 				}
 			}
 
-			layers[scheme][layer] = { tint: { L: tintL, C: round3(tintC) }, onTint, border, text };
+			layers[scheme][layer] = {
+				tint: { L: tintL, C: round3(tintC) },
+				onTint,
+				border,
+				text,
+			};
 		}
 	}
 
@@ -682,7 +771,13 @@ function emit() {
 	];
 
 	for (const layer of LAYERS) {
-		lines.push(...numbers(`surface-${layer}`, ladder.light[layer].surface, ladder.dark[layer].surface));
+		lines.push(
+			...numbers(
+				`surface-${layer}`,
+				ladder.light[layer].surface,
+				ladder.dark[layer].surface,
+			),
+		);
 	}
 
 	for (const spec of RANKS) {
@@ -717,7 +812,10 @@ const roleOf = (cell, role) => (role === "on-tint" ? cell.onTint : cell[role]);
 
 /** A solved (L, C) pair as the two numbers the engine will compose. */
 function accentNumbers(prefix, solved) {
-	return [`\t--itx-ramp-${prefix}-l: ${solved.L.toFixed(3)};`, `\t--itx-ramp-${prefix}-c: ${solved.C.toFixed(3)};`];
+	return [
+		`\t--itx-ramp-${prefix}-l: ${solved.L.toFixed(3)};`,
+		`\t--itx-ramp-${prefix}-c: ${solved.C.toFixed(3)};`,
+	];
 }
 
 function emitAccents() {
@@ -895,7 +993,9 @@ function tokenSet(i, indent) {
 	out.push(`${t}--itx-surface-above-2: ${compose(`surface-${key(i + 2)}`)};`);
 	out.push(`${t}--itx-surface-below: ${compose(`surface-${key(i - 1)}`)};`);
 	for (const spec of RANKS) {
-		out.push(`${t}--itx-contrast-${spec.rank}: ${compose(`contrast-${spec.rank}-${key(i)}`)};`);
+		out.push(
+			`${t}--itx-contrast-${spec.rank}: ${compose(`contrast-${spec.rank}-${key(i)}`)};`,
+		);
 	}
 
 	/*
@@ -1036,7 +1136,9 @@ function emitEngine() {
 		L.push("");
 	}
 
-	L.push("/* ── Absolute pins — last, so they outrank the counter ───────────────── */");
+	L.push(
+		"/* ── Absolute pins — last, so they outrank the counter ───────────────── */",
+	);
 	L.push("");
 	for (let i = LAYER_MIN; i <= LAYER_MAX; i++) {
 		L.push(`:where([itx-layer="${i}"]) {`);
@@ -1045,7 +1147,9 @@ function emitEngine() {
 		L.push("");
 	}
 
-	L.push("/* ── Paint. Zero specificity, so any consumer rule wins on contact. ──── */");
+	L.push(
+		"/* ── Paint. Zero specificity, so any consumer rule wins on contact. ──── */",
+	);
 	L.push("");
 	L.push(":where([itx-layer], [itx-sink]) {");
 	L.push("\tbackground-color: var(--itx-surface);");
@@ -1062,7 +1166,9 @@ function report() {
 	const rows = [];
 	for (const scheme of ["light", "dark"]) {
 		rows.push(`\n  ${scheme.toUpperCase()}`);
-		rows.push(`  layer  surface   ${RANKS.map((r) => `r${r.rank}`.padStart(13)).join("")}`);
+		rows.push(
+			`  layer  surface   ${RANKS.map((r) => `r${r.rank}`.padStart(13)).join("")}`,
+		);
 		for (const layer of LAYERS) {
 			const cell = ladder[scheme][layer];
 			const ranks = RANKS.map((r) => {
@@ -1078,11 +1184,16 @@ function report() {
 const check = process.argv.includes("--check");
 
 function accentReport() {
-	const rows = ["\n  ACCENT FAMILIES — solid (scheme-invariant) + per-layer roles at layer 0"];
-	rows.push(`  ${"family".padEnd(18)}${"solid".padStart(22)}${"label".padStart(9)}${"on-solid".padStart(11)}${"seed L".padStart(10)}`);
+	const rows = [
+		"\n  ACCENT FAMILIES — solid (scheme-invariant) + per-layer roles at layer 0",
+	];
+	rows.push(
+		`  ${"family".padEnd(18)}${"solid".padStart(22)}${"label".padStart(9)}${"on-solid".padStart(11)}${"seed L".padStart(10)}`,
+	);
 	for (const f of families) {
 		const s = f.solid;
-		const moved = s.moved === 0 ? "kept" : `${s.moved > 0 ? "+" : ""}${s.moved}`;
+		const moved =
+			s.moved === 0 ? "kept" : `${s.moved > 0 ? "+" : ""}${s.moved}`;
 		rows.push(
 			`  ${f.id.padEnd(18)}` +
 				`oklch(${s.L.toFixed(3)} ${s.C.toFixed(3)} ${f.hue})`.padStart(22) +
@@ -1115,7 +1226,9 @@ function hueSweep(seedL = 0.55, seedC = 0.19) {
 	return failed;
 }
 
-console.log("Colour ladder — lightness / measured contrast against own surface");
+console.log(
+	"Colour ladder — lightness / measured contrast against own surface",
+);
 console.log(report());
 console.log(accentReport());
 
@@ -1127,12 +1240,16 @@ console.log(
 );
 
 if (findings.length) {
-	console.error(`\n✗ ${findings.length} contrast failure${findings.length === 1 ? "" : "s"}:`);
+	console.error(
+		`\n✗ ${findings.length} contrast failure${findings.length === 1 ? "" : "s"}:`,
+	);
 	for (const f of findings) console.error(`  ${f}`);
 	process.exit(1);
 }
 
-console.log("\n✓ every rank clears its floor; every adjacent surface pair reads apart");
+console.log(
+	"\n✓ every rank clears its floor; every adjacent surface pair reads apart",
+);
 
 if (!check) {
 	const ladderCss = emit();

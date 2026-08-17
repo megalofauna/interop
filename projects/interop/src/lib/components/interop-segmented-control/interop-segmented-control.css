@@ -124,7 +124,7 @@ legend {
 	flex-direction: var(--itx-segmented-control-track-flex-direction);
 	row-gap: var(--itx-segmented-control-track-row-gap);
 	column-gap: var(--itx-segmented-control-track-column-gap);
-	align-items: var(--itx-segmented-control-track-align-items);
+	align-items: var(--itx-segmented-control-track-align-items, normal);
 	justify-content: var(--itx-segmented-control-track-justify-content);
 }
 

@@ -78,11 +78,17 @@
 	/* focus */
 	--itx-pn-link-border-color-current: var(--itx-colorway-solid);
 	--itx-pn-link-background-color-current: var(--itx-contrast-1);
-	--itx-pn-link-background-image-current: radial-gradient(
-		circle at 0 0 25%,
-		#ff9c56,
-		transparent
-	);
+	/* No background image by default. This carried
+	   `radial-gradient(circle at 0 0 25%, #ff9c56, transparent)`, which is
+	   invalid — a radial-gradient's size must precede `at`, and a three-value
+	   position is only legal in the keyword-plus-offset form — so it never
+	   painted. It also hardcoded the same light-only #ff9c56 that
+	   command-palette.css records removing for exactly that reason.
+
+	   The token is deliberately left undeclared rather than repaired: it stays
+	   a consumer lever, and the library expresses no opinion. To use it, supply
+	   valid syntax and a scheme-aware colour, e.g.
+	   radial-gradient(circle 25% at 0 0, var(--itx-colorway-tint), transparent). */
 
 	/* vertical */
 	--itx-pn-label-color: var(--itx-contrast-4);

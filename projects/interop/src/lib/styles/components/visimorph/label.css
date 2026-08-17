@@ -105,7 +105,7 @@
 		border: var(--itx-control-label-border-width, 2px) solid
 			var(--itx-control-label-border-color, transparent);
 		border-radius: var(--itx-control-label-radius, var(--itx-radius-md));
-		corner-shape: var(--itx-control-label-corner-shape, round);
+		corner-shape: var(--itx-control-label-corner-shape, initial);
 
 		transition:
 			background-color var(--itx-control-label-transition),

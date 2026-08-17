@@ -6,7 +6,7 @@ import {
 	InteropCellDef,
 	type SelectControl,
 	type TableColumn,
-} from 'interop';
+} from "interop";
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -44,26 +44,26 @@ interface ApiEntry {
 export class ListboxPage {
 	// ── Single-select demo ────────────────────────────────────────────────
 	dockingBays: SelectControl[] = [
-		{ value: 'bay-1', label: 'Bay 1 — Docking ring A' },
-		{ value: 'bay-2', label: 'Bay 2 — Docking ring A' },
-		{ value: 'bay-3', label: 'Bay 3 — Docking ring B' },
-		{ value: 'bay-4', label: 'Bay 4 — Docking ring B', disabled: true },
-		{ value: 'bay-5', label: 'Bay 5 — Cargo lock' },
+		{ value: "bay-1", label: "Bay 1 — Docking ring A" },
+		{ value: "bay-2", label: "Bay 2 — Docking ring A" },
+		{ value: "bay-3", label: "Bay 3 — Docking ring B" },
+		{ value: "bay-4", label: "Bay 4 — Docking ring B", disabled: true },
+		{ value: "bay-5", label: "Bay 5 — Cargo lock" },
 	];
-	selectedBay = signal<string | number | boolean | null>('bay-1');
+	selectedBay = signal<string | number | boolean | null>("bay-1");
 
 	// ── Multi-select demo ─────────────────────────────────────────────────
 	crewRoles: SelectControl[] = [
-		{ value: 'pilot', label: 'Pilot' },
-		{ value: 'navigator', label: 'Navigator' },
-		{ value: 'engineer', label: 'Engineer' },
-		{ value: 'medic', label: 'Medic' },
-		{ value: 'gunner', label: 'Gunner', disabled: true },
+		{ value: "pilot", label: "Pilot" },
+		{ value: "navigator", label: "Navigator" },
+		{ value: "engineer", label: "Engineer" },
+		{ value: "medic", label: "Medic" },
+		{ value: "gunner", label: "Gunner", disabled: true },
 	];
-	selectedRoles = signal<(string | number | boolean)[]>(['pilot', 'navigator']);
+	selectedRoles = signal<(string | number | boolean)[]>(["pilot", "navigator"]);
 
 	// ── Content projection demo ───────────────────────────────────────────
-	selectedSector = signal<string | number | boolean | null>('alpha');
+	selectedSector = signal<string | number | boolean | null>("alpha");
 
 	// ── Code snippets ─────────────────────────────────────────────────────
 	readonly singleSelectTemplate = `<ul interop-listbox
@@ -119,12 +119,20 @@ selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
 
 	// ── Code files ────────────────────────────────────────────────────────
 	readonly singleSelectFiles: CodeFile[] = [
-		{ label: "template.html", language: "html", code: this.singleSelectTemplate },
+		{
+			label: "template.html",
+			language: "html",
+			code: this.singleSelectTemplate,
+		},
 		{ label: "component.ts", language: "ts", code: this.singleSelectData },
 	];
 
 	readonly multiSelectFiles: CodeFile[] = [
-		{ label: "template.html", language: "html", code: this.multiSelectTemplate },
+		{
+			label: "template.html",
+			language: "html",
+			code: this.multiSelectTemplate,
+		},
 		{ label: "component.ts", language: "ts", code: this.multiSelectData },
 	];
 
@@ -137,12 +145,45 @@ selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
 	];
 
 	apiEntries: ApiEntry[] = [
-		{ name: "controls", type: "SelectControl[]", default: "[]", description: "Declarative option list. Each entry has value, label, and optional disabled." },
-		{ name: "value", type: "SelectControlValue | SelectControlValue[] | null", default: "null", description: "Current selected value (single) or values (multi)." },
-		{ name: "multiselectable", type: "boolean", default: "false", description: "Enables multi-select. Arrow keys move focus; Space toggles selection." },
-		{ name: "disabled", type: "boolean", default: "false", description: "Disables the entire listbox." },
-		{ name: "ariaLabel", type: "string | null", default: "null", description: "Accessible label when no visible label element is associated." },
-		{ name: "ariaLabelledby", type: "string | null", default: "null", description: "ID of an external element that labels this listbox." },
+		{
+			name: "controls",
+			type: "SelectControl[]",
+			default: "[]",
+			description:
+				"Declarative option list. Each entry has value, label, and optional disabled.",
+		},
+		{
+			name: "value",
+			type: "SelectControlValue | SelectControlValue[] | null",
+			default: "null",
+			description: "Current selected value (single) or values (multi).",
+		},
+		{
+			name: "multiselectable",
+			type: "boolean",
+			default: "false",
+			description:
+				"Enables multi-select. Arrow keys move focus; Space toggles selection.",
+		},
+		{
+			name: "disabled",
+			type: "boolean",
+			default: "false",
+			description: "Disables the entire listbox.",
+		},
+		{
+			name: "ariaLabel",
+			type: "string | null",
+			default: "null",
+			description:
+				"Accessible label when no visible label element is associated.",
+		},
+		{
+			name: "ariaLabelledby",
+			type: "string | null",
+			default: "null",
+			description: "ID of an external element that labels this listbox.",
+		},
 	];
 
 	outputColumns: TableColumn<ApiEntry>[] = [
@@ -152,9 +193,24 @@ selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
 	];
 
 	outputEntries: ApiEntry[] = [
-		{ name: "valueChange", type: "SelectControlValue | SelectControlValue[] | null", default: "", description: "Emitted when the selected value(s) change." },
-		{ name: "activeItemChange", type: "SelectControlValue | null", default: "", description: "Emitted when keyboard focus moves to a different option." },
-		{ name: "closeRequest", type: "void", default: "", description: "Emitted when the listbox requests to close (e.g. Enter or Escape pressed). Useful when embedded in a dropdown." },
+		{
+			name: "valueChange",
+			type: "SelectControlValue | SelectControlValue[] | null",
+			default: "",
+			description: "Emitted when the selected value(s) change.",
+		},
+		{
+			name: "activeItemChange",
+			type: "SelectControlValue | null",
+			default: "",
+			description: "Emitted when keyboard focus moves to a different option.",
+		},
+		{
+			name: "closeRequest",
+			type: "void",
+			default: "",
+			description:
+				"Emitted when the listbox requests to close (e.g. Enter or Escape pressed). Useful when embedded in a dropdown.",
+		},
 	];
-
 }

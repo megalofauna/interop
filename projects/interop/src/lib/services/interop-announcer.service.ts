@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  OnDestroy,
-  afterNextRender,
-  inject,
-} from "@angular/core";
+import { Injectable, OnDestroy, afterNextRender, inject } from "@angular/core";
 import { DOCUMENT } from "@angular/common";
 
 /**
@@ -39,72 +34,72 @@ import { DOCUMENT } from "@angular/common";
  */
 @Injectable({ providedIn: "root" })
 export class InteropAnnouncer implements OnDestroy {
-  private readonly doc = inject(DOCUMENT);
+	private readonly doc = inject(DOCUMENT);
 
-  private politeEl: HTMLElement | null = null;
-  private assertiveEl: HTMLElement | null = null;
+	private politeEl: HTMLElement | null = null;
+	private assertiveEl: HTMLElement | null = null;
 
-  constructor() {
-    afterNextRender(() => {
-      this.politeEl = this.createRegion("polite");
-      this.assertiveEl = this.createRegion("assertive");
-      this.doc.body.appendChild(this.politeEl);
-      this.doc.body.appendChild(this.assertiveEl);
-    });
-  }
+	constructor() {
+		afterNextRender(() => {
+			this.politeEl = this.createRegion("polite");
+			this.assertiveEl = this.createRegion("assertive");
+			this.doc.body.appendChild(this.politeEl);
+			this.doc.body.appendChild(this.assertiveEl);
+		});
+	}
 
-  /**
-   * Queue an announcement through the appropriate aria-live region.
-   *
-   * The region is cleared before repopulation so that identical successive
-   * messages are still announced (some ATs suppress duplicate live region text).
-   *
-   * @param message - The text to announce.
-   * @param politeness - 'polite' (default) waits for AT to finish speaking;
-   *   'assertive' interrupts immediately. Prefer 'polite' for non-critical updates.
-   */
-  announce(
-    message: string,
-    politeness: "polite" | "assertive" = "polite",
-  ): void {
-    const el = politeness === "assertive" ? this.assertiveEl : this.politeEl;
-    if (!el) return;
+	/**
+	 * Queue an announcement through the appropriate aria-live region.
+	 *
+	 * The region is cleared before repopulation so that identical successive
+	 * messages are still announced (some ATs suppress duplicate live region text).
+	 *
+	 * @param message - The text to announce.
+	 * @param politeness - 'polite' (default) waits for AT to finish speaking;
+	 *   'assertive' interrupts immediately. Prefer 'polite' for non-critical updates.
+	 */
+	announce(
+		message: string,
+		politeness: "polite" | "assertive" = "polite",
+	): void {
+		const el = politeness === "assertive" ? this.assertiveEl : this.politeEl;
+		if (!el) return;
 
-    // Clear first — forces re-announcement even for identical messages.
-    el.textContent = "";
-    requestAnimationFrame(() => {
-      el!.textContent = message;
-    });
-  }
+		// Clear first — forces re-announcement even for identical messages.
+		el.textContent = "";
+		requestAnimationFrame(() => {
+			el!.textContent = message;
+		});
+	}
 
-  /**
-   * Clear both live regions immediately.
-   * Useful when a component unmounts and its last announcement is no longer relevant.
-   */
-  clear(): void {
-    if (this.politeEl) this.politeEl.textContent = "";
-    if (this.assertiveEl) this.assertiveEl.textContent = "";
-  }
+	/**
+	 * Clear both live regions immediately.
+	 * Useful when a component unmounts and its last announcement is no longer relevant.
+	 */
+	clear(): void {
+		if (this.politeEl) this.politeEl.textContent = "";
+		if (this.assertiveEl) this.assertiveEl.textContent = "";
+	}
 
-  ngOnDestroy(): void {
-    this.politeEl?.remove();
-    this.assertiveEl?.remove();
-  }
+	ngOnDestroy(): void {
+		this.politeEl?.remove();
+		this.assertiveEl?.remove();
+	}
 
-  private createRegion(politeness: "polite" | "assertive"): HTMLElement {
-    const el = this.doc.createElement("div");
-    el.setAttribute("aria-live", politeness);
-    el.setAttribute("aria-atomic", "true");
-    el.setAttribute("aria-relevant", "additions");
-    // Visually hidden — present in DOM and accessible to AT, not visible to
-    // sighted users. Reads the shared utility rather than inlining a tenth copy
-    // of the same nine declarations; see styles/utilities/visually-hidden.css.
-    //
-    // This does mean the announcer depends on the library's global stylesheet
-    // being imported. That is already the library's contract — every component
-    // is unstyled without it — and the alternative is a copy that drifts, which
-    // is exactly what happened to the other nine.
-    el.className = "interop-sr-only";
-    return el;
-  }
+	private createRegion(politeness: "polite" | "assertive"): HTMLElement {
+		const el = this.doc.createElement("div");
+		el.setAttribute("aria-live", politeness);
+		el.setAttribute("aria-atomic", "true");
+		el.setAttribute("aria-relevant", "additions");
+		// Visually hidden — present in DOM and accessible to AT, not visible to
+		// sighted users. Reads the shared utility rather than inlining a tenth copy
+		// of the same nine declarations; see styles/utilities/visually-hidden.css.
+		//
+		// This does mean the announcer depends on the library's global stylesheet
+		// being imported. That is already the library's contract — every component
+		// is unstyled without it — and the alternative is a copy that drifts, which
+		// is exactly what happened to the other nine.
+		el.className = "interop-sr-only";
+		return el;
+	}
 }

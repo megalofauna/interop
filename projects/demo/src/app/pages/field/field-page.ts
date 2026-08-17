@@ -225,8 +225,6 @@ massErrors = [
 
 	// ── In-section notes ─────────────────────────────────────────────────
 
-
-
 	// ── CSS tokens ───────────────────────────────────────────────────────
 
 	tokenColumns: TableColumn<TokenEntry>[] = [
@@ -277,15 +275,24 @@ massErrors = [
 			property: "--itx-field-border-radius",
 			default: "var(--itx-radius-none) — 0",
 		},
-		{ property: "--itx-field-focus-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-field-focus-color",
+			default: "var(--itx-colorway-solid)",
+		},
 		{ property: "--itx-field-focus-width", default: "2px" },
-		{ property: "--itx-field-invalid-color", default: "var(--itx-danger-solid)" },
+		{
+			property: "--itx-field-invalid-color",
+			default: "var(--itx-danger-solid)",
+		},
 		{ property: "--itx-field-invalid-icon-size", default: "1rem — 16px" },
 		{
 			property: "--itx-field-readonly-underline-color",
 			default: "var(--itx-contrast-2)",
 		},
-		{ property: "--itx-field-disabled-color", default: "var(--itx-contrast-3)" },
+		{
+			property: "--itx-field-disabled-color",
+			default: "var(--itx-contrast-3)",
+		},
 		{
 			property: "--itx-field-transition-duration",
 			default: "var(--itx-duration-fast) — 100ms",

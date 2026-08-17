@@ -83,7 +83,9 @@
 		>
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>

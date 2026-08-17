@@ -1,12 +1,12 @@
 import {
-  Directive,
-  ElementRef,
-  afterNextRender,
-  computed,
-  inject,
-  input,
-  isDevMode,
-  signal,
+	Directive,
+	ElementRef,
+	afterNextRender,
+	computed,
+	inject,
+	input,
+	isDevMode,
+	signal,
 } from "@angular/core";
 import { INTEROP_TREE, INTEROP_TREE_ITEM } from "./interop-tree.context";
 
@@ -38,80 +38,80 @@ import { INTEROP_TREE, INTEROP_TREE_ITEM } from "./interop-tree.context";
  * replace it.
  */
 @Directive({
-  selector: "[interop-tree-toggle]",
-  standalone: true,
-  exportAs: "interopTreeToggle",
-  host: {
-    "[attr.type]": 'isButton ? "button" : null',
-    "[attr.aria-expanded]": "ariaExpanded()",
-    "[attr.aria-controls]": "ariaControls()",
-    "[attr.aria-label]": "ariaLabel()",
-    "[attr.aria-hidden]": 'isButton ? null : "true"',
-    "[attr.disabled]": "isDisabled()",
-    "[attr.data-leaf]": 'item.isExpandable() ? null : ""',
-    "[attr.data-expanded]": 'item.isExpanded() ? "" : null',
-    "(click)": "onClick($event)",
-  },
+	selector: "[interop-tree-toggle]",
+	standalone: true,
+	exportAs: "interopTreeToggle",
+	host: {
+		"[attr.type]": 'isButton ? "button" : null',
+		"[attr.aria-expanded]": "ariaExpanded()",
+		"[attr.aria-controls]": "ariaControls()",
+		"[attr.aria-label]": "ariaLabel()",
+		"[attr.aria-hidden]": 'isButton ? null : "true"',
+		"[attr.disabled]": "isDisabled()",
+		"[attr.data-leaf]": 'item.isExpandable() ? null : ""',
+		"[attr.data-expanded]": 'item.isExpanded() ? "" : null',
+		"(click)": "onClick($event)",
+	},
 })
 export class InteropTreeToggle {
-  private readonly tree = inject(INTEROP_TREE);
-  readonly item = inject(INTEROP_TREE_ITEM);
+	private readonly tree = inject(INTEROP_TREE);
+	readonly item = inject(INTEROP_TREE_ITEM);
 
-  private readonly elRef = inject<ElementRef<HTMLElement>>(ElementRef);
+	private readonly elRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /** Fixed for the element's lifetime — the host tag cannot change. */
-  readonly isButton = this.elRef.nativeElement.tagName === "BUTTON";
+	/** Fixed for the element's lifetime — the host tag cannot change. */
+	readonly isButton = this.elRef.nativeElement.tagName === "BUTTON";
 
-  /**
-   * Accessible name for the button form. Defaults to the row's own text, so
-   * an icon-only twisty is never nameless.
-   */
-  readonly label = input<string | undefined>(undefined);
+	/**
+	 * Accessible name for the button form. Defaults to the row's own text, so
+	 * an icon-only twisty is never nameless.
+	 */
+	readonly label = input<string | undefined>(undefined);
 
-  private readonly resolvedLabel = signal<string | null>(null);
+	private readonly resolvedLabel = signal<string | null>(null);
 
-  protected readonly ariaExpanded = computed(() =>
-    this.isButton && this.item.isExpandable()
-      ? String(this.item.isExpanded())
-      : null,
-  );
+	protected readonly ariaExpanded = computed(() =>
+		this.isButton && this.item.isExpandable()
+			? String(this.item.isExpanded())
+			: null,
+	);
 
-  protected readonly ariaControls = computed(() =>
-    this.isButton && this.item.isExpandable() ? this.item.groupId : null,
-  );
+	protected readonly ariaControls = computed(() =>
+		this.isButton && this.item.isExpandable() ? this.item.groupId : null,
+	);
 
-  protected readonly ariaLabel = computed(() => {
-    if (!this.isButton) return null;
-    return this.label() ?? this.resolvedLabel();
-  });
+	protected readonly ariaLabel = computed(() => {
+		if (!this.isButton) return null;
+		return this.label() ?? this.resolvedLabel();
+	});
 
-  /** A leaf has nothing to disclose, so its button is not a live tab stop. */
-  protected readonly isDisabled = computed(() =>
-    this.isButton && !this.item.isExpandable() ? "" : null,
-  );
+	/** A leaf has nothing to disclose, so its button is not a live tab stop. */
+	protected readonly isDisabled = computed(() =>
+		this.isButton && !this.item.isExpandable() ? "" : null,
+	);
 
-  onClick(event: Event): void {
-    event.preventDefault();
-    this.item.toggle();
-  }
+	onClick(event: Event): void {
+		event.preventDefault();
+		this.item.toggle();
+	}
 
-  constructor() {
-    afterNextRender(() => {
-      // Read the row text once, after render — a host binding would re-walk
-      // the DOM on every change-detection pass.
-      if (this.label() === undefined) {
-        this.resolvedLabel.set(this.item.label() || null);
-      }
+	constructor() {
+		afterNextRender(() => {
+			// Read the row text once, after render — a host binding would re-walk
+			// the DOM on every change-detection pass.
+			if (this.label() === undefined) {
+				this.resolvedLabel.set(this.item.label() || null);
+			}
 
-      if (isDevMode() && this.isButton && this.tree.isSelectTier()) {
-        console.warn(
-          "interop-tree-toggle: a <button> twisty inside a select-tier tree " +
-            "adds a tab stop that screen-reader users cannot reach — a " +
-            "composite widget has exactly one. Use a non-interactive host " +
-            "(<span interop-tree-toggle>); the treeitem already carries " +
-            "aria-expanded and Arrow keys already expand.",
-        );
-      }
-    });
-  }
+			if (isDevMode() && this.isButton && this.tree.isSelectTier()) {
+				console.warn(
+					"interop-tree-toggle: a <button> twisty inside a select-tier tree " +
+						"adds a tab stop that screen-reader users cannot reach — a " +
+						"composite widget has exactly one. Use a non-interactive host " +
+						"(<span interop-tree-toggle>); the treeitem already carries " +
+						"aria-expanded and Arrow keys already expand.",
+				);
+			}
+		});
+	}
 }

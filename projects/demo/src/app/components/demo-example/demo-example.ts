@@ -75,7 +75,9 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 			     demo-example's stylesheet cannot select <demo-state> directly —
 			     it can only style a wrapper of its own. -->
 			@if (state()) {
-				<div class="demo-example__state"><ng-content select="demo-state" /></div>
+				<div class="demo-example__state">
+					<ng-content select="demo-state" />
+				</div>
 			}
 		</div>
 		@if (table()) {

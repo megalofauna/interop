@@ -203,5 +203,4 @@ protected onPaletteChange(value: string): void {
 			description: "Optional heading rendered above the projected body.",
 		},
 	];
-
 }

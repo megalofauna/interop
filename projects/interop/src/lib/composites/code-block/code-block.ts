@@ -27,7 +27,6 @@ import { INTEROP_HIGHLIGHTER } from "../../highlighter/public-api";
 import { type ActivationOptions } from "../../utils/public-api";
 import { provideInteropIcons } from "../../iconsets/core";
 import { InteropToolbar } from "../../rigs/public-api";
-import { PhArrowUDownLeft } from "../../iconsets/phosphor/regular/ph-arrow-u-down-left";
 import { MsCheck } from "../../iconsets/material-symbols/sharp/ms-check";
 import { MsContentCopy } from "../../iconsets/material-symbols/sharp/ms-content-copy";
 import { TablerTextWrap } from "../../iconsets/tabler/outline/tabler-text-wrap";
@@ -97,7 +96,6 @@ let _cbIdCounter = 0;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		provideInteropIcons(
-			PhArrowUDownLeft,
 			MsCheck,
 			MsContentCopy,
 			TablerTextWrap,

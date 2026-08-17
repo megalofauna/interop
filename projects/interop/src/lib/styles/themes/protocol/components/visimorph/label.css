@@ -51,7 +51,6 @@
 	--itx-control-label-padding-inline: 0.5rem;
 
 	/* ── Text colour ────────────────────────────────────────────────────── */
-	--itx-control-label-color: inherit;
 
 	/* ── Interaction surface — background ───────────────────────────────── */
 	--itx-control-label-bg: transparent;
@@ -71,7 +70,6 @@
 	--itx-control-label-border-width: var(--itx-border-width-thick);
 	--itx-control-label-border-color: transparent;
 	--itx-control-label-radius: var(--itx-radius-md);
-	--itx-control-label-corner-shape: squircle;
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-control-label-transition: var(--itx-duration-fast)

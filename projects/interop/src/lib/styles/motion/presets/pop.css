@@ -17,22 +17,22 @@
 	}
 
 	:where(
-			[itx-motion-preset="pop"]:not(:disabled):not(
-					[aria-disabled="true"]
-				):not(:has([data-itx-motion-target]))
-		):hover,
+		[itx-motion-preset="pop"]:not(:disabled):not([aria-disabled="true"]):not(
+				:has([data-itx-motion-target])
+			)
+	):hover,
 	:where(
-			[itx-motion-preset="pop"]:not(:disabled):not(
-					[aria-disabled="true"]
-				):has([data-itx-motion-target])
+			[itx-motion-preset="pop"]:not(:disabled):not([aria-disabled="true"]):has(
+					[data-itx-motion-target]
+				)
 		):hover
 		[data-itx-motion-target] {
 		transform: scale(1.05);
 	}
 
 	:where(
-			[itx-motion-preset="pop"].is-acting:not(:has([data-itx-motion-target]))
-		),
+		[itx-motion-preset="pop"].is-acting:not(:has([data-itx-motion-target]))
+	),
 	:where([itx-motion-preset="pop"].is-acting:has([data-itx-motion-target]))
 		[data-itx-motion-target] {
 		animation: itx-motion-pop-action 250ms ease-out;

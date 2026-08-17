@@ -76,7 +76,7 @@ export interface SliderRangeValue {
 		},
 	],
 	host: {
-		"role": "group",
+		role: "group",
 		"[attr.aria-label]": "ariaLabel()",
 		"[attr.aria-disabled]": "disabled() ? 'true' : null",
 		"[attr.data-orientation]": "orientation()",
@@ -190,15 +190,15 @@ export class InteropSliderRange implements InteropSliderRangeApi {
 		if (thumbs.length !== 2) {
 			console.warn(
 				`[InteropSliderRange] expected exactly 2 thumbs, found ${thumbs.length}. ` +
-					"Project both <input type=\"range\" interop-slider-thumb=\"start\"> " +
-					"and <input type=\"range\" interop-slider-thumb=\"end\">.",
+					'Project both <input type="range" interop-slider-thumb="start"> ' +
+					'and <input type="range" interop-slider-thumb="end">.',
 			);
 		}
 
 		if (!roles.includes("start") || !roles.includes("end")) {
 			console.warn(
 				"[InteropSliderRange] thumbs must include exactly one " +
-					"interop-slider-thumb=\"start\" and one interop-slider-thumb=\"end\". " +
+					'interop-slider-thumb="start" and one interop-slider-thumb="end". ' +
 					`Found roles: [${roles.join(", ")}].`,
 			);
 		}

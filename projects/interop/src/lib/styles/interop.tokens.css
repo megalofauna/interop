@@ -55,7 +55,7 @@
 	/* --itx-button-box-shadow: none; */
 	/* --itx-button-box-shadow-active: ; */ /* inherits --itx-button-box-shadow */
 	/* --itx-button-box-shadow-hover: ; */ /* inherits --itx-button-box-shadow */
-	/* --itx-button-corner-shape: unset; */
+	/* --itx-button-corner-shape: initial; */ /* (fallback) */
 	/* --itx-button-disabled-opacity: 1; */
 	/* --itx-button-display: inline-flex; */
 	/* --itx-button-flex: 1 1 auto; */
@@ -783,7 +783,7 @@
 	/* --itx-control-label-color-active: ; */ /* inherits --itx-control-label-color */
 	/* --itx-control-label-color-focus: ; */ /* inherits --itx-control-label-color */
 	/* --itx-control-label-color-hover: ; */ /* inherits --itx-control-label-color */
-	/* --itx-control-label-corner-shape: squircle; */
+	/* --itx-control-label-corner-shape: initial; */ /* (fallback) */
 	/* --itx-control-label-gap: 0.5rem; */
 	/* --itx-control-label-padding-block: 0.5rem; */
 	/* --itx-control-label-padding-inline: 0.5rem; */
@@ -804,6 +804,7 @@
 	/* --itx-control-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
 	/* --itx-control-check-weight: 3px; */
 	/* --itx-control-check-weight-indeterminate: 4px; */
+	/* --itx-control-corner-shape: initial; */ /* (fallback) */
 	/* --itx-control-disabled-opacity: 0.5; */
 	/* --itx-control-dot-size: 0.625rem; */
 	/* --itx-control-focus-color: var(--itx-colorway-solid, #0066cc); */ /* (fallback) */
@@ -811,7 +812,7 @@
 	/* --itx-control-focus-scale: 0.875; */
 	/* --itx-control-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
 	/* --itx-control-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
-	/* --itx-control-indicator: light-dark( var(--itx-contrast-1), var(--itx-contrast-6-on) ); */
+	/* --itx-control-indicator: var(--itx-contrast-1); */
 	/* --itx-control-radius: var(--itx-inner-radius, var(--itx-radius)); */ /* (fallback) */
 	/* --itx-control-size: 1.25rem; */
 	/* --itx-control-toggle-border-color-checked: var(--itx-colorway-border); */
@@ -823,10 +824,9 @@
 	/* --itx-control-toggle-thumb-width: ; */ /* default is derived internally — set an explicit value to override */
 	/* --itx-control-toggle-width: 2.5rem; */
 	/* --itx-control-transition: var(--itx-duration-fast) var(--itx-easing-standard); */ /* (fallback) */
-	/* --itx-corner-shape: none; */
 }
 
-/* ──── composites/code-block ───────────────────────────────────────── 50 levers */
+/* ──── composites/code-block ───────────────────────────────────────── 49 levers */
 /*
  * structural: composites/code-block.css
  * values:     themes/protocol/composites/code-block.css
@@ -835,7 +835,6 @@
 	/* --itx-button-transition-duration: var(--itx-duration-base); */
 	/* --itx-cb-actions-gap: var(--itx-spacing-1); */
 	/* --itx-cb-actions-radius: var(--itx-radius); */
-	/* --itx-cb-body-background: ; */ /* no default — unset unless you set it */
 	/* --itx-cb-button-background: transparent; */
 	/* --itx-cb-button-background-hover: ; */ /* inherits --itx-cb-button-background */
 	/* --itx-cb-button-background-pressed: var(--itx-contrast-2); */
@@ -851,46 +850,47 @@
 	/* --itx-cb-label-font-weight: 500; */
 	/* --itx-cb-label-foreground: var(--itx-contrast-4); */
 	/* --itx-cb-label-letter-spacing: 0.05em; */
-	/* --itx-cb-label-padding-inline: initial; */
+	/* --itx-cb-label-padding-inline: 0; */
 	/* --itx-cb-radius: var(--itx-radius); */
 	/* --itx-cb-tab-background: transparent; */
 	/* --itx-cb-tab-background-current: ; */ /* inherits --itx-cb-tab-background */
 	/* --itx-cb-tab-background-hover: ; */ /* inherits --itx-cb-tab-background */
 	/* --itx-cb-tab-border: none; */
 	/* --itx-cb-tab-border-bottom: var(--itx-border-width-thick) solid transparent; */
-	/* --itx-cb-tab-border-bottom-color: var(--itx-colorway-solid); */
-	/* --itx-cb-tab-border-bottom-color-hover: ; */ /* inherits --itx-cb-tab-border-bottom-color */
+	/* --itx-cb-tab-border-bottom-color-current: var(--itx-colorway-solid); */
+	/* --itx-cb-tab-border-bottom-color-hover: var(--itx-contrast-4); */
 	/* --itx-cb-tab-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
 	/* --itx-cb-tab-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
 	/* --itx-cb-tab-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
 	/* --itx-cb-tab-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
-	/* --itx-cb-tab-font-family: inherit; */
+	/* --itx-cb-tab-font-family: inherit; */ /* (fallback) */
 	/* --itx-cb-tab-font-size: var(--itx-font-size-caption); */
 	/* --itx-cb-tab-foreground: var(--itx-contrast-4); */
-	/* --itx-cb-tab-foreground-active: ; */ /* inherits --itx-cb-tab-foreground */
 	/* --itx-cb-tab-foreground-current: ; */ /* inherits --itx-cb-tab-foreground */
+	/* --itx-cb-tab-foreground-hover: ; */ /* inherits --itx-cb-tab-foreground */
 	/* --itx-cb-tab-padding-block: var(--itx-spacing-2); */
 	/* --itx-cb-tab-padding-inline: var(--itx-spacing-4); */
 	/* --itx-cb-tab-radius: var(--itx-radius); */
 	/* --itx-cb-tab-transition-duration: var(--itx-duration-fast); */
 	/* --itx-cb-tab-transition-timing: var(--itx-easing-standard); */
 	/* --itx-cb-tablist-background: transparent; */
-	/* --itx-cb-tablist-border-bottom-color: var(--itx-contrast-4); */
+	/* --itx-cb-tablist-border-bottom-color: var(--itx-contrast-3); */
 	/* --itx-cb-tablist-border-bottom-width: var(--itx-border-width-thick); */
 	/* --itx-cb-tablist-border-radius: var(--itx-radius); */
 	/* --itx-cb-tablist-box-shadow: none; */
-	/* --itx-cd-tablist-column-gap: 0; */ /* (fallback) */
-	/* --itx-cd-tablist-padding-block: var(--itx-spacing-2) 0; */
-	/* --itx-cd-tablist-padding-inline: 0; */
+	/* --itx-cb-tablist-column-gap: 0; */ /* (fallback) */
+	/* --itx-cb-tablist-padding-block: var(--itx-spacing-2) 0; */
+	/* --itx-cb-tablist-padding-inline: 0; */
 }
 
-/* ──── composites/inline-code ──────────────────────────────────────── 9 levers */
+/* ──── composites/inline-code ──────────────────────────────────────── 10 levers */
 /*
  * structural: composites/inline-code.css
  * values:     themes/protocol/composites/inline-code.css
  */
 [interop-root] {
 	/* --itx-ic-background: var(--itx-surface-above); */
+	/* --itx-ic-corner-shape: initial; */ /* (fallback) */
 	/* --itx-ic-font-family: var(--itx-font-family-mono); */
 	/* --itx-ic-font-size: var(--itx-font-size-caption); */
 	/* --itx-ic-foreground: var(--itx-contrast-6); */
@@ -927,7 +927,7 @@
 	/* --itx-pn-item-gap: var(--itx-spacing-1); */
 	/* --itx-pn-link-background-color-current: var(--itx-contrast-1); */
 	/* --itx-pn-link-background-hover: var(--itx-contrast-1); */
-	/* --itx-pn-link-background-image-current: radial-gradient( circle at 0 0 25%, #ff9c56, transparent ); */
+	/* --itx-pn-link-background-image-current: ; */ /* no default — unset unless you set it */
 	/* --itx-pn-link-border-color: transparent; */
 	/* --itx-pn-link-border-color-current: ; */ /* inherits --itx-pn-link-border-color */
 	/* --itx-pn-link-border-color-hover: ; */ /* inherits --itx-pn-link-border-color */

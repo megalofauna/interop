@@ -8,15 +8,15 @@ export type ResizableAxis = "horizontal" | "vertical" | "both";
 /** Per-axis size or bound. Numeric values are pixels. Either axis is optional
  * — pass only the dimension(s) you want to constrain or seed. */
 export interface ResizableBounds {
-  width?: number;
-  height?: number;
+	width?: number;
+	height?: number;
 }
 
 /** Payload for `(resize)` and `(resizeEnd)` outputs. Always contains both
  * dimensions, measured from the host's `getBoundingClientRect()`. */
 export interface ResizableDimensions {
-  width: number;
-  height: number;
+	width: number;
+	height: number;
 }
 
 /** CSS `container-type` value applied to the host. Default `inline-size`

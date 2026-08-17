@@ -62,7 +62,7 @@ export function generateProgressId(): string {
 	styleUrl: "./interop-progress.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
-		"role": "progressbar",
+		role: "progressbar",
 		// Native progress attrs — normalized to 0-100 so the browser fill is correct
 		// even when min ≠ 0.
 		"[attr.value]": "indeterminate() ? null : normalizedNativeValue()",
@@ -79,7 +79,8 @@ export function generateProgressId(): string {
 		// the physical inline axis, so it fills left-to-right no matter what
 		// writing-mode the host is in — which is why vertical bars used to
 		// reorient their box but not their fill.
-		"[style.--itx-progress-percent]": "indeterminate() ? 0 : normalizedNativeValue()",
+		"[style.--itx-progress-percent]":
+			"indeterminate() ? 0 : normalizedNativeValue()",
 	},
 })
 export class InteropProgress {
@@ -129,21 +130,22 @@ export class InteropProgress {
 				// Check for accessible name from all three valid sources.
 				const hasAriaLabel = el.hasAttribute("aria-label");
 				const hasAriaLabelledBy = el.hasAttribute("aria-labelledby");
-				const hasNativeLabel =
-					el.id ? !!document.querySelector(`label[for="${el.id}"]`) : false;
+				const hasNativeLabel = el.id
+					? !!document.querySelector(`label[for="${el.id}"]`)
+					: false;
 
 				if (!hasAriaLabel && !hasAriaLabelledBy && !hasNativeLabel) {
 					console.warn(
 						"[InteropProgress] No accessible name found. " +
-						"Add aria-label, use aria-labelledby, or add a " +
-						"<label interop-progress-label> adjacent to this element.",
+							"Add aria-label, use aria-labelledby, or add a " +
+							"<label interop-progress-label> adjacent to this element.",
 					);
 				}
 
 				if (this.indeterminate() && this.value() !== 0) {
 					console.warn(
 						"[InteropProgress] Both [indeterminate] and [value] are set. " +
-						"The indeterminate state takes precedence; [value] is ignored.",
+							"The indeterminate state takes precedence; [value] is ignored.",
 					);
 				}
 

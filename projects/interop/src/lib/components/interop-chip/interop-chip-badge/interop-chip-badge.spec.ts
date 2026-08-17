@@ -18,7 +18,9 @@ describe("InteropChipBadge", () => {
 	let output: HTMLOutputElement;
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({ imports: [TestHost] }).compileComponents();
+		await TestBed.configureTestingModule({
+			imports: [TestHost],
+		}).compileComponents();
 		fixture = TestBed.createComponent(TestHost);
 		fixture.detectChanges();
 		await fixture.whenStable();

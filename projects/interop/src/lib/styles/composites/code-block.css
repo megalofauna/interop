@@ -16,9 +16,11 @@
  * All selectors wrapped in :where() for zero specificity — consumer overrides
  * always win regardless of declaration order.
  *
- * The code-renderer body background is piped through `--itx-cb-body-background`
- * so themes can tune it scoped to code-block without affecting other
- * InteropCodeRenderer instances.
+ * NOTE: there is no body-background pipe. A `--itx-cb-body-bg` declaration here
+ * claimed to feed the renderer's `--itx-cr-body-bg`, but it wrote the wrong
+ * name, its source token was declared nowhere, and interop-code-renderer.scss
+ * hardcodes `background: transparent` and reads neither. Scoping the renderer's
+ * background per code-block is a feature to build, not a line to repair.
  *
  * Public tokens — see the theme file's header comment for the full list with
  * descriptions. Surface is partitioned into host, header, tablist, tab,
@@ -32,9 +34,6 @@
 	position: relative;
 	border-radius: var(--itx-cb-radius);
 	overflow: hidden;
-
-	/* Pipe the composite-level body background into the renderer's token. */
-	--itx-cb-body-bg: var(--itx-cb-body-background);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -55,12 +54,12 @@
 	position: relative;
 	display: flex;
 	min-width: 0;
-	padding-block: var(--itx-cd-tablist-padding-block);
-	padding-inline: var(--itx-cd-tablist-padding-inline);
+	padding-block: var(--itx-cb-tablist-padding-block);
+	padding-inline: var(--itx-cb-tablist-padding-inline);
 	border-radius: var(--itx-cb-tablist-border-radius);
 	background-color: var(--itx-cb-tablist-background);
 	box-shadow: var(--itx-cb-tablist-box-shadow);
-	column-gap: var(--itx-cd-tablist-column-gap, 0);
+	column-gap: var(--itx-cb-tablist-column-gap, 0);
 
 	&::after {
 		content: "";
@@ -83,7 +82,7 @@
 	border-radius: var(--itx-cb-tab-radius);
 
 	color: var(--itx-cb-tab-foreground);
-	font-family: var(--itx-cb-tab-font-family);
+	font-family: var(--itx-cb-tab-font-family, inherit);
 	font-size: var(--itx-cb-tab-font-size);
 	cursor: pointer;
 	transition-property: color, border-color, background-color;
@@ -93,7 +92,7 @@
 }
 
 :where(itx-code-block .itx-cb__tab:hover) {
-	color: var(--itx-cb-tab-foreground-active);
+	color: var(--itx-cb-tab-foreground-hover);
 	background-color: var(--itx-cb-tab-background-hover);
 	border-bottom-color: var(--itx-cb-tab-border-bottom-color-hover);
 }
@@ -101,7 +100,7 @@
 :where(itx-code-block .itx-cb__tab[aria-selected="true"]) {
 	color: var(--itx-cb-tab-foreground-current);
 	background-color: var(--itx-cb-tab-background-current);
-	border-bottom-color: var(--itx-cb-tab-border-bottom-color);
+	border-bottom-color: var(--itx-cb-tab-border-bottom-color-current);
 }
 
 :where(itx-code-block .itx-cb__tab:focus-visible) {

@@ -1,8 +1,8 @@
 <demo-page>
 	<demo-masthead category="Foundations" title="Colour">
-		Two axes, and nothing in between. A component declares <em>that it is a
-		layer</em> — never which grey it is — and its surface, borders and text all
-		follow from the depth it happens to sit at.
+		Two axes, and nothing in between. A component declares
+		<em>that it is a layer</em> — never which grey it is — and its surface,
+		borders and text all follow from the depth it happens to sit at.
 	</demo-masthead>
 
 	<demo-section id="axes" heading="The two axes">
@@ -66,10 +66,10 @@
 
 	<demo-section id="steps" heading="Step size — dark">
 		<p description class="demo-section__lede">
-			Four candidate ramps for the dark scheme, each starting from the same
-			page at L .200 and climbing five layers. Switch to dark mode to judge
-			them. Nested, not adjacent — a step that reads fine as two flat swatches
-			can still fail as a card inside a card, which is how it is actually used.
+			Four candidate ramps for the dark scheme, each starting from the same page
+			at L .200 and climbing five layers. Switch to dark mode to judge them.
+			Nested, not adjacent — a step that reads fine as two flat swatches can
+			still fail as a card inside a card, which is how it is actually used.
 		</p>
 
 		<div class="color-steps">
@@ -160,7 +160,9 @@
 						/>
 						<div class="color-ranks__actions">
 							<button interop-button="primary" type="button">Primary</button>
-							<button interop-button="secondary" type="button">Secondary</button>
+							<button interop-button="secondary" type="button">
+								Secondary
+							</button>
 						</div>
 						<button
 							interop-button
@@ -171,8 +173,8 @@
 						</button>
 						<div #depthPopover="interopPopover" interop-popover>
 							<p>
-								Pinned to its own layer, so it reads the same whatever depth
-								it is opened from.
+								Pinned to its own layer, so it reads the same whatever depth it
+								is opened from.
 							</p>
 						</div>
 					</div>
@@ -199,7 +201,9 @@
 			<tbody>
 				@for (entry of ranks; track entry.rank) {
 					<tr>
-						<td><code>--itx-contrast-{{ entry.rank }}</code></td>
+						<td>
+							<code>--itx-contrast-{{ entry.rank }}</code>
+						</td>
 						<td>{{ entry.intent }}</td>
 						<td>{{ entry.floor }}</td>
 					</tr>

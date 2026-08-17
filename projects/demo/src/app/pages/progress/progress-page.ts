@@ -1,8 +1,4 @@
-import {
-	ChangeDetectionStrategy,
-	Component,
-	signal,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
 import {
 	InteropProgress,
 	InteropProgressLabel,
@@ -10,7 +6,7 @@ import {
 	InteropTable,
 	InteropCellDef,
 	type TableColumn,
-} from 'interop';
+} from "interop";
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoPage } from "../../components/demo-page/demo-page";
@@ -124,8 +120,16 @@ currentStep = signal(1);`;
 	// ── Code files ───────────────────────────────────────────────────────
 
 	readonly stepBasedFiles: CodeFile[] = [
-		{ label: "template.html", language: "html", code: this.stepBasedTemplateCode },
-		{ label: "component.ts", language: "ts", code: this.stepBasedComponentCode },
+		{
+			label: "template.html",
+			language: "html",
+			code: this.stepBasedTemplateCode,
+		},
+		{
+			label: "component.ts",
+			language: "ts",
+			code: this.stepBasedComponentCode,
+		},
 	];
 
 	// ── API tables ───────────────────────────────────────────────────────
@@ -226,12 +230,23 @@ currentStep = signal(1);`;
 	tokenEntries: TokenEntry[] = [
 		{ property: "--itx-progress-track", default: "var(--itx-contrast-3)" },
 		{ property: "--itx-progress-fill", default: "var(--itx-colorway-solid)" },
-		{ property: "--itx-progress-height", default: "var(--itx-spacing-2) — 8px" },
-		{ property: "--itx-progress-length", default: "var(--itx-spacing-32) — 8rem, vertical only" },
+		{
+			property: "--itx-progress-height",
+			default: "var(--itx-spacing-2) — 8px",
+		},
+		{
+			property: "--itx-progress-length",
+			default: "var(--itx-spacing-32) — 8rem, vertical only",
+		},
 		{ property: "--itx-progress-radius", default: "var(--itx-radius-none)" },
-		{ property: "--itx-progress-duration", default: "var(--itx-duration-fast)" },
+		{
+			property: "--itx-progress-duration",
+			default: "var(--itx-duration-fast)",
+		},
 		{ property: "--itx-progress-indeterminate-duration", default: "1000ms" },
-		{ property: "--itx-progress-indeterminate-band", default: "30 (percent of track, unitless)" },
+		{
+			property: "--itx-progress-indeterminate-band",
+			default: "30 (percent of track, unitless)",
+		},
 	];
-
 }

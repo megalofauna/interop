@@ -1,17 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  computed,
-  inject,
-  input,
-  model,
-} from '@angular/core';
+	ChangeDetectionStrategy,
+	Component,
+	DestroyRef,
+	computed,
+	inject,
+	input,
+	model,
+} from "@angular/core";
 import {
-  INTEROP_EXPANSION_PANEL_CONTEXT,
-  type InteropExpansionPanelContext,
-} from './interop-expansion-panel.context.token';
-import { INTEROP_ACCORDION_CONTEXT } from './interop-accordion.context.token';
+	INTEROP_EXPANSION_PANEL_CONTEXT,
+	type InteropExpansionPanelContext,
+} from "./interop-expansion-panel.context.token";
+import { INTEROP_ACCORDION_CONTEXT } from "./interop-accordion.context.token";
 
 let _panelIdCounter = 0;
 
@@ -65,74 +65,76 @@ let _panelIdCounter = 0;
  * // enhancement when heading nesting constraints can be worked around.
  */
 @Component({
-  selector: 'interop-expansion-panel',
-  standalone: true,
-  template: '<ng-content />',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: INTEROP_EXPANSION_PANEL_CONTEXT,
-      useExisting: InteropExpansionPanel,
-    },
-  ],
-  host: {
-    '[attr.data-expanded]': 'isExpanded() ? "" : null',
-    '[attr.data-disabled]': 'disabled() ? "" : null',
-  },
+	selector: "interop-expansion-panel",
+	standalone: true,
+	template: "<ng-content />",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [
+		{
+			provide: INTEROP_EXPANSION_PANEL_CONTEXT,
+			useExisting: InteropExpansionPanel,
+		},
+	],
+	host: {
+		"[attr.data-expanded]": 'isExpanded() ? "" : null',
+		"[attr.data-disabled]": 'disabled() ? "" : null',
+	},
 })
 export class InteropExpansionPanel implements InteropExpansionPanelContext {
-  private readonly accordion = inject(INTEROP_ACCORDION_CONTEXT, { optional: true });
-  private readonly destroyRef = inject(DestroyRef);
+	private readonly accordion = inject(INTEROP_ACCORDION_CONTEXT, {
+		optional: true,
+	});
+	private readonly destroyRef = inject(DestroyRef);
 
-  private readonly _uid = `itx-expansion-${_panelIdCounter++}`;
+	private readonly _uid = `itx-expansion-${_panelIdCounter++}`;
 
-  /** Stable body ID shared with the trigger (aria-controls) and body (id). */
-  readonly bodyId = `${this._uid}-body`;
+	/** Stable body ID shared with the trigger (aria-controls) and body (id). */
+	readonly bodyId = `${this._uid}-body`;
 
-  // ── Inputs ──────────────────────────────────────────────────────────────────
+	// ── Inputs ──────────────────────────────────────────────────────────────────
 
-  /**
-   * Two-way bindable expanded state.
-   * Uncontrolled by default — the panel manages its own state.
-   * Use `[(expanded)]="myBoolSignal"` to control from the parent.
-   */
-  readonly expanded = model<boolean>(false);
+	/**
+	 * Two-way bindable expanded state.
+	 * Uncontrolled by default — the panel manages its own state.
+	 * Use `[(expanded)]="myBoolSignal"` to control from the parent.
+	 */
+	readonly expanded = model<boolean>(false);
 
-  /**
-   * Whether the panel is disabled. Prevents user interaction.
-   */
-  readonly disabled = input<boolean>(false);
+	/**
+	 * Whether the panel is disabled. Prevents user interaction.
+	 */
+	readonly disabled = input<boolean>(false);
 
-  // ── Context API ──────────────────────────────────────────────────────────────
+	// ── Context API ──────────────────────────────────────────────────────────────
 
-  readonly isExpanded = computed(() => this.expanded());
+	readonly isExpanded = computed(() => this.expanded());
 
-  toggle(): void {
-    if (this.disabled()) return;
-    const next = !this.expanded();
-    this.expanded.set(next);
-    if (next) {
-      this.accordion?.notifyOpened(this._uid);
-    }
-  }
+	toggle(): void {
+		if (this.disabled()) return;
+		const next = !this.expanded();
+		this.expanded.set(next);
+		if (next) {
+			this.accordion?.notifyOpened(this._uid);
+		}
+	}
 
-  open(): void {
-    if (this.disabled() || this.expanded()) return;
-    this.expanded.set(true);
-    this.accordion?.notifyOpened(this._uid);
-  }
+	open(): void {
+		if (this.disabled() || this.expanded()) return;
+		this.expanded.set(true);
+		this.accordion?.notifyOpened(this._uid);
+	}
 
-  close(): void {
-    if (!this.expanded()) return;
-    this.expanded.set(false);
-  }
+	close(): void {
+		if (!this.expanded()) return;
+		this.expanded.set(false);
+	}
 
-  // ── Lifecycle ────────────────────────────────────────────────────────────────
+	// ── Lifecycle ────────────────────────────────────────────────────────────────
 
-  constructor() {
-    if (this.accordion) {
-      const unregister = this.accordion.registerPanel(this._uid, this);
-      this.destroyRef.onDestroy(unregister);
-    }
-  }
+	constructor() {
+		if (this.accordion) {
+			const unregister = this.accordion.registerPanel(this._uid, this);
+			this.destroyRef.onDestroy(unregister);
+		}
+	}
 }

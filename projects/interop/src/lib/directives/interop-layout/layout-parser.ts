@@ -1,4 +1,11 @@
-import type { LayoutConfig, LayoutDirection, LayoutJustify, LayoutAlign, LayoutWrap, LayoutGap } from './layout.types';
+import type {
+	LayoutConfig,
+	LayoutDirection,
+	LayoutJustify,
+	LayoutAlign,
+	LayoutWrap,
+	LayoutGap,
+} from "./layout.types";
 
 /**
  * Parse shorthand layout strings into LayoutConfig objects.
@@ -10,35 +17,35 @@ import type { LayoutConfig, LayoutDirection, LayoutJustify, LayoutAlign, LayoutW
  */
 
 const DIRECTION_TOKENS: Record<string, LayoutDirection> = {
-  'row': 'row',
-  'column': 'column',
-  'col': 'column',
-  'row-reverse': 'row-reverse',
-  'column-reverse': 'column-reverse',
-  'col-reverse': 'column-reverse'
+	row: "row",
+	column: "column",
+	col: "column",
+	"row-reverse": "row-reverse",
+	"column-reverse": "column-reverse",
+	"col-reverse": "column-reverse",
 };
 
 const JUSTIFY_TOKENS: Record<string, LayoutJustify> = {
-  'start': 'start',
-  'end': 'end',
-  'center': 'center',
-  'between': 'between',
-  'around': 'around',
-  'evenly': 'evenly'
+	start: "start",
+	end: "end",
+	center: "center",
+	between: "between",
+	around: "around",
+	evenly: "evenly",
 };
 
 const ALIGN_TOKENS: Record<string, LayoutAlign> = {
-  'start': 'start',
-  'end': 'end',
-  'center': 'center',
-  'stretch': 'stretch',
-  'baseline': 'baseline'
+	start: "start",
+	end: "end",
+	center: "center",
+	stretch: "stretch",
+	baseline: "baseline",
 };
 
 const WRAP_TOKENS: Record<string, LayoutWrap> = {
-  'nowrap': 'nowrap',
-  'wrap': 'wrap',
-  'wrap-reverse': 'wrap-reverse'
+	nowrap: "nowrap",
+	wrap: "wrap",
+	"wrap-reverse": "wrap-reverse",
 };
 
 /**
@@ -56,47 +63,49 @@ const WRAP_TOKENS: Record<string, LayoutWrap> = {
  * // => { direction: 'column', align: 'start', wrap: 'wrap', gap: 4 }
  * ```
  */
-export function parseLayoutShorthand(shorthand: string | null): LayoutConfig | null {
-  if (!shorthand?.trim()) {
-    return null;
-  }
+export function parseLayoutShorthand(
+	shorthand: string | null,
+): LayoutConfig | null {
+	if (!shorthand?.trim()) {
+		return null;
+	}
 
-  const tokens = shorthand.trim().toLowerCase().split(/\s+/);
-  const config: LayoutConfig = {};
+	const tokens = shorthand.trim().toLowerCase().split(/\s+/);
+	const config: LayoutConfig = {};
 
-  for (const token of tokens) {
-    // Check for gap token (gap-N format)
-    if (token.startsWith('gap-')) {
-      const gapValue = token.slice(4);
-      const numValue = parseInt(gapValue, 10);
-      if (!isNaN(numValue) && isValidGap(numValue)) {
-        config.gap = numValue as LayoutGap;
-      }
-      continue;
-    }
+	for (const token of tokens) {
+		// Check for gap token (gap-N format)
+		if (token.startsWith("gap-")) {
+			const gapValue = token.slice(4);
+			const numValue = parseInt(gapValue, 10);
+			if (!isNaN(numValue) && isValidGap(numValue)) {
+				config.gap = numValue as LayoutGap;
+			}
+			continue;
+		}
 
-    // Check other layout properties
-    if (token in DIRECTION_TOKENS) {
-      config.direction = DIRECTION_TOKENS[token];
-    } else if (token in JUSTIFY_TOKENS) {
-      config.justify = JUSTIFY_TOKENS[token];
-    } else if (token in ALIGN_TOKENS) {
-      config.align = ALIGN_TOKENS[token];
-    } else if (token in WRAP_TOKENS) {
-      config.wrap = WRAP_TOKENS[token];
-    }
-    // Ignore unrecognized tokens silently
-  }
+		// Check other layout properties
+		if (token in DIRECTION_TOKENS) {
+			config.direction = DIRECTION_TOKENS[token];
+		} else if (token in JUSTIFY_TOKENS) {
+			config.justify = JUSTIFY_TOKENS[token];
+		} else if (token in ALIGN_TOKENS) {
+			config.align = ALIGN_TOKENS[token];
+		} else if (token in WRAP_TOKENS) {
+			config.wrap = WRAP_TOKENS[token];
+		}
+		// Ignore unrecognized tokens silently
+	}
 
-  return Object.keys(config).length > 0 ? config : null;
+	return Object.keys(config).length > 0 ? config : null;
 }
 
 /**
  * Validate if a number is a valid gap value
  */
 function isValidGap(value: number): boolean {
-  const validGaps: number[] = [0, 1, 2, 3, 4, 6, 8, 12, 16, 24];
-  return validGaps.includes(value);
+	const validGaps: number[] = [0, 1, 2, 3, 4, 6, 8, 12, 16, 24];
+	return validGaps.includes(value);
 }
 
 /**
@@ -106,23 +115,23 @@ function isValidGap(value: number): boolean {
  * @returns Shorthand string representation
  */
 export function layoutConfigToShorthand(config: LayoutConfig): string {
-  const tokens: string[] = [];
+	const tokens: string[] = [];
 
-  if (config.direction) {
-    tokens.push(config.direction);
-  }
-  if (config.align) {
-    tokens.push(config.align);
-  }
-  if (config.justify) {
-    tokens.push(config.justify);
-  }
-  if (config.wrap) {
-    tokens.push(config.wrap);
-  }
-  if (config.gap !== undefined) {
-    tokens.push(`gap-${config.gap}`);
-  }
+	if (config.direction) {
+		tokens.push(config.direction);
+	}
+	if (config.align) {
+		tokens.push(config.align);
+	}
+	if (config.justify) {
+		tokens.push(config.justify);
+	}
+	if (config.wrap) {
+		tokens.push(config.wrap);
+	}
+	if (config.gap !== undefined) {
+		tokens.push(`gap-${config.gap}`);
+	}
 
-  return tokens.join(' ');
+	return tokens.join(" ");
 }

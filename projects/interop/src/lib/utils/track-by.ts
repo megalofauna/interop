@@ -33,7 +33,7 @@ export type TrackKey = string | number;
  * ```
  */
 export function trackByIndex<T = unknown>(): TrackByFunction<T> {
-  return (index) => index;
+	return (index) => index;
 }
 
 /**
@@ -55,13 +55,13 @@ export function trackByIndex<T = unknown>(): TrackByFunction<T> {
  * ```
  */
 export function trackByField<T = any>(
-  field: keyof T | string,
+	field: keyof T | string,
 ): TrackByFunction<T> {
-  const key = String(field);
-  return (index, item: T | any) => {
-    const value = item?.[key];
-    return value !== undefined ? (value as TrackKey) : index;
-  };
+	const key = String(field);
+	return (index, item: T | any) => {
+		const value = item?.[key];
+		return value !== undefined ? (value as TrackKey) : index;
+	};
 }
 
 /**
@@ -80,14 +80,14 @@ export function trackByField<T = any>(
  * ```
  */
 export function trackByAuto<T = any>(): TrackByFunction<T> {
-  return (index, item) => {
-    if (item && typeof item === "object") {
-      const obj = item as any;
-      if ("id" in obj) return obj.id as TrackKey;
-      if ("_id" in obj) return obj._id as TrackKey;
-    }
-    return index;
-  };
+	return (index, item) => {
+		if (item && typeof item === "object") {
+			const obj = item as any;
+			if ("id" in obj) return obj.id as TrackKey;
+			if ("_id" in obj) return obj._id as TrackKey;
+		}
+		return index;
+	};
 }
 
 /**
@@ -106,21 +106,21 @@ export function trackByAuto<T = any>(): TrackByFunction<T> {
  * ```
  */
 export function trackByFieldThenAutoThenIndex<T = any>(
-  field?: keyof T | string | null,
+	field?: keyof T | string | null,
 ): TrackByFunction<T> {
-  const fieldFn = field ? trackByField<T>(field) : null;
-  const autoFn = trackByAuto<T>();
-  const indexFn = trackByIndex<T>();
+	const fieldFn = field ? trackByField<T>(field) : null;
+	const autoFn = trackByAuto<T>();
+	const indexFn = trackByIndex<T>();
 
-  return (index, item) => {
-    if (fieldFn) {
-      const k = fieldFn(index, item);
-      if (k !== index) return k;
-    }
-    const a = autoFn(index, item);
-    if (a !== index) return a;
-    return indexFn(index, item);
-  };
+	return (index, item) => {
+		if (fieldFn) {
+			const k = fieldFn(index, item);
+			if (k !== index) return k;
+		}
+		const a = autoFn(index, item);
+		if (a !== index) return a;
+		return indexFn(index, item);
+	};
 }
 
 /**
@@ -146,20 +146,20 @@ export function trackByFieldThenAutoThenIndex<T = any>(
  * ```
  */
 export function createComponentTrackByFn<T>(
-  trackByMode: () => TrackByFunction<T> | "auto" | "index",
-  trackByField: () => keyof T | null,
+	trackByMode: () => TrackByFunction<T> | "auto" | "index",
+	trackByField: () => keyof T | null,
 ): TrackByFunction<T> {
-  return (index: number, item: T): any => {
-    const mode = trackByMode();
-    const field = trackByField();
+	return (index: number, item: T): any => {
+		const mode = trackByMode();
+		const field = trackByField();
 
-    // Explicit index tracking
-    if (mode === "index") return index;
+		// Explicit index tracking
+		if (mode === "index") return index;
 
-    // Custom function provided
-    if (typeof mode === "function") return mode(index, item);
+		// Custom function provided
+		if (typeof mode === "function") return mode(index, item);
 
-    // Auto or unspecified: use shared precedence (field -> auto id -> index)
-    return trackByFieldThenAutoThenIndex<T>(field ?? null)(index, item);
-  };
+		// Auto or unspecified: use shared precedence (field -> auto id -> index)
+		return trackByFieldThenAutoThenIndex<T>(field ?? null)(index, item);
+	};
 }

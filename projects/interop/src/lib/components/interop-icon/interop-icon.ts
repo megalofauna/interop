@@ -1,14 +1,17 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  computed,
-  inject,
-  input,
-  isDevMode,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	computed,
+	inject,
+	input,
+	isDevMode,
 } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { InteropIconDefinition, InteropIconRegistry } from "../../iconsets/core";
+import {
+	InteropIconDefinition,
+	InteropIconRegistry,
+} from "../../iconsets/core";
 
 /**
  * InteropIcon — Renders icons from the InteropIconRegistry or projects
@@ -16,7 +19,7 @@ import { InteropIconDefinition, InteropIconRegistry } from "../../iconsets/core"
  *
  * ## Registry path (primary)
  * Icons are registered at any DI scope via `provideInteropIcons()` and
- * rendered by name. The registry supports Phosphor, Tabler, and any custom
+ * rendered by name. The registry supports Tabler, Material Symbols, and any custom
  * icons adapted via `fromSvg()`.
  *
  * ```html
@@ -62,133 +65,133 @@ import { InteropIconDefinition, InteropIconRegistry } from "../../iconsets/core"
  *
  * @example Stroke weight override
  * ```html
- * <!-- Bolder Phosphor icon (default is 16 in 256-unit space) -->
- * <interop-icon name="ph-copy" [strokeWidth]="24" />
+ * <!-- Bolder stroked icon (Tabler's default is 2 in a 24-unit space) -->
+ * <interop-icon name="tabler-copy" [strokeWidth]="3" />
  * <!-- Lighter Tabler icon (default is 2 in 24-unit space) -->
  * <interop-icon name="tabler-copy" [strokeWidth]="1.5" />
  * ```
  */
 @Component({
-  selector: "interop-icon",
-  standalone: true,
-  imports: [],
-  templateUrl: "./interop-icon.html",
-  changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: "interop-icon",
+	standalone: true,
+	imports: [],
+	templateUrl: "./interop-icon.html",
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropIcon {
-  private readonly _registry = inject(InteropIconRegistry);
-  // DomSanitizer injected by string token to avoid circular import issues.
-  // Safe to cast — Angular always provides this in the browser runtime.
-  private readonly _sanitizer = inject(DomSanitizer);
-  private readonly _el = inject(ElementRef<HTMLElement>);
+	private readonly _registry = inject(InteropIconRegistry);
+	// DomSanitizer injected by string token to avoid circular import issues.
+	// Safe to cast — Angular always provides this in the browser runtime.
+	private readonly _sanitizer = inject(DomSanitizer);
+	private readonly _el = inject(ElementRef<HTMLElement>);
 
-  // ── Inputs ─────────────────────────────────────────────────────────────────
+	// ── Inputs ─────────────────────────────────────────────────────────────────
 
-  /**
-   * Icon registry key. When provided, the icon is looked up in the registry
-   * and rendered via the SVG path. When absent, projected content is rendered.
-   */
-  readonly name = input<string | undefined>(undefined);
+	/**
+	 * Icon registry key. When provided, the icon is looked up in the registry
+	 * and rendered via the SVG path. When absent, projected content is rendered.
+	 */
+	readonly name = input<string | undefined>(undefined);
 
-  /** Icon size in pixels. Applied to both `width` and `height` of the SVG. */
-  readonly size = input<number>(24);
+	/** Icon size in pixels. Applied to both `width` and `height` of the SVG. */
+	readonly size = input<number>(24);
 
-  /**
-   * Stroke width override in viewBox coordinate units.
-   * When not provided, the icon's own `defaultStrokeWidth` is used.
-   *
-   * Units are viewBox-relative: Phosphor icons use a 256×256 space (default 16),
-   * Tabler uses 24×24 (default 2). These values are not directly comparable.
-   */
-  readonly strokeWidth = input<number | undefined>(undefined);
+	/**
+	 * Stroke width override in viewBox coordinate units.
+	 * When not provided, the icon's own `defaultStrokeWidth` is used.
+	 *
+	 * Units are viewBox-relative: Tabler icons use a 24×24 space (default 2),
+	 * Tabler uses 24×24 (default 2). These values are not directly comparable.
+	 */
+	readonly strokeWidth = input<number | undefined>(undefined);
 
-  /** Colour override. Accepts any CSS colour value. Defaults to `currentColor`. */
-  readonly color = input<string | undefined>(undefined);
+	/** Colour override. Accepts any CSS colour value. Defaults to `currentColor`. */
+	readonly color = input<string | undefined>(undefined);
 
-  /**
-   * Whether this icon is purely decorative (`true`) or conveys meaning (`false`).
-   * Decorative icons are hidden from screen readers (`aria-hidden="true"`).
-   * Non-decorative icons require `ariaLabel`.
-   */
-  readonly decorative = input<boolean>(true);
+	/**
+	 * Whether this icon is purely decorative (`true`) or conveys meaning (`false`).
+	 * Decorative icons are hidden from screen readers (`aria-hidden="true"`).
+	 * Non-decorative icons require `ariaLabel`.
+	 */
+	readonly decorative = input<boolean>(true);
 
-  /**
-   * Accessible label for non-decorative icons.
-   * Ignored when `decorative` is `true`.
-   */
-  readonly ariaLabel = input<string | undefined>(undefined);
+	/**
+	 * Accessible label for non-decorative icons.
+	 * Ignored when `decorative` is `true`.
+	 */
+	readonly ariaLabel = input<string | undefined>(undefined);
 
-  // ── Computed ───────────────────────────────────────────────────────────────
+	// ── Computed ───────────────────────────────────────────────────────────────
 
-  /** Resolved icon definition, or undefined if not found / name not provided. */
-  readonly icon = computed<InteropIconDefinition | undefined>(() => {
-    const n = this.name();
-    return n ? this._registry.get(n) : undefined;
-  });
+	/** Resolved icon definition, or undefined if not found / name not provided. */
+	readonly icon = computed<InteropIconDefinition | undefined>(() => {
+		const n = this.name();
+		return n ? this._registry.get(n) : undefined;
+	});
 
-  /** Whether to render the registry SVG path (vs. projected content). */
-  readonly useRegistry = computed(() => !!this.name());
+	/** Whether to render the registry SVG path (vs. projected content). */
+	readonly useRegistry = computed(() => !!this.name());
 
-  /** Pixel size string for width/height attributes. */
-  readonly sizeInPx = computed(() => `${this.size()}px`);
+	/** Pixel size string for width/height attributes. */
+	readonly sizeInPx = computed(() => `${this.size()}px`);
 
-  /**
-   * Effective stroke-width: explicit override → icon default → null.
-   * Applied to the outer `<svg>` so all child elements inherit it.
-   */
-  readonly effectiveStrokeWidth = computed<number | null>(() => {
-    const override = this.strokeWidth();
-    if (override !== undefined) return override;
-    return this.icon()?.defaultStrokeWidth ?? null;
-  });
+	/**
+	 * Effective stroke-width: explicit override → icon default → null.
+	 * Applied to the outer `<svg>` so all child elements inherit it.
+	 */
+	readonly effectiveStrokeWidth = computed<number | null>(() => {
+		const override = this.strokeWidth();
+		if (override !== undefined) return override;
+		return this.icon()?.defaultStrokeWidth ?? null;
+	});
 
-  /**
-   * Trusted SVG inner content for innerHTML binding.
-   *
-   * Security rationale: see class-level JSDoc.
-   */
-  readonly trustedSvgContent = computed<SafeHtml | null>(() => {
-    const icon = this.icon();
-    if (!icon) return null;
-    // Safe: svgContent originates from static developer imports, never user input.
-    return this._sanitizer.bypassSecurityTrustHtml(icon.svgContent);
-  });
+	/**
+	 * Trusted SVG inner content for innerHTML binding.
+	 *
+	 * Security rationale: see class-level JSDoc.
+	 */
+	readonly trustedSvgContent = computed<SafeHtml | null>(() => {
+		const icon = this.icon();
+		if (!icon) return null;
+		// Safe: svgContent originates from static developer imports, never user input.
+		return this._sanitizer.bypassSecurityTrustHtml(icon.svgContent);
+	});
 
-  constructor() {
-    if (isDevMode()) {
-      // Validate accessibility contract
-      const el = this._el.nativeElement;
-      setTimeout(() => {
-        if (!this.decorative() && !this.ariaLabel()) {
-          console.warn(
-            `InteropIcon: Icon "${this.name() ?? "(projected)"}" is marked as non-decorative ` +
-              "but has no [ariaLabel]. Provide an accessible label or set [decorative]=\"true\".",
-          );
-        }
-        if (this.name() && !this.icon()) {
-          console.warn(
-            `InteropIcon: Icon "${this.name()}" was not found in the registry. ` +
-              "Register it via provideInteropIcons() at the app, module, or component level.",
-          );
-        }
-        // [strokeWidth] on a fill-only icon is a silent no-op: the attribute is
-        // emitted, but there is no stroke for it to act on. Material Symbols and
-        // Carbon are drawn as filled contours — even their "outline" styles are
-        // frames, two nested contours filled by winding rule, not stroked lines.
-        // Weight there is fixed when the icon is generated, not at runtime.
-        const icon = this.icon();
-        if (
-          icon &&
-          this.strokeWidth() !== undefined &&
-          icon.defaultStrokeWidth === undefined
-        ) {
-          console.warn(
-            `InteropIcon: [strokeWidth] has no effect on "${icon.name}" — it is a ` +
-              "fill-only icon with no stroke to widen. Use a stroked set (Tabler, " +
-              "Phosphor regular) for a runtime weight axis.",
-          );
-        }
-      });
-    }
-  }
+	constructor() {
+		if (isDevMode()) {
+			// Validate accessibility contract
+			const el = this._el.nativeElement;
+			setTimeout(() => {
+				if (!this.decorative() && !this.ariaLabel()) {
+					console.warn(
+						`InteropIcon: Icon "${this.name() ?? "(projected)"}" is marked as non-decorative ` +
+							'but has no [ariaLabel]. Provide an accessible label or set [decorative]="true".',
+					);
+				}
+				if (this.name() && !this.icon()) {
+					console.warn(
+						`InteropIcon: Icon "${this.name()}" was not found in the registry. ` +
+							"Register it via provideInteropIcons() at the app, module, or component level.",
+					);
+				}
+				// [strokeWidth] on a fill-only icon is a silent no-op: the attribute is
+				// emitted, but there is no stroke for it to act on. Material Symbols and
+				// Carbon are drawn as filled contours — even their "outline" styles are
+				// frames, two nested contours filled by winding rule, not stroked lines.
+				// Weight there is fixed when the icon is generated, not at runtime.
+				const icon = this.icon();
+				if (
+					icon &&
+					this.strokeWidth() !== undefined &&
+					icon.defaultStrokeWidth === undefined
+				) {
+					console.warn(
+						`InteropIcon: [strokeWidth] has no effect on "${icon.name}" — it is a ` +
+							"fill-only icon with no stroke to widen. Use a stroked set (Tabler, " +
+							"Tabler outline) for a runtime weight axis.",
+					);
+				}
+			});
+		}
+	}
 }

@@ -5,7 +5,6 @@
  *
  *   Host
  *     --itx-cb-radius                       Host border-radius (participates in managed-radius)
- *     --itx-cb-body-background              Code body background (piped to --itx-cr-body-bg)
  *
  *   Header
  *     --itx-cb-header-background            Header background color
@@ -22,12 +21,10 @@
  *     --itx-cb-tab-padding-block            Tab block padding
  *     --itx-cb-tab-padding-inline           Tab inline padding
  *     --itx-cb-tab-radius                   Tab top-corner radius
- *     --itx-cb-tab-font-family              Tab font family
  *     --itx-cb-tab-font-size                Tab font size
- *     --itx-cb-tab-foreground               Inactive tab text color
- *     --itx-cb-tab-foreground-active        Active tab text color
- *     --itx-cb-tab-indicator-color          Active tab underline color
- *     --itx-cb-tab-indicator-width          Active tab underline thickness
+ *     --itx-cb-tab-foreground               Rest tab text colour        (rank 4)
+ *     --itx-cb-tab-foreground-hover         Hover tab text colour       (rank 5)
+ *     --itx-cb-tab-foreground-current       Selected tab text colour    (rank 6)
  *     --itx-cb-tab-outline-color            Focus-visible outline color
  *     --itx-cb-tab-outline-width            Focus-visible outline thickness
  *     --itx-cb-tab-outline-offset           Focus-visible outline offset
@@ -73,11 +70,9 @@
 	--itx-cb-header-gap: var(--itx-spacing-2);
 
 	/* Tablist */
-	--itx-cd-tablist-padding-block: var(--itx-spacing-2) 0;
-	--itx-cd-tablist-padding-inline: 0;
+	--itx-cb-tablist-padding-block: var(--itx-spacing-2) 0;
+	--itx-cb-tablist-padding-inline: 0;
 	--itx-cb-tablist-border-bottom-width: var(--itx-border-width-thick);
-	--itx-cb-tablist-border-bottom-style: solid;
-	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-4);
 	--itx-cb-tablist-background: transparent;
 	--itx-cb-tablist-border-radius: var(--itx-radius);
 	--itx-cb-tablist-box-shadow: none;
@@ -90,33 +85,23 @@
 	--itx-cb-tab-padding-block: var(--itx-spacing-2);
 	--itx-cb-tab-padding-inline: var(--itx-spacing-4);
 	--itx-cb-tab-radius: var(--itx-radius);
-	/* Also read-but-never-declared. font-family inherits, so an invalid var()
-	   resolved to `unset` → inherit anyway; stating it is a no-op that stops the
-	   property silently failing. */
-	--itx-cb-tab-font-family: inherit;
 	--itx-cb-tab-font-size: var(--itx-font-size-caption);
 	--itx-cb-tab-foreground: var(--itx-contrast-4);
-	--itx-cb-tab-foreground-active: var(--itx-contrast-6);
-	/*--itx-cb-tab-indicator-color: var(--itx-colorway-solid);*/
-
-	--itx-cb-tab-indicator-width: 1px;
 	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
 	--itx-cb-tab-transition-timing: var(--itx-easing-standard);
 
 	/* Tab:Hover  */
-	--itx-cb-tab-background-hover: inherit;
-	--itx-cb-tab-foreground-hover: var(--itx-contrast-4);
-	--itx-cb-tab-border-bottom-width: var(--itx-border-width-thick);
-	--itx-cb-tab-border-bottom-style: solid;
+	--itx-cb-tab-background-hover: transparent;
+	--itx-cb-tab-foreground-hover: var(--itx-contrast-5);
 	--itx-cb-tab-border-bottom-color-hover: var(--itx-contrast-4);
 
 	/* Tab:Current  */
 	--itx-cb-tab-background-current: transparent;
 	--itx-cb-tab-foreground-current: var(--itx-contrast-6);
-	--itx-cb-tab-border-bottom-color: var(--itx-colorway-solid);
+	--itx-cb-tab-border-bottom-color-current: var(--itx-colorway-solid);
 
 	/* Label */
-	--itx-cb-label-padding-inline: initial;
+	--itx-cb-label-padding-inline: 0;
 	--itx-cb-label-foreground: var(--itx-contrast-4);
 	--itx-cb-label-font-size: var(--itx-font-size-caption);
 	--itx-cb-label-font-weight: 500;

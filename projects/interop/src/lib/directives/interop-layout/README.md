@@ -18,44 +18,46 @@ Universal layout control for Interop components via CSS custom properties. Provi
 ```html
 <!-- Horizontal toolbar with spaced items -->
 <interop-toolbar interopLayout="row center between">
-  <button>Save</button>
-  <button>Cancel</button>
+	<button>Save</button>
+	<button>Cancel</button>
 </interop-toolbar>
 
 <!-- Vertical stack with consistent gap -->
 <interop-list interopLayout="column start gap-4">
-  <interop-card>Card 1</interop-card>
-  <interop-card>Card 2</interop-card>
+	<interop-card>Card 1</interop-card>
+	<interop-card>Card 2</interop-card>
 </interop-list>
 
 <!-- Button group with small spacing -->
 <div interopLayout="row center gap-2">
-  <button interop-button>Edit</button>
-  <button interop-button>Delete</button>
+	<button interop-button>Edit</button>
+	<button interop-button>Delete</button>
 </div>
 ```
 
 ### Object Syntax
 
 ```html
-<interop-stack [interopLayoutConfig]="{ 
+<interop-stack
+	[interopLayoutConfig]="{ 
   direction: 'column', 
   align: 'stretch', 
   gap: 6 
-}">
-  <interop-card>Content</interop-card>
+}"
+>
+	<interop-card>Content</interop-card>
 </interop-stack>
 ```
 
 ## Supported Properties
 
-| Property | Values | CSS Mapping | Description |
-|----------|--------|-------------|-------------|
-| `direction` | `row`, `column`, `row-reverse`, `column-reverse` | `flex-direction` | Primary axis direction |
-| `justify` | `start`, `end`, `center`, `between`, `around`, `evenly` | `justify-content` | Main axis alignment |
-| `align` | `start`, `end`, `center`, `stretch`, `baseline` | `align-items` | Cross axis alignment |
-| `wrap` | `nowrap`, `wrap`, `wrap-reverse` | `flex-wrap` | Flex wrapping behavior |
-| `gap` | `0`, `1`, `2`, `3`, `4`, `6`, `8`, `12`, `16`, `24` | `gap` | Space between items (design tokens) |
+| Property    | Values                                                  | CSS Mapping       | Description                         |
+| ----------- | ------------------------------------------------------- | ----------------- | ----------------------------------- |
+| `direction` | `row`, `column`, `row-reverse`, `column-reverse`        | `flex-direction`  | Primary axis direction              |
+| `justify`   | `start`, `end`, `center`, `between`, `around`, `evenly` | `justify-content` | Main axis alignment                 |
+| `align`     | `start`, `end`, `center`, `stretch`, `baseline`         | `align-items`     | Cross axis alignment                |
+| `wrap`      | `nowrap`, `wrap`, `wrap-reverse`                        | `flex-wrap`       | Flex wrapping behavior              |
+| `gap`       | `0`, `1`, `2`, `3`, `4`, `6`, `8`, `12`, `16`, `24`     | `gap`             | Space between items (design tokens) |
 
 ## Gap Values & Design Tokens
 
@@ -85,26 +87,26 @@ Components must opt into layout support by:
 ### Making Your Component Layout-Capable
 
 ```typescript
-import { LayoutCapable } from 'interop';
+import { LayoutCapable } from "interop";
 
-@LayoutCapable(['direction', 'justify', 'align', 'gap'])
+@LayoutCapable(["direction", "justify", "align", "gap"])
 @Component({
-  selector: 'my-container',
-  // ...
+	selector: "my-container",
+	// ...
 })
 export class MyContainerComponent {
-  // Component implementation
+	// Component implementation
 }
 ```
 
 ```scss
-@use 'interop/layout' as layout;
+@use "interop/layout" as layout;
 
 :host {
-  @include layout.layout-capable;
-  
-  // Override defaults if needed
-  flex-direction: var(--itx-layout-direction, column);
+	@include layout.layout-capable;
+
+	// Override defaults if needed
+	flex-direction: var(--itx-layout-direction, column);
 }
 ```
 
@@ -115,9 +117,9 @@ export class MyContainerComponent {
 ```html
 <!-- Complex layout with multiple properties -->
 <div interopLayout="row-reverse center between wrap gap-6">
-  <button>Action 1</button>
-  <button>Action 2</button>
-  <button>Action 3</button>
+	<button>Action 1</button>
+	<button>Action 2</button>
+	<button>Action 3</button>
 </div>
 ```
 
@@ -127,12 +129,12 @@ Use CSS custom properties for responsive behavior:
 
 ```scss
 .my-responsive-container {
-  --itx-layout-direction: column;
-  
-  @media (min-width: 768px) {
-    --itx-layout-direction: row;
-    --itx-layout-gap: var(--itx-layout-gap-8);
-  }
+	--itx-layout-direction: column;
+
+	@media (min-width: 768px) {
+		--itx-layout-direction: row;
+		--itx-layout-gap: var(--itx-layout-gap-8);
+	}
 }
 ```
 
@@ -140,17 +142,17 @@ Use CSS custom properties for responsive behavior:
 
 ```typescript
 export class MyComponent {
-  layoutConfig = computed(() => ({
-    direction: this.isVertical() ? 'column' : 'row',
-    gap: this.spacing(),
-    justify: this.alignment()
-  }));
+	layoutConfig = computed(() => ({
+		direction: this.isVertical() ? "column" : "row",
+		gap: this.spacing(),
+		justify: this.alignment(),
+	}));
 }
 ```
 
 ```html
 <div [interopLayoutConfig]="layoutConfig()">
-  <!-- Content -->
+	<!-- Content -->
 </div>
 ```
 
@@ -159,7 +161,7 @@ export class MyComponent {
 The directive sets these CSS custom properties:
 
 - `--itx-layout-direction`: flex-direction value
-- `--itx-layout-justify`: justify-content value  
+- `--itx-layout-justify`: justify-content value
 - `--itx-layout-align`: align-items value
 - `--itx-layout-wrap`: flex-wrap value
 - `--itx-layout-gap`: gap value (using design tokens)
@@ -179,50 +181,53 @@ InteropLayout works alongside existing component styles:
 ```scss
 // Component can provide defaults
 :host {
-  display: flex;
-  flex-direction: column;
-  gap: var(--itx-sz-2);
-  
-  // Layout directive can override these
-  flex-direction: var(--itx-layout-direction, column);
-  justify-content: var(--itx-layout-justify, flex-start);
-  align-items: var(--itx-layout-align, flex-start);
-  flex-wrap: var(--itx-layout-wrap, nowrap);
-  gap: var(--itx-layout-gap, var(--itx-sz-2));
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-sz-2);
+
+	// Layout directive can override these
+	flex-direction: var(--itx-layout-direction, column);
+	justify-content: var(--itx-layout-justify, flex-start);
+	align-items: var(--itx-layout-align, flex-start);
+	flex-wrap: var(--itx-layout-wrap, nowrap);
+	gap: var(--itx-layout-gap, var(--itx-sz-2));
 }
 ```
 
 ## Common Patterns
 
 ### Toolbar Layouts
+
 ```html
 <header interopLayout="row center between">
-  <h1>Title</h1>
-  <nav interopLayout="row center gap-4">
-    <button>Home</button>
-    <button>About</button>
-  </nav>
+	<h1>Title</h1>
+	<nav interopLayout="row center gap-4">
+		<button>Home</button>
+		<button>About</button>
+	</nav>
 </header>
 ```
 
 ### Card Grids
+
 ```html
 <div interopLayout="row start wrap gap-6">
-  <interop-card>Card 1</interop-card>
-  <interop-card>Card 2</interop-card>
-  <interop-card>Card 3</interop-card>
+	<interop-card>Card 1</interop-card>
+	<interop-card>Card 2</interop-card>
+	<interop-card>Card 3</interop-card>
 </div>
 ```
 
 ### Form Layouts
+
 ```html
 <form interopLayout="column stretch gap-4">
-  <input type="text" placeholder="Name">
-  <input type="email" placeholder="Email">
-  <div interopLayout="row end gap-2">
-    <button type="submit">Save</button>
-    <button type="button">Cancel</button>
-  </div>
+	<input type="text" placeholder="Name" />
+	<input type="email" placeholder="Email" />
+	<div interopLayout="row end gap-2">
+		<button type="submit">Save</button>
+		<button type="button">Cancel</button>
+	</div>
 </form>
 ```
 
@@ -230,19 +235,19 @@ InteropLayout works alongside existing component styles:
 
 ### Inputs
 
-| Input | Type | Description |
-|-------|------|-------------|
-| `interopLayout` | `string \| null` | Shorthand layout string |
+| Input                 | Type                   | Description                   |
+| --------------------- | ---------------------- | ----------------------------- |
+| `interopLayout`       | `string \| null`       | Shorthand layout string       |
 | `interopLayoutConfig` | `LayoutConfig \| null` | Explicit configuration object |
 
 ### Types
 
 ```typescript
 interface LayoutConfig {
-  direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
-  justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
-  align?: 'start' | 'end' | 'center' | 'stretch' | 'baseline';
-  wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
-  gap?: 0 | 1 | 2 | 3 | 4 | 6 | 8 | 12 | 16 | 24;
+	direction?: "row" | "column" | "row-reverse" | "column-reverse";
+	justify?: "start" | "end" | "center" | "between" | "around" | "evenly";
+	align?: "start" | "end" | "center" | "stretch" | "baseline";
+	wrap?: "nowrap" | "wrap" | "wrap-reverse";
+	gap?: 0 | 1 | 2 | 3 | 4 | 6 | 8 | 12 | 16 | 24;
 }
 ```

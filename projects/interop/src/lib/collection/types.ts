@@ -41,9 +41,7 @@ export interface Collection<T = unknown> {
  * ```
  */
 export type InteropCollectionInput<T> =
-	| SimpleIterable<T>
-	| Collection<T>
-	| InteropCollection<T>;
+	SimpleIterable<T> | Collection<T> | InteropCollection<T>;
 
 // ── Type guards ───────────────────────────────────────────────────────────
 

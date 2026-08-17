@@ -37,11 +37,11 @@
 		id="display"
 		heading="Display chips"
 		[chips]="[
-		{
-			label: 'css only',
-			size: 'sm',
-		},
-]"
+			{
+				label: 'css only',
+				size: 'sm',
+			},
+		]"
 	>
 		<demo-example label="Presentational">
 			<ul interop-chip-list aria-label="Cargo manifest tags">
@@ -56,14 +56,14 @@
 			<!--<span interop-chip-badge>CSS only</span>-->
 			<ul interop-chip-list aria-label="Active cargo tags">
 				@for (tag of cargoTags(); track tag) {
-				<li
-					interop-chip-item
-					[label]="tag"
-					[removable]="true"
-					(removed)="removeTag(tag)"
-				>
-					{{ tag }}
-				</li>
+					<li
+						interop-chip-item
+						[label]="tag"
+						[removable]="true"
+						(removed)="removeTag(tag)"
+					>
+						{{ tag }}
+					</li>
 				}
 			</ul>
 			<itx-terminal
@@ -165,7 +165,9 @@
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -188,6 +190,5 @@
 		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-	</demo-section>
+	<demo-section id="notes" heading="Notes"> </demo-section>
 </article>

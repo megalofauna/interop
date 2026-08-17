@@ -1,5 +1,5 @@
-import { Directive, TemplateRef, inject, input } from '@angular/core';
-import type { TableColumn } from './interop-table';
+import { Directive, TemplateRef, inject, input } from "@angular/core";
+import type { TableColumn } from "./interop-table";
 
 /**
  * Context object provided to custom cell templates.
@@ -53,7 +53,7 @@ export interface InteropCellContext<T = any> {
  * ```
  */
 @Directive({
-	selector: '[itxCell]',
+	selector: "[itxCell]",
 	standalone: true,
 })
 export class InteropCellDef<T = any> {

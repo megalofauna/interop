@@ -7,9 +7,12 @@ import { InteropChipOption } from "../interop-chip-option/interop-chip-option";
 	standalone: true,
 	imports: [InteropChipFilter, InteropChipOption],
 	template: `
-		<fieldset interop-chip-filter label="Size"
+		<fieldset
+			interop-chip-filter
+			label="Size"
 			[value]="selected()"
-			(valueChange)="onValueChange($event)">
+			(valueChange)="onValueChange($event)"
+		>
 			<label interop-chip-option value="xs">XS</label>
 			<label interop-chip-option value="sm">SM</label>
 			<label interop-chip-option value="lg">LG</label>

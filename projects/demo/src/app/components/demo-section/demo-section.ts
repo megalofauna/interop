@@ -42,7 +42,7 @@ type DemoSectionChips = { label: string; size: string }[];
 				{{ heading() }}
 			</h2>
 		</hgroup>
-			<ng-content select="[description]" />
+		<ng-content select="[description]" />
 		<div class="demo-section__body">
 			<ng-content />
 		</div>

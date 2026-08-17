@@ -1,5 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
-import { INTEROP_EXPANSION_PANEL_CONTEXT } from './interop-expansion-panel.context.token';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	inject,
+	input,
+} from "@angular/core";
+import { INTEROP_EXPANSION_PANEL_CONTEXT } from "./interop-expansion-panel.context.token";
 
 /**
  * InteropExpansionBody — Animated content region of an `interop-expansion-panel`.
@@ -27,27 +32,27 @@ import { INTEROP_EXPANSION_PANEL_CONTEXT } from './interop-expansion-panel.conte
  * - `--itx-expansion-panel-body-peek-height` / `-peek-fade-height` / `-peek-fade-color`
  */
 @Component({
-  selector: '[interop-expansion-body]',
-  standalone: true,
-  template: `<div class="itx-expansion-body-inner"><ng-content /></div>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[id]': 'panel.bodyId',
-    '[attr.data-expanded]': 'panel.isExpanded() ? "" : null',
-    '[attr.data-peek]': 'peek() ? "" : null',
-    '[attr.aria-hidden]': '!panel.isExpanded() && !peek() ? "true" : null',
-  },
+	selector: "[interop-expansion-body]",
+	standalone: true,
+	template: `<div class="itx-expansion-body-inner"><ng-content /></div>`,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: {
+		"[id]": "panel.bodyId",
+		"[attr.data-expanded]": 'panel.isExpanded() ? "" : null',
+		"[attr.data-peek]": 'peek() ? "" : null',
+		"[attr.aria-hidden]": '!panel.isExpanded() && !peek() ? "true" : null',
+	},
 })
 export class InteropExpansionBody {
-  readonly panel = inject(INTEROP_EXPANSION_PANEL_CONTEXT);
+	readonly panel = inject(INTEROP_EXPANSION_PANEL_CONTEXT);
 
-  /**
-   * When true, the body shows a partial preview of its content while collapsed
-   * rather than hiding it entirely. The visible height is controlled by the
-   * `--itx-expansion-panel-body-peek-height` CSS custom property.
-   * A fade gradient indicates there is more content beyond the threshold.
-   *
-   * `aria-hidden` is not applied in peek mode since the content is visible.
-   */
-  readonly peek = input<boolean>(false);
+	/**
+	 * When true, the body shows a partial preview of its content while collapsed
+	 * rather than hiding it entirely. The visible height is controlled by the
+	 * `--itx-expansion-panel-body-peek-height` CSS custom property.
+	 * A fade gradient indicates there is more content beyond the threshold.
+	 *
+	 * `aria-hidden` is not applied in peek mode since the content is visible.
+	 */
+	readonly peek = input<boolean>(false);
 }

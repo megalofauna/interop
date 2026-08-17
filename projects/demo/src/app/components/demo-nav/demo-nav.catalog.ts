@@ -310,8 +310,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 	{
 		label: "Experiments",
 		id: "experiments",
-		items: [
-		],
+		items: [],
 	},
 	{ label: "Rigs", id: "rigs", disabled: true, items: [] },
 	{ label: "Services", id: "services", disabled: true, items: [] },

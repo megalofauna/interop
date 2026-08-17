@@ -9,21 +9,23 @@
 	<demo-section heading="The platform does it better">
 		<div class="principles-page__prose">
 			<p>
-				"Platform-native" means a component's behavior derives from the
-				browser. If a behavior can be so derived, it should be.
+				"Platform-native" means a component's behavior derives from the browser.
+				If a behavior can be so derived, it should be.
 			</p>
 			<p>
 				The web platform already implements most of what a component library
 				wants to ship. Dialogs, popovers, disclosure, focus management, form
 				semantics, and the accessibility tree are all browser features. Interop
-				reaches for those first and adds coordination, tokens, and ergonomics
-				on top, with the semantics left intact.
+				reaches for those first and adds coordination, tokens, and ergonomics on
+				top, with the semantics left intact.
 			</p>
 			<p>
 				A popover trigger sets <code>popovertarget</code> and the browser does
 				the rest. No JavaScript sits in the click path.
 			</p>
-			<p>In the rare cases where the platform is lacking, Interop patches it.</p>
+			<p>
+				In the rare cases where the platform is lacking, Interop patches it.
+			</p>
 			<p class="principles-page__proof">
 				<a routerLink="/components/popover" fragment="usage"
 					>See a trigger with no click handler</a
@@ -104,10 +106,11 @@
 			<p>
 				There is no generated wrapper and no shadow root, so the semantics come
 				standard. <code>&lt;fieldset&gt;</code> groups.
-				<code>&lt;label&gt;</code> associates. <code>&lt;progress&gt;</code>
-				announces. <code>&lt;button&gt;</code> handles keyboard activation and
-				form participation. None of it is restated in ARIA, because none of it
-				needs to be.
+				<code>&lt;label&gt;</code> associates.
+				<code>&lt;progress&gt;</code> announces.
+				<code>&lt;button&gt;</code> handles keyboard activation and form
+				participation. None of it is restated in ARIA, because none of it needs
+				to be.
 			</p>
 			<p class="principles-page__proof">
 				<a routerLink="/components/radio" fragment="usage"

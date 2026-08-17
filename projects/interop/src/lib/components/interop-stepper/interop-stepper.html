@@ -26,39 +26,39 @@
 -->
 <nav class="interop-stepper__nav" [attr.aria-label]="ariaLabel()">
 	@if (menu() === "never") {
-	<div
-		class="interop-stepper__nav-trigger interop-stepper__nav-trigger--passive"
-	>
-		<interop-icon name="tabler-list" [size]="14" />
-		<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
-		<span class="interop-stepper__nav-progress"
-			>{{ activeIndex() + 1 }}/{{ totalSteps() }}</span
+		<div
+			class="interop-stepper__nav-trigger interop-stepper__nav-trigger--passive"
 		>
-	</div>
+			<interop-icon name="tabler-list" [size]="14" />
+			<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
+			<span class="interop-stepper__nav-progress"
+				>{{ activeIndex() + 1 }}/{{ totalSteps() }}</span
+			>
+		</div>
 	} @else {
-	<button
-		interop-button
-		itx-size="md"
-		type="button"
-		class="interop-stepper__nav-trigger"
-		[interop-popover-trigger]="menuPopover"
-		[popoverHaspopup]="'menu'"
-		[attr.aria-label]="menuLabel()"
-	>
-		<interop-icon name="tabler-list" [size]="24" />
-		<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
-		<span spacer style="flex: 1"></span>
-		<span class="interop-stepper__nav-progress"
-			>Step {{ activeIndex() + 1 }} of {{ totalSteps() }}</span
+		<button
+			interop-button
+			itx-size="md"
+			type="button"
+			class="interop-stepper__nav-trigger"
+			[interop-popover-trigger]="menuPopover"
+			[popoverHaspopup]="'menu'"
+			[attr.aria-label]="menuLabel()"
 		>
-		<span spacer style="flex: 0.0125"></span>
-		<interop-icon
-			class="interop-stepper__nav-arrow"
-			name="tabler-chevron-down"
-			[size]="20"
-			[color]="'var(--itx-contrast-5)'"
-		></interop-icon>
-	</button>
+			<interop-icon name="tabler-list" [size]="24" />
+			<span class="interop-stepper__nav-summary">{{ activeStepLabel() }}</span>
+			<span spacer style="flex: 1"></span>
+			<span class="interop-stepper__nav-progress"
+				>Step {{ activeIndex() + 1 }} of {{ totalSteps() }}</span
+			>
+			<span spacer style="flex: 0.0125"></span>
+			<interop-icon
+				class="interop-stepper__nav-arrow"
+				name="tabler-chevron-down"
+				[size]="20"
+				[color]="'var(--itx-contrast-5)'"
+			></interop-icon>
+		</button>
 	}
 	<!--
 	  Horizontal default: the projected step list lives inside an
@@ -106,19 +106,19 @@
 	placement="bottom-end"
 >
 	@if (orientation() === "vertical" && stepListTemplate(); as tpl) {
-	<ng-container
-		[ngTemplateOutlet]="tpl"
-		[ngTemplateOutletInjector]="injector"
-	/>
+		<ng-container
+			[ngTemplateOutlet]="tpl"
+			[ngTemplateOutletInjector]="injector"
+		/>
 	} @else if (menu() !== "never") {
-	<ul
-		interop-listbox
-		class="interop-stepper__menu-list"
-		[attr.aria-label]="menuLabel()"
-		[controls]="menuOptions()"
-		[value]="activeIndex()"
-		(valueChange)="onMenuSelect($event)"
-	></ul>
+		<ul
+			interop-listbox
+			class="interop-stepper__menu-list"
+			[attr.aria-label]="menuLabel()"
+			[controls]="menuOptions()"
+			[value]="activeIndex()"
+			(valueChange)="onMenuSelect($event)"
+		></ul>
 	}
 </div>
 
@@ -127,9 +127,9 @@
 </div>
 
 @if (actions()) {
-<div class="interop-stepper__actions">
-	<ng-content select="[interop-stepper-actions]">
-		<!--
+	<div class="interop-stepper__actions">
+		<ng-content select="[interop-stepper-actions]">
+			<!--
 		  Default action bar. Buttons are direct children — source order is
 		  priority order. The first two are pushed to the end (primary), any
 		  subsequent ones are pushed to the start (secondary). Authors can
@@ -137,55 +137,56 @@
 		  bar with `flex-direction: row-reverse`.
 		-->
 
-		<button
-			type="button"
-			interop-button="secondary grow"
-			class="interop-stepper__back"
-			[disabled]="!canGoBack()"
-			[focusableWhenDisabled]="true"
-			(click)="back()"
-		>
-			<interop-icon name="tabler-arrow-narrow-left" [size]="20" />
-			{{ backLabel() }}
-		</button>
-		<button
-			type="button"
-			interop-button="primary grow"
-			class="interop-stepper__next"
-			[disabled]="(!canGoForward() && !canFinish()) || isFinished()"
-			[focusableWhenDisabled]="true"
-			(click)="onNextOrFinish()"
-		>
-			{{ canFinish() ? finishLabel() : nextLabel() }} @if (!canFinish()) {
-			<interop-icon name="tabler-arrow-narrow-right" [size]="20" />
+			<button
+				type="button"
+				interop-button="secondary grow"
+				class="interop-stepper__back"
+				[disabled]="!canGoBack()"
+				[focusableWhenDisabled]="true"
+				(click)="back()"
+			>
+				<interop-icon name="tabler-arrow-narrow-left" [size]="20" />
+				{{ backLabel() }}
+			</button>
+			<button
+				type="button"
+				interop-button="primary grow"
+				class="interop-stepper__next"
+				[disabled]="(!canGoForward() && !canFinish()) || isFinished()"
+				[focusableWhenDisabled]="true"
+				(click)="onNextOrFinish()"
+			>
+				{{ canFinish() ? finishLabel() : nextLabel() }}
+				@if (!canFinish()) {
+					<interop-icon name="tabler-arrow-narrow-right" [size]="20" />
+				}
+			</button>
+			@if (menu() === "always") {
+				<button
+					type="button"
+					interop-button="icon"
+					itx-size="sm"
+					class="interop-stepper__menu-trigger"
+					[interop-popover-trigger]="menuPopover"
+					[popoverHaspopup]="'menu'"
+					[attr.aria-label]="menuLabel()"
+				>
+					<interop-icon name="tabler-list" [size]="20" />
+				</button>
+				<span spacer style="flex: 1"></span>
 			}
-		</button>
-		@if (menu() === "always") {
-		<button
-			type="button"
-			interop-button="icon"
-			itx-size="sm"
-			class="interop-stepper__menu-trigger"
-			[interop-popover-trigger]="menuPopover"
-			[popoverHaspopup]="'menu'"
-			[attr.aria-label]="menuLabel()"
-		>
-			<interop-icon name="tabler-list" [size]="20" />
-		</button>
-		<span spacer style="flex: 1"></span>
-
-		} @if (cancellable()) {
-		<button
-			type="button"
-			interop-button
-			class="interop-stepper__cancel"
-			(click)="cancel.emit()"
-		>
-			<interop-icon name="tabler-circle-x" [size]="24" [strokeWidth]="2" />
-			{{ cancelLabel() }}
-		</button>
-		<span spacer style="flex: 1"></span>
-		}
-	</ng-content>
-</div>
+			@if (cancellable()) {
+				<button
+					type="button"
+					interop-button
+					class="interop-stepper__cancel"
+					(click)="cancel.emit()"
+				>
+					<interop-icon name="tabler-circle-x" [size]="24" [strokeWidth]="2" />
+					{{ cancelLabel() }}
+				</button>
+				<span spacer style="flex: 1"></span>
+			}
+		</ng-content>
+	</div>
 }

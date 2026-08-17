@@ -1,58 +1,58 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "bundler",
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022",
-    "useDefineForClassFields": false,
-    "lib": ["ES2023", "dom"],
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    /*
-     * SOURCE FIRST, dist second — the order matters and is not cosmetic.
-     *
-     * TypeScript takes the first candidate that resolves. These used to list
-     * "dist/interop" first, so the moment anyone ran `ng build interop` the
-     * demo stopped compiling the library from source and silently compiled
-     * against the built package instead. Library edits then had no effect on
-     * the demo until you remembered to rebuild — and because the failure is
-     * silent, it reads as "my change didn't take" or "the page is broken",
-     * identically, no matter what you edit.
-     *
-     * With source first, the demo always compiles what you are editing.
-     * "dist/interop" stays as the fallback so a consumer-style build (and
-     * anything resolving the package after `ng build interop`) still works.
-     *
-     * If the demo ever seems to ignore a library change again, check this
-     * ordering before anything else.
-     */
-    "paths": {
-      "interop": ["projects/interop/src/public-api.ts", "dist/interop"],
-      "interop/highlighters/shiki": [
-        "projects/interop/highlighters/shiki/src/public-api.ts",
-        "dist/interop/highlighters/shiki"
-      ],
-      "interop/*": ["projects/interop/src/*", "dist/interop/*"]
-    }
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "compilationMode": "partial"
-  }
+	"compileOnSave": false,
+	"compilerOptions": {
+		"baseUrl": "./",
+		"outDir": "./dist/out-tsc",
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitOverride": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"sourceMap": true,
+		"declaration": false,
+		"downlevelIteration": true,
+		"experimentalDecorators": true,
+		"moduleResolution": "bundler",
+		"importHelpers": true,
+		"target": "ES2022",
+		"module": "ES2022",
+		"useDefineForClassFields": false,
+		"lib": ["ES2023", "dom"],
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		/*
+		 * SOURCE FIRST, dist second — the order matters and is not cosmetic.
+		 *
+		 * TypeScript takes the first candidate that resolves. These used to list
+		 * "dist/interop" first, so the moment anyone ran `ng build interop` the
+		 * demo stopped compiling the library from source and silently compiled
+		 * against the built package instead. Library edits then had no effect on
+		 * the demo until you remembered to rebuild — and because the failure is
+		 * silent, it reads as "my change didn't take" or "the page is broken",
+		 * identically, no matter what you edit.
+		 *
+		 * With source first, the demo always compiles what you are editing.
+		 * "dist/interop" stays as the fallback so a consumer-style build (and
+		 * anything resolving the package after `ng build interop`) still works.
+		 *
+		 * If the demo ever seems to ignore a library change again, check this
+		 * ordering before anything else.
+		 */
+		"paths": {
+			"interop": ["projects/interop/src/public-api.ts", "dist/interop"],
+			"interop/highlighters/shiki": [
+				"projects/interop/highlighters/shiki/src/public-api.ts",
+				"dist/interop/highlighters/shiki"
+			],
+			"interop/*": ["projects/interop/src/*", "dist/interop/*"]
+		}
+	},
+	"angularCompilerOptions": {
+		"enableI18nLegacyMessageIdFormat": false,
+		"strictInjectionParameters": true,
+		"strictInputAccessModifiers": true,
+		"strictTemplates": true,
+		"compilationMode": "partial"
+	}
 }

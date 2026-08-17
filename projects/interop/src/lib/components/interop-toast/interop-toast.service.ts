@@ -1,22 +1,19 @@
-import {
-  Injectable,
-  inject,
-  signal,
-  isDevMode,
-  computed,
-} from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { Observable, Subscription } from 'rxjs';
+import { Injectable, inject, signal, isDevMode, computed } from "@angular/core";
+import { DOCUMENT } from "@angular/common";
+import { Observable, Subscription } from "rxjs";
 
 import type {
-  ToastType,
-  ToastDismissReason,
-  ToastState,
-  InteropToastOptions,
-  ToastAsyncMessages,
-} from './interop-toast.types';
-import { INTEROP_TOAST_CONFIG, INTEROP_TOAST_DEFAULTS } from './interop-toast.config';
-import { InteropToastHandle } from './interop-toast-handle';
+	ToastType,
+	ToastDismissReason,
+	ToastState,
+	InteropToastOptions,
+	ToastAsyncMessages,
+} from "./interop-toast.types";
+import {
+	INTEROP_TOAST_CONFIG,
+	INTEROP_TOAST_DEFAULTS,
+} from "./interop-toast.config";
+import { InteropToastHandle } from "./interop-toast-handle";
 
 let nextId = 0;
 
@@ -44,304 +41,348 @@ let nextId = 0;
  * });
  * ```
  */
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class InteropToastService {
-  private readonly doc = inject(DOCUMENT);
-  private readonly globalConfig = inject(INTEROP_TOAST_CONFIG);
+	private readonly doc = inject(DOCUMENT);
+	private readonly globalConfig = inject(INTEROP_TOAST_CONFIG);
 
-  /** @internal — the source of truth for all active toasts. */
-  readonly _toasts = signal<ToastState[]>([]);
+	/** @internal — the source of truth for all active toasts. */
+	readonly _toasts = signal<ToastState[]>([]);
 
-  /** @internal — registry of active toast refs keyed by id. */
-  private readonly refs = new Map<string, InteropToastHandle>();
+	/** @internal — registry of active toast refs keyed by id. */
+	private readonly refs = new Map<string, InteropToastHandle>();
 
-  /** @internal — registry of Observable subscriptions for async toasts. */
-  private readonly asyncSubs = new Map<string, Subscription>();
+	/** @internal — registry of Observable subscriptions for async toasts. */
+	private readonly asyncSubs = new Map<string, Subscription>();
 
-  /** @internal — whether a viewport component is registered. */
-  _viewportRegistered = signal(false);
+	/** @internal — whether a viewport component is registered. */
+	_viewportRegistered = signal(false);
 
-  /** Read-only computed of current toast count. */
-  readonly count = computed(() => this._toasts().length);
+	/** Read-only computed of current toast count. */
+	readonly count = computed(() => this._toasts().length);
 
-  // ── Public API: typed convenience methods ─────────────────────────────
+	// ── Public API: typed convenience methods ─────────────────────────────
 
-  /** Show a toast with the default type. */
-  show(message: string, options?: InteropToastOptions): InteropToastHandle {
-    return this.create(message, { ...options, type: options?.type ?? 'default' });
-  }
+	/** Show a toast with the default type. */
+	show(message: string, options?: InteropToastOptions): InteropToastHandle {
+		return this.create(message, {
+			...options,
+			type: options?.type ?? "default",
+		});
+	}
 
-  /** Show a success toast. */
-  success(message: string, options?: Omit<InteropToastOptions, 'type'>): InteropToastHandle {
-    return this.create(message, { ...options, type: 'success' });
-  }
+	/** Show a success toast. */
+	success(
+		message: string,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		return this.create(message, { ...options, type: "success" });
+	}
 
-  /** Show an error toast. Duration defaults to 0 (no auto-dismiss). */
-  error(message: string, options?: Omit<InteropToastOptions, 'type'>): InteropToastHandle {
-    return this.create(message, { ...options, type: 'error' });
-  }
+	/** Show an error toast. Duration defaults to 0 (no auto-dismiss). */
+	error(
+		message: string,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		return this.create(message, { ...options, type: "error" });
+	}
 
-  /** Show a warning toast. Duration defaults to 0 (no auto-dismiss). */
-  warning(message: string, options?: Omit<InteropToastOptions, 'type'>): InteropToastHandle {
-    return this.create(message, { ...options, type: 'warning' });
-  }
+	/** Show a warning toast. Duration defaults to 0 (no auto-dismiss). */
+	warning(
+		message: string,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		return this.create(message, { ...options, type: "warning" });
+	}
 
-  /** Show an info toast. */
-  info(message: string, options?: Omit<InteropToastOptions, 'type'>): InteropToastHandle {
-    return this.create(message, { ...options, type: 'info' });
-  }
+	/** Show an info toast. */
+	info(
+		message: string,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		return this.create(message, { ...options, type: "info" });
+	}
 
-  /** Show a loading toast. Duration defaults to 0 (no auto-dismiss). */
-  loading(message: string, options?: Omit<InteropToastOptions, 'type'>): InteropToastHandle {
-    return this.create(message, { ...options, type: 'loading' });
-  }
+	/** Show a loading toast. Duration defaults to 0 (no auto-dismiss). */
+	loading(
+		message: string,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		return this.create(message, { ...options, type: "loading" });
+	}
 
-  /**
-   * Show a toast that tracks an Observable lifecycle.
-   * Starts as 'loading', transitions to 'success' or 'error' based on the Observable.
-   */
-  observe<T>(
-    source$: Observable<T>,
-    messages: ToastAsyncMessages<T>,
-    options?: Omit<InteropToastOptions, 'type'>,
-  ): InteropToastHandle {
-    const ref = this.create(messages.loading, {
-      ...options,
-      type: 'loading',
-      cancelBehavior: options?.cancelBehavior ?? 'detach',
-    });
+	/**
+	 * Show a toast that tracks an Observable lifecycle.
+	 * Starts as 'loading', transitions to 'success' or 'error' based on the Observable.
+	 */
+	observe<T>(
+		source$: Observable<T>,
+		messages: ToastAsyncMessages<T>,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		const ref = this.create(messages.loading, {
+			...options,
+			type: "loading",
+			cancelBehavior: options?.cancelBehavior ?? "detach",
+		});
 
-    const sub = source$.subscribe({
-      next: (value) => {
-        const successMsg = typeof messages.success === 'function'
-          ? messages.success(value)
-          : messages.success;
-        ref.update({
-          message: successMsg,
-          type: 'success',
-          duration: this.resolveDuration('success', options?.duration),
-          dismissible: true,
-        });
-        this.asyncSubs.delete(ref.id);
-      },
-      error: (err) => {
-        const errorMsg = typeof messages.error === 'function'
-          ? messages.error(err)
-          : messages.error;
-        ref.update({
-          message: errorMsg,
-          type: 'error',
-          duration: 0,
-          dismissible: true,
-        });
-        this.asyncSubs.delete(ref.id);
-      },
-    });
+		const sub = source$.subscribe({
+			next: (value) => {
+				const successMsg =
+					typeof messages.success === "function"
+						? messages.success(value)
+						: messages.success;
+				ref.update({
+					message: successMsg,
+					type: "success",
+					duration: this.resolveDuration("success", options?.duration),
+					dismissible: true,
+				});
+				this.asyncSubs.delete(ref.id);
+			},
+			error: (err) => {
+				const errorMsg =
+					typeof messages.error === "function"
+						? messages.error(err)
+						: messages.error;
+				ref.update({
+					message: errorMsg,
+					type: "error",
+					duration: 0,
+					dismissible: true,
+				});
+				this.asyncSubs.delete(ref.id);
+			},
+		});
 
-    this.asyncSubs.set(ref.id, sub);
-    return ref;
-  }
+		this.asyncSubs.set(ref.id, sub);
+		return ref;
+	}
 
-  /**
-   * Show a toast that tracks a Promise lifecycle.
-   * Starts as 'loading', transitions to 'success' or 'error'.
-   */
-  promise<T>(
-    promise: Promise<T>,
-    messages: ToastAsyncMessages<T>,
-    options?: Omit<InteropToastOptions, 'type'>,
-  ): InteropToastHandle {
-    const ref = this.create(messages.loading, {
-      ...options,
-      type: 'loading',
-      cancelBehavior: options?.cancelBehavior ?? 'detach',
-    });
+	/**
+	 * Show a toast that tracks a Promise lifecycle.
+	 * Starts as 'loading', transitions to 'success' or 'error'.
+	 */
+	promise<T>(
+		promise: Promise<T>,
+		messages: ToastAsyncMessages<T>,
+		options?: Omit<InteropToastOptions, "type">,
+	): InteropToastHandle {
+		const ref = this.create(messages.loading, {
+			...options,
+			type: "loading",
+			cancelBehavior: options?.cancelBehavior ?? "detach",
+		});
 
-    promise.then(
-      (value) => {
-        const successMsg = typeof messages.success === 'function'
-          ? messages.success(value)
-          : messages.success;
-        ref.update({
-          message: successMsg,
-          type: 'success',
-          duration: this.resolveDuration('success', options?.duration),
-          dismissible: true,
-        });
-      },
-      (err) => {
-        const errorMsg = typeof messages.error === 'function'
-          ? messages.error(err)
-          : messages.error;
-        ref.update({
-          message: errorMsg,
-          type: 'error',
-          duration: 0,
-          dismissible: true,
-        });
-      },
-    );
+		promise.then(
+			(value) => {
+				const successMsg =
+					typeof messages.success === "function"
+						? messages.success(value)
+						: messages.success;
+				ref.update({
+					message: successMsg,
+					type: "success",
+					duration: this.resolveDuration("success", options?.duration),
+					dismissible: true,
+				});
+			},
+			(err) => {
+				const errorMsg =
+					typeof messages.error === "function"
+						? messages.error(err)
+						: messages.error;
+				ref.update({
+					message: errorMsg,
+					type: "error",
+					duration: 0,
+					dismissible: true,
+				});
+			},
+		);
 
-    return ref;
-  }
+		return ref;
+	}
 
-  /** Dismiss a specific toast by ID. */
-  dismiss(id: string): void {
-    this.removeToast(id, 'programmatic');
-  }
+	/** Dismiss a specific toast by ID. */
+	dismiss(id: string): void {
+		this.removeToast(id, "programmatic");
+	}
 
-  /** Dismiss all active toasts. */
-  dismissAll(): void {
-    const toasts = this._toasts();
-    for (const toast of toasts) {
-      this.removeToast(toast.id, 'programmatic');
-    }
-  }
+	/** Dismiss all active toasts. */
+	dismissAll(): void {
+		const toasts = this._toasts();
+		for (const toast of toasts) {
+			this.removeToast(toast.id, "programmatic");
+		}
+	}
 
-  // ── Internal methods (used by viewport component) ─────────────────────
+	// ── Internal methods (used by viewport component) ─────────────────────
 
-  /** @internal */
-  _handleAction(id: string): void {
-    const toast = this._toasts().find(t => t.id === id);
-    const ref = this.refs.get(id);
-    if (!toast || !ref) return;
+	/** @internal */
+	_handleAction(id: string): void {
+		const toast = this._toasts().find((t) => t.id === id);
+		const ref = this.refs.get(id);
+		if (!toast || !ref) return;
 
-    const actionId = toast.action?.id ?? toast.action?.label ?? '';
-    ref._emitAction(actionId);
-    this.removeToast(id, 'action');
-  }
+		const actionId = toast.action?.id ?? toast.action?.label ?? "";
+		ref._emitAction(actionId);
+		this.removeToast(id, "action");
+	}
 
-  /** @internal */
-  _handleSwipeDismiss(id: string): void {
-    this.removeToast(id, 'swipe');
-  }
+	/** @internal */
+	_handleSwipeDismiss(id: string): void {
+		this.removeToast(id, "swipe");
+	}
 
-  /** @internal */
-  _handleTimeout(id: string): void {
-    this.removeToast(id, 'timeout');
-  }
+	/** @internal */
+	_handleTimeout(id: string): void {
+		this.removeToast(id, "timeout");
+	}
 
-  /** @internal */
-  _handleDismiss(id: string): void {
-    this.removeToast(id, 'dismissed');
-  }
+	/** @internal */
+	_handleDismiss(id: string): void {
+		this.removeToast(id, "dismissed");
+	}
 
-  /** @internal */
-  _registerViewport(): void {
-    this._viewportRegistered.set(true);
-  }
+	/** @internal */
+	_registerViewport(): void {
+		this._viewportRegistered.set(true);
+	}
 
-  /** @internal */
-  _unregisterViewport(): void {
-    this._viewportRegistered.set(false);
-  }
+	/** @internal */
+	_unregisterViewport(): void {
+		this._viewportRegistered.set(false);
+	}
 
-  // ── Private helpers ───────────────────────────────────────────────────
+	// ── Private helpers ───────────────────────────────────────────────────
 
-  private create(message: string, options: InteropToastOptions = {}): InteropToastHandle {
-    const id = `itx-toast-${nextId++}`;
-    const type = options.type ?? 'default';
-    const duration = this.resolveDuration(type, options.duration);
-    const dismissible = this.resolveDismissible(type, duration, options);
+	private create(
+		message: string,
+		options: InteropToastOptions = {},
+	): InteropToastHandle {
+		const id = `itx-toast-${nextId++}`;
+		const type = options.type ?? "default";
+		const duration = this.resolveDuration(type, options.duration);
+		const dismissible = this.resolveDismissible(type, duration, options);
 
-    if (isDevMode()) {
-      if (!this._viewportRegistered()) {
-        console.warn(
-          'InteropToastService: no <interop-toast-viewport> found in the DOM. ' +
-          'Add one to your root layout to display toast notifications.\n' +
-          'Example: <interop-toast-viewport />'
-        );
-      }
-      if (type === 'error' && options.duration && options.duration > 0 && isFinite(options.duration)) {
-        console.warn(
-          `InteropToastService: toast "${id}" has type 'error' with auto-dismiss duration ${options.duration}ms. ` +
-          'Error toasts should persist until explicitly dismissed. Consider removing the duration.'
-        );
-      }
-      if (options.action && !options.action.altText) {
-        console.warn(
-          `InteropToastService: toast "${id}" has an action button ("${options.action.label}") without altText. ` +
-          'Provide altText to describe an alternative way for screen reader users to accomplish the action. ' +
-          'Example: { label: "Undo", altText: "Go to trash to restore the deleted item" }'
-        );
-      }
-    }
+		if (isDevMode()) {
+			if (!this._viewportRegistered()) {
+				console.warn(
+					"InteropToastService: no <interop-toast-viewport> found in the DOM. " +
+						"Add one to your root layout to display toast notifications.\n" +
+						"Example: <interop-toast-viewport />",
+				);
+			}
+			if (
+				type === "error" &&
+				options.duration &&
+				options.duration > 0 &&
+				isFinite(options.duration)
+			) {
+				console.warn(
+					`InteropToastService: toast "${id}" has type 'error' with auto-dismiss duration ${options.duration}ms. ` +
+						"Error toasts should persist until explicitly dismissed. Consider removing the duration.",
+				);
+			}
+			if (options.action && !options.action.altText) {
+				console.warn(
+					`InteropToastService: toast "${id}" has an action button ("${options.action.label}") without altText. ` +
+						"Provide altText to describe an alternative way for screen reader users to accomplish the action. " +
+						'Example: { label: "Undo", altText: "Go to trash to restore the deleted item" }',
+				);
+			}
+		}
 
-    const state: ToastState = {
-      id,
-      message,
-      type,
-      description: options.description,
-      duration,
-      action: options.action,
-      dismissible,
-      cancelBehavior: options.cancelBehavior ?? 'detach',
-      createdAt: Date.now(),
-      data: options.data,
-    };
+		const state: ToastState = {
+			id,
+			message,
+			type,
+			description: options.description,
+			duration,
+			action: options.action,
+			dismissible,
+			cancelBehavior: options.cancelBehavior ?? "detach",
+			createdAt: Date.now(),
+			data: options.data,
+		};
 
-    const ref = new InteropToastHandle(
-      id,
-      (reason) => this.removeToast(id, reason),
-      (patch) => this.updateToast(id, patch),
-    );
+		const ref = new InteropToastHandle(
+			id,
+			(reason) => this.removeToast(id, reason),
+			(patch) => this.updateToast(id, patch),
+		);
 
-    this.refs.set(id, ref);
-    this._toasts.update(toasts => [...toasts, state]);
+		this.refs.set(id, ref);
+		this._toasts.update((toasts) => [...toasts, state]);
 
-    return ref;
-  }
+		return ref;
+	}
 
-  private removeToast(id: string, reason: ToastDismissReason): void {
-    const toast = this._toasts().find(t => t.id === id);
-    if (!toast) return;
+	private removeToast(id: string, reason: ToastDismissReason): void {
+		const toast = this._toasts().find((t) => t.id === id);
+		if (!toast) return;
 
-    if (toast.cancelBehavior === 'prevent' && toast.type === 'loading' && reason !== 'programmatic') {
-      return;
-    }
+		if (
+			toast.cancelBehavior === "prevent" &&
+			toast.type === "loading" &&
+			reason !== "programmatic"
+		) {
+			return;
+		}
 
-    const sub = this.asyncSubs.get(id);
-    if (sub) {
-      if (toast.cancelBehavior === 'unsubscribe') {
-        sub.unsubscribe();
-      }
-      this.asyncSubs.delete(id);
-    }
+		const sub = this.asyncSubs.get(id);
+		if (sub) {
+			if (toast.cancelBehavior === "unsubscribe") {
+				sub.unsubscribe();
+			}
+			this.asyncSubs.delete(id);
+		}
 
-    this._toasts.update(toasts => toasts.filter(t => t.id !== id));
+		this._toasts.update((toasts) => toasts.filter((t) => t.id !== id));
 
-    const ref = this.refs.get(id);
-    if (ref) {
-      ref._emitDismissed(reason);
-      this.refs.delete(id);
-    }
-  }
+		const ref = this.refs.get(id);
+		if (ref) {
+			ref._emitDismissed(reason);
+			this.refs.delete(id);
+		}
+	}
 
-  private updateToast(
-    id: string,
-    patch: Partial<Pick<ToastState, 'message' | 'description' | 'type' | 'action' | 'duration' | 'dismissible'>>,
-  ): void {
-    this._toasts.update(toasts =>
-      toasts.map(t => (t.id === id ? { ...t, ...patch } : t)),
-    );
-  }
+	private updateToast(
+		id: string,
+		patch: Partial<
+			Pick<
+				ToastState,
+				| "message"
+				| "description"
+				| "type"
+				| "action"
+				| "duration"
+				| "dismissible"
+			>
+		>,
+	): void {
+		this._toasts.update((toasts) =>
+			toasts.map((t) => (t.id === id ? { ...t, ...patch } : t)),
+		);
+	}
 
-  private resolveDuration(type: ToastType, explicit?: number): number {
-    if (explicit !== undefined) return explicit;
-    if (type === 'error' || type === 'warning' || type === 'loading') return 0;
-    return this.globalConfig.duration ?? INTEROP_TOAST_DEFAULTS.duration;
-  }
+	private resolveDuration(type: ToastType, explicit?: number): number {
+		if (explicit !== undefined) return explicit;
+		if (type === "error" || type === "warning" || type === "loading") return 0;
+		return this.globalConfig.duration ?? INTEROP_TOAST_DEFAULTS.duration;
+	}
 
-  private resolveDismissible(
-    type: ToastType,
-    duration: number,
-    options: InteropToastOptions,
-  ): boolean {
-    const explicit = options.dismissible;
-    if (explicit !== undefined && explicit !== 'auto') return explicit;
-    if (type === 'error' || type === 'warning') return true;
-    if (type === 'loading') return options.cancelBehavior !== 'prevent';
-    if (duration === 0 || !isFinite(duration)) return true;
-    return false;
-  }
+	private resolveDismissible(
+		type: ToastType,
+		duration: number,
+		options: InteropToastOptions,
+	): boolean {
+		const explicit = options.dismissible;
+		if (explicit !== undefined && explicit !== "auto") return explicit;
+		if (type === "error" || type === "warning") return true;
+		if (type === "loading") return options.cancelBehavior !== "prevent";
+		if (duration === 0 || !isFinite(duration)) return true;
+		return false;
+	}
 }

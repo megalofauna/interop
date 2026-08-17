@@ -1,31 +1,31 @@
 /* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../../out-tsc/app",
-    "types": [],
-    "baseUrl": "../../",
-    "paths": {
-      "interop": ["projects/interop/src/public-api"],
-      "interop/highlighters/shiki": [
-        "projects/interop/highlighters/shiki/src/public-api.ts"
-      ],
-      "interop/*": ["projects/interop/src/*"]
-    }
-  },
-  "include": [
-    "src/**/*.ts",
-    "../../projects/interop/src/lib/**/*.ts",
-    "../../projects/interop/src/types/**/*.ts",
-    "../../projects/interop/highlighters/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "../../projects/interop/src/**/*.spec.ts",
-    "../../projects/interop/src/examples/**/*"
-  ],
-  "angularCompilerOptions": {
-    "compilationMode": "full"
-  }
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "../../out-tsc/app",
+		"types": [],
+		"baseUrl": "../../",
+		"paths": {
+			"interop": ["projects/interop/src/public-api"],
+			"interop/highlighters/shiki": [
+				"projects/interop/highlighters/shiki/src/public-api.ts"
+			],
+			"interop/*": ["projects/interop/src/*"]
+		}
+	},
+	"include": [
+		"src/**/*.ts",
+		"../../projects/interop/src/lib/**/*.ts",
+		"../../projects/interop/src/types/**/*.ts",
+		"../../projects/interop/highlighters/**/*.ts"
+	],
+	"exclude": [
+		"src/**/*.spec.ts",
+		"../../projects/interop/src/**/*.spec.ts",
+		"../../projects/interop/src/examples/**/*"
+	],
+	"angularCompilerOptions": {
+		"compilationMode": "full"
+	}
 }

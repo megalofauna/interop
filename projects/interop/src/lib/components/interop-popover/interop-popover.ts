@@ -14,9 +14,7 @@ import {
 	output,
 	signal,
 } from "@angular/core";
-import {
-	FloatingUiPositionStrategy,
-} from "../interop-tooltip/floating-ui.strategy";
+import { FloatingUiPositionStrategy } from "../interop-tooltip/floating-ui.strategy";
 import {
 	INTEROP_POSITION_STRATEGY,
 	type Placement,
@@ -337,10 +335,7 @@ export class InteropPopover implements AfterViewInit, OnDestroy {
 
 		this.stopAutoUpdate?.();
 		this.stopAutoUpdate = this.strategy.startAutoUpdate(async () => {
-			await this.runPosition(
-				this.effectivePlacement(),
-				this.effectiveOffset(),
-			);
+			await this.runPosition(this.effectivePlacement(), this.effectiveOffset());
 		});
 
 		queueMicrotask(() => this.applyAutoFocus());
@@ -462,4 +457,7 @@ const FOCUSABLE_SELECTORS = [
 	"[contenteditable]:not([contenteditable=false])",
 ].join(",");
 
-export type { PopoverClosedEvent, PopoverCloseReason } from "./interop-popover.types";
+export type {
+	PopoverClosedEvent,
+	PopoverCloseReason,
+} from "./interop-popover.types";

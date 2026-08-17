@@ -214,6 +214,36 @@ other legitimate survivors. `scripts/check-motion.mjs` enforces the rest, and a
 `var()` fallback is a chain (allowed) while a literal fallback is a second source
 of truth (rejected).
 
+## Never write a CSS-wide keyword as a token value
+
+```css
+--itx-kbd-perspective: unset;      /* NOT "no perspective" */
+--itx-button-corner-shape: unset;  /* NOT "no corner shape" */
+--itx-button-background-hover: inherit;
+```
+
+`unset` / `inherit` / `initial` / `revert` apply to the **custom property**, not
+to the property that reads it. `unset` on an inherited custom property means
+*inherit*; with nothing declaring it above, that is guaranteed-invalid and the
+reading declaration dies. Where an ancestor DOES declare it, you inherit that —
+which is worse, because it resolves to the value you were trying to cancel.
+
+This shipped three bugs, each of which looked deliberate in review: the kbd
+keycap tilt never rendered, the button's squircle never rendered (with an
+override block existing to undo it), and a toolbar's six hover/active
+neutralisations resolved to `[interop-root]`'s own fills.
+
+Write a real value. If you genuinely want the keyword, put it in the `var()`
+**fallback slot**, where it is valid:
+
+```css
+font-family: var(--itx-cb-tab-font-family, inherit);
+```
+
+And if the component has no opinion, declare nothing — absence is how the theme
+says that, and the structural fallback carries it.
+`scripts/check-keywords.mjs` fails the build on all of them.
+
 ## Radius
 
 `--itx-radius` is the global knob. A component that follows it puts the whole
@@ -332,7 +362,7 @@ means following the user's colours, not the brand's.
 
 ## Linting
 
-`npm run lint` runs seven guards; `npm run lint:css` is the stylelint one.
+`npm run lint` runs nine guards; `npm run lint:css` is the stylelint one.
 
 Stylelint was configured long before it was installed, and its config had never
 been executed — `custom-property-pattern` was written as `^--(itx-…)$`, but

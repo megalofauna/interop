@@ -3,11 +3,7 @@ import { InjectionToken, Signal, TemplateRef } from "@angular/core";
 // ── Status ─────────────────────────────────────────────────────────────────────
 
 export type StepStatus =
-  | "pending"
-  | "active"
-  | "completed"
-  | "error"
-  | "skipped";
+	"pending" | "active" | "completed" | "error" | "skipped";
 
 // ── Indicator template context ─────────────────────────────────────────────────
 //
@@ -23,14 +19,14 @@ export type StepStatus =
 // ```
 
 export interface StepIndicatorContext {
-  /** The step's effective status (auto-calculated or consumer-overridden). */
-  $implicit: StepStatus;
-  /** 0-based index of the step. */
-  index: number;
-  /** The step's visible label. */
-  label: string;
-  /** Whether the step is marked optional. */
-  optional: boolean;
+	/** The step's effective status (auto-calculated or consumer-overridden). */
+	$implicit: StepStatus;
+	/** 0-based index of the step. */
+	index: number;
+	/** The step's visible label. */
+	label: string;
+	/** Whether the step is marked optional. */
+	optional: boolean;
 }
 
 // ── Nav context ────────────────────────────────────────────────────────────────
@@ -51,75 +47,75 @@ export interface StepIndicatorContext {
 // ```
 
 export interface StepperNavContext {
-  readonly activeIndex: Signal<number>;
-  readonly totalSteps: Signal<number>;
-  readonly canGoBack: Signal<boolean>;
-  readonly canGoForward: Signal<boolean>;
-  next(): void;
-  back(): void;
-  goTo(index: number): void;
-  /** Roll the stepper back to its initial state — step 0, frontier cleared.
-   * Consumer-provided `[status]` overrides (error/skipped) are NOT cleared —
-   * the form's validity state remains the source of truth for those, and the
-   * stepper should not second-guess it. Use this as the "abandon and restart"
-   * path; typically wired to a Cancel button. */
-  reset(): void;
+	readonly activeIndex: Signal<number>;
+	readonly totalSteps: Signal<number>;
+	readonly canGoBack: Signal<boolean>;
+	readonly canGoForward: Signal<boolean>;
+	next(): void;
+	back(): void;
+	goTo(index: number): void;
+	/** Roll the stepper back to its initial state — step 0, frontier cleared.
+	 * Consumer-provided `[status]` overrides (error/skipped) are NOT cleared —
+	 * the form's validity state remains the source of truth for those, and the
+	 * stepper should not second-guess it. Use this as the "abandon and restart"
+	 * path; typically wired to a Cancel button. */
+	reset(): void;
 }
 
 // ── Full internal interface ────────────────────────────────────────────────────
 
 export interface IInteropStepper extends StepperNavContext {
-  readonly linear: Signal<boolean>;
-  readonly orientation: Signal<"horizontal" | "vertical">;
-  readonly icons: Signal<Partial<Record<StepStatus, string>>>;
-  readonly indicatorTemplate: Signal<TemplateRef<StepIndicatorContext> | null>;
-  getAutoStatus(index: number): StepStatus;
-  isStepLocked(index: number): boolean;
-  /** True when the user has previously advanced past this step. Independent
-   * of whether the step is currently active — a step revisited via `back()`
-   * remains "reached". Drives the `interop-step--reviewed` host class so the
-   * "active+reviewed" combination can be styled distinctly. */
-  wasReached(index: number): boolean;
-  /** Stable, per-instance id used to wire ARIA relationships between steps
-   * and panels. The panel at `index` is given the id returned by
-   * `getPanelId(index)`; the corresponding step button binds `aria-controls`
-   * to the same id. Returns undefined when no panel is registered at that
-   * index yet (panel registration can lag step registration depending on
-   * content projection order). */
-  getPanelId(index: number): string | undefined;
-  /** True while the flow has emitted `finish` and the user has not yet
-   * navigated away from the last step. In this state the active step's
-   * auto-status is reported as "completed" so the last step gets a
-   * completed visual, and the step indicator's `--active` class is dropped
-   * so the completed colourway wins. Cleared by any navigation
-   * (`next` / `back` / `goTo` / scroll-driven activation) and by `reset()`. */
-  readonly isFinished: Signal<boolean>;
-  /** Each step registers itself, surfacing label + status-override signals
-   * so the stepper can build menu options and evaluate `blockOn` without a
-   * back-reference to InteropStep. */
-  registerStep(
-    label: Signal<string>,
-    status?: Signal<StepStatus | null>,
-  ): number;
-  unregisterStep(index: number): void;
-  registerPanel(panel: StepPanelRef): number;
-  unregisterPanel(index: number): void;
+	readonly linear: Signal<boolean>;
+	readonly orientation: Signal<"horizontal" | "vertical">;
+	readonly icons: Signal<Partial<Record<StepStatus, string>>>;
+	readonly indicatorTemplate: Signal<TemplateRef<StepIndicatorContext> | null>;
+	getAutoStatus(index: number): StepStatus;
+	isStepLocked(index: number): boolean;
+	/** True when the user has previously advanced past this step. Independent
+	 * of whether the step is currently active — a step revisited via `back()`
+	 * remains "reached". Drives the `interop-step--reviewed` host class so the
+	 * "active+reviewed" combination can be styled distinctly. */
+	wasReached(index: number): boolean;
+	/** Stable, per-instance id used to wire ARIA relationships between steps
+	 * and panels. The panel at `index` is given the id returned by
+	 * `getPanelId(index)`; the corresponding step button binds `aria-controls`
+	 * to the same id. Returns undefined when no panel is registered at that
+	 * index yet (panel registration can lag step registration depending on
+	 * content projection order). */
+	getPanelId(index: number): string | undefined;
+	/** True while the flow has emitted `finish` and the user has not yet
+	 * navigated away from the last step. In this state the active step's
+	 * auto-status is reported as "completed" so the last step gets a
+	 * completed visual, and the step indicator's `--active` class is dropped
+	 * so the completed colourway wins. Cleared by any navigation
+	 * (`next` / `back` / `goTo` / scroll-driven activation) and by `reset()`. */
+	readonly isFinished: Signal<boolean>;
+	/** Each step registers itself, surfacing label + status-override signals
+	 * so the stepper can build menu options and evaluate `blockOn` without a
+	 * back-reference to InteropStep. */
+	registerStep(
+		label: Signal<string>,
+		status?: Signal<StepStatus | null>,
+	): number;
+	unregisterStep(index: number): void;
+	registerPanel(panel: StepPanelRef): number;
+	unregisterPanel(index: number): void;
 }
 
 /** Minimal reference the stepper holds for each panel. */
 export interface StepPanelRef {
-  /** Move focus to the panel's first heading (or the panel itself as a
-   * fallback). The `preventScroll` option avoids a focus-induced scroll
-   * adjustment when the stepper has already programmatically scrolled the
-   * panel into view. */
-  requestFocus(options?: { preventScroll?: boolean }): void;
-  /** The DOM element representing the panel. The stepper uses this to drive
-   * `scrollIntoView()` for click-driven navigation in the scroll-snap viewport. */
-  getElement(): HTMLElement;
+	/** Move focus to the panel's first heading (or the panel itself as a
+	 * fallback). The `preventScroll` option avoids a focus-induced scroll
+	 * adjustment when the stepper has already programmatically scrolled the
+	 * panel into view. */
+	requestFocus(options?: { preventScroll?: boolean }): void;
+	/** The DOM element representing the panel. The stepper uses this to drive
+	 * `scrollIntoView()` for click-driven navigation in the scroll-snap viewport. */
+	getElement(): HTMLElement;
 }
 
 // ── Token ──────────────────────────────────────────────────────────────────────
 
 export const INTEROP_STEPPER_TOKEN = new InjectionToken<IInteropStepper>(
-  "InteropStepper",
+	"InteropStepper",
 );

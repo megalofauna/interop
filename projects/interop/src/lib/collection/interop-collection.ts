@@ -220,7 +220,9 @@ export class InteropCollection<T = unknown> {
 		this.mirror = undefined;
 	}
 
-	private handleObservable(source: { subscribe: (...args: any[]) => any }): void {
+	private handleObservable(source: {
+		subscribe: (...args: any[]) => any;
+	}): void {
 		this._loading.set(true);
 		this._error.set(null);
 		this.subscription = (source as any).subscribe({
@@ -257,7 +259,7 @@ export class InteropCollection<T = unknown> {
 				const value = src();
 				untracked(() => this.setItems(value));
 			},
-			{ injector: this.injector, allowSignalWrites: true },
+			{ injector: this.injector },
 		);
 	}
 
@@ -279,7 +281,7 @@ export class InteropCollection<T = unknown> {
 					this._error.set(error);
 				});
 			},
-			{ injector: this.injector, allowSignalWrites: true },
+			{ injector: this.injector },
 		);
 	}
 }

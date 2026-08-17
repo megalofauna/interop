@@ -1,4 +1,4 @@
-import { InjectionToken, Type, Provider } from '@angular/core';
+import { InjectionToken, Type, Provider } from "@angular/core";
 
 /**
  * Component that knows how to render a class-tagged `:::`-div from a compiled
@@ -25,7 +25,7 @@ export type DivRenderer = Type<any>;
 
 export const CONTENT_DIV_RENDERERS = new InjectionToken<
 	ReadonlyMap<string, DivRenderer>
->('interop.content.div-renderers', {
+>("interop.content.div-renderers", {
 	factory: () => new Map<string, DivRenderer>(),
 });
 
@@ -54,10 +54,10 @@ export const provideContentDivRenderers = (
  */
 export type SymbolRenderer = Type<any>;
 
-export const CONTENT_SYMBOL_RENDERER = new InjectionToken<SymbolRenderer | null>(
-	'interop.content.symbol-renderer',
-	{ factory: () => null },
-);
+export const CONTENT_SYMBOL_RENDERER =
+	new InjectionToken<SymbolRenderer | null>("interop.content.symbol-renderer", {
+		factory: () => null,
+	});
 
 export const provideContentSymbolRenderer = (
 	renderer: SymbolRenderer,

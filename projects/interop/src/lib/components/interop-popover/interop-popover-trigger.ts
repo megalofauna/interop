@@ -23,12 +23,7 @@ import type { InteropPopover } from "./interop-popover";
  * When unset, the trigger emits no `aria-haspopup`.
  */
 export type PopoverHaspopup =
-	| "menu"
-	| "listbox"
-	| "tree"
-	| "grid"
-	| "dialog"
-	| boolean;
+	"menu" | "listbox" | "tree" | "grid" | "dialog" | boolean;
 
 /**
  * InteropPopoverTrigger — the consumer-side wiring for {@link InteropPopover}.
@@ -83,7 +78,9 @@ export class InteropPopoverTrigger implements AfterViewInit, OnDestroy {
 
 	// ── Host-binding signals ──────────────────────────────────────────────────
 
-	protected readonly popoverId = computed(() => this.target()?.popoverId ?? null);
+	protected readonly popoverId = computed(
+		() => this.target()?.popoverId ?? null,
+	);
 	protected readonly anchorName = computed(
 		() => this.target()?.anchorName ?? null,
 	);
@@ -108,7 +105,7 @@ export class InteropPopoverTrigger implements AfterViewInit, OnDestroy {
 		} else if (isDevMode()) {
 			console.warn(
 				"InteropPopoverTrigger: no target popover bound. Pass an InteropPopover " +
-					"reference via [interop-popover-trigger]=\"#ref=\\\"interopPopover\\\"\".",
+					'reference via [interop-popover-trigger]="#ref=\\"interopPopover\\"".',
 			);
 		}
 	}

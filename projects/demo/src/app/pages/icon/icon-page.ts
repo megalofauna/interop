@@ -6,7 +6,7 @@ import {
 	provideInteropIcons,
 	type TableColumn,
 	type TableGroupRow,
-} from 'interop';
+} from "interop";
 import { TablerRocket } from "interop/lib/iconsets/tabler/outline/tabler-rocket";
 import { TablerBug } from "interop/lib/iconsets/tabler/outline/tabler-bug";
 import { TablerBolt } from "interop/lib/iconsets/tabler/outline/tabler-bolt";
@@ -36,18 +36,37 @@ interface ApiEntry {
 }
 
 type TokenEntry =
-	| TableGroupRow
-	| { property: string; default: string; description: string };
+	TableGroupRow | { property: string; default: string; description: string };
 
 @Component({
 	selector: "icon-page",
 	standalone: true,
-	imports: [InteropIcon, InteropTable, InteropCellDef, CodeBlock, DemoSection, DemoExample, DemoMasthead],
+	imports: [
+		InteropIcon,
+		InteropTable,
+		InteropCellDef,
+		CodeBlock,
+		DemoSection,
+		DemoExample,
+		DemoMasthead,
+	],
 	providers: [
 		provideInteropIcons(
-			TablerRocket, TablerBug, TablerBolt, TablerArchive, TablerInfoCircle,
-			TablerCheck, TablerX, TablerSettings, TablerUser, TablerHome,
-			TablerSearch, TablerBell, TablerStar, TablerArrowUp, TablerArrowDown,
+			TablerRocket,
+			TablerBug,
+			TablerBolt,
+			TablerArchive,
+			TablerInfoCircle,
+			TablerCheck,
+			TablerX,
+			TablerSettings,
+			TablerUser,
+			TablerHome,
+			TablerSearch,
+			TablerBell,
+			TablerStar,
+			TablerArrowUp,
+			TablerArrowDown,
 		),
 	],
 	templateUrl: "./icon-page.html",
@@ -56,9 +75,21 @@ type TokenEntry =
 })
 export class IconPage {
 	gridIcons = [
-		'tabler-rocket', 'tabler-bug', 'tabler-bolt', 'tabler-archive', 'tabler-info-circle',
-		'tabler-check', 'tabler-x', 'tabler-settings', 'tabler-user', 'tabler-home',
-		'tabler-search', 'tabler-bell', 'tabler-star', 'tabler-arrow-up', 'tabler-arrow-down',
+		"tabler-rocket",
+		"tabler-bug",
+		"tabler-bolt",
+		"tabler-archive",
+		"tabler-info-circle",
+		"tabler-check",
+		"tabler-x",
+		"tabler-settings",
+		"tabler-user",
+		"tabler-home",
+		"tabler-search",
+		"tabler-bell",
+		"tabler-star",
+		"tabler-arrow-up",
+		"tabler-arrow-down",
 	];
 
 	previewSize = signal(24);
@@ -75,7 +106,8 @@ export class IconPage {
 		{
 			property: "--itx-icon-display",
 			default: "inline-flex",
-			description: "Outer box behaviour. Set to inline-flex so the icon sits on the text baseline.",
+			description:
+				"Outer box behaviour. Set to inline-flex so the icon sits on the text baseline.",
 		},
 		{
 			property: "--itx-icon-align-items",
@@ -90,12 +122,14 @@ export class IconPage {
 		{
 			property: "--itx-icon-flex-shrink",
 			default: "0",
-			description: "Prevents the icon from shrinking when placed in a constrained flex parent.",
+			description:
+				"Prevents the icon from shrinking when placed in a constrained flex parent.",
 		},
 		{
 			property: "--itx-icon-line-height",
 			default: "0",
-			description: "Collapses the inline line-box so the host height matches the SVG exactly.",
+			description:
+				"Collapses the inline line-box so the host height matches the SVG exactly.",
 		},
 
 		{ groupLabel: "SVG rendering" },
@@ -107,28 +141,32 @@ export class IconPage {
 		{
 			property: "--itx-icon-shape-rendering",
 			default: "geometricPrecision",
-			description: "Browser hint for path rasterisation. Keeps strokes crisp at integer pixel sizes.",
+			description:
+				"Browser hint for path rasterisation. Keeps strokes crisp at integer pixel sizes.",
 		},
 
 		{ groupLabel: "Appearance" },
 		{
 			property: "--itx-icon-color",
 			default: "currentColor",
-			description: "Stroke / fill colour. Inherits text colour by default; override per-instance with the [color] input.",
+			description:
+				"Stroke / fill colour. Inherits text colour by default; override per-instance with the [color] input.",
 		},
 
 		{ groupLabel: "Interaction" },
 		{
 			property: "--itx-icon-pointer-events",
 			default: "none",
-			description: "Icons are never click targets — events pass through to whatever wraps them.",
+			description:
+				"Icons are never click targets — events pass through to whatever wraps them.",
 		},
 
 		{ groupLabel: "Missing-icon placeholder (dev)" },
 		{
 			property: "--itx-icon-missing-color",
 			default: "var(--itx-danger-solid)",
-			description: "Tint of the X-mark shown when a registry name has no match. Visible in dev.",
+			description:
+				"Tint of the X-mark shown when a registry name has no match. Visible in dev.",
 		},
 		{
 			property: "--itx-icon-missing-opacity",
@@ -149,7 +187,8 @@ export class IconPage {
 			name: "name",
 			type: "string | undefined",
 			default: "undefined",
-			description: "Icon registry key. When provided, the icon is looked up in the nearest provideInteropIcons() scope.",
+			description:
+				"Icon registry key. When provided, the icon is looked up in the nearest provideInteropIcons() scope.",
 		},
 		{
 			name: "size",
@@ -161,25 +200,29 @@ export class IconPage {
 			name: "strokeWidth",
 			type: "number | undefined",
 			default: "undefined",
-			description: "Stroke width override in viewBox coordinate units. Falls back to the icon's own default when not set.",
+			description:
+				"Stroke width override in viewBox coordinate units. Falls back to the icon's own default when not set.",
 		},
 		{
 			name: "color",
 			type: "string | undefined",
 			default: "undefined",
-			description: "Colour override. Accepts any CSS colour value. Falls back to currentColor when not set.",
+			description:
+				"Colour override. Accepts any CSS colour value. Falls back to currentColor when not set.",
 		},
 		{
 			name: "decorative",
 			type: "boolean",
 			default: "true",
-			description: "When true, aria-hidden is applied and the icon is invisible to assistive technology.",
+			description:
+				"When true, aria-hidden is applied and the icon is invisible to assistive technology.",
 		},
 		{
 			name: "ariaLabel",
 			type: "string | undefined",
 			default: "undefined",
-			description: "Accessible label for non-decorative icons. Set [decorative]=\"false\" when providing this.",
+			description:
+				'Accessible label for non-decorative icons. Set [decorative]="false" when providing this.',
 		},
 	];
 
@@ -210,5 +253,4 @@ export const appConfig: ApplicationConfig = {
     provideInteropIcons(TablerRocket),
   ],
 };`;
-
 }

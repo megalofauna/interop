@@ -80,9 +80,7 @@ export function generateSliderId(): string {
 	template: "",
 	styleUrl: "./interop-slider.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [
-		{ provide: INTEROP_SLIDER_TOKEN, useExisting: InteropSlider },
-	],
+	providers: [{ provide: INTEROP_SLIDER_TOKEN, useExisting: InteropSlider }],
 	host: {
 		"[disabled]": "disabled()",
 		"[attr.name]": "name()",
@@ -215,7 +213,7 @@ export class InteropSlider implements InteropSliderApi {
 
 		if (el.tagName !== "INPUT" || el.type !== "range") {
 			console.warn(
-				"[InteropSlider] Must be applied to <input type=\"range\">. " +
+				'[InteropSlider] Must be applied to <input type="range">. ' +
 					`Found <${el.tagName.toLowerCase()} type="${el.type}">.`,
 			);
 			return;
@@ -228,7 +226,12 @@ export class InteropSlider implements InteropSliderApi {
 			: false;
 		const wrappedByLabel = !!el.closest("label");
 
-		if (!hasAriaLabel && !hasAriaLabelledBy && !hasNativeLabel && !wrappedByLabel) {
+		if (
+			!hasAriaLabel &&
+			!hasAriaLabelledBy &&
+			!hasNativeLabel &&
+			!wrappedByLabel
+		) {
 			console.warn(
 				"[InteropSlider] No accessible name found. Add a <label for>, " +
 					"aria-label, or aria-labelledby.",
@@ -246,14 +249,10 @@ export class InteropSlider implements InteropSliderApi {
 			);
 		}
 		if (step <= 0) {
-			console.warn(
-				`[InteropSlider] step (${step}) must be a positive number.`,
-			);
+			console.warn(`[InteropSlider] step (${step}) must be a positive number.`);
 		}
 		if (v < min || v > max) {
-			console.warn(
-				`[InteropSlider] value (${v}) is outside [${min}, ${max}].`,
-			);
+			console.warn(`[InteropSlider] value (${v}) is outside [${min}, ${max}].`);
 		}
 
 		// Floating-point hazard — warn when (max - min) / step does not divide cleanly.

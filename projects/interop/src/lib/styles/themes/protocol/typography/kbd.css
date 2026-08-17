@@ -7,7 +7,6 @@
  *   Color   --itx-kbd-color           --itx-kbd-background
  *   Edge    --itx-kbd-border-color    --itx-kbd-border-width
  *   Keycap  --itx-kbd-shadow-size     --itx-kbd-shadow-color
- *   Tilt    --itx-kbd-perspective     --itx-kbd-tilt
  */
 
 :where([interop-root] kbd) {
@@ -33,8 +32,4 @@
 	/* keycap drop shadow */
 	--itx-kbd-shadow-size: 2px;
 	--itx-kbd-shadow-color: var(--itx-contrast-3);
-
-	/* 3D tilt — viewed from above and front */
-	--itx-kbd-perspective: unset; /* smaller = stronger recede */
-	--itx-kbd-tilt: 20deg;
 }

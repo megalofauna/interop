@@ -10,96 +10,96 @@
  */
 
 export type ActivationOptions = {
-  /**
-   * Debounce window in milliseconds.
-   * If set, the handler executes only after triggers stop for this duration.
-   */
-  debounceMs?: number;
+	/**
+	 * Debounce window in milliseconds.
+	 * If set, the handler executes only after triggers stop for this duration.
+	 */
+	debounceMs?: number;
 
-  /**
-   * Throttle window in milliseconds.
-   * If set, the handler executes at most once per this duration.
-   *
-   * Notes:
-   * - When both debounce and throttle are specified, debounce will schedule,
-   *   and throttle will suppress executions too close together.
-   */
-  throttleMs?: number;
+	/**
+	 * Throttle window in milliseconds.
+	 * If set, the handler executes at most once per this duration.
+	 *
+	 * Notes:
+	 * - When both debounce and throttle are specified, debounce will schedule,
+	 *   and throttle will suppress executions too close together.
+	 */
+	throttleMs?: number;
 
-  /**
-   * Whether to allow overlapping executions for async handlers.
-   * Default false (prevent reentrancy): if a previous execution is still running,
-   * subsequent triggers are ignored until it completes.
-   */
-  reentrant?: boolean;
+	/**
+	 * Whether to allow overlapping executions for async handlers.
+	 * Default false (prevent reentrancy): if a previous execution is still running,
+	 * subsequent triggers are ignored until it completes.
+	 */
+	reentrant?: boolean;
 
-  /**
-   * Auto-disable after first successful execution.
-   * Subsequent triggers are ignored unless re-enabled.
-   */
-  once?: boolean;
+	/**
+	 * Auto-disable after first successful execution.
+	 * Subsequent triggers are ignored unless re-enabled.
+	 */
+	once?: boolean;
 
-  /**
-   * Lifecycle hooks for observability.
-   * These are best-effort; errors in hooks are swallowed to avoid breaking the handler.
-   */
-  onStart?: () => void;
-  onEnd?: (result: unknown) => void;
-  onError?: (error: unknown) => void;
+	/**
+	 * Lifecycle hooks for observability.
+	 * These are best-effort; errors in hooks are swallowed to avoid breaking the handler.
+	 */
+	onStart?: () => void;
+	onEnd?: (result: unknown) => void;
+	onError?: (error: unknown) => void;
 
-  /**
-   * Enable simple debug logging for timing and lock state.
-   */
-  debug?: boolean;
+	/**
+	 * Enable simple debug logging for timing and lock state.
+	 */
+	debug?: boolean;
 };
 
 export type ActivationHandler<TPayload = void> = (
-  payload: TPayload,
+	payload: TPayload,
 ) => Promise<unknown> | unknown;
 
 /**
  * An augmented activation function with control methods to manage its runtime state.
  */
 export type ManagedActivation<TPayload = void> = ActivationHandler<TPayload> & {
-  /**
-   * Cancel any scheduled (debounced) execution that hasn't run yet.
-   * Does not affect running executions.
-   */
-  cancel(): void;
+	/**
+	 * Cancel any scheduled (debounced) execution that hasn't run yet.
+	 * Does not affect running executions.
+	 */
+	cancel(): void;
 
-  /**
-   * Disable the handler (no-op on future triggers).
-   */
-  disable(): void;
+	/**
+	 * Disable the handler (no-op on future triggers).
+	 */
+	disable(): void;
 
-  /**
-   * Enable the handler (if it was disabled or consumed by `once`).
-   */
-  enable(): void;
+	/**
+	 * Enable the handler (if it was disabled or consumed by `once`).
+	 */
+	enable(): void;
 
-  /**
-   * Returns whether the handler is currently enabled.
-   */
-  isEnabled(): boolean;
+	/**
+	 * Returns whether the handler is currently enabled.
+	 */
+	isEnabled(): boolean;
 
-  /**
-   * Restore the handler to its just-created runtime state: cancels any
-   * pending debounced trigger, clears the throttle cooldown, releases the
-   * reentrancy lock, and clears `once` consumption (re-arming a handler
-   * that auto-disabled itself after firing).
-   *
-   * An *explicit* `disable()` call is preserved — if you disabled the
-   * handler yourself, it stays disabled after `reset()`. Call `enable()`
-   * separately to re-arm in that case. Only the implicit disable caused by
-   * `once` consumption is undone.
-   *
-   * Caveat: in-flight async handlers cannot be aborted. Their `onEnd` /
-   * `onError` callbacks will still fire when the orphaned work settles, so
-   * any UI state those hooks mutate should be guarded against running after
-   * a reset. Reset only releases the reentrancy lock so a fresh trigger is
-   * not blocked; it does not unsubscribe from work already in motion.
-   */
-  reset(): void;
+	/**
+	 * Restore the handler to its just-created runtime state: cancels any
+	 * pending debounced trigger, clears the throttle cooldown, releases the
+	 * reentrancy lock, and clears `once` consumption (re-arming a handler
+	 * that auto-disabled itself after firing).
+	 *
+	 * An *explicit* `disable()` call is preserved — if you disabled the
+	 * handler yourself, it stays disabled after `reset()`. Call `enable()`
+	 * separately to re-arm in that case. Only the implicit disable caused by
+	 * `once` consumption is undone.
+	 *
+	 * Caveat: in-flight async handlers cannot be aborted. Their `onEnd` /
+	 * `onError` callbacks will still fire when the orphaned work settles, so
+	 * any UI state those hooks mutate should be guarded against running after
+	 * a reset. Reset only releases the reentrancy lock so a fresh trigger is
+	 * not blocked; it does not unsubscribe from work already in motion.
+	 */
+	reset(): void;
 };
 
 /**
@@ -123,144 +123,144 @@ export type ManagedActivation<TPayload = void> = ActivationHandler<TPayload> & {
  * });
  */
 export function createActivationHandler<TPayload = void>(
-  handler: ActivationHandler<TPayload>,
-  options: ActivationOptions = {},
+	handler: ActivationHandler<TPayload>,
+	options: ActivationOptions = {},
 ): ManagedActivation<TPayload> {
-  const {
-    debounceMs = 0,
-    throttleMs = 0,
-    reentrant = false,
-    once = false,
-    onStart,
-    onEnd,
-    onError,
-    debug = false,
-  } = options;
+	const {
+		debounceMs = 0,
+		throttleMs = 0,
+		reentrant = false,
+		once = false,
+		onStart,
+		onEnd,
+		onError,
+		debug = false,
+	} = options;
 
-  let enabled = true;
-  let running = false;
-  let lastExecTs = 0;
-  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
-  let consumedOnce = false;
+	let enabled = true;
+	let running = false;
+	let lastExecTs = 0;
+	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+	let consumedOnce = false;
 
-  const log = (...args: any[]) => {
-    if (debug) {
-      console.debug("[Activation]", ...args);
-    }
-  };
+	const log = (...args: any[]) => {
+		if (debug) {
+			console.debug("[Activation]", ...args);
+		}
+	};
 
-  const clearDebounce = () => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-      debounceTimer = null;
-      log("Debounce timer cleared");
-    }
-  };
+	const clearDebounce = () => {
+		if (debounceTimer) {
+			clearTimeout(debounceTimer);
+			debounceTimer = null;
+			log("Debounce timer cleared");
+		}
+	};
 
-  const canExecuteNow = (): boolean => {
-    if (!enabled) {
-      log("Blocked: not enabled");
-      return false;
-    }
-    if (once && consumedOnce) {
-      log("Blocked: once consumed");
-      return false;
-    }
-    if (!reentrant && running) {
-      log("Blocked: running (reentrancy prevention)");
-      return false;
-    }
-    const now = Date.now();
-    if (throttleMs > 0 && now - lastExecTs < throttleMs) {
-      log("Blocked: throttle window", {
-        sinceLastMs: now - lastExecTs,
-        throttleMs,
-      });
-      return false;
-    }
-    return true;
-  };
+	const canExecuteNow = (): boolean => {
+		if (!enabled) {
+			log("Blocked: not enabled");
+			return false;
+		}
+		if (once && consumedOnce) {
+			log("Blocked: once consumed");
+			return false;
+		}
+		if (!reentrant && running) {
+			log("Blocked: running (reentrancy prevention)");
+			return false;
+		}
+		const now = Date.now();
+		if (throttleMs > 0 && now - lastExecTs < throttleMs) {
+			log("Blocked: throttle window", {
+				sinceLastMs: now - lastExecTs,
+				throttleMs,
+			});
+			return false;
+		}
+		return true;
+	};
 
-  const tryExecute = async (payload: TPayload) => {
-    if (!canExecuteNow()) return;
+	const tryExecute = async (payload: TPayload) => {
+		if (!canExecuteNow()) return;
 
-    clearDebounce();
+		clearDebounce();
 
-    const now = Date.now();
-    lastExecTs = now;
+		const now = Date.now();
+		lastExecTs = now;
 
-    try {
-      onStartSafe(onStart, log);
-      running = true;
-      const result = handler(payload);
-      const finalResult = isPromiseLike(result) ? await result : result;
-      running = false;
-      onEndSafe(onEnd, finalResult, log);
-      if (once) {
-        consumedOnce = true;
-        enabled = false;
-        log("Disabled after once execution");
-      }
-    } catch (err) {
-      running = false;
-      onErrorSafe(onError, err, log);
-    }
-  };
+		try {
+			onStartSafe(onStart, log);
+			running = true;
+			const result = handler(payload);
+			const finalResult = isPromiseLike(result) ? await result : result;
+			running = false;
+			onEndSafe(onEnd, finalResult, log);
+			if (once) {
+				consumedOnce = true;
+				enabled = false;
+				log("Disabled after once execution");
+			}
+		} catch (err) {
+			running = false;
+			onErrorSafe(onError, err, log);
+		}
+	};
 
-  const wrapped: ManagedActivation<TPayload> = Object.assign(
-    (payload: TPayload) => {
-      if (!enabled || (once && consumedOnce)) {
-        log("Trigger ignored: disabled or consumed once");
-        return;
-      }
+	const wrapped: ManagedActivation<TPayload> = Object.assign(
+		(payload: TPayload) => {
+			if (!enabled || (once && consumedOnce)) {
+				log("Trigger ignored: disabled or consumed once");
+				return;
+			}
 
-      // Debounce scheduling
-      if (debounceMs > 0) {
-        clearDebounce();
-        debounceTimer = setTimeout(() => {
-          debounceTimer = null;
-          tryExecute(payload);
-        }, debounceMs);
-        log("Debounced trigger scheduled", { debounceMs });
-        return;
-      }
+			// Debounce scheduling
+			if (debounceMs > 0) {
+				clearDebounce();
+				debounceTimer = setTimeout(() => {
+					debounceTimer = null;
+					tryExecute(payload);
+				}, debounceMs);
+				log("Debounced trigger scheduled", { debounceMs });
+				return;
+			}
 
-      // Immediate attempt
-      void tryExecute(payload);
-    },
-    {
-      cancel() {
-        clearDebounce();
-      },
-      disable() {
-        enabled = false;
-        clearDebounce();
-        log("Handler disabled");
-      },
-      enable() {
-        enabled = true;
-        consumedOnce = false;
-        log("Handler enabled");
-      },
-      isEnabled() {
-        return enabled && !(once && consumedOnce);
-      },
-      reset() {
-        clearDebounce();
-        lastExecTs = 0;
-        running = false;
-        // Re-arm only when `enabled === false` was a side effect of `once`
-        // consumption — never when the consumer explicitly called disable().
-        if (once && consumedOnce && !enabled) {
-          enabled = true;
-        }
-        consumedOnce = false;
-        log("Handler reset to initial runtime state");
-      },
-    },
-  );
+			// Immediate attempt
+			void tryExecute(payload);
+		},
+		{
+			cancel() {
+				clearDebounce();
+			},
+			disable() {
+				enabled = false;
+				clearDebounce();
+				log("Handler disabled");
+			},
+			enable() {
+				enabled = true;
+				consumedOnce = false;
+				log("Handler enabled");
+			},
+			isEnabled() {
+				return enabled && !(once && consumedOnce);
+			},
+			reset() {
+				clearDebounce();
+				lastExecTs = 0;
+				running = false;
+				// Re-arm only when `enabled === false` was a side effect of `once`
+				// consumption — never when the consumer explicitly called disable().
+				if (once && consumedOnce && !enabled) {
+					enabled = true;
+				}
+				consumedOnce = false;
+				log("Handler reset to initial runtime state");
+			},
+		},
+	);
 
-  return wrapped;
+	return wrapped;
 }
 
 /**
@@ -282,65 +282,65 @@ export function createActivationHandler<TPayload = void>(
  * await composed(item);
  */
 export function composeActivation<TPayload = void>(
-  ...handlers: ActivationHandler<TPayload>[]
+	...handlers: ActivationHandler<TPayload>[]
 ): ActivationHandler<TPayload> {
-  return async (payload: TPayload) => {
-    for (const fn of handlers) {
-      const result = await Promise.resolve(fn(payload));
-      if (result === false) {
-        return false;
-      }
-    }
-    return true;
-  };
+	return async (payload: TPayload) => {
+		for (const fn of handlers) {
+			const result = await Promise.resolve(fn(payload));
+			if (result === false) {
+				return false;
+			}
+		}
+		return true;
+	};
 }
 
 /**
  * Safe lifecycle hook invocations to avoid breaking the handler when hooks throw.
  */
 function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
-  return (
-    !!value &&
-    (typeof value === "object" || typeof value === "function") &&
-    "then" in value &&
-    typeof (value as PromiseLike<unknown>).then === "function"
-  );
+	return (
+		!!value &&
+		(typeof value === "object" || typeof value === "function") &&
+		"then" in value &&
+		typeof (value as PromiseLike<unknown>).then === "function"
+	);
 }
 
 function onStartSafe(
-  hook: ActivationOptions["onStart"],
-  log: (...args: any[]) => void,
+	hook: ActivationOptions["onStart"],
+	log: (...args: any[]) => void,
 ) {
-  if (!hook) return;
-  try {
-    hook();
-  } catch (e) {
-    log("onStart hook error suppressed", e);
-  }
+	if (!hook) return;
+	try {
+		hook();
+	} catch (e) {
+		log("onStart hook error suppressed", e);
+	}
 }
 
 function onEndSafe(
-  hook: ActivationOptions["onEnd"],
-  result: unknown,
-  log: (...args: any[]) => void,
+	hook: ActivationOptions["onEnd"],
+	result: unknown,
+	log: (...args: any[]) => void,
 ) {
-  if (!hook) return;
-  try {
-    hook(result);
-  } catch (e) {
-    log("onEnd hook error suppressed", e);
-  }
+	if (!hook) return;
+	try {
+		hook(result);
+	} catch (e) {
+		log("onEnd hook error suppressed", e);
+	}
 }
 
 function onErrorSafe(
-  hook: ActivationOptions["onError"],
-  error: unknown,
-  log: (...args: any[]) => void,
+	hook: ActivationOptions["onError"],
+	error: unknown,
+	log: (...args: any[]) => void,
 ) {
-  if (!hook) return;
-  try {
-    hook(error);
-  } catch (e) {
-    log("onError hook error suppressed", e);
-  }
+	if (!hook) return;
+	try {
+		hook(error);
+	} catch (e) {
+		log("onError hook error suppressed", e);
+	}
 }

@@ -23,7 +23,9 @@ import {
  * }
  */
 export type ItxButtonMap = Record<string, string>;
-export const ITX_BUTTON_MAP = new InjectionToken<ItxButtonMap>("itx-button-map");
+export const ITX_BUTTON_MAP = new InjectionToken<ItxButtonMap>(
+	"itx-button-map",
+);
 
 /**
  * Resolves consumer vocabulary on [interop-button] to Interop's internal

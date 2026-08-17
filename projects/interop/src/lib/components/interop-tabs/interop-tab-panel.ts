@@ -1,14 +1,14 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  afterNextRender,
-  computed,
-  contentChild,
-  effect,
-  inject,
-  input,
-  isDevMode,
-  signal,
+	ChangeDetectionStrategy,
+	Component,
+	afterNextRender,
+	computed,
+	contentChild,
+	effect,
+	inject,
+	input,
+	isDevMode,
+	signal,
 } from "@angular/core";
 import { InteropTabLabel } from "./interop-tab-label.directive";
 import { INTEROP_TABS_CONTEXT } from "./interop-tabs-context.token";
@@ -71,119 +71,119 @@ let _panelIdCounter = 0;
  * ```
  */
 @Component({
-  selector: "section[interop-tab-panel]",
-  standalone: true,
-  imports: [],
-  templateUrl: "./interop-tab-panel.html",
-  styleUrl: "./interop-tab-panel.scss",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    role: "tabpanel",
-    "[id]": "panelId()",
-    "[attr.aria-labelledby]": "tabId()",
-    "[hidden]": "!isActive()",
-    "[attr.tabindex]": "0",
-  },
+	selector: "section[interop-tab-panel]",
+	standalone: true,
+	imports: [],
+	templateUrl: "./interop-tab-panel.html",
+	styleUrl: "./interop-tab-panel.scss",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: {
+		role: "tabpanel",
+		"[id]": "panelId()",
+		"[attr.aria-labelledby]": "tabId()",
+		"[hidden]": "!isActive()",
+		"[attr.tabindex]": "0",
+	},
 })
 export class InteropTabPanel {
-  private readonly tabs = inject(INTEROP_TABS_CONTEXT, { optional: true });
+	private readonly tabs = inject(INTEROP_TABS_CONTEXT, { optional: true });
 
-  /**
-   * Unique key for this panel. Used to identify the active panel and to
-   * generate stable ARIA IDs. Auto-generated if not provided.
-   *
-   * @example
-   * ```html
-   * <section interop-tab-panel key="profile" label="Profile">...</section>
-   * ```
-   */
-  readonly key = input<string>(`panel-${_panelIdCounter++}`);
+	/**
+	 * Unique key for this panel. Used to identify the active panel and to
+	 * generate stable ARIA IDs. Auto-generated if not provided.
+	 *
+	 * @example
+	 * ```html
+	 * <section interop-tab-panel key="profile" label="Profile">...</section>
+	 * ```
+	 */
+	readonly key = input<string>(`panel-${_panelIdCounter++}`);
 
-  /**
-   * Plain-text label for the tab button. Ignored if `interop-tab-label` template
-   * is also present in this panel's content.
-   */
-  readonly label = input<string | null>(null);
+	/**
+	 * Plain-text label for the tab button. Ignored if `interop-tab-label` template
+	 * is also present in this panel's content.
+	 */
+	readonly label = input<string | null>(null);
 
-  /**
-   * When true, the panel content is destroyed when the panel becomes inactive,
-   * restoring the traditional destroy-on-switch behavior. Use for panels where
-   * memory pressure outweighs the cost of re-initialization.
-   *
-   * Default: false (content is preserved after first render).
-   */
-  readonly destroyOnHide = input<boolean>(false);
+	/**
+	 * When true, the panel content is destroyed when the panel becomes inactive,
+	 * restoring the traditional destroy-on-switch behavior. Use for panels where
+	 * memory pressure outweighs the cost of re-initialization.
+	 *
+	 * Default: false (content is preserved after first render).
+	 */
+	readonly destroyOnHide = input<boolean>(false);
 
-  /**
-   * When true, the panel content renders immediately on init regardless of
-   * whether this panel is the active one. Use to pre-warm expensive panels.
-   *
-   * Default: false (content renders on first activation).
-   */
-  readonly preRender = input<boolean>(false);
+	/**
+	 * When true, the panel content renders immediately on init regardless of
+	 * whether this panel is the active one. Use to pre-warm expensive panels.
+	 *
+	 * Default: false (content renders on first activation).
+	 */
+	readonly preRender = input<boolean>(false);
 
-  /**
-   * Rich label template. When present, overrides the `label` string input.
-   * Populated by `<ng-template interop-tab-label>` inside panel content.
-   */
-  readonly labelTemplate = contentChild(InteropTabLabel);
+	/**
+	 * Rich label template. When present, overrides the `label` string input.
+	 * Populated by `<ng-template interop-tab-label>` inside panel content.
+	 */
+	readonly labelTemplate = contentChild(InteropTabLabel);
 
-  /**
-   * Whether this panel is currently the active panel.
-   * Derived from the parent InteropTabs context.
-   */
-  readonly isActive = computed(
-    () => this.tabs?.resolvedActive() === this.key(),
-  );
+	/**
+	 * Whether this panel is currently the active panel.
+	 * Derived from the parent InteropTabs context.
+	 */
+	readonly isActive = computed(
+		() => this.tabs?.resolvedActive() === this.key(),
+	);
 
-  /**
-   * ID of the corresponding tab button in the tablist.
-   * Used as `aria-labelledby` on this panel.
-   */
-  readonly tabId = computed(
-    () => `${this.tabs?.uid ?? "itx-tabs"}-tab-${this.key()}`,
-  );
+	/**
+	 * ID of the corresponding tab button in the tablist.
+	 * Used as `aria-labelledby` on this panel.
+	 */
+	readonly tabId = computed(
+		() => `${this.tabs?.uid ?? "itx-tabs"}-tab-${this.key()}`,
+	);
 
-  /**
-   * ID of this panel element.
-   * Used as `aria-controls` on the corresponding tab button.
-   */
-  readonly panelId = computed(
-    () => `${this.tabs?.uid ?? "itx-tabs"}-panel-${this.key()}`,
-  );
+	/**
+	 * ID of this panel element.
+	 * Used as `aria-controls` on the corresponding tab button.
+	 */
+	readonly panelId = computed(
+		() => `${this.tabs?.uid ?? "itx-tabs"}-panel-${this.key()}`,
+	);
 
-  /**
-   * One-way render latch. Starts false; set to true on first activation.
-   * Once true, stays true (unless destroyOnHide is set).
-   * Controls the @if gate in the template.
-   */
-  protected readonly rendered = signal(false);
+	/**
+	 * One-way render latch. Starts false; set to true on first activation.
+	 * Once true, stays true (unless destroyOnHide is set).
+	 * Controls the @if gate in the template.
+	 */
+	protected readonly rendered = signal(false);
 
-  constructor() {
-    if (isDevMode()) {
-      afterNextRender(() => {
-        const el = document.getElementById(this.panelId());
-        if (el && el.tagName !== "SECTION") {
-          console.warn(
-            `InteropTabPanel must be used on <section> elements for semantic correctness. ` +
-              `Found on: ${el.tagName.toLowerCase()}`,
-          );
-        }
-      });
-    }
+	constructor() {
+		if (isDevMode()) {
+			afterNextRender(() => {
+				const el = document.getElementById(this.panelId());
+				if (el && el.tagName !== "SECTION") {
+					console.warn(
+						`InteropTabPanel must be used on <section> elements for semantic correctness. ` +
+							`Found on: ${el.tagName.toLowerCase()}`,
+					);
+				}
+			});
+		}
 
-    effect(() => {
-      const active = this.isActive();
-      const preRender = this.preRender();
-      const destroy = this.destroyOnHide();
+		effect(() => {
+			const active = this.isActive();
+			const preRender = this.preRender();
+			const destroy = this.destroyOnHide();
 
-      if ((active || preRender) && !this.rendered()) {
-        this.rendered.set(true);
-      }
+			if ((active || preRender) && !this.rendered()) {
+				this.rendered.set(true);
+			}
 
-      if (!active && destroy) {
-        this.rendered.set(false);
-      }
-    });
-  }
+			if (!active && destroy) {
+				this.rendered.set(false);
+			}
+		});
+	}
 }

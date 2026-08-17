@@ -60,8 +60,8 @@ export class InteropProgressLabel {
 				if (isDevMode()) {
 					console.warn(
 						"[InteropProgressLabel] Could not find an adjacent " +
-						"progress[interop-progress] element. Set [target] to the " +
-						"id of the progress element if they are not siblings.",
+							"progress[interop-progress] element. Set [target] to the " +
+							"id of the progress element if they are not siblings.",
 					);
 				}
 				return;
@@ -70,7 +70,7 @@ export class InteropProgressLabel {
 			if (isDevMode() && !progress.matches("progress[interop-progress]")) {
 				console.warn(
 					`[InteropProgressLabel] target "${targetId}" does not point to ` +
-					"a progress[interop-progress] element.",
+						"a progress[interop-progress] element.",
 				);
 			}
 

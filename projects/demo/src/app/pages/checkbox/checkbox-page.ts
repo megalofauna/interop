@@ -1,8 +1,4 @@
-import {
-	Component,
-	ChangeDetectionStrategy,
-	signal,
-} from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import { JsonPipe } from "@angular/common";
 import {
 	InteropCheckbox,
@@ -12,7 +8,7 @@ import {
 	InteropCellDef,
 	TableColumn,
 	InteropCallout,
-} from 'interop';
+} from "interop";
 import { CodeBlock, type CodeFile } from "interop";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -181,5 +177,4 @@ selectedItems = signal<string[]>(['plasma-conduit']);`;
 				"Emitted when indeterminate state changes (always false on user click).",
 		},
 	];
-
 }

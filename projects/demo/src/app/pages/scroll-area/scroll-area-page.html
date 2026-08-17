@@ -1,7 +1,7 @@
 <article class="demo-page">
 	<demo-masthead category="Components" title="Scroll Area">
-		Constrained scrollable region with optional scroll-shadow indicators.
-		Keeps keyboard and screen reader navigation intact.
+		Constrained scrollable region with optional scroll-shadow indicators. Keeps
+		keyboard and screen reader navigation intact.
 	</demo-masthead>
 
 	<!-- ── Usage ──────────────────────────────────────────────────────────── -->
@@ -10,7 +10,8 @@
 			<interop-scroll-area
 				aria-label="Mission log"
 				[showShadows]="true"
-				style="height: 14rem; width: 100%;">
+				style="height: 14rem; width: 100%"
+			>
 				@for (entry of logEntries; track entry.time) {
 					<div class="scroll-area-page__log-row">
 						<code class="scroll-area-page__log-time">{{ entry.time }}</code>
@@ -23,8 +24,9 @@
 		<demo-example label="Constrained height, no shadows">
 			<interop-scroll-area
 				aria-label="Station manifest"
-				style="height: 10rem; width: 100%;">
-				<ul style="margin: 0; padding: 0 0 0 1.25rem;">
+				style="height: 10rem; width: 100%"
+			>
+				<ul style="margin: 0; padding: 0 0 0 1.25rem">
 					@for (entry of logEntries; track entry.time) {
 						<li>{{ entry.message }}</li>
 					}
@@ -38,7 +40,9 @@
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>
 				<code class="demo-page__api-name">{{ entry.name }}</code>
-				@if (entry.required) { <span class="demo-page__required">*</span> }
+				@if (entry.required) {
+					<span class="demo-page__required">*</span>
+				}
 			</ng-template>
 			<ng-template itxCell="type" let-entry>
 				<code class="demo-page__api-type">{{ entry.type }}</code>
@@ -61,6 +65,5 @@
 		</interop-table>
 	</demo-section>
 	<!-- ── Notes ─────────────────────────────────────────────────────────── -->
-	<demo-section id="notes" heading="Notes">
-	</demo-section>
+	<demo-section id="notes" heading="Notes"> </demo-section>
 </article>

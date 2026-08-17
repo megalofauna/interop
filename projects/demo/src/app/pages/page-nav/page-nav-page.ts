@@ -90,7 +90,6 @@ export class PageNavPage {
 		{ label: "component.ts", language: "ts", code: this.basicTs },
 	];
 
-
 	tokenColumns: TableColumn<TokenEntry>[] = [
 		{ key: "property", label: "Property" },
 		{ key: "default", label: "Default" },
@@ -143,7 +142,10 @@ export class PageNavPage {
 			property: "--itx-pn-indicator-size",
 			default: "5px — vertical active dot",
 		},
-		{ property: "--itx-pn-indicator-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-pn-indicator-color",
+			default: "var(--itx-colorway-solid)",
+		},
 	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [

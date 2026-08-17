@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	Component,
 	input,
 	output,
@@ -6,7 +7,6 @@ import {
 	signal,
 	effect,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { InteropRadioControl } from "../../components/interop-radio/interop-radio-control/interop-radio-control";
 
@@ -68,7 +68,8 @@ export type RadioControl = {
 @Component({
 	selector: "interop-radio-rig",
 	standalone: true,
-	imports: [CommonModule, InteropRadioControl],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [InteropRadioControl],
 	templateUrl: "./interop-radio-rig.html",
 	styleUrl: "./interop-radio-rig.css",
 	providers: [
