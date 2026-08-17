@@ -1,0 +1,73 @@
+# Continuous integration for the Interop workspace.
+#
+# This exists because everything that guards this repo — nine lint checks, 573
+# specs, three builds — used to run only on a maintainer's machine. That is how
+# a red deploy reached main: the build passed locally on Node 25 and the first
+# environment to run Node 22 was production.
+#
+# So the job pins the SAME Node the deploy uses (via .nvmrc, which netlify.toml
+# mirrors) and runs `npm ci`, not `npm install`. Reproducing the deploy's
+# install is half the point — a lock file that npm 10 refuses is exactly the
+# failure this is here to catch.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# A new push supersedes an in-flight run for the same ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use the Node version the deploy uses
+        uses: actions/setup-node@v4
+        with:
+          # Reads .nvmrc, so this can never drift from local or from
+          # netlify.toml's NODE_VERSION without someone noticing.
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        # `ci`, not `install`: it installs strictly from the lock file and fails
+        # when the two disagree, which is precisely the deploy failure that
+        # motivated this workflow.
+        run: npm ci
+
+      # Nine checks: prettier --check, stylelint, and the seven token guards
+      # (private tokens, colour axes, focus, motion, shape, CSS-wide keywords,
+      # plus drift checks on the two generated stylesheets and the composites
+      # boundary rule).
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
+
+      # All three projects, because the library and the two apps have broken
+      # independently before.
+      - name: Build library
+        run: npm run build:lib
+
+      - name: Build demo
+        run: npm run build:demo
+
+      - name: Build protocol
+        run: npm run build:protocol
