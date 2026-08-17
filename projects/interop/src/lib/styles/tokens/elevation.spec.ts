@@ -112,11 +112,15 @@ describe("Layer engine", () => {
 		});
 
 		it("clamps at the floor", () => {
+			// The floor is DEPTH.below in scripts/generate-color-ladder.mjs. These
+			// two literals are the only place the spec hardcodes it — the colour
+			// itself is read from the generated source via ramp(), so a ramp
+			// retune does not touch this test, but changing the DEPTH does.
 			let node = root;
-			for (let i = 0; i < 5; i++) node = el(node, { "itx-sink": "" });
+			for (let i = 0; i < 6; i++) node = el(node, { "itx-sink": "" });
 
-			expect(layerOf(node)).toEqual("-2");
-			expect(surfaceOf(node)).toEqual(ramp("surface-n2"));
+			expect(layerOf(node)).toEqual("-3");
+			expect(surfaceOf(node)).toEqual(ramp("surface-n3"));
 		});
 
 		it("honours an absolute pin regardless of inherited depth, and counts on from it", () => {
