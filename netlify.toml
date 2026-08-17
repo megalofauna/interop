@@ -21,6 +21,13 @@
   # Angular 21 requires Node 20.11+ or 22+. Pin to the current LTS to
   # avoid Netlify picking an older or newer default that doesn't match
   # local dev. The CI image installs this version before `command` runs.
+  #
+  # KEEP IN SYNC WITH .nvmrc, which pins the same version for local work.
+  # The two drifting apart is not cosmetic: Node 22 ships npm 10 and Node 25
+  # ships npm 11, and the two disagree about optional peer dependencies of
+  # platform-specific packages. A lock file written by npm 11 omits
+  # @emnapi/core and @emnapi/runtime, which npm 10's `npm ci` then reports as
+  # missing and refuses to install — a red deploy from a green local build.
   NODE_VERSION = "22"
 
   # Netlify auto-installs the `@netlify/angular-runtime` plugin when it
