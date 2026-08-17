@@ -143,28 +143,22 @@ export class InteropCommandPalette {
 		 * about the reset and kept serving [commands] filtered by the previous
 		 * query — the palette reopened with an empty field over stale results.
 		 */
-		effect(
-			() => {
-				if (this.dialog.isOpen()) {
-					untracked(() => this.clearQuery());
-				}
-			},
-			{ allowSignalWrites: true },
-		);
+		effect(() => {
+			if (this.dialog.isOpen()) {
+				untracked(() => this.clearQuery());
+			}
+		});
 
 		// Keep the active index valid as items stream in. Default to the first
 		// item — this is the async-selection guarantee (survives streaming
 		// results), the exact case cmdk #280 fails.
-		effect(
-			() => {
-				const n = this.items().length;
-				untracked(() => {
-					const i = this.activeIndex();
-					if (n === 0 || i >= n || i < 0) this.activeIndex.set(0);
-				});
-			},
-			{ allowSignalWrites: true },
-		);
+		effect(() => {
+			const n = this.items().length;
+			untracked(() => {
+				const i = this.activeIndex();
+				if (n === 0 || i >= n || i < 0) this.activeIndex.set(0);
+			});
+		});
 	}
 
 	// ── Option identity / active state ──────────────────────────────────────────

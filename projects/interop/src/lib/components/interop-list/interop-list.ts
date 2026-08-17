@@ -8,7 +8,7 @@ import {
 	TrackByFunction,
 	TemplateRef,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import {
 	type InteropCollectionInput,
 	interopCollection,
@@ -27,7 +27,7 @@ import { LayoutCapable } from "../../directives/interop-layout";
 	selector:
 		"ul[interop-list], ol[interop-list], dl[interop-list], interop-list",
 	standalone: true,
-	imports: [CommonModule],
+	imports: [NgTemplateOutlet],
 	hostDirectives: [
 		{
 			directive: NormalizeSemanticsDirective,

@@ -1,4 +1,3 @@
-import { CommonModule } from "@angular/common";
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -95,7 +94,7 @@ import {
 @Component({
 	selector: "label[interop-radio]",
 	standalone: true,
-	imports: [CommonModule, InteropVisimorph],
+	imports: [InteropVisimorph],
 	template: `
 		<input
 			#radioInput

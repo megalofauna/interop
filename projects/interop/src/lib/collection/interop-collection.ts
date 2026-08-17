@@ -259,7 +259,7 @@ export class InteropCollection<T = unknown> {
 				const value = src();
 				untracked(() => this.setItems(value));
 			},
-			{ injector: this.injector, allowSignalWrites: true },
+			{ injector: this.injector },
 		);
 	}
 
@@ -281,7 +281,7 @@ export class InteropCollection<T = unknown> {
 					this._error.set(error);
 				});
 			},
-			{ injector: this.injector, allowSignalWrites: true },
+			{ injector: this.injector },
 		);
 	}
 }

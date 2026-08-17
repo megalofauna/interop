@@ -10,7 +10,6 @@ import {
 	Output,
 	EventEmitter,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import {
 	InteropToolbarBase,
 	KeyboardNavigationManager,
@@ -60,7 +59,6 @@ import {
 @Component({
 	selector: "interop-toolbar-group, [interop-toolbar-group]",
 	standalone: true,
-	imports: [CommonModule],
 	templateUrl: "./interop-toolbar-group.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {

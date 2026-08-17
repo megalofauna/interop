@@ -1,13 +1,11 @@
-import { CommonModule } from "@angular/common";
 import {
-	AfterContentInit,
+	afterNextRender,
 	ChangeDetectionStrategy,
 	Component,
-	ContentChildren,
+	contentChildren,
 	effect,
 	input,
 	isDevMode,
-	QueryList,
 } from "@angular/core";
 import {
 	DevWarningsManager,
@@ -67,7 +65,6 @@ import {
 @Component({
 	selector: "interop-toolbar, [interop-toolbar]",
 	standalone: true,
-	imports: [CommonModule],
 	templateUrl: "./interop-toolbar.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
@@ -79,10 +76,7 @@ import {
 		"(focusin)": "onFocusIn($event)",
 	},
 })
-export class InteropToolbar
-	extends InteropToolbarBase
-	implements AfterContentInit
-{
+export class InteropToolbar extends InteropToolbarBase {
 	// ARIA inputs implementation
 	/**
 	 * Accessible label for the component.
@@ -112,10 +106,12 @@ export class InteropToolbar
 	private keyboardNav = new KeyboardNavigationManager(this.elementRef);
 
 	/**
-	 * Query for toolbar groups to coordinate with them
+	 * Projected toolbar groups. A signal query rather than @ContentChildren, so
+	 * the effect below can depend on it directly — see the constructor.
 	 */
-	@ContentChildren("interopToolbarGroup", { descendants: true })
-	toolbarGroups!: QueryList<any>;
+	readonly toolbarGroups = contentChildren("interopToolbarGroup", {
+		descendants: true,
+	});
 
 	// InteropToolbarBase implementation
 	get componentName(): string {
@@ -129,27 +125,30 @@ export class InteropToolbar
 	constructor() {
 		super();
 
-		// Update focusable items when content changes
+		/*
+		 * Re-scan focusables whenever the projected groups change.
+		 *
+		 * This effect READS toolbarGroups(), which is what makes it an effect at
+		 * all. It previously called updateFocusableElements() without touching a
+		 * single signal — so it ran exactly once and was never scheduled again,
+		 * and the real work was done by a QueryList.changes subscription in
+		 * ngAfterContentInit that had no teardown. The signal query replaces
+		 * both, covering the initial scan and every subsequent change.
+		 */
 		effect(() => {
+			this.toolbarGroups();
 			this.keyboardNav.updateFocusableElements();
 		});
 
-		// Additional toolbar-specific validation
+		/*
+		 * Dev-time validation inspects the DOM, so it belongs after render
+		 * rather than in an effect — as an effect it read no signals, ran once,
+		 * and could fire before content projection had put anything there to
+		 * check.
+		 */
 		if (isDevMode()) {
-			effect(() => {
-				this.validateToolbarUsage();
-			});
+			afterNextRender(() => this.validateToolbarUsage());
 		}
-	}
-
-	ngAfterContentInit() {
-		// Initial scan for focusable items
-		this.keyboardNav.updateFocusableElements();
-
-		// Re-scan when toolbar groups change
-		this.toolbarGroups.changes.subscribe(() => {
-			this.keyboardNav.updateFocusableElements();
-		});
 	}
 
 	/**

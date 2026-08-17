@@ -79,7 +79,7 @@ export function interopCollection<T>(
 				const value = getter();
 				untracked(() => collection.setSource(value));
 			},
-			{ injector, allowSignalWrites: true },
+			{ injector },
 		);
 	} else {
 		collection.setSource(source as InteropCollectionInput<T>);

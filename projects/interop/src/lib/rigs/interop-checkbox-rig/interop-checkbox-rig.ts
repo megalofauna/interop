@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	Component,
 	input,
 	output,
@@ -9,7 +10,6 @@ import {
 	ElementRef,
 	type TrackByFunction,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { InteropCheckbox } from "../../components/interop-checkbox/interop-checkbox";
 import {
@@ -121,7 +121,8 @@ export type CheckboxOption = {
 	selector:
 		"interop-checkbox-rig, [interop-checkbox-rig]:not(interop-checkbox-rig)",
 	standalone: true,
-	imports: [CommonModule, InteropCheckbox],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [InteropCheckbox],
 	templateUrl: "./interop-checkbox-rig.html",
 	styleUrl: "./interop-checkbox-rig.css",
 	providers: [

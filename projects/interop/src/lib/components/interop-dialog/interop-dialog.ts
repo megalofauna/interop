@@ -112,31 +112,28 @@ export class InteropDialog {
 
 	constructor() {
 		// ── Effect: open/close driven by isOpen ──────────────────────────────────
-		effect(
-			() => {
-				const open = this.isOpen();
-				const dialog = this.el.nativeElement;
+		effect(() => {
+			const open = this.isOpen();
+			const dialog = this.el.nativeElement;
 
-				if (open) {
-					this.previousFocus.set(document.activeElement ?? null);
-					if (!dialog.open) {
-						dialog.showModal();
-						// Schedule autoFocus for after the top-layer has been entered
-						afterNextRender(() => {
-							this.applyAutoFocus();
-						});
-					}
-				} else {
-					if (dialog.open) {
-						// dialog.close() fires the native `close` event; the listener
-						// restores focus and emits (closed). No pending reason was
-						// recorded, so the emission carries reason: 'programmatic'.
-						dialog.close();
-					}
+			if (open) {
+				this.previousFocus.set(document.activeElement ?? null);
+				if (!dialog.open) {
+					dialog.showModal();
+					// Schedule autoFocus for after the top-layer has been entered
+					afterNextRender(() => {
+						this.applyAutoFocus();
+					});
 				}
-			},
-			{ allowSignalWrites: true },
-		);
+			} else {
+				if (dialog.open) {
+					// dialog.close() fires the native `close` event; the listener
+					// restores focus and emits (closed). No pending reason was
+					// recorded, so the emission carries reason: 'programmatic'.
+					dialog.close();
+				}
+			}
+		});
 
 		// ── Dev-mode validation ──────────────────────────────────────────────────
 		if (isDevMode()) {

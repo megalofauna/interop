@@ -13,7 +13,7 @@ import {
 	viewChild,
 	TrackByFunction,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { NgTemplateOutlet } from "@angular/common";
 import {
 	type InteropCollectionInput,
 	interopCollection,
@@ -113,7 +113,7 @@ export interface TableColumn<T = any> {
 @Component({
 	selector: "interop-table",
 	standalone: true,
-	imports: [CommonModule],
+	imports: [NgTemplateOutlet],
 	templateUrl: "./interop-table.html",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
