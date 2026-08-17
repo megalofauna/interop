@@ -15,3 +15,4 @@ dist/
 projects/interop/src/lib/styles/interop.starter.css
 projects/interop/src/lib/styles/themes/protocol/ladder.css
 projects/interop/src/lib/styles/tokens/elevation.css
+projects/interop/src/lib/styles/interop.tokens.css

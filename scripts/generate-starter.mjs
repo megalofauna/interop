@@ -46,6 +46,12 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import {
+	decomment,
+	readDeclaration,
+	readFallback,
+	readOverrides,
+} from "./lib/css-read.mjs";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STYLES = join(REPO, "projects/interop/src/lib/styles");
@@ -350,75 +356,22 @@ const BUILD_TIME = [
 
 /* ── Reading the real defaults ────────────────────────────────────────── */
 
-/** Strip comments so a token named in prose is never mistaken for a declaration. */
-const decomment = (s) =>
-	s.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
-
 /**
- * Remove conditional at-rule blocks — @media, @supports, @container.
+ * The default for `token`, from the library source.
  *
- * Without this the reader picks up overrides as if they were defaults, and the
- * failure is silent and severe: motion.css declares --itx-duration-base: 200ms
- * at the root and 0ms inside @media (prefers-reduced-motion: reduce), so the
- * first version of this script emitted a starter that switched motion off for
- * everyone.
- */
-function stripAtRules(src) {
-	let out = "";
-	let i = 0;
-	while (i < src.length) {
-		const at = src.indexOf("@", i);
-		if (at === -1) return out + src.slice(i);
-		const kind = /^@(media|supports|container)\b/.exec(src.slice(at));
-		if (!kind) {
-			out += src.slice(i, at + 1);
-			i = at + 1;
-			continue;
-		}
-		out += src.slice(i, at);
-		const open = src.indexOf("{", at);
-		if (open === -1) return out;
-		let depth = 1;
-		let j = open + 1;
-		while (j < src.length && depth > 0) {
-			if (src[j] === "{") depth++;
-			else if (src[j] === "}") depth--;
-			j++;
-		}
-		i = j;
-	}
-	return out;
-}
-
-/**
- * The LAST declaration of `token` in `file` — last, because a file may declare
- * a token once per selector set (the ramps do), and because within one file the
- * last one is what actually applies.
+ * Declaration first; failing that the structural fallback, which is a
+ * legitimate home for a constant the theme has no opinion about —
+ * --itx-button-touch-target has no declaration anywhere, only
+ * `var(--itx-button-touch-target, 2.75rem)` inside a coarse-pointer block.
  */
 function readDefault(file, token) {
 	const raw = decomment(readFileSync(join(STYLES, file), "utf8"));
-	const esc = token.replace(/-/g, "\\-");
 
-	/* DECLARATIONS are read with at-rules stripped, so a preference override is
-	   never mistaken for the default. */
-	const src = stripAtRules(raw);
-	const re = new RegExp(`${esc}\\s*:\\s*([^;]+);`, "g");
-	let last = null;
-	for (const m of src.matchAll(re)) last = m[1];
-	if (last !== null) return last.trim().replace(/\s+/g, " ");
+	const declared = readDeclaration(raw, token);
+	if (declared !== null) return declared;
 
-	/*
-	 * Some knobs are never declared — their default lives in the structural
-	 * read's fallback, e.g. `var(--itx-button-touch-target, 2.75rem)`. That is
-	 * legitimate where the value is a constant the theme has no opinion about
-	 * (44px is a guideline, not a taste), so read the fallback rather than
-	 * inventing a declaration for it.
-	 */
-	/* FALLBACKS are read from the raw source: a token whose only default is a
-	   structural fallback may well have that fallback inside an at-rule, as the
-	   coarse-pointer touch target does. */
-	const fb = new RegExp(`var\\(\\s*${esc}\\s*,\\s*([^()]+?)\\s*\\)`).exec(raw);
-	if (fb) return fb[1].trim().replace(/\s+/g, " ");
+	const fallback = readFallback(raw, token);
+	if (fallback !== null) return fallback;
 
 	throw new Error(
 		`${token} is neither declared nor given a fallback in ${file} — the starter would ship a stale default`,
@@ -438,32 +391,8 @@ function readDefault(file, token) {
  *
  * So any knob with a preference override carries that override with it.
  */
-function readOverrides(file, token) {
-	const raw = decomment(readFileSync(join(STYLES, file), "utf8"));
-	const esc = token.replace(/-/g, "\\-");
-	const found = [];
-
-	for (const m of raw.matchAll(/@(?:media|supports|container)[^{]*/g)) {
-		const open = raw.indexOf("{", m.index);
-		if (open === -1) continue;
-		let depth = 1;
-		let j = open + 1;
-		while (j < raw.length && depth > 0) {
-			if (raw[j] === "{") depth++;
-			else if (raw[j] === "}") depth--;
-			j++;
-		}
-		const body = raw.slice(open + 1, j - 1);
-		const decl = new RegExp(`${esc}\\s*:\\s*([^;]+);`).exec(body);
-		if (decl) {
-			found.push({
-				prelude: m[0].trim().replace(/\s+/g, " "),
-				value: decl[1].trim().replace(/\s+/g, " "),
-			});
-		}
-	}
-	return found;
-}
+const overridesFor = (file, token) =>
+	readOverrides(decomment(readFileSync(join(STYLES, file), "utf8")), token);
 
 /** Confirm a build-time signpost still points at something real. */
 function assertConfigKeyExists(key) {
@@ -556,7 +485,7 @@ function build() {
 			/* Preference overrides must be restated, or the block above silently
 			   outranks them — see readOverrides(). */
 			for (const k of knobs) {
-				for (const o of readOverrides(k.from, k.token)) {
+				for (const o of overridesFor(k.from, k.token)) {
 					out.push(
 						`/* Keeps ${k.token} honouring this preference. Your declaration above is\n` +
 							`   unlayered, so it outranks the library's own copy of this rule — which\n` +
