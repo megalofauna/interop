@@ -8,7 +8,7 @@
 		"node_modules/**"
 	],
 	"rules": {
-		"custom-property-pattern": "^(itx|interop)-[a-z0-9-]+(_[0-9])?$|^_[a-z0-9-]+$",
+		"custom-property-pattern": "^itx-[a-z0-9-]+(_[0-9])?$|^_[a-z0-9-]+$",
 		"property-no-unknown": true,
 		"selector-type-no-unknown": [true, { "ignore": ["custom-elements"] }]
 	}

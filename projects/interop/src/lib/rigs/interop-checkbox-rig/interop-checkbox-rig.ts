@@ -124,7 +124,6 @@ export type CheckboxOption = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [InteropCheckbox],
 	templateUrl: "./interop-checkbox-rig.html",
-	styleUrl: "./interop-checkbox-rig.css",
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

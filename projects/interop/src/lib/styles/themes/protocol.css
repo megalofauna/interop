@@ -54,6 +54,7 @@
 @import "./protocol/components/button.css" layer(interop.theme);
 @import "./protocol/components/chip.css" layer(interop.theme);
 @import "./protocol/components/command-palette.css" layer(interop.theme);
+@import "./protocol/components/content.css" layer(interop.theme);
 @import "./protocol/components/dialog.css" layer(interop.theme);
 @import "./protocol/components/expansion-panel.css" layer(interop.theme);
 @import "./protocol/components/field.css" layer(interop.theme);
@@ -82,4 +83,5 @@
 
 /* ── Rigs ───────────────────────────────────────────────────────────────── */
 
+@import "./protocol/rigs/choice-rig.css" layer(interop.theme);
 @import "./protocol/rigs/toolbar.css" layer(interop.theme);
