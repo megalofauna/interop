@@ -25,7 +25,11 @@
  * Custom properties only — never a real CSS property.
  */
 
-:where([interop-root]) {
+/* Co-declared on the elevation boundaries, not the bare root: a custom
+   property substitutes where it is DECLARED, so aliasing a rank at the
+   root freezes layer 0's value for the whole tree. See css-strategy.md,
+   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Viewport ─────────────────────────────────────────────────────────
 	 * Carbon states the width of the notification itself (288px, 352px at
 	 * their `max` breakpoint / 1584px). The viewport is padded and

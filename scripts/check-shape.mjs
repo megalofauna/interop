@@ -56,7 +56,7 @@ const SKIP = /\/tokens\/|\.spec\.ts$|interop\.starter\.css$/;
 
 /** A reference to a system token, anywhere in a value. */
 const SYSTEM =
-	/--itx-(?:radius|radius-attr|focus-(?:color|width|style|offset)|duration-[a-z]+|easing-[a-z]+|border-width-[a-z]+)/;
+	/--itx-(?:radius|radius-attr|focus-(?:color|width|style|offset)|duration-[a-z]+|easing-[a-z]+|border-width-[a-z]+|contrast-[0-9]+|surface(?:-[a-z0-9-]+)?)/;
 
 /**
  * A system token's own NAME, anchored — including ramp steps and semantic
@@ -64,7 +64,7 @@ const SYSTEM =
  * defining another IS the ramp, not a baked alias.
  */
 const SYSTEM_NAME =
-	/^--itx-(?:radius|border-width|duration|easing|focus)(?:-[a-z0-9_]+)*$/;
+	/^--itx-(?:radius|border-width|duration|easing|focus|contrast|surface|on-surface)(?:-[a-z0-9_]+)*$/;
 
 function walk(dir, out = []) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -126,11 +126,16 @@ for (const file of walk(ROOT)) {
 		if (SYSTEM_NAME.test(name)) continue;
 		const sel = selectorAt(clean, m.index);
 		if (!/^:where\(\[interop-root\]\)$|^\[interop-root\]$/.test(sel)) continue;
+		// The remedy differs by axis, so name the right one rather than the
+		// generic advice — a colour rank cannot be fixed the way a radius is.
+		const isColor = /--itx-(?:contrast-[0-9]|surface)/.test(value);
 		findings.push({
 			file,
 			line: lineOf(m.index),
 			what: `${name}: ${value.trim()}`.replace(/\s+/g, " ").slice(0, 70),
-			why: "baked alias — substitutes at the root and freezes. Move the chain into the component's structural rule.",
+			why: isColor
+				? "baked alias — a contrast rank / surface is re-declared at every elevation boundary, so aliasing one at the root freezes layer 0's value for the whole tree. Co-declare the block on :where([interop-root], [itx-layer], [itx-sink])."
+				: "baked alias — substitutes at the root and freezes. Move the chain into the component's structural rule.",
 		});
 	}
 }

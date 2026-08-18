@@ -16,7 +16,11 @@
  * contained list's row height. That is the default here too.
  */
 
-:where([interop-root]) {
+/* Co-declared on the elevation boundaries, not the bare root: a custom
+   property substitutes where it is DECLARED, so aliasing a rank at the
+   root freezes layer 0's value for the whole tree. See css-strategy.md,
+   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Typography ─────────────────────────────────────────────────────── */
 	/* Carbon `body-compact-01` — 14px / 18px / 400.
 	   Fixed rem, never `--itx-font-size-*`: those are fluid clamp() values and

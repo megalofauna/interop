@@ -6,7 +6,11 @@
  * (`styles/components/dialog.css`) — this file only declares values.
  */
 
-:where([interop-root]) {
+/* Co-declared on the elevation boundaries, not the bare root: a custom
+   property substitutes where it is DECLARED, so aliasing a rank at the
+   root freezes layer 0's value for the whole tree. See css-strategy.md,
+   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Sizing ─────────────────────────────────────────────────────────── */
 	--itx-dialog-width: min(90vw, 32rem);
 	--itx-dialog-max-height: 85dvh;
