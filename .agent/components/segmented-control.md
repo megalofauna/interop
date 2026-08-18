@@ -5,12 +5,11 @@
 ```
 src/lib/components/interop-segmented-control/
   interop-segmented-control.ts          container component, SegmentedControlRef impl
-  interop-segmented-control.css         component styles (host fieldset / legend)
   interop-segmented-control.token.ts    SegmentedControlRef, SegmentRef interfaces + DI token
   interop-segment/
     interop-segment.ts                  button[interop-segment] — option button
   public-api.ts                         barrel
-src/lib/styles/components/segment.css                       structural rules (segment)
+src/lib/styles/components/segment.css                       structural rules (container AND segment)
 src/lib/styles/themes/protocol/components/segmented-control.css   token values (both)
 projects/demo/src/app/pages/segmented-control/              demo page
 ```
@@ -20,9 +19,13 @@ projects/demo/src/app/pages/segmented-control/              demo page
 > `segmented-control.css` exists under `components/` at all; the theme file is
 > `styles/themes/protocol/components/segmented-control.css`. Searching for
 > `segmented-control.css` finds only the theme and makes the structural half
-> look missing; searching for `segment.css` finds only the structure. The
-> container's own component-scoped styles are a third file again,
-> `interop-segmented-control.css`, colocated with the TypeScript.
+> look missing; searching for `segment.css` finds only the structure.
+>
+> There used to be a third file, `interop-segmented-control.css`, colocated
+> with the TypeScript and holding the fieldset / legend / track rules. It was
+> folded into `styles/components/segment.css` on 2026-08-17 — Angular injected
+> it unlayered, so it outranked the whole `interop` layer, and a CSS-only
+> consumer got a styled row of segments inside an unstyled fieldset.
 
 ## DOM structure
 
@@ -122,15 +125,18 @@ Dividers are rendered as a `::before` pseudo-element on every non-first segment,
 	position: absolute;
 	inset-block: 0;
 	inset-inline-start: 0;
-	width: var(--itx-rule-width, 0);
-	background-color: var(--itx-rule-color, currentColor);
+	width: var(--itx-segmented-control-rule-width, var(--itx-rule-width, 0));
+	background-color: var(
+		--itx-segmented-control-rule-color,
+		var(--itx-rule-color, currentColor)
+	);
 	pointer-events: none;
 }
 ```
 
 `:not([aria-pressed="true"])` on both sides suppresses the divider whenever an adjacent segment is selected, so the rule never overlays the indicator pill.
 
-The structural file's _fallback_ is `--itx-rule-width: 0` (invisible), but the Protocol theme now **opts in**: `--itx-rule-width: 1px` and `--itx-rule-color: var(--itx-neutral-4)`, declared on `fieldset[interop-segmented-control]` rather than on `[interop-root]`. That scoping is deliberate — `--itx-rule-*` also drives the standalone `<hr itx-rule>` utility, so declaring it at root would have re-themed every rule in the app.
+**The tokens are the control's own, and that is the fix, not a detail.** The theme used to declare `--itx-rule-width: 1px` / `--itx-rule-color` on `fieldset[interop-segmented-control]` — those are the PUBLIC pair of the global `[itx-rule]` utility, so every `<hr itx-rule>` a consumer placed anywhere inside a segmented control silently inherited the control's divider paint. Scoping to the fieldset limited the blast radius; it did not make it correct. A component must never write a shared vocabulary. The pair is now `--itx-segmented-control-rule-{color,width}`, read through the chain above so the utility's tokens still govern when the control says nothing, and the width is `var(--itx-border-width-hairline)` rather than a literal `1px` — a literal cannot follow the `prefers-contrast` bump.
 
 This replaced an earlier imperative approach (`<hr itx-rule>` injection via `Renderer2.insertBefore` inside an `effect`), which had timing fragility against Angular's content-projection lifecycle — when `contentChildren` reported new segments before their DOM elements were placed as direct children of the fieldset, the injection could land separators at the wrong DOM positions. CSS sibling combinators don't have this hazard.
 
@@ -187,13 +193,14 @@ Neither of these has an `input()` declaration — they are plain attributes read
 
 ## CSS strategy
 
-Two-file split per `css-strategy.md`. Container styles use `:host { ... }` (component-style scoping); segment styles use `:where(button[interop-segment])` global selectors so the bare attribute works without importing the Angular class.
+Two-file split per `css-strategy.md`, and now genuinely two files: container and segment both live in `styles/components/segment.css` with `:where()` global selectors, so the bare attributes work without importing the Angular classes. The container's `:host` rules became `:where(fieldset[interop-segmented-control])`, `… > legend` and `… .interop-segmented-control__track`.
 
 Public token namespaces:
 
+- `--itx-segmented-control-legend-*` — the group label. 4 tokens.
 - `--itx-segmented-control-track-*` — the track `<div>` (background, border, radius, **box-shadow**, padding, max-width, flex layout knobs). 15 tokens.
 - `--itx-segment-*` — segment button (layout, typography, state variants for rest/hover/selected, focus ring, transition, disabled). 25 tokens.
-- `--itx-rule-*` — inter-segment divider, scoped to the fieldset. 2 tokens.
+- `--itx-segmented-control-rule-*` — inter-segment divider, scoped to the fieldset. 2 tokens.
 - `--itx-indicator-*` — shared with the indicator pill, scoped to the fieldset; the selected-segment fallback path reads these too. 3 tokens.
 
 The Protocol theme declares **47 distinct tokens** in total (53 declarations — the three size steps re-declare `--itx-segment-padding-block`, and the icon-only rules re-declare `--itx-segment-padding-inline`). The remaining 2 of the 47 are the managed radii below.
@@ -204,19 +211,24 @@ State activation lives in the structural file (`segment.css`) via selectors like
 
 Proportions and paint follow IBM Carbon's Content Switcher, in its **default "high contrast" flavour** (see `.agent/workflows/carbon-borrow.md`). What Interop had before the borrow was effectively Carbon's _low contrast_ variant — filled track, light pill, weight shift on the selected label. The component has no variant axis, so only one flavour is expressed; the theme's inline comments name the single value that walks each decision back.
 
-**Selection inverts.** The selected segment takes a near-black fill (`--itx-indicator-background-color: var(--itx-neutral-12)`) with a near-white label (`--itx-segment-foreground-selected: var(--itx-neutral-1)`). Both anchor-positioning paths read the same fill token, so the enhancement path (indicator pill) and the fallback path (segment paints its own background) can't disagree about the colour.
+**Selection is a wash, not an inversion.** Carbon's `$layer-selected-inverse` was expressed as `--itx-indicator-background-color: var(--itx-surface-below)` — the ELEVATION axis, pointing the wrong way. Elevation climbs toward light in both schemes, so "below" is darker than the track in both: in dark, L 0.148 under a 0.193 track, i.e. the selected segment sank instead of standing out. It is now `var(--itx-contrast-1)`, whose definition is verbatim "wash — hover fills, stripes, selected tints". In light the two are indistinguishable (0.855 → 0.860); in dark it flips to 0.243. The label is `--itx-segment-foreground-selected: var(--itx-contrast-6)`. Both anchor-positioning paths read the same fill token, so the enhancement path (indicator pill) and the fallback path (segment paints its own background) can't disagree about the colour. (The `--itx-neutral-*` names this card used to quote were deleted in ITX-40.)
 
 **The track is transparent, framed by an inset box-shadow.**
 
 ```css
 --itx-segmented-control-track-background-color: transparent;
 --itx-segmented-control-track-border-width: 0;
---itx-segmented-control-track-box-shadow: inset 0 0 0 1px var(--itx-neutral-12);
---itx-segmented-control-track-border-radius: var(--itx-radius-1); /* 4px */
+/* declared on the fieldset, not [interop-root] — see below */
+--itx-segmented-control-track-box-shadow: inset 0 0 0
+	var(--itx-border-width-hairline) var(--itx-contrast-6);
 --itx-segmented-control-track-padding: 0;
 ```
 
-Carbon draws this frame as an `outline` with `-1px` offset so the 1px edge costs no layout. An inset `box-shadow` is the same trick — **zero layout cost, so the control measures exactly its size step** — with one difference that drives the hover decision below: box-shadow paints _under_ the children, where outline paints above them.
+Carbon draws this frame as an `outline` with `-1px` offset so the edge costs no layout. An inset `box-shadow` is the same trick — **zero layout cost, so the control measures exactly its size step** — with one difference that drives the hover decision below: box-shadow paints _under_ the children, where outline paints above them.
+
+The radius is not declared at all: `--itx-segmented-control-track-border-radius` falls through to the global `--itx-radius` knob, which defaults to `none`. The spread reads `--itx-border-width-hairline` rather than a literal `1px`, and that is why the declaration sits on `fieldset[interop-segmented-control]` rather than on `[interop-root]` — an alias to a system token parked on the root substitutes there and freezes, so neither an `[itx-scale-scope]` rescale nor the `prefers-contrast` bump to 2px would reach it. `check-shape.mjs` fails the build on that shape.
+
+Rank 6 for the frame is the one edge in this component above rank 3 ("border, emphasis edge"), and it is deliberate: a maximum-strength frame carrying an otherwise unpainted group is the whole identity of Carbon's high-contrast flavour.
 
 **Size axis — sm 32 / md 40 / lg 48.** There is no height token. The control's height _is_ the line box plus block padding, so each step is expressed as `padding = (height − 18px) / 2`:
 
@@ -230,22 +242,20 @@ Carbon draws this frame as an `outline` with `-1px` offset so the 1px edge costs
 
 **Segments are equal-width.** `--itx-segment-flex: 1 1 0` — Carbon: "each container that makes up the content switcher is equal in size". Because the fieldset is `flex: 0 1 fit-content` (shrink-to-fit), `1 1 0` sizes every segment to the widest label rather than stretching the control. `0 0 fit-content` reverts to content-width segments.
 
-**Type is fixed, not fluid.** `$body-compact-01` — `--itx-segment-font-size: 0.875rem` / `--itx-segment-line-height: 1.2857` / `--itx-segment-font-weight: 400`, in `--itx-font-family-sans`. A fluid `clamp()` font-size is **forbidden in a fixed-height box**: the height arithmetic above only holds if the 18px line box is constant, and a clamp() label would drift the pinned heights with the viewport. Note that `--itx-segment-line-height` did not previously exist as a token at all — the segment inherited its line box from prose, which under a typography root is exactly such a clamp(). Its structural fallback is `inherit`, so leaving it unset restores the old drifting behaviour.
+**Type is fixed, not fluid.** `$body-compact-01` — `--itx-segment-font-size: 0.875rem` / `--itx-segment-line-height: 1.2857` / `--itx-segment-font-weight: 500`, in `--itx-font-family-sans`. A fluid `clamp()` font-size is **forbidden in a fixed-height box**: the height arithmetic above only holds if the 18px line box is constant, and a clamp() label would drift the pinned heights with the viewport. Note that `--itx-segment-line-height` did not previously exist as a token at all — the segment inherited its line box from prose, which under a typography root is exactly such a clamp(). Its structural fallback is `inherit`, so leaving it unset restores the old drifting behaviour.
 
-**Selected weight stays 400.** `--itx-segment-font-weight-selected: 400`. Carbon holds the weight constant in this flavour so selection can never reflow segment widths; `600` is the low-contrast look.
+**Selected weight stays put.** `--itx-segment-font-weight-selected: 500`, the same as rest. Carbon holds the weight constant in this flavour so selection can never reflow segment widths; `600` is the low-contrast look.
 
 **Hover moves the label only — no background wash.**
 
 ```css
 --itx-segment-background-hover: transparent;
---itx-segment-foreground-hover: var(
-	--itx-neutral-12
-); /* from --itx-neutral-9 at rest */
+--itx-segment-foreground-hover: var(--itx-contrast-6); /* rank 5 at rest */
 ```
 
 Carbon washes the segment with `$layer-hover` here and we deliberately don't, for the box-shadow reason above: the frame is drawn _inside_ the same box the segments occupy, so an opaque segment fill paints over it — and the first and last segments clip the frame at exactly the corners where it reads most. Carbon gets away with the wash because its frame is an `outline`, which paints above the children. Luminance alone carries the affordance anyway: unlike a bare button, a segment has the track and its neighbours as constant reference, so grey → full strength is unambiguous.
 
-**Focus** is a 2px inset ring (`--itx-segment-outline-offset: -2px`) in `var(--itx-colorway)` — Carbon draws an inset ring in its brand blue; we keep our colorway. The negative offset keeps the ring inside the frame instead of spilling onto the neighbouring segment.
+**Focus** is the system ring, inset. The theme declares exactly one focus token, `--itx-segment-focus-offset: -2px`; width, style and colour come from `tokens/focus.css` through the three-tier chain in the structural file. The negative offset keeps the ring inside the frame instead of spilling onto the neighbouring segment.
 
 ### Trap — `--itx-outer-radius` / `--itx-inner-radius` are homed in the wrong file
 

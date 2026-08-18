@@ -4,7 +4,8 @@
 **Raised:** 2026-08-12 by the round 5 (Progress) Carbon borrow
 **Re-raised:** 2026-08-13 by rounds 10–14 — badge, field, slider and tabs all
 hit it independently in the same sweep, which is how the count reached fifteen.
-**Thirteen remain** — the field pair migrated 2026-08-15, see below.
+**Ten remain** — the field pair migrated 2026-08-15; listbox, segmented-control
+and code-renderer on 2026-08-17. See below.
 
 ## The debt
 
@@ -16,18 +17,38 @@ src/lib/styles/components/X.css                  structure
 src/lib/styles/themes/protocol/components/X.css  values
 ```
 
-Fifteen components don't. They carry a component-local `styleUrl`, so all
+Fifteen components didn't. They carry a component-local `styleUrl`, so all
 their structure *and* all their values live in one file behind Angular's view
 encapsulation:
 
 ```
-interop-badge            interop-scroll-area
-interop-callout          interop-segmented-control  (partially — has a theme file too)
-interop-code-renderer    interop-slider
-interop-listbox          interop-slider-range
+interop-badge            interop-slider
+interop-callout          interop-slider-range
 interop-progress         interop-slider-thumb
-composites/terminal      interop-tabs
-                         interop-tab-panel
+interop-scroll-area      interop-tabs
+composites/terminal      interop-tab-panel
+
+DONE — interop-listbox, interop-segmented-control, interop-code-renderer
+(2026-08-17), migrated together as one conformance pass. Four things worth
+carrying forward:
+
+  - `interop-listbox` was the ViewEncapsulation.None case: already global, just
+    unlayered — the worst combination, since it leaked `.interop-option` into
+    every document AND outranked the whole interop layer. Removing the
+    encapsulation line is the last step, not the first.
+  - It was also the counter-example to "none of these files uses a SCSS
+    feature": `&--active#{&}--selected` is interpolation, which native nesting
+    has no equivalent for. Check before assuming.
+  - `interop-segmented-control`'s structure went into the EXISTING
+    `components/segment.css` rather than a new file, so the pre-existing
+    `themes/protocol/components/segmented-control.css` finally faces one
+    structural file instead of half of one.
+  - A component must never write a shared vocabulary. That theme wrote
+    `--itx-rule-color` / `--itx-rule-width` — the public pair of the global
+    `[itx-rule]` utility — on the fieldset, so every `<hr itx-rule>` a consumer
+    placed inside a segmented control silently took the control's divider paint.
+    Aliased to `--itx-segmented-control-rule-*`, read as
+    `var(--itx-segmented-control-rule-width, var(--itx-rule-width, 0))`.
 
 DONE — interop-field-input + interop-field-textarea (2026-08-15). The pair
 migrated together, as this file said they had to: they were ~90% byte-identical
@@ -96,11 +117,16 @@ one people forget, and the third is the one that actually inverts the contract:
   segmented-control) precisely *because* they can't rely on the global sheet.
   Those copies delete themselves as part of the migration; until then they are
   correct, not redundant.
-- **`interop-segmented-control` is a hybrid** — it has a theme file *and* a
-  local `styleUrl`. Work out which rules live where before moving anything.
-  `interop-progress` is the same shape and is already halfway out: it has a
-  theme file, so only the structural half is still component-scoped. Those two
-  are the cheapest wins on the list.
+- **`interop-progress` is a hybrid** — it has a theme file *and* a local
+  `styleUrl`, so only the structural half is still component-scoped. It is the
+  cheapest win left on the list. `interop-segmented-control` was the same shape
+  and is done.
+- **The theme declares values ON the component, so ancestor overrides stop
+  reaching them.** That is the whole point of the split, and it breaks
+  consumers who were setting the token on a wrapper — the demo's
+  `.demo-example__code` was setting `--itx-cr-body-padding-*` on a div around
+  the renderer, and had to move to `.demo-example__code [interop-code-renderer]`.
+  Grep the demo for every token you are about to declare before you declare it.
 - **Wrap migrated selectors in `:where()` for zero specificity, but keep
   pseudo-elements OUTSIDE it** — `:where(section[interop-tabs])::after`, not
   `:where(section[interop-tabs]::after)`.

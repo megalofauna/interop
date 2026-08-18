@@ -71,6 +71,7 @@
 
 @import "./components/button.css" layer(interop.foundation);
 @import "./components/chip.css" layer(interop.foundation);
+@import "./components/code-renderer.css" layer(interop.foundation);
 @import "./components/command-palette.css" layer(interop.foundation);
 @import "./components/dialog.css" layer(interop.foundation);
 @import "./components/expansion-panel.css" layer(interop.foundation);
@@ -78,6 +79,7 @@
 @import "./components/icon.css" layer(interop.foundation);
 @import "./components/indicator.css" layer(interop.foundation);
 @import "./components/list.css" layer(interop.foundation);
+@import "./components/listbox.css" layer(interop.foundation);
 @import "./components/popover.css" layer(interop.foundation);
 @import "./components/segment.css" layer(interop.foundation);
 @import "./components/stepper.css" layer(interop.foundation);

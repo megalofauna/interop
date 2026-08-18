@@ -65,6 +65,15 @@
 
 .demo-example__code {
 	padding: var(--itx-spacing-6);
+}
+
+/*
+ * Set ON the renderer, not on this wrapper. The renderer's values moved into
+ * the Protocol theme when it migrated off its styleUrl, and a theme declares
+ * them on `figure[interop-code-renderer]` itself — so an ancestor's value is
+ * never inherited past that declaration, whatever the layer.
+ */
+.demo-example__code [interop-code-renderer] {
 	--itx-cr-body-padding-block: 0;
 	--itx-cr-body-padding-inline: 0;
 }
