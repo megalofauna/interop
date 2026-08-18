@@ -64,6 +64,7 @@
 @import "./protocol/components/popover.css" layer(interop.theme);
 @import "./protocol/components/progress.css" layer(interop.theme);
 @import "./protocol/components/segmented-control.css" layer(interop.theme);
+@import "./protocol/components/slider.css" layer(interop.theme);
 @import "./protocol/components/stepper.css" layer(interop.theme);
 @import "./protocol/components/table.css" layer(interop.theme);
 @import "./protocol/components/toast.css" layer(interop.theme);

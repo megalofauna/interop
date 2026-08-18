@@ -59,7 +59,6 @@ export function generateProgressId(): string {
 	selector: "progress[interop-progress]",
 	standalone: true,
 	template: "",
-	styleUrl: "./interop-progress.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		role: "progressbar",

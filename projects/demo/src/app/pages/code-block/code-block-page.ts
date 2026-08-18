@@ -51,7 +51,7 @@ increment(): void {
 }`;
 
 	readonly sampleCss = `:where(progress[interop-progress]) {
-  --itx-progress-height: 0.5rem;
+  --itx-progress-thickness: 0.5rem;
   --itx-progress-fill: var(--itx-colorway-solid);
 }`;
 

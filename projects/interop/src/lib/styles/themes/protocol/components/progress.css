@@ -1,6 +1,19 @@
 /*
  * InteropProgress — Protocol theme.
  *
+ * Token surface:
+ *   Colour   --itx-progress-track          --itx-progress-fill
+ *   Metrics  --itx-progress-thickness      --itx-progress-length
+ *   Motion   --itx-progress-duration       --itx-progress-easing
+ *            --itx-progress-indeterminate-duration
+ *            --itx-progress-indeterminate-band
+ *
+ * Radius reads the system chain in the structural file and is declared
+ * nowhere: the bar has no opinion, so it follows --itx-radius. Square is
+ * Carbon's shape and the global knob's default anyway.
+ *
+ * Set by the component, never by a theme: --itx-progress-percent.
+ *
  * Visual target — borrowed from Carbon's Progress Bar:
  *   A flat 8px rule. Square, because Carbon gives the bar no border-radius at
  *   all — a pill-shaped 8px track reads as a UI *object*, where a square one
@@ -8,29 +21,54 @@
  *   hairline value used for borders elsewhere, so an empty bar is a rule on
  *   the page rather than a filled trough waiting to be noticed.
  *
- * NOTE: the component still carries its own `styleUrl` rather than the global
- * two-file split every other component uses, so these tokens are consumed by
- * `components/interop-progress/interop-progress.css`. See the note in that
- * file — a CSS-only consumer gets no progress styling today.
+ * ── The track was one rank too strong ─────────────────────────────────────
+ *
+ * It was --itx-contrast-3, which the ladder defines as "border, emphasis edge"
+ * (3:1). The intent stated right above it — Carbon's $border-subtle, "a rule on
+ * the page rather than a filled trough waiting to be noticed" — is rank 2,
+ * "hairline, dividers" (1.5:1), verbatim. The slider, whose track is the same
+ * Carbon token doing the same job, was already rank 2; these two disagreed
+ * about one borrowed value. Now they do not, and an empty bar recedes the way
+ * the comment always said it did. It also widens the gap that actually carries
+ * the information — fill against track — rather than the one that does not.
+ *
+ * ── And it was baked at the root ──────────────────────────────────────────
+ *
+ * These declarations used to sit on `:where([interop-root])`. A contrast rank
+ * is solved against the CURRENT surface and re-declared at every elevation
+ * boundary, so aliasing one at the root substitutes it there and freezes it:
+ * a progress bar inside a raised card kept layer 0's grey instead of its own
+ * layer's. Scoping the block to the element is what keeps the rank live, and
+ * it is the same failure `check-shape.mjs` catches for radius and duration —
+ * only colour, which that guard does not cover.
  */
 
-:where([interop-root]) {
-	/* Track + fill — Carbon's $border-subtle and $interactive. */
-	--itx-progress-track: var(--itx-contrast-3);
+:where([interop-root] progress[interop-progress]) {
+	/* ── Colour ─────────────────────────────────────────────────────────── */
+	/* rank 2 — "hairline, dividers", i.e. Carbon's $border-subtle. */
+	--itx-progress-track: var(--itx-contrast-2);
+	/* The brand FILL rung, which is what a filled bar is. */
 	--itx-progress-fill: var(--itx-colorway-solid);
 
-	/* 8px, Carbon's default/big step. */
-	--itx-progress-height: var(--itx-spacing-2);
-
-	/* Square. Carbon defines no radius on the bar. */
+	/* ── Metrics ────────────────────────────────────────────────────────── */
+	/* 8px, Carbon's default/big step. "Thickness", not "height": writing-mode
+	   makes it the bar's width when the bar is vertical. */
+	--itx-progress-thickness: var(--itx-spacing-2);
 
 	/* Length along the fill axis when vertical; ignored when horizontal,
 	   where the bar takes the full inline size of its container. */
 	--itx-progress-length: var(--itx-spacing-32); /* 8rem */
 
-	/* Determinate fill easing. Carbon's indeterminate is 1400ms, but that pace
-	   was set for a soft shimmer spanning the whole track; a single hard-edged
-	   band reads as sluggish at the same speed, so this runs quicker. */
+	/* ── Motion ─────────────────────────────────────────────────────────── */
+	/* The determinate fill's tween, on the house micro-transition. */
+	--itx-progress-duration: var(--itx-duration-fast);
+	--itx-progress-easing: var(--itx-easing-standard);
+
+	/* Carbon's indeterminate is 1400ms, but that pace was set for a soft
+	   shimmer spanning the whole track; a single hard-edged band reads as
+	   sluggish at the same speed, so this runs quicker. A literal because it
+	   is an ANIMATION duration — no --itx-duration-* reaches an animation, and
+	   the structural file stops this one under prefers-reduced-motion. */
 	--itx-progress-indeterminate-duration: 1000ms;
 
 	/* Length of the travelling band, as a percentage of the track. Unitless,
@@ -45,9 +83,9 @@
    supporting information rather than the subject of the view. */
 
 :where(progress[interop-progress][itx-size="sm"]) {
-	--itx-progress-height: var(--itx-spacing-1); /* 4px */
+	--itx-progress-thickness: var(--itx-spacing-1); /* 4px */
 }
 
 :where(progress[interop-progress][itx-size="md"]) {
-	--itx-progress-height: var(--itx-spacing-2); /* 8px */
+	--itx-progress-thickness: var(--itx-spacing-2); /* 8px */
 }

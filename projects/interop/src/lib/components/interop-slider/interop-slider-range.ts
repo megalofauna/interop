@@ -67,7 +67,6 @@ export interface SliderRangeValue {
 	selector: "interop-slider-range",
 	standalone: true,
 	template: `<ng-content></ng-content>`,
-	styleUrl: "./interop-slider-range.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
