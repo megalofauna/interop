@@ -202,9 +202,9 @@
 		// is 86rem, so the lead is always pinned at its gutter minimum.
 		transform: translateX(calc(-100% - var(--shell-gutter)));
 		transition:
-			transform var(--itx-duration-base, 200ms) var(--itx-easing-standard, ease),
-			overlay var(--itx-duration-base, 200ms) allow-discrete,
-			display var(--itx-duration-base, 200ms) allow-discrete;
+			transform var(--itx-duration-base) var(--itx-easing-standard),
+			overlay var(--itx-duration-base) allow-discrete,
+			display var(--itx-duration-base) allow-discrete;
 	}
 
 	.nav__panel[popover]:popover-open {

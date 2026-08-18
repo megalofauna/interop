@@ -87,8 +87,9 @@
 			text-decoration: underline;
 			text-underline-offset: 6px;
 			text-decoration-style: solid;
-			text-decoration-color: var(--itx-colorway-solid);
-			transition: text-decoration-style 500ms ease-in-out;
+			text-decoration-color: var(--itx-colorway-text);
+			transition: text-decoration-style var(--itx-duration-slow)
+				var(--itx-easing-standard);
 
 			&:hover {
 				color: var(--itx-colorway-solid);

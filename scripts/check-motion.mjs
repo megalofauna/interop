@@ -51,6 +51,23 @@ const findings = [];
 /** A bare time value, not one that is part of an identifier or a var() name. */
 const TIME = /(?<![\w-])\d*\.?\d+m?s(?![\w-])/;
 
+/** An easing written as a function — the only way to write one literally. */
+const EASING_FN = /\b(?:cubic-bezier|steps|linear)\(/;
+
+/** True when `s` is a single balanced parenthesised group and nothing after it. */
+function balanced(s) {
+	const trimmed = s.trim();
+	let depth = 0;
+	for (let i = 0; i < trimmed.length; i++) {
+		if (trimmed[i] === "(") depth++;
+		else if (trimmed[i] === ")") {
+			depth--;
+			if (depth === 0) return i === trimmed.length - 1;
+		}
+	}
+	return false;
+}
+
 /**
  * Split a transition shorthand on its top-level commas only. Splitting naively
  * tears `var(--x, 90ms)` in half, which is how a fallback ends up reported as
@@ -70,6 +87,55 @@ function topLevelParts(value) {
 	}
 	parts.push(value.slice(start));
 	return parts;
+}
+
+/**
+ * Every `var(--itx-*-duration|easing|…, <fallback>)` in `src`, with the fallback
+ * read by scanning to the matching close paren rather than by regex.
+ *
+ * A regex cannot do this. The obvious capture — `([^()]+)` — stops at the first
+ * parenthesis, so it matches `var(--x, 110ms)` but is blind to exactly the two
+ * fallbacks that matter most:
+ *
+ *   var(--itx-a-easing, cubic-bezier(0.2, 0, 0.38, 0.9))   an easing literal
+ *   var(--itx-a-duration, var(--itx-duration-fast, 90ms))  a nested chain
+ *
+ * That blind spot shipped. interop-slider carried Carbon's 110ms and
+ * cubic-bezier(0.2, 0, 0.38, 0.9) in fallback slots for months; this guard ran
+ * green over them the whole time, and they were found by hand during the
+ * styleUrl migration. An easing literal is the worse miss of the two, since a
+ * parenthesised value is the ONLY way to write one.
+ */
+function motionVarsWithFallback(src) {
+	const out = [];
+	const OPEN =
+		/var\(\s*(--itx-[a-z0-9-]*(?:duration|easing|timing|transition)(?!-?propert)[a-z0-9-]*)\s*,/g;
+
+	let m;
+	while ((m = OPEN.exec(src)) !== null) {
+		// Scan from just past the comma to the paren that closes this var().
+		let depth = 1;
+		let i = m.index + m[0].length;
+		for (; i < src.length && depth > 0; i++) {
+			if (src[i] === "(") depth++;
+			else if (src[i] === ")") depth--;
+		}
+		if (depth !== 0) continue; // unbalanced source; leave it to stylelint
+
+		const fallback = src.slice(m.index + m[0].length, i - 1);
+
+		// A fallback that is ITSELF just a var() chain is not a literal. The
+		// inner var() is matched by this same loop and reported on its own, so
+		// reporting the outer one too would name the same defect twice and
+		// point at the wrong token.
+		if (/^\s*var\(/.test(fallback) && balanced(fallback)) continue;
+
+		if (!TIME.test(fallback) && !EASING_FN.test(fallback)) continue;
+
+		out.push({ token: m[1], fallback, index: m.index });
+	}
+
+	return out;
 }
 
 for (const file of walk(ROOT)) {
@@ -99,13 +165,11 @@ for (const file of walk(ROOT)) {
 	}
 
 	// Rule 2 — a literal fallback on a motion token.
-	for (const m of clean.matchAll(
-		/var\(\s*(--itx-[a-z0-9-]*(?:duration|easing|timing|transition)(?!-?propert)[a-z0-9-]*)\s*,\s*([^()]+)\)/g,
-	)) {
+	for (const { token, fallback, index } of motionVarsWithFallback(clean)) {
 		findings.push({
 			file,
-			line: lineOf(m.index),
-			what: `var(${m[1]}, ${m[2].trim()})`.slice(0, 70),
+			line: lineOf(index),
+			what: `var(${token}, ${fallback.trim()})`.slice(0, 70),
 			why: "literal fallback on a motion token — the theme is the single source. Drop the fallback.",
 		});
 	}
