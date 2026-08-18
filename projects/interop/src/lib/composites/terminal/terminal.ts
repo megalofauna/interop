@@ -29,7 +29,6 @@ interface DisplayEntry {
 	imports: [InteropButton, InteropIcon],
 	providers: [provideInteropIcons(TablerEraser)],
 	templateUrl: "./terminal.html",
-	styleUrl: "./terminal.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"[class.itx-term--terminal]": "variant() === 'terminal'",

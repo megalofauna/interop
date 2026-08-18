@@ -1,0 +1,74 @@
+/*
+ * InteropCallout — structural foundation.
+ *
+ * Rendering rules for `interop-callout` and its heading / body parts. Loaded
+ * globally via `interop.css`; token VALUES live in
+ * `themes/protocol/components/callout.css`.
+ *
+ * Migrated out of `interop-callout.scss`, a per-component `styleUrl` sheet.
+ * Angular injected it unlayered, so it outranked the entire `interop` cascade
+ * layer and a consumer's layered override could not reach a callout; a CSS-only
+ * consumer got no callout styling at all. The file used no SCSS feature — the
+ * one `//` comment was the only thing that needed a `.scss` extension.
+ *
+ * The variant is a HOST-level state (`[data-type]`), so its values live in the
+ * theme as scoped custom-property blocks. Structural declares the shape once
+ * and never repeats it per variant.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the single
+ * source of truth for every `--itx-callout-*` value; radius reads the system
+ * chain, so a component with no opinion inherits one.
+ *
+ * All selectors are wrapped in :where() for zero specificity.
+ */
+
+:where(interop-callout) {
+	display: block;
+	padding-block: var(--itx-callout-padding-block);
+	padding-inline: var(--itx-callout-padding-inline);
+
+	/* Logical, not `border-left`: an RTL page puts the accent on the right, and
+	   the rule belongs at the start of the reading direction either way. */
+	border-inline-start: var(--itx-callout-accent-width) solid
+		var(--itx-callout-accent);
+
+	/* Squared by default because --itx-radius is, not because the callout pins
+	   it. Fourteen Carbon-borrow rounds converged the library on square corners,
+	   and a rounded admonition in a page of squared tables, tabs, fields and
+	   panels was the last soft edge in ordinary prose. Set --itx-radius (or
+	   itx-radius="nominal" on one instance) to walk it back — which is exactly
+	   what the knob is for, and why there is no theme default here. */
+	border-radius: var(
+		--itx-callout-radius,
+		var(--itx-radius-attr, var(--itx-radius))
+	);
+
+	background: var(--itx-callout-background);
+	color: var(--itx-callout-color);
+
+	/* Deliberately fluid. The borrow rounds ban clamp() type from controls with
+	   a pinned height, where a growing label overflows its box; a callout is
+	   prose furniture that interrupts running text and should scale with it. */
+	font-size: var(--itx-callout-font-size);
+	line-height: var(--itx-callout-line-height);
+}
+
+/* ── Heading ─────────────────────────────────────────────────────────────── */
+/* A `<strong>`, so the UA weight has to be restated rather than inherited. */
+:where(interop-callout .interop-callout__heading) {
+	display: block;
+	margin-block-end: var(--itx-callout-heading-margin-block-end);
+	font-size: var(--itx-callout-heading-font-size);
+	font-weight: var(--itx-callout-heading-font-weight);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+/* Projected prose keeps its own rhythm internally but must not push the panel
+   open at either end — the callout's padding owns those edges. */
+:where(interop-callout .interop-callout__body > :first-child) {
+	margin-block-start: 0;
+}
+
+:where(interop-callout .interop-callout__body > :last-child) {
+	margin-block-end: 0;
+}

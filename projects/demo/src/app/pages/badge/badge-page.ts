@@ -217,6 +217,10 @@ toggleCart() { this.cartHidden.update((v) => !v); }`;
 			property: "--itx-badge-offset",
 			default: "0px — corner-centred; positive bleeds outward",
 		},
+		{
+			property: "--itx-badge-z-index",
+			default: "1 — above the anchor it overlaps",
+		},
 	];
 
 	readonly apiColumns: TableColumn<ApiEntry>[] = [

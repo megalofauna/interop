@@ -1,0 +1,117 @@
+/*
+ * InteropBadge — structural foundation.
+ *
+ * Rendering rules for `interop-badge` and its `.interop-badge__indicator`
+ * child. Loaded globally via `interop.css`; token VALUES live in
+ * `themes/protocol/components/badge.css`.
+ *
+ * Migrated out of `interop-badge.scss`, a per-component `styleUrl` sheet.
+ * Angular injected it unlayered, so it outranked the entire `interop` cascade
+ * layer and no consumer using layers could reach a badge value; a CSS-only
+ * consumer got no badge styling at all. The file used no SCSS feature — the
+ * only nesting was `&`-nesting, which is native CSS.
+ *
+ * The indicator's class is deliberately NOT scoped under the host: it is a
+ * plain, unscoped class so hand-written or replicated markup picks it up, which
+ * is the whole point of shipping the CSS globally.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the single
+ * source of truth for every `--itx-badge-*` value.
+ *
+ * All selectors are wrapped in :where() for zero specificity — consumer
+ * overrides always win regardless of declaration order.
+ *
+ * ── Placement ──────────────────────────────────────────────────────────────
+ *
+ * The indicator uses `position: fixed` + CSS Anchor Positioning, so it escapes
+ * every overflow context its anchor sits in. `position-anchor` is set
+ * per-instance from the template; `anchor-name` is set on the host. Anchor
+ * Positioning needs Chrome 125+, Firefox 135+, Safari 18.2+.
+ */
+
+:where(interop-badge) {
+	display: inline-flex;
+	align-self: flex-start;
+}
+
+/* ── Indicator ───────────────────────────────────────────────────────────── */
+/*
+ * Carbon caps the count bubble at $spacing-05, and its 16px line box always
+ * reaches the cap, so the count is a fixed 16px tall. The inline floor reads
+ * the same token — a one-digit count is then a circle, and "99+" grows sideways
+ * only. Reading --itx-badge-size directly rather than through a derived
+ * --itx-badge-min-width keeps a downstream override of the size reaching both
+ * axes (see the var() resolution note in .agent/workflows/carbon-borrow.md).
+ */
+:where(.interop-badge__indicator) {
+	position: fixed;
+	z-index: var(--itx-badge-z-index);
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	min-inline-size: var(--itx-badge-size);
+	block-size: var(--itx-badge-size);
+	padding-block: 0;
+	padding-inline: var(--itx-badge-padding-inline);
+	box-sizing: border-box;
+
+	background: var(--itx-badge-background);
+	color: var(--itx-badge-color);
+
+	font-size: var(--itx-badge-font-size);
+	font-weight: var(--itx-badge-font-weight);
+	line-height: var(--itx-badge-line-height);
+	white-space: nowrap;
+
+	/* Pinned round, not the --itx-radius knob: a badge is a spot, and a spot
+	   with corners reads as a chip that has lost its label. Carbon names a
+	   radius here (100px) where the house style would square it off. */
+	border-radius: var(--itx-badge-radius);
+
+	/*
+	 * `position-area` drops the indicator in the corner cell so its near corner
+	 * touches the anchor's, and the translate then pulls it back by half its own
+	 * size — which centres it exactly on the corner. The offset pushes it back
+	 * OUT from there, so 0 is corner-centred, positive bleeds outward, and a
+	 * negative value walks toward Carbon's fully-inside placement.
+	 *
+	 * --itx-badge-offset must carry a unit: it is subtracted from a percentage
+	 * inside calc(), and a unitless 0 makes that calc invalid, which drops the
+	 * translate entirely.
+	 */
+	&:where([data-position="top-right"]) {
+		position-area: top right;
+		translate: calc(var(--itx-badge-offset) - 50%)
+			calc(50% - var(--itx-badge-offset));
+	}
+
+	&:where([data-position="top-left"]) {
+		position-area: top left;
+		translate: calc(50% - var(--itx-badge-offset))
+			calc(50% - var(--itx-badge-offset));
+	}
+
+	&:where([data-position="bottom-right"]) {
+		position-area: bottom right;
+		translate: calc(var(--itx-badge-offset) - 50%)
+			calc(var(--itx-badge-offset) - 50%);
+	}
+
+	&:where([data-position="bottom-left"]) {
+		position-area: bottom left;
+		translate: calc(50% - var(--itx-badge-offset))
+			calc(var(--itx-badge-offset) - 50%);
+	}
+
+	/* Carbon's dot is min-block-size/min-inline-size $spacing-03 with no
+	   padding — half the count bubble, and stated rather than derived from it,
+	   so retuning one does not silently move the other. */
+	&:where([data-dot]) {
+		min-inline-size: 0;
+		inline-size: var(--itx-badge-dot-size);
+		block-size: var(--itx-badge-dot-size);
+		padding-inline: 0;
+	}
+}

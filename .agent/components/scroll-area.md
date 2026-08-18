@@ -7,7 +7,8 @@ gradients, and auto-promotes itself to a focusable keyboard scroll target
 when overflow exists without focusable descendants.
 
 The component does not introduce its own scroll model. The host element
-itself is the scroll container; the SCSS sets `overflow` per orientation.
+itself is the scroll container; the structural CSS sets `overflow` per
+orientation.
 All work the JS does is observation: detecting overflow, tracking scroll
 position, updating shadow custom properties, watching for DOM changes that
 would affect either.
@@ -17,13 +18,27 @@ would affect either.
 ```
 src/lib/components/interop-scroll-area/
   interop-scroll-area.ts          component
-  interop-scroll-area.scss        :host overflow + mask shadows + focus ring
   interop-scroll-area.config.ts   config interface, defaults, INJECTION_TOKEN
   public-api.ts                   barrel
+
+src/lib/styles/components/scroll-area.css                  overflow, mask
+                                                           shadows, focus ring
+src/lib/styles/themes/protocol/components/scroll-area.css  four values
 ```
 
-No dedicated structural-vs-theme split — the scroll-area's structural CSS
-*is* its theme surface (a small set of tokens, declared in the SCSS header).
+Two files since 2026-08-17, both imported globally and both layered; there is
+no `styleUrl`. That migration is also where the library's only `!important`
+went: `scroll-behavior: auto !important` inside the reduced-motion block. In an
+UNLAYERED sheet it was the highest-priority declaration Interop shipped, and
+layered it would be worse — important declarations invert layer order, so an
+important rule in `interop.foundation` beats everything a consumer writes. The
+block survives without the flag; `scroll-behavior` carries no duration, so
+`--itx-duration-base: 0ms` cannot reach it.
+
+The focus ring reads the system chain and the theme declares no focus token.
+The old sheet pinned `outline-offset: 2px` by hand, which is exactly what
+`--itx-focus-offset` is — the literal only meant the ring stopped following the
+system.
 
 ## DOM structure
 
@@ -72,10 +87,10 @@ Defaults (`interop-scroll-area.config.ts`):
 | `overscrollBehavior` | `'contain'` |
 
 **Footgun:** `overscrollBehavior` is declared in the config interface but
-the TS component never imperatively applies it. The SCSS reads
-`--itx-scroll-area-overscroll` directly (defaulting to `contain`). To set
-it, callers must set the CSS variable; the config field is documentation,
-not wiring.
+the TS component never imperatively applies it. The structural rule reads
+`--itx-scroll-area-overscroll`, whose value (`contain`) is declared in the
+theme. To set it, callers must set the CSS variable; the config field is
+documentation, not wiring.
 
 ## Outputs and exposed signals
 
@@ -118,8 +133,8 @@ pending are coalesced. Inside the RAF, `updateScrollState()`:
 5. Emits `scrollState`
 
 All four shadow vars are always written when shadows are enabled, even
-on a single-axis scroll. The SCSS only consumes the ones relevant to the
-current `[data-orientation]`.
+on a single-axis scroll. The structural CSS only consumes the ones relevant to
+the current `[data-orientation]`.
 
 ## Auto tabindex / role
 
@@ -156,8 +171,10 @@ Visual fades at scrollable edges use `mask-image` rather than
 overlay elements — no extra DOM, no background-color assumption, works
 on any backdrop.
 
-The SCSS computes a linear gradient with stops at
-`var(--_shadow-{top|bottom|start|end}) * var(--_shadow-size)`. When a
+The structural CSS computes a linear gradient with stops at
+`var(--_shadow-{top|bottom|start|end}) * var(--itx-scroll-area-shadow-size)`.
+The `--_shadow-size` alias is gone — it was a public token plus a literal
+fallback, which the theme now owns outright. When a
 shadow var is 0, that gradient stop collapses to 0px and the edge is
 fully opaque (no fade). When it's 1, the full `--itx-scroll-area-shadow-size`
 fades the content out.
