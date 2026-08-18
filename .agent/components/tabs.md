@@ -17,10 +17,10 @@ src/lib/components/interop-tabs/
   interop-tab-panel.spec.ts
 ```
 
-**There is no `styles/components/tabs.css` and no
-`themes/protocol/components/tabs.css.`** Tabs is one of only two components
-(progress is the other) still styled from its own `styleUrl`. See
-*Stylesheet debt* below — it is not a stylistic quirk, it breaks two contracts.
+Styles live in `styles/components/tabs.css` (structure) and
+`themes/protocol/components/tabs.css` (values), both global and layered. Tabs
+was the worked example for the `styleUrl` migration (`64002cda`); see
+*Stylesheet debt, resolved* below for what the move fixed.
 
 ## Shape
 
@@ -202,21 +202,25 @@ cannot be partially overridden, which is why they go:
 | `--itx-tab-focus-outline: 2px solid currentColor` | focus ring was black, not brand | `-width` / `-style` / `-color` |
 | `--itx-tab-active-indicator-height` | the bar is no longer selected-only, and it is a thickness on both axes | `--itx-tab-indicator-size` |
 
-## Stylesheet debt
+## Stylesheet debt, resolved (2026-08-17)
 
-Tabs is styled from component `styleUrl`s. Two consequences:
+Tabs *was* styled from component `styleUrl`s, with two consequences:
 
-1. **A CSS-only consumer gets no tab styling at all** — the one thing the
+1. **A CSS-only consumer got no tab styling at all** — the one thing the
    global stylesheet exists to provide.
 2. **Angular injects component styles unlayered**, and unlayered rules beat
-   layered ones at any specificity. A consumer who correctly declares
-   `@layer interop, …` cannot override tabs. That inverts the contract in
+   layered ones at any specificity. A consumer who correctly declared
+   `@layer interop, …` could not override tabs. That inverted the contract in
    `css-strategy.md` for exactly this component.
 
-Neither `.scss` file uses a single SCSS feature — the nesting is native CSS
-nesting. They are plain CSS wearing a `.scss` extension.
+Both are fixed. The move also corrected three colour rungs that the port would
+otherwise have carried across intact — the rule at `contrast-3` where a divider
+is rank 2, hover reaching for `surface-below` (elevation used as a mark), and
+the selected indicator painting `colorway-solid`, a FILL rung, on an edge.
+That pattern — a mechanically faithful port preserving a category error —
+is why the remaining twelve sheets were migrated as *conformance* passes.
 
-Full migration plan: `.agent/todo/styleurl-components-migration.md`.
+Full migration plan: `.agent/records/styleurl-migration.md`.
 
 ## Gotchas
 

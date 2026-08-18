@@ -1,15 +1,21 @@
-# TODO — components styled from `styleUrl` instead of the two-file split
+# DONE — the `styleUrl` migration (closed 2026-08-17)
 
-**Status:** deferred, architectural (not mechanical — read the caveats)
+**Status:** COMPLETE. Zero components in the library carry a `styleUrl`.
 **Raised:** 2026-08-12 by the round 5 (Progress) Carbon borrow
 **Re-raised:** 2026-08-13 by rounds 10–14 — badge, field, slider and tabs all
 hit it independently in the same sweep, which is how the count reached fifteen.
-**Nine remain** — the field pair migrated 2026-08-15, then `interop-progress`
-and the three slider files 2026-08-17. See below.
-**Nine remain** — the field pair migrated 2026-08-15; badge, callout,
-scroll-area and composites/terminal migrated 2026-08-17, see below.
-**Ten remain** — the field pair migrated 2026-08-15; listbox, segmented-control
-and code-renderer on 2026-08-17. See below.
+**Closed:** 2026-08-17. Kept as a record, not a task: the per-component notes
+below are the forensics for a set of defects that a purely mechanical port
+would have carried forward intact.
+
+Sequence: the field pair 2026-08-15; tabs 2026-08-17 as the worked example
+(`64002cda`); then the remaining thirteen in four parallel batches the same day
+— slider trio + progress, badge/callout/scroll-area/terminal,
+listbox/segmented-control/code-renderer, and the two choice rigs + content.
+
+Verified on the merged result: nine guards green, three builds, 573 specs, no
+spec modified, every rename propagated, 1014 documented levers across 34
+components.
 
 ## The debt
 
@@ -21,21 +27,11 @@ src/lib/styles/components/X.css                  structure
 src/lib/styles/themes/protocol/components/X.css  values
 ```
 
-Fifteen components didn't. They carry a component-local `styleUrl`, so all
-their structure *and* all their values live in one file behind Angular's view
-encapsulation:
+Fifteen components didn't. They carried a component-local `styleUrl`, so all
+their structure *and* all their values lived in one file behind Angular's view
+encapsulation — injected UNLAYERED, which put them above the entire `interop`
+cascade layer and out of reach of any consumer using layers.
 
-```
-interop-badge            interop-scroll-area
-interop-callout          interop-segmented-control  (partially — has a theme file too)
-interop-code-renderer    interop-tabs
-interop-listbox          interop-tab-panel
-composites/terminal
-interop-code-renderer    interop-slider
-interop-listbox          interop-slider-range
-interop-progress         interop-slider-thumb
-interop-segmented-control (partially — has a theme file too)
-interop-tabs             interop-tab-panel
 
 DONE — interop-badge, interop-callout, interop-scroll-area and
 composites/terminal (2026-08-17). Migrated as a conformance pass, not a port —

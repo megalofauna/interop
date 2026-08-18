@@ -138,7 +138,7 @@ What is now true: `InteropCodeRenderer` reads `--itx-cr-body-background` for rea
 
 ## CSS strategy
 
-- Two-file split: structural rules in `code-block.scss` (`styleUrl`, Angular emulated encapsulation), token values in `protocol/composites/code-block.css` (global theme).
+- Two-file split: structural rules in `styles/composites/code-block.css`, token values in `protocol/composites/code-block.css`. Both global and layered; no `styleUrl` since 2026-08-17.
 - `:where()` on every child selector inside structural CSS for zero added specificity. `:host` stays unwrapped (Angular emulates it).
 - Every theme-relevant property reads `var(--itx-cb-*, <fallback>)`. The fallback chain keeps the component rendering even when the Protocol theme isn't imported.
 - Border-radius participates in `--itx-context-radius` (managed-radius opt-in) before falling back to a fixed value:
