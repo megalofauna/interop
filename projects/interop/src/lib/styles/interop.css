@@ -75,6 +75,7 @@
 @import "./components/chip.css" layer(interop.foundation);
 @import "./components/code-renderer.css" layer(interop.foundation);
 @import "./components/command-palette.css" layer(interop.foundation);
+@import "./components/content.css" layer(interop.foundation);
 @import "./components/dialog.css" layer(interop.foundation);
 @import "./components/expansion-panel.css" layer(interop.foundation);
 @import "./components/field.css" layer(interop.foundation);
@@ -118,6 +119,7 @@
 /*    Container/layout components that coordinate child controls (toolbars,   */
 /*    etc). Same authoring pattern as components.                             */
 
+@import "./rigs/choice-rig.css" layer(interop.foundation);
 @import "./rigs/toolbar.css" layer(interop.foundation);
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */

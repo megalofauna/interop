@@ -74,7 +74,6 @@ const inlineText = (nodes: readonly Inline[]): string => {
 	standalone: true,
 	imports: [NgComponentOutlet],
 	templateUrl: "./interop-content.html",
-	styleUrls: ["./interop-content.css"],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InteropContent {
