@@ -38,12 +38,18 @@
  * is solved against the CURRENT surface and re-declared at every elevation
  * boundary, so aliasing one at the root substitutes it there and freezes it:
  * a progress bar inside a raised card kept layer 0's grey instead of its own
- * layer's. Scoping the block to the element is what keeps the rank live, and
- * it is the same failure `check-shape.mjs` catches for radius and duration —
- * only colour, which that guard does not cover.
+ * layer's. Co-declaring the block on the elevation boundaries is what keeps the
+ * rank live — the same failure `check-shape.mjs` catches for radius and
+ * duration, which it now also covers for color.
+ *
+ * This block first landed scoped to the element itself,
+ * `:where([interop-root] progress[interop-progress])`. That also tracked the
+ * layer, but it put a declaration ON the component, which outranks any value
+ * inherited from an ancestor — so it silently killed region theming
+ * (`.sidebar { --itx-progress-track: … }`). Co-declaration keeps both.
  */
 
-:where([interop-root] progress[interop-progress]) {
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Colour ─────────────────────────────────────────────────────────── */
 	/* rank 2 — "hairline, dividers", i.e. Carbon's $border-subtle. */
 	--itx-progress-track: var(--itx-contrast-2);

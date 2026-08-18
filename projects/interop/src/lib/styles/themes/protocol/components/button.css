@@ -17,7 +17,11 @@
 
 /* ── Base (default, no variant) ──────────────────────────────────────────── */
 
-:where([interop-root]) {
+/* Co-declared on the elevation boundaries, not the bare root: a custom
+   property substitutes where it is DECLARED, so aliasing a rank at the
+   root freezes layer 0's value for the whole tree. See css-strategy.md,
+   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* Sizing — pin the height; the foundation derives block padding as
 	   (height − 1em) / 2, so the visible pill lands at exactly the height.
 	   Default size = md (40), Carbon's medium step. */
@@ -59,10 +63,13 @@
 	--itx-button-transition-properties:
 		background-color, border-color, box-shadow;
 
-	/* Rest state — defaults declared at root so any ancestor can override
-	   the same token via inheritance. Variant rules below stay on
-	   button[interop-button~="…"] because they're keyed off attributes
-	   that don't propagate up the tree. */
+	/* Rest state — declared on the elevation boundaries rather than the bare
+	   root, so the rank re-resolves per layer. An ancestor can still override
+	   the same token via inheritance, which is the point of not scoping this
+	   block to the button itself; the one exception is an [itx-layer] sitting
+	   between that ancestor and the button, which reclaims the token. Variant
+	   rules below stay on button[interop-button~="…"] because they're keyed off
+	   attributes that don't propagate up the tree. */
 	--itx-button-background: var(--itx-contrast-2);
 	--itx-button-foreground: var(--itx-contrast-6);
 	--itx-button-border-color: transparent;

@@ -214,4 +214,84 @@ describe("Layer engine", () => {
 			expect(surfaceOf(below)).toEqual(ramp("surface-1"));
 		});
 	});
+	/**
+	 * How a THEME may alias a contrast rank into a component token.
+	 *
+	 * This is the rule the whole theme layer depends on, and getting it wrong is
+	 * invisible: the component renders, in a plausible grey, just the wrong one.
+	 * Fourteen theme files shipped the broken form.
+	 */
+	describe("component aliases onto a rank", () => {
+		let themeStyle: HTMLStyleElement;
+
+		const theme = (css: string) => {
+			themeStyle = document.createElement("style");
+			themeStyle.textContent = css;
+			document.head.appendChild(themeStyle);
+		};
+
+		afterEach(() => themeStyle?.remove());
+
+		/** Paint a probe with the component token and read it back. */
+		const painted = (host: HTMLElement) => {
+			const probe = el(host);
+			probe.style.backgroundColor = "var(--itx-widget-background)";
+			return getComputedStyle(probe).backgroundColor;
+		};
+
+		it("FREEZES when declared on the bare root — the bug", () => {
+			theme(`:where([interop-root]) {
+				--itx-widget-background: var(--itx-contrast-2);
+			}`);
+
+			const deep = el(root, { "itx-layer": "" });
+
+			// The alias substituted --itx-contrast-2 at the ROOT, so what inherits
+			// down is a finished colour: layer 0's grey, everywhere, forever.
+			expect(painted(deep)).toEqual(painted(root));
+		});
+
+		it("tracks the layer when co-declared on the elevation boundaries — the fix", () => {
+			theme(`:where([interop-root], [itx-layer], [itx-sink]) {
+				--itx-widget-background: var(--itx-contrast-2);
+			}`);
+
+			const deep = el(root, { "itx-layer": "" });
+
+			expect(painted(deep)).not.toEqual(painted(root));
+			// And it is the rank the deeper layer actually solves for.
+			const probe = el(deep);
+			probe.style.backgroundColor = "var(--itx-contrast-2)";
+			expect(painted(deep)).toEqual(getComputedStyle(probe).backgroundColor);
+		});
+
+		it("still lets an ancestor override the component token", () => {
+			// The ergonomic the bare-root form was written for, and the reason
+			// co-declaration beats scoping the block to the component element:
+			// a rule on the component itself would outrank this inherited value.
+			theme(`:where([interop-root], [itx-layer], [itx-sink]) {
+				--itx-widget-background: var(--itx-contrast-2);
+			}`);
+
+			const region = el(root);
+			region.style.setProperty("--itx-widget-background", "rgb(7, 8, 9)");
+
+			expect(painted(region)).toEqual("rgb(7, 8, 9)");
+		});
+
+		it("but a layer boundary below that override reclaims the token", () => {
+			// The negative case, asserted on purpose — the same trade-off
+			// --itx-radius already makes at an [itx-scale-scope]. Co-declaration
+			// means re-declaration, and re-declaration clobbers what it inherits.
+			theme(`:where([interop-root], [itx-layer], [itx-sink]) {
+				--itx-widget-background: var(--itx-contrast-2);
+			}`);
+
+			const region = el(root);
+			region.style.setProperty("--itx-widget-background", "rgb(7, 8, 9)");
+			const boundary = el(region, { "itx-layer": "" });
+
+			expect(painted(boundary)).not.toEqual("rgb(7, 8, 9)");
+		});
+	});
 });

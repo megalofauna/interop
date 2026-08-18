@@ -56,7 +56,7 @@
  * lands at 0.507, which is indistinguishable from where it started.
  */
 
-:where([interop-root] section[interop-tabs]) {
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Tablist ────────────────────────────────────────────────────────── */
 	--itx-tabs-tablist-display: flex;
 	--itx-tabs-tablist-flex-wrap: nowrap;
@@ -114,7 +114,7 @@
  * Panel. Padding matches the tab's own inline padding so projected content and
  * the first tab's label align on the same optical edge.
  */
-:where([interop-root] section[interop-tab-panel]) {
+:where([interop-root], [itx-layer], [itx-sink]) {
 	--itx-tab-panel-padding-block: var(--itx-spacing-4);
 	--itx-tab-panel-padding-inline: var(--itx-spacing-4);
 }

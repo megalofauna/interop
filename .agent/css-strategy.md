@@ -244,6 +244,59 @@ And if the component has no opinion, declare nothing — absence is how the them
 says that, and the structural fallback carries it.
 `scripts/check-keywords.mjs` fails the build on all of them.
 
+## Co-declaration — where an alias must be declared
+
+A custom property is substituted **where it is declared**, using that element's
+computed values. It then inherits as a finished value. So an alias is only as
+live as the selector it sits on.
+
+```css
+/* WRONG — substitutes at the root and freezes layer 0's grey for the whole tree */
+:where([interop-root]) {
+	--itx-widget-background: var(--itx-contrast-2);
+}
+
+/* RIGHT — re-resolves wherever the input is re-declared */
+:where([interop-root], [itx-layer], [itx-sink]) {
+	--itx-widget-background: var(--itx-contrast-2);
+}
+```
+
+**The rule: an alias must be declared on the same selector set as its input.**
+
+Look up where the system token you are reading is declared, and match it:
+
+| input | declared on | so co-declare on |
+|---|---|---|
+| `--itx-contrast-*`, `--itx-surface*` | `[interop-root]`, `[itx-layer]`, `[itx-sink]`, `[itx-layer="N"]` | `:where([interop-root], [itx-layer], [itx-sink])` |
+| the radius / border-width / duration ramps | `[interop-root]`, `[itx-scale-scope]` | `:where([interop-root], [itx-scale-scope])` |
+| `--itx-colorway-*` | `[interop-root]` only (colorway blocks are a **compound** selector on the root element) | `:where([interop-root])` is already correct |
+
+`--itx-contrast-2` alone is declared **27 times** in `tokens/elevation.css`, once
+per layer. That is the whole point of a rank: it is a contrast *target* against
+the current surface, not a fixed gray. An alias on the bare root throws that away
+silently — the component still renders, in a plausible gray, just the wrong one.
+
+### Why not scope the block to the component instead
+
+`:where([interop-root] button[interop-button])` also tracks the layer, and was
+the first fix tried (tabs and progress shipped it briefly). It has a cost that is
+easy to miss: it puts a declaration **on the component element**, and a
+declaration always beats an inherited value. Region theming —
+`.sidebar { --itx-button-background: … }` — stops working entirely.
+
+Co-declaration keeps that working, with one documented exception: an `[itx-layer]`
+between the overriding ancestor and the component reclaims the token, exactly as
+`[itx-scale-scope]` does for radius. Both behaviors are asserted in
+`tokens/elevation.spec.ts`, under "component aliases onto a rank".
+
+### Enforcement
+
+`scripts/check-shape.mjs` fails the build on an alias to a system token declared
+on a bare `[interop-root]`, and names the remedy for the axis it caught. It did
+not cover the color axes until 2026-08-17; 84 sites across 14 theme files had
+accumulated behind that gap.
+
 ## Radius
 
 `--itx-radius` is the global knob. A component that follows it puts the whole

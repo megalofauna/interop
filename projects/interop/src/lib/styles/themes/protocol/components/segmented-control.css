@@ -31,7 +31,11 @@
  * on each token below name the single value that walks it back.
  */
 
-:where([interop-root]) {
+/* Co-declared on the elevation boundaries, not the bare root: a custom
+   property substitutes where it is DECLARED, so aliasing a rank at the
+   root freezes layer 0's value for the whole tree. See css-strategy.md,
+   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* Focus — the only deviation from the system ring. Inset: segments abut, so an outset ring would cross the divider.
 	   Colour, width and style come from tokens/focus.css. */
 	--itx-segment-focus-offset: -2px;
