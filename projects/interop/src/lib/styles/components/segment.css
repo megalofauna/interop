@@ -1,68 +1,207 @@
 /*
- * InteropSegment — structural foundation.
+ * InteropSegmentedControl + InteropSegment — structural foundation.
  *
- * Rendering rules for `button[interop-segment]`: the visual pill background
- * via state-resolved private slots, focus ring, disabled treatment, and the
- * anchor-name exposure used by the parent container's enhanced selection pill.
+ * Rendering rules for the container `fieldset[interop-segmented-control]`, its
+ * `<legend>` and track wrapper, and for the `button[interop-segment]` children:
+ * the visual pill background via state-resolved private slots, the divider
+ * pseudo, the focus ring, the disabled treatment, and the anchor-name exposure
+ * used by the sliding selection pill.
+ *
+ * The container half was migrated out of `interop-segmented-control.css`, a
+ * per-component `styleUrl` sheet that Angular injected unlayered — so it
+ * outranked the whole `interop` cascade layer, and a CSS-only consumer got a
+ * styled row of segments inside an unstyled fieldset. It lands HERE rather than
+ * in a file of its own because the container and the segment are one component
+ * with one theme file; a third structural file would have split the layout
+ * across two places that have to agree about the track's padding and radius.
  *
  * Loaded globally via `interop.css` so any consumer can apply Interop segment
- * styling by writing `<button interop-segment>` — no Angular component import
- * required. Importing the InteropSegment class additionally brings ARIA wiring,
- * roving-tabindex coordination, and parent container integration.
+ * styling by writing the markup — no Angular component import required.
+ * Importing the classes additionally brings ARIA wiring, roving-tabindex
+ * coordination, and the anchor-positioned pill.
  *
- * Token values (colors, sizes, radii) are set separately by the theme — see
+ * Token VALUES (colors, sizes, radii) live in
  * `themes/protocol/components/segmented-control.css`. This file declares
- * structure and state activation rules; the theme declares values.
+ * structure and state activation; the theme declares values.
  *
  * All selectors are wrapped in :where() to keep specificity at zero, so
  * consumer overrides always win regardless of declaration order.
  *
  * Public tokens (set on any ancestor, e.g. [interop-root]):
  *
- *   Layout / structure
+ *   Container — legend
+ *   --itx-segmented-control-legend-margin-block-end
+ *   --itx-segmented-control-legend-font-size
+ *   --itx-segmented-control-legend-line-height
+ *   --itx-segmented-control-legend-font-weight
+ *
+ *   Container — track
+ *   --itx-segmented-control-track-display
+ *   --itx-segmented-control-track-flex-direction
+ *   --itx-segmented-control-track-row-gap
+ *   --itx-segmented-control-track-column-gap
+ *   --itx-segmented-control-track-align-items
+ *   --itx-segmented-control-track-justify-content
+ *   --itx-segmented-control-track-background-color
+ *   --itx-segmented-control-track-background-image
+ *   --itx-segmented-control-track-border-color
+ *   --itx-segmented-control-track-border-width
+ *   --itx-segmented-control-track-border-style
+ *   --itx-segmented-control-track-border-radius
+ *   --itx-segmented-control-track-padding
+ *   --itx-segmented-control-track-box-shadow
+ *   --itx-segmented-control-track-max-width
+ *
+ *   Inter-segment rule
+ *   --itx-segmented-control-rule-color   --itx-segmented-control-rule-width
+ *
+ *   Segment — layout / structure
  *   --itx-segment-display
  *   --itx-segment-flex
  *   --itx-segment-padding-block
  *   --itx-segment-padding-inline
  *   --itx-segment-min-width
  *
- *   Typography
+ *   Segment — typography
  *   --itx-segment-font-family
  *   --itx-segment-font-size
  *   --itx-segment-line-height
  *   --itx-segment-font-weight              --itx-segment-font-weight-selected
  *
- *   Visual — state tokens (rest / hover / selected)
+ *   Segment — state tokens (rest / hover / selected)
  *   --itx-segment-background       --itx-segment-background-hover       --itx-segment-background-selected
  *   --itx-segment-foreground       --itx-segment-foreground-hover       --itx-segment-foreground-selected
  *   --itx-segment-border-color     --itx-segment-border-color-hover     --itx-segment-border-color-selected
  *
- *   Visual — structure (no state variants)
+ *   Segment — visual structure (no state variants)
  *   --itx-segment-border-width
  *   --itx-segment-border-style
  *   --itx-segment-border-radius
  *
- *   Focus ring
- *   --itx-segment-outline-width
- *   --itx-segment-outline-style
- *   --itx-segment-outline-color
- *   --itx-segment-outline-offset
+ *   Segment — focus ring
+ *   --itx-segment-focus-width   --itx-segment-focus-style
+ *   --itx-segment-focus-color   --itx-segment-focus-offset
  *
- *   Transition
+ *   Segment — transition
  *   --itx-segment-transition-duration
  *   --itx-segment-transition-timing-function
  *
- *   Disabled
+ *   Segment — disabled
  *   --itx-segment-disabled-opacity
  *
- * Inter-segment dividers are rendered as a ::before pseudo-element on each
- * non-first segment via the adjacent-sibling combinator. Tune colour and
- * thickness via --itx-rule-{color,width} on any ancestor. A consumer can
- * suppress the pseudo divider in a given gap by placing their own
- * <hr itx-rule> there — adjacency breaks and the explicit markup wins.
+ *   Indicator pill — see styles/components/indicator.css for its tokens.
  */
 
-/* ── Base ────────────────────────────────────────────────────────────────── */
+/* ── Container — fieldset shell ──────────────────────────────────────────── */
+/*
+ * Outer layout only — sized as a column so the <legend> and the inner track
+ * stack in document flow. The legend is a true sibling of the track, not an
+ * absolutely-positioned overlay.
+ *
+ * The wrapper div exists so the <legend> can be styled as a normal block
+ * without the track inheriting its background. Painting the track on the
+ * fieldset itself would either bleed under the legend or require encoding the
+ * legend's rendered height into a gradient stop — fragile to font, padding and
+ * wrapping changes.
+ */
+
+:where(fieldset[interop-segmented-control]) {
+	/* Reset UA fieldset chrome. */
+	margin: 0;
+	padding: 0;
+	border: 0;
+	/* Browsers set min-inline-size: min-content on fieldset by default, which
+	   can cause overflow in flex/grid contexts. */
+	min-inline-size: 0;
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+
+	/*
+	 * Don't expand to fill the parent, and don't let it squeeze either — the
+	 * control sizes to its content, full stop.
+	 *
+	 * This was `0 1 fit-content`. The shrink factor of 1, combined with the
+	 * `min-inline-size: 0` reset above and the segments' own `min-width: 0`,
+	 * meant any flex parent could compress the control until its labels wrapped
+	 * to two lines. A wrapped label in a fixed-height segment is always wrong:
+	 * the height is the line box plus block padding, so wrapping breaks the
+	 * size step as well as the reading.
+	 *
+	 * `0 0 auto` states the intent the comment always claimed. In a container
+	 * genuinely narrower than the control it now overflows rather than wraps —
+	 * the honest failure for a control whose whole job is showing its options
+	 * side by side.
+	 */
+	flex: 0 0 auto;
+}
+
+/* ── Container — legend ──────────────────────────────────────────────────── */
+/*
+ * A hidden legend is still a legend: `labelHidden` swaps in `.interop-sr-only`
+ * (see utilities/visually-hidden.css) rather than removing the element.
+ */
+
+:where(fieldset[interop-segmented-control] > legend) {
+	display: block;
+	padding: 0;
+	margin-block-end: var(--itx-segmented-control-legend-margin-block-end);
+	font-size: var(--itx-segmented-control-legend-font-size);
+	line-height: var(--itx-segmented-control-legend-line-height);
+	font-weight: var(--itx-segmented-control-legend-font-weight);
+}
+
+/* ── Container — track ───────────────────────────────────────────────────── */
+/*
+ * Owns everything visual on the container: background, border, radius,
+ * padding, flex layout, and the anchor-positioning context for the
+ * <interop-indicator> pill.
+ */
+
+:where(fieldset[interop-segmented-control] .interop-segmented-control__track) {
+	display: var(--itx-segmented-control-track-display);
+	flex-direction: var(--itx-segmented-control-track-flex-direction);
+	row-gap: var(--itx-segmented-control-track-row-gap);
+	column-gap: var(--itx-segmented-control-track-column-gap);
+	align-items: var(--itx-segmented-control-track-align-items);
+	justify-content: var(--itx-segmented-control-track-justify-content);
+
+	padding: var(--itx-segmented-control-track-padding);
+	max-width: var(--itx-segmented-control-track-max-width);
+
+	background-color: var(--itx-segmented-control-track-background-color);
+	background-image: var(--itx-segmented-control-track-background-image);
+	border-color: var(--itx-segmented-control-track-border-color);
+	border-width: var(--itx-segmented-control-track-border-width);
+	border-style: var(--itx-segmented-control-track-border-style);
+	border-radius: var(
+		--itx-segmented-control-track-border-radius,
+		var(--itx-radius)
+	);
+	box-shadow: var(--itx-segmented-control-track-box-shadow);
+
+	/* Containing block for the absolutely-positioned <interop-indicator>. */
+	position: relative;
+
+	/* Bind the child indicator to the anchor exposed by the active segment. */
+	--itx-indicator-anchor-name: --itx-segment-active;
+}
+
+/*
+ * High contrast — an edge the control only has under the preference. The
+ * track's own frame is an inset box-shadow, which forced-colours modes flatten;
+ * an outline in currentColor follows the user's palette, which is the point.
+ */
+@media (prefers-contrast: more), (prefers-contrast: high) {
+	:where(
+		fieldset[interop-segmented-control] .interop-segmented-control__track
+	) {
+		outline: var(--itx-border-width-thick) solid currentColor;
+	}
+}
+
+/* ── Segment — base ──────────────────────────────────────────────────────── */
 
 :where(button[interop-segment]) {
 	-webkit-appearance: none;
@@ -145,9 +284,15 @@
  * Skipped on either side of the selected segment so the divider never
  * overlays the active indicator pill.
  *
- * Tokens consumed (set on any ancestor):
- *   --itx-rule-color   divider colour (default: currentColor)
- *   --itx-rule-width   divider thickness (default: 0)
+ * The tokens are the component's OWN, falling through to the [itx-rule]
+ * utility's shared pair. The theme used to write --itx-rule-color /
+ * --itx-rule-width directly on the fieldset, which is a component writing a
+ * shared vocabulary: every <hr itx-rule> anywhere inside a segmented control
+ * silently took the control's divider colour and width. Now the control
+ * configures itself and the utility's public tokens stay the utility's.
+ *
+ * The final `0` is absence rather than a weight — a bare button[interop-segment]
+ * outside a control, with neither token set, draws no divider.
  */
 :where(
 	button[interop-segment]:not([aria-pressed="true"])
@@ -157,8 +302,11 @@
 	position: absolute;
 	inset-block: 0;
 	inset-inline-start: 0;
-	width: var(--itx-rule-width, 0);
-	background-color: var(--itx-rule-color, currentColor);
+	width: var(--itx-segmented-control-rule-width, var(--itx-rule-width, 0));
+	background-color: var(
+		--itx-segmented-control-rule-color,
+		var(--itx-rule-color, currentColor)
+	);
 	pointer-events: none;
 }
 
@@ -179,15 +327,6 @@
 		--itx-segment-border-color-hover,
 		var(--itx-segment-border-color, transparent)
 	);
-}
-
-:where([interop-segmented-control~="icon"]) {
-	[interop-segment] {
-		/*padding: 0.5rem;*/
-		/*margin: 4px;*/
-		/*height: auto;*/
-		/*aspect-ratio: 1 / 1;*/
-	}
 }
 
 /*

@@ -55,6 +55,7 @@
 @import "./protocol/components/button.css" layer(interop.theme);
 @import "./protocol/components/callout.css" layer(interop.theme);
 @import "./protocol/components/chip.css" layer(interop.theme);
+@import "./protocol/components/code-renderer.css" layer(interop.theme);
 @import "./protocol/components/command-palette.css" layer(interop.theme);
 @import "./protocol/components/dialog.css" layer(interop.theme);
 @import "./protocol/components/expansion-panel.css" layer(interop.theme);
@@ -63,6 +64,7 @@
 @import "./protocol/components/indicator.css" layer(interop.theme);
 @import "./protocol/typography/kbd.css" layer(interop.theme);
 @import "./protocol/components/list.css" layer(interop.theme);
+@import "./protocol/components/listbox.css" layer(interop.theme);
 @import "./protocol/components/popover.css" layer(interop.theme);
 @import "./protocol/components/progress.css" layer(interop.theme);
 @import "./protocol/components/segmented-control.css" layer(interop.theme);

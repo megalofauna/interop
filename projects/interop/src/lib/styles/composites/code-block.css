@@ -16,11 +16,13 @@
  * All selectors wrapped in :where() for zero specificity — consumer overrides
  * always win regardless of declaration order.
  *
- * NOTE: there is no body-background pipe. A `--itx-cb-body-bg` declaration here
- * claimed to feed the renderer's `--itx-cr-body-bg`, but it wrote the wrong
- * name, its source token was declared nowhere, and interop-code-renderer.scss
- * hardcodes `background: transparent` and reads neither. Scoping the renderer's
- * background per code-block is a feature to build, not a line to repair.
+ * NOTE: there is still no body-background pipe, but half the obstacle is gone.
+ * A `--itx-cb-body-bg` declaration here claimed to feed the renderer's
+ * `--itx-cr-body-bg`; it wrote the wrong name, its source token was declared
+ * nowhere, and the renderer hardcoded `background: transparent` and read
+ * neither. The renderer now reads `--itx-cr-body-background` for real (see
+ * components/code-renderer.css), so building the pipe is one declaration on
+ * `itx-code-block` — but it is still a feature to design, not a line to repair.
  *
  * Public tokens — see the theme file's header comment for the full list with
  * descriptions. Surface is partitioned into host, header, tablist, tab,

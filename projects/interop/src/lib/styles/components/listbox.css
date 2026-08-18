@@ -1,0 +1,197 @@
+/*
+ * InteropListbox — structural foundation.
+ *
+ * Rendering rules for `ul[interop-listbox]` / `ol[interop-listbox]` and the
+ * `.interop-option` rows inside it. Loaded globally via `interop.css`; token
+ * VALUES live in `themes/protocol/components/listbox.css`.
+ *
+ * Migrated out of `interop-listbox.scss`, which was a per-component `styleUrl`
+ * carrying `encapsulation: ViewEncapsulation.None`. That combination is the
+ * worst of both: Angular injected the sheet UNLAYERED — so it outranked the
+ * whole `interop` layer and no consumer using layers could override a row —
+ * and with encapsulation off its selectors were global anyway, so it leaked
+ * `.interop-option` into every document that loaded the component. Unlike the
+ * other sheets on this list it did use SCSS: `&--active#{&}--selected` is
+ * interpolation, which native nesting has no equivalent for.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the single
+ * source of truth for every `--itx-option-*` value; system tokens (focus,
+ * radius) are read through their documented chains so a component with no
+ * opinion inherits one.
+ *
+ * Rows match the CLASS and the ATTRIBUTE. The class is what the Angular
+ * directive adds and what the declarative template writes; the attribute is
+ * what a CSS-only consumer authors, and styling only the class would leave
+ * exactly the consumer this migration exists for with an unstyled list.
+ * `[aria-selected="true"]` / `[aria-disabled="true"]` are matched for the same
+ * reason — both Angular paths set them alongside the modifier class. The active
+ * descendant has no ARIA equivalent on the row (it is named by the host's
+ * `aria-activedescendant`), so that state stays class-only.
+ *
+ * All selectors are wrapped in :where() for zero specificity.
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+
+:where(ul[interop-listbox], ol[interop-listbox]) {
+	display: block;
+	overflow-y: auto;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/*
+ * Focus. The host carries `tabindex="0"` and drives the rows through
+ * `aria-activedescendant`, so DOM focus never leaves it — which is why the
+ * bare `:focus` ring is suppressed and a real one is drawn on
+ * `:focus-visible`.
+ *
+ * The old sheet wrote an unconditional `outline: none` here and stopped. With
+ * the Angular component that was survivable: `onFocus()` always promotes a row
+ * to active, so the row highlight stood in for the ring. A CSS-only consumer
+ * got a focusable widget with no focus indicator at all.
+ */
+:where(ul[interop-listbox]:focus, ol[interop-listbox]:focus) {
+	outline: none;
+}
+
+:where(ul[interop-listbox]:focus-visible, ol[interop-listbox]:focus-visible) {
+	outline: var(--itx-listbox-focus-width, var(--itx-focus-width))
+		var(--itx-listbox-focus-style, var(--itx-focus-style))
+		var(--itx-listbox-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-listbox-focus-offset, var(--itx-focus-offset));
+}
+
+/* ── Option row ──────────────────────────────────────────────────────────── */
+/*
+ * The row height is a FLOOR, not the padding sum: a single-line row snaps to
+ * the step and only a wrapped one grows. Same model as the table, where Carbon
+ * sizes the row rather than the cell.
+ *
+ * The accent bar at the inline-start edge marks SELECTION. It rests
+ * transparent and only changes colour, so it costs no layout and it
+ * transitions. On selected, not on active: `mouseenter` sets the active
+ * descendant, so putting it on active meant every row grew a bar as the
+ * pointer passed over it — a persistent marker doing a transient job.
+ *
+ * It also solves what fill alone could not. The three fills sit within a rank
+ * of each other — legible when one row is tinted, invisible when six are. With
+ * the bar carrying selection, the remaining fill difference only has to say
+ * "this is the cursor", which it can.
+ *
+ * box-shadow takes PHYSICAL offsets, so the bar's offset is sign-flipped under
+ * `:dir(rtl)`. Both the offset and the colour resolve through private slots so
+ * there is one box-shadow declaration rather than one per state × direction.
+ */
+:where(.interop-option, li[interop-option]) {
+	--_accent-offset: var(--itx-option-accent-width);
+	--_accent-color: var(--itx-option-accent-color);
+
+	display: flex;
+	align-items: center;
+	gap: var(--itx-option-gap);
+
+	min-block-size: var(--itx-option-min-block-size);
+	padding-block: var(--itx-option-padding-block);
+	padding-inline: var(--itx-option-padding-inline);
+
+	font-size: var(--itx-option-font-size);
+	line-height: var(--itx-option-line-height);
+	color: var(--itx-option-color);
+
+	background-color: var(--itx-option-background);
+	box-shadow: inset var(--_accent-offset) 0 0 0 var(--_accent-color);
+	border-radius: var(
+		--itx-option-border-radius,
+		var(--itx-radius-attr, var(--itx-radius))
+	);
+
+	cursor: default;
+	user-select: none;
+
+	transition-property: background-color, box-shadow;
+	transition-duration: var(--itx-option-transition-duration);
+	transition-timing-function: var(--itx-option-transition-timing);
+
+	&:where(:dir(rtl)) {
+		--_accent-offset: calc(-1 * var(--itx-option-accent-width));
+	}
+
+	/* Pointer hover only, and only when it is not already the active
+	   descendant — otherwise moving the mouse over the keyboard-highlighted row
+	   would quietly downgrade its paint. */
+	&:where(:not(.interop-option--active):hover) {
+		background-color: var(
+			--itx-option-background-hover,
+			var(--itx-option-background)
+		);
+	}
+
+	/* Keyboard active descendant. Stronger than hover: this one is telling you
+	   where Enter will land. */
+	&:where(.interop-option--active) {
+		background-color: var(
+			--itx-option-background-active,
+			var(--itx-option-background)
+		);
+	}
+
+	/*
+	 * Selected keeps the HOVER fill and adds the bar. That makes the two
+	 * channels orthogonal rather than a four-step ramp: the fill says where the
+	 * pointer or keyboard cursor is, the bar says what is chosen. Hovering a
+	 * selected row therefore changes nothing — there is nothing left to change.
+	 */
+	&:where(.interop-option--selected, [aria-selected="true"]) {
+		background-color: var(
+			--itx-option-background-selected,
+			var(--itx-option-background)
+		);
+		--_accent-color: var(
+			--itx-option-accent-color-selected,
+			var(--itx-option-accent-color)
+		);
+	}
+
+	/* Selected AND the cursor: same fill as plain active, and the bar carries
+	   the selection. No third value needed. */
+	&:where(.interop-option--active.interop-option--selected) {
+		background-color: var(
+			--itx-option-background-active-selected,
+			var(--itx-option-background-active, var(--itx-option-background))
+		);
+	}
+
+	&:where(.interop-option--disabled, [aria-disabled="true"]) {
+		opacity: var(--itx-option-disabled-opacity);
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+}
+
+/* ── Row parts ───────────────────────────────────────────────────────────── */
+
+:where(.interop-option__icon) {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+}
+
+:where(.interop-option__label) {
+	flex: 1;
+	min-inline-size: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Colour, not opacity. A faded row smears every layer at once — the same
+   reason the slider round replaced its disabled `opacity` with painted grey —
+   and a description is secondary text, which is what rank 4 means. */
+:where(.interop-option__description) {
+	flex-shrink: 0;
+	font-size: var(--itx-option-description-font-size);
+	color: var(--itx-option-description-color);
+	white-space: nowrap;
+}

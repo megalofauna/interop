@@ -244,6 +244,24 @@ export class SegmentedControlPage {
 	];
 
 	tokenEntries: TokenEntry[] = [
+		// Legend
+		{
+			property: "--itx-segmented-control-legend-margin-block-end",
+			default: "var(--itx-spacing-2)",
+		},
+		{
+			property: "--itx-segmented-control-legend-font-size",
+			default: "var(--itx-font-size-body)",
+		},
+		{
+			property: "--itx-segmented-control-legend-line-height",
+			default: "var(--itx-line-height)",
+		},
+		{
+			property: "--itx-segmented-control-legend-font-weight",
+			default: "var(--itx-font-weight-body)",
+		},
+
 		// Track
 		{ property: "--itx-segmented-control-track-display", default: "flex" },
 		{
@@ -252,7 +270,7 @@ export class SegmentedControlPage {
 		},
 		{
 			property: "--itx-segmented-control-track-align-items",
-			default: "initial",
+			default: "normal",
 		},
 		{
 			property: "--itx-segmented-control-track-justify-content",
@@ -280,11 +298,11 @@ export class SegmentedControlPage {
 		{
 			property: "--itx-segmented-control-track-box-shadow",
 			default:
-				"inset 0 0 0 1px var(--itx-contrast-6) — the 1px frame, drawn inset so it costs no layout",
+				"inset 0 0 0 var(--itx-border-width-hairline) var(--itx-contrast-6) — the frame, drawn inset so it costs no layout",
 		},
 		{
 			property: "--itx-segmented-control-track-border-radius",
-			default: "var(--itx-radius-1) — 4px",
+			default: "unset — follows the global --itx-radius knob",
 		},
 		{ property: "--itx-segmented-control-track-padding", default: "0" },
 		{ property: "--itx-segmented-control-track-max-width", default: "none" },
@@ -315,24 +333,24 @@ export class SegmentedControlPage {
 			property: "--itx-segment-line-height",
 			default: "1.2857 — 18px at 14px, fixed so the height steps stay exact",
 		},
-		{ property: "--itx-segment-font-weight", default: "400" },
+		{ property: "--itx-segment-font-weight", default: "500" },
 		{
 			property: "--itx-segment-font-weight-selected",
-			default: "400 — held constant so selection never reflows widths",
+			default: "500 — held constant so selection never reflows widths",
 		},
 
 		// Segment — visual structure
 		{ property: "--itx-segment-border-width", default: "0" },
 		{
 			property: "--itx-segment-border-radius",
-			default: "var(--itx-radius-1) — 4px",
+			default: "unset — follows the global --itx-radius knob",
 		},
 
 		// Segment — rest
 		{ property: "--itx-segment-background", default: "transparent" },
 		{
 			property: "--itx-segment-foreground",
-			default: "var(--itx-contrast-4) — secondary grey",
+			default: "var(--itx-contrast-5) — secondary grey",
 		},
 		{ property: "--itx-segment-border-color", default: "transparent" },
 
@@ -349,26 +367,35 @@ export class SegmentedControlPage {
 		// Segment — selected
 		{
 			property: "--itx-segment-foreground-selected",
-			default: "var(--itx-contrast-1) — inverse label on the dark pill",
+			default: "var(--itx-contrast-6) — label at full strength on the pill",
 		},
 
 		// Segment — focus ring
-		{ property: "--itx-segment-outline-width", default: "2px" },
-		{ property: "--itx-segment-outline-style", default: "solid" },
 		{
-			property: "--itx-segment-outline-color",
-			default: "var(--itx-colorway-solid)",
+			property: "--itx-segment-focus-width",
+			default: "unset — falls through to --itx-focus-width",
 		},
 		{
-			property: "--itx-segment-outline-offset",
+			property: "--itx-segment-focus-style",
+			default: "unset — falls through to --itx-focus-style",
+		},
+		{
+			property: "--itx-segment-focus-color",
+			default: "unset — falls through to --itx-focus-color",
+		},
+		{
+			property: "--itx-segment-focus-offset",
 			default: "-2px — inset, so the ring stays inside the frame",
 		},
 
 		// Segment — transition
-		{ property: "--itx-segment-transition-duration", default: "48ms" },
+		{
+			property: "--itx-segment-transition-duration",
+			default: "var(--itx-duration-speedy)",
+		},
 		{
 			property: "--itx-segment-transition-timing-function",
-			default: "ease-in-out",
+			default: "var(--itx-easing-standard)",
 		},
 
 		// Segment — disabled
@@ -376,20 +403,23 @@ export class SegmentedControlPage {
 
 		// Divider — scoped to the fieldset
 		{
-			property: "--itx-rule-color",
+			property: "--itx-segmented-control-rule-color",
 			default: "var(--itx-contrast-2) — set on the fieldset, not at root",
 		},
-		{ property: "--itx-rule-width", default: "1px" },
+		{
+			property: "--itx-segmented-control-rule-width",
+			default: "var(--itx-border-width-hairline)",
+		},
 
 		// Selection pill — scoped to the fieldset
 		{
 			property: "--itx-indicator-background-color",
-			default: "var(--itx-contrast-6) — near-black fill",
+			default: "var(--itx-contrast-1) — the selection wash",
 		},
 		{ property: "--itx-indicator-border-width", default: "0" },
 		{
 			property: "--itx-indicator-border-radius",
-			default: "var(--itx-radius-1) — 4px",
+			default: "var(--itx-radius) — the global knob",
 		},
 	];
 
