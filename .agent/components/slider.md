@@ -5,9 +5,7 @@
 ```
 src/lib/components/interop-slider/
   interop-slider.ts            input[type=range][interop-slider] — single-thumb
-  interop-slider.css           styles for BOTH the single slider and the range thumb
   interop-slider-range.ts      <interop-slider-range> — two-handle group
-  interop-slider-range.css     styles for the range parent (track + fill)
   interop-slider-thumb.ts      input[type=range][interop-slider-thumb="start"|"end"]
   interop-slider-value.ts      output[interop-slider-value] — <output> companion
   interop-slider-marks.ts      input[type=range][interop-slider-marks] — tick gradients
@@ -15,13 +13,17 @@ src/lib/components/interop-slider/
   interop-slider.token.ts      InteropSliderApi / InteropSliderRangeApi + DI tokens
   public-api.ts                barrel
 projects/demo/src/app/pages/slider/     demo page
+
+src/lib/styles/components/slider.css                  structure — all three hosts
+src/lib/styles/themes/protocol/components/slider.css  values — one token surface
 ```
 
-> **There is no `styles/components/slider.css` and no
-> `themes/protocol/components/slider.css`.** Slider is one of two components
-> (with progress) styled entirely from its own `styleUrl`. Searching the global
-> stylesheets for slider finds nothing and makes the component look unstyled.
-> See *Migration debt* below.
+> **All three hosts share ONE pair of files.** The single slider, the range
+> thumbs and the range parent are one visual object — a range slider is a
+> single slider's track with two handles on it — so a second set of values
+> would be a second source of truth for the same shape. Both files are imported
+> globally (`interop.css` / `protocol.css`), so a CSS-only consumer gets the
+> full slider.
 
 ## DOM structure
 
@@ -134,19 +136,20 @@ thickness as well as the target, so it also sets the host's `block-size`.
 
 ## Token surface
 
-Full list with defaults lives at the top of `interop-slider.css` and in the demo
-page's `id="tokens"` section. The shape worth remembering:
+Full list with defaults lives in `themes/protocol/components/slider.css` and in
+the demo page's `id="tokens"` section. The shape worth remembering:
 
 | Token | Default | Note |
 |---|---|---|
-| `--itx-slider-track-color` | `--itx-neutral-4` | Carbon `$border-subtle` |
+| `--itx-slider-track-color` | `--itx-contrast-2` | rank 2, "hairline / dividers" — Carbon `$border-subtle` |
 | `--itx-slider-track-thickness` | `--itx-spacing-0_5` (2px) | Carbon's SCSS, not the 4px in their style.mdx |
-| `--itx-slider-fill-color` | `--itx-neutral-12` | Carbon `$layer-selected-inverse` — near-black, NOT the brand hue |
-| `--itx-slider-thumb-size` | `0.875rem` (14px) | painted circle |
-| `--itx-slider-thumb-size-active` | `1.25rem` (20px) | hover / focus |
-| `--itx-slider-thumb-target` | `1.5rem` (24px) | hit target AND control thickness |
-| `--itx-slider-focus-ring-color` | `--itx-colorway` | thumb *and* fill turn this on focus |
-| `--itx-slider-disabled-color` | `--itx-neutral-5` | painted, not faded |
+| `--itx-slider-fill-color` | `--itx-contrast-6` | Carbon `$layer-selected-inverse` — the strongest neutral, NOT the brand hue |
+| `--itx-slider-thumb-size` | `--itx-spacing-3_5` (14px) | painted circle |
+| `--itx-slider-thumb-size-active` | `--itx-spacing-5` (20px) | hover / focus |
+| `--itx-slider-thumb-target` | `--itx-spacing-6` (24px) | hit target AND control thickness |
+| `--itx-slider-focus-color` | falls through to `--itx-focus-color` | thumb *and* fill turn this on focus; no ring |
+| `--itx-slider-disabled-color` | `--itx-contrast-2` | painted, not faded |
+| `--itx-slider-duration` / `-easing` | `--itx-duration-fast` / `--itx-easing-standard` | Carbon's 110ms + productive-standard, on the house tokens |
 | `--itx-slider-max-length` | `40rem` | Carbon's 640px cap |
 
 Set by the component, never by consumers: `--itx-slider-fill`,
@@ -223,30 +226,29 @@ absolutely and it draws the bars itself. Its vertical fill is anchored from
 An unrecognised pseudo-element invalidates the entire selector list it appears
 in. Every `::-webkit-` / `::-moz-` pair in these files is duplicated on purpose.
 
-## Migration debt
+## The `:where()` + UA pseudo-element shape
 
-Both stylesheets are component-scoped `styleUrl`s, not the
-`styles/components/*.css` + `themes/protocol/components/*.css` split every other
-component uses. **A CSS-only consumer — someone writing
-`<input type="range" interop-slider>` without importing the Angular component —
-gets no slider styling at all**, which is the one thing the global stylesheet
-exists to provide.
+`:host` is gone; every rule is a `:where()` list of the two input hosts (or
+`interop-slider-range`), with the pseudo-element OUTSIDE the wrapper:
 
-Migrating means swapping `:host` for
-`input[type="range"]:where([interop-slider], [interop-slider-thumb])` (and
-`interop-slider-range` for the parent), splitting values into a theme file, and
-registering both in `interop.css` / `protocol.css`. Progress carries the
-identical debt. Tracked, with the full list and its caveats, in
-`.agent/todo/styleurl-components-migration.md` — where slider is flagged as the
-largest of the thirteen, because it is three files, not one.
+```css
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+)::-webkit-slider-runnable-track { … }
+```
+
+That combination is not obvious enough to assume — it was verified in
+ChromeHeadless against a plain-selector control, and the layered zero-specificity
+rule reaches the UA pseudo identically. Inside `:where()` the rule would be
+silently dropped, which is the standard pseudo-element trap.
+
+The private `--_` slots survive the migration deliberately: the states have to
+reach the UA pseudo-elements, which inherit custom properties from the host but
+would otherwise need a `::-webkit-` and a `::-moz-` rule each, per state.
 
 ## Known gaps
 
-- **Fill vs thumb at the ends.** The native range insets the thumb by half its
-  own width so it stays inside the track, but the fill gradient runs the full
-  length. At `min` and `max` the fill edge and the thumb centre differ by up to
-  12px. Inherent to painting the track on the element the UA also lays the thumb
-  out in; fixing it means a wrapper.
 - **Marks on a range slider are invisible** — a thumb inside
   `<interop-slider-range>` paints no background, because the parent owns the
   track. Documented on the directive.

@@ -103,8 +103,10 @@
  * to `styles/components/badge.css`, every literal below moves to
  * `styles/themes/protocol/components/badge.css` and loses its inline fallback,
  * and both get registered in `interop.css` / `protocol.css` with their
- * `layer()`. Not done here: this round was visual only. Same debt as
- * interop-progress.css.
+ * `layer()`. Not done here: this round was visual only. The slider, progress
+ * and tabs sheets that used to carry the same debt have since been migrated —
+ * `styles/components/slider.css` is the worked example for a host with UA
+ * pseudo-elements.
  *
  * NOTE — this file is `.scss` but uses no SCSS: no variables, no mixins, no
  * `@use`, and the only nesting is `&`-nesting, which is native CSS now. It can

@@ -79,7 +79,9 @@
 @import "./components/indicator.css" layer(interop.foundation);
 @import "./components/list.css" layer(interop.foundation);
 @import "./components/popover.css" layer(interop.foundation);
+@import "./components/progress.css" layer(interop.foundation);
 @import "./components/segment.css" layer(interop.foundation);
+@import "./components/slider.css" layer(interop.foundation);
 @import "./components/stepper.css" layer(interop.foundation);
 @import "./components/table.css" layer(interop.foundation);
 @import "./components/tabs.css" layer(interop.foundation);

@@ -78,7 +78,6 @@ export function generateSliderId(): string {
 	selector: "input[type=range][interop-slider]",
 	standalone: true,
 	template: "",
-	styleUrl: "./interop-slider.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [{ provide: INTEROP_SLIDER_TOKEN, useExisting: InteropSlider }],
 	host: {

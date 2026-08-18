@@ -23,14 +23,21 @@ const AXIS = "var(--itx-slider-axis, to right)";
 
 /**
  * Carbon's tick is `$border-subtle` sitting clear of the track. Ours has to
- * read against both the unfilled track (neutral-4) and the filled one
- * (neutral-12), so it takes the house hairline step instead — `currentColor`,
- * the previous default, is the page's text colour and vanished into the fill.
+ * read against both the unfilled track (rank 2) and the filled one (rank 6),
+ * so a major tick takes rank 3 and a minor one the hairline rank —
+ * `currentColor`, the previous default, is the page's text colour and vanished
+ * into the fill.
+ *
+ * No fallbacks. The values live in `themes/protocol/components/slider.css`
+ * with the rest of the slider's surface, and a duplicate stated here — in a
+ * language the theme cannot see — is exactly the second source of truth the
+ * two-file split exists to remove. Two of them were already stale: the ramp
+ * this comment used to name (neutral-4 / neutral-12) was deleted in ITX-40.
  */
-const MAJOR_COLOR = "var(--itx-slider-mark-color, var(--itx-contrast-3))";
-const MINOR_COLOR = "var(--itx-slider-mark-minor-color, var(--itx-contrast-2))";
-const MAJOR_THICKNESS = "var(--itx-slider-mark-thickness, 2px)";
-const MINOR_THICKNESS = "var(--itx-slider-mark-minor-thickness, 1px)";
+const MAJOR_COLOR = "var(--itx-slider-mark-color)";
+const MINOR_COLOR = "var(--itx-slider-mark-minor-color)";
+const MAJOR_THICKNESS = "var(--itx-slider-mark-thickness)";
+const MINOR_THICKNESS = "var(--itx-slider-mark-minor-thickness)";
 
 const TOL = 1e-9;
 
@@ -65,8 +72,10 @@ const TOL = 1e-9;
  *   --itx-slider-mark-thickness       Major tick width along the track (2px).
  *   --itx-slider-mark-minor-color     Minor tick color (default --itx-contrast-2).
  *   --itx-slider-mark-minor-thickness Minor tick width along the track (1px).
- *   --itx-slider-mark-length          Tick extent ACROSS the track (0.5rem),
- *                                     declared in interop-slider.css.
+ *   --itx-slider-mark-length          Tick extent ACROSS the track (0.5rem).
+ *
+ * All five are declared in `styles/themes/protocol/components/slider.css`.
+ * They are read here without fallbacks, deliberately — see the constants.
  *
  * Ticks are painted on the input's own background, behind the track, so they
  * read above and below the 2px track rather than through it — which is where

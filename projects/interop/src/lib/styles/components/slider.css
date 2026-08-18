@@ -1,72 +1,58 @@
 /*
- * InteropSlider / InteropSliderThumb — styles for input[type=range].
+ * InteropSlider / InteropSliderThumb / InteropSliderRange — structural
+ * foundation.
  *
- * `appearance: none` strips the browser chrome; the UA pseudo-elements are then
- * re-drawn as a hairline track with a round thumb. Proportions and paint follow
- * IBM Carbon's Slider — see .agent/workflows/carbon-borrow.md.
+ * Rendering rules for `input[type="range"][interop-slider]`, the
+ * `[interop-slider-thumb]` inputs that stack inside `<interop-slider-range>`,
+ * and that range host itself. Loaded globally via `interop.css`; token VALUES
+ * live in `themes/protocol/components/slider.css`.
  *
- * ── What was borrowed ──────────────────────────────────────────────────────
+ * Migrated out of `interop-slider.css` and `interop-slider-range.css`, two
+ * per-component `styleUrl` sheets (the first shared by two components).
+ * Angular injected both unlayered, so they outranked the entire `interop`
+ * cascade layer and no consumer using layers could override a slider; a
+ * CSS-only consumer got no slider styling whatsoever.
  *
- *   2px track          Carbon's SCSS ships `block-size: to-rem(2px)`. Their
- *                      style.mdx says 4px; the SCSS wins (workflow step 1).
- *   $border-subtle     unfilled track  → --itx-contrast-2
- *   $layer-selected-inverse
- *                      filled track + thumb → --itx-contrast-6. Carbon's fill
- *                      is near-black, NOT the interactive blue; blue is a focus
- *                      signal only. Same call as rounds 7 and 9 — emphasis by
- *                      value, not by hue.
- *   14px round thumb   Carbon's handle. 20px on hover / focus / active.
- *   110ms ease         $duration-fast-02 + motion(standard, productive).
- *   640px max          Carbon caps the slider at 40rem.
- *   $border-disabled   disabled everything → --itx-contrast-2.
+ * One file for all three because they are one visual object: a range slider is
+ * a single slider's track with two handles on it, and both halves read one
+ * token surface so the two shapes cannot drift. Same reason tabs and tab-panel
+ * share a file.
  *
- * ── What was declined ──────────────────────────────────────────────────────
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the
+ * single source of truth for every `--itx-slider-*` value; system tokens are
+ * read through their documented chains (focus) so a component with no opinion
+ * inherits one. The two exceptions are marked where they appear, and both are
+ * component-set properties rather than theme values.
  *
- *   Carbon's 200px min-inline-size — a hard minimum overflows narrow
- *   containers, and we have no wrapper to scroll it. Restore by adding
- *   `min-inline-size: 12.5rem` to the host.
+ * All selectors are wrapped in :where() for zero specificity — consumer
+ * overrides always win regardless of declaration order. Pseudo-elements sit
+ * OUTSIDE the wrapper, which is the one place :where() cannot go.
  *
- *   Carbon's `transform: scale(1.4286)` for the grown thumb. Scaling the thumb
- *   scales its HIT TARGET too, so the target would breathe between 24 and 34px
- *   as the pointer crosses it. We grow the painted circle by shrinking the
- *   thumb's transparent border instead (see the thumb block) — same 14→20px
- *   motion, fixed 24px target.
- *
- *   Carbon's inset focus rings (`inset 0 0 0 2px $interactive, 0 0 0 3px
- *   $layer`). Inset shadows are measured from the border box, which for us is
- *   the 24px target, not the 14px circle — the rings would float clear of the
- *   thumb. Focus is instead: thumb turns --itx-colorway-solid, circle grows to 20px,
- *   and the filled track turns --itx-colorway-solid (which Carbon also does, via
- *   `.slider__thumb:focus ~ .slider__filled-track`). Three simultaneous
- *   changes, none of them hue-only.
- *
- *   Carbon's single mid-point tick above the track (`.slider__track:before`).
- *   [interop-slider-marks] is a general facility Carbon has no equivalent for;
- *   a fixed 50% notch would fight it.
- *
- *   A size axis. Carbon's slider SCSS has no size variants, and the only step
- *   below the current one would put the thumb target under 24px.
+ * `appearance: none` strips the browser chrome; the UA pseudo-elements are
+ * then re-drawn as a hairline track with a round thumb. Proportions and paint
+ * follow IBM Carbon's Slider — what was borrowed, and what was declined, is
+ * recorded in the theme file next to the values it produced.
  *
  * ── Track radius ───────────────────────────────────────────────────────────
  *
- * There is no --itx-slider-track-radius any more. At 2px, a radius is not
- * expressible in any way a consumer could see: `<input>` generates no
- * ::before/::after (replaced-element rules), so the track is the UA's
+ * There is no --itx-slider-track-radius. At 2px, a radius is not expressible
+ * in any way a consumer could see: `<input>` generates no ::before/::after
+ * (replaced-element rules), so the track is the UA's
  * ::-webkit-slider-runnable-track / ::-moz-range-track and a radius on it
- * rounds a 2px stripe by at most 1px. Squared is the house default regardless
- * (rounds 5–9). A genuinely rounded track needs a thicker track and a wrapper
- * element to draw it — a mechanism change, not a token.
+ * rounds a 2px stripe by at most 1px. Squared is the house default regardless.
+ * A genuinely rounded track needs a thicker track and a wrapper element to
+ * draw it — a mechanism change, not a token.
  *
- * ── Axis handling — the round-5 lesson, applied ────────────────────────────
+ * ── Axis handling ──────────────────────────────────────────────────────────
  *
- * The previous version sized the track with `height`, a PHYSICAL property, and
- * then patched the vertical case with an extra ::-webkit- rule for the gradient
- * direction. `height` on a pseudo-element that has inherited
+ * An earlier version sized the track with `height`, a PHYSICAL property, and
+ * then patched the vertical case with an extra ::-webkit- rule for the
+ * gradient direction. `height` on a pseudo-element that has inherited
  * `writing-mode: vertical-lr` is the track's LENGTH, not its thickness, so a
  * vertical slider drew a 6px-long stub instead of an 8rem track — and Firefox
  * never got the direction patch at all.
  *
- * Everything cross-axis is now a LOGICAL property (`block-size` for thickness,
+ * Everything cross-axis is a LOGICAL property (`block-size` for thickness,
  * `inline-size` for length, `margin-block` to centre the thumb), which is
  * exactly what `writing-mode` re-maps. Orientation is then three declarations:
  * the writing-mode, the length, and --itx-slider-axis for the gradient. No
@@ -119,58 +105,6 @@
  * The side-effect matches Carbon: the host's background paints BEHIND the
  * pseudo track, so a tick reads above and below the track rather than through
  * it, which is where Carbon puts its own notch.
- *
- * ── Available tokens (set on any ancestor, e.g. [interop-root]) ────────────
- *
- *   --itx-slider-track-color        Unfilled track. (--itx-contrast-2)
- *   --itx-slider-track-thickness    Track thickness. (2px)  [was -track-height]
- *   --itx-slider-fill-color         Filled portion. (--itx-contrast-6)
- *   --itx-slider-thumb-color        Thumb fill. (--itx-contrast-6)
- *   --itx-slider-thumb-size         Painted thumb diameter. (14px)
- *   --itx-slider-thumb-size-active  Diameter on hover/focus/active. (20px)
- *   --itx-slider-thumb-target       Hit target AND control thickness. (24px)
- *                                   Never take this below 24px — WCAG 2.2
- *                                   SC 2.5.8.
- *   --itx-slider-thumb-radius       Thumb corner radius. (--itx-radius-full)
- *   --itx-slider-focus-ring-color   Thumb + fill colour when focused.
- *                                   (--itx-colorway-solid)
- *   --itx-slider-disabled-color     Track, fill and thumb when disabled.
- *                                   (--itx-contrast-2)
- *   --itx-slider-length             Length of a vertical slider. (8rem)
- *   --itx-slider-max-length         Length cap in both axes. (40rem)
- *   --itx-slider-duration           State transition duration. (110ms)
- *   --itx-slider-easing             State transition easing.
- *   --itx-slider-mark-length        Cross-axis extent of a tick. (8px)
- *   --itx-slider-mark-color             Major tick colour. (--itx-contrast-3)
- *   --itx-slider-mark-thickness         Major tick width. (2px)
- *   --itx-slider-mark-minor-color       Minor tick colour. (--itx-contrast-2)
- *   --itx-slider-mark-minor-thickness   Minor tick width. (1px)
- *
- * Set by the component, not by consumers:
- *   --itx-slider-fill               Fill fraction, 0–1, e.g. `0.6`. A NUMBER,
- *                                   not a percentage — see the @property note
- *                                   and "Endpoints" below.
- *   --itx-slider-axis               Gradient direction, read by the marks
- *                                   directive so ticks follow the orientation
- *   --itx-slider-marks-image / -marks-minor-image
- *
- * Removed by the Carbon round: --itx-slider-track-height (renamed to
- * -track-thickness — "height" is the wrong word half the time),
- * --itx-slider-track-radius (see above), --itx-slider-thumb-border and
- * --itx-slider-thumb-shadow (Carbon's thumb is flat, with no ring).
- *
- * ── Migration debt ─────────────────────────────────────────────────────────
- *
- * NOTE — this component is styled from its own `styleUrl` rather than the
- * global `styles/components/*.css` + `themes/protocol/components/*.css` split
- * every other component uses. The consequence is that a CSS-only consumer —
- * someone writing `<input type="range" interop-slider>` without importing the
- * Angular component — gets no slider styling at all, which is the one thing the
- * global stylesheet exists to provide. Migrating means swapping `:host` for
- * `input[type="range"]:where([interop-slider], [interop-slider-thumb])`,
- * splitting values out into a theme file, and registering both in
- * `interop.css` / `protocol.css`. Not done here: this round was visual only.
- * Same debt as interop-progress.css.
  */
 
 /*
@@ -179,14 +113,16 @@
  * broken — but a typed property also means a malformed value falls back to the
  * initial value instead of going invalid at computed-value time and dropping
  * the whole background.
- */
-/*
+ *
  * A NUMBER (0–1), not a percentage, and that is load-bearing rather than
  * stylistic: the fill stop has to be computed as
  * `half-target + (100% - target) * fill`, and CSS calc() can multiply a
  * length-percentage by a number but cannot divide by a percentage. As a
  * percentage there is no expression that maps it onto the thumb's travel.
- * See "Endpoints" below for why that mapping is necessary.
+ * See "Endpoints" above for why that mapping is necessary.
+ *
+ * `inherits: true` is required for the range pair as well: ::before / ::after
+ * only see a custom property that inherits.
  */
 @property --itx-slider-fill {
 	syntax: "<number>";
@@ -194,7 +130,24 @@
 	initial-value: 0;
 }
 
-:host {
+@property --itx-slider-range-start {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --itx-slider-range-end {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 1;
+}
+
+/* ── Host ─────────────────────────────────────────────────────────────────── */
+
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+) {
 	-webkit-appearance: none;
 	appearance: none;
 	display: block;
@@ -207,46 +160,52 @@
 	   thickness, which is precisely the remap we want. */
 	inline-size: 100%;
 	block-size: var(--_target);
-	max-inline-size: var(--itx-slider-max-length, 40rem);
+	max-inline-size: var(--itx-slider-max-length);
 
-	/* ── Resolved slots ──────────────────────────────────────────────────── */
-	--_track-color: var(--itx-slider-track-color, var(--itx-contrast-2));
-	--_track-thickness: var(--itx-slider-track-thickness, var(--itx-spacing-0_5));
-	--_fill-color: var(--itx-slider-fill-color, var(--itx-contrast-6));
-	--_thumb-color: var(--itx-slider-thumb-color, var(--itx-contrast-6));
-	--_thumb-size: var(--itx-slider-thumb-size, 0.875rem); /* Carbon: 14px */
-	--_thumb-size-active: var(
-		--itx-slider-thumb-size-active,
-		1.25rem
-	); /* Carbon: 20px */
-	--_target: var(--itx-slider-thumb-target, 1.5rem); /* 24px — SC 2.5.8 */
-	--_thumb-radius: var(--itx-slider-thumb-radius, var(--itx-radius-full));
-	--_fill: var(--itx-slider-fill, 0);
+	/* ── Resolved slots ──────────────────────────────────────────────────── *
+	 * Private slots rather than per-state tokens because the states have to
+	 * reach the UA pseudo-elements, which inherit custom properties from the
+	 * host but would otherwise need a ::-webkit- and a ::-moz- rule each.
+	 */
+	--_track-color: var(--itx-slider-track-color);
+	--_track-thickness: var(--itx-slider-track-thickness);
+	--_fill-color: var(--itx-slider-fill-color);
+	--_thumb-color: var(--itx-slider-thumb-color);
+	--_thumb-size: var(--itx-slider-thumb-size);
+	--_thumb-size-active: var(--itx-slider-thumb-size-active);
+	--_target: var(--itx-slider-thumb-target);
+	--_thumb-radius: var(--itx-slider-thumb-radius);
+	/* Registered above with initial-value 0, so it can never be invalid and
+	   needs no fallback. Set per element by the component. */
+	--_fill: var(--itx-slider-fill);
 
 	/* ── Endpoints ───────────────────────────────────────────────────────── *
 	 * Read the PUBLIC --itx-slider-thumb-size, never the --_thumb-size slot:
 	 * the hover/focus rules grow that slot to 20px, and the track's endpoints
 	 * must not move when the thumb grows.
 	 */
-	--_end-inset: calc(
-		(var(--_target) - var(--itx-slider-thumb-size, 0.875rem)) / 2
-	);
+	--_end-inset: calc((var(--_target) - var(--itx-slider-thumb-size)) / 2);
 	--_fill-stop: calc(
 		var(--_target) / 2 + (100% - var(--_target)) * var(--_fill)
 	);
-	--_duration: var(--itx-slider-duration, var(--itx-duration-fast));
-	--_easing: var(--itx-slider-easing, cubic-bezier(0.2, 0, 0.38, 0.9));
+	--_duration: var(--itx-slider-duration);
+	--_easing: var(--itx-slider-easing);
 
 	/* Gradient direction. Published as a public custom property because
 	   [interop-slider-marks] builds its gradients from it too — one token, and
 	   ticks can never disagree with the fill about which way is "along". */
 	--itx-slider-axis: to right;
-	--_mark-size: 100% var(--itx-slider-mark-length, 0.5rem);
+	--_mark-size: 100% var(--itx-slider-mark-length);
 
 	/* ── Marks band ──────────────────────────────────────────────────────── *
 	 * The host paints ONLY the ticks; the track and fill are the pseudo below.
 	 * One background-size for every layer, so an unknown number of mark layers
-	 * can never mis-size. Unset marks resolve to `none` and the layer is inert.
+	 * can never mis-size.
+	 *
+	 * The two `none` fallbacks are the exception to the no-fallback contract
+	 * and have to be: these are set per element by [interop-slider-marks], not
+	 * by the theme, and an unset background layer must resolve to something
+	 * valid or the whole shorthand drops. `none` is how a layer says "inert".
 	 */
 	background-color: transparent;
 	background-image:
@@ -262,37 +221,54 @@
  * vertical rule sits after this one and wins, which is the correct precedence:
  * a vertical slider's axis is not an inline-direction question.
  */
-:host(:dir(rtl)) {
+:where(
+	input[type="range"][interop-slider]:dir(rtl),
+	input[type="range"][interop-slider-thumb]:dir(rtl)
+) {
 	--itx-slider-axis: to left;
 }
 
+/* ── Focus ────────────────────────────────────────────────────────────────── */
 /*
  * No outline. The focus state changes the thumb's colour AND its size AND the
  * filled track's colour simultaneously (below) — three signals, satisfying
  * WCAG 2.4.11 without a ring that would have to clear a 24px box to avoid
- * overlapping a 14px circle.
+ * overlapping a 14px circle. `outline: none` on bare `:focus` is the correct
+ * reset for that, paired with the `:focus-visible` rule beneath it.
  */
-:host:focus {
+:where(
+	input[type="range"][interop-slider]:focus,
+	input[type="range"][interop-slider-thumb]:focus
+) {
 	outline: none;
 }
 
-:host:focus-visible {
+/* The colour still reads the focus system chain, so a consumer who repoints
+   --itx-focus-color moves the slider's focus signal with everything else. */
+:where(
+	input[type="range"][interop-slider]:focus-visible,
+	input[type="range"][interop-slider-thumb]:focus-visible
+) {
 	--_thumb-color: var(--itx-slider-focus-color, var(--itx-focus-color));
 	--_fill-color: var(--itx-slider-focus-color, var(--itx-focus-color));
 	--_thumb-size: var(--_thumb-size-active);
 }
 
+/* ── Disabled ─────────────────────────────────────────────────────────────── */
 /*
  * Carbon paints the disabled state rather than fading it: track, fill and thumb
  * all collapse to one grey. An opacity fade (what this file used to do) drags
  * every part below its contrast floor at once and makes the control look
  * transparent rather than inert.
  */
-:host([disabled]) {
+:where(
+	input[type="range"][interop-slider][disabled],
+	input[type="range"][interop-slider-thumb][disabled]
+) {
 	cursor: not-allowed;
-	--_track-color: var(--itx-slider-disabled-color, var(--itx-contrast-2));
-	--_fill-color: var(--itx-slider-disabled-color, var(--itx-contrast-2));
-	--_thumb-color: var(--itx-slider-disabled-color, var(--itx-contrast-2));
+	--_track-color: var(--itx-slider-disabled-color);
+	--_fill-color: var(--itx-slider-disabled-color);
+	--_thumb-color: var(--itx-slider-disabled-color);
 }
 
 /* ── Track + fill ─────────────────────────────────────────────────────────── *
@@ -315,7 +291,10 @@
  * the thumb, which is a real background-color, carries the transition instead.
  */
 
-:host::-webkit-slider-runnable-track {
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+)::-webkit-slider-runnable-track {
 	inline-size: 100%;
 	block-size: var(--_track-thickness);
 	border: none;
@@ -328,7 +307,10 @@
 	);
 }
 
-:host::-moz-range-track {
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+)::-moz-range-track {
 	inline-size: 100%;
 	block-size: var(--_track-thickness);
 	border: none;
@@ -341,16 +323,19 @@
 	);
 }
 
-:host::-moz-range-progress {
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+)::-moz-range-progress {
 	background: transparent;
 }
 
 /* ── Thumb ────────────────────────────────────────────────────────────────── *
  * The box is always --_target (24px). The painted circle is the CONTENT box:
  * a transparent border of (target − size) / 2 insets it, and
- * `background-clip: content-box` keeps the fill off the border. border-radius
- * 50% on the 24px box leaves the content box's radii at 50% of 14px, so the
- * circle stays a circle at any size.
+ * `background-clip: content-box` keeps the fill off the border. A full radius
+ * on the 24px box leaves the content box's radii at 50% of 14px, so the circle
+ * stays a circle at any size.
  *
  * Growing on hover/focus is therefore a border-width change, not a transform:
  * the target never moves, so the thumb cannot escape the pointer that is
@@ -365,7 +350,10 @@
  * that is.
  */
 
-:host::-webkit-slider-thumb {
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+)::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	appearance: none;
 	box-sizing: border-box;
@@ -382,7 +370,10 @@
 		background-color var(--_duration) var(--_easing);
 }
 
-:host::-moz-range-thumb {
+:where(
+	input[type="range"][interop-slider],
+	input[type="range"][interop-slider-thumb]
+)::-moz-range-thumb {
 	box-sizing: border-box;
 	inline-size: var(--_target);
 	block-size: var(--_target);
@@ -396,11 +387,17 @@
 		background-color var(--_duration) var(--_easing);
 }
 
-:host:not([disabled])::-webkit-slider-thumb:hover {
+:where(
+		input[type="range"][interop-slider]:not([disabled]),
+		input[type="range"][interop-slider-thumb]:not([disabled])
+	)::-webkit-slider-thumb:hover {
 	border-width: calc((var(--_target) - var(--_thumb-size-active)) / 2);
 }
 
-:host:not([disabled])::-moz-range-thumb:hover {
+:where(
+		input[type="range"][interop-slider]:not([disabled]),
+		input[type="range"][interop-slider-thumb]:not([disabled])
+	)::-moz-range-thumb:hover {
 	border-width: calc((var(--_target) - var(--_thumb-size-active)) / 2);
 }
 
@@ -415,12 +412,15 @@
  * so dragging stays correct. `to bottom` is therefore the pre-flip direction
  * that renders as bottom-up.
  */
-:host([data-orientation="vertical"]) {
+:where(
+	input[type="range"][interop-slider][data-orientation="vertical"],
+	input[type="range"][interop-slider-thumb][data-orientation="vertical"]
+) {
 	writing-mode: vertical-lr;
 	transform: scaleY(-1);
-	inline-size: var(--itx-slider-length, 8rem);
+	inline-size: var(--itx-slider-length);
 	--itx-slider-axis: to bottom;
-	--_mark-size: var(--itx-slider-mark-length, 0.5rem) 100%;
+	--_mark-size: var(--itx-slider-mark-length) 100%;
 }
 
 /* ── Range thumbs (children of <interop-slider-range>) ────────────────────── *
@@ -435,7 +435,7 @@
  * writing-mode — the one thing this file is trying not to depend on.
  */
 
-:host([data-thumb-role]) {
+:where(input[type="range"][interop-slider-thumb][data-thumb-role]) {
 	position: absolute;
 	inset: 0;
 	inline-size: auto;
@@ -445,18 +445,141 @@
 	background-image: none;
 }
 
-:host([data-thumb-role])::-webkit-slider-runnable-track {
+:where(
+	input[type="range"][interop-slider-thumb][data-thumb-role]
+)::-webkit-slider-runnable-track {
 	background: transparent;
 }
 
-:host([data-thumb-role])::-moz-range-track {
+:where(
+	input[type="range"][interop-slider-thumb][data-thumb-role]
+)::-moz-range-track {
 	background: transparent;
 }
 
-:host([data-thumb-role])::-webkit-slider-thumb {
+:where(
+	input[type="range"][interop-slider-thumb][data-thumb-role]
+)::-webkit-slider-thumb {
 	pointer-events: auto;
 }
 
-:host([data-thumb-role])::-moz-range-thumb {
+:where(
+	input[type="range"][interop-slider-thumb][data-thumb-role]
+)::-moz-range-thumb {
 	pointer-events: auto;
+}
+
+/* ── Range host ───────────────────────────────────────────────────────────── *
+ * Positioning context for the two thumb inputs above. The visible track and
+ * fill are drawn by ::before / ::after here, because the thumbs' own tracks are
+ * transparent — two overlapping tracks would double the paint and neither would
+ * know about the other thumb.
+ *
+ * Every metric is read from the SAME --itx-slider-* tokens the single slider
+ * uses, which is what keeps the two shapes from drifting: a range slider is a
+ * single slider's track with two handles on it, and Carbon draws it that way
+ * too.
+ */
+
+:where(interop-slider-range) {
+	display: block;
+	position: relative;
+	inline-size: 100%;
+	block-size: var(--itx-slider-thumb-target);
+	max-inline-size: var(--itx-slider-max-length);
+
+	--_track-color: var(--itx-slider-track-color);
+	--_fill-color: var(--itx-slider-fill-color);
+	--_track-thickness: var(--itx-slider-track-thickness);
+	--_start: var(--itx-slider-range-start);
+	--_end: var(--itx-slider-range-end);
+
+	/* Mirrors the single slider exactly — read the PUBLIC thumb-size token,
+	   never a slot the hover/focus rules grow, or the track's ends would move
+	   whenever a handle was touched. */
+	--_target: var(--itx-slider-thumb-target);
+	--_end-inset: calc((var(--_target) - var(--itx-slider-thumb-size)) / 2);
+	--_start-pos: calc(
+		var(--_target) / 2 + (100% - var(--_target)) * var(--_start)
+	);
+	--_end-pos: calc(var(--_target) / 2 + (100% - var(--_target)) * var(--_end));
+}
+
+/* ── Range track ──────────────────────────────────────────────────────────── *
+ * Logical insets, so a right-to-left page reverses the track without a
+ * :dir(rtl) rule — the same reason the single slider flips its gradient axis.
+ * No radius: see the track-radius note at the top. Carbon's track is square and
+ * at 2px there is nothing to round.
+ */
+
+:where(interop-slider-range)::before {
+	content: "";
+	position: absolute;
+	inset-inline: var(--_end-inset);
+	inset-block-start: 50%;
+	block-size: var(--_track-thickness);
+	background: var(--_track-color);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+/* ── Range active fill ────────────────────────────────────────────────────── */
+
+:where(interop-slider-range)::after {
+	content: "";
+	position: absolute;
+	inset-inline-start: var(--_start-pos);
+	inset-inline-end: calc(100% - var(--_end-pos));
+	inset-block-start: 50%;
+	block-size: var(--_track-thickness);
+	background: var(--_fill-color);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+
+/*
+ * Carbon greys a disabled slider out rather than fading it — matching the
+ * single-thumb rule, which sets the same token on track, fill and thumb.
+ */
+:where(interop-slider-range[aria-disabled="true"]) {
+	cursor: not-allowed;
+	--_track-color: var(--itx-slider-disabled-color);
+	--_fill-color: var(--itx-slider-disabled-color);
+}
+
+/* ── Range, vertical ──────────────────────────────────────────────────────── *
+ * The host is a plain element, not a range input, so it takes no writing-mode:
+ * its children position themselves absolutely and the bars are drawn here. Only
+ * the two bars swap axis.
+ *
+ * The fill is anchored from the BLOCK-END, because the thumbs put the minimum
+ * at the bottom (the scaleY(-1) above). Anchoring from the top — which this
+ * file used to do — drew the fill at the opposite end of the track from the
+ * handles that define it.
+ */
+
+:where(interop-slider-range[data-orientation="vertical"]) {
+	inline-size: var(--itx-slider-thumb-target);
+	block-size: var(--itx-slider-length);
+	max-inline-size: none;
+	max-block-size: var(--itx-slider-max-length);
+}
+
+:where(interop-slider-range[data-orientation="vertical"])::before {
+	inset-inline: auto;
+	inset-inline-start: 50%;
+	inset-block: var(--_end-inset);
+	inline-size: var(--_track-thickness);
+	block-size: auto;
+	transform: translateX(-50%);
+}
+
+:where(interop-slider-range[data-orientation="vertical"])::after {
+	inset-inline: auto;
+	inset-inline-start: 50%;
+	inset-block-end: var(--_start-pos);
+	inset-block-start: calc(100% - var(--_end-pos));
+	inline-size: var(--_track-thickness);
+	block-size: auto;
+	transform: translateX(-50%);
 }

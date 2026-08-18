@@ -228,11 +228,11 @@ currentStep = signal(1);`;
 	];
 
 	tokenEntries: TokenEntry[] = [
-		{ property: "--itx-progress-track", default: "var(--itx-contrast-3)" },
+		{ property: "--itx-progress-track", default: "var(--itx-contrast-2)" },
 		{ property: "--itx-progress-fill", default: "var(--itx-colorway-solid)" },
 		{
-			property: "--itx-progress-height",
-			default: "var(--itx-spacing-2) — 8px",
+			property: "--itx-progress-thickness",
+			default: "var(--itx-spacing-2) — 8px (was --itx-progress-height)",
 		},
 		{
 			property: "--itx-progress-length",
@@ -242,6 +242,10 @@ currentStep = signal(1);`;
 		{
 			property: "--itx-progress-duration",
 			default: "var(--itx-duration-fast)",
+		},
+		{
+			property: "--itx-progress-easing",
+			default: "var(--itx-easing-standard)",
 		},
 		{ property: "--itx-progress-indeterminate-duration", default: "1000ms" },
 		{

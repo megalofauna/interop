@@ -4,7 +4,8 @@
 **Raised:** 2026-08-12 by the round 5 (Progress) Carbon borrow
 **Re-raised:** 2026-08-13 by rounds 10–14 — badge, field, slider and tabs all
 hit it independently in the same sweep, which is how the count reached fifteen.
-**Thirteen remain** — the field pair migrated 2026-08-15, see below.
+**Nine remain** — the field pair migrated 2026-08-15, then `interop-progress`
+and the three slider files 2026-08-17. See below.
 
 ## The debt
 
@@ -23,11 +24,9 @@ encapsulation:
 ```
 interop-badge            interop-scroll-area
 interop-callout          interop-segmented-control  (partially — has a theme file too)
-interop-code-renderer    interop-slider
-interop-listbox          interop-slider-range
-interop-progress         interop-slider-thumb
-composites/terminal      interop-tabs
-                         interop-tab-panel
+interop-code-renderer    interop-tabs
+interop-listbox          interop-tab-panel
+composites/terminal
 
 DONE — interop-field-input + interop-field-textarea (2026-08-15). The pair
 migrated together, as this file said they had to: they were ~90% byte-identical
@@ -45,6 +44,32 @@ Two things worth carrying to the next component:
     only exists because the Angular directive's host adds it, so matching the
     class alone would have left the CSS-only consumer — the entire point of the
     migration — with unstyled addons.
+
+DONE — interop-progress + the slider trio (2026-08-17). The three slider files
+became ONE pair, as this file predicted they had to: interop-slider.css was
+shared by two components and interop-slider-range.css re-typed the same values a
+third time, and only a global sheet lets all three read one declaration. Four
+things worth carrying forward:
+
+  - `:where(…)::-webkit-slider-runnable-track` DOES reach the UA pseudo, and a
+    layered zero-specificity rule reaches it identically to a plain selector.
+    Verified in ChromeHeadless against a control rather than assumed, because
+    the failure mode (silently dropped rule) looks exactly like "the component
+    is unstyled".
+  - The private `--_` slots stayed. States on this component have to reach the
+    UA pseudo-elements, and those inherit custom properties from the host — the
+    per-state-token pattern would need a ::-webkit- and a ::-moz- rule per
+    state instead.
+  - progress's theme block sat on `:where([interop-root])`, which BAKED
+    `--itx-contrast-3` at the root: a contrast rank is solved against the
+    current surface and re-declared at every layer boundary, so a bar inside a
+    raised card kept layer 0's grey. Scoping the block to the element is the
+    fix, and it is the colour-axis twin of the baked-alias bug check-shape.mjs
+    catches for radius and duration. Check any theme block still on the bare
+    root for this.
+  - Conform, don't port. Two literal Carbon values (110ms, a cubic-bezier) had
+    opted the slider out of prefers-reduced-motion entirely, and the progress
+    track was one contrast rank stronger than the comment above it described.
 ```
 
 ## Why it matters
@@ -104,7 +129,8 @@ one people forget, and the third is the one that actually inverts the contract:
 - **Wrap migrated selectors in `:where()` for zero specificity, but keep
   pseudo-elements OUTSIDE it** — `:where(section[interop-tabs])::after`, not
   `:where(section[interop-tabs]::after)`.
-- **The field pair and the three slider files each have to move together.**
+- **A component family moves together.** The field pair and the three slider
+  files each did.
   Their shared values are currently typed twice, once per file, because two
   component stylesheets cannot share a declaration without a global sheet. The
   migration is what collapses that duplication — which also means migrating one
@@ -135,8 +161,9 @@ concurrently.
 
 Do them one at a time, each in its own commit, verifying in the browser. This
 is the kind of change where five at once produces one unattributable
-regression. Progress and badge are the smallest and the best first candidates;
-`interop-slider` (three files) is the largest.
+regression. Badge is now the smallest remaining and the best next candidate;
+`interop-segmented-control` is the other half-migrated hybrid, the same shape
+progress was.
 
 ## Free win while you're in there
 
