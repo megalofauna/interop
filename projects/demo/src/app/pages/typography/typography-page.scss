@@ -73,3 +73,67 @@
 		text-align: end;
 	}
 }
+
+/* ── Leading dial ──────────────────────────────────────────────────────────
+ * A live control on --itx-lh-leading, scoped to the specimen beside it. The
+ * leading is a value judgement; this renders candidates as they are really
+ * used rather than arguing for a number in prose.
+ *
+ * The ratio list is the interesting part: it is where --itx-lh-loose becomes
+ * visible, because the small roles stop moving once the ceiling takes over. */
+.leading-dial {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-spacing-4);
+	margin-block-end: var(--itx-spacing-6);
+
+	&__control {
+		display: flex;
+		align-items: center;
+		gap: var(--itx-spacing-3);
+	}
+
+	&__label {
+		font-size: var(--itx-font-size-label);
+		color: var(--itx-contrast-4);
+	}
+
+	&__value {
+		display: flex;
+		align-items: baseline;
+		gap: var(--itx-spacing-2);
+		font-size: var(--itx-font-size-label);
+		color: var(--itx-contrast-5);
+		/* Stop the row jittering as the number changes width. */
+		font-variant-numeric: tabular-nums;
+	}
+
+	&__ratios {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--itx-spacing-3);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: var(--itx-font-size-caption);
+		font-variant-numeric: tabular-nums;
+
+		li {
+			display: flex;
+			align-items: baseline;
+			gap: var(--itx-spacing-1);
+			color: var(--itx-contrast-4);
+
+			span:last-of-type {
+				color: var(--itx-contrast-6);
+			}
+
+			/* A role held by the ceiling rather than by the leading. */
+			&.is-clamped em {
+				font-style: normal;
+				color: var(--itx-colorway-text);
+			}
+		}
+	}
+}

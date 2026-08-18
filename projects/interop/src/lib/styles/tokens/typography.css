@@ -36,9 +36,25 @@
 	 * --itx-lh-tight, smaller text loosens toward --itx-lh-loose. Reads 1em,
 	 * so it must be applied ON a text element (recomputes per element) — it
 	 * then rides the fluid font-size for free. */
-	--itx-lh-tight: 1; /* floor  — display & headings (reeled in; 1.3 was gappy) */
-	--itx-lh-loose: 1.6; /* ceiling — captions & fine print (must stay > tight) */
-	--itx-lh-leading: 0.875em; /* constant leading (~8px) added over 1em */
+	/* Floor. Cannot bind while the leading is positive — 1em + anything > 0
+	   always clears it — so it exists only to catch a negative override. It is
+	   NOT the dial for gappy headings; that is the leading. (It was previously
+	   annotated "reeled in; 1.3 was gappy", which is a record of someone tuning
+	   a disconnected dial: the real cause was the ceiling below.) */
+	--itx-lh-tight: 1;
+
+	/* Ceiling — captions and fine print. Must stay > tight. This one DOES bind:
+	   below ~13px the staked leading would push past it. */
+	--itx-lh-loose: 1.6;
+
+	/* THE dial. Constant leading added over 1em — 8px at the default root size.
+	   It MUST be an absolute unit. A leading in `em` scales with the font-size
+	   it is added to, which yields a constant ratio and silently cancels the
+	   whole mechanism; that is what shipped (0.875em → a flat 1.875, itself
+	   then pinned to 1.6 by the ceiling above). `rem` rather than `px` so it
+	   still answers to the user's root font size. Asserted in
+	   tokens/typography.spec.ts. */
+	--itx-lh-leading: 0.5rem;
 	--itx-line-height: clamp(
 		calc(var(--itx-lh-tight) * 1em),
 		1em + var(--itx-lh-leading),
