@@ -149,34 +149,50 @@ protected onPaletteChange(value: string): void {
 
 	tokenEntries: TokenEntry[] = [
 		{
-			property: "--itx-callout-bg",
-			default: "var(--itx-<type>-surface) — the palette tint",
+			property: "--itx-callout-background",
+			default: "var(--itx-<type>-tint) — the palette wash",
 		},
 		{
 			property: "--itx-callout-accent",
-			default: "var(--itx-<type>) — the palette accent",
+			default: "var(--itx-<type>-border) — the palette's accent-bar rung",
 		},
 		{
 			property: "--itx-callout-color",
-			default: "var(--itx-on-<type>-surface)",
+			default: "var(--itx-<type>-on-tint)",
 		},
 		{
 			property: "--itx-callout-accent-width",
-			default: "3px — matches the toast status bar",
+			default: "var(--itx-border-width-heavy) — 3px, the toast status bar",
 		},
 		{
-			property: "--itx-callout-padding",
-			default: "var(--itx-spacing-4) var(--itx-spacing-6) — 16px 24px",
+			property: "--itx-callout-padding-block",
+			default: "var(--itx-spacing-4) — 16px",
+		},
+		{
+			property: "--itx-callout-padding-inline",
+			default: "var(--itx-spacing-6) — 24px",
 		},
 		{
 			property: "--itx-callout-radius",
-			default: "var(--itx-radius-none) — 0",
+			default: "unset — follows var(--itx-radius), which is 0",
 		},
 		{
 			property: "--itx-callout-font-size",
 			default: "var(--itx-font-size-body) — fluid, this is prose",
 		},
-		{ property: "--itx-callout-line-height", default: "1.6" },
+		{
+			property: "--itx-callout-line-height",
+			default: "var(--itx-line-height) — 1.6 at body size",
+		},
+		{
+			property: "--itx-callout-heading-font-size",
+			default: "var(--itx-font-size-label)",
+		},
+		{ property: "--itx-callout-heading-font-weight", default: "500" },
+		{
+			property: "--itx-callout-heading-margin-block-end",
+			default: "var(--itx-spacing-2) — 8px",
+		},
 	];
 
 	// ── API ──────────────────────────────────────────────────────────────────

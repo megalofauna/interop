@@ -35,7 +35,6 @@ const FOCUSABLE_SELECTOR =
 	selector: "interop-scroll-area",
 	standalone: true,
 	template: "<ng-content />",
-	styleUrl: "./interop-scroll-area.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"[attr.tabindex]": "effectiveTabIndex()",

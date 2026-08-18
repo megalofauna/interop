@@ -5,13 +5,13 @@
 ```
 src/lib/components/interop-badge/
   interop-badge.ts      component — inline template, a11y wiring, announcement
-  interop-badge.scss    ALL styling (structure AND values) — see "CSS architecture"
   public-api.ts         barrel export
+
+src/lib/styles/components/badge.css                  structure
+src/lib/styles/themes/protocol/components/badge.css  values
 ```
 
-There is **no** `styles/components/badge.css` and **no**
-`styles/themes/protocol/components/badge.css`. Badge is the exception to the
-two-file split, alongside `interop-progress`. See below.
+Badge follows the two-file split as of 2026-08-17; it has no `styleUrl`.
 
 ## Shape
 
@@ -86,33 +86,25 @@ floor — the reason chip stops at 24px — does not apply to it. 16px is safe.
 
 ## CSS architecture
 
-**Badge does not follow `css-strategy.md`'s two-file split.** Everything —
-layout and values — lives in `interop-badge.scss`, applied through the
-component's `styleUrl`.
+Two files, both imported globally and both layered — `styles/components/badge.css`
+for structure, `styles/themes/protocol/components/badge.css` for values. Until
+2026-08-17 all of it lived in `interop-badge.scss` behind the component's
+`styleUrl`, which meant a CSS-only consumer got no badge styling at all and the
+injected sheet was UNLAYERED, so it outranked the whole `interop` layer.
 
-Consequences, both real:
+Two things about the migration worth remembering:
 
-1. A **CSS-only consumer** — someone writing the markup without importing the
-   Angular component — gets no badge styling at all, which is the one thing the
-   global stylesheet exists to provide.
-2. The values cannot be re-themed by shipping a different theme file. The
-   inline `var(--itx-badge-x, <default>)` fallback chain is the only seam.
+- `.interop-badge__indicator` stays an **unscoped** class selector rather than
+  being nested under `interop-badge`. That is deliberate: hand-written or
+  replicated markup should pick it up.
+- The indicator's `.interop-sr-only` copy is gone. It folded into the global
+  `styles/utilities/visually-hidden.css` rule, which is where that lives now.
 
-Because there is nowhere else to put them, the defaults are inline fallbacks
-rather than declarations, which is the opposite of the foundation's no-fallback
-contract. That is deliberate under the circumstances, not an oversight.
-
-Migrating means: `:host` → `interop-badge`, layout to
-`styles/components/badge.css`, every literal to
-`styles/themes/protocol/components/badge.css` with the fallbacks stripped, and
-both registered in `interop.css` / `protocol.css` **with their `layer()`**.
-`.interop-badge__indicator` and `.interop-sr-only` are already unscoped class
-selectors and need no change. Tracked in
-`.agent/todo/styleurl-components-migration.md`.
-
-The file is named `.scss` but contains **no SCSS**: no variables, no mixins, no
-`@use`, and the only nesting is `&`-nesting, which is native CSS. It can be
-renamed `.css` whenever someone is passing.
+The theme scopes its declarations to `:where([interop-root] interop-badge)`
+rather than to `[interop-root]`, so `--itx-badge-radius: var(--itx-radius-full)`
+substitutes on the component instead of baking at the root. The radius is one of
+the few in the library that PINS rather than following `--itx-radius`: a badge
+is a spot, and Carbon names the radius.
 
 ## Visual language
 

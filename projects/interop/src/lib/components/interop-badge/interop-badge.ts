@@ -94,7 +94,6 @@ let nextInstanceId = 0;
 			computedAccessibleText()
 		}}</span>
 	`,
-	styleUrl: "./interop-badge.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"[attr.data-hidden]": "hidden() ? '' : null",

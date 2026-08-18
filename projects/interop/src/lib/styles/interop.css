@@ -69,7 +69,9 @@
 /*    Rendering rules for each component, decoupled from Angular imports.   */
 /*    Token values are layered on top by the active theme.                  */
 
+@import "./components/badge.css" layer(interop.foundation);
 @import "./components/button.css" layer(interop.foundation);
+@import "./components/callout.css" layer(interop.foundation);
 @import "./components/chip.css" layer(interop.foundation);
 @import "./components/command-palette.css" layer(interop.foundation);
 @import "./components/dialog.css" layer(interop.foundation);
@@ -89,6 +91,7 @@
 @import "./components/tooltip.css" layer(interop.foundation);
 @import "./components/tree.css" layer(interop.foundation);
 @import "./components/resizable.css" layer(interop.foundation);
+@import "./components/scroll-area.css" layer(interop.foundation);
 @import "./components/visimorph/visimorph.css" layer(interop.foundation);
 @import "./components/visimorph/label.css" layer(interop.foundation);
 
@@ -107,6 +110,7 @@
 @import "./composites/code-block.css" layer(interop.foundation);
 @import "./composites/inline-code.css" layer(interop.foundation);
 @import "./composites/page-nav.css" layer(interop.foundation);
+@import "./composites/terminal.css" layer(interop.foundation);
 
 /* ── Rigs (structural foundation) ───────────────────────────────────────── */
 /*    Container/layout components that coordinate child controls (toolbars,   */

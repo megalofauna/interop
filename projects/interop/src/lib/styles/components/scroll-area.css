@@ -1,0 +1,183 @@
+/*
+ * InteropScrollArea — structural foundation.
+ *
+ * Rendering rules for `interop-scroll-area`: a scroll container with
+ * overflow-aware accessibility (auto tabindex/role) and proportional scroll
+ * shadows via `mask-image`. Loaded globally via `interop.css`; token VALUES
+ * live in `themes/protocol/components/scroll-area.css`.
+ *
+ * Migrated out of `interop-scroll-area.scss`, a per-component `styleUrl` sheet
+ * that used no SCSS feature. Angular injected it unlayered, which mattered more
+ * here than anywhere else in the library: the file carried the ONE
+ * `!important` Interop shipped (`scroll-behavior: auto !important`, below), so
+ * the highest-priority declaration in the whole package sat in an unlayered
+ * sheet no consumer could outrank. See the reduced-motion note at the foot.
+ *
+ * Shadow intensity is driven by the --_shadow-* slots (0–1), set imperatively
+ * by the component's RAF-throttled scroll handler. CSS does all the visual
+ * work — no layout thrash, no paint from JS.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the single
+ * source of truth for every `--itx-scroll-area-*` value; focus reads the system
+ * chain, so the ring is inherited rather than restated.
+ */
+
+:where(interop-scroll-area) {
+	display: block;
+	position: relative;
+
+	scrollbar-width: var(--itx-scroll-area-scrollbar-width);
+	scrollbar-color: var(--itx-scroll-area-scrollbar-color);
+	overscroll-behavior: var(--itx-scroll-area-overscroll);
+}
+
+/* ── Orientation ─────────────────────────────────────────────────────────── */
+
+:where(interop-scroll-area[data-orientation="vertical"]) {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+:where(interop-scroll-area[data-orientation="horizontal"]) {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+:where(interop-scroll-area[data-orientation="both"]) {
+	overflow: auto;
+}
+
+/* ── Shadow-intensity slots ───────────────────────────────────────────────
+ *
+ * These 0–1 values are set imperatively (inline) by the scroll handler and are
+ * consumed inside the mask gradients below. Registering them as typed <number>
+ * properties is not cosmetic: some engines fail to invalidate the mask's paint
+ * when an *unregistered* custom property changes, so the initial shadow can
+ * compute correctly yet not paint until a later composite (e.g. a hover
+ * repaint). Typing them makes the update invalidate paint reliably, and gives
+ * each one an initial value of 0 so the gradients are valid before the first
+ * scroll event.
+ */
+@property --_shadow-top {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --_shadow-bottom {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --_shadow-start {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --_shadow-end {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+
+/* ── Scroll shadows (mask-image) ─────────────────────────────────────────
+ *
+ * Applied only when content overflows AND shadows are enabled.
+ * --_shadow-top/bottom/start/end run 0 (at that edge) to 1 (fully away from
+ * it); at 0 the gradient stop collapses to 0px, so there is no fade at that
+ * edge. The mask fades content to transparent wherever more content exists,
+ * which adapts to any background — `black` here is opacity, not paint, so it
+ * is a mask keyword rather than a colour the theme has any say over.
+ *
+ * The four slots are zeroed explicitly as well as by @property: an engine
+ * without registered properties still resolves the calc(), and gets no fade
+ * instead of an invalid mask.
+ */
+
+:where(interop-scroll-area[data-overflowing][data-shadows]) {
+	--_shadow-top: 0;
+	--_shadow-bottom: 0;
+	--_shadow-start: 0;
+	--_shadow-end: 0;
+}
+
+:where(
+	interop-scroll-area[data-overflowing][data-shadows][data-orientation="vertical"]
+) {
+	mask-image: linear-gradient(
+		to bottom,
+		transparent,
+		black calc(var(--_shadow-top) * var(--itx-scroll-area-shadow-size)),
+		black
+			calc(100% - var(--_shadow-bottom) * var(--itx-scroll-area-shadow-size)),
+		transparent
+	);
+}
+
+:where(
+	interop-scroll-area[data-overflowing][data-shadows][data-orientation="horizontal"]
+) {
+	mask-image: linear-gradient(
+		to right,
+		transparent,
+		black calc(var(--_shadow-start) * var(--itx-scroll-area-shadow-size)),
+		black calc(100% - var(--_shadow-end) * var(--itx-scroll-area-shadow-size)),
+		transparent
+	);
+}
+
+:where(
+	interop-scroll-area[data-overflowing][data-shadows][data-orientation="both"]
+) {
+	mask-image:
+		linear-gradient(
+			to bottom,
+			transparent,
+			black calc(var(--_shadow-top) * var(--itx-scroll-area-shadow-size)),
+			black
+				calc(100% - var(--_shadow-bottom) * var(--itx-scroll-area-shadow-size)),
+			transparent
+		),
+		linear-gradient(
+			to right,
+			transparent,
+			black calc(var(--_shadow-start) * var(--itx-scroll-area-shadow-size)),
+			black calc(100% - var(--_shadow-end) * var(--itx-scroll-area-shadow-size)),
+			transparent
+		);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+}
+
+/* ── Focus ───────────────────────────────────────────────────────────────── */
+/* The host takes tabindex="0" whenever it overflows and holds nothing
+   focusable, so this ring is the one thing standing between a keyboard user and
+   an unreachable scroll region. Values come from the system chain; the
+   component has no opinion of its own and declares no theme default. */
+
+:where(interop-scroll-area:focus-visible) {
+	outline: var(--itx-scroll-area-focus-width, var(--itx-focus-width))
+		var(--itx-scroll-area-focus-style, var(--itx-focus-style))
+		var(--itx-scroll-area-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-scroll-area-focus-offset, var(--itx-focus-offset));
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+/*
+ * A legitimate survivor: `scroll-behavior` carries no duration, so the 0ms in
+ * tokens/motion.css cannot reach it. The component never sets `smooth` itself —
+ * this exists to neutralise a blanket `scroll-behavior: smooth` from a reset or
+ * an ancestor when the user has asked for less motion.
+ *
+ * It used to carry `!important`, and that was the library's only one. Layered,
+ * the flag would have been worse than pointless: important declarations invert
+ * layer order, so an `!important` in `interop.foundation` outranks every
+ * consumer rule, important or not — the exact opposite of the contract the
+ * cascade layer exists to deliver. Dropped. A consumer who genuinely wants
+ * smooth scrolling under the preference now wins by writing one ordinary rule.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+	:where(interop-scroll-area) {
+		scroll-behavior: auto;
+	}
+}

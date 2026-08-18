@@ -6,6 +6,8 @@
 hit it independently in the same sweep, which is how the count reached fifteen.
 **Nine remain** — the field pair migrated 2026-08-15, then `interop-progress`
 and the three slider files 2026-08-17. See below.
+**Nine remain** — the field pair migrated 2026-08-15; badge, callout,
+scroll-area and composites/terminal migrated 2026-08-17, see below.
 
 ## The debt
 
@@ -27,6 +29,38 @@ interop-callout          interop-segmented-control  (partially — has a theme f
 interop-code-renderer    interop-tabs
 interop-listbox          interop-tab-panel
 composites/terminal
+interop-code-renderer    interop-slider
+interop-listbox          interop-slider-range
+interop-progress         interop-slider-thumb
+interop-segmented-control (partially — has a theme file too)
+interop-tabs             interop-tab-panel
+
+DONE — interop-badge, interop-callout, interop-scroll-area and
+composites/terminal (2026-08-17). Migrated as a conformance pass, not a port —
+four of the values that looked fine in the source were wrong against a system:
+
+  - The callout's accent rule read --itx-<type>-solid, the status FILL, on an
+    EDGE. The status families carry mark rungs the generator names for exactly
+    that job ("border — Ring, rule, accent bar", 3:1), so it is
+    --itx-<type>-border now. Same category error the tabs migration found on its
+    selection bar. interop-toast still paints its status bar with -solid.
+  - The terminal's plain scrollbar thumb was rank 2 (a 1.5:1 hairline). A thumb
+    is a UI component boundary, which WCAG 2.2 SC 1.4.11 puts at 3:1 — rank 3.
+  - Neither the terminal nor the callout reached the radius knob. The callout
+    fell back to var(--itx-radius-none) inline, so it ignored --itx-radius and
+    itx-radius="…" outright; the terminal's theme pinned
+    --itx-term-radius: var(--itx-radius), which follows the knob but swallows
+    the per-instance attribute. Both read the three-tier chain and pin nothing
+    now.
+  - The scroll area's focus ring pinned outline-offset: 2px, which is what
+    --itx-focus-offset already is; the literal only stopped it following the
+    system.
+
+It also removed the library's only `!important` — see the note in
+styles/components/scroll-area.css. A `scroll-behavior: auto !important` in an
+UNLAYERED sheet was the highest-priority declaration Interop shipped; layered,
+the flag would be worse, because important declarations invert layer order and
+an important rule in interop.foundation outranks everything a consumer writes.
 
 DONE — interop-field-input + interop-field-textarea (2026-08-15). The pair
 migrated together, as this file said they had to: they were ~90% byte-identical

@@ -1,0 +1,76 @@
+/*
+ * InteropBadge — Protocol theme.
+ *
+ * Token surface:
+ *   Box     --itx-badge-size            --itx-badge-dot-size
+ *           --itx-badge-padding-inline  --itx-badge-radius
+ *           --itx-badge-z-index         --itx-badge-offset
+ *   Colour  --itx-badge-background      --itx-badge-color
+ *   Type    --itx-badge-font-size       --itx-badge-font-weight
+ *           --itx-badge-line-height
+ *
+ * Nothing here is focusable and nothing transitions, so there are no state,
+ * focus or motion tokens: the indicator is `aria-hidden` and non-interactive.
+ *
+ * ── Borrowed visual language ───────────────────────────────────────────────
+ *
+ * Proportions and paint follow IBM Carbon's `badge-indicator`; the procedure
+ * and the Carbon → Interop conversion tables are in
+ * .agent/workflows/carbon-borrow.md. Carbon's badge is deliberately tiny — a
+ * 16px count bubble and an 8px dot, both fully round, both painted in the error
+ * red. It has no size axis, no variants and no states. What Carbon states:
+ *
+ *   $helper-text-01           12px / 16px / 400   → the count label
+ *   max-block-size $spacing-05        16px        → the count bubble
+ *   min-block-size $spacing-03         8px        → the dot
+ *   padding 0 $spacing-02 $spacing-01  0 4px 2px  → inline breathing room
+ *   border-radius 100px                           → round, at both shapes
+ *   background $support-error         red-60      → --itx-danger-solid
+ *   color $text-on-color              white       → --itx-danger-on-solid
+ *
+ * Declined: Carbon's asymmetric padding (a 2px optical nudge for a line box
+ * Carbon does not centre — we do centre it, so the nudge would push the digits
+ * off-centre rather than on); Carbon's fully-inside placement (their only
+ * anchor is a 48px UI-shell icon button, ours wraps arbitrary content); the
+ * count/dot offset split (corner-centred placement is size-independent, so one
+ * offset covers both).
+ *
+ * ── Colour ─────────────────────────────────────────────────────────────────
+ *
+ * The pair is a FILL and its label: --itx-danger-solid is the full-strength
+ * status fill, --itx-danger-on-solid the rung solved for 4.5:1 against it. Both
+ * re-point with `itx-status-palette`, so a badge follows the active palette
+ * without naming a colour. Neither is an elevation token, and neither is a
+ * contrast rank — a badge does not sit on the page's ladder, it paints over it.
+ */
+
+:where([interop-root] interop-badge) {
+	/* ── Box ────────────────────────────────────────────────────────────── */
+	--itx-badge-z-index: 1;
+	--itx-badge-size: var(--itx-spacing-4); /* 16px — Carbon's $spacing-05 */
+	--itx-badge-dot-size: var(--itx-spacing-2); /* 8px — Carbon's $spacing-03 */
+	--itx-badge-padding-inline: var(--itx-spacing-1); /* 4px */
+
+	/* Pinned, not the --itx-radius knob — the shape IS the component. See the
+	   structural file, and the pinning rule in .agent/css-strategy.md. */
+	--itx-badge-radius: var(--itx-radius-full);
+
+	/* Corner-centred. Positive bleeds outward, negative walks the badge inside
+	   the anchor. Must carry a unit — it is subtracted from a percentage inside
+	   calc(), and a unitless 0 invalidates the whole translate. */
+	--itx-badge-offset: 0px;
+
+	/* ── Colour ─────────────────────────────────────────────────────────── */
+	--itx-badge-background: var(--itx-danger-solid);
+	--itx-badge-color: var(--itx-danger-on-solid);
+
+	/* ── Type ───────────────────────────────────────────────────────────────
+	 * Carbon $helper-text-01 — 12 / 16 / 400. Fixed rem, never
+	 * --itx-font-size-*: those are fluid clamp() values, and a fluid label
+	 * inside a fixed-height bubble overflows it. 1.3333 is 16/12, so the line
+	 * box is exactly the bubble and the digits sit centred with no nudge.
+	 */
+	--itx-badge-font-size: 0.75rem;
+	--itx-badge-font-weight: 400;
+	--itx-badge-line-height: 1.3333;
+}
