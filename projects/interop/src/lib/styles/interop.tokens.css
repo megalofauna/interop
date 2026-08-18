@@ -1274,28 +1274,28 @@
 	/* --itx-term-scrollbar-width: thin; */
 }
 
-/* ──── rigs/choice-rig ─────────────────────────────────────────────── 16 levers */
+/* ──── rigs/rig ────────────────────────────────────────────────────── 16 levers */
 /*
- * structural: rigs/choice-rig.css
- * values:     themes/protocol/rigs/choice-rig.css
+ * structural: rigs/rig.css
+ * values:     themes/protocol/rigs/rig.css
  */
 [interop-root] {
-	/* --itx-choice-rig-border-color: transparent; */
-	/* --itx-choice-rig-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
-	/* --itx-choice-rig-border-width: var(--itx-border-width-hairline); */
-	/* --itx-choice-rig-control-gap: var(--itx-spacing-2); */
-	/* --itx-choice-rig-direction: column; */
-	/* --itx-choice-rig-disabled-opacity: 0.6; */
-	/* --itx-choice-rig-divider-color: var(--itx-contrast-2); */
-	/* --itx-choice-rig-divider-width: var(--itx-border-width-hairline); */
-	/* --itx-choice-rig-font-size: var(--itx-font-size-body); */
-	/* --itx-choice-rig-gap: var(--itx-spacing-3); */
-	/* --itx-choice-rig-legend-font-weight: var(--itx-font-weight-heading); */
-	/* --itx-choice-rig-legend-margin-block-end: var(--itx-spacing-2); */
-	/* --itx-choice-rig-legend-padding-inline: var(--itx-spacing-2); */
-	/* --itx-choice-rig-line-height: var(--itx-line-height); */
-	/* --itx-choice-rig-padding: 0; */
-	/* --itx-choice-rig-wrap: nowrap; */
+	/* --itx-rig-border-color: transparent; */
+	/* --itx-rig-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-rig-border-width: var(--itx-border-width-hairline); */
+	/* --itx-rig-control-gap: var(--itx-spacing-2); */
+	/* --itx-rig-direction: column; */
+	/* --itx-rig-disabled-opacity: 0.6; */
+	/* --itx-rig-divider-color: var(--itx-contrast-2); */
+	/* --itx-rig-divider-width: var(--itx-border-width-hairline); */
+	/* --itx-rig-font-size: var(--itx-font-size-body); */
+	/* --itx-rig-gap: var(--itx-spacing-3); */
+	/* --itx-rig-legend-font-weight: var(--itx-font-weight-heading); */
+	/* --itx-rig-legend-margin-block-end: var(--itx-spacing-2); */
+	/* --itx-rig-legend-padding-inline: var(--itx-spacing-2); */
+	/* --itx-rig-line-height: var(--itx-line-height); */
+	/* --itx-rig-padding: 0; */
+	/* --itx-rig-wrap: nowrap; */
 }
 
 /* ──── rigs/toolbar ────────────────────────────────────────────────── 16 levers */

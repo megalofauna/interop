@@ -1,10 +1,20 @@
 /*
- * Choice rigs — structural foundation.
+ * Rig shell — structural foundation.
+ *
+ * A RIG is a coordination layer around subcontrols. It is not a selection
+ * concept: `interop-toolbar` is a rig too, and coordinates buttons. This sheet
+ * is the shell every fieldset-shaped rig shares — the fieldset, the legend, the
+ * row flow — so the namespace is `--itx-rig-*` rather than anything naming the
+ * controls that happen to sit in it today.
+ *
+ * It applies to the two rigs that currently have that shape. A future rig opts
+ * in by joining the selector lists below; nothing about the shell assumes what
+ * its rows contain.
  *
  * ONE stylesheet for TWO components: `interop-checkbox-rig` (element form, or
  * `[interop-checkbox-rig]` on a host you own) and `interop-radio-rig`. Loaded
  * globally via `interop.css`; token VALUES live in
- * `themes/protocol/rigs/choice-rig.css`.
+ * `themes/protocol/rigs/rig.css`.
  *
  * ── Why one file ──────────────────────────────────────────────────────────
  *
@@ -20,7 +30,7 @@
  * host) is a labelled section below rather than a second file.
  *
  * Contract: no literal `var(token, fallback)` defaults. The theme is the
- * single source of truth for every `--itx-choice-rig-*` value; radius and
+ * single source of truth for every `--itx-rig-*` value; radius and
  * focus read their documented system chains so a rig with no opinion inherits
  * one.
  *
@@ -67,9 +77,9 @@
 	[interop-checkbox-rig] .checkbox-rig-content
 ) {
 	display: flex;
-	flex-direction: var(--itx-choice-rig-direction);
-	flex-wrap: var(--itx-choice-rig-wrap);
-	gap: var(--itx-choice-rig-gap);
+	flex-direction: var(--itx-rig-direction);
+	flex-wrap: var(--itx-rig-wrap);
+	gap: var(--itx-rig-gap);
 }
 
 /* ── Group box ───────────────────────────────────────────────────────────── */
@@ -82,17 +92,16 @@
 :where(interop-checkbox-rig fieldset, interop-radio-rig fieldset) {
 	margin: 0;
 	min-inline-size: 0;
-	padding: var(--itx-choice-rig-padding);
-	border: var(--itx-choice-rig-border-width) solid
-		var(--itx-choice-rig-border-color);
-	border-radius: var(--itx-choice-rig-border-radius, var(--itx-radius));
+	padding: var(--itx-rig-padding);
+	border: var(--itx-rig-border-width) solid var(--itx-rig-border-color);
+	border-radius: var(--itx-rig-border-radius, var(--itx-radius));
 }
 
 :where(
 	interop-checkbox-rig fieldset:disabled,
 	interop-radio-rig fieldset:disabled
 ) {
-	opacity: var(--itx-choice-rig-disabled-opacity);
+	opacity: var(--itx-rig-disabled-opacity);
 	cursor: not-allowed;
 }
 
@@ -100,10 +109,10 @@
 
 :where(interop-checkbox-rig legend, interop-radio-rig legend) {
 	padding-block: 0;
-	padding-inline: var(--itx-choice-rig-legend-padding-inline);
-	margin-block-end: var(--itx-choice-rig-legend-margin-block-end);
-	font-weight: var(--itx-choice-rig-legend-font-weight);
-	line-height: var(--itx-choice-rig-line-height);
+	padding-inline: var(--itx-rig-legend-padding-inline);
+	margin-block-end: var(--itx-rig-legend-margin-block-end);
+	font-weight: var(--itx-rig-legend-font-weight);
+	line-height: var(--itx-rig-line-height);
 }
 
 /* ── Control row ─────────────────────────────────────────────────────────── */
@@ -119,12 +128,12 @@
 ) {
 	display: flex;
 	align-items: center;
-	gap: var(--itx-choice-rig-control-gap);
+	gap: var(--itx-rig-control-gap);
 	cursor: pointer;
 	user-select: none;
 	-webkit-user-select: none;
-	font-size: var(--itx-choice-rig-font-size);
-	line-height: var(--itx-choice-rig-line-height);
+	font-size: var(--itx-rig-font-size);
+	line-height: var(--itx-rig-line-height);
 }
 
 /*
@@ -136,7 +145,7 @@
 	[interop-checkbox-rig] .checkbox-control:has(input:disabled),
 	interop-radio-rig .radio-control:has(input:disabled)
 ) {
-	opacity: var(--itx-choice-rig-disabled-opacity);
+	opacity: var(--itx-rig-disabled-opacity);
 	cursor: not-allowed;
 }
 
@@ -170,7 +179,7 @@
 	interop-checkbox-rig .checkbox-select-all,
 	[interop-checkbox-rig] .checkbox-select-all
 ) {
-	padding-block-end: var(--itx-choice-rig-gap);
-	border-block-end: var(--itx-choice-rig-divider-width) solid
-		var(--itx-choice-rig-divider-color);
+	padding-block-end: var(--itx-rig-gap);
+	border-block-end: var(--itx-rig-divider-width) solid
+		var(--itx-rig-divider-color);
 }

@@ -11,7 +11,7 @@ would have carried forward intact.
 Sequence: the field pair 2026-08-15; tabs 2026-08-17 as the worked example
 (`64002cda`); then the remaining thirteen in four parallel batches the same day
 — slider trio + progress, badge/callout/scroll-area/terminal,
-listbox/segmented-control/code-renderer, and the two choice rigs + content.
+listbox/segmented-control/code-renderer, and the checkbox and radio rigs + content.
 
 Verified on the merged result: nine guards green, three builds, 573 specs, no
 spec modified, every rename propagated, 1014 documented levers across 34

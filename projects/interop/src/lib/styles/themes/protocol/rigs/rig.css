@@ -1,22 +1,22 @@
 /*
- * Choice rigs — Protocol theme.
+ * Rig shell — Protocol theme.
  *
  * Values for `interop-checkbox-rig` and `interop-radio-rig`. One block, because
- * one stylesheet: see the header of `styles/rigs/choice-rig.css` for why the
+ * one stylesheet: see the header of `styles/rigs/rig.css` for why the
  * two rigs share a file. Structural rules live there; this file declares
  * custom properties only.
  *
  * Token surface:
- *   Flow      --itx-choice-rig-direction     --itx-choice-rig-wrap
- *             --itx-choice-rig-gap           --itx-choice-rig-control-gap
- *   Group box --itx-choice-rig-padding       --itx-choice-rig-border-width
- *             --itx-choice-rig-border-color
- *   Legend    --itx-choice-rig-legend-padding-inline
- *             --itx-choice-rig-legend-margin-block-end
- *             --itx-choice-rig-legend-font-weight
- *   Type      --itx-choice-rig-font-size     --itx-choice-rig-line-height
- *   State     --itx-choice-rig-disabled-opacity
- *   Divider   --itx-choice-rig-divider-width --itx-choice-rig-divider-color
+ *   Flow      --itx-rig-direction     --itx-rig-wrap
+ *             --itx-rig-gap           --itx-rig-control-gap
+ *   Group box --itx-rig-padding       --itx-rig-border-width
+ *             --itx-rig-border-color
+ *   Legend    --itx-rig-legend-padding-inline
+ *             --itx-rig-legend-margin-block-end
+ *             --itx-rig-legend-font-weight
+ *   Type      --itx-rig-font-size     --itx-rig-line-height
+ *   State     --itx-rig-disabled-opacity
+ *   Divider   --itx-rig-divider-width --itx-rig-divider-color
  *
  * Radius reads its system chain in the structural file and is declared nowhere
  * here — a rig with no opinion about its corners inherits the global one.
@@ -34,8 +34,8 @@
  * still drawn, transparent, so turning it back on is a colour change and not a
  * reflow:
  *
- *   --itx-choice-rig-border-color: var(--itx-contrast-3);   (rank 3, an edge)
- *   --itx-choice-rig-padding: var(--itx-spacing-4);
+ *   --itx-rig-border-color: var(--itx-contrast-3);   (rank 3, an edge)
+ *   --itx-rig-padding: var(--itx-spacing-4);
  */
 
 :where(
@@ -44,15 +44,15 @@
 	[interop-root] interop-radio-rig
 ) {
 	/* ── Flow ───────────────────────────────────────────────────────────── */
-	--itx-choice-rig-direction: column;
-	--itx-choice-rig-wrap: nowrap;
-	--itx-choice-rig-gap: var(--itx-spacing-3);
-	--itx-choice-rig-control-gap: var(--itx-spacing-2);
+	--itx-rig-direction: column;
+	--itx-rig-wrap: nowrap;
+	--itx-rig-gap: var(--itx-spacing-3);
+	--itx-rig-control-gap: var(--itx-spacing-2);
 
 	/* ── Group box ──────────────────────────────────────────────────────── */
-	--itx-choice-rig-padding: 0;
-	--itx-choice-rig-border-width: var(--itx-border-width-hairline);
-	--itx-choice-rig-border-color: transparent;
+	--itx-rig-padding: 0;
+	--itx-rig-border-width: var(--itx-border-width-hairline);
+	--itx-rig-border-color: transparent;
 
 	/* ── Legend ─────────────────────────────────────────────────────────── */
 	/*
@@ -60,22 +60,22 @@
 	 * and heading (400) — and no bold rung, so 600 was a private weight no
 	 * theme could move. A legend labels a group, which is the heading role.
 	 */
-	--itx-choice-rig-legend-padding-inline: var(--itx-spacing-2);
-	--itx-choice-rig-legend-margin-block-end: var(--itx-spacing-2);
-	--itx-choice-rig-legend-font-weight: var(--itx-font-weight-heading);
+	--itx-rig-legend-padding-inline: var(--itx-spacing-2);
+	--itx-rig-legend-margin-block-end: var(--itx-spacing-2);
+	--itx-rig-legend-font-weight: var(--itx-font-weight-heading);
 
 	/* ── Type ───────────────────────────────────────────────────────────── */
 	/* Role token, not the raw --itx-fs-* primitive, and not the radio rig's
 	   old literal 1rem. Leading is the one staked expression. */
-	--itx-choice-rig-font-size: var(--itx-font-size-body);
-	--itx-choice-rig-line-height: var(--itx-line-height);
+	--itx-rig-font-size: var(--itx-font-size-body);
+	--itx-rig-line-height: var(--itx-line-height);
 
 	/* ── State ──────────────────────────────────────────────────────────── */
-	--itx-choice-rig-disabled-opacity: 0.6;
+	--itx-rig-disabled-opacity: 0.6;
 
 	/* ── Divider (select-all separator) ─────────────────────────────────── */
-	--itx-choice-rig-divider-width: var(--itx-border-width-hairline);
-	--itx-choice-rig-divider-color: var(--itx-contrast-2);
+	--itx-rig-divider-width: var(--itx-border-width-hairline);
+	--itx-rig-divider-color: var(--itx-contrast-2);
 }
 
 /* ── Orientation ─────────────────────────────────────────────────────────── */
@@ -93,9 +93,9 @@
 	[interop-root] [interop-checkbox-rig][itx-orientation="horizontal"],
 	[interop-root] interop-radio-rig[itx-orientation="horizontal"]
 ) {
-	--itx-choice-rig-direction: row;
-	--itx-choice-rig-wrap: wrap;
-	--itx-choice-rig-gap: var(--itx-spacing-4);
+	--itx-rig-direction: row;
+	--itx-rig-wrap: wrap;
+	--itx-rig-gap: var(--itx-spacing-4);
 }
 
 /* ── Density ─────────────────────────────────────────────────────────────── */
@@ -106,6 +106,6 @@
 	[interop-root] [interop-checkbox-rig][itx-size="sm"],
 	[interop-root] interop-radio-rig[itx-size="sm"]
 ) {
-	--itx-choice-rig-gap: var(--itx-spacing-1);
-	--itx-choice-rig-control-gap: var(--itx-spacing-1);
+	--itx-rig-gap: var(--itx-spacing-1);
+	--itx-rig-control-gap: var(--itx-spacing-1);
 }

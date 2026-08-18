@@ -119,7 +119,7 @@
 /*    Container/layout components that coordinate child controls (toolbars,   */
 /*    etc). Same authoring pattern as components.                             */
 
-@import "./rigs/choice-rig.css" layer(interop.foundation);
+@import "./rigs/rig.css" layer(interop.foundation);
 @import "./rigs/toolbar.css" layer(interop.foundation);
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */
