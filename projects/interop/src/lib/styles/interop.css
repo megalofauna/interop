@@ -69,23 +69,32 @@
 /*    Rendering rules for each component, decoupled from Angular imports.   */
 /*    Token values are layered on top by the active theme.                  */
 
+@import "./components/badge.css" layer(interop.foundation);
 @import "./components/button.css" layer(interop.foundation);
+@import "./components/callout.css" layer(interop.foundation);
 @import "./components/chip.css" layer(interop.foundation);
+@import "./components/code-renderer.css" layer(interop.foundation);
 @import "./components/command-palette.css" layer(interop.foundation);
+@import "./components/content.css" layer(interop.foundation);
 @import "./components/dialog.css" layer(interop.foundation);
 @import "./components/expansion-panel.css" layer(interop.foundation);
 @import "./components/field.css" layer(interop.foundation);
 @import "./components/icon.css" layer(interop.foundation);
 @import "./components/indicator.css" layer(interop.foundation);
 @import "./components/list.css" layer(interop.foundation);
+@import "./components/listbox.css" layer(interop.foundation);
 @import "./components/popover.css" layer(interop.foundation);
+@import "./components/progress.css" layer(interop.foundation);
 @import "./components/segment.css" layer(interop.foundation);
+@import "./components/slider.css" layer(interop.foundation);
 @import "./components/stepper.css" layer(interop.foundation);
 @import "./components/table.css" layer(interop.foundation);
+@import "./components/tabs.css" layer(interop.foundation);
 @import "./components/toast.css" layer(interop.foundation);
 @import "./components/tooltip.css" layer(interop.foundation);
 @import "./components/tree.css" layer(interop.foundation);
 @import "./components/resizable.css" layer(interop.foundation);
+@import "./components/scroll-area.css" layer(interop.foundation);
 @import "./components/visimorph/visimorph.css" layer(interop.foundation);
 @import "./components/visimorph/label.css" layer(interop.foundation);
 
@@ -104,11 +113,13 @@
 @import "./composites/code-block.css" layer(interop.foundation);
 @import "./composites/inline-code.css" layer(interop.foundation);
 @import "./composites/page-nav.css" layer(interop.foundation);
+@import "./composites/terminal.css" layer(interop.foundation);
 
 /* ── Rigs (structural foundation) ───────────────────────────────────────── */
 /*    Container/layout components that coordinate child controls (toolbars,   */
 /*    etc). Same authoring pattern as components.                             */
 
+@import "./rigs/choice-rig.css" layer(interop.foundation);
 @import "./rigs/toolbar.css" layer(interop.foundation);
 
 /* ── Utilities ──────────────────────────────────────────────────────────── */

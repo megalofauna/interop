@@ -1,8 +1,104 @@
-/* ── Terminal — Protocol theme ───────────────────────────────────────────── */
+/*
+ * Terminal — Protocol theme.
+ *
+ * Token surface:
+ *   Panel   --itx-term-max-height        --itx-term-background
+ *           --itx-term-scrollbar-width   --itx-term-scrollbar-color
+ *           --itx-term-scrollbar-track-color
+ *   Reset   --itx-term-reset-inset       --itx-term-reset-z-index
+ *   Type    --itx-term-font-family       --itx-term-font-size
+ *           --itx-term-line-height       --itx-term-line-gap
+ *   Colour  --itx-term-color             --itx-term-glow
+ *           --itx-term-prompt-color      --itx-term-delta-color
+ *           --itx-term-caret-color
+ *   Delta   --itx-term-delta-font-size   --itx-term-delta-opacity
+ *   Caret   --itx-term-caret-opacity     --itx-term-caret-opacity-active
+ *           --itx-term-caret-blink-duration
+ *           --itx-term-cursor-offset
+ *   Scan    --itx-term-scan-line-color   --itx-term-scan-line-gap
+ *           --itx-term-scan-line-width
+ *
+ * Radius reads the system chain in the structural file and declares nothing
+ * here. It used to be pinned `--itx-term-radius: var(--itx-radius)` on both
+ * variants, which is the same value the chain already resolves to — except that
+ * pinning it swallowed `itx-radius="…"` on an instance. The knob and the
+ * attribute both reach the terminal now.
+ *
+ * Base block = the shared skeleton and the `terminal` look, because that is the
+ * component's default variant; `.itx-term--plain` overrides only the colours it
+ * changes. Keying the base on the ELEMENT rather than on `.itx-term--terminal`
+ * is what lets a CSS-only consumer write `<itx-terminal>` and get a terminal —
+ * the variant classes are applied by the Angular host, and hand-written markup
+ * has neither.
+ *
+ * ── Two variants, two colour strategies ───────────────────────────────────
+ *
+ * `terminal` is art direction, not a rank: a phosphor CRT is a fixed look with
+ * its own green, its own near-black glass and a glow, none of which should
+ * follow the page's elevation or flip with the colour scheme. Those literals
+ * are deliberate and belong here, in the values file.
+ *
+ * `plain` is the opposite — it is a log panel sitting in the page, so every
+ * value is a rank or a surface:
+ *
+ *   background     --itx-surface-below   elevation: a recessed well
+ *   text           --itx-contrast-6      maximum, for monospace at 13px
+ *   prompt, delta  --itx-contrast-4      secondary text (4.5:1)
+ *   scrollbar      --itx-contrast-3      was rank 2. A thumb is a control, not
+ *                                        a divider: rank 2 is a 1.5:1 hairline,
+ *                                        and WCAG 2.2 SC 1.4.11 asks 3:1 of a
+ *                                        UI component's own boundary. Rank 3 is
+ *                                        "border, emphasis edge", verbatim.
+ *
+ * Known limit: the plain well paints --itx-surface-below without declaring
+ * `itx-sink`, so the contrast ranks above are solved against the PAGE rather
+ * than against the well they land on — one step of headroom, not a flip.
+ * Declaring the layer would fix the maths and cost the API: the tokens would
+ * have to be declared on the inner scroll element, where they would shadow a
+ * consumer's own `--itx-term-color` set on the host. Left as is deliberately.
+ */
 
-/* ── terminal variant (retro phosphor) ──────────────────────────────────── */
+:where([interop-root] itx-terminal) {
+	/* ── Panel ──────────────────────────────────────────────────────────── */
+	--itx-term-max-height: 18rem;
+	--itx-term-scrollbar-width: thin;
+	--itx-term-scrollbar-track-color: transparent;
 
-:where([interop-root] itx-terminal.itx-term--terminal) {
+	/* ── Reset button ───────────────────────────────────────────────────── */
+	--itx-term-reset-inset: var(--itx-spacing-2); /* 8px */
+	--itx-term-reset-z-index: 1;
+
+	/* ── Type ───────────────────────────────────────────────────────────────
+	 * Fixed rem, not --itx-font-size-*: a log is a grid of characters, and a
+	 * fluid size would re-wrap every line at every viewport width. The gap is
+	 * stated in `ch` for the same reason — it is half a character cell, so it
+	 * tracks the monospace font rather than the spacing scale.
+	 */
+	--itx-term-font-family: var(--itx-font-family-mono);
+	--itx-term-font-size: 0.8125rem; /* 13px */
+	--itx-term-line-height: 1.65;
+	--itx-term-line-gap: 0.5ch;
+
+	/* ── Delta ──────────────────────────────────────────────────────────── */
+	--itx-term-delta-font-size: 0.9em; /* relative to the log's own size */
+	--itx-term-delta-opacity: 0.9;
+
+	/* ── Caret ──────────────────────────────────────────────────────────── */
+	--itx-term-cursor-offset: 0.1em;
+	--itx-term-caret-opacity: 0.25;
+	--itx-term-caret-opacity-active: 1;
+	--itx-term-caret-blink-duration: 1.1s;
+
+	/* ── Scan lines ─────────────────────────────────────────────────────────
+	 * A 4px pitch: 3px lit, 1px dark. Raster geometry, not the border scale —
+	 * thickening it under prefers-contrast would coarsen the CRT rather than
+	 * clarify anything.
+	 */
+	--itx-term-scan-line-gap: 3px;
+	--itx-term-scan-line-width: 1px;
+	--itx-term-scan-line-color: oklch(0% 0 0 / 0.2);
+
+	/* ── Colour — the `terminal` look (default variant) ─────────────────── */
 	--itx-term-background: oklch(8% 0.02 140);
 	--itx-term-color: oklch(83% 0.26 140);
 	--itx-term-glow: 0 0 6px currentColor, 0 0 12px oklch(83% 0.26 140 / 0.3);
@@ -10,8 +106,6 @@
 	--itx-term-delta-color: oklch(55% 0.12 140);
 	--itx-term-caret-color: oklch(83% 0.26 140);
 	--itx-term-scrollbar-color: oklch(28% 0.08 140);
-	--itx-term-radius: var(--itx-radius);
-	--itx-term-font-family: var(--itx-font-family-mono);
 }
 
 /* ── plain variant (minimal, no-frills log) ──────────────────────────────── */
@@ -23,7 +117,5 @@
 	--itx-term-prompt-color: var(--itx-contrast-4);
 	--itx-term-delta-color: var(--itx-contrast-4);
 	--itx-term-caret-color: var(--itx-contrast-6);
-	--itx-term-scrollbar-color: var(--itx-contrast-2);
-	--itx-term-radius: var(--itx-radius);
-	--itx-term-font-family: var(--itx-font-family-mono);
+	--itx-term-scrollbar-color: var(--itx-contrast-3);
 }

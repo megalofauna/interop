@@ -1,0 +1,173 @@
+/*
+ * Terminal — structural foundation.
+ *
+ * Rendering rules for `itx-terminal`: a scrolling log with a prompt glyph, an
+ * optional relative-timestamp prefix, a blinking caret, and two looks (a retro
+ * phosphor CRT and a plain log). Loaded globally via `interop.css`; token
+ * VALUES live in `themes/protocol/composites/terminal.css`.
+ *
+ * Migrated out of `composites/terminal/terminal.css`, a per-component
+ * `styleUrl` sheet. Angular injected it unlayered, so it outranked the entire
+ * `interop` cascade layer while its companion theme file — which already
+ * existed and was already layered — sat underneath it. A CSS-only consumer got
+ * the variant tokens and none of the structure they feed.
+ *
+ * The `--_`-prefixed slots the old file resolved on the host are gone. Every
+ * one of them was a public token plus a literal fallback, which is the shape
+ * the two-file split exists to remove: the theme owns the value, and the
+ * structural rule reads the public token bare.
+ *
+ * Where a fallback survives it is a CHAIN, not a default — the prompt, delta
+ * and caret fall back to --itx-term-color, so setting one colour still moves
+ * the whole terminal.
+ *
+ * "Phosphor" here is the CRT glow, not the icon set.
+ *
+ * All selectors are wrapped in :where() for zero specificity; the scan-line
+ * pseudo-element sits OUTSIDE the wrapper, which is the one place :where()
+ * cannot go.
+ */
+
+:where(itx-terminal) {
+	display: block;
+	position: relative;
+}
+
+/* ── Reset button ────────────────────────────────────────────────────────── */
+/* Floats over the log's top corner rather than taking a row of its own — the
+   log is the content, and the affordance only appears once there is something
+   to clear. */
+:where(itx-terminal .itx-term__reset) {
+	position: absolute;
+	inset-block-start: var(--itx-term-reset-inset);
+	inset-inline-end: var(--itx-term-reset-inset);
+	z-index: var(--itx-term-reset-z-index);
+}
+
+/* ── Scroll wrapper ──────────────────────────────────────────────────────── */
+/* The panel: it owns the surface, the radius and the scrollport. Radius reads
+   the system chain, so `itx-radius="md"` on one instance reaches it and the
+   theme pins nothing. */
+:where(itx-terminal .itx-term__scroll) {
+	position: relative;
+	max-block-size: var(--itx-term-max-height);
+	overflow-y: auto;
+
+	background: var(--itx-term-background);
+	border-radius: var(
+		--itx-term-radius,
+		var(--itx-radius-attr, var(--itx-radius))
+	);
+
+	scrollbar-width: var(--itx-term-scrollbar-width);
+	scrollbar-color: var(--itx-term-scrollbar-color)
+		var(--itx-term-scrollbar-track-color);
+}
+
+/* ── Scan-line overlay (opt-in, terminal variant) ────────────────────────── */
+/* A raster pattern, not a border: the gap is the lit run and the width is the
+   dark line, so the pair states the pitch of the CRT rather than a weight from
+   the border scale. */
+:where(itx-terminal.itx-term--scan-lines .itx-term__scroll)::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: repeating-linear-gradient(
+		to bottom,
+		transparent 0,
+		transparent var(--itx-term-scan-line-gap),
+		var(--itx-term-scan-line-color) var(--itx-term-scan-line-gap),
+		var(--itx-term-scan-line-color)
+			calc(var(--itx-term-scan-line-gap) + var(--itx-term-scan-line-width))
+	);
+	pointer-events: none;
+	border-radius: inherit;
+}
+
+/* ── Log body ────────────────────────────────────────────────────────────── */
+/* `inherit` is valid in a fallback slot but NOT as a token value, so the theme
+   declares no colour for the plain-by-default case and the log takes its
+   surroundings. */
+:where(itx-terminal .itx-term__log) {
+	color: var(--itx-term-color, inherit);
+	font-family: var(--itx-term-font-family);
+	font-size: var(--itx-term-font-size);
+	line-height: var(--itx-term-line-height);
+	text-shadow: var(--itx-term-glow);
+}
+
+/* ── Lines ───────────────────────────────────────────────────────────────── */
+/* Baseline-aligned so the prompt, the delta and the text sit on one line even
+   when the delta is a smaller size. */
+:where(itx-terminal .itx-term__line) {
+	display: flex;
+	gap: var(--itx-term-line-gap);
+	align-items: baseline;
+}
+
+:where(itx-terminal .itx-term__text) {
+	flex: 1;
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+/* ── Prompt ──────────────────────────────────────────────────────────────── */
+:where(itx-terminal .itx-term__prompt) {
+	color: var(--itx-term-prompt-color, var(--itx-term-color));
+	flex-shrink: 0;
+	user-select: none;
+}
+
+/* ── Timestamp delta ─────────────────────────────────────────────────────── */
+/* Outside the phosphor deliberately: the glow is the log's voice, and a
+   timestamp is annotation. `none` cancels the inherited text-shadow at every
+   variant, so it is structure rather than a value the theme chooses. */
+:where(itx-terminal .itx-term__delta) {
+	color: var(--itx-term-delta-color, var(--itx-term-color));
+	flex-shrink: 0;
+	font-size: var(--itx-term-delta-font-size);
+	text-shadow: none;
+	opacity: var(--itx-term-delta-opacity);
+}
+
+/* ── Cursor ──────────────────────────────────────────────────────────────── */
+:where(itx-terminal .itx-term__cursor) {
+	display: flex;
+	gap: var(--itx-term-line-gap);
+	align-items: baseline;
+	margin-block-start: var(--itx-term-cursor-offset);
+}
+
+:where(itx-terminal .itx-term__caret) {
+	color: var(--itx-term-caret-color, var(--itx-term-color));
+	opacity: var(--itx-term-caret-opacity);
+}
+
+/* Active = the log has entries. The caret goes solid and starts blinking, which
+   is the component's only motion. */
+:where(itx-terminal.itx-term--active .itx-term__caret) {
+	opacity: var(--itx-term-caret-opacity-active);
+	animation: itx-term-blink var(--itx-term-caret-blink-duration) step-start
+		infinite;
+}
+
+/* An animation carries its own duration, so the 0ms in tokens/motion.css does
+   not reach it — this is one of the blocks that still has to be written by
+   hand. The caret stays solid rather than stopping mid-blink: a caret parked at
+   0 opacity reads as no caret at all. */
+@media (prefers-reduced-motion: reduce) {
+	:where(itx-terminal.itx-term--active .itx-term__caret) {
+		animation: none;
+		opacity: var(--itx-term-caret-opacity-active);
+	}
+}
+
+@keyframes itx-term-blink {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+}

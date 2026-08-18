@@ -1,0 +1,120 @@
+/*
+ * InteropTabs — Protocol theme.
+ *
+ * Token surface:
+ *   Tablist   --itx-tabs-tablist-display   --itx-tabs-tablist-flex-wrap
+ *             --itx-tabs-gap               --itx-tabs-rule-width
+ *             --itx-tabs-rule-color
+ *   Tab box   --itx-tab-min-block-size     --itx-tab-gap
+ *             --itx-tab-padding-block      --itx-tab-padding-inline
+ *             --itx-tab-border-width       --itx-tab-border-color
+ *             --itx-tab-border-radius
+ *   Type      --itx-tab-font-size          --itx-tab-font-weight
+ *             --itx-tab-line-height
+ *             --itx-tab-letter-spacing     --itx-tab-font-weight-selected
+ *   Colour    --itx-tab-background         --itx-tab-foreground
+ *             --itx-tab-background-hover   --itx-tab-foreground-hover
+ *             --itx-tab-background-selected --itx-tab-foreground-selected
+ *   Indicator --itx-tab-indicator-size     --itx-tab-indicator-color
+ *             --itx-tab-indicator-color-hover
+ *             --itx-tab-indicator-color-selected
+ *   Motion    --itx-tab-transition-duration --itx-tab-transition-easing
+ *   Panel     --itx-tab-panel-padding-block --itx-tab-panel-padding-inline
+ *
+ * Focus reads the system chain in the structural file and declares nothing
+ * here — a component with no opinion about its ring inherits one.
+ *
+ * ── The three colour rungs, and why they changed ──────────────────────────
+ *
+ * Every value below is a RANK, never a colour. A rank is a contrast target
+ * relative to whatever surface the component is sitting on, so it re-solves per
+ * elevation layer and flips per scheme without anyone re-picking it. Reaching
+ * for a literal, or for the wrong axis, is what breaks that.
+ *
+ * The list rule was --itx-contrast-3. Rank 3 is "border, emphasis edge" (3:1);
+ * rank 2 is, in the ladder's own words, "hairline, dividers" (1.5:1). A
+ * continuous baseline under a tab strip is a divider, so it was one rank too
+ * strong — measurably so in dark, where rank 3 lands at L 0.497 against a
+ * 0.193 page and reads as a bright line rather than a seam.
+ *
+ * The hover indicator was --itx-surface-below. That is the ELEVATION axis,
+ * which is the substrate a thing stands on and must never be a mark. Elevation
+ * climbs toward light in both schemes, so "below" is DARKER than the page —
+ * in dark, L 0.148 against a 0.193 surface. A hover bar that is darker than
+ * the thing it sits on is the category error, not a taste call. It is now rank
+ * 3: one step stronger than the rule it overlaps, which is the relationship
+ * the interaction is meant to express.
+ *
+ * The selected indicator was --itx-colorway-solid. `solid` is the brand FILL —
+ * what a primary button's background is — and it is scheme-independent, fixed
+ * at L 0.500 in both. The brand family also carries mark rungs that are solved
+ * against the current surface and flip per scheme: `border` (edge, L 0.600
+ * light / 0.507 dark) and `text` (L 0.506 / 0.601). A 2px selection bar is the
+ * single strongest signal this component has, so it takes `text` — the rung
+ * solved for text-level separation. In dark that is the visible step up from
+ * 0.500 to 0.601; `border` would have been the semantically tidier name but
+ * lands at 0.507, which is indistinguishable from where it started.
+ */
+
+:where([interop-root] section[interop-tabs]) {
+	/* ── Tablist ────────────────────────────────────────────────────────── */
+	--itx-tabs-tablist-display: flex;
+	--itx-tabs-tablist-flex-wrap: nowrap;
+	--itx-tabs-gap: 0;
+	--itx-tabs-rule-width: var(--itx-border-width-hairline);
+	/* rank 2 — "hairline, dividers". See the note above. */
+	--itx-tabs-rule-color: var(--itx-contrast-2);
+
+	/* ── Tab box ────────────────────────────────────────────────────────── */
+	--itx-tab-min-block-size: var(--itx-spacing-10);
+	--itx-tab-gap: var(--itx-spacing-1);
+	--itx-tab-padding-block: var(--itx-spacing-2);
+	--itx-tab-padding-inline: var(--itx-spacing-4);
+	--itx-tab-border-width: 0;
+	--itx-tab-border-color: transparent;
+	--itx-tab-border-radius: var(--itx-radius-none);
+
+	/* ── Type ───────────────────────────────────────────────────────────────
+	 * Fixed rem, NOT --itx-font-size-*. Those are fluid clamp() values, and a
+	 * label that grows with the viewport inside a pinned 40px box overflows it.
+	 */
+	--itx-tab-font-size: 0.875rem;
+	--itx-tab-font-weight: 400;
+	--itx-tab-line-height: 1.2857;
+	--itx-tab-letter-spacing: normal;
+	/*
+	 * Selected weight matches rest on purpose. A weight change on a
+	 * content-width tab re-measures it, so selecting a tab would nudge every
+	 * tab after it sideways. Set 600 here to take that trade.
+	 */
+	--itx-tab-font-weight-selected: 400;
+
+	/* ── Colour ─────────────────────────────────────────────────────────── */
+	--itx-tab-background: transparent;
+	--itx-tab-foreground: var(--itx-contrast-4);
+	--itx-tab-background-hover: transparent;
+	--itx-tab-foreground-hover: var(--itx-contrast-6);
+	--itx-tab-background-selected: transparent;
+	--itx-tab-foreground-selected: var(--itx-contrast-6);
+
+	/* ── Indicator ──────────────────────────────────────────────────────── */
+	--itx-tab-indicator-size: var(--itx-border-width-thick);
+	--itx-tab-indicator-color: transparent;
+	/* rank 3 — one step stronger than the rule it overlaps. */
+	--itx-tab-indicator-color-hover: var(--itx-contrast-3);
+	/* The brand's mark rung, not its fill rung. */
+	--itx-tab-indicator-color-selected: var(--itx-colorway-text);
+
+	/* ── Motion ─────────────────────────────────────────────────────────── */
+	--itx-tab-transition-duration: var(--itx-duration-fast);
+	--itx-tab-transition-easing: var(--itx-easing-standard);
+}
+
+/*
+ * Panel. Padding matches the tab's own inline padding so projected content and
+ * the first tab's label align on the same optical edge.
+ */
+:where([interop-root] section[interop-tab-panel]) {
+	--itx-tab-panel-padding-block: var(--itx-spacing-4);
+	--itx-tab-panel-padding-inline: var(--itx-spacing-4);
+}

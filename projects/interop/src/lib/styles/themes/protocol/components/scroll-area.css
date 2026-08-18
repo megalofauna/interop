@@ -1,0 +1,40 @@
+/*
+ * InteropScrollArea — Protocol theme.
+ *
+ * Token surface:
+ *   Scrollbar --itx-scroll-area-scrollbar-width
+ *             --itx-scroll-area-scrollbar-color
+ *   Behaviour --itx-scroll-area-overscroll
+ *   Shadows   --itx-scroll-area-shadow-size
+ *
+ * Focus reads the system chain in the structural file and declares nothing
+ * here — a component with no opinion about its ring inherits one. The old
+ * sheet pinned `outline-offset: 2px` by hand, which is what --itx-focus-offset
+ * already is; the literal only meant the ring stopped following the system.
+ *
+ * There is no colour here at all, and that is the point: the scroll shadows are
+ * a `mask-image`, so they fade the content itself to transparent rather than
+ * painting a gradient over it. That works on any surface, at any elevation,
+ * in either scheme — which is why this component needs neither an elevation
+ * token nor a contrast rank.
+ */
+
+:where([interop-root] interop-scroll-area) {
+	/* ── Scrollbar ──────────────────────────────────────────────────────────
+	 * `thin` rather than hidden: a scroll region with no visible scrollbar is a
+	 * discoverability failure for pointer users, and the component's own
+	 * overflow detection is what supplies the keyboard affordance. `auto` keeps
+	 * the UA's own thumb/track pair, which already follows `color-scheme`.
+	 */
+	--itx-scroll-area-scrollbar-width: thin;
+	--itx-scroll-area-scrollbar-color: auto;
+
+	/* Contain the scroll chain: reaching the end of this region must not start
+	   scrolling the page behind it. */
+	--itx-scroll-area-overscroll: contain;
+
+	/* Fade depth at each overflowing edge. Not a spacing step — it is a
+	   proportion of the viewport being masked, and 1.5rem is roughly one line
+	   of body text, which is what makes the cut-off read as "more below". */
+	--itx-scroll-area-shadow-size: 1.5rem;
+}

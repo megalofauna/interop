@@ -1,0 +1,63 @@
+/*
+ * InteropCodeRenderer — Protocol theme.
+ *
+ * Token surface:
+ *   Caption      --itx-cr-caption-padding-block
+ *                --itx-cr-caption-padding-inline
+ *                --itx-cr-caption-font-size
+ *                --itx-cr-caption-font-weight
+ *                --itx-cr-caption-letter-spacing
+ *   Body         --itx-cr-body-background
+ *                --itx-cr-body-padding-block  --itx-cr-body-padding-inline
+ *   Code         --itx-cr-code-font-size      --itx-cr-code-line-height
+ *   Pre          --itx-cr-white-space         --itx-cr-tab-size
+ *   Line numbers --itx-cr-line-number-min-inline-size
+ *                --itx-cr-line-number-gap
+ *                --itx-cr-line-number-opacity
+ *
+ * Declared here and NOT declared here, on purpose:
+ *
+ *   --itx-cr-caption-font-family / --itx-cr-code-font-family — the structural
+ *   file chains them to --itx-font-family-sans / -mono, so the house faces
+ *   govern and a component with no opinion inherits one.
+ *
+ *   --itx-cr-code-color — falls through to `inherit`. That keyword is valid in
+ *   a var() fallback slot and invalid as a token value (it would mean "inherit
+ *   the custom property", which with nothing above declaring it is
+ *   guaranteed-invalid). check-keywords.mjs fails the build on the other
+ *   spelling.
+ *
+ * The type sizes stay fixed rem rather than --itx-font-size-*. Those roles are
+ * fluid clamp() values; code that reflows its own wrapping as the viewport
+ * moves is not what anyone wants from a code block, and the line-number gutter
+ * is sized in spacing steps that would no longer line up.
+ */
+
+:where([interop-root] figure[interop-code-renderer]) {
+	/* ── Caption ────────────────────────────────────────────────────────── */
+	--itx-cr-caption-padding-block: var(--itx-spacing-1);
+	--itx-cr-caption-padding-inline: var(--itx-spacing-4);
+	--itx-cr-caption-font-size: 0.75rem;
+	--itx-cr-caption-font-weight: 500;
+	--itx-cr-caption-letter-spacing: 0.05em;
+
+	/* ── Body ───────────────────────────────────────────────────────────── */
+	/* Transparent by default: the renderer is a primitive, and whatever wraps
+	   it — itx-code-block, a callout, the demo's hero — owns the surface. */
+	--itx-cr-body-background: transparent;
+	--itx-cr-body-padding-block: var(--itx-spacing-4);
+	--itx-cr-body-padding-inline: var(--itx-spacing-4);
+
+	/* ── Code ───────────────────────────────────────────────────────────── */
+	--itx-cr-code-font-size: 0.875rem;
+	--itx-cr-code-line-height: 1.6;
+
+	/* ── Pre ────────────────────────────────────────────────────────────── */
+	--itx-cr-white-space: pre;
+	--itx-cr-tab-size: 2;
+
+	/* ── Line numbers ───────────────────────────────────────────────────── */
+	--itx-cr-line-number-min-inline-size: var(--itx-spacing-10);
+	--itx-cr-line-number-gap: var(--itx-spacing-4);
+	--itx-cr-line-number-opacity: 0.4;
+}

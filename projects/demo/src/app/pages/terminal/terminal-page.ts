@@ -137,9 +137,20 @@ emit(): void {
 			property: "--itx-term-font-family",
 			default: "var(--itx-font-family-mono)",
 		},
-		{ property: "--itx-term-radius", default: "var(--itx-radius-none)" },
+		{
+			property: "--itx-term-radius",
+			default: 'unset — follows itx-radius="…", then var(--itx-radius)',
+		},
 		{ property: "--itx-term-glow", default: "Text shadow for the CRT effect" },
 		{ property: "--itx-term-scrollbar-color", default: "Scrollbar thumb" },
+		{
+			property: "--itx-term-scan-line-color",
+			default: "oklch(0% 0 0 / 0.2) — the dark run of the CRT raster",
+		},
+		{
+			property: "--itx-term-scan-line-gap",
+			default: "3px lit / --itx-term-scan-line-width 1px dark",
+		},
 	];
 
 	apiColumns: TableColumn<ApiEntry>[] = [

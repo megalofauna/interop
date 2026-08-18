@@ -125,19 +125,20 @@ Same shape as `InlineCode`. `executeCopy()` resolves text in this order:
 
 ## Renderer body background piping
 
-`InteropCodeRenderer` (the primitive) exposes `--itx-cr-body-bg` for its body background. `CodeBlock` doesn't expose `--itx-cr-body-bg` directly to consumers because that token belongs to the primitive — instead it offers `--itx-cb-body-background` and pipes it through:
+**This pipe does not exist, and the token it named never did.** The declaration below wrote `--itx-cr-body-bg`, its source `--itx-cb-body-background` was declared nowhere, and the renderer hardcoded `background: transparent` and read neither — so nothing on either side of the pipe was live. `--itx-neutral-3` was also deleted with the rest of that ramp in ITX-40.
 
 ```scss
+/* NOT REAL — kept as the shape a future pipe would take */
 :host {
-  --itx-cr-body-bg: var(--itx-cb-body-background, var(--itx-neutral-3));
+  --itx-cr-body-background: var(--itx-cb-body-background);
 }
 ```
 
-Themes set `--itx-cb-body-background` scoped to `itx-code-block`. The same renderer used elsewhere (outside CodeBlock) reads its own `--itx-cr-body-bg` unaffected.
+What is now true: `InteropCodeRenderer` reads `--itx-cr-body-background` for real (`styles/components/code-renderer.css`, defaulted to `transparent` by the theme), so building the pipe is one declaration on `itx-code-block` plus a `--itx-cb-body-background` value in the composite's theme. Scoping the renderer's background per code-block is still a feature to design rather than a line to repair.
 
 ## CSS strategy
 
-- Two-file split: structural rules in `code-block.scss` (`styleUrl`, Angular emulated encapsulation), token values in `protocol/composites/code-block.css` (global theme).
+- Two-file split: structural rules in `styles/composites/code-block.css`, token values in `protocol/composites/code-block.css`. Both global and layered; no `styleUrl` since 2026-08-17.
 - `:where()` on every child selector inside structural CSS for zero added specificity. `:host` stays unwrapped (Angular emulates it).
 - Every theme-relevant property reads `var(--itx-cb-*, <fallback>)`. The fallback chain keeps the component rendering even when the Protocol theme isn't imported.
 - Border-radius participates in `--itx-context-radius` (managed-radius opt-in) before falling back to a fixed value:

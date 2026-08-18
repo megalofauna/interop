@@ -2,7 +2,6 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	ViewEncapsulation,
 	afterNextRender,
 	computed,
 	contentChildren,
@@ -96,9 +95,7 @@ let nextListboxId = 0;
 	selector: "ul[interop-listbox], ol[interop-listbox]",
 	standalone: true,
 	templateUrl: "./interop-listbox.html",
-	styleUrl: "./interop-listbox.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	encapsulation: ViewEncapsulation.None,
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

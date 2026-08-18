@@ -71,7 +71,6 @@ export type RadioControl = {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [InteropRadioControl],
 	templateUrl: "./interop-radio-rig.html",
-	styleUrl: "./interop-radio-rig.css",
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,

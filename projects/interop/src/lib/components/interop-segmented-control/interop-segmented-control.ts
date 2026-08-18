@@ -71,7 +71,6 @@ import { InteropIndicator } from "../interop-indicator/interop-indicator";
 			<ng-content></ng-content>
 		</div>
 	`,
-	styleUrl: "./interop-segmented-control.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{

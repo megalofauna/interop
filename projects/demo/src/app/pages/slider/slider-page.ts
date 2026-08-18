@@ -265,23 +265,25 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-thumb-size",
-			default: "0.875rem — 14px, the painted circle",
+			default: "var(--itx-spacing-3_5) — 14px, the painted circle",
 		},
 		{
 			property: "--itx-slider-thumb-size-active",
-			default: "1.25rem — 20px, on hover / focus",
+			default: "var(--itx-spacing-5) — 20px, on hover / focus",
 		},
 		{
 			property: "--itx-slider-thumb-target",
-			default: "1.5rem — 24px; also the control's thickness. Never lower it",
+			default:
+				"var(--itx-spacing-6) — 24px; also the control's thickness. Never lower it",
 		},
 		{
 			property: "--itx-slider-thumb-radius",
 			default: "var(--itx-radius-full)",
 		},
 		{
-			property: "--itx-slider-focus-ring-color",
-			default: "var(--itx-colorway-solid) — thumb AND fill when focused",
+			property: "--itx-slider-focus-color",
+			default:
+				"var(--itx-focus-color) — thumb AND fill when focused; falls through to the global focus colour",
 		},
 		{
 			property: "--itx-slider-disabled-color",
@@ -289,7 +291,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-length",
-			default: "8rem — vertical only",
+			default: "var(--itx-spacing-32) — 8rem, vertical only",
 		},
 		{
 			property: "--itx-slider-max-length",
@@ -297,11 +299,11 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-duration",
-			default: "110ms",
+			default: "var(--itx-duration-fast)",
 		},
 		{
 			property: "--itx-slider-easing",
-			default: "cubic-bezier(0.2, 0, 0.38, 0.9)",
+			default: "var(--itx-easing-standard)",
 		},
 		{
 			property: "--itx-slider-mark-color",
@@ -309,11 +311,11 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-thickness",
-			default: "2px — along the track",
+			default: "var(--itx-border-width-thick) — 2px, along the track",
 		},
 		{
 			property: "--itx-slider-mark-length",
-			default: "0.5rem — 8px, across the track",
+			default: "var(--itx-spacing-2) — 8px, across the track",
 		},
 		{
 			property: "--itx-slider-mark-minor-color",
@@ -321,7 +323,8 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-minor-thickness",
-			default: "1px — along the track",
+			default:
+				"var(--itx-border-width-hairline) — 1px, thickens under prefers-contrast",
 		},
 		{
 			property: "--itx-slider-fill",

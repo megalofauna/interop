@@ -1,0 +1,176 @@
+/*
+ * Choice rigs — structural foundation.
+ *
+ * ONE stylesheet for TWO components: `interop-checkbox-rig` (element form, or
+ * `[interop-checkbox-rig]` on a host you own) and `interop-radio-rig`. Loaded
+ * globally via `interop.css`; token VALUES live in
+ * `themes/protocol/rigs/choice-rig.css`.
+ *
+ * ── Why one file ──────────────────────────────────────────────────────────
+ *
+ * The two rigs are the same object: a fieldset with a legend and a column of
+ * checkable rows, differing only in the input type inside each row. Their
+ * former per-component sheets were 112 and 102 lines that agreed on structure
+ * and disagreed on values — the radio's fieldset carried a hardcoded `#ccc`
+ * border, `1rem` padding and a raw `1rem` font-size that the checkbox rig had
+ * already tokenised, and its legend/horizontal blocks were byte-identical
+ * duplicates. That is what two files buy: the second copy drifts and nothing
+ * says so. Structure is shared here; anything genuinely per-rig (the
+ * checkbox's select-all separator, its projection wrapper, its attribute
+ * host) is a labelled section below rather than a second file.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the
+ * single source of truth for every `--itx-choice-rig-*` value; radius and
+ * focus read their documented system chains so a rig with no opinion inherits
+ * one.
+ *
+ * All selectors are wrapped in :where() for zero specificity — including the
+ * descendant part, so `:where(a b)` rather than `:where(a) b`, which would
+ * leak the type selector's (0,0,1).
+ */
+
+/* ── Hosts ───────────────────────────────────────────────────────────────── */
+/*
+ * Element form: the custom element leaves layout entirely and the fieldset
+ * becomes the layout root. Attribute form (checkbox rig only): the consumer
+ * owns the container, so the host itself is the flow container.
+ */
+
+:where(interop-checkbox-rig, interop-radio-rig) {
+	display: contents;
+}
+
+/* ── Flow container ──────────────────────────────────────────────────────── */
+/*
+ * The fieldset, the attribute-mode host, and the projection wrapper are the
+ * three things that can hold a column of rows, and they flow identically.
+ *
+ * `display: flex` on a <fieldset> does not capture its <legend>: the HTML
+ * rendering model puts the fieldset's contents in an anonymous box that takes
+ * the display value and leaves the legend outside it, so the notch survives.
+ *
+ * Gap replaces the old `margin-bottom` + `:last-child { margin-bottom: 0 }`
+ * pair — no trailing margins, nothing to clean up. In the checkbox rig that
+ * `margin-bottom` was commented out, so declarative checkboxes stacked flush
+ * against each other while projected ones sat 2rem apart.
+ *
+ * Direction and wrap are read from tokens rather than switched by a rule, so
+ * the horizontal variant is a theme-side value block and never a second
+ * structural rule.
+ */
+
+:where(
+	interop-checkbox-rig fieldset,
+	interop-radio-rig fieldset,
+	[interop-checkbox-rig]:not(interop-checkbox-rig),
+	interop-checkbox-rig .checkbox-rig-content,
+	[interop-checkbox-rig] .checkbox-rig-content
+) {
+	display: flex;
+	flex-direction: var(--itx-choice-rig-direction);
+	flex-wrap: var(--itx-choice-rig-wrap);
+	gap: var(--itx-choice-rig-gap);
+}
+
+/* ── Group box ───────────────────────────────────────────────────────────── */
+/*
+ * `min-inline-size: 0` because a fieldset's UA min-content floor otherwise
+ * refuses to shrink below its widest row. The border is present but
+ * transparent by default so turning it on is a colour change, not a reflow.
+ */
+
+:where(interop-checkbox-rig fieldset, interop-radio-rig fieldset) {
+	margin: 0;
+	min-inline-size: 0;
+	padding: var(--itx-choice-rig-padding);
+	border: var(--itx-choice-rig-border-width) solid
+		var(--itx-choice-rig-border-color);
+	border-radius: var(--itx-choice-rig-border-radius, var(--itx-radius));
+}
+
+:where(
+	interop-checkbox-rig fieldset:disabled,
+	interop-radio-rig fieldset:disabled
+) {
+	opacity: var(--itx-choice-rig-disabled-opacity);
+	cursor: not-allowed;
+}
+
+/* ── Legend ──────────────────────────────────────────────────────────────── */
+
+:where(interop-checkbox-rig legend, interop-radio-rig legend) {
+	padding-block: 0;
+	padding-inline: var(--itx-choice-rig-legend-padding-inline);
+	margin-block-end: var(--itx-choice-rig-legend-margin-block-end);
+	font-weight: var(--itx-choice-rig-legend-font-weight);
+	line-height: var(--itx-choice-rig-line-height);
+}
+
+/* ── Control row ─────────────────────────────────────────────────────────── */
+/*
+ * One row = a <label> wrapping a native input and its text. The label is the
+ * hit target, hence the pointer and the select guard.
+ */
+
+:where(
+	interop-checkbox-rig .checkbox-control,
+	[interop-checkbox-rig] .checkbox-control,
+	interop-radio-rig .radio-control
+) {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-choice-rig-control-gap);
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	font-size: var(--itx-choice-rig-font-size);
+	line-height: var(--itx-choice-rig-line-height);
+}
+
+/*
+ * A disabled input dims its whole row. `fieldset:disabled` above covers the
+ * all-at-once case; this is the per-option one.
+ */
+:where(
+	interop-checkbox-rig .checkbox-control:has(input:disabled),
+	[interop-checkbox-rig] .checkbox-control:has(input:disabled),
+	interop-radio-rig .radio-control:has(input:disabled)
+) {
+	opacity: var(--itx-choice-rig-disabled-opacity);
+	cursor: not-allowed;
+}
+
+/* ── Focus is NOT here, and the rings that were are gone ─────────────────── */
+/*
+ * Both sheets carried a `:focus-visible` ring on `.control input`, reading
+ * --itx-checkbox-focus-* / --itx-radio-focus-*. Neither rule had ever matched
+ * anything: the <input> belongs to InteropCheckbox / InteropRadioControl, so
+ * under emulated encapsulation it never carried the rig's scoping attribute.
+ * Ported verbatim into a global sheet they would have started matching — and
+ * what they would have ringed is a `.interop-sr-only` input, a 1px box clipped
+ * to nothing.
+ *
+ * The visible control is <interop-visimorph>, which draws the real ring on
+ * `[data-focused]` from --itx-control-focus-*, fed by the `focus-visible`
+ * probe in each control's (focus) binding. That is the lever; the two rig
+ * namespaces were an API pointing at nothing, so they are deleted rather than
+ * migrated. A rule that was dead under encapsulation is not automatically
+ * correct once the encapsulation is removed.
+ */
+
+/* ── Select-all separator (checkbox rig only) ────────────────────────────── */
+/*
+ * The select-all row commands the rows beneath it, so a rule divides them.
+ * Rank 2 is the ladder's "hairline, dividers" — this read --itx-surface-below
+ * before, which is the ELEVATION axis: a substrate used as a mark, and darker
+ * than the page it sits on in both schemes.
+ */
+
+:where(
+	interop-checkbox-rig .checkbox-select-all,
+	[interop-checkbox-rig] .checkbox-select-all
+) {
+	padding-block-end: var(--itx-choice-rig-gap);
+	border-block-end: var(--itx-choice-rig-divider-width) solid
+		var(--itx-choice-rig-divider-color);
+}

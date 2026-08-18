@@ -151,7 +151,7 @@ convention (`styles/components/segment.css` ↔
 `themes/protocol/components/segmented-control.css`), making the pairing invisible to
 tooling.
 
-There is already a tracking note at `.agent/todo/styleurl-components-migration.md`.
+Closed 2026-08-17; the record is at `.agent/records/styleurl-migration.md`.
 The four named above are the cheapest to move, since their theme halves exist.
 
 **Related:** `popover.css` ships 11 rules / 16 selectors at up to `(0,5,0)`

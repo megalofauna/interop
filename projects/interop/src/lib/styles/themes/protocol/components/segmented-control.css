@@ -7,7 +7,11 @@
  * surface is reused by other selection-pill patterns.
  *
  * No state selectors here — the component CSS owns state activation. This
- * file only declares values.
+ * file only declares values. Its structural counterpart is
+ * `components/segment.css`, which now carries the container (fieldset, legend,
+ * track) as well as the segment button: the control's own `styleUrl` sheet was
+ * folded into it, so this theme finally faces one structural file instead of
+ * half of one.
  *
  * ── Borrowed visual language ────────────────────────────────────────────────
  *
@@ -37,9 +41,23 @@
 	   indicator and visimorph themes. Left at their existing values — the
 	   control now states its own radii below rather than moving these. */
 
+	/* ── Container — legend ─────────────────────────────────────────────── */
+	/*
+	 * The group label, in flow above the track. Leading reads the system
+	 * expression rather than a fixed 24px: the label's size is the fluid body
+	 * role, so a pinned line box was correct at one viewport and broke the line
+	 * at every other. --itx-line-height is staked to the element's own
+	 * font-size, so the two move together.
+	 */
+	--itx-segmented-control-legend-margin-block-end: var(--itx-spacing-2);
+	--itx-segmented-control-legend-font-size: var(--itx-font-size-body);
+	--itx-segmented-control-legend-line-height: var(--itx-line-height);
+	--itx-segmented-control-legend-font-weight: var(--itx-font-weight-body);
+
 	/* ── Container — track ──────────────────────────────────────────────── */
 	--itx-segmented-control-track-display: flex;
 	--itx-segmented-control-track-justify-content: flex-start;
+	--itx-segmented-control-track-align-items: normal;
 	--itx-segmented-control-track-row-gap: 0;
 	--itx-segmented-control-track-column-gap: 0;
 	--itx-segmented-control-track-flex-direction: row;
@@ -49,22 +67,20 @@
 	--itx-segmented-control-track-background-color: transparent;
 	--itx-segmented-control-track-background-image: none;
 
-	/* The frame is drawn as an inset ring, not a border: Carbon uses
-	   `outline` with a -1px offset so the 1px edge costs no layout and the
-	   control measures exactly its size step. An inset box-shadow is the
-	   same trick, and it paints *under* the segments, so the selected pill
-	   covers the frame at the ends the way Carbon's does. */
+	/* No per-side border: the frame is the inset box-shadow declared on the
+	   control below. */
 	--itx-segmented-control-track-border-color: transparent;
 	--itx-segmented-control-track-border-width: 0;
 	--itx-segmented-control-track-border-style: solid;
-	--itx-segmented-control-track-box-shadow: inset 0 0 0 1px
-		var(--itx-contrast-6);
 
-	/* Squared. Carbon's Content Switcher specifies a 4px radius and we decline
-	   it, as rounds 2–14 declined every other one: the library is square, and a
-	   4px curve on a control that sits beside squared tabs, fields and tables
-	   reads as an oversight rather than a choice. Set --itx-radius-1 to restore
-	   Carbon's value exactly. */
+	/* Squared, but not pinned. Carbon's Content Switcher specifies a 4px radius
+	   and we decline it, as rounds 2–14 declined every other one: the library
+	   is square, and a 4px curve on a control that sits beside squared tabs,
+	   fields and tables reads as an oversight rather than a choice. That is
+	   said by declaring NOTHING — --itx-segmented-control-track-border-radius
+	   falls through to the global --itx-radius knob, which is `none`. Set
+	   --itx-radius (or --itx-radius-1 on the control) to restore Carbon's
+	   value. */
 	--itx-segmented-control-track-padding: 0;
 	--itx-segmented-control-track-max-width: none;
 
@@ -141,14 +157,19 @@
 
 /* ── Control-scoped values ───────────────────────────────────────────────── */
 /*
- * Set on the control, not on [interop-root], because both token families are
- * shared: --itx-rule-* also drives the standalone <hr itx-rule> utility, and
- * --itx-indicator-* also drives every other sliding-pill surface. Declaring
- * them here keeps the borrow inside this component.
+ * Set on the control, not on [interop-root], because --itx-indicator-* also
+ * drives every other sliding-pill surface. Declaring it here keeps the borrow
+ * inside this component.
  *
- * Safe against the layer order: no foundation rule declares either family on
- * an element, it only reads them, so these inherit down without shadowing a
- * state rule.
+ * Configuring a CHILD component's public tokens from its parent is legitimate
+ * composition — the indicator renders inside this track and nowhere else, the
+ * same way code-block.css maps its own tokens onto the button's. Writing a
+ * shared UTILITY's tokens is not, which is why the divider pair moved into
+ * this component's namespace below.
+ *
+ * Safe against the layer order: no foundation rule declares the family on an
+ * element, it only reads it, so these inherit down without shadowing a state
+ * rule.
  */
 
 :where(fieldset[interop-segmented-control]) {
@@ -160,16 +181,58 @@
 	--itx-inner-radius: calc(
 		var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
 	);
-	/* Divider — $border-subtle, 1px. segment.css already suppresses it on
-	   either side of the selected segment. */
-	--itx-rule-color: var(--itx-contrast-2);
-	--itx-rule-width: 1px;
 
-	/* Selection pill — $layer-selected-inverse, squared off at 4px with no
-	   border. This is the one lever for selected paint: with anchor
-	   positioning the <interop-indicator> draws it, and without, the segment
-	   falls back to the same token. */
-	--itx-indicator-background-color: var(--itx-surface-below);
+	/* The frame is drawn as an inset ring, not a border: Carbon uses `outline`
+	   with a -1px offset so the edge costs no layout and the control measures
+	   exactly its size step. An inset box-shadow is the same trick, and it
+	   paints *under* the segments, so the selected pill covers the frame at the
+	   ends the way Carbon's does.
+
+	   Declared HERE for the same reason as the radii: the spread reads
+	   --itx-border-width-hairline, and an alias to a system token parked on
+	   [interop-root] substitutes there and freezes. On the control it stays
+	   live, so a subtree rescale — and the prefers-contrast bump from 1px to
+	   2px — both still reach it. A literal 1px, which is what this was, reached
+	   neither.
+
+	   Rank 6 is deliberate, and is the one edge in this file above rank 3.
+	   Carbon's Content Switcher has two flavours and this is the "high
+	   contrast" one, whose whole identity is a maximum-strength frame carrying
+	   an otherwise unpainted group. Set --itx-contrast-3 for the ordinary
+	   emphasis edge. */
+	--itx-segmented-control-track-box-shadow: inset 0 0 0
+		var(--itx-border-width-hairline) var(--itx-contrast-6);
+
+	/* Divider — $border-subtle, one hairline. segment.css already suppresses it
+	   on either side of the selected segment.
+
+	   These used to be written as --itx-rule-color / --itx-rule-width: the
+	   PUBLIC pair of the global [itx-rule] utility. A component must never
+	   write a shared vocabulary — every <hr itx-rule> a consumer placed inside
+	   a segmented control silently inherited the control's divider paint. The
+	   pair is now namespaced, and segment.css reads
+	   var(--itx-segmented-control-rule-*, var(--itx-rule-*)) so the utility's
+	   tokens still govern when the control says nothing.
+
+	   The width also stops being a literal 1px: hairline thickens under
+	   prefers-contrast, and a divider that cannot follow that preference is
+	   the one that disappears when it matters. */
+	--itx-segmented-control-rule-color: var(--itx-contrast-2);
+	--itx-segmented-control-rule-width: var(--itx-border-width-hairline);
+
+	/* Selection pill — Carbon's $layer-selected-inverse. This is the one lever
+	   for selected paint: with anchor positioning the <interop-indicator> draws
+	   it, and without, the segment falls back to the same token.
+
+	   It was --itx-surface-below, and that is the ELEVATION axis pointing the
+	   wrong way. Elevation climbs toward light in BOTH schemes, so "below" is
+	   darker than the track in both: in dark, L 0.148 under a 0.193 track — the
+	   selected segment sank instead of standing out. A selection fill is a
+	   wash, and rank 1's definition is verbatim "wash — hover fills, stripes,
+	   selected tints". In light the two are indistinguishable (0.855 → 0.860);
+	   in dark it flips to 0.243, which is the side of the track the selection
+	   belonged on all along. */
+	--itx-indicator-background-color: var(--itx-contrast-1);
 	--itx-indicator-border-width: 0;
 	/* The pill matches the track. All three radii move together or the
 	   selection sits visibly proud of the frame at the ends. */

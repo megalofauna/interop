@@ -1,0 +1,127 @@
+/*
+ * InteropCodeRenderer — structural foundation.
+ *
+ * Rendering rules for `figure[interop-code-renderer]` and its caption / body /
+ * line parts. Loaded globally via `interop.css`; token VALUES live in
+ * `themes/protocol/components/code-renderer.css`.
+ *
+ * Migrated out of `interop-code-renderer.scss`, a per-component `styleUrl`
+ * sheet that Angular injected unlayered — so it outranked the whole `interop`
+ * cascade layer, and a CSS-only consumer got no renderer styling at all. It
+ * used no SCSS feature: plain CSS wearing a `.scss` extension.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the single
+ * source of truth for every `--itx-cr-*` value. Two exceptions, both real
+ * chains rather than second sources of truth: the two font families fall
+ * through to the house families, and the code colour falls through to
+ * `inherit` — a CSS-wide keyword is valid in a fallback slot and NOT as a token
+ * value, so the theme deliberately declares neither.
+ *
+ * Inheriting the code colour is load-bearing rather than an omission: the body
+ * is what a highlighter paints into, and every token span carries its own
+ * inline colour from the Shiki theme. The renderer's job is to not fight that.
+ *
+ * All selectors are wrapped in :where() for zero specificity.
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+
+:where(figure[interop-code-renderer]) {
+	display: block;
+	/* UA gives <figure> a 1em block margin and a 40px inline one. */
+	margin: 0;
+}
+
+/* ── Caption ─────────────────────────────────────────────────────────────── */
+/*
+ * The old sheet read `var(--itx-font-family, sans-serif)`. There is no
+ * `--itx-font-family` in the library — the theme publishes
+ * `--itx-font-family-sans` and `-mono` — so this always resolved to the
+ * generic `sans-serif` and the caption was the one part of the library not
+ * set in the house face.
+ */
+:where(figure[interop-code-renderer] .itx-cr__caption) {
+	padding-block: var(--itx-cr-caption-padding-block);
+	padding-inline: var(--itx-cr-caption-padding-inline);
+	font-family: var(--itx-cr-caption-font-family, var(--itx-font-family-sans));
+	font-size: var(--itx-cr-caption-font-size);
+	font-weight: var(--itx-cr-caption-font-weight);
+	letter-spacing: var(--itx-cr-caption-letter-spacing);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+/*
+ * `--itx-cr-body-background` is now READ. The old sheet hardcoded
+ * `background: transparent` while its own header documented a
+ * `--itx-cr-body-bg` lever that appeared nowhere else in the file — a consumer
+ * setting it saw nothing happen. `composites/code-block.css` records the same
+ * dead end from the other side. Transparent is still the default; it is a
+ * value now instead of a hardcode.
+ */
+:where(figure[interop-code-renderer] .itx-cr__body) {
+	background: var(--itx-cr-body-background);
+	padding-block: var(--itx-cr-body-padding-block);
+	padding-inline: var(--itx-cr-body-padding-inline);
+	overflow: auto;
+
+	color: var(--itx-cr-code-color, inherit);
+	font-family: var(--itx-cr-code-font-family, var(--itx-font-family-mono));
+	font-size: var(--itx-cr-code-font-size);
+	line-height: var(--itx-cr-code-line-height);
+}
+
+/* ── Pre / code ──────────────────────────────────────────────────────────── */
+/*
+ * Both are UA-styled elements inside a box that has already set the type, so
+ * they reset to `font: inherit` rather than restating it. `--itx-cr-white-space`
+ * is also written as an inline style by the component's `wrap` input (see
+ * interop-code-renderer.ts); an inline style beats any layer, so the theme
+ * default below is what a CSS-only consumer gets.
+ */
+:where(figure[interop-code-renderer] .itx-cr__pre) {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	font: inherit;
+	white-space: var(--itx-cr-white-space);
+	tab-size: var(--itx-cr-tab-size);
+}
+
+:where(figure[interop-code-renderer] .itx-cr__code) {
+	display: block;
+	font: inherit;
+}
+
+/* ── Lines ───────────────────────────────────────────────────────────────── */
+
+:where(figure[interop-code-renderer] .itx-cr__line) {
+	display: flex;
+	align-items: baseline;
+	/* 1lh, not a length: a blank line has to occupy exactly one line box, and
+	   that box moves with --itx-cr-code-line-height. */
+	min-block-size: 1lh;
+}
+
+/*
+ * Line numbers fade with opacity rather than taking a contrast rank, which is
+ * the opposite of what the house does everywhere else — and deliberate here.
+ * A rank is solved against the SURFACE, and this body has no surface of its
+ * own: it is transparent over whatever the composite or the consumer paints,
+ * carrying an arbitrary highlighter foreground (the demo's hero block sets one
+ * directly). Opacity tracks that foreground; a rank would be solved against a
+ * page the code is not sitting on.
+ */
+:where(figure[interop-code-renderer] .itx-cr__line-number) {
+	flex-shrink: 0;
+	min-inline-size: var(--itx-cr-line-number-min-inline-size);
+	padding-inline-end: var(--itx-cr-line-number-gap);
+	opacity: var(--itx-cr-line-number-opacity);
+	text-align: end;
+	user-select: none;
+	pointer-events: none;
+}
+
+:where(figure[interop-code-renderer] .itx-cr__line-content) {
+	flex: 1;
+	min-inline-size: 0;
+}

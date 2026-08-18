@@ -1,0 +1,136 @@
+/*
+ * InteropSlider / InteropSliderThumb / InteropSliderRange — Protocol theme.
+ *
+ * Token surface:
+ *   Track    --itx-slider-track-color      --itx-slider-track-thickness
+ *   Fill     --itx-slider-fill-color
+ *   Thumb    --itx-slider-thumb-color      --itx-slider-thumb-size
+ *            --itx-slider-thumb-size-active
+ *            --itx-slider-thumb-target     --itx-slider-thumb-radius
+ *   States   --itx-slider-disabled-color
+ *   Metrics  --itx-slider-length           --itx-slider-max-length
+ *   Motion   --itx-slider-duration         --itx-slider-easing
+ *   Marks    --itx-slider-mark-color       --itx-slider-mark-thickness
+ *            --itx-slider-mark-minor-color --itx-slider-mark-minor-thickness
+ *            --itx-slider-mark-length
+ *
+ * Set by the component, never by a theme: --itx-slider-fill,
+ * --itx-slider-range-start / -range-end, --itx-slider-axis,
+ * --itx-slider-marks-image / -marks-minor-image.
+ *
+ * Focus reads the system chain in the structural file and declares nothing
+ * here — a component with no opinion about its focus colour inherits one,
+ * which for the slider recolours the thumb and the filled track rather than
+ * drawing a ring.
+ *
+ * All three hosts share ONE block. A range slider is a single slider's track
+ * with two handles on it, so a second set of values would be a second source
+ * of truth for the same object.
+ *
+ * ── What was borrowed from IBM Carbon's Slider ─────────────────────────────
+ *
+ *   2px track          Carbon's SCSS ships `block-size: to-rem(2px)`. Their
+ *                      style.mdx says 4px; the SCSS wins (workflow step 1).
+ *   $border-subtle     unfilled track  → rank 2
+ *   $layer-selected-inverse
+ *                      filled track + thumb → rank 6. Carbon's fill is
+ *                      near-black, NOT the interactive blue; blue is a focus
+ *                      signal only. Emphasis by value, not by hue.
+ *   14px round thumb   Carbon's handle. 20px on hover / focus / active.
+ *   110ms ease         $duration-fast-02 + motion(standard, productive).
+ *   640px max          Carbon caps the slider at 40rem.
+ *   $border-disabled   disabled everything → rank 2.
+ *
+ * ── What was declined ──────────────────────────────────────────────────────
+ *
+ *   Carbon's 200px min-inline-size — a hard minimum overflows narrow
+ *   containers, and we have no wrapper to scroll it. Restore by adding
+ *   `min-inline-size: 12.5rem` to the host.
+ *
+ *   Carbon's `transform: scale(1.4286)` for the grown thumb, its inset focus
+ *   rings, and its single mid-point tick: all three are mechanism rather than
+ *   value, and the reasons are recorded in the structural file.
+ *
+ *   A size axis. Carbon's slider SCSS has no size variants, and the only step
+ *   below the current one would put the thumb target under 24px.
+ *
+ * ── Colour ─────────────────────────────────────────────────────────────────
+ *
+ * Every colour below is a RANK, never a colour: a contrast target against
+ * whatever surface the control is sitting on, so it re-solves per elevation
+ * layer and flips per scheme without anyone re-picking it.
+ *
+ *   track        rank 2 — "hairline, dividers". An empty track is a rule on
+ *                the page, which is exactly Carbon's $border-subtle.
+ *   fill, thumb  rank 6 — maximum. These are the control's marks, the thing
+ *                the eye lands on, and Carbon deliberately makes them the
+ *                strongest neutral rather than the brand hue.
+ *   marks        rank 3 for a major tick ("border, emphasis edge"), rank 2 for
+ *                a minor one — the minor ticks are hairlines by definition,
+ *                and the one-rank gap is what makes the two legible as a
+ *                hierarchy rather than as two greys.
+ *   disabled     rank 2 for all three parts at once. Carbon paints the
+ *                disabled state rather than fading it; an opacity fade drags
+ *                every part below its floor simultaneously.
+ *
+ * ── Motion ─────────────────────────────────────────────────────────────────
+ *
+ * Carbon's 110ms / cubic-bezier(0.2, 0, 0.38, 0.9) were written out literally
+ * here before the migration, which opted the slider out of both
+ * prefers-reduced-motion and --itx-duration-base. They are now the nearest
+ * house tokens: `fast` (half of base, 100ms at the default) and `standard`.
+ * The 10ms and the easing's slightly later exit are not perceptible on a
+ * 6px border-width change; being reachable by the global knob is.
+ */
+
+:where(
+	[interop-root] input[type="range"][interop-slider],
+	[interop-root] input[type="range"][interop-slider-thumb],
+	[interop-root] interop-slider-range
+) {
+	/* ── Track ──────────────────────────────────────────────────────────── */
+	--itx-slider-track-color: var(--itx-contrast-2);
+	--itx-slider-track-thickness: var(--itx-spacing-0_5); /* 2px */
+
+	/* ── Fill ───────────────────────────────────────────────────────────── */
+	--itx-slider-fill-color: var(--itx-contrast-6);
+
+	/* ── Thumb ──────────────────────────────────────────────────────────── */
+	--itx-slider-thumb-color: var(--itx-contrast-6);
+	--itx-slider-thumb-size: var(--itx-spacing-3_5); /* 14px, Carbon's handle */
+	--itx-slider-thumb-size-active: var(--itx-spacing-5); /* 20px */
+	/*
+	 * The hit target AND the control's thickness. 24px is the WCAG 2.2
+	 * SC 2.5.8 floor — never take it below. It stays on the spacing scale so
+	 * an app that rescales the unit scales the control with it; the floor is a
+	 * minimum, not a fixed size.
+	 */
+	--itx-slider-thumb-target: var(--itx-spacing-6); /* 24px */
+	/* A circle is the point here, which is when the radius doc says to pin a
+	   default rather than follow the --itx-radius knob. */
+	--itx-slider-thumb-radius: var(--itx-radius-full);
+
+	/* ── Disabled ───────────────────────────────────────────────────────── */
+	--itx-slider-disabled-color: var(--itx-contrast-2);
+
+	/* ── Metrics ────────────────────────────────────────────────────────── */
+	/* Length of a VERTICAL slider; a horizontal one takes the full inline size
+	   of its container. */
+	--itx-slider-length: var(--itx-spacing-32); /* 8rem */
+	/* Carbon's 640px cap, in both axes. Off the spacing scale, which stops at
+	   24rem — a page-level maximum is not a spacing step. */
+	--itx-slider-max-length: 40rem;
+
+	/* ── Motion ─────────────────────────────────────────────────────────── */
+	--itx-slider-duration: var(--itx-duration-fast);
+	--itx-slider-easing: var(--itx-easing-standard);
+
+	/* ── Marks ──────────────────────────────────────────────────────────── */
+	/* Read by [interop-slider-marks], which builds the tick gradients in
+	   TypeScript from these tokens. */
+	--itx-slider-mark-color: var(--itx-contrast-3);
+	--itx-slider-mark-thickness: var(--itx-border-width-thick); /* 2px */
+	--itx-slider-mark-minor-color: var(--itx-contrast-2);
+	--itx-slider-mark-minor-thickness: var(--itx-border-width-hairline); /* 1px */
+	--itx-slider-mark-length: var(--itx-spacing-2); /* 8px, across the track */
+}

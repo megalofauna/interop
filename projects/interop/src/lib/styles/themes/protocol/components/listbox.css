@@ -1,0 +1,102 @@
+/*
+ * InteropListbox — Protocol theme.
+ *
+ * Token surface:
+ *   Row box     --itx-option-gap              --itx-option-min-block-size
+ *               --itx-option-padding-block    --itx-option-padding-inline
+ *   Type        --itx-option-font-size        --itx-option-line-height
+ *   Colour      --itx-option-color            --itx-option-background
+ *               --itx-option-background-hover
+ *               --itx-option-background-active
+ *               --itx-option-background-selected
+ *               --itx-option-background-active-selected
+ *   Accent bar  --itx-option-accent-width     --itx-option-accent-color
+ *               --itx-option-accent-color-selected
+ *   Disabled    --itx-option-disabled-opacity
+ *   Description --itx-option-description-font-size
+ *               --itx-option-description-color
+ *   Motion      --itx-option-transition-duration
+ *               --itx-option-transition-timing
+ *
+ * Radius and focus declare NOTHING here — both read their system chain in the
+ * structural file, so the global knobs govern them and an override reaches the
+ * element rather than baking at the root.
+ *
+ * Declared on the listbox rather than on [interop-root] because half of these
+ * are surface-relative: a custom property substitutes where it is DECLARED, so
+ * a rank parked on the root resolves against the page and then inherits a
+ * finished colour into whatever layer the list actually sits in. A listbox in
+ * a popover is the common case, and it is exactly the case that would be
+ * wrong.
+ *
+ * Proportions follow the house language the Carbon rounds converged on
+ * (.agent/workflows/carbon-borrow.md): a 40px row, 16px inline padding, 14/18
+ * type, and paint only on state.
+ *
+ * ── The two colour rungs that changed ─────────────────────────────────────
+ *
+ * Hover and selected fills were --itx-surface-above. That is the ELEVATION
+ * axis, and .agent/color.md settles this case by name: "Washes are contrast,
+ * not elevation. In light mode a hover wash goes DARKER while elevation goes
+ * LIGHTER. A row hover is --itx-contrast-1, not half a layer up." The old
+ * value did the opposite in light — L 0.926 against a 0.898 page, a row that
+ * lit up as the pointer crossed it. Rank 1 is 0.860: the same magnitude of
+ * step, in the direction a wash is supposed to move. Rank 1's own definition
+ * is "wash — hover fills, stripes, selected tints", which is verbatim what
+ * these two are.
+ *
+ * The active fill was already rank 2 and stays there, so hover → active is now
+ * a one-rank climb instead of a jump across axes.
+ *
+ * The selection bar was --itx-colorway-solid. `solid` is the brand FILL — a
+ * primary button's background — and it is scheme-independent at L 0.500. The
+ * brand family also carries mark rungs solved against the current surface;
+ * `text` reaches L 0.601 in dark, which is the visible step up for a 4px bar
+ * that is this component's strongest signal. Same correction as the tab
+ * indicator.
+ */
+
+:where([interop-root] ul[interop-listbox], [interop-root] ol[interop-listbox]) {
+	/* ── Row box ────────────────────────────────────────────────────────── */
+	--itx-option-gap: var(--itx-spacing-2);
+	--itx-option-min-block-size: var(--itx-spacing-10);
+	--itx-option-padding-block: var(--itx-spacing-2);
+	--itx-option-padding-inline: var(--itx-spacing-4);
+
+	/* ── Type ───────────────────────────────────────────────────────────────
+	 * Fixed rem, NOT --itx-font-size-*. Those are fluid clamp() values, and a
+	 * label that grows with the viewport inside a row with a pinned height
+	 * overflows it.
+	 */
+	--itx-option-font-size: 0.875rem;
+	--itx-option-line-height: 1.2857;
+
+	/* ── Colour ─────────────────────────────────────────────────────────── */
+	/* Row text is the house body rank, matching the tree row and the table
+	   cell. */
+	--itx-option-color: var(--itx-contrast-6);
+	--itx-option-background: transparent;
+	/* rank 1 — "wash: hover fills, stripes, selected tints". See above. */
+	--itx-option-background-hover: var(--itx-contrast-1);
+	--itx-option-background-active: var(--itx-contrast-2);
+	--itx-option-background-selected: var(--itx-contrast-1);
+	--itx-option-background-active-selected: var(--itx-contrast-2);
+
+	/* ── Accent bar ─────────────────────────────────────────────────────── */
+	--itx-option-accent-width: var(--itx-spacing-1);
+	--itx-option-accent-color: transparent;
+	/* The brand's mark rung, not its fill rung. */
+	--itx-option-accent-color-selected: var(--itx-colorway-text);
+
+	/* ── Disabled ───────────────────────────────────────────────────────── */
+	--itx-option-disabled-opacity: 0.4;
+
+	/* ── Description ────────────────────────────────────────────────────── */
+	--itx-option-description-font-size: 0.75rem;
+	/* rank 4 — secondary text. */
+	--itx-option-description-color: var(--itx-contrast-4);
+
+	/* ── Motion ─────────────────────────────────────────────────────────── */
+	--itx-option-transition-duration: var(--itx-duration-fast);
+	--itx-option-transition-timing: var(--itx-easing-standard);
+}

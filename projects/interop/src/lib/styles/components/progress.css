@@ -1,11 +1,29 @@
 /*
- * InteropProgress — styles for progress[interop-progress]
+ * InteropProgress — structural foundation.
  *
- * Visual approach: `appearance: none` strips the browser chrome, and the host
- * paints BOTH track and fill itself as a single gradient driven by
- * --itx-progress-percent, which the component publishes.
+ * Rendering rules for `progress[interop-progress]`. Loaded globally via
+ * `interop.css`; token VALUES live in
+ * `themes/protocol/components/progress.css`.
+ *
+ * Migrated out of `interop-progress.css`, a per-component `styleUrl` sheet.
+ * Angular injected it unlayered, so it outranked the entire `interop` cascade
+ * layer and no consumer using layers could override a progress bar; a CSS-only
+ * consumer got no progress styling whatsoever — while the theme file it needed
+ * had already shipped, and had been sitting there with no structural
+ * counterpart to read it.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the
+ * single source of truth for every `--itx-progress-*` value; radius reads the
+ * system chain so a component with no opinion follows the global knob.
+ *
+ * All selectors are wrapped in :where() for zero specificity, with
+ * pseudo-elements OUTSIDE the wrapper.
  *
  * ── Why not the UA pseudo-elements ────────────────────────────────────────
+ *
+ * `appearance: none` strips the browser chrome, and the host paints BOTH track
+ * and fill itself as a single gradient driven by --itx-progress-percent, which
+ * the component publishes.
  *
  * The obvious implementation delegates the fill to `::-webkit-progress-value`
  * (and `::-moz-progress-bar`) and lets the UA size it. That works horizontally
@@ -21,29 +39,6 @@
  * The UA pseudo-elements are still zeroed out below — `appearance: none` does
  * not stop them being painted, and their default backgrounds would sit on top
  * of the gradient.
- *
- * Available tokens (set on any ancestor, e.g. [interop-root]):
- *
- *   --itx-progress-track        Track background color
- *   --itx-progress-fill         Fill / indicator color
- *   --itx-progress-height       Track thickness (horizontal) / width (vertical)
- *   --itx-progress-length       Track length when vertical (horizontal always
- *                               takes the full inline size of its container)
- *   --itx-progress-radius       Track corner radius
- *   --itx-progress-duration     Fill transition duration
- *   --itx-progress-indeterminate-duration
- *                               Shimmer cycle length (Carbon: 1400ms linear)
- *
- * Set by the component, not by consumers:
- *   --itx-progress-percent      Fill percentage as a plain number, 0–100
- *
- * NOTE — this component is styled from its own `styleUrl` rather than the
- * global `styles/components/*.css` + theme split every other component uses.
- * The consequence is that a CSS-only consumer — someone writing the markup
- * without importing the Angular component — gets no progress styling at all,
- * which is the one thing the global stylesheet exists to provide. Migrating
- * means swapping `:host` for `progress[interop-progress]` and registering the
- * file in `interop.css`. Not done here: this round was visual only.
  */
 
 /*
@@ -58,12 +53,12 @@
 	initial-value: 0;
 }
 
-:host {
+:where(progress[interop-progress]) {
 	-webkit-appearance: none;
 	appearance: none;
 	display: block;
 	width: 100%;
-	height: var(--itx-progress-height, 0.5rem);
+	height: var(--itx-progress-thickness);
 	border: none;
 	border-radius: var(--itx-progress-radius, var(--itx-radius));
 	overflow: hidden;
@@ -73,21 +68,19 @@
 	   draining rather than progressing. */
 	--_axis: to right;
 
-	background-color: var(--itx-progress-track, var(--itx-contrast-3));
+	background-color: var(--itx-progress-track);
 	background-image: linear-gradient(
 		var(--_axis),
-		var(--itx-progress-fill, var(--itx-colorway-solid)) 0
-			calc(var(--itx-progress-percent, 0) * 1%),
-		transparent calc(var(--itx-progress-percent, 0) * 1%) 100%
+		var(--itx-progress-fill) 0 calc(var(--itx-progress-percent) * 1%),
+		transparent calc(var(--itx-progress-percent) * 1%) 100%
 	);
 
-	transition: --itx-progress-percent
-		var(--itx-progress-duration, var(--itx-duration-fast))
-		var(--itx-easing-standard);
+	transition: --itx-progress-percent var(--itx-progress-duration)
+		var(--itx-progress-easing);
 }
 
 /* RTL: the inline axis reverses, so the fill does too. */
-:host(:dir(rtl)) {
+:where(progress[interop-progress]:dir(rtl)) {
 	--_axis: to left;
 }
 
@@ -95,14 +88,20 @@
 /*
  * Zeroed, not styled. The host owns both track and fill; these would otherwise
  * paint their own backgrounds over it.
+ *
+ * The ::-webkit- and ::-moz- rules are separate because an unrecognised
+ * pseudo-element invalidates the whole selector list it appears in.
  */
 
-:host::-webkit-progress-bar,
-:host::-webkit-progress-value {
+:where(progress[interop-progress])::-webkit-progress-bar {
 	background: transparent;
 }
 
-:host::-moz-progress-bar {
+:where(progress[interop-progress])::-webkit-progress-value {
+	background: transparent;
+}
+
+:where(progress[interop-progress])::-moz-progress-bar {
 	background: transparent;
 }
 
@@ -140,22 +139,27 @@
 	}
 }
 
-:host(:indeterminate) {
-	--_band: var(--itx-progress-indeterminate-band, 30);
+:where(progress[interop-progress]:indeterminate) {
+	--_band: var(--itx-progress-indeterminate-band);
 
 	background-image: linear-gradient(
 		var(--_axis),
 		transparent 0 calc((var(--_sweep) - var(--_band)) * 1%),
-		var(--itx-progress-fill, var(--itx-colorway-solid))
-			calc((var(--_sweep) - var(--_band)) * 1%) calc(var(--_sweep) * 1%),
+		var(--itx-progress-fill) calc((var(--_sweep) - var(--_band)) * 1%)
+			calc(var(--_sweep) * 1%),
 		transparent calc(var(--_sweep) * 1%) 100%
 	);
+	/* `linear` is deliberate and stays a keyword: an easing on a continuously
+	   looping band would make the loop pulse. The duration is a token because
+	   an animation carries its own — no --itx-duration-* reaches it, which is
+	   exactly why the reduced-motion block below is one of the legitimate
+	   survivors. */
 	animation: itx-progress-sweep var(--itx-progress-indeterminate-duration)
 		linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	:host(:indeterminate) {
+	:where(progress[interop-progress]:indeterminate) {
 		/* Motion removed, presence kept: the band parks mid-track so the bar
 		   still reads as "working, amount unknown" rather than as empty. */
 		animation: none;
@@ -168,17 +172,15 @@
 /*
  * writing-mode still swaps the box's block and inline axes, which is what
  * gives the track its height; the gradient direction is what actually fills it.
- */
-
-/*
+ *
  * Setting --_axis is the whole of it. Both the determinate fill and the
  * indeterminate sweep are built from gradient stops along that axis, so
  * reorienting the bar reorients everything on it — no per-orientation
  * keyframes, no RTL reversal, nothing to keep in sync.
  */
-:host([data-orientation="vertical"]) {
+:where(progress[interop-progress][data-orientation="vertical"]) {
 	writing-mode: vertical-lr;
-	width: var(--itx-progress-height, 0.5rem);
-	height: var(--itx-progress-length, 8rem);
+	width: var(--itx-progress-thickness);
+	height: var(--itx-progress-length);
 	--_axis: to top;
 }

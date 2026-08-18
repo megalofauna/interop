@@ -75,7 +75,6 @@ let _panelIdCounter = 0;
 	standalone: true,
 	imports: [],
 	templateUrl: "./interop-tab-panel.html",
-	styleUrl: "./interop-tab-panel.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		role: "tabpanel",

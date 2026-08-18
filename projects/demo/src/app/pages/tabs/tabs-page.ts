@@ -262,7 +262,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tabs-tablist-flex-wrap", default: "nowrap" },
 		{ property: "--itx-tabs-gap", default: "0" },
 		{ property: "--itx-tabs-rule-width", default: "1px" },
-		{ property: "--itx-tabs-rule-color", default: "var(--itx-contrast-3)" },
+		{ property: "--itx-tabs-rule-color", default: "var(--itx-contrast-2)" },
 		// Tab — box
 		{
 			property: "--itx-tab-min-block-size",
@@ -303,9 +303,9 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 			property: "--itx-tab-foreground-hover",
 			default: "var(--itx-contrast-6)",
 		},
-		{ property: "--itx-tab-active-background", default: "transparent" },
+		{ property: "--itx-tab-background-selected", default: "transparent" },
 		{
-			property: "--itx-tab-active-foreground",
+			property: "--itx-tab-foreground-selected",
 			default: "var(--itx-contrast-6)",
 		},
 		{
@@ -319,17 +319,17 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 			default: "var(--itx-contrast-5)",
 		},
 		{
-			property: "--itx-tab-active-indicator-color",
+			property: "--itx-tab-indicator-color-selected",
 			default: "var(--itx-colorway-solid)",
 		},
 		// Tab — focus + motion
-		{ property: "--itx-tab-focus-outline-width", default: "2px" },
-		{ property: "--itx-tab-focus-outline-style", default: "solid" },
+		{ property: "--itx-tab-focus-width", default: "2px" },
+		{ property: "--itx-tab-focus-style", default: "solid" },
 		{
-			property: "--itx-tab-focus-outline-color",
+			property: "--itx-tab-focus-color",
 			default: "var(--itx-colorway-solid)",
 		},
-		{ property: "--itx-tab-focus-outline-offset", default: "-2px — inset" },
+		{ property: "--itx-tab-focus-offset", default: "-2px — inset" },
 		{
 			property: "--itx-tab-transition-duration",
 			default: "var(--itx-duration-fast) — 100ms",
@@ -343,14 +343,14 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 			property: "--itx-tab-panel-padding-inline",
 			default: "var(--itx-spacing-4) — 16px",
 		},
-		{ property: "--itx-tab-panel-focus-outline-width", default: "2px" },
-		{ property: "--itx-tab-panel-focus-outline-style", default: "solid" },
+		{ property: "--itx-tab-panel-focus-width", default: "2px" },
+		{ property: "--itx-tab-panel-focus-style", default: "solid" },
 		{
-			property: "--itx-tab-panel-focus-outline-color",
+			property: "--itx-tab-panel-focus-color",
 			default: "var(--itx-colorway-solid)",
 		},
 		{
-			property: "--itx-tab-panel-focus-outline-offset",
+			property: "--itx-tab-panel-focus-offset",
 			default: "-2px — inset",
 		},
 	];

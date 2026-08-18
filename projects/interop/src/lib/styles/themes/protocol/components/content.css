@@ -1,0 +1,186 @@
+/*
+ * InteropContent — Protocol theme.
+ *
+ * Token surface:
+ *   Body      --itx-content-color            --itx-content-font-family
+ *             --itx-content-font-size        --itx-content-line-height
+ *             --itx-content-measure
+ *   Rhythm    --itx-content-block-gap        --itx-content-list-gap
+ *             --itx-content-heading-margin-block-start
+ *             --itx-content-heading-margin-block-end
+ *             --itx-content-rule-margin-block
+ *   Headings  --itx-content-heading-font-weight
+ *             --itx-content-heading-line-height
+ *             --itx-content-heading-1-font-size … -6-font-size
+ *   Inline    --itx-content-strong-font-weight
+ *             --itx-content-mark-background  --itx-content-mark-color
+ *             --itx-content-ins-background   --itx-content-del-color
+ *   Code      --itx-content-code-font-family --itx-content-code-font-size
+ *             --itx-content-code-font-weight --itx-content-code-color
+ *             --itx-content-code-background  --itx-content-code-padding
+ *             --itx-content-code-border-width
+ *             --itx-content-code-border-color
+ *             --itx-content-pre-padding      --itx-content-pre-background
+ *   Links     --itx-content-link-color       --itx-content-link-decoration
+ *             --itx-content-link-underline-offset
+ *             --itx-content-link-decoration-thickness-hover
+ *   Quotes    --itx-content-quote-padding-inline-start
+ *             --itx-content-quote-border-width
+ *             --itx-content-quote-border-color
+ *             --itx-content-quote-color
+ *   Tables    --itx-content-table-cell-padding
+ *             --itx-content-table-border-width
+ *             --itx-content-table-border-color
+ *             --itx-content-table-header-background
+ *             --itx-content-table-header-font-weight
+ *             --itx-content-caption-color    --itx-content-caption-font-size
+ *             --itx-content-caption-padding-block-end
+ *   Rule      --itx-content-rule-width       --itx-content-rule-color
+ *
+ * Radius (code chip, pre, mark) and focus read their system chains in the
+ * structural file, so nothing is declared for them here — a component with no
+ * opinion about its corners or its ring inherits the global one.
+ *
+ * ── The whole namespace was renamed ───────────────────────────────────────
+ *
+ * `--interop-content-*` -> `--itx-content-*`. BREAKING for anyone who set one.
+ * `--interop-*` was the last survivor of the pre-`itx` prefix and the reason
+ * .stylelintrc's custom-property pattern carried an `interop-` alternative;
+ * that allowance is gone with it.
+ *
+ * ── Colour ────────────────────────────────────────────────────────────────
+ *
+ * Every value is a RANK, never a colour, and the two axes do not mix:
+ * elevation (--itx-surface*) is the substrate a thing stands ON, contrast is
+ * everything drawn on top of it. Four values here were on the wrong side of
+ * that line or the wrong rung of it.
+ *
+ *   link       --itx-colorway-solid -> --itx-colorway-text
+ *              `solid` is the brand FILL — a primary button's background,
+ *              scheme-independent at L 0.500. A link is a MARK, and the brand
+ *              family carries mark rungs solved against the current surface:
+ *              `text` reaches L 0.506 light / 0.601 dark. Same category error
+ *              the tab indicator had.
+ *
+ *   mark, ins  --itx-surface -> --itx-colorway-tint / --itx-contrast-1
+ *              `--itx-surface` is the CURRENT layer. Highlighted text was
+ *              painted the exact colour of the page behind it, so neither
+ *              element rendered any highlight at all — in any scheme, at any
+ *              depth. A highlight is a wash: the colourway's tint with its
+ *              solved on-colour for <mark>, the neutral rank-1 wash for <ins>,
+ *              which keeps the two distinguishable.
+ *
+ *   del        opacity 0.7 -> --itx-contrast-4
+ *              Rank 4 IS "secondary text", floored at 4.5:1. Opacity fades the
+ *              glyph and whatever sits behind it, holds no floor, and gets
+ *              worse as the surface moves.
+ *
+ *   quote bar  --itx-contrast-2 -> --itx-contrast-3
+ *              Rank 2 is "hairline, dividers" (1.5:1). The bar is not dividing
+ *              anything — it is the quote's only signal, and at 2px it is an
+ *              emphasis edge, which is rank 3 (3:1).
+ *
+ *   table head --itx-surface-below -> --itx-surface-above
+ *              Still elevation, which is correct for a band that rows sit on,
+ *              but `below` is DARKER than the page in both schemes: a header
+ *              sunk beneath its own table. The table component reached the
+ *              same answer independently (--itx-table-header-bg).
+ *
+ * Left alone deliberately: `--itx-content-pre-background: var(--itx-surface-below)`.
+ * A sunken well is a real elevation move and a fenced block is the one place
+ * in prose that wants one. And the cell rule stays rank 2 — a cell rule is a
+ * divider, verbatim. The table COMPONENT uses rank 3 for its own, a documented
+ * Carbon borrow for dense data; prose tables are not that.
+ *
+ * ── Typography ────────────────────────────────────────────────────────────
+ *
+ * Font size read `--itx-fs-base` — a raw primitive from the fluid ramp, which
+ * the type system says to never consume directly; it is `--itx-font-size-body`
+ * now. Line-height was a flat 1.5 and is the one staked expression. The
+ * heading ramp was shifted one rung up from prose.css's (h2 took heading-lg,
+ * h3 heading, …), which is exactly the "no component owns a private prose
+ * scale" the type system forbids; it now matches prose.css rung for rung.
+ * Block spacing came off the raw spacing scale and now comes off the rhythm
+ * scale, the one thing that owns prose flow.
+ */
+
+:where([interop-root] interop-content) {
+	/* ── Body ───────────────────────────────────────────────────────────── */
+	--itx-content-color: var(--itx-contrast-6);
+	--itx-content-font-family: var(--itx-font-family-sans);
+	--itx-content-font-size: var(--itx-font-size-body);
+	--itx-content-line-height: var(--itx-line-height);
+	--itx-content-measure: var(--itx-measure);
+
+	/* ── Rhythm ─────────────────────────────────────────────────────────── */
+	--itx-content-block-gap: var(--itx-rhythm);
+	--itx-content-list-gap: var(--itx-rhythm-tight);
+	--itx-content-heading-margin-block-start: var(--itx-rhythm-loose);
+	--itx-content-heading-margin-block-end: var(--itx-rhythm-tight);
+	--itx-content-rule-margin-block: var(--itx-rhythm-loose);
+
+	/* ── Headings ───────────────────────────────────────────────────────── */
+	/* 1.125 is prose.css's heading leading. The staked clamp is shaped for
+	   running text; headings are the one role that wants it overridden, and
+	   the system has no per-role line-height token by design. */
+	--itx-content-heading-font-weight: var(--itx-font-weight-heading);
+	--itx-content-heading-line-height: 1.125;
+	--itx-content-heading-1-font-size: var(--itx-font-size-display);
+	--itx-content-heading-2-font-size: var(--itx-font-size-heading);
+	--itx-content-heading-3-font-size: var(--itx-font-size-subheading);
+	--itx-content-heading-4-font-size: var(--itx-font-size-body-lg);
+	--itx-content-heading-5-font-size: var(--itx-font-size-body);
+	--itx-content-heading-6-font-size: var(--itx-font-size-body);
+
+	/* ── Inline ─────────────────────────────────────────────────────────── */
+	/* 600 stays a literal: the type system has body (400) and heading (400)
+	   and no bold rung, and <strong> that is not bolder than its text is not
+	   strong. The gap is the type system's, not this component's. */
+	--itx-content-strong-font-weight: 600;
+	--itx-content-mark-background: var(--itx-colorway-tint);
+	--itx-content-mark-color: var(--itx-colorway-on-tint);
+	--itx-content-ins-background: var(--itx-contrast-1);
+	--itx-content-del-color: var(--itx-contrast-4);
+
+	/* ── Code ───────────────────────────────────────────────────────────── */
+	/* em-relative sizing and padding so the chip tracks its surrounding text;
+	   the spacing scale is absolute and would not. */
+	--itx-content-code-font-family: var(--itx-font-family-mono);
+	--itx-content-code-font-size: 0.875em;
+	--itx-content-code-font-weight: var(--itx-font-weight-body);
+	--itx-content-code-color: var(--itx-contrast-6);
+	--itx-content-code-background: var(--itx-surface-above);
+	--itx-content-code-padding: 0.125em 0.275em;
+	/* Was 2px at rank 3 — an emphasis edge around a word. The chip's edge
+	   delimits, so hairline at rank 2. */
+	--itx-content-code-border-width: var(--itx-border-width-hairline);
+	--itx-content-code-border-color: var(--itx-contrast-2);
+	--itx-content-pre-padding: var(--itx-spacing-4);
+	--itx-content-pre-background: var(--itx-surface-below);
+
+	/* ── Links ──────────────────────────────────────────────────────────── */
+	--itx-content-link-color: var(--itx-colorway-text);
+	--itx-content-link-decoration: underline;
+	--itx-content-link-underline-offset: 0.2em;
+	--itx-content-link-decoration-thickness-hover: var(--itx-border-width-thick);
+
+	/* ── Quotes ─────────────────────────────────────────────────────────── */
+	--itx-content-quote-padding-inline-start: var(--itx-spacing-4);
+	--itx-content-quote-border-width: var(--itx-border-width-thick);
+	--itx-content-quote-border-color: var(--itx-contrast-3);
+	--itx-content-quote-color: var(--itx-contrast-5);
+
+	/* ── Tables ─────────────────────────────────────────────────────────── */
+	--itx-content-table-cell-padding: var(--itx-spacing-2) var(--itx-spacing-3);
+	--itx-content-table-border-width: var(--itx-border-width-hairline);
+	--itx-content-table-border-color: var(--itx-contrast-2);
+	--itx-content-table-header-background: var(--itx-surface-above);
+	--itx-content-table-header-font-weight: 600;
+	--itx-content-caption-color: var(--itx-contrast-4);
+	--itx-content-caption-font-size: var(--itx-font-size-label);
+	--itx-content-caption-padding-block-end: var(--itx-spacing-2);
+
+	/* ── Rule ───────────────────────────────────────────────────────────── */
+	--itx-content-rule-width: var(--itx-border-width-hairline);
+	--itx-content-rule-color: var(--itx-contrast-2);
+}

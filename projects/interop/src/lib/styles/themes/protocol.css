@@ -51,9 +51,13 @@
 
 /* ── Components ─────────────────────────────────────────────────────────── */
 
+@import "./protocol/components/badge.css" layer(interop.theme);
 @import "./protocol/components/button.css" layer(interop.theme);
+@import "./protocol/components/callout.css" layer(interop.theme);
 @import "./protocol/components/chip.css" layer(interop.theme);
+@import "./protocol/components/code-renderer.css" layer(interop.theme);
 @import "./protocol/components/command-palette.css" layer(interop.theme);
+@import "./protocol/components/content.css" layer(interop.theme);
 @import "./protocol/components/dialog.css" layer(interop.theme);
 @import "./protocol/components/expansion-panel.css" layer(interop.theme);
 @import "./protocol/components/field.css" layer(interop.theme);
@@ -61,15 +65,19 @@
 @import "./protocol/components/indicator.css" layer(interop.theme);
 @import "./protocol/typography/kbd.css" layer(interop.theme);
 @import "./protocol/components/list.css" layer(interop.theme);
+@import "./protocol/components/listbox.css" layer(interop.theme);
 @import "./protocol/components/popover.css" layer(interop.theme);
 @import "./protocol/components/progress.css" layer(interop.theme);
 @import "./protocol/components/segmented-control.css" layer(interop.theme);
+@import "./protocol/components/slider.css" layer(interop.theme);
 @import "./protocol/components/stepper.css" layer(interop.theme);
 @import "./protocol/components/table.css" layer(interop.theme);
+@import "./protocol/components/tabs.css" layer(interop.theme);
 @import "./protocol/components/toast.css" layer(interop.theme);
 @import "./protocol/components/tooltip.css" layer(interop.theme);
 @import "./protocol/components/tree.css" layer(interop.theme);
 @import "./protocol/components/resizable.css" layer(interop.theme);
+@import "./protocol/components/scroll-area.css" layer(interop.theme);
 @import "./protocol/components/visimorph/visimorph.css" layer(interop.theme);
 @import "./protocol/components/visimorph/label.css" layer(interop.theme);
 
@@ -82,4 +90,5 @@
 
 /* ── Rigs ───────────────────────────────────────────────────────────────── */
 
+@import "./protocol/rigs/choice-rig.css" layer(interop.theme);
 @import "./protocol/rigs/toolbar.css" layer(interop.theme);

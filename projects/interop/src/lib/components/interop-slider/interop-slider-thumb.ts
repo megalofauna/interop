@@ -37,7 +37,6 @@ import {
 	selector: "input[type=range][interop-slider-thumb]",
 	standalone: true,
 	template: "",
-	styleUrl: "./interop-slider.css",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{ provide: INTEROP_SLIDER_TOKEN, useExisting: InteropSliderThumb },
@@ -48,7 +47,8 @@ import {
 		"[attr.data-thumb-role]": "role()",
 		"[attr.data-orientation]": "orientation()",
 		// 0–1 fraction, matching interop-slider.ts — this component shares
-		// interop-slider.css, where --itx-slider-fill is registered as <number>.
+		// styles/components/slider.css, where --itx-slider-fill is registered as
+		// <number>.
 		// A "60%" string here would be invalid at computed-value time and fall
 		// back to the initial 0. The thumb's own track is transparent inside a
 		// range (the [data-thumb-role] block), so nothing paints from it today,

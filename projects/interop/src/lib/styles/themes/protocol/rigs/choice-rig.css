@@ -1,0 +1,111 @@
+/*
+ * Choice rigs — Protocol theme.
+ *
+ * Values for `interop-checkbox-rig` and `interop-radio-rig`. One block, because
+ * one stylesheet: see the header of `styles/rigs/choice-rig.css` for why the
+ * two rigs share a file. Structural rules live there; this file declares
+ * custom properties only.
+ *
+ * Token surface:
+ *   Flow      --itx-choice-rig-direction     --itx-choice-rig-wrap
+ *             --itx-choice-rig-gap           --itx-choice-rig-control-gap
+ *   Group box --itx-choice-rig-padding       --itx-choice-rig-border-width
+ *             --itx-choice-rig-border-color
+ *   Legend    --itx-choice-rig-legend-padding-inline
+ *             --itx-choice-rig-legend-margin-block-end
+ *             --itx-choice-rig-legend-font-weight
+ *   Type      --itx-choice-rig-font-size     --itx-choice-rig-line-height
+ *   State     --itx-choice-rig-disabled-opacity
+ *   Divider   --itx-choice-rig-divider-width --itx-choice-rig-divider-color
+ *
+ * Radius reads its system chain in the structural file and is declared nowhere
+ * here — a rig with no opinion about its corners inherits the global one.
+ * Focus belongs to neither file: the visible control is <interop-visimorph>,
+ * which owns the ring under --itx-control-focus-*. See the structural file.
+ *
+ * ── What the two files disagreed about, and which one won ─────────────────
+ *
+ * The radio rig framed its fieldset: `1px solid #ccc`, 1rem of padding, a
+ * radius. The checkbox rig drew the same border transparent with no padding.
+ * The frame is off by default here, i.e. the checkbox rig's answer, for two
+ * reasons: a hardcoded #ccc is a fixed light-mode grey that neither scheme nor
+ * colourway can reach — it was the last raw hex in either file — and a group
+ * box is a decision a page makes, not one a rig should impose. The border is
+ * still drawn, transparent, so turning it back on is a colour change and not a
+ * reflow:
+ *
+ *   --itx-choice-rig-border-color: var(--itx-contrast-3);   (rank 3, an edge)
+ *   --itx-choice-rig-padding: var(--itx-spacing-4);
+ */
+
+:where(
+	[interop-root] interop-checkbox-rig,
+	[interop-root] [interop-checkbox-rig],
+	[interop-root] interop-radio-rig
+) {
+	/* ── Flow ───────────────────────────────────────────────────────────── */
+	--itx-choice-rig-direction: column;
+	--itx-choice-rig-wrap: nowrap;
+	--itx-choice-rig-gap: var(--itx-spacing-3);
+	--itx-choice-rig-control-gap: var(--itx-spacing-2);
+
+	/* ── Group box ──────────────────────────────────────────────────────── */
+	--itx-choice-rig-padding: 0;
+	--itx-choice-rig-border-width: var(--itx-border-width-hairline);
+	--itx-choice-rig-border-color: transparent;
+
+	/* ── Legend ─────────────────────────────────────────────────────────── */
+	/*
+	 * The legend was 600. The type system has exactly two weights — body (400)
+	 * and heading (400) — and no bold rung, so 600 was a private weight no
+	 * theme could move. A legend labels a group, which is the heading role.
+	 */
+	--itx-choice-rig-legend-padding-inline: var(--itx-spacing-2);
+	--itx-choice-rig-legend-margin-block-end: var(--itx-spacing-2);
+	--itx-choice-rig-legend-font-weight: var(--itx-font-weight-heading);
+
+	/* ── Type ───────────────────────────────────────────────────────────── */
+	/* Role token, not the raw --itx-fs-* primitive, and not the radio rig's
+	   old literal 1rem. Leading is the one staked expression. */
+	--itx-choice-rig-font-size: var(--itx-font-size-body);
+	--itx-choice-rig-line-height: var(--itx-line-height);
+
+	/* ── State ──────────────────────────────────────────────────────────── */
+	--itx-choice-rig-disabled-opacity: 0.6;
+
+	/* ── Divider (select-all separator) ─────────────────────────────────── */
+	--itx-choice-rig-divider-width: var(--itx-border-width-hairline);
+	--itx-choice-rig-divider-color: var(--itx-contrast-2);
+}
+
+/* ── Orientation ─────────────────────────────────────────────────────────── */
+/*
+ * Was `:host(.horizontal)`, which set `display: flex` on a host that is
+ * `display: contents` in element mode — so it did nothing there, and the
+ * fieldset it was meant to turn stayed a column. Now an attribute on the
+ * `itx-*` configuration axis, and a pair of values rather than a rule: the
+ * flow container reads direction and wrap from tokens, so the variant reaches
+ * the fieldset, the attribute-mode host and the projection wrapper alike.
+ */
+
+:where(
+	[interop-root] interop-checkbox-rig[itx-orientation="horizontal"],
+	[interop-root] [interop-checkbox-rig][itx-orientation="horizontal"],
+	[interop-root] interop-radio-rig[itx-orientation="horizontal"]
+) {
+	--itx-choice-rig-direction: row;
+	--itx-choice-rig-wrap: wrap;
+	--itx-choice-rig-gap: var(--itx-spacing-4);
+}
+
+/* ── Density ─────────────────────────────────────────────────────────────── */
+/* Was `:host(.compact)`. `itx-size` is the library's size axis. */
+
+:where(
+	[interop-root] interop-checkbox-rig[itx-size="sm"],
+	[interop-root] [interop-checkbox-rig][itx-size="sm"],
+	[interop-root] interop-radio-rig[itx-size="sm"]
+) {
+	--itx-choice-rig-gap: var(--itx-spacing-1);
+	--itx-choice-rig-control-gap: var(--itx-spacing-1);
+}

@@ -29,7 +29,6 @@ export type CalloutType = "info" | "warning" | "success" | "danger";
 			<ng-content />
 		</div>
 	`,
-	styleUrl: "./interop-callout.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		role: "note",

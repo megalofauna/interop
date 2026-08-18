@@ -6,9 +6,11 @@
 projects/interop/src/lib/composites/terminal/
   terminal.ts           Component class
   terminal.html         Template (reset button + scroll wrapper + log + cursor)
-  terminal.css          Structural CSS (styleUrl, `:where()` on all children)
+  terminal.ts           Component class (no styleUrl)
   public-api.ts         Barrel
 
+src/lib/styles/composites/terminal.css
+                        Structural CSS, global and layered (`:where()` on all children)
 src/lib/styles/themes/protocol/composites/terminal.css
                         Protocol theme token values for both variants
 ```
@@ -87,7 +89,10 @@ The Protocol theme sets all tokens for both variants in `protocol/composites/ter
 
 ## CSS strategy notes
 
-- Structural CSS lives in `terminal.css` (component `styleUrl`, emulated encapsulation).
+- Structural CSS lives in `styles/composites/terminal.css`, imported globally into
+  the `interop` cascade layer. Migrated off `styleUrl` 2026-08-17 — see
+  `.agent/records/styleurl-migration.md`. The scan-line variant's `oklch()`
+  literals are deliberate art direction, not contrast ranks.
 - All child selectors wrapped in `:where()` for near-zero library-added specificity. `:host` and `:host(.class)` selectors use Angular's emulated encapsulation directly — no `:where()` wrapper there.
 - Private resolved slots use `--_` prefix; public API uses `--itx-term-*`.
 - State classes on `:host`: `itx-term--terminal`, `itx-term--plain`, `itx-term--scan-lines`, `itx-term--active` (set when entries array is non-empty — drives the cursor blink).

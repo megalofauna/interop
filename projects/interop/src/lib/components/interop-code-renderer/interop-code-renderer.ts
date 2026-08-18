@@ -97,7 +97,6 @@ let _rendererIdCounter = 0;
 	standalone: true,
 	imports: [],
 	templateUrl: "./interop-code-renderer.html",
-	styleUrl: "./interop-code-renderer.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	host: {
 		"[style.--itx-cr-white-space]": "whiteSpaceValue()",

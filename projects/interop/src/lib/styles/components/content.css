@@ -1,0 +1,295 @@
+/*
+ * InteropContent — structural foundation.
+ *
+ * Rendering rules for the prose `<interop-content>` renders from a compiled
+ * djot AST. Loaded globally via `interop.css`; token VALUES live in
+ * `themes/protocol/components/content.css`.
+ *
+ * ── Why `components/` and not a `content/` directory ──────────────────────
+ *
+ * `styles/typography/prose.css` is the other prose file in the library and it
+ * is deliberately NOT a component: no host, no token surface, applied to bare
+ * elements under an opt-in `[interop-typography-root]`. `interop-content` is
+ * the opposite — a custom element with a selector and ~35 levers — so it files
+ * under `components/`, which is also the only place
+ * `generate-token-reference.mjs` looks (SOURCE_DIRS = components, composites,
+ * rigs). A `styles/content/` directory would have dropped every one of those
+ * levers out of `interop.tokens.css` silently.
+ *
+ * ── Why the trailing-margin block model survives here ─────────────────────
+ *
+ * Every block and every inline node is rendered inside its OWN nested
+ * `<interop-content>` wrapper (see interop-content.html — each @case recurses
+ * through the component). So two paragraphs are never adjacent siblings: the
+ * siblings are `interop-content` elements, which are `display: contents` and
+ * cannot carry a margin. The owl rhythm prose.css uses (`* + *`) therefore
+ * cannot reach across the wrapper, and this file keeps `margin-block-end` on
+ * each block instead. The VALUES are the rhythm scale either way. Folding this
+ * component onto the prose base — the reconciliation .agent/typography.md
+ * names as next — is a template change, not a stylesheet change.
+ *
+ * That wrapper also broke two rules outright, both fixed below:
+ * `h*:first-child` matched EVERY heading (each is the only child of its own
+ * wrapper), so no heading has had a top margin, and `li p:only-child` — written
+ * as a child combinator — matched none.
+ *
+ * Contract: no literal `var(token, fallback)` defaults — the theme is the
+ * single source of truth for every `--itx-content-*` value. Radius and focus
+ * read their documented system chains.
+ *
+ * All selectors are wrapped in :where() for zero specificity, the full
+ * descendant chain inside the wrapper so no type selector leaks (0,0,1).
+ */
+
+/* ── Host ────────────────────────────────────────────────────────────────── */
+/*
+ * `display: contents` is load-bearing, not cosmetic: the renderer wraps every
+ * node in one of these, and any wrapper that generated a box would break the
+ * flow of the prose it wraps. The measure therefore cannot live here — a
+ * `max-width` on a box-less element is inert, which is what the old
+ * `--interop-content-max-width: 76ch` was. It sits on the text blocks now,
+ * matching prose.css's target set.
+ */
+
+:where(interop-content) {
+	display: contents;
+}
+
+/* ── Paragraphs ──────────────────────────────────────────────────────────── */
+
+:where(interop-content p) {
+	margin: 0 0 var(--itx-content-block-gap) 0;
+	max-inline-size: var(--itx-content-measure);
+	color: var(--itx-content-color);
+	font-family: var(--itx-content-font-family);
+	font-size: var(--itx-content-font-size);
+	line-height: var(--itx-content-line-height);
+}
+
+/* ── Headings ────────────────────────────────────────────────────────────── */
+
+:where(interop-content :where(h1, h2, h3, h4, h5, h6)) {
+	margin: var(--itx-content-heading-margin-block-start) 0
+		var(--itx-content-heading-margin-block-end) 0;
+	color: var(--itx-content-color);
+	font-family: var(--itx-content-font-family);
+	font-weight: var(--itx-content-heading-font-weight);
+	line-height: var(--itx-content-heading-line-height);
+}
+
+/*
+ * A heading opening its container takes no top margin. The test is on the
+ * WRAPPER, not the heading: `h1:first-child` is true of every heading the
+ * renderer emits, so as written it zeroed all of them.
+ */
+:where(interop-content:first-child > :where(h1, h2, h3, h4, h5, h6)) {
+	margin-block-start: 0;
+}
+
+:where(interop-content h1) {
+	font-size: var(--itx-content-heading-1-font-size);
+}
+:where(interop-content h2) {
+	font-size: var(--itx-content-heading-2-font-size);
+}
+:where(interop-content h3) {
+	font-size: var(--itx-content-heading-3-font-size);
+}
+:where(interop-content h4) {
+	font-size: var(--itx-content-heading-4-font-size);
+}
+:where(interop-content h5) {
+	font-size: var(--itx-content-heading-5-font-size);
+}
+:where(interop-content h6) {
+	font-size: var(--itx-content-heading-6-font-size);
+}
+
+/* ── Inline emphasis ─────────────────────────────────────────────────────── */
+
+:where(interop-content strong) {
+	font-weight: var(--itx-content-strong-font-weight);
+}
+
+:where(interop-content em) {
+	font-style: italic;
+}
+
+/*
+ * A highlight is a TINT — the colourway's wash rung paired with the on-colour
+ * solved against it. Both `mark` and `ins` painted `var(--itx-surface)`, which
+ * is the current layer: text highlighted the exact colour of the page behind
+ * it, i.e. no highlight at all.
+ */
+:where(interop-content mark) {
+	background: var(--itx-content-mark-background);
+	color: var(--itx-content-mark-color);
+	padding: 0 0.15em;
+	border-radius: var(--itx-content-mark-border-radius, var(--itx-radius));
+}
+
+:where(interop-content ins) {
+	background: var(--itx-content-ins-background);
+	text-decoration: none;
+}
+
+/*
+ * Deleted text is secondary text, and the ladder has a rung that means exactly
+ * that. `opacity: 0.7` fades the glyph AND whatever is behind it, holds no
+ * contrast floor, and drifts as the surface moves.
+ */
+:where(interop-content del) {
+	color: var(--itx-content-del-color);
+	text-decoration: line-through;
+}
+
+:where(interop-content :where(sup, sub)) {
+	font-size: 0.8em;
+	line-height: 1;
+}
+
+/* ── Code ────────────────────────────────────────────────────────────────── */
+/*
+ * The chip is em-relative so it tracks whatever text it lands in — the same
+ * reasoning as the `itx-inline-code` composite, which paints this same object.
+ */
+
+:where(interop-content code) {
+	font-family: var(--itx-content-code-font-family);
+	font-size: var(--itx-content-code-font-size);
+	font-weight: var(--itx-content-code-font-weight);
+	line-height: var(--itx-content-line-height);
+	color: var(--itx-content-code-color);
+	background: var(--itx-content-code-background);
+	padding: var(--itx-content-code-padding);
+	border: var(--itx-content-code-border-width) solid
+		var(--itx-content-code-border-color);
+	border-radius: var(--itx-content-code-border-radius, var(--itx-radius));
+}
+
+:where(interop-content pre) {
+	margin: 0 0 var(--itx-content-block-gap) 0;
+	padding: var(--itx-content-pre-padding);
+	background: var(--itx-content-pre-background);
+	border-radius: var(--itx-content-pre-border-radius, var(--itx-radius));
+	overflow-x: auto;
+}
+
+/* Inside a block, the chip is not a chip: no plate, no edge, no shrink. The
+   edge reset was missing, so every fenced block wore the inline border. */
+:where(interop-content pre code) {
+	padding: 0;
+	border-width: 0;
+	background: transparent;
+	font-size: var(--itx-content-font-size);
+}
+
+/* ── Links ───────────────────────────────────────────────────────────────── */
+
+:where(interop-content a) {
+	color: var(--itx-content-link-color);
+	text-decoration: var(--itx-content-link-decoration);
+	text-underline-offset: var(--itx-content-link-underline-offset);
+}
+
+:where(interop-content a:hover) {
+	text-decoration-thickness: var(--itx-content-link-decoration-thickness-hover);
+}
+
+/* The ring is the accessibility floor, so it lives in structural and reads the
+   system chain; the theme has nothing to say about it. */
+:where(interop-content a:focus-visible) {
+	outline: var(--itx-content-focus-width, var(--itx-focus-width))
+		var(--itx-content-focus-style, var(--itx-focus-style))
+		var(--itx-content-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-content-focus-offset, var(--itx-focus-offset));
+}
+
+/* ── Lists ───────────────────────────────────────────────────────────────── */
+/*
+ * The marker indent is em-relative on purpose: it has to track the text it
+ * hangs off, and the spacing scale is absolute.
+ */
+
+:where(interop-content :where(ul, ol)) {
+	margin: 0 0 var(--itx-content-block-gap) 0;
+	padding-inline-start: 1.5em;
+	color: var(--itx-content-color);
+	font-family: var(--itx-content-font-family);
+	font-size: var(--itx-content-font-size);
+	line-height: var(--itx-content-line-height);
+}
+
+:where(interop-content li) {
+	max-inline-size: var(--itx-content-measure);
+}
+
+:where(interop-content li + li) {
+	margin-block-start: var(--itx-content-list-gap);
+}
+
+/*
+ * The last block in an item drops its trailing margin, so a tight list stays
+ * tight. This was `li p:only-child` as a child combinator, which could never
+ * match: an item's children are wrappers, not blocks.
+ */
+:where(
+	interop-content
+		li
+		> interop-content:last-child
+		> :where(p, ul, ol, blockquote)
+) {
+	margin-block-end: 0;
+}
+
+/* ── Quotes ──────────────────────────────────────────────────────────────── */
+
+:where(interop-content blockquote) {
+	margin: 0 0 var(--itx-content-block-gap) 0;
+	padding: 0 0 0 var(--itx-content-quote-padding-inline-start);
+	max-inline-size: var(--itx-content-measure);
+	border-inline-start: var(--itx-content-quote-border-width) solid
+		var(--itx-content-quote-border-color);
+	color: var(--itx-content-quote-color);
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+
+:where(interop-content table) {
+	inline-size: 100%;
+	margin: 0 0 var(--itx-content-block-gap) 0;
+	border-collapse: collapse;
+	color: var(--itx-content-color);
+	font-family: var(--itx-content-font-family);
+	font-size: var(--itx-content-font-size);
+}
+
+:where(interop-content :where(th, td)) {
+	padding: var(--itx-content-table-cell-padding);
+	text-align: start;
+	border-block-end: var(--itx-content-table-border-width) solid
+		var(--itx-content-table-border-color);
+}
+
+:where(interop-content th) {
+	background: var(--itx-content-table-header-background);
+	font-weight: var(--itx-content-table-header-font-weight);
+}
+
+:where(interop-content caption) {
+	caption-side: top;
+	padding-block-end: var(--itx-content-caption-padding-block-end);
+	color: var(--itx-content-caption-color);
+	font-size: var(--itx-content-caption-font-size);
+	text-align: start;
+}
+
+/* ── Rule ────────────────────────────────────────────────────────────────── */
+
+:where(interop-content hr) {
+	margin-block: var(--itx-content-rule-margin-block);
+	margin-inline: 0;
+	border: 0;
+	border-block-start: var(--itx-content-rule-width) solid
+		var(--itx-content-rule-color);
+}
