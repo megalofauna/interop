@@ -61,8 +61,56 @@
 			sets line-height here but the shared token — watch the leading open up as
 			the type shrinks.
 		</p>
+
+		<!-- The leading is a value judgement, so it is a dial rather than a
+		     paragraph arguing for a number. Drag past both edges: the ratios
+		     below show the ceiling starting to bite at the small roles. -->
+		<div class="leading-dial">
+			<label class="leading-dial__control">
+				<span class="leading-dial__label">Leading</span>
+				<input
+					type="range"
+					min="0"
+					max="20"
+					step="1"
+					[value]="leadingPx()"
+					(input)="onLeading($event)"
+					aria-describedby="leading-dial-value"
+				/>
+				<output id="leading-dial-value" class="leading-dial__value">
+					{{ leadingPx() }}px
+					<code>--itx-lh-leading: {{ leadingCss() }}</code>
+				</output>
+			</label>
+
+			<button
+				interop-button="tertiary"
+				itx-size="sm"
+				type="button"
+				[disabled]="isDefault()"
+				(click)="reset()"
+			>
+				Reset to 8px
+			</button>
+
+			<ul class="leading-dial__ratios">
+				@for (role of ratios(); track role.label) {
+					<li [class.is-clamped]="role.clamped">
+						<span>{{ role.label }}</span>
+						<span>{{ role.ratio }}</span>
+						@if (role.clamped) {
+							<em>ceiling</em>
+						}
+					</li>
+				}
+			</ul>
+		</div>
 		<div class="specimen-frame specimen-frame--leading">
-			<div interop-typography-root class="specimen specimen--leading">
+			<div
+				interop-typography-root
+				class="specimen specimen--leading"
+				[style.--itx-lh-leading]="leadingCss()"
+			>
 				<p data-label="display" style="font-size: var(--itx-font-size-display)">
 					Constant leading over the font size means the ratio loosens as the
 					type shrinks.
