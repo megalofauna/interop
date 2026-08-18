@@ -90,5 +90,5 @@
 
 /* ── Rigs ───────────────────────────────────────────────────────────────── */
 
-@import "./protocol/rigs/choice-rig.css" layer(interop.theme);
+@import "./protocol/rigs/rig.css" layer(interop.theme);
 @import "./protocol/rigs/toolbar.css" layer(interop.theme);
