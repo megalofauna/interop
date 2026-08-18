@@ -66,6 +66,7 @@
 @import "./protocol/components/segmented-control.css" layer(interop.theme);
 @import "./protocol/components/stepper.css" layer(interop.theme);
 @import "./protocol/components/table.css" layer(interop.theme);
+@import "./protocol/components/tabs.css" layer(interop.theme);
 @import "./protocol/components/toast.css" layer(interop.theme);
 @import "./protocol/components/tooltip.css" layer(interop.theme);
 @import "./protocol/components/tree.css" layer(interop.theme);

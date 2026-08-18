@@ -82,6 +82,7 @@
 @import "./components/segment.css" layer(interop.foundation);
 @import "./components/stepper.css" layer(interop.foundation);
 @import "./components/table.css" layer(interop.foundation);
+@import "./components/tabs.css" layer(interop.foundation);
 @import "./components/toast.css" layer(interop.foundation);
 @import "./components/tooltip.css" layer(interop.foundation);
 @import "./components/tree.css" layer(interop.foundation);

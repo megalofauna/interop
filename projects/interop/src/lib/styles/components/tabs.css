@@ -1,0 +1,241 @@
+/*
+ * InteropTabs — structural foundation.
+ *
+ * Rendering rules for `section[interop-tabs]`, its `[role="tablist"]`,
+ * `[role="tab"]` children, and `section[interop-tab-panel]`. Loaded globally
+ * via `interop.css`; token VALUES live in
+ * `themes/protocol/components/tabs.css`.
+ *
+ * Migrated out of `interop-tabs.scss` / `interop-tab-panel.scss`, which were
+ * per-component `styleUrl` sheets. Angular injected those unlayered, so they
+ * outranked the entire `interop` cascade layer and no consumer using layers
+ * could override a tab. A CSS-only consumer got no tab styling at all. Neither
+ * file used any SCSS feature — they were plain CSS wearing a `.scss`
+ * extension.
+ *
+ * Contract: no literal `var(token, fallback)` defaults. The theme is the single
+ * source of truth for every `--itx-tab*` value; system tokens are read through
+ * their documented chains (focus) so a component with no opinion inherits one.
+ *
+ * All selectors are wrapped in :where() for zero specificity — consumer
+ * overrides always win regardless of declaration order. Pseudo-elements sit
+ * OUTSIDE the wrapper, which is the one place :where() cannot go.
+ */
+
+:where(section[interop-tabs]) {
+	display: block;
+}
+
+/*
+ * Vertical orientation.
+ *
+ * `orientation="vertical"` sets aria-orientation and swaps the arrow keys; the
+ * host reflects it as `itx-orientation` (see interop-tabs.ts) purely so this
+ * rule can exist. Side-by-side rather than stacked: a column of tabs sitting
+ * above its panels reads as a menu, not as tabs.
+ */
+:where(section[interop-tabs][itx-orientation="vertical"]) {
+	display: flex;
+	flex-direction: row;
+	align-items: start;
+	gap: var(--itx-tabs-gap);
+}
+
+/* UA reset. Type is set on the tab rule below rather than inherited, so
+   `font-size: inherit` is deliberately absent — it would re-inherit a fluid
+   prose size into a pinned-height box. */
+:where(section[interop-tabs] [role="tab"]) {
+	appearance: none;
+	-webkit-appearance: none;
+	margin: 0;
+	white-space: nowrap;
+	text-align: start;
+	user-select: none;
+	-webkit-user-select: none;
+	box-sizing: border-box;
+}
+
+/* ── Tablist ─────────────────────────────────────────────────────────────── */
+/*
+ * The rule runs along the WHOLE list, not per-tab. A continuous baseline is the
+ * better shape, and the per-tab bar below is positioned to sit IN it — so a
+ * selected tab reads as the rule turning colourway for that span rather than as
+ * a second line stacked on top of one.
+ */
+:where(section[interop-tabs] [role="tablist"]) {
+	display: var(--itx-tabs-tablist-display);
+	flex-wrap: var(--itx-tabs-tablist-flex-wrap);
+	gap: var(--itx-tabs-gap);
+	border-block-end: var(--itx-tabs-rule-width) solid var(--itx-tabs-rule-color);
+}
+
+/*
+ * Vertical: the list becomes a column and the rule moves to the inline-end
+ * edge — the seam between the list and the panels it controls. The selected bar
+ * follows it there, which keeps the relationship intact: the bar is always the
+ * rule, recoloured.
+ */
+:where(section[interop-tabs] [role="tablist"][aria-orientation="vertical"]) {
+	flex-direction: column;
+	border-block-end: none;
+	border-inline-end: var(--itx-tabs-rule-width) solid var(--itx-tabs-rule-color);
+}
+
+/* ── Tab ─────────────────────────────────────────────────────────────────── */
+/*
+ * Height comes from min-block-size with the label centred, so a tab with a
+ * two-line or icon label grows instead of clipping.
+ */
+:where(section[interop-tabs] [role="tab"]) {
+	display: inline-flex;
+	align-items: center;
+	min-block-size: var(--itx-tab-min-block-size);
+	gap: var(--itx-tab-gap);
+	padding-block: var(--itx-tab-padding-block);
+	padding-inline: var(--itx-tab-padding-inline);
+
+	/* `inherit` is valid in a fallback slot but NOT as a token value, so the
+	   theme declares nothing here. */
+	font-family: var(--itx-tab-font-family, inherit);
+	font-size: var(--itx-tab-font-size);
+	font-weight: var(--itx-tab-font-weight);
+	line-height: var(--itx-tab-line-height);
+	letter-spacing: var(--itx-tab-letter-spacing);
+
+	background: var(--itx-tab-background);
+	color: var(--itx-tab-foreground);
+	border: var(--itx-tab-border-width) solid var(--itx-tab-border-color);
+	border-radius: var(--itx-tab-border-radius);
+
+	cursor: pointer;
+	position: relative;
+	transition:
+		color var(--itx-tab-transition-duration) var(--itx-tab-transition-easing),
+		background-color var(--itx-tab-transition-duration)
+			var(--itx-tab-transition-easing);
+}
+
+/*
+ * The indicator bar. Absolutely positioned, so thickness and colour change on
+ * state without reflowing the strip.
+ *
+ * Pulled DOWN by the rule's width so it overlaps the list rule rather than
+ * sitting on top of it: a 2px bar at inset-block-end: -1px covers the 1px rule
+ * and stands 1px proud. That is what makes selection read as "the rule went
+ * colourway here".
+ */
+:where(section[interop-tabs] [role="tab"])::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	inset-block-end: calc(-1 * var(--itx-tabs-rule-width));
+	block-size: var(--itx-tab-indicator-size);
+	background: var(--itx-tab-indicator-color);
+	transition: background var(--itx-tab-transition-duration)
+		var(--itx-tab-transition-easing);
+}
+
+/*
+ * Hover — label to full strength, bar strengthens, NOTHING painted behind the
+ * tab. A filled hover on a squared, gapless row of labels is the segmented
+ * control's shape, and the two components have to stay legibly apart.
+ * `--itx-tab-background-hover` exists anyway, so that is a lever rather than an
+ * omission.
+ *
+ * Behind `any-hover: hover` so a touch device does not latch the hover paint
+ * after a tap.
+ */
+@media (any-hover: hover) {
+	:where(section[interop-tabs] [role="tab"]:hover) {
+		background: var(--itx-tab-background-hover);
+		color: var(--itx-tab-foreground-hover);
+	}
+
+	:where(section[interop-tabs] [role="tab"]:hover)::after {
+		background: var(--itx-tab-indicator-color-hover);
+	}
+}
+
+/* ── Selected ────────────────────────────────────────────────────────────── */
+/*
+ * Background stays transparent on purpose — selection carries two signals here,
+ * the label at full strength and a colourway bar.
+ */
+:where(section[interop-tabs] [role="tab"][aria-selected="true"]) {
+	color: var(--itx-tab-foreground-selected);
+	background: var(--itx-tab-background-selected);
+	font-weight: var(--itx-tab-font-weight-selected);
+}
+
+:where(section[interop-tabs] [role="tab"][aria-selected="true"])::after {
+	background: var(--itx-tab-indicator-color-selected);
+}
+
+/* ── Focus ───────────────────────────────────────────────────────────────── */
+/* Inset offset keeps the ring inside the tab rather than spilling over its
+   neighbour in a gapless strip. */
+:where(section[interop-tabs] [role="tab"]:focus-visible) {
+	outline: var(--itx-tab-focus-width, var(--itx-focus-width))
+		var(--itx-tab-focus-style, var(--itx-focus-style))
+		var(--itx-tab-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-tab-focus-offset, var(--itx-focus-offset));
+}
+
+/* ── Vertical tabs ───────────────────────────────────────────────────────── */
+/* Full-width rows, bar on the inline-end edge, in the rule. `inset-inline: auto`
+   first, because the horizontal rule above sets both inline insets and a lone
+   `inset-inline-end` would not clear the start one. */
+:where(
+	section[interop-tabs]
+		[role="tablist"][aria-orientation="vertical"]
+		[role="tab"]
+) {
+	inline-size: 100%;
+	justify-content: start;
+}
+
+:where(
+	section[interop-tabs]
+		[role="tablist"][aria-orientation="vertical"]
+		[role="tab"]
+)::after {
+	inset-inline: auto;
+	inset-block: 0;
+	inset-inline-end: calc(-1 * var(--itx-tabs-rule-width));
+	block-size: auto;
+	inline-size: var(--itx-tab-indicator-size);
+}
+
+/* ── Tab panel ───────────────────────────────────────────────────────────── */
+/*
+ * The panel host carries `tabindex="0"` unconditionally (see
+ * interop-tab-panel.ts) — the ARIA tabs pattern: a panel whose content has
+ * nothing focusable must itself be reachable, or a keyboard user tabs straight
+ * past the thing the tab just revealed. Which is why it needs a visible focus
+ * state; without one that is a WCAG 2.4.7 failure for exactly one Tab press.
+ */
+:where(section[interop-tab-panel]) {
+	display: block;
+	padding-block: var(--itx-tab-panel-padding-block);
+	padding-inline: var(--itx-tab-panel-padding-inline);
+
+	/* Only meaningful when the tabs host is a flex row, i.e. vertical
+	   orientation. Inert in the horizontal case, so it costs nothing to declare
+	   unconditionally and saves reaching up for the parent's orientation.
+	   min-inline-size: 0 because a flex item's automatic minimum size is its
+	   content, so a wide table inside a panel would push the group past its
+	   container instead of scrolling inside it. */
+	flex: 1 1 auto;
+	min-inline-size: 0;
+}
+
+:where(section[interop-tab-panel]:focus-visible) {
+	outline: var(--itx-tab-panel-focus-width, var(--itx-focus-width))
+		var(--itx-tab-panel-focus-style, var(--itx-focus-style))
+		var(--itx-tab-panel-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-tab-panel-focus-offset, var(--itx-focus-offset));
+}
+
+:where(section[interop-tab-panel][hidden]) {
+	display: none;
+}

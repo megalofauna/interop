@@ -99,7 +99,6 @@ let _tabsIdCounter = 0;
 	standalone: true,
 	imports: [NgTemplateOutlet],
 	templateUrl: "./interop-tabs.html",
-	styleUrl: "./interop-tabs.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		{
