@@ -41,21 +41,30 @@
  *                                     palette solid blue.
  */
 
-:where([interop-root] dialog[interop-command-palette]) {
+:where([interop-root], [itx-layer], [itx-sink]) {
 	/* shell */
 	--itx-cmdp-inline-size: 92vw;
-	--itx-cmdp-max-inline-size: 40rem;
+	--itx-cmdp-max-inline-size: 36rem;
 	--itx-cmdp-max-block-size: min(28rem, 70vh);
 	--itx-cmdp-offset-block-start: 12vh;
 	--itx-cmdp-aside-inline-size: 12rem;
-	--itx-cmdp-background: var(--itx-surface);
+	--itx-cmdp-background: var(--itx-surface-above);
 	--itx-cmdp-color: var(--itx-contrast-6);
 	--itx-cmdp-border-width: var(--itx-border-width-hairline);
 	/* The house hairline. NOT --itx-contrast-3, which resolves to neutral-5 — a
 	   sub-0.1 luminance delta against our surfaces, i.e. an edge you cannot
 	   see. Same value as the table's row rules and the tab list. */
-	--itx-cmdp-border-color: var(--itx-contrast-3);
+	--itx-cmdp-border-color: var(--itx-contrast-1);
+	/* Two radii, one per state. Collapsed the palette is a single pill-shaped
+	   search bar; expanded it is a panel, and a full radius on a tall panel
+	   reads as a mistake. --itx-cmdp-radius stays as the fallback for both so
+	   an existing consumer override still moves the whole thing. */
 	--itx-cmdp-radius: var(--itx-radius);
+	--itx-cmdp-radius-collapsed: var(--itx-radius-nominal);
+	--itx-cmdp-radius-expanded: var(--itx-cmdp-radius-collapsed);
+
+	/* The bar is the focus locus (see components/command-palette.css). */
+	--itx-cmdp-field-focus-offset: -2px;
 	--itx-cmdp-shadow: var(--itx-shadow-lg);
 	--itx-cmdp-backdrop: oklch(0 0 0 / 0.4);
 	--itx-cmdp-backdrop-filter: blur(2px);

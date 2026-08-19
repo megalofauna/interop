@@ -74,7 +74,7 @@ A standalone, inline-friendly chip for single-use cases. The selector is **tag-a
 - No `aria-label` required (nothing to label); no list wrapper required.
 - Removes the "list of one" UX smell ("this could be more").
 
-Visual paint reuses the shared `--itx-chip-*` family. The badge defaults to a smaller scale by overriding `--itx-chip-sizing-multiplier` to `1` on its own selector.
+Visual paint reuses the shared `--itx-chip-*` family. The badge defaults to the `sm` step via `[interop-chip-badge]:not([itx-size])` — it is non-interactive, so it has no target-size floor to defend, and small is what a badge is. (An earlier note here described an `--itx-chip-sizing-multiplier`; no such token exists.)
 
 **Inputs:** none — presentational.
 
@@ -211,7 +211,7 @@ A step is a **bundle** — height, inline padding, radius, and the remove button
 | Site | Why it exists |
 |---|---|
 | `[interop-root]` | The *inherited* default. A bare chip must declare no size of its own — otherwise it shadows the container trying to size it, and `<ul interop-chip-list itx-size="sm">` stops reaching its `<li>`s. |
-| the `[itx-size="md"]` rule | The *explicit* override — so `chip-badge`/`chip-input` can opt up from their `sm` default, and so a chip can re-assert `md` inside an `sm` container. |
+| the `[itx-size="md"]` rule | The *explicit* override — so `chip-badge` can opt up from its `sm` default, and so a chip can re-assert `md` inside an `sm` container. `chip-input` no longer has a silent `sm` default: it is interactive, so its size is the author's call. |
 
 Neither is removable, and the second can't reference the first (`--itx-chip-padding-inline: var(--itx-chip-padding-inline)` is a cycle). So the values live under their own names and every assignment site points at them:
 

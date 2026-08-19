@@ -17,7 +17,31 @@
 	inline-size: var(--itx-cmdp-inline-size);
 	max-inline-size: var(--itx-cmdp-max-inline-size);
 	max-block-size: var(--itx-cmdp-max-block-size);
-	margin-block-start: var(--itx-cmdp-offset-block-start);
+	/* Positioned by INSET, not by margin, and the default lives here in the
+	   fallback rather than in the theme.
+
+	   Two separate failures put it this way. A bare
+	   `var(--itx-cmdp-offset-block-start)` is guaranteed-invalid the moment the
+	   token does not reach this element, and margin's initial value is 0 — so
+	   the palette silently centred and computed to `margin-block-start: 0px`,
+	   which reads like an override rather than a dead declaration. The fallback
+	   fixes that.
+
+	   It still computed to 0, because the offset was a MARGIN and a consumer's
+	   `:host > * { margin-block: 0 }` was resetting it. Angular injects
+	   component styles UNLAYERED, and unlayered beats every cascade layer at
+	   any specificity — so a routine child reset in an app silently defeats a
+	   zero-specificity library rule. That is not a bug in the app; it is what
+	   this component gets for hanging its position on a margin.
+
+	   An inset cannot be reached by a margin reset, and it positions the box
+	   directly instead of relying on auto-margin resolution in an
+	   over-constrained absolute layout — the part of dialog positioning where
+	   engines have historically diverged. Measured identical to the margin form
+	   in Chrome. */
+	inset-block-start: var(--itx-cmdp-offset-block-start, 12vh);
+	inset-block-end: auto;
+	margin-block: 0;
 	margin-inline: auto;
 	padding: 0;
 	overflow: hidden;
@@ -25,7 +49,7 @@
 	color: var(--itx-cmdp-color);
 	background-color: var(--itx-cmdp-background);
 	border: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
-	border-radius: var(--itx-cmdp-radius);
+	border-radius: var(--itx-cmdp-radius-expanded, var(--itx-cmdp-radius));
 	box-shadow: var(--itx-cmdp-shadow);
 
 	/* Query container for the interior layout. The palette caps at its own
@@ -81,6 +105,16 @@
 :where(dialog[interop-command-palette])::backdrop {
 	background: var(--itx-cmdp-backdrop);
 	backdrop-filter: var(--itx-cmdp-backdrop-filter);
+}
+
+/* The search bar is the focus locus: it rings when anything inside it takes
+   focus, so the input, the clear button and any future control in the bar all
+   report through one edge. */
+:where(.itx-cmdp__field:focus-within) {
+	outline: var(--itx-cmdp-field-focus-width, var(--itx-focus-width))
+		var(--itx-cmdp-field-focus-style, var(--itx-focus-style))
+		var(--itx-cmdp-field-focus-color, var(--itx-focus-color));
+	outline-offset: var(--itx-cmdp-field-focus-offset, var(--itx-focus-offset));
 }
 
 /* ── Filter field ─────────────────────────────────────────────────────────── */
@@ -140,11 +174,16 @@
 	flex: 1 1 auto;
 	min-inline-size: 0;
 	appearance: none;
+	/* The field never draws its own edge, in any state. The focus locus is the
+	   whole search bar (.itx-cmdp__field, below) — an input-shaped ring inside
+	   it reads as a form control nested in a palette, which is not what this is.
+
+	   This rule used to carry the outline UNCONDITIONALLY — no :focus-visible,
+	   no :focus — so a 2px ring in the brand colour was painted on all four
+	   sides at all times, borrowing the CLEAR BUTTON's tokens
+	   (--itx-cmdp-clear-focus-*) to do it. */
 	border: none;
-	outline: var(--itx-cmdp-clear-focus-width, var(--itx-focus-width))
-		var(--itx-cmdp-clear-focus-style, var(--itx-focus-style))
-		var(--itx-cmdp-clear-focus-color, var(--itx-focus-color));
-	outline-offset: var(--itx-cmdp-clear-focus-offset, var(--itx-focus-offset));
+	outline: none;
 	color: inherit;
 	font: inherit;
 	font-size: var(--itx-cmdp-input-font-size);
@@ -277,4 +316,21 @@
 		color: HighlightText;
 		forced-color-adjust: none;
 	}
+}
+
+/* ── Collapsed — opened, nothing typed yet ────────────────────────────────── */
+/*
+ * A palette opened cold is a search bar, not an empty result list. The panel is
+ * hidden rather than removed so the listbox keeps its id for the input's
+ * aria-controls / aria-activedescendant.
+ */
+:where(dialog[interop-command-palette].itx-cmdp--collapsed) {
+	border-radius: var(--itx-cmdp-radius-collapsed, var(--itx-cmdp-radius));
+}
+
+:where(
+	dialog[interop-command-palette].itx-cmdp--collapsed .itx-cmdp__results,
+	dialog[interop-command-palette].itx-cmdp--collapsed .itx-cmdp__aside
+) {
+	display: none;
 }

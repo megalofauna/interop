@@ -76,6 +76,15 @@ let paletteSeq = 0;
 		 * in .agent/workflows/carbon-borrow.md.
 		 */
 		"interop-typography-isolate": "",
+		/*
+		 * Collapsed until the user types. A palette opened cold shows only its
+		 * search bar; the results panel is not a list waiting to be filtered, it
+		 * is a response to input. This is a class rather than a template @if so
+		 * the listbox stays in the DOM — the input's aria-controls and
+		 * aria-activedescendant reference it, and removing it would break those
+		 * IDREFs the moment the palette opens.
+		 */
+		"[class.itx-cmdp--collapsed]": "!query()",
 		"[attr.aria-label]": "label()",
 		"(cancel)": "onCancel($event)",
 	},

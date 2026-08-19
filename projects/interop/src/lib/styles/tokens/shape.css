@@ -138,7 +138,7 @@
  */
 
 :where([interop-root]) {
-	--itx-radius: var(--itx-radius-none);
+	--itx-radius: var(--itx-radius-nominal);
 }
 
 /* ── itx-radius="…" — per-element application attribute ───────────────────────
