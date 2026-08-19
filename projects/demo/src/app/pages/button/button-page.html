@@ -26,11 +26,11 @@
 				inverts the padding box on a short button. Omit the attribute to retain
 				the base size (md).
 			</p>
-			<button interop-button="" itx-size="xs">Extra small</button>
+			<!--<button interop-button="" itx-size="xs">Extra small</button>-->
 			<button interop-button="" itx-size="sm">Small</button>
 			<button interop-button="" itx-size="md">Medium</button>
 			<button interop-button="" itx-size="lg">Large</button>
-			<button interop-button="" itx-size="xl">Extra large</button>
+			<!--<button interop-button="" itx-size="xl">Extra large</button>-->
 			<itx-code-block [files]="sizeFiles" />
 		</demo-example>
 
@@ -71,35 +71,39 @@
 			<itx-code-block [files]="variantFiles" />
 		</demo-example>
 
-		<demo-example label="Addon slots">
+		<demo-example label="Icons in buttons">
 			<p description>
-				<code>interop-button-prefix</code> and
-				<code>interop-button-suffix</code> are marker directives — each adds a
-				class and nothing else. Source order remains layout order, and the
-				button's <code>gap</code> does the spacing; the slot rules only stop an
-				addon from stretching and keep a 1em icon on the label's centre line.
-				Neither sets <code>aria-hidden</code>, because a button's contents can
-				<em>be</em> its accessible name. Mark a decorative addon
-				<code>aria-hidden</code> yourself when a visible label is present; for
-				an icon-only button give the host an <code>aria-label</code> and leave
-				the icon alone.
+				An icon in a button is just content. Source order is layout order and
+				the button's <code>gap</code> does the spacing, so a leading icon is an
+				icon written first and a trailing icon is one written last — no slot, no
+				wrapper, no directive.
+			</p>
+			<p description>
+				Naming is the part worth getting right. A button's contents can
+				<em>be</em> its accessible name, so mark a decorative icon
+				<code>aria-hidden="true"</code> when a visible label is already there.
+				On an icon-only button do the opposite: give the host an
+				<code>aria-label</code> and leave the icon alone, so the name comes from
+				one place rather than two.
 			</p>
 			<button interop-button="primary">
-				<interop-button-prefix>
-					<interop-icon name="tabler-download" aria-hidden="true" />
-				</interop-button-prefix>
+				<interop-icon name="tabler-download" aria-hidden="true" />
 				Download
 			</button>
 			<button interop-button="tertiary">
 				Next
-				<interop-button-suffix>
-					<interop-icon name="tabler-chevron-right" aria-hidden="true" />
-				</interop-button-suffix>
+				<interop-icon name="tabler-chevron-right" aria-hidden="true" />
+			</button>
+			<button interop-button="secondary">
+				<interop-icon name="tabler-filter" aria-hidden="true" />
+				Filter
+				<interop-icon name="tabler-chevron-down" aria-hidden="true" />
 			</button>
 			<button interop-button="primary icon" aria-label="Add item">
-				<interop-button-prefix>
-					<interop-icon name="tabler-plus" />
-				</interop-button-prefix>
+				<interop-icon name="tabler-plus" />
+			</button>
+			<button interop-button="tertiary icon" itx-size="sm" aria-label="Dismiss">
+				<interop-icon name="tabler-x" />
 			</button>
 			<itx-code-block language="html" [code]="addonHtml" />
 		</demo-example>
@@ -264,8 +268,6 @@
 			<code>InteropButtonActivation</code>. The two share a selector but are
 			separate imports — import only <code>InteropButton</code> and the
 			activation utilities are never bundled.
-			<code>InteropButtonPrefix</code> and <code>InteropButtonSuffix</code> are
-			marker directives with no inputs.
 		</p>
 		<interop-table [collection]="apiEntries" [columns]="apiColumns">
 			<ng-template itxCell="name" let-entry>

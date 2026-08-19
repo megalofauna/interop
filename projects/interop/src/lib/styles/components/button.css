@@ -247,30 +247,6 @@
 	outline-offset: var(--itx-button-focus-offset, var(--itx-focus-offset));
 }
 
-/* ── Prefix / suffix addon slots ─────────────────────────────────────────── */
-/*
- * Marker classes applied by `InteropButtonPrefix` and `InteropButtonSuffix`.
- * Source order is still layout order — the existing flex `gap` separates the
- * addon from the label. These rules only constrain the slot itself so that
- * addons (icons, badges) line up with the label baseline and don't grow to
- * fill extra space.
- *
- * `line-height: 1` keeps a 1em icon vertically centred even when the button
- * uses `line-height: unset` — addons measure to their own content rather
- * than the button's text leading.
- */
-
-:where(
-	button[interop-button] .interop-button__prefix,
-	button[interop-button] .interop-button__suffix
-) {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex: none;
-	line-height: 1;
-}
-
 /* ── Disabled ────────────────────────────────────────────────────────────── */
 
 :where(button[interop-button]:disabled),

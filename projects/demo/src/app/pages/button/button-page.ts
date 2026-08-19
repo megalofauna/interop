@@ -1,8 +1,6 @@
 import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import {
 	InteropButton,
-	InteropButtonPrefix,
-	InteropButtonSuffix,
 	InteropIcon,
 	InteropTable,
 	InteropCellDef,
@@ -54,8 +52,6 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	standalone: true,
 	imports: [
 		InteropButton,
-		InteropButtonPrefix,
-		InteropButtonSuffix,
 		InteropIcon,
 		InteropTable,
 		InteropCellDef,
@@ -169,11 +165,10 @@ export class ButtonPage {
 	}
 
 	// ── Code snippets ────────────────────────────────────────────────────────
-	readonly sizeCode = `<button interop-button itx-size="xs">Extra small</button>
+	readonly sizeCode = `
 <button interop-button itx-size="sm">Small</button>
 <button interop-button itx-size="md">Medium</button>
-<button interop-button itx-size="lg">Large</button>
-<button interop-button itx-size="xl">Extra large</button>`;
+<button interop-button itx-size="lg">Large</button>`;
 
 	readonly radiusCode = `<button interop-button itx-radius="none">None</button>
 <button interop-button itx-radius="nominal">Nominal</button>
@@ -203,27 +198,32 @@ export class ButtonPage {
 <button interop-button="interop-demo">Custom</button>`;
 
 	// ── Addon slot snippets ──────────────────────────────────────────────────
-	readonly addonHtml = `<!-- Leading icon alongside a visible label -->
+	readonly addonHtml = `<!-- Leading icon: written first, so it renders first -->
 <button interop-button="primary">
-  <interop-button-prefix>
-    <interop-icon name="tabler-download" aria-hidden="true" />
-  </interop-button-prefix>
+  <interop-icon name="tabler-download" aria-hidden="true" />
   Download
 </button>
 
-<!-- Trailing icon -->
+<!-- Trailing icon: written last -->
 <button interop-button="tertiary">
   Next
-  <interop-button-suffix>
-    <interop-icon name="tabler-chevron-right" aria-hidden="true" />
-  </interop-button-suffix>
+  <interop-icon name="tabler-chevron-right" aria-hidden="true" />
 </button>
 
-<!-- Icon-only: the host carries the accessible name, the icon is left alone -->
+<!-- Both. The button's gap spaces all three children evenly -->
+<button interop-button="secondary">
+  <interop-icon name="tabler-filter" aria-hidden="true" />
+  Filter
+  <interop-icon name="tabler-chevron-down" aria-hidden="true" />
+</button>
+
+<!-- Icon-only: the HOST carries the name, so the icon is NOT aria-hidden -->
 <button interop-button="primary icon" aria-label="Add item">
-  <interop-button-prefix>
-    <interop-icon name="tabler-plus" />
-  </interop-button-prefix>
+  <interop-icon name="tabler-plus" />
+</button>
+
+<button interop-button="tertiary icon" itx-size="sm" aria-label="Dismiss">
+  <interop-icon name="tabler-x" />
 </button>`;
 
 	readonly throttleCode = `readonly handler = createActivationHandler(
