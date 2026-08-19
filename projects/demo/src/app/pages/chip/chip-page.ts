@@ -332,10 +332,6 @@ export class ChipPage {
 			default: "var(--itx-spacing-3) — 12px",
 		},
 		{
-			property: "--itx-chip-md-radius",
-			default: "var(--itx-radius-lg) — 12px",
-		},
-		{
 			property: "--itx-chip-sm-height",
 			default: "var(--itx-spacing-6) — 24px",
 		},
@@ -343,7 +339,6 @@ export class ChipPage {
 			property: "--itx-chip-sm-padding-inline",
 			default: "var(--itx-spacing-2) — 8px",
 		},
-		{ property: "--itx-chip-sm-radius", default: "var(--itx-radius-md) — 8px" },
 
 		{ groupLabel: "Shared — size (assigned from the step above)" },
 		{ property: "--itx-chip-height", default: "var(--itx-chip-md-height)" },
@@ -357,7 +352,10 @@ export class ChipPage {
 		},
 		{ property: "--itx-chip-max-width", default: "none" },
 		{ property: "--itx-chip-gap", default: "var(--itx-spacing-4) — 16px" },
-		{ property: "--itx-chip-radius", default: "var(--itx-chip-md-radius)" },
+		{
+			property: "--itx-chip-radius",
+			default: "var(--itx-radius-full) — a pill",
+		},
 
 		{ groupLabel: "Shared — type" },
 		{ property: "--itx-chip-font-size", default: "0.75rem" },

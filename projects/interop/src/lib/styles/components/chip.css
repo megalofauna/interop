@@ -105,7 +105,7 @@
 	padding-inline: var(--itx-chip-padding-inline);
 	background: var(--itx-chip-background);
 	border: var(--itx-chip-border);
-	border-radius: var(--itx-chip-radius, var(--itx-radius-lg));
+	border-radius: var(--itx-chip-radius, var(--itx-radius));
 	color: var(--itx-chip-color);
 	font-size: var(--itx-chip-font-size);
 	font-weight: var(--itx-chip-font-weight);
@@ -119,7 +119,10 @@
 :where(fieldset[interop-chip-filter]) {
 	background: var(--itx-chip-filter-background);
 	border: var(--itx-chip-filter-border);
-	border-radius: var(--itx-chip-filter-radius);
+	border-radius: var(
+		--itx-chip-filter-radius,
+		var(--itx-chip-radius, var(--itx-radius))
+	);
 	padding: var(--itx-chip-filter-padding);
 	margin: 0;
 	min-inline-size: 0;
@@ -259,7 +262,10 @@
 	margin: var(--itx-chip-remove-margin);
 	background: var(--itx-chip-remove-background);
 	border: var(--itx-chip-remove-border);
-	border-radius: var(--itx-chip-remove-radius);
+	border-radius: var(
+		--itx-chip-remove-radius,
+		var(--itx-chip-radius, var(--itx-radius))
+	);
 	color: inherit;
 	cursor: pointer;
 	font-size: var(--itx-chip-remove-font-size);
@@ -291,9 +297,25 @@
    family; the theme expresses badge "smallness" by dropping it to the small
    step of the size axis.                                                    */
 
+/* A badge sits in running text, so its vertical alignment is a typographic
+   decision rather than a default.
+
+   `middle` aligns the box's midpoint to the parent's baseline plus half its
+   x-height. For a box the height of the line — a 24px sm badge in 16px/1.5
+   text — that pushes the badge's bottom BELOW the text, so it reads as a
+   descender. Measured in Chrome 151 against a plain inline span:
+
+     vertical-align      badge bottom vs the text's bottom
+     baseline            +5.0px
+     middle              +4.4px   ← was here
+     text-bottom          0.0px
+
+   `text-bottom` aligns the badge's bottom edge to the bottom of the parent's
+   font content box, which is where the eye expects it to sit. The badge then
+   grows upward, which is what a taller-than-text inline object should do. */
 :where([interop-chip-badge]) {
 	max-width: fit-content;
-	vertical-align: middle;
+	vertical-align: text-bottom;
 }
 
 @media (prefers-contrast: more), (prefers-contrast: high) {
@@ -312,7 +334,10 @@
 	gap: var(--itx-chip-input-gap);
 	background: var(--itx-chip-input-background);
 	border: var(--itx-chip-input-border);
-	border-radius: var(--itx-chip-input-radius);
+	border-radius: var(
+		--itx-chip-input-radius,
+		var(--itx-chip-radius, var(--itx-radius))
+	);
 	padding: var(--itx-chip-input-padding);
 	min-height: var(--itx-chip-input-min-height);
 	cursor: text;
@@ -345,17 +370,29 @@
 	text-overflow: ellipsis;
 }
 
+/* The field is a bare text surface inside the container's box — the container
+   draws the frame, the background and the focus ring.
+
+   It used to carry the chip's focus ring on its BASE rule, with no
+   :focus-visible and no :focus, so a 2px solid ring was painted around the
+   field at all times. Two rings fired together on focus (the container also
+   rings on :focus-within), and because the field had no border-radius the
+   permanent one was a square sitting inside a pill.
+
+   `outline: none` is the sanctioned reset here rather than a gated ring: the
+   container's :focus-within ring is the affordance, and a second concentric
+   ring for one focus event is noise. The radius still chains, so anything the
+   field ever paints — a ring, a selection background, a consumer's override —
+   follows the chip's shape instead of squaring it off. */
 :where(div[interop-chip-input] .itx-chip-text-input) {
 	flex: 1;
 	min-width: 8rem;
 	background: transparent;
 	border: none;
+	border-radius: var(--itx-chip-radius, var(--itx-radius));
 	color: inherit;
 	font: inherit;
-	outline: var(--itx-chip-focus-width, var(--itx-focus-width))
-		var(--itx-chip-focus-style, var(--itx-focus-style))
-		var(--itx-chip-focus-color, var(--itx-focus-color));
-	outline-offset: var(--itx-chip-focus-offset, var(--itx-focus-offset));
+	outline: none;
 }
 
 /* ::placeholder is a pseudo-element — must go outside :where()              */

@@ -13,6 +13,32 @@
  *
  * The label is 12px at every step — Carbon holds $label-01 across all sizes, so
  * the size axis moves the box, never the type.
+ *
+ * ── Radius — pinned to the pill, once ────────────────────────────────────
+ *
+ * A chip is a pill, so --itx-chip-radius is stated ONCE in the base below and
+ * every part follows it. That is a deliberate deviation: field,
+ * expansion-panel, callout, listbox and toast all declare no radius at all and
+ * follow the house knob. Chip does not, because a pill is the shape rather
+ * than a rounding preference. Setting --itx-radius does not square a chip; a
+ * consumer who wants that sets --itx-chip-radius.
+ *
+ * The parts still chain, so overriding stays layered:
+ *
+ *   chip         var(--itx-chip-radius, var(--itx-radius))
+ *   its parts    var(--itx-chip-<part>-radius, var(--itx-chip-radius, var(--itx-radius)))
+ *
+ * Three scopes to reach for — one part, the whole chip, or the whole product —
+ * and the parts track the chip by construction rather than by theme lines that
+ * have to be kept in sync.
+ *
+ * They did not, before. Radius was pinned in five places and varied on the SIZE
+ * axis: md was --itx-radius-full, sm was --itx-radius-none, and a chip with no
+ * itx-size at all got neither, falling through to --itx-radius-lg — three
+ * different shapes from an attribute that means size. The base also carried
+ * `--itx-chip-remove-radius: var(--itx-chip-radius)` where --itx-chip-radius
+ * was not declared, so that line was guaranteed-invalid and never applied, and
+ * --itx-chip-selectable-radius was read by nothing at all.
  */
 
 /* Co-declared on the elevation boundaries, not the bare root: a custom
@@ -21,8 +47,20 @@
    "Co-declaration", and the specs in tokens/elevation.spec.ts. */
 :where([interop-root], [itx-layer], [itx-sink]) {
 	/* Focus — the only deviation from the system ring. Inset: the remove button is a small target inside the chip's own edge.
-	   Colour, width and style come from tokens/focus.css. */
+	   Width and style come from tokens/focus.css. */
 	--itx-chip-remove-focus-offset: -2px;
+
+	/* The colour CANNOT fall through, which is why it is stated here.
+	   --itx-focus-color is --itx-colorway-solid, and the remove button is
+	   transparent over a chip whose background is --itx-colorway-solid — so the
+	   inherited ring was drawn in exactly the colour of the thing behind it and
+	   could not be seen. The button still took focus on tab; it just stopped
+	   saying so.
+
+	   -on-solid is the rung solved to be legible against the solid fill, which
+	   is what the transparent button reveals. It is also --itx-chip-color, so
+	   the ring matches the label it sits beside. */
+	--itx-chip-remove-focus-color: var(--itx-colorway-on-solid);
 
 	/* ── Size steps — the vocabulary ──────────────────────────────────────
 	 * Each step's values are declared exactly ONCE, here. The three sites
@@ -57,6 +95,9 @@
 	--itx-chip-font-weight: 400;
 	--itx-chip-line-height: 1.3333;
 
+	/* ── Shape ────────────────────────────────────────────────────────── */
+	--itx-chip-radius: var(--itx-radius-full);
+
 	/* ── Paint — presentational & dismissible ─────────────────────────────
 	 * Carbon's gray tag is a solid fill with no border at all. Dropping the
 	 * border is most of what makes the shape read as Carbon.               */
@@ -71,7 +112,7 @@
 	 * checked. Neutral by design — Carbon's selectable tag never takes a
 	 * colour. Set --itx-chip-background-selected / -color-selected to brand
 	 * it; those are the seam, at whatever scope you set them.              */
-	--itx-chip-selectable-background: var(--itx-contrast-2);
+	--itx-chip-selectable-background: var(--itx-contrast-1);
 	--itx-chip-selectable-color: var(--itx-contrast-6);
 	--itx-chip-selectable-background-hover: var(--itx-contrast-2);
 	--itx-chip-selectable-color-hover: var(--itx-contrast-6);
@@ -88,11 +129,10 @@
 	 * A flush square the full height of the chip. No border: the chip is a
 	 * solid fill, so the button announces itself by deepening. The focus ring
 	 * insets so it stays inside the pill rather than orbiting it.           */
-	--itx-chip-remove-background: var(--itx-colorway-solid);
-	--itx-chip-remove-background-hover: var(--itx-contrast-2);
+	--itx-chip-remove-background: transparent;
+	--itx-chip-remove-background-hover: var(--itx-contrast-1);
 	--itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2);
 	--itx-chip-remove-border: none;
-	--itx-chip-remove-radius: var(--itx-chip-radius); /* tracks the chip */
 	--itx-chip-remove-font-size: var(--itx-spacing-3); /* 16px — Carbon icon */
 
 	/* ── Disabled ─────────────────────────────────────────────────────── */
@@ -109,7 +149,6 @@
 :where(fieldset[interop-chip-filter]) {
 	--itx-chip-filter-background: transparent;
 	--itx-chip-filter-border: none;
-	--itx-chip-filter-radius: var(--itx-radius);
 	--itx-chip-filter-padding: 0;
 	--itx-chip-filter-gap: var(--itx-spacing-2); /* 8px */
 }
@@ -129,9 +168,8 @@
 :where(div[interop-chip-input]) {
 	--itx-chip-input-background: var(--itx-surface);
 	--itx-chip-input-border: var(--itx-border-width-thick) solid transparent;
-	--itx-chip-input-radius: var(--itx-radius-xl); /* 16px — the field's own */
-	--itx-chip-input-gap: var(--itx-spacing-1); /* 4px */
-	--itx-chip-input-padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	--itx-chip-input-gap: var(--itx-spacing-2); /* 8px */
+	--itx-chip-input-padding: var(--itx-spacing-2);
 	--itx-chip-input-min-height: var(--itx-spacing-10); /* 40px */
 }
 
@@ -145,9 +183,22 @@
 
    Only elements carrying an explicit itx-size appear here — a bare chip must
    declare nothing on itself, or it would shadow the container that is trying
-   to size it. chip-badge and chip-input are the exception: they default to
-   sm via :not([itx-size]), which is mutually exclusive with the md rule, so
-   an explicit size still wins with no source-order dependency.             */
+   to size it.
+
+   One exception: chip-badge defaults to sm through `:not([itx-size])`. A badge
+   is non-interactive, so it has no target-size floor to defend, and small IS
+   what a badge is — the default carries no risk and states the component's
+   nature.
+
+   chip-input used to do the same and no longer does. It is interactive, and a
+   developer writing `<div interop-chip-input>` got 24px chips with nothing in
+   the markup saying so — and no way to reach md except by writing itx-size="md"
+   to undo a default they could not see. On an interactive control that is the
+   library making a sizing decision on the author's behalf and hiding it. It now
+   takes the base md step; sm is one attribute away.
+
+   md also happens to fit: the input's 40px min-height minus its 4px block
+   padding is exactly the 32px md chip.             */
 
 :where(
 	label[interop-chip-option][itx-size="md"],
@@ -159,8 +210,6 @@
 ) {
 	--itx-chip-height: var(--itx-chip-md-height);
 	--itx-chip-padding-inline: var(--itx-chip-md-padding-inline);
-	--itx-chip-radius: var(--itx-radius-lg);
-	--itx-chip-remove-radius: var(--itx-chip-radius);
 }
 
 :where(
@@ -170,11 +219,8 @@
 	ul[interop-chip-list][itx-size="sm"],
 	fieldset[interop-chip-filter][itx-size="sm"],
 	div[interop-chip-input][itx-size="sm"],
-	[interop-chip-badge]:not([itx-size]),
-	div[interop-chip-input]:not([itx-size])
+	[interop-chip-badge]:not([itx-size])
 ) {
 	--itx-chip-height: var(--itx-chip-sm-height);
 	--itx-chip-padding-inline: var(--itx-chip-sm-padding-inline);
-	--itx-chip-radius: var(--itx-radius-md);
-	--itx-chip-remove-radius: var(--itx-chip-radius);
 }

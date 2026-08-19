@@ -20,6 +20,11 @@
 .chip-page__defs dt {
 	font-weight: 600;
 	color: var(--itx-contrast-5);
+	/* prose.css gives `dd + dt` a rhythm margin, which is right for a flow <dl>
+	   and wrong for this one: row-gap already spaces the rows, so the margin
+	   pushed every dt after the first down by 16px while its badge stayed put.
+	   The dl and the dd were already reset here; the dt was missed. */
+	margin: 0;
 }
 
 .chip-page__defs dd {
