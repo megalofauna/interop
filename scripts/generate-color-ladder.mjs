@@ -6,6 +6,12 @@
  * reads, and validates every value against its contrast floor. One script owns
  * both, so the validator can never drift from the thing it validates.
  *
+ * It also emits a DERIVATION RECORD for the demo — the dials that were turned
+ * and what the solver made of them, including the facts CSS cannot express: a
+ * seed, a chroma ceiling, a lightness the solver had to abandon. Same reasoning
+ * one step further out: a demonstration that hand-copies its numbers is a
+ * demonstration that can be wrong about the system it is demonstrating.
+ *
  * ── The two axes ──────────────────────────────────────────────────────────
  *
  * ELEVATION is the neutral substrate a component stands on. It moves toward
@@ -90,6 +96,15 @@ const OUT_ENGINE = join(
 const OUT_SOURCE = join(
 	REPO,
 	"projects/interop/src/lib/styles/tokens/ladder.css-source.ts",
+);
+/**
+ * The derivation record — the dials that were turned and what the solver made
+ * of them, as a typed module the demo renders. Lives in the demo rather than
+ * the library because it documents the system; it is not part of it.
+ */
+const OUT_FACTS = join(
+	REPO,
+	"projects/demo/src/app/pages/color/ladder-facts.ts",
 );
 
 /* ── Configuration ──────────────────────────────────────────────────────── */
@@ -215,6 +230,18 @@ const RANKS = [
 	// 5 as the softer body-text option rather than an unused notch.
 	{ rank: 6, intent: "maximum", pole: { light: 0.15, dark: 0.92 } },
 ];
+
+/**
+ * Where the hue sweep probes. A default-strength seed walked round the circle,
+ * to prove an arbitrary hue resolves — and to name the ones that do not.
+ */
+const SWEEP = {
+	seedL: 0.55,
+	seedC: 0.19,
+	step: 15,
+	/** Finer step for the gamut envelope — it is drawn as a curve, not a list. */
+	envelopeStep: 5,
+};
 
 /** Minimum lightness separation between adjacent surfaces, so layers read apart. */
 const MIN_SURFACE_STEP = 0.02;
@@ -1160,6 +1187,219 @@ function emitEngine() {
 	return L.join("\n");
 }
 
+/* ── Emit: the derivation record ────────────────────────────────────────── */
+
+/**
+ * Everything the generator KNOWS, as a typed module the demo can render.
+ *
+ * The Colour page used to hand-mirror the RANKS table and hardcode the ramp
+ * candidates, so the two drifted the moment a dial moved. Worse, the parts of
+ * this system that most need showing — how far a seed had to move, how much
+ * chroma the gamut ate, which hues cannot resolve at all — exist only as
+ * terminal output that nobody reads.
+ *
+ * So this emits BOTH halves:
+ *
+ *   inputs   the dials, verbatim. A config file and (later) a GUI need these,
+ *            and emitting them now means the extraction reads from something
+ *            that already exists rather than inventing a format.
+ *   solved   what those dials produced, including the intermediate facts the
+ *            CSS cannot express — a seed, a chroma ceiling, a lightness the
+ *            solver had to abandon.
+ *
+ * What is deliberately NOT here: measured contrast ratios. Those are read from
+ * the shipped CSS at runtime (see the demo's contrast.ts). A ratio asserted by
+ * the generator only proves the generator agrees with itself; one measured in
+ * the browser proves the emitted stylesheet is right. The record supplies what
+ * CSS cannot reveal; the browser supplies the rest.
+ */
+function emitFacts(unusable) {
+	const rankFloor = (spec) =>
+		spec.ratio
+			? `${spec.ratio}:1`
+			: spec.delta
+				? `perceptible (≥ ${spec.minDeltaL} L)`
+				: "as far as the scheme allows";
+
+	const facts = {
+		ranks: RANKS.map((spec) => ({
+			rank: spec.rank,
+			intent: spec.intent,
+			floor: rankFloor(spec),
+			ratio: spec.ratio ?? null,
+		})),
+		layerKeys: LAYERS,
+		surfaces: SURFACES,
+		families: families.map((f) => {
+			const ceiling = round3(peakChroma(f.hue));
+			return {
+				id: f.id,
+				role: f.role,
+				variant: f.variant,
+				hue: f.hue,
+				perLayer: perLayer(f),
+				seed: { l: f.seed[0], c: f.seed[1], h: f.seed[2] },
+				// What the hue can actually reach anywhere in sRGB, what the seed
+				// asked for after clamping, and the difference the gamut took.
+				chromaCeiling: ceiling,
+				chromaIntent: f.intent,
+				chromaClamped: round3(Math.max(0, f.seed[1] - f.intent)),
+				solid: {
+					l: round3(f.solid.L),
+					c: round3(f.solid.C),
+					ratio: round3(f.solid.ratio),
+					// How far the solver had to leave the seed's lightness to find a
+					// label that clears its floor while keeping keepChroma of the hue.
+					movedFromSeed: f.solid.moved,
+					label: f.solid.label.name,
+					labelL: f.solid.label.L,
+					labelC: f.solid.label.C,
+					hover: { l: f.solid.hover.L, c: f.solid.hover.C },
+					active: { l: f.solid.active.L, c: f.solid.active.C },
+				},
+			};
+		}),
+		// A guard, not a demonstration: since `intent` is clamped to the hue's own
+		// ceiling, a seed can no longer ask for chroma that does not exist, and
+		// every hue passes. The evidence that the clamp EARNS its place is the
+		// envelope below — the arc where the ceiling sits under a default seed.
+		hueSweep: {
+			seedL: SWEEP.seedL,
+			seedC: SWEEP.seedC,
+			step: SWEEP.step,
+			failed: unusable,
+		},
+		hueCeilings: Array.from({ length: 360 / SWEEP.envelopeStep }, (_, i) => {
+			const hue = i * SWEEP.envelopeStep;
+			return { hue, peakChroma: round3(peakChroma(hue)) };
+		}),
+		inputs: {
+			depth: DEPTH,
+			ramp: RAMP,
+			tint: TINT,
+			accent: ACCENT,
+			seeds: SEEDS,
+		},
+	};
+
+	// JSON, then unquote plain identifier keys: this is a TypeScript module
+	// people will read, not a payload.
+	const j = (v) =>
+		JSON.stringify(v, null, "\t").replace(
+			/^(\s*)"([A-Za-z_$][\w$]*)":/gm,
+			"$1$2:",
+		);
+
+	return `/*
+ * Colour derivation record — GENERATED, do not edit by hand.
+ *
+ *   node scripts/generate-color-ladder.mjs
+ *
+ * The facts behind projects/demo's Colour page: the dials that were turned and
+ * what the solver made of them. Contrast ratios are NOT here on purpose — the
+ * demo measures those from the shipped CSS at runtime, so a demonstration can
+ * never agree with a generator that is wrong about its own output.
+ */
+
+/** A neutral contrast rank and the floor it was solved against. */
+export interface RankFact {
+	readonly rank: number;
+	readonly intent: string;
+	/** Human-readable floor, e.g. "4.5:1". Ranks 1 and 6 are not ratio targets. */
+	readonly floor: string;
+	/** The numeric floor, or null where the rank is not a contrast target. */
+	readonly ratio: number | null;
+}
+
+/** An (L, C) pair, as the theme publishes them. Hue travels separately. */
+export interface Lc {
+	readonly l: number;
+	readonly c: number;
+}
+
+/** A family's solid fill: the one part of an accent that never varies. */
+export interface SolidFact extends Lc {
+	/** Measured contrast of the chosen label against the fill, per the solver. */
+	readonly ratio: number;
+	/** Lightness delta from the seed. 0 means the seed was honoured as given. */
+	readonly movedFromSeed: number;
+	/** Which pole won the label. Derived, never chosen. */
+	readonly label: "light" | "dark";
+	readonly labelL: number;
+	readonly labelC: number;
+	/** Stepped AWAY from the label, so a state can only improve its contrast. */
+	readonly hover: Lc;
+	readonly active: Lc;
+}
+
+/** One seeded accent family, and what the solver had to do to the seed. */
+export interface FamilyFact {
+	readonly id: string;
+	readonly role: string;
+	readonly variant: string;
+	readonly hue: number;
+	/** Colourways re-solve per layer; statuses are solved against layer 0 only. */
+	readonly perLayer: boolean;
+	readonly seed: { readonly l: number; readonly c: number; readonly h: number };
+	/** The most chroma this hue can reach at ANY lightness in sRGB. */
+	readonly chromaCeiling: number;
+	/** What the seed asked for, after clamping to that ceiling. */
+	readonly chromaIntent: number;
+	/** How much chroma the gamut took. Non-zero means the seed over-asked. */
+	readonly chromaClamped: number;
+	readonly solid: SolidFact;
+}
+
+/** Which hues resolve at a given seed strength, and which cannot. */
+export interface HueSweepFact {
+	readonly seedL: number;
+	readonly seedC: number;
+	readonly step: number;
+	/** Hues with no solution at this strength — the case that motivated the clamp. */
+	readonly failed: readonly number[];
+}
+
+/** The most chroma a hue can reach at any lightness. The gamut, as a curve. */
+export interface HueCeiling {
+	readonly hue: number;
+	readonly peakChroma: number;
+}
+
+/** The dials, verbatim. The surface a config file and a live editor would bind to. */
+export interface InputFacts {
+	readonly depth: { readonly below: number; readonly above: number };
+	readonly ramp: Record<string, Record<string, number>>;
+	readonly tint: Record<string, { readonly c: number; readonly h: number }>;
+	readonly accent: Record<string, unknown>;
+	readonly seeds: Record<string, unknown>;
+}
+
+export const RANK_FACTS: readonly RankFact[] = ${j(facts.ranks)};
+
+/** Ramp keys, deepest sink first — the order the ladder is emitted in. */
+export const LAYER_KEYS: readonly string[] = ${j(facts.layerKeys)};
+
+/** Surface lightness per scheme, per layer. Chroma and hue come from the tint. */
+export const SURFACE_FACTS: Record<string, Record<string, number>> = ${j(facts.surfaces)};
+
+export const FAMILY_FACTS: readonly FamilyFact[] = ${j(facts.families)};
+
+export const HUE_SWEEP: HueSweepFact = ${j(facts.hueSweep)};
+
+/**
+ * Peak chroma per hue — the gamut, as a curve.
+ *
+ * This is the constraint every seed is clamped against, and the reason the
+ * clamp is not theoretical: 28 of these 72 hues top out BELOW the default .19
+ * seed strength, bottoming at .145 around hue 215. A teal seeded at .19 has no
+ * solution at any lightness, which is precisely what it used to return.
+ */
+export const HUE_CEILINGS: readonly HueCeiling[] = ${j(facts.hueCeilings)};
+
+export const INPUT_FACTS: InputFacts = ${j(facts.inputs)};
+`;
+}
+
 /* ── Report ─────────────────────────────────────────────────────────────── */
 
 function report() {
@@ -1214,9 +1454,9 @@ function accentReport() {
  * out at .146 anywhere, so a .19 intent has no solution at any lightness, and
  * that failure mode is invisible until someone seeds a muted hue.
  */
-function hueSweep(seedL = 0.55, seedC = 0.19) {
+function hueSweep(seedL = SWEEP.seedL, seedC = SWEEP.seedC) {
 	const failed = [];
-	for (let H = 0; H < 360; H += 15) {
+	for (let H = 0; H < 360; H += SWEEP.step) {
 		if (!solveSolid([seedL, seedC, H], `sweep-${H}`)) failed.push(H);
 	}
 	// solveSolid records its own findings; the sweep is advisory, so drop them.
@@ -1263,6 +1503,7 @@ if (!check) {
 		[OUT_LADDER, ladderCss],
 		[OUT_ENGINE, engineCss],
 		[OUT_SOURCE, asModule],
+		[OUT_FACTS, emitFacts(unusable)],
 	]) {
 		writeFileSync(path, contents);
 		console.log(`✓ wrote ${path.replace(REPO + "/", "")}`);
