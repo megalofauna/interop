@@ -244,6 +244,60 @@ And if the component has no opinion, declare nothing — absence is how the them
 says that, and the structural fallback carries it.
 `scripts/check-keywords.mjs` fails the build on all of them.
 
+## Position a positioned box with INSET, never margin
+
+If an element is `fixed`, `absolute`, `sticky`, or in the top layer, place it
+with `inset-block-start` / `inset-inline-*` — not with `margin`.
+
+```css
+/* WRONG — a consumer's child reset silently wins */
+:where(dialog[interop-command-palette]) {
+	margin-block-start: var(--itx-cmdp-offset-block-start, 12vh);
+}
+
+/* RIGHT — no margin reset can reach an inset */
+:where(dialog[interop-command-palette]) {
+	inset-block-start: var(--itx-cmdp-offset-block-start, 12vh);
+	inset-block-end: auto;
+	margin-block: 0;
+}
+```
+
+**Why, concretely.** The command palette hung its viewport offset on
+`margin-block-start`. The demo app has an ordinary child reset in a component
+stylesheet:
+
+```scss
+:host > * { margin-block: 0; }
+```
+
+Angular injects component styles **unlayered**, and unlayered beats every
+cascade layer at any specificity — so that one line silently defeated the
+library rule, and the palette computed `margin-block-start: 0px` and centred
+itself. Nothing was wrong with the app's CSS. `margin` is simply one of the most
+commonly reset properties in any codebase, and a library that hangs placement on
+it is asking to lose a fight it cannot see.
+
+`inset` is not reset by convention the way `margin` is, so the same app cannot
+clobber it by accident.
+
+**A second reason, independent of resets.** `margin: auto` placement on an
+absolutely positioned box resolves through the over-constrained equation, which
+is the part of dialog positioning where engines have historically diverged. An
+inset states the position outright. Both forms measured identically in Chrome
+(top = 12vh); only the inset form is robust.
+
+**Scope.** Audited 2026-08-18: the palette was the only offender. Margins on
+elements that are *not* positioned are fine and stay — the sr-only utility's
+`margin: -1px` is part of the canonical clip recipe, and toast's
+`margin-block-start` spaces a description under a message rather than placing
+the toast. The rule is about PLACEMENT, not about avoiding margin.
+
+**Related:** the same unlayered-beats-layered mechanic is why component
+`styleUrl` sheets were removed from the library — see
+`.agent/records/styleurl-migration.md`. The library no longer ships any, but
+consumer apps still do, and this is what that costs them.
+
 ## Co-declaration — where an alias must be declared
 
 A custom property is substituted **where it is declared**, using that element's
