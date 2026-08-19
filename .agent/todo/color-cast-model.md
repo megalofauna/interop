@@ -1,7 +1,9 @@
 # Plan — collapse the color families into one ramp plus a cast
 
-**Status:** plan, provisional. An adversarial review was commissioned in
-parallel and its objections are NOT yet folded in — see §8.
+**Status:** REJECTED as specified, 2026-08-18, by adversarial review. The
+mechanism works; the colour science does not. Kept as a record of what was
+tested and why it fails — see §8. The surviving recommendation is the simpler
+rename, §10.
 **Raised:** 2026-08-18
 **Supersedes the idea in:** the `--itx-colorway-contrast-*` parity proposal,
 which this replaces entirely.
@@ -179,34 +181,128 @@ scanning a stylesheet in isolation.
 
 ---
 
-## 8. Open — the adversarial review
+## 8. The review — REJECT as specified
 
-A hostile review was commissioned before any code, specifically to attack:
+### Fatal: "lightness is cast-invariant" is false
 
-1. whether 0.012 L actually preserves every rank's WCAG target at brand chroma,
-   including boundary cases where it could flip 2.9:1 against 3.0:1
-2. whether a two-value chroma split is sufficient or chroma is genuinely per-rank
-3. whether cast x layer composition survives real nesting, tested against the
-   REAL generated CSS rather than reasoned about
-4. whether "casting is total" is tolerable across real components in this repo
-5. what today's system can express that this cannot — notably a brand border
-   with neutral text on the SAME element
-6. whether the simpler options win: parallel families renamed for parity, or
-   doing nothing
+The 0.010–0.012 delta this plan was built on was measured at **one cell** —
+layer 0, the wash rung, blue — where neutral and brand happen to agree. Across
+10 shipped families x 2 schemes x 8 layers x ranks 2–5, reusing neutral rank
+lightness at cast chroma misses the stated contrast floor in **316 of 640 cells
+(49%)**, gamut-clamped (the best case). Letting chroma clip instead: 312/640.
 
-**Nothing in this plan should be built until those land.** Item 1 is fatal if it
-fails.
+  danger-eighties  dark  n2  rank 3   floor 3.0   actual 2.70:1
+  success-eighties light  0  rank 3   floor 3.0   actual 2.78:1
+  colorway (blue)  dark   0  rank 5   floor 7.0   actual 6.93:1
+  warning          dark   0  rank 2   floor 1.5   actual 1.49:1
 
----
+Not boundary noise — a systematic 7–10% shortfall, always the same direction,
+every family. Cause is exactly the suspected one: OKLCH L is perceptual, WCAG is
+relative luminance, and they diverge by a hue-dependent amount that grows with
+chroma. The generator already knows this, which is why `solveRank` binary
+searches on measured luminance and `solveAccentRole` re-clamps chroma inside the
+search loop. This plan deletes that machinery and asserts its answer.
 
-## 9. Sequence, if it survives
+A shared worst-case ramp does exist (no unsolvable cell, ΔL 0.008–0.025) but
+drags the neutrals off their floors — hairlines go 1.50 -> 1.65:1 on every
+neutral page, forever, to serve casts. And the worst-case hue is whatever a
+CONSUMER seeds, so it is either re-solved per colourway (reintroducing per-family
+numbers, the thing being deleted) or wrong-by-overshoot for everyone.
 
-1. Fold the review's objections in; re-decide.
-2. Generator: emit one lightness ramp + cast packs. Keep the old families
-   emitting in parallel initially so nothing breaks mid-migration.
-3. Spec the composition rule (cast above/below/on a layer boundary, nested
-   casts, cast on the root) against the real generated CSS.
-4. Migrate call sites, component by component, deciding each cast's scope.
-5. Delete the old families; extend `check-color-axes.mjs` to the new shape and
-   confirm it is not blinded by the collapse.
-6. Regenerate the token reference and the color demo page.
+### Fatal: a two-value chroma pack cannot be gamut-correct
+
+Rank 6 is a fixed pole (L 0.150 light / 0.920 dark at every layer), so one
+"mark chroma" spanning ranks 3–6 must fit at the worst of those lightnesses.
+Gamut-safe static chroma retains **19–27% of the seed** for most families;
+18 of 20 hue x scheme pairs keep under 80%, median ~40%. Rank 3 — a border —
+would be near-grey because rank 6 cannot hold colour at the pole.
+
+Letting it clip does keep contrast predictable (Chrome's paint matches the
+generator's clip model, 4/4 pixel-exact) but destroys identity: blue rank 6
+renders cyan (−33.3° hue), amber body text renders orange-red (−15.9°), amber
+maximum renders maroon. That is the amber-slot failure `.agent/color.md` records
+as the reason the slot model was replaced, reintroduced in a new coordinate
+system. Today nothing ever goes out of gamut.
+
+### The headline snippet is not writable
+
+`light-dark()` is a colour function and cannot carry bare numbers, so
+`oklch(var(--rank-l) var(--cast-c) var(--cast-h))` does not work for a
+two-scheme system. It must be `light-dark(oklch(l-light c-light h),
+oklch(l-dark c-dark h))` — five inherited inputs per rank, not two, and the
+"one ramp" is two tokens.
+
+### Also major
+
+- **Casting is not total where it matters.** Body text does not go brand,
+  because `color` was substituted at `[interop-root]` and inherits finished.
+  Making it total requires adding `[itx-cast]` to paint rules, and then a cast
+  boundary reclaims a consumer's region override — the exact failure
+  `css-strategy.md` rejects component-scoped blocks for.
+- **It moves theme decisions into markup, i.e. into TypeScript.** All 24
+  status-family reads are theme bindings on host-level variant selectors
+  (`interop-callout[data-type="warning"]`). Under casting those become
+  inexpressible from the theme layer; the component must write `itx-cast` on its
+  own host, which CSS cannot do — so a pure-CSS variant becomes an Angular host
+  binding. Flagged against `project_angular_waystation`.
+- **`on-tint` has no positional equivalent.** Ranks are solved against the
+  SURFACE, never against a wash sitting on it: re-measured against their own
+  rank-1 wash, **158 of 160** cells have at least one rank failing. Only rank 6
+  survives, so "text on a tinted callout" collapses to "always maximum",
+  deleting the secondary/body distinction inside every tinted panel. 16 of the
+  24 status reads are tint/on-tint pairs.
+- **The guards go blind.** `check-shape.mjs` rule 2 only fires on a bare
+  `[interop-root]` selector; it never checks that a co-declared selector is
+  COMPLETE. An incomplete cast co-declaration renders a plausible grey, wrong,
+  guard green — the same class the 84-site sweep just fixed.
+- **An undeclared cast is guaranteed-invalid and inherits**, taking a whole
+  subtree's ranks to transparent. Fixable with `@property`, unmentioned.
+
+### Disproved, in the design's favour
+
+- **Cast x layer composition works.** Every case passed in Chrome 151 — cast
+  above, below, and on the same element as a boundary; nested casts; cast on the
+  root; counting still compounds. The co-declaration fix is sound and source
+  order is irrelevant, because `var()` reads the computed value.
+- **Recalc cost is a non-issue.** 4000 nodes: 6.8 ms plain, 6.3 ms all-cast,
+  6.9 ms all-layer. Within noise.
+- **The size win is real but small on the wire** — ~123 kB -> ~52 kB raw, but
+  the files gzip to 9.76 kB today, so ~4–5 kB. The genuine win is parse and
+  legibility.
+
+## 9. What it would take to revive it
+
+Six conditions, all of them, per the review: per-rank gamut-solved chroma (which
+returns the token count to near parity with today); either per-cast lightness
+(at which point "one ramp" is gone) or a proven worst-case ramp with the neutral
+overshoot accepted in writing; `on-tint` surviving in some form; `check-shape`
+validating co-declaration COMPLETENESS; status variants still expressible from
+the theme layer without a host binding; and `@property` registration for the
+cast pack.
+
+If all six land, the result is today's system plus `itx-cast` as a scoping
+attribute plus rank-numbered names — which is §10 with one extra attribute, not
+the collapse this plan describes.
+
+## 10. The surviving recommendation — rank-numbered names
+
+`--itx-colorway-contrast-1…6`, `--itx-<status>-contrast-1…6`.
+
+It takes the whole pedagogical win — one vocabulary, ranks all the way down,
+"border" stops being a privileged name that people reach for wrongly — while
+keeping per-rung solved lightness, per-rung gamut-clamped chroma, `on-tint`,
+per-property mixing, theme-layer variants, and **zero markup attributes**.
+
+It also closes a live doc/code divergence: `.agent/color.md:46` already documents
+the axis as `--itx-contrast-<family>-N`, while the shipped tokens are
+`--itx-colorway-border` / `-text` / `-tint`. The documentation has described this
+naming all along.
+
+Honest caveat: the existing roles are not a clean 1–6. `border` is rank 3,
+`text` is rank 4, `tint` is the rank-1 wash, and `on-tint` has no rank at all
+because it is solved against the tint rather than the surface. So it lands as
+`contrast-1/3/4` plus one off-ladder token, and filling in 2/5/6 for every
+family would cost ~960 declarations — emit only ranks that have consumers.
+
+Doing nothing is also defensible: the entire deleted surface is 30 read sites
+across 9 files.
