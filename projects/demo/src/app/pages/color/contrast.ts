@@ -107,6 +107,24 @@ export function contrastRatio(foreground: string, background: string): number {
 	return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
+/**
+ * Signed luminance difference, foreground minus background.
+ *
+ * A contrast RATIO cannot express this, because a ratio is symmetric: a wash
+ * .06 lighter than its surface and one .06 darker measure identically. For a
+ * tint that is the whole question — a wash is supposed to read as a lift in
+ * dark and a recess in light, and a status tint solved against one layer and
+ * carried onto another can cross zero and start reading as the opposite of
+ * what it means. Only the sign catches that.
+ */
+export function luminanceDelta(foreground: string, background: string): number {
+	const bg = resolveRgb(background);
+	if (!bg) return Number.NaN;
+	const fg = resolveRgb(foreground, background);
+	if (!fg) return Number.NaN;
+	return relativeLuminance(fg) - relativeLuminance(bg);
+}
+
 /** A used value off a live element — the value after the cascade, not the token. */
 export function usedValue(el: Element, property: string): string {
 	if (typeof getComputedStyle === "undefined") return "";

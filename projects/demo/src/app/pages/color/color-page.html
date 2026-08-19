@@ -227,59 +227,239 @@
 						class="color-families__solid"
 						[style.background-color]="'var(--itx-' + family.id + '-solid)'"
 						[style.color]="'var(--itx-' + family.id + '-on-solid)'"
+						[attr.data-measure]="'family-' + family.id"
+						data-measure-prop="color"
 					>
 						Aa
 					</div>
 					<figcaption>
-						<strong>{{ family.label }}</strong>
-						<span>{{ family.seed }}</span>
+						<strong>{{ labelOf(family) }}</strong>
+						<span>{{ seedOf(family) }}</span>
+						<span
+							class="color-families__ratio"
+							[class.is-under]="!passes('family-' + family.id, 4.5)"
+						>
+							label {{ reading("family-" + family.id) }}
+						</span>
 					</figcaption>
 				</figure>
 			}
 		</div>
 
 		<p>
-			The label on each fill is <em>derived</em>, not chosen. Amber comes out
-			with dark text because white on vivid orange measures about 1.7:1 — a
-			correction that used to live in a comment and had to be remembered by
-			whoever added the next hue.
+			The label on each fill is <em>derived</em>, not chosen, and the ratio
+			under each one is <em>measured</em> — read off the rendered swatch in the
+			browser, not copied from the generator. Cream Can comes out with dark text
+			because white on it measures about 1.7:1, a correction that used to live
+			in a comment and had to be remembered by whoever added the next hue.
+		</p>
+	</demo-section>
+
+	<demo-section id="gamut" heading="What the hue can actually reach">
+		<p description class="demo-section__lede">
+			A seed's chroma is an <em>intent</em>, not a promise. Every hue has its
+			own ceiling in sRGB, and the arc below the line is where a
+			default-strength seed gets clamped — which is why a lightness-indexed slot
+			ramp could not survive a hue change, and a contrast target can.
+		</p>
+
+		<figure class="color-gamut">
+			<svg viewBox="0 0 720 200" role="img" aria-labelledby="gamut-title">
+				<title id="gamut-title">
+					Peak reachable chroma per hue, with the default seed strength marked.
+					{{ clampedHues.length }} of {{ ceilings.length }} hues top out below
+					it.
+				</title>
+				<polyline class="color-gamut__curve" [attr.points]="ceilingPoints" />
+				<line
+					class="color-gamut__seed"
+					x1="0"
+					x2="720"
+					[attr.y1]="seedLine"
+					[attr.y2]="seedLine"
+				/>
+			</svg>
+			<figcaption>
+				Peak chroma per hue, 0°–360°. The rule sits at the default seed strength
+				of {{ defaultSeedChroma }}.
+				<strong>{{ clampedHues.length }} of {{ ceilings.length }}</strong>
+				hues cannot reach it — bottoming at
+				{{ lowestCeiling.peakChroma }} around hue {{ lowestCeiling.hue }}°,
+				which is the teal that returned no solution at all before the clamp
+				existed.
+			</figcaption>
+		</figure>
+	</demo-section>
+
+	<demo-section id="states" heading="Hover and active move away from the label">
+		<p description class="demo-section__lede">
+			A state is not a lighter or a darker version of the fill — it is a step
+			<em>away from the label</em>, so a state can only ever improve the
+			contrast the solver proved for the rest state. Which means the direction
+			is not a constant. Jelly Bean carries a light label and darkens; Cream Can
+			carries a dark label and lightens. Same rule, opposite result.
+		</p>
+
+		<div class="color-states">
+			@for (way of colorways; track way.id) {
+				<div
+					class="color-states__family"
+					interop-root
+					[attr.itx-colorway]="way.variant === 'default' ? null : way.variant"
+				>
+					<h3>
+						{{ labelOf(way) }}
+						<span>{{ way.solid.label }} label</span>
+					</h3>
+					<div class="color-states__row">
+						@for (state of solidStates; track state) {
+							<div
+								class="color-states__swatch"
+								[style.background-color]="'var(--itx-colorway-' + state + ')'"
+								[style.color]="'var(--itx-colorway-on-solid)'"
+								[attr.data-measure]="'state-' + way.id + '-' + state"
+							>
+								<span>{{ stateLabel(state) }}</span>
+								<small>{{ reading("state-" + way.id + "-" + state) }}</small>
+							</div>
+						}
+					</div>
+					<div class="color-states__live">
+						<button interop-button="primary" type="button">
+							Hover me for real
+						</button>
+					</div>
+				</div>
+			}
+		</div>
+
+		<p>
+			The measured ratio under each swatch is the label against that state. It
+			climbs from rest to active in both families, in opposite lightness
+			directions — which is the property the rule exists to guarantee.
 		</p>
 	</demo-section>
 
 	<demo-section id="accent-depth" heading="Accents at depth">
 		<p description class="demo-section__lede">
-			The identity holds; the surface-relative roles move. A solid fill is the
-			same colour at every depth and in both schemes, because a brand colour
-			that drifts as it nests is not a brand colour. Its tint, border and text
-			re-solve against whatever surface they land on.
+			Real componentry, one layer per row, with what each accent
+			<em>actually measures</em> where it landed. A solid fill is the same
+			colour at every depth and in both schemes, because a brand colour that
+			drifts as it nests is not a brand colour. The surface-relative roles are
+			the interesting ones — and they do not all behave the same way.
 		</p>
 
 		@for (layer of layers; track layer) {
-			<div [attr.itx-layer]="layer" class="color-accent-row">
-				<span class="color-accent-row__caption">Layer {{ layer }}</span>
-				<span
-					class="color-accent-row__solid"
-					[style.background-color]="'var(--itx-colorway-solid)'"
-					[style.color]="'var(--itx-colorway-on-solid)'"
-					>solid</span
-				>
-				@for (role of accentRoles; track role) {
-					<span
-						class="color-accent-row__chip"
-						[style.background-color]="
-							role === 'tint' ? 'var(--itx-colorway-tint)' : 'transparent'
-						"
-						[style.border-color]="'var(--itx-colorway-border)'"
-						[style.color]="
-							role === 'tint'
-								? 'var(--itx-colorway-on-tint)'
-								: 'var(--itx-colorway-text)'
-						"
-						>{{ role }}</span
+			<div [attr.itx-layer]="layer" class="color-depth">
+				<span class="color-depth__caption">Layer {{ layer }}</span>
+
+				<div class="color-depth__components">
+					<interop-callout
+						type="danger"
+						heading="Coolant pressure"
+						[attr.data-measure]="'depth-' + layer + '-status-border'"
+						data-measure-prop="border-inline-start-color"
+						data-measure-mode="outward"
 					>
-				}
+						Loop 3 is venting. Isolate before the next burn.
+					</interop-callout>
+
+					<div class="color-depth__inline">
+						<interop-badge
+							[count]="3"
+							[accessibleLabel]="'3 unresolved faults'"
+						>
+							<button interop-button="secondary" type="button">Faults</button>
+						</interop-badge>
+						<button interop-button="primary" type="button">Acknowledge</button>
+						<a
+							class="color-depth__link"
+							href="#accent-depth"
+							[attr.data-measure]="'depth-' + layer + '-colorway-text'"
+							>Maintenance log</a
+						>
+					</div>
+				</div>
+
+				<!--
+				  A probe, not decoration: it carries the tint and nothing else, so
+				  the signed delta beside it answers for the tint alone. The other
+				  two readings come off real components above — the callout's own
+				  accent rule and the link's own colour.
+				-->
+				<div class="color-depth__probes">
+					<span
+						class="color-depth__probe"
+						[style.background-color]="'var(--itx-contrast-1)'"
+						[attr.data-measure]="'depth-' + layer + '-neutral-wash'"
+						data-measure-prop="background-color"
+						data-measure-mode="delta"
+						aria-hidden="true"
+					></span>
+					<span
+						class="color-depth__probe"
+						[style.background-color]="'var(--itx-' + depthStatus + '-tint)'"
+						[attr.data-measure]="'depth-' + layer + '-status-tint'"
+						data-measure-prop="background-color"
+						data-measure-mode="delta"
+						aria-hidden="true"
+					></span>
+				</div>
+
+				<table class="color-depth__readout">
+					<thead>
+						<tr>
+							<th scope="col">role</th>
+							<th scope="col">solved</th>
+							<th scope="col">measured</th>
+							<th scope="col">floor / reference</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr
+							[class.is-under]="
+								!passes('depth-' + layer + '-colorway-text', 4.5)
+							"
+						>
+							<th scope="row">colourway text</th>
+							<td>per layer</td>
+							<td>{{ reading("depth-" + layer + "-colorway-text") }}</td>
+							<td>4.5:1</td>
+						</tr>
+						<tr
+							[class.is-under]="!passes('depth-' + layer + '-status-border', 3)"
+						>
+							<th scope="row">status accent rule</th>
+							<td>layer 0 only</td>
+							<td>{{ reading("depth-" + layer + "-status-border") }}</td>
+							<td>3:1</td>
+						</tr>
+						<tr
+							[class.is-under]="
+								!leansWithScheme(
+									'depth-' + layer + '-status-tint',
+									'depth-' + layer + '-neutral-wash'
+								)
+							"
+						>
+							<th scope="row">status tint</th>
+							<td>layer 0 only</td>
+							<td>{{ delta("depth-" + layer + "-status-tint") }}</td>
+							<td>{{ delta("depth-" + layer + "-neutral-wash") }}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		}
+
+		<p>
+			Colourway roles re-solve per layer, so the first row holds its floor all
+			the way up. Status roles are solved against layer 0 and left there, so the
+			second and third rows drift — and in dark they drift the wrong way,
+			because elevation moves toward light in <em>both</em> schemes while
+			contrast direction flips per scheme. Switch to dark and watch the status
+			tint's sign change: a wash that means "lift" starts reading as a recess.
+		</p>
 	</demo-section>
 
 	<demo-section id="switching" heading="Switching a colourway">
@@ -291,30 +471,20 @@
 		</p>
 
 		<div class="color-switch">
-			@for (way of colorways; track way.label) {
+			@for (way of colorways; track way.id) {
 				<div
 					class="color-switch__frame"
 					interop-root
-					[attr.itx-colorway]="way.id || null"
+					[attr.itx-colorway]="way.variant === 'default' ? null : way.variant"
 				>
-					<span class="color-switch__caption">{{ way.label }}</span>
+					<span class="color-switch__caption">{{ labelOf(way) }}</span>
 					<div class="color-switch__body">
-						<span
-							class="color-accent-row__solid"
-							[style.background-color]="'var(--itx-colorway-solid)'"
-							[style.color]="'var(--itx-colorway-on-solid)'"
-							>solid</span
-						>
-						<span
-							class="color-accent-row__chip"
-							[style.background-color]="'var(--itx-colorway-tint)'"
-							[style.border-color]="'var(--itx-colorway-border)'"
-							[style.color]="'var(--itx-colorway-on-tint)'"
-							>tint</span
-						>
 						<button interop-button="primary" type="button">Primary</button>
+						<interop-badge [count]="7" [accessibleLabel]="'7 new readings'">
+							<button interop-button="secondary" type="button">Readings</button>
+						</interop-badge>
 						<interop-field-input
-							[id]="'switch-field-' + (way.id || 'default')"
+							[id]="'switch-field-' + way.variant"
 							label="Focus me"
 							placeholder="ring follows the seed"
 						/>

@@ -45,6 +45,8 @@ export interface FamilyFact {
 	readonly id: string;
 	readonly role: string;
 	readonly variant: string;
+	/** The seed's human name, where it has one. Decoration, not an input. */
+	readonly name: string | null;
 	readonly hue: number;
 	/** Colourways re-solve per layer; statuses are solved against layer 0 only. */
 	readonly perLayer: boolean;
@@ -165,31 +167,32 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "colorway",
 		role: "colorway",
 		variant: "default",
-		hue: 264,
+		name: "Jelly Bean",
+		hue: 246.74,
 		perLayer: true,
 		seed: {
-			l: 0.5,
-			c: 0.19,
-			h: 264
+			l: 0.522,
+			c: 0.11,
+			h: 246.74
 		},
-		chromaCeiling: 0.285,
-		chromaIntent: 0.19,
+		chromaCeiling: 0.178,
+		chromaIntent: 0.11,
 		chromaClamped: 0,
 		solid: {
-			l: 0.5,
-			c: 0.19,
-			ratio: 6.067,
+			l: 0.522,
+			c: 0.11,
+			ratio: 5.267,
 			movedFromSeed: 0,
 			label: "light",
 			labelL: 0.99,
 			labelC: 0.006,
 			hover: {
-				l: 0.45,
-				c: 0.19
+				l: 0.472,
+				c: 0.11
 			},
 			active: {
-				l: 0.41,
-				c: 0.19
+				l: 0.432,
+				c: 0.11
 			}
 		}
 	},
@@ -197,31 +200,32 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "colorway-amber",
 		role: "colorway",
 		variant: "amber",
-		hue: 54.35,
+		name: "Cream Can",
+		hue: 82.32,
 		perLayer: true,
 		seed: {
-			l: 0.78,
-			c: 0.145,
-			h: 54.35
+			l: 0.832,
+			c: 0.12,
+			h: 82.32
 		},
-		chromaCeiling: 0.182,
-		chromaIntent: 0.145,
+		chromaCeiling: 0.171,
+		chromaIntent: 0.12,
 		chromaClamped: 0,
 		solid: {
-			l: 0.78,
-			c: 0.145,
-			ratio: 9.07,
+			l: 0.832,
+			c: 0.12,
+			ratio: 11.103,
 			movedFromSeed: 0,
 			label: "dark",
 			labelL: 0.18,
 			labelC: 0.02,
 			hover: {
-				l: 0.83,
-				c: 0.109
+				l: 0.882,
+				c: 0.119
 			},
 			active: {
-				l: 0.87,
-				c: 0.081
+				l: 0.922,
+				c: 0.077
 			}
 		}
 	},
@@ -229,6 +233,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "danger",
 		role: "danger",
 		variant: "seventies",
+		name: null,
 		hue: 33,
 		perLayer: false,
 		seed: {
@@ -261,6 +266,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "info",
 		role: "info",
 		variant: "seventies",
+		name: null,
 		hue: 218,
 		perLayer: false,
 		seed: {
@@ -293,6 +299,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "success",
 		role: "success",
 		variant: "seventies",
+		name: null,
 		hue: 122,
 		perLayer: false,
 		seed: {
@@ -325,6 +332,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "warning",
 		role: "warning",
 		variant: "seventies",
+		name: null,
 		hue: 78,
 		perLayer: false,
 		seed: {
@@ -357,6 +365,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "danger-eighties",
 		role: "danger",
 		variant: "eighties",
+		name: null,
 		hue: 25,
 		perLayer: false,
 		seed: {
@@ -389,6 +398,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "info-eighties",
 		role: "info",
 		variant: "eighties",
+		name: null,
 		hue: 264,
 		perLayer: false,
 		seed: {
@@ -421,6 +431,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "success-eighties",
 		role: "success",
 		variant: "eighties",
+		name: null,
 		hue: 145,
 		perLayer: false,
 		seed: {
@@ -453,6 +464,7 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "warning-eighties",
 		role: "warning",
 		variant: "eighties",
+		name: null,
 		hue: 85,
 		perLayer: false,
 		seed: {
@@ -840,16 +852,22 @@ export const INPUT_FACTS: InputFacts = {
 	},
 	seeds: {
 		colorway: {
-			default: [
-				0.5,
-				0.19,
-				264
-			],
-			amber: [
-				0.78,
-				0.145,
-				54.35
-			]
+			default: {
+				name: "Jelly Bean",
+				seed: [
+					0.522,
+					0.11,
+					246.74
+				]
+			},
+			amber: {
+				name: "Cream Can",
+				seed: [
+					0.832,
+					0.12,
+					82.32
+				]
+			}
 		},
 		status: {
 			seventies: {

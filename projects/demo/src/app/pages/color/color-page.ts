@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
 import {
+	afterNextRender,
+	ChangeDetectionStrategy,
+	Component,
+	DestroyRef,
+	ElementRef,
+	inject,
+	signal,
+} from "@angular/core";
+import {
+	InteropBadge,
 	InteropButton,
+	InteropCallout,
 	InteropFieldInput,
 	InteropPopover,
 	InteropPopoverTrigger,
@@ -9,9 +19,22 @@ import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import {
+	clearsFloor,
+	contrastRatio,
+	effectiveBackground,
+	formatRatio,
+	luminanceDelta,
+	measure,
+	usedValue,
+} from "./contrast";
+import {
+	FAMILY_FACTS,
+	HUE_CEILINGS,
+	HUE_SWEEP,
 	INPUT_FACTS,
 	LAYER_KEYS,
 	RANK_FACTS,
+	type FamilyFact,
 	type RankFact,
 } from "./ladder-facts";
 
@@ -22,7 +45,9 @@ import {
 		DemoPage,
 		DemoSection,
 		DemoMasthead,
+		InteropBadge,
 		InteropButton,
+		InteropCallout,
 		InteropFieldInput,
 		InteropPopover,
 		InteropPopoverTrigger,
@@ -88,21 +113,205 @@ export class ColorPage {
 		return `oklch(${l} 0.006 250)`;
 	}
 
-	/** Every seeded family, in the order the generator reports them. */
-	protected readonly families = [
-		{ id: "colorway", label: "Colourway", seed: "#0066CC" },
-		{ id: "danger", label: "Danger", seed: "oklch(.50 .105 33)" },
-		{ id: "info", label: "Info", seed: "oklch(.53 .058 218)" },
-		{ id: "success", label: "Success", seed: "oklch(.53 .078 122)" },
-		{ id: "warning", label: "Warning", seed: "oklch(.62 .105 78)" },
-	];
+	/**
+	 * Every seeded family, from the record rather than a hand-kept list.
+	 *
+	 * The old copy quoted "#0066CC" for the colourway. That seed is now Jelly
+	 * Bean, and a page that documents the seed has to be told when the seed
+	 * changes — so it is not told, it is generated.
+	 */
+	protected readonly families: readonly FamilyFact[] = FAMILY_FACTS.filter(
+		(f) => f.variant === "default" || f.variant === "seventies",
+	);
 
-	/** The roles that re-derive against whatever surface they land on. */
-	protected readonly accentRoles = ["tint", "border", "text"];
+	/** The two colourways, side by side, to prove a switch leaves nothing behind. */
+	protected readonly colorways: readonly FamilyFact[] = FAMILY_FACTS.filter(
+		(f) => f.role === "colorway",
+	);
 
-	/** Shown side by side to prove a colourway switch leaves nothing behind. */
-	protected readonly colorways = [
-		{ id: "", label: "Default — blue" },
-		{ id: "amber", label: "Amber" },
-	];
+	/** The status used for the depth comparison. One variable at a time. */
+	protected readonly depthStatus = "danger";
+
+	/**
+	 * Rest, hover and active for one family, as three swatches side by side.
+	 *
+	 * States are stepped AWAY from the label, which means the direction is not a
+	 * constant: a fill with a light label darkens, a fill with a dark label
+	 * lightens. Jelly Bean and Cream Can sit adjacent here precisely so that flip
+	 * is something you see rather than something you are told.
+	 */
+	protected readonly solidStates = ["solid", "solid-hover", "solid-active"];
+
+	/* ── The gamut envelope ──────────────────────────────────────────────── */
+
+	protected readonly ceilings = HUE_CEILINGS;
+	protected readonly defaultSeedChroma = HUE_SWEEP.seedC;
+
+	/** The hues a default-strength seed cannot have, because sRGB has not got them. */
+	protected readonly clampedHues = HUE_CEILINGS.filter(
+		(entry) => entry.peakChroma < HUE_SWEEP.seedC,
+	);
+
+	protected readonly lowestCeiling = HUE_CEILINGS.reduce((low, entry) =>
+		entry.peakChroma < low.peakChroma ? entry : low,
+	);
+
+	/** Chroma .34 gives the curve headroom without flattening it against the top. */
+	private readonly gamutScale = 200 / 0.34;
+
+	/** The envelope as SVG points: hue across, peak chroma up. */
+	protected readonly ceilingPoints = HUE_CEILINGS.map(
+		(entry) =>
+			`${(entry.hue / 360) * 720},${200 - entry.peakChroma * this.gamutScale}`,
+	).join(" ");
+
+	protected readonly seedLine = 200 - HUE_SWEEP.seedC * this.gamutScale;
+
+	/** "solid" reads as a state name only once you drop the prefix. */
+	protected stateLabel(state: string): string {
+		return state === "solid" ? "rest" : state.replace("solid-", "");
+	}
+
+	/** A seed, written the way the generator holds it. */
+	protected seedOf(family: FamilyFact): string {
+		const { l, c, h } = family.seed;
+		return `oklch(${l} ${c} ${h})`;
+	}
+
+	/** Display name: the human one where the seed has it, else the family id. */
+	protected labelOf(family: FamilyFact): string {
+		return family.name ?? family.id;
+	}
+
+	/* ── Measurement ─────────────────────────────────────────────────────── */
+
+	private readonly host: ElementRef<HTMLElement> = inject(ElementRef);
+
+	/** Measured ratios and signed deltas, keyed by the probe's data-measure id. */
+	private readonly readings = signal<ReadonlyMap<string, number>>(new Map());
+
+	constructor() {
+		afterNextRender(() => {
+			this.remeasure();
+
+			// Every measurement is scheme-dependent, and the toggle changes the
+			// scheme by setting an attribute rather than navigating — so nothing
+			// would otherwise tell this page its numbers just went stale.
+			const root = document.querySelector("[interop-root]");
+			const observer = new MutationObserver(() => this.remeasure());
+			if (root) {
+				observer.observe(root, {
+					attributes: true,
+					attributeFilter: ["itx-theme"],
+				});
+			}
+			const media = matchMedia("(prefers-color-scheme: dark)");
+			const onScheme = () => this.remeasure();
+			media.addEventListener("change", onScheme);
+
+			this.cleanup = () => {
+				observer.disconnect();
+				media.removeEventListener("change", onScheme);
+			};
+		});
+
+		inject(DestroyRef).onDestroy(() => this.cleanup?.());
+	}
+
+	private cleanup: (() => void) | null = null;
+
+	/**
+	 * Read every probe in the page and record what it actually measures.
+	 *
+	 * Deferred a frame: the scheme switch swaps custom-property values, and
+	 * measuring in the mutation callback can catch the old computed values.
+	 */
+	private remeasure(): void {
+		requestAnimationFrame(() => {
+			const next = new Map<string, number>();
+			const probes = Array.from(
+				this.host.nativeElement.querySelectorAll<HTMLElement>("[data-measure]"),
+			);
+
+			for (const el of probes) {
+				const key = el.dataset["measure"];
+				if (!key) continue;
+				const property = el.dataset["measureProp"] ?? "color";
+				const mode = el.dataset["measureMode"] ?? "ratio";
+
+				if (mode === "delta") {
+					// Against the surface OUTSIDE the probe, which is the surface the
+					// role was solved against — not the probe's own fill.
+					const parent = el.parentElement;
+					next.set(
+						key,
+						parent
+							? luminanceDelta(
+									usedValue(el, property),
+									effectiveBackground(parent),
+								)
+							: Number.NaN,
+					);
+				} else if (mode === "outward") {
+					const parent = el.parentElement;
+					next.set(
+						key,
+						parent
+							? this.ratioAgainst(usedValue(el, property), parent)
+							: Number.NaN,
+					);
+				} else {
+					next.set(key, measure(el, property));
+				}
+			}
+			this.readings.set(next);
+		});
+	}
+
+	/**
+	 * A role measured against the surface OUTSIDE the element carrying it.
+	 *
+	 * The callout's accent rule is a border on the callout itself, but `border`
+	 * is solved against the surface the callout sits on — so measuring it
+	 * against the callout's own tint would grade it on the wrong question.
+	 */
+	private ratioAgainst(color: string, against: Element): number {
+		return contrastRatio(color, effectiveBackground(against));
+	}
+
+	/** A measured ratio, formatted. Renders "—" rather than a number if unread. */
+	protected reading(key: string): string {
+		return formatRatio(this.readings().get(key) ?? Number.NaN);
+	}
+
+	/** A measured signed delta, formatted with its sign kept. */
+	protected delta(key: string): string {
+		const value = this.readings().get(key);
+		return value === undefined || !Number.isFinite(value)
+			? "—"
+			: `${value >= 0 ? "+" : "−"}${Math.abs(value).toFixed(3)}`;
+	}
+
+	/** Whether a measured reading clears a floor. Drives the pass/fail marker. */
+	protected passes(key: string, floor: number): boolean {
+		return clearsFloor(this.readings().get(key) ?? Number.NaN, floor);
+	}
+
+	/**
+	 * Whether a wash still leans the way its scheme intends.
+	 *
+	 * There is no fixed correct sign, which is the trap: contrast moves away
+	 * from the surface, so a wash is LIGHTER than its surface in dark and DARKER
+	 * in light. Comparing against a hardcoded direction marks every light-scheme
+	 * tint as broken. So the reference is the neutral wash — rank 1, measured in
+	 * the same layer, in whatever scheme is live. A status tint is doing its job
+	 * when it leans the same way that does.
+	 */
+	protected leansWithScheme(tintKey: string, washKey: string): boolean {
+		const tint = this.readings().get(tintKey);
+		const wash = this.readings().get(washKey);
+		if (tint === undefined || wash === undefined) return true;
+		if (!Number.isFinite(tint) || !Number.isFinite(wash)) return true;
+		return Math.sign(tint) === Math.sign(wash);
+	}
 }

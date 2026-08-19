@@ -270,10 +270,10 @@ const MIN_SURFACE_STEP = 0.02;
  */
 const SEEDS = {
 	colorway: {
-		// Science Blue #0066CC, the long-standing default.
-		default: [0.5, 0.19, 264],
-		// #FE9C55. Peaks light, which is exactly what broke the slot model.
-		amber: [0.78, 0.145, 54.35],
+		// Jelly Bean. Replaces Science Blue #0066CC as the default.
+		default: { name: "Jelly Bean", seed: [0.522, 0.11, 246.74] },
+		// Cream Can. Peaks light, which is exactly what broke the slot model.
+		amber: { name: "Cream Can", seed: [0.832, 0.12, 82.32] },
 	},
 	status: {
 		seventies: {
@@ -614,21 +614,26 @@ const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
 /** Every family that gets generated: the colourways plus each status set. */
 function familyList() {
 	const out = [];
-	for (const [name, seed] of Object.entries(SEEDS.colorway)) {
+	for (const [name, entry] of Object.entries(SEEDS.colorway)) {
 		out.push({
 			id: name === "default" ? "colorway" : `colorway-${name}`,
 			role: "colorway",
 			variant: name,
-			seed,
+			// A seed may be a bare [L, C, H] or a named record. The name is
+			// decoration for the demo — nothing solves differently for having one —
+			// but "Jelly Bean" is a great deal easier to hold in mind than 246.74.
+			name: entry.name ?? null,
+			seed: entry.seed ?? entry,
 		});
 	}
 	for (const [palette, set] of Object.entries(SEEDS.status)) {
-		for (const [status, seed] of Object.entries(set)) {
+		for (const [status, entry] of Object.entries(set)) {
 			out.push({
 				id: palette === "seventies" ? status : `${status}-${palette}`,
 				role: status,
 				variant: palette,
-				seed,
+				name: entry.name ?? null,
+				seed: entry.seed ?? entry,
 			});
 		}
 	}
@@ -1236,6 +1241,7 @@ function emitFacts(unusable) {
 				id: f.id,
 				role: f.role,
 				variant: f.variant,
+				name: f.name,
 				hue: f.hue,
 				perLayer: perLayer(f),
 				seed: { l: f.seed[0], c: f.seed[1], h: f.seed[2] },
@@ -1337,6 +1343,8 @@ export interface FamilyFact {
 	readonly id: string;
 	readonly role: string;
 	readonly variant: string;
+	/** The seed's human name, where it has one. Decoration, not an input. */
+	readonly name: string | null;
 	readonly hue: number;
 	/** Colourways re-solve per layer; statuses are solved against layer 0 only. */
 	readonly perLayer: boolean;

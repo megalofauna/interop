@@ -88,7 +88,7 @@
 	);
 	--_focus-ring-color: var(
 		--itx-control-focus-color,
-		var(--itx-colorway-solid, #0066cc)
+		var(--itx-colorway-solid)
 	);
 	--_focus-ring-width: var(--itx-control-focus-width, var(--itx-focus-width));
 	--_focus-ring-offset: var(--itx-control-focus-offset, 3px);
