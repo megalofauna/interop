@@ -8,8 +8,6 @@ src/lib/components/interop-button/
   interop-button-activation.ts directive — activation guardrails (opt-in import)
   interop-button.html          template — loading swap (loading text vs <ng-content />)
   interop-button-map.ts        ITX_BUTTON_MAP token + InteropButtonMap directive
-  interop-button-prefix.ts     marker directive — .interop-button__prefix slot
-  interop-button-suffix.ts     marker directive — .interop-button__suffix slot
   interop-button.spec.ts       tests
   README.md                    consumer-facing usage doc
 src/lib/styles/components/button.css            structural rules
@@ -388,24 +386,19 @@ The button is `display: inline-flex; gap: var(--itx-button-gap)` (8px, Carbon's
 `$spacing-03`). Any content the consumer projects renders left-to-right (or
 RTL-flipped) in **source order**, with the same `gap` between every adjacent pair.
 
-`InteropButtonPrefix` and `InteropButtonSuffix` are **marker directives, not
-positioning ones**. Each is usable as an element or an attribute and does exactly
-one thing: put `.interop-button__prefix` / `.interop-button__suffix` on its host.
-Source order is still layout order — a suffix written first renders first. The
-foundation rules only constrain the slot itself:
+Icons and other addons are **plain content**. A leading icon is an icon written
+first; a trailing icon is one written last. The button's `gap` does the spacing
+and `align-items: center` does the alignment, so there is no slot, wrapper or
+directive involved.
 
-```css
-:where(
-	button[interop-button] .interop-button__prefix,
-	button[interop-button] .interop-button__suffix
-) {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	flex: none;
-	line-height: 1;
-}
-```
+`InteropButtonPrefix` / `InteropButtonSuffix` and their
+`.interop-button__prefix` / `.interop-button__suffix` slot rules were removed on
+2026-08-19. Each directive added a class and nothing else, and the class only
+restated what the flex container already did — too much machinery for the
+result. Naming is the only part that needs care: mark a decorative icon
+`aria-hidden="true"` when a visible label is present, and on an icon-only button
+do the opposite — `aria-label` on the host, icon left alone — so the accessible
+name comes from one place.
 
 `flex: none` stops an addon growing to fill spare space; `line-height: 1` keeps a
 1em icon vertically centred even though the button runs `line-height: 1`, because

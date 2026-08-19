@@ -7,8 +7,6 @@ export * from "./interop-list/interop-list";
 export * from "./interop-button/interop-button";
 export * from "./interop-button/interop-button-activation";
 export * from "./interop-button/interop-button-map";
-export * from "./interop-button/interop-button-prefix";
-export * from "./interop-button/interop-button-suffix";
 export * from "./interop-radio/public-api";
 export * from "./interop-table/interop-table";
 export * from "./interop-table/interop-cell-def";

@@ -72,11 +72,22 @@
 	/* Tablist */
 	--itx-cb-tablist-padding-block: var(--itx-spacing-2) 0;
 	--itx-cb-tablist-padding-inline: 0;
+	/* Tab edges defer to the TABS component rather than restating ranks.
+
+	   code-block does not use interop-tabs — it has a parallel .itx-cb__tab
+	   implementation — so its edge colours were a copy of tabs' values, and
+	   they went stale when tabs was corrected: the rule sat at rank 3 where a
+	   divider is rank 2, hover at 4 where tabs uses 3, and the current edge on
+	   --itx-colorway-solid, the brand FILL rung, which is the category error
+	   the tabs migration removed. A tab should look like a tab wherever it is.
+
+	   Aliasing the tabs tokens means one edit moves both. Widths are still
+	   local — the tablist rule is thick here against tabs' hairline. */
 	--itx-cb-tablist-border-bottom-width: var(--itx-border-width-thick);
 	--itx-cb-tablist-background: transparent;
 	--itx-cb-tablist-border-radius: var(--itx-radius);
 	--itx-cb-tablist-box-shadow: none;
-	--itx-cb-tablist-border-bottom-color: var(--itx-contrast-3);
+	--itx-cb-tablist-border-bottom-color: var(--itx-tabs-rule-color);
 
 	/* Tab */
 	--itx-cb-tab-background: transparent;
@@ -93,12 +104,14 @@
 	/* Tab:Hover  */
 	--itx-cb-tab-background-hover: transparent;
 	--itx-cb-tab-foreground-hover: var(--itx-contrast-5);
-	--itx-cb-tab-border-bottom-color-hover: var(--itx-contrast-4);
+	--itx-cb-tab-border-bottom-color-hover: var(--itx-tab-indicator-color-hover);
 
 	/* Tab:Current  */
 	--itx-cb-tab-background-current: transparent;
 	--itx-cb-tab-foreground-current: var(--itx-contrast-6);
-	--itx-cb-tab-border-bottom-color-current: var(--itx-colorway-solid);
+	--itx-cb-tab-border-bottom-color-current: var(
+		--itx-tab-indicator-color-selected
+	);
 
 	/* Label */
 	--itx-cb-label-padding-inline: 0;
