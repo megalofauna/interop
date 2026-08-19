@@ -105,7 +105,7 @@ const OUT_SOURCE = join(
  * How deep the ladder goes in each direction. Changing these changes how many
  * @container blocks the engine emits; everything downstream follows.
  */
-const DEPTH = { below: 3, above: 4 };
+const DEPTH = { below: 4, above: 4 };
 
 /**
  * The ramp SPEC — five numbers per scheme, not a hand-kept table of seven.
@@ -144,7 +144,7 @@ const RAMP = {
 		max: 1.0,
 	},
 	dark: {
-		page: 0.1925,
+		page: 0.232,
 		up: 0.0395,
 		ease: 1.0,
 		down: 0.045,

@@ -119,8 +119,8 @@ describe("Layer engine", () => {
 			let node = root;
 			for (let i = 0; i < 6; i++) node = el(node, { "itx-sink": "" });
 
-			expect(layerOf(node)).toEqual("-3");
-			expect(surfaceOf(node)).toEqual(ramp("surface-n3"));
+			expect(layerOf(node)).toEqual("-4");
+			expect(surfaceOf(node)).toEqual(ramp("surface-n4"));
 		});
 
 		it("honours an absolute pin regardless of inherited depth, and counts on from it", () => {

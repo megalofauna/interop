@@ -260,6 +260,128 @@
 
 /* ── Tier 3 — the counter. Strictly monotone up the tree, so never a cycle. */
 
+@container style(--itx-layer: -4) {
+	:where([itx-layer]) {
+		--itx-layer: -3;
+		--itx-surface: light-dark(
+			oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-above: light-dark(
+			oklch(var(--itx-ramp-surface-n2-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n2-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-above-2: light-dark(
+			oklch(var(--itx-ramp-surface-n1-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n1-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-below: light-dark(
+			oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-1: light-dark(
+			oklch(var(--itx-ramp-contrast-1-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-1-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-2: light-dark(
+			oklch(var(--itx-ramp-contrast-2-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-2-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-3: light-dark(
+			oklch(var(--itx-ramp-contrast-3-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-3-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-4: light-dark(
+			oklch(var(--itx-ramp-contrast-4-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-4-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-5: light-dark(
+			oklch(var(--itx-ramp-contrast-5-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-5-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-6: light-dark(
+			oklch(var(--itx-ramp-contrast-6-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-6-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-colorway-tint: light-dark(
+			oklch(var(--itx-ramp-colorway-tint-n3-light-l) var(--itx-ramp-colorway-tint-n3-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-tint-n3-dark-l) var(--itx-ramp-colorway-tint-n3-dark-c) var(--itx-colorway-hue))
+		);
+		--itx-colorway-on-tint: light-dark(
+			oklch(var(--itx-ramp-colorway-on-tint-n3-light-l) var(--itx-ramp-colorway-on-tint-n3-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-on-tint-n3-dark-l) var(--itx-ramp-colorway-on-tint-n3-dark-c) var(--itx-colorway-hue))
+		);
+		--itx-colorway-border: light-dark(
+			oklch(var(--itx-ramp-colorway-border-n3-light-l) var(--itx-ramp-colorway-border-n3-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-border-n3-dark-l) var(--itx-ramp-colorway-border-n3-dark-c) var(--itx-colorway-hue))
+		);
+		--itx-colorway-text: light-dark(
+			oklch(var(--itx-ramp-colorway-text-n3-light-l) var(--itx-ramp-colorway-text-n3-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-text-n3-dark-l) var(--itx-ramp-colorway-text-n3-dark-c) var(--itx-colorway-hue))
+		);
+	}
+
+	:where([itx-sink]) { /* terminal — re-asserts without moving */
+		--itx-layer: -4;
+		--itx-surface: light-dark(
+			oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-above: light-dark(
+			oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-above-2: light-dark(
+			oklch(var(--itx-ramp-surface-n2-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n2-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-below: light-dark(
+			oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-1: light-dark(
+			oklch(var(--itx-ramp-contrast-1-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-1-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-2: light-dark(
+			oklch(var(--itx-ramp-contrast-2-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-2-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-3: light-dark(
+			oklch(var(--itx-ramp-contrast-3-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-3-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-4: light-dark(
+			oklch(var(--itx-ramp-contrast-4-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-4-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-5: light-dark(
+			oklch(var(--itx-ramp-contrast-5-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-5-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-contrast-6: light-dark(
+			oklch(var(--itx-ramp-contrast-6-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-6-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-colorway-tint: light-dark(
+			oklch(var(--itx-ramp-colorway-tint-n4-light-l) var(--itx-ramp-colorway-tint-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-tint-n4-dark-l) var(--itx-ramp-colorway-tint-n4-dark-c) var(--itx-colorway-hue))
+		);
+		--itx-colorway-on-tint: light-dark(
+			oklch(var(--itx-ramp-colorway-on-tint-n4-light-l) var(--itx-ramp-colorway-on-tint-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-on-tint-n4-dark-l) var(--itx-ramp-colorway-on-tint-n4-dark-c) var(--itx-colorway-hue))
+		);
+		--itx-colorway-border: light-dark(
+			oklch(var(--itx-ramp-colorway-border-n4-light-l) var(--itx-ramp-colorway-border-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-border-n4-dark-l) var(--itx-ramp-colorway-border-n4-dark-c) var(--itx-colorway-hue))
+		);
+		--itx-colorway-text: light-dark(
+			oklch(var(--itx-ramp-colorway-text-n4-light-l) var(--itx-ramp-colorway-text-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-text-n4-dark-l) var(--itx-ramp-colorway-text-n4-dark-c) var(--itx-colorway-hue))
+		);
+	}
+}
+
 @container style(--itx-layer: -3) {
 	:where([itx-layer]) {
 		--itx-layer: -2;
@@ -321,63 +443,63 @@
 		);
 	}
 
-	:where([itx-sink]) { /* terminal — re-asserts without moving */
-		--itx-layer: -3;
+	:where([itx-sink]) {
+		--itx-layer: -4;
 		--itx-surface: light-dark(
+			oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
+		);
+		--itx-surface-above: light-dark(
 			oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
 			oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
 		);
-		--itx-surface-above: light-dark(
+		--itx-surface-above-2: light-dark(
 			oklch(var(--itx-ramp-surface-n2-light) var(--itx-tint-light)),
 			oklch(var(--itx-ramp-surface-n2-dark) var(--itx-tint-dark))
 		);
-		--itx-surface-above-2: light-dark(
-			oklch(var(--itx-ramp-surface-n1-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-surface-n1-dark) var(--itx-tint-dark))
-		);
 		--itx-surface-below: light-dark(
-			oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-1: light-dark(
-			oklch(var(--itx-ramp-contrast-1-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-contrast-1-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-contrast-1-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-1-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-2: light-dark(
-			oklch(var(--itx-ramp-contrast-2-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-contrast-2-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-contrast-2-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-2-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-3: light-dark(
-			oklch(var(--itx-ramp-contrast-3-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-contrast-3-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-contrast-3-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-3-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-4: light-dark(
-			oklch(var(--itx-ramp-contrast-4-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-contrast-4-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-contrast-4-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-4-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-5: light-dark(
-			oklch(var(--itx-ramp-contrast-5-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-contrast-5-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-contrast-5-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-5-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-6: light-dark(
-			oklch(var(--itx-ramp-contrast-6-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-contrast-6-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-contrast-6-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-contrast-6-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-colorway-tint: light-dark(
-			oklch(var(--itx-ramp-colorway-tint-n3-light-l) var(--itx-ramp-colorway-tint-n3-light-c) var(--itx-colorway-hue)),
-			oklch(var(--itx-ramp-colorway-tint-n3-dark-l) var(--itx-ramp-colorway-tint-n3-dark-c) var(--itx-colorway-hue))
+			oklch(var(--itx-ramp-colorway-tint-n4-light-l) var(--itx-ramp-colorway-tint-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-tint-n4-dark-l) var(--itx-ramp-colorway-tint-n4-dark-c) var(--itx-colorway-hue))
 		);
 		--itx-colorway-on-tint: light-dark(
-			oklch(var(--itx-ramp-colorway-on-tint-n3-light-l) var(--itx-ramp-colorway-on-tint-n3-light-c) var(--itx-colorway-hue)),
-			oklch(var(--itx-ramp-colorway-on-tint-n3-dark-l) var(--itx-ramp-colorway-on-tint-n3-dark-c) var(--itx-colorway-hue))
+			oklch(var(--itx-ramp-colorway-on-tint-n4-light-l) var(--itx-ramp-colorway-on-tint-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-on-tint-n4-dark-l) var(--itx-ramp-colorway-on-tint-n4-dark-c) var(--itx-colorway-hue))
 		);
 		--itx-colorway-border: light-dark(
-			oklch(var(--itx-ramp-colorway-border-n3-light-l) var(--itx-ramp-colorway-border-n3-light-c) var(--itx-colorway-hue)),
-			oklch(var(--itx-ramp-colorway-border-n3-dark-l) var(--itx-ramp-colorway-border-n3-dark-c) var(--itx-colorway-hue))
+			oklch(var(--itx-ramp-colorway-border-n4-light-l) var(--itx-ramp-colorway-border-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-border-n4-dark-l) var(--itx-ramp-colorway-border-n4-dark-c) var(--itx-colorway-hue))
 		);
 		--itx-colorway-text: light-dark(
-			oklch(var(--itx-ramp-colorway-text-n3-light-l) var(--itx-ramp-colorway-text-n3-light-c) var(--itx-colorway-hue)),
-			oklch(var(--itx-ramp-colorway-text-n3-dark-l) var(--itx-ramp-colorway-text-n3-dark-c) var(--itx-colorway-hue))
+			oklch(var(--itx-ramp-colorway-text-n4-light-l) var(--itx-ramp-colorway-text-n4-light-c) var(--itx-colorway-hue)),
+			oklch(var(--itx-ramp-colorway-text-n4-dark-l) var(--itx-ramp-colorway-text-n4-dark-c) var(--itx-colorway-hue))
 		);
 	}
 }
@@ -458,8 +580,8 @@
 			oklch(var(--itx-ramp-surface-n1-dark) var(--itx-tint-dark))
 		);
 		--itx-surface-below: light-dark(
-			oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
-			oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
+			oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+			oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
 		);
 		--itx-contrast-1: light-dark(
 			oklch(var(--itx-ramp-contrast-1-n3-light) var(--itx-tint-light)),
@@ -1238,6 +1360,66 @@
 
 /* ── Absolute pins — last, so they outrank the counter ───────────────── */
 
+:where([itx-layer="-4"]) {
+	--itx-layer: -4;
+	--itx-surface: light-dark(
+		oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-surface-above: light-dark(
+		oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
+	);
+	--itx-surface-above-2: light-dark(
+		oklch(var(--itx-ramp-surface-n2-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-surface-n2-dark) var(--itx-tint-dark))
+	);
+	--itx-surface-below: light-dark(
+		oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-contrast-1: light-dark(
+		oklch(var(--itx-ramp-contrast-1-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-contrast-1-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-contrast-2: light-dark(
+		oklch(var(--itx-ramp-contrast-2-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-contrast-2-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-contrast-3: light-dark(
+		oklch(var(--itx-ramp-contrast-3-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-contrast-3-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-contrast-4: light-dark(
+		oklch(var(--itx-ramp-contrast-4-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-contrast-4-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-contrast-5: light-dark(
+		oklch(var(--itx-ramp-contrast-5-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-contrast-5-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-contrast-6: light-dark(
+		oklch(var(--itx-ramp-contrast-6-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-contrast-6-n4-dark) var(--itx-tint-dark))
+	);
+	--itx-colorway-tint: light-dark(
+		oklch(var(--itx-ramp-colorway-tint-n4-light-l) var(--itx-ramp-colorway-tint-n4-light-c) var(--itx-colorway-hue)),
+		oklch(var(--itx-ramp-colorway-tint-n4-dark-l) var(--itx-ramp-colorway-tint-n4-dark-c) var(--itx-colorway-hue))
+	);
+	--itx-colorway-on-tint: light-dark(
+		oklch(var(--itx-ramp-colorway-on-tint-n4-light-l) var(--itx-ramp-colorway-on-tint-n4-light-c) var(--itx-colorway-hue)),
+		oklch(var(--itx-ramp-colorway-on-tint-n4-dark-l) var(--itx-ramp-colorway-on-tint-n4-dark-c) var(--itx-colorway-hue))
+	);
+	--itx-colorway-border: light-dark(
+		oklch(var(--itx-ramp-colorway-border-n4-light-l) var(--itx-ramp-colorway-border-n4-light-c) var(--itx-colorway-hue)),
+		oklch(var(--itx-ramp-colorway-border-n4-dark-l) var(--itx-ramp-colorway-border-n4-dark-c) var(--itx-colorway-hue))
+	);
+	--itx-colorway-text: light-dark(
+		oklch(var(--itx-ramp-colorway-text-n4-light-l) var(--itx-ramp-colorway-text-n4-light-c) var(--itx-colorway-hue)),
+		oklch(var(--itx-ramp-colorway-text-n4-dark-l) var(--itx-ramp-colorway-text-n4-dark-c) var(--itx-colorway-hue))
+	);
+}
+
 :where([itx-layer="-3"]) {
 	--itx-layer: -3;
 	--itx-surface: light-dark(
@@ -1253,8 +1435,8 @@
 		oklch(var(--itx-ramp-surface-n1-dark) var(--itx-tint-dark))
 	);
 	--itx-surface-below: light-dark(
-		oklch(var(--itx-ramp-surface-n3-light) var(--itx-tint-light)),
-		oklch(var(--itx-ramp-surface-n3-dark) var(--itx-tint-dark))
+		oklch(var(--itx-ramp-surface-n4-light) var(--itx-tint-light)),
+		oklch(var(--itx-ramp-surface-n4-dark) var(--itx-tint-dark))
 	);
 	--itx-contrast-1: light-dark(
 		oklch(var(--itx-ramp-contrast-1-n3-light) var(--itx-tint-light)),
