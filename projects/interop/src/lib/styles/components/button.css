@@ -280,7 +280,21 @@
 }
 
 :where(button[interop-button~="icon"]) {
-	width: var(--itx-button-max-width, min-content);
+	/* Square: the inline size IS the height.
+
+	   This used to be `width: var(--itx-button-max-width, min-content)` — the
+	   MAX-width token driving the WIDTH property. The theme sets
+	   --itx-button-max-width: none on icon buttons, meaning "no maximum", so it
+	   resolved to `width: none`. That is not a valid width, so the declaration
+	   was invalid at computed-value time and width fell back to auto: the
+	   button sized to its icon on the inline axis while the block axis kept its
+	   height floor, giving a tall narrow rectangle with the icon off-centre in
+	   the frame.
+
+	   max-width is applied on the base rule, which is where that token belongs.
+	   Under a coarse pointer min-inline-size raises this to the touch target and
+	   min-block-size does the same, so the square holds at 44px too. */
+	inline-size: var(--itx-button-height, 2.5rem);
 	flex: 0 0 auto;
 }
 

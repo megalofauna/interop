@@ -38,7 +38,7 @@
 	--itx-button-width: auto;
 	--itx-button-flex: 1 1 auto;
 	--itx-button-min-width: max-content;
-	--itx-button-max-width: var(--itx-spacing-80);
+	--itx-button-max-width: var(--itx-spacing-56);
 	--itx-button-justify-content: flex-start;
 
 	/* Carbon $spacing-03 — the gap it uses between label and icon wherever the
@@ -166,6 +166,12 @@
 	--itx-button-min-width: var(--itx-button-height, 2.5rem);
 	--itx-button-padding-inline: 0;
 	--itx-button-max-width: none;
+
+	/* The base sets flex-start, which is right for a labelled button — Carbon
+	   left-aligns the label so a column of buttons reads as a column of text.
+	   An icon button has no label to align: its glyph is the whole content, so
+	   flex-start parked it against the left edge of a square frame. */
+	--itx-button-justify-content: center;
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
