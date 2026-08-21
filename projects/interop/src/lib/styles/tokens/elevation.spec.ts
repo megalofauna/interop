@@ -12,7 +12,7 @@
  *   "overrides"— the governing principle holds mechanically: rules cohere by
  *                default, and overriding stays trivial everywhere.
  */
-import { ENGINE_CSS, LADDER_CSS } from "./ladder.css-source";
+import { ENGINE_CSS, LADDER_CSS, SURFACE_L } from "./ladder.css-source";
 
 describe("Layer engine", () => {
 	let style: HTMLStyleElement;
@@ -37,12 +37,26 @@ describe("Layer engine", () => {
 	/**
 	 * Resolve a ramp entry to a real colour, composing it the same way the engine
 	 * does — the theme publishes lightness numbers, not finished colours.
+	 *
+	 * Surfaces take a different path from the ranks. Ranks are SOLVED per layer
+	 * and published as discrete numbers, so the probe reads those. Surfaces are
+	 * COMPUTED by the engine from the ramp spec, so reading a published number
+	 * would only prove the engine agrees with itself; the probe uses SURFACE_L
+	 * instead — the same formula evaluated in JS by the generator, which is an
+	 * oracle the CSS cannot influence.
 	 */
 	const ramp = (name: string, host: HTMLElement = root): string => {
 		const probe = el(host);
-		probe.style.backgroundColor =
-			`light-dark(oklch(var(--itx-ramp-${name}-light) var(--itx-tint-light)),` +
-			` oklch(var(--itx-ramp-${name}-dark) var(--itx-tint-dark)))`;
+		if (name.startsWith("surface-")) {
+			const layer = name.slice("surface-".length);
+			probe.style.backgroundColor =
+				`light-dark(oklch(${SURFACE_L["light"][layer]} var(--itx-tint-light)),` +
+				` oklch(${SURFACE_L["dark"][layer]} var(--itx-tint-dark)))`;
+		} else {
+			probe.style.backgroundColor =
+				`light-dark(oklch(var(--itx-ramp-${name}-light) var(--itx-tint-light)),` +
+				` oklch(var(--itx-ramp-${name}-dark) var(--itx-tint-dark)))`;
+		}
 		return getComputedStyle(probe).backgroundColor;
 	};
 
@@ -180,17 +194,45 @@ describe("Layer engine", () => {
 			expect(after).not.toEqual(before);
 		});
 
-		it("re-lightens every layer below when a ramp NUMBER is set on any ancestor", () => {
-			// Same reason: the theme publishes lightness numbers rather than finished
-			// colours, so an art-direction override reaches layers below it too.
+		it("re-scales EVERY layer below when a ramp DIAL is set on any ancestor", () => {
+			// The ramp spec is read at use time rather than baked, so one number
+			// retunes the whole ladder underneath it. This is strictly more reach
+			// than the per-layer numbers it replaced: those moved one rung, this
+			// moves all of them, and the steps stay proportional to each other.
+			const branch = el(root);
+			branch.style.setProperty("--itx-ramp-dark-step", "0.09");
+
+			const one = el(branch, { "itx-layer": "" });
+			const two = el(one, { "itx-layer": "" });
+
+			// page .232 + step .09 per rung, uniform in dark.
+			const expected = (l: number): string => {
+				const probe = el(branch);
+				probe.style.backgroundColor = `oklch(${l} var(--itx-tint-dark))`;
+				return getComputedStyle(probe).backgroundColor;
+			};
+
+			expect(surfaceOf(one)).toEqual(expected(0.232 + 0.09));
+			expect(surfaceOf(two)).toEqual(expected(0.232 + 0.18));
+			expect(surfaceOf(one)).not.toEqual(
+				surfaceOf(el(root, { "itx-layer": "" })),
+			);
+		});
+
+		it("no longer honours a per-layer ramp number — that override became a dial", () => {
+			/*
+			 * A deliberate, documented break. --itx-ramp-surface-N-light/dark used
+			 * to be settable on any ancestor; the engine now computes lightness from
+			 * the ramp spec and never reads those names, so they are gone rather
+			 * than inert. Asserted so the removal stays visible instead of being
+			 * rediscovered by whoever relied on it.
+			 */
 			const branch = el(root);
 			branch.style.setProperty("--itx-ramp-surface-1-dark", "0.9");
 
-			const overridden = el(branch, { "itx-layer": "" });
-			const untouched = el(root, { "itx-layer": "" });
-
-			expect(surfaceOf(overridden)).not.toEqual(surfaceOf(untouched));
-			expect(surfaceOf(overridden)).toEqual(ramp("surface-1", branch));
+			expect(surfaceOf(el(branch, { "itx-layer": "" }))).toEqual(
+				surfaceOf(el(root, { "itx-layer": "" })),
+			);
 		});
 
 		it("lets any consumer rule win on contact, at every depth", () => {
