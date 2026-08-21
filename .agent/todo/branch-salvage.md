@@ -42,7 +42,7 @@ hand-maintained token-defaults table still citing `--itx-neutral-5/6/7/12` and
 The branch's other commit (remove `InteropButtonPrefix`/`Suffix`) already landed
 via `itx-51-button-addons`.
 
-### 2. Ratio-first resizable — `ITX-11-aspect-ratio-first-resizable`
+### 2. Ratio-first resizable — `ITX-11-aspect-ratio-first-resizable` ✅ DONE
 
 `main` has `aspectLocked` (a boolean). This branch adds `[aspectRatio]` — a
 *declared* ratio (`'16/9'`), authoritative, with one axis projected onto the
@@ -55,8 +55,17 @@ read as real bugs:
 Backed by a cross-engine probe (below) that drove Blink, WebKit and Gecko with
 real dispatched input against each UA's own resizer control.
 
-Six commits, 2026-07-26, 100+ commits behind. Expect to re-implement rather than
-cherry-pick, but the design and the measurements are done.
+**Ported 2026-08-21.** It cherry-picked after all: `main` had touched resizable
+only with the repo-wide prettier run, so the branch was a clean superset —
+identical counts for `aria-orientation`, `keyboardLargeStep` and the dragging
+class, plus `aspectRatio`. Taken with its 338-line spec (601 tests, up from
+583), the `box-sizing: border-box` fix, and the mental-model card.
+
+Two things deliberately NOT taken: the branch regressed `resizable.css`'s
+transition from `var(--itx-duration-fast)` to a literal `96ms`, which `main`
+already does correctly; and the demo example, because that diff spans 149 files
+against a demo that has since been rebuilt. A ratio-first example can be written
+fresh against the current page.
 
 ---
 

@@ -24,6 +24,16 @@
 /* ── Host (both tiers) ───────────────────────────────────────────────────── */
 
 :where([interop-resizable]) {
+	/* The directive measures with getBoundingClientRect() (border box) and
+	   writes those measurements back into `width`/`height`, so the host must
+	   be border-box or every drag grows the frame by its own border. This also
+	   makes the min/max tokens, the emitted dimensions and the box the
+	   consumer sees all refer to the same rectangle. */
+	box-sizing: border-box;
+
+	/* Required for `resize`, and load-bearing beyond it: a scroll container is
+	   exempt from the automatic content-based minimum, so content taller than
+	   the box cannot push it open. See .agent/explorations/resize-aspect-ratio. */
 	overflow: hidden;
 	min-inline-size: var(--itx-resizable-min-width);
 	min-block-size: var(--itx-resizable-min-height);

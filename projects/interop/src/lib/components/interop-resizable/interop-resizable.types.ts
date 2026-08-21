@@ -19,6 +19,30 @@ export interface ResizableDimensions {
 	height: number;
 }
 
+/**
+ * A CSS `aspect-ratio` value, restricted to the forms that mean anything on a
+ * non-replaced element: a `<number>`, or two numbers separated by a solidus.
+ *
+ * ```
+ * "16/9"   "16 / 9"   "1.7778"   1.7778
+ * ```
+ *
+ * `auto` and `auto <ratio>` are not accepted — they only apply to replaced
+ * elements. Degenerate values (zero, negative, non-finite, unparseable) are
+ * treated as unset, matching CSS: "if the ratio is degenerate, the property
+ * instead behaves as auto".
+ */
+export type ResizableAspectRatio = string | number;
+
+/** A parsed ratio, kept as its numerator and denominator so projected bounds
+ * can be emitted as `calc()` rather than a pre-rounded number. */
+export interface ResizableRatio {
+	/** Inline-axis term. */
+	w: number;
+	/** Block-axis term. */
+	h: number;
+}
+
 /** CSS `container-type` value applied to the host. Default `inline-size`
  * makes the resized element a container-query container so consumers can
  * write CQ rules against its width without extra wiring. */
