@@ -65,7 +65,9 @@ never set `id` keep working; pages that do set it keep their explicit anchors.
   beyond `class="demo-page"` — those need the attribute moved rather than the
   element swapped wholesale.
 - Reference implementations already on the shell: `button`, `resizable`,
-  `principles`, `amber-lab`, and now `progress`.
+  `principles`, and now `progress`. (`amber-lab` was also one, but that page
+  never reached `main` — it survives only as a record in
+  `.agent/explorations/amber-lab/`.)
 - Worth doing in one sweep rather than opportunistically — the value is a nav
   on *every* page, and a half-converted set is harder to reason about than
   either end state.

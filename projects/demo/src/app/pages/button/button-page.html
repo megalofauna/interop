@@ -107,6 +107,65 @@
 			</button>
 			<itx-code-block language="html" [code]="addonHtml" />
 		</demo-example>
+
+		<demo-example label="Borrowed vocabulary: Tailwind">
+			<p description>
+				The variants above take their look from IBM Carbon — square, flat,
+				severe. That is a preference, not a constraint. Below is the Tailwind
+				Plus button pattern rebuilt entirely from
+				<code>--itx-button-*</code> properties: same element, same foundation,
+				no component code. Tailwind ships utilities rather than a button, so the
+				reference is the class string those examples use —
+				<code>rounded-md px-2.5 py-1.5 text-sm font-semibold shadow-xs</code> —
+				resolved against the v4 default theme. Both schemes are taken: Tailwind
+				Plus publishes a dark treatment for each of these three, and it is not a
+				mechanical darkening. Primary steps one rung lighter, the shadow is
+				dropped outright, and secondary trades its opaque white-on-gray-300 for
+				a translucent <code>white/10</code> on <code>white/5</code>. Those are
+				the real values, carried on <code>light-dark()</code> pairs — the same
+				mechanism the protocol theme already uses. Note also that sizing runs
+				the other way from Carbon: Carbon pins a height and derives padding,
+				Tailwind states padding and lets the height fall out. Both fit, because
+				<code>--itx-button-padding-block</code> bypasses the derivation.
+				Tailwind's <code>inset-ring-1</code> needs no special handling either —
+				the pill is a pseudo-element pinned to the host box, so a border there
+				never adds to the button's height.
+			</p>
+			<button interop-button="tw-primary">Primary</button>
+			<button interop-button="tw-secondary">Secondary</button>
+			<button interop-button="tw-soft">Soft</button>
+			<itx-code-block [files]="tailwindFiles" />
+		</demo-example>
+
+		<demo-example label="Borrowed vocabulary: Angular Material">
+			<p description>
+				The same exercise against Material 3, read off
+				<code>&#64;angular/material</code>'s own source: structural tokens from
+				<code>button/_m3-button.scss</code>, colours from the
+				<code>azure-blue</code> palette that <code>ng add</code> installs. The
+				colour layer is a straight lift: <code>mat.theme()</code> emits its
+				<code>--mat-sys-*</code> system colours as
+				<code>light-dark()</code> pairs, which is exactly this theme's
+				mechanism, so the six system colours are the compiled Material values
+				verbatim and every variant reads through them. One container serves all
+				five — 40px tall, 24px side padding, <code>corner-full</code>, a Roboto
+				500 label at 14/20 with 0.006rem tracking. The one mechanism that does
+				not map is the state layer: Material composites the label colour at 8%
+				and 12% over the container, where this foundation resolves a flat colour
+				per state, so the composite is done up front with
+				<code>color-mix()</code> — which keeps working per-scheme, since
+				<code>light-dark()</code> nests inside it. Same pixels, no overlay
+				element. The ripple is not taken — it needs a positioned child, an
+				animation and a pointer origin, which is architecture rather than
+				tokens.
+			</p>
+			<button interop-button="m3-filled">Filled</button>
+			<button interop-button="m3-tonal">Tonal</button>
+			<button interop-button="m3-elevated">Elevated</button>
+			<button interop-button="m3-outlined">Outlined</button>
+			<button interop-button="m3-text">Text</button>
+			<itx-code-block [files]="materialFiles" />
+		</demo-example>
 	</demo-section>
 
 	<!-- ── Availability ──────────────────────────────────────────────────── -->

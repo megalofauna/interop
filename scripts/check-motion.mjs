@@ -49,7 +49,18 @@ function walk(dir, out = []) {
 
 const findings = [];
 /** A bare time value, not one that is part of an identifier or a var() name. */
-const TIME = /(?<![\w-])\d*\.?\d+m?s(?![\w-])/;
+/**
+ * A literal duration — excluding zero.
+ *
+ * `0s` and `0ms` are the ABSENCE of motion, so they cannot ignore
+ * prefers-reduced-motion; reduced motion is what they already are. Flagging
+ * them made the guard cry wolf on the one honest way to say "no transition
+ * here", and a guard that cries wolf gets switched off.
+ *
+ * Any non-zero literal still fails, including 0.15s — the zero has to be the
+ * whole number, not its first digit.
+ */
+const TIME = /(?<![\w-])(?!0+(?:\.0+)?m?s(?![\w-]))\d*\.?\d+m?s(?![\w-])/;
 
 /** An easing written as a function — the only way to write one literally. */
 const EASING_FN = /\b(?:cubic-bezier|steps|linear)\(/;

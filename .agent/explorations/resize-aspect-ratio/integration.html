@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- The actual built library stylesheet. -->
+<link rel="stylesheet" href="resizable.css">
+<style>
+  body { margin: 0; padding: 40px; font: 13px system-ui; }
+  .interop-resizable { background: #cde; margin-bottom: 50px; }
+</style>
+</head>
+<body>
+<!--
+  Exactly what the directive emits for:
+    [aspectRatio]="'16/9'"  [max]="{ height: 300 }"  axis defaulting to "both"
+  Cross-axis bounds neutralised; the cross-axis max projected onto the driving
+  axis as calc(). This is probe case D, which broke the ratio before projection.
+-->
+<div interop-resizable class="interop-resizable" id="projected"
+     data-tier="native" data-axis="horizontal" data-aspect-ratio=""
+     style="aspect-ratio: 16 / 9;
+            width: 400px;
+            --itx-resizable-max-width: calc(300px * 16 / 9);
+            --itx-resizable-min-height: 0;
+            --itx-resizable-max-height: none;">projected</div>
+
+<!--
+  The same intent expressed the naive way — a raw cross-axis max reaching CSS.
+  This is the control: it must break.
+-->
+<div interop-resizable class="interop-resizable" id="naive"
+     data-tier="native" data-axis="horizontal"
+     style="aspect-ratio: 16 / 9;
+            width: 400px;
+            --itx-resizable-max-height: 300px;">naive</div>
+</body>
+</html>
