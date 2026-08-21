@@ -1351,6 +1351,86 @@ function emitEngine() {
 	return L.join("\n");
 }
 
+/* ── Emit: the render-verification manifest ─────────────────────────────── */
+
+/**
+ * Every pairing this generator claims a floor for, as data a browser can check.
+ *
+ * The build validates its own arithmetic; it cannot see what an engine actually
+ * renders. That gap is not theoretical — --itx-contrast-4 shipped at 4.48:1 in
+ * Chrome while this file computed 4.52:1, because the two round one 8-bit
+ * channel differently. The solver now measures pessimistically so that cannot
+ * recur, but "cannot recur" is a claim, and this is what checks it.
+ *
+ * Backgrounds use the lightness the engine COMPUTES (layerLightnessJs), not the
+ * rounded table the solver worked from — the point is to verify what ships.
+ *
+ * Consumed by scripts/check-contrast-render.mjs.
+ */
+function contrastPairs() {
+	const index = (k) => (k.startsWith("n") ? -Number(k.slice(1)) : Number(k));
+	const pairs = [];
+
+	for (const scheme of ["light", "dark"]) {
+		const tint = TINT[scheme];
+
+		for (const layer of LAYERS) {
+			const bgL = layerLightnessJs(scheme, index(layer));
+			const bg = { l: bgL, c: tint.c, h: tint.h };
+
+			for (const spec of RANKS) {
+				if (!spec.ratio) continue; // rank 1 is a delta, rank 6 is a pole
+				const { L } = ladder[scheme][layer].ranks[spec.rank];
+				pairs.push({
+					label: `${scheme} layer ${layer} rank ${spec.rank}`,
+					fg: { l: L, c: tint.c, h: tint.h },
+					bg,
+					floor: spec.ratio,
+				});
+			}
+
+			for (const family of families) {
+				const cell = family.layers[scheme][layer];
+				if (!cell) continue; // statuses are solved at layer 0 only
+				for (const [role, floor] of [
+					["border", ACCENT.border],
+					["text", ACCENT.text],
+				]) {
+					pairs.push({
+						label: `${scheme} layer ${layer} ${family.id} ${role}`,
+						fg: { l: cell[role].L, c: cell[role].C, h: family.hue },
+						bg,
+						floor,
+					});
+				}
+				// Text on a tint is measured against the TINT, not the surface.
+				pairs.push({
+					label: `${scheme} layer ${layer} ${family.id} on-tint`,
+					fg: { l: cell.onTint.L, c: cell.onTint.C, h: family.hue },
+					bg: { l: cell.tint.L, c: cell.tint.C, h: family.hue },
+					floor: ACCENT.onTint,
+				});
+			}
+		}
+	}
+
+	// Solids are scheme- and layer-invariant, so they are checked once.
+	for (const family of families) {
+		pairs.push({
+			label: `${family.id} label on solid`,
+			fg: {
+				l: family.solid.label.L,
+				c: family.solid.label.C,
+				h: family.hue,
+			},
+			bg: { l: family.solid.L, c: family.solid.C, h: family.hue },
+			floor: ACCENT.onSolid,
+		});
+	}
+
+	return pairs;
+}
+
 /* ── Emit: the derivation record ────────────────────────────────────────── */
 
 /**
@@ -1673,7 +1753,10 @@ if (!check) {
 		`export const LADDER_CSS = ${JSON.stringify(ladderCss)};\n\n` +
 		`export const ENGINE_CSS = ${JSON.stringify(engineCss)};\n\n` +
 		"/* The ramp formula in JS — an oracle independent of the CSS engine. */\n" +
-		`export const SURFACE_L: Record<string, Record<string, number>> = ${JSON.stringify(surfaceL)};\n`;
+		`export const SURFACE_L: Record<string, Record<string, number>> = ${JSON.stringify(surfaceL)};\n\n` +
+		"/* Every floor this generator claims, for a browser to check. See\n" +
+		"   scripts/check-contrast-render.mjs. */\n" +
+		`export const CONTRAST_PAIRS = ${JSON.stringify(contrastPairs())};\n`;
 
 	for (const [path, contents] of [
 		[OUT_LADDER, ladderCss],
