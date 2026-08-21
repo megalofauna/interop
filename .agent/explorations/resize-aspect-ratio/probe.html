@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { margin: 0; padding: 40px; font: 14px system-ui; }
+  .frame {
+    overflow: hidden;
+    background: #cde;
+    border: 0;
+    margin-bottom: 60px;
+    box-sizing: border-box;
+  }
+
+  /* A: horizontal resize + ratio. Height must stay auto for the ratio to hold. */
+  #a { resize: horizontal; aspect-ratio: 16 / 9; width: 400px; }
+
+  /* B: control — both-axis resize + ratio. Expect the ratio to die on drag. */
+  #b { resize: both; aspect-ratio: 16 / 9; width: 400px; }
+
+  /* C: vertical resize + ratio. */
+  #c { resize: vertical; aspect-ratio: 16 / 9; height: 225px; }
+
+  /* D: horizontal + ratio + a cross-axis max. Defect 1: does max-block-size
+        clamp the derived height and break the ratio? */
+  #d { resize: horizontal; aspect-ratio: 16 / 9; width: 400px; max-block-size: 300px; }
+
+  /* E: pure layout, no drag — min > max conflict. CSS 2.2 §10.4 says min wins. */
+  #e { inline-size: 500px; min-inline-size: 711.11px; max-inline-size: 600px; block-size: 50px; }
+
+  /* F: pure layout — ratio with BOTH dimensions definite. Ratio must be ignored. */
+  #f { aspect-ratio: 16 / 9; width: 400px; height: 300px; }
+
+  /* G: overflow visible + ratio + content taller than derived height.
+        Scroll-container exemption from the automatic content-based minimum. */
+  #g { overflow: visible; aspect-ratio: 16 / 9; width: 320px; }
+  #g-inner { height: 240px; background: rgba(255,0,0,.25); }
+
+  /* H: same as G but overflow hidden (a scroll container) — content must not floor it. */
+  #h { overflow: hidden; aspect-ratio: 16 / 9; width: 320px; }
+  #h-inner { height: 240px; background: rgba(0,128,0,.25); }
+</style>
+</head>
+<body>
+  <div class="frame" id="a">A horizontal+ratio</div>
+  <div class="frame" id="b">B both+ratio</div>
+  <div class="frame" id="c">C vertical+ratio</div>
+  <div class="frame" id="d">D horizontal+ratio+max-block-size:300</div>
+  <div class="frame" id="e">E min(711.11) &gt; max(600)</div>
+  <div class="frame" id="f">F ratio + both dims definite</div>
+  <div class="frame" id="g">G overflow:visible<div id="g-inner"></div></div>
+  <div class="frame" id="h">H overflow:hidden<div id="h-inner"></div></div>
+</body>
+</html>

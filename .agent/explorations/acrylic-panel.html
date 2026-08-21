@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Milky acrylic slab — live tuner</title>
+<style>
+  /* ============================================================
+     MILKY ACRYLIC — exploration tuner
+     Goal: a thick, milky, light-diffusing acrylic SLAB (milk-plexi),
+     NOT transparent glass / aero / aqua.
+     Physics we emulate:
+       - subsurface scattering: background -> soft luminance fields
+       - milk washes out colour (DESATURATE, don't pump saturation)
+       - matte/satin, self-lit, even. no specular gloss, no rim light.
+       - "thick" read = broad soft internal glow + layered elevation shadow
+     Every layer is a CSS custom property, live-bound to a slider.
+     Token names mirror what would port to the library (--itx-acrylic-*).
+     ============================================================ */
+
+  :root {
+    color-scheme: light dark;
+
+    /* ---- the acrylic recipe (these are the real knobs) ---- */
+
+    /* A. diffusion of what's behind */
+    --itx-acrylic-blur: 22px;          /* heavy = diffuse, not "frost" */
+    --itx-acrylic-saturate: 62%;       /* <100% : milk kills chroma */
+    --itx-acrylic-brightness: 106%;    /* light milk lifts; dark milk < 100% */
+
+    /* B. the milk fill (dominant layer). tint + how milky + how opaque */
+    --itx-acrylic-tint: oklch(72% 0.13 255);  /* the custom colour input */
+    --itx-acrylic-tint-amount: 10%;    /* how far the milk pulls toward tint */
+    --itx-acrylic-milk-base: white;    /* white (light) or near-black (dark) */
+    --itx-acrylic-opacity: 0.80;       /* 0.72–0.86 magic band */
+
+    /* C. internal luminance (top-lit slab, broad + soft) */
+    --itx-acrylic-glow: 0.28;          /* strength of the top-down light wash */
+    --itx-acrylic-pool: 0.18;          /* light pooling in the bottom-right corner */
+
+    /* D. edge treatment (restrained, not aqua) */
+    --itx-acrylic-edge-top: 0.55;      /* faint lighter catch on top edge */
+    --itx-acrylic-edge-bottom: 0.05;   /* faint densify on bottom edge */
+
+    /* E. elevation (sells thickness + float) */
+    --itx-acrylic-shadow: 0.14;        /* master shadow strength */
+    --itx-acrylic-halo: 0.35;          /* soft light hugging the outer edge */
+
+    /* F. grain (optional; off by default. keeps gradients from banding) */
+    --itx-acrylic-grain: 0;            /* 0 or 1 */
+
+    --itx-acrylic-radius: 20px;
+
+    /* ---- derived (composed from the knobs above) ---- */
+    --_milk: color-mix(in oklch,
+               var(--itx-acrylic-tint) var(--itx-acrylic-tint-amount),
+               var(--itx-acrylic-milk-base));
+    --_fill: color-mix(in srgb, var(--_milk) calc(var(--itx-acrylic-opacity) * 100%), transparent);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; margin: 0; }
+
+  body {
+    font: 15px/1.5 ui-sans-serif, system-ui, sans-serif;
+    color: #1a1a1a;
+    overflow: hidden;
+  }
+
+  /* ---------------------------------------------------------
+     BUSY BACKGROUND — deliberately high-frequency + saturated,
+     so we can SEE detail dissolve into luminance fields.
+     --------------------------------------------------------- */
+  .stage {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(40% 55% at 18% 24%, #ff2d95 0%, transparent 60%),
+      radial-gradient(45% 45% at 82% 18%, #00e0ff 0%, transparent 55%),
+      radial-gradient(50% 60% at 75% 82%, #ffd400 0%, transparent 55%),
+      radial-gradient(55% 55% at 22% 84%, #6d28d9 0%, transparent 60%),
+      #0b1220;
+  }
+  /* sharp high-frequency detail: a grid of glyphs that MUST dissolve */
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: -5%;
+    background-image:
+      repeating-linear-gradient(45deg, #ffffff22 0 2px, transparent 2px 14px),
+      repeating-linear-gradient(-45deg, #00000022 0 2px, transparent 2px 14px);
+    opacity: 0.9;
+  }
+  .stage__glyphs {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 90px);
+    grid-auto-rows: 90px;
+    place-content: center;
+    gap: 6px;
+    font-size: 46px;
+    opacity: 0.9;
+    user-select: none;
+    pointer-events: none;
+    filter: saturate(1.2);
+  }
+
+  .panels {
+    position: relative;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  /* ---------------------------------------------------------
+     THE ACRYLIC SLAB
+     Composition (bottom -> top within the box):
+       background layer  : diffused backdrop is handled by backdrop-filter
+       fill              : the milk (semi-opaque, dominant)
+       ::before          : broad top-down internal luminance (the glow)
+       ::after           : optional grain
+       box-shadow        : inset edges (C/D) + outset elevation (E)
+     --------------------------------------------------------- */
+  .acrylic {
+    position: relative;
+    border-radius: var(--itx-acrylic-radius);
+    isolation: isolate;
+
+    /* B — milk fill. flat, uniform. all top-lighting comes from the single
+       full-surface glow gradient (::before) so there's no compound arc. */
+    background: var(--_fill);
+
+    /* A — diffuse the backdrop. desaturate! */
+    -webkit-backdrop-filter:
+      blur(var(--itx-acrylic-blur))
+      saturate(var(--itx-acrylic-saturate))
+      brightness(var(--itx-acrylic-brightness));
+    backdrop-filter:
+      blur(var(--itx-acrylic-blur))
+      saturate(var(--itx-acrylic-saturate))
+      brightness(var(--itx-acrylic-brightness));
+
+    /* D + E — edges (inset) and elevation (outset), one shadow list */
+    box-shadow:
+      /* D: top edge catch + bottom densify (the only "sides" we hint) */
+      inset 0 1px 0 0 color-mix(in srgb, white calc(var(--itx-acrylic-edge-top) * 100%), transparent),
+      inset 0 -1px 0 0 color-mix(in srgb, black calc(var(--itx-acrylic-edge-bottom) * 100%), transparent),
+      /* halo: soft light hugging the outer edge, barely spilling out before
+         the shadows overtake. sits on top of the shadows so it wins at the edge. */
+      0 0 8px 0 color-mix(in srgb, white calc(var(--itx-acrylic-halo) * 100%), transparent),
+      /* E: grounded + directional. light from top-left -> shadows fall
+         to the bottom-right; top-left stays clean. a tight low-blur
+         contact shadow grounds it, then two softer steps give body. */
+      2px 3px 3px color-mix(in srgb, black calc(var(--itx-acrylic-shadow) * 95%), transparent),
+      6px 9px 16px color-mix(in srgb, black calc(var(--itx-acrylic-shadow) * 65%), transparent),
+      14px 22px 40px color-mix(in srgb, black calc(var(--itx-acrylic-shadow) * 42%), transparent);
+  }
+
+  /* C — internal luminance: broad, soft, top-weighted. NOT a specular dot. */
+  .acrylic::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    /* two internal light effects, both painted inside the slab:
+       1. bottom-right pool — light scattered through the milk gathering
+          in the far corner (same light direction as the shadow).
+       2. full-surface top-lit gradient: highlight at the top edge,
+          fading to fully transparent at the bottom. no arc, no hotspot. */
+    background:
+      radial-gradient(75% 65% at 100% 100%,
+        color-mix(in srgb, white calc(var(--itx-acrylic-pool) * 100%), transparent) 0%,
+        transparent 62%),
+      linear-gradient(to bottom,
+        color-mix(in srgb, white calc(var(--itx-acrylic-glow) * 100%), transparent) 0%,
+        transparent 100%);
+  }
+
+  /* F — optional grain (SVG feTurbulence data-URI). off unless --grain:1 */
+  .acrylic::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: calc(var(--itx-acrylic-grain) * 0.5);
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/>\
+<feColorMatrix type='saturate' values='0'/></filter>\
+<rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+    background-size: 120px 120px;
+  }
+
+  /* slab contents */
+  .acrylic__body { padding: 22px 24px; color: #12203a; }
+  .acrylic--dark .acrylic__body,
+  .acrylic.on-dark .acrylic__body { color: #eef2ff; }
+  .acrylic h3 { margin: 0 0 6px; font-size: 15px; letter-spacing: .01em; }
+  .acrylic p  { margin: 0; font-size: 13px; opacity: .8; }
+
+  .panel-a { width: 340px; }
+  .panel-b { width: 200px; }
+  .panel-c { width: 120px; height: 120px; display: grid; place-items: center; font-size: 30px; }
+
+  /* -------- DARK MILK preset (charcoal translucent) -------- */
+  .acrylic--dark {
+    --itx-acrylic-milk-base: oklch(24% 0.02 265);
+    --itx-acrylic-brightness: 82%;
+    --itx-acrylic-saturate: 55%;
+    --itx-acrylic-glow: 0.14;
+    --itx-acrylic-edge-top: 0.14;
+    --itx-acrylic-edge-bottom: 0.28;
+    --itx-acrylic-shadow: 0.34;
+  }
+
+  /* ---------------------------------------------------------
+     CONTROL PANEL (plain solid, so it's always readable)
+     --------------------------------------------------------- */
+  .controls {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 300px;
+    max-height: calc(100vh - 32px);
+    overflow: auto;
+    background: #ffffff;
+    color: #111;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    padding: 14px 16px;
+    z-index: 10;
+    font-size: 12px;
+  }
+  .controls h2 { margin: 0 0 4px; font-size: 13px; }
+  .controls .sub { margin: 0 0 12px; color: #666; font-size: 11px; }
+  .row { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; margin: 9px 0; }
+  .row label { font-weight: 600; }
+  .row output { font-variant-numeric: tabular-nums; color: #444; }
+  .row input[type=range] { grid-column: 1 / -1; width: 100%; }
+  .row input[type=color] { grid-column: 1 / -1; width: 100%; height: 26px; }
+  .grp { border-top: 1px solid #eee; margin-top: 12px; padding-top: 8px; }
+  .grp > b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #999; margin-bottom: 2px; }
+  .presets { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .presets button {
+    flex: 1; min-width: 60px; padding: 6px 4px; border: 1px solid #ddd; border-radius: 8px;
+    background: #f7f7f7; color: #111; cursor: pointer; font-size: 11px; font-weight: 600;
+  }
+  .presets button:hover { background: #eee; }
+  .bg-toggle { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .bg-toggle button { flex:1; padding: 5px; border:1px solid #ddd; border-radius:8px; background:#f7f7f7; color:#111; cursor:pointer; font-size:11px; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="stage__glyphs" id="glyphs"></div>
+
+  <div class="panels">
+    <div class="acrylic panel-a" id="tunable">
+      <div class="acrylic__body">
+        <h3>Command palette</h3>
+        <p>This slab is milk, not glass. The colour storm behind should read as soft luminance — you sense light, you resolve nothing.</p>
+      </div>
+    </div>
+
+    <div class="acrylic panel-b" id="tunable2">
+      <div class="acrylic__body">
+        <h3>Nav menu</h3>
+        <p>Same recipe, smaller.</p>
+      </div>
+    </div>
+
+    <div class="acrylic panel-c acrylic--dark">🌙</div>
+  </div>
+</div>
+
+<div class="controls">
+  <h2>Milky acrylic — tuner</h2>
+  <p class="sub">Left two panels are live. Third is the dark-milk preset.</p>
+
+  <div class="presets">
+    <button data-preset="light">Light milk</button>
+    <button data-preset="dark">Dark milk</button>
+    <button data-preset="tinted">Tinted</button>
+  </div>
+
+  <div class="grp">
+    <b>A · Diffuse the backdrop</b>
+    <div class="row"><label>Blur</label><output id="o-blur"></output>
+      <input type="range" id="blur" min="0" max="60" step="1"></div>
+    <div class="row"><label>Saturate (milk kills chroma)</label><output id="o-sat"></output>
+      <input type="range" id="sat" min="0" max="200" step="1"></div>
+    <div class="row"><label>Brightness</label><output id="o-bri"></output>
+      <input type="range" id="bri" min="50" max="150" step="1"></div>
+  </div>
+
+  <div class="grp">
+    <b>B · The milk fill</b>
+    <div class="row"><label>Tint colour</label>
+      <input type="color" id="tint" value="#6aa3ff"></div>
+    <div class="row"><label>Tint amount</label><output id="o-tintamt"></output>
+      <input type="range" id="tintamt" min="0" max="60" step="1"></div>
+    <div class="row"><label>Opacity (0.72–0.86 magic band)</label><output id="o-op"></output>
+      <input type="range" id="op" min="40" max="100" step="1"></div>
+  </div>
+
+  <div class="grp">
+    <b>C/D · Internal glow &amp; edges</b>
+    <div class="row"><label>Top-lit glow</label><output id="o-glow"></output>
+      <input type="range" id="glow" min="0" max="60" step="1"></div>
+    <div class="row"><label>Bottom-right pool</label><output id="o-pool"></output>
+      <input type="range" id="pool" min="0" max="60" step="1" value="18"></div>
+    <div class="row"><label>Top edge catch</label><output id="o-et"></output>
+      <input type="range" id="et" min="0" max="100" step="1"></div>
+    <div class="row"><label>Bottom densify</label><output id="o-eb"></output>
+      <input type="range" id="eb" min="0" max="60" step="1"></div>
+  </div>
+
+  <div class="grp">
+    <b>Shape · all elements</b>
+    <div class="row"><label>Border radius</label><output id="o-radius"></output>
+      <input type="range" id="radius" min="0" max="48" step="1" value="20"></div>
+  </div>
+
+  <div class="grp">
+    <b>E/F · Elevation &amp; grain</b>
+    <div class="row"><label>Shadow strength</label><output id="o-sh"></output>
+      <input type="range" id="sh" min="0" max="60" step="1"></div>
+    <div class="row"><label>Edge halo (outer)</label><output id="o-halo"></output>
+      <input type="range" id="halo" min="0" max="80" step="1" value="35"></div>
+    <div class="row"><label>Grain (optional, SVG)</label><output id="o-grain"></output>
+      <input type="range" id="grain" min="0" max="100" step="1"></div>
+  </div>
+
+  <div class="bg-toggle">
+    <button data-bg="storm">Colour storm</button>
+    <button data-bg="text">Text detail</button>
+    <button data-bg="photo">Photo-ish</button>
+    <button data-bg="neutralLight">Neutral light</button>
+    <button data-bg="neutralDark">Neutral dark</button>
+  </div>
+</div>
+
+<script>
+  // fill the glyph grid with high-frequency detail
+  const glyphs = "◆●▲★✦❖◈✿☀☁♪⬡✚⬢◉";
+  const g = document.getElementById("glyphs");
+  let s = "";
+  for (let i = 0; i < 400; i++) s += `<span>${glyphs[i % glyphs.length]}</span>`;
+  g.innerHTML = s;
+
+  const root = document.documentElement.style;
+  const $ = id => document.getElementById(id);
+
+  // map slider id -> {prop, css var, transform, output formatter}
+  const knobs = [
+    { id: "blur",   v: "--itx-acrylic-blur",         unit: "px",  out: "o-blur" },
+    { id: "sat",    v: "--itx-acrylic-saturate",     unit: "%",   out: "o-sat" },
+    { id: "bri",    v: "--itx-acrylic-brightness",   unit: "%",   out: "o-bri" },
+    { id: "tintamt",v: "--itx-acrylic-tint-amount",  unit: "%",   out: "o-tintamt" },
+    { id: "op",     v: "--itx-acrylic-opacity",      unit: "",    out: "o-op",   scale: 0.01, dp: 2 },
+    { id: "glow",   v: "--itx-acrylic-glow",         unit: "",    out: "o-glow", scale: 0.01, dp: 2 },
+    { id: "pool",   v: "--itx-acrylic-pool",         unit: "",    out: "o-pool", scale: 0.01, dp: 2 },
+    { id: "et",     v: "--itx-acrylic-edge-top",     unit: "",    out: "o-et",   scale: 0.01, dp: 2 },
+    { id: "eb",     v: "--itx-acrylic-edge-bottom",  unit: "",    out: "o-eb",   scale: 0.01, dp: 2 },
+    { id: "sh",     v: "--itx-acrylic-shadow",       unit: "",    out: "o-sh",   scale: 0.01, dp: 2 },
+    { id: "halo",   v: "--itx-acrylic-halo",         unit: "",    out: "o-halo", scale: 0.01, dp: 2 },
+    { id: "grain",  v: "--itx-acrylic-grain",        unit: "",    out: "o-grain",scale: 0.01, dp: 2 },
+    { id: "radius", v: "--itx-acrylic-radius",       unit: "px",  out: "o-radius" },
+  ];
+
+  function apply(k) {
+    const raw = +$(k.id).value;
+    const val = k.scale ? raw * k.scale : raw;
+    root.setProperty(k.v, val + (k.unit || ""));
+    $(k.out).textContent = k.scale ? val.toFixed(k.dp) : val + (k.unit || "");
+  }
+  knobs.forEach(k => $(k.id).addEventListener("input", () => apply(k)));
+
+  // tint colour input
+  $("tint").addEventListener("input", e => root.setProperty("--itx-acrylic-tint", e.target.value));
+
+  const presets = {
+    light:  { blur:22, sat:62, bri:106, tint:"#6aa3ff", tintamt:8,  op:80, glow:28, et:55, eb:5,  grain:0,  base:"white" },
+    dark:   { blur:26, sat:55, bri:82,  tint:"#8fa0c8", tintamt:12, op:82, glow:14, et:14, eb:28, grain:0,  base:"oklch(24% 0.02 265)" },
+    tinted: { blur:24, sat:70, bri:104, tint:"#ff7ac0", tintamt:26, op:78, glow:30, et:50, eb:8,  grain:0,  base:"white" },
+  };
+  function loadPreset(name) {
+    const p = presets[name];
+    $("blur").value=p.blur; $("sat").value=p.sat; $("bri").value=p.bri;
+    $("tintamt").value=p.tintamt; $("op").value=p.op; $("glow").value=p.glow;
+    $("et").value=p.et; $("eb").value=p.eb; $("sh").value=14; $("grain").value=p.grain;
+    $("tint").value=p.tint;
+    root.setProperty("--itx-acrylic-tint", p.tint);
+    root.setProperty("--itx-acrylic-milk-base", p.base);
+    // flip body ink to light when the milk base is dark
+    const dark = name === "dark";
+    document.querySelectorAll("#tunable, #tunable2")
+      .forEach(el => el.classList.toggle("on-dark", dark));
+    knobs.forEach(apply);
+  }
+  document.querySelectorAll("[data-preset]").forEach(b =>
+    b.addEventListener("click", () => loadPreset(b.dataset.preset)));
+
+  // background variants
+  const stage = document.getElementById("stage");
+  const bgs = {
+    storm: `radial-gradient(40% 55% at 18% 24%, #ff2d95 0%, transparent 60%),
+            radial-gradient(45% 45% at 82% 18%, #00e0ff 0%, transparent 55%),
+            radial-gradient(50% 60% at 75% 82%, #ffd400 0%, transparent 55%),
+            radial-gradient(55% 55% at 22% 84%, #6d28d9 0%, transparent 60%), #0b1220`,
+    photo: `linear-gradient(120deg,#1e3a8a,#9333ea 40%,#db2777 70%,#f59e0b), #000`,
+    text:  `#111827`,
+    neutralLight: `#e9eaec`,
+    neutralDark:  `#17181c`,
+  };
+  document.querySelectorAll("[data-bg]").forEach(b =>
+    b.addEventListener("click", () => {
+      stage.style.background = bgs[b.dataset.bg];
+      // plain neutral backgrounds hide the high-frequency glyph grid
+      g.style.display = b.dataset.bg.startsWith("neutral") ? "none" : "grid";
+    }));
+
+  loadPreset("light");
+</script>
+</body>
+</html>

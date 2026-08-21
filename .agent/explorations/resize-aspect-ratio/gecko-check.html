@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>resize + aspect-ratio — Gecko check</title>
+<style>
+  body { margin: 0; padding: 32px; font: 14px/1.5 system-ui; max-width: 900px; }
+  h2 { margin: 32px 0 8px; font-size: 15px; }
+  .frame { overflow: hidden; background: #cfe0ee; box-sizing: border-box; }
+  .out { font: 12px/1.6 ui-monospace, monospace; white-space: pre; margin: 6px 0 0; }
+  .pass { color: #0a7d24; font-weight: 600; }
+  .fail { color: #c00; font-weight: 600; }
+  .note { color: #555; }
+  #a { resize: horizontal; aspect-ratio: 16/9; width: 400px; }
+  #b { resize: both;       aspect-ratio: 16/9; width: 400px; }
+  #c { resize: vertical;   aspect-ratio: 16/9; height: 225px; }
+  #d { resize: horizontal; aspect-ratio: 16/9; width: 400px; max-block-size: 300px; }
+  #e { inline-size: 500px; min-inline-size: 711.11px; max-inline-size: 600px; block-size: 40px; background:#eee; }
+  #f { aspect-ratio: 16/9; width: 400px; height: 300px; background:#eee; }
+  #g { overflow: visible; aspect-ratio: 16/9; width: 320px; background:#eee; }
+  #h { overflow: hidden;  aspect-ratio: 16/9; width: 320px; background:#eee; }
+  .tall { height: 240px; background: rgba(200,0,0,.15); }
+</style>
+</head>
+<body>
+<h1 style="font-size:18px">CSS <code>resize</code> + <code>aspect-ratio</code> — engine check</h1>
+<p class="note">Blink and WebKit both produce the expected results below. This page exists to
+confirm Gecko. Drag the bottom-right corner of each blue box; the readout updates live.
+The load-bearing question is <strong>A</strong>: does the UA write <em>only</em> width?</p>
+
+<h2>Automatic checks (no interaction)</h2>
+<div id="auto" class="out"></div>
+
+<div id="e"></div><div id="f"></div>
+<div id="g"><div class="tall"></div></div>
+<div id="h"><div class="tall"></div></div>
+
+<h2>A — <code>resize: horizontal</code> + ratio &nbsp;<span class="note">expect: only <code>width</code> written, ratio stays 1.7778</span></h2>
+<div class="frame" id="a"></div><div class="out" id="a-out"></div>
+
+<h2>B — <code>resize: both</code> + ratio (control) &nbsp;<span class="note">expect: both written, ratio breaks</span></h2>
+<div class="frame" id="b"></div><div class="out" id="b-out"></div>
+
+<h2>C — <code>resize: vertical</code> + ratio &nbsp;<span class="note">expect: only <code>height</code> written, ratio holds</span></h2>
+<div class="frame" id="c"></div><div class="out" id="c-out"></div>
+
+<h2>D — horizontal + ratio + <code>max-block-size: 300px</code> &nbsp;<span class="note">expect: ratio BREAKS once height hits 300</span></h2>
+<div class="frame" id="d"></div><div class="out" id="d-out"></div>
+
+<script>
+const TARGET = 16 / 9;
+const fmt = n => n.toFixed(2);
+
+function live(id) {
+  const el = document.getElementById(id);
+  const out = document.getElementById(id + "-out");
+  const paint = () => {
+    const r = el.getBoundingClientRect();
+    const ratio = r.height ? r.width / r.height : 0;
+    const ok = Math.abs(ratio - TARGET) < 0.01;
+    out.innerHTML =
+      `rect        ${fmt(r.width)} x ${fmt(r.height)}\n` +
+      `ratio       ${ratio.toFixed(4)}  ` +
+        `<span class="${ok ? "pass" : "fail"}">${ok ? "holds 16/9" : "NOT 16/9"}</span>\n` +
+      `inline w    ${el.style.width || "(unset)"}\n` +
+      `inline h    ${el.style.height || "(unset)"}\n` +
+      `style attr  ${el.getAttribute("style") || "(none)"}`;
+  };
+  new ResizeObserver(paint).observe(el);
+  paint();
+}
+["a", "b", "c", "d"].forEach(live);
+
+// Automatic, no-drag assertions.
+const checks = [
+  ["E  min(711.11) > max(600)", "e", el => el.getBoundingClientRect().width,
+   711.11, "min wins over max (CSS 2.2 §10.4)"],
+  ["F  ratio + both dims definite", "f", el => el.getBoundingClientRect().height,
+   300, "ratio ignored when both sizes definite"],
+  ["G  overflow:visible, 240px content", "g", el => el.getBoundingClientRect().height,
+   240, "content floors the box; ratio broken"],
+  ["H  overflow:hidden, 240px content", "h", el => el.getBoundingClientRect().height,
+   180, "scroll container exempt from content minimum; ratio holds"],
+];
+document.getElementById("auto").innerHTML = checks.map(([label, id, get, want, why]) => {
+  const got = get(document.getElementById(id));
+  const ok = Math.abs(got - want) < 1.5;
+  return `${label.padEnd(34)} got ${fmt(got).padStart(8)}  expect ${fmt(want).padStart(8)}  ` +
+         `<span class="${ok ? "pass" : "fail"}">${ok ? "PASS" : "FAIL"}</span>   ${why}`;
+}).join("\n");
+</script>
+</body>
+</html>
