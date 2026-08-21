@@ -275,6 +275,306 @@ async save() {
 	readonly reentrantHtml = `<button interop-button [onActivate]="handler">Place order</button>`;
 
 	// ── Tabbed multi-file code blocks ────────────────────────────────────────
+
+	/* ── Borrowed vocabulary ──────────────────────────────────────────────────
+	 *
+	 * Two other frameworks' buttons, rebuilt from their own published values
+	 * using nothing but this library's --itx-button-* tokens. No component
+	 * code, no variant classes, no overrides reaching past the namespace.
+	 *
+	 * The point is not that you should ship a Tailwind button. It is that the
+	 * token surface is wide enough to say someone else's design in full — which
+	 * is the only real test of whether it is a system or a skin.
+	 */
+	readonly tailwindHtml = `<button interop-button="tw-primary">Primary</button>
+<button interop-button="tw-secondary">Secondary</button>
+<button interop-button="tw-soft">Soft</button>`;
+
+	readonly tailwindCss = `:where(
+  [interop-button~="tw-primary"],
+  [interop-button~="tw-secondary"],
+  [interop-button~="tw-soft"]
+) {
+  /* text-sm / font-semibold, on Tailwind's default --font-sans stack */
+  --itx-button-font-family: ui-sans-serif, system-ui, sans-serif;
+  --itx-button-font-size: 0.875rem;
+  --itx-button-line-height: 1.25rem;
+  --itx-button-font-weight: 600;
+  --itx-button-letter-spacing: normal;
+
+  /* px-2.5 py-1.5 — height falls out at 32px */
+  --itx-button-height: 2rem;
+  --itx-button-padding-block: 0.375rem;
+  --itx-button-padding-inline: 0.625rem;
+  --itx-button-gap: 0.5rem;
+
+  /* rounded-md */
+  --itx-button-radius-default: 0.375rem;
+  --itx-button-border-width: 1px;
+
+  /* shrink to content and centre the label */
+  --itx-button-justify-content: center;
+  --itx-button-flex: 0 0 auto;
+  --itx-button-max-width: none;
+
+  /* focus-visible:outline-2 outline-offset-2 outline-indigo-600, stepping to
+     indigo-500 in dark alongside the fill. Departure: Tailwind Plus declares
+     these focus utilities on the primary button only — secondary and soft
+     fall back to the UA ring. A ring on every variant is a floor we keep. */
+  --itx-button-outline-width: 2px;
+  --itx-button-outline-offset: 2px;
+  --itx-button-outline-color: light-dark(
+    oklch(51.1% 0.262 276.966),
+    oklch(58.5% 0.233 277.117)
+  );
+
+  /* The Tailwind Plus buttons carry no transition utility — state changes
+     land on the next frame. Kept faithful rather than smoothed. */
+  --itx-button-transition-duration: 0s;
+}
+
+/* bg-indigo-600 text-white shadow-xs hover:bg-indigo-500
+   dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:shadow-none */
+:where([interop-button~="tw-primary"]) {
+  --itx-button-background: light-dark(
+    oklch(51.1% 0.262 276.966),
+    oklch(58.5% 0.233 277.117)
+  );
+  --itx-button-foreground: #fff;
+  --itx-button-border-color: transparent;
+
+  /* shadow-xs in light, dropped in dark. light-dark() is a colour function
+     and cannot switch a whole box-shadow, so the mode rides on the shadow's
+     colour instead — a transparent shadow is an absent one. */
+  --itx-button-box-shadow: 0 1px 2px 0
+    light-dark(rgb(0 0 0 / 0.05), transparent);
+
+  /* \`hover:\` stays true while the pointer is down, so the pressed state is
+     the hover state — Tailwind declares no separate active step. The shadow
+     is restated per state because the foundation's -hover/-active shadow
+     slots fall back to \`none\`, not to the rest value. */
+  --itx-button-background-hover: light-dark(
+    oklch(58.5% 0.233 277.117),
+    oklch(67.3% 0.182 276.935)
+  );
+  --itx-button-box-shadow-hover: var(--itx-button-box-shadow);
+  --itx-button-background-active: var(--itx-button-background-hover);
+  --itx-button-box-shadow-active: var(--itx-button-box-shadow);
+}
+
+/* bg-white text-gray-900 inset-ring-1 inset-ring-gray-300 shadow-xs
+   hover:bg-gray-50 — dark:bg-white/10 dark:text-white
+   dark:inset-ring-white/5 dark:hover:bg-white/20 dark:shadow-none */
+:where([interop-button~="tw-secondary"]) {
+  --itx-button-background: light-dark(#fff, rgb(255 255 255 / 0.1));
+  --itx-button-foreground: light-dark(oklch(21% 0.034 264.665), #fff);
+  --itx-button-border-color: light-dark(
+    oklch(87.2% 0.01 258.338),
+    rgb(255 255 255 / 0.05)
+  );
+  --itx-button-box-shadow: 0 1px 2px 0
+    light-dark(rgb(0 0 0 / 0.05), transparent);
+
+  --itx-button-background-hover: light-dark(
+    oklch(98.5% 0.002 247.839),
+    rgb(255 255 255 / 0.2)
+  );
+  --itx-button-box-shadow-hover: var(--itx-button-box-shadow);
+  --itx-button-background-active: var(--itx-button-background-hover);
+  --itx-button-box-shadow-active: var(--itx-button-box-shadow);
+}
+
+/* bg-indigo-50 text-indigo-600 shadow-xs hover:bg-indigo-100 — no ring.
+   dark:bg-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/30
+   dark:shadow-none */
+:where([interop-button~="tw-soft"]) {
+  --itx-button-background: light-dark(
+    oklch(96.2% 0.018 272.314),
+    oklch(58.5% 0.233 277.117 / 0.2)
+  );
+  --itx-button-foreground: light-dark(
+    oklch(51.1% 0.262 276.966),
+    oklch(67.3% 0.182 276.935)
+  );
+  --itx-button-border-color: transparent;
+  --itx-button-box-shadow: 0 1px 2px 0
+    light-dark(rgb(0 0 0 / 0.05), transparent);
+
+  --itx-button-background-hover: light-dark(
+    oklch(93% 0.034 272.788),
+    oklch(58.5% 0.233 277.117 / 0.3)
+  );
+  --itx-button-box-shadow-hover: var(--itx-button-box-shadow);
+  --itx-button-background-active: var(--itx-button-background-hover);
+  --itx-button-box-shadow-active: var(--itx-button-box-shadow);
+}`;
+
+	readonly materialHtml = `<button interop-button="m3-filled">Filled</button>
+<button interop-button="m3-tonal">Tonal</button>
+<button interop-button="m3-elevated">Elevated</button>
+<button interop-button="m3-outlined">Outlined</button>
+<button interop-button="m3-text">Text</button>`;
+
+	readonly materialCss = `:where(
+  [interop-button~="m3-filled"],
+  [interop-button~="m3-tonal"],
+  [interop-button~="m3-elevated"],
+  [interop-button~="m3-outlined"],
+  [interop-button~="m3-text"]
+) {
+  /* --mat-sys-* system colours, azure-blue, as mat.theme() compiles them. */
+  --_m3-primary: light-dark(#005cbb, #abc7ff);
+  --_m3-on-primary: light-dark(#ffffff, #002f65);
+  --_m3-secondary-container: light-dark(#dae2f9, #3e4759);
+  --_m3-on-secondary-container: light-dark(#3e4759, #dae2f9);
+  --_m3-surface: light-dark(#faf9fd, #121316);
+  --_m3-outline: light-dark(#74777f, #8e9099);
+
+  /* --mat-sys-label-large. Roboto is not bundled here, so this resolves down
+     the stack — the same treatment IBM Plex gets in the protocol theme. */
+  --itx-button-font-family: Roboto, system-ui, sans-serif;
+  --itx-button-font-size: 0.875rem;
+  --itx-button-line-height: 1.25rem;
+  --itx-button-font-weight: 500;
+  --itx-button-letter-spacing: 0.006rem;
+
+  /* container-height 40px, horizontal-padding 24px, icon-spacing 8px */
+  --itx-button-height: 2.5rem;
+  --itx-button-padding-block: 0.625rem;
+  --itx-button-padding-inline: 1.5rem;
+  --itx-button-gap: 0.5rem;
+  --itx-button-min-width: 4rem;
+  --itx-button-max-width: none;
+  --itx-button-flex: 0 0 auto;
+  --itx-button-justify-content: center;
+
+  /* corner-full. The squircle cannot form a stadium, so switch the corner
+     curve the same way itx-radius="full" does. */
+  --itx-button-radius-default: 9999px;
+  --itx-button-corner-shape: round;
+  --itx-button-border-width: 0;
+
+  /* Material animates the state layer's opacity over 15ms linear. */
+  --itx-button-transition-duration: 15ms;
+  --itx-button-transition-timing-function: linear;
+
+  /* Departure. Material's default focus treatment is the 12% state layer and
+     nothing else — its ring is opt-in behind mat.strong-focus-indicators().
+     A visible ring is a floor we keep, so it stays and takes the primary. */
+  --itx-button-outline-width: 2px;
+  --itx-button-outline-offset: 2px;
+  --itx-button-outline-color: var(--_m3-primary);
+}
+
+/* container primary / label on-primary; state layer on-primary */
+:where([interop-button~="m3-filled"]) {
+  --itx-button-background: var(--_m3-primary);
+  --itx-button-foreground: var(--_m3-on-primary);
+
+  --itx-button-background-hover: color-mix(
+    in srgb,
+    var(--_m3-on-primary) 8%,
+    var(--_m3-primary)
+  );
+  --itx-button-background-active: color-mix(
+    in srgb,
+    var(--_m3-on-primary) 12%,
+    var(--_m3-primary)
+  );
+}
+
+/* container secondary-container / label on-secondary-container */
+:where([interop-button~="m3-tonal"]) {
+  --itx-button-background: var(--_m3-secondary-container);
+  --itx-button-foreground: var(--_m3-on-secondary-container);
+
+  --itx-button-background-hover: color-mix(
+    in srgb,
+    var(--_m3-on-secondary-container) 8%,
+    var(--_m3-secondary-container)
+  );
+  --itx-button-background-active: color-mix(
+    in srgb,
+    var(--_m3-on-secondary-container) 12%,
+    var(--_m3-secondary-container)
+  );
+}
+
+/* "protected" in the source — container surface, label primary, and the one
+   variant that moves in z: level1 at rest, level2 on hover, back to level1
+   when pressed. Material's elevation shadows are plain black alphas and do
+   not change with the scheme, so they carry no light-dark(). */
+:where([interop-button~="m3-elevated"]) {
+  --itx-button-background: var(--_m3-surface);
+  --itx-button-foreground: var(--_m3-primary);
+  --itx-button-box-shadow:
+    0 2px 1px -1px rgb(0 0 0 / 0.2), 0 1px 1px 0 rgb(0 0 0 / 0.14),
+    0 1px 3px 0 rgb(0 0 0 / 0.12);
+
+  --itx-button-background-hover: color-mix(
+    in srgb,
+    var(--_m3-primary) 8%,
+    var(--_m3-surface)
+  );
+  --itx-button-box-shadow-hover:
+    0 3px 3px -2px rgb(0 0 0 / 0.2), 0 3px 4px 0 rgb(0 0 0 / 0.14),
+    0 1px 8px 0 rgb(0 0 0 / 0.12);
+
+  --itx-button-background-active: color-mix(
+    in srgb,
+    var(--_m3-primary) 12%,
+    var(--_m3-surface)
+  );
+  --itx-button-box-shadow-active: var(--itx-button-box-shadow);
+}
+
+/* transparent container, 1px outline, label primary */
+:where([interop-button~="m3-outlined"]) {
+  --itx-button-background: transparent;
+  --itx-button-foreground: var(--_m3-primary);
+  --itx-button-border-width: 1px;
+  --itx-button-border-color: var(--_m3-outline);
+
+  --itx-button-background-hover: color-mix(
+    in srgb,
+    var(--_m3-primary) 8%,
+    transparent
+  );
+  --itx-button-background-active: color-mix(
+    in srgb,
+    var(--_m3-primary) 12%,
+    transparent
+  );
+}
+
+/* transparent container, no outline, 12px side padding */
+:where([interop-button~="m3-text"]) {
+  --itx-button-background: transparent;
+  --itx-button-foreground: var(--_m3-primary);
+  --itx-button-padding-inline: 0.75rem;
+
+  --itx-button-background-hover: color-mix(
+    in srgb,
+    var(--_m3-primary) 8%,
+    transparent
+  );
+  --itx-button-background-active: color-mix(
+    in srgb,
+    var(--_m3-primary) 12%,
+    transparent
+  );
+}`;
+
+	readonly tailwindFiles: CodeFile[] = [
+		{ label: "markup.html", language: "html", code: this.tailwindHtml },
+		{ label: "tailwind.css", language: "css", code: this.tailwindCss },
+	];
+
+	readonly materialFiles: CodeFile[] = [
+		{ label: "markup.html", language: "html", code: this.materialHtml },
+		{ label: "material.css", language: "css", code: this.materialCss },
+	];
+
 	readonly sizeFiles: CodeFile[] = [
 		{ label: "markup.html", language: "html", code: this.sizeCode },
 		{ label: "theming.css", language: "css", code: this.sizeOverrideCss },
