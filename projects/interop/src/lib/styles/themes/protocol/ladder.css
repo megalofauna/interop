@@ -23,24 +23,18 @@
 	--itx-tint-dark: 0.006 250;
 
 	/* ── Elevation: the neutral substrate ───────────────────────────── */
-	--itx-ramp-surface-n4-light: 0.726;
-	--itx-ramp-surface-n4-dark: 0.052;
-	--itx-ramp-surface-n3-light: 0.769;
-	--itx-ramp-surface-n3-dark: 0.097;
-	--itx-ramp-surface-n2-light: 0.812;
-	--itx-ramp-surface-n2-dark: 0.142;
-	--itx-ramp-surface-n1-light: 0.855;
-	--itx-ramp-surface-n1-dark: 0.187;
-	--itx-ramp-surface-0-light: 0.898;
-	--itx-ramp-surface-0-dark: 0.232;
-	--itx-ramp-surface-1-light: 0.926;
-	--itx-ramp-surface-1-dark: 0.272;
-	--itx-ramp-surface-2-light: 0.953;
-	--itx-ramp-surface-2-dark: 0.311;
-	--itx-ramp-surface-3-light: 0.978;
-	--itx-ramp-surface-3-dark: 0.351;
-	--itx-ramp-surface-4-light: 1.000;
-	--itx-ramp-surface-4-dark: 0.390;
+	--itx-ramp-light-page: 0.898;
+	--itx-ramp-light-step: 0.028;
+	--itx-ramp-light-ease: 0.95;
+	--itx-ramp-light-down: 0.043;
+	--itx-ramp-light-min: 0.6;
+	--itx-ramp-light-max: 1;
+	--itx-ramp-dark-page: 0.232;
+	--itx-ramp-dark-step: 0.0395;
+	--itx-ramp-dark-ease: 1;
+	--itx-ramp-dark-down: 0.045;
+	--itx-ramp-dark-min: 0.03;
+	--itx-ramp-dark-max: 0.44;
 
 	/* ── Contrast rank 1 — wash — hover fills, stripes ─────── */
 	--itx-ramp-contrast-1-n4-light: 0.688; /* 1.16:1 on its surface */

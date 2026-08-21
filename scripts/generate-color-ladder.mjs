@@ -607,6 +607,30 @@ function buildScheme(scheme) {
 	return out;
 }
 
+/**
+ * The ramp formula, in JS, exactly as the CSS computes it.
+ *
+ * Emitted as a test fixture so the spec has an oracle that is NOT the engine
+ * it is testing. The browser evaluating clamp/pow/min inside oklch() and this
+ * arithmetic have to land on the same colour; if `pow()` were unsupported, a
+ * var name were wrong, or a clamp were inverted, they would not.
+ *
+ * Deliberately UNROUNDED. buildRamp() rounds to 3dp for the published table,
+ * and the CSS does not round at all — comparing the two would fail on 0.2715
+ * against 0.272, a difference of 0.0005 in L that renders to the same byte.
+ */
+function layerLightnessJs(scheme, n) {
+	const r = RAMP[scheme];
+	const up =
+		r.ease === 1
+			? r.up * Math.max(0, n)
+			: (r.up * (1 - Math.pow(r.ease, Math.max(0, n)))) / (1 - r.ease);
+	return Math.min(
+		r.max,
+		Math.max(r.min, r.page + up + r.down * Math.min(0, n)),
+	);
+}
+
 const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
 
 /* ── Build the accent families ──────────────────────────────────────────── */
@@ -802,13 +826,24 @@ function emit() {
 		"\t/* ── Elevation: the neutral substrate ───────────────────────────── */",
 	];
 
-	for (const layer of LAYERS) {
+	/*
+	 * The ramp SPEC, not a table of surfaces.
+	 *
+	 * Every layer's lightness is one expression away from these six numbers, so
+	 * the engine computes rather than enumerates — and because they are read at
+	 * use time rather than baked, setting one on any ancestor moves every layer
+	 * below it at once. That is the same override story the discrete numbers
+	 * told, with a dial instead of a step.
+	 */
+	for (const scheme of ["light", "dark"]) {
+		const r = RAMP[scheme];
 		lines.push(
-			...numbers(
-				`surface-${layer}`,
-				ladder.light[layer].surface,
-				ladder.dark[layer].surface,
-			),
+			`\t--itx-ramp-${scheme}-page: ${r.page};`,
+			`\t--itx-ramp-${scheme}-step: ${r.up};`,
+			`\t--itx-ramp-${scheme}-ease: ${r.ease};`,
+			`\t--itx-ramp-${scheme}-down: ${r.down};`,
+			`\t--itx-ramp-${scheme}-min: ${r.min};`,
+			`\t--itx-ramp-${scheme}-max: ${r.max};`,
 		);
 	}
 
@@ -1011,6 +1046,63 @@ const key = (i) => {
  * value written once at the root cannot re-evaluate further down. There is no
  * late binding for custom properties in CSS. This repetition IS the mechanism.
  */
+/**
+ * The lightness of `--itx-layer` plus a fixed offset, as one CSS expression.
+ *
+ *   clamp(min, page + step·(1 − ease^max(0,n))/(1 − ease) + down·min(0,n), max)
+ *          └ geometric going up: the light ramp decelerates under its ceiling
+ *                                        └ linear going down: sinks have no ceiling
+ *
+ * A uniform ramp (ease 1) would divide by zero, so it gets the plain
+ * multiplication instead. The two schemes already sit in separate arms of
+ * light-dark(), so emitting the right form per scheme costs nothing and keeps
+ * a uniform ramp EXACT rather than approximated.
+ *
+ * `n` is clamped to the ramp's own bounds, which is what key() does for the
+ * enumerated version — at the top layer, "one above" is still the top layer.
+ */
+function layerLightness(scheme, offset) {
+	const r = RAMP[scheme];
+	const v = (k) => `var(--itx-ramp-${scheme}-${k})`;
+	const n =
+		offset === 0
+			? "var(--itx-layer)"
+			: `clamp(${-DEPTH.below}, calc(var(--itx-layer) + ${offset}), ${DEPTH.above})`;
+	const up =
+		r.ease === 1
+			? `${v("step")} * max(0, ${n})`
+			: `${v("step")} * (1 - pow(${v("ease")}, max(0, ${n}))) / (1 - ${v("ease")})`;
+	return (
+		`clamp(\n\t\t${v("min")},\n` +
+		`\t\tcalc(${v("page")} + ${up} + ${v("down")} * min(0, ${n})),\n` +
+		`\t\t${v("max")}\n\t)`
+	);
+}
+
+/**
+ * The whole elevation ladder, in one rule.
+ *
+ * The selector has to match every element that carries a layer. A custom
+ * property containing var() is substituted where it is DECLARED, so a value
+ * composed once at [interop-root] would bake --itx-layer: 0 and inherit frozen;
+ * matching each layer-bearing element makes every one resolve against its own
+ * depth. One rule, not one block per depth.
+ */
+function surfaceRule() {
+	const compose = (offset) =>
+		`light-dark(\n\t\toklch(${layerLightness("light", offset)} var(--itx-tint-light)),\n` +
+		`\t\toklch(${layerLightness("dark", offset)} var(--itx-tint-dark))\n\t)`;
+	return [
+		":where([interop-root], [itx-layer], [itx-sink]) {",
+		`\t--itx-surface: ${compose(0)};`,
+		`\t--itx-surface-above: ${compose(1)};`,
+		`\t--itx-surface-above-2: ${compose(2)};`,
+		`\t--itx-surface-below: ${compose(-1)};`,
+		"}",
+		"",
+	].join("\n");
+}
+
 function tokenSet(i, indent) {
 	const t = "\t".repeat(indent);
 
@@ -1019,11 +1111,13 @@ function tokenSet(i, indent) {
 		`light-dark(\n${t}\toklch(var(--itx-ramp-${name}-light) var(--itx-tint-light)),\n` +
 		`${t}\toklch(var(--itx-ramp-${name}-dark) var(--itx-tint-dark))\n${t})`;
 
+	/*
+	 * Surfaces are NOT here. They are computed once from the ramp spec, in a
+	 * single rule that matches every layer-bearing element — see surfaceRule().
+	 * Ranks and accent roles stay, because they are SOLVED per surface rather
+	 * than derived from it, and a solver's output cannot be reached by calc().
+	 */
 	const out = [`${t}--itx-layer: ${i};`];
-	out.push(`${t}--itx-surface: ${compose(`surface-${key(i)}`)};`);
-	out.push(`${t}--itx-surface-above: ${compose(`surface-${key(i + 1)}`)};`);
-	out.push(`${t}--itx-surface-above-2: ${compose(`surface-${key(i + 2)}`)};`);
-	out.push(`${t}--itx-surface-below: ${compose(`surface-${key(i - 1)}`)};`);
 	for (const spec of RANKS) {
 		out.push(
 			`${t}--itx-contrast-${spec.rank}: ${compose(`contrast-${spec.rank}-${key(i)}`)};`,
@@ -1122,6 +1216,7 @@ function emitEngine() {
 		"",
 		"/* ── Tier 1 — layer 0, unconditional ─────────────────────────────────── */",
 		"",
+		surfaceRule(),
 		":where([interop-root]) {",
 		tokenSet(0, 1),
 		"",
@@ -1502,10 +1597,19 @@ console.log(
 if (!check) {
 	const ladderCss = emit();
 	const engineCss = emitEngine();
+	const surfaceL = { light: {}, dark: {} };
+	for (const scheme of ["light", "dark"]) {
+		for (let i = -DEPTH.below; i <= DEPTH.above; i++) {
+			surfaceL[scheme][key(i)] = layerLightnessJs(scheme, i);
+		}
+	}
+
 	const asModule =
 		"/* GENERATED — node scripts/generate-color-ladder.mjs. Test fixture only. */\n" +
 		`export const LADDER_CSS = ${JSON.stringify(ladderCss)};\n\n` +
-		`export const ENGINE_CSS = ${JSON.stringify(engineCss)};\n`;
+		`export const ENGINE_CSS = ${JSON.stringify(engineCss)};\n\n` +
+		"/* The ramp formula in JS — an oracle independent of the CSS engine. */\n" +
+		`export const SURFACE_L: Record<string, Record<string, number>> = ${JSON.stringify(surfaceL)};\n`;
 
 	for (const [path, contents] of [
 		[OUT_LADDER, ladderCss],
