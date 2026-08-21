@@ -116,7 +116,12 @@
 .demo-page__api-type {
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
-	color: var(--itx-colorway-solid);
+	/*
+	 * -text, not -solid. The solid is a FILL, positioned by chroma so the hue
+	 * reads as itself; as text on the page it measures 3.09:1. The text role
+	 * is solved against its surface for 4.5:1, which is what this needs.
+	 */
+	color: var(--itx-colorway-text);
 }
 
 .demo-page__api-default {
