@@ -61,13 +61,23 @@ jobs:
         env:
           CHROME_BIN: /usr/bin/google-chrome
 
-      # All three projects, because the library and the two apps have broken
-      # independently before.
+      # The colour ladder, twice over: the generator validates its own
+      # arithmetic, then every floor it claims is painted in Chrome and
+      # measured. The second half exists because the first once passed while
+      # --itx-contrast-4 rendered at 4.48:1 against a 4.5 floor — the model and
+      # the engine round one 8-bit channel differently. Runs after Test so it
+      # inherits the same browser.
+      - name: Colour
+        run: npm run check:color
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
+          REQUIRE_BROWSER: "1"
+
+      # The library and the demo only. projects/protocol is no longer developed;
+      # building it here gated every PR on a project nobody was changing. Its
+      # `build:protocol` script still exists, so reviving it is one line back.
       - name: Build library
         run: npm run build:lib
 
       - name: Build demo
         run: npm run build:demo
-
-      - name: Build protocol
-        run: npm run build:protocol

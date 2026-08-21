@@ -243,6 +243,30 @@ const SWEEP = {
 	envelopeStep: 5,
 };
 
+/**
+ * One unit of 8-bit channel, as a safety bound on every solve.
+ *
+ * This generator's OKLCH → sRGB and a browser's disagree by a single unit in a
+ * single channel on a few percent of values. Neither is wrong — it is a
+ * rounding boundary, and other engines land on their own side of it. But green
+ * carries 0.7152 of the luminance weight, and the WCAG ratio is most sensitive
+ * where the darker colour is darkest, so one unit is worth up to 0.047 of
+ * contrast on the neutral hue and 0.118 on a saturated one.
+ *
+ * That is not hypothetical. It shipped: --itx-contrast-4 measured 4.48:1
+ * against light layer 2 in Chrome while this file computed 4.52:1, and the
+ * runtime audit caught it.
+ *
+ * A fixed ratio margin is the wrong shape — sized for the neutral hue it misses
+ * saturated ones by more than double. So instead of guessing, the solver
+ * measures PESSIMISTICALLY: it nudges each colour one unit toward the other,
+ * which is the worst a disagreeing engine can do, and requires the floor to
+ * clear even then. Self-sizing, and it bounds the real error rather than
+ * approximating it.
+ *
+ * Reported ratios stay honest — they are computed unbiased, so the table says
+ * what a rank measures, not what it was solved against.
+ */
 /** Minimum lightness separation between adjacent surfaces, so layers read apart. */
 const MIN_SURFACE_STEP = 0.02;
 
@@ -368,6 +392,22 @@ function luminance(L, C, H) {
 	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
+/**
+ * Luminance with every channel nudged one 8-bit unit in `toward` (+1 or -1).
+ *
+ * Used only for SOLVING. Nudging a colour toward the thing it is measured
+ * against gives the least contrast a disagreeing engine could render, so a
+ * value that clears its floor here clears it anywhere.
+ */
+function luminanceBiased(L, C, H, toward) {
+	const linear = oklchToLinearSrgb(L, C, H);
+	const [r, g, b] = linear.map((u) => {
+		const q = Math.round(clamp01(encodeGamma(clamp01(u))) * 255);
+		return decodeGamma(clamp01((q + toward) / 255));
+	});
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
 const contrast = (y1, y2) => {
 	const [hi, lo] = y1 >= y2 ? [y1, y2] : [y2, y1];
 	return (hi + 0.05) / (lo + 0.05);
@@ -384,16 +424,20 @@ const contrast = (y1, y2) => {
  * those are exactly what make the answer true on a real screen.
  */
 function solveRank(surfaceL, target, dir, { c, h }) {
-	const surfaceY = luminance(surfaceL, c, h);
+	// Pessimistic on BOTH sides: the surface nudged toward the rank, the rank
+	// nudged toward the surface. That is the least contrast a disagreeing engine
+	// can render, so clearing it here clears it anywhere. See luminanceBiased.
+	const surfaceY = luminanceBiased(surfaceL, c, h, dir);
+	const rankY = (L) => luminanceBiased(L, c, h, -dir);
 	const poleL = dir > 0 ? 1 : 0;
 
-	if (contrast(luminance(poleL, c, h), surfaceY) < target) return null;
+	if (contrast(rankY(poleL), surfaceY) < target) return null;
 
 	let near = surfaceL;
 	let far = poleL;
 	for (let i = 0; i < 40; i++) {
 		const mid = (near + far) / 2;
-		if (contrast(luminance(mid, c, h), surfaceY) >= target) far = mid;
+		if (contrast(rankY(mid), surfaceY) >= target) far = mid;
 		else near = mid;
 	}
 
@@ -466,10 +510,21 @@ function solveSolid([seedL, seedC, H], label) {
 
 		const y = luminance(L, C, H);
 		const scored = labelPoles(H)
-			.map((p) => ({ ...p, ratio: contrast(luminance(p.L, p.C, H), y) }))
-			.sort((a, b) => b.ratio - a.ratio);
+			.map((p) => {
+				// A label sits ON the fill, so each is nudged toward the other.
+				const toward = p.L > L ? -1 : 1;
+				return {
+					...p,
+					ratio: contrast(luminance(p.L, p.C, H), y),
+					safeRatio: contrast(
+						luminanceBiased(p.L, p.C, H, toward),
+						luminanceBiased(L, C, H, -toward),
+					),
+				};
+			})
+			.sort((a, b) => b.safeRatio - a.safeRatio);
 
-		return scored[0].ratio >= ACCENT.onSolid
+		return scored[0].safeRatio >= ACCENT.onSolid
 			? { L, C, label: scored[0], ratio: scored[0].ratio }
 			: null;
 	};
@@ -514,14 +569,16 @@ function solveSolid([seedL, seedC, H], label) {
  * new lightness allows. Same shape as solveRank, but gamut-clamped per step.
  */
 function solveAccentRole(surfaceL, surfaceC, surfaceH, H, intent, target, dir) {
-	const surfaceY = luminance(surfaceL, surfaceC, surfaceH);
+	// Solved against the pessimistic pair; reported against the true one.
+	const solveY = luminanceBiased(surfaceL, surfaceC, surfaceH, dir);
+	const trueY = luminance(surfaceL, surfaceC, surfaceH);
 
 	let near = surfaceL;
 	let far = dir > 0 ? 1 : 0;
 	for (let i = 0; i < 40; i++) {
 		const mid = (near + far) / 2;
 		const C = Math.min(intent, maxChroma(mid, H));
-		if (contrast(luminance(mid, C, H), surfaceY) >= target) far = mid;
+		if (contrast(luminanceBiased(mid, C, H, -dir), solveY) >= target) far = mid;
 		else near = mid;
 	}
 
@@ -529,7 +586,7 @@ function solveAccentRole(surfaceL, surfaceC, surfaceH, H, intent, target, dir) {
 		dir > 0 ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000,
 	);
 	const C = Math.min(intent, maxChroma(L, H));
-	return { L, C: round3(C), ratio: contrast(luminance(L, C, H), surfaceY) };
+	return { L, C: round3(C), ratio: contrast(luminance(L, C, H), trueY) };
 }
 
 /* ── Build the ladder ───────────────────────────────────────────────────── */
@@ -714,7 +771,14 @@ function buildFamily(family) {
 				for (let i = 0; i < 40; i++) {
 					const mid = (near + far) / 2;
 					const c = Math.min(intent, maxChroma(mid, H));
-					if (contrast(luminance(mid, c, H), tintY) >= ACCENT.onTint) far = mid;
+					// Pessimistic on both sides, as everywhere else a floor is solved.
+					if (
+						contrast(
+							luminanceBiased(mid, c, H, -dir),
+							luminanceBiased(tintL, tintC, H, dir),
+						) >= ACCENT.onTint
+					)
+						far = mid;
 					else near = mid;
 				}
 				const L = clamp01(
@@ -1287,6 +1351,86 @@ function emitEngine() {
 	return L.join("\n");
 }
 
+/* ── Emit: the render-verification manifest ─────────────────────────────── */
+
+/**
+ * Every pairing this generator claims a floor for, as data a browser can check.
+ *
+ * The build validates its own arithmetic; it cannot see what an engine actually
+ * renders. That gap is not theoretical — --itx-contrast-4 shipped at 4.48:1 in
+ * Chrome while this file computed 4.52:1, because the two round one 8-bit
+ * channel differently. The solver now measures pessimistically so that cannot
+ * recur, but "cannot recur" is a claim, and this is what checks it.
+ *
+ * Backgrounds use the lightness the engine COMPUTES (layerLightnessJs), not the
+ * rounded table the solver worked from — the point is to verify what ships.
+ *
+ * Consumed by scripts/check-contrast-render.mjs.
+ */
+function contrastPairs() {
+	const index = (k) => (k.startsWith("n") ? -Number(k.slice(1)) : Number(k));
+	const pairs = [];
+
+	for (const scheme of ["light", "dark"]) {
+		const tint = TINT[scheme];
+
+		for (const layer of LAYERS) {
+			const bgL = layerLightnessJs(scheme, index(layer));
+			const bg = { l: bgL, c: tint.c, h: tint.h };
+
+			for (const spec of RANKS) {
+				if (!spec.ratio) continue; // rank 1 is a delta, rank 6 is a pole
+				const { L } = ladder[scheme][layer].ranks[spec.rank];
+				pairs.push({
+					label: `${scheme} layer ${layer} rank ${spec.rank}`,
+					fg: { l: L, c: tint.c, h: tint.h },
+					bg,
+					floor: spec.ratio,
+				});
+			}
+
+			for (const family of families) {
+				const cell = family.layers[scheme][layer];
+				if (!cell) continue; // statuses are solved at layer 0 only
+				for (const [role, floor] of [
+					["border", ACCENT.border],
+					["text", ACCENT.text],
+				]) {
+					pairs.push({
+						label: `${scheme} layer ${layer} ${family.id} ${role}`,
+						fg: { l: cell[role].L, c: cell[role].C, h: family.hue },
+						bg,
+						floor,
+					});
+				}
+				// Text on a tint is measured against the TINT, not the surface.
+				pairs.push({
+					label: `${scheme} layer ${layer} ${family.id} on-tint`,
+					fg: { l: cell.onTint.L, c: cell.onTint.C, h: family.hue },
+					bg: { l: cell.tint.L, c: cell.tint.C, h: family.hue },
+					floor: ACCENT.onTint,
+				});
+			}
+		}
+	}
+
+	// Solids are scheme- and layer-invariant, so they are checked once.
+	for (const family of families) {
+		pairs.push({
+			label: `${family.id} label on solid`,
+			fg: {
+				l: family.solid.label.L,
+				c: family.solid.label.C,
+				h: family.hue,
+			},
+			bg: { l: family.solid.L, c: family.solid.C, h: family.hue },
+			floor: ACCENT.onSolid,
+		});
+	}
+
+	return pairs;
+}
+
 /* ── Emit: the derivation record ────────────────────────────────────────── */
 
 /**
@@ -1609,7 +1753,10 @@ if (!check) {
 		`export const LADDER_CSS = ${JSON.stringify(ladderCss)};\n\n` +
 		`export const ENGINE_CSS = ${JSON.stringify(engineCss)};\n\n` +
 		"/* The ramp formula in JS — an oracle independent of the CSS engine. */\n" +
-		`export const SURFACE_L: Record<string, Record<string, number>> = ${JSON.stringify(surfaceL)};\n`;
+		`export const SURFACE_L: Record<string, Record<string, number>> = ${JSON.stringify(surfaceL)};\n\n` +
+		"/* Every floor this generator claims, for a browser to check. See\n" +
+		"   scripts/check-contrast-render.mjs. */\n" +
+		`export const CONTRAST_PAIRS = ${JSON.stringify(contrastPairs())};\n`;
 
 	for (const [path, contents] of [
 		[OUT_LADDER, ladderCss],
