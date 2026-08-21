@@ -215,11 +215,105 @@
 	}
 }
 
-.color-accent-row {
+/* A measured ratio sits under each fill. Under its floor, it says so. */
+.color-families__ratio {
+	font-family: var(--itx-font-family-mono);
+	color: var(--itx-contrast-4);
+
+	&.is-under {
+		color: var(--itx-danger-text);
+		font-weight: 600;
+	}
+}
+
+.color-gamut {
+	margin: 0;
+
+	svg {
+		inline-size: 100%;
+		block-size: auto;
+		display: block;
+		background-color: var(--itx-surface-below);
+		border-radius: var(--itx-radius-md);
+	}
+
+	&__curve {
+		fill: none;
+		stroke: var(--itx-colorway-solid);
+		stroke-width: 2;
+	}
+
+	/* The rule a default seed asks for. Everything under it gets clamped. */
+	&__seed {
+		stroke: var(--itx-danger-text);
+		stroke-width: 1;
+		stroke-dasharray: 4 4;
+	}
+
+	figcaption {
+		margin-block-start: var(--itx-spacing-2);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+		max-inline-size: var(--itx-measure);
+	}
+}
+
+.color-states {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
-	gap: var(--itx-spacing-2);
+	gap: var(--itx-spacing-6);
+
+	&__family {
+		flex: 1 1 18rem;
+		padding: var(--itx-spacing-4);
+		border-radius: var(--itx-radius-md);
+		background-color: var(--itx-surface);
+
+		h3 {
+			display: flex;
+			align-items: baseline;
+			gap: var(--itx-spacing-2);
+			margin-block: 0 var(--itx-spacing-3);
+
+			span {
+				font-weight: 400;
+				font-size: var(--itx-font-size-caption);
+				font-family: var(--itx-font-family-mono);
+				color: var(--itx-contrast-4);
+			}
+		}
+	}
+
+	&__row {
+		display: flex;
+		gap: var(--itx-spacing-1);
+	}
+
+	&__swatch {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-spacing-1);
+		padding: var(--itx-spacing-3);
+		border-radius: var(--itx-radius-sm);
+		font-size: var(--itx-font-size-caption);
+
+		small {
+			font-family: var(--itx-font-family-mono);
+			opacity: 0.85;
+		}
+	}
+
+	&__live {
+		margin-block-start: var(--itx-spacing-3);
+	}
+}
+
+.color-depth {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+	gap: var(--itx-spacing-4);
+	align-items: start;
 	padding: var(--itx-spacing-4);
 	border-radius: var(--itx-radius-md);
 
@@ -228,22 +322,81 @@
 	}
 
 	&__caption {
+		grid-column: 1 / -1;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
 		color: var(--itx-contrast-4);
-		min-inline-size: 5rem;
 	}
 
-	&__solid,
-	&__chip {
-		padding: var(--itx-spacing-1) var(--itx-spacing-3);
+	&__components {
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-spacing-3);
+	}
+
+	&__inline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--itx-spacing-3);
+	}
+
+	/* The link is both the demonstration and the instrument: it carries the
+	   colourway's text role, and it is what gets measured for it. */
+	&__link {
+		color: var(--itx-colorway-text);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 2px;
+	}
+
+	/*
+	 * Instruments, not illustration. Each carries exactly one role so the
+	 * readout beside it answers for that role and nothing else.
+	 */
+	&__probes {
+		display: flex;
+		gap: var(--itx-spacing-1);
+	}
+
+	&__probe {
+		inline-size: var(--itx-sz-8);
+		block-size: var(--itx-sz-8);
+		display: grid;
+		place-items: center;
 		border-radius: var(--itx-radius-sm);
 		font-size: var(--itx-font-size-caption);
-		font-family: var(--itx-font-family-mono);
 	}
 
-	&__chip {
-		border: 1px solid;
+	&__readout {
+		border-collapse: collapse;
+		font-size: var(--itx-font-size-caption);
+		inline-size: 100%;
+
+		th,
+		td {
+			text-align: start;
+			padding: var(--itx-spacing-1) var(--itx-spacing-2);
+			font-weight: 400;
+		}
+
+		th {
+			color: var(--itx-contrast-4);
+		}
+
+		td:nth-child(3) {
+			font-family: var(--itx-font-family-mono);
+		}
+
+		td:last-child {
+			color: var(--itx-contrast-4);
+			font-family: var(--itx-font-family-mono);
+		}
+
+		/* A row that has stopped clearing its floor says so, in its own colour. */
+		tr.is-under td:nth-child(3) {
+			color: var(--itx-danger-text);
+			font-weight: 600;
+		}
 	}
 }
 
