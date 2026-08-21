@@ -26,7 +26,7 @@ import {
 	luminanceDelta,
 	measure,
 	usedValue,
-} from "./contrast";
+} from "interop/lib/dev/contrast";
 import {
 	FAMILY_FACTS,
 	HUE_CEILINGS,

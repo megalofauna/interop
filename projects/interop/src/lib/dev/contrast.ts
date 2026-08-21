@@ -1,6 +1,11 @@
 /**
  * Contrast measured from the SHIPPED CSS, at runtime, in the browser.
  *
+ * DEV TOOLING. Not exported from the public barrel — import it by path, the
+ * same rule the icons follow:
+ *
+ *   import { contrastRatio } from 'interop/lib/dev/contrast';
+ *
  * The generator already computes every ratio in this system and refuses to
  * write a stylesheet where one is missing its floor. So why measure again?
  *
