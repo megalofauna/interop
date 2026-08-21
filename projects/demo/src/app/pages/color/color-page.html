@@ -511,10 +511,13 @@
 		</p>
 		<p>
 			To move the whole palette instead, set <code>--itx-tint-light</code> /
-			<code>--itx-tint-dark</code> (chroma and hue) or any
-			<code>--itx-ramp-*-light</code> / <code>-dark</code> lightness number on
-			any ancestor. Those stay unresolved until each layer composes them, so an
-			override reaches every layer below it.
+			<code>--itx-tint-dark</code> (chroma and hue) or any ramp <em>dial</em> —
+			<code>--itx-ramp-light-step</code>, <code>-page</code>,
+			<code>-ease</code>, <code>-down</code>, <code>-min</code>,
+			<code>-max</code>, and the <code>dark</code> pair — on any ancestor.
+			Surfaces are computed from those six numbers rather than tabulated per
+			layer, so one dial retunes the entire ladder below it at once, live, with
+			no regeneration.
 		</p>
 	</demo-section>
 </demo-page>

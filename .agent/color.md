@@ -101,7 +101,19 @@ The rules precede the componentry — components cohere because none of them cho
 
 Setting the generic `--itx-surface` on an ancestor **is** stomped at the next boundary — necessarily, since every layer block re-declares it. That is asserted in `elevation.spec.ts` as a negative case so the reason stays visible.
 
-To move the palette instead, set `--itx-tint-light` / `--itx-tint-dark` (chroma + hue) or any `--itx-ramp-*-light` / `-dark` number on any ancestor; both reach every layer below.
+To move the palette instead, set `--itx-tint-light` / `--itx-tint-dark` (chroma + hue), or one of the ramp **dials** — `--itx-ramp-{light,dark}-{page,step,ease,down,min,max}` — on any ancestor. Both reach every layer below.
+
+> **Surfaces are computed, not tabulated.** The engine derives every layer's lightness from those six numbers per scheme:
+>
+> ```
+> clamp(min, page + step·(1 − ease^max(0,n))/(1 − ease) + down·min(0,n), max)
+> ```
+>
+> which is why one dial retunes the whole ladder at once, live, with no regeneration. A uniform ramp (`ease: 1`) gets the plain multiplication — `1/(1 − ease)` cannot divide by zero.
+>
+> The per-layer `--itx-ramp-surface-N-light` / `-dark` numbers this replaced **no longer exist**. They moved one rung; a dial moves all of them. `elevation.spec.ts` asserts their removal so it stays visible.
+>
+> Contrast ranks and accent roles are still published per layer and still enumerated by the engine. They are *solved* against their surface rather than derived from it, and a solver's output cannot be reached by `calc()`.
 
 ## Enforcement
 
