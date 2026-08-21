@@ -105,7 +105,9 @@ export function solveAway(fromL, chromaIntent, H, target, poleL, tint) {
 	// Round AWAY from the surface: rounding to 3dp can drop the ratio below its
 	// floor, so round in the direction that can only add contrast.
 	const snapped =
-		poleL > fromL ? Math.ceil(far * 1000) / 1000 : Math.floor(far * 1000) / 1000;
+		poleL > fromL
+			? Math.ceil(far * 1000) / 1000
+			: Math.floor(far * 1000) / 1000;
 	const L = clamp01(snapped);
 	const C = round3(Math.min(chromaIntent, maxChroma(L, H)));
 	return { L, C, ratio: contrast(luminance(L, C, H), fromY) };
