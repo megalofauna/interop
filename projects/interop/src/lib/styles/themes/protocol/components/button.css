@@ -108,7 +108,7 @@
 :where(button[interop-button~="primary"]) {
 	--itx-button-background: var(--itx-colorway-solid);
 	--itx-button-foreground: var(--itx-colorway-on-solid);
-	--itx-button-border-color: transparent;
+	--itx-button-border-color: var(--itx-contrast-2);
 	--itx-button-box-shadow: none;
 
 	--itx-button-background-hover: var(--itx-colorway-solid-hover);

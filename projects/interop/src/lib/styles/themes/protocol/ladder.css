@@ -168,159 +168,159 @@
 	 * solid and on-solid are scheme-invariant on purpose: a brand colour
 	 * that shifts between light and dark is not an identity.
 	 */
-	--itx-colorway-hue: 246.74;
-	--itx-ramp-colorway-solid-l: 0.522;
-	--itx-ramp-colorway-solid-c: 0.110;
+	--itx-colorway-hue: 264;
+	--itx-ramp-colorway-solid-l: 0.500;
+	--itx-ramp-colorway-solid-c: 0.190;
 	--itx-ramp-colorway-on-solid-l: 0.990;
 	--itx-ramp-colorway-on-solid-c: 0.006;
-	--itx-ramp-colorway-solid-hover-l: 0.472;
-	--itx-ramp-colorway-solid-hover-c: 0.110;
-	--itx-ramp-colorway-solid-active-l: 0.432;
-	--itx-ramp-colorway-solid-active-c: 0.110;
+	--itx-ramp-colorway-solid-hover-l: 0.450;
+	--itx-ramp-colorway-solid-hover-c: 0.190;
+	--itx-ramp-colorway-solid-active-l: 0.410;
+	--itx-ramp-colorway-solid-active-c: 0.190;
 	--itx-ramp-colorway-tint-n4-light-l: 0.676;
-	--itx-ramp-colorway-tint-n4-light-c: 0.110;
+	--itx-ramp-colorway-tint-n4-light-c: 0.171;
 	--itx-ramp-colorway-tint-n4-dark-l: 0.112;
-	--itx-ramp-colorway-tint-n4-dark-c: 0.032;
-	--itx-ramp-colorway-on-tint-n4-light-l: 0.304;
-	--itx-ramp-colorway-on-tint-n4-light-c: 0.080;
-	--itx-ramp-colorway-on-tint-n4-dark-l: 0.569;
-	--itx-ramp-colorway-on-tint-n4-dark-c: 0.110;
-	--itx-ramp-colorway-border-n4-light-l: 0.448;
-	--itx-ramp-colorway-border-n4-light-c: 0.110;
-	--itx-ramp-colorway-border-n4-dark-l: 0.467;
-	--itx-ramp-colorway-border-n4-dark-c: 0.110;
-	--itx-ramp-colorway-text-n4-light-l: 0.351;
-	--itx-ramp-colorway-text-n4-light-c: 0.092;
-	--itx-ramp-colorway-text-n4-dark-l: 0.563;
-	--itx-ramp-colorway-text-n4-dark-c: 0.110;
+	--itx-ramp-colorway-tint-n4-dark-c: 0.080;
+	--itx-ramp-colorway-on-tint-n4-light-l: 0.315;
+	--itx-ramp-colorway-on-tint-n4-light-c: 0.186;
+	--itx-ramp-colorway-on-tint-n4-dark-l: 0.579;
+	--itx-ramp-colorway-on-tint-n4-dark-c: 0.190;
+	--itx-ramp-colorway-border-n4-light-l: 0.461;
+	--itx-ramp-colorway-border-n4-light-c: 0.190;
+	--itx-ramp-colorway-border-n4-dark-l: 0.481;
+	--itx-ramp-colorway-border-n4-dark-c: 0.190;
+	--itx-ramp-colorway-text-n4-light-l: 0.368;
+	--itx-ramp-colorway-text-n4-light-c: 0.190;
+	--itx-ramp-colorway-text-n4-dark-l: 0.573;
+	--itx-ramp-colorway-text-n4-dark-c: 0.190;
 	--itx-ramp-colorway-tint-n3-light-l: 0.719;
-	--itx-ramp-colorway-tint-n3-light-c: 0.110;
+	--itx-ramp-colorway-tint-n3-light-c: 0.145;
 	--itx-ramp-colorway-tint-n3-dark-l: 0.157;
-	--itx-ramp-colorway-tint-n3-dark-c: 0.042;
-	--itx-ramp-colorway-on-tint-n3-light-l: 0.344;
-	--itx-ramp-colorway-on-tint-n3-light-c: 0.090;
-	--itx-ramp-colorway-on-tint-n3-dark-l: 0.581;
-	--itx-ramp-colorway-on-tint-n3-dark-c: 0.110;
-	--itx-ramp-colorway-border-n3-light-l: 0.483;
-	--itx-ramp-colorway-border-n3-light-c: 0.110;
-	--itx-ramp-colorway-border-n3-dark-l: 0.473;
-	--itx-ramp-colorway-border-n3-dark-c: 0.110;
-	--itx-ramp-colorway-text-n3-light-l: 0.388;
-	--itx-ramp-colorway-text-n3-light-c: 0.102;
-	--itx-ramp-colorway-text-n3-dark-l: 0.568;
-	--itx-ramp-colorway-text-n3-dark-c: 0.110;
+	--itx-ramp-colorway-tint-n3-dark-c: 0.110;
+	--itx-ramp-colorway-on-tint-n3-light-l: 0.357;
+	--itx-ramp-colorway-on-tint-n3-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-n3-dark-l: 0.588;
+	--itx-ramp-colorway-on-tint-n3-dark-c: 0.190;
+	--itx-ramp-colorway-border-n3-light-l: 0.494;
+	--itx-ramp-colorway-border-n3-light-c: 0.190;
+	--itx-ramp-colorway-border-n3-dark-l: 0.484;
+	--itx-ramp-colorway-border-n3-dark-c: 0.190;
+	--itx-ramp-colorway-text-n3-light-l: 0.403;
+	--itx-ramp-colorway-text-n3-light-c: 0.190;
+	--itx-ramp-colorway-text-n3-dark-l: 0.576;
+	--itx-ramp-colorway-text-n3-dark-c: 0.190;
 	--itx-ramp-colorway-tint-n2-light-l: 0.762;
-	--itx-ramp-colorway-tint-n2-light-c: 0.110;
+	--itx-ramp-colorway-tint-n2-light-c: 0.121;
 	--itx-ramp-colorway-tint-n2-dark-l: 0.202;
-	--itx-ramp-colorway-tint-n2-dark-c: 0.054;
-	--itx-ramp-colorway-on-tint-n2-light-l: 0.384;
-	--itx-ramp-colorway-on-tint-n2-light-c: 0.101;
-	--itx-ramp-colorway-on-tint-n2-dark-l: 0.601;
-	--itx-ramp-colorway-on-tint-n2-dark-c: 0.110;
-	--itx-ramp-colorway-border-n2-light-l: 0.517;
-	--itx-ramp-colorway-border-n2-light-c: 0.110;
-	--itx-ramp-colorway-border-n2-dark-l: 0.480;
-	--itx-ramp-colorway-border-n2-dark-c: 0.110;
-	--itx-ramp-colorway-text-n2-light-l: 0.424;
-	--itx-ramp-colorway-text-n2-light-c: 0.110;
-	--itx-ramp-colorway-text-n2-dark-l: 0.577;
-	--itx-ramp-colorway-text-n2-dark-c: 0.110;
+	--itx-ramp-colorway-tint-n2-dark-c: 0.141;
+	--itx-ramp-colorway-on-tint-n2-light-l: 0.394;
+	--itx-ramp-colorway-on-tint-n2-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-n2-dark-l: 0.603;
+	--itx-ramp-colorway-on-tint-n2-dark-c: 0.190;
+	--itx-ramp-colorway-border-n2-light-l: 0.529;
+	--itx-ramp-colorway-border-n2-light-c: 0.190;
+	--itx-ramp-colorway-border-n2-dark-l: 0.492;
+	--itx-ramp-colorway-border-n2-dark-c: 0.190;
+	--itx-ramp-colorway-text-n2-light-l: 0.437;
+	--itx-ramp-colorway-text-n2-light-c: 0.190;
+	--itx-ramp-colorway-text-n2-dark-l: 0.585;
+	--itx-ramp-colorway-text-n2-dark-c: 0.190;
 	--itx-ramp-colorway-tint-n1-light-l: 0.805;
-	--itx-ramp-colorway-tint-n1-light-c: 0.104;
+	--itx-ramp-colorway-tint-n1-light-c: 0.098;
 	--itx-ramp-colorway-tint-n1-dark-l: 0.247;
-	--itx-ramp-colorway-tint-n1-dark-c: 0.065;
-	--itx-ramp-colorway-on-tint-n1-light-l: 0.420;
-	--itx-ramp-colorway-on-tint-n1-light-c: 0.110;
-	--itx-ramp-colorway-on-tint-n1-dark-l: 0.630;
-	--itx-ramp-colorway-on-tint-n1-dark-c: 0.110;
-	--itx-ramp-colorway-border-n1-light-l: 0.552;
-	--itx-ramp-colorway-border-n1-light-c: 0.110;
-	--itx-ramp-colorway-border-n1-dark-l: 0.497;
-	--itx-ramp-colorway-border-n1-dark-c: 0.110;
-	--itx-ramp-colorway-text-n1-light-l: 0.459;
-	--itx-ramp-colorway-text-n1-light-c: 0.110;
-	--itx-ramp-colorway-text-n1-dark-l: 0.593;
-	--itx-ramp-colorway-text-n1-dark-c: 0.110;
+	--itx-ramp-colorway-tint-n1-dark-c: 0.149;
+	--itx-ramp-colorway-on-tint-n1-light-l: 0.431;
+	--itx-ramp-colorway-on-tint-n1-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-n1-dark-l: 0.626;
+	--itx-ramp-colorway-on-tint-n1-dark-c: 0.190;
+	--itx-ramp-colorway-border-n1-light-l: 0.562;
+	--itx-ramp-colorway-border-n1-light-c: 0.190;
+	--itx-ramp-colorway-border-n1-dark-l: 0.507;
+	--itx-ramp-colorway-border-n1-dark-c: 0.190;
+	--itx-ramp-colorway-text-n1-light-l: 0.468;
+	--itx-ramp-colorway-text-n1-light-c: 0.190;
+	--itx-ramp-colorway-text-n1-dark-l: 0.601;
+	--itx-ramp-colorway-text-n1-dark-c: 0.190;
 	--itx-ramp-colorway-tint-0-light-l: 0.848;
-	--itx-ramp-colorway-tint-0-light-c: 0.080;
+	--itx-ramp-colorway-tint-0-light-c: 0.075;
 	--itx-ramp-colorway-tint-0-dark-l: 0.292;
-	--itx-ramp-colorway-tint-0-dark-c: 0.077;
-	--itx-ramp-colorway-on-tint-0-light-l: 0.453;
-	--itx-ramp-colorway-on-tint-0-light-c: 0.110;
-	--itx-ramp-colorway-on-tint-0-dark-l: 0.665;
-	--itx-ramp-colorway-on-tint-0-dark-c: 0.110;
-	--itx-ramp-colorway-border-0-light-l: 0.586;
-	--itx-ramp-colorway-border-0-light-c: 0.110;
-	--itx-ramp-colorway-border-0-dark-l: 0.521;
-	--itx-ramp-colorway-border-0-dark-c: 0.110;
-	--itx-ramp-colorway-text-0-light-l: 0.489;
-	--itx-ramp-colorway-text-0-light-c: 0.110;
-	--itx-ramp-colorway-text-0-dark-l: 0.620;
-	--itx-ramp-colorway-text-0-dark-c: 0.110;
+	--itx-ramp-colorway-tint-0-dark-c: 0.173;
+	--itx-ramp-colorway-on-tint-0-light-l: 0.462;
+	--itx-ramp-colorway-on-tint-0-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-0-dark-l: 0.660;
+	--itx-ramp-colorway-on-tint-0-dark-c: 0.180;
+	--itx-ramp-colorway-border-0-light-l: 0.594;
+	--itx-ramp-colorway-border-0-light-c: 0.190;
+	--itx-ramp-colorway-border-0-dark-l: 0.532;
+	--itx-ramp-colorway-border-0-dark-c: 0.190;
+	--itx-ramp-colorway-text-0-light-l: 0.500;
+	--itx-ramp-colorway-text-0-light-c: 0.190;
+	--itx-ramp-colorway-text-0-dark-l: 0.629;
+	--itx-ramp-colorway-text-0-dark-c: 0.190;
 	--itx-ramp-colorway-tint-1-light-l: 0.876;
-	--itx-ramp-colorway-tint-1-light-c: 0.064;
+	--itx-ramp-colorway-tint-1-light-c: 0.060;
 	--itx-ramp-colorway-tint-1-dark-l: 0.332;
-	--itx-ramp-colorway-tint-1-dark-c: 0.087;
-	--itx-ramp-colorway-on-tint-1-light-l: 0.473;
-	--itx-ramp-colorway-on-tint-1-light-c: 0.110;
-	--itx-ramp-colorway-on-tint-1-dark-l: 0.704;
-	--itx-ramp-colorway-on-tint-1-dark-c: 0.110;
-	--itx-ramp-colorway-border-1-light-l: 0.606;
-	--itx-ramp-colorway-border-1-light-c: 0.110;
-	--itx-ramp-colorway-border-1-dark-l: 0.548;
-	--itx-ramp-colorway-border-1-dark-c: 0.110;
-	--itx-ramp-colorway-text-1-light-l: 0.510;
-	--itx-ramp-colorway-text-1-light-c: 0.110;
-	--itx-ramp-colorway-text-1-dark-l: 0.647;
-	--itx-ramp-colorway-text-1-dark-c: 0.110;
+	--itx-ramp-colorway-tint-1-dark-c: 0.190;
+	--itx-ramp-colorway-on-tint-1-light-l: 0.484;
+	--itx-ramp-colorway-on-tint-1-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-1-dark-l: 0.692;
+	--itx-ramp-colorway-on-tint-1-dark-c: 0.161;
+	--itx-ramp-colorway-border-1-light-l: 0.616;
+	--itx-ramp-colorway-border-1-light-c: 0.190;
+	--itx-ramp-colorway-border-1-dark-l: 0.559;
+	--itx-ramp-colorway-border-1-dark-c: 0.190;
+	--itx-ramp-colorway-text-1-light-l: 0.521;
+	--itx-ramp-colorway-text-1-light-c: 0.190;
+	--itx-ramp-colorway-text-1-dark-l: 0.656;
+	--itx-ramp-colorway-text-1-dark-c: 0.182;
 	--itx-ramp-colorway-tint-2-light-l: 0.903;
-	--itx-ramp-colorway-tint-2-light-c: 0.050;
+	--itx-ramp-colorway-tint-2-light-c: 0.047;
 	--itx-ramp-colorway-tint-2-dark-l: 0.371;
-	--itx-ramp-colorway-tint-2-dark-c: 0.097;
-	--itx-ramp-colorway-on-tint-2-light-l: 0.493;
-	--itx-ramp-colorway-on-tint-2-light-c: 0.110;
-	--itx-ramp-colorway-on-tint-2-dark-l: 0.748;
-	--itx-ramp-colorway-on-tint-2-dark-c: 0.110;
-	--itx-ramp-colorway-border-2-light-l: 0.626;
-	--itx-ramp-colorway-border-2-light-c: 0.110;
-	--itx-ramp-colorway-border-2-dark-l: 0.581;
-	--itx-ramp-colorway-border-2-dark-c: 0.110;
-	--itx-ramp-colorway-text-2-light-l: 0.527;
-	--itx-ramp-colorway-text-2-light-c: 0.110;
-	--itx-ramp-colorway-text-2-dark-l: 0.682;
-	--itx-ramp-colorway-text-2-dark-c: 0.110;
+	--itx-ramp-colorway-tint-2-dark-c: 0.190;
+	--itx-ramp-colorway-on-tint-2-light-l: 0.503;
+	--itx-ramp-colorway-on-tint-2-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-2-dark-l: 0.734;
+	--itx-ramp-colorway-on-tint-2-dark-c: 0.137;
+	--itx-ramp-colorway-border-2-light-l: 0.636;
+	--itx-ramp-colorway-border-2-light-c: 0.190;
+	--itx-ramp-colorway-border-2-dark-l: 0.592;
+	--itx-ramp-colorway-border-2-dark-c: 0.190;
+	--itx-ramp-colorway-text-2-light-l: 0.539;
+	--itx-ramp-colorway-text-2-light-c: 0.190;
+	--itx-ramp-colorway-text-2-dark-l: 0.690;
+	--itx-ramp-colorway-text-2-dark-c: 0.162;
 	--itx-ramp-colorway-tint-3-light-l: 0.928;
-	--itx-ramp-colorway-tint-3-light-c: 0.037;
+	--itx-ramp-colorway-tint-3-light-c: 0.034;
 	--itx-ramp-colorway-tint-3-dark-l: 0.411;
-	--itx-ramp-colorway-tint-3-dark-c: 0.108;
-	--itx-ramp-colorway-on-tint-3-light-l: 0.510;
-	--itx-ramp-colorway-on-tint-3-light-c: 0.110;
-	--itx-ramp-colorway-on-tint-3-dark-l: 0.794;
-	--itx-ramp-colorway-on-tint-3-dark-c: 0.110;
-	--itx-ramp-colorway-border-3-light-l: 0.645;
-	--itx-ramp-colorway-border-3-light-c: 0.110;
-	--itx-ramp-colorway-border-3-dark-l: 0.617;
-	--itx-ramp-colorway-border-3-dark-c: 0.110;
-	--itx-ramp-colorway-text-3-light-l: 0.545;
-	--itx-ramp-colorway-text-3-light-c: 0.110;
-	--itx-ramp-colorway-text-3-dark-l: 0.723;
-	--itx-ramp-colorway-text-3-dark-c: 0.110;
+	--itx-ramp-colorway-tint-3-dark-c: 0.190;
+	--itx-ramp-colorway-on-tint-3-light-l: 0.521;
+	--itx-ramp-colorway-on-tint-3-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-3-dark-l: 0.780;
+	--itx-ramp-colorway-on-tint-3-dark-c: 0.111;
+	--itx-ramp-colorway-border-3-light-l: 0.654;
+	--itx-ramp-colorway-border-3-light-c: 0.184;
+	--itx-ramp-colorway-border-3-dark-l: 0.626;
+	--itx-ramp-colorway-border-3-dark-c: 0.190;
+	--itx-ramp-colorway-text-3-light-l: 0.556;
+	--itx-ramp-colorway-text-3-light-c: 0.190;
+	--itx-ramp-colorway-text-3-dark-l: 0.729;
+	--itx-ramp-colorway-text-3-dark-c: 0.140;
 	--itx-ramp-colorway-tint-4-light-l: 0.950;
-	--itx-ramp-colorway-tint-4-light-c: 0.025;
+	--itx-ramp-colorway-tint-4-light-c: 0.024;
 	--itx-ramp-colorway-tint-4-dark-l: 0.450;
-	--itx-ramp-colorway-tint-4-dark-c: 0.110;
-	--itx-ramp-colorway-on-tint-4-light-l: 0.527;
-	--itx-ramp-colorway-on-tint-4-light-c: 0.110;
-	--itx-ramp-colorway-on-tint-4-dark-l: 0.844;
-	--itx-ramp-colorway-on-tint-4-dark-c: 0.082;
-	--itx-ramp-colorway-border-4-light-l: 0.661;
-	--itx-ramp-colorway-border-4-light-c: 0.110;
-	--itx-ramp-colorway-border-4-dark-l: 0.659;
-	--itx-ramp-colorway-border-4-dark-c: 0.110;
-	--itx-ramp-colorway-text-4-light-l: 0.560;
-	--itx-ramp-colorway-text-4-light-c: 0.110;
-	--itx-ramp-colorway-text-4-dark-l: 0.767;
-	--itx-ramp-colorway-text-4-dark-c: 0.110;
+	--itx-ramp-colorway-tint-4-dark-c: 0.190;
+	--itx-ramp-colorway-on-tint-4-light-l: 0.537;
+	--itx-ramp-colorway-on-tint-4-light-c: 0.190;
+	--itx-ramp-colorway-on-tint-4-dark-l: 0.831;
+	--itx-ramp-colorway-on-tint-4-dark-c: 0.084;
+	--itx-ramp-colorway-border-4-light-l: 0.669;
+	--itx-ramp-colorway-border-4-light-c: 0.175;
+	--itx-ramp-colorway-border-4-dark-l: 0.666;
+	--itx-ramp-colorway-border-4-dark-c: 0.176;
+	--itx-ramp-colorway-text-4-light-l: 0.569;
+	--itx-ramp-colorway-text-4-light-c: 0.190;
+	--itx-ramp-colorway-text-4-dark-l: 0.772;
+	--itx-ramp-colorway-text-4-dark-c: 0.116;
 	--itx-colorway-solid: oklch(var(--itx-ramp-colorway-solid-l) var(--itx-ramp-colorway-solid-c) var(--itx-colorway-hue));
 	--itx-colorway-on-solid: oklch(var(--itx-ramp-colorway-on-solid-l) var(--itx-ramp-colorway-on-solid-c) var(--itx-colorway-hue));
 	--itx-colorway-solid-hover: oklch(var(--itx-ramp-colorway-solid-hover-l) var(--itx-ramp-colorway-solid-hover-c) var(--itx-colorway-hue));
@@ -513,42 +513,10 @@
 	--itx-ramp-danger-solid-hover-c: 0.105;
 	--itx-ramp-danger-solid-active-l: 0.410;
 	--itx-ramp-danger-solid-active-c: 0.105;
-	--itx-ramp-danger-tint-light-l: 0.848;
-	--itx-ramp-danger-tint-light-c: 0.084;
-	--itx-ramp-danger-tint-dark-l: 0.292;
-	--itx-ramp-danger-tint-dark-c: 0.105;
-	--itx-ramp-danger-on-tint-light-l: 0.459;
-	--itx-ramp-danger-on-tint-light-c: 0.105;
-	--itx-ramp-danger-on-tint-dark-l: 0.666;
-	--itx-ramp-danger-on-tint-dark-c: 0.105;
-	--itx-ramp-danger-border-light-l: 0.598;
-	--itx-ramp-danger-border-light-c: 0.105;
-	--itx-ramp-danger-border-dark-l: 0.534;
-	--itx-ramp-danger-border-dark-c: 0.105;
-	--itx-ramp-danger-text-light-l: 0.503;
-	--itx-ramp-danger-text-light-c: 0.105;
-	--itx-ramp-danger-text-dark-l: 0.632;
-	--itx-ramp-danger-text-dark-c: 0.105;
 	--itx-danger-solid: oklch(var(--itx-ramp-danger-solid-l) var(--itx-ramp-danger-solid-c) var(--itx-danger-hue));
 	--itx-danger-on-solid: oklch(var(--itx-ramp-danger-on-solid-l) var(--itx-ramp-danger-on-solid-c) var(--itx-danger-hue));
 	--itx-danger-solid-hover: oklch(var(--itx-ramp-danger-solid-hover-l) var(--itx-ramp-danger-solid-hover-c) var(--itx-danger-hue));
 	--itx-danger-solid-active: oklch(var(--itx-ramp-danger-solid-active-l) var(--itx-ramp-danger-solid-active-c) var(--itx-danger-hue));
-	--itx-danger-tint: light-dark(
-		oklch(var(--itx-ramp-danger-tint-light-l) var(--itx-ramp-danger-tint-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-tint-dark-l) var(--itx-ramp-danger-tint-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-on-tint: light-dark(
-		oklch(var(--itx-ramp-danger-on-tint-light-l) var(--itx-ramp-danger-on-tint-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-on-tint-dark-l) var(--itx-ramp-danger-on-tint-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-border: light-dark(
-		oklch(var(--itx-ramp-danger-border-light-l) var(--itx-ramp-danger-border-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-border-dark-l) var(--itx-ramp-danger-border-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-text: light-dark(
-		oklch(var(--itx-ramp-danger-text-light-l) var(--itx-ramp-danger-text-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-text-dark-l) var(--itx-ramp-danger-text-dark-c) var(--itx-danger-hue))
-	);
 	--itx-info-hue: 218;
 	--itx-ramp-info-solid-l: 0.530;
 	--itx-ramp-info-solid-c: 0.058;
@@ -558,42 +526,10 @@
 	--itx-ramp-info-solid-hover-c: 0.058;
 	--itx-ramp-info-solid-active-l: 0.440;
 	--itx-ramp-info-solid-active-c: 0.058;
-	--itx-ramp-info-tint-light-l: 0.848;
-	--itx-ramp-info-tint-light-c: 0.058;
-	--itx-ramp-info-tint-dark-l: 0.292;
-	--itx-ramp-info-tint-dark-c: 0.053;
-	--itx-ramp-info-on-tint-light-l: 0.451;
-	--itx-ramp-info-on-tint-light-c: 0.058;
-	--itx-ramp-info-on-tint-dark-l: 0.666;
-	--itx-ramp-info-on-tint-dark-c: 0.058;
-	--itx-ramp-info-border-light-l: 0.581;
-	--itx-ramp-info-border-light-c: 0.058;
-	--itx-ramp-info-border-dark-l: 0.518;
-	--itx-ramp-info-border-dark-c: 0.058;
-	--itx-ramp-info-text-light-l: 0.486;
-	--itx-ramp-info-text-light-c: 0.058;
-	--itx-ramp-info-text-dark-l: 0.615;
-	--itx-ramp-info-text-dark-c: 0.058;
 	--itx-info-solid: oklch(var(--itx-ramp-info-solid-l) var(--itx-ramp-info-solid-c) var(--itx-info-hue));
 	--itx-info-on-solid: oklch(var(--itx-ramp-info-on-solid-l) var(--itx-ramp-info-on-solid-c) var(--itx-info-hue));
 	--itx-info-solid-hover: oklch(var(--itx-ramp-info-solid-hover-l) var(--itx-ramp-info-solid-hover-c) var(--itx-info-hue));
 	--itx-info-solid-active: oklch(var(--itx-ramp-info-solid-active-l) var(--itx-ramp-info-solid-active-c) var(--itx-info-hue));
-	--itx-info-tint: light-dark(
-		oklch(var(--itx-ramp-info-tint-light-l) var(--itx-ramp-info-tint-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-tint-dark-l) var(--itx-ramp-info-tint-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-on-tint: light-dark(
-		oklch(var(--itx-ramp-info-on-tint-light-l) var(--itx-ramp-info-on-tint-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-on-tint-dark-l) var(--itx-ramp-info-on-tint-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-border: light-dark(
-		oklch(var(--itx-ramp-info-border-light-l) var(--itx-ramp-info-border-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-border-dark-l) var(--itx-ramp-info-border-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-text: light-dark(
-		oklch(var(--itx-ramp-info-text-light-l) var(--itx-ramp-info-text-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-text-dark-l) var(--itx-ramp-info-text-dark-c) var(--itx-info-hue))
-	);
 	--itx-success-hue: 122;
 	--itx-ramp-success-solid-l: 0.530;
 	--itx-ramp-success-solid-c: 0.078;
@@ -603,42 +539,10 @@
 	--itx-ramp-success-solid-hover-c: 0.078;
 	--itx-ramp-success-solid-active-l: 0.440;
 	--itx-ramp-success-solid-active-c: 0.078;
-	--itx-ramp-success-tint-light-l: 0.848;
-	--itx-ramp-success-tint-light-c: 0.078;
-	--itx-ramp-success-tint-dark-l: 0.292;
-	--itx-ramp-success-tint-dark-c: 0.071;
-	--itx-ramp-success-on-tint-light-l: 0.451;
-	--itx-ramp-success-on-tint-light-c: 0.078;
-	--itx-ramp-success-on-tint-dark-l: 0.665;
-	--itx-ramp-success-on-tint-dark-c: 0.078;
-	--itx-ramp-success-border-light-l: 0.582;
-	--itx-ramp-success-border-light-c: 0.078;
-	--itx-ramp-success-border-dark-l: 0.518;
-	--itx-ramp-success-border-dark-c: 0.078;
-	--itx-ramp-success-text-light-l: 0.486;
-	--itx-ramp-success-text-light-c: 0.078;
-	--itx-ramp-success-text-dark-l: 0.616;
-	--itx-ramp-success-text-dark-c: 0.078;
 	--itx-success-solid: oklch(var(--itx-ramp-success-solid-l) var(--itx-ramp-success-solid-c) var(--itx-success-hue));
 	--itx-success-on-solid: oklch(var(--itx-ramp-success-on-solid-l) var(--itx-ramp-success-on-solid-c) var(--itx-success-hue));
 	--itx-success-solid-hover: oklch(var(--itx-ramp-success-solid-hover-l) var(--itx-ramp-success-solid-hover-c) var(--itx-success-hue));
 	--itx-success-solid-active: oklch(var(--itx-ramp-success-solid-active-l) var(--itx-ramp-success-solid-active-c) var(--itx-success-hue));
-	--itx-success-tint: light-dark(
-		oklch(var(--itx-ramp-success-tint-light-l) var(--itx-ramp-success-tint-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-tint-dark-l) var(--itx-ramp-success-tint-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-on-tint: light-dark(
-		oklch(var(--itx-ramp-success-on-tint-light-l) var(--itx-ramp-success-on-tint-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-on-tint-dark-l) var(--itx-ramp-success-on-tint-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-border: light-dark(
-		oklch(var(--itx-ramp-success-border-light-l) var(--itx-ramp-success-border-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-border-dark-l) var(--itx-ramp-success-border-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-text: light-dark(
-		oklch(var(--itx-ramp-success-text-light-l) var(--itx-ramp-success-text-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-text-dark-l) var(--itx-ramp-success-text-dark-c) var(--itx-success-hue))
-	);
 	--itx-warning-hue: 78;
 	--itx-ramp-warning-solid-l: 0.620;
 	--itx-ramp-warning-solid-c: 0.105;
@@ -648,42 +552,10 @@
 	--itx-ramp-warning-solid-hover-c: 0.105;
 	--itx-ramp-warning-solid-active-l: 0.710;
 	--itx-ramp-warning-solid-active-c: 0.105;
-	--itx-ramp-warning-tint-light-l: 0.848;
-	--itx-ramp-warning-tint-light-c: 0.105;
-	--itx-ramp-warning-tint-dark-l: 0.292;
-	--itx-ramp-warning-tint-dark-c: 0.061;
-	--itx-ramp-warning-on-tint-light-l: 0.454;
-	--itx-ramp-warning-on-tint-light-c: 0.095;
-	--itx-ramp-warning-on-tint-dark-l: 0.667;
-	--itx-ramp-warning-on-tint-dark-c: 0.105;
-	--itx-ramp-warning-border-light-l: 0.590;
-	--itx-ramp-warning-border-light-c: 0.105;
-	--itx-ramp-warning-border-dark-l: 0.527;
-	--itx-ramp-warning-border-dark-c: 0.105;
-	--itx-ramp-warning-text-light-l: 0.494;
-	--itx-ramp-warning-text-light-c: 0.103;
-	--itx-ramp-warning-text-dark-l: 0.624;
-	--itx-ramp-warning-text-dark-c: 0.105;
 	--itx-warning-solid: oklch(var(--itx-ramp-warning-solid-l) var(--itx-ramp-warning-solid-c) var(--itx-warning-hue));
 	--itx-warning-on-solid: oklch(var(--itx-ramp-warning-on-solid-l) var(--itx-ramp-warning-on-solid-c) var(--itx-warning-hue));
 	--itx-warning-solid-hover: oklch(var(--itx-ramp-warning-solid-hover-l) var(--itx-ramp-warning-solid-hover-c) var(--itx-warning-hue));
 	--itx-warning-solid-active: oklch(var(--itx-ramp-warning-solid-active-l) var(--itx-ramp-warning-solid-active-c) var(--itx-warning-hue));
-	--itx-warning-tint: light-dark(
-		oklch(var(--itx-ramp-warning-tint-light-l) var(--itx-ramp-warning-tint-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-tint-dark-l) var(--itx-ramp-warning-tint-dark-c) var(--itx-warning-hue))
-	);
-	--itx-warning-on-tint: light-dark(
-		oklch(var(--itx-ramp-warning-on-tint-light-l) var(--itx-ramp-warning-on-tint-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-on-tint-dark-l) var(--itx-ramp-warning-on-tint-dark-c) var(--itx-warning-hue))
-	);
-	--itx-warning-border: light-dark(
-		oklch(var(--itx-ramp-warning-border-light-l) var(--itx-ramp-warning-border-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-border-dark-l) var(--itx-ramp-warning-border-dark-c) var(--itx-warning-hue))
-	);
-	--itx-warning-text: light-dark(
-		oklch(var(--itx-ramp-warning-text-light-l) var(--itx-ramp-warning-text-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-text-dark-l) var(--itx-ramp-warning-text-dark-c) var(--itx-warning-hue))
-	);
 }
 
 :where([itx-status-palette="eighties"]) {
@@ -696,42 +568,10 @@
 	--itx-ramp-danger-solid-hover-c: 0.190;
 	--itx-ramp-danger-solid-active-l: 0.460;
 	--itx-ramp-danger-solid-active-c: 0.187;
-	--itx-ramp-danger-tint-light-l: 0.848;
-	--itx-ramp-danger-tint-light-c: 0.083;
-	--itx-ramp-danger-tint-dark-l: 0.292;
-	--itx-ramp-danger-tint-dark-c: 0.119;
-	--itx-ramp-danger-on-tint-light-l: 0.470;
-	--itx-ramp-danger-on-tint-light-c: 0.190;
-	--itx-ramp-danger-on-tint-dark-l: 0.676;
-	--itx-ramp-danger-on-tint-dark-c: 0.190;
-	--itx-ramp-danger-border-light-l: 0.610;
-	--itx-ramp-danger-border-light-c: 0.190;
-	--itx-ramp-danger-border-dark-l: 0.544;
-	--itx-ramp-danger-border-dark-c: 0.190;
-	--itx-ramp-danger-text-light-l: 0.515;
-	--itx-ramp-danger-text-light-c: 0.190;
-	--itx-ramp-danger-text-dark-l: 0.643;
-	--itx-ramp-danger-text-dark-c: 0.190;
 	--itx-danger-solid: oklch(var(--itx-ramp-danger-solid-l) var(--itx-ramp-danger-solid-c) var(--itx-danger-hue));
 	--itx-danger-on-solid: oklch(var(--itx-ramp-danger-on-solid-l) var(--itx-ramp-danger-on-solid-c) var(--itx-danger-hue));
 	--itx-danger-solid-hover: oklch(var(--itx-ramp-danger-solid-hover-l) var(--itx-ramp-danger-solid-hover-c) var(--itx-danger-hue));
 	--itx-danger-solid-active: oklch(var(--itx-ramp-danger-solid-active-l) var(--itx-ramp-danger-solid-active-c) var(--itx-danger-hue));
-	--itx-danger-tint: light-dark(
-		oklch(var(--itx-ramp-danger-tint-light-l) var(--itx-ramp-danger-tint-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-tint-dark-l) var(--itx-ramp-danger-tint-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-on-tint: light-dark(
-		oklch(var(--itx-ramp-danger-on-tint-light-l) var(--itx-ramp-danger-on-tint-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-on-tint-dark-l) var(--itx-ramp-danger-on-tint-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-border: light-dark(
-		oklch(var(--itx-ramp-danger-border-light-l) var(--itx-ramp-danger-border-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-border-dark-l) var(--itx-ramp-danger-border-dark-c) var(--itx-danger-hue))
-	);
-	--itx-danger-text: light-dark(
-		oklch(var(--itx-ramp-danger-text-light-l) var(--itx-ramp-danger-text-light-c) var(--itx-danger-hue)),
-		oklch(var(--itx-ramp-danger-text-dark-l) var(--itx-ramp-danger-text-dark-c) var(--itx-danger-hue))
-	);
 	--itx-info-hue: 264;
 	--itx-ramp-info-solid-l: 0.500;
 	--itx-ramp-info-solid-c: 0.190;
@@ -741,42 +581,10 @@
 	--itx-ramp-info-solid-hover-c: 0.190;
 	--itx-ramp-info-solid-active-l: 0.410;
 	--itx-ramp-info-solid-active-c: 0.190;
-	--itx-ramp-info-tint-light-l: 0.848;
-	--itx-ramp-info-tint-light-c: 0.075;
-	--itx-ramp-info-tint-dark-l: 0.292;
-	--itx-ramp-info-tint-dark-c: 0.173;
-	--itx-ramp-info-on-tint-light-l: 0.462;
-	--itx-ramp-info-on-tint-light-c: 0.190;
-	--itx-ramp-info-on-tint-dark-l: 0.660;
-	--itx-ramp-info-on-tint-dark-c: 0.180;
-	--itx-ramp-info-border-light-l: 0.594;
-	--itx-ramp-info-border-light-c: 0.190;
-	--itx-ramp-info-border-dark-l: 0.532;
-	--itx-ramp-info-border-dark-c: 0.190;
-	--itx-ramp-info-text-light-l: 0.500;
-	--itx-ramp-info-text-light-c: 0.190;
-	--itx-ramp-info-text-dark-l: 0.629;
-	--itx-ramp-info-text-dark-c: 0.190;
 	--itx-info-solid: oklch(var(--itx-ramp-info-solid-l) var(--itx-ramp-info-solid-c) var(--itx-info-hue));
 	--itx-info-on-solid: oklch(var(--itx-ramp-info-on-solid-l) var(--itx-ramp-info-on-solid-c) var(--itx-info-hue));
 	--itx-info-solid-hover: oklch(var(--itx-ramp-info-solid-hover-l) var(--itx-ramp-info-solid-hover-c) var(--itx-info-hue));
 	--itx-info-solid-active: oklch(var(--itx-ramp-info-solid-active-l) var(--itx-ramp-info-solid-active-c) var(--itx-info-hue));
-	--itx-info-tint: light-dark(
-		oklch(var(--itx-ramp-info-tint-light-l) var(--itx-ramp-info-tint-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-tint-dark-l) var(--itx-ramp-info-tint-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-on-tint: light-dark(
-		oklch(var(--itx-ramp-info-on-tint-light-l) var(--itx-ramp-info-on-tint-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-on-tint-dark-l) var(--itx-ramp-info-on-tint-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-border: light-dark(
-		oklch(var(--itx-ramp-info-border-light-l) var(--itx-ramp-info-border-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-border-dark-l) var(--itx-ramp-info-border-dark-c) var(--itx-info-hue))
-	);
-	--itx-info-text: light-dark(
-		oklch(var(--itx-ramp-info-text-light-l) var(--itx-ramp-info-text-light-c) var(--itx-info-hue)),
-		oklch(var(--itx-ramp-info-text-dark-l) var(--itx-ramp-info-text-dark-c) var(--itx-info-hue))
-	);
 	--itx-success-hue: 145;
 	--itx-ramp-success-solid-l: 0.620;
 	--itx-ramp-success-solid-c: 0.190;
@@ -786,42 +594,10 @@
 	--itx-ramp-success-solid-hover-c: 0.190;
 	--itx-ramp-success-solid-active-l: 0.710;
 	--itx-ramp-success-solid-active-c: 0.190;
-	--itx-ramp-success-tint-light-l: 0.848;
-	--itx-ramp-success-tint-light-c: 0.190;
-	--itx-ramp-success-tint-dark-l: 0.292;
-	--itx-ramp-success-tint-dark-c: 0.092;
-	--itx-ramp-success-on-tint-light-l: 0.454;
-	--itx-ramp-success-on-tint-light-c: 0.143;
-	--itx-ramp-success-on-tint-dark-l: 0.657;
-	--itx-ramp-success-on-tint-dark-c: 0.190;
-	--itx-ramp-success-border-light-l: 0.569;
-	--itx-ramp-success-border-light-c: 0.179;
-	--itx-ramp-success-border-dark-l: 0.509;
-	--itx-ramp-success-border-dark-c: 0.160;
-	--itx-ramp-success-text-light-l: 0.475;
-	--itx-ramp-success-text-light-c: 0.150;
-	--itx-ramp-success-text-dark-l: 0.601;
-	--itx-ramp-success-text-dark-c: 0.189;
 	--itx-success-solid: oklch(var(--itx-ramp-success-solid-l) var(--itx-ramp-success-solid-c) var(--itx-success-hue));
 	--itx-success-on-solid: oklch(var(--itx-ramp-success-on-solid-l) var(--itx-ramp-success-on-solid-c) var(--itx-success-hue));
 	--itx-success-solid-hover: oklch(var(--itx-ramp-success-solid-hover-l) var(--itx-ramp-success-solid-hover-c) var(--itx-success-hue));
 	--itx-success-solid-active: oklch(var(--itx-ramp-success-solid-active-l) var(--itx-ramp-success-solid-active-c) var(--itx-success-hue));
-	--itx-success-tint: light-dark(
-		oklch(var(--itx-ramp-success-tint-light-l) var(--itx-ramp-success-tint-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-tint-dark-l) var(--itx-ramp-success-tint-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-on-tint: light-dark(
-		oklch(var(--itx-ramp-success-on-tint-light-l) var(--itx-ramp-success-on-tint-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-on-tint-dark-l) var(--itx-ramp-success-on-tint-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-border: light-dark(
-		oklch(var(--itx-ramp-success-border-light-l) var(--itx-ramp-success-border-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-border-dark-l) var(--itx-ramp-success-border-dark-c) var(--itx-success-hue))
-	);
-	--itx-success-text: light-dark(
-		oklch(var(--itx-ramp-success-text-light-l) var(--itx-ramp-success-text-light-c) var(--itx-success-hue)),
-		oklch(var(--itx-ramp-success-text-dark-l) var(--itx-ramp-success-text-dark-c) var(--itx-success-hue))
-	);
 	--itx-warning-hue: 85;
 	--itx-ramp-warning-solid-l: 0.750;
 	--itx-ramp-warning-solid-c: 0.154;
@@ -831,40 +607,8 @@
 	--itx-ramp-warning-solid-hover-c: 0.164;
 	--itx-ramp-warning-solid-active-l: 0.840;
 	--itx-ramp-warning-solid-active-c: 0.170;
-	--itx-ramp-warning-tint-light-l: 0.848;
-	--itx-ramp-warning-tint-light-c: 0.168;
-	--itx-ramp-warning-tint-dark-l: 0.292;
-	--itx-ramp-warning-tint-dark-c: 0.060;
-	--itx-ramp-warning-on-tint-light-l: 0.452;
-	--itx-ramp-warning-on-tint-light-c: 0.093;
-	--itx-ramp-warning-on-tint-dark-l: 0.669;
-	--itx-ramp-warning-on-tint-dark-c: 0.137;
-	--itx-ramp-warning-border-light-l: 0.590;
-	--itx-ramp-warning-border-light-c: 0.121;
-	--itx-ramp-warning-border-dark-l: 0.526;
-	--itx-ramp-warning-border-dark-c: 0.108;
-	--itx-ramp-warning-text-light-l: 0.492;
-	--itx-ramp-warning-text-light-c: 0.101;
-	--itx-ramp-warning-text-dark-l: 0.623;
-	--itx-ramp-warning-text-dark-c: 0.128;
 	--itx-warning-solid: oklch(var(--itx-ramp-warning-solid-l) var(--itx-ramp-warning-solid-c) var(--itx-warning-hue));
 	--itx-warning-on-solid: oklch(var(--itx-ramp-warning-on-solid-l) var(--itx-ramp-warning-on-solid-c) var(--itx-warning-hue));
 	--itx-warning-solid-hover: oklch(var(--itx-ramp-warning-solid-hover-l) var(--itx-ramp-warning-solid-hover-c) var(--itx-warning-hue));
 	--itx-warning-solid-active: oklch(var(--itx-ramp-warning-solid-active-l) var(--itx-ramp-warning-solid-active-c) var(--itx-warning-hue));
-	--itx-warning-tint: light-dark(
-		oklch(var(--itx-ramp-warning-tint-light-l) var(--itx-ramp-warning-tint-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-tint-dark-l) var(--itx-ramp-warning-tint-dark-c) var(--itx-warning-hue))
-	);
-	--itx-warning-on-tint: light-dark(
-		oklch(var(--itx-ramp-warning-on-tint-light-l) var(--itx-ramp-warning-on-tint-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-on-tint-dark-l) var(--itx-ramp-warning-on-tint-dark-c) var(--itx-warning-hue))
-	);
-	--itx-warning-border: light-dark(
-		oklch(var(--itx-ramp-warning-border-light-l) var(--itx-ramp-warning-border-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-border-dark-l) var(--itx-ramp-warning-border-dark-c) var(--itx-warning-hue))
-	);
-	--itx-warning-text: light-dark(
-		oklch(var(--itx-ramp-warning-text-light-l) var(--itx-ramp-warning-text-light-c) var(--itx-warning-hue)),
-		oklch(var(--itx-ramp-warning-text-dark-l) var(--itx-ramp-warning-text-dark-c) var(--itx-warning-hue))
-	);
 }

@@ -212,6 +212,110 @@
 		</table>
 	</demo-section>
 
+	<demo-section id="palette" heading="The palette, as rendered">
+		<p description class="demo-section__lede">
+			Every value the system produces, read back out of a painted element rather
+			than printed from the generator — so this is a picture of the page, not of
+			the script that wrote it. Switch the colour scheme and every number here
+			changes.
+		</p>
+
+		<h3 class="color-palette__title">Neutral</h3>
+		<p>
+			A grid, not a strip. A rank is a contrast target against
+			<em>its own</em> surface, so <code>contrast-4</code> is a different colour
+			on every layer — a single row would have to pick one and imply the rest.
+			Sinks are negative; the page is 0.
+		</p>
+
+		<div
+			class="color-palette"
+			role="table"
+			aria-label="Neutral palette by layer"
+		>
+			<div class="color-palette__row color-palette__row--head" role="row">
+				<span role="columnheader">layer</span>
+				@for (col of neutralColumns; track col.token) {
+					<span role="columnheader">{{ col.label }}</span>
+				}
+			</div>
+			@for (layer of paletteLayers; track layer) {
+				<div [attr.itx-layer]="layer" class="color-palette__row" role="row">
+					<span class="color-palette__layer" role="rowheader">
+						{{ layerLabel(layer) }}
+					</span>
+					@for (col of neutralColumns; track col.token) {
+						<span class="color-palette__cell" role="cell">
+							<span
+								class="color-palette__chip"
+								[style.background-color]="'var(' + col.token + ')'"
+								[attr.data-swatch]="'n-' + layer + '-' + col.label"
+							></span>
+							<code>{{ swatchColor("n-" + layer + "-" + col.label) }}</code>
+						</span>
+					}
+				</div>
+			}
+		</div>
+
+		<h3 class="color-palette__title">Colourway</h3>
+		<p>
+			The same treatment for the seeded blue. These four roles re-solve against
+			whatever surface they land on, which is why they are laid out the same
+			way.
+		</p>
+
+		<div
+			class="color-palette"
+			role="table"
+			aria-label="Colourway palette by layer"
+		>
+			<div class="color-palette__row color-palette__row--head" role="row">
+				<span role="columnheader">layer</span>
+				@for (col of colorwayColumns; track col.token) {
+					<span role="columnheader">{{ col.label }}</span>
+				}
+			</div>
+			@for (layer of paletteLayers; track layer) {
+				<div [attr.itx-layer]="layer" class="color-palette__row" role="row">
+					<span class="color-palette__layer" role="rowheader">
+						{{ layerLabel(layer) }}
+					</span>
+					@for (col of colorwayColumns; track col.token) {
+						<span class="color-palette__cell" role="cell">
+							<span
+								class="color-palette__chip"
+								[style.background-color]="'var(' + col.token + ')'"
+								[attr.data-swatch]="'c-' + layer + '-' + col.label"
+							></span>
+							<code>{{ swatchColor("c-" + layer + "-" + col.label) }}</code>
+						</span>
+					}
+				</div>
+			}
+		</div>
+
+		<h3 class="color-palette__title">Fixed</h3>
+		<p>
+			Four that do not move with depth or scheme, because a brand colour that
+			drifts as it nests is not a brand colour.
+		</p>
+
+		<div class="color-palette__fixed">
+			@for (col of colorwayFixed; track col.token) {
+				<span class="color-palette__cell" role="cell">
+					<span
+						class="color-palette__chip color-palette__chip--wide"
+						[style.background-color]="'var(' + col.token + ')'"
+						[attr.data-swatch]="'f-' + col.label"
+					></span>
+					<strong>{{ col.label }}</strong>
+					<code>{{ swatchColor("f-" + col.label) }}</code>
+				</span>
+			}
+		</div>
+	</demo-section>
+
 	<demo-section id="accents" heading="Accent families">
 		<p description class="demo-section__lede">
 			Five families, each generated from <em>one</em> seed colour. The hue
@@ -492,6 +596,101 @@
 				</div>
 			}
 		</div>
+	</demo-section>
+
+	<demo-section id="preview" heading="12-step palettes — proposed, not shipped">
+		<p description class="demo-section__lede">
+			A palette, and then a verdict. Steps are placed by lightness alone —
+			nothing here is positioned by a contrast target — and the guidance
+			underneath was measured off the result. Nothing is a token; the generator
+			behind it writes no CSS. The system above this section ships.
+		</p>
+
+		<p>
+			<strong>Even in OKLCH lightness is not even to the eye.</strong> On a
+			linear ramp the last step removes 2.86× the light of the one before it
+			while the first removes 1.26× — so it measures uniform and reads as
+			accelerating into the dark. That is why neither Radix nor Tailwind is
+			linear in any single space. <em>Curve</em> shrinks the lightness step
+			toward the dark end to compensate; <em>evenness</em> below is the largest
+			adjacent jump over the smallest, where 1.0 would be perfect.
+		</p>
+
+		<p>
+			The catch is that the tidy rule was partly an artifact of the ramp being
+			uneven. Ease too hard and the distances stop agreeing between hues. Each
+			candidate here is the most easing that length can take while every hue
+			still shares one distance per floor.
+		</p>
+
+		@for (candidate of previewCandidates; track candidate.key) {
+			<section
+				class="palette-candidate"
+				[class.is-chosen]="candidate.chosen"
+				itx-layer="1"
+			>
+				<header>
+					<h3>
+						{{ candidate.label }}
+						@if (candidate.chosen) {
+							<span class="palette-candidate__chosen">chosen</span>
+						}
+					</h3>
+					<dl>
+						<div>
+							<dt>evenness</dt>
+							<dd>{{ candidate.spread }}</dd>
+						</div>
+						<div>
+							<dt>ΔL</dt>
+							<dd>{{ candidate.deltaFirst }} → {{ candidate.deltaLast }}</dd>
+						</div>
+						@for (floor of previewFloors; track floor.id) {
+							<div>
+								<dt>{{ floor.ratio }}:1</dt>
+								<dd>
+									@if (previewOffset(candidate.key, floor.id); as n) {
+										{{ n }} apart
+									} @else {
+										varies
+									}
+								</dd>
+							</div>
+						}
+					</dl>
+				</header>
+
+				@for (scale of candidate.scales; track scale.id) {
+					<figure class="palette-ramp">
+						<figcaption>
+							<strong>{{ scale.id }}</strong>
+							@if (scale.note) {
+								<span>{{ scale.note }}</span>
+							}
+						</figcaption>
+						<div class="palette-ramp__strip">
+							@for (s of scale.steps; track s.step) {
+								<span class="palette-ramp__step">
+									<span
+										class="palette-ramp__chip"
+										[style.background-color]="previewColor(scale.hue, s.l, s.c)"
+									></span>
+									<b>{{ s.step }}</b>
+									<small>{{ s.l }}</small>
+								</span>
+							}
+						</div>
+					</figure>
+				}
+			</section>
+		}
+
+		<p>
+			The 215° teal is in every set deliberately: its chroma ceiling is the
+			lowest anywhere on the circle, and it still obeys the same distances —
+			because the distances come from lightness, and lightness is what the ramp
+			controls.
+		</p>
 	</demo-section>
 
 	<demo-section id="overriding" heading="Overriding">

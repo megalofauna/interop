@@ -167,32 +167,32 @@ export const FAMILY_FACTS: readonly FamilyFact[] = [
 		id: "colorway",
 		role: "colorway",
 		variant: "default",
-		name: "Jelly Bean",
-		hue: 246.74,
+		name: "Science Blue",
+		hue: 264,
 		perLayer: true,
 		seed: {
-			l: 0.522,
-			c: 0.11,
-			h: 246.74
+			l: 0.5,
+			c: 0.19,
+			h: 264
 		},
-		chromaCeiling: 0.178,
-		chromaIntent: 0.11,
+		chromaCeiling: 0.285,
+		chromaIntent: 0.19,
 		chromaClamped: 0,
 		solid: {
-			l: 0.522,
-			c: 0.11,
-			ratio: 5.267,
+			l: 0.5,
+			c: 0.19,
+			ratio: 6.067,
 			movedFromSeed: 0,
 			label: "light",
 			labelL: 0.99,
 			labelC: 0.006,
 			hover: {
-				l: 0.472,
-				c: 0.11
+				l: 0.45,
+				c: 0.19
 			},
 			active: {
-				l: 0.432,
-				c: 0.11
+				l: 0.41,
+				c: 0.19
 			}
 		}
 	},
@@ -853,11 +853,11 @@ export const INPUT_FACTS: InputFacts = {
 	seeds: {
 		colorway: {
 			default: {
-				name: "Jelly Bean",
+				name: "Science Blue",
 				seed: [
-					0.522,
-					0.11,
-					246.74
+					0.5,
+					0.19,
+					264
 				]
 			},
 			amber: {

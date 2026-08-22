@@ -28,6 +28,12 @@ import {
 	usedValue,
 } from "interop/lib/dev/contrast";
 import {
+	PALETTE_CANDIDATES,
+	PALETTE_FLOORS,
+	PALETTE_RAMP,
+	PALETTE_SCALES,
+} from "./palette-preview";
+import {
 	FAMILY_FACTS,
 	HUE_CEILINGS,
 	HUE_SWEEP,
@@ -142,6 +148,91 @@ export class ColorPage {
 	 */
 	protected readonly solidStates = ["solid", "solid-hover", "solid-active"];
 
+	/* ── Palette preview ────────────────────────────────────────────────── */
+
+	/**
+	 * Proposed palettes, rendered but not shipped. Two dials, both value
+	 * decisions, so they get a comparison rather than an argument.
+	 */
+	protected readonly previewRamp = PALETTE_RAMP;
+	protected readonly previewFloors = PALETTE_FLOORS;
+
+	/** One entry per candidate: its scales, and how it scored. */
+	protected readonly previewCandidates = PALETTE_CANDIDATES.map((c) => {
+		const key = `${c.count}-${c.curve.toFixed(2)}`;
+		const scales = PALETTE_SCALES.filter((s) => s.candidate === key);
+		return {
+			key,
+			count: c.count,
+			curve: c.curve,
+			label: `${c.count} steps · ${c.curve === 1 ? "linear" : `curve ${c.curve}`}`,
+			chosen: scales[0]?.chosen ?? false,
+			spread: scales[0]?.spread ?? 0,
+			deltaFirst: scales[0]?.deltaFirst ?? 0,
+			deltaLast: scales[0]?.deltaLast ?? 0,
+			scales,
+		};
+	});
+
+	/** One swatch. No light-dark(): a palette is a ramp, not a scheme pair. */
+	protected previewColor(hue: number, l: number, c: number): string {
+		return `oklch(${l} ${c} ${hue})`;
+	}
+
+	/** The shared distance for a floor, or null when the hues disagree. */
+	protected previewOffset(
+		candidateKey: string,
+		floorId: string,
+	): number | null {
+		const scales = PALETTE_SCALES.filter((s) => s.candidate === candidateKey);
+		const all = scales.map((s) => s.offsets[floorId]?.offset ?? null);
+		return all.length && all.every((v) => v !== null && v === all[0])
+			? all[0]
+			: null;
+	}
+
+	/* ── Palette boards ──────────────────────────────────────────────────── */
+
+	/**
+	 * Every layer, deepest sink first — the same order the generator emits.
+	 *
+	 * The palette is a grid rather than a strip because that is what it is: a
+	 * rank is a contrast target against its own surface, so "contrast 4" is a
+	 * different colour on every layer. A flat swatch row would have to pick one
+	 * and imply the rest.
+	 */
+	protected readonly paletteLayers: readonly string[] = LAYER_KEYS;
+
+	/** Neutral columns: the substrate, then everything drawn on it. */
+	protected readonly neutralColumns = [
+		{ token: "--itx-surface", label: "surface" },
+		...RANK_FACTS.map((r) => ({
+			token: `--itx-contrast-${r.rank}`,
+			label: `contrast-${r.rank}`,
+		})),
+	];
+
+	/** Colourway columns — the roles that re-solve against their layer. */
+	protected readonly colorwayColumns = [
+		{ token: "--itx-colorway-tint", label: "tint" },
+		{ token: "--itx-colorway-on-tint", label: "on-tint" },
+		{ token: "--itx-colorway-border", label: "border" },
+		{ token: "--itx-colorway-text", label: "text" },
+	];
+
+	/** The four that do not move: a brand colour that drifts is not one. */
+	protected readonly colorwayFixed = [
+		{ token: "--itx-colorway-solid", label: "solid" },
+		{ token: "--itx-colorway-on-solid", label: "on-solid" },
+		{ token: "--itx-colorway-solid-hover", label: "solid-hover" },
+		{ token: "--itx-colorway-solid-active", label: "solid-active" },
+	];
+
+	/** A layer key as it reads in the engine: n2 is two sinks below the page. */
+	protected layerLabel(key: string): string {
+		return key.startsWith("n") ? `−${key.slice(1)}` : key;
+	}
+
 	/* ── The gamut envelope ──────────────────────────────────────────────── */
 
 	protected readonly ceilings = HUE_CEILINGS;
@@ -226,8 +317,31 @@ export class ColorPage {
 	 * Deferred a frame: the scheme switch swaps custom-property values, and
 	 * measuring in the mutation callback can catch the old computed values.
 	 */
+	/** Resolved colour per swatch, keyed by its data-swatch id. */
+	private readonly swatches = signal<ReadonlyMap<string, string>>(new Map());
+
+	/**
+	 * The colour a swatch actually resolved to, as the browser reports it.
+	 *
+	 * Read rather than derived: a palette sample that printed the numbers the
+	 * generator emitted would be a picture of the generator, not of the page.
+	 * Every value here came back out of a painted element.
+	 */
+	protected swatchColor(key: string): string {
+		return this.swatches().get(key) ?? "";
+	}
+
 	private remeasure(): void {
 		requestAnimationFrame(() => {
+			const colours = new Map<string, string>();
+			for (const el of Array.from(
+				this.host.nativeElement.querySelectorAll<HTMLElement>("[data-swatch]"),
+			)) {
+				const key = el.dataset["swatch"];
+				if (key) colours.set(key, usedValue(el, "background-color"));
+			}
+			this.swatches.set(colours);
+
 			const next = new Map<string, number>();
 			const probes = Array.from(
 				this.host.nativeElement.querySelectorAll<HTMLElement>("[data-measure]"),
