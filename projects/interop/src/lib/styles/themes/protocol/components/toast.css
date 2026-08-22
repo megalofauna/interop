@@ -47,9 +47,9 @@
 	 * No frame: Carbon's toast carries a border on the inline-start edge
 	 * only (the inline notification is the variant that gets all four).   */
 	--itx-toast-background: var(--itx-surface-above);
-	--itx-toast-foreground: var(--itx-contrast-6);
+	--itx-toast-foreground: var(--itx-neutral-14);
 	--itx-toast-border-width: 0px;
-	--itx-toast-border-color: var(--itx-contrast-3);
+	--itx-toast-border-color: var(--itx-neutral-8);
 
 	/* Carbon's status bar is 3px on the notification (the tree's edge marker
 	   is 4px — different components, different weights in Carbon too). It
@@ -57,7 +57,7 @@
 	   already budgets layout for it, and `border-inline-start` flips in RTL
 	   where a box-shadow offset would not. */
 	--itx-toast-accent-width: 3px;
-	--itx-toast-accent-color: var(--itx-contrast-3);
+	--itx-toast-accent-color: var(--itx-neutral-8);
 
 	/* Carbon insets content 16px on every side (13px padding + the 3px bar on
 	   the inline-start edge). We keep the padding uniform, so the start edge
@@ -91,10 +91,10 @@
 	--itx-toast-actions-gap: var(--itx-spacing-2);
 	--itx-toast-action-padding-block: var(--itx-spacing-2);
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
-	--itx-toast-action-border-color: var(--itx-contrast-3);
+	--itx-toast-action-border-color: var(--itx-neutral-8);
 	--itx-toast-action-font-size: 0.875rem;
 	--itx-toast-action-font-weight: 400;
-	--itx-toast-action-background-hover: var(--itx-contrast-1);
+	--itx-toast-action-background-hover: var(--itx-neutral-2);
 
 	/* ── Close ────────────────────────────────────────────────────────────
 	 * Carbon's close is a 48px flush-corner hit area with a 16px glyph. Ours
@@ -106,7 +106,7 @@
 	--itx-toast-close-size: var(--itx-spacing-8); /* 32px */
 	--itx-toast-close-opacity: 1;
 	--itx-toast-close-opacity-hover: 1;
-	--itx-toast-close-background-hover: var(--itx-contrast-1);
+	--itx-toast-close-background-hover: var(--itx-neutral-2);
 
 	/* ── Focus ────────────────────────────────────────────────────────────
 	 * Carbon's is 2px inset blue. Kept on --itx-colorway-solid and kept outside
@@ -153,7 +153,7 @@
 }
 
 :where([interop-root] interop-toast-item[data-type="loading"]) {
-	--itx-toast-accent-color: var(--itx-contrast-4);
+	--itx-toast-accent-color: var(--itx-neutral-9);
 }
 
 /*

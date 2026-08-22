@@ -97,25 +97,25 @@
 	--itx-cb-tab-padding-inline: var(--itx-spacing-4);
 	--itx-cb-tab-radius: var(--itx-radius);
 	--itx-cb-tab-font-size: var(--itx-font-size-caption);
-	--itx-cb-tab-foreground: var(--itx-contrast-4);
+	--itx-cb-tab-foreground: var(--itx-neutral-9);
 	--itx-cb-tab-transition-duration: var(--itx-duration-fast);
 	--itx-cb-tab-transition-timing: var(--itx-easing-standard);
 
 	/* Tab:Hover  */
 	--itx-cb-tab-background-hover: transparent;
-	--itx-cb-tab-foreground-hover: var(--itx-contrast-5);
+	--itx-cb-tab-foreground-hover: var(--itx-neutral-11);
 	--itx-cb-tab-border-bottom-color-hover: var(--itx-tab-indicator-color-hover);
 
 	/* Tab:Current  */
 	--itx-cb-tab-background-current: transparent;
-	--itx-cb-tab-foreground-current: var(--itx-contrast-6);
+	--itx-cb-tab-foreground-current: var(--itx-neutral-14);
 	--itx-cb-tab-border-bottom-color-current: var(
 		--itx-tab-indicator-color-selected
 	);
 
 	/* Label */
 	--itx-cb-label-padding-inline: 0;
-	--itx-cb-label-foreground: var(--itx-contrast-4);
+	--itx-cb-label-foreground: var(--itx-neutral-9);
 	--itx-cb-label-font-size: var(--itx-font-size-caption);
 	--itx-cb-label-font-weight: 500;
 	--itx-cb-label-letter-spacing: 0.05em;
@@ -138,12 +138,12 @@
 	 * which is also when it is wanted.
 	 */
 	--itx-cb-button-background: transparent;
-	--itx-cb-button-foreground: var(--itx-contrast-5);
+	--itx-cb-button-foreground: var(--itx-neutral-11);
 	--itx-cb-button-background-hover: var(--itx-surface-above);
-	--itx-cb-button-foreground-hover: var(--itx-contrast-6);
+	--itx-cb-button-foreground-hover: var(--itx-neutral-14);
 
 	/* Pressed is the word-wrap toggle's "on" state — the one action here with a
 	   persistent state, so it keeps a fill to say so. */
-	--itx-cb-button-background-pressed: var(--itx-contrast-2);
-	--itx-cb-button-foreground-pressed: var(--itx-contrast-6);
+	--itx-cb-button-background-pressed: var(--itx-neutral-3);
+	--itx-cb-button-foreground-pressed: var(--itx-neutral-14);
 }

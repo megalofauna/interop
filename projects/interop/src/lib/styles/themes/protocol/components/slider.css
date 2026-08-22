@@ -89,14 +89,14 @@
 	[interop-root] interop-slider-range
 ) {
 	/* ── Track ──────────────────────────────────────────────────────────── */
-	--itx-slider-track-color: var(--itx-contrast-2);
+	--itx-slider-track-color: var(--itx-neutral-3);
 	--itx-slider-track-thickness: var(--itx-spacing-0_5); /* 2px */
 
 	/* ── Fill ───────────────────────────────────────────────────────────── */
-	--itx-slider-fill-color: var(--itx-contrast-6);
+	--itx-slider-fill-color: var(--itx-neutral-14);
 
 	/* ── Thumb ──────────────────────────────────────────────────────────── */
-	--itx-slider-thumb-color: var(--itx-contrast-6);
+	--itx-slider-thumb-color: var(--itx-neutral-14);
 	--itx-slider-thumb-size: var(--itx-spacing-3_5); /* 14px, Carbon's handle */
 	--itx-slider-thumb-size-active: var(--itx-spacing-5); /* 20px */
 	/*
@@ -111,7 +111,7 @@
 	--itx-slider-thumb-radius: var(--itx-radius-full);
 
 	/* ── Disabled ───────────────────────────────────────────────────────── */
-	--itx-slider-disabled-color: var(--itx-contrast-2);
+	--itx-slider-disabled-color: var(--itx-neutral-3);
 
 	/* ── Metrics ────────────────────────────────────────────────────────── */
 	/* Length of a VERTICAL slider; a horizontal one takes the full inline size
@@ -128,9 +128,9 @@
 	/* ── Marks ──────────────────────────────────────────────────────────── */
 	/* Read by [interop-slider-marks], which builds the tick gradients in
 	   TypeScript from these tokens. */
-	--itx-slider-mark-color: var(--itx-contrast-3);
+	--itx-slider-mark-color: var(--itx-neutral-8);
 	--itx-slider-mark-thickness: var(--itx-border-width-thick); /* 2px */
-	--itx-slider-mark-minor-color: var(--itx-contrast-2);
+	--itx-slider-mark-minor-color: var(--itx-neutral-3);
 	--itx-slider-mark-minor-thickness: var(--itx-border-width-hairline); /* 1px */
 	--itx-slider-mark-length: var(--itx-spacing-2); /* 8px, across the track */
 }
