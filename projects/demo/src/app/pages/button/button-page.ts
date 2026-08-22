@@ -15,7 +15,10 @@ import {
 import { createActivationHandler } from "interop/lib/utils/activation";
 import { TablerDownload } from "interop/lib/iconsets/tabler/outline/tabler-download";
 import { TablerChevronRight } from "interop/lib/iconsets/tabler/outline/tabler-chevron-right";
+import { TablerChevronDown } from "interop/lib/iconsets/tabler/outline/tabler-chevron-down";
+import { TablerFilter } from "interop/lib/iconsets/tabler/outline/tabler-filter";
 import { TablerPlus } from "interop/lib/iconsets/tabler/outline/tabler-plus";
+import { TablerX } from "interop/lib/iconsets/tabler/outline/tabler-x";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
 import { DemoExample } from "../../components/demo-example/demo-example";
@@ -66,7 +69,14 @@ type TokenEntry = TableGroupRow | { property: string; default: string };
 	styleUrl: "./button-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
-		provideInteropIcons(TablerDownload, TablerChevronRight, TablerPlus),
+		provideInteropIcons(
+			TablerDownload,
+			TablerChevronRight,
+			TablerChevronDown,
+			TablerPlus,
+			TablerX,
+			TablerFilter,
+		),
 	],
 })
 export class ButtonPage {

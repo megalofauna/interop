@@ -104,8 +104,8 @@
 	--itx-chip-background: var(--itx-colorway-solid);
 	--itx-chip-color: var(--itx-colorway-on-solid);
 	--itx-chip-border: none;
-	--itx-chip-background-hover: var(--itx-contrast-2);
-	--itx-chip-color-hover: var(--itx-contrast-6);
+	--itx-chip-background-hover: var(--itx-neutral-3);
+	--itx-chip-color-hover: var(--itx-neutral-14);
 
 	/* ── Paint — selectable (chip-option) ─────────────────────────────────
 	 * The one outlined variant: hairline border at rest, inverse fill when
@@ -142,7 +142,7 @@
 	 * solid fill, so the button announces itself by deepening. The focus ring
 	 * insets so it stays inside the pill rather than orbiting it.           */
 	--itx-chip-remove-background: transparent;
-	--itx-chip-remove-background-hover: var(--itx-contrast-1);
+	--itx-chip-remove-background-hover: var(--itx-neutral-2);
 	--itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2);
 	--itx-chip-remove-border: none;
 	--itx-chip-remove-font-size: var(--itx-spacing-3); /* 16px — Carbon icon */

@@ -15,12 +15,26 @@
    "Co-declaration", and the specs in tokens/elevation.spec.ts. */
 :where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Visual surface ─────────────────────────────────────────────────── */
+	/*
+	 * This inversion does NOT collapse, and that is the interesting part.
+	 *
+	 * The list's filled marker had the same shape — light-dark(rank, other rank)
+	 * — and became one token, because both arms wanted the SAME relationship to
+	 * the page and only a rank forced them apart. Here the arms want genuinely
+	 * different distances: a faint chip two steps off the page in light, the far
+	 * end in dark. Paired steps make that legible rather than removing it, which
+	 * is the honest outcome — the conditional was carrying real intent.
+	 *
+	 * Worth a second look on its own merits: the border also sits at the far
+	 * end, so in dark the chip and its ring are the same colour and the ring does
+	 * nothing. Preserved exactly as it rendered rather than fixed in passing.
+	 */
 	--itx-indicator-background-color: light-dark(
-		var(--itx-contrast-1),
-		var(--itx-contrast-6)
+		var(--itx-neutral-2),
+		var(--itx-neutral-14)
 	);
 
-	--itx-indicator-border-color: var(--itx-contrast-6);
+	--itx-indicator-border-color: var(--itx-neutral-14);
 	--itx-indicator-border-style: solid;
 
 	--itx-indicator-background-image: none;

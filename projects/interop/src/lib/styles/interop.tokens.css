@@ -349,14 +349,14 @@
 	/* --itx-dialog-backdrop-blur: 2px; */
 	/* --itx-dialog-backdrop-color: rgba(0 0 0 / 0.5); */
 	/* --itx-dialog-background: var(--itx-surface-above); */
-	/* --itx-dialog-border-color: var(--itx-contrast-1); */
+	/* --itx-dialog-border-color: var(--itx-neutral-2); */
 	/* --itx-dialog-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
 	/* --itx-dialog-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
 	/* --itx-dialog-enter-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.starter.css */
 	/* --itx-dialog-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.starter.css */
 	/* --itx-dialog-exit-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
 	/* --itx-dialog-exit-easing: ; */ /* falls through to --itx-easing-accelerate — set globally in interop.starter.css */
-	/* --itx-dialog-foreground: var(--itx-contrast-6); */
+	/* --itx-dialog-foreground: var(--itx-neutral-14); */
 	/* --itx-dialog-max-height: 85dvh; */
 	/* --itx-dialog-padding: var(--itx-spacing-4); */
 	/* --itx-dialog-shadow: 0 8px 0 rgba(0 0 0 / 0.2); */
@@ -497,9 +497,9 @@
  */
 [interop-root] {
 	/* --itx-indicator-anchor-name: --itx-indicator-anchor; */ /* (fallback) */
-	/* --itx-indicator-background-color: light-dark( var(--itx-contrast-1), var(--itx-contrast-6) ); */
+	/* --itx-indicator-background-color: light-dark( var(--itx-neutral-2), var(--itx-neutral-14) ); */
 	/* --itx-indicator-background-image: none; */
-	/* --itx-indicator-border-color: var(--itx-contrast-6); */
+	/* --itx-indicator-border-color: var(--itx-neutral-14); */
 	/* --itx-indicator-border-radius: var(--itx-inner-radius, var(--itx-radius)); */ /* (fallback) */
 	/* --itx-indicator-border-style: solid; */
 	/* --itx-indicator-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
@@ -592,7 +592,7 @@
 	/* --itx-popover-arrow-offset: 0px; */
 	/* --itx-popover-arrow-size: 6px; */
 	/* --itx-popover-background: var(--itx-surface-above); */
-	/* --itx-popover-border-color: var(--itx-contrast-3); */
+	/* --itx-popover-border-color: var(--itx-neutral-8); */
 	/* --itx-popover-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
 	/* --itx-popover-border-style: solid; */
 	/* --itx-popover-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
@@ -603,7 +603,7 @@
 	/* --itx-popover-exit-easing: ; */ /* falls through to --itx-easing-accelerate — set globally in interop.starter.css */
 	/* --itx-popover-exit-translate: 0 -0.25rem; */
 	/* --itx-popover-font-size: 0.875rem; */
-	/* --itx-popover-foreground: var(--itx-contrast-6); */
+	/* --itx-popover-foreground: var(--itx-neutral-14); */
 	/* --itx-popover-line-height: 1.4286; */
 	/* --itx-popover-max-height: 70vh; */
 	/* --itx-popover-max-width: min(90vw, 23rem); */
@@ -627,7 +627,7 @@
 	/* --itx-progress-percent: ; */ /* no default — unset unless you set it */
 	/* --itx-progress-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
 	/* --itx-progress-thickness: var(--itx-spacing-2); */
-	/* --itx-progress-track: var(--itx-contrast-2); */
+	/* --itx-progress-track: var(--itx-neutral-3); */
 }
 
 /* ──── components/resizable ────────────────────────────────────────── 27 levers */
@@ -643,7 +643,7 @@
 	/* --itx-resizable-border-radius: var(--itx-radius-2); */
 	/* --itx-resizable-border-style: solid; */
 	/* --itx-resizable-border-width: var(--itx-border-width-hairline); */
-	/* --itx-resizable-handle-color: var(--itx-contrast-3); */
+	/* --itx-resizable-handle-color: var(--itx-neutral-8); */
 	/* --itx-resizable-handle-color-active: ; */ /* inherits --itx-resizable-handle-color */
 	/* --itx-resizable-handle-color-hover: ; */ /* inherits --itx-resizable-handle-color */
 	/* --itx-resizable-handle-corner-radius: var(--itx-radius-nominal) 0 var(--itx-radius-2) 0; */
@@ -660,7 +660,7 @@
 	/* --itx-resizable-readout-border-radius: var(--itx-radius-2); */
 	/* --itx-resizable-readout-font-family: var(--itx-font-family-mono); */
 	/* --itx-resizable-readout-font-size: var(--itx-fs-xs); */
-	/* --itx-resizable-readout-foreground: var(--itx-contrast-6); */
+	/* --itx-resizable-readout-foreground: var(--itx-neutral-14); */
 	/* --itx-resizable-readout-offset: var(--itx-spacing-2); */
 	/* --itx-resizable-readout-padding: var(--itx-spacing-1) var(--itx-spacing-2); */
 }
@@ -1195,7 +1195,7 @@
 	/* --itx-ic-corner-shape: initial; */ /* (fallback) */
 	/* --itx-ic-font-family: var(--itx-font-family-mono); */
 	/* --itx-ic-font-size: var(--itx-font-size-caption); */
-	/* --itx-ic-foreground: var(--itx-contrast-6); */
+	/* --itx-ic-foreground: var(--itx-neutral-14); */
 	/* --itx-ic-gap: var(--itx-spacing-3); */
 	/* --itx-ic-line-height: 1.4; */
 	/* --itx-ic-padding-block: var(--itx-spacing-1); */
