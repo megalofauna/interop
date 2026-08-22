@@ -540,90 +540,96 @@
 }
 
 /*
- * 12-step preview.
+ * 12-step palette preview.
  *
- * Deliberately styled apart from the boards above: this is a proposal, and it
- * should not be mistakable for the shipping palette while it sits on the same
- * page as one.
+ * Styled apart from the boards above: it is a proposal, and should not be
+ * mistakable for the shipping palette while it sits on the same page as one.
  */
-.palette-rule {
-	padding: var(--itx-spacing-4);
-	border-inline-start: var(--itx-border-width-heavy) solid
-		var(--itx-colorway-border);
-	background-color: var(--itx-contrast-1);
-	border-radius: var(--itx-radius-sm);
-
-	strong {
-		display: block;
-		margin-block-end: var(--itx-spacing-2);
-	}
-
-	p {
-		margin-block: 0 var(--itx-spacing-2);
-		max-inline-size: var(--itx-measure);
-	}
-
-	ul {
-		margin: 0;
-		padding-inline-start: var(--itx-spacing-5);
-	}
-}
-
-.palette-scale {
+.palette-ramp {
 	margin: var(--itx-spacing-6) 0 0;
 
 	figcaption {
 		display: flex;
 		align-items: baseline;
+		flex-wrap: wrap;
 		gap: var(--itx-spacing-2);
 		margin-block-end: var(--itx-spacing-2);
 		font-size: var(--itx-font-size-caption);
 
-		span {
+		span,
+		code {
 			color: var(--itx-contrast-4);
 		}
 
 		code {
-			color: var(--itx-contrast-4);
 			font-family: var(--itx-font-family-mono);
 		}
 	}
 
+	&__title {
+		margin-block: var(--itx-spacing-8) var(--itx-spacing-2);
+		font-size: var(--itx-font-size-label);
+		font-weight: 500;
+	}
+
+	/* No gaps. A ramp is continuous, and gaps would read as twelve swatches
+	   rather than one gradation — which is the thing being judged. */
 	&__strip {
 		display: grid;
 		grid-template-columns: repeat(12, minmax(0, 1fr));
-		gap: var(--itx-spacing-1);
-		overflow-x: auto;
+		border-radius: var(--itx-radius-sm);
+		overflow: hidden;
 	}
 
 	&__step {
 		display: flex;
 		flex-direction: column;
-		gap: 2px;
 		min-inline-size: 0;
 
-		b {
-			font-size: var(--itx-font-size-caption);
+		b,
+		small {
+			padding-inline: var(--itx-spacing-1);
 			font-family: var(--itx-font-family-mono);
+		}
+
+		b {
+			margin-block-start: var(--itx-spacing-1);
+			font-size: var(--itx-font-size-caption);
 			font-weight: 500;
 		}
 
 		small {
-			font-size: 0.6875rem;
+			font-size: 0.625rem;
 			color: var(--itx-contrast-4);
-			line-height: 1.2;
-		}
-
-		/* The band boundary: 1–5 is elevation, 6–12 is everything drawn on it. */
-		&.is-band-edge {
-			padding-inline-start: var(--itx-spacing-2);
-			border-inline-start: 1px solid var(--itx-contrast-3);
 		}
 	}
 
 	&__chip {
-		block-size: var(--itx-sz-12);
-		border-radius: var(--itx-radius-sm);
-		border: 1px solid var(--itx-contrast-2);
+		block-size: var(--itx-sz-16);
+	}
+
+	&__rules {
+		border-collapse: collapse;
+		font-size: var(--itx-font-size-caption);
+
+		th,
+		td {
+			text-align: start;
+			padding: var(--itx-spacing-1) var(--itx-spacing-3);
+			border-block-end: 1px solid var(--itx-contrast-2);
+		}
+
+		thead th {
+			color: var(--itx-contrast-4);
+			font-weight: 400;
+		}
+
+		tbody th {
+			font-weight: 400;
+		}
+
+		td {
+			font-family: var(--itx-font-family-mono);
+		}
 	}
 }

@@ -28,9 +28,8 @@ import {
 	usedValue,
 } from "interop/lib/dev/contrast";
 import {
-	PALETTE_BANDS,
-	PALETTE_INTENTS,
-	PALETTE_RULE,
+	PALETTE_FLOORS,
+	PALETTE_RAMP,
 	PALETTE_SCALES,
 } from "./palette-preview";
 import {
@@ -151,51 +150,45 @@ export class ColorPage {
 	/* ── 12-step preview ─────────────────────────────────────────────────── */
 
 	/**
-	 * A proposed scale, rendered but not shipped.
+	 * A proposed palette, rendered but not shipped.
 	 *
-	 * Nothing here is a token. The generator that produces it writes no CSS —
-	 * the point is to look at the model before committing to it, which is why
-	 * every swatch is composed inline from the emitted numbers rather than read
-	 * back from a custom property.
+	 * Nothing here is a token, and nothing here was positioned by a contrast
+	 * target. The steps are evenly spaced in OKLCH lightness — a ramp, which is
+	 * what a palette is — and the contrast guidance below was measured off them
+	 * afterwards rather than designed into them.
 	 */
 	protected readonly previewScales = PALETTE_SCALES;
-	protected readonly previewBands = PALETTE_BANDS;
-	protected readonly previewRule = PALETTE_RULE;
+	protected readonly previewFloors = PALETTE_FLOORS;
+	protected readonly previewRamp = PALETTE_RAMP;
 
-	/** Step numbers in order, both bands. */
-	protected readonly previewSteps: readonly number[] = [
-		...PALETTE_BANDS.background,
-		...PALETTE_BANDS.foreground,
-	];
+	/** Even spacing, stated once: what the ramp actually steps by. */
+	protected readonly previewDelta =
+		Math.round(
+			((PALETTE_RAMP.lightest - PALETTE_RAMP.darkest) /
+				(PALETTE_SCALES[0].steps.length - 1)) *
+				1000,
+		) / 1000;
 
-	/** What a foreground step is for. Background steps are elevation. */
-	protected previewIntent(step: number): string {
-		if (PALETTE_BANDS.background.includes(step)) {
-			return step === 1 ? "page" : `layer ${step - 1}`;
-		}
-		return PALETTE_INTENTS.find((i) => i.step === step)?.intent ?? "";
+	/** One swatch. No light-dark(): a palette is a ramp, not a scheme pair. */
+	protected previewColor(scaleId: string, step: number): string {
+		const scale = PALETTE_SCALES.find((s) => s.id === scaleId);
+		const s = scale?.steps.find((x) => x.step === step);
+		return s ? `oklch(${s.l} ${s.c} ${scale!.hue})` : "transparent";
+	}
+
+	/** Whether the offset rule holds for every pair at this floor. */
+	protected previewOffset(scaleId: string, floorId: string): string {
+		const o = PALETTE_SCALES.find((s) => s.id === scaleId)?.offsets[floorId];
+		return o?.offset == null ? "—" : `${o.offset} steps`;
 	}
 
 	/**
-	 * One swatch, both schemes.
-	 *
-	 * light-dark() rather than two boards: the scale is scheme-paired by design
-	 * — step 12 means "highest contrast text" in both — and showing that as one
-	 * swatch that changes is the claim.
+	 * The offsets, if every scale agrees. They do, which is the finding: an even
+	 * ramp gives one rule for every hue rather than a table per family.
 	 */
-	protected previewColor(scaleId: string, step: number): string {
-		const scale = PALETTE_SCALES.find((s) => s.id === scaleId);
-		if (!scale) return "transparent";
-		const at = (scheme: "light" | "dark"): string => {
-			const s = scale.schemes[scheme].steps[String(step)];
-			return `oklch(${s.l} ${s.c} ${scale.hue})`;
-		};
-		return `light-dark(${at("light")}, ${at("dark")})`;
-	}
-
-	/** Whether a step sits in the background band — drives the divider. */
-	protected isBackgroundStep(step: number): boolean {
-		return PALETTE_BANDS.background.includes(step);
+	protected sharedOffset(floorId: string): number | null {
+		const all = PALETTE_SCALES.map((s) => s.offsets[floorId]?.offset ?? null);
+		return all.every((v) => v !== null && v === all[0]) ? all[0] : null;
 	}
 
 	/* ── Palette boards ──────────────────────────────────────────────────── */

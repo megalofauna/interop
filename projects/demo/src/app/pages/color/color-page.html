@@ -603,79 +603,96 @@
 		heading="A 12-step palette — proposed, not shipped"
 	>
 		<p description class="demo-section__lede">
-			A model under consideration, rendered so it can be judged before it is
-			adopted. Nothing here is a token: the generator behind it writes no CSS,
-			and every swatch is composed from the emitted numbers rather than read
-			back from a custom property. The system on this page above is what
+			A palette, and then a verdict. Twelve steps evenly spaced in OKLCH
+			lightness — nothing positioned by a contrast target — and the guidance
+			underneath measured off them afterwards. Nothing here is a token; the
+			generator behind it writes no CSS. The system above this section is what
 			actually ships.
 		</p>
 
 		<p>
-			The scale is <strong>banded, not monotonic</strong>. Radix ascends in
-			lightness; Interop's elevation moves toward light in
-			<em>both</em> schemes, so a monotonic scale would run elevation backwards.
-			Steps 1–5 are the background band ordered by elevation — step 1 is the
-			page — and 6–12 are the foreground band ordered by increasing contrast
-			<em>against</em> that band. What ascends is not lightness but contrast
-			where it is read.
+			Even in lightness is even to the eye, which is what OKLCH is for. The ramp
+			runs L {{ previewRamp.lightest }} to {{ previewRamp.darkest }}, stepping
+			{{ previewDelta }} each time. It stops short of white and black on
+			purpose: those are not palette colours, and a ramp that reaches them
+			spends two of its twelve steps on values nothing should use.
 		</p>
 
-		<div class="palette-rule">
-			<strong>The whole rule</strong>
-			<p>
-				Every foreground step was solved against the <em>worst</em> background
-				in the band, so the guidance is three constants rather than a lookup
-				table — and it holds for all four hues below, in both schemes.
-			</p>
-			<ul>
-				<li>
-					Borders — step <strong>{{ previewRule["border"] }}</strong>
-				</li>
-				<li>
-					Text — step <strong>{{ previewRule["text"] }}</strong>
-				</li>
-				<li>
-					High-contrast text — step <strong>{{ previewRule["high"] }}</strong>
-				</li>
-			</ul>
-		</div>
+		<p>
+			Chroma cannot be even. A hue holds most of its colour in the middle of the
+			range and almost none at the ends, so chroma follows a curve that peaks
+			mid-scale and is clamped to what each step can actually display. The seed
+			sets intensity; the gamut sets what is reachable.
+		</p>
 
 		@for (scale of previewScales; track scale.id) {
-			<figure class="palette-scale">
+			<figure class="palette-ramp">
 				<figcaption>
 					<strong>{{ scale.id }}</strong>
 					@if (scale.note) {
 						<span>{{ scale.note }}</span>
 					}
-					<code>hue {{ scale.hue }}</code>
+					<code>hue {{ scale.hue }} · ceiling {{ scale.ceiling }}</code>
 				</figcaption>
 
-				<div class="palette-scale__strip">
-					@for (step of previewSteps; track step) {
-						<span
-							class="palette-scale__step"
-							[class.is-background]="isBackgroundStep(step)"
-							[class.is-band-edge]="step === 6"
-						>
+				<div class="palette-ramp__strip">
+					@for (s of scale.steps; track s.step) {
+						<span class="palette-ramp__step">
 							<span
-								class="palette-scale__chip"
-								[style.background-color]="previewColor(scale.id, step)"
+								class="palette-ramp__chip"
+								[style.background-color]="previewColor(scale.id, s.step)"
 							></span>
-							<b>{{ step }}</b>
-							<small>{{ previewIntent(step) }}</small>
+							<b>{{ s.step }}</b>
+							<small>{{ s.l }}</small>
 						</span>
 					}
 				</div>
 			</figure>
 		}
 
+		<h3 class="palette-ramp__title">What the ramp turns out to guarantee</h3>
 		<p>
-			The hostile teal is in there deliberately: its chroma ceiling is
-			<code>.145</code>, the lowest anywhere on the circle, and it still
-			produces a compliant scale. Watch its step 12 though — high-contrast text
-			in a saturated hue desaturates almost to grey, because that lightness
-			cannot hold chroma. That is the model telling the truth rather than a
-			defect, but it is worth seeing before committing.
+			Not a rule anyone chose — the smallest step distance that clears each
+			floor for <em>every</em> pair on the ramp, computed from all 144 pairings
+			per scale. Every hue agrees, which is the useful part: one distance, not a
+			lookup table per family.
+		</p>
+
+		<table class="palette-ramp__rules">
+			<thead>
+				<tr>
+					<th scope="col">Floor</th>
+					<th scope="col">Distance</th>
+					@for (scale of previewScales; track scale.id) {
+						<th scope="col">{{ scale.id }}</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for (floor of previewFloors; track floor.id) {
+					<tr>
+						<th scope="row">{{ floor.label }}</th>
+						<td>
+							@if (sharedOffset(floor.id); as shared) {
+								<strong>any {{ shared }} steps apart</strong>
+							} @else {
+								<em>varies by hue</em>
+							}
+						</td>
+						@for (scale of previewScales; track scale.id) {
+							<td>{{ previewOffset(scale.id, floor.id) }}</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+
+		<p>
+			So <strong>step 4 on step 10</strong> is body text, and
+			<strong>step 3 on step 8</strong> is a border — at any point on the ramp,
+			in any of these hues. The teal is included because its chroma ceiling is
+			the lowest anywhere on the circle; it obeys the same distances, because
+			the distances come from lightness and lightness is what the ramp controls.
 		</p>
 	</demo-section>
 
