@@ -267,6 +267,33 @@ const SWEEP = {
  * Reported ratios stay honest — they are computed unbiased, so the table says
  * what a rank measures, not what it was solved against.
  */
+/**
+ * How much hue a derived status role carries, and which neutral rank it rides.
+ *
+ * The lightness always comes from the rank, so these chroma values are the only
+ * numbers deciding how coloured a status surface looks — and they carry no
+ * contrast consequence, because the ratio belongs to the rank. Raise the tint
+ * and callouts get more saturated; nothing else moves.
+ */
+const STATUS_ROLES = [
+	/* A wash. Rank 1 is solved away from its own surface at every layer, so a
+	   tint riding it cannot invert — which is what the old fixed value did
+	   from layer 2 down. */
+	{ role: "tint", rank: 1, chroma: 0.05 },
+	/* Text on that wash. Rank 5 against a rank-1 ground measures 5.79:1 at
+	   worst (dark, layer 4). */
+	{ role: "on-tint", rank: 5, chroma: 0.02 },
+	/* The accent rule. Rank 4, not rank 3, even though its floor is 3:1: rank 3
+	   is solved to EXACTLY 3:1, and adding chroma at a fixed lightness shifts
+	   luminance enough to eat that margin — measured at 2.947:1 worst, and no
+	   chroma low enough to fix it still reads as the status colour. Rank 4
+	   leaves 4.43:1 against a 3:1 floor, and a status bar carrying more
+	   emphasis than the minimum is the right way to be wrong. */
+	{ role: "border", rank: 4, chroma: 0.08 },
+	/* Status text on the plain surface. 7.04:1 worst against a 4.5 floor. */
+	{ role: "text", rank: 5, chroma: 0.02 },
+];
+
 /** Minimum lightness separation between adjacent surfaces, so layers read apart. */
 const MIN_SURFACE_STEP = 0.02;
 
@@ -690,6 +717,15 @@ function layerLightnessJs(scheme, n) {
 
 const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
 
+/** The status families, by role name. Both palettes publish the same four. */
+const STATUS_NAMES = [
+	...new Set(
+		familyList()
+			.filter((f) => f.role !== "colorway")
+			.map((f) => f.role),
+	),
+];
+
 /* ── Build the accent families ──────────────────────────────────────────── */
 
 /** Every family that gets generated: the colourways plus each status set. */
@@ -1056,15 +1092,44 @@ function emitAccents() {
 			`\t--itx-ramp-${name}-solid-active-l: ${family.solid.active.L.toFixed(3)};`,
 			`\t--itx-ramp-${name}-solid-active-c: ${family.solid.active.C.toFixed(3)};`,
 		];
-		for (const role of ACCENT_ROLES) {
-			for (const scheme of ["light", "dark"]) {
-				const solved = roleOf(family.layers[scheme]["0"], role);
-				rows.push(...accentNumbers(`${name}-${role}-${scheme}`, solved));
-			}
-		}
 		// Composition travels with the numbers — see compose().
 		for (const role of SOLID_ROLES) rows.push(compose(name, role, true));
-		for (const role of ACCENT_ROLES) rows.push(compose(name, role, false));
+
+		/*
+		 * The surface-relative roles are DERIVED, not solved.
+		 *
+		 * They used to be solved once against layer 0 and emitted as fixed
+		 * numbers, which meant they were only correct at layer 0. Measured on
+		 * the dark ramp, a callout's tint inverted from layer 2 — reading as a
+		 * recess where it means a lift — and its accent rule fell under 3:1 from
+		 * layer 1. Nothing caught it, because the generator never claimed a floor
+		 * anywhere but layer 0, so there was nothing for the render check to
+		 * check.
+		 *
+		 * Solving them per layer would have worked and cost four times the
+		 * tokens. Riding the neutral ranks costs none: the ranks are already
+		 * re-solved at every depth, so a role that borrows a rank's LIGHTNESS
+		 * inherits its guarantee and wears the status hue on top. Relative colour
+		 * syntax does exactly that, and takes a light-dark() origin, so one
+		 * declaration serves both schemes.
+		 *
+		 *   tint     rank 1, the neutral wash. Cannot invert, because rank 1 is
+		 *            solved away from its own surface at every layer.
+		 *   on-tint  rank 5. Measured against a rank-1 ground it clears 4.5:1
+		 *            everywhere, worst case 5.79:1 at dark layer 4.
+		 *   border   rank 3, the 3:1 edge. Inherits that floor at every depth.
+		 */
+		/*
+		 * The surface-relative roles are NOT here. They are derived from the
+		 * neutral ranks, and a derivation has to sit where those ranks are
+		 * re-declared — see statusRoles(), emitted per layer by the engine.
+		 *
+		 * Declaring them here would look right and be frozen: a var() inside a
+		 * custom property is substituted where the property is DECLARED, so a
+		 * derivation written at [interop-root] bakes layer 0's rank and inherits
+		 * that value everywhere. Verified in a browser rather than assumed —
+		 * root and depth returned the identical colour.
+		 */
 		return rows;
 	};
 
@@ -1205,6 +1270,27 @@ function tokenSet(i, indent) {
 		);
 	}
 
+	/*
+	 * Status roles, derived from the ranks declared just above.
+	 *
+	 * They ride a neutral rank's LIGHTNESS and wear the status hue, so they
+	 * inherit that rank's guarantee at every depth for free. Solving them per
+	 * layer instead would have cost four times the tokens; this costs one line
+	 * each and cannot drift, because the thing it borrows from cannot.
+	 *
+	 * They must be re-declared here, in the same block as the ranks, for the
+	 * reason the whole engine re-declares everything: a var() inside a custom
+	 * property resolves where it is DECLARED. Written once at [interop-root]
+	 * these freeze at layer 0 — measured, not assumed.
+	 */
+	for (const status of STATUS_NAMES) {
+		for (const { role, rank, chroma } of STATUS_ROLES) {
+			out.push(
+				`${t}--itx-${status}-${role}: oklch(\n` +
+					`${t}\tfrom var(--itx-contrast-${rank}) l ${chroma} var(--itx-${status}-hue)\n${t});`,
+			);
+		}
+	}
 	return out.join("\n");
 }
 
@@ -1389,9 +1475,10 @@ function contrastPairs() {
 				});
 			}
 
-			for (const family of families) {
+			// The COLOURWAY re-solves per layer, so its roles are checked as solved.
+			for (const family of families.filter((f) => f.role === "colorway")) {
 				const cell = family.layers[scheme][layer];
-				if (!cell) continue; // statuses are solved at layer 0 only
+				if (!cell) continue;
 				for (const [role, floor] of [
 					["border", ACCENT.border],
 					["text", ACCENT.text],
@@ -1403,13 +1490,47 @@ function contrastPairs() {
 						floor,
 					});
 				}
-				// Text on a tint is measured against the TINT, not the surface.
 				pairs.push({
 					label: `${scheme} layer ${layer} ${family.id} on-tint`,
 					fg: { l: cell.onTint.L, c: cell.onTint.C, h: family.hue },
 					bg: { l: cell.tint.L, c: cell.tint.C, h: family.hue },
 					floor: ACCENT.onTint,
 				});
+			}
+
+			/*
+			 * STATUS roles are derived, so they are checked as derived — the same
+			 * arithmetic the CSS performs, against the same rank.
+			 *
+			 * Checking their old solved values here would be worse than checking
+			 * nothing: those numbers no longer ship, so the pairing would pass
+			 * while verifying a colour the browser never paints. That is the exact
+			 * failure this manifest exists to prevent, one level up.
+			 *
+			 * And because the derivation is defined at every layer, these pairings
+			 * now exist at every layer — which is what the old shape could not do,
+			 * and why a tint that inverted from layer 2 went uncaught.
+			 */
+			const rankL = (n) => ladder[scheme][layer].ranks[n].L;
+			const tintSpec = STATUS_ROLES.find((r) => r.role === "tint");
+			for (const family of families.filter((f) => f.role !== "colorway")) {
+				const tintBg = {
+					l: rankL(tintSpec.rank),
+					c: tintSpec.chroma,
+					h: family.hue,
+				};
+				for (const { role, rank, chroma } of STATUS_ROLES) {
+					// The tint is a wash: a perceptibility delta, not a ratio, and it
+					// cannot invert now that it rides a rank. Nothing to assert here.
+					if (role === "tint") continue;
+					pairs.push({
+						label: `${scheme} layer ${layer} ${family.id} ${role}`,
+						fg: { l: rankL(rank), c: chroma, h: family.hue },
+						// on-tint sits on the tint; the rest sit on the surface.
+						bg: role === "on-tint" ? tintBg : bg,
+						floor: role === "border" ? ACCENT.border : ACCENT.text,
+					});
+				}
 			}
 		}
 	}
