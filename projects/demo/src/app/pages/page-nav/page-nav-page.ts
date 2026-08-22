@@ -115,13 +115,13 @@ export class PageNavPage {
 		{ property: "--itx-pn-gap", default: "0 — gap between horizontal links" },
 		{ property: "--itx-pn-z-index", default: "10" },
 		{ property: "--itx-pn-nav-rule-width", default: "2px" },
-		{ property: "--itx-pn-nav-rule-color", default: "var(--itx-contrast-2)" },
+		{ property: "--itx-pn-nav-rule-color", default: "var(--itx-neutral-3)" },
 		{ property: "--itx-pn-font-size", default: "var(--itx-font-size-body)" },
-		{ property: "--itx-pn-link-color", default: "var(--itx-contrast-4)" },
-		{ property: "--itx-pn-link-color-hover", default: "var(--itx-contrast-6)" },
+		{ property: "--itx-pn-link-color", default: "var(--itx-neutral-9)" },
+		{ property: "--itx-pn-link-color-hover", default: "var(--itx-neutral-14)" },
 		{
 			property: "--itx-pn-link-color-active",
-			default: "var(--itx-contrast-6)",
+			default: "var(--itx-neutral-14)",
 		},
 		{
 			property: "--itx-pn-link-padding-block",

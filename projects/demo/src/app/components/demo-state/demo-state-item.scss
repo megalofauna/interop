@@ -7,17 +7,17 @@
 }
 
 :host + :host {
-	border-top: 1px solid var(--itx-contrast-3);
+	border-top: 1px solid var(--itx-neutral-8);
 }
 
 .demo-state-item__label {
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 	white-space: nowrap;
 }
 
 .demo-state-item__value {
 	font-family: var(--itx-font-family-mono);
 	font-weight: 500;
-	color: var(--itx-contrast-6);
+	color: var(--itx-neutral-14);
 	text-align: end;
 }

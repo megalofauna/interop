@@ -2,7 +2,7 @@
 	display: block;
 	position: relative;
 	overflow: clip;
-	border: 1px solid var(--itx-contrast-1);
+	border: 1px solid var(--itx-neutral-2);
 	border-radius: var(--itx-radius-none);
 }
 
@@ -14,7 +14,7 @@
 	margin: var(--itx-spacing-2) 0 0 0;
 	font-size: var(--itx-font-size-body-lg);
 	font-weight: 400;
-	color: var(--itx-contrast-6);
+	color: var(--itx-neutral-14);
 
 	& + p {
 		margin-block-start: var(--itx-spacing-4);
@@ -60,7 +60,7 @@
 .demo-example__reference,
 .demo-example__code,
 .demo-example__output {
-	border-top: 1px solid var(--itx-contrast-1);
+	border-top: 1px solid var(--itx-neutral-2);
 }
 
 .demo-example__code {
