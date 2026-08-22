@@ -82,3 +82,10 @@ Three ways out, in preference order:
 
 Recommend 1. Decide before button and stepper, which read the most ranks and
 render at the widest spread of depths.
+
+**Decision (2026-08-22): deferred.** No fix now. Guaranteed contrast at any
+depth stays a goal, but not a day-one one, and none of the three options is
+worth committing to before the palettes have been used in real contexts long
+enough to show what the problem actually looks like. Point-fix what the audit
+catches; revisit once button and stepper are moved and the palette has been
+lived in.
