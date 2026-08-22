@@ -212,6 +212,110 @@
 		</table>
 	</demo-section>
 
+	<demo-section id="palette" heading="The palette, as rendered">
+		<p description class="demo-section__lede">
+			Every value the system produces, read back out of a painted element rather
+			than printed from the generator — so this is a picture of the page, not of
+			the script that wrote it. Switch the colour scheme and every number here
+			changes.
+		</p>
+
+		<h3 class="color-palette__title">Neutral</h3>
+		<p>
+			A grid, not a strip. A rank is a contrast target against
+			<em>its own</em> surface, so <code>contrast-4</code> is a different colour
+			on every layer — a single row would have to pick one and imply the rest.
+			Sinks are negative; the page is 0.
+		</p>
+
+		<div
+			class="color-palette"
+			role="table"
+			aria-label="Neutral palette by layer"
+		>
+			<div class="color-palette__row color-palette__row--head" role="row">
+				<span role="columnheader">layer</span>
+				@for (col of neutralColumns; track col.token) {
+					<span role="columnheader">{{ col.label }}</span>
+				}
+			</div>
+			@for (layer of paletteLayers; track layer) {
+				<div [attr.itx-layer]="layer" class="color-palette__row" role="row">
+					<span class="color-palette__layer" role="rowheader">
+						{{ layerLabel(layer) }}
+					</span>
+					@for (col of neutralColumns; track col.token) {
+						<span class="color-palette__cell" role="cell">
+							<span
+								class="color-palette__chip"
+								[style.background-color]="'var(' + col.token + ')'"
+								[attr.data-swatch]="'n-' + layer + '-' + col.label"
+							></span>
+							<code>{{ swatchColor("n-" + layer + "-" + col.label) }}</code>
+						</span>
+					}
+				</div>
+			}
+		</div>
+
+		<h3 class="color-palette__title">Colourway</h3>
+		<p>
+			The same treatment for the seeded blue. These four roles re-solve against
+			whatever surface they land on, which is why they are laid out the same
+			way.
+		</p>
+
+		<div
+			class="color-palette"
+			role="table"
+			aria-label="Colourway palette by layer"
+		>
+			<div class="color-palette__row color-palette__row--head" role="row">
+				<span role="columnheader">layer</span>
+				@for (col of colorwayColumns; track col.token) {
+					<span role="columnheader">{{ col.label }}</span>
+				}
+			</div>
+			@for (layer of paletteLayers; track layer) {
+				<div [attr.itx-layer]="layer" class="color-palette__row" role="row">
+					<span class="color-palette__layer" role="rowheader">
+						{{ layerLabel(layer) }}
+					</span>
+					@for (col of colorwayColumns; track col.token) {
+						<span class="color-palette__cell" role="cell">
+							<span
+								class="color-palette__chip"
+								[style.background-color]="'var(' + col.token + ')'"
+								[attr.data-swatch]="'c-' + layer + '-' + col.label"
+							></span>
+							<code>{{ swatchColor("c-" + layer + "-" + col.label) }}</code>
+						</span>
+					}
+				</div>
+			}
+		</div>
+
+		<h3 class="color-palette__title">Fixed</h3>
+		<p>
+			Four that do not move with depth or scheme, because a brand colour that
+			drifts as it nests is not a brand colour.
+		</p>
+
+		<div class="color-palette__fixed">
+			@for (col of colorwayFixed; track col.token) {
+				<span class="color-palette__cell" role="cell">
+					<span
+						class="color-palette__chip color-palette__chip--wide"
+						[style.background-color]="'var(' + col.token + ')'"
+						[attr.data-swatch]="'f-' + col.label"
+					></span>
+					<strong>{{ col.label }}</strong>
+					<code>{{ swatchColor("f-" + col.label) }}</code>
+				</span>
+			}
+		</div>
+	</demo-section>
+
 	<demo-section id="accents" heading="Accent families">
 		<p description class="demo-section__lede">
 			Five families, each generated from <em>one</em> seed colour. The hue

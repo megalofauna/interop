@@ -453,3 +453,88 @@
 		font-family: var(--itx-font-family-mono);
 	}
 }
+
+/*
+ * Palette boards.
+ *
+ * Each row IS a layer — it carries itx-layer, so the chips inside resolve
+ * against that depth rather than being told what colour to be. The row paints
+ * its own surface for the same reason: a swatch of contrast-4 on the wrong
+ * ground is a swatch of nothing.
+ */
+.color-palette {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-spacing-1);
+	overflow-x: auto;
+
+	&__title {
+		margin-block: var(--itx-spacing-6) var(--itx-spacing-2);
+		font-size: var(--itx-font-size-label);
+		font-weight: 500;
+	}
+
+	&__row {
+		display: grid;
+		grid-template-columns: 3rem repeat(auto-fit, minmax(7.5rem, 1fr));
+		gap: var(--itx-spacing-2);
+		align-items: center;
+		padding: var(--itx-spacing-2);
+		border-radius: var(--itx-radius-sm);
+		min-inline-size: max-content;
+
+		&--head {
+			padding-block: 0;
+			font-size: var(--itx-font-size-caption);
+			color: var(--itx-contrast-4);
+			font-family: var(--itx-font-family-mono);
+		}
+	}
+
+	&__layer {
+		font-family: var(--itx-font-family-mono);
+		font-size: var(--itx-font-size-caption);
+		color: var(--itx-contrast-4);
+	}
+
+	&__cell {
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-spacing-1);
+		min-inline-size: 0;
+
+		code {
+			font-size: 0.6875rem;
+			color: var(--itx-contrast-4);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+
+	/* A hairline so a chip that matches its ground is still a rectangle. */
+	&__chip {
+		block-size: var(--itx-sz-8);
+		border-radius: var(--itx-radius-sm);
+		border: 1px solid var(--itx-contrast-2);
+
+		&--wide {
+			block-size: var(--itx-sz-12);
+		}
+	}
+
+	&__fixed {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--itx-spacing-4);
+
+		.color-palette__cell {
+			flex: 1 1 10rem;
+		}
+
+		strong {
+			font-size: var(--itx-font-size-caption);
+			font-weight: 500;
+		}
+	}
+}
