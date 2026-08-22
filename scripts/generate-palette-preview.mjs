@@ -82,9 +82,15 @@ const CANDIDATES = [
 	   distance per floor. Past 1.25 the rule starts fragmenting. */
 	{ count: 12, curve: 1.25, note: "eased" },
 	{ count: 14, curve: 1.0, note: "linear" },
-	/* The best of everything tried: evenness 1.39, and 7/8/10 holds for all
-	   five hues. More room than 12 and a rule that still fits on one line. */
-	{ count: 14, curve: 1.3, note: "eased" },
+	/*
+	 * CHOSEN, 2026-08-21, on the browser rather than the numbers.
+	 *
+	 * Best evenness of anything that keeps a single distance per floor (1.39,
+	 * against 2.19 for the same length linear), more room than 12, and 7/8/10
+	 * holds for all five hues including the 215 teal. Sixteen steps is past the
+	 * ceiling at any curve — the rule fragments and needs per-hue exceptions.
+	 */
+	{ count: 14, curve: 1.3, note: "eased", chosen: true },
 ];
 
 /**
@@ -207,7 +213,7 @@ function seededScales() {
 
 /** Every seeded hue, at every candidate length. */
 const scales = [];
-for (const { count, curve } of CANDIDATES) {
+for (const { count, curve, chosen } of CANDIDATES) {
 	for (const seed of seededScales()) {
 		const steps = buildScale(seed, count, curve);
 		const m = matrix(steps, seed.hue);
@@ -224,6 +230,7 @@ for (const { count, curve } of CANDIDATES) {
 			count,
 			curve,
 			note: seed.note,
+			chosen: chosen === true,
 			candidate: `${count}-${curve.toFixed(2)}`,
 			/** Ratio of the largest adjacent luminance jump to the smallest. */
 			spread: round3(spreadOf(steps, seed.hue)),
@@ -242,7 +249,7 @@ for (const { count, curve } of CANDIDATES) {
 	const here = scales.filter((s) => s.count === count && s.curve === curve);
 	const n = here[0];
 	console.log(
-		`  ${count} steps, curve ${curve.toFixed(2)}` +
+		`  ${count} steps, curve ${curve.toFixed(2)}${here[0].chosen ? "  ← CHOSEN" : ""}` +
 			`   ΔL ${n.deltaFirst} → ${n.deltaLast}   evenness ${n.spread} (1.0 = perfect)`,
 	);
 	for (const f of FLOORS) {
@@ -286,6 +293,8 @@ export interface PaletteScale {
 	readonly curve: number;
 	/** Stable key for grouping: "14-1.30". */
 	readonly candidate: string;
+	/** The candidate settled on. */
+	readonly chosen: boolean;
 	/** Largest adjacent luminance jump over the smallest. 1.0 = perfectly even. */
 	readonly spread: number;
 	readonly deltaFirst: number;

@@ -159,3 +159,65 @@ The palette rewrite itself (stages 2, 4, 5) still carries every risk in the plan
 section — most of all that the system being replaced is six days old. But Q3 materially changes
 the calculus: "borders 8, text 11, high-contrast 12" is a system a developer can hold in their
 head, which is the thing the current one demonstrably is not.
+
+---
+
+## Decided, 2026-08-21 — 14 steps, curve 1.30
+
+Settled in the browser, against the four candidates rendered on the demo's
+Colour page.
+
+### What the shape turned out to be
+
+Not what the spike proposed. The spike's band model solved steps 6–12
+*backwards* from contrast floors — step 8 was "whatever clears 3:1 against the
+worst background" — so each step was a separate answer and the ramp did not
+gradate. It read as neither a palette nor the role system. Chris called it: *"a
+hybrid approach that doesn't really accomplish either."*
+
+The shape now is a **palette, then a verdict**. Steps are placed by lightness
+alone; contrast is measured afterwards and the guidance is an output.
+
+### The two dials
+
+**Length.** 12 matched Radix, not the common count — ten is (Carbon, Ant, Open
+Color, Bootstrap), Tailwind ships 11 and got there by adding to both ends
+twice. Measured here, the single-distance rule survives 12 and 14 and
+**fragments at 16**, where the hues stop agreeing and need per-hue exceptions.
+
+**Curve.** Even in OKLCH lightness is *not* even to the eye. On a linear ramp
+the last step removes **2.86×** the light of the one before it while the first
+removes 1.26× — it measures uniform and reads as accelerating into the dark.
+This is why neither Radix nor Tailwind is linear in any single space.
+
+The dials fight: the tidy rule was partly an artefact of the ramp being uneven.
+Each candidate below is the most easing that length can take while every hue
+still shares one distance per floor.
+
+| candidate | evenness | borders | text | enhanced |
+| --- | --- | --- | --- | --- |
+| 12 linear | 2.38 | 5 | 6 | 8 |
+| 12 · curve 1.25 | 1.50 | 6 | 7 | 8 |
+| 14 linear | 2.19 | 6 | 7 | 9 |
+| **14 · curve 1.30** | **1.39** | **7** | **8** | **10** |
+
+Evenness is the largest adjacent luminance jump over the smallest; 1.0 is
+perfect.
+
+### The rule
+
+> **Borders 7 apart. Text 8 apart. Enhanced 10 apart.**
+
+Holds for all five hues, including the 215° teal whose chroma ceiling is the
+lowest on the circle — because the distances come from lightness, and lightness
+is what the ramp controls.
+
+### Still open
+
+- **Three text levels.** Chris wants three; the model gives two distances above
+  the border. The shipping rank system already has three (rank 4 secondary,
+  rank 5 body, rank 6 maximum), so adopting this as drawn loses one.
+- **Scheme pairing.** The preview is one ramp, deliberately. How light and dark
+  draw from it is undecided and easier to reason about separately.
+- **Nothing is a token yet.** This is still preview only: the generator writes
+  no CSS.

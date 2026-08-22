@@ -653,3 +653,21 @@
 		block-size: var(--itx-sz-16);
 	}
 }
+
+/* The candidate settled on, 2026-08-21. Marked rather than moved: the
+   comparison is the evidence for the choice, so it stays on the page. */
+.palette-candidate.is-chosen {
+	outline: var(--itx-border-width-heavy) solid var(--itx-colorway-border);
+	outline-offset: calc(var(--itx-border-width-heavy) * -1);
+}
+
+.palette-candidate__chosen {
+	margin-inline-start: var(--itx-spacing-2);
+	padding: 2px var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+	background-color: var(--itx-colorway-tint);
+	color: var(--itx-colorway-on-tint);
+	font-size: var(--itx-font-size-caption);
+	font-weight: 400;
+	vertical-align: middle;
+}

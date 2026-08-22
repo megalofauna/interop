@@ -166,6 +166,7 @@ export class ColorPage {
 			count: c.count,
 			curve: c.curve,
 			label: `${c.count} steps · ${c.curve === 1 ? "linear" : `curve ${c.curve}`}`,
+			chosen: scales[0]?.chosen ?? false,
 			spread: scales[0]?.spread ?? 0,
 			deltaFirst: scales[0]?.deltaFirst ?? 0,
 			deltaLast: scales[0]?.deltaLast ?? 0,

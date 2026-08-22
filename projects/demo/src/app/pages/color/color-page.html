@@ -624,9 +624,18 @@
 		</p>
 
 		@for (candidate of previewCandidates; track candidate.key) {
-			<section class="palette-candidate" itx-layer="1">
+			<section
+				class="palette-candidate"
+				[class.is-chosen]="candidate.chosen"
+				itx-layer="1"
+			>
 				<header>
-					<h3>{{ candidate.label }}</h3>
+					<h3>
+						{{ candidate.label }}
+						@if (candidate.chosen) {
+							<span class="palette-candidate__chosen">chosen</span>
+						}
+					</h3>
 					<dl>
 						<div>
 							<dt>evenness</dt>
