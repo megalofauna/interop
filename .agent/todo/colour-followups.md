@@ -41,3 +41,44 @@ Everything that exists to argue a decision that has since been made belongs in
 Chris wants three, matching the rank system's secondary / body / maximum. On a
 uniform ramp this is three DISTANCES rather than three reserved steps, so it
 costs nothing structurally — see the palette floors.
+
+## Page-relative steps lose their margin at depth
+
+Found migrating the field (2026-08-22). Contrast ranks were **surface-relative**:
+every layer boundary re-solved them against its own ground, so a rank held its
+ratio at any depth. Palette steps are **page-relative** and fixed. The two ramps
+are now independent, and the elevation ramp keeps climbing after the palette has
+stopped compensating.
+
+Secondary text (step 9) against the dark elevation ramp:
+
+| layer | surface | step 9 | step 10 | step 11 |
+| --- | --- | --- | --- | --- |
+| 0 | 0.170 | 4.78 | 6.31 | 8.25 |
+| 1 | 0.202 | 4.50 | 5.95 | 7.78 |
+| 2 | 0.234 | **4.18** | 5.52 | 7.22 |
+| 3 | 0.266 | **3.81** | 5.03 | 6.58 |
+| 4 | 0.298 | **3.42** | 4.52 | 5.91 |
+| 5 | 0.330 | **3.04** | **4.02** | 5.26 |
+| 6 | 0.362 | **2.69** | **3.56** | 4.65 |
+
+Step 9 clears AA to layer 1. Step 10 to layer 4. Nothing clears layer 6 but 11.
+Point-fixing each component to the depth it happens to render at is fitting the
+demo, not the system — the same component at a different depth breaks again.
+
+Three ways out, in preference order:
+
+1. **Derive depth-tracking text roles per layer.** `--itx-text-secondary` and
+   friends emitted inside `tokenSet()`, resolved against the current surface —
+   exactly the trick that fixed status drift. Components read the role and get
+   depth tracking free; the flat palette stays for consumers picking a step by
+   hand. Costs a handful of role tokens, no new palette tokens.
+2. **Cap the elevation ramp** at the depth real UI reaches (2–3), so a fixed
+   step is safe everywhere. Cheapest, but it spends the elevation range we just
+   built to fix the dark page.
+3. **Consumers offset by depth.** Radix's answer. Manual and unguarded, and it
+   gives back the automatic guarantee the ranks provided — the thing the README
+   sells.
+
+Recommend 1. Decide before button and stepper, which read the most ranks and
+render at the widest spread of depths.
