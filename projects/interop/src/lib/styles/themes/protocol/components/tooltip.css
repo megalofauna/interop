@@ -14,13 +14,25 @@
    "Co-declaration", and the specs in tokens/elevation.spec.ts. */
 :where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Appearance ─────────────────────────────────────────────────── */
+	/*
+	 * Another inversion that does not collapse, and for a different reason
+	 * again: a tooltip wants to be DARK in both schemes, which a page-relative
+	 * step cannot say in one name because the page is at opposite ends. So the
+	 * conditional survives and the arms just read as distances now.
+	 *
+	 * Three of these have come up — the list's collapsed, the indicator's did
+	 * not because its arms wanted different distances, and this one does not
+	 * because it wants a fixed absolute regardless of scheme. Only the last kind
+	 * is a candidate for stating a literal instead, and that is a design call
+	 * about tooltips rather than a migration.
+	 */
 	--itx-tooltip-background: light-dark(
-		var(--itx-contrast-5),
-		var(--itx-contrast-1)
+		var(--itx-neutral-11),
+		var(--itx-neutral-2)
 	);
 	--itx-tooltip-foreground: light-dark(
-		var(--itx-contrast-1),
-		var(--itx-contrast-6)
+		var(--itx-neutral-2),
+		var(--itx-neutral-14)
 	);
 	--itx-tooltip-padding: 0.375rem 0.625rem;
 	--itx-tooltip-font-size: 0.8125rem;

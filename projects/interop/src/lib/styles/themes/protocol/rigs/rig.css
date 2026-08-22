@@ -34,7 +34,7 @@
  * still drawn, transparent, so turning it back on is a colour change and not a
  * reflow:
  *
- *   --itx-rig-border-color: var(--itx-contrast-3);   (rank 3, an edge)
+ *   --itx-rig-border-color: var(--itx-neutral-8);   (an edge)
  *   --itx-rig-padding: var(--itx-spacing-4);
  */
 
@@ -75,7 +75,7 @@
 
 	/* ── Divider (select-all separator) ─────────────────────────────────── */
 	--itx-rig-divider-width: var(--itx-border-width-hairline);
-	--itx-rig-divider-color: var(--itx-contrast-2);
+	--itx-rig-divider-color: var(--itx-neutral-3);
 }
 
 /* ── Orientation ─────────────────────────────────────────────────────────── */

@@ -52,7 +52,7 @@
 :where([interop-root], [itx-layer], [itx-sink]) {
 	/* ── Colour ─────────────────────────────────────────────────────────── */
 	/* rank 2 — "hairline, dividers", i.e. Carbon's $border-subtle. */
-	--itx-progress-track: var(--itx-contrast-2);
+	--itx-progress-track: var(--itx-neutral-3);
 	/* The brand FILL rung, which is what a filled bar is. */
 	--itx-progress-fill: var(--itx-colorway-solid);
 

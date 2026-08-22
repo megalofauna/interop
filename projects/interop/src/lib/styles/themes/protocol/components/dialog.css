@@ -18,9 +18,9 @@
 
 	/* ── Appearance ─────────────────────────────────────────────────────── */
 	--itx-dialog-background: var(--itx-surface-above);
-	--itx-dialog-foreground: var(--itx-contrast-6);
+	--itx-dialog-foreground: var(--itx-neutral-14);
 	/*
-	 * Stated directly, NOT as var(--itx-contrast-3).
+	 * Stated directly, NOT as the border distance.
 	 *
 	 * This file used to lighten the dialog's edge by declaring the GLOBAL
 	 * `--itx-contrast-3: var(--itx-contrast-1)` on [interop-root]. Same layer, same
@@ -34,7 +34,7 @@
 	 * The dialog's own appearance is unchanged — this is the value it was
 	 * getting all along, now scoped to the one component that wanted it.
 	 */
-	--itx-dialog-border-color: var(--itx-contrast-1);
+	--itx-dialog-border-color: var(--itx-neutral-2);
 	--itx-dialog-shadow: 0 8px 0 rgba(0 0 0 / 0.2);
 
 	/* ── Backdrop ───────────────────────────────────────────────────────── */

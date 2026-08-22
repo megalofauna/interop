@@ -16,7 +16,7 @@
 		flex-direction: column;
 		gap: var(--itx-spacing-2);
 		padding: var(--itx-spacing-4);
-		border: 1px solid var(--itx-contrast-2);
+		border: 1px solid var(--itx-neutral-3);
 		border-radius: var(--itx-radius-md);
 
 		h3 {
@@ -27,7 +27,7 @@
 		code {
 			font-family: var(--itx-font-family-mono);
 			font-size: var(--itx-font-size-caption);
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 		}
 
 		p {
@@ -49,7 +49,7 @@
 		display: block;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
+		color: var(--itx-neutral-9);
 		margin-block-end: var(--itx-spacing-3);
 	}
 
@@ -59,95 +59,8 @@
 		p {
 			margin: 0 0 var(--itx-spacing-3);
 			font-size: var(--itx-font-size-caption);
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 		}
-	}
-}
-
-.color-ranks {
-	padding: var(--itx-spacing-4);
-	border-radius: var(--itx-radius-md);
-
-	& + & {
-		margin-block-start: var(--itx-spacing-2);
-	}
-
-	&__caption {
-		display: block;
-		font-family: var(--itx-font-family-mono);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
-		margin-block-end: var(--itx-spacing-2);
-	}
-
-	/*
-	 * Swatches and live componentry sit side by side and wrap together, so the
-	 * abstract ladder and the thing it actually paints are read in one glance.
-	 * `start` alignment rather than stretch: the field sets the column width and
-	 * the swatch grid should not be dragged to match its height.
-	 */
-	&__body {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--itx-spacing-6);
-		align-items: start;
-	}
-
-	&__col {
-		display: flex;
-		flex-direction: column;
-		gap: var(--itx-spacing-3);
-		flex: 1 1 18rem;
-		min-inline-size: 0;
-	}
-
-	&__components {
-		flex: 0 1 16rem;
-	}
-
-	&__actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--itx-spacing-2);
-	}
-
-	&__row {
-		display: flex;
-		gap: var(--itx-spacing-2);
-	}
-
-	&__cell {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--itx-spacing-1);
-	}
-
-	&__swatch {
-		inline-size: var(--itx-sz-10);
-		block-size: var(--itx-sz-8);
-		border-radius: var(--itx-radius-sm);
-		/* A rank-2 hairline, so low ranks stay visible against their own surface. */
-		border: 1px solid var(--itx-contrast-2);
-	}
-
-	&__n {
-		font-family: var(--itx-font-family-mono);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
-	}
-
-	&__text {
-		/* No block margin — the column's gap already spaces this. Keeping the
-		   old top margin here would double it. */
-		margin: 0;
-		padding-block-start: var(--itx-spacing-3);
-		border-block-start: 1px solid var(--itx-contrast-2);
-		font-size: var(--itx-font-size-caption);
-	}
-
-	&__muted {
-		color: var(--itx-contrast-4);
 	}
 }
 
@@ -156,32 +69,6 @@
  * flatter a ramp, because the eye reads an edge far better than it reads two
  * areas separated by other content. Nesting is how layers actually appear.
  */
-.color-steps {
-	display: grid;
-	gap: var(--itx-spacing-4);
-	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-
-	&__item {
-		margin: 0;
-
-		figcaption {
-			font-family: var(--itx-font-family-mono);
-			font-size: var(--itx-font-size-caption);
-			color: var(--itx-contrast-4);
-			margin-block-end: var(--itx-spacing-2);
-		}
-	}
-
-	&__nest {
-		padding: var(--itx-spacing-4);
-		border-radius: var(--itx-radius-sm);
-
-		&--last {
-			padding: var(--itx-spacing-5);
-		}
-	}
-}
-
 .color-families {
 	display: flex;
 	flex-wrap: wrap;
@@ -210,7 +97,7 @@
 
 		span {
 			font-family: var(--itx-font-family-mono);
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 		}
 	}
 }
@@ -218,7 +105,7 @@
 /* A measured ratio sits under each fill. Under its floor, it says so. */
 .color-families__ratio {
 	font-family: var(--itx-font-family-mono);
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 
 	&.is-under {
 		color: var(--itx-danger-text);
@@ -253,7 +140,7 @@
 	figcaption {
 		margin-block-start: var(--itx-spacing-2);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
+		color: var(--itx-neutral-9);
 		max-inline-size: var(--itx-measure);
 	}
 }
@@ -279,7 +166,7 @@
 				font-weight: 400;
 				font-size: var(--itx-font-size-caption);
 				font-family: var(--itx-font-family-mono);
-				color: var(--itx-contrast-4);
+				color: var(--itx-neutral-9);
 			}
 		}
 	}
@@ -325,7 +212,7 @@
 		grid-column: 1 / -1;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
+		color: var(--itx-neutral-9);
 	}
 
 	&__components {
@@ -380,7 +267,7 @@
 		}
 
 		th {
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 		}
 
 		td:nth-child(3) {
@@ -388,7 +275,7 @@
 		}
 
 		td:last-child {
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 			font-family: var(--itx-font-family-mono);
 		}
 
@@ -412,7 +299,7 @@
 
 	&__frame {
 		padding: var(--itx-spacing-4);
-		border: 1px solid var(--itx-contrast-2);
+		border: 1px solid var(--itx-neutral-3);
 		border-radius: var(--itx-radius-md);
 	}
 
@@ -420,7 +307,7 @@
 		display: block;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
+		color: var(--itx-neutral-9);
 		margin-block-end: var(--itx-spacing-3);
 	}
 
@@ -429,28 +316,6 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: var(--itx-spacing-3);
-	}
-}
-
-.color-table {
-	inline-size: 100%;
-	border-collapse: collapse;
-	font-size: var(--itx-font-size-caption);
-
-	th,
-	td {
-		text-align: start;
-		padding: var(--itx-spacing-2) var(--itx-spacing-3);
-		border-block-end: 1px solid var(--itx-contrast-2);
-	}
-
-	th {
-		color: var(--itx-contrast-4);
-		font-weight: 600;
-	}
-
-	code {
-		font-family: var(--itx-font-family-mono);
 	}
 }
 
@@ -486,7 +351,7 @@
 		&--head {
 			padding-block: 0;
 			font-size: var(--itx-font-size-caption);
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 			font-family: var(--itx-font-family-mono);
 		}
 	}
@@ -494,7 +359,7 @@
 	&__layer {
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-contrast-4);
+		color: var(--itx-neutral-9);
 	}
 
 	&__cell {
@@ -505,7 +370,7 @@
 
 		code {
 			font-size: 0.6875rem;
-			color: var(--itx-contrast-4);
+			color: var(--itx-neutral-9);
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -516,7 +381,7 @@
 	&__chip {
 		block-size: var(--itx-sz-8);
 		border-radius: var(--itx-radius-sm);
-		border: 1px solid var(--itx-contrast-2);
+		border: 1px solid var(--itx-neutral-3);
 
 		&--wide {
 			block-size: var(--itx-sz-12);
@@ -549,125 +414,94 @@
  * next step read as a huge jump. The ramp is not the problem there; the
  * backdrop is.
  *
- * The first fix was a fixed neutral card, and it was wrong for the reason this
- * whole page is about: --itx-contrast-* is solved against the LAYER, so putting
- * it on a hardcoded background measured 4.04:1 against a 4.5 floor. Declaring
- * the card a layer keeps every token correct, and an outline on the strip does
- * the delineating instead.
+ * The first fix was a fixed neutral card, and it was wrong: the tokens of the
+ * day were solved against the LAYER, so putting one on a hardcoded background
+ * measured 4.04:1 against a 4.5 floor. Declaring the card a layer instead keeps
+ * it on the ladder, and an outline on the strip does the delineating.
  */
-.palette-candidate {
-	margin-block-start: var(--itx-spacing-8);
-	padding: var(--itx-spacing-4);
-	border-radius: var(--itx-radius-md);
-	/* Painted by the layer engine — see the [itx-layer] on the element. */
-
-	header {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
-		gap: var(--itx-spacing-2) var(--itx-spacing-5);
-		margin-block-end: var(--itx-spacing-3);
-
-		h3 {
-			margin: 0;
-			font-size: var(--itx-font-size-label);
-			font-weight: 500;
-		}
-
-		dl {
-			display: flex;
-			flex-wrap: wrap;
-			gap: var(--itx-spacing-4);
-			margin: 0;
-			font-size: var(--itx-font-size-caption);
-		}
-
-		div {
-			display: flex;
-			gap: var(--itx-spacing-1);
-		}
-
-		dt {
-			color: var(--itx-contrast-4);
-		}
-
-		dd {
-			margin: 0;
-			font-family: var(--itx-font-family-mono);
-		}
-	}
-}
-
-.palette-ramp {
-	margin: var(--itx-spacing-3) 0 0;
-
-	figcaption {
-		display: flex;
-		align-items: baseline;
-		flex-wrap: wrap;
-		gap: var(--itx-spacing-2);
-		margin-block-end: var(--itx-spacing-1);
-		font-size: var(--itx-font-size-caption);
-
-		span {
-			color: var(--itx-contrast-4);
-		}
-	}
-
-	/* Continuous: a ramp is a gradation, and gaps would read as N swatches. */
-	&__strip {
-		display: flex;
-		border-radius: var(--itx-radius-sm);
-		overflow: hidden;
-		/* Inset so it delineates without changing the chips' geometry. The ends
-		   need it: a ramp end can be the same colour as its ground. */
-		box-shadow: inset 0 0 0 1px var(--itx-contrast-3);
-	}
-
-	&__step {
-		flex: 1 1 0;
-		display: flex;
-		flex-direction: column;
-		min-inline-size: 0;
-
-		b,
-		small {
-			padding-inline: 2px;
-			font-family: var(--itx-font-family-mono);
-			text-align: center;
-		}
-
-		b {
-			margin-block-start: var(--itx-spacing-1);
-			font-size: 0.6875rem;
-			font-weight: 500;
-		}
-
-		small {
-			font-size: 0.5625rem;
-			color: var(--itx-contrast-4);
-		}
-	}
-
-	&__chip {
-		block-size: var(--itx-sz-16);
-	}
-}
-
 /* The candidate settled on, 2026-08-21. Marked rather than moved: the
    comparison is the evidence for the choice, so it stays on the page. */
-.palette-candidate.is-chosen {
-	outline: var(--itx-border-width-heavy) solid var(--itx-colorway-border);
-	outline-offset: calc(var(--itx-border-width-heavy) * -1);
+/*
+ * Legibility board.
+ *
+ * Big enough to judge. The whole argument is that a name printed IN the colour
+ * it names cannot lie about its own legibility, and that only works if there is
+ * room to read it — hence a 256px floor rather than a swatch grid.
+ *
+ * No token reads inside a card: the card paints a palette step, and the palette
+ * is a proposal that has nothing to do with the layer the page happens to be
+ * on. Everything inside is coloured from the same proposal, which is the point.
+ */
+.legibility {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+	gap: var(--itx-spacing-3);
+
+	&__title {
+		margin-block: var(--itx-spacing-8) var(--itx-spacing-3);
+		font-size: var(--itx-font-size-label);
+		font-weight: 500;
+
+		span {
+			margin-inline-start: var(--itx-spacing-2);
+			font-weight: 400;
+			color: var(--itx-neutral-9);
+		}
+	}
+
+	&__card {
+		min-block-size: 12rem;
+		padding: var(--itx-spacing-4);
+		border-radius: var(--itx-radius-sm);
+		/* A hairline, because a card can match the page it sits on. */
+		box-shadow: inset 0 0 0 1px var(--itx-neutral-3);
+
+		header {
+			display: flex;
+			align-items: baseline;
+			gap: var(--itx-spacing-2);
+			margin-block-end: var(--itx-spacing-3);
+			font-weight: 600;
+			font-family: var(--itx-font-family-mono);
+		}
+
+		small {
+			font-size: 0.6875rem;
+			font-weight: 400;
+			opacity: 0.75;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+
+		li {
+			display: flex;
+			align-items: baseline;
+			gap: var(--itx-spacing-2);
+			font-family: var(--itx-font-family-mono);
+			font-size: var(--itx-font-size-caption);
+		}
+	}
+
+	&__none {
+		margin: 0;
+		font-size: var(--itx-font-size-caption);
+		font-style: italic;
+		opacity: 0.7;
+	}
 }
 
-.palette-candidate__chosen {
-	margin-inline-start: var(--itx-spacing-2);
-	padding: 2px var(--itx-spacing-2);
-	border-radius: var(--itx-radius-sm);
-	background-color: var(--itx-colorway-tint);
-	color: var(--itx-colorway-on-tint);
-	font-size: var(--itx-font-size-caption);
-	font-weight: 400;
-	vertical-align: middle;
-}
+/*
+ * Light-mode direction comparison.
+ *
+ * Both frames pin color-scheme: light and paint from literal values, because
+ * the right-hand frame is a proposal the shipping system cannot express. The
+ * page inside each frame is a real page, not a swatch — the question is what a
+ * card and a field look like ON it, which a colour chip cannot answer.
+ */

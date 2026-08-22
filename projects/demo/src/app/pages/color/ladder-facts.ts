@@ -125,40 +125,34 @@ export const RANK_FACTS: readonly RankFact[] = [
 
 /** Ramp keys, deepest sink first — the order the ladder is emitted in. */
 export const LAYER_KEYS: readonly string[] = [
-	"n4",
-	"n3",
-	"n2",
-	"n1",
 	"0",
 	"1",
 	"2",
 	"3",
-	"4"
+	"4",
+	"5",
+	"6"
 ];
 
 /** Surface lightness per scheme, per layer. Chroma and hue come from the tint. */
 export const SURFACE_FACTS: Record<string, Record<string, number>> = {
 	light: {
-		"0": 0.898,
-		"1": 0.926,
-		"2": 0.953,
-		"3": 0.978,
-		"4": 1,
-		n1: 0.855,
-		n2: 0.812,
-		n3: 0.769,
-		n4: 0.726
+		"0": 0.99,
+		"1": 0.965,
+		"2": 0.94,
+		"3": 0.915,
+		"4": 0.89,
+		"5": 0.865,
+		"6": 0.84
 	},
 	dark: {
-		"0": 0.232,
-		"1": 0.272,
-		"2": 0.311,
-		"3": 0.351,
-		"4": 0.39,
-		n1: 0.187,
-		n2: 0.142,
-		n3: 0.097,
-		n4: 0.052
+		"0": 0.17,
+		"1": 0.202,
+		"2": 0.234,
+		"3": 0.266,
+		"4": 0.298,
+		"5": 0.33,
+		"6": 0.362
 	}
 };
 
@@ -803,25 +797,23 @@ export const HUE_CEILINGS: readonly HueCeiling[] = [
 
 export const INPUT_FACTS: InputFacts = {
 	depth: {
-		below: 4,
-		above: 4
+		below: 0,
+		above: 6
 	},
 	ramp: {
 		light: {
-			page: 0.898,
-			up: 0.028,
-			ease: 0.95,
-			down: 0.043,
-			min: 0.6,
-			max: 1
+			page: 0.99,
+			up: -0.025,
+			ease: 1,
+			min: 0.12,
+			max: 0.99
 		},
 		dark: {
-			page: 0.232,
-			up: 0.0395,
+			page: 0.17,
+			up: 0.032,
 			ease: 1,
-			down: 0.045,
-			min: 0.03,
-			max: 0.44
+			min: 0.17,
+			max: 0.62
 		}
 	},
 	tint: {

@@ -120,7 +120,7 @@ const OUT_FACTS = join(
  * How deep the ladder goes in each direction. Changing these changes how many
  * @container blocks the engine emits; everything downstream follows.
  */
-const DEPTH = { below: 4, above: 4 };
+const DEPTH = { below: 0, above: 6 };
 
 /**
  * The ramp SPEC — five numbers per scheme, not a hand-kept table of seven.
@@ -146,25 +146,39 @@ const DEPTH = { below: 4, above: 4 };
  * flatters a ramp.
  */
 const RAMP = {
-	// Light has only .102 of room between the page and white for four steps, so
-	// `ease` cannot be aggressive: at .87 the last step compresses to .018 and
-	// trips the separation guard. .95 decelerates enough to feel like it is
-	// approaching a ceiling while keeping every step ≥ .02.
+	/*
+	 * The page is the extreme; everything else steps AWAY from it.
+	 *
+	 * Light used to start at mid-grey .898 and climb toward white, because tone
+	 * carried direction — a card was lighter than the page, a field darker — and
+	 * that needs headroom both ways. Nobody else works like that. In Radix,
+	 * Material and Carbon an elevated card and a recessed field are BOTH darker
+	 * than the page in light mode: tone carries distance, shadow carries
+	 * direction.
+	 *
+	 * The bidirectional requirement was ours, the grey page was what it cost,
+	 * and it quietly made a monotonic palette impossible — which is what pushed
+	 * the palette work into a shape that was neither a palette nor a role
+	 * system. Dropping it costs a mechanism and buys back a white page, one
+	 * direction of travel, and a scale that means the same thing in both
+	 * schemes.
+	 *
+	 * `down` is gone with it. There is no below any more; a recess is a step
+	 * away like everything else, wearing an inset shadow instead of a drop one.
+	 */
 	light: {
-		page: 0.898,
-		up: 0.028,
-		ease: 0.95,
-		down: 0.043,
-		min: 0.6,
-		max: 1.0,
+		page: 0.99,
+		up: -0.025,
+		ease: 1.0,
+		min: 0.12,
+		max: 0.99,
 	},
 	dark: {
-		page: 0.232,
-		up: 0.0395,
+		page: 0.17,
+		up: 0.032,
 		ease: 1.0,
-		down: 0.045,
-		min: 0.03,
-		max: 0.44,
+		min: 0.17,
+		max: 0.62,
 	},
 };
 
@@ -177,15 +191,10 @@ function buildRamp(spec) {
 	let l = spec.page;
 	let step = spec.up;
 	for (let i = 1; i <= DEPTH.above; i++) {
-		l = Math.min(spec.max, l + step);
+		l =
+			spec.up < 0 ? Math.max(spec.min, l + step) : Math.min(spec.max, l + step);
 		out[i] = round3(l);
 		step *= spec.ease;
-	}
-
-	l = spec.page;
-	for (let i = 1; i <= DEPTH.below; i++) {
-		l = Math.max(spec.min, l - spec.down);
-		out[`n${i}`] = round3(l);
 	}
 
 	return out;
@@ -709,10 +718,7 @@ function layerLightnessJs(scheme, n) {
 		r.ease === 1
 			? r.up * Math.max(0, n)
 			: (r.up * (1 - Math.pow(r.ease, Math.max(0, n)))) / (1 - r.ease);
-	return Math.min(
-		r.max,
-		Math.max(r.min, r.page + up + r.down * Math.min(0, n)),
-	);
+	return Math.min(r.max, Math.max(r.min, r.page + up));
 }
 
 const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
@@ -876,6 +882,89 @@ function buildFamily(family) {
 
 const families = familyList().map(buildFamily).filter(Boolean);
 
+/* ── The palette ─────────────────────────────────────────────────────────── */
+
+/**
+ * A 14-step scale per family, and the distances that make it usable.
+ *
+ * Decided 2026-08-21 after rendering four candidates in a browser; the
+ * reasoning is in .agent/records/palette-spike.md. Two things are worth
+ * carrying here rather than leaving in the record:
+ *
+ * EVEN IN LIGHTNESS IS NOT EVEN TO THE EYE. A linear ramp's last step removes
+ * 2.86x the light of its first, so it measures uniform and reads as
+ * accelerating into the dark. `curve` shrinks the step toward the dark end;
+ * 1.30 flattens the luminance ratios without breaking the distance rule.
+ *
+ * THE DISTANCES ARE AN OUTPUT. Nothing here is positioned by a contrast
+ * target — steps are placed by lightness alone and the floors are measured off
+ * the result afterwards. That is the difference between a palette and a set of
+ * roles wearing step numbers, and it is what the first attempt got wrong.
+ */
+const PALETTE = { steps: 14, curve: 1.3, lightest: 0.97, darkest: 0.17 };
+
+/**
+ * Three text levels, matching what the rank system already had — secondary,
+ * body, maximum — plus the border floor beneath them.
+ *
+ * On a uniform ramp these are DISTANCES rather than reserved steps, so a third
+ * level costs nothing structurally. Maximum is not a ratio: it is the far end
+ * of the ramp, which is as much contrast as the scale has.
+ */
+const PALETTE_FLOORS = [
+	{ id: "border", ratio: 3 },
+	{ id: "secondary", ratio: 4.5 },
+	{ id: "body", ratio: 7 },
+];
+
+/**
+ * Chroma across the ramp: a raised sine, peaking mid-scale.
+ *
+ * Lightness is even; chroma cannot be. A hue holds most of its colour in the
+ * middle and almost none at either end — blue reaches .28 at L .49 and .048 at
+ * L .90 — so a constant chroma would clip at the extremes and read as a grey
+ * ramp with a bulge. The seed sets intensity; the gamut sets what is reachable.
+ */
+const paletteEnvelope = (i) =>
+	Math.sin((Math.PI * (i + 0.5)) / PALETTE.steps) ** 0.75;
+
+/** One family's scale: even in lightness, chroma clamped per step. */
+function buildPalette(hue, chroma) {
+	const out = [];
+	for (let i = 0; i < PALETTE.steps; i++) {
+		const t = i / (PALETTE.steps - 1);
+		const eased = 1 - Math.pow(1 - t, PALETTE.curve);
+		const l = round3(
+			PALETTE.lightest - eased * (PALETTE.lightest - PALETTE.darkest),
+		);
+		out.push({
+			step: i + 1,
+			l,
+			c: round3(Math.min(chroma * paletteEnvelope(i), maxChroma(l, hue))),
+		});
+	}
+	return out;
+}
+
+/**
+ * The smallest step distance clearing a floor for EVERY pair on a scale.
+ *
+ * Asked of the data rather than designed into it. Null would mean no single
+ * distance works, which is a real answer and more useful than a rule with
+ * silent exceptions — the generator reports it rather than papering over it.
+ */
+function paletteDistance(steps, hue, ratio) {
+	const y = steps.map((s) => luminance(s.l, s.c, hue));
+	for (let d = 1; d < steps.length; d++) {
+		let ok = true;
+		for (let i = 0; i + d < steps.length; i++) {
+			if (contrast(y[i], y[i + d]) < ratio) ok = false;
+		}
+		if (ok) return d;
+	}
+	return null;
+}
+
 /* ── Emit ───────────────────────────────────────────────────────────────── */
 
 /**
@@ -941,7 +1030,6 @@ function emit() {
 			`\t--itx-ramp-${scheme}-page: ${r.page};`,
 			`\t--itx-ramp-${scheme}-step: ${r.up};`,
 			`\t--itx-ramp-${scheme}-ease: ${r.ease};`,
-			`\t--itx-ramp-${scheme}-down: ${r.down};`,
 			`\t--itx-ramp-${scheme}-min: ${r.min};`,
 			`\t--itx-ramp-${scheme}-max: ${r.max};`,
 		);
@@ -965,11 +1053,90 @@ function emit() {
 	// Accent declarations that belong on [interop-root] are spliced INTO this
 	// block rather than opening a second one: .stylelintrc.json sets
 	// no-duplicate-selectors, and stylelint is now installed and enforcing it.
+	lines.push(...emitPalette());
+
 	const accents = emitAccents();
 	lines.push(...accents.root);
 	lines.push("}", "");
 	lines.push(...accents.scoped);
 	return lines.join("\n");
+}
+
+/* ── Emit: the palette ──────────────────────────────────────────────────── */
+
+/**
+ * The 14-step scales, as real tokens.
+ *
+ * Emitted ALONGSIDE the existing vocabulary, not instead of it. Nothing in the
+ * library reads these yet; both vocabularies coexist so components can move one
+ * at a time and the palette can be judged in situ rather than in a preview.
+ *
+ * SCHEME-PAIRED, and that is the whole ergonomic argument.
+ *
+ * Step N means "N steps from the page" in BOTH schemes. The alternative was one
+ * scheme-invariant ramp, which is the right shape for judging a palette and the
+ * wrong one for using it: the page is the light end in light mode and the dark
+ * end in dark, so every consumer would write
+ *
+ *   light-dark(var(--itx-neutral-3), var(--itx-neutral-12))
+ *
+ * and compute 15 − n in their head, per token, forever. That is precisely the
+ * abstruseness this rewrite exists to remove, so the pairing happens here once
+ * instead of at every call site. Radix does the same and for the same reason.
+ *
+ * The dark arm is the light ramp READ BACKWARDS, which lands the fine steps
+ * next to the page in both schemes — the easing put them at the dark end, and
+ * the dark end is where the dark page is.
+ */
+function emitPalette() {
+	const lines = [
+		"",
+		"\t/*",
+		"\t * ── Palette ──────────────────────────────────────────────────────",
+		"\t *",
+		`\t * ${PALETTE.steps} steps per family, even in OKLCH lightness with an easing`,
+		`\t * curve of ${PALETTE.curve} so the dark end does not accelerate. Scheme-`,
+		"\t * invariant: a ramp, not a scheme pair.",
+		"\t *",
+		"\t * Distances, measured off the ramp rather than designed into it:",
+	];
+
+	const families = [
+		{ id: "neutral", hue: TINT.light.h, chroma: 0.012 },
+		...familyList().map((f) => ({
+			id: f.id,
+			hue: f.seed[2],
+			chroma: f.seed[1],
+		})),
+	];
+
+	/* Report the distances once — they hold for every family, which is the
+	   finding that makes the scale usable as a rule rather than a lookup. */
+	const first = buildPalette(families[0].hue, families[0].chroma);
+	for (const f of PALETTE_FLOORS) {
+		const d = paletteDistance(first, families[0].hue, f.ratio);
+		lines.push(`\t *   ${f.id.padEnd(10)} ${f.ratio}:1   ${d} steps apart`);
+	}
+	lines.push(
+		"\t *   maximum      the far end — step 1 or " + PALETTE.steps,
+		"\t */",
+	);
+
+	for (const family of families) {
+		const steps = buildPalette(family.hue, family.chroma);
+		lines.push("");
+		for (const s of steps) {
+			// Same ramp, read from the far end for dark: step N is N steps from
+			// the page whichever end the page happens to be.
+			const mirror = steps[steps.length - s.step];
+			lines.push(
+				`\t--itx-${family.id}-${s.step}: light-dark(\n` +
+					`\t\toklch(${s.l} ${s.c} ${family.hue}),\n` +
+					`\t\toklch(${mirror.l} ${mirror.c} ${family.hue})\n\t);`,
+			);
+		}
+	}
+	return lines;
 }
 
 /* ── Emit: accent families ──────────────────────────────────────────────── */
@@ -1196,15 +1363,15 @@ function layerLightness(scheme, offset) {
 	const n =
 		offset === 0
 			? "var(--itx-layer)"
-			: `clamp(${-DEPTH.below}, calc(var(--itx-layer) + ${offset}), ${DEPTH.above})`;
+			: `max(0, calc(var(--itx-layer) + ${offset}))`;
 	const up =
 		r.ease === 1
-			? `${v("step")} * max(0, ${n})`
-			: `${v("step")} * (1 - pow(${v("ease")}, max(0, ${n}))) / (1 - ${v("ease")})`;
+			? `${v("step")} * ${n}`
+			: `${v("step")} * (1 - pow(${v("ease")}, ${n})) / (1 - ${v("ease")})`;
 	return (
-		`clamp(\n\t\t${v("min")},\n` +
-		`\t\tcalc(${v("page")} + ${up} + ${v("down")} * min(0, ${n})),\n` +
-		`\t\t${v("max")}\n\t)`
+		`clamp(\n\t\t\t\t${v("min")},\n` +
+		`\t\t\t\tcalc(${v("page")} + ${up}),\n` +
+		`\t\t\t\t${v("max")}\n\t\t\t)`
 	);
 }
 
@@ -1226,7 +1393,16 @@ function surfaceRule() {
 		`\t--itx-surface: ${compose(0)};`,
 		`\t--itx-surface-above: ${compose(1)};`,
 		`\t--itx-surface-above-2: ${compose(2)};`,
-		`\t--itx-surface-below: ${compose(-1)};`,
+		/*
+		 * --itx-surface-below is an ALIAS now, not a direction.
+		 *
+		 * A recess used to be a step toward the page's opposite; under one
+		 * direction of travel it is a step away like everything else, and what
+		 * makes it read as recessed is an inset shadow rather than its tone.
+		 * Kept as a name so consumers reading it keep working, and so "below"
+		 * still means something a component can ask for.
+		 */
+		`\t--itx-surface-below: ${compose(1)};`,
 		"}",
 		"",
 	].join("\n");
@@ -1386,7 +1562,7 @@ function emitEngine() {
 		"}",
 		"",
 		":where([itx-sink]) {",
-		tokenSet(-1, 1),
+		tokenSet(1, 1),
 		"}",
 		"",
 		"/* ── Tier 3 — the counter. Strictly monotone up the tree, so never a cycle. */",
@@ -1394,8 +1570,18 @@ function emitEngine() {
 	];
 
 	for (let ancestor = LAYER_MIN; ancestor <= LAYER_MAX; ancestor++) {
+		/*
+		 * A sink counts UP, exactly like a raise.
+		 *
+		 * It used to count down, because tone carried direction and a recess was
+		 * a step toward the page's opposite. Under one direction of travel both
+		 * move away from the page by the same amount; what separates them is the
+		 * shadow, not the tone. So the counter has one behaviour, and `itx-sink`
+		 * now means "a step away, drawn as a recess" rather than "a step the
+		 * other way".
+		 */
 		const raise = Math.min(LAYER_MAX, ancestor + 1);
-		const sink = Math.max(LAYER_MIN, ancestor - 1);
+		const sink = raise;
 		// A terminal block re-asserts its layer WITHOUT moving. Without it, an
 		// element already at the ceiling matches no counter block, falls through
 		// to the tier-2 floor, and snaps back to layer 1.
@@ -1431,6 +1617,35 @@ function emitEngine() {
 	L.push(":where([itx-layer], [itx-sink]) {");
 	L.push("\tbackground-color: var(--itx-surface);");
 	L.push("\tcolor: var(--itx-contrast-6);");
+	L.push("}");
+	L.push("");
+	L.push("/*");
+	L.push(
+		" * Direction. Tone already said how FAR from the page a surface is; these",
+	);
+	L.push(
+		" * say which way, which is the half of the model tone used to carry.",
+	);
+	L.push(" *");
+	L.push(
+		" * A layer and a sink at the same depth are the same colour on purpose —",
+	);
+	L.push(
+		" * light from above is what separates them, so a raise casts a shadow and a",
+	);
+	L.push(
+		" * recess is shadowed within. Zero specificity, so a component that paints",
+	);
+	L.push(
+		" * its own box-shadow wins on contact and nothing here needs unwinding.",
+	);
+	L.push(" */");
+	L.push(":where([itx-layer]) {");
+	L.push("\tbox-shadow: var(--itx-elevation-shadow);");
+	L.push("}");
+	L.push("");
+	L.push(":where([itx-sink]) {");
+	L.push("\tbox-shadow: var(--itx-recess-shadow);");
 	L.push("}");
 	L.push("");
 

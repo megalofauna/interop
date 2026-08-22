@@ -67,7 +67,7 @@
 	--itx-segmented-control-track-flex-direction: row;
 
 	/* Carbon paints no track fill; the frame alone carries the group.
-	   Restore a filled track by setting this to var(--itx-contrast-1). */
+	   Restore a filled track by setting this to var(--itx-neutral-2). */
 	--itx-segmented-control-track-background-color: transparent;
 	--itx-segmented-control-track-background-image: none;
 
@@ -121,7 +121,7 @@
 	/* ── Segment — rest state ───────────────────────────────────────────── */
 	/* $text-secondary — unselected labels are quieter than the selected one. */
 	--itx-segment-background: transparent;
-	--itx-segment-foreground: var(--itx-contrast-5);
+	--itx-segment-foreground: var(--itx-neutral-11);
 	--itx-segment-border-color: transparent;
 
 	/* ── Segment — hover state ──────────────────────────────────────────── */
@@ -141,12 +141,12 @@
 	 * shifting from grey to full strength is unambiguous.
 	 */
 	--itx-segment-background-hover: transparent;
-	--itx-segment-foreground-hover: var(--itx-contrast-6);
+	--itx-segment-foreground-hover: var(--itx-neutral-14);
 
 	/* ── Segment — selected state ───────────────────────────────────────── */
 	/* $text-inverse. The fill comes from the indicator pill (below), so the
 	   two anchor-positioning paths can't disagree about the colour. */
-	--itx-segment-foreground-selected: var(--itx-contrast-6);
+	--itx-segment-foreground-selected: var(--itx-neutral-14);
 
 	/* ── Segment — focus ring ───────────────────────────────────────────── */
 	/* Carbon draws focus as an inset ring in its brand blue; ours keeps the
@@ -205,7 +205,7 @@
 	   an otherwise unpainted group. Set --itx-contrast-3 for the ordinary
 	   emphasis edge. */
 	--itx-segmented-control-track-box-shadow: inset 0 0 0
-		var(--itx-border-width-hairline) var(--itx-contrast-6);
+		var(--itx-border-width-hairline) var(--itx-neutral-14);
 
 	/* Divider — $border-subtle, one hairline. segment.css already suppresses it
 	   on either side of the selected segment.
@@ -221,7 +221,7 @@
 	   The width also stops being a literal 1px: hairline thickens under
 	   prefers-contrast, and a divider that cannot follow that preference is
 	   the one that disappears when it matters. */
-	--itx-segmented-control-rule-color: var(--itx-contrast-2);
+	--itx-segmented-control-rule-color: var(--itx-neutral-3);
 	--itx-segmented-control-rule-width: var(--itx-border-width-hairline);
 
 	/* Selection pill — Carbon's $layer-selected-inverse. This is the one lever
@@ -236,7 +236,7 @@
 	   selected tints". In light the two are indistinguishable (0.855 → 0.860);
 	   in dark it flips to 0.243, which is the side of the track the selection
 	   belonged on all along. */
-	--itx-indicator-background-color: var(--itx-contrast-1);
+	--itx-indicator-background-color: var(--itx-neutral-2);
 	--itx-indicator-border-width: 0;
 	/* The pill matches the track. All three radii move together or the
 	   selection sits visibly proud of the frame at the ends. */

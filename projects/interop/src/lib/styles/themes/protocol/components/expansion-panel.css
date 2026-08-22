@@ -31,12 +31,12 @@
 	/* ── Panel host — frame (rest) ──────────────────────────────────────── */
 	--itx-expansion-panel-background: transparent;
 	--itx-expansion-panel-background-image: none;
-	--itx-expansion-panel-foreground: var(--itx-contrast-6);
+	--itx-expansion-panel-foreground: var(--itx-neutral-14);
 	--itx-expansion-panel-border-style: solid;
 	/* The block edges do the structural work — they are the rules a reader
 	   scans down a stack of panels — so they carry real weight. The inline
 	   edges only close the frame and stay at the standard hairline. */
-	--itx-expansion-panel-border-block-color: var(--itx-contrast-2);
+	--itx-expansion-panel-border-block-color: var(--itx-neutral-3);
 	--itx-expansion-panel-border-inline-color: transparent;
 	--itx-expansion-panel-box-shadow: none;
 	--itx-expansion-panel-padding: 0;
@@ -47,7 +47,7 @@
 	 */
 	--itx-expansion-panel-background-expanded: transparent;
 	--itx-expansion-panel-background-image-expanded: none;
-	--itx-expansion-panel-border-block-color-expanded: var(--itx-contrast-3);
+	--itx-expansion-panel-border-block-color-expanded: var(--itx-neutral-8);
 	--itx-expansion-panel-box-shadow-expanded: none;
 
 	/* ── Disabled state ─────────────────────────────────────────────────── */
@@ -76,7 +76,7 @@
 	   page in both schemes (neutral-1 in light, neutral-4 in dark), so the
 	   hovered row lifts toward the viewer rather than darkening. */
 	--itx-expansion-panel-trigger-background-hover: var(--itx-surface-above);
-	--itx-expansion-panel-trigger-color: var(--itx-contrast-6);
+	--itx-expansion-panel-trigger-color: var(--itx-neutral-14);
 
 	/* Arrow — sized in em so it tracks the trigger's own type, matching the
 	   tree's twisty. 135deg points the corner down; +180 flips it up. */
@@ -101,7 +101,7 @@
 	--itx-expansion-panel-body-divider-width: 1px;
 	--itx-expansion-panel-body-divider-style: solid;
 	--itx-expansion-panel-body-divider-color: transparent;
-	--itx-expansion-panel-body-divider-color-expanded: var(--itx-contrast-2);
+	--itx-expansion-panel-body-divider-color-expanded: var(--itx-neutral-3);
 
 	/* ── Body — animation ───────────────────────────────────────────────── */
 

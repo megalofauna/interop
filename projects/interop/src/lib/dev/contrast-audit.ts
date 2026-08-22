@@ -69,6 +69,36 @@ function ownText(el: Element): string {
 	return out.trim();
 }
 
+/**
+ * Whether this text belongs to an inactive control.
+ *
+ * WCAG 1.4.3 exempts it outright: "Text or images of text that are part of an
+ * inactive user interface component ... have no contrast requirement." Disabled
+ * text is SUPPOSED to be low contrast — that is how it says it is disabled — so
+ * reporting it is not a strict reading of the rule, it is a wrong one.
+ *
+ * Found by chasing a real finding to ground: a field label measured 3.08:1 and
+ * turned out to be the disabled example on the demo page. The colour was right;
+ * the instrument was wrong.
+ *
+ * Checks ancestors, not just the element: a label sits beside the control it
+ * labels rather than inside it, so the disabled marker is usually on a parent.
+ */
+function isInactive(el: Element): boolean {
+	for (let node: Element | null = el; node; node = node.parentElement) {
+		if (
+			node.hasAttribute("disabled") ||
+			node.getAttribute("aria-disabled") === "true" ||
+			node.matches(":disabled")
+		) {
+			return true;
+		}
+		// The field marks its own disabled state on the wrapper.
+		if (node.hasAttribute("data-disabled")) return true;
+	}
+	return false;
+}
+
 function isVisible(el: Element): boolean {
 	const style = getComputedStyle(el);
 	if (style.visibility === "hidden" || style.display === "none") return false;
@@ -100,7 +130,7 @@ export function auditContrast(root: ParentNode = document): ContrastFinding[] {
 
 	for (const el of Array.from(root.querySelectorAll<HTMLElement>("*"))) {
 		const sample = ownText(el);
-		if (!sample || !isVisible(el)) continue;
+		if (!sample || !isVisible(el) || isInactive(el)) continue;
 
 		const foreground = usedValue(el, "color");
 		const background = effectiveBackground(el);
