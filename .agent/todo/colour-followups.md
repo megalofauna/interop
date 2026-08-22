@@ -98,3 +98,37 @@ pending number sit at step 10. Layers 3–6, where the drift got genuinely bad
 (down to 2.69:1), no longer exist. What is left to decide is whether step 9
 should clear AA at layer 2 on its own, which is a question about where the
 palette's secondary step sits rather than about depth tracking.
+
+## Retiring the contrast ranks needs the status roles rebuilt first
+
+The queue item read "retire `--itx-contrast-*` once the last read is gone."
+The last *public* read is gone — 0 consumers across the library and all 38
+demo routes. But the ranks are not dead, they have become internal: 192
+declarations in the engine derive status roles from them via relative colour
+syntax, `oklch(from var(--itx-contrast-N) l <chroma> var(--itx-<status>-hue))`.
+
+The blocker is the tint specifically. It rides rank 1 because a rank is
+solved away from *its own* surface at every layer, so a wash riding it cannot
+invert. A palette step cannot do that job — measured against the shipped
+surfaces, in dark:
+
+| layer | surface | step 2 | result |
+| --- | --- | --- | --- |
+| 0 | 0.170 | 0.199 | lifts 0.029 |
+| 1 | 0.202 | 0.199 | **inverts** 0.003 |
+| 2 | 0.234 | 0.199 | **inverts** 0.035 |
+
+A callout inside a card would be darker than the card. That is the exact bug
+rank 1 was introduced to fix, and unlike the margin question this one is
+visible rather than measurable.
+
+The way out is to derive the tint from the surface directly rather than from
+a solved rank — `oklch(from var(--itx-surface) calc(l ± delta) <chroma>
+<hue>)`, with the sign flipped per scheme by `light-dark()`. That is sound
+and would let the whole rank apparatus go, but it is a redesign of the status
+system rather than a cleanup, and it should be done deliberately.
+
+Not doing it now. The ranks cost 72 declarations inside a 1,268-line
+generated file that nobody reads by hand, they carry the render manifest's
+floor proof, and nothing is blocked by their existence. Revisit when the
+status roles are being looked at for their own sake.
