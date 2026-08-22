@@ -218,6 +218,54 @@ export class ColorPage {
 			: null;
 	}
 
+	/* ── Light-mode direction ────────────────────────────────────────────── */
+
+	/**
+	 * Two ways light mode can work, as literal values rather than tokens.
+	 *
+	 * Hardcoded on purpose: the second frame is a proposal that the shipping
+	 * system cannot express, so reading it from tokens would be reading the
+	 * thing it is arguing against. Both frames pin `color-scheme: light`, since
+	 * light is the question — dark is unchanged either way.
+	 *
+	 * Current: tone carries DIRECTION. A card is lighter than the page, a field
+	 * darker, so the page must sit at mid-grey to leave headroom both ways.
+	 *
+	 * Monotonic: tone carries DISTANCE and shadow carries direction, which is
+	 * what Radix, Material and Carbon all do. Card and field are both a step
+	 * away from the page; a drop shadow says raised, an inset one says recessed.
+	 * The page is free to be near-white.
+	 */
+	protected readonly directionFrames = [
+		{
+			id: "current",
+			label: "Current — tone carries direction",
+			note: "page sits at mid-grey to leave room both ways",
+			page: "oklch(0.898 0.006 250)",
+			card: "oklch(0.926 0.006 250)",
+			field: "oklch(0.855 0.006 250)",
+			text: "oklch(0.15 0.006 250)",
+			muted: "oklch(0.489 0.006 250)",
+			border: "oklch(0.593 0.006 250)",
+			cardShadow: "none",
+			fieldShadow: "none",
+		},
+		{
+			id: "monotonic",
+			label: "Monotonic — shadow carries direction",
+			note: "page near-white; card and field both step away from it",
+			page: "oklch(0.99 0.002 250)",
+			card: "oklch(0.965 0.004 250)",
+			field: "oklch(0.955 0.005 250)",
+			text: "oklch(0.17 0.006 250)",
+			muted: "oklch(0.5 0.006 250)",
+			border: "oklch(0.82 0.006 250)",
+			cardShadow:
+				"0 1px 2px oklch(0.2 0 0 / 0.08), 0 2px 8px oklch(0.2 0 0 / 0.06)",
+			fieldShadow: "inset 0 1px 2px oklch(0.2 0 0 / 0.10)",
+		},
+	];
+
 	/* ── Palette boards ──────────────────────────────────────────────────── */
 
 	/**

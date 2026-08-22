@@ -753,6 +753,92 @@
 		}
 	</demo-section>
 
+	<demo-section id="direction" heading="Light mode — which way is up?">
+		<p description class="demo-section__lede">
+			Interop uses tone to say <em>direction</em>: a card is lighter than the
+			page, a field darker. That is why the light page sits at mid-grey — it
+			needs headroom both ways. No other system does this. Radix, Material and
+			Carbon all move one way from the page and let shadow say which way.
+		</p>
+
+		<p>
+			Both frames below are pinned to light mode so they can be compared
+			whatever scheme you are reading in, and both are hardcoded values rather
+			than tokens — the right-hand one is a proposal the shipping system cannot
+			currently express. Dark mode is unchanged either way; it already moves one
+			direction.
+		</p>
+
+		<div class="direction">
+			@for (frame of directionFrames; track frame.id) {
+				<figure class="direction__frame">
+					<figcaption>
+						<strong>{{ frame.label }}</strong>
+						<span>{{ frame.note }}</span>
+					</figcaption>
+
+					<div
+						class="direction__page"
+						[style.background-color]="frame.page"
+						[style.color]="frame.text"
+					>
+						<p class="direction__body">
+							Body text on the page itself.
+							<span [style.color]="frame.muted">Secondary text beside it.</span>
+						</p>
+
+						<div
+							class="direction__card"
+							[style.background-color]="frame.card"
+							[style.box-shadow]="frame.cardShadow"
+							[style.border-color]="frame.border"
+						>
+							<strong>A raised card</strong>
+							<p [style.color]="frame.muted">
+								One step from the page. Raised, or recessed?
+							</p>
+
+							<label class="direction__field" [style.color]="frame.muted">
+								Callsign
+								<input
+									type="text"
+									value="Viper-7"
+									[style.background-color]="frame.field"
+									[style.box-shadow]="frame.fieldShadow"
+									[style.border-color]="frame.border"
+									[style.color]="frame.text"
+								/>
+							</label>
+
+							<div class="direction__row">
+								<span
+									class="direction__chip"
+									[style.background-color]="frame.field"
+									[style.border-color]="frame.border"
+									>a recess</span
+								>
+								<span
+									class="direction__chip"
+									[style.background-color]="frame.card"
+									[style.border-color]="frame.border"
+									[style.box-shadow]="frame.cardShadow"
+									>a raise</span
+								>
+							</div>
+						</div>
+					</div>
+				</figure>
+			}
+		</div>
+
+		<p>
+			The test is the pair at the bottom of each card. On the left they are
+			distinguishable by tone alone, which is the mechanism working — and it
+			costs a grey page. On the right they are the same tone and told apart by
+			shadow, which is what every reference system does, and the page is white.
+		</p>
+	</demo-section>
+
 	<demo-section id="overriding" heading="Overriding">
 		<p description class="demo-section__lede">
 			The rules precede the componentry, so components cohere without agreeing

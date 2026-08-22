@@ -747,3 +747,86 @@
 		opacity: 0.7;
 	}
 }
+
+/*
+ * Light-mode direction comparison.
+ *
+ * Both frames pin color-scheme: light and paint from literal values, because
+ * the right-hand frame is a proposal the shipping system cannot express. The
+ * page inside each frame is a real page, not a swatch — the question is what a
+ * card and a field look like ON it, which a colour chip cannot answer.
+ */
+.direction {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+	gap: var(--itx-spacing-4);
+
+	&__frame {
+		margin: 0;
+
+		figcaption {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+			margin-block-end: var(--itx-spacing-2);
+			font-size: var(--itx-font-size-caption);
+
+			span {
+				color: var(--itx-contrast-4);
+			}
+		}
+	}
+
+	/* Pinned: the comparison is about light mode, and it has to hold whatever
+	   scheme the reader is in. */
+	&__page {
+		color-scheme: light;
+		padding: var(--itx-spacing-5);
+		border-radius: var(--itx-radius-sm);
+		font-size: var(--itx-font-size-caption);
+	}
+
+	&__body {
+		margin: 0 0 var(--itx-spacing-4);
+	}
+
+	&__card {
+		padding: var(--itx-spacing-4);
+		border-radius: var(--itx-radius-sm);
+		border: 1px solid;
+
+		strong {
+			display: block;
+			margin-block-end: var(--itx-spacing-1);
+		}
+
+		p {
+			margin: 0 0 var(--itx-spacing-3);
+		}
+	}
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		margin-block-end: var(--itx-spacing-3);
+
+		input {
+			padding: var(--itx-spacing-2);
+			border-radius: var(--itx-radius-sm);
+			border: 1px solid;
+			font: inherit;
+		}
+	}
+
+	&__row {
+		display: flex;
+		gap: var(--itx-spacing-2);
+	}
+
+	&__chip {
+		padding: var(--itx-spacing-1) var(--itx-spacing-3);
+		border-radius: var(--itx-radius-sm);
+		border: 1px solid;
+	}
+}
