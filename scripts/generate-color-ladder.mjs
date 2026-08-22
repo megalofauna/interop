@@ -119,8 +119,16 @@ const OUT_FACTS = join(
 /**
  * How deep the ladder goes in each direction. Changing these changes how many
  * @container blocks the engine emits; everything downstream follows.
+ *
+ * Three shades, not seven. Six increments accumulated nearly .2 in lightness —
+ * more drift than a whole palette step — which is what made a fixed,
+ * page-relative palette lose its margin at the bottom of the ladder. Real UI
+ * does not nest that far, and nobody else ships a ramp that long: Radix,
+ * Carbon and Material all give you two or three named surfaces and stop.
+ * Deeper pins clamp rather than fail. Revisit when someone actually wants a
+ * fourth.
  */
-const DEPTH = { below: 0, above: 6 };
+const DEPTH = { below: 0, above: 2 };
 
 /**
  * The ramp SPEC — five numbers per scheme, not a hand-kept table of seven.

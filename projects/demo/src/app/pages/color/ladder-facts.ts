@@ -127,11 +127,7 @@ export const RANK_FACTS: readonly RankFact[] = [
 export const LAYER_KEYS: readonly string[] = [
 	"0",
 	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6"
+	"2"
 ];
 
 /** Surface lightness per scheme, per layer. Chroma and hue come from the tint. */
@@ -139,20 +135,12 @@ export const SURFACE_FACTS: Record<string, Record<string, number>> = {
 	light: {
 		"0": 0.99,
 		"1": 0.965,
-		"2": 0.94,
-		"3": 0.915,
-		"4": 0.89,
-		"5": 0.865,
-		"6": 0.84
+		"2": 0.94
 	},
 	dark: {
 		"0": 0.17,
 		"1": 0.202,
-		"2": 0.234,
-		"3": 0.266,
-		"4": 0.298,
-		"5": 0.33,
-		"6": 0.362
+		"2": 0.234
 	}
 };
 
@@ -798,7 +786,7 @@ export const HUE_CEILINGS: readonly HueCeiling[] = [
 export const INPUT_FACTS: InputFacts = {
 	depth: {
 		below: 0,
-		above: 6
+		above: 2
 	},
 	ramp: {
 		light: {

@@ -89,3 +89,12 @@ worth committing to before the palettes have been used in real contexts long
 enough to show what the problem actually looks like. Point-fix what the audit
 catches; revisit once button and stepper are moved and the palette has been
 lived in.
+
+**Update (2026-08-22): the ramp was capped at three shades.** `DEPTH.above`
+went 6 → 2, which removes most of this problem rather than solving it. The
+deepest surface is now layer 2, where secondary text (step 9) measures 4.18:1
+in dark — still short, which is why the field's addons and the stepper's
+pending number sit at step 10. Layers 3–6, where the drift got genuinely bad
+(down to 2.69:1), no longer exist. What is left to decide is whether step 9
+should clear AA at layer 2 on its own, which is a question about where the
+palette's secondary step sits rather than about depth tracking.
