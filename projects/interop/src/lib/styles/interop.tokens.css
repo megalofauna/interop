@@ -434,7 +434,7 @@
 	/* --itx-field-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
 	/* --itx-field-color: var(--itx-contrast-6); */
 	/* --itx-field-disabled-color: var(--itx-contrast-3); */
-	/* --itx-field-error-color: var(--itx-danger-solid); */
+	/* --itx-field-error-color: var(--itx-danger-text); */
 	/* --itx-field-error-font-size: 0.75rem; */
 	/* --itx-field-error-line-height: 1.3333; */
 	/* --itx-field-errors-gap: var(--itx-spacing-1); */
