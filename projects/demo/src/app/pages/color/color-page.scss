@@ -538,3 +538,92 @@
 		}
 	}
 }
+
+/*
+ * 12-step preview.
+ *
+ * Deliberately styled apart from the boards above: this is a proposal, and it
+ * should not be mistakable for the shipping palette while it sits on the same
+ * page as one.
+ */
+.palette-rule {
+	padding: var(--itx-spacing-4);
+	border-inline-start: var(--itx-border-width-heavy) solid
+		var(--itx-colorway-border);
+	background-color: var(--itx-contrast-1);
+	border-radius: var(--itx-radius-sm);
+
+	strong {
+		display: block;
+		margin-block-end: var(--itx-spacing-2);
+	}
+
+	p {
+		margin-block: 0 var(--itx-spacing-2);
+		max-inline-size: var(--itx-measure);
+	}
+
+	ul {
+		margin: 0;
+		padding-inline-start: var(--itx-spacing-5);
+	}
+}
+
+.palette-scale {
+	margin: var(--itx-spacing-6) 0 0;
+
+	figcaption {
+		display: flex;
+		align-items: baseline;
+		gap: var(--itx-spacing-2);
+		margin-block-end: var(--itx-spacing-2);
+		font-size: var(--itx-font-size-caption);
+
+		span {
+			color: var(--itx-contrast-4);
+		}
+
+		code {
+			color: var(--itx-contrast-4);
+			font-family: var(--itx-font-family-mono);
+		}
+	}
+
+	&__strip {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: var(--itx-spacing-1);
+		overflow-x: auto;
+	}
+
+	&__step {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-inline-size: 0;
+
+		b {
+			font-size: var(--itx-font-size-caption);
+			font-family: var(--itx-font-family-mono);
+			font-weight: 500;
+		}
+
+		small {
+			font-size: 0.6875rem;
+			color: var(--itx-contrast-4);
+			line-height: 1.2;
+		}
+
+		/* The band boundary: 1–5 is elevation, 6–12 is everything drawn on it. */
+		&.is-band-edge {
+			padding-inline-start: var(--itx-spacing-2);
+			border-inline-start: 1px solid var(--itx-contrast-3);
+		}
+	}
+
+	&__chip {
+		block-size: var(--itx-sz-12);
+		border-radius: var(--itx-radius-sm);
+		border: 1px solid var(--itx-contrast-2);
+	}
+}

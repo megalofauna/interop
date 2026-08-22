@@ -28,6 +28,12 @@ import {
 	usedValue,
 } from "interop/lib/dev/contrast";
 import {
+	PALETTE_BANDS,
+	PALETTE_INTENTS,
+	PALETTE_RULE,
+	PALETTE_SCALES,
+} from "./palette-preview";
+import {
 	FAMILY_FACTS,
 	HUE_CEILINGS,
 	HUE_SWEEP,
@@ -141,6 +147,56 @@ export class ColorPage {
 	 * is something you see rather than something you are told.
 	 */
 	protected readonly solidStates = ["solid", "solid-hover", "solid-active"];
+
+	/* ── 12-step preview ─────────────────────────────────────────────────── */
+
+	/**
+	 * A proposed scale, rendered but not shipped.
+	 *
+	 * Nothing here is a token. The generator that produces it writes no CSS —
+	 * the point is to look at the model before committing to it, which is why
+	 * every swatch is composed inline from the emitted numbers rather than read
+	 * back from a custom property.
+	 */
+	protected readonly previewScales = PALETTE_SCALES;
+	protected readonly previewBands = PALETTE_BANDS;
+	protected readonly previewRule = PALETTE_RULE;
+
+	/** Step numbers in order, both bands. */
+	protected readonly previewSteps: readonly number[] = [
+		...PALETTE_BANDS.background,
+		...PALETTE_BANDS.foreground,
+	];
+
+	/** What a foreground step is for. Background steps are elevation. */
+	protected previewIntent(step: number): string {
+		if (PALETTE_BANDS.background.includes(step)) {
+			return step === 1 ? "page" : `layer ${step - 1}`;
+		}
+		return PALETTE_INTENTS.find((i) => i.step === step)?.intent ?? "";
+	}
+
+	/**
+	 * One swatch, both schemes.
+	 *
+	 * light-dark() rather than two boards: the scale is scheme-paired by design
+	 * — step 12 means "highest contrast text" in both — and showing that as one
+	 * swatch that changes is the claim.
+	 */
+	protected previewColor(scaleId: string, step: number): string {
+		const scale = PALETTE_SCALES.find((s) => s.id === scaleId);
+		if (!scale) return "transparent";
+		const at = (scheme: "light" | "dark"): string => {
+			const s = scale.schemes[scheme].steps[String(step)];
+			return `oklch(${s.l} ${s.c} ${scale.hue})`;
+		};
+		return `light-dark(${at("light")}, ${at("dark")})`;
+	}
+
+	/** Whether a step sits in the background band — drives the divider. */
+	protected isBackgroundStep(step: number): boolean {
+		return PALETTE_BANDS.background.includes(step);
+	}
 
 	/* ── Palette boards ──────────────────────────────────────────────────── */
 

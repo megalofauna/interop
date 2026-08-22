@@ -321,8 +321,8 @@ const MIN_SURFACE_STEP = 0.02;
  */
 const SEEDS = {
 	colorway: {
-		// Jelly Bean. Replaces Science Blue #0066CC as the default.
-		default: { name: "Jelly Bean", seed: [0.522, 0.11, 246.74] },
+		// Science Blue #0066CC, the long-standing default.
+		default: { name: "Science Blue", seed: [0.5, 0.19, 264] },
 		// Cream Can. Peaks light, which is exactly what broke the slot model.
 		amber: { name: "Cream Can", seed: [0.832, 0.12, 82.32] },
 	},
@@ -738,7 +738,7 @@ function familyList() {
 			variant: name,
 			// A seed may be a bare [L, C, H] or a named record. The name is
 			// decoration for the demo — nothing solves differently for having one —
-			// but "Jelly Bean" is a great deal easier to hold in mind than 246.74.
+			// but "Science Blue" is a great deal easier to hold in mind than 264.
 			name: entry.name ?? null,
 			seed: entry.seed ?? entry,
 		});

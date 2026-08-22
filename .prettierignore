@@ -18,6 +18,7 @@ projects/interop/src/lib/styles/tokens/elevation.css
 projects/interop/src/lib/styles/interop.tokens.css
 projects/interop/src/lib/styles/tokens/ladder.css-source.ts
 projects/demo/src/app/pages/color/ladder-facts.ts
+projects/demo/src/app/pages/color/palette-preview.ts
 
 # Generated icon components — 18,431 files, ~99% of the repo's file count and
 # every one of them emitted by scripts/generate-icons.mjs. Formatting them would

@@ -598,6 +598,87 @@
 		</div>
 	</demo-section>
 
+	<demo-section
+		id="preview"
+		heading="A 12-step palette — proposed, not shipped"
+	>
+		<p description class="demo-section__lede">
+			A model under consideration, rendered so it can be judged before it is
+			adopted. Nothing here is a token: the generator behind it writes no CSS,
+			and every swatch is composed from the emitted numbers rather than read
+			back from a custom property. The system on this page above is what
+			actually ships.
+		</p>
+
+		<p>
+			The scale is <strong>banded, not monotonic</strong>. Radix ascends in
+			lightness; Interop's elevation moves toward light in
+			<em>both</em> schemes, so a monotonic scale would run elevation backwards.
+			Steps 1–5 are the background band ordered by elevation — step 1 is the
+			page — and 6–12 are the foreground band ordered by increasing contrast
+			<em>against</em> that band. What ascends is not lightness but contrast
+			where it is read.
+		</p>
+
+		<div class="palette-rule">
+			<strong>The whole rule</strong>
+			<p>
+				Every foreground step was solved against the <em>worst</em> background
+				in the band, so the guidance is three constants rather than a lookup
+				table — and it holds for all four hues below, in both schemes.
+			</p>
+			<ul>
+				<li>
+					Borders — step <strong>{{ previewRule["border"] }}</strong>
+				</li>
+				<li>
+					Text — step <strong>{{ previewRule["text"] }}</strong>
+				</li>
+				<li>
+					High-contrast text — step <strong>{{ previewRule["high"] }}</strong>
+				</li>
+			</ul>
+		</div>
+
+		@for (scale of previewScales; track scale.id) {
+			<figure class="palette-scale">
+				<figcaption>
+					<strong>{{ scale.id }}</strong>
+					@if (scale.note) {
+						<span>{{ scale.note }}</span>
+					}
+					<code>hue {{ scale.hue }}</code>
+				</figcaption>
+
+				<div class="palette-scale__strip">
+					@for (step of previewSteps; track step) {
+						<span
+							class="palette-scale__step"
+							[class.is-background]="isBackgroundStep(step)"
+							[class.is-band-edge]="step === 6"
+						>
+							<span
+								class="palette-scale__chip"
+								[style.background-color]="previewColor(scale.id, step)"
+							></span>
+							<b>{{ step }}</b>
+							<small>{{ previewIntent(step) }}</small>
+						</span>
+					}
+				</div>
+			</figure>
+		}
+
+		<p>
+			The hostile teal is in there deliberately: its chroma ceiling is
+			<code>.145</code>, the lowest anywhere on the circle, and it still
+			produces a compliant scale. Watch its step 12 though — high-contrast text
+			in a saturated hue desaturates almost to grey, because that lightness
+			cannot hold chroma. That is the model telling the truth rather than a
+			defect, but it is worth seeing before committing.
+		</p>
+	</demo-section>
+
 	<demo-section id="overriding" heading="Overriding">
 		<p description class="demo-section__lede">
 			The rules precede the componentry, so components cohere without agreeing
