@@ -70,15 +70,15 @@
 	   between that ancestor and the button, which reclaims the token. Variant
 	   rules below stay on button[interop-button~="…"] because they're keyed off
 	   attributes that don't propagate up the tree. */
-	--itx-button-background: var(--itx-contrast-2);
-	--itx-button-foreground: var(--itx-contrast-6);
+	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-foreground: var(--itx-neutral-14);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
 	/* Hover / active — Carbon's state ramps are monotonic: each state sits one
 	   step further from the page than the one before it. */
-	--itx-button-background-hover: var(--itx-contrast-2);
-	--itx-button-background-active: var(--itx-contrast-2);
+	--itx-button-background-hover: var(--itx-neutral-3);
+	--itx-button-background-active: var(--itx-neutral-3);
 
 	/* Focused/selected state — kept on --itx-colorway-solid rather than Carbon's
 	   inset double ring; see the note at the foot of this file. */
@@ -96,7 +96,7 @@
    derived FOR that identity — not the neutral maximum.
 
    This block previously set the background and left the foreground to inherit
-   --itx-contrast-6, which is near-white in dark mode. On blue that happened to
+   the neutral maximum, which is near-white in dark mode. On blue that happened to
    look fine; on amber it put white on vivid orange at about 1.7:1. The button
    carried a hand-written comment explaining a related pairing bug, which is
    the tell that "what label does this fill take?" needed one answer rather
@@ -108,7 +108,7 @@
 :where(button[interop-button~="primary"]) {
 	--itx-button-background: var(--itx-colorway-solid);
 	--itx-button-foreground: var(--itx-colorway-on-solid);
-	--itx-button-border-color: var(--itx-contrast-2);
+	--itx-button-border-color: var(--itx-neutral-3);
 	--itx-button-box-shadow: none;
 
 	--itx-button-background-hover: var(--itx-colorway-solid-hover);
@@ -122,14 +122,14 @@
    A light neutral, not Carbon's dark solid. */
 
 :where(button[interop-button~="secondary"]) {
-	--itx-button-background: var(--itx-contrast-2);
-	--itx-button-foreground: var(--itx-contrast-5);
+	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-contrast-2);
+	--itx-button-background-hover: var(--itx-neutral-3);
 
-	--itx-button-background-active: var(--itx-contrast-2);
+	--itx-button-background-active: var(--itx-neutral-3);
 }
 
 /* ── tertiary ────────────────────────────────────────────────────────────
@@ -146,16 +146,16 @@
 
 :where(button[interop-button~="tertiary"]) {
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-contrast-5);
-	--itx-button-border-color: var(--itx-contrast-4);
+	--itx-button-foreground: var(--itx-neutral-11);
+	--itx-button-border-color: var(--itx-neutral-9);
 	--itx-button-box-shadow: none;
 
-	--itx-button-foreground-hover: var(--itx-contrast-6);
+	--itx-button-foreground-hover: var(--itx-neutral-14);
 	--itx-button-background-hover: var(--itx-button-background);
-	--itx-button-border-color-hover: var(--itx-contrast-4);
+	--itx-button-border-color-hover: var(--itx-neutral-9);
 
-	--itx-button-foreground-active: var(--itx-contrast-5);
-	--itx-button-border-color-active: var(--itx-contrast-4);
+	--itx-button-foreground-active: var(--itx-neutral-11);
+	--itx-button-border-color-active: var(--itx-neutral-9);
 	--itx-button-background-active: transparent;
 }
 
@@ -297,18 +297,18 @@
 	button[interop-button~="action"][aria-disabled="true"]
 ) {
 	--itx-button-disabled-opacity: 1;
-	--itx-button-background: var(--itx-contrast-2);
-	--itx-button-foreground: var(--itx-contrast-4);
-	--itx-button-border-color: var(--itx-contrast-2);
+	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-foreground: var(--itx-neutral-9);
+	--itx-button-border-color: var(--itx-neutral-3);
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-contrast-2);
-	--itx-button-foreground-hover: var(--itx-contrast-4);
-	--itx-button-border-color-hover: var(--itx-contrast-2);
+	--itx-button-background-hover: var(--itx-neutral-3);
+	--itx-button-foreground-hover: var(--itx-neutral-9);
+	--itx-button-border-color-hover: var(--itx-neutral-3);
 
-	--itx-button-background-active: var(--itx-contrast-2);
-	--itx-button-foreground-active: var(--itx-contrast-4);
-	--itx-button-border-color-active: var(--itx-contrast-2);
+	--itx-button-background-active: var(--itx-neutral-3);
+	--itx-button-foreground-active: var(--itx-neutral-9);
+	--itx-button-border-color-active: var(--itx-neutral-3);
 }
 
 /* Carbon's outline variants stay transparent when disabled — only the border
@@ -323,11 +323,11 @@
 	button[interop-button~="tertiary"][aria-disabled="true"]
 ) {
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-contrast-3);
+	--itx-button-foreground: var(--itx-neutral-8);
 	--itx-button-background-hover: transparent;
-	--itx-button-foreground-hover: var(--itx-contrast-3);
+	--itx-button-foreground-hover: var(--itx-neutral-8);
 	--itx-button-background-active: transparent;
-	--itx-button-foreground-active: var(--itx-contrast-3);
+	--itx-button-foreground-active: var(--itx-neutral-8);
 }
 
 /* ── Not taken from Carbon ───────────────────────────────────────────────── */
