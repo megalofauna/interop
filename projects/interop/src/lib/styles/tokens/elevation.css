@@ -2361,3 +2361,20 @@
 	background-color: var(--itx-surface);
 	color: var(--itx-contrast-6);
 }
+
+/*
+ * Direction. Tone already said how FAR from the page a surface is; these
+ * say which way, which is the half of the model tone used to carry.
+ *
+ * A layer and a sink at the same depth are the same colour on purpose —
+ * light from above is what separates them, so a raise casts a shadow and a
+ * recess is shadowed within. Zero specificity, so a component that paints
+ * its own box-shadow wins on contact and nothing here needs unwinding.
+ */
+:where([itx-layer]) {
+	box-shadow: var(--itx-elevation-shadow);
+}
+
+:where([itx-sink]) {
+	box-shadow: var(--itx-recess-shadow);
+}

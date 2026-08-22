@@ -1457,6 +1457,35 @@ function emitEngine() {
 	L.push("\tcolor: var(--itx-contrast-6);");
 	L.push("}");
 	L.push("");
+	L.push("/*");
+	L.push(
+		" * Direction. Tone already said how FAR from the page a surface is; these",
+	);
+	L.push(
+		" * say which way, which is the half of the model tone used to carry.",
+	);
+	L.push(" *");
+	L.push(
+		" * A layer and a sink at the same depth are the same colour on purpose —",
+	);
+	L.push(
+		" * light from above is what separates them, so a raise casts a shadow and a",
+	);
+	L.push(
+		" * recess is shadowed within. Zero specificity, so a component that paints",
+	);
+	L.push(
+		" * its own box-shadow wins on contact and nothing here needs unwinding.",
+	);
+	L.push(" */");
+	L.push(":where([itx-layer]) {");
+	L.push("\tbox-shadow: var(--itx-elevation-shadow);");
+	L.push("}");
+	L.push("");
+	L.push(":where([itx-sink]) {");
+	L.push("\tbox-shadow: var(--itx-recess-shadow);");
+	L.push("}");
+	L.push("");
 
 	return L.join("\n");
 }
