@@ -25,14 +25,15 @@ import {
 	measure,
 	usedValue,
 } from "interop/lib/dev/contrast";
-import { PALETTE_SCALES } from "./palette-preview";
 import {
 	FAMILY_FACTS,
 	HUE_CEILINGS,
 	HUE_SWEEP,
 	LAYER_KEYS,
-	RANK_FACTS,
+	PALETTE_FACTS,
 	type FamilyFact,
+	type PaletteFamily,
+	type PaletteStep,
 } from "./ladder-facts";
 
 @Component({
@@ -90,55 +91,72 @@ export class ColorPage {
 	 */
 	protected readonly solidStates = ["solid", "solid-hover", "solid-active"];
 
-	/**
-	 * The chosen candidate's scales, for the legibility board.
-	 *
-	 * One scale at a time and one swatch per step, big enough to judge: the
-	 * board's whole argument is that a name printed IN the colour it names
-	 * cannot lie about its own legibility, and that needs room to be read.
-	 */
-	protected readonly boardScales = PALETTE_SCALES.filter(
-		(s) => s.chosen && (s.id === "neutral" || s.id === "colorway"),
-	);
-
-	/** Legible foregrounds for a background step, at the AA floor. */
-	protected legibleOn(
-		scaleId: string,
-		step: number,
-	): readonly { step: number; ratio: number }[] {
-		const scale = PALETTE_SCALES.find((s) => s.chosen && s.id === scaleId);
-		return scale?.legible[step - 1]?.["aa"] ?? [];
-	}
-
-	/** A step's colour, for painting or for writing with. */
-	protected stepColor(scaleId: string, step: number): string {
-		const scale = PALETTE_SCALES.find((s) => s.chosen && s.id === scaleId);
-		const s = scale?.steps.find((x) => x.step === step);
-		return s ? `oklch(${s.l} ${s.c} ${scale!.hue})` : "transparent";
-	}
-
 	/* ── Light-mode direction ────────────────────────────────────────────── */
 
 	/* ── Palette boards ──────────────────────────────────────────────────── */
 
-	/**
-	 * Every layer, deepest sink first — the same order the generator emits.
-	 *
-	 * The palette is a grid rather than a strip because that is what it is: a
-	 * rank is a contrast target against its own surface, so "contrast 4" is a
-	 * different colour on every layer. A flat swatch row would have to pick one
-	 * and imply the rest.
-	 */
+	/** Every layer, deepest first — the same order the generator emits. */
 	protected readonly paletteLayers: readonly string[] = LAYER_KEYS;
 
-	/** Neutral columns: the substrate, then everything drawn on it. */
-	protected readonly neutralColumns = [
-		{ token: "--itx-surface", label: "surface" },
-		...RANK_FACTS.map((r) => ({
-			token: `--itx-contrast-${r.rank}`,
-			label: `contrast-${r.rank}`,
-		})),
-	];
+	/* ── The palette ─────────────────────────────────────────────────────── */
+
+	protected readonly palette = PALETTE_FACTS;
+
+	/**
+	 * A strip, not a grid.
+	 *
+	 * This section used to render a layer-by-rank matrix, because a rank was a
+	 * contrast target against its own surface and so had a different value on
+	 * every layer. A step is not: it is a fixed position on a ramp measured from
+	 * the page, the same colour wherever it is used. One row per family says
+	 * that; a grid would imply a depth axis the palette does not have.
+	 */
+	protected readonly paletteStrips = PALETTE_FACTS.families.filter((f) =>
+		["neutral", "colorway", "danger", "success"].includes(f.id),
+	);
+
+	/**
+	 * Which arm is on screen. Everything measured here is scheme-dependent, and
+	 * scheme pairing fixes the DISTANCE a step sits from the page, not its
+	 * ratio — so the same step carries body text in light and only secondary in
+	 * dark. Reporting one arm and implying the other would be a lie the board is
+	 * specifically built to prevent.
+	 */
+	protected readonly scheme = signal<"light" | "dark">("dark");
+
+	protected stepsOf(family: PaletteFamily): readonly PaletteStep[] {
+		return this.scheme() === "dark" ? family.dark : family.light;
+	}
+
+	/** Steps clearing a floor against this background, in the active scheme. */
+	protected legibleOn(
+		familyId: string,
+		step: number,
+		floor = "secondary",
+	): readonly { step: number; ratio: number }[] {
+		return (
+			this.palette.legible[familyId]?.[this.scheme()]?.[step - 1]?.floors[
+				floor
+			] ?? []
+		);
+	}
+
+	/**
+	 * A step, as the CSS spells it.
+	 *
+	 * The board used to paint from numbers a separate preview generator
+	 * produced, which let it agree with itself while disagreeing with the
+	 * stylesheet. Painting with the token means a name printed in the colour it
+	 * names is printed in the colour that ships.
+	 */
+	protected token(familyId: string, step: number): string {
+		return `var(--itx-${familyId}-${step})`;
+	}
+
+	/** The families the board renders at full size. */
+	protected readonly boardFamilies = PALETTE_FACTS.families.filter((f) =>
+		Object.keys(PALETTE_FACTS.legible).includes(f.id),
+	);
 
 	/** Colourway columns — the roles that re-solve against their layer. */
 	protected readonly colorwayColumns = [
@@ -259,7 +277,18 @@ export class ColorPage {
 		return this.swatches().get(key) ?? "";
 	}
 
+	/** Read the arm actually in force, rather than guessing from the media query. */
+	private readScheme(): "light" | "dark" {
+		const root = document.querySelector("[interop-root]");
+		const declared = root ? getComputedStyle(root).colorScheme.trim() : "";
+		if (declared === "light" || declared === "dark") return declared;
+		return matchMedia("(prefers-color-scheme: dark)").matches
+			? "dark"
+			: "light";
+	}
+
 	private remeasure(): void {
+		this.scheme.set(this.readScheme());
 		requestAnimationFrame(() => {
 			const colours = new Map<string, string>();
 			for (const el of Array.from(

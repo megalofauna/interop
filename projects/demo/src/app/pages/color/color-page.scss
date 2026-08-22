@@ -27,7 +27,7 @@
 		code {
 			font-family: var(--itx-font-family-mono);
 			font-size: var(--itx-font-size-caption);
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 		}
 
 		p {
@@ -49,7 +49,7 @@
 		display: block;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-9);
+		color: var(--itx-neutral-10);
 		margin-block-end: var(--itx-spacing-3);
 	}
 
@@ -59,7 +59,7 @@
 		p {
 			margin: 0 0 var(--itx-spacing-3);
 			font-size: var(--itx-font-size-caption);
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 		}
 	}
 }
@@ -97,7 +97,7 @@
 
 		span {
 			font-family: var(--itx-font-family-mono);
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 		}
 	}
 }
@@ -105,7 +105,7 @@
 /* A measured ratio sits under each fill. Under its floor, it says so. */
 .color-families__ratio {
 	font-family: var(--itx-font-family-mono);
-	color: var(--itx-neutral-9);
+	color: var(--itx-neutral-10);
 
 	&.is-under {
 		color: var(--itx-danger-text);
@@ -140,7 +140,7 @@
 	figcaption {
 		margin-block-start: var(--itx-spacing-2);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-9);
+		color: var(--itx-neutral-10);
 		max-inline-size: var(--itx-measure);
 	}
 }
@@ -166,7 +166,7 @@
 				font-weight: 400;
 				font-size: var(--itx-font-size-caption);
 				font-family: var(--itx-font-family-mono);
-				color: var(--itx-neutral-9);
+				color: var(--itx-neutral-10);
 			}
 		}
 	}
@@ -212,7 +212,7 @@
 		grid-column: 1 / -1;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-9);
+		color: var(--itx-neutral-10);
 	}
 
 	&__components {
@@ -267,7 +267,7 @@
 		}
 
 		th {
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 		}
 
 		td:nth-child(3) {
@@ -275,7 +275,7 @@
 		}
 
 		td:last-child {
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 			font-family: var(--itx-font-family-mono);
 		}
 
@@ -307,7 +307,7 @@
 		display: block;
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-9);
+		color: var(--itx-neutral-10);
 		margin-block-end: var(--itx-spacing-3);
 	}
 
@@ -351,7 +351,7 @@
 		&--head {
 			padding-block: 0;
 			font-size: var(--itx-font-size-caption);
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 			font-family: var(--itx-font-family-mono);
 		}
 	}
@@ -359,7 +359,7 @@
 	&__layer {
 		font-family: var(--itx-font-family-mono);
 		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-9);
+		color: var(--itx-neutral-10);
 	}
 
 	&__cell {
@@ -370,7 +370,7 @@
 
 		code {
 			font-size: 0.6875rem;
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -428,9 +428,10 @@
  * it names cannot lie about its own legibility, and that only works if there is
  * room to read it — hence a 256px floor rather than a swatch grid.
  *
- * No token reads inside a card: the card paints a palette step, and the palette
- * is a proposal that has nothing to do with the layer the page happens to be
- * on. Everything inside is coloured from the same proposal, which is the point.
+ * No token reads inside a card beyond the palette itself: the card paints a
+ * step and everything inside is coloured from the same ramp. Reading a layer
+ * token in here would colour the card from the page's depth rather than from
+ * the scale the card is demonstrating.
  */
 .legibility {
 	display: grid;
@@ -445,7 +446,7 @@
 		span {
 			margin-inline-start: var(--itx-spacing-2);
 			font-weight: 400;
-			color: var(--itx-neutral-9);
+			color: var(--itx-neutral-10);
 		}
 	}
 
@@ -505,3 +506,58 @@
  * page inside each frame is a real page, not a swatch — the question is what a
  * card and a field look like ON it, which a colour chip cannot answer.
  */
+
+/*
+ * Palette strips.
+ *
+ * One row per family, one cell per step, no depth axis — a step is the same
+ * colour wherever it lands, which is the whole difference from what this
+ * section used to render. Steps stay legible against themselves by writing in
+ * the far end of their own ramp rather than in a layer token.
+ */
+.palette-strip {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-spacing-3);
+	margin-block-end: var(--itx-spacing-3);
+
+	&__name {
+		flex: 0 0 8rem;
+		font-size: var(--itx-font-size-label);
+	}
+
+	&__steps {
+		display: grid;
+		flex: 1;
+		grid-auto-columns: 1fr;
+		grid-auto-flow: column;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-radius: var(--itx-radius-sm);
+		overflow: hidden;
+	}
+
+	&__step {
+		display: flex;
+		flex-direction: column;
+		gap: 0.125em;
+		min-block-size: 4rem;
+		padding: var(--itx-spacing-2);
+		font-size: var(--itx-font-size-caption);
+		font-variant-numeric: tabular-nums;
+
+		/* Colour comes from the template, which writes each step in the nearest
+		   step measured to clear 4.5:1 against it. An nth-child rule stood here
+		   and guessed; it put 1.00:1 labels on half the ramp. No opacity on the
+		   small text either — it lowers the ratio the label was chosen for. */
+
+		small {
+			font-size: 0.85em;
+		}
+	}
+
+	&__n {
+		font-weight: 500;
+	}
+}

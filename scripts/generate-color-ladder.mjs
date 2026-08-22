@@ -1096,6 +1096,95 @@ function emit() {
  * next to the page in both schemes — the easing put them at the dark end, and
  * the dark end is where the dark page is.
  */
+/** Every family that gets a scale. Neutral is not seeded, so it is added here. */
+function paletteFamilies() {
+	return [
+		{ id: "neutral", hue: TINT.light.h, chroma: 0.012 },
+		...familyList().map((f) => ({
+			id: f.id,
+			hue: f.seed[2],
+			chroma: f.seed[1],
+		})),
+	];
+}
+
+/**
+ * A family's scale as each scheme actually receives it.
+ *
+ * The dark arm is the light ramp read backwards, which is what makes step N
+ * mean the same DISTANCE from the page in both. It does not make it mean the
+ * same RATIO: the light ramp spans more lightness than the dark one, so the
+ * same step measures stronger in light. Anything reporting on the palette has
+ * to do it per scheme or it is reporting on one arm and implying the other.
+ */
+function paletteArms(family) {
+	const steps = buildPalette(family.hue, family.chroma);
+	const arms = {
+		light: steps,
+		dark: steps.map((_, i) => steps[steps.length - 1 - i]),
+	};
+
+	/*
+	 * The step to WRITE a label with, per arm — the closest step on the same
+	 * ramp clearing 4.5:1 against this one, or null where none does.
+	 *
+	 * Nullable on purpose, though nothing on the current ramp returns null. The
+	 * reported AA distance is 8 steps, which the middle of a 14-step scale
+	 * cannot reach in either direction — but that distance is the WORST case
+	 * across every pairing, and specific pairs do better: step 7 clears 4.5:1
+	 * against step 1 at a distance of 6. Reseed the palette and that stops being
+	 * true, so a caller has to handle the absence rather than assume a partner.
+	 */
+	for (const scheme of ["light", "dark"]) {
+		const ramp = arms[scheme];
+		arms[scheme] = ramp.map((bg, i) => {
+			const yBg = luminance(bg.l, bg.c, family.hue);
+			let best = null;
+			for (let j = 0; j < ramp.length; j++) {
+				const fg = ramp[j];
+				if (contrast(luminance(fg.l, fg.c, family.hue), yBg) < 4.5) continue;
+				if (best === null || Math.abs(j - i) < Math.abs(best - 1 - i)) {
+					best = j + 1;
+				}
+			}
+			return { ...bg, step: i + 1, label: best };
+		});
+	}
+	return arms;
+}
+
+/**
+ * What each step can carry, measured off the shipped ramp.
+ *
+ * The page used to answer this from a separate preview generator, which meant
+ * the board could agree with itself while disagreeing with the CSS. Same run,
+ * same numbers, or it is decoration.
+ */
+function paletteLegibility(family) {
+	const arms = paletteArms(family);
+	const out = {};
+	for (const scheme of ["light", "dark"]) {
+		const ramp = arms[scheme];
+		out[scheme] = ramp.map((bg, i) => {
+			const yBg = luminance(bg.l, bg.c, family.hue);
+			const floors = {};
+			for (const f of PALETTE_FLOORS) {
+				floors[f.id] = ramp
+					.map((fg, j) => ({
+						step: j + 1,
+						ratio:
+							Math.round(
+								contrast(luminance(fg.l, fg.c, family.hue), yBg) * 100,
+							) / 100,
+					}))
+					.filter((x) => x.ratio >= f.ratio);
+			}
+			return { step: i + 1, floors };
+		});
+	}
+	return out;
+}
+
 function emitPalette() {
 	const lines = [
 		"",
@@ -1104,19 +1193,12 @@ function emitPalette() {
 		"\t *",
 		`\t * ${PALETTE.steps} steps per family, even in OKLCH lightness with an easing`,
 		`\t * curve of ${PALETTE.curve} so the dark end does not accelerate. Scheme-`,
-		"\t * invariant: a ramp, not a scheme pair.",
+		"\t * paired: step N is N steps from the page in either scheme.",
 		"\t *",
 		"\t * Distances, measured off the ramp rather than designed into it:",
 	];
 
-	const families = [
-		{ id: "neutral", hue: TINT.light.h, chroma: 0.012 },
-		...familyList().map((f) => ({
-			id: f.id,
-			hue: f.seed[2],
-			chroma: f.seed[1],
-		})),
-	];
+	const families = paletteFamilies();
 
 	/* Report the distances once — they hold for every family, which is the
 	   finding that makes the scale usable as a rule rather than a lookup. */
@@ -1818,6 +1900,30 @@ function emitFacts(unusable) {
 		})),
 		layerKeys: LAYERS,
 		surfaces: SURFACES,
+		palette: {
+			steps: PALETTE.steps,
+			curve: PALETTE.curve,
+			floors: PALETTE_FLOORS,
+			distances: PALETTE_FLOORS.map((f) => ({
+				id: f.id,
+				ratio: f.ratio,
+				steps: paletteDistance(
+					buildPalette(paletteFamilies()[0].hue, paletteFamilies()[0].chroma),
+					paletteFamilies()[0].hue,
+					f.ratio,
+				),
+			})),
+			families: paletteFamilies().map((f) => ({
+				id: f.id,
+				hue: f.hue,
+				...paletteArms(f),
+			})),
+			legible: Object.fromEntries(
+				paletteFamilies()
+					.filter((f) => f.id === "neutral" || f.id === "colorway")
+					.map((f) => [f.id, paletteLegibility(f)]),
+			),
+		},
 		families: families.map((f) => {
 			const ceiling = round3(peakChroma(f.hue));
 			return {
@@ -1988,6 +2094,56 @@ export const HUE_SWEEP: HueSweepFact = ${j(facts.hueSweep)};
 export const HUE_CEILINGS: readonly HueCeiling[] = ${j(facts.hueCeilings)};
 
 export const INPUT_FACTS: InputFacts = ${j(facts.inputs)};
+
+/** One step: the lightness and chroma one scheme's arm actually receives. */
+export interface PaletteStep {
+	readonly step: number;
+	readonly l: number;
+	readonly c: number;
+	/** The nearest step that clears 4.5:1 on this one. Null in the middle of
+	    the ramp, where the AA distance does not fit in either direction. */
+	readonly label: number | null;
+}
+
+export interface PaletteFamily {
+	readonly id: string;
+	readonly hue: number;
+	readonly light: readonly PaletteStep[];
+	readonly dark: readonly PaletteStep[];
+}
+
+/** A background step, and what clears each floor on it. Per scheme. */
+export interface PaletteBackground {
+	readonly step: number;
+	readonly floors: Record<
+		string,
+		readonly { readonly step: number; readonly ratio: number }[]
+	>;
+}
+
+export interface PaletteFacts {
+	readonly steps: number;
+	readonly curve: number;
+	readonly floors: readonly { readonly id: string; readonly ratio: number }[];
+	/** How far apart two steps must be to clear a floor, anywhere on the ramp. */
+	readonly distances: readonly {
+		readonly id: string;
+		readonly ratio: number;
+		readonly steps: number | null;
+	}[];
+	readonly families: readonly PaletteFamily[];
+	/** Neutral and colourway only — what the legibility board renders. */
+	readonly legible: Record<string, Record<string, readonly PaletteBackground[]>>;
+}
+
+/**
+ * The shipped palette, measured off the same ramp the CSS is written from.
+ *
+ * Note that legibility is keyed by scheme before it is keyed by step. Scheme
+ * pairing fixes the DISTANCE from the page, not the ratio, so a step that
+ * carries body text in light may only reach secondary in dark.
+ */
+export const PALETTE_FACTS: PaletteFacts = ${j(facts.palette)};
 `;
 }
 

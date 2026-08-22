@@ -76,43 +76,41 @@
 			changes.
 		</p>
 
-		<h3 class="color-palette__title">Neutral</h3>
+		<h3 class="color-palette__title">Neutral, and three seeded families</h3>
 		<p>
-			A grid, not a strip. A rank is a contrast target against
-			<em>its own</em> surface, so <code>contrast-4</code> is a different colour
-			on every layer — a single row would have to pick one and imply the rest.
-			Sinks are negative; the page is 0.
+			A strip, not a grid. A step is a fixed position on a ramp measured from
+			the page — the same colour wherever it is used — so there is no depth axis
+			to lay out. Step 1 is the page; step 14 is as far from it as the scale
+			goes.
+		</p>
+		<p>
+			Distances, measured off the ramp rather than designed into it:
+			@for (d of palette.distances; track d.id) {
+				<code>{{ d.id }} {{ d.ratio }}:1 — {{ d.steps }} steps apart</code>
+			}
+			These are worst-case across the whole ramp, which is why they are larger
+			than what any particular pairing needs.
 		</p>
 
-		<div
-			class="color-palette"
-			role="table"
-			aria-label="Neutral palette by layer"
-		>
-			<div class="color-palette__row color-palette__row--head" role="row">
-				<span role="columnheader">layer</span>
-				@for (col of neutralColumns; track col.token) {
-					<span role="columnheader">{{ col.label }}</span>
-				}
-			</div>
-			@for (layer of paletteLayers; track layer) {
-				<div [attr.itx-layer]="layer" class="color-palette__row" role="row">
-					<span class="color-palette__layer" role="rowheader">
-						{{ layerLabel(layer) }}
-					</span>
-					@for (col of neutralColumns; track col.token) {
-						<span class="color-palette__cell" role="cell">
-							<span
-								class="color-palette__chip"
-								[style.background-color]="'var(' + col.token + ')'"
-								[attr.data-swatch]="'n-' + layer + '-' + col.label"
-							></span>
-							<code>{{ swatchColor("n-" + layer + "-" + col.label) }}</code>
-						</span>
+		@for (family of paletteStrips; track family.id) {
+			<div class="palette-strip">
+				<span class="palette-strip__name"
+					><code>{{ family.id }}</code></span
+				>
+				<ol class="palette-strip__steps">
+					@for (step of stepsOf(family); track step.step) {
+						<li
+							class="palette-strip__step"
+							[style.background-color]="token(family.id, step.step)"
+							[style.color]="step.label ? token(family.id, step.label) : null"
+						>
+							<span class="palette-strip__n">{{ step.step }}</span>
+							<small>L {{ step.l }}</small>
+						</li>
 					}
-				</div>
-			}
-		</div>
+				</ol>
+			</div>
+		}
 
 		<h3 class="color-palette__title">Colourway</h3>
 		<p>
@@ -464,42 +462,47 @@
 		</p>
 
 		<p>
-			14 steps, curve 1.30 — the candidate settled on above. Names shown are the
-			steps clearing <strong>4.5:1</strong> against that background; the
-			measured ratio follows each, small, so a borderline pass reads as
-			borderline rather than as a tick.
+			Painted with the shipped tokens, not with numbers computed alongside them,
+			so the board cannot agree with itself while disagreeing with the
+			stylesheet. Names shown clear <strong>4.5:1</strong> against that
+			background; the measured ratio follows each, small, so a borderline pass
+			reads as borderline rather than as a tick.
 		</p>
 
-		@for (scale of boardScales; track scale.id) {
-			<h3 class="legibility__title">
-				{{ scale.id }}
-				@if (scale.note) {
-					<span>{{ scale.note }}</span>
-				}
-			</h3>
+		<p>
+			Showing the <strong>{{ scheme() }}</strong> arm, because this is one of
+			the few things on the page that genuinely differs between the two. Scheme
+			pairing fixes how far a step sits from the page, not how much contrast
+			that buys — the light ramp spans more lightness than the dark one, so the
+			same step reads stronger in light. On step 1 in light, body text starts at
+			step 9; in dark it does not arrive until step 11.
+		</p>
+
+		@for (family of boardFamilies; track family.id) {
+			<h3 class="legibility__title">{{ family.id }}</h3>
 
 			<div class="legibility">
-				@for (s of scale.steps; track s.step) {
+				@for (step of stepsOf(family); track step.step) {
 					<article
 						class="legibility__card"
-						[style.background-color]="stepColor(scale.id, s.step)"
+						[style.background-color]="token(family.id, step.step)"
 					>
 						<header
 							[style.color]="
-								stepColor(
-									scale.id,
-									legibleOn(scale.id, s.step)[0]?.step ?? s.step
+								token(
+									family.id,
+									legibleOn(family.id, step.step)[0]?.step ?? step.step
 								)
 							"
 						>
-							step {{ s.step }}
-							<small>L {{ s.l }}</small>
+							step {{ step.step }}
+							<small>L {{ step.l }}</small>
 						</header>
 
-						@if (legibleOn(scale.id, s.step).length) {
+						@if (legibleOn(family.id, step.step).length) {
 							<ul>
-								@for (fg of legibleOn(scale.id, s.step); track fg.step) {
-									<li [style.color]="stepColor(scale.id, fg.step)">
+								@for (fg of legibleOn(family.id, step.step); track fg.step) {
+									<li [style.color]="token(family.id, fg.step)">
 										step {{ fg.step }}
 										<small>{{ fg.ratio }}:1</small>
 									</li>

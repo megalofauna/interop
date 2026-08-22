@@ -87,7 +87,7 @@
 	 *
 	 * 14 steps per family, even in OKLCH lightness with an easing
 	 * curve of 1.3 so the dark end does not accelerate. Scheme-
-	 * invariant: a ramp, not a scheme pair.
+	 * paired: step N is N steps from the page in either scheme.
 	 *
 	 * Distances, measured off the ramp rather than designed into it:
 	 *   border     3:1   7 steps apart
