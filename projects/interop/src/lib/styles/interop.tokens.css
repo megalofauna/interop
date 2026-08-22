@@ -281,20 +281,20 @@
  */
 [interop-root] {
 	/* --itx-content-block-gap: var(--itx-rhythm); */
-	/* --itx-content-caption-color: var(--itx-contrast-4); */
+	/* --itx-content-caption-color: var(--itx-neutral-9); */
 	/* --itx-content-caption-font-size: var(--itx-font-size-label); */
 	/* --itx-content-caption-padding-block-end: var(--itx-spacing-2); */
 	/* --itx-content-code-background: var(--itx-surface-above); */
-	/* --itx-content-code-border-color: var(--itx-contrast-2); */
+	/* --itx-content-code-border-color: var(--itx-neutral-3); */
 	/* --itx-content-code-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
 	/* --itx-content-code-border-width: var(--itx-border-width-hairline); */
-	/* --itx-content-code-color: var(--itx-contrast-6); */
+	/* --itx-content-code-color: var(--itx-neutral-14); */
 	/* --itx-content-code-font-family: var(--itx-font-family-mono); */
 	/* --itx-content-code-font-size: 0.875em; */
 	/* --itx-content-code-font-weight: var(--itx-font-weight-body); */
 	/* --itx-content-code-padding: 0.125em 0.275em; */
-	/* --itx-content-color: var(--itx-contrast-6); */
-	/* --itx-content-del-color: var(--itx-contrast-4); */
+	/* --itx-content-color: var(--itx-neutral-14); */
+	/* --itx-content-del-color: var(--itx-neutral-9); */
 	/* --itx-content-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
 	/* --itx-content-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
 	/* --itx-content-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
@@ -311,7 +311,7 @@
 	/* --itx-content-heading-line-height: 1.125; */
 	/* --itx-content-heading-margin-block-end: var(--itx-rhythm-tight); */
 	/* --itx-content-heading-margin-block-start: var(--itx-rhythm-loose); */
-	/* --itx-content-ins-background: var(--itx-contrast-1); */
+	/* --itx-content-ins-background: var(--itx-neutral-2); */
 	/* --itx-content-line-height: var(--itx-line-height); */
 	/* --itx-content-link-color: var(--itx-colorway-text); */
 	/* --itx-content-link-decoration: underline; */
@@ -325,15 +325,15 @@
 	/* --itx-content-pre-background: var(--itx-surface-below); */
 	/* --itx-content-pre-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
 	/* --itx-content-pre-padding: var(--itx-spacing-4); */
-	/* --itx-content-quote-border-color: var(--itx-contrast-3); */
+	/* --itx-content-quote-border-color: var(--itx-neutral-8); */
 	/* --itx-content-quote-border-width: var(--itx-border-width-thick); */
-	/* --itx-content-quote-color: var(--itx-contrast-5); */
+	/* --itx-content-quote-color: var(--itx-neutral-11); */
 	/* --itx-content-quote-padding-inline-start: var(--itx-spacing-4); */
-	/* --itx-content-rule-color: var(--itx-contrast-2); */
+	/* --itx-content-rule-color: var(--itx-neutral-3); */
 	/* --itx-content-rule-margin-block: var(--itx-rhythm-loose); */
 	/* --itx-content-rule-width: var(--itx-border-width-hairline); */
 	/* --itx-content-strong-font-weight: 600; */
-	/* --itx-content-table-border-color: var(--itx-contrast-2); */
+	/* --itx-content-table-border-color: var(--itx-neutral-3); */
 	/* --itx-content-table-border-width: var(--itx-border-width-hairline); */
 	/* --itx-content-table-cell-padding: var(--itx-spacing-2) var(--itx-spacing-3); */
 	/* --itx-content-table-header-background: var(--itx-surface-above); */
@@ -427,13 +427,13 @@
  * values:     themes/protocol/components/field.css
  */
 [interop-root] {
-	/* --itx-field-addon-color: var(--itx-contrast-4); */
+	/* --itx-field-addon-color: var(--itx-neutral-9); */
 	/* --itx-field-addon-gap: var(--itx-spacing-2); */
 	/* --itx-field-background: var(--itx-surface); */
 	/* --itx-field-background-hover: ; */ /* inherits --itx-field-background */
 	/* --itx-field-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
-	/* --itx-field-color: var(--itx-contrast-6); */
-	/* --itx-field-disabled-color: var(--itx-contrast-3); */
+	/* --itx-field-color: var(--itx-neutral-14); */
+	/* --itx-field-disabled-color: var(--itx-neutral-8); */
 	/* --itx-field-error-color: var(--itx-danger-text); */
 	/* --itx-field-error-font-size: 0.75rem; */
 	/* --itx-field-error-line-height: 1.3333; */
@@ -448,26 +448,26 @@
 	/* --itx-field-height: var(--itx-spacing-10); */
 	/* --itx-field-invalid-color: var(--itx-danger-solid); */
 	/* --itx-field-invalid-icon-size: 1rem; */
-	/* --itx-field-label-color: var(--itx-contrast-4); */
+	/* --itx-field-label-color: var(--itx-neutral-9); */
 	/* --itx-field-label-font-size: 0.75rem; */
 	/* --itx-field-label-font-weight: 400; */
 	/* --itx-field-label-gap: var(--itx-spacing-1); */
 	/* --itx-field-label-line-height: 1.3333; */
 	/* --itx-field-line-height: 1.2857; */
-	/* --itx-field-note-color: var(--itx-contrast-4); */
+	/* --itx-field-note-color: var(--itx-neutral-9); */
 	/* --itx-field-note-font-size: 0.75rem; */
 	/* --itx-field-note-line-height: 1.3333; */
 	/* --itx-field-notes-gap: var(--itx-spacing-1); */
 	/* --itx-field-padding-inline: var(--itx-spacing-4); */
-	/* --itx-field-placeholder-color: var(--itx-contrast-4); */
-	/* --itx-field-readonly-underline-color: var(--itx-contrast-2); */
+	/* --itx-field-placeholder-color: var(--itx-neutral-9); */
+	/* --itx-field-readonly-underline-color: var(--itx-neutral-3); */
 	/* --itx-field-required-indicator: " *"; */
 	/* --itx-field-required-indicator-color: var(--itx-danger-solid); */
 	/* --itx-field-textarea-min-inline-size: 10rem; */
 	/* --itx-field-textarea-padding-block: 0.6875rem; */
 	/* --itx-field-textarea-resize: vertical; */
 	/* --itx-field-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-field-underline-color: var(--itx-contrast-4); */
+	/* --itx-field-underline-color: var(--itx-neutral-9); */
 	/* --itx-field-underline-width: 1px; */
 }
 
@@ -1212,7 +1212,7 @@
 	/* --itx-pn-backdrop-filter: none; */
 	/* --itx-pn-background-color: color-mix(in srgb, currentColor 0%, transparent); */
 	/* --itx-pn-background-image: none; */
-	/* --itx-pn-child-color: var(--itx-contrast-4); */
+	/* --itx-pn-child-color: var(--itx-neutral-9); */
 	/* --itx-pn-child-font-size: var(--itx-font-size-caption); */
 	/* --itx-pn-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
 	/* --itx-pn-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
@@ -1227,19 +1227,19 @@
 	/* --itx-pn-indicator-radius: var(--itx-radius-full); */
 	/* --itx-pn-indicator-size: 5px; */
 	/* --itx-pn-item-gap: var(--itx-spacing-1); */
-	/* --itx-pn-link-background-color-current: var(--itx-contrast-1); */
-	/* --itx-pn-link-background-hover: var(--itx-contrast-1); */
+	/* --itx-pn-link-background-color-current: var(--itx-neutral-2); */
+	/* --itx-pn-link-background-hover: var(--itx-neutral-2); */
 	/* --itx-pn-link-background-image-current: ; */ /* no default — unset unless you set it */
 	/* --itx-pn-link-border-color: transparent; */
 	/* --itx-pn-link-border-color-current: ; */ /* inherits --itx-pn-link-border-color */
 	/* --itx-pn-link-border-color-hover: ; */ /* inherits --itx-pn-link-border-color */
 	/* --itx-pn-link-border-width: var(--itx-border-width-thick); */
-	/* --itx-pn-link-color: var(--itx-contrast-4); */
+	/* --itx-pn-link-color: var(--itx-neutral-9); */
 	/* --itx-pn-link-color-active: ; */ /* inherits --itx-pn-link-color */
 	/* --itx-pn-link-color-hover: ; */ /* inherits --itx-pn-link-color */
 	/* --itx-pn-link-padding-block: var(--itx-spacing-3); */
 	/* --itx-pn-link-padding-inline: var(--itx-spacing-4); */
-	/* --itx-pn-nav-rule-color: var(--itx-contrast-2); */
+	/* --itx-pn-nav-rule-color: var(--itx-neutral-3); */
 	/* --itx-pn-nav-rule-style: solid; */
 	/* --itx-pn-nav-rule-width: 2px; */
 	/* --itx-pn-sticky-top: 0; */ /* (fallback) */

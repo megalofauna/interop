@@ -43,7 +43,7 @@
 	/* ── Label ───────────────────────────────────────────────────────────── */
 	/* Carbon $label-01 — 12 / 16 / 400. Fixed rem: a fluid clamp() label inside
 	   a pinned control is how a field overflows itself. */
-	--itx-field-label-color: var(--itx-contrast-4);
+	--itx-field-label-color: var(--itx-neutral-9);
 	--itx-field-label-font-size: 0.75rem;
 	--itx-field-label-font-weight: 400;
 	--itx-field-label-line-height: 1.3333;
@@ -74,7 +74,7 @@
 	/* ── Notes ───────────────────────────────────────────────────────────── */
 	/* $helper-text-01 — same metrics as the label, so the block above and the
 	   block below the control are one voice. */
-	--itx-field-note-color: var(--itx-contrast-4);
+	--itx-field-note-color: var(--itx-neutral-9);
 	--itx-field-note-font-size: 0.75rem;
 	--itx-field-note-line-height: 1.3333;
 	--itx-field-notes-gap: var(--itx-spacing-1);
@@ -97,7 +97,7 @@
 	/* Declared here for the LABEL and helper text, which sit outside the
 	   control at the host's layer. The control re-declares it below for the
 	   value text, which sits inside the sink. */
-	--itx-field-disabled-color: var(--itx-contrast-3);
+	--itx-field-disabled-color: var(--itx-neutral-8);
 }
 
 /*
@@ -122,25 +122,28 @@
 	 * moving in Carbon's direction ($field-hover is a step further from the
 	 * surface than $field). A wash, measured from the recessed surface.
 	 */
-	--itx-field-background-hover: var(--itx-contrast-1);
+	--itx-field-background-hover: var(--itx-neutral-2);
 
 	/*
 	 * The underline is the affordance, not a divider, so it is deliberately
 	 * stronger than the rank-2 hairline the other borrow rounds use for
 	 * structural rules.
 	 */
-	--itx-field-underline-color: var(--itx-contrast-4);
+	--itx-field-underline-color: var(--itx-neutral-9);
 
 	/* Read-only softens the rule: the value is still there to be read and
 	   copied, but the box stops advertising itself as somewhere to type. */
-	--itx-field-readonly-underline-color: var(--itx-contrast-2);
+	--itx-field-readonly-underline-color: var(--itx-neutral-3);
 
-	--itx-field-color: var(--itx-contrast-6);
+	--itx-field-color: var(--itx-neutral-14);
 	/* Carbon's $text-placeholder is a documented contrast failure against its
 	   own $field; one step darker keeps placeholder text legible. */
-	--itx-field-placeholder-color: var(--itx-contrast-4);
-	--itx-field-addon-color: var(--itx-contrast-4);
-	--itx-field-disabled-color: var(--itx-contrast-3);
+	--itx-field-placeholder-color: var(--itx-neutral-10);
+	/* Addons sit inside the field's own sink, so their ground is two
+	   elevation layers below the page. Palette steps are page-relative;
+	   step 9 clears AA down to layer 1 only. */
+	--itx-field-addon-color: var(--itx-neutral-10);
+	--itx-field-disabled-color: var(--itx-neutral-8);
 
 	--itx-field-invalid-color: var(--itx-danger-solid);
 }
