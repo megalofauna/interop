@@ -540,96 +540,116 @@
 }
 
 /*
- * 12-step palette preview.
+ * Palette preview.
  *
- * Styled apart from the boards above: it is a proposal, and should not be
- * mistakable for the shipping palette while it sits on the same page as one.
+ * Each candidate is a LAYER, and the strip carries its own outline.
+ *
+ * A ramp end can match the surface it sits on and vanish — in dark mode step 11
+ * is rgb(30,32,35) against a layer-0 page of rgb(27,30,32) — which makes the
+ * next step read as a huge jump. The ramp is not the problem there; the
+ * backdrop is.
+ *
+ * The first fix was a fixed neutral card, and it was wrong for the reason this
+ * whole page is about: --itx-contrast-* is solved against the LAYER, so putting
+ * it on a hardcoded background measured 4.04:1 against a 4.5 floor. Declaring
+ * the card a layer keeps every token correct, and an outline on the strip does
+ * the delineating instead.
  */
+.palette-candidate {
+	margin-block-start: var(--itx-spacing-8);
+	padding: var(--itx-spacing-4);
+	border-radius: var(--itx-radius-md);
+	/* Painted by the layer engine — see the [itx-layer] on the element. */
+
+	header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--itx-spacing-2) var(--itx-spacing-5);
+		margin-block-end: var(--itx-spacing-3);
+
+		h3 {
+			margin: 0;
+			font-size: var(--itx-font-size-label);
+			font-weight: 500;
+		}
+
+		dl {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--itx-spacing-4);
+			margin: 0;
+			font-size: var(--itx-font-size-caption);
+		}
+
+		div {
+			display: flex;
+			gap: var(--itx-spacing-1);
+		}
+
+		dt {
+			color: var(--itx-contrast-4);
+		}
+
+		dd {
+			margin: 0;
+			font-family: var(--itx-font-family-mono);
+		}
+	}
+}
+
 .palette-ramp {
-	margin: var(--itx-spacing-6) 0 0;
+	margin: var(--itx-spacing-3) 0 0;
 
 	figcaption {
 		display: flex;
 		align-items: baseline;
 		flex-wrap: wrap;
 		gap: var(--itx-spacing-2);
-		margin-block-end: var(--itx-spacing-2);
+		margin-block-end: var(--itx-spacing-1);
 		font-size: var(--itx-font-size-caption);
 
-		span,
-		code {
+		span {
 			color: var(--itx-contrast-4);
 		}
-
-		code {
-			font-family: var(--itx-font-family-mono);
-		}
 	}
 
-	&__title {
-		margin-block: var(--itx-spacing-8) var(--itx-spacing-2);
-		font-size: var(--itx-font-size-label);
-		font-weight: 500;
-	}
-
-	/* No gaps. A ramp is continuous, and gaps would read as twelve swatches
-	   rather than one gradation — which is the thing being judged. */
+	/* Continuous: a ramp is a gradation, and gaps would read as N swatches. */
 	&__strip {
-		display: grid;
-		grid-template-columns: repeat(12, minmax(0, 1fr));
+		display: flex;
 		border-radius: var(--itx-radius-sm);
 		overflow: hidden;
+		/* Inset so it delineates without changing the chips' geometry. The ends
+		   need it: a ramp end can be the same colour as its ground. */
+		box-shadow: inset 0 0 0 1px var(--itx-contrast-3);
 	}
 
 	&__step {
+		flex: 1 1 0;
 		display: flex;
 		flex-direction: column;
 		min-inline-size: 0;
 
 		b,
 		small {
-			padding-inline: var(--itx-spacing-1);
+			padding-inline: 2px;
 			font-family: var(--itx-font-family-mono);
+			text-align: center;
 		}
 
 		b {
 			margin-block-start: var(--itx-spacing-1);
-			font-size: var(--itx-font-size-caption);
+			font-size: 0.6875rem;
 			font-weight: 500;
 		}
 
 		small {
-			font-size: 0.625rem;
+			font-size: 0.5625rem;
 			color: var(--itx-contrast-4);
 		}
 	}
 
 	&__chip {
-		block-size: var(--itx-sz-16);
-	}
-
-	&__rules {
-		border-collapse: collapse;
-		font-size: var(--itx-font-size-caption);
-
-		th,
-		td {
-			text-align: start;
-			padding: var(--itx-spacing-1) var(--itx-spacing-3);
-			border-block-end: 1px solid var(--itx-contrast-2);
-		}
-
-		thead th {
-			color: var(--itx-contrast-4);
-			font-weight: 400;
-		}
-
-		tbody th {
-			font-weight: 400;
-		}
-
-		td {
-			font-family: var(--itx-font-family-mono);
-		}
+		block-size: var(--itx-sz-14);
 	}
 }

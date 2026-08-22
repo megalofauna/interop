@@ -40,7 +40,7 @@
 
 [interop-root] {
 	/* The house radius: what every component falls back to. */
-	--itx-radius: var(--itx-radius-nominal);
+	--itx-radius: var(--itx-radius-sm);
 
 	/* Rescales the whole radius ramp proportionally: every step is derived from
 	   this. Root only — a subtree rescales by carrying itx-scale-scope with its

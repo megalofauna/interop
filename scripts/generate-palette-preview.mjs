@@ -45,7 +45,47 @@ import {
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(REPO, "projects/demo/src/app/pages/color/palette-preview.ts");
 
-const STEPS = 12;
+/**
+ * Candidates, rendered side by side. Two dials, both value decisions.
+ *
+ * ── Length ──────────────────────────────────────────────────────────────
+ *
+ * 12 matches Radix. Tailwind ships 11 (50, 100-900, 950) and got there by
+ * adding to both ends twice, which is evidence people kept wanting room. Ten
+ * is the most common count — Carbon, Ant, Open Color, Bootstrap. Adobe
+ * Spectrum runs to 14.
+ *
+ * Measured here, the single-distance rule survives 12 and 14 and breaks at 16:
+ * past that the hues stop agreeing and you need per-hue exceptions. So there is
+ * a real ceiling, and it sits between 14 and 16.
+ *
+ * ── Curve ───────────────────────────────────────────────────────────────
+ *
+ * Even in OKLCH lightness is NOT even to the eye at the dark end. Measured on
+ * the linear ramp, the last step removes 2.86x the light of the one before it
+ * while the first removes 1.26x — so it measures uniform and reads as
+ * accelerating into the dark. OKLab's uniformity is a model, and it diverges
+ * from what the eye reports in a dark context.
+ *
+ * `curve` shrinks ΔL toward the dark end: L = lightest − (1 − (1 − t)^curve)·range.
+ * 1.0 is linear. 1.45 flattens the luminance ratios to 1.40x → 1.47x, the most
+ * even of anything tried. Beyond that it overshoots and the dark end goes
+ * finer than the light.
+ *
+ * This is why neither Radix nor Tailwind is linear in any single space. Ours
+ * was the naive version.
+ */
+const CANDIDATES = [
+	/* The naive ramp. Evenness 2.38 — the complaint, measurable. */
+	{ count: 12, curve: 1.0, note: "linear" },
+	/* The most easing 12 steps can take while every hue still shares one
+	   distance per floor. Past 1.25 the rule starts fragmenting. */
+	{ count: 12, curve: 1.25, note: "eased" },
+	{ count: 14, curve: 1.0, note: "linear" },
+	/* The best of everything tried: evenness 1.39, and 7/8/10 holds for all
+	   five hues. More room than 12 and a rule that still fits on one line. */
+	{ count: 14, curve: 1.3, note: "eased" },
+];
 
 /**
  * Where the ramp starts and ends.
@@ -71,18 +111,31 @@ const FLOORS = [
  * then clamped to the gamut, so the seed sets intensity and the hue sets what
  * is actually reachable.
  */
-const envelope = (i) => Math.sin((Math.PI * (i + 0.5)) / STEPS) ** 0.75;
+const envelope = (i, count) => Math.sin((Math.PI * (i + 0.5)) / count) ** 0.75;
 
-function buildScale({ hue, chroma }) {
+function buildScale({ hue, chroma }, count, curve) {
 	const steps = [];
-	for (let i = 0; i < STEPS; i++) {
-		const t = i / (STEPS - 1);
-		const l = round3(RAMP.lightest - t * (RAMP.lightest - RAMP.darkest));
-		const want = chroma * envelope(i);
+	for (let i = 0; i < count; i++) {
+		const t = i / (count - 1);
+		const eased = 1 - Math.pow(1 - t, curve);
+		const l = round3(RAMP.lightest - eased * (RAMP.lightest - RAMP.darkest));
+		const want = chroma * envelope(i, count);
 		const c = round3(Math.min(want, maxChroma(l, hue)));
 		steps.push({ step: i + 1, l, c });
 	}
 	return steps;
+}
+
+/**
+ * How uneven the ramp reads: the largest adjacent luminance jump over the
+ * smallest. 1.0 would be perfectly even in the physical light; the linear ramp
+ * scores 2.27, which is the complaint made measurable.
+ */
+function spreadOf(steps, hue) {
+	const y = steps.map((s) => luminance(s.l, s.c, hue));
+	const rs = [];
+	for (let i = 1; i < y.length; i++) rs.push(y[i - 1] / y[i]);
+	return Math.max(...rs) / Math.min(...rs);
 }
 
 /** Every step against every other. The whole point. */
@@ -101,9 +154,10 @@ function matrix(steps, hue) {
  * is a real answer, and more useful than a rule with silent exceptions.
  */
 function minimumOffset(m, ratio) {
-	for (let d = 1; d < STEPS; d++) {
+	const n = m.length;
+	for (let d = 1; d < n; d++) {
 		let ok = true;
-		for (let i = 0; i + d < STEPS; i++) if (m[i][i + d] < ratio) ok = false;
+		for (let i = 0; i + d < n; i++) if (m[i][i + d] < ratio) ok = false;
 		if (ok) return d;
 	}
 	return null;
@@ -112,7 +166,7 @@ function minimumOffset(m, ratio) {
 /** Where a given distance stops working, for reporting the exceptions. */
 function breaksAt(m, ratio, offset) {
 	const out = [];
-	for (let i = 0; i + offset < STEPS; i++) {
+	for (let i = 0; i + offset < m.length; i++) {
 		if (m[i][i + offset] < ratio)
 			out.push({ from: i + 1, to: i + offset + 1, ratio: m[i][i + offset] });
 	}
@@ -151,41 +205,52 @@ function seededScales() {
 	];
 }
 
-const scales = seededScales().map((s) => {
-	const steps = buildScale(s);
-	const m = matrix(steps, s.hue);
-	const offsets = {};
-	for (const f of FLOORS) {
-		const d = minimumOffset(m, f.ratio);
-		offsets[f.id] = {
-			offset: d,
-			// If no single distance works, report the smallest that mostly does.
-			exceptions: d === null ? breaksAt(m, f.ratio, STEPS - 1) : [],
-		};
+/** Every seeded hue, at every candidate length. */
+const scales = [];
+for (const { count, curve } of CANDIDATES) {
+	for (const seed of seededScales()) {
+		const steps = buildScale(seed, count, curve);
+		const m = matrix(steps, seed.hue);
+		const offsets = {};
+		for (const f of FLOORS) {
+			const d = minimumOffset(m, f.ratio);
+			offsets[f.id] = {
+				offset: d,
+				exceptions: d === null ? breaksAt(m, f.ratio, count - 1) : [],
+			};
+		}
+		scales.push({
+			...seed,
+			count,
+			curve,
+			note: seed.note,
+			candidate: `${count}-${curve.toFixed(2)}`,
+			/** Ratio of the largest adjacent luminance jump to the smallest. */
+			spread: round3(spreadOf(steps, seed.hue)),
+			ceiling: round3(peakChroma(seed.hue)),
+			deltaFirst: round3(steps[0].l - steps[1].l),
+			deltaLast: round3(steps[count - 2].l - steps[count - 1].l),
+			steps,
+			matrix: m,
+			offsets,
+		});
 	}
-	return {
-		...s,
-		ceiling: round3(peakChroma(s.hue)),
-		steps,
-		matrix: m,
-		offsets,
-	};
-});
+}
 
-console.log("12-step palettes — even in lightness, measured afterwards\n");
-console.log(
-	`  ramp: L ${RAMP.lightest} → ${RAMP.darkest}, ${STEPS} steps, ` +
-		`ΔL ${round3((RAMP.lightest - RAMP.darkest) / (STEPS - 1))} each\n`,
-);
-for (const s of scales) {
-	console.log(`  ${s.id}${s.note ? ` — ${s.note}` : ""}  hue ${s.hue}`);
+console.log("Palettes — an even ramp, then a verdict\n");
+for (const { count, curve } of CANDIDATES) {
+	const here = scales.filter((s) => s.count === count && s.curve === curve);
+	const n = here[0];
+	console.log(
+		`  ${count} steps, curve ${curve.toFixed(2)}` +
+			`   ΔL ${n.deltaFirst} → ${n.deltaLast}   evenness ${n.spread} (1.0 = perfect)`,
+	);
 	for (const f of FLOORS) {
-		const o = s.offsets[f.id];
+		const all = here.map((s) => s.offsets[f.id].offset);
+		const agree = all.every((v) => v !== null && v === all[0]);
 		console.log(
 			`    ${f.label.padEnd(28)} ${
-				o.offset === null
-					? "no single distance works"
-					: `any ${o.offset} steps apart`
+				agree ? `any ${all[0]} steps apart` : `varies: ${all.join(", ")}`
 			}`,
 		);
 	}
@@ -216,6 +281,15 @@ export interface PaletteScale {
 	readonly hue: number;
 	readonly chroma: number;
 	readonly ceiling: number;
+	/** How many steps this candidate has, and how eased. */
+	readonly count: number;
+	readonly curve: number;
+	/** Stable key for grouping: "14-1.30". */
+	readonly candidate: string;
+	/** Largest adjacent luminance jump over the smallest. 1.0 = perfectly even. */
+	readonly spread: number;
+	readonly deltaFirst: number;
+	readonly deltaLast: number;
 	readonly steps: readonly PaletteStep[];
 	/** 12x12. matrix[i][j] is step i+1 against step j+1. */
 	readonly matrix: readonly (readonly number[])[];
@@ -223,6 +297,8 @@ export interface PaletteScale {
 }
 
 export const PALETTE_RAMP = ${JSON.stringify(RAMP)};
+
+export const PALETTE_CANDIDATES = ${JSON.stringify(CANDIDATES)};
 
 export const PALETTE_FLOORS: readonly { id: string; ratio: number; label: string }[] = ${JSON.stringify(FLOORS)};
 

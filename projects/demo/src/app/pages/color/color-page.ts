@@ -28,6 +28,7 @@ import {
 	usedValue,
 } from "interop/lib/dev/contrast";
 import {
+	PALETTE_CANDIDATES,
 	PALETTE_FLOORS,
 	PALETTE_RAMP,
 	PALETTE_SCALES,
@@ -147,48 +148,46 @@ export class ColorPage {
 	 */
 	protected readonly solidStates = ["solid", "solid-hover", "solid-active"];
 
-	/* ── 12-step preview ─────────────────────────────────────────────────── */
+	/* ── Palette preview ────────────────────────────────────────────────── */
 
 	/**
-	 * A proposed palette, rendered but not shipped.
-	 *
-	 * Nothing here is a token, and nothing here was positioned by a contrast
-	 * target. The steps are evenly spaced in OKLCH lightness — a ramp, which is
-	 * what a palette is — and the contrast guidance below was measured off them
-	 * afterwards rather than designed into them.
+	 * Proposed palettes, rendered but not shipped. Two dials, both value
+	 * decisions, so they get a comparison rather than an argument.
 	 */
-	protected readonly previewScales = PALETTE_SCALES;
-	protected readonly previewFloors = PALETTE_FLOORS;
 	protected readonly previewRamp = PALETTE_RAMP;
+	protected readonly previewFloors = PALETTE_FLOORS;
 
-	/** Even spacing, stated once: what the ramp actually steps by. */
-	protected readonly previewDelta =
-		Math.round(
-			((PALETTE_RAMP.lightest - PALETTE_RAMP.darkest) /
-				(PALETTE_SCALES[0].steps.length - 1)) *
-				1000,
-		) / 1000;
+	/** One entry per candidate: its scales, and how it scored. */
+	protected readonly previewCandidates = PALETTE_CANDIDATES.map((c) => {
+		const key = `${c.count}-${c.curve.toFixed(2)}`;
+		const scales = PALETTE_SCALES.filter((s) => s.candidate === key);
+		return {
+			key,
+			count: c.count,
+			curve: c.curve,
+			label: `${c.count} steps · ${c.curve === 1 ? "linear" : `curve ${c.curve}`}`,
+			spread: scales[0]?.spread ?? 0,
+			deltaFirst: scales[0]?.deltaFirst ?? 0,
+			deltaLast: scales[0]?.deltaLast ?? 0,
+			scales,
+		};
+	});
 
 	/** One swatch. No light-dark(): a palette is a ramp, not a scheme pair. */
-	protected previewColor(scaleId: string, step: number): string {
-		const scale = PALETTE_SCALES.find((s) => s.id === scaleId);
-		const s = scale?.steps.find((x) => x.step === step);
-		return s ? `oklch(${s.l} ${s.c} ${scale!.hue})` : "transparent";
+	protected previewColor(hue: number, l: number, c: number): string {
+		return `oklch(${l} ${c} ${hue})`;
 	}
 
-	/** Whether the offset rule holds for every pair at this floor. */
-	protected previewOffset(scaleId: string, floorId: string): string {
-		const o = PALETTE_SCALES.find((s) => s.id === scaleId)?.offsets[floorId];
-		return o?.offset == null ? "—" : `${o.offset} steps`;
-	}
-
-	/**
-	 * The offsets, if every scale agrees. They do, which is the finding: an even
-	 * ramp gives one rule for every hue rather than a table per family.
-	 */
-	protected sharedOffset(floorId: string): number | null {
-		const all = PALETTE_SCALES.map((s) => s.offsets[floorId]?.offset ?? null);
-		return all.every((v) => v !== null && v === all[0]) ? all[0] : null;
+	/** The shared distance for a floor, or null when the hues disagree. */
+	protected previewOffset(
+		candidateKey: string,
+		floorId: string,
+	): number | null {
+		const scales = PALETTE_SCALES.filter((s) => s.candidate === candidateKey);
+		const all = scales.map((s) => s.offsets[floorId]?.offset ?? null);
+		return all.length && all.every((v) => v !== null && v === all[0])
+			? all[0]
+			: null;
 	}
 
 	/* ── Palette boards ──────────────────────────────────────────────────── */

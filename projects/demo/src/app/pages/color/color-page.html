@@ -598,101 +598,89 @@
 		</div>
 	</demo-section>
 
-	<demo-section
-		id="preview"
-		heading="A 12-step palette — proposed, not shipped"
-	>
+	<demo-section id="preview" heading="12-step palettes — proposed, not shipped">
 		<p description class="demo-section__lede">
-			A palette, and then a verdict. Twelve steps evenly spaced in OKLCH
-			lightness — nothing positioned by a contrast target — and the guidance
-			underneath measured off them afterwards. Nothing here is a token; the
-			generator behind it writes no CSS. The system above this section is what
-			actually ships.
+			A palette, and then a verdict. Steps are placed by lightness alone —
+			nothing here is positioned by a contrast target — and the guidance
+			underneath was measured off the result. Nothing is a token; the generator
+			behind it writes no CSS. The system above this section ships.
 		</p>
 
 		<p>
-			Even in lightness is even to the eye, which is what OKLCH is for. The ramp
-			runs L {{ previewRamp.lightest }} to {{ previewRamp.darkest }}, stepping
-			{{ previewDelta }} each time. It stops short of white and black on
-			purpose: those are not palette colours, and a ramp that reaches them
-			spends two of its twelve steps on values nothing should use.
+			<strong>Even in OKLCH lightness is not even to the eye.</strong> On a
+			linear ramp the last step removes 2.86× the light of the one before it
+			while the first removes 1.26× — so it measures uniform and reads as
+			accelerating into the dark. That is why neither Radix nor Tailwind is
+			linear in any single space. <em>Curve</em> shrinks the lightness step
+			toward the dark end to compensate; <em>evenness</em> below is the largest
+			adjacent jump over the smallest, where 1.0 would be perfect.
 		</p>
 
 		<p>
-			Chroma cannot be even. A hue holds most of its colour in the middle of the
-			range and almost none at the ends, so chroma follows a curve that peaks
-			mid-scale and is clamped to what each step can actually display. The seed
-			sets intensity; the gamut sets what is reachable.
+			The catch is that the tidy rule was partly an artifact of the ramp being
+			uneven. Ease too hard and the distances stop agreeing between hues. Each
+			candidate here is the most easing that length can take while every hue
+			still shares one distance per floor.
 		</p>
 
-		@for (scale of previewScales; track scale.id) {
-			<figure class="palette-ramp">
-				<figcaption>
-					<strong>{{ scale.id }}</strong>
-					@if (scale.note) {
-						<span>{{ scale.note }}</span>
-					}
-					<code>hue {{ scale.hue }} · ceiling {{ scale.ceiling }}</code>
-				</figcaption>
+		@for (candidate of previewCandidates; track candidate.key) {
+			<section class="palette-candidate" itx-layer="1">
+				<header>
+					<h3>{{ candidate.label }}</h3>
+					<dl>
+						<div>
+							<dt>evenness</dt>
+							<dd>{{ candidate.spread }}</dd>
+						</div>
+						<div>
+							<dt>ΔL</dt>
+							<dd>{{ candidate.deltaFirst }} → {{ candidate.deltaLast }}</dd>
+						</div>
+						@for (floor of previewFloors; track floor.id) {
+							<div>
+								<dt>{{ floor.ratio }}:1</dt>
+								<dd>
+									@if (previewOffset(candidate.key, floor.id); as n) {
+										{{ n }} apart
+									} @else {
+										varies
+									}
+								</dd>
+							</div>
+						}
+					</dl>
+				</header>
 
-				<div class="palette-ramp__strip">
-					@for (s of scale.steps; track s.step) {
-						<span class="palette-ramp__step">
-							<span
-								class="palette-ramp__chip"
-								[style.background-color]="previewColor(scale.id, s.step)"
-							></span>
-							<b>{{ s.step }}</b>
-							<small>{{ s.l }}</small>
-						</span>
-					}
-				</div>
-			</figure>
+				@for (scale of candidate.scales; track scale.id) {
+					<figure class="palette-ramp">
+						<figcaption>
+							<strong>{{ scale.id }}</strong>
+							@if (scale.note) {
+								<span>{{ scale.note }}</span>
+							}
+						</figcaption>
+						<div class="palette-ramp__strip">
+							@for (s of scale.steps; track s.step) {
+								<span class="palette-ramp__step">
+									<span
+										class="palette-ramp__chip"
+										[style.background-color]="previewColor(scale.hue, s.l, s.c)"
+									></span>
+									<b>{{ s.step }}</b>
+									<small>{{ s.l }}</small>
+								</span>
+							}
+						</div>
+					</figure>
+				}
+			</section>
 		}
 
-		<h3 class="palette-ramp__title">What the ramp turns out to guarantee</h3>
 		<p>
-			Not a rule anyone chose — the smallest step distance that clears each
-			floor for <em>every</em> pair on the ramp, computed from all 144 pairings
-			per scale. Every hue agrees, which is the useful part: one distance, not a
-			lookup table per family.
-		</p>
-
-		<table class="palette-ramp__rules">
-			<thead>
-				<tr>
-					<th scope="col">Floor</th>
-					<th scope="col">Distance</th>
-					@for (scale of previewScales; track scale.id) {
-						<th scope="col">{{ scale.id }}</th>
-					}
-				</tr>
-			</thead>
-			<tbody>
-				@for (floor of previewFloors; track floor.id) {
-					<tr>
-						<th scope="row">{{ floor.label }}</th>
-						<td>
-							@if (sharedOffset(floor.id); as shared) {
-								<strong>any {{ shared }} steps apart</strong>
-							} @else {
-								<em>varies by hue</em>
-							}
-						</td>
-						@for (scale of previewScales; track scale.id) {
-							<td>{{ previewOffset(scale.id, floor.id) }}</td>
-						}
-					</tr>
-				}
-			</tbody>
-		</table>
-
-		<p>
-			So <strong>step 4 on step 10</strong> is body text, and
-			<strong>step 3 on step 8</strong> is a border — at any point on the ramp,
-			in any of these hues. The teal is included because its chroma ceiling is
-			the lowest anywhere on the circle; it obeys the same distances, because
-			the distances come from lightness and lightness is what the ramp controls.
+			The 215° teal is in every set deliberately: its chroma ceiling is the
+			lowest anywhere on the circle, and it still obeys the same distances —
+			because the distances come from lightness, and lightness is what the ramp
+			controls.
 		</p>
 	</demo-section>
 
