@@ -882,6 +882,89 @@ function buildFamily(family) {
 
 const families = familyList().map(buildFamily).filter(Boolean);
 
+/* ── The palette ─────────────────────────────────────────────────────────── */
+
+/**
+ * A 14-step scale per family, and the distances that make it usable.
+ *
+ * Decided 2026-08-21 after rendering four candidates in a browser; the
+ * reasoning is in .agent/records/palette-spike.md. Two things are worth
+ * carrying here rather than leaving in the record:
+ *
+ * EVEN IN LIGHTNESS IS NOT EVEN TO THE EYE. A linear ramp's last step removes
+ * 2.86x the light of its first, so it measures uniform and reads as
+ * accelerating into the dark. `curve` shrinks the step toward the dark end;
+ * 1.30 flattens the luminance ratios without breaking the distance rule.
+ *
+ * THE DISTANCES ARE AN OUTPUT. Nothing here is positioned by a contrast
+ * target — steps are placed by lightness alone and the floors are measured off
+ * the result afterwards. That is the difference between a palette and a set of
+ * roles wearing step numbers, and it is what the first attempt got wrong.
+ */
+const PALETTE = { steps: 14, curve: 1.3, lightest: 0.97, darkest: 0.17 };
+
+/**
+ * Three text levels, matching what the rank system already had — secondary,
+ * body, maximum — plus the border floor beneath them.
+ *
+ * On a uniform ramp these are DISTANCES rather than reserved steps, so a third
+ * level costs nothing structurally. Maximum is not a ratio: it is the far end
+ * of the ramp, which is as much contrast as the scale has.
+ */
+const PALETTE_FLOORS = [
+	{ id: "border", ratio: 3 },
+	{ id: "secondary", ratio: 4.5 },
+	{ id: "body", ratio: 7 },
+];
+
+/**
+ * Chroma across the ramp: a raised sine, peaking mid-scale.
+ *
+ * Lightness is even; chroma cannot be. A hue holds most of its colour in the
+ * middle and almost none at either end — blue reaches .28 at L .49 and .048 at
+ * L .90 — so a constant chroma would clip at the extremes and read as a grey
+ * ramp with a bulge. The seed sets intensity; the gamut sets what is reachable.
+ */
+const paletteEnvelope = (i) =>
+	Math.sin((Math.PI * (i + 0.5)) / PALETTE.steps) ** 0.75;
+
+/** One family's scale: even in lightness, chroma clamped per step. */
+function buildPalette(hue, chroma) {
+	const out = [];
+	for (let i = 0; i < PALETTE.steps; i++) {
+		const t = i / (PALETTE.steps - 1);
+		const eased = 1 - Math.pow(1 - t, PALETTE.curve);
+		const l = round3(
+			PALETTE.lightest - eased * (PALETTE.lightest - PALETTE.darkest),
+		);
+		out.push({
+			step: i + 1,
+			l,
+			c: round3(Math.min(chroma * paletteEnvelope(i), maxChroma(l, hue))),
+		});
+	}
+	return out;
+}
+
+/**
+ * The smallest step distance clearing a floor for EVERY pair on a scale.
+ *
+ * Asked of the data rather than designed into it. Null would mean no single
+ * distance works, which is a real answer and more useful than a rule with
+ * silent exceptions — the generator reports it rather than papering over it.
+ */
+function paletteDistance(steps, hue, ratio) {
+	const y = steps.map((s) => luminance(s.l, s.c, hue));
+	for (let d = 1; d < steps.length; d++) {
+		let ok = true;
+		for (let i = 0; i + d < steps.length; i++) {
+			if (contrast(y[i], y[i + d]) < ratio) ok = false;
+		}
+		if (ok) return d;
+	}
+	return null;
+}
+
 /* ── Emit ───────────────────────────────────────────────────────────────── */
 
 /**
@@ -970,11 +1053,74 @@ function emit() {
 	// Accent declarations that belong on [interop-root] are spliced INTO this
 	// block rather than opening a second one: .stylelintrc.json sets
 	// no-duplicate-selectors, and stylelint is now installed and enforcing it.
+	lines.push(...emitPalette());
+
 	const accents = emitAccents();
 	lines.push(...accents.root);
 	lines.push("}", "");
 	lines.push(...accents.scoped);
 	return lines.join("\n");
+}
+
+/* ── Emit: the palette ──────────────────────────────────────────────────── */
+
+/**
+ * The 14-step scales, as real tokens.
+ *
+ * Emitted ALONGSIDE the existing vocabulary, not instead of it. Nothing in the
+ * library reads these yet; both vocabularies coexist so components can move one
+ * at a time and the palette can be judged in situ rather than in a preview.
+ *
+ * Scheme-invariant on purpose. A palette is a ramp, not a scheme pair: step 3
+ * is the same colour in both schemes, and what changes per scheme is which end
+ * of the ramp the page starts from. That is why the elevation model had to
+ * become monotonic first — a scale cannot mean the same thing in both schemes
+ * while tone is also carrying direction.
+ */
+function emitPalette() {
+	const lines = [
+		"",
+		"\t/*",
+		"\t * ── Palette ──────────────────────────────────────────────────────",
+		"\t *",
+		`\t * ${PALETTE.steps} steps per family, even in OKLCH lightness with an easing`,
+		`\t * curve of ${PALETTE.curve} so the dark end does not accelerate. Scheme-`,
+		"\t * invariant: a ramp, not a scheme pair.",
+		"\t *",
+		"\t * Distances, measured off the ramp rather than designed into it:",
+	];
+
+	const families = [
+		{ id: "neutral", hue: TINT.light.h, chroma: 0.012 },
+		...familyList().map((f) => ({
+			id: f.id,
+			hue: f.seed[2],
+			chroma: f.seed[1],
+		})),
+	];
+
+	/* Report the distances once — they hold for every family, which is the
+	   finding that makes the scale usable as a rule rather than a lookup. */
+	const first = buildPalette(families[0].hue, families[0].chroma);
+	for (const f of PALETTE_FLOORS) {
+		const d = paletteDistance(first, families[0].hue, f.ratio);
+		lines.push(`\t *   ${f.id.padEnd(10)} ${f.ratio}:1   ${d} steps apart`);
+	}
+	lines.push(
+		"\t *   maximum      the far end — step 1 or " + PALETTE.steps,
+		"\t */",
+	);
+
+	for (const family of families) {
+		const steps = buildPalette(family.hue, family.chroma);
+		lines.push("");
+		for (const s of steps) {
+			lines.push(
+				`\t--itx-${family.id}-${s.step}: oklch(${s.l} ${s.c} ${family.hue});`,
+			);
+		}
+	}
+	return lines;
 }
 
 /* ── Emit: accent families ──────────────────────────────────────────────── */

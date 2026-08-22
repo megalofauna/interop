@@ -131,6 +131,185 @@
 	--itx-ramp-contrast-6-6-dark: 0.920; /* 8.51:1 on its surface */
 
 	/*
+	 * ── Palette ──────────────────────────────────────────────────────
+	 *
+	 * 14 steps per family, even in OKLCH lightness with an easing
+	 * curve of 1.3 so the dark end does not accelerate. Scheme-
+	 * invariant: a ramp, not a scheme pair.
+	 *
+	 * Distances, measured off the ramp rather than designed into it:
+	 *   border     3:1   7 steps apart
+	 *   secondary  4.5:1   8 steps apart
+	 *   body       7:1   10 steps apart
+	 *   maximum      the far end — step 1 or 14
+	 */
+
+	--itx-neutral-1: oklch(0.97 0.002 250);
+	--itx-neutral-2: oklch(0.891 0.005 250);
+	--itx-neutral-3: oklch(0.814 0.007 250);
+	--itx-neutral-4: oklch(0.739 0.009 250);
+	--itx-neutral-5: oklch(0.666 0.011 250);
+	--itx-neutral-6: oklch(0.596 0.011 250);
+	--itx-neutral-7: oklch(0.528 0.012 250);
+	--itx-neutral-8: oklch(0.463 0.012 250);
+	--itx-neutral-9: oklch(0.401 0.011 250);
+	--itx-neutral-10: oklch(0.343 0.011 250);
+	--itx-neutral-11: oklch(0.289 0.009 250);
+	--itx-neutral-12: oklch(0.24 0.007 250);
+	--itx-neutral-13: oklch(0.199 0.005 250);
+	--itx-neutral-14: oklch(0.17 0.002 250);
+
+	--itx-colorway-1: oklch(0.97 0.014 264);
+	--itx-colorway-2: oklch(0.891 0.053 264);
+	--itx-colorway-3: oklch(0.814 0.093 264);
+	--itx-colorway-4: oklch(0.739 0.134 264);
+	--itx-colorway-5: oklch(0.666 0.168 264);
+	--itx-colorway-6: oklch(0.596 0.182 264);
+	--itx-colorway-7: oklch(0.528 0.189 264);
+	--itx-colorway-8: oklch(0.463 0.189 264);
+	--itx-colorway-9: oklch(0.401 0.182 264);
+	--itx-colorway-10: oklch(0.343 0.168 264);
+	--itx-colorway-11: oklch(0.289 0.147 264);
+	--itx-colorway-12: oklch(0.24 0.118 264);
+	--itx-colorway-13: oklch(0.199 0.083 264);
+	--itx-colorway-14: oklch(0.17 0.037 264);
+
+	--itx-colorway-amber-1: oklch(0.97 0.023 82.32);
+	--itx-colorway-amber-2: oklch(0.891 0.052 82.32);
+	--itx-colorway-amber-3: oklch(0.814 0.075 82.32);
+	--itx-colorway-amber-4: oklch(0.739 0.093 82.32);
+	--itx-colorway-amber-5: oklch(0.666 0.106 82.32);
+	--itx-colorway-amber-6: oklch(0.596 0.115 82.32);
+	--itx-colorway-amber-7: oklch(0.528 0.109 82.32);
+	--itx-colorway-amber-8: oklch(0.463 0.095 82.32);
+	--itx-colorway-amber-9: oklch(0.401 0.083 82.32);
+	--itx-colorway-amber-10: oklch(0.343 0.071 82.32);
+	--itx-colorway-amber-11: oklch(0.289 0.06 82.32);
+	--itx-colorway-amber-12: oklch(0.24 0.05 82.32);
+	--itx-colorway-amber-13: oklch(0.199 0.042 82.32);
+	--itx-colorway-amber-14: oklch(0.17 0.023 82.32);
+
+	--itx-danger-1: oklch(0.97 0.015 33);
+	--itx-danger-2: oklch(0.891 0.046 33);
+	--itx-danger-3: oklch(0.814 0.065 33);
+	--itx-danger-4: oklch(0.739 0.081 33);
+	--itx-danger-5: oklch(0.666 0.093 33);
+	--itx-danger-6: oklch(0.596 0.101 33);
+	--itx-danger-7: oklch(0.528 0.105 33);
+	--itx-danger-8: oklch(0.463 0.105 33);
+	--itx-danger-9: oklch(0.401 0.101 33);
+	--itx-danger-10: oklch(0.343 0.093 33);
+	--itx-danger-11: oklch(0.289 0.081 33);
+	--itx-danger-12: oklch(0.24 0.065 33);
+	--itx-danger-13: oklch(0.199 0.046 33);
+	--itx-danger-14: oklch(0.17 0.02 33);
+
+	--itx-info-1: oklch(0.97 0.011 218);
+	--itx-info-2: oklch(0.891 0.025 218);
+	--itx-info-3: oklch(0.814 0.036 218);
+	--itx-info-4: oklch(0.739 0.045 218);
+	--itx-info-5: oklch(0.666 0.051 218);
+	--itx-info-6: oklch(0.596 0.056 218);
+	--itx-info-7: oklch(0.528 0.058 218);
+	--itx-info-8: oklch(0.463 0.058 218);
+	--itx-info-9: oklch(0.401 0.056 218);
+	--itx-info-10: oklch(0.343 0.051 218);
+	--itx-info-11: oklch(0.289 0.045 218);
+	--itx-info-12: oklch(0.24 0.036 218);
+	--itx-info-13: oklch(0.199 0.025 218);
+	--itx-info-14: oklch(0.17 0.011 218);
+
+	--itx-success-1: oklch(0.97 0.015 122);
+	--itx-success-2: oklch(0.891 0.034 122);
+	--itx-success-3: oklch(0.814 0.049 122);
+	--itx-success-4: oklch(0.739 0.06 122);
+	--itx-success-5: oklch(0.666 0.069 122);
+	--itx-success-6: oklch(0.596 0.075 122);
+	--itx-success-7: oklch(0.528 0.078 122);
+	--itx-success-8: oklch(0.463 0.078 122);
+	--itx-success-9: oklch(0.401 0.075 122);
+	--itx-success-10: oklch(0.343 0.069 122);
+	--itx-success-11: oklch(0.289 0.06 122);
+	--itx-success-12: oklch(0.24 0.049 122);
+	--itx-success-13: oklch(0.199 0.034 122);
+	--itx-success-14: oklch(0.17 0.015 122);
+
+	--itx-warning-1: oklch(0.97 0.02 78);
+	--itx-warning-2: oklch(0.891 0.046 78);
+	--itx-warning-3: oklch(0.814 0.065 78);
+	--itx-warning-4: oklch(0.739 0.081 78);
+	--itx-warning-5: oklch(0.666 0.093 78);
+	--itx-warning-6: oklch(0.596 0.101 78);
+	--itx-warning-7: oklch(0.528 0.105 78);
+	--itx-warning-8: oklch(0.463 0.097 78);
+	--itx-warning-9: oklch(0.401 0.084 78);
+	--itx-warning-10: oklch(0.343 0.072 78);
+	--itx-warning-11: oklch(0.289 0.061 78);
+	--itx-warning-12: oklch(0.24 0.051 78);
+	--itx-warning-13: oklch(0.199 0.042 78);
+	--itx-warning-14: oklch(0.17 0.02 78);
+
+	--itx-danger-eighties-1: oklch(0.97 0.015 25);
+	--itx-danger-eighties-2: oklch(0.891 0.057 25);
+	--itx-danger-eighties-3: oklch(0.814 0.105 25);
+	--itx-danger-eighties-4: oklch(0.739 0.147 25);
+	--itx-danger-eighties-5: oklch(0.666 0.168 25);
+	--itx-danger-eighties-6: oklch(0.596 0.182 25);
+	--itx-danger-eighties-7: oklch(0.528 0.189 25);
+	--itx-danger-eighties-8: oklch(0.463 0.188 25);
+	--itx-danger-eighties-9: oklch(0.401 0.163 25);
+	--itx-danger-eighties-10: oklch(0.343 0.139 25);
+	--itx-danger-eighties-11: oklch(0.289 0.118 25);
+	--itx-danger-eighties-12: oklch(0.24 0.098 25);
+	--itx-danger-eighties-13: oklch(0.199 0.082 25);
+	--itx-danger-eighties-14: oklch(0.17 0.037 25);
+
+	--itx-info-eighties-1: oklch(0.97 0.014 264);
+	--itx-info-eighties-2: oklch(0.891 0.053 264);
+	--itx-info-eighties-3: oklch(0.814 0.093 264);
+	--itx-info-eighties-4: oklch(0.739 0.134 264);
+	--itx-info-eighties-5: oklch(0.666 0.168 264);
+	--itx-info-eighties-6: oklch(0.596 0.182 264);
+	--itx-info-eighties-7: oklch(0.528 0.189 264);
+	--itx-info-eighties-8: oklch(0.463 0.189 264);
+	--itx-info-eighties-9: oklch(0.401 0.182 264);
+	--itx-info-eighties-10: oklch(0.343 0.168 264);
+	--itx-info-eighties-11: oklch(0.289 0.147 264);
+	--itx-info-eighties-12: oklch(0.24 0.118 264);
+	--itx-info-eighties-13: oklch(0.199 0.083 264);
+	--itx-info-eighties-14: oklch(0.17 0.037 264);
+
+	--itx-success-eighties-1: oklch(0.97 0.037 145);
+	--itx-success-eighties-2: oklch(0.891 0.083 145);
+	--itx-success-eighties-3: oklch(0.814 0.118 145);
+	--itx-success-eighties-4: oklch(0.739 0.147 145);
+	--itx-success-eighties-5: oklch(0.666 0.168 145);
+	--itx-success-eighties-6: oklch(0.596 0.182 145);
+	--itx-success-eighties-7: oklch(0.528 0.166 145);
+	--itx-success-eighties-8: oklch(0.463 0.146 145);
+	--itx-success-eighties-9: oklch(0.401 0.126 145);
+	--itx-success-eighties-10: oklch(0.343 0.108 145);
+	--itx-success-eighties-11: oklch(0.289 0.091 145);
+	--itx-success-eighties-12: oklch(0.24 0.076 145);
+	--itx-success-eighties-13: oklch(0.199 0.063 145);
+	--itx-success-eighties-14: oklch(0.17 0.037 145);
+
+	--itx-warning-eighties-1: oklch(0.97 0.032 85);
+	--itx-warning-eighties-2: oklch(0.891 0.074 85);
+	--itx-warning-eighties-3: oklch(0.814 0.106 85);
+	--itx-warning-eighties-4: oklch(0.739 0.131 85);
+	--itx-warning-eighties-5: oklch(0.666 0.137 85);
+	--itx-warning-eighties-6: oklch(0.596 0.122 85);
+	--itx-warning-eighties-7: oklch(0.528 0.108 85);
+	--itx-warning-eighties-8: oklch(0.463 0.095 85);
+	--itx-warning-eighties-9: oklch(0.401 0.082 85);
+	--itx-warning-eighties-10: oklch(0.343 0.071 85);
+	--itx-warning-eighties-11: oklch(0.289 0.06 85);
+	--itx-warning-eighties-12: oklch(0.24 0.05 85);
+	--itx-warning-eighties-13: oklch(0.199 0.042 85);
+	--itx-warning-eighties-14: oklch(0.17 0.033 85);
+
+	/*
 	 * Colourway.
 	 *
 	 * Seeded with ONE colour. Hue carries through; chroma is an intent
