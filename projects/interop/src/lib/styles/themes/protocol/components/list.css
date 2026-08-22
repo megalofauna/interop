@@ -30,10 +30,15 @@
 	--itx-list-marker-align: center;
 	--itx-list-marker-size: 2em;
 	--itx-list-marker-radius: var(--itx-radius-full);
+	/*
+	 * On the palette. A step is a distance from the page and means the same in
+	 * both schemes, so these read as they would be said: the marker's edge and
+	 * its numeral sit at the secondary distance, eight steps off.
+	 */
 	--itx-list-marker-border: var(--itx-border-width-thick) solid
-		var(--itx-contrast-4);
+		var(--itx-neutral-9);
 	--itx-list-marker-background: transparent;
-	--itx-list-marker-color: var(--itx-contrast-4);
+	--itx-list-marker-color: var(--itx-neutral-9);
 	--itx-list-marker-font-size: 0.8em;
 	--itx-list-marker-font-weight: 600;
 	--itx-list-marker-style: decimal;
@@ -52,13 +57,19 @@
    it is a modifier layered on that variant, not a replacement for it. */
 
 :where(ol[interop-list][itx-marker~="filled"] > li) {
-	--itx-list-marker-background: var(--itx-contrast-2);
+	--itx-list-marker-background: var(--itx-neutral-3);
 	--itx-list-marker-border: var(--itx-border-width-thick) solid
-		var(--itx-contrast-4);
-	--itx-list-marker-color: light-dark(
-		var(--itx-contrast-6),
-		var(--itx-contrast-1)
-	);
+		var(--itx-neutral-9);
+	/*
+	 * One token where there were two.
+	 *
+	 * This was light-dark(contrast-6, contrast-1) — a hand-written inversion,
+	 * because a rank is a distance from the SURFACE and the surface flips sides
+	 * per scheme, so the numeral had to be told which rank to take in each. A
+	 * step is a distance from the PAGE and the scales are paired, so "the far
+	 * end" is one name that already means the right thing in both.
+	 */
+	--itx-list-marker-color: var(--itx-neutral-14);
 }
 
 /* ── contained variant ───────────────────────────────────────────────────── */
@@ -75,7 +86,7 @@
 	--itx-list-row-background-hover: var(--itx-surface-above);
 
 	--itx-list-row-rule-width: 1px;
-	--itx-list-row-rule-color: var(--itx-contrast-3);
+	--itx-list-row-rule-color: var(--itx-neutral-8);
 
 	--itx-list-row-transition-duration: var(--itx-duration-fast);
 	--itx-list-row-transition-timing-function: var(--itx-easing-standard);
