@@ -64,7 +64,7 @@ import {
 									resolvedIcons().completed ?? 'tabler-circle-check-filled'
 								"
 								[size]="28"
-								[color]="'var(--itx-contrast-6)'"
+								[color]="'var(--itx-neutral-14)'"
 							/>
 						}
 						@case ("error") {

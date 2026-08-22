@@ -36,7 +36,7 @@
 	   `thin` (or `auto`); the thumb/track values below give it a themed
 	   appearance that blends with the surface. */
 	--itx-stepper-viewport-scrollbar-width: none;
-	--itx-stepper-viewport-scrollbar-thumb-color: var(--itx-contrast-2);
+	--itx-stepper-viewport-scrollbar-thumb-color: var(--itx-neutral-3);
 	--itx-stepper-viewport-scrollbar-track-color: transparent;
 
 	/* ── Actions region ─────────────────────────────────────────────────── */
@@ -50,7 +50,7 @@
 		100cqi - var(--itx-stepper-menu-padding) * 2
 	);
 	--itx-stepper-menu-background-color: var(--itx-surface);
-	--itx-stepper-menu-border-color: var(--itx-contrast-2);
+	--itx-stepper-menu-border-color: var(--itx-neutral-3);
 	/* Squared, like every other surface the borrow rounds have touched. The old
 	   value also read --itx-radius-4 with an 8px fallback, but that token is
 	   16px — the fallback was describing a different shape from the token. */
@@ -78,19 +78,23 @@
 	--itx-step-indicator-font-weight: 500;
 
 	/* ── Step indicator — pending (rest) ────────────────────────────────── */
-	--itx-step-indicator-background: var(--itx-contrast-2);
-	--itx-step-indicator-foreground: var(--itx-contrast-4);
-	--itx-step-indicator-border-color: var(--itx-contrast-3);
+	--itx-step-indicator-background: var(--itx-neutral-3);
+	/* The pending step's number sits on the step-3 indicator fill, not on the
+	   page, so a page-relative step arrives short: step 9 measures 4.09 dark.
+	   Step 10 clears AA on both arms at 5.41 / 6.56. (Under the old ranks
+	   this pairing measured 3.01.) */
+	--itx-step-indicator-foreground: var(--itx-neutral-10);
+	--itx-step-indicator-border-color: var(--itx-neutral-8);
 
 	/* ── Step indicator — active ────────────────────────────────────────── */
 	--itx-step-indicator-background-active: var(--itx-surface);
-	/* --itx-on-neutral does not exist, so this resolved to the literal `white`
-	   in the fallback — against --itx-contrast-1, which is light in light mode.
-	   The current step's number measured 1.23:1 there: legible in dark, all but
-	   invisible in light. --itx-contrast-6 is the light-dark() pair that belongs
-	   opposite a neutral surface. */
-	--itx-step-indicator-foreground-active: var(--itx-contrast-6);
-	--itx-step-indicator-border-color-active: var(--itx-contrast-4);
+	/* --itx-on-neutral does not exist, so this once resolved to the literal
+	   `white` in the fallback — against a page-coloured background, which is
+	   light in light mode. The current step's number measured 1.23:1 there:
+	   legible in dark, all but invisible in light. The top palette step is the
+	   light-dark() pair that belongs opposite a neutral surface. */
+	--itx-step-indicator-foreground-active: var(--itx-neutral-14);
+	--itx-step-indicator-border-color-active: var(--itx-neutral-9);
 
 	/* ── Step indicator — active + reviewed (revisited) ────────────────── */
 	/* Outlined variant: keeps the neutral hue (so you know it's a step
@@ -98,13 +102,13 @@
 	   "current first-visit" treatment. The number is shown in neutral,
 	   the indicator is transparent with a neutral-8 border. */
 	--itx-step-indicator-background-active-reviewed: var(--itx-surface-below);
-	--itx-step-indicator-foreground-active-reviewed: var(--itx-contrast-6);
-	--itx-step-indicator-border-color-active-reviewed: var(--itx-contrast-6);
+	--itx-step-indicator-foreground-active-reviewed: var(--itx-neutral-14);
+	--itx-step-indicator-border-color-active-reviewed: var(--itx-neutral-14);
 
 	/* ── Step indicator — completed ─────────────────────────────────────── */
-	--itx-step-indicator-background-completed: var(--itx-contrast-2);
-	--itx-step-indicator-foreground-completed: var(--itx-contrast-6);
-	--itx-step-indicator-border-color-completed: var(--itx-contrast-6);
+	--itx-step-indicator-background-completed: var(--itx-neutral-3);
+	--itx-step-indicator-foreground-completed: var(--itx-neutral-14);
+	--itx-step-indicator-border-color-completed: var(--itx-neutral-14);
 
 	/* ── Step indicator — error ─────────────────────────────────────────── */
 	/* Errors are a deliberate signal — a coloured fill is appropriate here. */
@@ -114,19 +118,19 @@
 
 	/* ── Step indicator — skipped ───────────────────────────────────────── */
 	--itx-step-indicator-background-skipped: var(--itx-surface);
-	--itx-step-indicator-foreground-skipped: var(--itx-contrast-4);
-	--itx-step-indicator-border-color-skipped: var(--itx-contrast-2);
+	--itx-step-indicator-foreground-skipped: var(--itx-neutral-9);
+	--itx-step-indicator-border-color-skipped: var(--itx-neutral-3);
 
 	/* ── Step label ─────────────────────────────────────────────────────── */
 	--itx-step-label-font-family: var(--itx-font-family-sans);
 	/* Carbon $body-compact-01 (14px), fixed for the same reason as above. */
 	--itx-step-label-font-size: 0.875rem;
 	--itx-step-label-font-weight: 500;
-	--itx-step-label-color: var(--itx-contrast-5);
-	--itx-step-label-color-active: var(--itx-contrast-6);
-	--itx-step-label-color-active-reviewed: var(--itx-contrast-4);
-	--itx-step-label-color-completed: var(--itx-contrast-5);
-	--itx-step-label-color-locked: var(--itx-contrast-4);
+	--itx-step-label-color: var(--itx-neutral-11);
+	--itx-step-label-color-active: var(--itx-neutral-14);
+	--itx-step-label-color-active-reviewed: var(--itx-neutral-9);
+	--itx-step-label-color-completed: var(--itx-neutral-11);
+	--itx-step-label-color-locked: var(--itx-neutral-9);
 	--itx-step-label-text-align: center;
 
 	--itx-step-optional-font-size: 0.75em;
@@ -134,22 +138,28 @@
 
 	/* ── Connector ──────────────────────────────────────────────────────── */
 	--itx-step-connector-thickness: 2px;
-	/* The rest state was neutral-5, which this codebase repeatedly records as
-	   reading like nothing at 1–2px — the same sub-0.1 luminance delta that made
-	   --itx-contrast-3 invisible for the directory cards and the command palette.
-	   The line was drawn the whole time; it just could not be seen, which is
-	   indistinguishable from absent.
+	/* The rest state was once a near-surface grey, which this codebase
+	   repeatedly records as reading like nothing at 1–2px — the same sub-0.1
+	   luminance delta that made the old rank 3 invisible for the directory cards
+	   and the command palette. The line was drawn the whole time; it just could
+	   not be seen, which is indistinguishable from absent.
 
-	   neutral-8 rather than the neutral-7 hairline: the connector carries the
-	   shape of the path, so SC 1.4.11 (non-text contrast, 3:1) applies to it in
-	   a way it does not to a card's top rule. neutral-7 measures 2.26 against
-	   the surface; neutral-8 measures 3.29 dark / 3.28 light — the one step that
-	   clears the bar symmetrically in both schemes.
+	   The connector carries the shape of the path, so SC 1.4.11 (non-text
+	   contrast, 3:1) applies to it in a way it does not to a card's top rule.
+	   Against the page, step 8 measures 3.61 dark / 6.40 light — clearing the
+	   bar but only just, in dark. Step 9 sits at 4.79 / 8.33 and keeps the
+	   margin on the nested surfaces a stepper usually renders on, where a
+	   page-relative step loses ground.
 
-	   Completed goes two further, to 6.4 / 7.7, so the walked path reads as
-	   legibly brighter than the path ahead rather than one grey beside another. */
-	--itx-step-connector-color: var(--itx-contrast-4);
-	--itx-step-connector-color-completed: var(--itx-contrast-5);
+	   Completed goes two further, to 8.28 / 13.03, so the walked path reads as
+	   legibly brighter than the path ahead rather than one grey beside another.
+
+	   Note that the two schemes no longer measure alike: scheme pairing makes
+	   step N the same *distance* from the page in both, and the light ramp
+	   spans more lightness than the dark one, so the same step reads stronger
+	   in light. */
+	--itx-step-connector-color: var(--itx-neutral-9);
+	--itx-step-connector-color-completed: var(--itx-neutral-11);
 
 	/* ── Step focus ring ────────────────────────────────────────────────── */
 }
