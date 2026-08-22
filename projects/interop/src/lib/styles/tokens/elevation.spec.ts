@@ -105,36 +105,47 @@ describe("Layer engine", () => {
 			expect(layerOf(b)).toEqual("2");
 		});
 
-		it("sinks, and nets correctly against raises", () => {
+		it("sinks count away from the page, exactly like raises", () => {
+			/*
+			 * A sink used to count DOWN and net against a raise, because tone
+			 * carried direction: a recess was a step toward the page's opposite.
+			 * Under one direction of travel both move away from the page by the
+			 * same amount, and what separates them is the shadow rather than the
+			 * tone. So a sink inside a card is deeper than the card, not back at
+			 * the page — which is what every other system does, and what stops
+			 * the light page having to sit at mid-grey to leave room both ways.
+			 */
 			const card = el(root, { "itx-layer": "" });
 			const well = el(card, { "itx-sink": "" });
 			const inner = el(well, { "itx-layer": "" });
 
 			expect(layerOf(card)).toEqual("1");
-			expect(layerOf(well)).toEqual("0");
-			expect(layerOf(inner)).toEqual("1");
+			expect(layerOf(well)).toEqual("2");
+			expect(layerOf(inner)).toEqual("3");
 		});
 
 		it("clamps at the ceiling instead of falling back to the tier-2 floor", () => {
 			// Without a terminal block, an element already at the ceiling would match
 			// no counter block, drop through to the one-step floor, and snap to 1.
 			let node = root;
-			for (let i = 0; i < 7; i++) node = el(node, { "itx-layer": "" });
+			for (let i = 0; i < 9; i++) node = el(node, { "itx-layer": "" });
 
-			expect(layerOf(node)).toEqual("4");
-			expect(surfaceOf(node)).toEqual(ramp("surface-4"));
+			expect(layerOf(node)).toEqual("6");
+			expect(surfaceOf(node)).toEqual(ramp("surface-6"));
 		});
 
-		it("clamps at the floor", () => {
-			// The floor is DEPTH.below in scripts/generate-color-ladder.mjs. These
-			// two literals are the only place the spec hardcodes it — the colour
-			// itself is read from the generated source via ramp(), so a ramp
-			// retune does not touch this test, but changing the DEPTH does.
+		it("has no floor to clamp at — the ramp only goes one way", () => {
+			/*
+			 * There is no below any more. DEPTH.below is 0, the n1..n4 keys are
+			 * gone, and a stack of sinks walks up to the ceiling like a stack of
+			 * layers. The old floor test asserted the mirrored half of a ramp
+			 * that no longer exists.
+			 */
 			let node = root;
-			for (let i = 0; i < 6; i++) node = el(node, { "itx-sink": "" });
+			for (let i = 0; i < 8; i++) node = el(node, { "itx-sink": "" });
 
-			expect(layerOf(node)).toEqual("-4");
-			expect(surfaceOf(node)).toEqual(ramp("surface-n4"));
+			expect(layerOf(node)).toEqual("6");
+			expect(surfaceOf(node)).toEqual(ramp("surface-6"));
 		});
 
 		it("honours an absolute pin regardless of inherited depth, and counts on from it", () => {
@@ -196,24 +207,24 @@ describe("Layer engine", () => {
 
 		it("re-scales EVERY layer below when a ramp DIAL is set on any ancestor", () => {
 			// The ramp spec is read at use time rather than baked, so one number
-			// retunes the whole ladder underneath it. This is strictly more reach
-			// than the per-layer numbers it replaced: those moved one rung, this
-			// moves all of them, and the steps stay proportional to each other.
+			// retunes the whole ladder underneath it. Strictly more reach than the
+			// per-layer numbers it replaced: those moved one rung, this moves all
+			// of them, and the steps stay proportional to each other.
 			const branch = el(root);
 			branch.style.setProperty("--itx-ramp-dark-step", "0.09");
 
 			const one = el(branch, { "itx-layer": "" });
 			const two = el(one, { "itx-layer": "" });
 
-			// page .232 + step .09 per rung, uniform in dark.
+			// page .17 + step .09 per rung, uniform in dark.
 			const expected = (l: number): string => {
 				const probe = el(branch);
 				probe.style.backgroundColor = `oklch(${l} var(--itx-tint-dark))`;
 				return getComputedStyle(probe).backgroundColor;
 			};
 
-			expect(surfaceOf(one)).toEqual(expected(0.232 + 0.09));
-			expect(surfaceOf(two)).toEqual(expected(0.232 + 0.18));
+			expect(surfaceOf(one)).toEqual(expected(0.17 + 0.09));
+			expect(surfaceOf(two)).toEqual(expected(0.17 + 0.18));
 			expect(surfaceOf(one)).not.toEqual(
 				surfaceOf(el(root, { "itx-layer": "" })),
 			);

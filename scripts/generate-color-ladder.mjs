@@ -120,7 +120,7 @@ const OUT_FACTS = join(
  * How deep the ladder goes in each direction. Changing these changes how many
  * @container blocks the engine emits; everything downstream follows.
  */
-const DEPTH = { below: 4, above: 4 };
+const DEPTH = { below: 0, above: 6 };
 
 /**
  * The ramp SPEC — five numbers per scheme, not a hand-kept table of seven.
@@ -146,25 +146,39 @@ const DEPTH = { below: 4, above: 4 };
  * flatters a ramp.
  */
 const RAMP = {
-	// Light has only .102 of room between the page and white for four steps, so
-	// `ease` cannot be aggressive: at .87 the last step compresses to .018 and
-	// trips the separation guard. .95 decelerates enough to feel like it is
-	// approaching a ceiling while keeping every step ≥ .02.
+	/*
+	 * The page is the extreme; everything else steps AWAY from it.
+	 *
+	 * Light used to start at mid-grey .898 and climb toward white, because tone
+	 * carried direction — a card was lighter than the page, a field darker — and
+	 * that needs headroom both ways. Nobody else works like that. In Radix,
+	 * Material and Carbon an elevated card and a recessed field are BOTH darker
+	 * than the page in light mode: tone carries distance, shadow carries
+	 * direction.
+	 *
+	 * The bidirectional requirement was ours, the grey page was what it cost,
+	 * and it quietly made a monotonic palette impossible — which is what pushed
+	 * the palette work into a shape that was neither a palette nor a role
+	 * system. Dropping it costs a mechanism and buys back a white page, one
+	 * direction of travel, and a scale that means the same thing in both
+	 * schemes.
+	 *
+	 * `down` is gone with it. There is no below any more; a recess is a step
+	 * away like everything else, wearing an inset shadow instead of a drop one.
+	 */
 	light: {
-		page: 0.898,
-		up: 0.028,
-		ease: 0.95,
-		down: 0.043,
-		min: 0.6,
-		max: 1.0,
+		page: 0.99,
+		up: -0.025,
+		ease: 1.0,
+		min: 0.12,
+		max: 0.99,
 	},
 	dark: {
-		page: 0.232,
-		up: 0.0395,
+		page: 0.17,
+		up: 0.032,
 		ease: 1.0,
-		down: 0.045,
-		min: 0.03,
-		max: 0.44,
+		min: 0.17,
+		max: 0.62,
 	},
 };
 
@@ -177,15 +191,10 @@ function buildRamp(spec) {
 	let l = spec.page;
 	let step = spec.up;
 	for (let i = 1; i <= DEPTH.above; i++) {
-		l = Math.min(spec.max, l + step);
+		l =
+			spec.up < 0 ? Math.max(spec.min, l + step) : Math.min(spec.max, l + step);
 		out[i] = round3(l);
 		step *= spec.ease;
-	}
-
-	l = spec.page;
-	for (let i = 1; i <= DEPTH.below; i++) {
-		l = Math.max(spec.min, l - spec.down);
-		out[`n${i}`] = round3(l);
 	}
 
 	return out;
@@ -709,10 +718,7 @@ function layerLightnessJs(scheme, n) {
 		r.ease === 1
 			? r.up * Math.max(0, n)
 			: (r.up * (1 - Math.pow(r.ease, Math.max(0, n)))) / (1 - r.ease);
-	return Math.min(
-		r.max,
-		Math.max(r.min, r.page + up + r.down * Math.min(0, n)),
-	);
+	return Math.min(r.max, Math.max(r.min, r.page + up));
 }
 
 const ladder = { light: buildScheme("light"), dark: buildScheme("dark") };
@@ -941,7 +947,6 @@ function emit() {
 			`\t--itx-ramp-${scheme}-page: ${r.page};`,
 			`\t--itx-ramp-${scheme}-step: ${r.up};`,
 			`\t--itx-ramp-${scheme}-ease: ${r.ease};`,
-			`\t--itx-ramp-${scheme}-down: ${r.down};`,
 			`\t--itx-ramp-${scheme}-min: ${r.min};`,
 			`\t--itx-ramp-${scheme}-max: ${r.max};`,
 		);
@@ -1196,15 +1201,15 @@ function layerLightness(scheme, offset) {
 	const n =
 		offset === 0
 			? "var(--itx-layer)"
-			: `clamp(${-DEPTH.below}, calc(var(--itx-layer) + ${offset}), ${DEPTH.above})`;
+			: `max(0, calc(var(--itx-layer) + ${offset}))`;
 	const up =
 		r.ease === 1
-			? `${v("step")} * max(0, ${n})`
-			: `${v("step")} * (1 - pow(${v("ease")}, max(0, ${n}))) / (1 - ${v("ease")})`;
+			? `${v("step")} * ${n}`
+			: `${v("step")} * (1 - pow(${v("ease")}, ${n})) / (1 - ${v("ease")})`;
 	return (
-		`clamp(\n\t\t${v("min")},\n` +
-		`\t\tcalc(${v("page")} + ${up} + ${v("down")} * min(0, ${n})),\n` +
-		`\t\t${v("max")}\n\t)`
+		`clamp(\n\t\t\t\t${v("min")},\n` +
+		`\t\t\t\tcalc(${v("page")} + ${up}),\n` +
+		`\t\t\t\t${v("max")}\n\t\t\t)`
 	);
 }
 
@@ -1226,7 +1231,16 @@ function surfaceRule() {
 		`\t--itx-surface: ${compose(0)};`,
 		`\t--itx-surface-above: ${compose(1)};`,
 		`\t--itx-surface-above-2: ${compose(2)};`,
-		`\t--itx-surface-below: ${compose(-1)};`,
+		/*
+		 * --itx-surface-below is an ALIAS now, not a direction.
+		 *
+		 * A recess used to be a step toward the page's opposite; under one
+		 * direction of travel it is a step away like everything else, and what
+		 * makes it read as recessed is an inset shadow rather than its tone.
+		 * Kept as a name so consumers reading it keep working, and so "below"
+		 * still means something a component can ask for.
+		 */
+		`\t--itx-surface-below: ${compose(1)};`,
 		"}",
 		"",
 	].join("\n");
@@ -1386,7 +1400,7 @@ function emitEngine() {
 		"}",
 		"",
 		":where([itx-sink]) {",
-		tokenSet(-1, 1),
+		tokenSet(1, 1),
 		"}",
 		"",
 		"/* ── Tier 3 — the counter. Strictly monotone up the tree, so never a cycle. */",
@@ -1394,8 +1408,18 @@ function emitEngine() {
 	];
 
 	for (let ancestor = LAYER_MIN; ancestor <= LAYER_MAX; ancestor++) {
+		/*
+		 * A sink counts UP, exactly like a raise.
+		 *
+		 * It used to count down, because tone carried direction and a recess was
+		 * a step toward the page's opposite. Under one direction of travel both
+		 * move away from the page by the same amount; what separates them is the
+		 * shadow, not the tone. So the counter has one behaviour, and `itx-sink`
+		 * now means "a step away, drawn as a recess" rather than "a step the
+		 * other way".
+		 */
 		const raise = Math.min(LAYER_MAX, ancestor + 1);
-		const sink = Math.max(LAYER_MIN, ancestor - 1);
+		const sink = raise;
 		// A terminal block re-asserts its layer WITHOUT moving. Without it, an
 		// element already at the ceiling matches no counter block, falls through
 		// to the tier-2 floor, and snaps back to layer 1.

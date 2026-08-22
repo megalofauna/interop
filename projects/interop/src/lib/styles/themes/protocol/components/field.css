@@ -80,7 +80,10 @@
 	--itx-field-notes-gap: var(--itx-spacing-1);
 
 	/* ── Errors ──────────────────────────────────────────────────────────── */
-	--itx-field-error-color: var(--itx-danger-solid);
+	/* -text, not -solid. The solid is a FILL, positioned by chroma so the hue
+	   reads as itself; as text it measured 2.86:1 once the page moved. The text
+	   role is derived per layer and clears 4.5:1 wherever the field lands. */
+	--itx-field-error-color: var(--itx-danger-text);
 	--itx-field-error-font-size: 0.75rem;
 	--itx-field-error-line-height: 1.3333;
 	--itx-field-errors-gap: var(--itx-spacing-1);
