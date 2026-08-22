@@ -174,6 +174,33 @@ export class ColorPage {
 		};
 	});
 
+	/**
+	 * The chosen candidate's scales, for the legibility board.
+	 *
+	 * One scale at a time and one swatch per step, big enough to judge: the
+	 * board's whole argument is that a name printed IN the colour it names
+	 * cannot lie about its own legibility, and that needs room to be read.
+	 */
+	protected readonly boardScales = PALETTE_SCALES.filter(
+		(s) => s.chosen && (s.id === "neutral" || s.id === "colorway"),
+	);
+
+	/** Legible foregrounds for a background step, at the AA floor. */
+	protected legibleOn(
+		scaleId: string,
+		step: number,
+	): readonly { step: number; ratio: number }[] {
+		const scale = PALETTE_SCALES.find((s) => s.chosen && s.id === scaleId);
+		return scale?.legible[step - 1]?.["aa"] ?? [];
+	}
+
+	/** A step's colour, for painting or for writing with. */
+	protected stepColor(scaleId: string, step: number): string {
+		const scale = PALETTE_SCALES.find((s) => s.chosen && s.id === scaleId);
+		const s = scale?.steps.find((x) => x.step === step);
+		return s ? `oklch(${s.l} ${s.c} ${scale!.hue})` : "transparent";
+	}
+
 	/** One swatch. No light-dark(): a palette is a ramp, not a scheme pair. */
 	protected previewColor(hue: number, l: number, c: number): string {
 		return `oklch(${l} ${c} ${hue})`;

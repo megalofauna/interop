@@ -693,6 +693,66 @@
 		</p>
 	</demo-section>
 
+	<demo-section id="legibility" heading="What can sit on what">
+		<p description class="demo-section__lede">
+			Every step as a background, at a size you can actually judge, listing the
+			steps legible on it — each name printed in the colour it names. A ratio in
+			a table can be wrong and still look fine. A label rendered in the colour
+			it describes cannot: if it is illegible, you are looking at the
+			illegibility.
+		</p>
+
+		<p>
+			14 steps, curve 1.30 — the candidate settled on above. Names shown are the
+			steps clearing <strong>4.5:1</strong> against that background; the
+			measured ratio follows each, small, so a borderline pass reads as
+			borderline rather than as a tick.
+		</p>
+
+		@for (scale of boardScales; track scale.id) {
+			<h3 class="legibility__title">
+				{{ scale.id }}
+				@if (scale.note) {
+					<span>{{ scale.note }}</span>
+				}
+			</h3>
+
+			<div class="legibility">
+				@for (s of scale.steps; track s.step) {
+					<article
+						class="legibility__card"
+						[style.background-color]="stepColor(scale.id, s.step)"
+					>
+						<header
+							[style.color]="
+								stepColor(
+									scale.id,
+									legibleOn(scale.id, s.step)[0]?.step ?? s.step
+								)
+							"
+						>
+							step {{ s.step }}
+							<small>L {{ s.l }}</small>
+						</header>
+
+						@if (legibleOn(scale.id, s.step).length) {
+							<ul>
+								@for (fg of legibleOn(scale.id, s.step); track fg.step) {
+									<li [style.color]="stepColor(scale.id, fg.step)">
+										step {{ fg.step }}
+										<small>{{ fg.ratio }}:1</small>
+									</li>
+								}
+							</ul>
+						} @else {
+							<p class="legibility__none">nothing on this ramp clears 4.5:1</p>
+						}
+					</article>
+				}
+			</div>
+		}
+	</demo-section>
+
 	<demo-section id="overriding" heading="Overriding">
 		<p description class="demo-section__lede">
 			The rules precede the componentry, so components cohere without agreeing

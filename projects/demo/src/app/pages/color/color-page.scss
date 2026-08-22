@@ -671,3 +671,79 @@
 	font-weight: 400;
 	vertical-align: middle;
 }
+
+/*
+ * Legibility board.
+ *
+ * Big enough to judge. The whole argument is that a name printed IN the colour
+ * it names cannot lie about its own legibility, and that only works if there is
+ * room to read it — hence a 256px floor rather than a swatch grid.
+ *
+ * No token reads inside a card: the card paints a palette step, and the palette
+ * is a proposal that has nothing to do with the layer the page happens to be
+ * on. Everything inside is coloured from the same proposal, which is the point.
+ */
+.legibility {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+	gap: var(--itx-spacing-3);
+
+	&__title {
+		margin-block: var(--itx-spacing-8) var(--itx-spacing-3);
+		font-size: var(--itx-font-size-label);
+		font-weight: 500;
+
+		span {
+			margin-inline-start: var(--itx-spacing-2);
+			font-weight: 400;
+			color: var(--itx-contrast-4);
+		}
+	}
+
+	&__card {
+		min-block-size: 12rem;
+		padding: var(--itx-spacing-4);
+		border-radius: var(--itx-radius-sm);
+		/* A hairline, because a card can match the page it sits on. */
+		box-shadow: inset 0 0 0 1px var(--itx-contrast-2);
+
+		header {
+			display: flex;
+			align-items: baseline;
+			gap: var(--itx-spacing-2);
+			margin-block-end: var(--itx-spacing-3);
+			font-weight: 600;
+			font-family: var(--itx-font-family-mono);
+		}
+
+		small {
+			font-size: 0.6875rem;
+			font-weight: 400;
+			opacity: 0.75;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+
+		li {
+			display: flex;
+			align-items: baseline;
+			gap: var(--itx-spacing-2);
+			font-family: var(--itx-font-family-mono);
+			font-size: var(--itx-font-size-caption);
+		}
+	}
+
+	&__none {
+		margin: 0;
+		font-size: var(--itx-font-size-caption);
+		font-style: italic;
+		opacity: 0.7;
+	}
+}

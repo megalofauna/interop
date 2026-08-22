@@ -153,6 +153,26 @@ function matrix(steps, hue) {
 }
 
 /**
+ * For each step used as a BACKGROUND, which steps are legible on it.
+ *
+ * The same information as the matrix, asked the way anyone actually asks it:
+ * "I am painting on step 4 — what can I write with?" A table of ratios answers
+ * that only after arithmetic. This answers it directly, and the demo renders
+ * each answer in the colour it names, so a claim that is wrong looks wrong.
+ */
+function legibleOn(m, floors) {
+	return m.map((row) => {
+		const out = {};
+		for (const f of floors) {
+			out[f.id] = row
+				.map((ratio, j) => ({ step: j + 1, ratio }))
+				.filter((x) => x.ratio >= f.ratio - 0.005);
+		}
+		return out;
+	});
+}
+
+/**
  * The smallest step distance that clears a floor EVERYWHERE, if one exists.
  *
  * This is the question a rule of thumb answers, asked of the data rather than
@@ -227,6 +247,7 @@ for (const { count, curve, chosen } of CANDIDATES) {
 		}
 		scales.push({
 			...seed,
+			legible: legibleOn(m, FLOORS),
 			count,
 			curve,
 			note: seed.note,
@@ -300,8 +321,13 @@ export interface PaletteScale {
 	readonly deltaFirst: number;
 	readonly deltaLast: number;
 	readonly steps: readonly PaletteStep[];
-	/** 12x12. matrix[i][j] is step i+1 against step j+1. */
+	/** NxN. matrix[i][j] is step i+1 against step j+1. */
 	readonly matrix: readonly (readonly number[])[];
+	/** Per background step, the steps legible on it at each floor. */
+	readonly legible: readonly Record<
+		string,
+		readonly { step: number; ratio: number }[]
+	>[];
 	readonly offsets: Record<string, PaletteOffset>;
 }
 
