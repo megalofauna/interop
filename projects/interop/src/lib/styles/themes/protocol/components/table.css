@@ -47,7 +47,7 @@
 	--itx-table-row-block-size: var(--itx-spacing-12);
 
 	/* Carbon ships zebra striping as an opt-in modifier, not a default, and so
-	   do we. Set this to `var(--itx-contrast-1)` for the Carbon stripe. */
+	   do we. Set this to `var(--itx-neutral-2)` for the Carbon stripe. */
 	--itx-table-stripe-bg: transparent;
 
 	--itx-table-row-hover-bg: var(--itx-neutral-2);
@@ -57,7 +57,7 @@
 	   no rule at all. We keep the lighter lift and carry the emphasis in the
 	   type instead — a slab would put a heavy band across a component whose
 	   whole borrowed language is "transparent, hairlines only". For Carbon's
-	   actual header, set `--itx-table-header-bg: var(--itx-contrast-2)`. */
+	   actual header, set `--itx-table-header-bg: var(--itx-neutral-3)`. */
 	--itx-table-header-bg: var(--itx-surface-above);
 	--itx-table-header-color: var(--itx-neutral-14);
 	/* Carbon `heading-compact-01` — same 14/18 as the body, weight 600. */

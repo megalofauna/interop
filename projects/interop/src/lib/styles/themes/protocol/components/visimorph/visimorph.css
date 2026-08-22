@@ -24,27 +24,27 @@
 
 	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-control-border-color: light-dark(
-		var(--itx-contrast-3),
-		var(--itx-contrast-3)
+		var(--itx-neutral-8),
+		var(--itx-neutral-8)
 	);
 	--itx-control-bg: light-dark(
 		var(--itx-surface-below),
 		var(--itx-surface-below)
 	);
-	--itx-control-accent: var(--itx-contrast-6);
+	--itx-control-accent: var(--itx-neutral-14);
 	/* The indicator is drawn ON --itx-control-accent (rank 6), so rank 1 is the
-	   maximum separation from it in BOTH schemes — a rank is a contrast target
-	   relative to the current surface, not a fixed grey, so it flips on its own
-	   and needs no light-dark(). The dark arm previously named
-	   --itx-contrast-6-on, which is declared nowhere; that made the whole
+	   maximum separation from it in BOTH schemes. Palette steps are already
+	   scheme-paired — step N is the same distance from the page in either arm,
+	   so the token flips on its own and needs no light-dark() here. The dark
+	   arm previously named a token declared nowhere, which made the whole
 	   declaration invalid at computed-value time, so the read fell through to
-	   its own var(--itx-contrast-1) fallback. Rendering is unchanged. */
-	--itx-control-indicator: var(--itx-contrast-1);
+	   its own fallback. Rendering is unchanged. */
+	--itx-control-indicator: var(--itx-neutral-2);
 
 	/* ── Toggle-specific ────────────────────────────────────────────────── */
 	--itx-control-toggle-width: 2.5rem;
 	--itx-control-toggle-height: 1.25rem;
-	--itx-control-toggle-thumb-color: var(--itx-contrast-3);
+	--itx-control-toggle-thumb-color: var(--itx-neutral-8);
 	--itx-control-toggle-thumb-color-on: var(--itx-colorway-on-solid);
 	--itx-control-toggle-thumb-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.18);
 	--itx-control-toggle-border-color-checked: var(--itx-colorway-border);

@@ -67,7 +67,7 @@
 	--itx-segmented-control-track-flex-direction: row;
 
 	/* Carbon paints no track fill; the frame alone carries the group.
-	   Restore a filled track by setting this to var(--itx-contrast-1). */
+	   Restore a filled track by setting this to var(--itx-neutral-2). */
 	--itx-segmented-control-track-background-color: transparent;
 	--itx-segmented-control-track-background-image: none;
 

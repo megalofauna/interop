@@ -63,7 +63,7 @@
 	--itx-button-border-style: solid;
 
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-contrast-6);
+	--itx-button-foreground: var(--itx-neutral-14);
 
 	/* A wash, not a fill. Rank 1 is defined as "wash — hover fills", which is
 	   exactly this: enough feedback to read as interactive, not enough to stack
@@ -76,11 +76,11 @@
 	   value from its ancestor, which is [interop-root], where the button theme
 	   declares --itx-contrast-2. So the six declarations resolved to the very
 	   fill they were written to suppress, and were exact no-ops. */
-	--itx-button-background-hover: var(--itx-contrast-1);
-	--itx-button-foreground-hover: var(--itx-contrast-6);
+	--itx-button-background-hover: var(--itx-neutral-2);
+	--itx-button-foreground-hover: var(--itx-neutral-14);
 	--itx-button-border-color-hover: transparent;
 
-	--itx-button-background-active: var(--itx-contrast-2);
-	--itx-button-foreground-active: var(--itx-contrast-6);
+	--itx-button-background-active: var(--itx-neutral-3);
+	--itx-button-foreground-active: var(--itx-neutral-14);
 	--itx-button-border-color-active: transparent;
 }

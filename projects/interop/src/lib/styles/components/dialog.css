@@ -47,7 +47,7 @@
 	max-height: var(--itx-dialog-max-height, 85dvh);
 	padding: var(--itx-dialog-padding, var(--itx-spacing-6, 1.5rem));
 	border: var(--itx-dialog-border-width, var(--itx-border-width-thick)) solid
-		var(--itx-dialog-border-color, var(--itx-contrast-3, currentColor));
+		var(--itx-dialog-border-color, var(--itx-neutral-8, currentColor));
 	border-radius: var(--itx-dialog-border-radius, var(--itx-radius));
 	background: var(--itx-dialog-background, Canvas);
 	color: var(--itx-dialog-foreground, CanvasText);

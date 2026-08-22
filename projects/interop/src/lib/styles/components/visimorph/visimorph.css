@@ -71,11 +71,11 @@
 	);
 	--_border-color: var(
 		--itx-control-border-color,
-		var(--itx-contrast-3, var(--itx-contrast-2))
+		var(--itx-neutral-8, var(--itx-neutral-3))
 	);
-	--_bg: var(--itx-control-bg, var(--itx-contrast-1, #ffffff));
-	--_accent: var(--itx-control-accent, var(--itx-contrast-6));
-	--_indicator: var(--itx-control-indicator, var(--itx-contrast-1, #ffffff));
+	--_bg: var(--itx-control-bg, var(--itx-neutral-2, #ffffff));
+	--_accent: var(--itx-control-accent, var(--itx-neutral-14));
+	--_indicator: var(--itx-control-indicator, var(--itx-neutral-2, #ffffff));
 	--_radius: var(
 		--itx-control-radius,
 		var(--itx-inner-radius, var(--itx-radius))
@@ -232,7 +232,7 @@
 :where(interop-visimorph[itx-visimorph="toggle"][data-checked]) {
 	--_toggle-thumb-color: var(
 		--itx-control-toggle-thumb-color-on,
-		var(--itx-contrast-1)
+		var(--itx-neutral-2)
 	);
 	border-color: var(--itx-control-toggle-border-color-checked);
 	/*background-color: var(--_accent);*/
