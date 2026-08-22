@@ -183,10 +183,10 @@
 	/* --itx-chip-remove-font-size: var(--itx-spacing-3); */
 	/* --itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2); */
 	/* --itx-chip-remove-radius: var(--itx-chip-radius, var(--itx-radius)); */ /* (fallback) */
-	/* --itx-chip-selectable-background: var(--itx-contrast-1); */
+	/* --itx-chip-selectable-background: var(--itx-neutral-2); */
 	/* --itx-chip-selectable-background-hover: ; */ /* inherits --itx-chip-selectable-background */
 	/* --itx-chip-selectable-border: var(--itx-border-width-thick) solid transparent; */ /* (fallback) */
-	/* --itx-chip-selectable-color: var(--itx-contrast-6); */
+	/* --itx-chip-selectable-color: var(--itx-neutral-14); */
 	/* --itx-chip-selectable-color-hover: ; */ /* inherits --itx-chip-selectable-color */
 	/* --itx-chip-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
 	/* --itx-chip-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */

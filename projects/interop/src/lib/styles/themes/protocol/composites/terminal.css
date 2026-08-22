@@ -50,12 +50,21 @@
  *                                        UI component's own boundary. Rank 3 is
  *                                        "border, emphasis edge", verbatim.
  *
- * Known limit: the plain well paints --itx-surface-below without declaring
- * `itx-sink`, so the contrast ranks above are solved against the PAGE rather
- * than against the well they land on — one step of headroom, not a flip.
- * Declaring the layer would fix the maths and cost the API: the tokens would
- * have to be declared on the inner scroll element, where they would shadow a
- * consumer's own `--itx-term-color` set on the host. Left as is deliberately.
+ * Known limit, and it changed sign: the plain well paints --itx-surface-below
+ * without declaring `itx-sink`, so the contrast ranks above are solved against
+ * the PAGE rather than against the well they land on.
+ *
+ * That used to cost one step of headroom in the safe direction — below meant a
+ * step toward the page's opposite, so a rank solved on the page had MORE
+ * contrast on the well, not less. Under one direction of travel "below" is a
+ * step AWAY from the page like everything else, and the same gap now runs the
+ * wrong way: the prompt measured 4.35:1 against a 4.5 floor.
+ *
+ * Fixed by taking the rank one step further out rather than by declaring the
+ * layer, which would still cost the API the original note describes — the
+ * tokens would move to the inner scroll element and shadow a consumer's own
+ * --itx-term-color set on the host. Rank 5 on the well measures what rank 4 was
+ * meant to measure on the page.
  */
 
 :where([interop-root] itx-terminal) {
@@ -114,7 +123,7 @@
 	--itx-term-background: var(--itx-surface-below);
 	--itx-term-color: var(--itx-contrast-6);
 	--itx-term-glow: none;
-	--itx-term-prompt-color: var(--itx-contrast-4);
+	--itx-term-prompt-color: var(--itx-contrast-5);
 	--itx-term-delta-color: var(--itx-contrast-4);
 	--itx-term-caret-color: var(--itx-contrast-6);
 	--itx-term-scrollbar-color: var(--itx-contrast-3);

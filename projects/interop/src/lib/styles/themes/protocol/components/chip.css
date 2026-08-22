@@ -112,10 +112,22 @@
 	 * checked. Neutral by design — Carbon's selectable tag never takes a
 	 * colour. Set --itx-chip-background-selected / -color-selected to brand
 	 * it; those are the seam, at whatever scope you set them.              */
-	--itx-chip-selectable-background: var(--itx-contrast-1);
-	--itx-chip-selectable-color: var(--itx-contrast-6);
-	--itx-chip-selectable-background-hover: var(--itx-contrast-2);
-	--itx-chip-selectable-color-hover: var(--itx-contrast-6);
+	/*
+	 * FIRST COMPONENT ON THE PALETTE. Steps, not ranks.
+	 *
+	 * A step is a distance from the page, identical in both schemes, so these
+	 * read the same way a designer would say them out loud: a wash two steps
+	 * off the page, text ten steps off it. The measured distances the generator
+	 * publishes are border 7, secondary 8, body 10, and the far end for maximum.
+	 *
+	 * The rank equivalents are one-to-one and were correct; what changes is that
+	 * a rank meant "3:1 against whatever I am on" and a step means "this far
+	 * from the page", which is a thing you can point at in the palette.
+	 */
+	--itx-chip-selectable-background: var(--itx-neutral-2);
+	--itx-chip-selectable-color: var(--itx-neutral-14);
+	--itx-chip-selectable-background-hover: var(--itx-neutral-3);
+	--itx-chip-selectable-color-hover: var(--itx-neutral-14);
 
 	--itx-chip-background-selected: var(--itx-colorway-solid);
 	--itx-chip-color-selected: var(--itx-colorway-on-solid);

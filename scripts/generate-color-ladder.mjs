@@ -1071,11 +1071,22 @@ function emit() {
  * library reads these yet; both vocabularies coexist so components can move one
  * at a time and the palette can be judged in situ rather than in a preview.
  *
- * Scheme-invariant on purpose. A palette is a ramp, not a scheme pair: step 3
- * is the same colour in both schemes, and what changes per scheme is which end
- * of the ramp the page starts from. That is why the elevation model had to
- * become monotonic first — a scale cannot mean the same thing in both schemes
- * while tone is also carrying direction.
+ * SCHEME-PAIRED, and that is the whole ergonomic argument.
+ *
+ * Step N means "N steps from the page" in BOTH schemes. The alternative was one
+ * scheme-invariant ramp, which is the right shape for judging a palette and the
+ * wrong one for using it: the page is the light end in light mode and the dark
+ * end in dark, so every consumer would write
+ *
+ *   light-dark(var(--itx-neutral-3), var(--itx-neutral-12))
+ *
+ * and compute 15 − n in their head, per token, forever. That is precisely the
+ * abstruseness this rewrite exists to remove, so the pairing happens here once
+ * instead of at every call site. Radix does the same and for the same reason.
+ *
+ * The dark arm is the light ramp READ BACKWARDS, which lands the fine steps
+ * next to the page in both schemes — the easing put them at the dark end, and
+ * the dark end is where the dark page is.
  */
 function emitPalette() {
 	const lines = [
@@ -1115,8 +1126,13 @@ function emitPalette() {
 		const steps = buildPalette(family.hue, family.chroma);
 		lines.push("");
 		for (const s of steps) {
+			// Same ramp, read from the far end for dark: step N is N steps from
+			// the page whichever end the page happens to be.
+			const mirror = steps[steps.length - s.step];
 			lines.push(
-				`\t--itx-${family.id}-${s.step}: oklch(${s.l} ${s.c} ${family.hue});`,
+				`\t--itx-${family.id}-${s.step}: light-dark(\n` +
+					`\t\toklch(${s.l} ${s.c} ${family.hue}),\n` +
+					`\t\toklch(${mirror.l} ${mirror.c} ${family.hue})\n\t);`,
 			);
 		}
 	}
