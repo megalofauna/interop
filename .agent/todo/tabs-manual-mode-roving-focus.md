@@ -1,6 +1,7 @@
 # TODO — Tabs: arrow keys track selection, not focus
 
-**Status:** open, live bug
+**Status:** FIXED 2026-08-23. Kept as the record of the diagnosis; see the
+closing note.
 **Raised:** 2026-08-11, during the Carbon borrow (round 10, Tabs)
 **Severity:** keyboard navigation is stuck after one step in `manual` mode
 
@@ -92,3 +93,25 @@ Round 10 was a visual pass. Keyboard-model surgery is a behaviour change with
 spec churn attached and belongs in its own commit. Surfaced there because
 reading a component closely enough to restate its values is reading it closely
 enough to find what was already wrong.
+
+---
+
+## Fixed, 2026-08-23
+
+Both halves, as diagnosed. Focus is now its own signal, `focusedKey`, and a
+`rovingKey` computed resolves it against the live panel keys and falls back to
+the selection. The keydown handler counts from `rovingKey()`; the tab stop
+binds to it.
+
+Two departures from the sketch above. The fix reads a signal rather than
+`document.activeElement` — the template needs the same value to drive
+`tabindex`, and a DOM read is not reactive, so the signal was needed regardless
+and reading it twice is better than having two sources. And `rovingKey`
+re-validates against current keys, which the sketch's fallback did not: without
+it, removing the focused panel leaves the tablist with no tab stop at all.
+
+Four tests added. Two of them fail against the old code — verified by
+reintroducing the bug — which is the point, since the three tests that existed
+all pressed a key exactly once and a single press is the one case the bug did
+not break. The other two guard behaviour that already worked (ArrowLeft wrap)
+and the new re-validation path, and pass either way by design.

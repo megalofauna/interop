@@ -26,14 +26,18 @@ import { InteropTabs } from "./interop-tabs";
 			<section interop-tab-panel key="settings" label="Settings">
 				Settings content
 			</section>
-			<section interop-tab-panel key="billing" label="Billing">
-				Billing content
-			</section>
+			@if (showBilling) {
+				<section interop-tab-panel key="billing" label="Billing">
+					Billing content
+				</section>
+			}
 		</section>
 	`,
 })
 class TestHostComponent {
 	active = signal<string | null>(null);
+	/** Lets a test remove a panel while it holds focus. */
+	showBilling = true;
 	lastActiveChange: string | null = null;
 	ariaLabel: string | null = "Account";
 	orientation: "horizontal" | "vertical" = "horizontal";
@@ -328,6 +332,92 @@ describe("InteropTabs", () => {
 		const tabs = fixture.debugElement.query(By.directive(InteropTabs))
 			.componentInstance as InteropTabs;
 		expect(tabs.resolvedActive()).toBe("billing");
+	});
+
+	// ── Roving focus, manual mode ─────────────────────────────────────────────
+	//
+	// Every test above presses a key exactly ONCE, which is the single case the
+	// bug these cover did not break. Focus used to be computed from the SELECTED
+	// index, which does not move while you arrow in manual mode, so the second
+	// press resolved to the same target as the first and focus could never
+	// travel more than one tab from the selection.
+
+	it("arrows travel more than one tab from the selection in manual mode", () => {
+		hostComponent.activationMode = "manual";
+		fixture.detectChanges();
+
+		const tablist = fixture.nativeElement.querySelector('[role="tablist"]');
+		const buttons = getTabButtons();
+		const arrow = () => {
+			tablist.dispatchEvent(
+				new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
+			);
+			fixture.detectChanges();
+		};
+
+		arrow();
+		expect(document.activeElement).toBe(buttons[1]);
+		arrow();
+		expect(document.activeElement).toBe(buttons[2]);
+		// …and wraps rather than sticking at the end.
+		arrow();
+		expect(document.activeElement).toBe(buttons[0]);
+
+		const tabs = fixture.debugElement.query(By.directive(InteropTabs))
+			.componentInstance as InteropTabs;
+		expect(tabs.resolvedActive()).toBe("profile"); // still uncommitted
+	});
+
+	it("ArrowLeft from the first tab wraps to the last in manual mode", () => {
+		hostComponent.activationMode = "manual";
+		fixture.detectChanges();
+
+		const tablist = fixture.nativeElement.querySelector('[role="tablist"]');
+		tablist.dispatchEvent(
+			new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }),
+		);
+		fixture.detectChanges();
+
+		const buttons = getTabButtons();
+		expect(document.activeElement).toBe(buttons[buttons.length - 1]);
+	});
+
+	it("moves the tab stop to the focused tab, not the selected one", () => {
+		// The ARIA APG puts tabindex="0" on the tab WITH FOCUS. Bound to selection
+		// instead, a focused-but-unselected tab is focused and not tabbable, so
+		// tabbing out and back returns you to the selection rather than to where
+		// you left off.
+		hostComponent.activationMode = "manual";
+		fixture.detectChanges();
+
+		const tablist = fixture.nativeElement.querySelector('[role="tablist"]');
+		tablist.dispatchEvent(
+			new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
+		);
+		fixture.detectChanges();
+
+		const buttons = getTabButtons();
+		expect(buttons[1].getAttribute("tabindex")).toBe("0");
+		expect(buttons[0].getAttribute("tabindex")).toBe("-1");
+		expect(buttons[1].getAttribute("aria-selected")).toBe("false");
+	});
+
+	it("keeps a tab stop when the focused panel is removed", () => {
+		hostComponent.activationMode = "manual";
+		fixture.detectChanges();
+
+		const tablist = fixture.nativeElement.querySelector('[role="tablist"]');
+		tablist.dispatchEvent(
+			new KeyboardEvent("keydown", { key: "End", bubbles: true }),
+		);
+		fixture.detectChanges();
+
+		hostComponent.showBilling = false;
+		fixture.detectChanges();
+
+		const buttons = getTabButtons();
+		const stops = buttons.filter((b) => b.getAttribute("tabindex") === "0");
+		expect(stops.length).toBe(1);
 	});
 
 	// ── Content preservation ──────────────────────────────────────────────────

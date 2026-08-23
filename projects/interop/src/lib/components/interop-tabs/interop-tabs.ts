@@ -10,8 +10,10 @@ import {
 	inject,
 	input,
 	isDevMode,
+	computed,
 	linkedSignal,
 	model,
+	signal,
 	viewChildren,
 } from "@angular/core";
 import { InteropActivation } from "../../services/interop-activation.service";
@@ -217,6 +219,47 @@ export class InteropTabs implements InteropTabsContext {
 		return keys[0] ?? null;
 	});
 
+	// ── Roving focus ──────────────────────────────────────────────────────────────
+
+	/**
+	 * The tab that currently holds focus, which is NOT the tab that is selected.
+	 *
+	 * In `activationMode="auto"` the two move together and this is redundant. In
+	 * `manual` they deliberately come apart — arrows move focus, Enter or Space
+	 * commits — and conflating them broke arrow navigation outright: keyboard
+	 * focus computed its next target from the SELECTED index, which does not
+	 * move while you arrow, so every ArrowRight resolved to `selected + 1` and
+	 * focus could never travel more than one tab from the selection.
+	 *
+	 * `null` means "follow the selection", which is the correct initial state:
+	 * before anyone has interacted, the selected tab is the one that should be
+	 * tabbable.
+	 */
+	private readonly focusedKey = signal<string | null>(null);
+
+	/**
+	 * The tab that carries `tabindex="0"` — the single tab stop for the tablist.
+	 *
+	 * Per the ARIA APG this is the tab with focus, not the tab that is selected.
+	 * Binding it to selection meant that in manual mode a focused-but-unselected
+	 * tab carried `tabindex="-1"`: focused and not tabbable, so tabbing out and
+	 * back returned you to the selected tab rather than where you left.
+	 *
+	 * Re-validated against the live keys, so a panel removed while focused falls
+	 * back to the selection rather than leaving the tablist with no tab stop.
+	 */
+	readonly rovingKey = computed<string | null>(() => {
+		const focused = this.focusedKey();
+		const keys = this.panels().map((p) => p.key());
+		if (focused && keys.includes(focused)) return focused;
+		return this.resolvedActive();
+	});
+
+	/** Records which tab focus landed on, however it got there — arrow or click. */
+	onTabFocus(key: string): void {
+		this.focusedKey.set(key);
+	}
+
 	// ── Public API ────────────────────────────────────────────────────────────────
 
 	/**
@@ -271,9 +314,8 @@ export class InteropTabs implements InteropTabsContext {
 		const panels = this.panels();
 		if (!panels.length) return;
 
-		const currentIdx = panels.findIndex(
-			(p) => p.key() === this.resolvedActive(),
-		);
+		// Focus, not selection — see rovingKey above for why they differ.
+		const currentIdx = panels.findIndex((p) => p.key() === this.rovingKey());
 		const isHorizontal = this.orientation() === "horizontal";
 		const prevKey = isHorizontal ? "ArrowLeft" : "ArrowUp";
 		const nextKey = isHorizontal ? "ArrowRight" : "ArrowDown";
@@ -300,6 +342,7 @@ export class InteropTabs implements InteropTabsContext {
 			this.selectPanel(targetKey);
 		}
 
+		this.focusedKey.set(targetKey);
 		this.tabButtons()[targetIdx]?.nativeElement.focus();
 	}
 
