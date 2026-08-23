@@ -49,7 +49,7 @@
 	color: var(--itx-cmdp-color);
 	background-color: var(--itx-cmdp-background);
 	border: var(--itx-cmdp-border-width) solid var(--itx-cmdp-border-color);
-	border-radius: var(--itx-cmdp-radius-expanded, var(--itx-cmdp-radius));
+	border-radius: var(--itx-cmdp-radius);
 	box-shadow: var(--itx-cmdp-shadow);
 
 	/* Query container for the interior layout. The palette caps at its own
@@ -324,9 +324,6 @@
  * hidden rather than removed so the listbox keeps its id for the input's
  * aria-controls / aria-activedescendant.
  */
-:where(dialog[interop-command-palette].itx-cmdp--collapsed) {
-	border-radius: var(--itx-cmdp-radius-collapsed, var(--itx-cmdp-radius));
-}
 
 :where(
 	dialog[interop-command-palette].itx-cmdp--collapsed .itx-cmdp__results,
