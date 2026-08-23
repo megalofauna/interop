@@ -39,21 +39,31 @@ Both selectors are zero-specificity, so precedence is source order within
 
 ## Progress
 
-Done: `visimorph`, `button`, and the `toolbar` rig that restyles buttons.
+**Done — no per-layer theme block remains.** All 22 files converted across
+three passes: visimorph and button as the pilot, then the seven unambiguous
+ones (dialog, progress, popover, table, tree, tabs, expansion-panel), then the
+eight that needed a judgement call about their base selector.
 
-Remaining: ~23 theme files still open with a per-layer block, roughly 400
-declarations. Largest are stepper (56), command-palette (38), expansion-panel
-(37), segmented-control (36), chip (34).
+Base selectors that were not obvious, and why:
 
-Cross-component declarations needing the rig treatment as their target moves:
-23 in total — 15 in `rigs/toolbar.css` (done), 4 in `composites/inline-code.css`,
-3 in `components/segmented-control.css` (its `--itx-segment-*`), 1 in
-`components/stepper.css`.
+| file | selector | reason |
+| --- | --- | --- |
+| chip | four entry points | a chip-list stands alone, without a filter |
+| field | `interop-field-input, interop-field-textarea` | there is no wrapping host |
+| indicator | `interop-indicator, fieldset[interop-segmented-control]` | segment.css reads indicator tokens on a segment button, outside any indicator |
+| tooltip | `.interop-tooltip__panel` | the panel is created in JS; it now carries its own tokens instead of depending on where it is appended |
 
-Per file the one judgement call is the base selector, which must cover every
-entry point — chip tokens are read under `[interop-chip-filter]`,
-`[interop-chip-list]` and `[interop-chip-input]`. Derive it from the foundation
-file's own top-level selectors rather than guessing.
+Cross-component declarations retargeted: `rigs/toolbar.css` (15). The others
+found in the survey turned out not to need it — `segmented-control.css` sets
+`--itx-segment-*` on the fieldset and segments inherit it, and the
+`inline-code` and `stepper` cases declare into their own subtree.
+
+Verified by resolving a representative token on the element that reads it, per
+component — the contrast audit alone would not catch a sizing regression. Two
+apparent failures were bad probes rather than bad conversions:
+`--itx-field-addon-color` lives in an `interop-field-control` block that was
+never per-layer, and `--itx-segment-background-selected` is never declared at
+all, being a foundation fallback chain.
 
 ## Guard, once the sweep lands
 
