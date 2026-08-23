@@ -60,16 +60,10 @@
 
 // ── Calls to action ──────────────────────────────────────────────────────────
 //
-// GAP: these repeat the button's visual language by hand because there is no
-// way to borrow it. `InteropButton`'s selector is `button[interop-button]` and
-// components/button.css is keyed the same way, so `<a interop-button>` picks up
-// nothing but the appearance reset. Nothing else in the repo does it either, so
-// this is unsupported rather than merely unused. These are navigation, so the
-// anchor is the correct element and the component is the thing that needs to
-// grow a link tier — at which point this block deletes.
-//
-// Until then: squared, hairline, paint on state, matching the theme's own
-// button rather than the rounded filled pills that were here before.
+// These used to re-implement the button's visual language by hand, because
+// there was no way to borrow it. `itx-as-button` is that way: the anchors stay
+// anchors — they navigate, so the element is correct — and pick up the button
+// rules themselves rather than a copy of them.
 
 .home-page__actions {
 	display: flex;
@@ -77,56 +71,6 @@
 	align-items: center;
 	gap: var(--itx-spacing-3);
 	margin-block-start: var(--itx-spacing-2);
-}
-
-.home-page__cta {
-	display: inline-flex;
-	align-items: center;
-	block-size: 3rem; // --itx-button-height at itx-size="lg"
-	padding-inline: var(--itx-spacing-4);
-	border: 1px solid transparent;
-	border-radius: var(--itx-radius-none);
-	font-size: 0.875rem;
-	font-weight: 400;
-	line-height: 1;
-	text-decoration: none;
-	transition: background-color var(--itx-duration-fast)
-		var(--itx-easing-standard);
-
-	&:focus-visible {
-		outline: 2px solid var(--itx-focus-color);
-		outline-offset: 2px;
-	}
-
-	&--primary {
-		background: var(--itx-colorway-solid);
-		// --itx-neutral-14, not --itx-colorway-on-solid. That token pairs with the
-		// *semantic* --itx-colorway-solid, which is bright in dark mode and so wants
-		// dark text; this uses --itx-colorway-solid, the button's fill, which is a
-		// dark blue in that scheme. Pairing the two put near-black on dark blue
-		// at 1.78:1. The primary button's own foreground is neutral-12, and
-		// matching it is the point of this block — it measures 8.75:1.
-		color: var(--itx-neutral-14);
-
-		&:hover {
-			background: var(--itx-colorway-solid);
-		}
-	}
-
-	&--secondary {
-		border-color: var(--itx-neutral-9);
-		color: var(--itx-neutral-11);
-
-		&:hover {
-			color: var(--itx-neutral-14);
-		}
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.home-page__cta {
-		transition: none;
-	}
 }
 
 .home-page__hero-code {

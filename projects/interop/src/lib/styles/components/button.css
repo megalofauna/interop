@@ -11,6 +11,38 @@
  * component import required. Importing the InteropButton class additionally
  * brings activation guardrails, ARIA wiring, and the loading-text template.
  *
+ * ── Casting: itx-as-button ────────────────────────────────────────────────
+ *
+ * Sometimes design gives a link the button treatment. The wrong answers are to
+ * use a <button> and fake navigation, or to keep the <a> and add
+ * role="button" — which makes it announce as a button and then owe you a
+ * keydown handler for Space. Both trade semantics for pixels.
+ *
+ * `itx-as-button` buys the pixels only:
+ *
+ *   <button interop-button="primary" itx-size="sm">Save</button>
+ *   <a href="/start" itx-as-button="primary" itx-size="sm">Get started</a>
+ *
+ * Whatever you would write as the value of `interop-button`, you write as the
+ * value of `itx-as-button`. Same tokens, same ~= matching, same size axis.
+ * That is the whole API.
+ *
+ * Every rule below names both, so the two are identical by construction rather
+ * than by a copy that can drift. Two deliberate asymmetries:
+ *
+ *   :disabled has no cast twin — it cannot match an anchor. The
+ *   [aria-disabled="true"] selector beside it is the link-shaped answer and
+ *   does carry one.
+ *
+ *   No Angular component matches the cast. Its selector stays
+ *   `button[interop-button]`, so a cast link gets no activation guardrails —
+ *   no debounce, throttle or reentrancy. Those guard an action; navigation is
+ *   not one. Space still does not activate a link either, and should not: a
+ *   link that navigates ought to behave like a link.
+ *
+ * The naming follows the house rule — `interop-*` is identity and activation,
+ * `itx-*` is configuration. A cast is configuration, so it is `itx-`.
+ *
  * Token values (colors, sizes, radii) are set separately by the theme — see
  * `themes/protocol/components/button.css`. This file declares structure and
  * state activation rules; the theme declares values.
@@ -63,7 +95,7 @@
  *   --itx-button-transition-timing-function
  */
 
-:where([interop-button]) {
+:where([interop-button], [itx-as-button]) {
 	-webkit-appearance: none;
 	appearance: none;
 }
@@ -84,7 +116,8 @@
  * this file now floors both.
  */
 
-:where(button[interop-button]) {
+:where(button[interop-button]),
+:where([itx-as-button]) {
 	box-sizing: border-box;
 	display: var(--itx-button-display, inline-flex);
 	align-items: var(--itx-button-align-items, center);
@@ -159,7 +192,8 @@
 /* ── State-resolved private slots ────────────────────────────────────────── */
 /*    State activation lives here. Theme files set values, not selectors.    */
 
-:where(button[interop-button]) {
+:where(button[interop-button]),
+:where([itx-as-button]) {
 	--_background: var(--itx-button-background, transparent);
 	--_foreground: var(--itx-button-foreground, var(--itx-neutral-14));
 	--_border-color: var(--itx-button-border-color, transparent);
@@ -194,7 +228,8 @@
 	--itx-icon-color: var(--_icon-color);
 }
 
-:where(button[interop-button]:hover:not(:active)) {
+:where(button[interop-button]:hover:not(:active)),
+:where([itx-as-button]:hover:not(:active)) {
 	--_background: var(
 		--itx-button-background-hover,
 		var(--itx-button-background, transparent)
@@ -214,7 +249,8 @@
 	);
 }
 
-:where(button[interop-button]:active) {
+:where(button[interop-button]:active),
+:where([itx-as-button]:active) {
 	--_background: var(
 		--itx-button-background-active,
 		var(--itx-button-background, transparent)
@@ -236,11 +272,13 @@
 
 /* ── Focus ring ──────────────────────────────────────────────────────────── */
 
-:where(button[interop-button]:focus) {
+:where(button[interop-button]:focus),
+:where([itx-as-button]:focus) {
 	outline: none;
 }
 
-:where(button[interop-button]:focus-visible:not(:active)) {
+:where(button[interop-button]:focus-visible:not(:active)),
+:where([itx-as-button]:focus-visible:not(:active)) {
 	outline: var(--itx-button-focus-width, var(--itx-focus-width))
 		var(--itx-button-focus-style, var(--itx-focus-style))
 		var(--itx-button-focus-color, var(--itx-focus-color));
@@ -250,12 +288,14 @@
 /* ── Disabled ────────────────────────────────────────────────────────────── */
 
 :where(button[interop-button]:disabled),
-:where(button[interop-button][aria-disabled="true"]) {
+:where(button[interop-button][aria-disabled="true"]),
+:where([itx-as-button][aria-disabled="true"]) {
 	opacity: var(--itx-button-disabled-opacity, 0.4);
 	pointer-events: none;
 }
 
-:where(button[interop-button~="icon"]) {
+:where(button[interop-button~="icon"]),
+:where([itx-as-button~="icon"]) {
 	/* Square: the inline size IS the height.
 
 	   This used to be `width: var(--itx-button-max-width, min-content)` — the
@@ -290,7 +330,8 @@
  */
 
 @media (pointer: coarse) {
-	:where(button[interop-button]) {
+	:where(button[interop-button]),
+	:where([itx-as-button]) {
 		min-block-size: max(
 			var(--itx-button-height, 2.5rem),
 			var(--itx-button-touch-target, 2.75rem)
@@ -301,7 +342,8 @@
 	   applying it to every button would clobber the max-content floor that
 	   keeps labels from wrapping. A labelled button is comfortably past 44px
 	   already; a square icon button is the one that is not. */
-	:where(button[interop-button~="icon"]) {
+	:where(button[interop-button~="icon"]),
+	:where([itx-as-button~="icon"]) {
 		min-inline-size: var(--itx-button-touch-target, 2.75rem);
 	}
 }
