@@ -49,7 +49,13 @@
  * (`.sidebar { --itx-progress-track: … }`). Co-declaration keeps both.
  */
 
-:where([interop-root], [itx-layer], [itx-sink]) {
+/* Declared on the component, not co-declared on the elevation boundaries. The
+   colour tokens this aliased were ranks solved per surface, so a rank parked
+   higher up froze layer 0's value for the whole tree; the palette replaced them
+   and is page-relative, so that reason expired. Co-declaration is not free — it
+   re-declares at every boundary and wipes a consumer's override one layer down.
+   See tokens/placement.spec.ts. */
+:where(progress[interop-progress]) {
 	/* ── Colour ─────────────────────────────────────────────────────────── */
 	/* rank 2 — "hairline, dividers", i.e. Carbon's $border-subtle. */
 	--itx-progress-track: var(--itx-neutral-3);

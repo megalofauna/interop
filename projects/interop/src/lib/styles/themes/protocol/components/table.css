@@ -16,11 +16,13 @@
  * contained list's row height. That is the default here too.
  */
 
-/* Co-declared on the elevation boundaries, not the bare root: a custom
-   property substitutes where it is DECLARED, so aliasing a rank at the
-   root freezes layer 0's value for the whole tree. See css-strategy.md,
-   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
-:where([interop-root], [itx-layer], [itx-sink]) {
+/* Declared on the component, not co-declared on the elevation boundaries. The
+   colour tokens this aliased were ranks solved per surface, so a rank parked
+   higher up froze layer 0's value for the whole tree; the palette replaced them
+   and is page-relative, so that reason expired. Co-declaration is not free — it
+   re-declares at every boundary and wipes a consumer's override one layer down.
+   See tokens/placement.spec.ts. */
+:where(interop-table) {
 	/* ── Typography ─────────────────────────────────────────────────────── */
 	/* Carbon `body-compact-01` — 14px / 18px / 400.
 	   Fixed rem, never `--itx-font-size-*`: those are fluid clamp() values and
