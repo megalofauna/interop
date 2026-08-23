@@ -12,20 +12,17 @@
 			result is components that are correct without effort.
 		</p>
 
-		<!-- Local styling, not `interop-button`: that component's selector is
-		     `button[interop-button]` and its foundation CSS is keyed the same
-		     way, so an anchor gets none of it. These are navigation, so anchors
-		     are correct and the styling is matched by hand. A link tier for the
-		     button is a real gap — see the note in home-page.scss. -->
+		<!-- Anchors, because these navigate — and `itx-as-button` so they look
+		     like the buttons they sit beside. Not `interop-button`, whose
+		     selector is `button[interop-button]`: the cast is styling only and
+		     leaves the element saying what it is. -->
 		<div class="home-page__actions">
-			<a
-				class="home-page__cta home-page__cta--primary"
-				routerLink="/components"
-			>
+			<a itx-as-button="primary" itx-size="lg" routerLink="/components">
 				Browse components
 			</a>
 			<a
-				class="home-page__cta home-page__cta--secondary"
+				itx-as-button="secondary"
+				itx-size="lg"
 				routerLink="/foundation/principles"
 			>
 				Read the principles
