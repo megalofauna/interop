@@ -127,9 +127,11 @@
  * silently do nothing. That is the bug the focus system was built to fix; the
  * same shape applies here.
  *
- * The default is `none`, so this is a knob rather than a restyle: 29 of the
- * library's 54 radius values already resolved to zero, and adopting this
- * changed nothing on screen.
+ * The default was `none` when the knob was introduced, so adopting it changed
+ * nothing on screen — 29 of the library's 54 radius values already resolved to
+ * zero. It has moved twice since, to `nominal` and now to `sm` (4px), and this
+ * note claimed `none` for both of those. The default is a house style
+ * decision; the knob is the mechanism, and the mechanism does not care.
  *
  * A component PINS its radius — opts out of the knob — only when the shape is
  * the point rather than the styling: a chip is a pill, a step indicator is a
@@ -138,7 +140,7 @@
  */
 
 :where([interop-root]) {
-	--itx-radius: var(--itx-radius-nominal);
+	--itx-radius: var(--itx-radius-sm);
 }
 
 /* ── itx-radius="…" — per-element application attribute ───────────────────────
