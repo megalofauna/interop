@@ -70,7 +70,8 @@
 	--itx-control-label-border-width: var(--itx-border-width-thick);
 	--itx-control-label-border-color: transparent;
 	--itx-control-label-radius: var(--itx-radius-md);
-	--itx-control-label-corner-shape: initial;
+	/* A real value, not `initial` — see the note in visimorph.css. */
+	--itx-control-label-corner-shape: round;
 	/* How far the label's hit area extends past its ink. */
 	--itx-control-touch-inset: 0.25em;
 

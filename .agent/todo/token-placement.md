@@ -65,13 +65,28 @@ apparent failures were bad probes rather than bad conversions:
 never per-layer, and `--itx-segment-background-selected` is never declared at
 all, being a foundation fallback chain.
 
-## Guard, once the sweep lands
+## Guard
 
-`scripts/check-token-placement.mjs`, in the same gate as `check-color-axes`:
+`scripts/check-token-placement.mjs`, in `lint:tokens` (and `npm run
+lint:placement` on its own). Two rules:
 
-1. A declaration in a per-layer block whose value does not read `--itx-surface*`
-   or a per-layer colourway role → fail.
-2. Any declaration at root or per-layer whose value reads a container-published
-   token (`--itx-inner-radius`, `--itx-outer-radius`, `--itx-context-radius`,
-   `--itx-radius-attr`) → fail. This is the freeze bug; currently zero
-   violations, so the guard locks in a property that already holds.
+1. No per-layer block in the theme. If a value genuinely needs the nearest
+   boundary's surface it can still read it — `--itx-surface*` is registered
+   `inherits: true`, so reading it at the component gives the same answer.
+2. Nothing declared at `[interop-root]` may read a container-published token
+   (`--itx-inner-radius`, `--itx-outer-radius`, `--itx-context-radius`,
+   `--itx-radius-attr`). That is the freeze bug.
+
+Both were verified to fail on a deliberately reintroduced violation before
+being trusted — a guard that has only ever passed proves nothing.
+
+## A footgun the sweep exposed
+
+Running the full `lint:tokens` rather than individual checks turned up two
+declarations I had added earlier: `--itx-control-corner-shape: initial` and its
+label twin. A CSS-wide keyword as a custom-property value sets THE PROPERTY to
+guaranteed-invalid; it does not pass the keyword through to whatever reads it.
+Both happened to render correctly, because the foundation's
+`var(--itx-control-corner-shape, initial)` fell back to the same thing — a
+no-op that looked like a working default. `check-keywords.mjs` already existed
+and would have caught it immediately. Both now name `round`, the real value.

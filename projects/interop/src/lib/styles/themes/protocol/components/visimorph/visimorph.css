@@ -49,9 +49,13 @@
 	   block sits on the component: declared any higher, the chain would
 	   resolve where `--itx-inner-radius` is undefined and freeze. */
 	--itx-control-radius: var(--itx-inner-radius, var(--itx-radius));
-	/* `initial` means the browser's own corner. A theme opts into `squircle`
-	   by changing this one line. */
-	--itx-control-corner-shape: initial;
+	/* `round` is the browser's own corner, spelled as a real value. `initial`
+	   would have been the obvious way to say it and is a trap: a CSS-wide
+	   keyword in a custom property sets THE PROPERTY to guaranteed-invalid
+	   rather than passing the keyword through, so the declaration would be a
+	   no-op that only worked via the foundation's fallback. A theme opts into
+	   `squircle` by changing this one line. */
+	--itx-control-corner-shape: round;
 
 	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-control-border-color: light-dark(
