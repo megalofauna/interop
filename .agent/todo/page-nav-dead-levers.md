@@ -1,7 +1,8 @@
 # TODO — page-nav's theme file is a quarter inert
 
-**Status:** the dead levers are FIXED, 2026-08-23. The sticky-offset bug below
-is still UNRESOLVED and is the remainder of this file. Original note: investigated
+**Status:** CLOSED, 2026-08-23. The dead levers are fixed and the sticky-offset
+bug is not reproducible — its cause is recorded in this file and was already
+undone by the rollback. Original note: investigated
 2026-08-18 and deliberately rolled back — the work was done while chasing a
 complaint that turned out to be about `interop-command-palette`, not page-nav.
 The findings below were verified against the source; the fix was reverted, not
@@ -46,7 +47,7 @@ Both fine.
 and the documented surface never listed it, so the only way to discover it is to
 read the structural file.
 
-## The sticky offset does not appear to apply — UNRESOLVED
+## The sticky offset does not appear to apply — RESOLVED, see below
 
 The demo sets `--itx-pn-sticky-top: var(--header-h)` on a shell ancestor
 (`app.scss`), the component is mounted with `[sticky]="true"`, the host binding
@@ -131,3 +132,35 @@ A `check-dead-tokens` guard is the obvious answer and cannot land until those
 are worked down, since it would open with 73 violations. Worth pairing with the
 foundation-fallbacks sweep — both are "the theme says something the structure
 does not read", from opposite ends.
+
+## The sticky offset — closed, 2026-08-23
+
+Not reproducible. Measured in the running app with a temporary probe:
+
+    nav classes        : itx-pn--sticky itx-pn--horizontal
+    position           : sticky
+    inset-block-start  : 56px
+    top                : 56px
+    --itx-pn-sticky-top on nav  : 3.5rem
+    --itx-pn-sticky-top on root : 3.5rem
+
+Every link in the chain holds: the class lands, the property inherits from
+`app-root` down to the nav, and the offset resolves.
+
+**The cause was already written down in this file.** The trap note records that
+"adding a `--itx-pn-sticky-top: 0` default to the theme silently killed the
+demo's ancestor override" — and a killed override is exactly the reported
+symptom, a nav "pegged to the top whether the page is scrolled or not" with no
+offset applied. The observation was almost certainly made while that default
+was in place. Rolling the branch back removed the default, which removed the
+bug; the symptom was filed as open because nobody connected the two halves of
+the same page.
+
+Worth keeping as the reason the trap note matters: it did not just predict a
+hazard, it had already caused one and the cost was five days of a bug that no
+longer existed.
+
+`page-nav.ts` reads `getComputedStyle(el).top` to place the observer's
+rootMargin. The structural rule now sets `inset-block-start`; that still
+computes to `top` in horizontal-tb, verified at 56px above, so the switch to
+the logical property is safe for the reveal.
