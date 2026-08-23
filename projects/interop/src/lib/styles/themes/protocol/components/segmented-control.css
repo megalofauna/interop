@@ -243,6 +243,23 @@
 	   selected tints". In light the two are indistinguishable (0.855 → 0.860);
 	   in dark it flips to 0.243, which is the side of the track the selection
 	   belonged on all along. */
+}
+
+/* Targets the INDICATOR, not the control.
+ *
+ * These were declared on the fieldset and reached the pill by inheritance,
+ * which worked while indicator.css declared its values on the elevation
+ * boundaries — the fieldset was nearer, so the control won. Since indicator's
+ * theme moved onto `:where(interop-indicator, …)` the pill carries its own
+ * declaration, and an element's own value beats anything it inherits.
+ * Measured: the pill rendered indicator's nested light-dark() pair rather than
+ * this file's fill, so every value below was inert.
+ *
+ * Both selectors are zero-specificity, so precedence is source order inside
+ * `interop.theme`: protocol.css imports indicator at line 65 and this file at
+ * 71, and this rule depends on that ordering. Same shape as the toolbar's
+ * button rule — see .agent/todo/token-placement.md. */
+:where(fieldset[interop-segmented-control]) :where(interop-indicator) {
 	--itx-indicator-background-color: var(--itx-neutral-2);
 	--itx-indicator-border-width: 0;
 	/* The pill matches the track. All three radii move together or the

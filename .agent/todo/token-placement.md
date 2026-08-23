@@ -29,7 +29,14 @@ a component by setting that component's tokens **on itself** stops reaching it.
 The toolbar's buttons went back to the 40px base height and the default fill
 the moment button's theme moved.
 
-The fix is for the rig to target the component's elements:
+It is not only rigs. Any parent that configures a child component's public
+tokens has the same problem — `segmented-control` sets `--itx-indicator-*` on
+its fieldset to paint the selection pill, and that stopped reaching the pill
+the moment `indicator`'s theme moved onto `:where(interop-indicator, …)`. The
+control's values were inert for a week; it surfaced when someone edited the
+theme file to test whether it had any effect and found it had none.
+
+The fix, in both cases, is to target the component's elements:
 
     :where([interop-toolbar]) :where([interop-button]) { … }
 
@@ -53,10 +60,18 @@ Base selectors that were not obvious, and why:
 | indicator | `interop-indicator, fieldset[interop-segmented-control]` | segment.css reads indicator tokens on a segment button, outside any indicator |
 | tooltip | `.interop-tooltip__panel` | the panel is created in JS; it now carries its own tokens instead of depending on where it is appended |
 
-Cross-component declarations retargeted: `rigs/toolbar.css` (15). The others
-found in the survey turned out not to need it — `segmented-control.css` sets
-`--itx-segment-*` on the fieldset and segments inherit it, and the
-`inline-code` and `stepper` cases declare into their own subtree.
+Cross-component declarations retargeted: `rigs/toolbar.css` (15), and
+`components/segmented-control.css` (3, found later — see below). The
+`inline-code` and `stepper` cases declare into their own subtree and are fine,
+and `segmented-control`'s `--itx-segment-*` reaches the segments by
+inheritance because nothing declares those on the segment itself.
+
+**The survey that cleared segmented-control was not enough.** It asked whether
+a token was declared in another component's file, which `--itx-indicator-*`
+is — and then judged it safe because the reader was a descendant. The question
+it should have asked is whether the CHILD's own theme declares the same token
+on the child element, because that is what beats inheritance. Worth re-running
+against every parent that configures a child.
 
 Verified by resolving a representative token on the element that reads it, per
 component — the contrast audit alone would not catch a sizing regression. Two
