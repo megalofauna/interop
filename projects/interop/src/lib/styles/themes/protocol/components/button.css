@@ -132,12 +132,12 @@
    A light neutral, not Carbon's dark solid. */
 
 :where(button[interop-button~="secondary"]) {
-	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-background: var(--itx-neutral-4);
 	--itx-button-foreground: var(--itx-neutral-11);
 	--itx-button-border-color: var(--itx-neutral-1);
 	--itx-button-box-shadow: var(--itx-shadow-sm);
 
-	--itx-button-background-hover: var(--itx-neutral-4);
+	--itx-button-background-hover: var(--itx-neutral-5);
 
 	--itx-button-background-active: var(--itx-neutral-3);
 }
@@ -155,14 +155,14 @@
    meant to do, not the typo. */
 
 :where(button[interop-button~="tertiary"]) {
-	--itx-button-background: transparent;
+	--itx-button-background: var(--itx-neutral-1);
 	--itx-button-foreground: var(--itx-neutral-10);
-	--itx-button-border-color: var(--itx-neutral-8);
+	--itx-button-border-color: var(--itx-neutral-1);
 	--itx-button-box-shadow: none;
 
 	--itx-button-foreground-hover: var(--itx-neutral-12);
 	--itx-button-background-hover: var(--itx-neutral-3);
-	--itx-button-border-color-hover: var(--itx-neutral-8);
+	/*--itx-button-border-color-hover: var(--itx-neutral-8);*/
 
 	--itx-button-foreground-active: var(--itx-neutral-12);
 	--itx-button-border-color-active: var(--itx-colorway-8);

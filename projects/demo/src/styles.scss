@@ -4,7 +4,7 @@
 @import "../../../projects/interop/src/lib/styles/themes/protocol.css";
 
 /*
- * The starter, imported the way its own header tells consumers to: after
+ * The globals file, imported the way its own header tells consumers to: after
  * Interop, so it wins.
  *
  * It was not wired in before, which made it the one documented entry point the
@@ -14,7 +14,7 @@
  * own; what it buys is that the demo now proves the documented path works, and
  * that editing a knob here moves the whole product the way the docs promise.
  */
-@import "../../../projects/interop/src/lib/styles/interop.starter.css";
+@import "../../../projects/interop/src/lib/styles/interop.globals.css";
 
 /* ── Scrollbars ──────────────────────────────────────────────────────────────
  *

@@ -12,7 +12,7 @@ dist/
 # Generated stylesheets. The generator is the formatter — running prettier over
 # these makes `--check` fail against a freshly generated file for cosmetic
 # reasons, which turns a drift guard into a nuisance.
-projects/interop/src/lib/styles/interop.starter.css
+projects/interop/src/lib/styles/interop.globals.css
 projects/interop/src/lib/styles/themes/protocol/ladder.css
 projects/interop/src/lib/styles/tokens/elevation.css
 projects/interop/src/lib/styles/interop.tokens.css

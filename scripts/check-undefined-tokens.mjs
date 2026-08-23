@@ -44,7 +44,7 @@ import { join } from "node:path";
 const ROOT = process.argv[2] ?? "projects/interop/src";
 
 /** Generated files and specs that exercise the failure mode deliberately. */
-const SKIP = /interop\.(starter|tokens)\.css$|\.spec\.ts$/;
+const SKIP = /interop\.(globals|tokens)\.css$|\.spec\.ts$/;
 
 /**
  * Tokens with no declaration anywhere, on purpose: the consumer supplies one or

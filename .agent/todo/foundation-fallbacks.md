@@ -4,7 +4,7 @@ Raised 2026-08-23, from a concrete symptom: there is nowhere designated to set
 the checkbox's corner radius. `--itx-control-radius` is read at
 `styles/components/visimorph/visimorph.css:80` and declared by no theme, so it
 appears neither in the theme file where its seventeen siblings live nor in the
-starter. It is listed in `interop.tokens.css`, commented out and marked
+globals file. It is listed in `interop.tokens.css`, commented out and marked
 `/* (fallback) */` — the generator's flag for "no theme owns this".
 
 It is not a visimorph quirk.

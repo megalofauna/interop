@@ -5,7 +5,7 @@
  * 34 components, every value read from the library source.
  *
  * This is a lookup sheet, not a file to adopt wholesale. The companion file
- * interop.starter.css holds the global knobs — radius, motion, focus, tint —
+ * interop.globals.css holds the global knobs — radius, motion, focus, tint —
  * and is the one you copy and keep. Come here when you want to change one
  * component rather than the whole product.
  *
@@ -27,7 +27,7 @@
  * ── "falls through to …" ─────────────────────────────────────────────────
  *
  * The component declares nothing of its own and the named system token governs
- * it. Set that one in interop.starter.css to move every component at once, or
+ * it. Set that one in interop.globals.css to move every component at once, or
  * set the component token here to make this one diverge.
  *
  * ── Values marked (fallback) ─────────────────────────────────────────────
@@ -70,7 +70,7 @@
 	/* --itx-button-border-color-hover: ; */ /* inherits --itx-button-border-color */
 	/* --itx-button-border-radius: var( --itx-radius-attr, var( --itx-button-radius-default, var(--itx-context-radius, var(--itx-radius)) ) ); */ /* (fallback) */
 	/* --itx-button-border-style: solid; */
-	/* --itx-button-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
+	/* --itx-button-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-button-box-shadow: none; */
 	/* --itx-button-box-shadow-active: ; */ /* inherits --itx-button-box-shadow */
 	/* --itx-button-box-shadow-hover: ; */ /* inherits --itx-button-box-shadow */
@@ -78,10 +78,10 @@
 	/* --itx-button-disabled-opacity: 1; */
 	/* --itx-button-display: inline-flex; */
 	/* --itx-button-flex: 1 1 auto; */
-	/* --itx-button-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-button-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-button-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-button-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-button-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-button-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-button-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-button-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-button-font-family: var(--itx-font-family-sans); */
 	/* --itx-button-font-size: 0.875rem; */
 	/* --itx-button-font-weight: 400; */
@@ -102,9 +102,9 @@
 	/* --itx-button-padding-inline: var(--itx-spacing-4); */
 	/* --itx-button-radius-default: var(--itx-context-radius, var(--itx-radius)); */ /* (fallback) */
 	/* --itx-button-touch-target: 2.75rem; */ /* (fallback) */
-	/* --itx-button-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
+	/* --itx-button-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
 	/* --itx-button-transition-properties: background-color, border-color, box-shadow; */
-	/* --itx-button-transition-timing-function: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.starter.css */
+	/* --itx-button-transition-timing-function: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.globals.css */
 	/* --itx-button-width: auto; */
 	/* --itx-neutral-14: ; */ /* no default — unset unless you set it */
 }
@@ -149,10 +149,10 @@
 	/* --itx-chip-filter-gap: var(--itx-spacing-2); */
 	/* --itx-chip-filter-padding: 0; */
 	/* --itx-chip-filter-radius: var(--itx-chip-radius, var(--itx-radius)); */ /* (fallback) */
-	/* --itx-chip-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-chip-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-chip-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-chip-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-chip-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-chip-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-chip-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-chip-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-chip-font-size: 0.75rem; */
 	/* --itx-chip-font-weight: 400; */
 	/* --itx-chip-font-weight-selected: ; */ /* inherits --itx-chip-font-weight */
@@ -160,10 +160,10 @@
 	/* --itx-chip-height: var(--itx-chip-md-height); */
 	/* --itx-chip-input-background: var(--itx-surface); */
 	/* --itx-chip-input-border: var(--itx-border-width-thick) solid transparent; */
-	/* --itx-chip-input-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-chip-input-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-chip-input-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-chip-input-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-chip-input-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-chip-input-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-chip-input-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-chip-input-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-chip-input-gap: var(--itx-spacing-2); */
 	/* --itx-chip-input-min-height: var(--itx-spacing-10); */
 	/* --itx-chip-input-padding: var(--itx-spacing-2); */
@@ -179,8 +179,8 @@
 	/* --itx-chip-remove-border: none; */
 	/* --itx-chip-remove-focus-color: var(--itx-colorway-on-solid); */
 	/* --itx-chip-remove-focus-offset: -2px; */
-	/* --itx-chip-remove-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-chip-remove-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-chip-remove-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-chip-remove-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-chip-remove-font-size: var(--itx-spacing-3); */
 	/* --itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2); */
 	/* --itx-chip-remove-radius: var(--itx-chip-radius, var(--itx-radius)); */ /* (fallback) */
@@ -189,8 +189,8 @@
 	/* --itx-chip-selectable-border: var(--itx-border-width-thick) solid transparent; */ /* (fallback) */
 	/* --itx-chip-selectable-color: var(--itx-neutral-14); */
 	/* --itx-chip-selectable-color-hover: ; */ /* inherits --itx-chip-selectable-color */
-	/* --itx-chip-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-chip-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-chip-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-chip-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 }
 
 /* ──── components/code-renderer ────────────────────────────────────── 18 levers */
@@ -202,14 +202,14 @@
 	/* --itx-cr-body-background: transparent; */
 	/* --itx-cr-body-padding-block: var(--itx-spacing-4); */
 	/* --itx-cr-body-padding-inline: var(--itx-spacing-4); */
-	/* --itx-cr-caption-font-family: ; */ /* falls through to --itx-font-family-sans — set globally in interop.starter.css */
+	/* --itx-cr-caption-font-family: ; */ /* falls through to --itx-font-family-sans — set globally in interop.globals.css */
 	/* --itx-cr-caption-font-size: 0.75rem; */
 	/* --itx-cr-caption-font-weight: 500; */
 	/* --itx-cr-caption-letter-spacing: 0.05em; */
 	/* --itx-cr-caption-padding-block: var(--itx-spacing-1); */
 	/* --itx-cr-caption-padding-inline: var(--itx-spacing-4); */
 	/* --itx-cr-code-color: inherit; */ /* (fallback) */
-	/* --itx-cr-code-font-family: ; */ /* falls through to --itx-font-family-mono — set globally in interop.starter.css */
+	/* --itx-cr-code-font-family: ; */ /* falls through to --itx-font-family-mono — set globally in interop.globals.css */
 	/* --itx-cr-code-font-size: 0.875rem; */
 	/* --itx-cr-code-line-height: 1.6; */
 	/* --itx-cr-line-number-gap: var(--itx-spacing-4); */
@@ -234,19 +234,19 @@
 	/* --itx-cmdp-clear-background: var(--itx-surface-below); */
 	/* --itx-cmdp-clear-background-hover: ; */ /* inherits --itx-cmdp-clear-background */
 	/* --itx-cmdp-clear-color: var(--itx-neutral-14); */
-	/* --itx-cmdp-clear-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-cmdp-clear-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-cmdp-clear-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-cmdp-clear-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-cmdp-clear-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-cmdp-clear-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-cmdp-clear-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-cmdp-clear-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-cmdp-clear-radius: var(--itx-radius-full); */
 	/* --itx-cmdp-clear-size: 1.25rem; */
 	/* --itx-cmdp-clear-target: 1.5rem; */
 	/* --itx-cmdp-color: var(--itx-neutral-14); */
 	/* --itx-cmdp-desc-font-size: 0.75rem; */
-	/* --itx-cmdp-field-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
+	/* --itx-cmdp-field-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
 	/* --itx-cmdp-field-focus-offset: -2px; */
-	/* --itx-cmdp-field-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-cmdp-field-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-cmdp-field-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-cmdp-field-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-cmdp-field-gap: var(--itx-spacing-3); */
 	/* --itx-cmdp-field-padding-inline: var(--itx-spacing-4); */
 	/* --itx-cmdp-inline-size: 92vw; */
@@ -285,7 +285,7 @@
 	/* --itx-content-caption-padding-block-end: var(--itx-spacing-2); */
 	/* --itx-content-code-background: var(--itx-surface-above); */
 	/* --itx-content-code-border-color: var(--itx-neutral-3); */
-	/* --itx-content-code-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-content-code-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-content-code-border-width: var(--itx-border-width-hairline); */
 	/* --itx-content-code-color: var(--itx-neutral-14); */
 	/* --itx-content-code-font-family: var(--itx-font-family-mono); */
@@ -294,10 +294,10 @@
 	/* --itx-content-code-padding: 0.125em 0.275em; */
 	/* --itx-content-color: var(--itx-neutral-14); */
 	/* --itx-content-del-color: var(--itx-neutral-9); */
-	/* --itx-content-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-content-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-content-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-content-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-content-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-content-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-content-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-content-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-content-font-family: var(--itx-font-family-sans); */
 	/* --itx-content-font-size: var(--itx-font-size-body); */
 	/* --itx-content-heading-1-font-size: var(--itx-font-size-display); */
@@ -318,11 +318,11 @@
 	/* --itx-content-link-underline-offset: 0.2em; */
 	/* --itx-content-list-gap: var(--itx-rhythm-tight); */
 	/* --itx-content-mark-background: var(--itx-colorway-tint); */
-	/* --itx-content-mark-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-content-mark-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-content-mark-color: var(--itx-colorway-on-tint); */
 	/* --itx-content-measure: var(--itx-measure); */
 	/* --itx-content-pre-background: var(--itx-surface-below); */
-	/* --itx-content-pre-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-content-pre-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-content-pre-padding: var(--itx-spacing-4); */
 	/* --itx-content-quote-border-color: var(--itx-neutral-8); */
 	/* --itx-content-quote-border-width: var(--itx-border-width-thick); */
@@ -349,12 +349,12 @@
 	/* --itx-dialog-backdrop-color: rgba(0 0 0 / 0.5); */
 	/* --itx-dialog-background: var(--itx-surface-above); */
 	/* --itx-dialog-border-color: var(--itx-neutral-2); */
-	/* --itx-dialog-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
-	/* --itx-dialog-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
-	/* --itx-dialog-enter-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.starter.css */
-	/* --itx-dialog-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.starter.css */
-	/* --itx-dialog-exit-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-dialog-exit-easing: ; */ /* falls through to --itx-easing-accelerate — set globally in interop.starter.css */
+	/* --itx-dialog-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
+	/* --itx-dialog-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.globals.css */
+	/* --itx-dialog-enter-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.globals.css */
+	/* --itx-dialog-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.globals.css */
+	/* --itx-dialog-exit-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-dialog-exit-easing: ; */ /* falls through to --itx-easing-accelerate — set globally in interop.globals.css */
 	/* --itx-dialog-foreground: var(--itx-neutral-14); */
 	/* --itx-dialog-max-height: 85dvh; */
 	/* --itx-dialog-padding: var(--itx-spacing-4); */
@@ -383,23 +383,23 @@
 	/* --itx-expansion-panel-body-peek-fade-color: var(--itx-surface); */
 	/* --itx-expansion-panel-body-peek-fade-height: 2.5rem; */
 	/* --itx-expansion-panel-body-peek-height: 4rem; */
-	/* --itx-expansion-panel-body-transition-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.starter.css */
-	/* --itx-expansion-panel-body-transition-easing: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-expansion-panel-body-transition-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.globals.css */
+	/* --itx-expansion-panel-body-transition-easing: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 	/* --itx-expansion-panel-border-block-color: var(--itx-neutral-3); */
 	/* --itx-expansion-panel-border-block-color-expanded: ; */ /* inherits --itx-expansion-panel-border-block-color */
 	/* --itx-expansion-panel-border-inline-color: transparent; */
 	/* --itx-expansion-panel-border-inline-color-expanded: ; */ /* inherits --itx-expansion-panel-border-inline-color */
-	/* --itx-expansion-panel-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-expansion-panel-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-expansion-panel-border-style: solid; */
-	/* --itx-expansion-panel-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
+	/* --itx-expansion-panel-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-expansion-panel-box-shadow: none; */
 	/* --itx-expansion-panel-box-shadow-expanded: ; */ /* inherits --itx-expansion-panel-box-shadow */
 	/* --itx-expansion-panel-disabled-opacity: 0.5; */
 	/* --itx-expansion-panel-foreground: var(--itx-neutral-14); */
 	/* --itx-expansion-panel-padding: 0; */
-	/* --itx-expansion-panel-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
+	/* --itx-expansion-panel-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
 	/* --itx-expansion-panel-transition-property: background-color, border-color, box-shadow; */
-	/* --itx-expansion-panel-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-expansion-panel-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 	/* --itx-expansion-panel-trigger-arrow-rotation: 135deg; */
 	/* --itx-expansion-panel-trigger-arrow-rotation-expanded: ; */ /* inherits --itx-expansion-panel-trigger-arrow-rotation */
 	/* --itx-expansion-panel-trigger-arrow-size: 0.375em; */
@@ -407,10 +407,10 @@
 	/* --itx-expansion-panel-trigger-background: transparent; */
 	/* --itx-expansion-panel-trigger-background-hover: ; */ /* inherits --itx-expansion-panel-trigger-background */
 	/* --itx-expansion-panel-trigger-color: var(--itx-neutral-14); */
-	/* --itx-expansion-panel-trigger-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
+	/* --itx-expansion-panel-trigger-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
 	/* --itx-expansion-panel-trigger-focus-offset: -2px; */
-	/* --itx-expansion-panel-trigger-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-expansion-panel-trigger-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-expansion-panel-trigger-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-expansion-panel-trigger-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-expansion-panel-trigger-font-size: 0.875rem; */
 	/* --itx-expansion-panel-trigger-font-weight: 400; */
 	/* --itx-expansion-panel-trigger-gap: var(--itx-spacing-4); */
@@ -418,7 +418,7 @@
 	/* --itx-expansion-panel-trigger-justify-content: space-between; */
 	/* --itx-expansion-panel-trigger-line-height: 1.4286; */
 	/* --itx-expansion-panel-trigger-padding-inline: var(--itx-spacing-4); */
-	/* --itx-expansion-panel-trigger-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-expansion-panel-trigger-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 }
 
 /* ──── components/field ────────────────────────────────────────────── 42 levers */
@@ -431,17 +431,17 @@
 	/* --itx-field-addon-gap: var(--itx-spacing-2); */
 	/* --itx-field-background: var(--itx-surface); */
 	/* --itx-field-background-hover: ; */ /* inherits --itx-field-background */
-	/* --itx-field-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-field-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-field-color: var(--itx-neutral-14); */
 	/* --itx-field-disabled-color: var(--itx-neutral-8); */
 	/* --itx-field-error-color: var(--itx-danger-text); */
 	/* --itx-field-error-font-size: 0.75rem; */
 	/* --itx-field-error-line-height: 1.3333; */
 	/* --itx-field-errors-gap: var(--itx-spacing-1); */
-	/* --itx-field-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
+	/* --itx-field-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
 	/* --itx-field-focus-offset: -2px; */
-	/* --itx-field-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-field-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-field-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-field-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-field-font-family: var(--itx-font-family-sans); */
 	/* --itx-field-font-size: 0.875rem; */
 	/* --itx-field-gap: var(--itx-spacing-1); */
@@ -466,7 +466,7 @@
 	/* --itx-field-textarea-min-inline-size: 10rem; */
 	/* --itx-field-textarea-padding-block: 0.6875rem; */
 	/* --itx-field-textarea-resize: vertical; */
-	/* --itx-field-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
+	/* --itx-field-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
 	/* --itx-field-underline-color: var(--itx-neutral-9); */
 	/* --itx-field-underline-width: 1px; */
 }
@@ -502,11 +502,11 @@
 	/* --itx-indicator-border-color: var(--itx-neutral-14); */
 	/* --itx-indicator-border-radius: var(--itx-inner-radius, var(--itx-radius)); */ /* (fallback) */
 	/* --itx-indicator-border-style: solid; */
-	/* --itx-indicator-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
+	/* --itx-indicator-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.globals.css */
 	/* --itx-indicator-box-shadow: none; */
 	/* --itx-indicator-inset: ; */ /* no default — unset unless you set it */
-	/* --itx-indicator-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-indicator-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-indicator-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-indicator-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 }
 
 /* ──── components/list ─────────────────────────────────────────────── 29 levers */
@@ -534,10 +534,10 @@
 	/* --itx-list-row-background: transparent; */
 	/* --itx-list-row-background-hover: ; */ /* inherits --itx-list-row-background */
 	/* --itx-list-row-block-size: var(--itx-spacing-12); */
-	/* --itx-list-row-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
+	/* --itx-list-row-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
 	/* --itx-list-row-focus-offset: -2px; */
-	/* --itx-list-row-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-list-row-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-list-row-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-list-row-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-list-row-gap: var(--itx-spacing-3); */
 	/* --itx-list-row-padding-inline: var(--itx-spacing-4); */
 	/* --itx-list-row-rule-color: var(--itx-neutral-8); */
@@ -552,10 +552,10 @@
  * values:     themes/protocol/components/listbox.css
  */
 [interop-root] {
-	/* --itx-listbox-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-listbox-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-listbox-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-listbox-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-listbox-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-listbox-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-listbox-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-listbox-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-option-accent-color: transparent; */
 	/* --itx-option-accent-color-selected: ; */ /* inherits --itx-option-accent-color */
 	/* --itx-option-accent-width: var(--itx-spacing-1); */
@@ -593,14 +593,14 @@
 	/* --itx-popover-arrow-size: 6px; */
 	/* --itx-popover-background: var(--itx-surface-above); */
 	/* --itx-popover-border-color: var(--itx-neutral-8); */
-	/* --itx-popover-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-popover-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-popover-border-style: solid; */
-	/* --itx-popover-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
-	/* --itx-popover-enter-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-popover-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.starter.css */
+	/* --itx-popover-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
+	/* --itx-popover-enter-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-popover-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.globals.css */
 	/* --itx-popover-enter-translate: 0 -0.25rem; */
-	/* --itx-popover-exit-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-popover-exit-easing: ; */ /* falls through to --itx-easing-accelerate — set globally in interop.starter.css */
+	/* --itx-popover-exit-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-popover-exit-easing: ; */ /* falls through to --itx-easing-accelerate — set globally in interop.globals.css */
 	/* --itx-popover-exit-translate: 0 -0.25rem; */
 	/* --itx-popover-font-size: 0.875rem; */
 	/* --itx-popover-foreground: var(--itx-neutral-14); */
@@ -625,7 +625,7 @@
 	/* --itx-progress-indeterminate-duration: 1000ms; */
 	/* --itx-progress-length: var(--itx-spacing-32); */
 	/* --itx-progress-percent: ; */ /* no default — unset unless you set it */
-	/* --itx-progress-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-progress-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-progress-thickness: var(--itx-spacing-2); */
 	/* --itx-progress-track: var(--itx-neutral-3); */
 }
@@ -647,10 +647,10 @@
 	/* --itx-resizable-handle-color-active: ; */ /* inherits --itx-resizable-handle-color */
 	/* --itx-resizable-handle-color-hover: ; */ /* inherits --itx-resizable-handle-color */
 	/* --itx-resizable-handle-corner-radius: var(--itx-radius-nominal) 0 var(--itx-radius-2) 0; */
-	/* --itx-resizable-handle-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-resizable-handle-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-resizable-handle-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-resizable-handle-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-resizable-handle-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-resizable-handle-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-resizable-handle-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-resizable-handle-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-resizable-handle-size: 14px; */
 	/* --itx-resizable-max-height: none; */
 	/* --itx-resizable-max-width: 100%; */
@@ -671,10 +671,10 @@
  * values:     themes/protocol/components/scroll-area.css
  */
 [interop-root] {
-	/* --itx-scroll-area-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-scroll-area-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-scroll-area-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-scroll-area-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-scroll-area-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-scroll-area-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-scroll-area-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-scroll-area-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-scroll-area-overscroll: contain; */
 	/* --itx-scroll-area-scrollbar-color: auto; */
 	/* --itx-scroll-area-scrollbar-width: thin; */
@@ -697,16 +697,16 @@
 	/* --itx-segment-border-color: transparent; */ /* (fallback) */
 	/* --itx-segment-border-color-hover: ; */ /* inherits --itx-segment-border-color */
 	/* --itx-segment-border-color-selected: ; */ /* inherits --itx-segment-border-color */
-	/* --itx-segment-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-segment-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-segment-border-style: solid; */ /* (fallback) */
 	/* --itx-segment-border-width: 0; */ /* (fallback) */
 	/* --itx-segment-disabled-opacity: 0.4; */ /* (fallback) */
 	/* --itx-segment-display: inline-flex; */ /* (fallback) */
 	/* --itx-segment-flex: ; */ /* no default — unset unless you set it */
-	/* --itx-segment-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-segment-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-segment-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-segment-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-segment-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-segment-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-segment-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-segment-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-segment-font-family: inherit; */ /* (fallback) */
 	/* --itx-segment-font-size: inherit; */ /* (fallback) */
 	/* --itx-segment-font-weight: inherit; */ /* (fallback) */
@@ -718,8 +718,8 @@
 	/* --itx-segment-min-width: 0; */ /* (fallback) */
 	/* --itx-segment-padding-block: 0rem; */ /* (fallback) */
 	/* --itx-segment-padding-inline: 0rem; */ /* (fallback) */
-	/* --itx-segment-transition-duration: ; */ /* falls through to --itx-duration-speedy — set globally in interop.starter.css */
-	/* --itx-segment-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-segment-transition-duration: ; */ /* falls through to --itx-duration-speedy — set globally in interop.globals.css */
+	/* --itx-segment-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 	/* --itx-segmented-control-legend-font-size: ; */ /* no default — unset unless you set it */
 	/* --itx-segmented-control-legend-font-weight: ; */ /* no default — unset unless you set it */
 	/* --itx-segmented-control-legend-line-height: ; */ /* no default — unset unless you set it */
@@ -730,7 +730,7 @@
 	/* --itx-segmented-control-track-background-color: ; */ /* no default — unset unless you set it */
 	/* --itx-segmented-control-track-background-image: ; */ /* no default — unset unless you set it */
 	/* --itx-segmented-control-track-border-color: ; */ /* no default — unset unless you set it */
-	/* --itx-segmented-control-track-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-segmented-control-track-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-segmented-control-track-border-style: ; */ /* no default — unset unless you set it */
 	/* --itx-segmented-control-track-border-width: ; */ /* no default — unset unless you set it */
 	/* --itx-segmented-control-track-box-shadow: ; */ /* no default — unset unless you set it */
@@ -755,7 +755,7 @@
 	/* --itx-slider-easing: var(--itx-easing-standard); */
 	/* --itx-slider-fill: ; */ /* no default — unset unless you set it */
 	/* --itx-slider-fill-color: var(--itx-neutral-14); */
-	/* --itx-slider-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
+	/* --itx-slider-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
 	/* --itx-slider-length: var(--itx-spacing-32); */
 	/* --itx-slider-mark-length: var(--itx-spacing-2); */
 	/* --itx-slider-marks-image: none; */ /* (fallback) */
@@ -783,10 +783,10 @@
 	/* --itx-step-connector-color-completed: var(--itx-neutral-11); */
 	/* --itx-step-connector-thickness: 2px; */
 	/* --itx-step-flex: 100%; */
-	/* --itx-step-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-step-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-step-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-step-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-step-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-step-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-step-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-step-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-step-indicator-background: var(--itx-neutral-3); */
 	/* --itx-step-indicator-background-active: ; */ /* inherits --itx-step-indicator-background */
 	/* --itx-step-indicator-background-active-reviewed: var(--itx-surface-below); */
@@ -799,9 +799,9 @@
 	/* --itx-step-indicator-border-color-completed: var(--itx-neutral-14); */
 	/* --itx-step-indicator-border-color-error: var(--itx-danger-solid); */
 	/* --itx-step-indicator-border-color-skipped: var(--itx-neutral-3); */
-	/* --itx-step-indicator-border-radius: ; */ /* falls through to --itx-radius-full — set globally in interop.starter.css */
+	/* --itx-step-indicator-border-radius: ; */ /* falls through to --itx-radius-full — set globally in interop.globals.css */
 	/* --itx-step-indicator-border-style: solid; */
-	/* --itx-step-indicator-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
+	/* --itx-step-indicator-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.globals.css */
 	/* --itx-step-indicator-font-size: 0.8125rem; */
 	/* --itx-step-indicator-font-weight: 500; */
 	/* --itx-step-indicator-foreground: var(--itx-neutral-10); */
@@ -811,8 +811,8 @@
 	/* --itx-step-indicator-foreground-error: var(--itx-danger-on-solid); */
 	/* --itx-step-indicator-foreground-skipped: var(--itx-neutral-9); */
 	/* --itx-step-indicator-size: 2rem; */
-	/* --itx-step-indicator-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-step-indicator-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-step-indicator-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-step-indicator-transition-timing-function: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 	/* --itx-step-label-color: var(--itx-neutral-11); */
 	/* --itx-step-label-color-active: ; */ /* inherits --itx-step-label-color */
 	/* --itx-step-label-color-active-reviewed: var(--itx-neutral-9); */
@@ -830,13 +830,13 @@
 	/* --itx-stepper-actions-gap: var(--itx-spacing-2); */
 	/* --itx-stepper-actions-padding: var(--itx-spacing-2) 0 0 0; */
 	/* --itx-stepper-background-color: transparent; */
-	/* --itx-stepper-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-stepper-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-stepper-display: grid; */
 	/* --itx-stepper-gap: var(--itx-spacing-5); */
 	/* --itx-stepper-menu-background-color: var(--itx-surface); */
 	/* --itx-stepper-menu-border-color: var(--itx-neutral-3); */
-	/* --itx-stepper-menu-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
-	/* --itx-stepper-menu-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
+	/* --itx-stepper-menu-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
+	/* --itx-stepper-menu-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-stepper-menu-box-shadow: 0 4px 12px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.06); */
 	/* --itx-stepper-menu-max-height: 60vh; */
 	/* --itx-stepper-menu-max-width: auto; */
@@ -851,7 +851,7 @@
 	/* --itx-stepper-padding: 0; */
 	/* --itx-stepper-viewport-background-color: transparent; */ /* (fallback) */
 	/* --itx-stepper-viewport-block-size: 32rem; */
-	/* --itx-stepper-viewport-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-stepper-viewport-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-stepper-viewport-min-height: 386px; */
 	/* --itx-stepper-viewport-padding: 0; */
 	/* --itx-stepper-viewport-scrollbar-thumb-color: var(--itx-neutral-3); */
@@ -869,10 +869,10 @@
 	/* --itx-table-border: var(--itx-neutral-8); */
 	/* --itx-table-cell-padding: var(--itx-spacing-3) var(--itx-spacing-4); */
 	/* --itx-table-cell-vertical-align: middle; */
-	/* --itx-table-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-table-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-table-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-table-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-table-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-table-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-table-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-table-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-table-font-size: 0.875rem; */
 	/* --itx-table-font-weight: 400; */
 	/* --itx-table-group-label-color: var(--itx-neutral-9); */
@@ -882,15 +882,15 @@
 	/* --itx-table-group-label-padding-block-start: var(--itx-spacing-6); */
 	/* --itx-table-group-label-text-transform: uppercase; */
 	/* --itx-table-header-bg: var(--itx-surface-above); */
-	/* --itx-table-header-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
+	/* --itx-table-header-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-table-header-color: var(--itx-neutral-14); */
 	/* --itx-table-header-font-weight: 600; */
 	/* --itx-table-line-height: 1.2857; */
 	/* --itx-table-row-block-size: var(--itx-spacing-12); */
-	/* --itx-table-row-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
+	/* --itx-table-row-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-table-row-hover-bg: var(--itx-neutral-2); */
-	/* --itx-table-row-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-table-row-transition-easing: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-table-row-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-table-row-transition-easing: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 	/* --itx-table-sort-gap: var(--itx-spacing-2); */
 	/* --itx-table-sort-indicator-idle-opacity: 0.4; */
 	/* --itx-table-state-color: var(--itx-neutral-9); */
@@ -912,10 +912,10 @@
 	/* --itx-tab-border-color: transparent; */
 	/* --itx-tab-border-radius: var(--itx-radius-none); */
 	/* --itx-tab-border-width: 0; */
-	/* --itx-tab-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-tab-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-tab-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-tab-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-tab-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-tab-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-tab-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-tab-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-tab-font-family: inherit; */ /* (fallback) */
 	/* --itx-tab-font-size: 0.875rem; */
 	/* --itx-tab-font-weight: 400; */
@@ -933,10 +933,10 @@
 	/* --itx-tab-min-block-size: var(--itx-spacing-10); */
 	/* --itx-tab-padding-block: var(--itx-spacing-2); */
 	/* --itx-tab-padding-inline: var(--itx-spacing-4); */
-	/* --itx-tab-panel-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-tab-panel-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-tab-panel-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-tab-panel-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-tab-panel-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-tab-panel-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-tab-panel-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-tab-panel-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-tab-panel-padding-block: var(--itx-spacing-4); */
 	/* --itx-tab-panel-padding-inline: var(--itx-spacing-4); */
 	/* --itx-tab-transition-duration: var(--itx-duration-fast); */
@@ -958,8 +958,8 @@
 	/* --itx-toast-accent-width: 3px; */
 	/* --itx-toast-action-background-hover: var(--itx-neutral-2); */
 	/* --itx-toast-action-border-color: var(--itx-neutral-8); */
-	/* --itx-toast-action-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
-	/* --itx-toast-action-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.starter.css */
+	/* --itx-toast-action-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
+	/* --itx-toast-action-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-toast-action-font-size: 0.875rem; */
 	/* --itx-toast-action-font-weight: 400; */
 	/* --itx-toast-action-padding-block: var(--itx-spacing-2); */
@@ -967,22 +967,22 @@
 	/* --itx-toast-actions-gap: var(--itx-spacing-2); */
 	/* --itx-toast-background: var(--itx-surface-above); */
 	/* --itx-toast-border-color: var(--itx-neutral-8); */
-	/* --itx-toast-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-toast-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-toast-border-width: 0px; */
 	/* --itx-toast-close-background-hover: var(--itx-neutral-2); */
-	/* --itx-toast-close-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-toast-close-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-toast-close-opacity: 1; */
 	/* --itx-toast-close-opacity-hover: ; */ /* inherits --itx-toast-close-opacity */
 	/* --itx-toast-close-size: var(--itx-spacing-8); */
 	/* --itx-toast-description-font-size: 0.875rem; */
 	/* --itx-toast-description-margin-block-start: var(--itx-spacing-0); */
 	/* --itx-toast-description-opacity: 1; */
-	/* --itx-toast-enter-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.starter.css */
-	/* --itx-toast-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.starter.css */
-	/* --itx-toast-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-toast-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-toast-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-toast-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-toast-enter-duration: ; */ /* falls through to --itx-duration-base — set globally in interop.globals.css */
+	/* --itx-toast-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.globals.css */
+	/* --itx-toast-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-toast-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-toast-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-toast-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-toast-font-size: 0.875rem; */
 	/* --itx-toast-foreground: var(--itx-neutral-14); */
 	/* --itx-toast-gap: var(--itx-spacing-3); */
@@ -1003,9 +1003,9 @@
  */
 [interop-root] {
 	/* --itx-tooltip-background: light-dark( var(--itx-neutral-11), var(--itx-neutral-2) ); */
-	/* --itx-tooltip-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
-	/* --itx-tooltip-enter-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-tooltip-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.starter.css */
+	/* --itx-tooltip-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
+	/* --itx-tooltip-enter-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-tooltip-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.globals.css */
 	/* --itx-tooltip-font-size: 0.8125rem; */
 	/* --itx-tooltip-foreground: light-dark( var(--itx-neutral-2), var(--itx-neutral-14) ); */
 	/* --itx-tooltip-max-width: 18rem; */
@@ -1019,10 +1019,10 @@
  * values:     themes/protocol/components/tree.css
  */
 [interop-root] {
-	/* --itx-tree-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
+	/* --itx-tree-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
 	/* --itx-tree-focus-offset: -2px; */
-	/* --itx-tree-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-tree-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-tree-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-tree-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-tree-guide-color: transparent; */
 	/* --itx-tree-guide-width: 2px; */
 	/* --itx-tree-indent: var(--itx-spacing-4); */
@@ -1045,7 +1045,7 @@
 	/* --itx-tree-row-disabled-opacity: 0.5; */
 	/* --itx-tree-row-gap: var(--itx-spacing-1); */
 	/* --itx-tree-row-padding-inline: var(--itx-spacing-2); */
-	/* --itx-tree-row-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-tree-row-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-tree-toggle-aspect: 0.75; */
 	/* --itx-tree-toggle-color: var(--itx-neutral-9); */
 	/* --itx-tree-toggle-color-hover: ; */ /* inherits --itx-tree-toggle-color */
@@ -1053,8 +1053,8 @@
 	/* --itx-tree-toggle-rotation: 0deg; */
 	/* --itx-tree-toggle-rotation-expanded: ; */ /* inherits --itx-tree-toggle-rotation */
 	/* --itx-tree-toggle-size: 0.75em; */
-	/* --itx-tree-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.starter.css */
-	/* --itx-tree-transition-easing: ; */ /* falls through to --itx-easing-standard — set globally in interop.starter.css */
+	/* --itx-tree-transition-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
+	/* --itx-tree-transition-easing: ; */ /* falls through to --itx-easing-standard — set globally in interop.globals.css */
 }
 
 /* ──── components/visimorph/label ──────────────────────────────────── 29 levers */
@@ -1103,17 +1103,17 @@
 	/* --itx-control-accent: var(--itx-neutral-14); */
 	/* --itx-control-bg: light-dark( var(--itx-surface-below), var(--itx-surface-below) ); */
 	/* --itx-control-border-color: light-dark( var(--itx-neutral-8), var(--itx-neutral-8) ); */
-	/* --itx-control-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
+	/* --itx-control-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.globals.css */
 	/* --itx-control-check-weight: 3px; */
 	/* --itx-control-check-weight-indeterminate: 4px; */
 	/* --itx-control-corner-shape: round; */
 	/* --itx-control-disabled-opacity: 0.5; */
 	/* --itx-control-dot-size: 0.625rem; */
-	/* --itx-control-focus-color: ; */ /* falls through to --itx-colorway-solid — set globally in interop.starter.css */
+	/* --itx-control-focus-color: ; */ /* falls through to --itx-colorway-solid — set globally in interop.globals.css */
 	/* --itx-control-focus-offset: 3px; */
 	/* --itx-control-focus-scale: 0.875; */
-	/* --itx-control-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-control-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-control-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-control-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-control-indicator: var(--itx-neutral-2); */
 	/* --itx-control-radius: var(--itx-inner-radius, var(--itx-radius)); */
 	/* --itx-control-size: 1.25rem; */
@@ -1165,10 +1165,10 @@
 	/* --itx-cb-tab-border-bottom: var(--itx-border-width-thick) solid transparent; */
 	/* --itx-cb-tab-border-bottom-color-current: var( --itx-tab-indicator-color-selected ); */
 	/* --itx-cb-tab-border-bottom-color-hover: var(--itx-tab-indicator-color-hover); */
-	/* --itx-cb-tab-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-cb-tab-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-cb-tab-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-cb-tab-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-cb-tab-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-cb-tab-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-cb-tab-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-cb-tab-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-cb-tab-font-family: inherit; */ /* (fallback) */
 	/* --itx-cb-tab-font-size: var(--itx-font-size-caption); */
 	/* --itx-cb-tab-foreground: var(--itx-neutral-9); */
@@ -1218,10 +1218,10 @@
 	/* --itx-pn-background-image: none; */
 	/* --itx-pn-child-color: var(--itx-neutral-9); */
 	/* --itx-pn-child-font-size: var(--itx-font-size-caption); */
-	/* --itx-pn-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.starter.css */
-	/* --itx-pn-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.starter.css */
-	/* --itx-pn-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.starter.css */
-	/* --itx-pn-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.starter.css */
+	/* --itx-pn-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
+	/* --itx-pn-focus-offset: ; */ /* falls through to --itx-focus-offset — set globally in interop.globals.css */
+	/* --itx-pn-focus-style: ; */ /* falls through to --itx-focus-style — set globally in interop.globals.css */
+	/* --itx-pn-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-pn-font-size: var(--itx-font-size-body); */
 	/* --itx-pn-font-weight: 400; */
 	/* --itx-pn-font-weight-active: ; */ /* inherits --itx-pn-font-weight */
@@ -1291,7 +1291,7 @@
  */
 [interop-root] {
 	/* --itx-rig-border-color: transparent; */
-	/* --itx-rig-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.starter.css */
+	/* --itx-rig-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-rig-border-width: var(--itx-border-width-hairline); */
 	/* --itx-rig-control-gap: var(--itx-spacing-2); */
 	/* --itx-rig-direction: column; */
@@ -1319,7 +1319,7 @@
 	/* --itx-toolbar-border-color: transparent; */
 	/* --itx-toolbar-border-radius: 0; */
 	/* --itx-toolbar-border-style: solid; */ /* (fallback) */
-	/* --itx-toolbar-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.starter.css */
+	/* --itx-toolbar-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.globals.css */
 	/* --itx-toolbar-disabled-opacity: 0.6; */
 	/* --itx-toolbar-display: flex; */ /* (fallback) */
 	/* --itx-toolbar-flex: 0 1 auto; */ /* (fallback) */
