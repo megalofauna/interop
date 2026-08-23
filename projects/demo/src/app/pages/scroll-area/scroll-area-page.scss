@@ -3,7 +3,7 @@
 	gap: var(--itx-spacing-4);
 	align-items: baseline;
 	padding: var(--itx-spacing-2) var(--itx-spacing-4);
-	border-bottom: 1px solid var(--itx-contrast-3);
+	border-bottom: 1px solid var(--itx-neutral-8);
 	font-size: var(--itx-font-size-body);
 
 	&:last-child {
@@ -15,5 +15,5 @@
 	flex-shrink: 0;
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 }

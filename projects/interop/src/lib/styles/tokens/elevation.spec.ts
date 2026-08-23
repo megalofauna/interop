@@ -29,6 +29,14 @@ describe("Layer engine", () => {
 		return node;
 	};
 
+	/**
+	 * The deepest layer the engine emits, read from the generated ramp rather
+	 * than written down here. These assertions used to carry the ceiling as a
+	 * literal, and every change to DEPTH broke five of them for no reason worth
+	 * reading.
+	 */
+	const CEILING = Math.max(...Object.keys(SURFACE_L["dark"]).map(Number));
+
 	const layerOf = (node: HTMLElement): string =>
 		getComputedStyle(node).getPropertyValue("--itx-layer").trim();
 	const surfaceOf = (node: HTMLElement): string =>
@@ -83,14 +91,19 @@ describe("Layer engine", () => {
 		});
 
 		it("compounds: each nested [itx-layer] is one deeper than its parent", () => {
-			const a = el(root, { "itx-layer": "" });
-			const b = el(a, { "itx-layer": "" });
-			const c = el(b, { "itx-layer": "" });
+			const nested: HTMLElement[] = [];
+			let node = root;
+			for (let i = 0; i < CEILING; i++) {
+				node = el(node, { "itx-layer": "" });
+				nested.push(node);
+			}
 
-			expect([layerOf(a), layerOf(b), layerOf(c)]).toEqual(["1", "2", "3"]);
-			expect(surfaceOf(a)).toEqual(ramp("surface-1"));
-			expect(surfaceOf(b)).toEqual(ramp("surface-2"));
-			expect(surfaceOf(c)).toEqual(ramp("surface-3"));
+			expect(nested.map(layerOf)).toEqual(
+				Array.from({ length: CEILING }, (_, i) => String(i + 1)),
+			);
+			nested.forEach((n, i) =>
+				expect(surfaceOf(n)).toEqual(ramp(`surface-${i + 1}`)),
+			);
 		});
 
 		it("compounds through arbitrary intermediate DOM", () => {
@@ -121,17 +134,20 @@ describe("Layer engine", () => {
 
 			expect(layerOf(card)).toEqual("1");
 			expect(layerOf(well)).toEqual("2");
-			expect(layerOf(inner)).toEqual("3");
+			// Past the ceiling it clamps rather than counting on, which is the
+			// whole point of capping the ramp at three shades.
+			expect(layerOf(inner)).toEqual(String(Math.min(3, CEILING)));
 		});
 
 		it("clamps at the ceiling instead of falling back to the tier-2 floor", () => {
 			// Without a terminal block, an element already at the ceiling would match
 			// no counter block, drop through to the one-step floor, and snap to 1.
 			let node = root;
-			for (let i = 0; i < 9; i++) node = el(node, { "itx-layer": "" });
+			for (let i = 0; i < CEILING + 3; i++)
+				node = el(node, { "itx-layer": "" });
 
-			expect(layerOf(node)).toEqual("6");
-			expect(surfaceOf(node)).toEqual(ramp("surface-6"));
+			expect(layerOf(node)).toEqual(String(CEILING));
+			expect(surfaceOf(node)).toEqual(ramp(`surface-${CEILING}`));
 		});
 
 		it("has no floor to clamp at — the ramp only goes one way", () => {
@@ -142,10 +158,10 @@ describe("Layer engine", () => {
 			 * that no longer exists.
 			 */
 			let node = root;
-			for (let i = 0; i < 8; i++) node = el(node, { "itx-sink": "" });
+			for (let i = 0; i < CEILING + 3; i++) node = el(node, { "itx-sink": "" });
 
-			expect(layerOf(node)).toEqual("6");
-			expect(surfaceOf(node)).toEqual(ramp("surface-6"));
+			expect(layerOf(node)).toEqual(String(CEILING));
+			expect(surfaceOf(node)).toEqual(ramp(`surface-${CEILING}`));
 		});
 
 		it("honours an absolute pin regardless of inherited depth, and counts on from it", () => {
@@ -153,7 +169,7 @@ describe("Layer engine", () => {
 			const deep = el(el(el(root, { "itx-layer": "" }), { "itx-layer": "" }), {
 				"itx-layer": "",
 			});
-			expect(layerOf(deep)).toEqual("3");
+			expect(layerOf(deep)).toEqual(String(Math.min(3, CEILING)));
 
 			const pinned = el(deep, { "itx-layer": "1" });
 			expect(layerOf(pinned)).toEqual("1");

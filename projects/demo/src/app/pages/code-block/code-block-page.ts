@@ -134,16 +134,16 @@ increment(): void {
 		{ property: "--itx-cb-tablist-border-bottom-width", default: "2px" },
 		{
 			property: "--itx-cb-tablist-border-bottom-color",
-			default: "var(--itx-contrast-3)",
+			default: "var(--itx-neutral-8)",
 		},
 		{
 			property: "--itx-cb-tab-padding-inline",
 			default: "var(--itx-spacing-4)",
 		},
-		{ property: "--itx-cb-tab-foreground", default: "var(--itx-contrast-4)" },
+		{ property: "--itx-cb-tab-foreground", default: "var(--itx-neutral-9)" },
 		{
 			property: "--itx-cb-tab-foreground-current",
-			default: "var(--itx-contrast-6)",
+			default: "var(--itx-neutral-14)",
 		},
 		{
 			property: "--itx-cb-tab-border-bottom-color",
@@ -153,7 +153,7 @@ increment(): void {
 			property: "--itx-cb-tab-outline-color",
 			default: "var(--itx-colorway-solid)",
 		},
-		{ property: "--itx-cb-label-foreground", default: "var(--itx-contrast-4)" },
+		{ property: "--itx-cb-label-foreground", default: "var(--itx-neutral-9)" },
 		{ property: "--itx-cb-actions-gap", default: "var(--itx-spacing-1) — 4px" },
 		{ property: "--itx-cb-button-background", default: "transparent" },
 		{
@@ -162,7 +162,7 @@ increment(): void {
 		},
 		{
 			property: "--itx-cb-button-background-pressed",
-			default: "var(--itx-contrast-2) — word-wrap toggle when on",
+			default: "var(--itx-neutral-3) — word-wrap toggle when on",
 		},
 	];
 

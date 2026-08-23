@@ -127,11 +127,7 @@ export const RANK_FACTS: readonly RankFact[] = [
 export const LAYER_KEYS: readonly string[] = [
 	"0",
 	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6"
+	"2"
 ];
 
 /** Surface lightness per scheme, per layer. Chroma and hue come from the tint. */
@@ -139,20 +135,12 @@ export const SURFACE_FACTS: Record<string, Record<string, number>> = {
 	light: {
 		"0": 0.99,
 		"1": 0.965,
-		"2": 0.94,
-		"3": 0.915,
-		"4": 0.89,
-		"5": 0.865,
-		"6": 0.84
+		"2": 0.94
 	},
 	dark: {
 		"0": 0.17,
 		"1": 0.202,
-		"2": 0.234,
-		"3": 0.266,
-		"4": 0.298,
-		"5": 0.33,
-		"6": 0.362
+		"2": 0.234
 	}
 };
 
@@ -798,7 +786,7 @@ export const HUE_CEILINGS: readonly HueCeiling[] = [
 export const INPUT_FACTS: InputFacts = {
 	depth: {
 		below: 0,
-		above: 6
+		above: 2
 	},
 	ramp: {
 		light: {
@@ -906,6 +894,5666 @@ export const INPUT_FACTS: InputFacts = {
 					85
 				]
 			}
+		}
+	}
+};
+
+/** One step: the lightness and chroma one scheme's arm actually receives. */
+export interface PaletteStep {
+	readonly step: number;
+	readonly l: number;
+	readonly c: number;
+	/** The nearest step that clears 4.5:1 on this one. Null in the middle of
+	    the ramp, where the AA distance does not fit in either direction. */
+	readonly label: number | null;
+}
+
+export interface PaletteFamily {
+	readonly id: string;
+	readonly hue: number;
+	readonly light: readonly PaletteStep[];
+	readonly dark: readonly PaletteStep[];
+}
+
+/** A background step, and what clears each floor on it. Per scheme. */
+export interface PaletteBackground {
+	readonly step: number;
+	readonly floors: Record<
+		string,
+		readonly { readonly step: number; readonly ratio: number }[]
+	>;
+}
+
+export interface PaletteFacts {
+	readonly steps: number;
+	readonly curve: number;
+	readonly floors: readonly { readonly id: string; readonly ratio: number }[];
+	/** How far apart two steps must be to clear a floor, anywhere on the ramp. */
+	readonly distances: readonly {
+		readonly id: string;
+		readonly ratio: number;
+		readonly steps: number | null;
+	}[];
+	readonly families: readonly PaletteFamily[];
+	/** Neutral and colourway only — what the legibility board renders. */
+	readonly legible: Record<string, Record<string, readonly PaletteBackground[]>>;
+}
+
+/**
+ * The shipped palette, measured off the same ramp the CSS is written from.
+ *
+ * Note that legibility is keyed by scheme before it is keyed by step. Scheme
+ * pairing fixes the DISTANCE from the page, not the ratio, so a step that
+ * carries body text in light may only reach secondary in dark.
+ */
+export const PALETTE_FACTS: PaletteFacts = {
+	steps: 14,
+	curve: 1.3,
+	floors: [
+		{
+			id: "border",
+			ratio: 3
+		},
+		{
+			id: "secondary",
+			ratio: 4.5
+		},
+		{
+			id: "body",
+			ratio: 7
+		}
+	],
+	distances: [
+		{
+			id: "border",
+			ratio: 3,
+			steps: 7
+		},
+		{
+			id: "secondary",
+			ratio: 4.5,
+			steps: 8
+		},
+		{
+			id: "body",
+			ratio: 7,
+			steps: 10
+		}
+	],
+	families: [
+		{
+			id: "neutral",
+			hue: 250,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.002,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.005,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.007,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.009,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.011,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.011,
+					label: 13
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.012,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.012,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.011,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.011,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.009,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.007,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.005,
+					label: 6
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.002,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.002,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.005,
+					label: 9
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.007,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.009,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.011,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.011,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.012,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.012,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.011,
+					label: 2
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.011,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.009,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.007,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.005,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.002,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "colorway",
+			hue: 264,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.014,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.053,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.093,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.134,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.168,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.182,
+					label: 14
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.189,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.189,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.182,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.168,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.147,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.118,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.083,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.037,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.037,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.083,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.118,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.147,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.168,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.182,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.189,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.189,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.182,
+					label: 1
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.168,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.134,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.093,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.053,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.014,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "colorway-amber",
+			hue: 82.32,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.023,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.052,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.075,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.093,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.106,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.115,
+					label: 14
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.109,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.095,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.083,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.071,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.06,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.05,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.042,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.023,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.023,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.042,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.05,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.06,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.071,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.083,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.095,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.109,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.115,
+					label: 1
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.106,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.093,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.075,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.052,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.023,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "danger",
+			hue: 33,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.015,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.046,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.065,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.081,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.093,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.101,
+					label: 14
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.105,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.105,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.101,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.093,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.081,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.065,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.046,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.02,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.02,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.046,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.065,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.081,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.093,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.101,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.105,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.105,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.101,
+					label: 1
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.093,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.081,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.065,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.046,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.015,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "info",
+			hue: 218,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.011,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.025,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.036,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.045,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.051,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.056,
+					label: 13
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.058,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.058,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.056,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.051,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.045,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.036,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.025,
+					label: 6
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.011,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.011,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.025,
+					label: 9
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.036,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.045,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.051,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.056,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.058,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.058,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.056,
+					label: 2
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.051,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.045,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.036,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.025,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.011,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "success",
+			hue: 122,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.015,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.034,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.049,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.06,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.069,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.075,
+					label: 13
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.078,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.078,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.075,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.069,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.06,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.049,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.034,
+					label: 6
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.015,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.015,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.034,
+					label: 9
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.049,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.06,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.069,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.075,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.078,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.078,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.075,
+					label: 2
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.069,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.06,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.049,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.034,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.015,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "warning",
+			hue: 78,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.02,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.046,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.065,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.081,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.093,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.101,
+					label: 14
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.105,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.097,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.084,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.072,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.061,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.051,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.042,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.02,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.02,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.042,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.051,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.061,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.072,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.084,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.097,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.105,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.101,
+					label: 1
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.093,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.081,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.065,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.046,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.02,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "danger-eighties",
+			hue: 25,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.015,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.057,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.105,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.147,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.168,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.182,
+					label: null
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.189,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.188,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.163,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.139,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.118,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.098,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.082,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.037,
+					label: 5
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.037,
+					label: 10
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.082,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.098,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.118,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.139,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.163,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.188,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.189,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.182,
+					label: null
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.168,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.147,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.105,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.057,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.015,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "info-eighties",
+			hue: 264,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.014,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.053,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.093,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.134,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.168,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.182,
+					label: 14
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.189,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.189,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.182,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.168,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.147,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.118,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.083,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.037,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.037,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.083,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.118,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.147,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.168,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.182,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.189,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.189,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.182,
+					label: 1
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.168,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.134,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.093,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.053,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.014,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "success-eighties",
+			hue: 145,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.037,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.083,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.118,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.147,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.168,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.182,
+					label: 13
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.166,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.146,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.126,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.108,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.091,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.076,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.063,
+					label: 6
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.037,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.037,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.063,
+					label: 9
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.076,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.091,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.108,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.126,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.146,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.166,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.182,
+					label: 2
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.168,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.147,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.118,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.083,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.037,
+					label: 8
+				}
+			]
+		},
+		{
+			id: "warning-eighties",
+			hue: 85,
+			light: [
+				{
+					step: 1,
+					l: 0.97,
+					c: 0.032,
+					label: 7
+				},
+				{
+					step: 2,
+					l: 0.891,
+					c: 0.074,
+					label: 8
+				},
+				{
+					step: 3,
+					l: 0.814,
+					c: 0.106,
+					label: 9
+				},
+				{
+					step: 4,
+					l: 0.739,
+					c: 0.131,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.666,
+					c: 0.137,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.596,
+					c: 0.122,
+					label: 14
+				},
+				{
+					step: 7,
+					l: 0.528,
+					c: 0.108,
+					label: 1
+				},
+				{
+					step: 8,
+					l: 0.463,
+					c: 0.095,
+					label: 2
+				},
+				{
+					step: 9,
+					l: 0.401,
+					c: 0.082,
+					label: 3
+				},
+				{
+					step: 10,
+					l: 0.343,
+					c: 0.071,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.289,
+					c: 0.06,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.24,
+					c: 0.05,
+					label: 5
+				},
+				{
+					step: 13,
+					l: 0.199,
+					c: 0.042,
+					label: 5
+				},
+				{
+					step: 14,
+					l: 0.17,
+					c: 0.033,
+					label: 6
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					l: 0.17,
+					c: 0.033,
+					label: 9
+				},
+				{
+					step: 2,
+					l: 0.199,
+					c: 0.042,
+					label: 10
+				},
+				{
+					step: 3,
+					l: 0.24,
+					c: 0.05,
+					label: 10
+				},
+				{
+					step: 4,
+					l: 0.289,
+					c: 0.06,
+					label: 10
+				},
+				{
+					step: 5,
+					l: 0.343,
+					c: 0.071,
+					label: 11
+				},
+				{
+					step: 6,
+					l: 0.401,
+					c: 0.082,
+					label: 12
+				},
+				{
+					step: 7,
+					l: 0.463,
+					c: 0.095,
+					label: 13
+				},
+				{
+					step: 8,
+					l: 0.528,
+					c: 0.108,
+					label: 14
+				},
+				{
+					step: 9,
+					l: 0.596,
+					c: 0.122,
+					label: 1
+				},
+				{
+					step: 10,
+					l: 0.666,
+					c: 0.137,
+					label: 4
+				},
+				{
+					step: 11,
+					l: 0.739,
+					c: 0.131,
+					label: 5
+				},
+				{
+					step: 12,
+					l: 0.814,
+					c: 0.106,
+					label: 6
+				},
+				{
+					step: 13,
+					l: 0.891,
+					c: 0.074,
+					label: 7
+				},
+				{
+					step: 14,
+					l: 0.97,
+					c: 0.032,
+					label: 8
+				}
+			]
+		}
+	],
+	legible: {
+		neutral: {
+			light: [
+				{
+					step: 1,
+					floors: {
+						border: [
+							{
+								step: 6,
+								ratio: 3.66
+							},
+							{
+								step: 7,
+								ratio: 4.87
+							},
+							{
+								step: 8,
+								ratio: 6.4
+							},
+							{
+								step: 9,
+								ratio: 8.33
+							},
+							{
+								step: 10,
+								ratio: 10.65
+							},
+							{
+								step: 11,
+								ratio: 13.03
+							},
+							{
+								step: 12,
+								ratio: 14.99
+							},
+							{
+								step: 13,
+								ratio: 16.62
+							},
+							{
+								step: 14,
+								ratio: 17.55
+							}
+						],
+						secondary: [
+							{
+								step: 7,
+								ratio: 4.87
+							},
+							{
+								step: 8,
+								ratio: 6.4
+							},
+							{
+								step: 9,
+								ratio: 8.33
+							},
+							{
+								step: 10,
+								ratio: 10.65
+							},
+							{
+								step: 11,
+								ratio: 13.03
+							},
+							{
+								step: 12,
+								ratio: 14.99
+							},
+							{
+								step: 13,
+								ratio: 16.62
+							},
+							{
+								step: 14,
+								ratio: 17.55
+							}
+						],
+						body: [
+							{
+								step: 9,
+								ratio: 8.33
+							},
+							{
+								step: 10,
+								ratio: 10.65
+							},
+							{
+								step: 11,
+								ratio: 13.03
+							},
+							{
+								step: 12,
+								ratio: 14.99
+							},
+							{
+								step: 13,
+								ratio: 16.62
+							},
+							{
+								step: 14,
+								ratio: 17.55
+							}
+						]
+					}
+				},
+				{
+					step: 2,
+					floors: {
+						border: [
+							{
+								step: 7,
+								ratio: 3.83
+							},
+							{
+								step: 8,
+								ratio: 5.04
+							},
+							{
+								step: 9,
+								ratio: 6.56
+							},
+							{
+								step: 10,
+								ratio: 8.38
+							},
+							{
+								step: 11,
+								ratio: 10.25
+							},
+							{
+								step: 12,
+								ratio: 11.8
+							},
+							{
+								step: 13,
+								ratio: 13.08
+							},
+							{
+								step: 14,
+								ratio: 13.81
+							}
+						],
+						secondary: [
+							{
+								step: 8,
+								ratio: 5.04
+							},
+							{
+								step: 9,
+								ratio: 6.56
+							},
+							{
+								step: 10,
+								ratio: 8.38
+							},
+							{
+								step: 11,
+								ratio: 10.25
+							},
+							{
+								step: 12,
+								ratio: 11.8
+							},
+							{
+								step: 13,
+								ratio: 13.08
+							},
+							{
+								step: 14,
+								ratio: 13.81
+							}
+						],
+						body: [
+							{
+								step: 10,
+								ratio: 8.38
+							},
+							{
+								step: 11,
+								ratio: 10.25
+							},
+							{
+								step: 12,
+								ratio: 11.8
+							},
+							{
+								step: 13,
+								ratio: 13.08
+							},
+							{
+								step: 14,
+								ratio: 13.81
+							}
+						]
+					}
+				},
+				{
+					step: 3,
+					floors: {
+						border: [
+							{
+								step: 7,
+								ratio: 3
+							},
+							{
+								step: 8,
+								ratio: 3.94
+							},
+							{
+								step: 9,
+								ratio: 5.13
+							},
+							{
+								step: 10,
+								ratio: 6.56
+							},
+							{
+								step: 11,
+								ratio: 8.02
+							},
+							{
+								step: 12,
+								ratio: 9.23
+							},
+							{
+								step: 13,
+								ratio: 10.23
+							},
+							{
+								step: 14,
+								ratio: 10.81
+							}
+						],
+						secondary: [
+							{
+								step: 9,
+								ratio: 5.13
+							},
+							{
+								step: 10,
+								ratio: 6.56
+							},
+							{
+								step: 11,
+								ratio: 8.02
+							},
+							{
+								step: 12,
+								ratio: 9.23
+							},
+							{
+								step: 13,
+								ratio: 10.23
+							},
+							{
+								step: 14,
+								ratio: 10.81
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 8.02
+							},
+							{
+								step: 12,
+								ratio: 9.23
+							},
+							{
+								step: 13,
+								ratio: 10.23
+							},
+							{
+								step: 14,
+								ratio: 10.81
+							}
+						]
+					}
+				},
+				{
+					step: 4,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.02
+							},
+							{
+								step: 9,
+								ratio: 3.93
+							},
+							{
+								step: 10,
+								ratio: 5.02
+							},
+							{
+								step: 11,
+								ratio: 6.14
+							},
+							{
+								step: 12,
+								ratio: 7.07
+							},
+							{
+								step: 13,
+								ratio: 7.84
+							},
+							{
+								step: 14,
+								ratio: 8.28
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 5.02
+							},
+							{
+								step: 11,
+								ratio: 6.14
+							},
+							{
+								step: 12,
+								ratio: 7.07
+							},
+							{
+								step: 13,
+								ratio: 7.84
+							},
+							{
+								step: 14,
+								ratio: 8.28
+							}
+						],
+						body: [
+							{
+								step: 12,
+								ratio: 7.07
+							},
+							{
+								step: 13,
+								ratio: 7.84
+							},
+							{
+								step: 14,
+								ratio: 8.28
+							}
+						]
+					}
+				},
+				{
+					step: 5,
+					floors: {
+						border: [
+							{
+								step: 9,
+								ratio: 3.01
+							},
+							{
+								step: 10,
+								ratio: 3.84
+							},
+							{
+								step: 11,
+								ratio: 4.7
+							},
+							{
+								step: 12,
+								ratio: 5.41
+							},
+							{
+								step: 13,
+								ratio: 5.99
+							},
+							{
+								step: 14,
+								ratio: 6.33
+							}
+						],
+						secondary: [
+							{
+								step: 11,
+								ratio: 4.7
+							},
+							{
+								step: 12,
+								ratio: 5.41
+							},
+							{
+								step: 13,
+								ratio: 5.99
+							},
+							{
+								step: 14,
+								ratio: 6.33
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 6,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 3.66
+							},
+							{
+								step: 11,
+								ratio: 3.56
+							},
+							{
+								step: 12,
+								ratio: 4.09
+							},
+							{
+								step: 13,
+								ratio: 4.54
+							},
+							{
+								step: 14,
+								ratio: 4.79
+							}
+						],
+						secondary: [
+							{
+								step: 13,
+								ratio: 4.54
+							},
+							{
+								step: 14,
+								ratio: 4.79
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 7,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 4.87
+							},
+							{
+								step: 2,
+								ratio: 3.83
+							},
+							{
+								step: 3,
+								ratio: 3
+							},
+							{
+								step: 12,
+								ratio: 3.08
+							},
+							{
+								step: 13,
+								ratio: 3.41
+							},
+							{
+								step: 14,
+								ratio: 3.61
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 4.87
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 8,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 6.4
+							},
+							{
+								step: 2,
+								ratio: 5.04
+							},
+							{
+								step: 3,
+								ratio: 3.94
+							},
+							{
+								step: 4,
+								ratio: 3.02
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 6.4
+							},
+							{
+								step: 2,
+								ratio: 5.04
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 9,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 8.33
+							},
+							{
+								step: 2,
+								ratio: 6.56
+							},
+							{
+								step: 3,
+								ratio: 5.13
+							},
+							{
+								step: 4,
+								ratio: 3.93
+							},
+							{
+								step: 5,
+								ratio: 3.01
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 8.33
+							},
+							{
+								step: 2,
+								ratio: 6.56
+							},
+							{
+								step: 3,
+								ratio: 5.13
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 8.33
+							}
+						]
+					}
+				},
+				{
+					step: 10,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 10.65
+							},
+							{
+								step: 2,
+								ratio: 8.38
+							},
+							{
+								step: 3,
+								ratio: 6.56
+							},
+							{
+								step: 4,
+								ratio: 5.02
+							},
+							{
+								step: 5,
+								ratio: 3.84
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 10.65
+							},
+							{
+								step: 2,
+								ratio: 8.38
+							},
+							{
+								step: 3,
+								ratio: 6.56
+							},
+							{
+								step: 4,
+								ratio: 5.02
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 10.65
+							},
+							{
+								step: 2,
+								ratio: 8.38
+							}
+						]
+					}
+				},
+				{
+					step: 11,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 13.03
+							},
+							{
+								step: 2,
+								ratio: 10.25
+							},
+							{
+								step: 3,
+								ratio: 8.02
+							},
+							{
+								step: 4,
+								ratio: 6.14
+							},
+							{
+								step: 5,
+								ratio: 4.7
+							},
+							{
+								step: 6,
+								ratio: 3.56
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 13.03
+							},
+							{
+								step: 2,
+								ratio: 10.25
+							},
+							{
+								step: 3,
+								ratio: 8.02
+							},
+							{
+								step: 4,
+								ratio: 6.14
+							},
+							{
+								step: 5,
+								ratio: 4.7
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 13.03
+							},
+							{
+								step: 2,
+								ratio: 10.25
+							},
+							{
+								step: 3,
+								ratio: 8.02
+							}
+						]
+					}
+				},
+				{
+					step: 12,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 14.99
+							},
+							{
+								step: 2,
+								ratio: 11.8
+							},
+							{
+								step: 3,
+								ratio: 9.23
+							},
+							{
+								step: 4,
+								ratio: 7.07
+							},
+							{
+								step: 5,
+								ratio: 5.41
+							},
+							{
+								step: 6,
+								ratio: 4.09
+							},
+							{
+								step: 7,
+								ratio: 3.08
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 14.99
+							},
+							{
+								step: 2,
+								ratio: 11.8
+							},
+							{
+								step: 3,
+								ratio: 9.23
+							},
+							{
+								step: 4,
+								ratio: 7.07
+							},
+							{
+								step: 5,
+								ratio: 5.41
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 14.99
+							},
+							{
+								step: 2,
+								ratio: 11.8
+							},
+							{
+								step: 3,
+								ratio: 9.23
+							},
+							{
+								step: 4,
+								ratio: 7.07
+							}
+						]
+					}
+				},
+				{
+					step: 13,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 16.62
+							},
+							{
+								step: 2,
+								ratio: 13.08
+							},
+							{
+								step: 3,
+								ratio: 10.23
+							},
+							{
+								step: 4,
+								ratio: 7.84
+							},
+							{
+								step: 5,
+								ratio: 5.99
+							},
+							{
+								step: 6,
+								ratio: 4.54
+							},
+							{
+								step: 7,
+								ratio: 3.41
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 16.62
+							},
+							{
+								step: 2,
+								ratio: 13.08
+							},
+							{
+								step: 3,
+								ratio: 10.23
+							},
+							{
+								step: 4,
+								ratio: 7.84
+							},
+							{
+								step: 5,
+								ratio: 5.99
+							},
+							{
+								step: 6,
+								ratio: 4.54
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 16.62
+							},
+							{
+								step: 2,
+								ratio: 13.08
+							},
+							{
+								step: 3,
+								ratio: 10.23
+							},
+							{
+								step: 4,
+								ratio: 7.84
+							}
+						]
+					}
+				},
+				{
+					step: 14,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 17.55
+							},
+							{
+								step: 2,
+								ratio: 13.81
+							},
+							{
+								step: 3,
+								ratio: 10.81
+							},
+							{
+								step: 4,
+								ratio: 8.28
+							},
+							{
+								step: 5,
+								ratio: 6.33
+							},
+							{
+								step: 6,
+								ratio: 4.79
+							},
+							{
+								step: 7,
+								ratio: 3.61
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 17.55
+							},
+							{
+								step: 2,
+								ratio: 13.81
+							},
+							{
+								step: 3,
+								ratio: 10.81
+							},
+							{
+								step: 4,
+								ratio: 8.28
+							},
+							{
+								step: 5,
+								ratio: 6.33
+							},
+							{
+								step: 6,
+								ratio: 4.79
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 17.55
+							},
+							{
+								step: 2,
+								ratio: 13.81
+							},
+							{
+								step: 3,
+								ratio: 10.81
+							},
+							{
+								step: 4,
+								ratio: 8.28
+							}
+						]
+					}
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.61
+							},
+							{
+								step: 9,
+								ratio: 4.79
+							},
+							{
+								step: 10,
+								ratio: 6.33
+							},
+							{
+								step: 11,
+								ratio: 8.28
+							},
+							{
+								step: 12,
+								ratio: 10.81
+							},
+							{
+								step: 13,
+								ratio: 13.81
+							},
+							{
+								step: 14,
+								ratio: 17.55
+							}
+						],
+						secondary: [
+							{
+								step: 9,
+								ratio: 4.79
+							},
+							{
+								step: 10,
+								ratio: 6.33
+							},
+							{
+								step: 11,
+								ratio: 8.28
+							},
+							{
+								step: 12,
+								ratio: 10.81
+							},
+							{
+								step: 13,
+								ratio: 13.81
+							},
+							{
+								step: 14,
+								ratio: 17.55
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 8.28
+							},
+							{
+								step: 12,
+								ratio: 10.81
+							},
+							{
+								step: 13,
+								ratio: 13.81
+							},
+							{
+								step: 14,
+								ratio: 17.55
+							}
+						]
+					}
+				},
+				{
+					step: 2,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.41
+							},
+							{
+								step: 9,
+								ratio: 4.54
+							},
+							{
+								step: 10,
+								ratio: 5.99
+							},
+							{
+								step: 11,
+								ratio: 7.84
+							},
+							{
+								step: 12,
+								ratio: 10.23
+							},
+							{
+								step: 13,
+								ratio: 13.08
+							},
+							{
+								step: 14,
+								ratio: 16.62
+							}
+						],
+						secondary: [
+							{
+								step: 9,
+								ratio: 4.54
+							},
+							{
+								step: 10,
+								ratio: 5.99
+							},
+							{
+								step: 11,
+								ratio: 7.84
+							},
+							{
+								step: 12,
+								ratio: 10.23
+							},
+							{
+								step: 13,
+								ratio: 13.08
+							},
+							{
+								step: 14,
+								ratio: 16.62
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 7.84
+							},
+							{
+								step: 12,
+								ratio: 10.23
+							},
+							{
+								step: 13,
+								ratio: 13.08
+							},
+							{
+								step: 14,
+								ratio: 16.62
+							}
+						]
+					}
+				},
+				{
+					step: 3,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.08
+							},
+							{
+								step: 9,
+								ratio: 4.09
+							},
+							{
+								step: 10,
+								ratio: 5.41
+							},
+							{
+								step: 11,
+								ratio: 7.07
+							},
+							{
+								step: 12,
+								ratio: 9.23
+							},
+							{
+								step: 13,
+								ratio: 11.8
+							},
+							{
+								step: 14,
+								ratio: 14.99
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 5.41
+							},
+							{
+								step: 11,
+								ratio: 7.07
+							},
+							{
+								step: 12,
+								ratio: 9.23
+							},
+							{
+								step: 13,
+								ratio: 11.8
+							},
+							{
+								step: 14,
+								ratio: 14.99
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 7.07
+							},
+							{
+								step: 12,
+								ratio: 9.23
+							},
+							{
+								step: 13,
+								ratio: 11.8
+							},
+							{
+								step: 14,
+								ratio: 14.99
+							}
+						]
+					}
+				},
+				{
+					step: 4,
+					floors: {
+						border: [
+							{
+								step: 9,
+								ratio: 3.56
+							},
+							{
+								step: 10,
+								ratio: 4.7
+							},
+							{
+								step: 11,
+								ratio: 6.14
+							},
+							{
+								step: 12,
+								ratio: 8.02
+							},
+							{
+								step: 13,
+								ratio: 10.25
+							},
+							{
+								step: 14,
+								ratio: 13.03
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 4.7
+							},
+							{
+								step: 11,
+								ratio: 6.14
+							},
+							{
+								step: 12,
+								ratio: 8.02
+							},
+							{
+								step: 13,
+								ratio: 10.25
+							},
+							{
+								step: 14,
+								ratio: 13.03
+							}
+						],
+						body: [
+							{
+								step: 12,
+								ratio: 8.02
+							},
+							{
+								step: 13,
+								ratio: 10.25
+							},
+							{
+								step: 14,
+								ratio: 13.03
+							}
+						]
+					}
+				},
+				{
+					step: 5,
+					floors: {
+						border: [
+							{
+								step: 10,
+								ratio: 3.84
+							},
+							{
+								step: 11,
+								ratio: 5.02
+							},
+							{
+								step: 12,
+								ratio: 6.56
+							},
+							{
+								step: 13,
+								ratio: 8.38
+							},
+							{
+								step: 14,
+								ratio: 10.65
+							}
+						],
+						secondary: [
+							{
+								step: 11,
+								ratio: 5.02
+							},
+							{
+								step: 12,
+								ratio: 6.56
+							},
+							{
+								step: 13,
+								ratio: 8.38
+							},
+							{
+								step: 14,
+								ratio: 10.65
+							}
+						],
+						body: [
+							{
+								step: 13,
+								ratio: 8.38
+							},
+							{
+								step: 14,
+								ratio: 10.65
+							}
+						]
+					}
+				},
+				{
+					step: 6,
+					floors: {
+						border: [
+							{
+								step: 10,
+								ratio: 3.01
+							},
+							{
+								step: 11,
+								ratio: 3.93
+							},
+							{
+								step: 12,
+								ratio: 5.13
+							},
+							{
+								step: 13,
+								ratio: 6.56
+							},
+							{
+								step: 14,
+								ratio: 8.33
+							}
+						],
+						secondary: [
+							{
+								step: 12,
+								ratio: 5.13
+							},
+							{
+								step: 13,
+								ratio: 6.56
+							},
+							{
+								step: 14,
+								ratio: 8.33
+							}
+						],
+						body: [
+							{
+								step: 14,
+								ratio: 8.33
+							}
+						]
+					}
+				},
+				{
+					step: 7,
+					floors: {
+						border: [
+							{
+								step: 11,
+								ratio: 3.02
+							},
+							{
+								step: 12,
+								ratio: 3.94
+							},
+							{
+								step: 13,
+								ratio: 5.04
+							},
+							{
+								step: 14,
+								ratio: 6.4
+							}
+						],
+						secondary: [
+							{
+								step: 13,
+								ratio: 5.04
+							},
+							{
+								step: 14,
+								ratio: 6.4
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 8,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 3.61
+							},
+							{
+								step: 2,
+								ratio: 3.41
+							},
+							{
+								step: 3,
+								ratio: 3.08
+							},
+							{
+								step: 12,
+								ratio: 3
+							},
+							{
+								step: 13,
+								ratio: 3.83
+							},
+							{
+								step: 14,
+								ratio: 4.87
+							}
+						],
+						secondary: [
+							{
+								step: 14,
+								ratio: 4.87
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 9,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 4.79
+							},
+							{
+								step: 2,
+								ratio: 4.54
+							},
+							{
+								step: 3,
+								ratio: 4.09
+							},
+							{
+								step: 4,
+								ratio: 3.56
+							},
+							{
+								step: 14,
+								ratio: 3.66
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 4.79
+							},
+							{
+								step: 2,
+								ratio: 4.54
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 10,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 6.33
+							},
+							{
+								step: 2,
+								ratio: 5.99
+							},
+							{
+								step: 3,
+								ratio: 5.41
+							},
+							{
+								step: 4,
+								ratio: 4.7
+							},
+							{
+								step: 5,
+								ratio: 3.84
+							},
+							{
+								step: 6,
+								ratio: 3.01
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 6.33
+							},
+							{
+								step: 2,
+								ratio: 5.99
+							},
+							{
+								step: 3,
+								ratio: 5.41
+							},
+							{
+								step: 4,
+								ratio: 4.7
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 11,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 8.28
+							},
+							{
+								step: 2,
+								ratio: 7.84
+							},
+							{
+								step: 3,
+								ratio: 7.07
+							},
+							{
+								step: 4,
+								ratio: 6.14
+							},
+							{
+								step: 5,
+								ratio: 5.02
+							},
+							{
+								step: 6,
+								ratio: 3.93
+							},
+							{
+								step: 7,
+								ratio: 3.02
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 8.28
+							},
+							{
+								step: 2,
+								ratio: 7.84
+							},
+							{
+								step: 3,
+								ratio: 7.07
+							},
+							{
+								step: 4,
+								ratio: 6.14
+							},
+							{
+								step: 5,
+								ratio: 5.02
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 8.28
+							},
+							{
+								step: 2,
+								ratio: 7.84
+							},
+							{
+								step: 3,
+								ratio: 7.07
+							}
+						]
+					}
+				},
+				{
+					step: 12,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 10.81
+							},
+							{
+								step: 2,
+								ratio: 10.23
+							},
+							{
+								step: 3,
+								ratio: 9.23
+							},
+							{
+								step: 4,
+								ratio: 8.02
+							},
+							{
+								step: 5,
+								ratio: 6.56
+							},
+							{
+								step: 6,
+								ratio: 5.13
+							},
+							{
+								step: 7,
+								ratio: 3.94
+							},
+							{
+								step: 8,
+								ratio: 3
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 10.81
+							},
+							{
+								step: 2,
+								ratio: 10.23
+							},
+							{
+								step: 3,
+								ratio: 9.23
+							},
+							{
+								step: 4,
+								ratio: 8.02
+							},
+							{
+								step: 5,
+								ratio: 6.56
+							},
+							{
+								step: 6,
+								ratio: 5.13
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 10.81
+							},
+							{
+								step: 2,
+								ratio: 10.23
+							},
+							{
+								step: 3,
+								ratio: 9.23
+							},
+							{
+								step: 4,
+								ratio: 8.02
+							}
+						]
+					}
+				},
+				{
+					step: 13,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 13.81
+							},
+							{
+								step: 2,
+								ratio: 13.08
+							},
+							{
+								step: 3,
+								ratio: 11.8
+							},
+							{
+								step: 4,
+								ratio: 10.25
+							},
+							{
+								step: 5,
+								ratio: 8.38
+							},
+							{
+								step: 6,
+								ratio: 6.56
+							},
+							{
+								step: 7,
+								ratio: 5.04
+							},
+							{
+								step: 8,
+								ratio: 3.83
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 13.81
+							},
+							{
+								step: 2,
+								ratio: 13.08
+							},
+							{
+								step: 3,
+								ratio: 11.8
+							},
+							{
+								step: 4,
+								ratio: 10.25
+							},
+							{
+								step: 5,
+								ratio: 8.38
+							},
+							{
+								step: 6,
+								ratio: 6.56
+							},
+							{
+								step: 7,
+								ratio: 5.04
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 13.81
+							},
+							{
+								step: 2,
+								ratio: 13.08
+							},
+							{
+								step: 3,
+								ratio: 11.8
+							},
+							{
+								step: 4,
+								ratio: 10.25
+							},
+							{
+								step: 5,
+								ratio: 8.38
+							}
+						]
+					}
+				},
+				{
+					step: 14,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 17.55
+							},
+							{
+								step: 2,
+								ratio: 16.62
+							},
+							{
+								step: 3,
+								ratio: 14.99
+							},
+							{
+								step: 4,
+								ratio: 13.03
+							},
+							{
+								step: 5,
+								ratio: 10.65
+							},
+							{
+								step: 6,
+								ratio: 8.33
+							},
+							{
+								step: 7,
+								ratio: 6.4
+							},
+							{
+								step: 8,
+								ratio: 4.87
+							},
+							{
+								step: 9,
+								ratio: 3.66
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 17.55
+							},
+							{
+								step: 2,
+								ratio: 16.62
+							},
+							{
+								step: 3,
+								ratio: 14.99
+							},
+							{
+								step: 4,
+								ratio: 13.03
+							},
+							{
+								step: 5,
+								ratio: 10.65
+							},
+							{
+								step: 6,
+								ratio: 8.33
+							},
+							{
+								step: 7,
+								ratio: 6.4
+							},
+							{
+								step: 8,
+								ratio: 4.87
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 17.55
+							},
+							{
+								step: 2,
+								ratio: 16.62
+							},
+							{
+								step: 3,
+								ratio: 14.99
+							},
+							{
+								step: 4,
+								ratio: 13.03
+							},
+							{
+								step: 5,
+								ratio: 10.65
+							},
+							{
+								step: 6,
+								ratio: 8.33
+							}
+						]
+					}
+				}
+			]
+		},
+		colorway: {
+			light: [
+				{
+					step: 1,
+					floors: {
+						border: [
+							{
+								step: 6,
+								ratio: 3.78
+							},
+							{
+								step: 7,
+								ratio: 5.05
+							},
+							{
+								step: 8,
+								ratio: 6.74
+							},
+							{
+								step: 9,
+								ratio: 8.84
+							},
+							{
+								step: 10,
+								ratio: 11.1
+							},
+							{
+								step: 11,
+								ratio: 13.41
+							},
+							{
+								step: 12,
+								ratio: 15.35
+							},
+							{
+								step: 13,
+								ratio: 16.78
+							},
+							{
+								step: 14,
+								ratio: 17.51
+							}
+						],
+						secondary: [
+							{
+								step: 7,
+								ratio: 5.05
+							},
+							{
+								step: 8,
+								ratio: 6.74
+							},
+							{
+								step: 9,
+								ratio: 8.84
+							},
+							{
+								step: 10,
+								ratio: 11.1
+							},
+							{
+								step: 11,
+								ratio: 13.41
+							},
+							{
+								step: 12,
+								ratio: 15.35
+							},
+							{
+								step: 13,
+								ratio: 16.78
+							},
+							{
+								step: 14,
+								ratio: 17.51
+							}
+						],
+						body: [
+							{
+								step: 9,
+								ratio: 8.84
+							},
+							{
+								step: 10,
+								ratio: 11.1
+							},
+							{
+								step: 11,
+								ratio: 13.41
+							},
+							{
+								step: 12,
+								ratio: 15.35
+							},
+							{
+								step: 13,
+								ratio: 16.78
+							},
+							{
+								step: 14,
+								ratio: 17.51
+							}
+						]
+					}
+				},
+				{
+					step: 2,
+					floors: {
+						border: [
+							{
+								step: 7,
+								ratio: 3.98
+							},
+							{
+								step: 8,
+								ratio: 5.32
+							},
+							{
+								step: 9,
+								ratio: 6.98
+							},
+							{
+								step: 10,
+								ratio: 8.76
+							},
+							{
+								step: 11,
+								ratio: 10.59
+							},
+							{
+								step: 12,
+								ratio: 12.12
+							},
+							{
+								step: 13,
+								ratio: 13.24
+							},
+							{
+								step: 14,
+								ratio: 13.82
+							}
+						],
+						secondary: [
+							{
+								step: 8,
+								ratio: 5.32
+							},
+							{
+								step: 9,
+								ratio: 6.98
+							},
+							{
+								step: 10,
+								ratio: 8.76
+							},
+							{
+								step: 11,
+								ratio: 10.59
+							},
+							{
+								step: 12,
+								ratio: 12.12
+							},
+							{
+								step: 13,
+								ratio: 13.24
+							},
+							{
+								step: 14,
+								ratio: 13.82
+							}
+						],
+						body: [
+							{
+								step: 10,
+								ratio: 8.76
+							},
+							{
+								step: 11,
+								ratio: 10.59
+							},
+							{
+								step: 12,
+								ratio: 12.12
+							},
+							{
+								step: 13,
+								ratio: 13.24
+							},
+							{
+								step: 14,
+								ratio: 13.82
+							}
+						]
+					}
+				},
+				{
+					step: 3,
+					floors: {
+						border: [
+							{
+								step: 7,
+								ratio: 3.08
+							},
+							{
+								step: 8,
+								ratio: 4.12
+							},
+							{
+								step: 9,
+								ratio: 5.4
+							},
+							{
+								step: 10,
+								ratio: 6.78
+							},
+							{
+								step: 11,
+								ratio: 8.19
+							},
+							{
+								step: 12,
+								ratio: 9.38
+							},
+							{
+								step: 13,
+								ratio: 10.25
+							},
+							{
+								step: 14,
+								ratio: 10.7
+							}
+						],
+						secondary: [
+							{
+								step: 9,
+								ratio: 5.4
+							},
+							{
+								step: 10,
+								ratio: 6.78
+							},
+							{
+								step: 11,
+								ratio: 8.19
+							},
+							{
+								step: 12,
+								ratio: 9.38
+							},
+							{
+								step: 13,
+								ratio: 10.25
+							},
+							{
+								step: 14,
+								ratio: 10.7
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 8.19
+							},
+							{
+								step: 12,
+								ratio: 9.38
+							},
+							{
+								step: 13,
+								ratio: 10.25
+							},
+							{
+								step: 14,
+								ratio: 10.7
+							}
+						]
+					}
+				},
+				{
+					step: 4,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.14
+							},
+							{
+								step: 9,
+								ratio: 4.12
+							},
+							{
+								step: 10,
+								ratio: 5.17
+							},
+							{
+								step: 11,
+								ratio: 6.25
+							},
+							{
+								step: 12,
+								ratio: 7.15
+							},
+							{
+								step: 13,
+								ratio: 7.81
+							},
+							{
+								step: 14,
+								ratio: 8.16
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 5.17
+							},
+							{
+								step: 11,
+								ratio: 6.25
+							},
+							{
+								step: 12,
+								ratio: 7.15
+							},
+							{
+								step: 13,
+								ratio: 7.81
+							},
+							{
+								step: 14,
+								ratio: 8.16
+							}
+						],
+						body: [
+							{
+								step: 12,
+								ratio: 7.15
+							},
+							{
+								step: 13,
+								ratio: 7.81
+							},
+							{
+								step: 14,
+								ratio: 8.16
+							}
+						]
+					}
+				},
+				{
+					step: 5,
+					floors: {
+						border: [
+							{
+								step: 9,
+								ratio: 3.12
+							},
+							{
+								step: 10,
+								ratio: 3.92
+							},
+							{
+								step: 11,
+								ratio: 4.74
+							},
+							{
+								step: 12,
+								ratio: 5.42
+							},
+							{
+								step: 13,
+								ratio: 5.93
+							},
+							{
+								step: 14,
+								ratio: 6.18
+							}
+						],
+						secondary: [
+							{
+								step: 11,
+								ratio: 4.74
+							},
+							{
+								step: 12,
+								ratio: 5.42
+							},
+							{
+								step: 13,
+								ratio: 5.93
+							},
+							{
+								step: 14,
+								ratio: 6.18
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 6,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 3.78
+							},
+							{
+								step: 11,
+								ratio: 3.55
+							},
+							{
+								step: 12,
+								ratio: 4.06
+							},
+							{
+								step: 13,
+								ratio: 4.44
+							},
+							{
+								step: 14,
+								ratio: 4.63
+							}
+						],
+						secondary: [
+							{
+								step: 14,
+								ratio: 4.63
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 7,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 5.05
+							},
+							{
+								step: 2,
+								ratio: 3.98
+							},
+							{
+								step: 3,
+								ratio: 3.08
+							},
+							{
+								step: 12,
+								ratio: 3.04
+							},
+							{
+								step: 13,
+								ratio: 3.32
+							},
+							{
+								step: 14,
+								ratio: 3.47
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 5.05
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 8,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 6.74
+							},
+							{
+								step: 2,
+								ratio: 5.32
+							},
+							{
+								step: 3,
+								ratio: 4.12
+							},
+							{
+								step: 4,
+								ratio: 3.14
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 6.74
+							},
+							{
+								step: 2,
+								ratio: 5.32
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 9,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 8.84
+							},
+							{
+								step: 2,
+								ratio: 6.98
+							},
+							{
+								step: 3,
+								ratio: 5.4
+							},
+							{
+								step: 4,
+								ratio: 4.12
+							},
+							{
+								step: 5,
+								ratio: 3.12
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 8.84
+							},
+							{
+								step: 2,
+								ratio: 6.98
+							},
+							{
+								step: 3,
+								ratio: 5.4
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 8.84
+							}
+						]
+					}
+				},
+				{
+					step: 10,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 11.1
+							},
+							{
+								step: 2,
+								ratio: 8.76
+							},
+							{
+								step: 3,
+								ratio: 6.78
+							},
+							{
+								step: 4,
+								ratio: 5.17
+							},
+							{
+								step: 5,
+								ratio: 3.92
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 11.1
+							},
+							{
+								step: 2,
+								ratio: 8.76
+							},
+							{
+								step: 3,
+								ratio: 6.78
+							},
+							{
+								step: 4,
+								ratio: 5.17
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 11.1
+							},
+							{
+								step: 2,
+								ratio: 8.76
+							}
+						]
+					}
+				},
+				{
+					step: 11,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 13.41
+							},
+							{
+								step: 2,
+								ratio: 10.59
+							},
+							{
+								step: 3,
+								ratio: 8.19
+							},
+							{
+								step: 4,
+								ratio: 6.25
+							},
+							{
+								step: 5,
+								ratio: 4.74
+							},
+							{
+								step: 6,
+								ratio: 3.55
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 13.41
+							},
+							{
+								step: 2,
+								ratio: 10.59
+							},
+							{
+								step: 3,
+								ratio: 8.19
+							},
+							{
+								step: 4,
+								ratio: 6.25
+							},
+							{
+								step: 5,
+								ratio: 4.74
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 13.41
+							},
+							{
+								step: 2,
+								ratio: 10.59
+							},
+							{
+								step: 3,
+								ratio: 8.19
+							}
+						]
+					}
+				},
+				{
+					step: 12,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 15.35
+							},
+							{
+								step: 2,
+								ratio: 12.12
+							},
+							{
+								step: 3,
+								ratio: 9.38
+							},
+							{
+								step: 4,
+								ratio: 7.15
+							},
+							{
+								step: 5,
+								ratio: 5.42
+							},
+							{
+								step: 6,
+								ratio: 4.06
+							},
+							{
+								step: 7,
+								ratio: 3.04
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 15.35
+							},
+							{
+								step: 2,
+								ratio: 12.12
+							},
+							{
+								step: 3,
+								ratio: 9.38
+							},
+							{
+								step: 4,
+								ratio: 7.15
+							},
+							{
+								step: 5,
+								ratio: 5.42
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 15.35
+							},
+							{
+								step: 2,
+								ratio: 12.12
+							},
+							{
+								step: 3,
+								ratio: 9.38
+							},
+							{
+								step: 4,
+								ratio: 7.15
+							}
+						]
+					}
+				},
+				{
+					step: 13,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 16.78
+							},
+							{
+								step: 2,
+								ratio: 13.24
+							},
+							{
+								step: 3,
+								ratio: 10.25
+							},
+							{
+								step: 4,
+								ratio: 7.81
+							},
+							{
+								step: 5,
+								ratio: 5.93
+							},
+							{
+								step: 6,
+								ratio: 4.44
+							},
+							{
+								step: 7,
+								ratio: 3.32
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 16.78
+							},
+							{
+								step: 2,
+								ratio: 13.24
+							},
+							{
+								step: 3,
+								ratio: 10.25
+							},
+							{
+								step: 4,
+								ratio: 7.81
+							},
+							{
+								step: 5,
+								ratio: 5.93
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 16.78
+							},
+							{
+								step: 2,
+								ratio: 13.24
+							},
+							{
+								step: 3,
+								ratio: 10.25
+							},
+							{
+								step: 4,
+								ratio: 7.81
+							}
+						]
+					}
+				},
+				{
+					step: 14,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 17.51
+							},
+							{
+								step: 2,
+								ratio: 13.82
+							},
+							{
+								step: 3,
+								ratio: 10.7
+							},
+							{
+								step: 4,
+								ratio: 8.16
+							},
+							{
+								step: 5,
+								ratio: 6.18
+							},
+							{
+								step: 6,
+								ratio: 4.63
+							},
+							{
+								step: 7,
+								ratio: 3.47
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 17.51
+							},
+							{
+								step: 2,
+								ratio: 13.82
+							},
+							{
+								step: 3,
+								ratio: 10.7
+							},
+							{
+								step: 4,
+								ratio: 8.16
+							},
+							{
+								step: 5,
+								ratio: 6.18
+							},
+							{
+								step: 6,
+								ratio: 4.63
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 17.51
+							},
+							{
+								step: 2,
+								ratio: 13.82
+							},
+							{
+								step: 3,
+								ratio: 10.7
+							},
+							{
+								step: 4,
+								ratio: 8.16
+							}
+						]
+					}
+				}
+			],
+			dark: [
+				{
+					step: 1,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.47
+							},
+							{
+								step: 9,
+								ratio: 4.63
+							},
+							{
+								step: 10,
+								ratio: 6.18
+							},
+							{
+								step: 11,
+								ratio: 8.16
+							},
+							{
+								step: 12,
+								ratio: 10.7
+							},
+							{
+								step: 13,
+								ratio: 13.82
+							},
+							{
+								step: 14,
+								ratio: 17.51
+							}
+						],
+						secondary: [
+							{
+								step: 9,
+								ratio: 4.63
+							},
+							{
+								step: 10,
+								ratio: 6.18
+							},
+							{
+								step: 11,
+								ratio: 8.16
+							},
+							{
+								step: 12,
+								ratio: 10.7
+							},
+							{
+								step: 13,
+								ratio: 13.82
+							},
+							{
+								step: 14,
+								ratio: 17.51
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 8.16
+							},
+							{
+								step: 12,
+								ratio: 10.7
+							},
+							{
+								step: 13,
+								ratio: 13.82
+							},
+							{
+								step: 14,
+								ratio: 17.51
+							}
+						]
+					}
+				},
+				{
+					step: 2,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.32
+							},
+							{
+								step: 9,
+								ratio: 4.44
+							},
+							{
+								step: 10,
+								ratio: 5.93
+							},
+							{
+								step: 11,
+								ratio: 7.81
+							},
+							{
+								step: 12,
+								ratio: 10.25
+							},
+							{
+								step: 13,
+								ratio: 13.24
+							},
+							{
+								step: 14,
+								ratio: 16.78
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 5.93
+							},
+							{
+								step: 11,
+								ratio: 7.81
+							},
+							{
+								step: 12,
+								ratio: 10.25
+							},
+							{
+								step: 13,
+								ratio: 13.24
+							},
+							{
+								step: 14,
+								ratio: 16.78
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 7.81
+							},
+							{
+								step: 12,
+								ratio: 10.25
+							},
+							{
+								step: 13,
+								ratio: 13.24
+							},
+							{
+								step: 14,
+								ratio: 16.78
+							}
+						]
+					}
+				},
+				{
+					step: 3,
+					floors: {
+						border: [
+							{
+								step: 8,
+								ratio: 3.04
+							},
+							{
+								step: 9,
+								ratio: 4.06
+							},
+							{
+								step: 10,
+								ratio: 5.42
+							},
+							{
+								step: 11,
+								ratio: 7.15
+							},
+							{
+								step: 12,
+								ratio: 9.38
+							},
+							{
+								step: 13,
+								ratio: 12.12
+							},
+							{
+								step: 14,
+								ratio: 15.35
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 5.42
+							},
+							{
+								step: 11,
+								ratio: 7.15
+							},
+							{
+								step: 12,
+								ratio: 9.38
+							},
+							{
+								step: 13,
+								ratio: 12.12
+							},
+							{
+								step: 14,
+								ratio: 15.35
+							}
+						],
+						body: [
+							{
+								step: 11,
+								ratio: 7.15
+							},
+							{
+								step: 12,
+								ratio: 9.38
+							},
+							{
+								step: 13,
+								ratio: 12.12
+							},
+							{
+								step: 14,
+								ratio: 15.35
+							}
+						]
+					}
+				},
+				{
+					step: 4,
+					floors: {
+						border: [
+							{
+								step: 9,
+								ratio: 3.55
+							},
+							{
+								step: 10,
+								ratio: 4.74
+							},
+							{
+								step: 11,
+								ratio: 6.25
+							},
+							{
+								step: 12,
+								ratio: 8.19
+							},
+							{
+								step: 13,
+								ratio: 10.59
+							},
+							{
+								step: 14,
+								ratio: 13.41
+							}
+						],
+						secondary: [
+							{
+								step: 10,
+								ratio: 4.74
+							},
+							{
+								step: 11,
+								ratio: 6.25
+							},
+							{
+								step: 12,
+								ratio: 8.19
+							},
+							{
+								step: 13,
+								ratio: 10.59
+							},
+							{
+								step: 14,
+								ratio: 13.41
+							}
+						],
+						body: [
+							{
+								step: 12,
+								ratio: 8.19
+							},
+							{
+								step: 13,
+								ratio: 10.59
+							},
+							{
+								step: 14,
+								ratio: 13.41
+							}
+						]
+					}
+				},
+				{
+					step: 5,
+					floors: {
+						border: [
+							{
+								step: 10,
+								ratio: 3.92
+							},
+							{
+								step: 11,
+								ratio: 5.17
+							},
+							{
+								step: 12,
+								ratio: 6.78
+							},
+							{
+								step: 13,
+								ratio: 8.76
+							},
+							{
+								step: 14,
+								ratio: 11.1
+							}
+						],
+						secondary: [
+							{
+								step: 11,
+								ratio: 5.17
+							},
+							{
+								step: 12,
+								ratio: 6.78
+							},
+							{
+								step: 13,
+								ratio: 8.76
+							},
+							{
+								step: 14,
+								ratio: 11.1
+							}
+						],
+						body: [
+							{
+								step: 13,
+								ratio: 8.76
+							},
+							{
+								step: 14,
+								ratio: 11.1
+							}
+						]
+					}
+				},
+				{
+					step: 6,
+					floors: {
+						border: [
+							{
+								step: 10,
+								ratio: 3.12
+							},
+							{
+								step: 11,
+								ratio: 4.12
+							},
+							{
+								step: 12,
+								ratio: 5.4
+							},
+							{
+								step: 13,
+								ratio: 6.98
+							},
+							{
+								step: 14,
+								ratio: 8.84
+							}
+						],
+						secondary: [
+							{
+								step: 12,
+								ratio: 5.4
+							},
+							{
+								step: 13,
+								ratio: 6.98
+							},
+							{
+								step: 14,
+								ratio: 8.84
+							}
+						],
+						body: [
+							{
+								step: 14,
+								ratio: 8.84
+							}
+						]
+					}
+				},
+				{
+					step: 7,
+					floors: {
+						border: [
+							{
+								step: 11,
+								ratio: 3.14
+							},
+							{
+								step: 12,
+								ratio: 4.12
+							},
+							{
+								step: 13,
+								ratio: 5.32
+							},
+							{
+								step: 14,
+								ratio: 6.74
+							}
+						],
+						secondary: [
+							{
+								step: 13,
+								ratio: 5.32
+							},
+							{
+								step: 14,
+								ratio: 6.74
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 8,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 3.47
+							},
+							{
+								step: 2,
+								ratio: 3.32
+							},
+							{
+								step: 3,
+								ratio: 3.04
+							},
+							{
+								step: 12,
+								ratio: 3.08
+							},
+							{
+								step: 13,
+								ratio: 3.98
+							},
+							{
+								step: 14,
+								ratio: 5.05
+							}
+						],
+						secondary: [
+							{
+								step: 14,
+								ratio: 5.05
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 9,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 4.63
+							},
+							{
+								step: 2,
+								ratio: 4.44
+							},
+							{
+								step: 3,
+								ratio: 4.06
+							},
+							{
+								step: 4,
+								ratio: 3.55
+							},
+							{
+								step: 14,
+								ratio: 3.78
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 4.63
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 10,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 6.18
+							},
+							{
+								step: 2,
+								ratio: 5.93
+							},
+							{
+								step: 3,
+								ratio: 5.42
+							},
+							{
+								step: 4,
+								ratio: 4.74
+							},
+							{
+								step: 5,
+								ratio: 3.92
+							},
+							{
+								step: 6,
+								ratio: 3.12
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 6.18
+							},
+							{
+								step: 2,
+								ratio: 5.93
+							},
+							{
+								step: 3,
+								ratio: 5.42
+							},
+							{
+								step: 4,
+								ratio: 4.74
+							}
+						],
+						body: []
+					}
+				},
+				{
+					step: 11,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 8.16
+							},
+							{
+								step: 2,
+								ratio: 7.81
+							},
+							{
+								step: 3,
+								ratio: 7.15
+							},
+							{
+								step: 4,
+								ratio: 6.25
+							},
+							{
+								step: 5,
+								ratio: 5.17
+							},
+							{
+								step: 6,
+								ratio: 4.12
+							},
+							{
+								step: 7,
+								ratio: 3.14
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 8.16
+							},
+							{
+								step: 2,
+								ratio: 7.81
+							},
+							{
+								step: 3,
+								ratio: 7.15
+							},
+							{
+								step: 4,
+								ratio: 6.25
+							},
+							{
+								step: 5,
+								ratio: 5.17
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 8.16
+							},
+							{
+								step: 2,
+								ratio: 7.81
+							},
+							{
+								step: 3,
+								ratio: 7.15
+							}
+						]
+					}
+				},
+				{
+					step: 12,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 10.7
+							},
+							{
+								step: 2,
+								ratio: 10.25
+							},
+							{
+								step: 3,
+								ratio: 9.38
+							},
+							{
+								step: 4,
+								ratio: 8.19
+							},
+							{
+								step: 5,
+								ratio: 6.78
+							},
+							{
+								step: 6,
+								ratio: 5.4
+							},
+							{
+								step: 7,
+								ratio: 4.12
+							},
+							{
+								step: 8,
+								ratio: 3.08
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 10.7
+							},
+							{
+								step: 2,
+								ratio: 10.25
+							},
+							{
+								step: 3,
+								ratio: 9.38
+							},
+							{
+								step: 4,
+								ratio: 8.19
+							},
+							{
+								step: 5,
+								ratio: 6.78
+							},
+							{
+								step: 6,
+								ratio: 5.4
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 10.7
+							},
+							{
+								step: 2,
+								ratio: 10.25
+							},
+							{
+								step: 3,
+								ratio: 9.38
+							},
+							{
+								step: 4,
+								ratio: 8.19
+							}
+						]
+					}
+				},
+				{
+					step: 13,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 13.82
+							},
+							{
+								step: 2,
+								ratio: 13.24
+							},
+							{
+								step: 3,
+								ratio: 12.12
+							},
+							{
+								step: 4,
+								ratio: 10.59
+							},
+							{
+								step: 5,
+								ratio: 8.76
+							},
+							{
+								step: 6,
+								ratio: 6.98
+							},
+							{
+								step: 7,
+								ratio: 5.32
+							},
+							{
+								step: 8,
+								ratio: 3.98
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 13.82
+							},
+							{
+								step: 2,
+								ratio: 13.24
+							},
+							{
+								step: 3,
+								ratio: 12.12
+							},
+							{
+								step: 4,
+								ratio: 10.59
+							},
+							{
+								step: 5,
+								ratio: 8.76
+							},
+							{
+								step: 6,
+								ratio: 6.98
+							},
+							{
+								step: 7,
+								ratio: 5.32
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 13.82
+							},
+							{
+								step: 2,
+								ratio: 13.24
+							},
+							{
+								step: 3,
+								ratio: 12.12
+							},
+							{
+								step: 4,
+								ratio: 10.59
+							},
+							{
+								step: 5,
+								ratio: 8.76
+							}
+						]
+					}
+				},
+				{
+					step: 14,
+					floors: {
+						border: [
+							{
+								step: 1,
+								ratio: 17.51
+							},
+							{
+								step: 2,
+								ratio: 16.78
+							},
+							{
+								step: 3,
+								ratio: 15.35
+							},
+							{
+								step: 4,
+								ratio: 13.41
+							},
+							{
+								step: 5,
+								ratio: 11.1
+							},
+							{
+								step: 6,
+								ratio: 8.84
+							},
+							{
+								step: 7,
+								ratio: 6.74
+							},
+							{
+								step: 8,
+								ratio: 5.05
+							},
+							{
+								step: 9,
+								ratio: 3.78
+							}
+						],
+						secondary: [
+							{
+								step: 1,
+								ratio: 17.51
+							},
+							{
+								step: 2,
+								ratio: 16.78
+							},
+							{
+								step: 3,
+								ratio: 15.35
+							},
+							{
+								step: 4,
+								ratio: 13.41
+							},
+							{
+								step: 5,
+								ratio: 11.1
+							},
+							{
+								step: 6,
+								ratio: 8.84
+							},
+							{
+								step: 7,
+								ratio: 6.74
+							},
+							{
+								step: 8,
+								ratio: 5.05
+							}
+						],
+						body: [
+							{
+								step: 1,
+								ratio: 17.51
+							},
+							{
+								step: 2,
+								ratio: 16.78
+							},
+							{
+								step: 3,
+								ratio: 15.35
+							},
+							{
+								step: 4,
+								ratio: 13.41
+							},
+							{
+								step: 5,
+								ratio: 11.1
+							},
+							{
+								step: 6,
+								ratio: 8.84
+							}
+						]
+					}
+				}
+			]
 		}
 	}
 };

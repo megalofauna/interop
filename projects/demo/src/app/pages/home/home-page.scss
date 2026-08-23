@@ -41,7 +41,7 @@
 	font-size: clamp(2rem, 5vw, 3rem);
 	font-weight: 600;
 	line-height: 1.15;
-	color: var(--itx-contrast-6);
+	color: var(--itx-neutral-14);
 	letter-spacing: -0.02em;
 }
 
@@ -55,7 +55,7 @@
 	max-width: 42rem;
 	font-size: var(--itx-font-size-body-lg);
 	line-height: 1.7;
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 }
 
 // ── Calls to action ──────────────────────────────────────────────────────────
@@ -100,13 +100,13 @@
 
 	&--primary {
 		background: var(--itx-colorway-solid);
-		// --itx-contrast-6, not --itx-colorway-on-solid. That token pairs with the
+		// --itx-neutral-14, not --itx-colorway-on-solid. That token pairs with the
 		// *semantic* --itx-colorway-solid, which is bright in dark mode and so wants
 		// dark text; this uses --itx-colorway-solid, the button's fill, which is a
 		// dark blue in that scheme. Pairing the two put near-black on dark blue
 		// at 1.78:1. The primary button's own foreground is neutral-12, and
 		// matching it is the point of this block — it measures 8.75:1.
-		color: var(--itx-contrast-6);
+		color: var(--itx-neutral-14);
 
 		&:hover {
 			background: var(--itx-colorway-solid);
@@ -114,11 +114,11 @@
 	}
 
 	&--secondary {
-		border-color: var(--itx-contrast-4);
-		color: var(--itx-contrast-5);
+		border-color: var(--itx-neutral-9);
+		color: var(--itx-neutral-11);
 
 		&:hover {
-			color: var(--itx-contrast-6);
+			color: var(--itx-neutral-14);
 		}
 	}
 }
@@ -151,7 +151,7 @@
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 }
 
 // ── Pillars ──────────────────────────────────────────────────────────────────
@@ -174,26 +174,26 @@
 	flex-direction: column;
 	gap: var(--itx-spacing-2);
 	padding-block-start: var(--itx-spacing-4);
-	border-block-start: 2px solid var(--itx-contrast-3);
+	border-block-start: 2px solid var(--itx-neutral-8);
 }
 
 .home-page__pillar-heading {
 	margin: 0;
 	font-size: 1rem;
 	font-weight: 600;
-	color: var(--itx-contrast-6);
+	color: var(--itx-neutral-14);
 }
 
 .home-page__pillar-body {
 	margin: 0;
 	font-size: 0.875rem;
 	line-height: 1.6;
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 	text-wrap: pretty;
 
 	code {
 		font-family: var(--itx-font-family-mono);
 		font-size: 0.9em;
-		color: var(--itx-contrast-6);
+		color: var(--itx-neutral-14);
 	}
 }
