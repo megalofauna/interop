@@ -228,7 +228,7 @@ currentStep = signal(1);`;
 	];
 
 	tokenEntries: TokenEntry[] = [
-		{ property: "--itx-progress-track", default: "var(--itx-contrast-2)" },
+		{ property: "--itx-progress-track", default: "var(--itx-neutral-3)" },
 		{ property: "--itx-progress-fill", default: "var(--itx-colorway-solid)" },
 		{
 			property: "--itx-progress-thickness",

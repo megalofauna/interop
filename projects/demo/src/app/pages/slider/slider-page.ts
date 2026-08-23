@@ -249,7 +249,7 @@ onSubmit(event: SubmitEvent): void {
 	tokenEntries: TokenEntry[] = [
 		{
 			property: "--itx-slider-track-color",
-			default: "var(--itx-contrast-2)",
+			default: "var(--itx-neutral-3)",
 		},
 		{
 			property: "--itx-slider-track-thickness",
@@ -257,11 +257,11 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-fill-color",
-			default: "var(--itx-contrast-6)",
+			default: "var(--itx-neutral-14)",
 		},
 		{
 			property: "--itx-slider-thumb-color",
-			default: "var(--itx-contrast-6)",
+			default: "var(--itx-neutral-14)",
 		},
 		{
 			property: "--itx-slider-thumb-size",
@@ -287,7 +287,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-disabled-color",
-			default: "var(--itx-contrast-2)",
+			default: "var(--itx-neutral-3)",
 		},
 		{
 			property: "--itx-slider-length",
@@ -307,7 +307,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-color",
-			default: "var(--itx-contrast-3)",
+			default: "var(--itx-neutral-8)",
 		},
 		{
 			property: "--itx-slider-mark-thickness",
@@ -319,7 +319,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-minor-color",
-			default: "var(--itx-contrast-2)",
+			default: "var(--itx-neutral-3)",
 		},
 		{
 			property: "--itx-slider-mark-minor-thickness",

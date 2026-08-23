@@ -6,7 +6,7 @@
 // rather than a grid of slabs — each entry carries a single 1px rule above it,
 // the same vocabulary as the table's row rules and the contained list.
 //
-// The rule colour is --itx-contrast-3, not --itx-contrast-3: --itx-contrast-3 resolves
+// The rule colour is --itx-neutral-8, not --itx-neutral-8: --itx-neutral-8 resolves
 // to neutral-5, a sub-0.1 luminance delta against our surfaces, and reads as
 // nothing at 1px.
 
@@ -36,12 +36,12 @@
 	// Matches the table's cell padding, so the inset of the text from its rule
 	// is the same measure across the app.
 	padding: var(--itx-spacing-3) var(--itx-spacing-4);
-	border-block-start: 1px solid var(--itx-contrast-3);
+	border-block-start: 1px solid var(--itx-neutral-8);
 	// --itx-radius-none is the zero token; --itx-radius-0 does not exist and
 	// would silently invalidate the declaration.
 	border-radius: var(--itx-radius-none);
 	background-color: transparent;
-	color: var(--itx-contrast-6);
+	color: var(--itx-neutral-14);
 	text-decoration: none;
 	transition: background-color var(--itx-duration-fast)
 		var(--itx-easing-standard);
@@ -70,7 +70,7 @@
 .directory__desc {
 	font-size: 0.75rem;
 	line-height: 1.3333;
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 	text-wrap: pretty;
 }
 
@@ -122,7 +122,7 @@
 	flex: none;
 	font-size: 0.75rem;
 	font-variant-numeric: tabular-nums;
-	color: var(--itx-contrast-4);
+	color: var(--itx-neutral-9);
 }
 
 @media (prefers-reduced-motion: reduce) {

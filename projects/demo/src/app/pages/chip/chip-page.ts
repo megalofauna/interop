@@ -368,18 +368,18 @@ export class ChipPage {
 		{ property: "--itx-chip-border", default: "none" },
 		{
 			property: "--itx-chip-background-hover",
-			default: "var(--itx-contrast-2)",
+			default: "var(--itx-neutral-3)",
 		},
-		{ property: "--itx-chip-color-hover", default: "var(--itx-contrast-6)" },
+		{ property: "--itx-chip-color-hover", default: "var(--itx-neutral-14)" },
 
 		{ groupLabel: "Paint — selectable (chip-option)" },
 		{
 			property: "--itx-chip-selectable-background",
-			default: "var(--itx-contrast-2)",
+			default: "var(--itx-neutral-3)",
 		},
 		{
 			property: "--itx-chip-selectable-color",
-			default: "var(--itx-contrast-6)",
+			default: "var(--itx-neutral-14)",
 		},
 		{
 			property: "--itx-chip-selectable-border",
@@ -387,11 +387,11 @@ export class ChipPage {
 		},
 		{
 			property: "--itx-chip-selectable-background-hover",
-			default: "var(--itx-contrast-3)",
+			default: "var(--itx-neutral-8)",
 		},
 		{
 			property: "--itx-chip-selectable-color-hover",
-			default: "var(--itx-contrast-6)",
+			default: "var(--itx-neutral-14)",
 		},
 
 		{ groupLabel: "Paint — selected / checked" },
@@ -425,7 +425,7 @@ export class ChipPage {
 		},
 		{
 			property: "--itx-chip-remove-background-hover",
-			default: "var(--itx-contrast-2)",
+			default: "var(--itx-neutral-3)",
 		},
 		{ property: "--itx-chip-remove-border", default: "none" },
 		{
@@ -475,7 +475,7 @@ export class ChipPage {
 		{ property: "--itx-chip-input-background", default: "transparent" },
 		{
 			property: "--itx-chip-input-border",
-			default: "1px solid var(--itx-contrast-3)",
+			default: "1px solid var(--itx-neutral-8)",
 		},
 		{
 			property: "--itx-chip-input-radius",
