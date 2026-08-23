@@ -1,9 +1,12 @@
 # TODO — page-nav's theme file is a quarter inert
 
-**Status:** open, not started. Investigated 2026-08-18 and deliberately rolled
-back — the work was done while chasing a complaint that turned out to be about
-`interop-command-palette`, not page-nav. The findings below are real and were
-verified against the source; the fix was reverted, not the diagnosis.
+**Status:** CLOSED, 2026-08-23. The dead levers are fixed and the sticky-offset
+bug is not reproducible — its cause is recorded in this file and was already
+undone by the rollback. Original note: investigated
+2026-08-18 and deliberately rolled back — the work was done while chasing a
+complaint that turned out to be about `interop-command-palette`, not page-nav.
+The findings below were verified against the source; the fix was reverted, not
+the diagnosis, and every one of them still held five days later.
 
 **Why it matters:** the theme file's own header says *"the structural foundation
 references every one of these; there are no fallbacks there, so this file is the
@@ -44,7 +47,7 @@ Both fine.
 and the documented surface never listed it, so the only way to discover it is to
 read the structural file.
 
-## The sticky offset does not appear to apply — UNRESOLVED
+## The sticky offset does not appear to apply — RESOLVED, see below
 
 The demo sets `--itx-pn-sticky-top: var(--header-h)` on a shell ancestor
 (`app.scss`), the component is mounted with `[sticky]="true"`, the host binding
@@ -81,3 +84,83 @@ silently killed the demo's ancestor override. Any token whose PURPOSE is
 consumer configuration must not be declared in an element-scoped theme block —
 its default belongs in the structural `var()` fallback, where absence is the
 default and nothing is blocked.
+
+---
+
+## Fixed, 2026-08-23 — the dead levers
+
+Zero `--itx-pn-*` declarations are now unread. Four were removed and four wired:
+
+**Removed.** `--itx-pn-radius`, `--itx-pn-padding-block`, `--itx-pn-padding-inline`
+— the bar has no radius or padding rule to attach them to, and inventing one to
+justify a token would be changing the layout to fit the documentation. Spacing
+comes from the links' own padding and `--itx-pn-gap`. `--itx-pn-background-opacity`
+went too: the rest and stuck states each build their own `color-mix()`
+percentage, which one opacity token cannot express.
+
+**Wired.** `--itx-pn-link-radius` — hover and current backgrounds were painting
+square corners under a house radius that is not square; they now read 4px.
+`--itx-pn-label-color` — a section label inherited body colour and sat at the
+same weight as the links it groups; now `neutral-9`.
+
+**Reconciled.** The two families for one border are one family. The documented
+names won and the live values came with them, so the rest state renders
+identically — `2px solid neutral-3`, measured before and after.
+
+That last one has a consequence worth watching. The stuck block re-declares
+`--itx-pn-border-color: var(--itx-pn-background-color)` with a comment
+explaining that the stuck rule is the last row of the bar's own background
+rather than a mark. The border it aimed at was drawn from the other family, so
+**that mechanism had never once executed**. It does now: measured, the stuck
+rule resolves to exactly its background colour, so the hairline disappears when
+the bar pins. That is what the comment always intended and nobody has ever
+seen. If a visible edge under a stuck bar is wanted, the fix is one line in the
+stuck block, not a revert of the reconciliation.
+
+The demo was lying in both directions and is fixed too: its token table
+advertised `--itx-pn-padding-*` (dead) and used `--itx-pn-nav-rule-*`
+(undocumented). It now lists the real names, plus `--itx-pn-sticky-top`, which
+had no documented home at all.
+
+## The same disease elsewhere — 73 tokens
+
+Measured while closing this out: **73 theme declarations across 15 files are
+read by nothing.** Worst are stepper (20), expansion-panel (8),
+segmented-control (7), button (6) and toolbar (6).
+
+A `check-dead-tokens` guard is the obvious answer and cannot land until those
+are worked down, since it would open with 73 violations. Worth pairing with the
+foundation-fallbacks sweep — both are "the theme says something the structure
+does not read", from opposite ends.
+
+## The sticky offset — closed, 2026-08-23
+
+Not reproducible. Measured in the running app with a temporary probe:
+
+    nav classes        : itx-pn--sticky itx-pn--horizontal
+    position           : sticky
+    inset-block-start  : 56px
+    top                : 56px
+    --itx-pn-sticky-top on nav  : 3.5rem
+    --itx-pn-sticky-top on root : 3.5rem
+
+Every link in the chain holds: the class lands, the property inherits from
+`app-root` down to the nav, and the offset resolves.
+
+**The cause was already written down in this file.** The trap note records that
+"adding a `--itx-pn-sticky-top: 0` default to the theme silently killed the
+demo's ancestor override" — and a killed override is exactly the reported
+symptom, a nav "pegged to the top whether the page is scrolled or not" with no
+offset applied. The observation was almost certainly made while that default
+was in place. Rolling the branch back removed the default, which removed the
+bug; the symptom was filed as open because nobody connected the two halves of
+the same page.
+
+Worth keeping as the reason the trap note matters: it did not just predict a
+hazard, it had already caused one and the cost was five days of a bug that no
+longer existed.
+
+`page-nav.ts` reads `getComputedStyle(el).top` to place the observer's
+rootMargin. The structural rule now sets `inset-block-start`; that still
+computes to `top` in horizontal-tb, verified at 56px above, so the switch to
+the logical property is safe for the reveal.

@@ -132,10 +132,9 @@
 /*
  * Available tokens (set on any ancestor, e.g. [interop-root]):
  *   --itx-pn-bg                  Background color
- *   --itx-pn-padding-block       Block padding
- *   --itx-pn-padding-inline      Inline padding
- *   --itx-pn-border-color        Bottom border color
- *   --itx-pn-border-width        Bottom border width
+ *   --itx-pn-border-color        Bottom rule colour
+ *   --itx-pn-border-width        Bottom rule width
+ *   --itx-pn-border-style        Bottom rule style
  *   --itx-pn-gap                 Gap between links
  *   --itx-pn-font-size           Link font size
  *   --itx-pn-font-weight         Link font weight

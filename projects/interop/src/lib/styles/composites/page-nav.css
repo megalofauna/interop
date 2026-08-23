@@ -36,7 +36,7 @@
 	 * nav can rest beneath a persistent header/toolbar. Defaults to 0. The stuck
 	 * detection reads this offset back (see page-nav.ts) so the reveal still fires
 	 * at the right point. */
-	top: var(--itx-pn-sticky-top, 0);
+	inset-block-start: var(--itx-pn-sticky-top, 0);
 	z-index: var(--itx-pn-z-index);
 }
 
@@ -55,8 +55,13 @@
 	background-image: var(--itx-pn-background-image);
 	backdrop-filter: var(--itx-pn-backdrop-filter);
 	position: relative;
-	border-block-end: var(--itx-pn-nav-rule-width) var(--itx-pn-nav-rule-style)
-		var(--itx-pn-nav-rule-color);
+	/* --itx-pn-border-*, not --itx-pn-nav-rule-*. There were two families for
+	   this one border: the documented set, which nothing read, and this
+	   undocumented set, which did all the work. The names below are the
+	   documented ones; the values are the ones that were shipping, so the rule
+	   looks the same and the theme's own header stops being false. */
+	border-block-end: var(--itx-pn-border-width) var(--itx-pn-border-style)
+		var(--itx-pn-border-color);
 }
 
 :where(itx-page-nav.itx-pn--horizontal interop-scroll-area) {
@@ -103,6 +108,10 @@
 }
 
 :where(itx-page-nav.itx-pn--vertical .itx-pn__label) {
+	/* --itx-pn-label-color was declared by the theme and read by nothing, so a
+	   section label inherited body colour and sat at the same weight as the
+	   links it groups. */
+	color: var(--itx-pn-label-color);
 	font-weight: 400;
 	text-transform: uppercase;
 }
@@ -159,6 +168,10 @@
 	text-decoration: none;
 	padding-block: var(--itx-pn-link-padding-block);
 	padding-inline: var(--itx-pn-link-padding-inline);
+	/* The theme has always declared --itx-pn-link-radius and nothing read it,
+	   so hover and current backgrounds painted square corners under a house
+	   radius that is not square. */
+	border-radius: var(--itx-pn-link-radius);
 	border-bottom: var(--itx-pn-link-border-width) solid
 		var(--itx-pn-link-border-color);
 	/* Colour only. `font-size` and `padding-block` were transitioned here purely
