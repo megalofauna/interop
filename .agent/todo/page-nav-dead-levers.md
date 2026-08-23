@@ -1,9 +1,11 @@
 # TODO — page-nav's theme file is a quarter inert
 
-**Status:** open, not started. Investigated 2026-08-18 and deliberately rolled
-back — the work was done while chasing a complaint that turned out to be about
-`interop-command-palette`, not page-nav. The findings below are real and were
-verified against the source; the fix was reverted, not the diagnosis.
+**Status:** the dead levers are FIXED, 2026-08-23. The sticky-offset bug below
+is still UNRESOLVED and is the remainder of this file. Original note: investigated
+2026-08-18 and deliberately rolled back — the work was done while chasing a
+complaint that turned out to be about `interop-command-palette`, not page-nav.
+The findings below were verified against the source; the fix was reverted, not
+the diagnosis, and every one of them still held five days later.
 
 **Why it matters:** the theme file's own header says *"the structural foundation
 references every one of these; there are no fallbacks there, so this file is the
@@ -81,3 +83,51 @@ silently killed the demo's ancestor override. Any token whose PURPOSE is
 consumer configuration must not be declared in an element-scoped theme block —
 its default belongs in the structural `var()` fallback, where absence is the
 default and nothing is blocked.
+
+---
+
+## Fixed, 2026-08-23 — the dead levers
+
+Zero `--itx-pn-*` declarations are now unread. Four were removed and four wired:
+
+**Removed.** `--itx-pn-radius`, `--itx-pn-padding-block`, `--itx-pn-padding-inline`
+— the bar has no radius or padding rule to attach them to, and inventing one to
+justify a token would be changing the layout to fit the documentation. Spacing
+comes from the links' own padding and `--itx-pn-gap`. `--itx-pn-background-opacity`
+went too: the rest and stuck states each build their own `color-mix()`
+percentage, which one opacity token cannot express.
+
+**Wired.** `--itx-pn-link-radius` — hover and current backgrounds were painting
+square corners under a house radius that is not square; they now read 4px.
+`--itx-pn-label-color` — a section label inherited body colour and sat at the
+same weight as the links it groups; now `neutral-9`.
+
+**Reconciled.** The two families for one border are one family. The documented
+names won and the live values came with them, so the rest state renders
+identically — `2px solid neutral-3`, measured before and after.
+
+That last one has a consequence worth watching. The stuck block re-declares
+`--itx-pn-border-color: var(--itx-pn-background-color)` with a comment
+explaining that the stuck rule is the last row of the bar's own background
+rather than a mark. The border it aimed at was drawn from the other family, so
+**that mechanism had never once executed**. It does now: measured, the stuck
+rule resolves to exactly its background colour, so the hairline disappears when
+the bar pins. That is what the comment always intended and nobody has ever
+seen. If a visible edge under a stuck bar is wanted, the fix is one line in the
+stuck block, not a revert of the reconciliation.
+
+The demo was lying in both directions and is fixed too: its token table
+advertised `--itx-pn-padding-*` (dead) and used `--itx-pn-nav-rule-*`
+(undocumented). It now lists the real names, plus `--itx-pn-sticky-top`, which
+had no documented home at all.
+
+## The same disease elsewhere — 73 tokens
+
+Measured while closing this out: **73 theme declarations across 15 files are
+read by nothing.** Worst are stepper (20), expansion-panel (8),
+segmented-control (7), button (6) and toolbar (6).
+
+A `check-dead-tokens` guard is the obvious answer and cannot land until those
+are worked down, since it would open with 73 violations. Worth pairing with the
+foundation-fallbacks sweep — both are "the theme says something the structure
+does not read", from opposite ends.
