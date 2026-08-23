@@ -68,7 +68,6 @@
 	--itx-step-button-gap: var(--itx-spacing-2);
 
 	/* ── Step indicator — structure ─────────────────────────────────────── */
-	/*--itx-step-indicator-size: 1.75rem;*/
 	--itx-step-indicator-border-style: solid;
 	/* Fixed rem, not --itx-font-size-*. The role tokens are fluid clamp()
 	   values, and a numeral that grows with the viewport sits inside a fixed
@@ -162,4 +161,23 @@
 	--itx-step-connector-color-completed: var(--itx-neutral-11);
 
 	/* ── Step focus ring ────────────────────────────────────────────────── */
+}
+
+/*
+ * Static knobs, declared once at the root rather than in the per-layer block
+ * above.
+ *
+ * The per-layer block re-declares its tokens at EVERY layer boundary, which is
+ * required for anything reading a layer-sensitive value — but it also means a
+ * consumer's override is wiped one layer down. Measured: an override set on a
+ * plain wrapper survives until the first [itx-layer] beneath it and then resets.
+ * These values do not vary with depth, so declaring them here keeps them
+ * overridable at any depth, which is the whole point of exposing them.
+ */
+:where([interop-root]) {
+	--itx-stepper-menu-max-height: 60vh;
+	/* 2rem is what ships. This sat commented at 1.75rem while the foundation's
+	   fallback supplied the real value, so the theme read as though it had an
+	   opinion it had actually declined. */
+	--itx-step-indicator-size: 2rem;
 }

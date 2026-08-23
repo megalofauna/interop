@@ -24,7 +24,9 @@
 	--itx-toolbar-padding: var(--itx-spacing-1) var(--itx-spacing-1);
 	--itx-toolbar-background: transparent;
 	--itx-toolbar-border-color: transparent;
-	/*--itx-toolbar-border-radius: var(--itx-radius-full);*/
+	/* Square. The pill was commented out and the foundation's 0 became the
+	   shipped value; this states it rather than leaving it to a fallback. */
+	--itx-toolbar-border-radius: 0;
 
 	/* State */
 	--itx-toolbar-disabled-opacity: 0.6;

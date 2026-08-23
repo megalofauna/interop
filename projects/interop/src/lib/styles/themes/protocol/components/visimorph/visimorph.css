@@ -55,3 +55,22 @@
 	/* ── Motion / a11y ──────────────────────────────────────────────────── */
 	--itx-control-disabled-opacity: 0.5;
 }
+
+/*
+ * Static knobs, declared once at the root rather than in the per-layer block
+ * above.
+ *
+ * The per-layer block re-declares its tokens at EVERY layer boundary, which is
+ * required for anything reading a layer-sensitive value — but it also means a
+ * consumer's override is wiped one layer down. Measured: an override set on a
+ * plain wrapper survives until the first [itx-layer] beneath it and then resets.
+ * These values do not vary with depth, so declaring them here keeps them
+ * overridable at any depth, which is the whole point of exposing them.
+ */
+:where([interop-root]) {
+	/* `initial` means the browser's own corner. A theme opts into `squircle` by
+	   changing this one line — previously there was no line to change, because
+	   the value lived only as a foundation fallback. */
+	--itx-control-corner-shape: initial;
+	--itx-control-focus-offset: 3px;
+}

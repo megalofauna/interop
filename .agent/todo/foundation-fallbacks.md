@@ -50,13 +50,40 @@ The 81 homeless tokens are worse, because no theme can be blamed. They are
 the shipped values, in the wrong file, invisible to anyone looking where the
 architecture says to look.
 
+## Correction: the 81 are not one thing
+
+Written before looking at them individually. They split three ways, and only
+one of the three should move.
+
+**Structural defaults that belong in the foundation** — `--itx-icon-display:
+inline-flex`, `--itx-icon-pointer-events: none`, `--itx-layout-direction:
+column`, `--itx-toolbar-display: flex`, the seven `--itx-decoration-*`. A theme
+decides colour, size and shape; it does not decide whether an icon is a flex
+container. These are correctly placed and exposed as tokens only so a consumer
+can escape them. Roughly half the list.
+
+**Contextual chains that cannot move.** `--itx-control-radius` is the reported
+symptom and the clearest case. Its fallback is
+`var(--itx-inner-radius, var(--itx-radius))`, and `--itx-inner-radius` is
+declared by segmented-control on itself so a nested checkbox gets
+nesting-correct corners. A `var()` inside a custom property resolves where it
+is DECLARED, so moving that chain into the theme freezes it at the nearest
+layer boundary, where `--itx-inner-radius` is undefined. Measured, in a
+four-line repro:
+
+    no theme declaration, checkbox inside a segmented control:  4px
+    theme declares it,    same checkbox:                       12px
+
+The nesting breaks. Also affects the chip, callout, terminal, listbox and
+button radius tokens. These stay where they are; the fix for their findability
+is documentation, not relocation.
+
+**Genuine theme values.** The remainder — sizes, insets, corner shapes. These
+can and should move.
+
 ## The fix, in order of value
 
-1. **Give the 81 homeless tokens a theme home.** Mechanical, low risk, and it
-   is the whole of the reported symptom. `--itx-control-radius` goes in
-   `themes/protocol/components/visimorph/visimorph.css` beside its siblings,
-   mirroring `--itx-control-label-radius` in the sibling `label.css` which
-   already does this correctly. The value does not change; it moves.
+1. **Give the genuinely theme-shaped tokens a home.** Not all 81.
 2. **Reconcile the 148 contradictions to the theme's value.** Also mechanical
    once decided, but it is 148 judgement calls about what an incomplete
    custom theme should get, so it wants review rather than a sweep.
@@ -75,3 +102,36 @@ Nothing currently detects this. `check-undefined-tokens` proves every read
 resolves; it does not ask *where* the value lives. A check that fails when a
 foundation fallback disagrees with the theme, or when a token has no theme
 declaration, would keep the count at zero once it reaches zero.
+
+
+## Done so far (2026-08-23)
+
+- `--itx-spacing-6` was being shadowed by a literal `1.5rem` in `dialog.css`,
+  the only case in the library where a fallback restates a global primitive.
+  Rescaling `--itx-spacing-unit` would have moved the token and not the
+  literal. Removed.
+- Theme homes added for `--itx-control-corner-shape`,
+  `--itx-control-focus-offset`, `--itx-control-label-corner-shape`,
+  `--itx-control-touch-inset`, `--itx-stepper-menu-max-height`.
+- `--itx-step-indicator-size` and `--itx-toolbar-border-radius` were
+  *commented out* in the theme, at values (1.75rem, the pill) that were not
+  what shipped — the foundation's fallback was supplying 2rem and 0. The theme
+  now states what actually ships. This is a worse variant of the problem than
+  a missing declaration: a reader sees a crossed-out number and believes it.
+
+### A placement rule fell out of this
+
+`visimorph` and `stepper` declare their theme tokens in the per-layer block,
+`:where([interop-root], [itx-layer], [itx-sink])`. That block re-declares at
+every boundary, which anything layer-sensitive needs — and which silently
+wipes a consumer's override one layer down. Measured:
+
+    override on a plain wrapper, no layer between:  squircle
+    same override, one [itx-layer] below:           (wiped)
+    same override, root-only declaration, 2 below:  squircle
+
+So a static value put in the per-layer block becomes *less* overridable than
+it was as a bare fallback. The additions above went into root-only blocks for
+that reason. The seventeen static tokens already sitting in visimorph's
+per-layer block have the same defect and are worth splitting out — that is the
+next piece of work here, and it is a behaviour fix rather than tidying.

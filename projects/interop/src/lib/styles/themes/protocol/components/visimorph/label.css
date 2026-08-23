@@ -70,6 +70,9 @@
 	--itx-control-label-border-width: var(--itx-border-width-thick);
 	--itx-control-label-border-color: transparent;
 	--itx-control-label-radius: var(--itx-radius-md);
+	--itx-control-label-corner-shape: initial;
+	/* How far the label's hit area extends past its ink. */
+	--itx-control-touch-inset: 0.25em;
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-control-label-transition: var(--itx-duration-fast)
