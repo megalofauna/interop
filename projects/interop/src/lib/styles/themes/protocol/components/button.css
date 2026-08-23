@@ -17,11 +17,21 @@
 
 /* ── Base (default, no variant) ──────────────────────────────────────────── */
 
-/* Co-declared on the elevation boundaries, not the bare root: a custom
-   property substitutes where it is DECLARED, so aliasing a rank at the
-   root freezes layer 0's value for the whole tree. See css-strategy.md,
-   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
-:where([interop-root], [itx-layer], [itx-sink]) {
+/* Declared on the component, not on the elevation boundaries.
+
+   This block was co-declared at every layer because the colour tokens it
+   aliased were ranks solved per surface, and a rank parked at the root froze
+   layer 0's value for the whole tree. The palette replaced those ranks and is
+   page-relative, so the reason expired. Co-declaration is not free: it
+   re-declares at every boundary, which wipes a consumer's override one layer
+   down.
+
+   On the component the value substitutes at the element, which still sees
+   layer-sensitive inputs (--itx-surface* is registered `inherits: true`) and
+   additionally sees what an ancestor sets. `[interop-button]` rather than
+   `button[interop-button]`: the foundation styles the bare attribute at
+   components/button.css:66, so an `a[interop-button]` is supported. */
+:where([interop-button]) {
 	/* Sizing — pin the height; the foundation derives block padding as
 	   (height − 1em) / 2, so the visible pill lands at exactly the height.
 	   Default size = md (40), Carbon's medium step. */

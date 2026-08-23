@@ -85,7 +85,12 @@
 	   falls through to the global --itx-radius knob, which is `none`. Set
 	   --itx-radius (or --itx-radius-1 on the control) to restore Carbon's
 	   value. */
-	--itx-segmented-control-track-padding: 0;
+	/* 0px, not 0: this feeds calc() in --itx-inner-radius below, and CSS calc
+	   cannot subtract a unitless number from a length. As a bare `0` the whole
+	   expression was invalid at computed-value time, so every nested radius
+	   reading it silently collapsed to 0 — the mechanism was wired correctly
+	   and had never once produced a value. */
+	--itx-segmented-control-track-padding: 0px;
 	--itx-segmented-control-track-max-width: none;
 
 	/* ── Segment — layout ───────────────────────────────────────────────── */

@@ -74,9 +74,19 @@ four-line repro:
     no theme declaration, checkbox inside a segmented control:  4px
     theme declares it,    same checkbox:                       12px
 
-The nesting breaks. Also affects the chip, callout, terminal, listbox and
-button radius tokens. These stay where they are; the fix for their findability
-is documentation, not relocation.
+The nesting breaks — **when declared at the root or on a layer block.** That
+qualifier was missing when this was first written, and it was the whole
+answer. `tokens/shape.css` had already said so: a component's theme default
+belongs *on the component*, where it substitutes at the element and sees
+whatever that element inherits. Measured again, all three placements:
+
+    :where([interop-root], [itx-layer], [itx-sink])   12px — nesting lost
+    :where(interop-visimorph)                          4px — correct
+
+So contextual chains move perfectly well; they just have exactly one valid
+destination. `--itx-control-radius` now lives on `:where(interop-visimorph)`
+and the checkbox finally has a findable radius. See
+`.agent/todo/token-placement.md` for the rule and the sweep it implies.
 
 **Genuine theme values.** The remainder — sizes, insets, corner shapes. These
 can and should move.

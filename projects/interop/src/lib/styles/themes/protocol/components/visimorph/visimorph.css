@@ -8,19 +8,50 @@
  *
  * The visimorph reads `--itx-control-*` tokens, which are intentionally
  * shared with the surrounding radio / checkbox / toggle host CSS so a single
- * override re-themes every control type at once.
+ * override re-themes every control type at once. The one such token the label
+ * host reads for itself, `--itx-control-touch-inset`, is declared in label.css
+ * on the label's own selector for the same reason this block is on the
+ * visimorph's.
  */
 
-/* Co-declared on the elevation boundaries, not the bare root: a custom
-   property substitutes where it is DECLARED, so aliasing a rank at the
-   root freezes layer 0's value for the whole tree. See css-strategy.md,
-   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
-:where([interop-root], [itx-layer], [itx-sink]) {
+/*
+ * Declared on the component, not on the elevation boundaries.
+ *
+ * This block used to sit on `:where([interop-root], [itx-layer], [itx-sink])`,
+ * co-declared at every layer because the colour tokens it aliased were solved
+ * per surface: a rank parked at the root froze layer 0's value for the whole
+ * tree. The palette replaced those ranks and is page-relative, so the reason
+ * expired — and co-declaration is not free. A per-layer block re-declares at
+ * every boundary, which silently wipes a consumer's override one layer down.
+ *
+ * On the component the value substitutes at the element, which is both correct
+ * and strictly more capable. It still sees layer-sensitive inputs, because
+ * `--itx-surface*` is registered `inherits: true` and the element inherits the
+ * nearest boundary's value — measured identical to co-declaration at every
+ * depth. And it sees what an ancestor sets, which co-declaration cannot: the
+ * radius below picks up a segmented control's `--itx-inner-radius` only
+ * because this block resolves here.
+ *
+ * The rule, stated once: a theme declaration belongs on the component's own
+ * selector. See tokens/shape.css, which has said so all along.
+ */
+:where(interop-visimorph) {
 	/* ── Sizing ─────────────────────────────────────────────────────────── */
 	--itx-control-size: 1.25rem;
 	--itx-control-dot-size: 0.625rem;
 	--itx-control-check-weight: 3px;
 	--itx-control-check-weight-indeterminate: 4px;
+
+	/* ── Shape ──────────────────────────────────────────────────────────── */
+	/* Follows the house knob, and defers to a container that has published a
+	   nested radius — a checkbox inside a segmented control takes the track's
+	   inner corner rather than the global one. This is the whole reason the
+	   block sits on the component: declared any higher, the chain would
+	   resolve where `--itx-inner-radius` is undefined and freeze. */
+	--itx-control-radius: var(--itx-inner-radius, var(--itx-radius));
+	/* `initial` means the browser's own corner. A theme opts into `squircle`
+	   by changing this one line. */
+	--itx-control-corner-shape: initial;
 
 	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-control-border-color: light-dark(
@@ -32,13 +63,10 @@
 		var(--itx-surface-below)
 	);
 	--itx-control-accent: var(--itx-neutral-14);
-	/* The indicator is drawn ON --itx-control-accent (rank 6), so rank 1 is the
-	   maximum separation from it in BOTH schemes. Palette steps are already
+	/* The indicator is drawn ON --itx-control-accent, so the far end of the
+	   ramp is the maximum separation from it in BOTH schemes. Palette steps are
 	   scheme-paired — step N is the same distance from the page in either arm,
-	   so the token flips on its own and needs no light-dark() here. The dark
-	   arm previously named a token declared nowhere, which made the whole
-	   declaration invalid at computed-value time, so the read fell through to
-	   its own fallback. Rendering is unchanged. */
+	   so the token flips on its own and needs no light-dark() here. */
 	--itx-control-indicator: var(--itx-neutral-2);
 
 	/* ── Toggle-specific ────────────────────────────────────────────────── */
@@ -51,26 +79,8 @@
 
 	/* ── Focus ring ─────────────────────────────────────────────────────── */
 	--itx-control-focus-scale: 0.875;
+	--itx-control-focus-offset: 3px;
 
 	/* ── Motion / a11y ──────────────────────────────────────────────────── */
 	--itx-control-disabled-opacity: 0.5;
-}
-
-/*
- * Static knobs, declared once at the root rather than in the per-layer block
- * above.
- *
- * The per-layer block re-declares its tokens at EVERY layer boundary, which is
- * required for anything reading a layer-sensitive value — but it also means a
- * consumer's override is wiped one layer down. Measured: an override set on a
- * plain wrapper survives until the first [itx-layer] beneath it and then resets.
- * These values do not vary with depth, so declaring them here keeps them
- * overridable at any depth, which is the whole point of exposing them.
- */
-:where([interop-root]) {
-	/* `initial` means the browser's own corner. A theme opts into `squircle` by
-	   changing this one line — previously there was no line to change, because
-	   the value lived only as a foundation fallback. */
-	--itx-control-corner-shape: initial;
-	--itx-control-focus-offset: 3px;
 }
