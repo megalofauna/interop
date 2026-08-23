@@ -1128,7 +1128,7 @@
 	/* --itx-control-toggle-width: 2.5rem; */
 	/* --itx-control-transition: var(--itx-duration-fast) var(--itx-easing-standard); */ /* (fallback) */
 	/* --itx-neutral-14: ; */ /* no default — unset unless you set it */
-	/* --itx-neutral-2: #ffffff; */ /* (fallback) */
+	/* --itx-neutral-2: ; */ /* no default — unset unless you set it */
 	/* --itx-neutral-3: ; */ /* no default — unset unless you set it */
 	/* --itx-neutral-8: var(--itx-neutral-3); */ /* (fallback) */
 }

@@ -145,3 +145,66 @@ it was as a bare fallback. The additions above went into root-only blocks for
 that reason. The seventeen static tokens already sitting in visimorph's
 per-layer block have the same defect and are worth splitting out — that is the
 next piece of work here, and it is a behaviour fix rather than tidying.
+
+---
+
+## The count was wrong four times over — 2026-08-23
+
+The headline numbers in this file came from heuristics, and every successive
+filter cut them down. Recording the sequence, because the lesson is about
+measurement rather than tokens.
+
+**Dead theme tokens: 73 → 1.** The detector matched `var(--token` as a literal
+string, so it missed every read where `var(` and the token sit on different
+lines — which is how prettier formats any long declaration — and it scanned only
+`.css`, missing tokens read from TypeScript. The one real case was
+`--itx-toast-focus-offset-tight`, now wired.
+
+**Contradictions: 154 → 29.** Four classes of false positive, each of which
+looked exactly like a defect until the case was read:
+
+| filter | left | what it removed |
+| --- | --- | --- |
+| — | 156 | |
+| fallback is a no-opinion default (`initial`, `none`, `auto`) | 76 | the foundation declining to have an opinion is correct |
+| theme declares it only in a state or variant block | 60 | the base fallback IS the base value |
+| state inherits its own base (`--x-completed` → `var(--x…)`) | 38 | by design; the name-list version missed `-completed`, `-skipped`, `-error`, `-reviewed`, `-locked` |
+| declaration is contextual, from another component's block | 29 | the toolbar setting `--itx-button-height: auto` is not the button's base |
+
+The general rule that replaced the name list is worth keeping: a fallback that
+references a token which is a **prefix** of the one being read is a state
+reading its base, whatever the suffix happens to be called.
+
+## Done — the hardcoded colour fallbacks
+
+Nine, removed. These were the unambiguous half: light-only literals that would
+have been wrong in dark mode had they ever fired.
+
+    var(--itx-neutral-2, #ffffff)              ×2   a PALETTE token with a hex fallback
+    var(--itx-control-toggle-thumb-color, #ccc)
+    var(--itx-tooltip-background, #333)
+    var(--itx-tooltip-foreground, #fff)
+    var(--itx-icon-missing-color, red)
+    var(--itx-stepper-menu-background-color, white)
+    var(--itx-dialog-background, Canvas)
+    var(--itx-dialog-foreground, CanvasText)
+
+Verified unreachable before removal by measuring each token at its read site,
+and measured again after: byte-identical.
+
+## Remaining — 29, and they want reading not sweeping
+
+Every one of the 29 is a real second opinion, but they are not one job. Three
+shapes:
+
+- **Token-shadowing duplicates** — `--itx-table-cell-padding: 0.75rem 1rem`
+  against `var(--itx-spacing-3) var(--itx-spacing-4)`. Same pixels today, and
+  the literal cannot follow a rescale.
+- **Competing design values** — `--itx-step-list-column-gap: 0px` against
+  `48px`, `--itx-stepper-viewport-block-size: 24rem` against `32rem`. Someone
+  has to decide what an incomplete custom theme should get.
+- **Competing chains** — `--itx-indicator-border-radius` falling back to
+  `var(--itx-inner-radius…)` while the theme says `var(--itx-radius)`. These
+  interact with the placement rules and need reading in context.
+
+Stepper (8) and table (6) are half the list.

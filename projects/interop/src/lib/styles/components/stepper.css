@@ -558,7 +558,7 @@
 	min-inline-size: var(--itx-stepper-menu-min-width, 12rem);
 	max-inline-size: var(--itx-stepper-menu-max-width, 20rem);
 	max-block-size: var(--itx-stepper-menu-max-height, 60vh);
-	background: var(--itx-stepper-menu-background-color, white);
+	background: var(--itx-stepper-menu-background-color);
 	border-color: var(--itx-stepper-menu-border-color, transparent);
 	border-width: var(
 		--itx-stepper-menu-border-width,

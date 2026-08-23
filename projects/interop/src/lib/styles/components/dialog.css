@@ -49,8 +49,8 @@
 	border: var(--itx-dialog-border-width, var(--itx-border-width-thick)) solid
 		var(--itx-dialog-border-color, var(--itx-neutral-8, currentColor));
 	border-radius: var(--itx-dialog-border-radius, var(--itx-radius));
-	background: var(--itx-dialog-background, Canvas);
-	color: var(--itx-dialog-foreground, CanvasText);
+	background: var(--itx-dialog-background);
+	color: var(--itx-dialog-foreground);
 	box-shadow: var(--itx-dialog-shadow, 0 8px 32px rgba(0 0 0 / 0.18));
 	overflow-y: auto;
 	overflow-x: hidden;
