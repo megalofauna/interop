@@ -27,9 +27,9 @@
 				the base size (md).
 			</p>
 			<!--<button interop-button="" itx-size="xs">Extra small</button>-->
-			<button interop-button="" itx-size="sm">Small</button>
-			<button interop-button="" itx-size="md">Medium</button>
-			<button interop-button="" itx-size="lg">Large</button>
+			<button interop-button="primary" itx-size="sm">Small</button>
+			<button interop-button="primary" itx-size="md">Medium</button>
+			<button interop-button="primary" itx-size="lg">Large</button>
 			<!--<button interop-button="" itx-size="xl">Extra large</button>-->
 			<itx-code-block [files]="sizeFiles" />
 		</demo-example>
@@ -44,13 +44,13 @@
 				<code>full</code> additionally switches <code>corner-shape</code> to
 				<code>round</code>, since the default squircle cannot form a stadium.
 			</p>
-			<button interop-button itx-radius="none">None</button>
-			<button interop-button itx-radius="nominal">Nominal</button>
-			<button interop-button itx-radius="sm">Small</button>
-			<button interop-button itx-radius="md">Medium</button>
-			<button interop-button itx-radius="lg">Large</button>
-			<button interop-button itx-radius="xl">Extra large</button>
-			<button interop-button itx-radius="full">Full</button>
+			<button interop-button="secondary" itx-radius="none">None</button>
+			<button interop-button="secondary" itx-radius="nominal">Nominal</button>
+			<button interop-button="secondary" itx-radius="sm">Small</button>
+			<button interop-button="secondary" itx-radius="md">Medium</button>
+			<button interop-button="secondary" itx-radius="lg">Large</button>
+			<button interop-button="secondary" itx-radius="xl">Extra large</button>
+			<button interop-button="secondary" itx-radius="full">Full</button>
 			<itx-code-block language="html" [code]="radiusCode" />
 		</demo-example>
 
@@ -64,10 +64,9 @@
 				wrapper keeps specificity at zero, so any default may be overridden from
 				a consumer stylesheet.
 			</p>
-			<button itx-size="md" interop-button="tertiary">Tertiary</button>
-			<button itx-size="md" interop-button="secondary">Secondary</button>
 			<button itx-size="md" interop-button="primary">Primary</button>
-			<button itx-size="md" interop-button="interop-demo">Custom</button>
+			<button itx-size="md" interop-button="secondary">Secondary</button>
+			<button itx-size="md" interop-button="tertiary">Tertiary</button>
 			<itx-code-block [files]="variantFiles" />
 		</demo-example>
 

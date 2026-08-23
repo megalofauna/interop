@@ -51,7 +51,7 @@ import { join } from "node:path";
 const ROOT = process.argv[2] ?? "projects/interop/src";
 
 /** Generated files, and specs that exercise the failure mode on purpose. */
-const SKIP = /interop\.(starter|tokens)\.css$|ladder\.css$|\.spec\.ts$/;
+const SKIP = /interop\.(globals|tokens)\.css$|ladder\.css$|\.spec\.ts$/;
 
 const KEYWORDS = "unset|initial|inherit|revert|revert-layer";
 

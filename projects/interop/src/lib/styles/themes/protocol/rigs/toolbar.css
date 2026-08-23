@@ -24,7 +24,9 @@
 	--itx-toolbar-padding: var(--itx-spacing-1) var(--itx-spacing-1);
 	--itx-toolbar-background: transparent;
 	--itx-toolbar-border-color: transparent;
-	/*--itx-toolbar-border-radius: var(--itx-radius-full);*/
+	/* Square. The pill was commented out and the foundation's 0 became the
+	   shipped value; this states it rather than leaving it to a fallback. */
+	--itx-toolbar-border-radius: 0;
 
 	/* State */
 	--itx-toolbar-disabled-opacity: 0.6;
@@ -40,8 +42,20 @@
  * stack visual weight on top of it.
  */
 
-:where(interop-toolbar),
-:where([interop-toolbar]) {
+/* Targets the BUTTONS, not the toolbar.
+ *
+ * These used to be declared on the toolbar and reach its buttons by
+ * inheritance, which worked only while the button theme declared its own base
+ * somewhere higher up the tree. That base now sits on `:where([interop-button])`
+ * — on the element itself — and an element's own declaration beats anything it
+ * inherits, so a toolbar-level declaration no longer reaches. Measured: the
+ * toolbar's buttons went back to the 40px base height and the default fill.
+ *
+ * Both selectors carry zero specificity, so precedence is source order inside
+ * `interop.theme`. protocol.css imports rigs after components (line 94 vs 55)
+ * deliberately, and this rule depends on that ordering. */
+:where(interop-toolbar) :where([interop-button]),
+:where([interop-toolbar]) :where([interop-button]) {
 	--itx-button-display: inline-flex;
 
 	/* font-family is deliberately NOT set. The toolbar wants the ambient font,

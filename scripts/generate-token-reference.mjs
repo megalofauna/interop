@@ -5,13 +5,13 @@
  * Emits `styles/interop.tokens.css` — one commented block per component,
  * listing every lever that component actually has, with its current value.
  *
- * ── Why this is separate from the starter ─────────────────────────────────
+ * ── Why this is separate from the globals file ───────────────────────────
  *
- * interop.starter.css is 19 global knobs and its whole value is being short
+ * interop.globals.css is 19 global knobs and its whole value is being short
  * enough to read: every line is a decision someone might make about the whole
  * product. There are 700-odd component levers. Putting them in the same file
  * would bury the four knobs that matter under a wall of per-component detail,
- * and the two have different lifecycles anyway — the starter is edit-once-and-
+ * and the two have different lifecycles anyway — the globals file is edit-once-and-
  * keep, this is look-up-one-thing-and-close.
  *
  * ── Why generated ─────────────────────────────────────────────────────────
@@ -168,7 +168,7 @@ const out = [
  * ${components.length} components, every value read from the library source.
  *
  * This is a lookup sheet, not a file to adopt wholesale. The companion file
- * interop.starter.css holds the ${"global"} knobs — radius, motion, focus, tint —
+ * interop.globals.css holds the ${"global"} knobs — radius, motion, focus, tint —
  * and is the one you copy and keep. Come here when you want to change one
  * component rather than the whole product.
  *
@@ -190,7 +190,7 @@ const out = [
  * ── "falls through to …" ─────────────────────────────────────────────────
  *
  * The component declares nothing of its own and the named system token governs
- * it. Set that one in interop.starter.css to move every component at once, or
+ * it. Set that one in interop.globals.css to move every component at once, or
  * set the component token here to make this one diverge.
  *
  * ── Values marked (fallback) ─────────────────────────────────────────────
@@ -218,7 +218,7 @@ for (const c of components) {
 			);
 		} else if (l.fallsThroughTo) {
 			out.push(
-				`\t/* --${l.token.slice(2)}: ; */ /* falls through to ${l.fallsThroughTo} — set globally in interop.starter.css */`,
+				`\t/* --${l.token.slice(2)}: ; */ /* falls through to ${l.fallsThroughTo} — set globally in interop.globals.css */`,
 			);
 		} else if (l.derivesFromPrivate) {
 			out.push(

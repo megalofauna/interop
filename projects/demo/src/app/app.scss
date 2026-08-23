@@ -161,8 +161,7 @@
 	// Squared, house hairline, fixed type — the same three corrections as the
 	// palette's own panel and its landing cards, so the trigger and the thing it
 	// opens read as one component.
-	border: 1px solid var(--itx-neutral-8);
-	border-radius: var(--itx-radius-none);
+	border-radius: var(--itx-radius);
 	background: none;
 	color: var(--itx-neutral-9);
 	font-size: 0.75rem;

@@ -41,7 +41,13 @@
  *                                     palette solid blue.
  */
 
-:where([interop-root], [itx-layer], [itx-sink]) {
+/* Declared on the component, not co-declared on the elevation boundaries. The
+   colour tokens this aliased were ranks solved per surface, so a rank parked
+   higher up froze layer 0's value for the whole tree; the palette replaced them
+   and is page-relative, so that reason expired. Co-declaration is not free — it
+   re-declares at every boundary and wipes a consumer's override one layer down.
+   See tokens/placement.spec.ts. */
+:where(dialog[interop-command-palette]) {
 	/* shell */
 	--itx-cmdp-inline-size: 92vw;
 	--itx-cmdp-max-inline-size: 36rem;
@@ -55,13 +61,16 @@
 	   sub-0.1 luminance delta against our surfaces, i.e. an edge you cannot
 	   see. Same value as the table's row rules and the tab list. */
 	--itx-cmdp-border-color: var(--itx-neutral-2);
-	/* Two radii, one per state. Collapsed the palette is a single pill-shaped
-	   search bar; expanded it is a panel, and a full radius on a tall panel
-	   reads as a mistake. --itx-cmdp-radius stays as the fallback for both so
-	   an existing consumer override still moves the whole thing. */
+	/* Follows the house knob, like everything else.
+
+	   There were two radii here, one per state, on the theory that a panel
+	   wants a squarer corner than the collapsed search bar. The distinction
+	   never operated: -expanded was defined as -collapsed, so both resolved to
+	   the same nominal value, and because -collapsed was always declared the
+	   `var(…, var(--itx-cmdp-radius))` fallback in the foundation could never
+	   fire. --itx-cmdp-radius was unreachable and the house knob did not reach
+	   the palette at all — a comment here claimed the opposite. */
 	--itx-cmdp-radius: var(--itx-radius);
-	--itx-cmdp-radius-collapsed: var(--itx-radius-nominal);
-	--itx-cmdp-radius-expanded: var(--itx-cmdp-radius-collapsed);
 
 	/* The bar is the focus locus (see components/command-palette.css). */
 	--itx-cmdp-field-focus-offset: -2px;
@@ -115,7 +124,7 @@
 	--itx-cmdp-clear-color: var(--itx-neutral-14);
 
 	/* list */
-	--itx-cmdp-list-padding: var(--itx-spacing-1);
+	--itx-cmdp-list-padding: var(--itx-spacing-2);
 
 	/* option */
 	--itx-cmdp-option-gap: var(--itx-spacing-3);

@@ -56,7 +56,7 @@
  * lands at 0.507, which is indistinguishable from where it started.
  */
 
-:where([interop-root], [itx-layer], [itx-sink]) {
+:where(section[interop-tabs]) {
 	/* ── Tablist ────────────────────────────────────────────────────────── */
 	--itx-tabs-tablist-display: flex;
 	--itx-tabs-tablist-flex-wrap: nowrap;
@@ -110,11 +110,17 @@
 	--itx-tab-transition-easing: var(--itx-easing-standard);
 }
 
+/* Declared on the component, not co-declared on the elevation boundaries. The
+   colour tokens this aliased were ranks solved per surface, so a rank parked
+   higher up froze layer 0's value for the whole tree; the palette replaced them
+   and is page-relative, so that reason expired. Co-declaration is not free — it
+   re-declares at every boundary and wipes a consumer's override one layer down.
+   See tokens/placement.spec.ts. */
 /*
  * Panel. Padding matches the tab's own inline padding so projected content and
  * the first tab's label align on the same optical edge.
  */
-:where([interop-root], [itx-layer], [itx-sink]) {
+:where(section[interop-tabs]) {
 	--itx-tab-panel-padding-block: var(--itx-spacing-4);
 	--itx-tab-panel-padding-inline: var(--itx-spacing-4);
 }

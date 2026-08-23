@@ -1,7 +1,7 @@
 /*
  * Shared CSS reading helpers for the generators.
  *
- * Extracted so generate-starter.mjs and generate-token-reference.mjs cannot
+ * Extracted so generate-globals.mjs and generate-token-reference.mjs cannot
  * disagree about what a file says. Both of them read the SAME source the
  * library ships, which is the only reason either output can claim not to drift.
  */
@@ -16,7 +16,7 @@ export const decomment = (s) =>
  * Without this a reader picks up overrides as if they were defaults, and the
  * failure is silent and severe: motion.css declares --itx-duration-base as
  * 200ms at the root and 0ms inside @media (prefers-reduced-motion: reduce), so
- * the first version of the starter generator emitted a file that switched
+ * the first version of the globals generator emitted a file that switched
  * motion off for everyone who copied it.
  */
 export function stripAtRules(src) {
@@ -131,7 +131,7 @@ export function readOverrides(src, token) {
  *
  * A component reads plenty of these — --itx-surface, --itx-contrast-4,
  * --itx-radius — but they are not that component's levers. They are set once,
- * globally, which is what interop.starter.css is for.
+ * globally, which is what interop.globals.css is for.
  */
 export const SYSTEM_TOKEN =
 	/^--itx-(surface|contrast|radius|border-width|duration|easing|focus|spacing|sz|font|line-height|measure|rhythm|colorway|danger|info|success|warning|tint|ramp|layer|shadow|decoration|context-radius|outer-radius|inner-radius)\b/;

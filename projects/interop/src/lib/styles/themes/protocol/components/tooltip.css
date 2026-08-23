@@ -8,11 +8,15 @@
  * light and dark color schemes via light-dark().
  */
 
-/* Co-declared on the elevation boundaries, not the bare root: a custom
-   property substitutes where it is DECLARED, so aliasing a rank at the
-   root freezes layer 0's value for the whole tree. See css-strategy.md,
-   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
-:where([interop-root], [itx-layer], [itx-sink]) {
+/* Declared on the panel itself.
+
+   The panel is created in JS and appended into the nearest [interop-root]
+   specifically so these tokens would cascade into it — see the comment at
+   interop-tooltip.directive.ts:194. Declaring them on the panel removes that
+   dependency: the element that reads the tokens now carries them, and the
+   append location becomes a positioning decision rather than a theming one.
+   See tokens/placement.spec.ts for the rule. */
+:where(.interop-tooltip__panel) {
 	/* ── Appearance ─────────────────────────────────────────────────── */
 	/*
 	 * Another inversion that does not collapse, and for a different reason

@@ -31,11 +31,13 @@
  * on each token below name the single value that walks it back.
  */
 
-/* Co-declared on the elevation boundaries, not the bare root: a custom
-   property substitutes where it is DECLARED, so aliasing a rank at the
-   root freezes layer 0's value for the whole tree. See css-strategy.md,
-   "Co-declaration", and the specs in tokens/elevation.spec.ts. */
-:where([interop-root], [itx-layer], [itx-sink]) {
+/* Declared on the component, not co-declared on the elevation boundaries. The
+   colour tokens this aliased were ranks solved per surface, so a rank parked
+   higher up froze layer 0's value for the whole tree; the palette replaced them
+   and is page-relative, so that reason expired. Co-declaration is not free — it
+   re-declares at every boundary and wipes a consumer's override one layer down.
+   See tokens/placement.spec.ts. */
+:where(fieldset[interop-segmented-control]) {
 	/* Focus — the only deviation from the system ring. Inset: segments abut, so an outset ring would cross the divider.
 	   Colour, width and style come from tokens/focus.css. */
 	--itx-segment-focus-offset: -2px;
@@ -85,7 +87,12 @@
 	   falls through to the global --itx-radius knob, which is `none`. Set
 	   --itx-radius (or --itx-radius-1 on the control) to restore Carbon's
 	   value. */
-	--itx-segmented-control-track-padding: 0;
+	/* 0px, not 0: this feeds calc() in --itx-inner-radius below, and CSS calc
+	   cannot subtract a unitless number from a length. As a bare `0` the whole
+	   expression was invalid at computed-value time, so every nested radius
+	   reading it silently collapsed to 0 — the mechanism was wired correctly
+	   and had never once produced a value. */
+	--itx-segmented-control-track-padding: 0px;
 	--itx-segmented-control-track-max-width: none;
 
 	/* ── Segment — layout ───────────────────────────────────────────────── */
