@@ -12,8 +12,9 @@
 			[id]="panel.tabId()"
 			[attr.aria-selected]="panel.isActive()"
 			[attr.aria-controls]="panel.panelId()"
-			[tabindex]="panel.isActive() ? 0 : -1"
+			[tabindex]="rovingKey() === panel.key() ? 0 : -1"
 			(click)="selectPanel(panel.key())"
+			(focus)="onTabFocus(panel.key())"
 			(keydown)="onTabKeydown($event, panel.key())"
 		>
 			@if (panel.labelTemplate(); as tmpl) {
