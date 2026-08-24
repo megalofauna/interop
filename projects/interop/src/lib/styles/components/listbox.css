@@ -33,12 +33,40 @@
 
 /* ── Host ────────────────────────────────────────────────────────────────── */
 
+/*
+ * The container had no levers at all — five hardcoded lines, and the only
+ * --itx-listbox-* tokens in existence were the four focus ones. There was no
+ * way to paint a background, draw an edge, round a corner, pad the box or cap
+ * its height, which is a component that cannot be themed.
+ *
+ * display / list-style / margin stay hardcoded. They are structural resets the
+ * option rows depend on, not styling, and a `display` lever on a container
+ * whose children assume block flow is a footgun rather than a knob.
+ *
+ * No box-shadow token: elevation belongs to whatever floats the list, and an
+ * unused lever is the class of dead token the theme sweep just removed.
+ */
 :where(ul[interop-listbox], ol[interop-listbox]) {
 	display: block;
-	overflow-y: auto;
 	list-style: none;
 	margin: 0;
-	padding: 0;
+
+	padding: var(--itx-listbox-padding);
+	overflow-y: var(--itx-listbox-overflow);
+	max-block-size: var(--itx-listbox-max-block-size);
+	max-inline-size: var(--itx-listbox-max-inline-size);
+
+	background-color: var(--itx-listbox-background);
+	background-image: var(--itx-listbox-background-image);
+	border-color: var(--itx-listbox-border-color);
+	border-width: var(--itx-listbox-border-width);
+	border-style: var(--itx-listbox-border-style);
+	/* The same chain the option row uses below — declare nothing in the theme
+	   and the house knob governs. See tokens/shape.css. */
+	border-radius: var(
+		--itx-listbox-border-radius,
+		var(--itx-radius-attr, var(--itx-radius))
+	);
 }
 
 /*

@@ -183,3 +183,24 @@
 	   opinion it had actually declined. */
 	--itx-step-indicator-size: 2rem;
 }
+
+/*
+ * The nested listbox gives up its own surface.
+ *
+ * The menu is a popover and already paints a background, an edge and a corner,
+ * so a listbox that also paints one would double every edge. The listbox now
+ * has a real default rather than a pre-emptively absent one, which means the
+ * context that does not want it has to say so — this is the toolbar-and-button
+ * shape again, and the segmented-control-and-indicator shape.
+ *
+ * Targets the LIST, not the menu: an element's own declaration beats anything
+ * it inherits, so setting these on the popover would not reach. Both selectors
+ * are zero-specificity, so precedence is source order inside `interop.theme`,
+ * and protocol.css imports listbox at line 68 and this file at 73.
+ */
+:where(.interop-stepper__menu-list) {
+	--itx-listbox-background: transparent;
+	--itx-listbox-background-image: none;
+	--itx-listbox-border-width: 0;
+	--itx-listbox-padding: 0;
+}

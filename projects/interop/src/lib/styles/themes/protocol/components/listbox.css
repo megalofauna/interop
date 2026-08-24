@@ -2,6 +2,11 @@
  * InteropListbox — Protocol theme.
  *
  * Token surface:
+ *   Container   --itx-listbox-background      --itx-listbox-background-image
+ *               --itx-listbox-border-color    --itx-listbox-border-width
+ *               --itx-listbox-border-style    --itx-listbox-padding
+ *               --itx-listbox-overflow        --itx-listbox-max-block-size
+ *               --itx-listbox-max-inline-size
  *   Row box     --itx-option-gap              --itx-option-min-block-size
  *               --itx-option-padding-block    --itx-option-padding-inline
  *   Type        --itx-option-font-size        --itx-option-line-height
@@ -57,6 +62,33 @@
  */
 
 :where([interop-root] ul[interop-listbox], [interop-root] ol[interop-listbox]) {
+	/* ── Container ──────────────────────────────────────────────────────────
+	 * A listbox states what a listbox looks like, and a context that nests it
+	 * suppresses what it does not want — the stepper's menu does exactly that,
+	 * because its popover already provides the surface.
+	 *
+	 * The inverse arrangement is the tempting one: leave the container
+	 * unpainted so it never doubles up on a parent. It is what this file did,
+	 * and the cost is that a child with no opinion is indistinguishable from a
+	 * child whose opinion is broken — which is how the container went without a
+	 * single lever for as long as it did.
+	 *
+	 * Values mirror popover.css, the closest comparable container, so a
+	 * standalone list and a floating panel read as one system. Radius is absent
+	 * on purpose: the structural rule reads the house chain.
+	 */
+	--itx-listbox-background: var(--itx-surface-above);
+	--itx-listbox-background-image: none;
+	--itx-listbox-border-color: var(--itx-neutral-8);
+	--itx-listbox-border-width: var(--itx-border-width-hairline);
+	--itx-listbox-border-style: solid;
+	--itx-listbox-padding: var(--itx-spacing-1);
+	/* `auto` was hardcoded and inert — nothing constrained the height, so it
+	   never scrolled. It works now that max-block-size is a lever. */
+	--itx-listbox-overflow: auto;
+	--itx-listbox-max-block-size: none;
+	--itx-listbox-max-inline-size: none;
+
 	/* ── Row box ────────────────────────────────────────────────────────── */
 	--itx-option-gap: var(--itx-spacing-2);
 	--itx-option-min-block-size: var(--itx-spacing-10);
