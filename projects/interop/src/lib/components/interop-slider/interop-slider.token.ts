@@ -23,10 +23,35 @@ export interface InteropSliderApi {
 	readonly step: Signal<number>;
 	readonly value: Signal<number>;
 	readonly disabled: Signal<boolean>;
+	/**
+	 * Layout orientation. On the interface — not just on the two
+	 * implementations — because `<interop-slider-legend>` has to flip its own
+	 * axis to match, and a legend that read the DOM attribute instead would be
+	 * a second source of truth for the same question. Both implementations
+	 * already had it; a range thumb resolves it from its parent group.
+	 */
+	readonly orientation: Signal<SliderOrientation>;
 	readonly valueText: Signal<SliderValueFormatter | null>;
 	readonly fillPercent: Signal<number>;
 	readonly element: HTMLInputElement;
 	readonly elementId: () => string;
+}
+
+/**
+ * One resolved mark, ready to position. `p` is the mark's fraction of the
+ * slider's `[min, max]` domain — 0 at the minimum, 1 at the maximum.
+ *
+ * Produced by `[interop-slider-marks]` (the only place that normalises marks)
+ * and consumed by `<interop-slider-legend>`, so a label and its tick are
+ * computed once and cannot drift. A 0–1 NUMBER rather than a percentage, for
+ * the same reason `--itx-slider-fill` is: the stylesheet maps it onto the
+ * thumb's travel with `half-target + (100% - target) * p`, and `calc()` can
+ * multiply a length-percentage by a number but cannot divide by a percentage.
+ */
+export interface SliderLegendItem {
+	readonly value: number;
+	readonly label: string;
+	readonly p: number;
 }
 
 export const INTEROP_SLIDER_TOKEN = new InjectionToken<InteropSliderApi>(

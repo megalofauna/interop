@@ -4,6 +4,7 @@ import {
 	InteropButton,
 	InteropCellDef,
 	InteropSlider,
+	InteropSliderLegend,
 	InteropSliderMarks,
 	InteropSliderRange,
 	InteropSliderThumb,
@@ -42,11 +43,19 @@ interface ApiOutputEntry {
 
 const SHIRT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
 
+/**
+ * `SliderMark` is a union — a bare number, or `{ value, label? }`. These
+ * examples only use the labelled variant, and the formatter below reads the
+ * label back, so narrowing it here beats narrowing at every use site.
+ */
+type LabeledMark = { value: number; label: string };
+
 @Component({
 	selector: "slider-page",
 	standalone: true,
 	imports: [
 		InteropSlider,
+		InteropSliderLegend,
 		InteropSliderMarks,
 		InteropSliderRange,
 		InteropSliderThumb,
@@ -146,14 +155,57 @@ readonly sizeFormatter = (v: number): string =>
 		{ label: "component.ts", language: "ts", code: this.sizesTs },
 	];
 
+	/*
+	 * A field, not an inline array literal in the template. A literal is a new
+	 * reference on every change-detection pass, which would re-run the marks
+	 * directive's normalisation — and the legend's — for no reason.
+	 */
+	readonly qualityMarks: LabeledMark[] = [
+		{ value: 0, label: "Low" },
+		{ value: 25, label: "Med" },
+		{ value: 50, label: "High" },
+		{ value: 75, label: "Best" },
+		{ value: 100, label: "Max" },
+	];
+
+	/*
+	 * The legend is aria-hidden, so the vocabulary it shows has to reach a
+	 * screen reader some other way. This is that way — one formatter driving
+	 * aria-valuetext, which is exactly the pattern the "Value text" example
+	 * above demonstrates.
+	 */
+	readonly qualityFormatter = (v: number): string => {
+		const mark = this.qualityMarks.find((m) => m.value === v);
+		return mark ? `${v} (${mark.label})` : String(v);
+	};
+
 	private readonly marksHtml = `<input type="range" interop-slider id="quality"
        [min]="0" [max]="100" [step]="5"
        [(value)]="quality"
-       [interop-slider-marks]="[0, 25, 50, 75, 100]"
+       [interop-slider-marks]="qualityMarks"
        [interop-slider-marks-subdivisions]="5"
-       aria-label="Quality" />`;
+       [valueText]="qualityFormatter"
+       aria-label="Quality" />
 
-	private readonly marksTs = `quality = signal(75);`;
+<interop-slider-legend for="quality" />`;
+
+	private readonly marksTs = `quality = signal(75);
+
+// SliderMark also accepts bare numbers; narrowed here because the
+// formatter below reads the label back.
+readonly qualityMarks: { value: number; label: string }[] = [
+  { value: 0,   label: "Low"  },
+  { value: 25,  label: "Med"  },
+  { value: 50,  label: "High" },
+  { value: 75,  label: "Best" },
+  { value: 100, label: "Max"  },
+];
+
+// The legend is aria-hidden — it restates visually what this announces.
+readonly qualityFormatter = (v: number): string => {
+  const mark = this.qualityMarks.find((m) => m.value === v);
+  return mark ? \`\${v} (\${mark.label})\` : String(v);
+};`;
 
 	readonly marksFiles: CodeFile[] = [
 		{ label: "template.html", language: "html", code: this.marksHtml },
@@ -184,13 +236,34 @@ readonly currencyFormatter = (v: number): string =>
 		{ label: "component.ts", language: "ts", code: this.rangeTs },
 	];
 
-	private readonly verticalHtml = `<input type="range" interop-slider
+	readonly tempMarks: LabeledMark[] = [
+		{ value: 0, label: "0°" },
+		{ value: 25, label: "25°" },
+		{ value: 50, label: "50°" },
+		{ value: 75, label: "75°" },
+		{ value: 100, label: "100°" },
+	];
+
+	private readonly verticalHtml = `<input type="range" interop-slider id="temp"
        [orientation]="'vertical'"
        [(value)]="temperature"
+       [interop-slider-marks]="tempMarks"
+       [interop-slider-marks-subdivisions]="5"
        style="--itx-slider-length: 12rem"
-       aria-label="Temperature" />`;
+       aria-label="Temperature" />
 
-	private readonly verticalTs = `temperature = signal(72);`;
+<!-- Orientation is read from the slider. The LENGTH is not: the theme
+     declares --itx-slider-* on the host elements, so a value on a shared
+     ancestor is shadowed, and the legend has to be told the same one. -->
+<interop-slider-legend for="temp" style="--itx-slider-length: 12rem" />`;
+
+	private readonly verticalTs = `temperature = signal(72);
+
+readonly tempMarks: SliderMark[] = [
+  { value: 0, label: "0°" }, { value: 25, label: "25°" },
+  { value: 50, label: "50°" }, { value: 75, label: "75°" },
+  { value: 100, label: "100°" },
+];`;
 
 	readonly verticalFiles: CodeFile[] = [
 		{ label: "template.html", language: "html", code: this.verticalHtml },
@@ -315,7 +388,24 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-length",
-			default: "var(--itx-spacing-2) — 8px, across the track",
+			default:
+				"var(--itx-spacing-5) — 20px, across the track. Longer than the resting thumb (14px) on purpose: the endpoint tick has to clear the parked circle, or there is nothing for the eye to read the handle's overhang against. Sets BOTH tick ranks — one background-size covers every layer.",
+		},
+		{
+			property: "--itx-slider-legend-color",
+			default: "var(--itx-neutral-9)",
+		},
+		{
+			property: "--itx-slider-legend-font-size",
+			default: "0.75rem — Carbon $label-01, a fixed rem, never a clamp()",
+		},
+		{
+			property: "--itx-slider-legend-line-height",
+			default: "1.3333",
+		},
+		{
+			property: "--itx-slider-legend-gap",
+			default: "var(--itx-spacing-2) — 8px between track and labels",
 		},
 		{
 			property: "--itx-slider-mark-minor-color",
@@ -495,6 +585,15 @@ onSubmit(event: SubmitEvent): void {
 			default: "0",
 			description:
 				"N produces N − 1 dimmed minor ticks between each pair of majors. Requires uniformly-spaced majors spanning the full range; 0 or 1 disables them.",
+		},
+		{
+			directive: "interop-slider-legend",
+			name: "for",
+			type: "string",
+			default: "—",
+			required: true,
+			description:
+				"ID of the slider whose marks this legend labels. Renders one label per mark carrying a { value, label }, centred on its own tick; aria-hidden, so give the slider a [valueText] to announce the same vocabulary.",
 		},
 		{
 			directive: "output[interop-slider-value]",

@@ -1,4 +1,5 @@
 import {
+	DestroyRef,
 	Directive,
 	afterNextRender,
 	computed,
@@ -6,9 +7,11 @@ import {
 	input,
 	isDevMode,
 } from "@angular/core";
+import { InteropSliderRegistry } from "./interop-slider-registry";
 import {
 	INTEROP_SLIDER_TOKEN,
 	type InteropSliderApi,
+	type SliderLegendItem,
 } from "./interop-slider.token";
 
 export type SliderMark = number | { value: number; label?: string };
@@ -67,6 +70,22 @@ const TOL = 1e-9;
  * per tick — heavier output but still functional. Prefer uniform marks
  * whenever possible.
  *
+ * Every tick is painted in the thumb's TRAVEL space, not across the whole
+ * element: a native range reserves the thumb's box at each end, so a tick at a
+ * raw percentage of the control misses the parked thumb by half the thumb
+ * target. The stylesheet handles that by sizing the mark band to the travel
+ * (`--_mark-size`), which is why nothing here does endpoint arithmetic — see
+ * the "Marks are painted in the thumb's TRAVEL space" note in
+ * `styles/components/slider.css`.
+ *
+ * ## Labels
+ * A mark supplied as `{ value, label }` is rendered as visible text by
+ * `<interop-slider-legend for="…">`, a sibling component. This directive
+ * publishes its resolved marks — value, label and fraction of the domain — to
+ * `InteropSliderRegistry` under the slider's element id, so the legend reads
+ * back the SAME normalisation that produced the tick. A label therefore cannot
+ * drift from the tick it names.
+ *
  * ## Tokens
  *   --itx-slider-mark-color           Major tick color (default --itx-contrast-3).
  *   --itx-slider-mark-thickness       Major tick width along the track (2px).
@@ -107,12 +126,14 @@ export class InteropSliderMarks {
 		INTEROP_SLIDER_TOKEN,
 		{ self: true, optional: true },
 	);
+	private readonly registry = inject(InteropSliderRegistry);
+	private readonly destroyRef = inject(DestroyRef);
 
 	/**
 	 * Major mark positions. Either a list of values, or objects with
-	 * `{ value, label? }`. Labels are accepted for forward-compatibility
-	 * but not yet rendered — supply your own label row beneath the
-	 * slider for now.
+	 * `{ value, label? }`. A mark carrying a label is rendered as visible
+	 * text by `<interop-slider-legend for="…">`, centred on its own tick;
+	 * marks without one draw a tick and nothing else.
 	 */
 	readonly marks = input<SliderMark[]>([], { alias: "interop-slider-marks" });
 
@@ -126,18 +147,32 @@ export class InteropSliderMarks {
 		alias: "interop-slider-marks-subdivisions",
 	});
 
-	private readonly majorPercents = computed<number[]>(() => {
+	/**
+	 * Every in-range mark, sorted, with its label and its fraction of the
+	 * domain. THE normalisation — the tick gradients and the legend both
+	 * derive from this one computed, so a label can never disagree with the
+	 * tick it sits under about where the value is.
+	 */
+	readonly resolved = computed<SliderLegendItem[]>(() => {
 		const slider = this.slider;
 		if (!slider) return [];
 		const min = slider.min();
 		const max = slider.max();
 		if (max === min) return [];
 		return this.marks()
-			.map((m) => (typeof m === "number" ? m : m.value))
-			.filter((v) => v >= min && v <= max)
-			.sort((a, b) => a - b)
-			.map((v) => ((v - min) / (max - min)) * 100);
+			.map((m) =>
+				typeof m === "number"
+					? { value: m, label: "" }
+					: { value: m.value, label: m.label ?? "" },
+			)
+			.filter((m) => m.value >= min && m.value <= max)
+			.sort((a, b) => a.value - b.value)
+			.map((m) => ({ ...m, p: (m.value - min) / (max - min) }));
 	});
+
+	private readonly majorPercents = computed<number[]>(() =>
+		this.resolved().map((m) => m.p * 100),
+	);
 
 	/**
 	 * Returns the uniform stride (in %) IF all majors are evenly spaced
@@ -161,17 +196,13 @@ export class InteropSliderMarks {
 		if (m.length === 0) return null;
 		const stride = this.uniformMajorStride();
 		if (stride !== null) {
-			// Uniform [0, 100] coverage: middle ticks via a single repeating
-			// gradient, edge ticks (0% and 100%) layered on top so they sit
-			// flush to the track edges instead of being clipped off-screen.
-			return [
-				edgeTickStart(MAJOR_COLOR, MAJOR_THICKNESS),
-				edgeTickEnd(MAJOR_COLOR, MAJOR_THICKNESS),
-				repeatingCenteredTicks(stride, MAJOR_COLOR, MAJOR_THICKNESS),
-			].join(", ");
+			return uniformTicks(stride / 100, MAJOR_COLOR, MAJOR_THICKNESS, "0px");
 		}
-		// Fallback: rare, opt-in, non-uniform marks
-		return perTickGradient(m, MAJOR_COLOR, MAJOR_THICKNESS);
+		return everyTickInOneGradient(
+			m.map((pct) => pct / 100),
+			MAJOR_COLOR,
+			MAJOR_THICKNESS,
+		);
 	});
 
 	protected readonly minorBackground = computed(() => {
@@ -179,17 +210,27 @@ export class InteropSliderMarks {
 		if (subs < 2) return null;
 		const majorStride = this.uniformMajorStride();
 		if (majorStride === null) return null;
-		// Minors at 0% and 100% are visually covered by major edge ticks, so
-		// we don't bother enhancing them — the half-clipped repeating output
-		// hides under the majors. Middle minors are centered correctly.
-		return repeatingCenteredTicks(
-			majorStride / subs,
+		return uniformTicks(
+			majorStride / 100 / subs,
 			MINOR_COLOR,
 			MINOR_THICKNESS,
+			MINOR_PHASE,
 		);
 	});
 
 	constructor() {
+		// Publish the resolved marks under the slider's element id, the same key
+		// `<output interop-slider-value for>` already resolves through. The
+		// SIGNAL is registered, not its value, so the legend re-renders on an
+		// input change without the registry having to notice.
+		afterNextRender(() => {
+			const slider = this.slider;
+			if (!slider) return;
+			const id = slider.elementId();
+			this.registry.registerMarks(id, this.resolved);
+			this.destroyRef.onDestroy(() => this.registry.unregisterMarks(id));
+		});
+
 		if (isDevMode()) {
 			afterNextRender(() => {
 				if (!this.slider) {
@@ -201,7 +242,7 @@ export class InteropSliderMarks {
 				const subs = this.subdivisions();
 				if (subs !== 0 && subs < 2) {
 					console.warn(
-						`[InteropSliderMarks] subdivisions (${subs}) must be 0 or ≥ 2. ` +
+						`[InteropSliderMarks] subdivisions (${subs}) must be 0 or \u2265 2. ` +
 							"Treating as 0 (no minor ticks).",
 					);
 				}
@@ -217,61 +258,89 @@ export class InteropSliderMarks {
 	}
 }
 
-/**
- * Stripe of width `thickness` flush to the left edge — the explicit "tick
- * at 0%" that the repeating-gradient pattern can't paint correctly.
+/*
+ * ── The tile, and why every offset below is a length rather than a % ────────
+ *
+ * The stylesheet paints these into a tile of
+ * `travel + --itx-slider-mark-thickness`, centred, where travel is the thumb
+ * centre's range. Tile-local 0 is therefore half a MAJOR tick before the
+ * travel's start, which is exactly the room a tick centred on the first value
+ * needs in order not to be clipped.
+ *
+ * Two things follow, and both are why this file no longer paints separate
+ * "edge ticks" on top of the pattern:
+ *
+ *   A tick centred on travel-fraction p sits at tile-local
+ *   `MAJOR_THICKNESS / 2 + p * travel`, and `travel` is expressible inside the
+ *   gradient as `100% - MAJOR_THICKNESS` — because there, `100%` IS the tile.
+ *   So every position is exact, including the outermost two, with no
+ *   special case and no 1px fudge.
+ *
+ *   The first tick's band starts at tile-local 0 and the last one's ends at
+ *   tile-local 100%. Nothing overflows, so `no-repeat` clips nothing, and a
+ *   repeating pattern cannot bleed a spurious tick into the gutter however
+ *   short its period gets.
+ *
+ * MAJOR_THICKNESS is the tile's padding in BOTH cases — a minor tick reads it
+ * too, and takes MINOR_PHASE to put its thinner band back on centre.
  */
-function edgeTickStart(color: string, thickness: string): string {
-	return `linear-gradient(${AXIS}, ${color} 0 ${thickness}, transparent ${thickness})`;
-}
+
+/** The tile's own travel span: everything but the half-tick of padding. */
+const TRAVEL = `calc(100% - ${MAJOR_THICKNESS})`;
 
 /**
- * Stripe of width `thickness` flush to the right edge — the explicit "tick
- * at 100%" that the repeating-gradient pattern can't paint correctly.
+ * How far a minor tick's band must start after a major's for the two to share
+ * a centre — half the difference in their thicknesses.
  */
-function edgeTickEnd(color: string, thickness: string): string {
-	return (
-		`linear-gradient(${AXIS}, ` +
-		`transparent calc(100% - ${thickness}), ` +
-		`${color} calc(100% - ${thickness}) 100%)`
-	);
-}
+const MINOR_PHASE = `calc((${MAJOR_THICKNESS} - ${MINOR_THICKNESS}) / 2)`;
 
 /**
- * Repeating gradient with one centered stripe per cycle. Stripe centers
- * land at `stride`, `2 * stride`, ..., — i.e., at positions, NOT shifted
- * to the left. The 0% and 100% positions get half-stripes (right and
- * left half respectively); callers paint full edge ticks separately.
+ * One repeating gradient, one tick per cycle, centred on
+ * `phase + k * stride * travel` for every k.
+ *
+ * A repeating gradient's period is (last stop - first stop) and it repeats in
+ * BOTH directions from there, so stating the first stop at `phase` is what
+ * sets the pattern's alignment. No `background-position` is involved and none
+ * can be — that would move every layer at once.
  */
-function repeatingCenteredTicks(
-	stridePct: number,
+function uniformTicks(
+	stride: number,
 	color: string,
 	thickness: string,
+	phase: string,
 ): string {
-	const half = `calc(${thickness} / 2)`;
+	const period = `calc(${TRAVEL} * ${stride})`;
 	return (
 		`repeating-linear-gradient(${AXIS}, ` +
-		`${color} 0 ${half}, ` +
-		`transparent ${half} calc(${stridePct}% - ${half}), ` +
-		`${color} calc(${stridePct}% - ${half}) ${stridePct}%)`
+		`${color} ${phase} calc(${phase} + ${thickness}), ` +
+		`transparent calc(${phase} + ${thickness}) calc(${phase} + ${period}))`
 	);
 }
 
-function perTickGradient(
-	positions: number[],
+/**
+ * Non-uniform marks: ONE gradient carrying every tick, not one gradient per
+ * tick. The positions are already sorted, which is the only precondition a
+ * multi-stop gradient has — and a fixed layer count is what lets the
+ * stylesheet give the marks and the track different background-sizes without
+ * the list cycling out of step.
+ */
+function everyTickInOneGradient(
+	fractions: number[],
 	color: string,
 	thickness: string,
 ): string | null {
-	if (positions.length === 0) return null;
+	if (fractions.length === 0) return null;
 	const half = `calc(${thickness} / 2)`;
-	return positions
-		.map(
-			(pct) =>
-				`linear-gradient(${AXIS}, ` +
-				`transparent calc(${pct}% - ${half}), ` +
-				`${color} calc(${pct}% - ${half}), ` +
-				`${color} calc(${pct}% + ${half}), ` +
-				`transparent calc(${pct}% + ${half}))`,
-		)
-		.join(", ");
+	const stops = fractions.flatMap((p) => {
+		const centre = `calc(${MAJOR_THICKNESS} / 2 + ${TRAVEL} * ${p})`;
+		const start = `calc(${centre} - ${half})`;
+		const end = `calc(${centre} + ${half})`;
+		return [
+			`transparent ${start}`,
+			`${color} ${start}`,
+			`${color} ${end}`,
+			`transparent ${end}`,
+		];
+	});
+	return `linear-gradient(${AXIS}, ${stops.join(", ")})`;
 }
