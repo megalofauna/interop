@@ -76,6 +76,6 @@
  */
 
 :where(interop-icon .itx-icon--missing) {
-	color: var(--itx-icon-missing-color, red);
+	color: var(--itx-icon-missing-color);
 	opacity: var(--itx-icon-missing-opacity, 0.3);
 }

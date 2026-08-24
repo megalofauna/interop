@@ -558,7 +558,7 @@
 	min-inline-size: var(--itx-stepper-menu-min-width, 12rem);
 	max-inline-size: var(--itx-stepper-menu-max-width, 20rem);
 	max-block-size: var(--itx-stepper-menu-max-height, 60vh);
-	background: var(--itx-stepper-menu-background-color, white);
+	background: var(--itx-stepper-menu-background-color);
 	border-color: var(--itx-stepper-menu-border-color, transparent);
 	border-width: var(
 		--itx-stepper-menu-border-width,
@@ -569,11 +569,9 @@
 	box-shadow: var(--itx-stepper-menu-box-shadow, none);
 }
 
-:where(.interop-stepper__menu-list) {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
+/* The listbox foundation already resets margin, padding and list-style on the
+   host; this re-stated all three. Its surface is suppressed from the stepper
+   THEME instead, which is where a value belongs. */
 
 /* ── Step list (ol) ──────────────────────────────────────────────────────── */
 

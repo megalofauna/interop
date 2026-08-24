@@ -73,9 +73,9 @@
 		--itx-control-border-color,
 		var(--itx-neutral-8, var(--itx-neutral-3))
 	);
-	--_bg: var(--itx-control-bg, var(--itx-neutral-2, #ffffff));
+	--_bg: var(--itx-control-bg, var(--itx-neutral-2));
 	--_accent: var(--itx-control-accent, var(--itx-neutral-14));
-	--_indicator: var(--itx-control-indicator, var(--itx-neutral-2, #ffffff));
+	--_indicator: var(--itx-control-indicator, var(--itx-neutral-2));
 	--_radius: var(
 		--itx-control-radius,
 		var(--itx-inner-radius, var(--itx-radius))
@@ -199,7 +199,7 @@
 		--itx-control-toggle-thumb-width,
 		calc(var(--_toggle-thumb-size) * 1.5)
 	);
-	--_toggle-thumb-color: var(--itx-control-toggle-thumb-color, #ccc);
+	--_toggle-thumb-color: var(--itx-control-toggle-thumb-color);
 
 	width: var(--_toggle-width);
 	height: var(--_toggle-height);

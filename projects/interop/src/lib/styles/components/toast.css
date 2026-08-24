@@ -162,7 +162,15 @@
 		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
 			var(--itx-toast-focus-style, var(--itx-focus-style))
 			var(--itx-toast-focus-color, var(--itx-focus-color));
-		outline-offset: var(--itx-toast-focus-offset, var(--itx-focus-offset));
+		/* The tight offset, not the house one. These two controls sit INSIDE the
+		   toast's padding, so a 2px ring reaches for an edge that is already
+		   close; the toast itself keeps the standard offset, having the viewport
+		   to breathe into. The theme has declared --itx-toast-focus-offset-tight
+		   since the Carbon round and nothing read it. */
+		outline-offset: var(
+			--itx-toast-focus-offset-tight,
+			var(--itx-toast-focus-offset, var(--itx-focus-offset))
+		);
 	}
 }
 
@@ -189,7 +197,15 @@
 		outline: var(--itx-toast-focus-width, var(--itx-focus-width))
 			var(--itx-toast-focus-style, var(--itx-focus-style))
 			var(--itx-toast-focus-color, var(--itx-focus-color));
-		outline-offset: var(--itx-toast-focus-offset, var(--itx-focus-offset));
+		/* The tight offset, not the house one. These two controls sit INSIDE the
+		   toast's padding, so a 2px ring reaches for an edge that is already
+		   close; the toast itself keeps the standard offset, having the viewport
+		   to breathe into. The theme has declared --itx-toast-focus-offset-tight
+		   since the Carbon round and nothing read it. */
+		outline-offset: var(
+			--itx-toast-focus-offset-tight,
+			var(--itx-toast-focus-offset, var(--itx-focus-offset))
+		);
 	}
 }
 

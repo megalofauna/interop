@@ -13,7 +13,7 @@
 				aria-label="Docking bay"
 				[controls]="dockingBays"
 				[(value)]="selectedBay"
-				style="max-width: 22rem"
+				style="--itx-listbox-max-inline-size: 22rem"
 			></ul>
 			<!--<demo-state>
 				<demo-state-item label="Bay">{{ selectedBay() }}</demo-state-item>
@@ -31,7 +31,7 @@
 				[controls]="crewRoles"
 				[multiselectable]="true"
 				[(value)]="selectedRoles"
-				style="max-width: 22rem"
+				style="--itx-listbox-max-inline-size: 22rem"
 			></ul>
 			<itx-code-block [files]="multiSelectFiles" />
 		</demo-example>
@@ -44,7 +44,7 @@
 				interop-listbox
 				aria-label="Sector"
 				[(value)]="selectedSector"
-				style="max-width: 22rem"
+				style="--itx-listbox-max-inline-size: 22rem"
 			>
 				<li interop-option value="alpha" label="Sector Alpha">
 					<span aria-hidden="true">▲</span>

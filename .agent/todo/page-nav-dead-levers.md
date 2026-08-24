@@ -122,45 +122,36 @@ advertised `--itx-pn-padding-*` (dead) and used `--itx-pn-nav-rule-*`
 (undocumented). It now lists the real names, plus `--itx-pn-sticky-top`, which
 had no documented home at all.
 
-## The same disease elsewhere — 73 tokens
+## The same disease elsewhere — 73 tokens, and why that number was wrong
 
-Measured while closing this out: **73 theme declarations across 15 files are
-read by nothing.** Worst are stepper (20), expansion-panel (8),
-segmented-control (7), button (6) and toolbar (6).
+Measured while closing this out, and **the 73 was an artifact of my own
+regex.** It looked for `var(--token` as a literal string, so it missed every
+read where the `var(` and the token sit on different lines — which is how
+prettier formats any long declaration. It also only scanned `.css`, missing
+tokens read from TypeScript (`interop-slider-marks.ts` builds gradients from
+`"var(--itx-slider-mark-color)"`).
 
-A `check-dead-tokens` guard is the obvious answer and cannot land until those
-are worked down, since it would open with 73 violations. Worth pairing with the
-foundation-fallbacks sweep — both are "the theme says something the structure
-does not read", from opposite ends.
+Corrected, scanning every file type and tolerating whitespace inside `var()`:
 
-## The sticky offset — closed, 2026-08-23
+| pass | dead tokens |
+| --- | --- |
+| naive, CSS only | 73 |
+| whitespace-tolerant, CSS only | 5 |
+| whitespace-tolerant, + TS/HTML | **1** |
 
-Not reproducible. Measured in the running app with a temporary probe:
+The one was `--itx-toast-focus-offset-tight`, declared since the Carbon round,
+read by nothing, and advertised in the demo's token table — the same
+documented-but-dead shape as page-nav's, in a single instance. Now wired into
+the toast's action and close buttons, which sit inside the toast's padding and
+are what a 1px offset is for. Fixed 2026-08-23.
 
-    nav classes        : itx-pn--sticky itx-pn--horizontal
-    position           : sticky
-    inset-block-start  : 56px
-    top                : 56px
-    --itx-pn-sticky-top on nav  : 3.5rem
-    --itx-pn-sticky-top on root : 3.5rem
+**The lesson is the measurement, not the tokens.** A detector that scans for a
+token as a literal string will under-report reads and over-report death, and a
+number produced that way is worth nothing until it is spot-checked against a
+case you already know the answer to. `check-undefined-tokens.mjs` gets this
+right — `/var\(\s*(--itx-[\w-]+)\s*\)/` — and is the shape to copy.
 
-Every link in the chain holds: the class lands, the property inherits from
-`app-root` down to the nav, and the offset resolves.
-
-**The cause was already written down in this file.** The trap note records that
-"adding a `--itx-pn-sticky-top: 0` default to the theme silently killed the
-demo's ancestor override" — and a killed override is exactly the reported
-symptom, a nav "pegged to the top whether the page is scrolled or not" with no
-offset applied. The observation was almost certainly made while that default
-was in place. Rolling the branch back removed the default, which removed the
-bug; the symptom was filed as open because nobody connected the two halves of
-the same page.
-
-Worth keeping as the reason the trap note matters: it did not just predict a
-hazard, it had already caused one and the cost was five days of a bug that no
-longer existed.
-
-`page-nav.ts` reads `getComputedStyle(el).top` to place the observer's
-rootMargin. The structural rule now sets `inset-block-start`; that still
-computes to `top` in horizontal-tb, verified at 56px above, so the switch to
-the logical property is safe for the reveal.
+The real remaining work is the other half: **154 foundation fallbacks that
+contradict the theme**, verified by direct grep rather than inference. Foundation
+says buttons are `center`-justified, disabled opacity `0.4`, toggle width
+`1.75rem`; the theme says `flex-start`, `1`, `2.5rem`.
