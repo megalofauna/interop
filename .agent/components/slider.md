@@ -9,6 +9,7 @@ src/lib/components/interop-slider/
   interop-slider-thumb.ts      input[type=range][interop-slider-thumb="start"|"end"]
   interop-slider-value.ts      output[interop-slider-value] — <output> companion
   interop-slider-marks.ts      input[type=range][interop-slider-marks] — tick gradients
+  interop-slider-legend.ts     <interop-slider-legend for> — mark labels
   interop-slider-registry.ts   id → slider lookup, so <output for> can find its input
   interop-slider.token.ts      InteropSliderApi / InteropSliderRangeApi + DI tokens
   public-api.ts                barrel
@@ -58,22 +59,34 @@ element — is the only shape here that gets pseudo-elements.
 
 | Surface | Drawn by |
 |---|---|
-| Tick marks | the host `<input>`'s own `background-image` |
-| Track + fill (single) | `::-webkit-slider-runnable-track` / `::-moz-range-track`, one gradient |
-| Thumb | `::-webkit-slider-thumb` / `::-moz-range-thumb` |
+| Major ticks, minor ticks, track + fill | **one three-layer `background-image` on the host `<input>`**, front to back in that order |
+| Thumb | `::-webkit-slider-thumb` / `::-moz-range-thumb` — the only thing above any of it |
+| UA track pseudos | nothing. They still exist and are still sized, because WebKit centres the thumb against the track box |
 | Track + fill (range) | `::before` / `::after` on `<interop-slider-range>` |
 | Track (range thumbs) | nothing — the thumb inputs paint no background at all |
+| Mark labels | `<interop-slider-legend>`, a sibling element — the input has no pseudo-elements to put them in |
 
-Marks and track deliberately live on **different elements**. `[interop-slider-marks]`
-emits a background layer *list* whose length varies with the data (three layers
-for uniform marks, one per tick for non-uniform), and `background-size` cycles
-its values across layers — so any list mixing marks with the track gradient
-would start assigning the track's thickness to a tick the moment the count
-changed. One element per fixed layer-count is the fix.
+**`background-image`'s first layer is the topmost**, so the declaration reads in
+paint order. That is the whole stacking model of this component.
 
-Side-effect, and a good one: the host's background paints *behind* the track
-pseudo, so a tick reads above and below the 2px track rather than through it —
-which is where Carbon puts its own notch.
+The track used to live on the UA track pseudo instead, and the reason is worth
+keeping because it constrains any future layer: `[interop-slider-marks]` emitted
+a background layer *list* whose length varied with the data — three layers for
+uniform marks, one **per tick** for non-uniform — and `background-size` cycles
+its values across layers, so any list mixing marks with the track gradient would
+start assigning the track's 2px thickness to a tick the moment the count
+changed. Two elements, one size each.
+
+The directive now emits **exactly one layer per tick rank** either way: a
+repeating gradient when the marks are uniform, one multi-stop gradient carrying
+every tick when they are not. A fixed layer count is what buys the shared
+per-layer size list. *If you add a mark layer, it must be a fixed one.*
+
+What the move bought: a child box paints above its parent's background, so the
+pseudo track cut a 2px slot through the middle of every tick. Deliberate and
+Carbon-ish while a tick was 8px and read as a notch above and below the line —
+but once the ticks grew long enough to bracket the thumb, a bright fill halving
+each one stopped reading as a notch and started reading as damage.
 
 ## The axis rule
 
@@ -164,17 +177,28 @@ of going invalid at computed-value time and dropping the whole gradient.
 
 The number typing is load-bearing, not cosmetic. See "Endpoints" below.
 
-## Endpoints — the thumb, the track and the fill all have to agree
+## Endpoints — the scale has ONE terminus
 
 A native `<input type="range">` reserves the thumb's **box** width at each end
-so the thumb cannot overflow the control. Our box is the 24px target while the
-paint is a 14px circle centred in it, so the visible circle stops
-`(24 − 14) / 2` = 5px short of each end. That produces two separate artefacts:
+so the thumb cannot overflow the control. The box is the 24px target, so the
+thumb's **centre** — the thing that marks the value — travels only
+`[12px, w − 12px]`. **That travel is the scale**, and every part that positions
+itself along the track begins and ends there:
 
-1. **The circle never reaches the track's ends.** The track is therefore
-   painted transparent for `--_end-inset` at each end, so it begins exactly
-   where the resting circle's outer edge begins.
-2. **A fill expressed as a percentage of the track does not follow the thumb.**
+| | expression |
+|---|---|
+| `--_end-inset` | where the track and fill start and stop |
+| `--_mark-size` | the band the tick gradients are painted into |
+| `--_fill-stop` | where the fill's leading edge lands |
+| the legend's `inset-inline-start` | where each label centres |
+
+All four are `half-target + p × (100% − target)`. That is the whole geometry of
+this component. A fifth part that positions itself with a raw percentage of the
+element is wrong before it is written.
+
+Three things had to be learned the hard way to get there, in this order:
+
+1. **A fill expressed as a percentage of the track does not follow the thumb.**
    The fill edge sits at `p × w` and the thumb centre at `12px + p × (w − 24px)`;
    they agree only at `p = 0.5`. Divergence is `24p − 12`, reaching ±12px at the
    extremes — wider than the circle's 7px half-width, which is exactly when it
@@ -183,16 +207,112 @@ paint is a 14px circle centred in it, so the visible circle stops
    Same geometry both ends, but the dark stub is much louder, so the max end
    always looked worse.
 
-`--_fill-stop` lands the fill on the thumb's **centre**, which puts the residue
-under the circle at both extremes. Both corrections are pure geometry off
-`--_target` and the resting thumb size, so they hold at any token values, and
-both are computed along `--itx-slider-axis`, so they are already correct when
-vertical.
+   `--_fill-stop` lands the fill on the thumb's **centre**.
+
+2. **The marks had the same bug, and did not get the same fix** until it was
+   found again a round later. A tick for fraction `p` painted across the full
+   box lands at `p × W`; the thumb centre lands at `12 + p × (W − 24)`. Same
+   `24p − 12` divergence — ±12px at the ends — so the outer ticks missed the
+   parked thumb by half the target and the whole tick row read wider than the
+   control.
+
+   The fix is **`--_mark-size`, not the gradients**. Marks are a background
+   *tile* with `no-repeat`, and percentage colour-stops resolve against the
+   **tile**, not the element — so sizing the tile to `calc(100% - target)` and
+   letting the existing `background-position: center` offset it re-bases every
+   percentage in every mark layer at once. One `background-size` for all
+   layers, so the varying-layer-count constraint survives; symmetric, so RTL
+   needs no rule.
+
+   The tile carries **half a major tick of padding at each end** — the
+   `+ var(--itx-slider-mark-thickness)` in `--_mark-size` — which is the room a
+   tick *centred* on the first or last value needs in order not to be clipped
+   by `no-repeat`. Without it the outermost ticks had to be painted flush
+   *into* the band by their own layers, leaving each one a pixel inboard of the
+   value it named. Invisible at 8px; not at 20px.
+
+   The padding is also what makes the arithmetic exact rather than approximate.
+   Inside a gradient `100%` is the **tile**, so `100% − mark-thickness` *is* the
+   thumb's travel, and every tick position is a plain length expression off it —
+   no percentages, no special case for the ends, and no way for a repeating
+   pattern to bleed a spurious tick into the gutter however short its period
+   gets. That last hazard is why the earlier full-width-tile approach was
+   rejected.
+
+3. **Fixing the ticks left the TRACK as the only part still in the old space.**
+   `--_end-inset` was `(target − thumb-size) / 2` = 5px, chosen back when the
+   ticks were also in full-box space so the track would begin "exactly where
+   the resting circle's outer edge begins". With the ticks at 12px, that left a
+   7px stub of track and fill living outside the outer ticks at every value
+   between the extremes — measurable as `trackRow` reporting ink at x=5 while
+   `bandRow` reported x=12.
+
+   `--_end-inset` is now `target / 2`, on the single slider **and** on
+   `interop-slider-range`. Note what that removes: the old expression read
+   `--itx-slider-thumb-size` and carried a warning to read the *public* token
+   rather than the `--_thumb-size` slot, because hover and focus grow that slot
+   and the track's ends must not move. The dependency is gone, so the trap is
+   gone with it — by construction, not by anyone remembering.
+
+### What is left, and cannot be removed
+
+At the extremes the painted circle overhangs the scale by its own radius,
+symmetrically. **It has to.** The handle marks its value with its *centre*, so
+parked on an endpoint it necessarily reaches `thumb-size / 2` beyond it. Every
+control that centres a round handle does this, Carbon included. There is no
+token value that removes it — shrinking the thumb only shrinks the overhang in
+proportion.
+
+What *is* controllable is whether anything else is out there for the eye to
+misread, and whether the endpoint is marked at all. Hence the two decisions
+above: nothing but the circle now lives past the outer tick, and
+`--itx-slider-mark-length` is **longer than the resting circle is wide** (20px
+against 14px) so the endpoint tick clears it top and bottom. The thumb reads as
+sitting *on* the end marker rather than past it. 20px is also
+`--itx-slider-thumb-size-active`, so on hover the circle grows to exactly meet
+the tick — the bracket closes rather than disappearing.
+
+Both decisions were made against rendered candidates at 6× zoom, not from
+prose. 16px was rejected as too subtle (1px of clearance); 24px read heavy.
 
 This is why the fill must be a number: the mapping is
 `half-target + (100% - target) × fill`, and `calc()` can multiply a
 length-percentage by a number but cannot divide by a percentage. As a
 percentage there is no expression that gets there.
+
+## The legend is a sibling, never a wrapper
+
+`<interop-slider-legend for="quality">` renders the `label` on each
+`{ value, label }` mark, centred on its tick. It exists because the input has
+no pseudo-elements and nothing here is wrapped — but a label row does not need
+to *contain* the control, so it does not.
+
+It resolves through `InteropSliderRegistry` by `[for]`, the same mechanism
+`<output interop-slider-value for>` already used. Marks travel through a second
+map on that registry rather than through `InteropSliderApi`: they are a
+*companion directive's* data, and a slider with no `[interop-slider-marks]`
+should not have to pretend it has an empty list of them. `[interop-slider-marks]`
+publishes the resolved list — value, label, and fraction of the domain — so the
+tick and its label come out of one normalisation.
+
+`aria-hidden="true"` on the host, always. The legend restates what the slider
+already announces; give the slider a `[valueText]` to put the same vocabulary
+in the accessibility tree, which also feeds `<output interop-slider-value>`.
+
+Two things it deliberately does not do. It does not clamp the outer labels back
+inside the box — a label wider than the thumb target, centred on a tick that
+sits `target / 2` in from the edge, overflows, and nudging it would break the
+one thing the component promises. And it does not take an `[orientation]`; it
+reads the slider's, which is why `orientation` is on `InteropSliderApi` and not
+just on the two implementations.
+
+One footgun, found by measuring rather than by looking. A **vertical** legend
+spans `--itx-slider-length`, and the theme declares every `--itx-slider-*`
+token *on the host elements* — so setting the token on a shared ancestor is
+**shadowed, not inherited**, and the legend silently keeps the 8rem default
+while the track runs longer. Set it on both the input and the legend. This is
+a property of the theme's selector shape, not of the legend; it applies to any
+`--itx-slider-*` token a consumer tries to set from above.
 
 ## Focus, without an outline
 
@@ -252,7 +372,11 @@ would otherwise need a `::-webkit-` and a `::-moz-` rule each, per state.
 - **Marks on a range slider are invisible** — a thumb inside
   `<interop-slider-range>` paints no background, because the parent owns the
   track. Documented on the directive.
-- **Mark labels are not rendered.** `SliderMark` accepts `{ value, label }`, and
-  the label is ignored; supply your own label row.
 - **No size axis.** Carbon's slider SCSS ships none, and the only step below the
   current one would put the thumb target under 24px.
+- **Major and minor ticks share one length.** Both read
+  `--itx-slider-mark-length`, so they differ only in thickness (2px vs 1px) and
+  by one contrast rank. This is no longer a structural limit — the layer count
+  is fixed and `background-size` is already a per-layer list, so giving the
+  minors their own `--_mark-minor-size` slot is a two-line change. It simply
+  has not been asked for.

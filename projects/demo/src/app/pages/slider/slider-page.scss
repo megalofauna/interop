@@ -32,15 +32,6 @@
 		font-variant-numeric: tabular-nums;
 	}
 
-	&__marks-labels {
-		display: flex;
-		justify-content: space-between;
-		// Carbon's slider label: $label-01, 12/16.
-		font-size: 0.75rem;
-		line-height: 1.3333;
-		color: var(--itx-neutral-9);
-	}
-
 	&__submit {
 		// Layout only. Padding, type and cursor come from interop-button now —
 		// they were being re-declared here back when this was a bare <button>.

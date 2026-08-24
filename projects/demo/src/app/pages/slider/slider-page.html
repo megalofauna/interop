@@ -131,17 +131,12 @@
 					[max]="100"
 					[step]="5"
 					[(value)]="quality"
-					[interop-slider-marks]="[0, 25, 50, 75, 100]"
+					[interop-slider-marks]="qualityMarks"
 					[interop-slider-marks-subdivisions]="5"
+					[valueText]="qualityFormatter"
 					aria-label="Quality"
 				/>
-				<div class="slider-demo__marks-labels" aria-hidden="true">
-					<span>Low</span>
-					<span>Med</span>
-					<span>High</span>
-					<span>Best</span>
-					<span>Max</span>
-				</div>
+				<interop-slider-legend for="quality" />
 			</div>
 			<demo-state>
 				<demo-state-item label="value">{{ quality() }}</demo-state-item>
@@ -206,15 +201,24 @@
 	<!-- ── Vertical ──────────────────────────────────────────────────────── -->
 	<demo-section id="vertical" heading="Vertical orientation">
 		<demo-example label="writing-mode: vertical-lr, minimum at the bottom">
+			<!-- --itx-slider-length goes on BOTH, not on the wrapper. The theme
+			     declares every --itx-slider-* token on the host elements
+			     themselves, so a value set on an ancestor is shadowed rather
+			     than inherited — and a legend on a different length from its
+			     track puts every label in the wrong place. -->
 			<div class="slider-demo slider-demo--vertical">
 				<input
 					type="range"
 					interop-slider
+					id="temp"
 					[orientation]="'vertical'"
 					[(value)]="temperature"
+					[interop-slider-marks]="tempMarks"
+					[interop-slider-marks-subdivisions]="5"
 					style="--itx-slider-length: 12rem"
 					aria-label="Temperature"
 				/>
+				<interop-slider-legend for="temp" style="--itx-slider-length: 12rem" />
 				<div class="slider-demo__vertical-readout">
 					Temp: {{ temperature() }}°
 				</div>

@@ -13,6 +13,9 @@
  *   Marks    --itx-slider-mark-color       --itx-slider-mark-thickness
  *            --itx-slider-mark-minor-color --itx-slider-mark-minor-thickness
  *            --itx-slider-mark-length
+ *   Legend   --itx-slider-legend-color     --itx-slider-legend-font-size
+ *            --itx-slider-legend-line-height
+ *            --itx-slider-legend-gap
  *
  * Set by the component, never by a theme: --itx-slider-fill,
  * --itx-slider-range-start / -range-end, --itx-slider-axis,
@@ -86,7 +89,8 @@
 :where(
 	[interop-root] input[type="range"][interop-slider],
 	[interop-root] input[type="range"][interop-slider-thumb],
-	[interop-root] interop-slider-range
+	[interop-root] interop-slider-range,
+	[interop-root] interop-slider-legend
 ) {
 	/* ── Track ──────────────────────────────────────────────────────────── */
 	--itx-slider-track-color: var(--itx-neutral-3);
@@ -132,5 +136,40 @@
 	--itx-slider-mark-thickness: var(--itx-border-width-thick); /* 2px */
 	--itx-slider-mark-minor-color: var(--itx-neutral-3);
 	--itx-slider-mark-minor-thickness: var(--itx-border-width-hairline); /* 1px */
-	--itx-slider-mark-length: var(--itx-spacing-2); /* 8px, across the track */
+	/*
+	 * LONGER than the resting thumb is wide, and that is the whole point. The
+	 * handle marks its value with its centre, so parked on an endpoint it
+	 * necessarily overhangs the scale by its own radius; a tick the circle
+	 * swallows leaves nothing for the eye to read that overhang against. At
+	 * 20px against a 14px circle the endpoint tick clears it by 3px top and
+	 * bottom, and the thumb reads as sitting ON the end marker.
+	 *
+	 * 20px is --itx-spacing-5, which is also --itx-slider-thumb-size-active.
+	 * Keep that: at rest the tick brackets the circle, and on hover or focus
+	 * the circle grows to exactly meet it. The bracket closes rather than
+	 * disappearing, which reads as intentional.
+	 *
+	 * 16px was measured and rejected — 1px of clearance does not register.
+	 * 18px read best of all but there is no 18px step (the spacing scale's
+	 * half-steps stop at 3_5), and inventing a global step for one component's
+	 * tick is the wrong trade against staying on a scale the app can rescale.
+	 *
+	 * One value for BOTH tick ranks: the band's cross-axis size is a single
+	 * background-size shared by every layer, and the layer count varies with
+	 * the data. The minors lengthen too. They stay 1px against the majors' 2px
+	 * and a contrast rank lower, so the two still read as a hierarchy.
+	 */
+	--itx-slider-mark-length: var(--itx-spacing-5); /* 20px, across the track */
+
+	/* ── Legend ─────────────────────────────────────────────────────────── */
+	/*
+	 * Carbon's slider label is $label-01 — 12/16. A fixed rem, never
+	 * --itx-font-size-*, which is a fluid clamp(): a legend label whose width
+	 * changed with the viewport would drag its own centring around, and the
+	 * whole component exists to hold that centre still.
+	 */
+	--itx-slider-legend-color: var(--itx-neutral-9);
+	--itx-slider-legend-font-size: 0.75rem;
+	--itx-slider-legend-line-height: 1.3333;
+	--itx-slider-legend-gap: var(--itx-spacing-2);
 }
