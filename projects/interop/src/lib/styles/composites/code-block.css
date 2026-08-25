@@ -79,9 +79,88 @@
 	padding-block: var(--itx-cb-tab-padding-block);
 	padding-inline: var(--itx-cb-tab-padding-inline);
 	background-color: var(--itx-cb-tab-background);
-	border: var(--itx-cb-tab-border);
-	border-bottom: var(--itx-cb-tab-border-bottom);
-	border-radius: var(--itx-cb-tab-radius);
+	/* ── Border ──────────────────────────────────────────────────────────── *
+	 * The same longhand, logical surface the tabs COMPONENT exposes, under this
+	 * composite's own prefix. This tab is not an interop-tabs tab — that
+	 * component's selector is `section[interop-tabs] [role="tab"]` and the
+	 * markup here is a bare div[role=tablist] with its own keyboard handling —
+	 * so it cannot inherit those rules. Matching the token SHAPE is what keeps
+	 * one vocabulary across the two implementations.
+	 *
+	 * What it replaces: --itx-cb-tab-border and --itx-cb-tab-border-bottom, both
+	 * of which held a whole `border` shorthand as their value. A theme wanting a
+	 * different colour had to restate the width and style with it, and a state
+	 * rule could not reach inside at all.
+	 *
+	 * Physical `border-bottom` became `border-block-end` in the same pass. The
+	 * selected-tab indicator is drawn on that edge, and "bottom" is only the
+	 * right edge for it in horizontal-tb.
+	 */
+	border-block-start-width: var(
+		--itx-cb-tab-border-block-start-width,
+		var(--itx-cb-tab-border-width)
+	);
+	border-block-start-style: var(
+		--itx-cb-tab-border-block-start-style,
+		var(--itx-cb-tab-border-style)
+	);
+	border-block-start-color: var(
+		--itx-cb-tab-border-block-start-color,
+		var(--itx-cb-tab-border-color)
+	);
+	border-block-end-width: var(
+		--itx-cb-tab-border-block-end-width,
+		var(--itx-cb-tab-border-width)
+	);
+	border-block-end-style: var(
+		--itx-cb-tab-border-block-end-style,
+		var(--itx-cb-tab-border-style)
+	);
+	border-block-end-color: var(
+		--itx-cb-tab-border-block-end-color,
+		var(--itx-cb-tab-border-color)
+	);
+	border-inline-start-width: var(
+		--itx-cb-tab-border-inline-start-width,
+		var(--itx-cb-tab-border-width)
+	);
+	border-inline-start-style: var(
+		--itx-cb-tab-border-inline-start-style,
+		var(--itx-cb-tab-border-style)
+	);
+	border-inline-start-color: var(
+		--itx-cb-tab-border-inline-start-color,
+		var(--itx-cb-tab-border-color)
+	);
+	border-inline-end-width: var(
+		--itx-cb-tab-border-inline-end-width,
+		var(--itx-cb-tab-border-width)
+	);
+	border-inline-end-style: var(
+		--itx-cb-tab-border-inline-end-style,
+		var(--itx-cb-tab-border-style)
+	);
+	border-inline-end-color: var(
+		--itx-cb-tab-border-inline-end-color,
+		var(--itx-cb-tab-border-color)
+	);
+
+	border-start-start-radius: var(
+		--itx-cb-tab-border-start-start-radius,
+		var(--itx-cb-tab-border-radius)
+	);
+	border-start-end-radius: var(
+		--itx-cb-tab-border-start-end-radius,
+		var(--itx-cb-tab-border-radius)
+	);
+	border-end-start-radius: var(
+		--itx-cb-tab-border-end-start-radius,
+		var(--itx-cb-tab-border-radius)
+	);
+	border-end-end-radius: var(
+		--itx-cb-tab-border-end-end-radius,
+		var(--itx-cb-tab-border-radius)
+	);
 
 	color: var(--itx-cb-tab-foreground);
 	font-family: var(--itx-cb-tab-font-family, inherit);
@@ -96,13 +175,19 @@
 :where(itx-code-block .itx-cb__tab:hover) {
 	color: var(--itx-cb-tab-foreground-hover);
 	background-color: var(--itx-cb-tab-background-hover);
-	border-bottom-color: var(--itx-cb-tab-border-bottom-color-hover);
+	border-block-end-color: var(
+		--itx-cb-tab-border-block-end-color-hover,
+		var(--itx-cb-tab-border-block-end-color, var(--itx-cb-tab-border-color))
+	);
 }
 
 :where(itx-code-block .itx-cb__tab[aria-selected="true"]) {
 	color: var(--itx-cb-tab-foreground-current);
 	background-color: var(--itx-cb-tab-background-current);
-	border-bottom-color: var(--itx-cb-tab-border-bottom-color-current);
+	border-block-end-color: var(
+		--itx-cb-tab-border-block-end-color-current,
+		var(--itx-cb-tab-border-block-end-color, var(--itx-cb-tab-border-color))
+	);
 }
 
 :where(itx-code-block .itx-cb__tab:focus-visible) {
@@ -110,7 +195,6 @@
 		var(--itx-cb-tab-focus-style, var(--itx-focus-style))
 		var(--itx-cb-tab-focus-color, var(--itx-focus-color));
 	outline-offset: var(--itx-cb-tab-focus-offset, var(--itx-focus-offset));
-	border-radius: inherit;
 }
 
 /* ── Single-file label ───────────────────────────────────────────────────── */

@@ -104,7 +104,9 @@
 	padding-block: 0;
 	padding-inline: var(--itx-chip-padding-inline);
 	background: var(--itx-chip-background);
-	border: var(--itx-chip-border);
+	border-width: var(--itx-chip-border-width);
+	border-style: var(--itx-chip-border-style);
+	border-color: var(--itx-chip-border-color);
 	border-radius: var(--itx-chip-radius, var(--itx-radius));
 	color: var(--itx-chip-color);
 	font-size: var(--itx-chip-font-size);
@@ -118,7 +120,9 @@
 
 :where(fieldset[interop-chip-filter]) {
 	background: var(--itx-chip-filter-background);
-	border: var(--itx-chip-filter-border);
+	border-width: var(--itx-chip-filter-border-width);
+	border-style: var(--itx-chip-filter-border-style);
+	border-color: var(--itx-chip-filter-border-color);
 	border-radius: var(
 		--itx-chip-filter-radius,
 		var(--itx-chip-radius, var(--itx-radius))
@@ -261,7 +265,9 @@
 	padding: 0;
 	margin: var(--itx-chip-remove-margin);
 	background: var(--itx-chip-remove-background);
-	border: var(--itx-chip-remove-border);
+	border-width: var(--itx-chip-remove-border-width);
+	border-style: var(--itx-chip-remove-border-style);
+	border-color: var(--itx-chip-remove-border-color);
 	border-radius: var(
 		--itx-chip-remove-radius,
 		var(--itx-chip-radius, var(--itx-radius))
@@ -333,7 +339,9 @@
 	align-items: center;
 	gap: var(--itx-chip-input-gap);
 	background: var(--itx-chip-input-background);
-	border: var(--itx-chip-input-border);
+	border-width: var(--itx-chip-input-border-width);
+	border-style: var(--itx-chip-input-border-style);
+	border-color: var(--itx-chip-input-border-color);
 	border-radius: var(
 		--itx-chip-input-radius,
 		var(--itx-chip-radius, var(--itx-radius))
