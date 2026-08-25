@@ -257,22 +257,63 @@ Carbon washes the segment with `$layer-hover` here and we deliberately don't, fo
 
 **Focus** is the system ring, inset. The theme declares exactly one focus token, `--itx-segment-focus-offset: -2px`; width, style and colour come from `tokens/focus.css` through the three-tier chain in the structural file. The negative offset keeps the ring inside the frame instead of spilling onto the neighbouring segment.
 
-### Trap — `--itx-outer-radius` / `--itx-inner-radius` are homed in the wrong file
+### Managed radii — how the pill nests, and how it was inert
 
 ```css
 /* themes/protocol/components/segmented-control.css */
---itx-outer-radius: var(--itx-radius-2);
---itx-inner-radius: calc(
-	var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
+--itx-outer-radius: var(
+	--itx-segmented-control-track-border-radius,
+	var(--itx-radius)
+);
+--itx-inner-radius: max(
+	0px,
+	calc(var(--itx-outer-radius) - var(--itx-segmented-control-track-padding))
 );
 ```
 
-These are **declared here but read elsewhere**, on `[interop-root]`:
+The track paints `--itx-outer-radius`; the pill takes the inner corner, which is
+the radius a box inset by the track padding must have to sit flush. Measured:
 
-- `themes/protocol/components/indicator.css` → `--itx-indicator-border-radius: var(--itx-inner-radius)`
-- `themes/protocol/components/visimorph/visimorph.css` → `--itx-control-radius: var(--itx-inner-radius, 4px)`, which is the shared radius for **checkbox, radio, and toggle**.
+| | track | pill |
+|---|---|---|
+| default (`--itx-radius` = 4px) | 4px | 0px |
+| `--itx-radius: 16px` | 16px | 12px |
+| track token `12px` | 12px | 8px |
+| track token `0` | 0px | 0px |
 
-So retuning these two "for the segmented control" silently changes checkbox and radio corners across the app. Worse, it doesn't even change _this_ component: the borrow sets `--itx-indicator-border-radius: var(--itx-radius-1)` scoped to `fieldset[interop-segmented-control]`, which wins over the root-level indicator value by inheritance proximity — so the segmented control ignores both tokens entirely. They are generic managed radii that happen to live in this file; they belong in the foundation or a shape theme file. Left in place by the borrow rather than moved, to keep that change out of a visual-only commit.
+**This did nothing for two rounds, and the file said otherwise.** `--itx-outer-radius`
+was `var(--itx-radius-2)` — a step the track never read, since the track paints
+`var(--itx-segmented-control-track-border-radius, var(--itx-radius))`. So the
+"outer" radius was the outer radius of nothing: setting it to `12px` moved
+neither the track (4px) nor the pill (2px). And the pill could not have followed
+anyway, because the theme pinned `--itx-indicator-border-radius:
+var(--itx-radius-nominal)` beside it, which beat `indicator.css`'s
+`var(--itx-inner-radius, …)` chain by proximity. The comment above that line
+claimed "all three radii move together"; they measured 4px and 2px.
+
+Three things keep it honest now, all of them former bugs:
+
+- **The outer value reads the token the track actually paints with.** If you
+  retarget it at a ramp step again, the family goes inert again and nothing
+  will tell you.
+- **Nothing pins the pill's radius.** Declaring `--itx-indicator-border-radius`
+  here opts the component out of the mechanism entirely.
+- **`max(0px, …)`, with the unit.** Padding exceeds radius by default, and a
+  negative radius invalidates the declaration. `max(0, …)` is invalid — calc
+  cannot mix a unitless number with a length, the same reason
+  `--itx-segmented-control-track-padding` is `0px` and not `0`.
+
+**These two tokens are generic, and still read from a distance.**
+`indicator.css` and `visimorph/visimorph.css` both read
+`var(--itx-inner-radius, var(--itx-radius))`, and visimorph is the shared radius
+for **checkbox, radio and toggle** — so retuning them here still reaches those
+whenever one renders inside this control. That is the intended contract, now
+documented in `tokens/shape.css` and in css-strategy's *Nested radii*, rather
+than an accident of which file the pair happened to live in. They stay declared
+on this container because only a container that knows its own padding can
+compute the inner corner — and because a derived alias declared on
+`[interop-root]` freezes (measured: subtree `--itx-radius: 16px`, alias still
+`4px`).
 
 ## Known structural constraints
 

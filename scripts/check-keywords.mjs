@@ -43,6 +43,26 @@
  * And if a component wants "no opinion", declare nothing at all. Absence is how
  * the theme says that, and the structural fallback handles it.
  *
+ * ─── What this file does NOT cover ──────────────────────────────────────────
+ *
+ * Only the custom-property position: `--x: inherit`. The same keywords on a
+ * REAL property are usually fine — `color: inherit` and `font: inherit` on a
+ * <button> are the standard UA reset and 25 of those ship — so a blanket rule
+ * here would be 25 false positives deep before it caught anything.
+ *
+ * But the underlying failure is identical whenever the keyword lands on a
+ * property the component also drives from a token: the value then comes from
+ * outside the token graph — the parent element, or the UA — so no theme can
+ * reach it, and the only symptom is a consumer reporting that the lever does
+ * not work. That shipped on the code-block tab, where a :focus-visible rule's
+ * `border-radius: inherit` quietly overrode --itx-cb-tab-border-radius with the
+ * TABLIST's radius.
+ *
+ * Radius is the slice of that a machine can decide, because a parent's radius
+ * is never what a component's own radius token meant — see Rule 3 in
+ * scripts/check-shape.mjs. The rest is doctrine: see "Addressability" in
+ * .agent/css-strategy.md.
+ *
  * Usage: node scripts/check-keywords.mjs [root]
  */
 import { readdirSync, readFileSync } from "node:fs";

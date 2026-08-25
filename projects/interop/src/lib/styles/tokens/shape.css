@@ -89,6 +89,39 @@
 	--itx-radius-lg: var(--itx-radius-3); /* 12px */
 	--itx-radius-xl: var(--itx-radius-4); /* 16px */
 
+	/* ── Nested radii — a contract, deliberately NOT declared here ───────── *
+	 * --itx-outer-radius   a container's own painted radius
+	 * --itx-inner-radius   the radius a child inset by that container's
+	 *                      padding must have to sit flush in its corner
+	 *
+	 * Read by indicator.css and visimorph/visimorph.css — which is the shared
+	 * radius for checkbox, radio and toggle — always as
+	 * `var(--itx-inner-radius, var(--itx-radius))`. The fallback IS the
+	 * "no container published one" case and resolves at the reading element,
+	 * so it is correct by default and needs nothing declared up here.
+	 *
+	 * Declaring them in this block would be the baked-alias bug, not a tidy-up.
+	 * Measured: with `--itx-outer-radius: var(--itx-radius)` on the root, a
+	 * subtree setting `--itx-radius: 16px` still reads 4px, because a derived
+	 * alias substitutes where it is DECLARED. Note that check-shape.mjs Rule 2
+	 * does not catch it — its selector test matches the bare
+	 * `:where([interop-root])`, not this block's two-selector form.
+	 *
+	 * So: only a container that knows its own padding declares them, on its own
+	 * selector. `themes/protocol/components/segmented-control.css` is the
+	 * worked example:
+	 *
+	 *   --itx-outer-radius: var(--itx-COMP-track-border-radius, var(--itx-radius));
+	 *   --itx-inner-radius: max(0px, calc(var(--itx-outer-radius) - <padding>));
+	 *
+	 * The outer value must be THE TOKEN THE CONTAINER ACTUALLY PAINTS WITH. It
+	 * used to be an unrelated ramp step there, so the "outer" radius was the
+	 * outer radius of nothing and the whole family moved nothing you could see.
+	 * The max() is required rather than defensive: the subtraction goes negative
+	 * whenever padding exceeds radius — the default case — and a negative radius
+	 * invalidates the declaration.
+	 */
+
 	/* ── Border width — primitive ramp ───────────────────────────────────── */
 	--itx-border-width-1: var(--itx-border-width-base);
 	--itx-border-width-2: calc(var(--itx-border-width-base) * 2);

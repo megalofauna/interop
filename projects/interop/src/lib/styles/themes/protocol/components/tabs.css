@@ -7,8 +7,12 @@
  *             --itx-tabs-rule-color
  *   Tab box   --itx-tab-min-block-size     --itx-tab-gap
  *             --itx-tab-padding-block      --itx-tab-padding-inline
- *             --itx-tab-border-width       --itx-tab-border-color
- *             --itx-tab-border-radius
+ *             --itx-tab-border-width       --itx-tab-border-style
+ *             --itx-tab-border-color       --itx-tab-border-radius
+ *             Per-side and per-corner overrides exist for all of these and
+ *             fall back to the base above — --itx-tab-border-block-end-color,
+ *             --itx-tab-border-start-start-radius, and so on for every logical
+ *             side and corner. Declare one only where it differs.
  *   Type      --itx-tab-font-size          --itx-tab-font-weight
  *             --itx-tab-line-height
  *             --itx-tab-letter-spacing     --itx-tab-font-weight-selected
@@ -71,6 +75,11 @@
 	--itx-tab-padding-block: var(--itx-spacing-2);
 	--itx-tab-padding-inline: var(--itx-spacing-4);
 	--itx-tab-border-width: 0;
+	/* Was hardcoded inside the `border` shorthand the structural file used to
+	   write. It has to be declared now that the longhands read it — a border
+	   longhand's initial style is `none`, which would drop any width a consumer
+	   set without also setting a style. */
+	--itx-tab-border-style: solid;
 	--itx-tab-border-color: transparent;
 	--itx-tab-border-radius: var(--itx-radius-none);
 

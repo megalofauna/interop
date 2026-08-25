@@ -35,8 +35,9 @@
 	 * both schemes, so these read as they would be said: the marker's edge and
 	 * its numeral sit at the secondary distance, eight steps off.
 	 */
-	--itx-list-marker-border: var(--itx-border-width-thick) solid
-		var(--itx-neutral-9);
+	--itx-list-marker-border-width: var(--itx-border-width-thick);
+	--itx-list-marker-border-style: solid;
+	--itx-list-marker-border-color: var(--itx-neutral-9);
 	--itx-list-marker-background: transparent;
 	--itx-list-marker-color: var(--itx-neutral-9);
 	--itx-list-marker-font-size: 0.8em;
@@ -58,8 +59,9 @@
 
 :where(ol[interop-list][itx-marker~="filled"] > li) {
 	--itx-list-marker-background: var(--itx-neutral-3);
-	--itx-list-marker-border: var(--itx-border-width-thick) solid
-		var(--itx-neutral-9);
+	--itx-list-marker-border-width: var(--itx-border-width-thick);
+	--itx-list-marker-border-style: solid;
+	--itx-list-marker-border-color: var(--itx-neutral-9);
 	/*
 	 * One token where there were two.
 	 *

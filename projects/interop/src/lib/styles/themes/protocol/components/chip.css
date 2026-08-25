@@ -110,7 +110,9 @@
 	 * border is most of what makes the shape read as Carbon.               */
 	--itx-chip-background: var(--itx-colorway-solid);
 	--itx-chip-color: var(--itx-colorway-on-solid);
-	--itx-chip-border: none;
+	--itx-chip-border-width: 0;
+	--itx-chip-border-style: solid;
+	--itx-chip-border-color: transparent;
 	--itx-chip-background-hover: var(--itx-neutral-3);
 	--itx-chip-color-hover: var(--itx-neutral-14);
 
@@ -151,7 +153,9 @@
 	--itx-chip-remove-background: transparent;
 	--itx-chip-remove-background-hover: var(--itx-neutral-2);
 	--itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2);
-	--itx-chip-remove-border: none;
+	--itx-chip-remove-border-width: 0;
+	--itx-chip-remove-border-style: solid;
+	--itx-chip-remove-border-color: transparent;
 	--itx-chip-remove-font-size: var(--itx-spacing-3); /* 16px — Carbon icon */
 
 	/* ── Disabled ─────────────────────────────────────────────────────── */
@@ -167,7 +171,9 @@
 
 :where(fieldset[interop-chip-filter]) {
 	--itx-chip-filter-background: transparent;
-	--itx-chip-filter-border: none;
+	--itx-chip-filter-border-width: 0;
+	--itx-chip-filter-border-style: solid;
+	--itx-chip-filter-border-color: transparent;
 	--itx-chip-filter-padding: 0;
 	--itx-chip-filter-gap: var(--itx-spacing-2); /* 8px */
 }
@@ -186,7 +192,9 @@
 
 :where(div[interop-chip-input]) {
 	--itx-chip-input-background: var(--itx-surface);
-	--itx-chip-input-border: var(--itx-border-width-thick) solid transparent;
+	--itx-chip-input-border-width: var(--itx-border-width-thick);
+	--itx-chip-input-border-style: solid;
+	--itx-chip-input-border-color: transparent;
 	--itx-chip-input-gap: var(--itx-spacing-2); /* 8px */
 	--itx-chip-input-padding: var(--itx-spacing-2);
 	--itx-chip-input-min-height: var(--itx-spacing-10); /* 40px */
