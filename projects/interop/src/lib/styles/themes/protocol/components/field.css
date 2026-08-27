@@ -45,7 +45,7 @@
 	/* ── Label ───────────────────────────────────────────────────────────── */
 	/* Carbon $label-01 — 12 / 16 / 400. Fixed rem: a fluid clamp() label inside
 	   a pinned control is how a field overflows itself. */
-	--itx-field-label-color: var(--itx-neutral-9);
+	--itx-field-label-color: var(--itx-neutral-10);
 	--itx-field-label-font-size: 0.75rem;
 	--itx-field-label-font-weight: 400;
 	--itx-field-label-line-height: 1.3333;
@@ -61,11 +61,13 @@
 	--itx-field-height: var(--itx-spacing-10);
 	--itx-field-padding-inline: var(--itx-spacing-4);
 	--itx-field-addon-gap: var(--itx-spacing-2);
-	--itx-field-underline-width: 1px;
+	--itx-field-underline-width: 2px;
 	/* Squared. Carbon specifies no radius on any field. */
 	--itx-field-invalid-icon-size: 1rem;
 	/* Carbon transitions at $duration-fast-01 (70ms); 100ms is the nearest step
 	   this system ships. */
+	--itx-field-border-radius: var(--itx-radius) var(--itx-radius) 0 0;
+	--itx-field-border-width: 1px 1px 2px 1px;
 
 	/* ── Value text ──────────────────────────────────────────────────────── */
 	/* Carbon $body-compact-01 — 14 / 18. Fixed rem, pinned box. */
@@ -117,21 +119,21 @@
 	 * --itx-surface-below is the point: the sink already happened, so this is
 	 * the control's OWN surface.
 	 */
-	--itx-field-background: var(--itx-surface);
+	--itx-field-background: var(--itx-neutral-1);
 
 	/*
 	 * Hover. Carbon's field has no hover state; this is an Interop addition
 	 * moving in Carbon's direction ($field-hover is a step further from the
 	 * surface than $field). A wash, measured from the recessed surface.
 	 */
-	--itx-field-background-hover: var(--itx-neutral-2);
+	--itx-field-background-hover: var(--itx-neutral-1);
 
 	/*
 	 * The underline is the affordance, not a divider, so it is deliberately
 	 * stronger than the rank-2 hairline the other borrow rounds use for
 	 * structural rules.
 	 */
-	--itx-field-underline-color: var(--itx-neutral-9);
+	--itx-field-underline-color: var(--itx-neutral-10);
 
 	/* Read-only softens the rule: the value is still there to be read and
 	   copied, but the box stops advertising itself as somewhere to type. */

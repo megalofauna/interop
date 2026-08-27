@@ -55,15 +55,52 @@
 	box-sizing: border-box;
 }
 
+/* ── Bar ─────────────────────────────────────────────────────────────────── */
+/*
+ * The tablist and the optional [interop-tabs-actions] slot, side by side. Pure
+ * layout — no role, so the tablist keeps owning exactly the tabs. An author who
+ * wants a toolbar in the tab strip cannot put it INSIDE the tablist, because
+ * ARIA requires a tablist's owned elements to be tabs; this row is how they get
+ * it beside them instead.
+ *
+ * `align-items: end` puts the actions on the tablist's bottom edge, which is
+ * where the rule is, so both sides of the strip share one baseline however tall
+ * the actions get.
+ *
+ * The rule stays on the TABLIST rather than moving up here, and that is
+ * load-bearing: the selected tab's ::after is positioned to sit IN the rule, so
+ * a rule that belonged to the bar would drift away from the tabs the moment an
+ * action was taller than they are. The cost is that the rule stops where the
+ * actions begin — correct, since it is the seam between the TABS and the panels
+ * they control.
+ */
+:where(section[interop-tabs] .itx-tabs__bar) {
+	display: flex;
+	align-items: end;
+	gap: var(--itx-tabs-gap);
+}
+
+:where(section[interop-tabs][itx-orientation="vertical"] .itx-tabs__bar) {
+	flex-direction: column;
+	align-items: stretch;
+}
+
 /* ── Tablist ─────────────────────────────────────────────────────────────── */
 /*
  * The rule runs along the WHOLE list, not per-tab. A continuous baseline is the
  * better shape, and the per-tab bar below is positioned to sit IN it — so a
  * selected tab reads as the rule turning colourway for that span rather than as
  * a second line stacked on top of one.
+ *
+ * `flex: 1` keeps that true now the list sits in a row: without it the list
+ * shrinks to its tabs and the rule stops under the last one. `min-inline-size:
+ * 0` lets it shrink past its content instead of shoving the actions out of the
+ * box — the tabs overflow, the actions stay put.
  */
 :where(section[interop-tabs] [role="tablist"]) {
 	display: var(--itx-tabs-tablist-display);
+	flex: 1 1 auto;
+	min-inline-size: 0;
 	flex-wrap: var(--itx-tabs-tablist-flex-wrap);
 	gap: var(--itx-tabs-gap);
 	border-block-end: var(--itx-tabs-rule-width) solid var(--itx-tabs-rule-color);

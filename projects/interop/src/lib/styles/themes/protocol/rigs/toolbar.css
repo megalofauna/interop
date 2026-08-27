@@ -14,24 +14,28 @@
  * arbitrarily deep — picks up the contextual values.
  */
 
-/* ── Toolbar tokens ──────────────────────────────────────────────────────── */
+/* ── Toolbar tokens ──────────────────────────────────────────────────────── *
+ * Only the two the toolbar has an OPINION about. Five more used to sit here —
+ * padding, background, border-colour, border-radius, disabled-opacity — and
+ * every one restated its own structural fallback exactly: `transparent` where
+ * the fallback was `transparent`, `0` where it was `0`. They could not change a
+ * rendering. The one thing they DID change was whether a containing component
+ * could set the token at all, because a theme declaration beats a container's
+ * by @import order while a structural fallback loses to anything.
+ *
+ * That cost the code block its actions container: it carried
+ * --itx-cb-actions-radius, a twin that lost to --itx-toolbar-border-radius, and
+ * had nowhere to put a background or a border at all.
+ *
+ * So: absence is the API. If a value here would be identical to the fallback in
+ * rigs/toolbar.css, delete it — the component is saying it has no opinion, and
+ * that is exactly what lets a container express one.
+ */
 
 :where([interop-root]) {
-	/* Layout */
+	/* Both are real opinions: the structural fallbacks are 0 and
+	   "cascade to --itx-toolbar-gap" respectively. */
 	--itx-toolbar-gap: var(--itx-spacing-1);
-
-	/* Frame */
-	--itx-toolbar-padding: var(--itx-spacing-1) var(--itx-spacing-1);
-	--itx-toolbar-background: transparent;
-	--itx-toolbar-border-color: transparent;
-	/* Square. The pill was commented out and the foundation's 0 became the
-	   shipped value; this states it rather than leaving it to a fallback. */
-	--itx-toolbar-border-radius: 0;
-
-	/* State */
-	--itx-toolbar-disabled-opacity: 0.6;
-
-	/* Group */
 	--itx-toolbar-group-gap: var(--itx-spacing-5);
 }
 
@@ -97,4 +101,31 @@
 	--itx-button-background-active: var(--itx-neutral-3);
 	--itx-button-foreground-active: var(--itx-neutral-14);
 	--itx-button-border-color-active: transparent;
+
+	/* A latched toggle sits one rung above active and STAYS there — the
+	   word-wrap button in a code block is the case. Declared here rather than
+	   in the code block, because "a toggle button in a toolbar" is a toolbar
+	   fact; the code block's copy of it lost to this rule for its whole life
+	   and the toggle showed nothing. */
+	--itx-button-background-pressed: var(--itx-neutral-3);
+	--itx-button-foreground-pressed: var(--itx-neutral-14);
+	--itx-button-border-color-pressed: transparent;
+
+	/* Square. A toolbar is a strip of adjacent controls, and rounded corners
+	   inside it read as separate chips rather than one strip. Also a toolbar
+	   fact: inline-code's copy button is NOT in a toolbar and keeps its pill.
+	   This was --itx-button-border-radius: 0 in composites/code-block.css,
+	   where it happened to work only because nobody contested it. */
+	--itx-button-border-radius: 0;
+
+	/* Slower in, faster out: the button is transparent at rest and appears on
+	   hover, so the arrival wants to be noticed and the departure does not. */
+	--itx-button-transition-duration: var(--itx-duration-base);
+	--itx-button-transition-timing-function: var(--itx-easing-decelerate);
+}
+
+:where(interop-toolbar) :where([interop-button]:hover),
+:where([interop-toolbar]) :where([interop-button]:hover) {
+	--itx-button-transition-duration: var(--itx-duration-fast);
+	--itx-button-transition-timing-function: var(--itx-easing-accelerate);
 }

@@ -51,6 +51,22 @@ let _tabsIdCounter = 0;
  * ## Labels
  * Each panel provides its own label via `label` input or `<ng-template interop-tab-label>`.
  *
+ * ## Actions in the tab strip
+ * Content marked `[interop-tabs-actions]` is projected BESIDE the tablist
+ * rather than into the panel area — an overflow menu, a copy button, a filter.
+ *
+ * ```html
+ * <section interop-tabs ariaLabel="Files">
+ *   <div interop-tabs-actions interop-toolbar label="Code actions">…</div>
+ *   <section interop-tab-panel label="template.html">…</section>
+ * </section>
+ * ```
+ *
+ * It cannot go inside the tablist, and that is an ARIA rule rather than a
+ * styling one: a tablist's owned elements must be tabs. The slot is how a
+ * toolbar sits in the strip without joining the tab sequence — arrow keys still
+ * traverse only the tabs, and the toolbar keeps its own single tab stop.
+ *
  * @example Basic usage
  * ```html
  * <section interop-tabs aria-label="Account settings">
@@ -280,6 +296,48 @@ export class InteropTabs implements InteropTabsContext {
 					console.warn(
 						`InteropTabs must be used on <section> elements for semantic correctness. ` +
 							`Found on: ${el.tagName.toLowerCase()}`,
+					);
+				}
+
+				/*
+				 * The tab strip has TWO slots, and the default one silently
+				 * swallows anything the named one misses. Mistype
+				 * `interop-tabs-actions` and your toolbar renders in the panel
+				 * area, below the tabs, still perfectly functional — the kind of
+				 * bug you only find by looking. So: anything projected that is
+				 * neither a panel nor the bar gets named here.
+				 */
+				for (const child of Array.from(el.children) as Element[]) {
+					if (child.classList.contains("itx-tabs__bar")) continue;
+					if (child.matches("section[interop-tab-panel]")) continue;
+					console.warn(
+						`[InteropTabs] <${child.tagName.toLowerCase()}> is a child of ` +
+							`interop-tabs but is neither a section[interop-tab-panel] nor ` +
+							`marked [interop-tabs-actions], so it has been projected into ` +
+							`the panel area. Add [interop-tabs-actions] to put it in the ` +
+							`tab strip, or move it out of the tabs.`,
+						child,
+					);
+				}
+
+				if (!this.ariaLabel() && !this.ariaLabelledBy()) {
+					/*
+					 * Almost always the same mistake, so name it rather than
+					 * describing the symptom: `aria-label="…"` is a plain
+					 * attribute and sets no input, so it lands on the host
+					 * <section> — which makes that a named REGION landmark and
+					 * leaves the tablist anonymous. The two spellings look
+					 * interchangeable and are not.
+					 */
+					const misplaced = el.hasAttribute("aria-label")
+						? ` The host carries aria-label="${el.getAttribute("aria-label")}", which names the <section>, not the tablist — write ariaLabel="…" (or [ariaLabel]) instead.`
+						: "";
+					console.warn(
+						"[InteropTabs] the tablist has no accessible name. Set " +
+							"ariaLabel or ariaLabelledBy — a screen-reader user hearing " +
+							"only \u201ctab list\u201d cannot tell one strip from another " +
+							`on the same page.${misplaced}`,
+						el,
 					);
 				}
 			});

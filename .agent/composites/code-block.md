@@ -98,9 +98,48 @@ constructor() {
 
 The registration happens inside an `effect()` so changing `syncKey` re-registers. `selectTab()` calls `activationService.trigger(syncKey, key)` to broadcast.
 
-## Keyboard model on the tablist
+## The tabs are `interop-tabs`
 
-Arrow keys, Home/End on the tablist root → move + focus. Enter/Space on a tab → activate. Roving tabindex: only the active tab is in tab order (`tabindex=0`), the rest are `tabindex=-1`.
+They were not, for a long time: this composite shipped a bare
+`div[role="tablist"]`, its own roving tabindex, its own arrow/Home/End handler,
+its own tab/panel id wiring, and a `.itx-cb__tab` stylesheet with its own
+border, radius, focus ring and states — a second tab implementation inside a
+library that already had one. Nineteen `--itx-cb-tab-*` / `--itx-cb-tablist-*`
+tokens existed only to theme it, and a fix to `interop-tabs` reached none of it.
+
+```html
+<section interop-tabs [ariaLabel]="filesLabel()"
+         [active]="activeKey()" (activeChange)="onTabChange($event)">
+  <div interop-tabs-actions class="itx-cb__actions" interop-toolbar …>…</div>
+  <section interop-tab-panel [key]="fileKey(file)" [label]="file.label">…</section>
+</section>
+```
+
+What the swap bought, beyond deleting the duplicate: **the full APG keyboard
+model** (the hand-rolled tab handler did Enter/Space only — arrows and Home/End
+came from a separate path on the tablist root), **an accessible name on the
+tablist** (there was none), and **lazy panel init**, since `interop-tab-panel`
+defers content until first visit rather than rendering every file's Shiki
+tokens up front.
+
+Three things to know when editing:
+
+- **`(activeChange)`, not `[(active)]`.** Two-way binding would echo the
+  cross-block sync: a remote change sets `activeKey`, which would fire the
+  trigger, which would set the other blocks. The output only fires on a change
+  originating *in* the tab strip, which is exactly the user-driven case
+  `selectTab` should broadcast.
+- **The actions wrapper is repeated in both branches of the template**, and
+  only the buttons are shared through an `<ng-template>`. Content projection
+  matches the *declared* element, so the `div` carrying
+  `[interop-tabs-actions]` has to be a real child of the tabs section — an
+  `<ng-container [ngTemplateOutlet]>` would not match the slot.
+- **The theme states no `--itx-tab-*` values.** The code block gets stock tabs
+  deliberately. Set them on `itx-code-block` if this strip ever needs to differ
+  from every other one.
+
+When there is only one file there is no tab strip at all, so the header row
+(`.itx-cb__header`) still exists for the label and the actions.
 
 `tabBtns = viewChildren<ElementRef<HTMLButtonElement>>('tabBtn')` gives the keyboard handler a way to call `.focus()` on the new tab after `selectTab()`.
 
@@ -150,14 +189,12 @@ See [../highlighter.md](../highlighter.md) for the highlighter contract and [../
 
 ## Token surface (summary)
 
-Full list with descriptions lives in the protocol theme file's header comment. Parts: **host**, **header**, **tablist**, **tab**, **label**, **actions**.
+Full list with descriptions lives in the protocol theme file's header comment. Parts: **host**, **header**, **label**, **actions**. There is no tab or tablist surface — those are `interop-tabs`, themed through `--itx-tab-*` / `--itx-tabs-*`.
 
 | Part | Tokens |
 |---|---|
 | Host | `radius`, `body-background` |
 | Header | `header-background`, `header-background-image`, `header-padding-block`, `header-padding-inline`, `header-gap` |
-| Tablist | `tablist-border-width`, `tablist-border-color` |
-| Tab | `tab-padding-block`, `tab-padding-inline`, `tab-radius`, `tab-font-family`, `tab-font-size`, `tab-foreground`, `tab-foreground-active`, `tab-indicator-color`, `tab-indicator-width`, `tab-outline-color/-width/-offset`, `tab-transition-duration/-timing` |
 | Label | `label-padding-inline`, `label-foreground`, `label-font-size`, `label-font-weight`, `label-letter-spacing` |
 | Actions | `actions-radius`, `actions-gap`, `button-size` |
 
@@ -178,7 +215,7 @@ All prefixed `--itx-cb-`. State variants follow the button pattern (`-active` su
 
 ## Things to know when editing
 
-- **Tablist `min-width: 0`** is load-bearing — flex items with text default to `min-width: auto` which prevents shrinking and can blow out horizontal layouts. Don't remove it.
+- **The tablist's `min-inline-size: 0`** now lives in `components/tabs.css`, on the tablist inside `.itx-tabs__bar`. Same reason as ever — a flex item with text defaults to `min-width: auto`, refuses to shrink, and shoves the actions out of the box.
 - **Body background pipe.** When adding more theme-relevant renderer properties (line numbers color, etc.), follow the same pipe pattern: expose a `--itx-cb-*` token on the composite, set the renderer's `--itx-cr-*` inside `:host`.
 - **Multi-file file ordering.** The tabs render in array order. Reordering the `files()` input reorders the tabs. The active key tries to survive reordering by matching keys, not indices.
 - **CodeFile.filename is currently unused.** It's reserved for per-file metadata (e.g. showing the filename above the active panel). If you wire it up, decide what happens in single-file vs multi-file — single-file's header already shows `displayLabel = filename ?? canonicalizeLanguage(language)`.

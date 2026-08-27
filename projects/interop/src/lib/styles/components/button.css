@@ -74,6 +74,9 @@
  *   Visual pill — state tokens (rest / hover / active)
  *   --itx-button-background          --itx-button-background-hover          --itx-button-background-active
  *   --itx-button-foreground          --itx-button-foreground-hover          --itx-button-foreground-active
+ *   --itx-button-background-pressed  --itx-button-foreground-pressed        --itx-button-border-color-pressed
+ *      aria-pressed="true" — a toggle that is ON. Falls back to the rest
+ *      state, so a theme that states nothing gets no pressed appearance.
  *   --itx-button-border-color        --itx-button-border-color-hover        --itx-button-border-color-active
  *
  *   Visual pill — structure (no state variants)
@@ -266,6 +269,40 @@
 	--_box-shadow: var(--itx-button-box-shadow-active, none);
 	--_icon-color: var(
 		--itx-button-icon-color-active,
+		var(--itx-button-icon-color, currentColor)
+	);
+}
+
+/* ── Pressed ─────────────────────────────────────────────────────────────── *
+ * `aria-pressed="true"` is a toggle button that is ON. Until now NOTHING in the
+ * library styled it: the attribute was announced and never shown. The code
+ * block's word-wrap toggle tried to style it locally, from a composite, and the
+ * declaration lost to the toolbar theme in a higher layer — so the toggle
+ * flipped aria-pressed with no visible change at all.
+ *
+ * It belongs here because `aria-pressed` is a button state, not a code block's
+ * business. One declaration, and every toggle button in the library shows it.
+ *
+ * Ordered BEFORE :active so a press-and-hold still reads as active — a pressed
+ * toggle being pushed should feel like any other button being pushed.
+ */
+
+:where(button[interop-button][aria-pressed="true"]:not(:active)),
+:where([itx-as-button][aria-pressed="true"]:not(:active)) {
+	--_background: var(
+		--itx-button-background-pressed,
+		var(--itx-button-background, transparent)
+	);
+	--_foreground: var(
+		--itx-button-foreground-pressed,
+		var(--itx-button-foreground, var(--itx-neutral-14))
+	);
+	--_border-color: var(
+		--itx-button-border-color-pressed,
+		var(--itx-button-border-color, transparent)
+	);
+	--_icon-color: var(
+		--itx-button-icon-color-pressed,
 		var(--itx-button-icon-color, currentColor)
 	);
 }

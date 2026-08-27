@@ -1,110 +1,124 @@
-<div class="itx-cb__header">
-	@if (isTabbed()) {
+@if (isTabbed()) {
+	<!--
+		The tab strip, the keyboard model and every ARIA relationship come from
+		interop-tabs. This composite used to hand-roll all three: a bare
+		div[role=tablist], its own roving tabindex, its own arrow/Home/End
+		handler, and its own tab/panel id wiring — a second implementation of a
+		component sitting in the same library.
+
+		The actions ride in the strip via [interop-tabs-actions]. They cannot go
+		inside the tablist, because ARIA requires a tablist's owned elements to
+		be tabs; the slot exists so a toolbar can sit beside them without joining
+		the tab sequence.
+	-->
+	<section
+		interop-tabs
+		class="itx-cb__tabs"
+		[ariaLabel]="filesLabel()"
+		[active]="activeKey()"
+		(activeChange)="onTabChange($event)"
+	>
 		<div
-			role="tablist"
-			class="itx-cb__tablist"
-			(keydown)="onTablistKeydown($event)"
+			interop-tabs-actions
+			class="itx-cb__actions"
+			interop-toolbar
+			[label]="actionsLabel()"
 		>
-			@for (file of files(); track fileKey(file)) {
-				<button
-					#tabBtn
-					role="tab"
-					class="itx-cb__tab"
-					[id]="tabId(fileKey(file))"
-					[attr.aria-selected]="activeKey() === fileKey(file)"
-					[attr.aria-controls]="panelId(fileKey(file))"
-					[tabindex]="activeKey() === fileKey(file) ? 0 : -1"
-					(click)="selectTab(fileKey(file))"
-					(keydown)="onTabKeydown($event, fileKey(file))"
-				>
-					{{ file.label }}
-				</button>
-			}
+			<ng-container [ngTemplateOutlet]="actionButtons" />
 		</div>
-	} @else {
+
+		@for (file of files(); track fileKey(file)) {
+			<section interop-tab-panel [key]="fileKey(file)" [label]="file.label">
+				<figure
+					interop-code-renderer
+					[tokens]="tokensFor(file)"
+					[lineNumbers]="lineNumbers()"
+					[wrap]="isWrapped()"
+				></figure>
+			</section>
+		}
+	</section>
+} @else {
+	<div class="itx-cb__header">
 		@if (displayLabel()) {
 			<span class="itx-cb__label">{{ displayLabel() }}</span>
 		}
-	}
 
-	<div class="itx-cb__actions" interop-toolbar [label]="actionsLabel()">
-		@if (wrapToggle()) {
-			<interop-tooltip
-				[label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
-			>
-				<button
-					interop-button="icon"
-					class="itx-cb__btn"
-					type="button"
-					[attr.aria-pressed]="isWrapped()"
-					[attr.aria-label]="
-						isWrapped() ? 'Disable word wrap' : 'Enable word wrap'
-					"
-					[onActivate]="handleWrapToggle"
-				>
-					<interop-icon
-						[size]="20"
-						[name]="
-							isWrapped() ? 'tabler-text-wrap' : 'tabler-text-wrap-disabled'
-						"
-					>
-					</interop-icon>
-				</button>
-			</interop-tooltip>
-		}
-		<interop-tooltip label="Copy">
+		<div class="itx-cb__actions" interop-toolbar [label]="actionsLabel()">
+			<ng-container [ngTemplateOutlet]="actionButtons" />
+		</div>
+	</div>
+
+	@if (isMultiFile()) {
+		<!-- Exactly one file. Same source resolution as a tab panel, but no
+		     role="tabpanel" — a panel with no tablist is orphaned ARIA. -->
+		<figure
+			interop-code-renderer
+			[tokens]="tokensFor(files()[0])"
+			[lineNumbers]="lineNumbers()"
+			[wrap]="isWrapped()"
+		></figure>
+	} @else {
+		<figure
+			interop-code-renderer
+			[tokens]="singleDisplayTokens()"
+			[lineNumbers]="lineNumbers()"
+			[wrap]="isWrapped()"
+		>
+			<ng-content />
+		</figure>
+	}
+}
+
+<!--
+	Declared once, rendered into whichever wrapper is live. The wrapper itself is
+	repeated rather than templated because content projection matches the
+	DECLARED element: interop-tabs selects [interop-tabs-actions], so the div
+	carrying that attribute has to be a real child of the tabs section.
+-->
+<ng-template #actionButtons>
+	@if (wrapToggle()) {
+		<interop-tooltip
+			[label]="isWrapped() ? 'Disable word wrap' : 'Enable word wrap'"
+		>
 			<button
 				interop-button="icon"
 				class="itx-cb__btn"
 				type="button"
-				[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
-				[onActivate]="handleCopy"
-				[activationOptions]="copyOptions"
+				[attr.aria-pressed]="isWrapped()"
+				[attr.aria-label]="
+					isWrapped() ? 'Disable word wrap' : 'Enable word wrap'
+				"
+				[onActivate]="handleWrapToggle"
 			>
 				<interop-icon
-					[name]="isCopied() ? 'ms-check' : 'ms-content-copy'"
 					[size]="20"
-				/>
+					[name]="
+						isWrapped() ? 'tabler-text-wrap' : 'tabler-text-wrap-disabled'
+					"
+				>
+				</interop-icon>
 			</button>
 		</interop-tooltip>
-	</div>
-</div>
-
-@if (isTabbed()) {
-	@for (file of files(); track fileKey(file)) {
-		<div
-			role="tabpanel"
-			[id]="panelId(fileKey(file))"
-			[attr.aria-labelledby]="tabId(fileKey(file))"
-			[hidden]="activeKey() !== fileKey(file)"
-		>
-			<figure
-				interop-code-renderer
-				[tokens]="tokensFor(file)"
-				[lineNumbers]="lineNumbers()"
-				[wrap]="isWrapped()"
-			></figure>
-		</div>
 	}
-} @else if (isMultiFile()) {
-	<!-- Exactly one file. Same source resolution as a tab panel, but no
-	     role="tabpanel" — a panel with no tablist is orphaned ARIA. -->
-	<figure
-		interop-code-renderer
-		[tokens]="tokensFor(files()[0])"
-		[lineNumbers]="lineNumbers()"
-		[wrap]="isWrapped()"
-	></figure>
-} @else {
-	<figure
-		interop-code-renderer
-		[tokens]="singleDisplayTokens()"
-		[lineNumbers]="lineNumbers()"
-		[wrap]="isWrapped()"
-	>
-		<ng-content />
-	</figure>
-}
+	<interop-tooltip label="Copy">
+		<button
+			itx-radius="full"
+			interop-button="icon"
+			itx-size="sm"
+			class="itx-cb__btn"
+			type="button"
+			[attr.aria-label]="isCopied() ? 'Copied to clipboard' : 'Copy code'"
+			[onActivate]="handleCopy"
+			[activationOptions]="copyOptions"
+		>
+			<interop-icon
+				[name]="isCopied() ? 'tabler-check' : 'tabler-copy'"
+				[size]="20"
+			/>
+		</button>
+	</interop-tooltip>
+</ng-template>
 
 <span class="interop-sr-only" aria-live="polite" aria-atomic="true">
 	@if (isCopied()) {

@@ -9,6 +9,7 @@ import {
 	InteropTabPanel,
 	InteropTabLabel,
 	InteropButton,
+	InteropToolbar,
 	InteropIcon,
 	InteropTable,
 	InteropCellDef,
@@ -21,6 +22,8 @@ import {
 import { TablerRoute } from "interop/lib/iconsets/tabler/outline/tabler-route";
 import { TablerBolt } from "interop/lib/iconsets/tabler/outline/tabler-bolt";
 import { TablerPackage } from "interop/lib/iconsets/tabler/outline/tabler-package";
+import { TablerRefresh } from "interop/lib/iconsets/tabler/outline/tabler-refresh";
+import { TablerDownload } from "interop/lib/iconsets/tabler/outline/tabler-download";
 import { DemoMasthead } from "../../components/demo-masthead/demo-masthead";
 import { DemoPage } from "../../components/demo-page/demo-page";
 import { DemoSection } from "../../components/demo-section/demo-section";
@@ -69,6 +72,7 @@ interface DirectiveEntry {
 		InteropTabPanel,
 		InteropTabLabel,
 		InteropButton,
+		InteropToolbar,
 		InteropIcon,
 		InteropTable,
 		InteropCellDef,
@@ -80,7 +84,15 @@ interface DirectiveEntry {
 		DemoState,
 		DemoStateItem,
 	],
-	providers: [provideInteropIcons(TablerRoute, TablerBolt, TablerPackage)],
+	providers: [
+		provideInteropIcons(
+			TablerRoute,
+			TablerBolt,
+			TablerPackage,
+			TablerRefresh,
+			TablerDownload,
+		),
+	],
 	templateUrl: "./tabs-page.html",
 	styleUrl: "./tabs-page.scss",
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -107,8 +119,20 @@ export class TabsPage {
 	// Literal strings on the class. Never assembled from live state: a snippet
 	// that can drift from what it documents is worse than no snippet.
 
+	readonly actionsCode = `\
+<section interop-tabs ariaLabel="Report views">
+  <!-- Projected into the tab strip, not the panel area. -->
+  <div interop-tabs-actions interop-toolbar label="Report actions">
+    <button interop-button="icon" aria-label="Refresh">…</button>
+    <button interop-button="icon" aria-label="Download">…</button>
+  </div>
+
+  <section interop-tab-panel label="Summary">…</section>
+  <section interop-tab-panel label="Incidents">…</section>
+</section>`;
+
 	readonly basicCode = `\
-<section interop-tabs aria-label="Station systems">
+<section interop-tabs ariaLabel="Station systems">
   <section interop-tab-panel label="Navigation">
     <p>Heading 042 degrees, 0.4c, ETA 6h 14m.</p>
   </section>
@@ -121,7 +145,7 @@ export class TabsPage {
 </section>`;
 
 	readonly controlledHtml = `\
-<section interop-tabs [(active)]="activeSystem" aria-label="Station systems">
+<section interop-tabs [(active)]="activeSystem" ariaLabel="Station systems">
   <section interop-tab-panel key="navigation" label="Navigation">…</section>
   <section interop-tab-panel key="engineering" label="Engineering">…</section>
   <section interop-tab-panel key="cargo" label="Cargo">…</section>
@@ -143,7 +167,7 @@ select(key: string): void {
 	];
 
 	readonly activationHtml = `\
-<section interop-tabs activationId="ops-console" aria-label="Ops console">
+<section interop-tabs activationId="ops-console" ariaLabel="Ops console">
   <section interop-tab-panel key="navigation" label="Navigation">…</section>
   <section interop-tab-panel key="engineering" label="Engineering">…</section>
 </section>
@@ -170,7 +194,7 @@ jumpTo(key: string): void {
 	];
 
 	readonly labelHtml = `\
-<section interop-tabs aria-label="Station systems">
+<section interop-tabs ariaLabel="Station systems">
   <section interop-tab-panel key="navigation">
     <ng-template interop-tab-label>
       <interop-icon [size]="16" name="tabler-route" />
@@ -208,7 +232,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 </section>`;
 
 	readonly stateHtml = `\
-<section interop-tabs aria-label="Panel lifecycle">
+<section interop-tabs ariaLabel="Panel lifecycle">
   <!-- Default: rendered on first activation, then kept forever. -->
   <section interop-tab-panel key="preserved" label="Preserved">
     <input type="text" placeholder="Type here, switch away, come back" />
@@ -238,10 +262,10 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 
 	readonly manualCode = `\
 <!-- auto (default): arrows move focus AND switch the panel -->
-<section interop-tabs aria-label="Light panels">…</section>
+<section interop-tabs ariaLabel="Light panels">…</section>
 
 <!-- manual: arrows move focus only; Enter or Space commits -->
-<section interop-tabs activationMode="manual" aria-label="Heavy panels">
+<section interop-tabs activationMode="manual" ariaLabel="Heavy panels">
   <section interop-tab-panel label="Telemetry">…</section>
   <section interop-tab-panel label="Diagnostics">…</section>
   <section interop-tab-panel label="Archive">…</section>
