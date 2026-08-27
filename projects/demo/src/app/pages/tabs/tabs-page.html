@@ -16,7 +16,7 @@
 		<demo-example label="Basic">
 			<section
 				interop-tabs
-				aria-label="Station systems"
+				ariaLabel="Station systems"
 				class="tabs-page__group"
 			>
 				<section interop-tab-panel label="Navigation">
@@ -37,6 +37,42 @@
 		</demo-example>
 	</demo-section>
 
+	<!-- ── Actions in the strip ───────────────────────────────────────────── -->
+	<demo-section id="actions" heading="Actions in the tab strip">
+		<p description class="demo-section__lede">
+			Content marked <code>[interop-tabs-actions]</code> rides beside the tabs
+			instead of falling into the panel area. It cannot go <em>inside</em> the
+			tablist &mdash; ARIA requires a tablist&rsquo;s owned elements to be tabs
+			&mdash; so the slot is how a toolbar sits in the strip without joining the
+			tab sequence. Arrow keys still traverse only the tabs; the toolbar keeps
+			its own single tab stop.
+		</p>
+
+		<demo-example label="A toolbar beside the tabs">
+			<section interop-tabs ariaLabel="Report views" class="tabs-page__group">
+				<div interop-tabs-actions interop-toolbar label="Report actions">
+					<button interop-button="icon" type="button" aria-label="Refresh">
+						<interop-icon name="tabler-refresh" [size]="18" />
+					</button>
+					<button interop-button="icon" type="button" aria-label="Download">
+						<interop-icon name="tabler-download" [size]="18" />
+					</button>
+				</div>
+
+				<section interop-tab-panel label="Summary">
+					<p>Uptime 99.98% across 31 days. Two incidents, both resolved.</p>
+				</section>
+				<section interop-tab-panel label="Incidents">
+					<p>
+						INC-204 — 6m, cache eviction storm. INC-211 — 2m, deploy rollback.
+					</p>
+				</section>
+			</section>
+
+			<itx-code-block language="html" [code]="actionsCode" />
+		</demo-example>
+	</demo-section>
+
 	<!-- ── Driving the selection ──────────────────────────────────────────── -->
 	<demo-section id="selection" heading="Driving the selection">
 		<p description class="demo-section__lede">
@@ -50,7 +86,7 @@
 			<section
 				interop-tabs
 				[(active)]="activeSystem"
-				aria-label="Station systems, controlled"
+				ariaLabel="Station systems, controlled"
 				class="tabs-page__group"
 			>
 				<section interop-tab-panel key="navigation" label="Navigation">
@@ -84,7 +120,7 @@
 			<section
 				interop-tabs
 				activationId="ops-console"
-				aria-label="Ops console"
+				ariaLabel="Ops console"
 				class="tabs-page__group"
 			>
 				<section interop-tab-panel key="navigation" label="Navigation">
@@ -120,7 +156,7 @@
 		<demo-example label="Icons and counts">
 			<section
 				interop-tabs
-				aria-label="Station systems, illustrated"
+				ariaLabel="Station systems, illustrated"
 				class="tabs-page__group"
 			>
 				<section interop-tab-panel key="navigation">
@@ -201,7 +237,7 @@
 		<demo-example label="Preserved, destroyed, and pre-rendered">
 			<section
 				interop-tabs
-				aria-label="Panel lifecycle"
+				ariaLabel="Panel lifecycle"
 				class="tabs-page__group"
 			>
 				<section interop-tab-panel key="preserved" label="Preserved">
@@ -257,7 +293,7 @@
 			<section
 				interop-tabs
 				activationMode="manual"
-				aria-label="Diagnostics, manual activation"
+				ariaLabel="Diagnostics, manual activation"
 				class="tabs-page__group"
 			>
 				<section interop-tab-panel label="Telemetry">

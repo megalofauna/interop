@@ -50,67 +50,30 @@
 	background-image: var(--itx-cb-header-background-image);
 }
 
-/* ── Tablist ─────────────────────────────────────────────────────────────── */
+/* ── Tab strip ───────────────────────────────────────────────────────────── *
+ * Nothing here draws a tab. interop-tabs does — the strip, the rule, the
+ * selected indicator, the focus ring — and this composite configures it with
+ * --itx-tab-* / --itx-tabs-* like any other consumer, exactly as .itx-cb__btn
+ * below configures --itx-button-*.
+ *
+ * What used to live here: a .itx-cb__tablist with its own background, radius,
+ * box-shadow and ::after rule, and a .itx-cb__tab with its own border, radius,
+ * focus ring and hover/selected states — a second tab implementation in a
+ * library that already had one. Its markup was a bare div[role=tablist] with a
+ * hand-rolled roving tabindex, no accessible name, and Enter/Space but no
+ * arrow keys.
+ *
+ * The header row it sat in is gone too when tabbed: interop-tabs' own bar is
+ * that row, and the actions ride in it through [interop-tabs-actions].
+ */
 
-:where(itx-code-block .itx-cb__tablist) {
-	position: relative;
-	display: flex;
-	min-width: 0;
-	padding-block: var(--itx-cb-tablist-padding-block);
-	padding-inline: var(--itx-cb-tablist-padding-inline);
-	border-radius: var(--itx-cb-tablist-border-radius);
-	background-color: var(--itx-cb-tablist-background);
-	box-shadow: var(--itx-cb-tablist-box-shadow);
-	column-gap: var(--itx-cb-tablist-column-gap, 0);
-
-	&::after {
-		content: "";
-		position: absolute;
-		width: 100%;
-		height: var(--itx-cb-tablist-border-bottom-width);
-		background-color: var(--itx-cb-tablist-border-bottom-color);
-		inset: auto 0 0px 0;
-	}
-}
-
-/* ── Tab ─────────────────────────────────────────────────────────────────── */
-
-:where(itx-code-block .itx-cb__tab) {
-	padding-block: var(--itx-cb-tab-padding-block);
-	padding-inline: var(--itx-cb-tab-padding-inline);
-	background-color: var(--itx-cb-tab-background);
-	border: var(--itx-cb-tab-border);
-	border-bottom: var(--itx-cb-tab-border-bottom);
-	border-radius: var(--itx-cb-tab-radius);
-
-	color: var(--itx-cb-tab-foreground);
-	font-family: var(--itx-cb-tab-font-family, inherit);
-	font-size: var(--itx-cb-tab-font-size);
-	cursor: pointer;
-	transition-property: color, border-color, background-color;
-	transition-duration: var(--itx-cb-tab-transition-duration);
-	transition-timing-function: var(--itx-cb-tab-transition-timing);
-	z-index: 1;
-}
-
-:where(itx-code-block .itx-cb__tab:hover) {
-	color: var(--itx-cb-tab-foreground-hover);
-	background-color: var(--itx-cb-tab-background-hover);
-	border-bottom-color: var(--itx-cb-tab-border-bottom-color-hover);
-}
-
-:where(itx-code-block .itx-cb__tab[aria-selected="true"]) {
-	color: var(--itx-cb-tab-foreground-current);
-	background-color: var(--itx-cb-tab-background-current);
-	border-bottom-color: var(--itx-cb-tab-border-bottom-color-current);
-}
-
-:where(itx-code-block .itx-cb__tab:focus-visible) {
-	outline: var(--itx-cb-tab-focus-width, var(--itx-focus-width))
-		var(--itx-cb-tab-focus-style, var(--itx-focus-style))
-		var(--itx-cb-tab-focus-color, var(--itx-focus-color));
-	outline-offset: var(--itx-cb-tab-focus-offset, var(--itx-focus-offset));
-	border-radius: inherit;
+:where(itx-code-block .itx-cb__tabs) {
+	/* The strip spans the block and carries the header's fill, because it IS
+	   the header in the tabbed case. */
+	background-color: var(--itx-cb-header-background);
+	background-image: var(--itx-cb-header-background-image);
+	padding-block: var(--itx-cb-header-padding-block);
+	padding-inline: var(--itx-cb-header-padding-inline);
 }
 
 /* ── Single-file label ───────────────────────────────────────────────────── */
@@ -126,48 +89,51 @@
 
 /* ── Actions toolbar ─────────────────────────────────────────────────────── */
 
+/*
+ * The actions container IS an interop-toolbar. Only its placement in the header
+ * belongs to this composite; everything it looks like belongs to the toolbar and
+ * is set through --itx-toolbar-* — background, border, radius, padding-block,
+ * padding-inline, gap.
+ *
+ * `border-radius: var(--itx-cb-actions-radius)` used to sit here. It never
+ * applied: rigs/toolbar.css sets border-radius on the same element in the same
+ * layer and imports later, so the twin lost every time.
+ */
 :where(itx-code-block .itx-cb__actions) {
 	flex: 0 1 auto;
 	margin-inline-start: auto;
-	border-radius: var(--itx-cb-actions-radius);
-	--itx-toolbar-gap: var(--itx-cb-actions-gap);
 }
 
-/*
- * Maps the composite's --itx-cb-button-* tokens onto the button component's
- * own --itx-button-* surface. Values live in the theme, per this file's
- * contract — they used to be literal --itx-neutral-* reads right here.
+/* ── Action buttons ──────────────────────────────────────────────────────── *
+ * Nothing. They are interop-buttons inside an interop-toolbar, and the toolbar
+ * theme already states every one of their properties — transparent at rest, the
+ * hover and active washes, the square corners, the pressed latch, the sizing.
+ *
+ * What used to be here: eleven declarations mapping --itx-cb-button-* onto
+ * --itx-button-*. Five of them were dead — toolbar.css declares the same tokens
+ * in interop.theme and this file is interop.foundation, which loses by layer —
+ * and the aria-pressed pair was dead for the same reason, so the word-wrap
+ * toggle announced a state it never showed.
+ *
+ * The twins existed to satisfy the two-file split rather than to serve anyone:
+ * a structural file "carries no values", so it could not write `transparent`
+ * and had to read a token, and the naming rule said that token must be
+ * --itx-cb-*. Seven levers were published in the token reference as working
+ * dials; none of them did anything. A consumer never needed them — an unlayered
+ * `itx-code-block [interop-button] { --itx-button-background: … }` outranks
+ * every interop layer and always did.
+ *
+ * The rule this leaves: a component names tokens for its OWN properties. To
+ * style a component it contains, declare that component's token directly, in
+ * the theme file, on a selector matching the element — the way toolbar.css
+ * does. Never invent a twin.
  */
-:where(itx-code-block .itx-cb__btn) {
-	--itx-button-border-radius: 0;
-	transition-property: background-color, background, color;
-	--itx-button-background: var(--itx-cb-button-background);
-	--itx-button-foreground: var(--itx-cb-button-foreground);
-	--itx-button-transition-duration: var(--itx-duration-base);
-	--itx-button-transition-timing-function: var(--itx-easing-decelerate);
 
-	&:hover {
-		--itx-button-background-hover: var(--itx-cb-button-background-hover);
-		--itx-button-foreground-hover: var(--itx-cb-button-foreground-hover);
-		--itx-button-transition-duration: var(--itx-duration-fast);
-		transition-duration: var(
-			--itx-button-transition-duration,
-			var(--itx-duration-fast)
-		);
-		--itx-button-transition-timing-function: var(--itx-easing-accelerate);
-	}
-
-	/* Applies to the word-wrap toggle, which is still a stroked Tabler pair.
-	   Inert for the copy/check pair — those are Material Symbols, whose glyphs
-	   are filled paths with no stroke to weight. */
-	interop-icon {
-		--itx-icon-stroke-width: 2px;
-	}
-
-	&[aria-pressed="true"] {
-		--itx-button-background: var(--itx-cb-button-background-pressed);
-		--itx-button-foreground: var(--itx-cb-button-foreground-pressed);
-	}
+/* Applies to the word-wrap toggle, which is still a stroked Tabler pair. Inert
+   for the copy/check pair — those are Material Symbols, whose glyphs are filled
+   paths with no stroke to weight. */
+:where(itx-code-block .itx-cb__btn interop-icon) {
+	--itx-icon-stroke-width: 2px;
 }
 
 /* ── Screen-reader live region ───────────────────────────────────────────── */

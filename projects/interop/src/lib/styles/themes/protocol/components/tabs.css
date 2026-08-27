@@ -63,7 +63,7 @@
 	--itx-tabs-gap: 0;
 	--itx-tabs-rule-width: var(--itx-border-width-hairline);
 	/* rank 2 — "hairline, dividers". See the note above. */
-	--itx-tabs-rule-color: var(--itx-neutral-3);
+	--itx-tabs-rule-color: var(--itx-neutral-4);
 
 	/* ── Tab box ────────────────────────────────────────────────────────── */
 	--itx-tab-min-block-size: var(--itx-spacing-10);
@@ -89,12 +89,12 @@
 	 */
 	--itx-tab-font-weight-selected: 400;
 
-	/* ── Colour ─────────────────────────────────────────────────────────── */
+	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-tab-background: transparent;
 	--itx-tab-foreground: var(--itx-neutral-9);
 	--itx-tab-background-hover: transparent;
 	--itx-tab-foreground-hover: var(--itx-neutral-14);
-	--itx-tab-background-selected: transparent;
+	--itx-tab-background-selected: var(--itx-neutral-3);
 	--itx-tab-foreground-selected: var(--itx-neutral-14);
 
 	/* ── Indicator ──────────────────────────────────────────────────────── */

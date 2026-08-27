@@ -1,29 +1,46 @@
-<div
-	role="tablist"
-	[attr.aria-label]="ariaLabel()"
-	[attr.aria-labelledby]="ariaLabelledBy()"
-	[attr.aria-orientation]="orientation()"
-	(keydown)="onTablistKeydown($event)"
->
-	@for (panel of panels(); track panel.key()) {
-		<button
-			#tabButton
-			role="tab"
-			[id]="panel.tabId()"
-			[attr.aria-selected]="panel.isActive()"
-			[attr.aria-controls]="panel.panelId()"
-			[tabindex]="rovingKey() === panel.key() ? 0 : -1"
-			(click)="selectPanel(panel.key())"
-			(focus)="onTabFocus(panel.key())"
-			(keydown)="onTabKeydown($event, panel.key())"
-		>
-			@if (panel.labelTemplate(); as tmpl) {
-				<ng-template [ngTemplateOutlet]="tmpl.templateRef" />
-			} @else {
-				{{ panel.label() ?? "" }}
-			}
-		</button>
-	}
+<!--
+	The bar is layout only — it carries no role, so the tablist's children stay
+	exactly the tabs and nothing else. That is the whole reason the actions slot
+	cannot simply live inside the tablist: ARIA requires a tablist's owned
+	elements to be tabs, and a toolbar in there is a spec violation, not a
+	styling choice.
+-->
+<div class="itx-tabs__bar">
+	<div
+		role="tablist"
+		[attr.aria-label]="ariaLabel()"
+		[attr.aria-labelledby]="ariaLabelledBy()"
+		[attr.aria-orientation]="orientation()"
+		(keydown)="onTablistKeydown($event)"
+	>
+		@for (panel of panels(); track panel.key()) {
+			<button
+				#tabButton
+				role="tab"
+				[id]="panel.tabId()"
+				[attr.aria-selected]="panel.isActive()"
+				[attr.aria-controls]="panel.panelId()"
+				[tabindex]="rovingKey() === panel.key() ? 0 : -1"
+				(click)="selectPanel(panel.key())"
+				(focus)="onTabFocus(panel.key())"
+				(keydown)="onTabKeydown($event, panel.key())"
+			>
+				@if (panel.labelTemplate(); as tmpl) {
+					<ng-template [ngTemplateOutlet]="tmpl.templateRef" />
+				} @else {
+					{{ panel.label() ?? "" }}
+				}
+			</button>
+		}
+	</div>
+
+	<!--
+		Anything the author marks [interop-tabs-actions] rides in the tab strip
+		instead of falling through to the panel area — an overflow menu, a copy
+		button, a filter. It is projected AFTER the tablist so the reading order
+		is tabs, then actions, then panels.
+	-->
+	<ng-content select="[interop-tabs-actions]" />
 </div>
 
 <ng-content />

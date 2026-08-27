@@ -157,6 +157,53 @@ follows it there. Carbon splits the two in its own vertical flavour (rule on
 one edge, marker on the other) because that flavour is a `contained`
 derivative; with no fill there is nothing to anchor a far-edge marker to.
 
+## Actions in the tab strip
+
+Content marked `[interop-tabs-actions]` projects beside the tablist instead of
+falling through to the panel area:
+
+```html
+<section interop-tabs ariaLabel="Report views">
+  <div interop-tabs-actions interop-toolbar label="Report actions">…</div>
+  <section interop-tab-panel label="Summary">…</section>
+</section>
+```
+
+**It cannot go inside the tablist, and that is ARIA, not styling** — a tablist's
+owned elements must be tabs, so a toolbar in there is a spec violation. The slot
+is how a toolbar sits in the strip without joining the tab sequence: arrow keys
+still traverse only the tabs, and the toolbar keeps its own single tab stop.
+
+The template is `.itx-tabs__bar` → `[tablist][slot]`. The bar carries **no role**,
+which is the whole point of it existing.
+
+Two things about the layout are load-bearing:
+
+- **The rule stays on the tablist, not the bar.** The selected tab's `::after`
+  is positioned to sit *in* the rule, so a rule owned by the bar would drift
+  away from the tabs the moment an action was taller than they are. The cost is
+  that the rule stops where the actions begin, which is right — it is the seam
+  between the *tabs* and the panels they control.
+- **The tablist is `flex: 1` with `min-inline-size: 0`.** Without the grow it
+  shrinks to its tabs and the rule stops under the last one; without the min it
+  refuses to shrink and shoves the actions out of the box.
+
+The default slot swallows anything the named one misses, so a mistyped
+`interop-tabs-actions` renders the toolbar in the panel area, still perfectly
+functional. Dev mode names any projected child that is neither a panel nor the
+bar for exactly that reason.
+
+## `ariaLabel`, not `aria-label`
+
+The input is `ariaLabel`. Writing `aria-label="…"` sets a plain attribute, so
+the input stays null, **the tablist gets no accessible name**, and the host
+`<section>` quietly becomes a named `region` landmark instead. The two spellings
+look interchangeable and are not.
+
+Six usages in the demo were written the wrong way and shipped anonymous
+tablists. Dev mode now warns when neither `ariaLabel` nor `ariaLabelledBy` is
+set, and says so explicitly when it finds a misplaced `aria-label` on the host.
+
 ## Token surface
 
 All of these are read from the component stylesheets' `var()` fallback slots —

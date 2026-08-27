@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import {
 	ChangeDetectionStrategy,
 	Component,
@@ -11,13 +12,14 @@ import {
 	isDevMode,
 	linkedSignal,
 	signal,
-	viewChildren,
 } from "@angular/core";
 import {
 	InteropButton,
 	InteropButtonActivation,
 	InteropIcon,
 	InteropCodeRenderer,
+	InteropTabs,
+	InteropTabPanel,
 	InteropTooltip,
 	canonicalizeLanguage,
 	type HighlightedCode,
@@ -27,9 +29,9 @@ import { INTEROP_HIGHLIGHTER } from "../../highlighter/public-api";
 import { type ActivationOptions } from "../../utils/public-api";
 import { provideInteropIcons } from "../../iconsets/core";
 import { InteropToolbar } from "../../rigs/public-api";
-import { MsCheck } from "../../iconsets/material-symbols/sharp/ms-check";
-import { MsContentCopy } from "../../iconsets/material-symbols/sharp/ms-content-copy";
 import { TablerTextWrap } from "../../iconsets/tabler/outline/tabler-text-wrap";
+import { TablerCopy } from "../../iconsets/tabler/outline/tabler-copy";
+import { TablerCheck } from "../../iconsets/tabler/outline/tabler-check";
 import { TablerTextWrapDisabled } from "../../iconsets/tabler/outline/tabler-text-wrap-disabled";
 
 export interface CodeFile {
@@ -85,6 +87,9 @@ let _cbIdCounter = 0;
 	selector: "itx-code-block",
 	standalone: true,
 	imports: [
+		NgTemplateOutlet,
+		InteropTabs,
+		InteropTabPanel,
 		InteropCodeRenderer,
 		InteropButton,
 		InteropButtonActivation,
@@ -96,8 +101,8 @@ let _cbIdCounter = 0;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [
 		provideInteropIcons(
-			MsCheck,
-			MsContentCopy,
+			TablerCopy,
+			TablerCheck,
 			TablerTextWrap,
 			TablerTextWrapDisabled,
 		),
@@ -213,8 +218,6 @@ export class CodeBlock {
 
 	// ── Tab button refs for keyboard focus management ─────────────────────────────
 
-	readonly tabBtns = viewChildren<ElementRef<HTMLButtonElement>>("tabBtn");
-
 	// ── Stable handler refs ───────────────────────────────────────────────────────
 
 	readonly handleCopy = (): void => {
@@ -228,6 +231,15 @@ export class CodeBlock {
 	};
 
 	// ── ARIA label helpers ───────────────────────────────────────────────────────
+
+	/**
+	 * Accessible name for the file tab strip. Set it when a page carries several
+	 * tabbed blocks — "Files" repeated five times tells a screen-reader user
+	 * nothing about which strip they are in.
+	 *
+	 * The hand-rolled tablist this replaced had no name at all.
+	 */
+	readonly filesLabel = input<string>("Files");
 
 	actionsLabel(): string {
 		const label = this.isTabbed()
@@ -363,45 +375,26 @@ export class CodeBlock {
 		return this.files().find((f) => this.fileKey(f) === this.activeKey());
 	}
 
-	tabId(key: string): string {
-		return `${this.uid}-tab-${key}`;
-	}
-
-	panelId(key: string): string {
-		return `${this.uid}-panel-${key}`;
+	/**
+	 * Activates a file by key. Also the (activeChange) handler for the tab
+	 * strip — interop-tabs owns focus and selection, this owns the cross-block
+	 * sync, and keeping the trigger HERE rather than binding [(active)] is what
+	 * stops an echo: a sync arriving from another block sets activeKey without
+	 * passing through this method.
+	 */
+	/**
+	 * (activeChange) handler. The tab strip's model is `string | null` — null
+	 * only when it has no panels, which cannot happen while this branch of the
+	 * template is live — so the guard is a type narrowing rather than a case.
+	 */
+	protected onTabChange(key: string | null): void {
+		if (key !== null) this.selectTab(key);
 	}
 
 	selectTab(key: string): void {
 		this.activeKey.set(key);
 		const syncKey = this.syncKey();
 		if (syncKey) this.activationService?.trigger(syncKey, key);
-	}
-
-	onTablistKeydown(event: KeyboardEvent): void {
-		const files = this.files();
-		if (!files.length) return;
-
-		const keys = files.map((f) => this.fileKey(f));
-		const currentIdx = keys.indexOf(this.activeKey() ?? "");
-		let targetIdx: number | null = null;
-
-		if (event.key === "ArrowRight") targetIdx = (currentIdx + 1) % keys.length;
-		else if (event.key === "ArrowLeft")
-			targetIdx = (currentIdx - 1 + keys.length) % keys.length;
-		else if (event.key === "Home") targetIdx = 0;
-		else if (event.key === "End") targetIdx = keys.length - 1;
-		else return;
-
-		event.preventDefault();
-		this.selectTab(keys[targetIdx]);
-		this.tabBtns()[targetIdx]?.nativeElement.focus();
-	}
-
-	onTabKeydown(event: KeyboardEvent, key: string): void {
-		if (event.key === "Enter" || event.key === " ") {
-			event.preventDefault();
-			this.selectTab(key);
-		}
 	}
 
 	// ── Private ──────────────────────────────────────────────────────────────────
