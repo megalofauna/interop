@@ -81,6 +81,12 @@
 	   rules below stay on button[interop-button~="…"] because they're keyed off
 	   attributes that don't propagate up the tree. */
 	--itx-button-background: var(--itx-neutral-3);
+
+	/* aria-pressed="true" — a toggle that is ON. One step past active on the
+	   same monotonic ramp the other states use, so "held down" and "latched on"
+	   read as the same family rather than two vocabularies. */
+	--itx-button-background-pressed: var(--itx-neutral-4);
+	--itx-button-foreground-pressed: var(--itx-neutral-14);
 	--itx-button-foreground: var(--itx-neutral-14);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
