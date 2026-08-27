@@ -244,6 +244,74 @@ And if the component has no opinion, declare nothing — absence is how the them
 says that, and the structural fallback carries it.
 `scripts/check-keywords.mjs` fails the build on all of them.
 
+## Styling a component you contain
+
+A component names tokens for its **own** properties. To style a component it
+*contains*, declare **that component's token directly** — in the theme file, on
+a selector matching the element. Never invent a namespaced twin.
+
+```css
+/* themes/protocol/rigs/toolbar.css — correct, and the only one that worked */
+:where(interop-toolbar) :where([interop-button]) {
+  --itx-button-background: transparent;
+}
+```
+
+Two ways the same intent fails, both shipped:
+
+- **Wrong layer.** `composites/code-block.css` mapped `--itx-cb-button-background`
+  onto `--itx-button-background`. Structural files are `interop.foundation`;
+  `toolbar.css` declares the same token in `interop.theme` and wins by layer, so
+  the mapping could never apply. Five tokens, dead for their whole life,
+  including the `aria-pressed` pair — the word-wrap toggle announced a state it
+  never showed.
+- **Wrong proximity.** `themes/protocol/composites/inline-code.css` declared
+  `--itx-button-background: transparent` on the **host**. `button.css` declares
+  it on the button *element*, and a declaration on the element beats one
+  inherited from an ancestor. It rendered correctly by coincidence — the
+  button's default fill was one ramp step from the chip's — and a commented-out
+  `purple` sat next to it where someone had tried and given up.
+
+**Do not add a cascade layer to make a twin win.** The twins existed to satisfy
+this document, not a consumer: a structural file "carries no values", so it
+could not write `transparent` and had to read a token, and the naming rule said
+that token must be `--itx-<own-prefix>-*`. Seven were published in
+`interop.tokens.css` as working dials. Deleting them changed nothing on screen,
+because losing declarations have no effect to remove.
+
+**The other half of the rule: a component must not restate its own structural
+fallbacks in its theme.** That is what makes its tokens unsettable from outside.
+
+`themes/protocol/rigs/toolbar.css` declared seven values; five of them —
+padding, background, border-colour, border-radius, disabled-opacity — were
+character-for-character what `rigs/toolbar.css` already falls back to. They
+could not change a rendering (verified: computed styles identical across three
+pages, before and after deleting them). The only thing they changed was whether
+a container could set the token, because a theme declaration beats a container's
+by `@import` order while a structural fallback loses to anything.
+
+So the code block had no way to give its actions strip a background, and the
+twin it did have — `--itx-cb-actions-radius` — lost to
+`--itx-toolbar-border-radius` on the same element. Deleting the five defaults
+made all of it settable from `itx-code-block` with no new mechanism.
+
+**Absence is the API.** If a theme value would be identical to the structural
+fallback, delete it. `--itx-toolbar-gap` stays, because the fallback is `0` and
+`var(--itx-spacing-1)` is a real opinion; `--itx-toolbar-background: transparent`
+goes, because the fallback is already `transparent`.
+
+**A consumer never needed the twin.** Everything Interop ships is inside
+`@layer interop`, so an unlayered consumer rule wins on contact:
+
+```css
+itx-code-block [interop-button] { --itx-button-background: red; }
+```
+
+And when the *contained* component has no token for what you want — as with
+`aria-pressed`, which nothing in the library styled — the answer is to give that
+component the state, not to reach in from outside. `aria-pressed` now lives in
+`components/button.css` and serves every toggle button.
+
 ## Position a positioned box with INSET, never margin
 
 If an element is `fixed`, `absolute`, `sticky`, or in the top layer, place it

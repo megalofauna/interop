@@ -28,18 +28,35 @@
 
 	--itx-ic-radius: var(--itx-radius-full);
 
-	--itx-button-background: transparent;
-	--itx-button-border-radius: var(--itx-radius-full);
-	--itx-button-background-hover: var(--itx-surface-below);
-	--itx-button-foreground-hover: var(--itx-neutral-14);
-
-	/*--itx-button-background: purple;
-	--itx-button-foreground: white;*/
-
 	--itx-ic-font-family: var(--itx-font-family-mono);
 	--itx-ic-font-size: var(--itx-font-size-caption);
 	--itx-ic-line-height: 1.4;
 	--itx-ic-padding-block: var(--itx-spacing-1);
 	--itx-ic-padding-inline: var(--itx-spacing-3) var(--itx-spacing-1);
 	--itx-ic-gap: var(--itx-spacing-3);
+}
+
+/*
+ * The copy button.
+ *
+ * These four used to sit in the block above, on the HOST. Two of them did
+ * nothing: button.css declares --itx-button-background and -foreground on the
+ * button ELEMENT, and a declaration on the element beats one inherited from an
+ * ancestor, so the host's `transparent` never arrived. The radius worked only
+ * because nothing else declares it.
+ *
+ * The result rendered correctly by coincidence — the button's default fill,
+ * oklch(0.24 0.007 250), sits on a chip of oklch(0.234 0.006 250), one ramp
+ * step apart and invisible. Move either value and a fill appears on a control
+ * that was meant to have none.
+ *
+ * Declared here, on the button, it lands. Same shape toolbar.css uses for the
+ * same problem: to style a component you contain, declare ITS token, in the
+ * theme, on a selector matching the element.
+ */
+:where([interop-root] itx-inline-code .itx-ic__btn) {
+	--itx-button-background: transparent;
+	--itx-button-border-radius: var(--itx-radius-full);
+	--itx-button-background-hover: var(--itx-surface-below);
+	--itx-button-foreground-hover: var(--itx-neutral-14);
 }
