@@ -141,8 +141,90 @@
 
 	background: var(--itx-tab-background);
 	color: var(--itx-tab-foreground);
-	border: var(--itx-tab-border-width) solid var(--itx-tab-border-color);
-	border-radius: var(--itx-tab-border-radius);
+	/* ── Border ──────────────────────────────────────────────────────────── *
+	 * Longhands, not the `border` shorthand, and LOGICAL rather than physical.
+	 *
+	 * The shorthand collapsed width, style and colour into one declaration and
+	 * hardcoded `solid`, so a theme could state one width and one colour for all
+	 * four sides and nothing else — no style at all, and no way to give the
+	 * block-end edge its own colour. A value that no token names is a value no
+	 * consumer can reach; see the Addressability note in .agent/css-strategy.md.
+	 *
+	 * Each side and corner reads its own token and falls back to the base one.
+	 * That is the same shape the state tokens use — `var(--x-state, var(--x))` —
+	 * for the same reason: an undeclared per-side token degrades to the base
+	 * instead of going invalid at computed-value time and dropping the edge.
+	 * The theme declares only the ones that differ.
+	 *
+	 * Logical because tabs already has a vertical orientation, where the list
+	 * rule moves from block-end to inline-end (see the tablist rules above). A
+	 * physical per-side token would name the wrong edge in exactly that case.
+	 */
+	border-block-start-width: var(
+		--itx-tab-border-block-start-width,
+		var(--itx-tab-border-width)
+	);
+	border-block-start-style: var(
+		--itx-tab-border-block-start-style,
+		var(--itx-tab-border-style)
+	);
+	border-block-start-color: var(
+		--itx-tab-border-block-start-color,
+		var(--itx-tab-border-color)
+	);
+	border-block-end-width: var(
+		--itx-tab-border-block-end-width,
+		var(--itx-tab-border-width)
+	);
+	border-block-end-style: var(
+		--itx-tab-border-block-end-style,
+		var(--itx-tab-border-style)
+	);
+	border-block-end-color: var(
+		--itx-tab-border-block-end-color,
+		var(--itx-tab-border-color)
+	);
+	border-inline-start-width: var(
+		--itx-tab-border-inline-start-width,
+		var(--itx-tab-border-width)
+	);
+	border-inline-start-style: var(
+		--itx-tab-border-inline-start-style,
+		var(--itx-tab-border-style)
+	);
+	border-inline-start-color: var(
+		--itx-tab-border-inline-start-color,
+		var(--itx-tab-border-color)
+	);
+	border-inline-end-width: var(
+		--itx-tab-border-inline-end-width,
+		var(--itx-tab-border-width)
+	);
+	border-inline-end-style: var(
+		--itx-tab-border-inline-end-style,
+		var(--itx-tab-border-style)
+	);
+	border-inline-end-color: var(
+		--itx-tab-border-inline-end-color,
+		var(--itx-tab-border-color)
+	);
+
+	border-start-start-radius: var(
+		--itx-tab-border-start-start-radius,
+		var(--itx-tab-border-radius)
+	);
+	border-start-end-radius: var(
+		--itx-tab-border-start-end-radius,
+		var(--itx-tab-border-radius)
+	);
+	border-end-start-radius: var(
+		--itx-tab-border-end-start-radius,
+		var(--itx-tab-border-radius)
+	);
+	border-end-end-radius: var(
+		--itx-tab-border-end-end-radius,
+		var(--itx-tab-border-radius)
+	);
 
 	cursor: pointer;
 	position: relative;

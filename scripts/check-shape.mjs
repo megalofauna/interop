@@ -10,9 +10,16 @@
  * reaches everything except the one component someone typed a number into.
  * Read var(--itx-COMP-radius, var(--itx-radius)) instead.
  *
- * `0` is allowed — that is absence, not a weight, and routing it through a
- * token buys nothing. Percentages are allowed: `50%` on a circular indicator is
- * geometry, not styling, and does not scale with a radius knob.
+ * Zero is allowed — that is absence, not a weight, and routing it through a
+ * token buys nothing. `0px` counts as zero as much as `0` does: calc() and
+ * max() cannot mix a unitless number with a length, so
+ * `max(0px, calc(var(--outer) - var(--padding)))` has to spell the unit, and
+ * the segmented control's track padding has to be `0px` for the same reason.
+ * Rejecting the unit would push authors back to the bare `0` that made those
+ * expressions invalid at computed-value time in the first place.
+ *
+ * Percentages are allowed: `50%` on a circular indicator is geometry, not
+ * styling, and does not scale with a radius knob.
  *
  * ─── Rule 2: no baked alias ─────────────────────────────────────────────────
  *
@@ -36,6 +43,27 @@
  * first two. Hence a guard rather than a convention.
  *
  * tokens/baking.spec.ts holds the executable version of both halves.
+ *
+ * ─── Rule 3: no CSS-wide keyword on a radius ────────────────────────────────
+ *
+ * `border-radius: inherit` does not mean "my radius token". It means the PARENT
+ * ELEMENT's computed radius — a different box, named by no token, reachable by
+ * no theme. Declared in a state rule it silently overrides the component's own
+ * radius, and the only symptom is a consumer reporting that the lever does not
+ * work. That is exactly how it shipped on the code-block tab: the base rule read
+ * --itx-cb-tab-radius, the :focus-visible rule read `inherit`, and a focused tab
+ * quietly took the TABLIST's radius.
+ *
+ * The exception, and the reason the mistake is so easy to make: inside a
+ * pseudo-element rule the "parent" IS the generating element, so `inherit` means
+ * "clip me to my own element's corners". That is the correct and intended idiom
+ * (utilities/decoration.css, composites/terminal.css). The two look identical in
+ * source and mean opposite things, so the selector is what decides.
+ *
+ * Scoped to radius on purpose. The same keywords on other properties are usually
+ * right — `color: inherit` and `font: inherit` on a <button> are the standard UA
+ * reset, and 25 of those ship. scripts/check-keywords.mjs carries the general
+ * doctrine; this rule is the slice of it a machine can decide.
  *
  * Usage: node scripts/check-shape.mjs [root]
  */
@@ -109,12 +137,31 @@ for (const file of walk(ROOT)) {
 	)) {
 		// A literal inside a var() fallback is still a literal here: it is the
 		// value that actually applies whenever the token is unset.
-		if (!LITERAL_LEN.test(m[1])) continue;
+		// Zero is absence at any unit — see the header.
+		const lengths = [...m[1].matchAll(new RegExp(LITERAL_LEN, "g"))];
+		if (!lengths.some((L) => Number.parseFloat(L[0]) !== 0)) continue;
 		findings.push({
 			file,
 			line: lineOf(m.index),
 			what: m[0].trim().replace(/\s+/g, " ").slice(0, 70),
 			why: "literal radius — this component ignores --itx-radius. Read var(--itx-COMP-radius, var(--itx-radius)).",
+		});
+	}
+
+	// Rule 3 — a CSS-wide keyword on a radius, outside a pseudo-element rule.
+	// The lookbehind keeps this off custom properties: `--itx-border-radius`
+	// contains the substring, and that position is check-keywords.mjs's.
+	for (const m of clean.matchAll(
+		/(?<![\w-])(border-[a-z-]*radius)\s*:\s*(unset|initial|inherit|revert|revert-layer)\s*(?=;|\})/g,
+	)) {
+		// In a pseudo-element rule the parent IS the generating element, which
+		// is the legitimate "clip me to my own corners" idiom.
+		if (/::/.test(selectorAt(clean, m.index))) continue;
+		findings.push({
+			file,
+			line: lineOf(m.index),
+			what: `${m[1]}: ${m[2]}`,
+			why: "a CSS-wide keyword on a radius takes the PARENT element's value, not this component's radius token — so the token is silently bypassed and no theme can reach the result. Read var(--itx-COMP-radius) instead, or delete the declaration and let the base rule stand.",
 		});
 	}
 
@@ -142,7 +189,7 @@ for (const file of walk(ROOT)) {
 
 if (!findings.length) {
 	console.log(
-		"✓ shape clean — no literal radius, no system token baked at the root",
+		"✓ shape clean — no literal radius, no baked system token, no radius keyword",
 	);
 	process.exit(0);
 }

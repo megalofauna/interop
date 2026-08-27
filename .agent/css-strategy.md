@@ -214,7 +214,14 @@ other legitimate survivors. `scripts/check-motion.mjs` enforces the rest, and a
 `var()` fallback is a chain (allowed) while a literal fallback is a second source
 of truth (rejected).
 
-## Never write a CSS-wide keyword as a token value
+## Addressability — a value nobody can name is a value nobody can change
+
+The theme is the single source of truth for every value. A declaration only
+honours that if the value it produces is **addressable** — reachable by naming
+one token. Two constructs quietly break it, and both report as the same bug:
+*"I can't see a way to override this."*
+
+### 1. A CSS-wide keyword as a value
 
 ```css
 --itx-kbd-perspective: unset;      /* NOT "no perspective" */
@@ -243,6 +250,62 @@ font-family: var(--itx-cb-tab-font-family, inherit);
 And if the component has no opinion, declare nothing — absence is how the theme
 says that, and the structural fallback carries it.
 `scripts/check-keywords.mjs` fails the build on all of them.
+
+**The same keyword on a real property is the same bug** whenever that property
+is also driven by a token. It shipped on the code-block tab:
+
+```css
+:where(itx-code-block .itx-cb__tab)                { border-radius: var(--itx-cb-tab-border-radius); }
+:where(itx-code-block .itx-cb__tab:focus-visible)  { border-radius: inherit; }   /* ← */
+```
+
+Both zero-specificity, so the later rule won — and `inherit` means *the parent
+element's computed value*, which was the **tablist's** radius. A focused tab
+took a radius from a different box, named by no token. The reported symptom was
+that changing `--itx-cb-tab-border-radius` did nothing.
+
+The trap is that the identical line is *correct* on a pseudo-element, where the
+"parent" is the generating element: `border-radius: inherit` on a `::before`
+overlay means "clip me to my own element's corners" (`utilities/decoration.css`,
+`composites/terminal.css`). Same words, opposite meanings, and only the selector
+tells you which.
+
+A blanket ban would be wrong — `color: inherit` and `font: inherit` on a
+`<button>` are the standard UA reset and 25 of those ship. So only the decidable
+slice is automated: **Rule 3 in `scripts/check-shape.mjs`** flags a CSS-wide
+keyword on any radius outside a pseudo-element rule, because a parent's radius
+is never what a component's own radius token meant.
+
+### 2. A shorthand as a token value
+
+```css
+--itx-cb-tab-border: none;                                        /* was */
+--itx-cb-tab-border-bottom: var(--itx-border-width-thick) solid transparent;
+```
+
+One token holding width + style + colour is one lever for three values. A theme
+that wants a different colour must restate the width and the style with it, and
+a **state rule cannot reach inside it at all** — which is why the code-block tab
+needed a separate `--itx-cb-tab-border-bottom-color-hover` bolted on beside the
+shorthand it could not modify.
+
+Write longhands, and prefer logical ones:
+
+```css
+border-block-end-width: var(--itx-cb-tab-border-block-end-width, var(--itx-cb-tab-border-width));
+border-block-end-style: var(--itx-cb-tab-border-block-end-style, var(--itx-cb-tab-border-style));
+border-block-end-color: var(--itx-cb-tab-border-block-end-color, var(--itx-cb-tab-border-color));
+```
+
+Per-side and per-corner tokens fall back to a base one — the same
+`var(--x-state, var(--x))` shape the state tokens use, and for the same reason:
+an undeclared override degrades to the base instead of going invalid at
+computed-value time and dropping the edge. The theme then declares only what
+differs, so a complete surface costs the theme nothing to ignore.
+
+`interop-tabs` and the code-block tab both expose this shape. Nothing lints it
+yet; a shorthand's *value* is not distinguishable from a longhand's by regex
+alone.
 
 ## Styling a component you contain
 
@@ -465,6 +528,43 @@ re-declaring ~20 custom properties on every element in the document.
 `tokens/baking.spec.ts` and `tokens/shape.spec.ts` hold all of this as
 executable cases.
 
+### Nested radii
+
+`--itx-outer-radius` / `--itx-inner-radius` are a **container-published
+contract**, not a root token pair. A container states its own painted radius and
+the radius a child inset by its padding needs to sit flush in the corner:
+
+```css
+:where(fieldset[interop-segmented-control]) {
+  --itx-outer-radius: var(--itx-segmented-control-track-border-radius, var(--itx-radius));
+  --itx-inner-radius: max(0px, calc(var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)));
+}
+```
+
+Three rules, each of which was a shipped bug first:
+
+- **Declare them on the container, never on `[interop-root]`.** A derived alias
+  substitutes where it is declared. Measured: with `--itx-outer-radius:
+  var(--itx-radius)` on the root, a subtree setting `--itx-radius: 16px` still
+  reads `4px`. `check-shape.mjs` Rule 2 does *not* catch this one — its selector
+  test matches the bare `:where([interop-root])`, not the ramp block's
+  two-selector form.
+- **The outer value must be the token the container actually paints with.** The
+  segmented control set it to an unrelated ramp step, so the "outer" radius was
+  the outer radius of nothing: the track painted 4px, the pill 2px, and moving
+  the token moved neither.
+- **`max(0px, …)`, and spell the unit.** The subtraction goes negative whenever
+  padding exceeds radius — the *default* case — and a negative radius kills the
+  declaration. `max(0, …)` is invalid: calc and max cannot mix a unitless number
+  with a length.
+
+Consumers read it as `var(--itx-inner-radius, var(--itx-radius))`; that fallback
+is the "no container published one" case and resolves at the reading element, so
+nothing needs declaring at the root. `indicator.css` and `visimorph.css` both do
+this, which is why a checkbox inside a segmented control takes the track's inner
+corner. A component that pins its own radius token on top of that chain opts out
+of the whole mechanism — which is what made this inert for two rounds.
+
 ## The globals file
 
 `styles/interop.globals.css` is GENERATED by `scripts/generate-globals.mjs` and is
@@ -538,6 +638,10 @@ means following the user's colours, not the brand's.
 ## Linting
 
 `npm run lint` runs nine guards; `npm run lint:css` is the stylelint one.
+
+`check-shape.mjs` carries three rules: no literal radius, no system token
+baked at the root, and no CSS-wide keyword on a radius outside a
+pseudo-element rule (see *Addressability*).
 
 Stylelint was configured long before it was installed, and its config had never
 been executed — `custom-property-pattern` was written as `^--(itx-…)$`, but

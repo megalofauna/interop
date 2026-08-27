@@ -75,8 +75,8 @@
 
 	/* No per-side border: the frame is the inset box-shadow declared on the
 	   control below. */
-	--itx-segmented-control-track-border-color: transparent;
-	--itx-segmented-control-track-border-width: 0;
+	--itx-segmented-control-track-border-color: var(--itx-neutral-12);
+	--itx-segmented-control-track-border-width: 1px;
 	--itx-segmented-control-track-border-style: solid;
 
 	/* Squared, but not pinned. Carbon's Content Switcher specifies a 4px radius
@@ -92,7 +92,7 @@
 	   expression was invalid at computed-value time, so every nested radius
 	   reading it silently collapsed to 0 — the mechanism was wired correctly
 	   and had never once produced a value. */
-	--itx-segmented-control-track-padding: 0px;
+	--itx-segmented-control-track-padding: var(--itx-spacing-1);
 	--itx-segmented-control-track-max-width: none;
 
 	/* ── Segment — layout ───────────────────────────────────────────────── */
@@ -148,12 +148,12 @@
 	 * shifting from grey to full strength is unambiguous.
 	 */
 	--itx-segment-background-hover: transparent;
-	--itx-segment-foreground-hover: var(--itx-neutral-14);
+	--itx-segment-foreground-hover: var(--itx-neutral-12);
 
 	/* ── Segment — selected state ───────────────────────────────────────── */
 	/* $text-inverse. The fill comes from the indicator pill (below), so the
 	   two anchor-positioning paths can't disagree about the colour. */
-	--itx-segment-foreground-selected: var(--itx-neutral-14);
+	--itx-segment-foreground-selected: var(--itx-neutral-2);
 
 	/* ── Segment — focus ring ───────────────────────────────────────────── */
 	/* Carbon draws focus as an inset ring in its brand blue; ours keeps the
@@ -184,13 +184,32 @@
  */
 
 :where(fieldset[interop-segmented-control]) {
-	/* Managed radii — declared HERE, not on [interop-root]. Parked on the root
-	   they substituted there and froze, so a consumer rescaling radius for a
-	   subtree could not reach them. The indicator and visimorph read these by
-	   inheritance, which still works: both render inside this element. */
-	--itx-outer-radius: var(--itx-radius-2);
-	--itx-inner-radius: calc(
-		var(--itx-outer-radius) - var(--itx-segmented-control-track-padding)
+	/* ── Managed radii ──────────────────────────────────────────────────── *
+	 * The nested-radius contract, published to everything inside this control.
+	 * Defined in tokens/shape.css; declared HERE because only a container that
+	 * knows its own padding can compute the inner corner, and because parking a
+	 * derived alias on [interop-root] freezes it — measured: with
+	 * `--itx-outer-radius: var(--itx-radius)` at the root, a subtree setting
+	 * --itx-radius: 16px still reads 4px.
+	 *
+	 * --itx-outer-radius is THE TRACK'S OWN radius, read from the same token the
+	 * track paints with. It used to be `var(--itx-radius-2)` — a number the
+	 * track never read — so the "outer" radius was not the outer radius of
+	 * anything, and moving it changed nothing you could see. Measured before the
+	 * fix: track 4px, pill 2px, and setting --itx-outer-radius: 12px moved
+	 * neither.
+	 *
+	 * max(0px, …) because the subtraction goes negative as soon as the padding
+	 * exceeds the radius — which is the DEFAULT case here, `none` minus 4px — and
+	 * a negative radius is invalid, taking the whole declaration with it.
+	 */
+	--itx-outer-radius: var(
+		--itx-segmented-control-track-border-radius,
+		var(--itx-radius)
+	);
+	--itx-inner-radius: max(
+		0px,
+		calc(var(--itx-outer-radius) - var(--itx-segmented-control-track-padding))
 	);
 
 	/* The frame is drawn as an inset ring, not a border: Carbon uses `outline`
@@ -211,8 +230,7 @@
 	   contrast" one, whose whole identity is a maximum-strength frame carrying
 	   an otherwise unpainted group. Set --itx-contrast-3 for the ordinary
 	   emphasis edge. */
-	--itx-segmented-control-track-box-shadow: inset 0 0 0
-		var(--itx-border-width-hairline) var(--itx-neutral-14);
+	--itx-segmented-control-track-box-shadow: none;
 
 	/* Divider — $border-subtle, one hairline. segment.css already suppresses it
 	   on either side of the selected segment.
@@ -245,9 +263,19 @@
 	   belonged on all along. */
 	--itx-indicator-background-color: var(--itx-neutral-2);
 	--itx-indicator-border-width: 0;
-	/* The pill matches the track. All three radii move together or the
-	   selection sits visibly proud of the frame at the ends. */
-	--itx-indicator-border-radius: var(--itx-radius);
+	/*
+	 * No radius declared, and that is the mechanism rather than an omission.
+	 * indicator.css reads
+	 *   var(--itx-indicator-border-radius, var(--itx-inner-radius, var(--itx-radius)))
+	 * so leaving this unset lets the pill take the track's INNER corner — the
+	 * outer radius minus the track padding — which is the radius a box inset by
+	 * the padding has to have to sit flush in the corner.
+	 *
+	 * It used to pin --itx-radius-nominal here, which won over that chain by
+	 * proximity and made the managed-radius family inert for this component:
+	 * the comment claimed "all three radii move together" while the track
+	 * painted 4px and the pill painted 2px.
+	 */
 }
 
 /* ── Sizes ───────────────────────────────────────────────────────────────── */
