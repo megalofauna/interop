@@ -1,20 +1,36 @@
 /*
- * Colour ladder — GENERATED, do not edit by hand.
+ * Colour ladder — the palette. Hand-authored; edit it directly.
  *
- *   node scripts/generate-color-ladder.mjs
+ * Fourteen steps per family, placed by lightness on one shared envelope, so
+ * every family lines up step-for-step. Contrast is a CONSEQUENCE of position,
+ * not something solved per surface:
  *
- * Surfaces are art-directed; contrast ranks are solved against their own
- * surface for a contrast floor. See the script for the reasoning, and
- * .agent/color.md for the model.
+ *     borders 7 steps from the background, text 8, enhanced text 10
  *
- * Both schemes live in one light-dark() per token. That is not a style
- * choice: color-scheme is `light dark` on [interop-root], and while it
- * computes to that, nothing in CSS can observe which scheme is actually in
- * use — not @supports, not a style query, not @container. Only light-dark()
- * knows. So scheme-varying NUMBERS have to ride inside a colour function.
+ * That rule is the whole guarantee, and it is proved — not asserted — by
+ * scripts/check-contrast-render.mjs, which paints every pairing in Chrome and
+ * reads the pixels back. Move a step and it will tell you.
  *
- * Chroma and hue stay live via the tint packs, so a whole-palette retint is
- * one declaration on any ancestor. Lightness is baked per layer.
+ * The ROLES below sit one tier further out than the rule's minimum — border on
+ * step 9 rather than 8. That is not slack: a role is read at every elevation,
+ * and the surface climbs about two steps up the ramp by the deepest layer, so
+ * a role picked for the page alone lands under its floor at depth. Measured by
+ * scripts/check-contrast-css.mjs, which resolves each role through the real
+ * cascade at every layer the engine can reach.
+ *
+ * Both schemes live in one light-dark() per token. That is not a style choice:
+ * color-scheme is `light dark` on [interop-root], and while it computes to
+ * that, nothing in CSS can observe which scheme is actually in use — not
+ * @supports, not a style query, not @container. Only light-dark() knows. So
+ * scheme-varying values have to ride inside a colour function.
+ *
+ * Roles are declared in EVERY block that redeclares the steps. A role written
+ * once at [interop-root] would compute there and inherit as a finished colour,
+ * so a colourway or status-palette variant would keep the root's roles. Same
+ * rule that governs the tint packs — see .agent/color.md.
+ *
+ * The surfaces are not here — they are computed from the ramp dials below by
+ * tokens/elevation.css.
  */
 
 :where([interop-root]) {
@@ -34,53 +50,11 @@
 	--itx-ramp-dark-min: 0.17;
 	--itx-ramp-dark-max: 0.62;
 
-	/* ── Contrast rank 1 — wash — hover fills, stripes ─────── */
-	--itx-ramp-contrast-1-0-light: 0.952; /* 1.12:1 on its surface */
-	--itx-ramp-contrast-1-0-dark: 0.220; /* 1.11:1 on its surface */
-	--itx-ramp-contrast-1-1-light: 0.927; /* 1.12:1 on its surface */
-	--itx-ramp-contrast-1-1-dark: 0.252; /* 1.13:1 on its surface */
-	--itx-ramp-contrast-1-2-light: 0.902; /* 1.12:1 on its surface */
-	--itx-ramp-contrast-1-2-dark: 0.284; /* 1.16:1 on its surface */
 
-	/* ── Contrast rank 2 — hairline, dividers ──────────────── */
-	--itx-ramp-contrast-2-0-light: 0.851; /* 1.53:1 on its surface */
-	--itx-ramp-contrast-2-0-dark: 0.326; /* 1.55:1 on its surface */
-	--itx-ramp-contrast-2-1-light: 0.829; /* 1.53:1 on its surface */
-	--itx-ramp-contrast-2-1-dark: 0.342; /* 1.55:1 on its surface */
-	--itx-ramp-contrast-2-2-light: 0.805; /* 1.53:1 on its surface */
-	--itx-ramp-contrast-2-2-dark: 0.361; /* 1.55:1 on its surface */
 
-	/* ── Contrast rank 3 — border, emphasis edge ───────────── */
-	--itx-ramp-contrast-3-0-light: 0.656; /* 3.07:1 on its surface */
-	--itx-ramp-contrast-3-0-dark: 0.493; /* 3.11:1 on its surface */
-	--itx-ramp-contrast-3-1-light: 0.636; /* 3.10:1 on its surface */
-	--itx-ramp-contrast-3-1-dark: 0.507; /* 3.08:1 on its surface */
-	--itx-ramp-contrast-3-2-light: 0.616; /* 3.10:1 on its surface */
-	--itx-ramp-contrast-3-2-dark: 0.525; /* 3.12:1 on its surface */
 
-	/* ── Contrast rank 4 — secondary text ──────────────────── */
-	--itx-ramp-contrast-4-0-light: 0.555; /* 4.63:1 on its surface */
-	--itx-ramp-contrast-4-0-dark: 0.587; /* 4.61:1 on its surface */
-	--itx-ramp-contrast-4-1-light: 0.538; /* 4.64:1 on its surface */
-	--itx-ramp-contrast-4-1-dark: 0.604; /* 4.66:1 on its surface */
-	--itx-ramp-contrast-4-2-light: 0.520; /* 4.62:1 on its surface */
-	--itx-ramp-contrast-4-2-dark: 0.621; /* 4.62:1 on its surface */
 
-	/* ── Contrast rank 5 — body text ───────────────────────── */
-	--itx-ramp-contrast-5-0-light: 0.452; /* 7.17:1 on its surface */
-	--itx-ramp-contrast-5-0-dark: 0.700; /* 7.18:1 on its surface */
-	--itx-ramp-contrast-5-1-light: 0.435; /* 7.20:1 on its surface */
-	--itx-ramp-contrast-5-1-dark: 0.716; /* 7.19:1 on its surface */
-	--itx-ramp-contrast-5-2-light: 0.416; /* 7.20:1 on its surface */
-	--itx-ramp-contrast-5-2-dark: 0.737; /* 7.16:1 on its surface */
 
-	/* ── Contrast rank 6 — maximum ─────────────────────────── */
-	--itx-ramp-contrast-6-0-light: 0.150; /* 19.14:1 on its surface */
-	--itx-ramp-contrast-6-0-dark: 0.920; /* 15.10:1 on its surface */
-	--itx-ramp-contrast-6-1-light: 0.150; /* 17.82:1 on its surface */
-	--itx-ramp-contrast-6-1-dark: 0.920; /* 14.24:1 on its surface */
-	--itx-ramp-contrast-6-2-light: 0.150; /* 16.48:1 on its surface */
-	--itx-ramp-contrast-6-2-dark: 0.920; /* 13.21:1 on its surface */
 
 	/*
 	 * ── Palette ──────────────────────────────────────────────────────
@@ -210,62 +184,6 @@
 		oklch(0.97 0.014 264)
 	);
 
-	--itx-colorway-amber-1: light-dark(
-		oklch(0.97 0.023 82.32),
-		oklch(0.17 0.023 82.32)
-	);
-	--itx-colorway-amber-2: light-dark(
-		oklch(0.891 0.052 82.32),
-		oklch(0.199 0.042 82.32)
-	);
-	--itx-colorway-amber-3: light-dark(
-		oklch(0.814 0.075 82.32),
-		oklch(0.24 0.05 82.32)
-	);
-	--itx-colorway-amber-4: light-dark(
-		oklch(0.739 0.093 82.32),
-		oklch(0.289 0.06 82.32)
-	);
-	--itx-colorway-amber-5: light-dark(
-		oklch(0.666 0.106 82.32),
-		oklch(0.343 0.071 82.32)
-	);
-	--itx-colorway-amber-6: light-dark(
-		oklch(0.596 0.115 82.32),
-		oklch(0.401 0.083 82.32)
-	);
-	--itx-colorway-amber-7: light-dark(
-		oklch(0.528 0.109 82.32),
-		oklch(0.463 0.095 82.32)
-	);
-	--itx-colorway-amber-8: light-dark(
-		oklch(0.463 0.095 82.32),
-		oklch(0.528 0.109 82.32)
-	);
-	--itx-colorway-amber-9: light-dark(
-		oklch(0.401 0.083 82.32),
-		oklch(0.596 0.115 82.32)
-	);
-	--itx-colorway-amber-10: light-dark(
-		oklch(0.343 0.071 82.32),
-		oklch(0.666 0.106 82.32)
-	);
-	--itx-colorway-amber-11: light-dark(
-		oklch(0.289 0.06 82.32),
-		oklch(0.739 0.093 82.32)
-	);
-	--itx-colorway-amber-12: light-dark(
-		oklch(0.24 0.05 82.32),
-		oklch(0.814 0.075 82.32)
-	);
-	--itx-colorway-amber-13: light-dark(
-		oklch(0.199 0.042 82.32),
-		oklch(0.891 0.052 82.32)
-	);
-	--itx-colorway-amber-14: light-dark(
-		oklch(0.17 0.023 82.32),
-		oklch(0.97 0.023 82.32)
-	);
 
 	--itx-danger-1: light-dark(
 		oklch(0.97 0.015 33),
@@ -495,233 +413,9 @@
 		oklch(0.97 0.02 78)
 	);
 
-	--itx-danger-eighties-1: light-dark(
-		oklch(0.97 0.015 25),
-		oklch(0.17 0.037 25)
-	);
-	--itx-danger-eighties-2: light-dark(
-		oklch(0.891 0.057 25),
-		oklch(0.199 0.082 25)
-	);
-	--itx-danger-eighties-3: light-dark(
-		oklch(0.814 0.105 25),
-		oklch(0.24 0.098 25)
-	);
-	--itx-danger-eighties-4: light-dark(
-		oklch(0.739 0.147 25),
-		oklch(0.289 0.118 25)
-	);
-	--itx-danger-eighties-5: light-dark(
-		oklch(0.666 0.168 25),
-		oklch(0.343 0.139 25)
-	);
-	--itx-danger-eighties-6: light-dark(
-		oklch(0.596 0.182 25),
-		oklch(0.401 0.163 25)
-	);
-	--itx-danger-eighties-7: light-dark(
-		oklch(0.528 0.189 25),
-		oklch(0.463 0.188 25)
-	);
-	--itx-danger-eighties-8: light-dark(
-		oklch(0.463 0.188 25),
-		oklch(0.528 0.189 25)
-	);
-	--itx-danger-eighties-9: light-dark(
-		oklch(0.401 0.163 25),
-		oklch(0.596 0.182 25)
-	);
-	--itx-danger-eighties-10: light-dark(
-		oklch(0.343 0.139 25),
-		oklch(0.666 0.168 25)
-	);
-	--itx-danger-eighties-11: light-dark(
-		oklch(0.289 0.118 25),
-		oklch(0.739 0.147 25)
-	);
-	--itx-danger-eighties-12: light-dark(
-		oklch(0.24 0.098 25),
-		oklch(0.814 0.105 25)
-	);
-	--itx-danger-eighties-13: light-dark(
-		oklch(0.199 0.082 25),
-		oklch(0.891 0.057 25)
-	);
-	--itx-danger-eighties-14: light-dark(
-		oklch(0.17 0.037 25),
-		oklch(0.97 0.015 25)
-	);
 
-	--itx-info-eighties-1: light-dark(
-		oklch(0.97 0.014 264),
-		oklch(0.17 0.037 264)
-	);
-	--itx-info-eighties-2: light-dark(
-		oklch(0.891 0.053 264),
-		oklch(0.199 0.083 264)
-	);
-	--itx-info-eighties-3: light-dark(
-		oklch(0.814 0.093 264),
-		oklch(0.24 0.118 264)
-	);
-	--itx-info-eighties-4: light-dark(
-		oklch(0.739 0.134 264),
-		oklch(0.289 0.147 264)
-	);
-	--itx-info-eighties-5: light-dark(
-		oklch(0.666 0.168 264),
-		oklch(0.343 0.168 264)
-	);
-	--itx-info-eighties-6: light-dark(
-		oklch(0.596 0.182 264),
-		oklch(0.401 0.182 264)
-	);
-	--itx-info-eighties-7: light-dark(
-		oklch(0.528 0.189 264),
-		oklch(0.463 0.189 264)
-	);
-	--itx-info-eighties-8: light-dark(
-		oklch(0.463 0.189 264),
-		oklch(0.528 0.189 264)
-	);
-	--itx-info-eighties-9: light-dark(
-		oklch(0.401 0.182 264),
-		oklch(0.596 0.182 264)
-	);
-	--itx-info-eighties-10: light-dark(
-		oklch(0.343 0.168 264),
-		oklch(0.666 0.168 264)
-	);
-	--itx-info-eighties-11: light-dark(
-		oklch(0.289 0.147 264),
-		oklch(0.739 0.134 264)
-	);
-	--itx-info-eighties-12: light-dark(
-		oklch(0.24 0.118 264),
-		oklch(0.814 0.093 264)
-	);
-	--itx-info-eighties-13: light-dark(
-		oklch(0.199 0.083 264),
-		oklch(0.891 0.053 264)
-	);
-	--itx-info-eighties-14: light-dark(
-		oklch(0.17 0.037 264),
-		oklch(0.97 0.014 264)
-	);
 
-	--itx-success-eighties-1: light-dark(
-		oklch(0.97 0.037 145),
-		oklch(0.17 0.037 145)
-	);
-	--itx-success-eighties-2: light-dark(
-		oklch(0.891 0.083 145),
-		oklch(0.199 0.063 145)
-	);
-	--itx-success-eighties-3: light-dark(
-		oklch(0.814 0.118 145),
-		oklch(0.24 0.076 145)
-	);
-	--itx-success-eighties-4: light-dark(
-		oklch(0.739 0.147 145),
-		oklch(0.289 0.091 145)
-	);
-	--itx-success-eighties-5: light-dark(
-		oklch(0.666 0.168 145),
-		oklch(0.343 0.108 145)
-	);
-	--itx-success-eighties-6: light-dark(
-		oklch(0.596 0.182 145),
-		oklch(0.401 0.126 145)
-	);
-	--itx-success-eighties-7: light-dark(
-		oklch(0.528 0.166 145),
-		oklch(0.463 0.146 145)
-	);
-	--itx-success-eighties-8: light-dark(
-		oklch(0.463 0.146 145),
-		oklch(0.528 0.166 145)
-	);
-	--itx-success-eighties-9: light-dark(
-		oklch(0.401 0.126 145),
-		oklch(0.596 0.182 145)
-	);
-	--itx-success-eighties-10: light-dark(
-		oklch(0.343 0.108 145),
-		oklch(0.666 0.168 145)
-	);
-	--itx-success-eighties-11: light-dark(
-		oklch(0.289 0.091 145),
-		oklch(0.739 0.147 145)
-	);
-	--itx-success-eighties-12: light-dark(
-		oklch(0.24 0.076 145),
-		oklch(0.814 0.118 145)
-	);
-	--itx-success-eighties-13: light-dark(
-		oklch(0.199 0.063 145),
-		oklch(0.891 0.083 145)
-	);
-	--itx-success-eighties-14: light-dark(
-		oklch(0.17 0.037 145),
-		oklch(0.97 0.037 145)
-	);
 
-	--itx-warning-eighties-1: light-dark(
-		oklch(0.97 0.032 85),
-		oklch(0.17 0.033 85)
-	);
-	--itx-warning-eighties-2: light-dark(
-		oklch(0.891 0.074 85),
-		oklch(0.199 0.042 85)
-	);
-	--itx-warning-eighties-3: light-dark(
-		oklch(0.814 0.106 85),
-		oklch(0.24 0.05 85)
-	);
-	--itx-warning-eighties-4: light-dark(
-		oklch(0.739 0.131 85),
-		oklch(0.289 0.06 85)
-	);
-	--itx-warning-eighties-5: light-dark(
-		oklch(0.666 0.137 85),
-		oklch(0.343 0.071 85)
-	);
-	--itx-warning-eighties-6: light-dark(
-		oklch(0.596 0.122 85),
-		oklch(0.401 0.082 85)
-	);
-	--itx-warning-eighties-7: light-dark(
-		oklch(0.528 0.108 85),
-		oklch(0.463 0.095 85)
-	);
-	--itx-warning-eighties-8: light-dark(
-		oklch(0.463 0.095 85),
-		oklch(0.528 0.108 85)
-	);
-	--itx-warning-eighties-9: light-dark(
-		oklch(0.401 0.082 85),
-		oklch(0.596 0.122 85)
-	);
-	--itx-warning-eighties-10: light-dark(
-		oklch(0.343 0.071 85),
-		oklch(0.666 0.137 85)
-	);
-	--itx-warning-eighties-11: light-dark(
-		oklch(0.289 0.06 85),
-		oklch(0.739 0.131 85)
-	);
-	--itx-warning-eighties-12: light-dark(
-		oklch(0.24 0.05 85),
-		oklch(0.814 0.106 85)
-	);
-	--itx-warning-eighties-13: light-dark(
-		oklch(0.199 0.042 85),
-		oklch(0.891 0.074 85)
-	);
-	--itx-warning-eighties-14: light-dark(
-		oklch(0.17 0.033 85),
-		oklch(0.97 0.032 85)
-	);
 
 	/*
 	 * Colourway.
@@ -744,58 +438,14 @@
 	--itx-ramp-colorway-solid-hover-c: 0.190;
 	--itx-ramp-colorway-solid-active-l: 0.410;
 	--itx-ramp-colorway-solid-active-c: 0.190;
-	--itx-ramp-colorway-tint-0-light-l: 0.940;
-	--itx-ramp-colorway-tint-0-light-c: 0.028;
-	--itx-ramp-colorway-tint-0-dark-l: 0.230;
-	--itx-ramp-colorway-tint-0-dark-c: 0.160;
-	--itx-ramp-colorway-on-tint-0-light-l: 0.531;
-	--itx-ramp-colorway-on-tint-0-light-c: 0.190;
-	--itx-ramp-colorway-on-tint-0-dark-l: 0.615;
-	--itx-ramp-colorway-on-tint-0-dark-c: 0.190;
-	--itx-ramp-colorway-border-0-light-l: 0.662;
-	--itx-ramp-colorway-border-0-light-c: 0.179;
-	--itx-ramp-colorway-border-0-dark-l: 0.501;
-	--itx-ramp-colorway-border-0-dark-c: 0.190;
-	--itx-ramp-colorway-text-0-light-l: 0.564;
-	--itx-ramp-colorway-text-0-light-c: 0.190;
-	--itx-ramp-colorway-text-0-dark-l: 0.595;
-	--itx-ramp-colorway-text-0-dark-c: 0.190;
-	--itx-ramp-colorway-tint-1-light-l: 0.915;
-	--itx-ramp-colorway-tint-1-light-c: 0.041;
-	--itx-ramp-colorway-tint-1-dark-l: 0.262;
-	--itx-ramp-colorway-tint-1-dark-c: 0.157;
-	--itx-ramp-colorway-on-tint-1-light-l: 0.512;
-	--itx-ramp-colorway-on-tint-1-light-c: 0.190;
-	--itx-ramp-colorway-on-tint-1-dark-l: 0.639;
-	--itx-ramp-colorway-on-tint-1-dark-c: 0.190;
-	--itx-ramp-colorway-border-1-light-l: 0.646;
-	--itx-ramp-colorway-border-1-light-c: 0.188;
-	--itx-ramp-colorway-border-1-dark-l: 0.516;
-	--itx-ramp-colorway-border-1-dark-c: 0.190;
-	--itx-ramp-colorway-text-1-light-l: 0.547;
-	--itx-ramp-colorway-text-1-light-c: 0.190;
-	--itx-ramp-colorway-text-1-dark-l: 0.611;
-	--itx-ramp-colorway-text-1-dark-c: 0.190;
-	--itx-ramp-colorway-tint-2-light-l: 0.890;
-	--itx-ramp-colorway-tint-2-light-c: 0.053;
-	--itx-ramp-colorway-tint-2-dark-l: 0.294;
-	--itx-ramp-colorway-tint-2-dark-c: 0.174;
-	--itx-ramp-colorway-on-tint-2-light-l: 0.493;
-	--itx-ramp-colorway-on-tint-2-light-c: 0.190;
-	--itx-ramp-colorway-on-tint-2-dark-l: 0.660;
-	--itx-ramp-colorway-on-tint-2-dark-c: 0.180;
-	--itx-ramp-colorway-border-2-light-l: 0.625;
-	--itx-ramp-colorway-border-2-light-c: 0.190;
-	--itx-ramp-colorway-border-2-dark-l: 0.532;
-	--itx-ramp-colorway-border-2-dark-c: 0.190;
-	--itx-ramp-colorway-text-2-light-l: 0.528;
-	--itx-ramp-colorway-text-2-light-c: 0.190;
-	--itx-ramp-colorway-text-2-dark-l: 0.629;
-	--itx-ramp-colorway-text-2-dark-c: 0.190;
 	--itx-colorway-solid: oklch(var(--itx-ramp-colorway-solid-l) var(--itx-ramp-colorway-solid-c) var(--itx-colorway-hue));
 	--itx-colorway-on-solid: oklch(var(--itx-ramp-colorway-on-solid-l) var(--itx-ramp-colorway-on-solid-c) var(--itx-colorway-hue));
 	--itx-colorway-solid-hover: oklch(var(--itx-ramp-colorway-solid-hover-l) var(--itx-ramp-colorway-solid-hover-c) var(--itx-colorway-hue));
 	--itx-colorway-solid-active: oklch(var(--itx-ramp-colorway-solid-active-l) var(--itx-ramp-colorway-solid-active-c) var(--itx-colorway-hue));
+	--itx-colorway-tint: var(--itx-colorway-3);
+	--itx-colorway-on-tint: var(--itx-colorway-13);
+	--itx-colorway-border: var(--itx-colorway-9);
+	--itx-colorway-text: var(--itx-colorway-11);
 }
 
 
@@ -804,6 +454,62 @@
  * label and the gamut-clamped chroma from the seed.
  */
 :where([interop-root][itx-colorway="amber"]) {
+	--itx-colorway-1: light-dark(
+		oklch(0.97 0.023 82.32),
+		oklch(0.17 0.023 82.32)
+	);
+	--itx-colorway-2: light-dark(
+		oklch(0.891 0.052 82.32),
+		oklch(0.199 0.042 82.32)
+	);
+	--itx-colorway-3: light-dark(
+		oklch(0.814 0.075 82.32),
+		oklch(0.24 0.05 82.32)
+	);
+	--itx-colorway-4: light-dark(
+		oklch(0.739 0.093 82.32),
+		oklch(0.289 0.06 82.32)
+	);
+	--itx-colorway-5: light-dark(
+		oklch(0.666 0.106 82.32),
+		oklch(0.343 0.071 82.32)
+	);
+	--itx-colorway-6: light-dark(
+		oklch(0.596 0.115 82.32),
+		oklch(0.401 0.083 82.32)
+	);
+	--itx-colorway-7: light-dark(
+		oklch(0.528 0.109 82.32),
+		oklch(0.463 0.095 82.32)
+	);
+	--itx-colorway-8: light-dark(
+		oklch(0.463 0.095 82.32),
+		oklch(0.528 0.109 82.32)
+	);
+	--itx-colorway-9: light-dark(
+		oklch(0.401 0.083 82.32),
+		oklch(0.596 0.115 82.32)
+	);
+	--itx-colorway-10: light-dark(
+		oklch(0.343 0.071 82.32),
+		oklch(0.666 0.106 82.32)
+	);
+	--itx-colorway-11: light-dark(
+		oklch(0.289 0.06 82.32),
+		oklch(0.739 0.093 82.32)
+	);
+	--itx-colorway-12: light-dark(
+		oklch(0.24 0.05 82.32),
+		oklch(0.814 0.075 82.32)
+	);
+	--itx-colorway-13: light-dark(
+		oklch(0.199 0.042 82.32),
+		oklch(0.891 0.052 82.32)
+	);
+	--itx-colorway-14: light-dark(
+		oklch(0.17 0.023 82.32),
+		oklch(0.97 0.023 82.32)
+	);
 	--itx-colorway-hue: 82.32;
 	--itx-ramp-colorway-solid-l: 0.832;
 	--itx-ramp-colorway-solid-c: 0.120;
@@ -813,58 +519,14 @@
 	--itx-ramp-colorway-solid-hover-c: 0.119;
 	--itx-ramp-colorway-solid-active-l: 0.922;
 	--itx-ramp-colorway-solid-active-c: 0.077;
-	--itx-ramp-colorway-tint-0-light-l: 0.940;
-	--itx-ramp-colorway-tint-0-light-c: 0.059;
-	--itx-ramp-colorway-tint-0-dark-l: 0.230;
-	--itx-ramp-colorway-tint-0-dark-c: 0.048;
-	--itx-ramp-colorway-on-tint-0-light-l: 0.523;
-	--itx-ramp-colorway-on-tint-0-light-c: 0.108;
-	--itx-ramp-colorway-on-tint-0-dark-l: 0.620;
-	--itx-ramp-colorway-on-tint-0-dark-c: 0.120;
-	--itx-ramp-colorway-border-0-light-l: 0.657;
-	--itx-ramp-colorway-border-0-light-c: 0.120;
-	--itx-ramp-colorway-border-0-dark-l: 0.494;
-	--itx-ramp-colorway-border-0-dark-c: 0.102;
-	--itx-ramp-colorway-text-0-light-l: 0.559;
-	--itx-ramp-colorway-text-0-light-c: 0.115;
-	--itx-ramp-colorway-text-0-dark-l: 0.592;
-	--itx-ramp-colorway-text-0-dark-c: 0.120;
-	--itx-ramp-colorway-tint-1-light-l: 0.915;
-	--itx-ramp-colorway-tint-1-light-c: 0.084;
-	--itx-ramp-colorway-tint-1-dark-l: 0.262;
-	--itx-ramp-colorway-tint-1-dark-c: 0.054;
-	--itx-ramp-colorway-on-tint-1-light-l: 0.504;
-	--itx-ramp-colorway-on-tint-1-light-c: 0.104;
-	--itx-ramp-colorway-on-tint-1-dark-l: 0.642;
-	--itx-ramp-colorway-on-tint-1-dark-c: 0.120;
-	--itx-ramp-colorway-border-1-light-l: 0.641;
-	--itx-ramp-colorway-border-1-light-c: 0.120;
-	--itx-ramp-colorway-border-1-dark-l: 0.509;
-	--itx-ramp-colorway-border-1-dark-c: 0.105;
-	--itx-ramp-colorway-text-1-light-l: 0.541;
-	--itx-ramp-colorway-text-1-light-c: 0.111;
-	--itx-ramp-colorway-text-1-dark-l: 0.606;
-	--itx-ramp-colorway-text-1-dark-c: 0.120;
-	--itx-ramp-colorway-tint-2-light-l: 0.890;
-	--itx-ramp-colorway-tint-2-light-c: 0.110;
-	--itx-ramp-colorway-tint-2-dark-l: 0.294;
-	--itx-ramp-colorway-tint-2-dark-c: 0.061;
-	--itx-ramp-colorway-on-tint-2-light-l: 0.485;
-	--itx-ramp-colorway-on-tint-2-light-c: 0.100;
-	--itx-ramp-colorway-on-tint-2-dark-l: 0.671;
-	--itx-ramp-colorway-on-tint-2-dark-c: 0.120;
-	--itx-ramp-colorway-border-2-light-l: 0.621;
-	--itx-ramp-colorway-border-2-light-c: 0.120;
-	--itx-ramp-colorway-border-2-dark-l: 0.527;
-	--itx-ramp-colorway-border-2-dark-c: 0.109;
-	--itx-ramp-colorway-text-2-light-l: 0.523;
-	--itx-ramp-colorway-text-2-light-c: 0.108;
-	--itx-ramp-colorway-text-2-dark-l: 0.626;
-	--itx-ramp-colorway-text-2-dark-c: 0.120;
 	--itx-colorway-solid: oklch(var(--itx-ramp-colorway-solid-l) var(--itx-ramp-colorway-solid-c) var(--itx-colorway-hue));
 	--itx-colorway-on-solid: oklch(var(--itx-ramp-colorway-on-solid-l) var(--itx-ramp-colorway-on-solid-c) var(--itx-colorway-hue));
 	--itx-colorway-solid-hover: oklch(var(--itx-ramp-colorway-solid-hover-l) var(--itx-ramp-colorway-solid-hover-c) var(--itx-colorway-hue));
 	--itx-colorway-solid-active: oklch(var(--itx-ramp-colorway-solid-active-l) var(--itx-ramp-colorway-solid-active-c) var(--itx-colorway-hue));
+	--itx-colorway-tint: var(--itx-colorway-3);
+	--itx-colorway-on-tint: var(--itx-colorway-13);
+	--itx-colorway-border: var(--itx-colorway-9);
+	--itx-colorway-text: var(--itx-colorway-11);
 }
 
 /*
@@ -931,9 +593,249 @@
 	--itx-warning-on-solid: oklch(var(--itx-ramp-warning-on-solid-l) var(--itx-ramp-warning-on-solid-c) var(--itx-warning-hue));
 	--itx-warning-solid-hover: oklch(var(--itx-ramp-warning-solid-hover-l) var(--itx-ramp-warning-solid-hover-c) var(--itx-warning-hue));
 	--itx-warning-solid-active: oklch(var(--itx-ramp-warning-solid-active-l) var(--itx-ramp-warning-solid-active-c) var(--itx-warning-hue));
+	--itx-danger-tint: var(--itx-danger-3);
+	--itx-danger-on-tint: var(--itx-danger-13);
+	--itx-danger-border: var(--itx-danger-9);
+	--itx-danger-text: var(--itx-danger-11);
+	--itx-info-tint: var(--itx-info-3);
+	--itx-info-on-tint: var(--itx-info-13);
+	--itx-info-border: var(--itx-info-9);
+	--itx-info-text: var(--itx-info-11);
+	--itx-success-tint: var(--itx-success-3);
+	--itx-success-on-tint: var(--itx-success-13);
+	--itx-success-border: var(--itx-success-9);
+	--itx-success-text: var(--itx-success-11);
+	--itx-warning-tint: var(--itx-warning-3);
+	--itx-warning-on-tint: var(--itx-warning-13);
+	--itx-warning-border: var(--itx-warning-9);
+	--itx-warning-text: var(--itx-warning-11);
 }
 
 :where([itx-status-palette="eighties"]) {
+	--itx-danger-1: light-dark(
+		oklch(0.97 0.015 25),
+		oklch(0.17 0.037 25)
+	);
+	--itx-danger-2: light-dark(
+		oklch(0.891 0.057 25),
+		oklch(0.199 0.082 25)
+	);
+	--itx-danger-3: light-dark(
+		oklch(0.814 0.105 25),
+		oklch(0.24 0.098 25)
+	);
+	--itx-danger-4: light-dark(
+		oklch(0.739 0.147 25),
+		oklch(0.289 0.118 25)
+	);
+	--itx-danger-5: light-dark(
+		oklch(0.666 0.168 25),
+		oklch(0.343 0.139 25)
+	);
+	--itx-danger-6: light-dark(
+		oklch(0.596 0.182 25),
+		oklch(0.401 0.154 25)
+	);
+	--itx-danger-7: light-dark(
+		oklch(0.528 0.189 25),
+		oklch(0.463 0.162 25)
+	);
+	--itx-danger-8: light-dark(
+		oklch(0.463 0.188 25),
+		oklch(0.528 0.138 25)
+	);
+	--itx-danger-9: light-dark(
+		oklch(0.401 0.163 25),
+		oklch(0.596 0.111 25)
+	);
+	--itx-danger-10: light-dark(
+		oklch(0.343 0.139 25),
+		oklch(0.666 0.099 25)
+	);
+	--itx-danger-11: light-dark(
+		oklch(0.289 0.118 25),
+		oklch(0.739 0.086 25)
+	);
+	--itx-danger-12: light-dark(
+		oklch(0.24 0.098 25),
+		oklch(0.814 0.064 25)
+	);
+	--itx-danger-13: light-dark(
+		oklch(0.199 0.082 25),
+		oklch(0.891 0.036 25)
+	);
+	--itx-danger-14: light-dark(
+		oklch(0.17 0.037 25),
+		oklch(0.97 0.01 25)
+	);
+	--itx-info-1: light-dark(
+		oklch(0.97 0.014 264),
+		oklch(0.17 0.037 264)
+	);
+	--itx-info-2: light-dark(
+		oklch(0.891 0.053 264),
+		oklch(0.199 0.083 264)
+	);
+	--itx-info-3: light-dark(
+		oklch(0.814 0.093 264),
+		oklch(0.24 0.118 264)
+	);
+	--itx-info-4: light-dark(
+		oklch(0.739 0.134 264),
+		oklch(0.289 0.147 264)
+	);
+	--itx-info-5: light-dark(
+		oklch(0.666 0.168 264),
+		oklch(0.343 0.168 264)
+	);
+	--itx-info-6: light-dark(
+		oklch(0.596 0.182 264),
+		oklch(0.401 0.182 264)
+	);
+	--itx-info-7: light-dark(
+		oklch(0.528 0.189 264),
+		oklch(0.463 0.189 264)
+	);
+	--itx-info-8: light-dark(
+		oklch(0.463 0.189 264),
+		oklch(0.528 0.189 264)
+	);
+	--itx-info-9: light-dark(
+		oklch(0.401 0.182 264),
+		oklch(0.596 0.182 264)
+	);
+	--itx-info-10: light-dark(
+		oklch(0.343 0.168 264),
+		oklch(0.666 0.168 264)
+	);
+	--itx-info-11: light-dark(
+		oklch(0.289 0.147 264),
+		oklch(0.739 0.134 264)
+	);
+	--itx-info-12: light-dark(
+		oklch(0.24 0.118 264),
+		oklch(0.814 0.093 264)
+	);
+	--itx-info-13: light-dark(
+		oklch(0.199 0.083 264),
+		oklch(0.891 0.053 264)
+	);
+	--itx-info-14: light-dark(
+		oklch(0.17 0.037 264),
+		oklch(0.97 0.014 264)
+	);
+	--itx-success-1: light-dark(
+		oklch(0.97 0.037 145),
+		oklch(0.17 0.037 145)
+	);
+	--itx-success-2: light-dark(
+		oklch(0.891 0.083 145),
+		oklch(0.199 0.063 145)
+	);
+	--itx-success-3: light-dark(
+		oklch(0.814 0.118 145),
+		oklch(0.24 0.076 145)
+	);
+	--itx-success-4: light-dark(
+		oklch(0.739 0.147 145),
+		oklch(0.289 0.091 145)
+	);
+	--itx-success-5: light-dark(
+		oklch(0.666 0.168 145),
+		oklch(0.343 0.108 145)
+	);
+	--itx-success-6: light-dark(
+		oklch(0.596 0.182 145),
+		oklch(0.401 0.126 145)
+	);
+	--itx-success-7: light-dark(
+		oklch(0.528 0.166 145),
+		oklch(0.463 0.146 145)
+	);
+	--itx-success-8: light-dark(
+		oklch(0.463 0.146 145),
+		oklch(0.528 0.166 145)
+	);
+	--itx-success-9: light-dark(
+		oklch(0.401 0.126 145),
+		oklch(0.596 0.182 145)
+	);
+	--itx-success-10: light-dark(
+		oklch(0.343 0.108 145),
+		oklch(0.666 0.168 145)
+	);
+	--itx-success-11: light-dark(
+		oklch(0.289 0.091 145),
+		oklch(0.739 0.147 145)
+	);
+	--itx-success-12: light-dark(
+		oklch(0.24 0.076 145),
+		oklch(0.814 0.118 145)
+	);
+	--itx-success-13: light-dark(
+		oklch(0.199 0.063 145),
+		oklch(0.891 0.083 145)
+	);
+	--itx-success-14: light-dark(
+		oklch(0.17 0.037 145),
+		oklch(0.97 0.037 145)
+	);
+	--itx-warning-1: light-dark(
+		oklch(0.97 0.032 85),
+		oklch(0.17 0.033 85)
+	);
+	--itx-warning-2: light-dark(
+		oklch(0.891 0.074 85),
+		oklch(0.199 0.042 85)
+	);
+	--itx-warning-3: light-dark(
+		oklch(0.814 0.106 85),
+		oklch(0.24 0.05 85)
+	);
+	--itx-warning-4: light-dark(
+		oklch(0.739 0.131 85),
+		oklch(0.289 0.06 85)
+	);
+	--itx-warning-5: light-dark(
+		oklch(0.666 0.137 85),
+		oklch(0.343 0.071 85)
+	);
+	--itx-warning-6: light-dark(
+		oklch(0.596 0.122 85),
+		oklch(0.401 0.082 85)
+	);
+	--itx-warning-7: light-dark(
+		oklch(0.528 0.108 85),
+		oklch(0.463 0.095 85)
+	);
+	--itx-warning-8: light-dark(
+		oklch(0.463 0.095 85),
+		oklch(0.528 0.108 85)
+	);
+	--itx-warning-9: light-dark(
+		oklch(0.401 0.082 85),
+		oklch(0.596 0.122 85)
+	);
+	--itx-warning-10: light-dark(
+		oklch(0.343 0.071 85),
+		oklch(0.666 0.137 85)
+	);
+	--itx-warning-11: light-dark(
+		oklch(0.289 0.06 85),
+		oklch(0.739 0.131 85)
+	);
+	--itx-warning-12: light-dark(
+		oklch(0.24 0.05 85),
+		oklch(0.814 0.106 85)
+	);
+	--itx-warning-13: light-dark(
+		oklch(0.199 0.042 85),
+		oklch(0.891 0.074 85)
+	);
+	--itx-warning-14: light-dark(
+		oklch(0.17 0.033 85),
+		oklch(0.97 0.032 85)
+	);
 	--itx-danger-hue: 25;
 	--itx-ramp-danger-solid-l: 0.550;
 	--itx-ramp-danger-solid-c: 0.190;
@@ -986,4 +888,20 @@
 	--itx-warning-on-solid: oklch(var(--itx-ramp-warning-on-solid-l) var(--itx-ramp-warning-on-solid-c) var(--itx-warning-hue));
 	--itx-warning-solid-hover: oklch(var(--itx-ramp-warning-solid-hover-l) var(--itx-ramp-warning-solid-hover-c) var(--itx-warning-hue));
 	--itx-warning-solid-active: oklch(var(--itx-ramp-warning-solid-active-l) var(--itx-ramp-warning-solid-active-c) var(--itx-warning-hue));
+	--itx-danger-tint: var(--itx-danger-3);
+	--itx-danger-on-tint: var(--itx-danger-13);
+	--itx-danger-border: var(--itx-danger-9);
+	--itx-danger-text: var(--itx-danger-11);
+	--itx-info-tint: var(--itx-info-3);
+	--itx-info-on-tint: var(--itx-info-13);
+	--itx-info-border: var(--itx-info-9);
+	--itx-info-text: var(--itx-info-11);
+	--itx-success-tint: var(--itx-success-3);
+	--itx-success-on-tint: var(--itx-success-13);
+	--itx-success-border: var(--itx-success-9);
+	--itx-success-text: var(--itx-success-11);
+	--itx-warning-tint: var(--itx-warning-3);
+	--itx-warning-on-tint: var(--itx-warning-13);
+	--itx-warning-border: var(--itx-warning-9);
+	--itx-warning-text: var(--itx-warning-11);
 }

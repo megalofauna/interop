@@ -82,19 +82,23 @@ describe("Accent families", () => {
 		});
 	});
 
-	describe("surface-relative roles re-derive", () => {
-		it("moves tint, border and text with the layer", () => {
+	describe("roles are fixed steps, not surface-relative solves", () => {
+		it("holds tint, border and text at one colour, whatever the depth", () => {
+			// The inverse of what this asserted while roles were solved per layer.
+			// A role is now a palette step, and a step is one colour everywhere —
+			// that is the trade the ranks were retired for. Depth safety comes
+			// from the elevation ramp being short, not from re-solving.
 			const one = el(root, { "itx-layer": "" });
 			const two = el(one, { "itx-layer": "" });
 
 			for (const role of ["tint", "on-tint", "border", "text"]) {
 				const token = `--itx-colorway-${role}`;
 				expect(resolve(token, one))
-					.withContext(`${token} should differ between layer 0 and 1`)
-					.not.toEqual(resolve(token, root));
+					.withContext(`${token} should not move between layer 0 and 1`)
+					.toEqual(resolve(token, root));
 				expect(resolve(token, two))
-					.withContext(`${token} should differ between layer 1 and 2`)
-					.not.toEqual(resolve(token, one));
+					.withContext(`${token} should not move between layer 1 and 2`)
+					.toEqual(resolve(token, one));
 			}
 		});
 
