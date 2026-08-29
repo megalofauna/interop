@@ -1,7 +1,16 @@
 /*
- * Colour derivation record — GENERATED, do not edit by hand.
+ * Colour derivation record — a SNAPSHOT, no longer generated.
  *
- *   node scripts/generate-color-ladder.mjs
+ * This was written by scripts/generate-color-ladder.mjs, which has been
+ * deleted along with the solver it documented. The palette is hand-authored
+ * now, so nothing re-derives these numbers.
+ *
+ * The Colour page still renders the parts that are about the palette itself
+ * (PALETTE_FACTS, FAMILY_FACTS, LAYER_KEYS, HUE_SWEEP, HUE_CEILINGS). The
+ * per-layer role figures in FAMILY_FACTS describe the OLD behaviour, where a
+ * role re-solved at every depth — roles are fixed steps now, so those columns
+ * are a record of what changed rather than a description of what ships.
+ * Gutting this page is its own pass; see .agent/todo/colour-followups.md.
  *
  * The facts behind projects/demo's Colour page: the dials that were turned and
  * what the solver made of them. Contrast ratios are NOT here on purpose — the

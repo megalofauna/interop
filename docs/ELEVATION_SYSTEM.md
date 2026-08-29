@@ -3,7 +3,7 @@
 > **Superseded.** The "sliding window" described by earlier revisions of this
 > document did not work and has been removed. The current model is two relative
 > axes driven by `@container style()` queries — see `.agent/color.md` for the
-> mental-model card and `scripts/generate-color-ladder.mjs` for the source of
+> mental-model card and `styles/themes/protocol/ladder.css` for the source of
 > truth.
 
 This page is kept for one reason: the mistake it made is easy to make again, and
