@@ -30,7 +30,7 @@
 		"start": "ng serve demo",
 		"demo": "ng serve demo --open",
 		"protocol": "ng serve protocol --open",
-		"lint:tokens": "node scripts/check-private-tokens.mjs && node scripts/check-color-axes.mjs && node scripts/check-token-placement.mjs && node scripts/check-cast.mjs && node scripts/check-focus.mjs && node scripts/check-motion.mjs && node scripts/check-motion.mjs projects/demo/src && node scripts/check-shape.mjs && node scripts/check-keywords.mjs && node scripts/check-undefined-tokens.mjs && node scripts/generate-globals.mjs --check && node scripts/generate-token-reference.mjs --check && node scripts/check-boundaries.mjs",
+		"lint:tokens": "node scripts/check-private-tokens.mjs && node scripts/check-color-axes.mjs && node scripts/check-token-placement.mjs && node scripts/check-cast.mjs && node scripts/check-focus.mjs && node scripts/check-motion.mjs && node scripts/check-motion.mjs projects/demo/src && node scripts/check-shape.mjs && node scripts/check-keywords.mjs && node scripts/check-undefined-tokens.mjs && node scripts/generate-globals.mjs --check && node scripts/generate-token-reference.mjs --check && node scripts/check-boundaries.mjs && node scripts/check-contrast-css.mjs && node scripts/check-contrast-render.mjs",
 		"lint:focus": "node scripts/check-focus.mjs",
 		"lint:color": "node scripts/check-color-axes.mjs",
 		"lint:placement": "node scripts/check-token-placement.mjs",
@@ -43,7 +43,8 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"lint:css": "stylelint \"projects/interop/src/**/*.{css,scss}\"",
-		"lint": "npm run format:check && npm run lint:css && npm run lint:tokens"
+		"lint": "npm run format:check && npm run lint:css && npm run lint:tokens",
+		"lint:contrast": "node scripts/check-contrast-css.mjs && node scripts/check-contrast-render.mjs"
 	},
 	"devDependencies": {
 		"@angular/build": "^21.2.20",
