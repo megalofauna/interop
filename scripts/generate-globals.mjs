@@ -294,14 +294,14 @@ const ATTRIBUTES = [
 		"Pin the colour scheme instead of following the OS.",
 	],
 	[
-		'itx-colorway="amber"',
+		"itx-colorway",
 		"[interop-root] ONLY",
-		"Swap the brand family. Compound-selected on the root — putting this on a <div> does nothing.",
+		"Selects a colour family. One ships. Compound-selected on the root, so putting this on a <div> does nothing.",
 	],
 	[
 		'itx-status-palette="seventies|eighties"',
 		"any element",
-		"Swap danger/info/success/warning. Unlike itx-colorway, this DOES work on a subtree.",
+		"Selects a status family. Works on any subtree, unlike itx-colorway.",
 	],
 	[
 		"itx-scale-scope",
