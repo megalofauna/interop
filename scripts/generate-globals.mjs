@@ -32,11 +32,10 @@
  *    and a consumer can write Interop's own vocabulary rather than raw pixels.
  *
  * 3. THE BUILD-TIME BOUNDARY. Several levers people reasonably expect to be
- *    tokens are not, and cannot be — the colour ladder's layer count, its
- *    contrast floors, its seeds. Those are config in
- *    `generate-color-ladder.mjs`; the engine unrolls @container blocks per
- *    layer, so the rules have to exist at build time. Only a generator can
- *    print the runtime knobs as live CSS *and* the build-time ones as
+ *    tokens are not, and cannot be — the number of elevation layers, and the
+ *    palette steps themselves. The engine needs one @container block per
+ *    layer, so those rules have to exist in the stylesheet. Only a generator
+ *    can print the runtime knobs as live CSS *and* the structural ones as
  *    signposts. That boundary is invisible otherwise.
  *
  * Usage:
@@ -56,7 +55,7 @@ import {
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STYLES = join(REPO, "projects/interop/src/lib/styles");
 const OUT = join(STYLES, "interop.globals.css");
-const LADDER_SCRIPT = join(REPO, "scripts/generate-color-ladder.mjs");
+const ENGINE = join(STYLES, "tokens/elevation.css");
 
 /* ── Selector sets ────────────────────────────────────────────────────────
  *
@@ -329,28 +328,12 @@ const ATTRIBUTES = [
 /* ── Config that is NOT reachable from CSS ─────────────────────────────── */
 const BUILD_TIME = [
 	[
-		"DEPTH.above / DEPTH.below",
-		"How many elevation layers exist. The engine unrolls a @container block per layer, so the rules must exist at build time — this can never be a custom property.",
+		"the @container unroll",
+		"How many elevation layers exist. The engine needs one @container block per layer, so the rules must exist in the stylesheet — this can never be a custom property. Add or remove a block in tokens/elevation.css.",
 	],
 	[
-		"RANKS[].ratio",
-		"The contrast floor each rank is solved to (1.5:1, 3:1, 4.5:1, 7:1). Raising one re-solves it on every layer at once.",
-	],
-	[
-		"RAMP.<scheme>.page",
-		"Moves a whole scheme up or down. The biggest single lever on the look.",
-	],
-	[
-		"RAMP.<scheme>.up / .ease / .down",
-		"Step size between layers, its deceleration, and the size of a sink.",
-	],
-	[
-		"TINT",
-		"The generated DEFAULT tint. Prefer --itx-tint-light / -dark above for a runtime retint.",
-	],
-	[
-		"SEEDS.colorway / SEEDS.status",
-		"Adds a whole new brand or status family from one seed each. Solved, then emitted as numbers.",
+		"the palette steps",
+		"A new brand or status family is fourteen literal oklch values in themes/protocol/ladder.css. Place them by lightness; the floor rule (borders 7 steps apart, text 8, enhanced 10) is what makes the result legible, and check-contrast-render.mjs proves it in a browser.",
 	],
 ];
 
@@ -394,13 +377,11 @@ function readDefault(file, token) {
 const overridesFor = (file, token) =>
 	readOverrides(decomment(readFileSync(join(STYLES, file), "utf8")), token);
 
-/** Confirm a build-time signpost still points at something real. */
-function assertConfigKeyExists(key) {
-	const src = readFileSync(LADDER_SCRIPT, "utf8");
-	const ident = key.split(/[.\[]/)[0].trim();
-	if (!new RegExp(`\\b(const|let)\\s+${ident}\\b`).test(src)) {
+/** Confirm the one mechanism these signposts name still exists. */
+function assertUnrollExists() {
+	if (!/@container style\(--itx-layer:/.test(readFileSync(ENGINE, "utf8"))) {
 		throw new Error(
-			`build-time signpost "${key}" names ${ident}, which no longer exists in generate-color-ladder.mjs`,
+			"build-time signpost names the @container unroll, which is no longer in tokens/elevation.css",
 		);
 	}
 }
@@ -521,13 +502,13 @@ function build() {
 
 	out.push(`\n/* ── Not reachable from CSS ${"─".repeat(44)} */
 /*
- * These change the colour system's SHAPE, and they are config in
- * scripts/generate-color-ladder.mjs rather than custom properties. Edit that
- * file and re-run it; every dial there is validated, so the worst case is a
- * non-zero exit rather than a quietly inaccessible palette.
+ * These change the colour system's SHAPE and are not reachable from CSS —
+ * they are structure in the stylesheets themselves rather than values. Edit
+ * the file named, then run npm run lint:tokens, which re-proves every contrast
+ * floor in a real browser.
  *`);
+	assertUnrollExists();
 	for (const [key, why] of BUILD_TIME) {
-		assertConfigKeyExists(key);
 		out.push(` *   ${key}`);
 		out.push(`${wrap(why, " *     ")}`);
 	}
@@ -535,7 +516,7 @@ function build() {
 
 	out.push(`\n/* ── Do not set these ${"─".repeat(50)} */
 /*
- * --itx-surface, --itx-surface-above, --itx-surface-below, --itx-contrast-1..6
+ * --itx-surface, --itx-surface-above, --itx-surface-above-2, --itx-surface-below
  *
  * They are a SOURCE, never an override point. The elevation engine re-declares
  * every one of them at each layer boundary, so a value you set here is stomped
@@ -543,8 +524,9 @@ function build() {
  * asserted as a negative case in tokens/elevation.spec.ts so the reason stays
  * visible.
  *
- * To move the palette, use --itx-tint-light / --itx-tint-dark above, or any
- * --itx-ramp-* number. Both reach every layer below.
+ * To move the surfaces, use --itx-tint-light / --itx-tint-dark above, or any
+ * --itx-ramp-* dial. Both reach every layer below. To move the palette itself,
+ * set the step you want — --itx-neutral-8 and friends are ordinary tokens.
  *
  * To restyle ONE component, use its own namespace — --itx-dialog-background,
  * --itx-button-foreground — which no layer block touches.
