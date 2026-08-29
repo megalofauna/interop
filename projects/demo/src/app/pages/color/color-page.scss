@@ -1,563 +1,187 @@
 /*
- * Colour page — layout only.
+ * Colour page.
  *
- * Deliberately sets no colour of its own beyond reading the two axes: the page
- * has to demonstrate that the system paints itself, so anything hardcoded here
- * would be cheating.
+ * Swatches paint themselves with the token they name, so nothing here sets a
+ * colour. The only job is layout and legibility over an arbitrary swatch.
  */
 
-.color-axes {
-	display: grid;
-	gap: var(--itx-spacing-4);
-	grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-
-	&__card {
-		display: flex;
-		flex-direction: column;
-		gap: var(--itx-spacing-2);
-		padding: var(--itx-spacing-4);
-		border: 1px solid var(--itx-neutral-3);
-		border-radius: var(--itx-radius-md);
-
-		h3 {
-			margin: 0;
-			font-size: var(--itx-font-size-label);
-		}
-
-		code {
-			font-family: var(--itx-font-family-mono);
-			font-size: var(--itx-font-size-caption);
-			color: var(--itx-neutral-10);
-		}
-
-		p {
-			margin: var(--itx-spacing-2) 0 0;
-			font-size: var(--itx-font-size-caption);
-		}
-	}
-}
-
-.color-stack {
+.color-nest {
 	padding: var(--itx-spacing-4);
-	border-radius: var(--itx-radius-md);
-
-	& + & {
-		margin-block-start: var(--itx-spacing-3);
-	}
-
-	&__label {
-		display: block;
-		font-family: var(--itx-font-family-mono);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-10);
-		margin-block-end: var(--itx-spacing-3);
-	}
-
-	&__filler {
-		padding-block: var(--itx-spacing-3);
-
-		p {
-			margin: 0 0 var(--itx-spacing-3);
-			font-size: var(--itx-font-size-caption);
-			color: var(--itx-neutral-10);
-		}
-	}
+	border-radius: var(--itx-radius);
 }
 
-/*
- * Step-size comparison. Nested rather than laid out in a row: adjacent swatches
- * flatter a ramp, because the eye reads an edge far better than it reads two
- * areas separated by other content. Nesting is how layers actually appear.
- */
-.color-families {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--itx-spacing-4);
-
-	&__item {
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		gap: var(--itx-spacing-2);
-	}
-
-	&__solid {
-		display: grid;
-		place-items: center;
-		inline-size: var(--itx-sz-20);
-		block-size: var(--itx-sz-16);
-		border-radius: var(--itx-radius-sm);
-		font-weight: 600;
-	}
-
-	figcaption {
-		display: flex;
-		flex-direction: column;
-		font-size: var(--itx-font-size-caption);
-
-		span {
-			font-family: var(--itx-font-family-mono);
-			color: var(--itx-neutral-10);
-		}
-	}
-}
-
-/* A measured ratio sits under each fill. Under its floor, it says so. */
-.color-families__ratio {
-	font-family: var(--itx-font-family-mono);
-	color: var(--itx-neutral-10);
-
-	&.is-under {
-		color: var(--itx-danger-text);
-		font-weight: 600;
-	}
-}
-
-.color-gamut {
-	margin: 0;
-
-	svg {
-		inline-size: 100%;
-		block-size: auto;
-		display: block;
-		background-color: var(--itx-surface-below);
-		border-radius: var(--itx-radius-md);
-	}
-
-	&__curve {
-		fill: none;
-		stroke: var(--itx-colorway-solid);
-		stroke-width: 2;
-	}
-
-	/* The rule a default seed asks for. Everything under it gets clamped. */
-	&__seed {
-		stroke: var(--itx-danger-text);
-		stroke-width: 1;
-		stroke-dasharray: 4 4;
-	}
-
-	figcaption {
-		margin-block-start: var(--itx-spacing-2);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-10);
-		max-inline-size: var(--itx-measure);
-	}
-}
-
-.color-states {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--itx-spacing-6);
-
-	&__family {
-		flex: 1 1 18rem;
-		padding: var(--itx-spacing-4);
-		border-radius: var(--itx-radius-md);
-		background-color: var(--itx-surface);
-
-		h3 {
-			display: flex;
-			align-items: baseline;
-			gap: var(--itx-spacing-2);
-			margin-block: 0 var(--itx-spacing-3);
-
-			span {
-				font-weight: 400;
-				font-size: var(--itx-font-size-caption);
-				font-family: var(--itx-font-family-mono);
-				color: var(--itx-neutral-10);
-			}
-		}
-	}
-
-	&__row {
-		display: flex;
-		gap: var(--itx-spacing-1);
-	}
-
-	&__swatch {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: var(--itx-spacing-1);
-		padding: var(--itx-spacing-3);
-		border-radius: var(--itx-radius-sm);
-		font-size: var(--itx-font-size-caption);
-
-		small {
-			font-family: var(--itx-font-family-mono);
-			opacity: 0.85;
-		}
-	}
-
-	&__live {
-		margin-block-start: var(--itx-spacing-3);
-	}
-}
-
-.color-depth {
-	display: grid;
-	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-	gap: var(--itx-spacing-4);
-	align-items: start;
-	padding: var(--itx-spacing-4);
-	border-radius: var(--itx-radius-md);
-
-	& + & {
-		margin-block-start: var(--itx-spacing-2);
-	}
-
-	&__caption {
-		grid-column: 1 / -1;
-		font-family: var(--itx-font-family-mono);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-10);
-	}
-
-	&__components {
-		display: flex;
-		flex-direction: column;
-		gap: var(--itx-spacing-3);
-	}
-
-	&__inline {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: var(--itx-spacing-3);
-	}
-
-	/* The link is both the demonstration and the instrument: it carries the
-	   colourway's text role, and it is what gets measured for it. */
-	&__link {
-		color: var(--itx-colorway-text);
-		text-decoration-thickness: 1px;
-		text-underline-offset: 2px;
-	}
-
-	/*
-	 * Instruments, not illustration. Each carries exactly one role so the
-	 * readout beside it answers for that role and nothing else.
-	 */
-	&__probes {
-		display: flex;
-		gap: var(--itx-spacing-1);
-	}
-
-	&__probe {
-		inline-size: var(--itx-sz-8);
-		block-size: var(--itx-sz-8);
-		display: grid;
-		place-items: center;
-		border-radius: var(--itx-radius-sm);
-		font-size: var(--itx-font-size-caption);
-	}
-
-	&__readout {
-		border-collapse: collapse;
-		font-size: var(--itx-font-size-caption);
-		inline-size: 100%;
-
-		th,
-		td {
-			text-align: start;
-			padding: var(--itx-spacing-1) var(--itx-spacing-2);
-			font-weight: 400;
-		}
-
-		th {
-			color: var(--itx-neutral-10);
-		}
-
-		td:nth-child(3) {
-			font-family: var(--itx-font-family-mono);
-		}
-
-		td:last-child {
-			color: var(--itx-neutral-10);
-			font-family: var(--itx-font-family-mono);
-		}
-
-		/* A row that has stopped clearing its floor says so, in its own colour. */
-		tr.is-under td:nth-child(3) {
-			color: var(--itx-danger-text);
-			font-weight: 600;
-		}
-	}
-}
-
-/*
- * Each frame is its own pinned root, so the two colourways resolve side by side
- * on the same page — the only way to see that a switch moves everything rather
- * than most things.
- */
-.color-switch {
-	display: grid;
-	gap: var(--itx-spacing-4);
-	grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-
-	&__frame {
-		padding: var(--itx-spacing-4);
-		border: 1px solid var(--itx-neutral-3);
-		border-radius: var(--itx-radius-md);
-	}
-
-	&__caption {
-		display: block;
-		font-family: var(--itx-font-family-mono);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-10);
-		margin-block-end: var(--itx-spacing-3);
-	}
-
-	&__body {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: var(--itx-spacing-3);
-	}
-}
-
-/*
- * Palette boards.
- *
- * Each row IS a layer — it carries itx-layer, so the chips inside resolve
- * against that depth rather than being told what colour to be. The row paints
- * its own surface for the same reason: a swatch of contrast-4 on the wrong
- * ground is a swatch of nothing.
- */
-.color-palette {
-	display: flex;
-	flex-direction: column;
-	gap: var(--itx-spacing-1);
-	overflow-x: auto;
-
-	&__title {
-		margin-block: var(--itx-spacing-6) var(--itx-spacing-2);
-		font-size: var(--itx-font-size-label);
-		font-weight: 500;
-	}
-
-	&__row {
-		display: grid;
-		grid-template-columns: 3rem repeat(auto-fit, minmax(7.5rem, 1fr));
-		gap: var(--itx-spacing-2);
-		align-items: center;
-		padding: var(--itx-spacing-2);
-		border-radius: var(--itx-radius-sm);
-		min-inline-size: max-content;
-
-		&--head {
-			padding-block: 0;
-			font-size: var(--itx-font-size-caption);
-			color: var(--itx-neutral-10);
-			font-family: var(--itx-font-family-mono);
-		}
-	}
-
-	&__layer {
-		font-family: var(--itx-font-family-mono);
-		font-size: var(--itx-font-size-caption);
-		color: var(--itx-neutral-10);
-	}
-
-	&__cell {
-		display: flex;
-		flex-direction: column;
-		gap: var(--itx-spacing-1);
-		min-inline-size: 0;
-
-		code {
-			font-size: 0.6875rem;
-			color: var(--itx-neutral-10);
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-	}
-
-	/* A hairline so a chip that matches its ground is still a rectangle. */
-	&__chip {
-		block-size: var(--itx-sz-8);
-		border-radius: var(--itx-radius-sm);
-		border: 1px solid var(--itx-neutral-3);
-
-		&--wide {
-			block-size: var(--itx-sz-12);
-		}
-	}
-
-	&__fixed {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--itx-spacing-4);
-
-		.color-palette__cell {
-			flex: 1 1 10rem;
-		}
-
-		strong {
-			font-size: var(--itx-font-size-caption);
-			font-weight: 500;
-		}
-	}
-}
-
-/*
- * Palette preview.
- *
- * Each candidate is a LAYER, and the strip carries its own outline.
- *
- * A ramp end can match the surface it sits on and vanish — in dark mode step 11
- * is rgb(30,32,35) against a layer-0 page of rgb(27,30,32) — which makes the
- * next step read as a huge jump. The ramp is not the problem there; the
- * backdrop is.
- *
- * The first fix was a fixed neutral card, and it was wrong: the tokens of the
- * day were solved against the LAYER, so putting one on a hardcoded background
- * measured 4.04:1 against a 4.5 floor. Declaring the card a layer instead keeps
- * it on the ladder, and an outline on the strip does the delineating.
- */
-/* The candidate settled on, 2026-08-21. Marked rather than moved: the
-   comparison is the evidence for the choice, so it stays on the page. */
-/*
- * Legibility board.
- *
- * Big enough to judge. The whole argument is that a name printed IN the colour
- * it names cannot lie about its own legibility, and that only works if there is
- * room to read it — hence a 256px floor rather than a swatch grid.
- *
- * No token reads inside a card beyond the palette itself: the card paints a
- * step and everything inside is coloured from the same ramp. Reading a layer
- * token in here would colour the card from the page's depth rather than from
- * the scale the card is demonstrating.
- */
-.legibility {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-	gap: var(--itx-spacing-3);
-
-	&__title {
-		margin-block: var(--itx-spacing-8) var(--itx-spacing-3);
-		font-size: var(--itx-font-size-label);
-		font-weight: 500;
-
-		span {
-			margin-inline-start: var(--itx-spacing-2);
-			font-weight: 400;
-			color: var(--itx-neutral-10);
-		}
-	}
-
-	&__card {
-		min-block-size: 12rem;
-		padding: var(--itx-spacing-4);
-		border-radius: var(--itx-radius-sm);
-		/* A hairline, because a card can match the page it sits on. */
-		box-shadow: inset 0 0 0 1px var(--itx-neutral-3);
-
-		header {
-			display: flex;
-			align-items: baseline;
-			gap: var(--itx-spacing-2);
-			margin-block-end: var(--itx-spacing-3);
-			font-weight: 600;
-			font-family: var(--itx-font-family-mono);
-		}
-
-		small {
-			font-size: 0.6875rem;
-			font-weight: 400;
-			opacity: 0.75;
-		}
-
-		ul {
-			margin: 0;
-			padding: 0;
-			list-style: none;
-			display: flex;
-			flex-direction: column;
-			gap: 2px;
-		}
-
-		li {
-			display: flex;
-			align-items: baseline;
-			gap: var(--itx-spacing-2);
-			font-family: var(--itx-font-family-mono);
-			font-size: var(--itx-font-size-caption);
-		}
-	}
-
-	&__none {
-		margin: 0;
-		font-size: var(--itx-font-size-caption);
-		font-style: italic;
-		opacity: 0.7;
-	}
-}
-
-/*
- * Light-mode direction comparison.
- *
- * Both frames pin color-scheme: light and paint from literal values, because
- * the right-hand frame is a proposal the shipping system cannot express. The
- * page inside each frame is a real page, not a swatch — the question is what a
- * card and a field look like ON it, which a colour chip cannot answer.
- */
-
-/*
- * Palette strips.
- *
- * One row per family, one cell per step, no depth axis — a step is the same
- * colour wherever it lands, which is the whole difference from what this
- * section used to render. Steps stay legible against themselves by writing in
- * the far end of their own ramp rather than in a layer token.
- */
-.palette-strip {
-	display: flex;
-	align-items: center;
-	gap: var(--itx-spacing-3);
+.color-nest__label {
+	display: block;
 	margin-block-end: var(--itx-spacing-3);
+	font-size: var(--itx-font-size-small);
 
-	&__name {
-		flex: 0 0 8rem;
-		font-size: var(--itx-font-size-label);
+	code {
+		font-size: inherit;
+	}
+}
+
+.color-code {
+	margin-block: var(--itx-spacing-3);
+	padding: var(--itx-spacing-3);
+	overflow-x: auto;
+	background-color: var(--itx-surface-above);
+	border-radius: var(--itx-radius);
+	font-size: var(--itx-font-size-small);
+}
+
+/* ── The palette ─────────────────────────────────────────────────────────── */
+
+.color-family {
+	margin-block-end: var(--itx-spacing-5);
+}
+
+.color-family__name {
+	margin-block-end: var(--itx-spacing-2);
+	font-size: var(--itx-font-size-small);
+}
+
+.color-family__steps {
+	display: grid;
+	grid-template-columns: repeat(14, minmax(0, 1fr));
+	gap: 2px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.color-family__step {
+	display: grid;
+	place-items: center;
+	min-block-size: 3.5rem;
+	border-radius: var(--itx-radius-sm);
+}
+
+/*
+ * The label rides on the swatch, so it cannot read a token — the swatch is a
+ * different colour in every cell. A blend mode keeps it legible at both ends
+ * of the ramp without picking a colour per step.
+ */
+.color-family__n,
+.color-board__n {
+	font-size: var(--itx-font-size-small);
+	font-variant-numeric: tabular-nums;
+	color: canvastext;
+	mix-blend-mode: difference;
+	filter: invert(1);
+}
+
+/* ── Picking a step ──────────────────────────────────────────────────────── */
+
+.color-controls {
+	display: flex;
+	gap: var(--itx-spacing-3);
+	align-items: center;
+	margin-block-end: var(--itx-spacing-4);
+	font-size: var(--itx-font-size-small);
+}
+
+.color-controls__set {
+	display: flex;
+	gap: var(--itx-spacing-2);
+}
+
+.color-board {
+	margin-block-end: var(--itx-spacing-5);
+}
+
+.color-board__name {
+	margin-block-end: var(--itx-spacing-2);
+	font-size: var(--itx-font-size-small);
+}
+
+.color-board__row {
+	display: grid;
+	grid-template-columns: repeat(14, minmax(0, 1fr));
+	gap: 2px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.color-board__cell {
+	display: grid;
+	gap: 2px;
+	place-items: center;
+	align-content: center;
+	min-block-size: 4.5rem;
+	padding-block: var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+}
+
+.color-board__cell--is-background {
+	outline: var(--itx-border-width-thick) solid var(--itx-neutral-11);
+	outline-offset: 2px;
+}
+
+/* The floor a step clears, and what it measured. Same blend trick. */
+.color-board__floor,
+.color-board__ratio {
+	font-size: var(--itx-font-size-xsmall);
+	font-variant-numeric: tabular-nums;
+	color: canvastext;
+	mix-blend-mode: difference;
+	filter: invert(1);
+}
+
+.color-board__floor {
+	font-weight: var(--itx-font-weight-bold);
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+
+.color-roles,
+.color-depth-table {
+	inline-size: 100%;
+	margin-block: var(--itx-spacing-4);
+	border-collapse: collapse;
+	font-size: var(--itx-font-size-small);
+	font-variant-numeric: tabular-nums;
+	text-align: start;
+
+	caption {
+		margin-block-end: var(--itx-spacing-3);
+		color: var(--itx-neutral-11);
+		text-align: start;
 	}
 
-	&__steps {
-		display: grid;
-		flex: 1;
-		grid-auto-columns: 1fr;
-		grid-auto-flow: column;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-		border-radius: var(--itx-radius-sm);
-		overflow: hidden;
+	th,
+	td {
+		padding: var(--itx-spacing-2) var(--itx-spacing-3);
+		border-block-end: var(--itx-border-width-hairline) solid
+			var(--itx-neutral-8);
+		text-align: start;
 	}
 
-	&__step {
-		display: flex;
-		flex-direction: column;
-		gap: 0.125em;
-		min-block-size: 4rem;
-		padding: var(--itx-spacing-2);
-		font-size: var(--itx-font-size-caption);
-		font-variant-numeric: tabular-nums;
-
-		/* Colour comes from the template, which writes each step in the nearest
-		   step measured to clear 4.5:1 against it. An nth-child rule stood here
-		   and guessed; it put 1.00:1 labels on half the ramp. No opacity on the
-		   small text either — it lowers the ratio the label was chosen for. */
-
-		small {
-			font-size: 0.85em;
-		}
+	thead th {
+		color: var(--itx-neutral-11);
+		font-weight: var(--itx-font-weight-normal);
 	}
+}
 
-	&__n {
-		font-weight: 500;
-	}
+.color-roles__step {
+	display: block;
+}
+
+.color-roles__ratio {
+	display: block;
+	color: var(--itx-neutral-11);
+}
+
+/*
+ * Probes exist to be read by getComputedStyle, not seen. They stay in the
+ * layout tree and keep their ancestors, because both are what makes the
+ * reading real.
+ */
+.color-probes {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	pointer-events: none;
 }
