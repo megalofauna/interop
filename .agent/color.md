@@ -168,6 +168,9 @@ every layer boundary, so a value set on an ancestor is replaced one layer down.
 `.agent/records/palette-spike.md` — why 14 steps at curve 1.30, and why 16
 fragments.
 
+`.agent/records/color-naming.md` — the job list, the open naming question, and
+why there is no industry convention to copy. Read it before renaming a role.
+
 `.agent/todo/colour-followups.md` — what is deferred.
 
 The demo's Colour page measures all of the above live at `/foundation/color`.
