@@ -2,6 +2,12 @@
 
 Raised and agreed 2026-08-22, during the move to a monotonic ramp.
 
+**Update 2026-08-28.** The solver is gone: the contrast ranks are deleted, the
+2270-line generator with them, and both stylesheets are hand-authored. Three
+items below are settled by that and marked inline. The Colour page review is
+NOT — it is now more overdue, because the page still renders per-layer role
+figures that describe behaviour which no longer exists.
+
 ## Layered depth for shadows
 
 `--itx-elevation-shadow` is currently one value for every layer, so a card at
@@ -36,13 +42,24 @@ palette, the legibility board, what the two axes are, and how to override.
 Everything that exists to argue a decision that has since been made belongs in
 `.agent/records/palette-spike.md`, not on a page consumers read.
 
-## Three text levels
+## Three text levels — STILL OPEN
 
 Chris wants three, matching the rank system's secondary / body / maximum. On a
 uniform ramp this is three DISTANCES rather than three reserved steps, so it
 costs nothing structurally — see the palette floors.
 
-## Page-relative steps lose their margin at depth
+## Page-relative steps lose their margin at depth — SETTLED
+
+**Resolved 2026-08-28.** Option 1 (depth-tracking roles) was rejected along with
+the rest of the relative machinery. The answer taken instead is option 2 taken
+seriously: the ramp is short, and the ROLES are picked one tier further out than
+the floor rule's minimum so they clear at the deepest layer rather than only on
+the page. Border is step 9, not 8 — at dark layer 2 step 8 measures 2.99:1
+against a 3:1 floor and step 9 measures 3.97:1. `check-contrast-css.mjs` now
+measures all 96 role pairings at every depth, so this cannot silently regress.
+
+The original analysis follows, because the numbers are still the reason.
+
 
 Found migrating the field (2026-08-22). Contrast ranks were **surface-relative**:
 every layer boundary re-solved them against its own ground, so a rank held its
@@ -99,7 +116,16 @@ pending number sit at step 10. Layers 3–6, where the drift got genuinely bad
 should clear AA at layer 2 on its own, which is a question about where the
 palette's secondary step sits rather than about depth tracking.
 
-## Retiring the contrast ranks needs the status roles rebuilt first
+## Retiring the contrast ranks needs the status roles rebuilt first — DONE
+
+**Resolved 2026-08-28**, and the blocker below turned out to be the wrong shape.
+The tint did not need to be derived from the surface by relative colour syntax:
+every status family already had its own 14-step palette, so the roles just point
+at steps. The inversion problem was real and was solved by choosing step 3 rather
+than step 2 — step 2 (L .199) sits below layers 1 and 2 (L .202, .234).
+
+The original analysis follows.
+
 
 The queue item read "retire `--itx-contrast-*` once the last read is gone."
 The last *public* read is gone — 0 consumers across the library and all 38

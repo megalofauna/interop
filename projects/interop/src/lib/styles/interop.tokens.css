@@ -606,8 +606,8 @@
 	/* --itx-popover-arrow-offset: 0px; */
 	/* --itx-popover-arrow-size: 6px; */
 	/* --itx-popover-background: var(--itx-surface-above); */
-	/* --itx-popover-border-color: var(--itx-neutral-8); */
-	/* --itx-popover-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
+	/* --itx-popover-border-color: var(--itx-neutral-5); */
+	/* --itx-popover-border-radius: var(--itx-radius); */
 	/* --itx-popover-border-style: solid; */
 	/* --itx-popover-border-width: ; */ /* falls through to --itx-border-width-hairline — set globally in interop.globals.css */
 	/* --itx-popover-enter-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */

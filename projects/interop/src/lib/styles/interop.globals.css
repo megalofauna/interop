@@ -210,10 +210,10 @@
  *
  *   itx-theme="light|dark"
  *     [interop-root] only — Pin the colour scheme instead of following the OS.
- *   itx-colorway="amber"
- *     [interop-root] ONLY — Swap the brand family. Compound-selected on the root — putting this on a <div> does nothing.
+ *   itx-colorway
+ *     [interop-root] ONLY — Selects a colour family. One ships. Compound-selected on the root, so putting this on a <div> does nothing.
  *   itx-status-palette="seventies|eighties"
- *     any element — Swap danger/info/success/warning. Unlike itx-colorway, this DOES work on a subtree.
+ *     any element — Selects a status family. Works on any subtree, unlike itx-colorway.
  *   itx-scale-scope
  *     any element — Re-derives the radius, border-width and duration ramps here, so a base set on the same element rescales the subtree proportionally.
  *   itx-radius="none|nominal|sm|md|lg|xl|full"
@@ -226,28 +226,20 @@
 
 /* ── Not reachable from CSS ──────────────────────────────────────────── */
 /*
- * These change the colour system's SHAPE, and they are config in
- * scripts/generate-color-ladder.mjs rather than custom properties. Edit that
- * file and re-run it; every dial there is validated, so the worst case is a
- * non-zero exit rather than a quietly inaccessible palette.
+ * These change the colour system's SHAPE and are not reachable from CSS —
+ * they are structure in the stylesheets themselves rather than values. Edit
+ * the file named, then run npm run lint:tokens, which re-proves every contrast
+ * floor in a real browser.
  *
- *   DEPTH.above / DEPTH.below
- *     How many elevation layers exist. The engine unrolls a @container block per layer, so the rules must exist at build time — this can never be a custom property.
- *   RANKS[].ratio
- *     The contrast floor each rank is solved to (1.5:1, 3:1, 4.5:1, 7:1). Raising one re-solves it on every layer at once.
- *   RAMP.<scheme>.page
- *     Moves a whole scheme up or down. The biggest single lever on the look.
- *   RAMP.<scheme>.up / .ease / .down
- *     Step size between layers, its deceleration, and the size of a sink.
- *   TINT
- *     The generated DEFAULT tint. Prefer --itx-tint-light / -dark above for a runtime retint.
- *   SEEDS.colorway / SEEDS.status
- *     Adds a whole new brand or status family from one seed each. Solved, then emitted as numbers.
+ *   the @container unroll
+ *     How many elevation layers exist. The engine needs one @container block per layer, so the rules must exist in the stylesheet — this can never be a custom property. Add or remove a block in tokens/elevation.css.
+ *   the palette steps
+ *     A new brand or status family is fourteen literal oklch values in themes/protocol/ladder.css. Place them by lightness; the floor rule (borders 7 steps apart, text 8, enhanced 10) is what makes the result legible, and check-contrast-render.mjs proves it in a browser.
  */
 
 /* ── Do not set these ────────────────────────────────────────────────── */
 /*
- * --itx-surface, --itx-surface-above, --itx-surface-below, --itx-contrast-1..6
+ * --itx-surface, --itx-surface-above, --itx-surface-above-2, --itx-surface-below
  *
  * They are a SOURCE, never an override point. The elevation engine re-declares
  * every one of them at each layer boundary, so a value you set here is stomped
@@ -255,8 +247,9 @@
  * asserted as a negative case in tokens/elevation.spec.ts so the reason stays
  * visible.
  *
- * To move the palette, use --itx-tint-light / --itx-tint-dark above, or any
- * --itx-ramp-* number. Both reach every layer below.
+ * To move the surfaces, use --itx-tint-light / --itx-tint-dark above, or any
+ * --itx-ramp-* dial. Both reach every layer below. To move the palette itself,
+ * set the step you want — --itx-neutral-8 and friends are ordinary tokens.
  *
  * To restyle ONE component, use its own namespace — --itx-dialog-background,
  * --itx-button-foreground — which no layer block touches.

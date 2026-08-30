@@ -1,546 +1,313 @@
 <demo-page>
 	<demo-masthead category="Foundations" title="Colour">
-		Two axes, and nothing in between. A component declares
-		<em>that it is a layer</em> and its surface follows from the depth it
-		happens to sit at; what it draws on that surface it names from a palette of
-		fixed steps.
+		A component declares that it is a layer, and its surface follows from the
+		depth it sits at. Everything it draws on that surface it names from a
+		palette of fixed steps.
 	</demo-masthead>
 
-	<demo-section id="axes" heading="The two axes">
+	<demo-section id="surfaces" heading="Surfaces">
 		<p description class="demo-section__lede">
-			Elevation is the substrate you stand on. The palette is everything drawn
-			on top of it. They are different kinds of thing, so they are written
-			differently: elevation is always a spatial word, a palette step is always
-			a family and a number. You cannot spell one in the other's notation.
+			<code>--itx-surface</code> is the background a component stands on. Its
+			value comes from the element's depth. Add <code>itx-layer</code> to nest
+			one step further from the page; nesting compounds.
 		</p>
 
-		<div class="color-axes">
-			<div class="color-axes__card">
-				<h3>Elevation</h3>
-				<code>--itx-surface</code>
-				<code>--itx-surface-above</code>
-				<code>--itx-surface-above-2</code>
-				<code>--itx-surface-below</code>
-				<p>
-					Moves <strong>away from the page</strong> in both schemes, because
-					tone carries distance and shadow carries direction. The light page is
-					near-white and nests darker; the dark page is near-black and nests
-					lighter. Backgrounds only.
-				</p>
-			</div>
-			<div class="color-axes__card">
-				<h3>Palette</h3>
-				<code>--itx-neutral-1 … --itx-neutral-14</code>
-				<code>--itx-&lt;family&gt;-1 … --itx-&lt;family&gt;-14</code>
-				<p>
-					Fourteen fixed steps per family, measured
-					<strong>from the page</strong>. The two schemes are paired, so step N
-					is the same distance from the page in either one and a token flips
-					arms without a <code>light-dark()</code>. Being fixed, a step does not
-					re-solve against the surface it lands on — a foreground chosen for the
-					page reads slightly closer once it is nested a few layers down.
-				</p>
-			</div>
-		</div>
-	</demo-section>
-
-	<demo-section id="layers" heading="Layers compound">
-		<p description class="demo-section__lede">
-			Nothing below sets a colour. Each box carries only
-			<code>itx-layer</code>, and the engine counts the depth by asking its
-			nearest ancestor — so intermediate markup is transparent to the count.
-		</p>
-
-		<div itx-layer class="color-stack">
-			<span class="color-stack__label">itx-layer — depth 1</span>
-			<div itx-layer class="color-stack">
-				<span class="color-stack__label">itx-layer — depth 2</span>
-				<div class="color-stack__filler">
-					<p>A plain wrapper. It changes nothing.</p>
-					<div itx-layer class="color-stack">
-						<span class="color-stack__label">itx-layer — depth 3</span>
-						<div itx-sink class="color-stack">
-							<span class="color-stack__label">itx-sink — back to depth 2</span>
-						</div>
-					</div>
+		<div class="color-nest" itx-layer="0" data-surface="0">
+			<span class="color-nest__label">
+				Layer 0 · <code>{{ surfaces().get(0) }}</code>
+			</span>
+			<div class="color-nest" itx-layer data-surface="1">
+				<span class="color-nest__label">
+					Layer 1 · <code>{{ surfaces().get(1) }}</code>
+				</span>
+				<div class="color-nest" itx-layer data-surface="2">
+					<span class="color-nest__label">
+						Layer 2 · <code>{{ surfaces().get(2) }}</code>
+					</span>
 				</div>
 			</div>
 		</div>
+
+		<p>
+			Four tokens read the ladder from wherever they are used:
+			<code>--itx-surface</code>, <code>--itx-surface-above</code>,
+			<code>--itx-surface-above-2</code> and <code>--itx-surface-below</code>.
+			<code>itx-sink</code> nests a recess instead of a raise;
+			<code>itx-layer="2"</code> pins a depth regardless of where the element
+			sits.
+		</p>
+
+		<p>
+			Each layer's lightness is computed from six numbers per scheme, so one
+			dial moves every layer at once.
+		</p>
+
+		<pre
+			class="color-code"
+		><code>clamp(min, page + step × layer, max)</code></pre>
 	</demo-section>
 
-	<demo-section id="palette" heading="The palette, as rendered">
+	<demo-section id="palette" heading="The palette">
 		<p description class="demo-section__lede">
-			Every value the system produces, read back out of a painted element rather
-			than printed from the generator — so this is a picture of the page, not of
-			the script that wrote it. Switch the colour scheme and every number here
-			changes.
+			Six families, fourteen steps each. A step is one colour at every depth and
+			in both schemes. Every swatch below is painted with the token it names,
+			and the value shown is read back from the page.
 		</p>
 
-		<h3 class="color-palette__title">Neutral, and three seeded families</h3>
-		<p>
-			A strip, not a grid. A step is a fixed position on a ramp measured from
-			the page — the same colour wherever it is used — so there is no depth axis
-			to lay out. Step 1 is the page; step 14 is as far from it as the scale
-			goes.
-		</p>
-		<p>
-			Distances, measured off the ramp rather than designed into it:
-			@for (d of palette.distances; track d.id) {
-				<code>{{ d.id }} {{ d.ratio }}:1 — {{ d.steps }} steps apart</code>
-			}
-			These are worst-case across the whole ramp, which is why they are larger
-			than what any particular pairing needs.
-		</p>
-
-		@for (family of paletteStrips; track family.id) {
-			<div class="palette-strip">
-				<span class="palette-strip__name"
-					><code>{{ family.id }}</code></span
-				>
-				<ol class="palette-strip__steps">
-					@for (step of stepsOf(family); track step.step) {
+		@for (family of families; track family.id) {
+			<div class="color-family">
+				<h3 class="color-family__name">{{ family.label }}</h3>
+				<ol class="color-family__steps">
+					@for (n of steps; track n) {
 						<li
-							class="palette-strip__step"
-							[style.background-color]="token(family.id, step.step)"
-							[style.color]="step.label ? token(family.id, step.label) : null"
+							class="color-family__step"
+							[style.background-color]="
+								'var(--itx-' + family.id + '-' + n + ')'
+							"
+							[attr.data-step]="family.id + '-' + n"
 						>
-							<span class="palette-strip__n">{{ step.step }}</span>
-							<small>L {{ step.l }}</small>
+							<span class="color-family__n">{{ n }}</span>
 						</li>
 					}
 				</ol>
 			</div>
 		}
 
-		<h3 class="color-palette__title">Colourway</h3>
 		<p>
-			The same treatment for the seeded blue. These four roles re-solve against
-			whatever surface they land on, which is why they are laid out the same
-			way.
+			Families are <code>neutral</code>, <code>colorway</code>,
+			<code>danger</code>, <code>success</code>, <code>warning</code> and
+			<code>info</code>. Write a step as <code>var(--itx-danger-9)</code>.
+		</p>
+	</demo-section>
+
+	<demo-section id="picking" heading="Picking a step">
+		<p description class="demo-section__lede">
+			Contrast comes from the distance between two steps. Counting from the
+			background: 7 steps clears 3:1, 8 clears 4.5:1, 10 clears 7:1. The same
+			distances hold for every family in both schemes, because every family
+			shares one lightness ramp.
 		</p>
 
-		<div
-			class="color-palette"
-			role="table"
-			aria-label="Colourway palette by layer"
-		>
-			<div class="color-palette__row color-palette__row--head" role="row">
-				<span role="columnheader">layer</span>
-				@for (col of colorwayColumns; track col.token) {
-					<span role="columnheader">{{ col.label }}</span>
+		<div class="color-controls">
+			<span id="bg-label">Measure against step</span>
+			<div role="group" aria-labelledby="bg-label" class="color-controls__set">
+				@for (bg of backgrounds; track bg) {
+					<button
+						type="button"
+						interop-button
+						[attr.aria-pressed]="background() === bg"
+						(click)="background.set(bg)"
+					>
+						{{ bg }}
+					</button>
 				}
 			</div>
-			@for (layer of paletteLayers; track layer) {
-				<div [attr.itx-layer]="layer" class="color-palette__row" role="row">
-					<span class="color-palette__layer" role="rowheader">
-						{{ layerLabel(layer) }}
-					</span>
-					@for (col of colorwayColumns; track col.token) {
-						<span class="color-palette__cell" role="cell">
-							<span
-								class="color-palette__chip"
-								[style.background-color]="'var(' + col.token + ')'"
-								[attr.data-swatch]="'c-' + layer + '-' + col.label"
-							></span>
-							<code>{{ swatchColor("c-" + layer + "-" + col.label) }}</code>
-						</span>
+		</div>
+
+		@for (family of families; track family.id) {
+			<div class="color-board">
+				<h3 class="color-board__name">{{ family.label }}</h3>
+				<ol class="color-board__row">
+					@for (step of board(family.id); track step.n) {
+						<li
+							class="color-board__cell"
+							[class.color-board__cell--is-background]="step.n === background()"
+							[style.background-color]="step.color"
+						>
+							<span class="color-board__n">{{ step.n }}</span>
+							@if (step.clears) {
+								<span class="color-board__floor">{{ step.clears }}</span>
+							}
+							<span class="color-board__ratio">{{
+								formatRatio(step.ratio)
+							}}</span>
+						</li>
 					}
-				</div>
-			}
-		</div>
-
-		<h3 class="color-palette__title">Fixed</h3>
-		<p>
-			Four that do not move with depth or scheme, because a brand colour that
-			drifts as it nests is not a brand colour.
-		</p>
-
-		<div class="color-palette__fixed">
-			@for (col of colorwayFixed; track col.token) {
-				<span class="color-palette__cell" role="cell">
-					<span
-						class="color-palette__chip color-palette__chip--wide"
-						[style.background-color]="'var(' + col.token + ')'"
-						[attr.data-swatch]="'f-' + col.label"
-					></span>
-					<strong>{{ col.label }}</strong>
-					<code>{{ swatchColor("f-" + col.label) }}</code>
-				</span>
-			}
-		</div>
-	</demo-section>
-
-	<demo-section id="accents" heading="Accent families">
-		<p description class="demo-section__lede">
-			Five families, each generated from <em>one</em> seed colour. The hue
-			carries through; the chroma is an intent clamped to what that hue can
-			actually reach in sRGB; the lightness is honoured for the solid where the
-			gamut allows and solved from contrast targets everywhere else.
-		</p>
-
-		<div class="color-families">
-			@for (family of families; track family.id) {
-				<figure class="color-families__item">
-					<div
-						class="color-families__solid"
-						[style.background-color]="'var(--itx-' + family.id + '-solid)'"
-						[style.color]="'var(--itx-' + family.id + '-on-solid)'"
-						[attr.data-measure]="'family-' + family.id"
-						data-measure-prop="color"
-					>
-						Aa
-					</div>
-					<figcaption>
-						<strong>{{ labelOf(family) }}</strong>
-						<span>{{ seedOf(family) }}</span>
-						<span
-							class="color-families__ratio"
-							[class.is-under]="!passes('family-' + family.id, 4.5)"
-						>
-							label {{ reading("family-" + family.id) }}
-						</span>
-					</figcaption>
-				</figure>
-			}
-		</div>
-
-		<p>
-			The label on each fill is <em>derived</em>, not chosen, and the ratio
-			under each one is <em>measured</em> — read off the rendered swatch in the
-			browser, not copied from the generator. Cream Can comes out with dark text
-			because white on it measures about 1.7:1, a correction that used to live
-			in a comment and had to be remembered by whoever added the next hue.
-		</p>
-	</demo-section>
-
-	<demo-section id="gamut" heading="What the hue can actually reach">
-		<p description class="demo-section__lede">
-			A seed's chroma is an <em>intent</em>, not a promise. Every hue has its
-			own ceiling in sRGB, and the arc below the line is where a
-			default-strength seed gets clamped — which is why a lightness-indexed slot
-			ramp could not survive a hue change, and a contrast target can.
-		</p>
-
-		<figure class="color-gamut">
-			<svg viewBox="0 0 720 200" role="img" aria-labelledby="gamut-title">
-				<title id="gamut-title">
-					Peak reachable chroma per hue, with the default seed strength marked.
-					{{ clampedHues.length }} of {{ ceilings.length }} hues top out below
-					it.
-				</title>
-				<polyline class="color-gamut__curve" [attr.points]="ceilingPoints" />
-				<line
-					class="color-gamut__seed"
-					x1="0"
-					x2="720"
-					[attr.y1]="seedLine"
-					[attr.y2]="seedLine"
-				/>
-			</svg>
-			<figcaption>
-				Peak chroma per hue, 0°–360°. The rule sits at the default seed strength
-				of {{ defaultSeedChroma }}.
-				<strong>{{ clampedHues.length }} of {{ ceilings.length }}</strong>
-				hues cannot reach it — bottoming at
-				{{ lowestCeiling.peakChroma }} around hue {{ lowestCeiling.hue }}°,
-				which is the teal that returned no solution at all before the clamp
-				existed.
-			</figcaption>
-		</figure>
-	</demo-section>
-
-	<demo-section id="states" heading="Hover and active move away from the label">
-		<p description class="demo-section__lede">
-			A state is not a lighter or a darker version of the fill — it is a step
-			<em>away from the label</em>, so a state can only ever improve the
-			contrast the solver proved for the rest state. Which means the direction
-			is not a constant. Jelly Bean carries a light label and darkens; Cream Can
-			carries a dark label and lightens. Same rule, opposite result.
-		</p>
-
-		<div class="color-states">
-			@for (way of colorways; track way.id) {
-				<div
-					class="color-states__family"
-					interop-root
-					[attr.itx-colorway]="way.variant === 'default' ? null : way.variant"
-				>
-					<h3>
-						{{ labelOf(way) }}
-						<span>{{ way.solid.label }} label</span>
-					</h3>
-					<div class="color-states__row">
-						@for (state of solidStates; track state) {
-							<div
-								class="color-states__swatch"
-								[style.background-color]="'var(--itx-colorway-' + state + ')'"
-								[style.color]="'var(--itx-colorway-on-solid)'"
-								[attr.data-measure]="'state-' + way.id + '-' + state"
-							>
-								<span>{{ stateLabel(state) }}</span>
-								<small>{{ reading("state-" + way.id + "-" + state) }}</small>
-							</div>
-						}
-					</div>
-					<div class="color-states__live">
-						<button interop-button="primary" type="button">
-							Hover me for real
-						</button>
-					</div>
-				</div>
-			}
-		</div>
-
-		<p>
-			The measured ratio under each swatch is the label against that state. It
-			climbs from rest to active in both families, in opposite lightness
-			directions — which is the property the rule exists to guarantee.
-		</p>
-	</demo-section>
-
-	<demo-section id="accent-depth" heading="Accents at depth">
-		<p description class="demo-section__lede">
-			Real componentry, one layer per row, with what each accent
-			<em>actually measures</em> where it landed. A solid fill is the same
-			colour at every depth and in both schemes, because a brand colour that
-			drifts as it nests is not a brand colour. The surface-relative roles are
-			the interesting ones — and they do not all behave the same way.
-		</p>
-
-		@for (layer of layers; track layer) {
-			<div [attr.itx-layer]="layer" class="color-depth">
-				<span class="color-depth__caption">Layer {{ layer }}</span>
-
-				<div class="color-depth__components">
-					<interop-callout
-						type="danger"
-						heading="Coolant pressure"
-						[attr.data-measure]="'depth-' + layer + '-status-border'"
-						data-measure-prop="border-inline-start-color"
-						data-measure-mode="outward"
-					>
-						Loop 3 is venting. Isolate before the next burn.
-					</interop-callout>
-
-					<div class="color-depth__inline">
-						<interop-badge
-							[count]="3"
-							[accessibleLabel]="'3 unresolved faults'"
-						>
-							<button interop-button="secondary" type="button">Faults</button>
-						</interop-badge>
-						<button interop-button="primary" type="button">Acknowledge</button>
-						<a
-							class="color-depth__link"
-							href="#accent-depth"
-							[attr.data-measure]="'depth-' + layer + '-colorway-text'"
-							>Maintenance log</a
-						>
-					</div>
-				</div>
-
-				<!--
-				  A probe, not decoration: it carries the tint and nothing else, so
-				  the signed delta beside it answers for the tint alone. The other
-				  two readings come off real components above — the callout's own
-				  accent rule and the link's own colour.
-				-->
-				<div class="color-depth__probes">
-					<span
-						class="color-depth__probe"
-						[style.background-color]="'var(--itx-neutral-2)'"
-						[attr.data-measure]="'depth-' + layer + '-neutral-wash'"
-						data-measure-prop="background-color"
-						data-measure-mode="delta"
-						aria-hidden="true"
-					></span>
-					<span
-						class="color-depth__probe"
-						[style.background-color]="'var(--itx-' + depthStatus + '-tint)'"
-						[attr.data-measure]="'depth-' + layer + '-status-tint'"
-						data-measure-prop="background-color"
-						data-measure-mode="delta"
-						aria-hidden="true"
-					></span>
-				</div>
-
-				<table class="color-depth__readout">
-					<thead>
-						<tr>
-							<th scope="col">role</th>
-							<th scope="col">solved</th>
-							<th scope="col">measured</th>
-							<th scope="col">floor / reference</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr
-							[class.is-under]="
-								!passes('depth-' + layer + '-colorway-text', 4.5)
-							"
-						>
-							<th scope="row">colourway text</th>
-							<td>per layer</td>
-							<td>{{ reading("depth-" + layer + "-colorway-text") }}</td>
-							<td>4.5:1</td>
-						</tr>
-						<tr
-							[class.is-under]="!passes('depth-' + layer + '-status-border', 3)"
-						>
-							<th scope="row">status accent rule</th>
-							<td>layer 0 only</td>
-							<td>{{ reading("depth-" + layer + "-status-border") }}</td>
-							<td>3:1</td>
-						</tr>
-						<tr
-							[class.is-under]="
-								!leansWithScheme(
-									'depth-' + layer + '-status-tint',
-									'depth-' + layer + '-neutral-wash'
-								)
-							"
-						>
-							<th scope="row">status tint</th>
-							<td>layer 0 only</td>
-							<td>{{ delta("depth-" + layer + "-status-tint") }}</td>
-							<td>{{ delta("depth-" + layer + "-neutral-wash") }}</td>
-						</tr>
-					</tbody>
-				</table>
+				</ol>
 			</div>
 		}
 
+		<h3>Roles</h3>
 		<p>
-			Colourway roles re-solve per layer, so the first row holds its floor all
-			the way up. Status roles are solved against layer 0 and left there, so the
-			second and third rows drift — and in dark they drift the wrong way,
-			because elevation moves toward light in <em>both</em> schemes while
-			contrast direction flips per scheme. Switch to dark and watch the status
-			tint's sign change: a wash that means "lift" starts reading as a recess.
-		</p>
-	</demo-section>
-
-	<demo-section id="switching" heading="Switching a colourway">
-		<p description class="demo-section__lede">
-			The same components under two seeds. Everything moves together — which is
-			the point. The previous slot-based ramp re-pointed its accent by hand and
-			left the consumers reading a fixed slot index behind, so a handful of
-			components stayed the old colour while the rest changed.
+			Roles name the common picks so a component does not restate the
+			arithmetic. Each one resolves to a step.
 		</p>
 
-		<div class="color-switch">
-			@for (way of colorways; track way.id) {
-				<div
-					class="color-switch__frame"
-					interop-root
-					[attr.itx-colorway]="way.variant === 'default' ? null : way.variant"
-				>
-					<span class="color-switch__caption">{{ labelOf(way) }}</span>
-					<div class="color-switch__body">
-						<button interop-button="primary" type="button">Primary</button>
-						<interop-badge [count]="7" [accessibleLabel]="'7 new readings'">
-							<button interop-button="secondary" type="button">Readings</button>
-						</interop-badge>
-						<interop-field-input
-							[id]="'switch-field-' + way.variant"
-							label="Focus me"
-							placeholder="ring follows the seed"
-						/>
-					</div>
-				</div>
-			}
-		</div>
-	</demo-section>
-
-	<demo-section id="legibility" heading="What can sit on what">
-		<p description class="demo-section__lede">
-			Every step as a background, at a size you can actually judge, listing the
-			steps legible on it — each name printed in the colour it names. A ratio in
-			a table can be wrong and still look fine. A label rendered in the colour
-			it describes cannot: if it is illegible, you are looking at the
-			illegibility.
-		</p>
-
-		<p>
-			Painted with the shipped tokens, not with numbers computed alongside them,
-			so the board cannot agree with itself while disagreeing with the
-			stylesheet. Names shown clear <strong>4.5:1</strong> against that
-			background; the measured ratio follows each, small, so a borderline pass
-			reads as borderline rather than as a tick.
-		</p>
-
-		<p>
-			Showing the <strong>{{ scheme() }}</strong> arm, because this is one of
-			the few things on the page that genuinely differs between the two. Scheme
-			pairing fixes how far a step sits from the page, not how much contrast
-			that buys — the light ramp spans more lightness than the dark one, so the
-			same step reads stronger in light. On step 1 in light, body text starts at
-			step 9; in dark it does not arrive until step 11.
-		</p>
-
-		@for (family of boardFamilies; track family.id) {
-			<h3 class="legibility__title">{{ family.id }}</h3>
-
-			<div class="legibility">
-				@for (step of stepsOf(family); track step.step) {
-					<article
-						class="legibility__card"
-						[style.background-color]="token(family.id, step.step)"
-					>
-						<header
-							[style.color]="
-								token(
-									family.id,
-									legibleOn(family.id, step.step)[0]?.step ?? step.step
-								)
-							"
-						>
-							step {{ step.step }}
-							<small>L {{ step.l }}</small>
-						</header>
-
-						@if (legibleOn(family.id, step.step).length) {
-							<ul>
-								@for (fg of legibleOn(family.id, step.step); track fg.step) {
-									<li [style.color]="token(family.id, fg.step)">
-										step {{ fg.step }}
-										<small>{{ fg.ratio }}:1</small>
-									</li>
+		<table class="color-roles">
+			<caption>
+				Measured against step
+				{{
+					background() === 3 ? 3 : 1
+				}}
+				for tint, border and text;
+				<code>on-tint</code>
+				is measured against the tint it sits on.
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">Family</th>
+					@for (role of roles; track role) {
+						<th scope="col">{{ role }}</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for (family of roleFamilies; track family.id) {
+					<tr>
+						<th scope="row">{{ family.label }}</th>
+						@for (entry of roleTable(family.id); track entry.token) {
+							<td>
+								@if (entry.step) {
+									<span class="color-roles__step">step {{ entry.step }}</span>
+									<span class="color-roles__ratio">
+										{{ formatRatio(entry.ratio) }}
+									</span>
+								} @else {
+									<span class="color-roles__step">—</span>
 								}
-							</ul>
-						} @else {
-							<p class="legibility__none">nothing on this ramp clears 4.5:1</p>
+							</td>
 						}
-					</article>
+					</tr>
 				}
-			</div>
-		}
+			</tbody>
+		</table>
+
+		<!-- Probes: painted with each role so the table can read it back. -->
+		<div class="color-probes" aria-hidden="true">
+			@for (family of roleFamilies; track family.id) {
+				@for (role of roles; track role) {
+					<span
+						[style.background-color]="
+							'var(--itx-' + family.id + '-' + role + ')'
+						"
+						[attr.data-role]="family.id + '-' + role"
+					></span>
+				}
+			}
+		</div>
 	</demo-section>
 
 	<demo-section id="overriding" heading="Overriding">
 		<p description class="demo-section__lede">
-			The rules precede the componentry, so components cohere without agreeing
-			on anything. That must never make overriding harder — every library
-			selector is zero-specificity and sits inside the <code>interop</code>
-			cascade layer, so any rule you write wins on contact.
+			Every library selector is zero-specificity and sits inside the
+			<code>interop</code> cascade layer, so any rule you write wins on contact.
 		</p>
+
+		<h3>Change one component</h3>
+		<p>Set the component's own token. No layer block touches it.</p>
+		<pre
+			class="color-code"
+		><code>--itx-dialog-background: var(--itx-neutral-2);</code></pre>
+
+		<h3>Change a step everywhere</h3>
 		<p>
-			Override through a component's own namespace
-			(<code>--itx-dialog-background</code>), which no layer block ever touches.
-			The generic <code>--itx-surface</code> is written by the engine at every
-			boundary, so setting it on an ancestor is overwritten one layer down — by
-			design, and asserted in the spec so the reason stays visible. Palette
-			steps are declared once at the root and are safe to override anywhere.
+			Steps are declared once and inherit. Set one on any ancestor and
+			everything below follows.
 		</p>
+		<pre
+			class="color-code"
+		><code>--itx-neutral-8: oklch(0.55 0.01 250);</code></pre>
+
+		<h3>Move every surface</h3>
 		<p>
-			To move the whole palette instead, set <code>--itx-tint-light</code> /
-			<code>--itx-tint-dark</code> (chroma and hue) or any ramp <em>dial</em> —
-			<code>--itx-ramp-light-step</code>, <code>-page</code>,
-			<code>-ease</code>, <code>-down</code>, <code>-min</code>,
-			<code>-max</code>, and the <code>dark</code> pair — on any ancestor.
-			Surfaces are computed from those six numbers rather than tabulated per
-			layer, so one dial retunes the entire ladder below it at once, live, with
-			no regeneration.
+			Set a ramp dial or a tint pack on any ancestor. Both reach every layer
+			below, live.
+		</p>
+		<pre class="color-code"><code>--itx-ramp-dark-page: 0.20;
+--itx-tint-dark: 0.006 250;</code></pre>
+
+		<h3>What gets overwritten</h3>
+		<p>
+			<code>--itx-surface</code> is written by the engine at every layer
+			boundary, so a value set on an ancestor is replaced one layer down. Reach
+			for a component's own token instead.
+		</p>
+	</demo-section>
+
+	<demo-section id="limits" heading="Limits">
+		<p description class="demo-section__lede">
+			Three constraints to design around.
+		</p>
+
+		<h3>Margin shrinks with depth</h3>
+		<p>
+			A step is fixed while the surface climbs, so a pairing measured on the
+			page reads closer once it is nested. Roles are placed to hold at the
+			deepest layer: <code>border</code> sits at step 9 rather than 8 for this
+			reason.
+		</p>
+
+		<table class="color-depth-table">
+			<caption>
+				<code>--itx-&lt;family&gt;-border</code>
+				against the surface it sits on. Floor is 3:1. Tightest reading:
+				{{
+					formatRatio(tightest())
+				}}.
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">Family</th>
+					@for (layer of layers; track layer) {
+						<th scope="col">Layer {{ layer }}</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for (family of roleFamilies; track family.id) {
+					<tr>
+						<th scope="row">{{ family.label }}</th>
+						@for (layer of layers; track layer) {
+							<td>{{ formatRatio(depth(family.id, "border", layer)) }}</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+
+		<!-- Probes: nested, because itx-layer compounds through the tree. -->
+		<div class="color-probes" aria-hidden="true">
+			<div>
+				@for (family of roleFamilies; track family.id) {
+					<span
+						[style.background-color]="'var(--itx-' + family.id + '-border)'"
+						[attr.data-depth]="family.id + '-border-0'"
+					></span>
+				}
+				<div itx-layer>
+					@for (family of roleFamilies; track family.id) {
+						<span
+							[style.background-color]="'var(--itx-' + family.id + '-border)'"
+							[attr.data-depth]="family.id + '-border-1'"
+						></span>
+					}
+					<div itx-layer>
+						@for (family of roleFamilies; track family.id) {
+							<span
+								[style.background-color]="'var(--itx-' + family.id + '-border)'"
+								[attr.data-depth]="family.id + '-border-2'"
+							></span>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h3>Chroma costs contrast</h3>
+		<p>
+			Two steps at the same lightness measure differently if one carries more
+			chroma. A saturated family reaches its ceiling earlier, so a new family
+			has to be checked rather than assumed.
+			<code>npm run lint</code> measures every pairing in a browser and fails on
+			a miss.
+		</p>
+
+		<h3>Colours are authored, not computed</h3>
+		<p>
+			Steps are literal values in
+			<code>styles/themes/protocol/ladder.css</code>. Adding a family means
+			writing fourteen values and running the checks. Nothing derives a palette
+			from a seed at runtime.
 		</p>
 	</demo-section>
 </demo-page>

@@ -1,13 +1,7 @@
 /**
- * Accent families — the contract that a seed drives a whole family.
+ * Accent families — a family's steps, and the roles built on them.
  *
- * There was previously no test of any kind covering colourway or status, which
- * is how the amber colourway shipped with a live defect: re-pointing the accent
- * from slot 8 to slot 5 moved most consumers and left the ones reading slots
- * 7/8 behind, so tree, code-block, resizable and visimorph rendered burnt
- * caramel while everything else changed. The last group here is that regression.
- *
- * Runs the REAL generated CSS, same as elevation.spec.ts.
+ * Runs the shipped CSS, same as elevation.spec.ts.
  */
 import { ENGINE_CSS, LADDER_CSS } from "./ladder.css-source";
 
@@ -82,19 +76,23 @@ describe("Accent families", () => {
 		});
 	});
 
-	describe("surface-relative roles re-derive", () => {
-		it("moves tint, border and text with the layer", () => {
+	describe("roles are fixed steps, not surface-relative solves", () => {
+		it("holds tint, border and text at one colour, whatever the depth", () => {
+			// The inverse of what this asserted while roles were solved per layer.
+			// A role is now a palette step, and a step is one colour everywhere —
+			// that is the trade the ranks were retired for. Depth safety comes
+			// from the elevation ramp being short, not from re-solving.
 			const one = el(root, { "itx-layer": "" });
 			const two = el(one, { "itx-layer": "" });
 
 			for (const role of ["tint", "on-tint", "border", "text"]) {
 				const token = `--itx-colorway-${role}`;
 				expect(resolve(token, one))
-					.withContext(`${token} should differ between layer 0 and 1`)
-					.not.toEqual(resolve(token, root));
+					.withContext(`${token} should not move between layer 0 and 1`)
+					.toEqual(resolve(token, root));
 				expect(resolve(token, two))
-					.withContext(`${token} should differ between layer 1 and 2`)
-					.not.toEqual(resolve(token, one));
+					.withContext(`${token} should not move between layer 1 and 2`)
+					.toEqual(resolve(token, one));
 			}
 		});
 
@@ -146,35 +144,82 @@ describe("Accent families", () => {
 		});
 	});
 
-	describe("colourway switching — the amber regression", () => {
-		it("moves EVERY accent role together, leaving nothing behind", () => {
-			// The defect this replaces: re-pointing the accent moved some consumers
-			// and not others, because the ones reading a slot index kept reading it.
-			const amber = makeRoot({ "itx-colorway": "amber" });
+	/*
+	 * One colourway ships. The switching mechanism still has a contract, and
+	 * breaking it is silent, so it is tested against a colourway defined here.
+	 *
+	 * The contract: a block that redeclares a family's steps must also
+	 * redeclare its roles. A role written at [interop-root] composes there and
+	 * inherits as a finished colour, so a block that changes only the steps
+	 * keeps the root's roles.
+	 */
+	describe("a colourway block redeclares its roles", () => {
+		let colorway: HTMLStyleElement;
 
-			for (const role of [
-				"solid",
-				"on-solid",
-				"tint",
-				"on-tint",
-				"border",
-				"text",
-			]) {
+		const define = (css: string) => {
+			colorway = document.createElement("style");
+			colorway.textContent = css;
+			document.head.appendChild(colorway);
+		};
+
+		afterEach(() => colorway?.remove());
+
+		/** Fourteen steps at a hue the shipped colourway does not use. */
+		const steps = Array.from(
+			{ length: 14 },
+			(_, i) =>
+				`--itx-colorway-${i + 1}: light-dark(oklch(${(0.97 - i * 0.06).toFixed(3)} 0.1 140), oklch(${(0.17 + i * 0.06).toFixed(3)} 0.1 140));`,
+		).join("\n");
+
+		const ROLES = ["tint", "on-tint", "border", "text"];
+
+		it("moves every role when the block redeclares both", () => {
+			define(`:where([itx-colorway="test"]) {
+				${steps}
+				--itx-colorway-tint: var(--itx-colorway-3);
+				--itx-colorway-on-tint: var(--itx-colorway-13);
+				--itx-colorway-border: var(--itx-colorway-9);
+				--itx-colorway-text: var(--itx-colorway-11);
+			}`);
+
+			const swapped = el(root, { "itx-colorway": "test" });
+
+			for (const role of ROLES) {
 				const token = `--itx-colorway-${role}`;
-				expect(resolve(token, amber))
-					.withContext(`${token} did not follow the colourway switch`)
+				expect(resolve(token, swapped))
+					.withContext(`${token} did not follow the colourway`)
 					.not.toEqual(resolve(token, root));
 			}
 		});
 
-		it("keeps following the switch at depth", () => {
-			const amber = makeRoot({ "itx-colorway": "amber" });
-			const amberDeep = el(el(amber, { "itx-layer": "" }), { "itx-layer": "" });
-			const baseDeep = el(el(root, { "itx-layer": "" }), { "itx-layer": "" });
+		it("leaves roles behind when the block redeclares only the steps", () => {
+			define(`:where([itx-colorway="test"]) { ${steps} }`);
 
-			expect(resolve("--itx-colorway-border", amberDeep)).not.toEqual(
-				resolve("--itx-colorway-border", baseDeep),
+			const swapped = el(root, { "itx-colorway": "test" });
+
+			expect(resolve("--itx-colorway-3", swapped)).not.toEqual(
+				resolve("--itx-colorway-3", root),
 			);
+			expect(resolve("--itx-colorway-tint", swapped)).toEqual(
+				resolve("--itx-colorway-tint", root),
+			);
+		});
+
+		it("follows the colourway at depth", () => {
+			define(`:where([itx-colorway="test"]) {
+				${steps}
+				--itx-colorway-border: var(--itx-colorway-9);
+			}`);
+
+			const deep = (host: HTMLElement) =>
+				el(el(host, { "itx-layer": "" }), { "itx-layer": "" });
+
+			expect(
+				resolve(
+					"--itx-colorway-border",
+					deep(el(root, { "itx-colorway": "test" })),
+				),
+			).not.toEqual(resolve("--itx-colorway-border", deep(root)));
 		});
 	});
 });

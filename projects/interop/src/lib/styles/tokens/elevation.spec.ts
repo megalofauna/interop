@@ -12,7 +12,7 @@
  *   "overrides"— the governing principle holds mechanically: rules cohere by
  *                default, and overriding stays trivial everywhere.
  */
-import { ENGINE_CSS, LADDER_CSS, SURFACE_L } from "./ladder.css-source";
+import { ENGINE_CSS, LADDER_CSS } from "./ladder.css-source";
 
 describe("Layer engine", () => {
 	let style: HTMLStyleElement;
@@ -30,12 +30,59 @@ describe("Layer engine", () => {
 	};
 
 	/**
-	 * The deepest layer the engine emits, read from the generated ramp rather
-	 * than written down here. These assertions used to carry the ceiling as a
-	 * literal, and every change to DEPTH broke five of them for no reason worth
-	 * reading.
+	 * The deepest layer the engine emits, read from the shipped engine's own
+	 * absolute pins rather than written down here. These assertions used to
+	 * carry the ceiling as a literal, and every change to the depth broke five
+	 * of them for no reason worth reading.
 	 */
-	const CEILING = Math.max(...Object.keys(SURFACE_L["dark"]).map(Number));
+	const CEILING = Math.max(
+		...[...ENGINE_CSS.matchAll(/\[itx-layer="(\d+)"\]/g)].map((m) =>
+			Number(m[1]),
+		),
+	);
+
+	/**
+	 * The surface oracle.
+	 *
+	 * Surfaces are COMPUTED by the engine from six dials, so reading a
+	 * published number back would only prove the engine agrees with itself.
+	 * This evaluates the documented formula —
+	 *
+	 *     clamp(min, page + step * layer, max)
+	 *
+	 * — in TypeScript, from the dials as the theme publishes them. The CSS
+	 * cannot influence it, which is what makes it an oracle rather than an echo.
+	 */
+	const dial = (scheme: string, name: string): number => {
+		const found = LADDER_CSS.match(
+			new RegExp(`--itx-ramp-${scheme}-${name}:\\s*(-?[\\d.]+)`),
+		);
+		if (!found) throw new Error(`no --itx-ramp-${scheme}-${name} in the theme`);
+		return Number(found[1]);
+	};
+
+	const surfaceL = (scheme: string, layer: number): number =>
+		Math.min(
+			dial(scheme, "max"),
+			Math.max(
+				dial(scheme, "min"),
+				dial(scheme, "page") + dial(scheme, "step") * layer,
+			),
+		);
+
+	/** Chrome resolves calc() and serializes as oklch(L C H). */
+	const lightnessOf = (color: string): number => {
+		const found = color.match(/oklch\(\s*([\d.]+)/);
+		if (!found) throw new Error(`not an oklch colour: ${color}`);
+		return Number(found[1]);
+	};
+
+	/** Assert a node paints the surface its layer computes to. */
+	const expectSurface = (node: HTMLElement, layer: number): void =>
+		expect(lightnessOf(surfaceOf(node))).toBeCloseTo(
+			surfaceL("dark", layer),
+			3,
+		);
 
 	const layerOf = (node: HTMLElement): string =>
 		getComputedStyle(node).getPropertyValue("--itx-layer").trim();
@@ -43,28 +90,14 @@ describe("Layer engine", () => {
 		getComputedStyle(node).backgroundColor;
 
 	/**
-	 * Resolve a ramp entry to a real colour, composing it the same way the engine
-	 * does — the theme publishes lightness numbers, not finished colours.
-	 *
-	 * Surfaces take a different path from the ranks. Ranks are SOLVED per layer
-	 * and published as discrete numbers, so the probe reads those. Surfaces are
-	 * COMPUTED by the engine from the ramp spec, so reading a published number
-	 * would only prove the engine agrees with itself; the probe uses SURFACE_L
-	 * instead — the same formula evaluated in JS by the generator, which is an
-	 * oracle the CSS cannot influence.
+	 * Resolve a published ramp NUMBER to a real colour, composing it the way the
+	 * engine does — the theme publishes lightness numbers, not finished colours.
 	 */
 	const ramp = (name: string, host: HTMLElement = root): string => {
 		const probe = el(host);
-		if (name.startsWith("surface-")) {
-			const layer = name.slice("surface-".length);
-			probe.style.backgroundColor =
-				`light-dark(oklch(${SURFACE_L["light"][layer]} var(--itx-tint-light)),` +
-				` oklch(${SURFACE_L["dark"][layer]} var(--itx-tint-dark)))`;
-		} else {
-			probe.style.backgroundColor =
-				`light-dark(oklch(var(--itx-ramp-${name}-light) var(--itx-tint-light)),` +
-				` oklch(var(--itx-ramp-${name}-dark) var(--itx-tint-dark)))`;
-		}
+		probe.style.backgroundColor =
+			`light-dark(oklch(var(--itx-ramp-${name}-light) var(--itx-tint-light)),` +
+			` oklch(var(--itx-ramp-${name}-dark) var(--itx-tint-dark)))`;
 		return getComputedStyle(probe).backgroundColor;
 	};
 
@@ -87,7 +120,7 @@ describe("Layer engine", () => {
 	describe("counts", () => {
 		it("starts at layer 0 and paints the layer-0 surface", () => {
 			expect(layerOf(root)).toEqual("0");
-			expect(surfaceOf(root)).toEqual(ramp("surface-0"));
+			expectSurface(root, 0);
 		});
 
 		it("compounds: each nested [itx-layer] is one deeper than its parent", () => {
@@ -101,9 +134,7 @@ describe("Layer engine", () => {
 			expect(nested.map(layerOf)).toEqual(
 				Array.from({ length: CEILING }, (_, i) => String(i + 1)),
 			);
-			nested.forEach((n, i) =>
-				expect(surfaceOf(n)).toEqual(ramp(`surface-${i + 1}`)),
-			);
+			nested.forEach((n, i) => expectSurface(n, i + 1));
 		});
 
 		it("compounds through arbitrary intermediate DOM", () => {
@@ -147,7 +178,7 @@ describe("Layer engine", () => {
 				node = el(node, { "itx-layer": "" });
 
 			expect(layerOf(node)).toEqual(String(CEILING));
-			expect(surfaceOf(node)).toEqual(ramp(`surface-${CEILING}`));
+			expectSurface(node, CEILING);
 		});
 
 		it("has no floor to clamp at — the ramp only goes one way", () => {
@@ -161,7 +192,7 @@ describe("Layer engine", () => {
 			for (let i = 0; i < CEILING + 3; i++) node = el(node, { "itx-sink": "" });
 
 			expect(layerOf(node)).toEqual(String(CEILING));
-			expect(surfaceOf(node)).toEqual(ramp(`surface-${CEILING}`));
+			expectSurface(node, CEILING);
 		});
 
 		it("honours an absolute pin regardless of inherited depth, and counts on from it", () => {
@@ -173,25 +204,27 @@ describe("Layer engine", () => {
 
 			const pinned = el(deep, { "itx-layer": "1" });
 			expect(layerOf(pinned)).toEqual("1");
-			expect(surfaceOf(pinned)).toEqual(ramp("surface-1"));
+			expectSurface(pinned, 1);
 
 			expect(layerOf(el(pinned, { "itx-layer": "" }))).toEqual("2");
 		});
 
-		it("re-derives contrast ranks per layer, so a rank is never a fixed grey", () => {
+		it("holds a palette step at exactly one colour, whatever the depth", () => {
 			const a = el(root, { "itx-layer": "" });
 			const b = el(a, { "itx-layer": "" });
 
-			const rank = (node: HTMLElement) => {
+			const step = (node: HTMLElement) => {
 				const probe = el(node);
-				probe.style.backgroundColor = "var(--itx-contrast-3)";
+				probe.style.backgroundColor = "var(--itx-neutral-8)";
 				return getComputedStyle(probe).backgroundColor;
 			};
 
-			// Same token, different value at each depth — that is the whole point.
-			expect(rank(a)).not.toEqual(rank(root));
-			expect(rank(b)).not.toEqual(rank(a));
-			expect(rank(a)).toEqual(ramp("contrast-3-1"));
+			// The bargain the ranks were traded for: position carries the
+			// guarantee, so a step means one colour everywhere and a developer
+			// can hold it in their head. The surfaces still move underneath it.
+			expect(step(a)).toEqual(step(root));
+			expect(step(b)).toEqual(step(root));
+			expect(surfaceOf(a)).not.toEqual(surfaceOf(root));
 		});
 	});
 
@@ -280,17 +313,17 @@ describe("Layer engine", () => {
 
 			const below = el(root, { "itx-layer": "" });
 			expect(surfaceOf(below)).not.toEqual("rgb(4, 5, 6)");
-			expect(surfaceOf(below)).toEqual(ramp("surface-1"));
+			expectSurface(below, 1);
 		});
 	});
 	/**
-	 * How a THEME may alias a contrast rank into a component token.
+	 * How a THEME may alias a layer-owned token into a component token.
 	 *
 	 * This is the rule the whole theme layer depends on, and getting it wrong is
 	 * invisible: the component renders, in a plausible grey, just the wrong one.
 	 * Fourteen theme files shipped the broken form.
 	 */
-	describe("component aliases onto a rank", () => {
+	describe("component aliases onto a layer-owned token", () => {
 		let themeStyle: HTMLStyleElement;
 
 		const theme = (css: string) => {
@@ -310,27 +343,27 @@ describe("Layer engine", () => {
 
 		it("FREEZES when declared on the bare root — the bug", () => {
 			theme(`:where([interop-root]) {
-				--itx-widget-background: var(--itx-contrast-2);
+				--itx-widget-background: var(--itx-surface);
 			}`);
 
 			const deep = el(root, { "itx-layer": "" });
 
-			// The alias substituted --itx-contrast-2 at the ROOT, so what inherits
+			// The alias substituted --itx-surface at the ROOT, so what inherits
 			// down is a finished colour: layer 0's grey, everywhere, forever.
 			expect(painted(deep)).toEqual(painted(root));
 		});
 
 		it("tracks the layer when co-declared on the elevation boundaries — the fix", () => {
 			theme(`:where([interop-root], [itx-layer], [itx-sink]) {
-				--itx-widget-background: var(--itx-contrast-2);
+				--itx-widget-background: var(--itx-surface);
 			}`);
 
 			const deep = el(root, { "itx-layer": "" });
 
 			expect(painted(deep)).not.toEqual(painted(root));
-			// And it is the rank the deeper layer actually solves for.
+			// And it is the surface the deeper layer actually computes.
 			const probe = el(deep);
-			probe.style.backgroundColor = "var(--itx-contrast-2)";
+			probe.style.backgroundColor = "var(--itx-surface)";
 			expect(painted(deep)).toEqual(getComputedStyle(probe).backgroundColor);
 		});
 
@@ -339,7 +372,7 @@ describe("Layer engine", () => {
 			// co-declaration beats scoping the block to the component element:
 			// a rule on the component itself would outrank this inherited value.
 			theme(`:where([interop-root], [itx-layer], [itx-sink]) {
-				--itx-widget-background: var(--itx-contrast-2);
+				--itx-widget-background: var(--itx-surface);
 			}`);
 
 			const region = el(root);
@@ -353,7 +386,7 @@ describe("Layer engine", () => {
 			// --itx-radius already makes at an [itx-scale-scope]. Co-declaration
 			// means re-declaration, and re-declaration clobbers what it inherits.
 			theme(`:where([interop-root], [itx-layer], [itx-sink]) {
-				--itx-widget-background: var(--itx-contrast-2);
+				--itx-widget-background: var(--itx-surface);
 			}`);
 
 			const region = el(root);

@@ -597,9 +597,10 @@ transparent background (a variant).
 
 Levers that are NOT tokens belong in the file as comments, not declarations:
 `itx-colorway` (root-only), `itx-status-palette` (any element), `itx-scale-scope`,
-and the build-time dials in `generate-color-ladder.mjs` — layer count, contrast
-floors, seeds — which cannot be custom properties because the engine unrolls a
-`@container` block per layer.
+and the two structural dials the colour system cannot express as tokens: the
+layer count, because `tokens/elevation.css` needs a `@container` block per
+layer, and the palette steps themselves, which are literal values in
+`themes/protocol/ladder.css`.
 
 ## Edges (border width & high contrast)
 

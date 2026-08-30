@@ -1,26 +1,34 @@
 #!/usr/bin/env node
 /*
- * Contrast verification against the SHIPPED CSS.
+ * Contrast verification against the SHIPPED CSS, as a consumer receives it.
  *
- * scripts/check-contrast-render.mjs verifies something narrower than its name
- * suggests: its CONTRAST_PAIRS manifest carries baked lightness numbers from
- * the generator, and it paints THOSE. It proves the generator's arithmetic
- * agrees with Chrome's renderer — a real thing, and it caught a real bug — but
- * it never reads a stylesheet. Sabotaging --itx-ramp-contrast-6-0-dark from
- * 0.920 to 0.250 in the generated source changes nothing it reports.
+ * The companion check — check-contrast-render.mjs — reads the palette's own
+ * literal values and proves the internal rule (borders 7 steps apart, text 8,
+ * enhanced 10). It never loads a stylesheet, so it cannot see whether a ROLE
+ * points at the step it claims to.
  *
- * This one resolves every colour from the DOM: it loads interop.css and the
+ * This one resolves everything from the DOM: it loads interop.css and the
  * protocol theme, mounts real elements in real layer contexts, and reads back
- * what getComputedStyle says. It therefore checks what a consumer receives,
- * and it keeps working when the values stop being generated.
+ * what getComputedStyle says. It checks what a consumer actually gets.
  *
- * Scope, deliberately stated: the RANK pairings only — --itx-contrast-2..5
- * against --itx-surface, at each layer depth, in both schemes. The generator's
- * manifest also covers ten colour families at three roles each, but those
- * labels ("danger border", "danger text") are not token names — the shipped
- * tokens are --itx-danger-1..14, and the role-to-step mapping lives inside the
- * generator. Those pairings cannot be resolved from CSS until roles are token
- * names. That is a finding, not an omission.
+ * ── What changed, and why this file is worth more than it was ───────────
+ *
+ * It used to check --itx-contrast-2..5, and its own header recorded why it
+ * could not check the roles: "those labels are not token names — the shipped
+ * tokens are --itx-danger-1..14, and the role-to-step mapping lives inside
+ * the generator. That is a finding, not an omission."
+ *
+ * The roles ARE token names now. --itx-danger-text is a declaration pointing
+ * at a step, so the pairing a component actually paints can be resolved from
+ * CSS — which is what this now does.
+ *
+ * ── The depth question this answers ─────────────────────────────────────
+ *
+ * Palette steps are page-relative and fixed, while the surface keeps climbing
+ * with elevation. That trade was made deliberately: position carries the
+ * guarantee, and the ramp is kept short enough that the loss stays inside the
+ * floor. "Stays inside" is a claim, and depth is the axis it fails on — so
+ * every pairing here is measured at EVERY layer the engine can reach.
  *
  * Usage: node scripts/check-contrast-css.mjs
  */
@@ -33,8 +41,20 @@ import { fileURLToPath } from "node:url";
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STYLES = join(REPO, "projects/interop/src/lib/styles");
 
-/** Rank -> contrast floor. The CONTRACT, transcribed once; not generated data. */
-const FLOORS = { 2: 1.5, 3: 3, 4: 4.5, 5: 7 };
+/*
+ * The contract, transcribed once — not generated, not derived from the values
+ * it judges. Each entry is a real pairing some component paints.
+ *
+ *   on: the background the foreground sits on, as a token or "" for the surface
+ */
+const FAMILIES = ["colorway", "danger", "info", "success", "warning"];
+const PAIRINGS = [
+	{ role: "text", on: "", floor: 4.5 },
+	{ role: "border", on: "", floor: 3 },
+	{ role: "on-tint", on: "tint", floor: 4.5 },
+];
+/** The page's own text, which is not a family role. */
+const PAGE_TEXT = { fg: "--itx-neutral-14", on: "", floor: 7 };
 const DEPTHS = [0, 1, 2];
 const SCHEMES = ["light", "dark"];
 
@@ -55,9 +75,19 @@ if (!CHROME) {
 
 const cases = [];
 for (const scheme of SCHEMES)
-	for (const depth of DEPTHS)
-		for (const rank of Object.keys(FLOORS).map(Number))
-			cases.push({ scheme, depth, rank, floor: FLOORS[rank] });
+	for (const depth of DEPTHS) {
+		cases.push({ scheme, depth, ...PAGE_TEXT, label: "page text" });
+		for (const family of FAMILIES)
+			for (const { role, on, floor } of PAIRINGS)
+				cases.push({
+					scheme,
+					depth,
+					fg: `--itx-${family}-${role}`,
+					on: on ? `--itx-${family}-${on}` : "",
+					floor,
+					label: `${family} ${role}${on ? ` on ${on}` : ""}`,
+				});
+	}
 
 /** Nest [itx-layer] to `depth`, innermost carrying the probe. */
 const nest = (depth, inner) =>
@@ -65,10 +95,14 @@ const nest = (depth, inner) =>
 
 const probes = cases
 	.map((c, i) => {
+		const bg = c.on
+			? `background-color: var(${c.on})`
+			: "background-color: var(--itx-surface)";
 		const probe =
-			`<div class="bg" id="b${i}">` +
-			`<span class="fg" id="f${i}" style="color: var(--itx-contrast-${c.rank})">x</span>` +
+			`<div class="bg" id="b${i}" style="${bg}">` +
+			`<span class="fg" id="f${i}" style="color: var(${c.fg})">x</span>` +
 			`</div>`;
+
 		return `<div interop-root style="color-scheme: ${c.scheme}">${nest(c.depth, probe)}</div>`;
 	})
 	.join("\n");
@@ -76,7 +110,7 @@ const probes = cases
 const html = `<!doctype html><meta charset="utf-8">
 <link rel="stylesheet" href="file://${join(STYLES, "interop.css")}">
 <link rel="stylesheet" href="file://${join(STYLES, "themes/protocol.css")}">
-<style>.bg { background-color: var(--itx-surface); padding: 4px }</style>
+<style>.bg { padding: 4px }</style>
 ${probes}
 <pre id="out"></pre>
 <script>
@@ -147,17 +181,17 @@ rows.forEach((row, i) => {
 	if (margin < tightest.margin) tightest = { margin, ratio, ...c };
 	if (ratio + 1e-4 < c.floor)
 		fails.push(
-			`  ${c.scheme} depth ${c.depth} rank ${c.rank}: ${ratio} < ${c.floor}   ${row.slice(row.indexOf(" ") + 1)}`,
+			`  ${c.scheme} depth ${c.depth} ${c.label}: ${ratio} < ${c.floor}   ${row.slice(row.indexOf(" ") + 1)}`,
 		);
 });
 
 if (fails.length) {
 	console.error(
-		`✗ ${fails.length} of ${cases.length} rank pairings fail their floor as Chrome renders the SHIPPED CSS:\n`,
+		`✗ ${fails.length} of ${cases.length} role pairings fail their floor as Chrome renders the SHIPPED CSS:\n`,
 	);
 	console.error(fails.join("\n"));
 	process.exit(1);
 }
 console.log(
-	`✓ all ${cases.length} rank pairings clear their floor in the shipped CSS — tightest ${tightest.ratio} against ${tightest.floor} (${tightest.scheme} depth ${tightest.depth} rank ${tightest.rank})`,
+	`✓ all ${cases.length} role pairings clear their floor in the shipped CSS — tightest ${tightest.ratio} against ${tightest.floor} (${tightest.scheme} depth ${tightest.depth} ${tightest.label})`,
 );
