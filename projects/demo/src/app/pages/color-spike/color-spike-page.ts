@@ -47,6 +47,8 @@ interface Rung {
 
 interface Candidate {
 	readonly spacing: string;
+	/** The one the spike ships. */
+	readonly chosen?: boolean;
 	/** Per-step separation at the dark end, in 8-bit levels. */
 	readonly levels: number;
 	/** Lightness left between the 7:1 tier and the far end. */
@@ -100,6 +102,7 @@ const CANDIDATES: readonly Candidate[] = [
 	},
 	{
 		spacing: "3%",
+		chosen: true,
 		levels: 7,
 		topGap: "0.100",
 		dark: LAD(

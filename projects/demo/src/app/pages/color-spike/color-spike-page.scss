@@ -173,8 +173,20 @@
 }
 
 .spike-cand__name {
+	display: flex;
+	gap: var(--itx-spacing-2);
+	align-items: center;
 	margin-block-end: var(--itx-spacing-2);
 	font-size: var(--itx-font-size-small);
+}
+
+.spike-cand__chosen {
+	padding: 0 var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+	background-color: var(--itxs-colorway-solid);
+	color: var(--itxs-on-solid);
+	font-size: var(--itx-font-size-xsmall);
+	font-weight: var(--itx-font-weight-normal);
 }
 
 .spike-cand__facts {

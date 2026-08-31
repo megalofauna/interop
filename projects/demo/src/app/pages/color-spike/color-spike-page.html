@@ -93,7 +93,12 @@
 
 				@for (c of candidates; track c.spacing) {
 					<div class="spike-cand">
-						<h3 class="spike-cand__name">{{ c.spacing }}</h3>
+						<h3 class="spike-cand__name">
+							{{ c.spacing }}
+							@if (c.chosen) {
+								<span class="spike-cand__chosen">chosen</span>
+							}
+						</h3>
 						<p class="spike-cand__facts">
 							<span
 								>page step <b>+{{ c.levels }}/255</b></span
@@ -129,7 +134,7 @@
 		<demo-section id="bands" heading="Bands">
 			<p description class="demo-section__lede">
 				Spacing tracks how often two members of a band sit side by side. Page
-				levels rarely do, so they sit 2% apart. Layers sometimes do, so 5%. Text
+				levels rarely do, so they sit 3% apart. Layers sometimes do, so 5%. Text
 				tiers are not spaced at all — each one is placed at the lightness that
 				clears its floor against the deepest layer.
 			</p>

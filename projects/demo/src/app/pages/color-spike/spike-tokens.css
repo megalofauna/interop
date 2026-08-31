@@ -14,9 +14,16 @@
  *    Page levels rarely do and only need to not read as flat. Layers
  *    sometimes do. Text tiers constantly do.
  *
- *      page   3 steps, 2.0% apart
- *      layer  3 steps, 5.0% apart
+ *      page   3 steps, 3.0% apart
+ *      layer  3 steps, 5.0% apart, starting 2.5% above page-2
  *      text   4 tiers, positioned by FLOOR rather than by spacing
+ *
+ *    The page band is 3% because 2% buys only +5/255 at the dark end, which
+ *    is where panel quality decides whether the step exists at all. 3% buys
+ *    +7. Going to 4% costs more than it returns: the ladder runs between two
+ *    fixed ends, so lightness spent low comes out of the top, and at 4% the
+ *    gap between the 7:1 tier and the far end falls to 0.075 and text-2
+ *    converges on text-3. The comparison is rendered on the spike page.
  *
  *    The text tiers are solved against the DEEPEST layer, not the page, so
  *    they hold everywhere the engine can put them:
@@ -24,20 +31,22 @@
  *      text-0  3:1    text-1  4.5:1    text-2  7:1    text-3  the far end
  *
  *    The light arm is solved from the same floors rather than mirrored.
- *    Contrast does not mirror: the arms land on the same ratios (3.16 / 4.7 /
- *    7.2 at layer-2) from completely different lightnesses.
+ *    Contrast does not mirror: the arms land on the same ratios from
+ *    completely different lightnesses.
  *
  * 2. BORDERS are one ink at two opacities, so they hold their weight as the
- *    surface climbs. Measured across all six surfaces, the separator varies
- *    by 0.11; an opaque border in the shipped system drifts 0.58 across three.
+ *    surface climbs. The separator varies by about 0.15 across all six
+ *    surfaces; an opaque border in the shipped system drifts 0.58 across
+ *    three. The opacities did not move when the bands widened from 2% to 3%,
+ *    which is the property the mechanism was chosen for.
+ *
  *    Opacity is per-scheme because contrast is not symmetric — the same 25%
- *    reads 2.15 on dark and 1.66 on light.
+ *    reads about 2.15 on dark and 1.66 on light.
  *
  * 3. ACCENTS are one hue number each. At fixed lightness and chroma, contrast
  *    barely moves around the hue circle; chroma is the variable that breaks
- *    it. Capped at 0.16, every hue clears its floor, and the accent text tier
- *    needs only a small offset from the neutral one (+0.012 dark, -0.030
- *    light). Past 0.18 the offset grows and a per-hue solve returns.
+ *    it. Capped at 0.16, every hue clears its floor without a per-hue
+ *    correction. Past 0.18 the correction returns.
  */
 
 :where([data-color-spike]) {
@@ -46,18 +55,18 @@
 	--itxs-chroma: 0.008;
 
 	--itxs-page-0: light-dark(oklch(0.99 0.008 255), oklch(0.18 0.008 255));
-	--itxs-page-1: light-dark(oklch(0.97 0.008 255), oklch(0.2 0.008 255));
-	--itxs-page-2: light-dark(oklch(0.95 0.008 255), oklch(0.22 0.008 255));
+	--itxs-page-1: light-dark(oklch(0.96 0.008 255), oklch(0.21 0.008 255));
+	--itxs-page-2: light-dark(oklch(0.93 0.008 255), oklch(0.24 0.008 255));
 
-	--itxs-layer-0: light-dark(oklch(0.925 0.008 255), oklch(0.245 0.008 255));
-	--itxs-layer-1: light-dark(oklch(0.875 0.008 255), oklch(0.295 0.008 255));
-	--itxs-layer-2: light-dark(oklch(0.825 0.008 255), oklch(0.345 0.008 255));
+	--itxs-layer-0: light-dark(oklch(0.905 0.008 255), oklch(0.265 0.008 255));
+	--itxs-layer-1: light-dark(oklch(0.855 0.008 255), oklch(0.315 0.008 255));
+	--itxs-layer-2: light-dark(oklch(0.805 0.008 255), oklch(0.365 0.008 255));
 
 	/* Solved against layer-2. text-0 is the 3:1 tier — disabled and large
 	   text, never body copy. */
-	--itxs-text-0: light-dark(oklch(0.524 0.008 255), oklch(0.617 0.008 255));
-	--itxs-text-1: light-dark(oklch(0.432 0.008 255), oklch(0.719 0.008 255));
-	--itxs-text-2: light-dark(oklch(0.329 0.008 255), oklch(0.843 0.008 255));
+	--itxs-text-0: light-dark(oklch(0.509 0.008 255), oklch(0.641 0.008 255));
+	--itxs-text-1: light-dark(oklch(0.417 0.008 255), oklch(0.745 0.008 255));
+	--itxs-text-2: light-dark(oklch(0.309 0.008 255), oklch(0.87 0.008 255));
 	--itxs-text-3: light-dark(oklch(0.15 0.008 255), oklch(0.97 0.008 255));
 
 	/* ── Borders ─────────────────────────────────────────────────────── */
@@ -76,8 +85,8 @@
 		color-mix(in srgb, oklch(0.97 0.008 255) 25%, transparent)
 	);
 	--itxs-edge: light-dark(
-		color-mix(in srgb, oklch(0.15 0.008 255) 48%, transparent),
-		color-mix(in srgb, oklch(0.97 0.008 255) 40%, transparent)
+		color-mix(in srgb, oklch(0.15 0.008 255) 49%, transparent),
+		color-mix(in srgb, oklch(0.97 0.008 255) 41%, transparent)
 	);
 
 	/* ── Accents ─────────────────────────────────────────────────────── */
@@ -91,37 +100,41 @@
 }
 
 /*
- * Every accent role from the hue alone. Redeclared nowhere, because the hue is
- * the only thing that varies — the lightnesses are shared across families.
+ * Every accent role from the hue alone. The lightnesses are shared across
+ * families, so a family is one number.
+ *
+ * Accent text sits a little further out than the neutral tier it corresponds
+ * to (0.767 against 0.745 dark, 0.385 against 0.417 light). Chroma costs
+ * contrast, and that offset is what it costs at the cap.
  */
 :where([data-color-spike]) {
-	--itxs-danger-wash: light-dark(oklch(0.93 0.064 33), oklch(0.26 0.064 33));
-	--itxs-danger-text: light-dark(oklch(0.402 0.16 33), oklch(0.731 0.16 33));
+	--itxs-danger-wash: light-dark(oklch(0.89 0.064 33), oklch(0.28 0.064 33));
+	--itxs-danger-text: light-dark(oklch(0.385 0.16 33), oklch(0.767 0.16 33));
 	--itxs-danger-solid: oklch(0.5 0.16 33);
 
-	--itxs-warning-wash: light-dark(oklch(0.93 0.064 78), oklch(0.26 0.064 78));
-	--itxs-warning-text: light-dark(oklch(0.402 0.16 78), oklch(0.731 0.16 78));
+	--itxs-warning-wash: light-dark(oklch(0.89 0.064 78), oklch(0.28 0.064 78));
+	--itxs-warning-text: light-dark(oklch(0.385 0.16 78), oklch(0.767 0.16 78));
 	--itxs-warning-solid: oklch(0.5 0.16 78);
 
-	--itxs-success-wash: light-dark(oklch(0.93 0.064 122), oklch(0.26 0.064 122));
-	--itxs-success-text: light-dark(oklch(0.402 0.16 122), oklch(0.731 0.16 122));
+	--itxs-success-wash: light-dark(oklch(0.89 0.064 122), oklch(0.28 0.064 122));
+	--itxs-success-text: light-dark(oklch(0.385 0.16 122), oklch(0.767 0.16 122));
 	--itxs-success-solid: oklch(0.5 0.16 122);
 
-	--itxs-info-wash: light-dark(oklch(0.93 0.064 218), oklch(0.26 0.064 218));
-	--itxs-info-text: light-dark(oklch(0.402 0.16 218), oklch(0.731 0.16 218));
+	--itxs-info-wash: light-dark(oklch(0.89 0.064 218), oklch(0.28 0.064 218));
+	--itxs-info-text: light-dark(oklch(0.385 0.16 218), oklch(0.767 0.16 218));
 	--itxs-info-solid: oklch(0.5 0.16 218);
 
 	--itxs-colorway-wash: light-dark(
-		oklch(0.93 0.064 264),
-		oklch(0.26 0.064 264)
+		oklch(0.89 0.064 264),
+		oklch(0.28 0.064 264)
 	);
 	--itxs-colorway-text: light-dark(
-		oklch(0.402 0.16 264),
-		oklch(0.731 0.16 264)
+		oklch(0.385 0.16 264),
+		oklch(0.767 0.16 264)
 	);
 	--itxs-colorway-solid: oklch(0.5 0.16 264);
 
-	/* One label for every solid: L 0.50 at this chroma clears 4.5:1 against
-	   the light end for all five hues (4.75 on info, 5.97 on danger). */
+	/* One label for every solid. The solid is scheme-invariant, so this does
+	   not move when the bands do. */
 	--itxs-on-solid: oklch(0.97 0.008 255);
 }
