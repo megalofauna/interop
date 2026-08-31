@@ -47,6 +47,85 @@
 			></span>
 		</div>
 
+		<demo-section
+			id="page-band"
+			heading="How far apart should the page band sit?"
+		>
+			<p description class="demo-section__lede">
+				Three complete ladders. The page band is the question, but it cannot be
+				answered alone — the layer band keeps its gap above <code>page-2</code>,
+				so widening the page band shifts everything up and re-solves the text
+				against a lighter deepest layer. The ladder runs between two fixed ends,
+				so what the page band spends comes out of the top.
+			</p>
+
+			<div class="spike-arm">
+				<span id="arm-label">Painted arm</span>
+				<div role="group" aria-labelledby="arm-label" class="spike-arm__set">
+					<button
+						type="button"
+						class="spike-arm__btn"
+						[attr.aria-pressed]="candidateArm() === 'dark'"
+						(click)="candidateArm.set('dark')"
+					>
+						dark
+					</button>
+					<button
+						type="button"
+						class="spike-arm__btn"
+						[attr.aria-pressed]="candidateArm() === 'light'"
+						(click)="candidateArm.set('light')"
+					>
+						light
+					</button>
+				</div>
+			</div>
+
+			<div class="spike-cands">
+				<!-- One shared key. Every ladder has the same rungs in the same
+				     order, and a label painted on a swatch is a mark on the thing
+				     being judged. -->
+				<ol class="spike-cand__key" aria-hidden="true">
+					@for (r of rungs(candidates[0]); track r.label) {
+						<li>{{ r.label }}</li>
+					}
+				</ol>
+
+				@for (c of candidates; track c.spacing) {
+					<div class="spike-cand">
+						<h3 class="spike-cand__name">{{ c.spacing }}</h3>
+						<p class="spike-cand__facts">
+							<span
+								>page step <b>+{{ c.levels }}/255</b></span
+							>
+							<span
+								>top gap <b>{{ c.topGap }}</b></span
+							>
+						</p>
+						<ol class="spike-cand__ladder">
+							@for (r of rungs(c); track r.label) {
+								<li
+									class="spike-cand__rung"
+									[class.spike-cand__rung--band-start]="
+										r.label === 'layer-0' || r.label === 'text-0'
+									"
+									[style.background-color]="r.color"
+								></li>
+							}
+						</ol>
+					</div>
+				}
+			</div>
+
+			<p>
+				The page band is the first three rungs. At 2% they are +5/255 apart,
+				which is where panel quality and ambient light decide whether the step
+				exists at all. The cost of widening shows at the other end: the gap
+				between the 7:1 tier and the far end falls from 0.127 to 0.075, so
+				<code>text-2</code> and <code>text-3</code> converge.
+			</p>
+		</demo-section>
+
 		<demo-section id="bands" heading="Bands">
 			<p description class="demo-section__lede">
 				Spacing tracks how often two members of a band sit side by side. Page
