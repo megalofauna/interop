@@ -1,0 +1,230 @@
+<demo-page>
+	<div data-color-spike>
+		<demo-masthead category="Spike" title="Colour mechanisms">
+			A parallel token set that nothing in the library reads. Three mechanisms
+			under test: bands spaced by job, borders as one ink at two opacities, and
+			an accent family derived from a single hue number. Every figure below is
+			measured in this browser against the tokens as they resolve.
+		</demo-masthead>
+
+		<!-- Probes. Every token painted once so the tables can read it back. -->
+		<div class="spike-probes" aria-hidden="true">
+			@for (s of surfaces; track s) {
+				<span
+					[style.background-color]="'var(--itxs-' + s + ')'"
+					[attr.data-token]="s"
+				></span>
+			}
+			@for (t of texts; track t) {
+				<span
+					[style.background-color]="'var(--itxs-' + t + ')'"
+					[attr.data-token]="t"
+				></span>
+			}
+			@for (b of borders; track b) {
+				<span
+					[style.background-color]="'var(--itxs-' + b + ')'"
+					[attr.data-token]="b"
+				></span>
+			}
+			@for (a of accents; track a) {
+				<span
+					[style.background-color]="'var(--itxs-' + a + '-wash)'"
+					[attr.data-token]="a + '-wash'"
+				></span>
+				<span
+					[style.background-color]="'var(--itxs-' + a + '-text)'"
+					[attr.data-token]="a + '-text'"
+				></span>
+				<span
+					[style.background-color]="'var(--itxs-' + a + '-solid)'"
+					[attr.data-token]="a + '-solid'"
+				></span>
+			}
+			<span
+				[style.background-color]="'var(--itxs-on-solid)'"
+				data-token="on-solid"
+			></span>
+		</div>
+
+		<demo-section id="bands" heading="Bands">
+			<p description class="demo-section__lede">
+				Spacing tracks how often two members of a band sit side by side. Page
+				levels rarely do, so they sit 2% apart. Layers sometimes do, so 5%. Text
+				tiers are not spaced at all — each one is placed at the lightness that
+				clears its floor against the deepest layer.
+			</p>
+
+			<div class="spike-bands">
+				@for (s of surfaces; track s) {
+					<div class="spike-bands__cell">
+						<div
+							class="spike-bands__swatch"
+							[style.background-color]="'var(--itxs-' + s + ')'"
+						></div>
+						<code>{{ s }}</code>
+						<span class="spike-bands__value">{{ value(s) }}</span>
+					</div>
+				}
+			</div>
+		</demo-section>
+
+		<demo-section id="text" heading="Text against every surface">
+			<p description class="demo-section__lede">
+				Each tier was solved against <code>layer-2</code>, so the rightmost
+				column is the one that decides it. The light arm is solved from the same
+				floors rather than mirrored, which is why both arms land on the same
+				ratios from different lightnesses.
+			</p>
+
+			<table class="spike-table">
+				<thead>
+					<tr>
+						<th scope="col">tier</th>
+						<th scope="col">floor</th>
+						@for (s of surfaces; track s) {
+							<th scope="col">{{ s }}</th>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					@for (t of texts; track t) {
+						<tr>
+							<th scope="row">
+								<code>{{ t }}</code>
+							</th>
+							<td class="spike-table__floor">
+								{{ t === "text-0" ? "3:1" : t === "text-1" ? "4.5:1" : "7:1" }}
+							</td>
+							@for (s of surfaces; track s) {
+								<td [class.spike-table__miss]="!clears(t, ratio(t, s))">
+									{{ formatRatio(ratio(t, s)) }}
+								</td>
+							}
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<p>
+				<code>text-0</code> is the 3:1 tier. It is for disabled state and large
+				text, never body copy.
+			</p>
+		</demo-section>
+
+		<demo-section id="borders" heading="Borders">
+			<p description class="demo-section__lede">
+				One ink at two opacities, per scheme. The claim is that a border derived
+				from the surface holds its weight as the surface climbs, where a fixed
+				step slides. The spread column is the test.
+			</p>
+
+			<table class="spike-table">
+				<thead>
+					<tr>
+						<th scope="col">border</th>
+						@for (s of surfaces; track s) {
+							<th scope="col">{{ s }}</th>
+						}
+						<th scope="col">spread</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (b of borders; track b) {
+						<tr>
+							<th scope="row">
+								<code>{{ b }}</code>
+							</th>
+							@for (s of surfaces; track s) {
+								<td [class.spike-table__miss]="!clears(b, ratio(b, s))">
+									{{ formatRatio(ratio(b, s)) }}
+								</td>
+							}
+							<td class="spike-table__spread">{{ spread(b) }}</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<p>
+				For comparison, the shipped opaque border drifts 0.58 across three
+				layers.
+			</p>
+
+			<div class="spike-demo">
+				@for (s of surfaces; track s) {
+					<div
+						class="spike-demo__box"
+						[style.background-color]="'var(--itxs-' + s + ')'"
+					>
+						<div class="spike-demo__sep">separator</div>
+						<div class="spike-demo__edge">edge</div>
+					</div>
+				}
+			</div>
+		</demo-section>
+
+		<demo-section id="accents" heading="Accents from a hue">
+			<p description class="demo-section__lede">
+				Each family is one hue number. Lightness and chroma are shared, so
+				nothing is authored per family. Chroma is capped at 0.16, which is where
+				every hue still clears its floor without a per-hue correction.
+			</p>
+
+			<table class="spike-table">
+				<thead>
+					<tr>
+						<th scope="col">family</th>
+						<th scope="col">text on layer-2</th>
+						<th scope="col">text on its wash</th>
+						<th scope="col">wash on page-1</th>
+						<th scope="col">label on solid</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (a of accents; track a) {
+						<tr>
+							<th scope="row">
+								<code>{{ a }}</code>
+							</th>
+							<td
+								[class.spike-table__miss]="
+									!clears('text-1', ratio(a + '-text', 'layer-2'))
+								"
+							>
+								{{ formatRatio(ratio(a + "-text", "layer-2")) }}
+							</td>
+							<td>{{ formatRatio(ratio(a + "-text", a + "-wash")) }}</td>
+							<td>{{ formatRatio(ratio(a + "-wash", "page-1")) }}</td>
+							<td
+								[class.spike-table__miss]="
+									!clears('text-1', ratio('on-solid', a + '-solid'))
+								"
+							>
+								{{ formatRatio(ratio("on-solid", a + "-solid")) }}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<div class="spike-accents">
+				@for (a of accents; track a) {
+					<div
+						class="spike-accents__card"
+						[style.background-color]="'var(--itxs-' + a + '-wash)'"
+						[style.border-color]="'var(--itxs-edge)'"
+					>
+						<span [style.color]="'var(--itxs-' + a + '-text)'">{{ a }}</span>
+						<span
+							class="spike-accents__solid"
+							[style.background-color]="'var(--itxs-' + a + '-solid)'"
+							[style.color]="'var(--itxs-on-solid)'"
+							>solid</span
+						>
+					</div>
+				}
+			</div>
+		</demo-section>
+	</div>
+</demo-page>

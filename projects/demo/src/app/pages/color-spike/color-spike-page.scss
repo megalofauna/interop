@@ -1,0 +1,117 @@
+/*
+ * Colour spike page. Layout only — every colour on this page comes from the
+ * spike tokens so the measurements read what the spec produces.
+ */
+
+.spike-probes {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	pointer-events: none;
+}
+
+.spike-bands {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+	gap: var(--itx-spacing-3);
+}
+
+.spike-bands__cell {
+	display: grid;
+	gap: var(--itx-spacing-1);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-bands__swatch {
+	block-size: 4rem;
+	border: 1px solid var(--itxs-separator);
+	border-radius: var(--itx-radius);
+}
+
+.spike-bands__value {
+	color: var(--itxs-text-0);
+	font-variant-numeric: tabular-nums;
+}
+
+.spike-table {
+	inline-size: 100%;
+	margin-block: var(--itx-spacing-4);
+	border-collapse: collapse;
+	font-size: var(--itx-font-size-small);
+	font-variant-numeric: tabular-nums;
+
+	th,
+	td {
+		padding: var(--itx-spacing-2);
+		border-block-end: 1px solid var(--itxs-separator);
+		text-align: start;
+	}
+
+	thead th {
+		color: var(--itxs-text-0);
+		font-weight: var(--itx-font-weight-normal);
+	}
+}
+
+/* A miss is the whole point of the table, so it has to be unmissable. */
+.spike-table__miss {
+	color: var(--itxs-danger-text);
+	font-weight: var(--itx-font-weight-bold);
+}
+
+.spike-table__floor,
+.spike-table__spread {
+	color: var(--itxs-text-0);
+}
+
+.spike-demo {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	gap: var(--itx-spacing-3);
+	margin-block-start: var(--itx-spacing-4);
+}
+
+.spike-demo__box {
+	display: grid;
+	gap: var(--itx-spacing-2);
+	padding: var(--itx-spacing-3);
+	border-radius: var(--itx-radius);
+	color: var(--itxs-text-2);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-demo__sep {
+	padding-block-end: var(--itx-spacing-2);
+	border-block-end: 1px solid var(--itxs-separator);
+}
+
+.spike-demo__edge {
+	padding: var(--itx-spacing-2);
+	border: 1px solid var(--itxs-edge);
+	border-radius: var(--itx-radius-sm);
+}
+
+.spike-accents {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	gap: var(--itx-spacing-3);
+	margin-block-start: var(--itx-spacing-4);
+}
+
+.spike-accents__card {
+	display: flex;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--itx-spacing-3);
+	border: 1px solid;
+	border-radius: var(--itx-radius);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-accents__solid {
+	padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+}

@@ -1,0 +1,127 @@
+/*
+ * Colour spike — a parallel token set. Nothing in the library reads these.
+ *
+ * Scoped to [data-color-spike] so it cannot leak, and prefixed --itxs- so it
+ * cannot collide. Delete this directory and nothing breaks.
+ *
+ * ── The spec ────────────────────────────────────────────────────────────
+ *
+ * Three mechanisms under test. Every value below is derived from the rules
+ * stated here, not picked by eye, and every floor is measured on the page
+ * that renders it.
+ *
+ * 1. BANDS. Spacing tracks how often two members of a band sit side by side.
+ *    Page levels rarely do and only need to not read as flat. Layers
+ *    sometimes do. Text tiers constantly do.
+ *
+ *      page   3 steps, 2.0% apart
+ *      layer  3 steps, 5.0% apart
+ *      text   4 tiers, positioned by FLOOR rather than by spacing
+ *
+ *    The text tiers are solved against the DEEPEST layer, not the page, so
+ *    they hold everywhere the engine can put them:
+ *
+ *      text-0  3:1    text-1  4.5:1    text-2  7:1    text-3  the far end
+ *
+ *    The light arm is solved from the same floors rather than mirrored.
+ *    Contrast does not mirror: the arms land on the same ratios (3.16 / 4.7 /
+ *    7.2 at layer-2) from completely different lightnesses.
+ *
+ * 2. BORDERS are one ink at two opacities, so they hold their weight as the
+ *    surface climbs. Measured across all six surfaces, the separator varies
+ *    by 0.11; an opaque border in the shipped system drifts 0.58 across three.
+ *    Opacity is per-scheme because contrast is not symmetric — the same 25%
+ *    reads 2.15 on dark and 1.66 on light.
+ *
+ * 3. ACCENTS are one hue number each. At fixed lightness and chroma, contrast
+ *    barely moves around the hue circle; chroma is the variable that breaks
+ *    it. Capped at 0.16, every hue clears its floor, and the accent text tier
+ *    needs only a small offset from the neutral one (+0.012 dark, -0.030
+ *    light). Past 0.18 the offset grows and a per-hue solve returns.
+ */
+
+:where([data-color-spike]) {
+	/* ── Neutral ramp ────────────────────────────────────────────────── */
+	--itxs-hue: 255;
+	--itxs-chroma: 0.008;
+
+	--itxs-page-0: light-dark(oklch(0.99 0.008 255), oklch(0.18 0.008 255));
+	--itxs-page-1: light-dark(oklch(0.97 0.008 255), oklch(0.2 0.008 255));
+	--itxs-page-2: light-dark(oklch(0.95 0.008 255), oklch(0.22 0.008 255));
+
+	--itxs-layer-0: light-dark(oklch(0.925 0.008 255), oklch(0.245 0.008 255));
+	--itxs-layer-1: light-dark(oklch(0.875 0.008 255), oklch(0.295 0.008 255));
+	--itxs-layer-2: light-dark(oklch(0.825 0.008 255), oklch(0.345 0.008 255));
+
+	/* Solved against layer-2. text-0 is the 3:1 tier — disabled and large
+	   text, never body copy. */
+	--itxs-text-0: light-dark(oklch(0.524 0.008 255), oklch(0.617 0.008 255));
+	--itxs-text-1: light-dark(oklch(0.432 0.008 255), oklch(0.719 0.008 255));
+	--itxs-text-2: light-dark(oklch(0.329 0.008 255), oklch(0.843 0.008 255));
+	--itxs-text-3: light-dark(oklch(0.15 0.008 255), oklch(0.97 0.008 255));
+
+	/* ── Borders ─────────────────────────────────────────────────────── */
+	/*
+	 * The opacity has to be baked into a colour, not carried as a number.
+	 * light-dark() takes <color> arguments only, so light-dark(33%, 25%) is
+	 * invalid and silently resolves the whole color-mix to transparent —
+	 * which measures 1.00:1 and looks like a working border that is not there.
+	 *
+	 * Same rule as everywhere else here: nothing in CSS can observe the active
+	 * scheme except light-dark(), so a scheme-varying value has to ride inside
+	 * a colour function.
+	 */
+	--itxs-separator: light-dark(
+		color-mix(in srgb, oklch(0.15 0.008 255) 33%, transparent),
+		color-mix(in srgb, oklch(0.97 0.008 255) 25%, transparent)
+	);
+	--itxs-edge: light-dark(
+		color-mix(in srgb, oklch(0.15 0.008 255) 48%, transparent),
+		color-mix(in srgb, oklch(0.97 0.008 255) 40%, transparent)
+	);
+
+	/* ── Accents ─────────────────────────────────────────────────────── */
+	--itxs-accent-chroma: 0.16;
+
+	--itxs-danger-hue: 33;
+	--itxs-warning-hue: 78;
+	--itxs-success-hue: 122;
+	--itxs-info-hue: 218;
+	--itxs-colorway-hue: 264;
+}
+
+/*
+ * Every accent role from the hue alone. Redeclared nowhere, because the hue is
+ * the only thing that varies — the lightnesses are shared across families.
+ */
+:where([data-color-spike]) {
+	--itxs-danger-wash: light-dark(oklch(0.93 0.064 33), oklch(0.26 0.064 33));
+	--itxs-danger-text: light-dark(oklch(0.402 0.16 33), oklch(0.731 0.16 33));
+	--itxs-danger-solid: oklch(0.5 0.16 33);
+
+	--itxs-warning-wash: light-dark(oklch(0.93 0.064 78), oklch(0.26 0.064 78));
+	--itxs-warning-text: light-dark(oklch(0.402 0.16 78), oklch(0.731 0.16 78));
+	--itxs-warning-solid: oklch(0.5 0.16 78);
+
+	--itxs-success-wash: light-dark(oklch(0.93 0.064 122), oklch(0.26 0.064 122));
+	--itxs-success-text: light-dark(oklch(0.402 0.16 122), oklch(0.731 0.16 122));
+	--itxs-success-solid: oklch(0.5 0.16 122);
+
+	--itxs-info-wash: light-dark(oklch(0.93 0.064 218), oklch(0.26 0.064 218));
+	--itxs-info-text: light-dark(oklch(0.402 0.16 218), oklch(0.731 0.16 218));
+	--itxs-info-solid: oklch(0.5 0.16 218);
+
+	--itxs-colorway-wash: light-dark(
+		oklch(0.93 0.064 264),
+		oklch(0.26 0.064 264)
+	);
+	--itxs-colorway-text: light-dark(
+		oklch(0.402 0.16 264),
+		oklch(0.731 0.16 264)
+	);
+	--itxs-colorway-solid: oklch(0.5 0.16 264);
+
+	/* One label for every solid: L 0.50 at this chroma clears 4.5:1 against
+	   the light end for all five hues (4.75 on info, 5.97 on danger). */
+	--itxs-on-solid: oklch(0.97 0.008 255);
+}
