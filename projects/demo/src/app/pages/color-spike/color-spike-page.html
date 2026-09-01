@@ -85,7 +85,11 @@
 				<!-- One shared key. Every ladder has the same rungs in the same
 				     order, and a label painted on a swatch is a mark on the thing
 				     being judged. -->
-				<ol class="spike-cand__key" aria-hidden="true">
+				<ol
+					class="spike-cand__key"
+					interop-typography-isolate
+					aria-hidden="true"
+				>
 					@for (r of rungs(candidates[0]); track r.label) {
 						<li>{{ r.label }}</li>
 					}
@@ -107,7 +111,7 @@
 								>top gap <b>{{ c.topGap }}</b></span
 							>
 						</p>
-						<ol class="spike-cand__ladder">
+						<ol class="spike-cand__ladder" interop-typography-isolate>
 							@for (r of rungs(c); track r.label) {
 								<li
 									class="spike-cand__rung"

@@ -57,7 +57,7 @@
 		@for (family of families; track family.id) {
 			<div class="color-family">
 				<h3 class="color-family__name">{{ family.label }}</h3>
-				<ol class="color-family__steps">
+				<ol class="color-family__steps" interop-typography-isolate>
 					@for (n of steps; track n) {
 						<li
 							class="color-family__step"
@@ -107,7 +107,7 @@
 		@for (family of families; track family.id) {
 			<div class="color-board">
 				<h3 class="color-board__name">{{ family.label }}</h3>
-				<ol class="color-board__row">
+				<ol class="color-board__row" interop-typography-isolate>
 					@for (step of board(family.id); track step.n) {
 						<li
 							class="color-board__cell"
