@@ -254,11 +254,17 @@ const VOCABULARY: readonly RoleGroup[] = [
 	{
 		slot: "text",
 		rows: [
-			{ token: "--itx-role-text", job: "primary" },
 			{
-				token: "--itx-role-text-{modifier}",
-				job: "three tiers below primary",
-				note: "the modifier words are the open question",
+				token: "--itx-role-text",
+				job: "body copy",
+				note: "unmarked, because it is the most-read token in the system",
+			},
+			{ token: "--itx-role-text-subtle", job: "the 7:1 tier" },
+			{ token: "--itx-role-text-subtler", job: "the 4.5:1 tier" },
+			{
+				token: "--itx-role-text-disabled",
+				job: "the 3:1 tier",
+				note: "names a state rather than a position — WCAG exempts it from a floor, so 3:1 is a house choice",
 			},
 			{ token: "--itx-role-text-{family}", job: "family text, one per family" },
 			{

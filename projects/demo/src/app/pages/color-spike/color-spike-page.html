@@ -165,6 +165,21 @@
 				shape, and the shape says which one you are in.
 			</p>
 
+			<h3>Why prominence and not brightness</h3>
+			<p>
+				The tiers are named for how much they stand out, not for how light they
+				are. A brightness word is true in one arm and false in the other: the
+				dark ramp runs 0.664 to 0.970 while the light ramp runs 0.489 to 0.150,
+				so <code>brightest</code> would resolve to near-black in light mode.
+				Both arms land on the same contrast from opposite lightnesses, which is
+				the property a brightness name would throw away.
+			</p>
+			<p>
+				<code>subtle</code> carries the same meaning here as it does in
+				<code>--itx-role-background-{{ "{" }}family{{ "}" }}-subtle</code> —
+				less prominent. One word, one meaning, two slots.
+			</p>
+
 			<p>
 				One cost of the optional segments:
 				<code>--itx-role-text-danger</code> and
