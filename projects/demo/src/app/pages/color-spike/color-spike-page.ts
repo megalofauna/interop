@@ -198,6 +198,18 @@ const SCHEMES: readonly Scheme[] = [
 		],
 	},
 	{
+		name: "Namespaced role",
+		note: "namespace · type · role · modifier. The role segment marks which vocabulary you are in — raw steps stay family-first, answers go slot-first — and makes the supported set autocompletable. Strains where a family wash needs both a family and a prominence in one modifier slot.",
+		lines: [
+			"var(--itx-role-background-interactive)",
+			"var(--itx-role-divider)",
+			"var(--itx-role-background-info-subtle)",
+			"var(--itx-role-text-danger)",
+			"var(--itx-role-edge)",
+			"var(--itx-role-text-subtle)",
+		],
+	},
+	{
 		name: "Slot-first",
 		note: "Primer and Atlassian structure. Sorts by what you are painting rather than which colour. Breaks the shape of the step tokens, which are family-first.",
 		lines: [
