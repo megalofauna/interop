@@ -232,7 +232,7 @@
 	position: relative;
 	margin-block-start: var(--itx-spacing-4);
 	padding: var(--itx-spacing-4);
-	background-color: var(--itxs-page-1);
+	background-color: var(--itxs-surface-2);
 	border-radius: var(--itx-radius);
 	color: var(--itxs-text-2);
 }
@@ -247,10 +247,10 @@
 }
 
 .spike-scrim__dialog {
-	--itxs-surface: var(--itxs-layer-0);
+	--itxs-surface: var(--itxs-surface-4);
 
 	padding: var(--itx-spacing-3) var(--itx-spacing-4);
-	background-color: var(--itxs-layer-0);
+	background-color: var(--itxs-surface-4);
 	border: 1px solid var(--itxs-edge);
 	border-radius: var(--itx-radius);
 	color: var(--itxs-text-2);
@@ -275,15 +275,44 @@
 	font-size: var(--itx-font-size-xsmall);
 }
 
+/*
+ * Wraps rather than scrolls. A long token is the cost of a scheme, and
+ * truncating it hides the thing worth seeing — the hanging indent keeps a
+ * wrapped value visibly attached to its declaration.
+ */
 .spike-scheme__code {
 	margin: 0;
 	padding: var(--itx-spacing-3);
-	overflow-x: auto;
-	background-color: var(--itxs-page-0);
+	white-space: pre-wrap;
+	text-indent: -2ch hanging;
+	padding-inline-start: calc(var(--itx-spacing-3) + 2ch);
+	background-color: var(--itxs-surface-1);
 	border: 1px solid var(--itxs-separator);
 	border-radius: var(--itx-radius);
 	color: var(--itxs-text-2);
 	font-size: var(--itx-font-size-xsmall);
 	line-height: 1.7;
 	tab-size: 2;
+}
+
+/* ── Role vocabulary ─────────────────────────────────────────────────────── */
+
+.spike-vocab {
+	margin-block-end: var(--itx-spacing-4);
+}
+
+.spike-vocab__slot {
+	margin-block-end: var(--itx-spacing-1);
+	color: var(--itxs-text-1);
+	font-size: var(--itx-font-size-small);
+	font-family: var(--itx-font-family-mono, monospace);
+}
+
+.spike-vocab .spike-table {
+	margin-block: 0;
+
+	th {
+		inline-size: 40%;
+		font-weight: var(--itx-font-weight-normal);
+	}
 }

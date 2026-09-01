@@ -18,13 +18,18 @@ import {
 	usedValue,
 } from "interop/lib/dev/contrast";
 
+/*
+ * One sequence rather than two named bands. 1-3 are the ground and 4-6 sit on
+ * it; that grouping is a spacing property of the ramp, documented beside the
+ * values, not encoded in every token name.
+ */
 const SURFACES = [
-	"page-0",
-	"page-1",
-	"page-2",
-	"layer-0",
-	"layer-1",
-	"layer-2",
+	"surface-1",
+	"surface-2",
+	"surface-3",
+	"surface-4",
+	"surface-5",
+	"surface-6",
 ] as const;
 const TEXTS = ["text-0", "text-1", "text-2", "text-3"] as const;
 const BORDERS = ["separator", "edge"] as const;
@@ -62,19 +67,19 @@ interface Candidate {
  * Page-band candidates at 2, 3 and 4 percent.
  *
  * Widening the page band is not a local change. The layer band keeps its
- * 0.025 gap above page-2, so it shifts up with it, and the text tiers are
+ * 0.025 gap above surface-3, so it shifts up with it, and the text tiers are
  * re-solved against the new deepest layer. The ladder runs between two fixed
  * ends, so lightness spent on the page band comes out of the top — which is
  * the trade the topGap column prices.
  */
 const LAD = (page: number[], layer: number[], text: number[]): Rung[] => [
 	...page.map((l, i) => ({
-		label: `page-${i}`,
+		label: `surface-${i + 1}`,
 		band: "page" as const,
 		color: `oklch(${l} 0.008 255)`,
 	})),
 	...layer.map((l, i) => ({
-		label: `layer-${i}`,
+		label: `surface-${i + 4}`,
 		band: "layer" as const,
 		color: `oklch(${l} 0.008 255)`,
 	})),
@@ -223,6 +228,101 @@ const SCHEMES: readonly Scheme[] = [
 	},
 ];
 
+/*
+ * The role vocabulary under namespace · type · role · family · modifier.
+ *
+ * Role is the primary distinction — this is a text thing, an edge thing.
+ * Family names the ramp. Modifier adjusts the base. Both trailing segments are
+ * optional, which keeps the common case short and costs a little: position no
+ * longer says which slot the last segment fills, because danger names a ramp
+ * and subtle names a prominence. Both are small closed sets.
+ *
+ * Surfaces stay out of this namespace. They are written by the engine and are
+ * a source rather than an override point — see .agent/color.md.
+ */
+interface RoleRow {
+	readonly token: string;
+	readonly job: string;
+	readonly note?: string;
+}
+interface RoleGroup {
+	readonly slot: string;
+	readonly rows: readonly RoleRow[];
+}
+
+const VOCABULARY: readonly RoleGroup[] = [
+	{
+		slot: "text",
+		rows: [
+			{ token: "--itx-role-text", job: "primary" },
+			{
+				token: "--itx-role-text-{modifier}",
+				job: "three tiers below primary",
+				note: "the modifier words are the open question",
+			},
+			{ token: "--itx-role-text-{family}", job: "family text, one per family" },
+			{
+				token: "--itx-role-text-on-bold",
+				job: "the label on a solid fill",
+				note: "no family segment — one label clears every solid, worst 4.75 on info",
+			},
+		],
+	},
+	{
+		slot: "background",
+		rows: [
+			{
+				token: "--itx-role-background-interactive",
+				job: "hover and selected",
+				note: "derived from the surface it lands on, and shared by both states",
+			},
+			{ token: "--itx-role-background-{family}-subtle", job: "family wash" },
+			{ token: "--itx-role-background-{family}-bold", job: "family solid" },
+		],
+	},
+	{
+		slot: "edge",
+		rows: [
+			{ token: "--itx-role-edge", job: "an edge that must read, 3:1" },
+			{ token: "--itx-role-edge-{family}", job: "family edge" },
+		],
+	},
+	{
+		slot: "divider",
+		rows: [
+			{
+				token: "--itx-role-divider",
+				job: "a separator that must not assert itself",
+				note: "no floor, so nothing to clear",
+			},
+		],
+	},
+	{
+		slot: "scrim",
+		rows: [
+			{
+				token: "--itx-role-scrim",
+				job: "over arbitrary content",
+				note: "the only job the palette cannot express",
+			},
+		],
+	},
+];
+
+/** Tokens the vocabulary deliberately does NOT contain, and why. */
+const RETIRED: readonly RoleRow[] = [
+	{
+		token: "on-tint / on-subtle",
+		job: "the label on a wash",
+		note: "family text already clears on the family wash — 7.10 to 8.32, every one above 7:1. Five tokens restating a guarantee the pairing already makes.",
+	},
+	{
+		token: "on-solid, per family",
+		job: "five labels for five solids",
+		note: "one label clears all five. Collapses to --itx-role-text-on-bold.",
+	},
+];
+
 @Component({
 	selector: "color-spike-page",
 	standalone: true,
@@ -240,6 +340,8 @@ export class ColorSpikePage {
 	protected readonly formatRatio = formatRatio;
 	protected readonly candidates = CANDIDATES;
 	protected readonly schemes = SCHEMES;
+	protected readonly vocabulary = VOCABULARY;
+	protected readonly retired = RETIRED;
 	protected readonly sampleLhs = SAMPLE_LHS;
 
 	/** The declaration as it would be written, padded so the values line up. */

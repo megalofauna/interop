@@ -99,16 +99,94 @@
 			</p>
 		</demo-section>
 
+		<demo-section id="vocabulary" heading="The role vocabulary">
+			<p description class="demo-section__lede">
+				<code>namespace · type · role · family · modifier</code>. Role is the
+				primary distinction — this is a text thing, an edge thing. Family names
+				the ramp. Modifier adjusts the base. Both trailing segments are
+				optional, which keeps the common case short.
+			</p>
+
+			@for (g of vocabulary; track g.slot) {
+				<div class="spike-vocab">
+					<h3 class="spike-vocab__slot">{{ g.slot }}</h3>
+					<table class="spike-table">
+						<tbody>
+							@for (r of g.rows; track r.token) {
+								<tr>
+									<th scope="row">
+										<code>{{ r.token }}</code>
+									</th>
+									<td>{{ r.job }}</td>
+									<td class="spike-table__floor">{{ r.note }}</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+
+			<h3>Not in it</h3>
+			<p>Two sets of tokens the measurements retired rather than renamed.</p>
+			<table class="spike-table">
+				<tbody>
+					@for (r of retired; track r.token) {
+						<tr>
+							<th scope="row">
+								<code>{{ r.token }}</code>
+							</th>
+							<td>{{ r.job }}</td>
+							<td class="spike-table__floor">{{ r.note }}</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<p>
+				Surfaces stay outside this namespace, and they are two things rather
+				than one. <code>--itx-surface-1</code> through <code>-6</code> are
+				values, one sequence. <code>--itx-surface</code>,
+				<code>--itx-surface-above</code> and <code>--itx-surface-below</code>
+				are pointers into it, written by the engine from depth — a source rather
+				than an override point.
+			</p>
+
+			<p>
+				That is the whole substrate vocabulary in one word.
+				<code>page</code> and <code>layer</code> were two names for one ramp,
+				and <code>layer</code> in particular collided with the
+				<code>itx-layer</code> attribute, which already means depth. The
+				grouping survives as a spacing property documented beside the values: 1
+				to 3 are the ground, 3% apart, and 4 to 6 sit on it, 5% apart.
+			</p>
+
+			<p>
+				Three vocabularies in all — steps, roles, surfaces — each with its own
+				shape, and the shape says which one you are in.
+			</p>
+
+			<p>
+				One cost of the optional segments:
+				<code>--itx-role-text-danger</code> and
+				<code>--itx-role-text-subtle</code> are the same shape but fill
+				different slots, so position stops disambiguating. Both are small closed
+				sets, so it is learnable rather than structural. Making family mandatory
+				would fix it and cost length on the common case — neutral text is about
+				185 reads against seven for family text.
+			</p>
+		</demo-section>
+
 		<demo-section
 			id="page-band"
 			heading="How far apart should the page band sit?"
 		>
 			<p description class="demo-section__lede">
 				Three complete ladders. The page band is the question, but it cannot be
-				answered alone — the layer band keeps its gap above <code>page-2</code>,
-				so widening the page band shifts everything up and re-solves the text
-				against a lighter deepest layer. The ladder runs between two fixed ends,
-				so what the page band spends comes out of the top.
+				answered alone — the layer band keeps its gap above
+				<code>surface-3</code>, so widening the page band shifts everything up
+				and re-solves the text against a lighter deepest layer. The ladder runs
+				between two fixed ends, so what the page band spends comes out of the
+				top.
 			</p>
 
 			<div class="spike-arm">
@@ -168,7 +246,7 @@
 								<li
 									class="spike-cand__rung"
 									[class.spike-cand__rung--band-start]="
-										r.label === 'layer-0' || r.label === 'text-0'
+										r.label === 'surface-4' || r.label === 'text-0'
 									"
 									[style.background-color]="r.color"
 								></li>
@@ -211,7 +289,7 @@
 
 		<demo-section id="text" heading="Text against every surface">
 			<p description class="demo-section__lede">
-				Each tier was solved against <code>layer-2</code>, so the rightmost
+				Each tier was solved against <code>surface-6</code>, so the rightmost
 				column is the one that decides it. The light arm is solved from the same
 				floors rather than mirrored, which is why both arms land on the same
 				ratios from different lightnesses.
@@ -369,12 +447,14 @@
 				<tbody>
 					<tr>
 						<th scope="row">body text on the page</th>
-						<td>{{ formatRatio(ratio("text-2", "page-1")) }}</td>
+						<td>{{ formatRatio(ratio("text-2", "surface-2")) }}</td>
 						<td class="spike-table__floor">unscrimmed, for comparison</td>
 					</tr>
 					<tr>
 						<th scope="row">body text behind the scrim</th>
-						<td>{{ formatRatio(ratioUnder("text-2", "page-1", "scrim")) }}</td>
+						<td>
+							{{ formatRatio(ratioUnder("text-2", "surface-2", "scrim")) }}
+						</td>
 						<td class="spike-table__floor">
 							dimmed and still legible — the inert signal, and the scrim's real
 							job
@@ -385,7 +465,7 @@
 						<td>
 							{{
 								formatRatio(
-									ratioAgainst("layer-0", composite("scrim", "page-1"))
+									ratioAgainst("surface-4", composite("scrim", "surface-2"))
 								)
 							}}
 						</td>
@@ -426,9 +506,9 @@
 				<thead>
 					<tr>
 						<th scope="col">family</th>
-						<th scope="col">text on layer-2</th>
+						<th scope="col">text on surface-6</th>
 						<th scope="col">text on its wash</th>
-						<th scope="col">wash on page-1</th>
+						<th scope="col">wash on surface-2</th>
 						<th scope="col">label on solid</th>
 					</tr>
 				</thead>
@@ -440,13 +520,13 @@
 							</th>
 							<td
 								[class.spike-table__miss]="
-									!clears('text-1', ratio(a + '-text', 'layer-2'))
+									!clears('text-1', ratio(a + '-text', 'surface-6'))
 								"
 							>
-								{{ formatRatio(ratio(a + "-text", "layer-2")) }}
+								{{ formatRatio(ratio(a + "-text", "surface-6")) }}
 							</td>
 							<td>{{ formatRatio(ratio(a + "-text", a + "-wash")) }}</td>
-							<td>{{ formatRatio(ratio(a + "-wash", "page-1")) }}</td>
+							<td>{{ formatRatio(ratio(a + "-wash", "surface-2")) }}</td>
 							<td
 								[class.spike-table__miss]="
 									!clears('text-1', ratio('on-solid', a + '-solid'))
