@@ -47,6 +47,18 @@
 			></span>
 			<!-- The fill derives from whatever surface it lands on, so each probe
 			     sets a surface and reads back what the one declaration produced. -->
+			<span
+				[style.background-color]="'var(--itxs-neutral-solid)'"
+				data-token="neutral-solid"
+			></span>
+			<span
+				[style.background-color]="'var(--itxs-on-neutral-solid)'"
+				data-token="on-neutral-solid"
+			></span>
+			<span
+				[style.background-color]="'var(--itxs-scrim)'"
+				data-token="scrim"
+			></span>
 			@for (s of surfaces; track s) {
 				<span
 					data-surface
@@ -316,6 +328,63 @@
 						<div class="spike-demo__edge">edge</div>
 					</div>
 				}
+			</div>
+		</demo-section>
+
+		<demo-section id="scrim" heading="Scrim and inverted fill">
+			<p description class="demo-section__lede">
+				The scrim is the only job the palette cannot express, because it works
+				over arbitrary content rather than a known surface. The inverted fill
+				closes the last gap in the job list.
+			</p>
+
+			<table class="spike-table">
+				<tbody>
+					<tr>
+						<th scope="row">body text on the page</th>
+						<td>{{ formatRatio(ratio("text-2", "page-1")) }}</td>
+						<td class="spike-table__floor">unscrimmed, for comparison</td>
+					</tr>
+					<tr>
+						<th scope="row">body text behind the scrim</th>
+						<td>{{ formatRatio(ratioUnder("text-2", "page-1", "scrim")) }}</td>
+						<td class="spike-table__floor">
+							dimmed and still legible — the inert signal, and the scrim's real
+							job
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">dialog surface on a scrimmed page</th>
+						<td>
+							{{
+								formatRatio(
+									ratioAgainst("layer-0", composite("scrim", "page-1"))
+								)
+							}}
+						</td>
+						<td class="spike-table__floor">
+							separation — weak in dark, where it comes from the shadow instead
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">label on the inverted fill</th>
+						<td
+							[class.spike-table__miss]="
+								!clears('text-1', ratio('on-neutral-solid', 'neutral-solid'))
+							"
+						>
+							{{ formatRatio(ratio("on-neutral-solid", "neutral-solid")) }}
+						</td>
+						<td class="spike-table__floor">floor 4.5</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="spike-scrim">
+				<p>Content behind the scrim stays legible and reads as inert.</p>
+				<div class="spike-scrim__veil">
+					<div class="spike-scrim__dialog">dialog</div>
+				</div>
 			</div>
 		</demo-section>
 

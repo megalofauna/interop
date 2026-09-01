@@ -14,6 +14,7 @@ import { DemoSection } from "../../components/demo-section/demo-section";
 import {
 	contrastRatio,
 	formatRatio,
+	resolveRgb,
 	usedValue,
 } from "interop/lib/dev/contrast";
 
@@ -167,6 +168,37 @@ export class ColorSpikePage {
 	protected ratio(fg: string, bg: string): number {
 		const f = this.value(fg);
 		const b = this.value(bg);
+		return f && b ? contrastRatio(f, b) : Number.NaN;
+	}
+
+	/**
+	 * A translucent token composited over a named backdrop, as a colour string.
+	 *
+	 * Needed because resolveRgb defaults its backdrop to white. Asking for the
+	 * scrim's contrast directly reports it over white rather than over the page,
+	 * which reads as a confident wrong answer — 3.83 where the truth is 1.27.
+	 */
+	protected composite(over: string, under: string): string {
+		const rgb = resolveRgb(this.value(over), this.value(under));
+		return rgb ? `rgb(${rgb.join(" ")})` : "";
+	}
+
+	/** A token measured against an already-composited colour. */
+	protected ratioAgainst(fg: string, backdrop: string): number {
+		const f = this.value(fg);
+		return f && backdrop ? contrastRatio(f, backdrop) : Number.NaN;
+	}
+
+	/**
+	 * A pairing seen through a veil drawn OVER both sides.
+	 *
+	 * The scrim covers the content, so it composites over the text and over the
+	 * page — not the other way round. Compositing opaque text over the scrim
+	 * returns the text unchanged and reports no dimming at all.
+	 */
+	protected ratioUnder(fg: string, bg: string, veil: string): number {
+		const f = this.composite(veil, fg);
+		const b = this.composite(veil, bg);
 		return f && b ? contrastRatio(f, b) : Number.NaN;
 	}
 

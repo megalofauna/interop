@@ -116,6 +116,30 @@
 	 */
 	--itxs-surface: var(--itxs-page-1);
 
+	/* ── Scrim ───────────────────────────────────────────────────────── */
+	/*
+	 * The only job in the system the palette cannot express, because it has to
+	 * work over arbitrary content rather than over a known surface.
+	 *
+	 * Scheme-invariant, and one value replaces the two literals the shipped
+	 * system carries (dialog 0.5, command palette 0.4). Its job is to knock the
+	 * content behind it back: body text on the page drops from 13.18 to 3.92 in
+	 * dark and 12.82 to 4.19 in light. Near enough symmetric.
+	 *
+	 * What it does NOT do is separate the dialog from the page in dark mode.
+	 * The dialog surface against a scrimmed page measures 1.27 dark against
+	 * 3.29 light, and raising the alpha to 0.7 only reaches 1.31 — darkening an
+	 * already-dark page cannot create separation. In dark mode that has to come
+	 * from the dialog's own surface and its shadow.
+	 */
+	--itxs-scrim: oklch(0 0 0 / 0.5);
+
+	/* ── Inverted fill ───────────────────────────────────────────────── */
+	/* The far text end used as a background, with the page end as its label.
+	   Fills the on-neutral gap in the job list. Provisional names. */
+	--itxs-neutral-solid: var(--itxs-text-3);
+	--itxs-on-neutral-solid: var(--itxs-page-0);
+
 	/* ── Accents ─────────────────────────────────────────────────────── */
 	--itxs-accent-chroma: 0.16;
 
