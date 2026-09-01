@@ -85,7 +85,9 @@ components pick today, not what they should pick.
 is 14, slider mark 8, minor mark 3, resizable handle 8 hovering to 9.
 
 **Scrim** — three literals with alpha: `dialog-backdrop`, `cmdp-backdrop`,
-`term-scan-line`. The palette cannot express these and they have no name.
+`term-scan-line`. The palette cannot express these and they have no name. The
+spike gives the first two one token; the scan line is a decorative overlay, not
+a scrim.
 
 ### What the counts say
 
@@ -109,25 +111,33 @@ must not assert itself. `--itx-<family>-border` at step 9 is an edge that must.
 
 ## Open decisions
 
-1. How many text tiers — three or four.
-2. Is `selected` distinct from `hover`. They are the same colour today, so a
-   selected row and a hovered row are indistinguishable.
-3. Is `separator` distinct from `edge`. The evidence says yes.
-4. Are marks a tier, or a reuse of the text and edge tiers.
-5. Does neutral get a solid, which would give `on-neutral-solid` a home.
-6. Does scrim join the system or stay a literal.
+Answered by the spike at `/foundation/color-spike`, measured rather than argued:
 
-1 through 4 change how things look and want a comparison harness rather than an
+| | answer |
+|---|---|
+| Is `selected` distinct from `hover`? | No. They share one fill and do not compound, because compounding collapses the top of the ramp. The difference is carried by a mark, which needs 3:1 against the surrounding surface only. |
+| Are marks a tier? | No. A quiet mark is the edge (3.05 dark / 3.11 light worst); a loud mark is the far text tier. |
+| Does neutral get a solid? | Yes. The far text end as a background, page end as its label, 17.21:1. |
+| Does scrim join the system? | Yes. One scheme-invariant value replaces two literals. It dims content symmetrically (13.18 to 3.88 dark) but does not separate a dialog in dark mode — 1.27 against 3.29 light — so that separation comes from the shadow. |
+
+Still open:
+
+1. How many text tiers — three or four. The spike ships four.
+2. Is `separator` distinct from `edge`. The evidence says yes and the spike
+   treats them as two.
+
+Both change how things look and want a comparison harness rather than an
 argument.
 
 ## Fixable without deciding any of that
 
 - Consolidate the separator to one value.
-- Decide `selected` versus `hover`.
 - Unify secondary text on one step.
-- Add the `solid` / `on-solid` pairing to `check-contrast-css.mjs`. It is the
-  one shipped pairing neither check measures, and the solid sits outside the
-  step ramp at `oklch(0.500 0.190 264)`, so the distance rule cannot reach it.
+
+Done since: `check-contrast-css.mjs` now measures text on an interactive fill
+and the brand fill against its label — 96 pairings became 144. The tightest
+reading in the shipped system is one of the new ones, secondary text on a hover
+fill at 4.5382 against a 4.5 floor, which nothing reported before.
 
 ## Alpha for borders and rules
 
