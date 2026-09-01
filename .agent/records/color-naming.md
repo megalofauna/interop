@@ -1,7 +1,19 @@
 # Colour role naming — the open question
 
-Recorded 2026-08-29. Nothing here is decided. `tint`, `on-tint` and `solid` are
-all disliked and slated to change; the rename waits on the job list below.
+Recorded 2026-08-29, updated 2026-08-31. Nothing here is decided.
+
+Every role name in play is provisional. Slated to change:
+
+| name | where it came from |
+|---|---|
+| `tint`, `on-tint`, `solid`, `on-solid` | the shipped system |
+| `wash` | the spike, and it is the same job as `tint` under a second name |
+| `ink` | the spike — a metaphor, which `.agent/writing.md` rules out |
+| `separator`, `edge` | the spike, for the two border weights |
+| `page-N`, `layer-N`, `text-N` | the spike, for the three bands |
+
+The rename waits on the job list below. Naming the names that happen to exist
+means naming again when the missing jobs surface.
 
 ## Why it is not decided yet
 
