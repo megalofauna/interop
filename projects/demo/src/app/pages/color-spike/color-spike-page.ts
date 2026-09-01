@@ -268,9 +268,9 @@ const VOCABULARY: readonly RoleGroup[] = [
 			},
 			{ token: "--itx-role-text-{family}", job: "family text, one per family" },
 			{
-				token: "--itx-role-text-on-bold",
-				job: "the label on a solid fill",
-				note: "no family segment — one label clears every solid, worst 4.75 on info",
+				token: "--itx-role-text-inverse",
+				job: "the label on a family fill",
+				note: "no family segment — one label clears every fill, worst 4.75 on info. Says what it is rather than where it goes, which is what unmarking the fill costs.",
 			},
 		],
 	},
@@ -282,8 +282,15 @@ const VOCABULARY: readonly RoleGroup[] = [
 				job: "hover and selected",
 				note: "derived from the surface it lands on, and shared by both states",
 			},
-			{ token: "--itx-role-background-{family}-subtle", job: "family wash" },
-			{ token: "--itx-role-background-{family}-bold", job: "family solid" },
+			{
+				token: "--itx-role-background-{family}",
+				job: "the family fill",
+				note: "unmarked because it is the full-strength case and the most read — 38 against the wash's 5",
+			},
+			{
+				token: "--itx-role-background-{family}-subtle",
+				job: "the family wash",
+			},
 		],
 	},
 	{
@@ -325,6 +332,7 @@ const VOCABULARY: readonly RoleGroup[] = [
  */
 interface Grammar {
 	readonly name: string;
+	readonly chosen?: boolean;
 	readonly textLoud: string;
 	readonly bgLoud: string;
 	readonly bgQuiet: string;
@@ -345,6 +353,7 @@ const GRAMMARS: readonly Grammar[] = [
 	},
 	{
 		name: "A — unmark the solid",
+		chosen: true,
 		textLoud: "--itx-role-text",
 		bgLoud: "--itx-role-background-danger",
 		bgQuiet: "--itx-role-background-danger-subtle",
@@ -373,7 +382,7 @@ const RETIRED: readonly RoleRow[] = [
 	{
 		token: "on-solid, per family",
 		job: "five labels for five solids",
-		note: "one label clears all five. Collapses to --itx-role-text-on-bold.",
+		note: "one label clears all five. Collapses to --itx-role-text-inverse.",
 	},
 ];
 
