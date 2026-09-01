@@ -25,8 +25,9 @@
  *    gap between the 7:1 tier and the far end falls to 0.075 and text-2
  *    converges on text-3. The comparison is rendered on the spike page.
  *
- *    The text tiers are solved against the DEEPEST layer, not the page, so
- *    they hold everywhere the engine can put them:
+ *    The text tiers are solved against the deepest surface WITH a fill on
+ *    it, not against the page and not against the bare layer, so they hold
+ *    everywhere the engine can put them:
  *
  *      text-0  3:1    text-1  4.5:1    text-2  7:1    text-3  the far end
  *
@@ -35,10 +36,11 @@
  *    completely different lightnesses.
  *
  * 2. BORDERS are one ink at two opacities, so they hold their weight as the
- *    surface climbs. The separator varies by about 0.15 across all six
- *    surfaces; an opaque border in the shipped system drifts 0.58 across
- *    three. The opacities did not move when the bands widened from 2% to 3%,
- *    which is the property the mechanism was chosen for.
+ *    surface climbs. The separator varies by about 0.2 across all twelve
+ *    backgrounds — six surfaces, bare and filled — where an opaque border in
+ *    the shipped system drifts 0.58 across three layers. The opacities did not
+ *    move when the bands widened from 2% to 3%, which is the property the
+ *    mechanism was chosen for.
  *
  *    Opacity is per-scheme because contrast is not symmetric — the same 25%
  *    reads about 2.15 on dark and 1.66 on light.
@@ -62,11 +64,12 @@
 	--itxs-layer-1: light-dark(oklch(0.855 0.008 255), oklch(0.315 0.008 255));
 	--itxs-layer-2: light-dark(oklch(0.805 0.008 255), oklch(0.365 0.008 255));
 
-	/* Solved against layer-2. text-0 is the 3:1 tier — disabled and large
-	   text, never body copy. */
-	--itxs-text-0: light-dark(oklch(0.509 0.008 255), oklch(0.641 0.008 255));
-	--itxs-text-1: light-dark(oklch(0.417 0.008 255), oklch(0.745 0.008 255));
-	--itxs-text-2: light-dark(oklch(0.309 0.008 255), oklch(0.87 0.008 255));
+	/* Solved against the deepest surface WITH an interactive fill on it, which
+	   is the real worst case — a hovered row at the deepest nesting. text-0 is
+	   the 3:1 tier: disabled and large text, never body copy. */
+	--itxs-text-0: light-dark(oklch(0.489 0.008 255), oklch(0.664 0.008 255));
+	--itxs-text-1: light-dark(oklch(0.398 0.008 255), oklch(0.771 0.008 255));
+	--itxs-text-2: light-dark(oklch(0.285 0.008 255), oklch(0.901 0.008 255));
 	--itxs-text-3: light-dark(oklch(0.15 0.008 255), oklch(0.97 0.008 255));
 
 	/* ── Borders ─────────────────────────────────────────────────────── */
@@ -84,10 +87,34 @@
 		color-mix(in srgb, oklch(0.15 0.008 255) 33%, transparent),
 		color-mix(in srgb, oklch(0.97 0.008 255) 25%, transparent)
 	);
+	/* Fitted to the worst background it can land on, which is the deepest
+	   surface WITH a fill on it — an outline on a hovered row. Against bare
+	   surfaces alone it fits at 41/49 and then reads 2.89 on a filled one. */
 	--itxs-edge: light-dark(
-		color-mix(in srgb, oklch(0.15 0.008 255) 49%, transparent),
-		color-mix(in srgb, oklch(0.97 0.008 255) 41%, transparent)
+		color-mix(in srgb, oklch(0.15 0.008 255) 50%, transparent),
+		color-mix(in srgb, oklch(0.97 0.008 255) 44%, transparent)
 	);
+
+	/* ── Interactive fill ────────────────────────────────────────────── */
+	/*
+	 * A row has no fill at rest, so its text is chosen against the surface. On
+	 * hover or selection a fill appears UNDER that text. One declaration
+	 * derives it from whatever surface it lands on, half a layer step out:
+	 *
+	 *   hover and selected share this fill. They do NOT compound.
+	 *
+	 * Compounding is what breaks the ramp — at +0.075 the room between the 7:1
+	 * tier and the far end collapses to 0.004 and the top two text tiers stop
+	 * separating. The difference between hover and selected is carried by a
+	 * mark, which needs only 3:1 against the surrounding surface. WCAG 1.4.11
+	 * asks for 3:1 against ADJACENT colours, and a component's two states are
+	 * never adjacent — they are the same pixels at different times.
+	 *
+	 * Written twice because the shift is a number and light-dark() takes only
+	 * colours. Same trap as the border opacities above: a scheme-varying
+	 * number has to ride inside a colour function.
+	 */
+	--itxs-surface: var(--itxs-page-1);
 
 	/* ── Accents ─────────────────────────────────────────────────────── */
 	--itxs-accent-chroma: 0.16;
@@ -100,28 +127,44 @@
 }
 
 /*
+ * The fill composes where it is DECLARED, against that element's surface. A
+ * single declaration at the root would compose there and inherit as a finished
+ * colour, so a descendant on a different surface would keep the root's fill.
+ *
+ * So it is re-declared alongside every surface — which is what the engine
+ * already does for --itx-surface at each layer boundary. Same rule as the
+ * palette roles and the tint packs: see .agent/color.md.
+ */
+:where([data-color-spike], [data-surface]) {
+	--itxs-fill: light-dark(
+		oklch(from var(--itxs-surface) calc(l - 0.025) c h),
+		oklch(from var(--itxs-surface) calc(l + 0.025) c h)
+	);
+}
+
+/*
  * Every accent role from the hue alone. The lightnesses are shared across
  * families, so a family is one number.
  *
  * Accent text sits a little further out than the neutral tier it corresponds
- * to (0.767 against 0.745 dark, 0.385 against 0.417 light). Chroma costs
+ * to (0.811 against 0.771 dark, 0.364 against 0.398 light). Chroma costs
  * contrast, and that offset is what it costs at the cap.
  */
 :where([data-color-spike]) {
 	--itxs-danger-wash: light-dark(oklch(0.89 0.064 33), oklch(0.28 0.064 33));
-	--itxs-danger-text: light-dark(oklch(0.385 0.16 33), oklch(0.767 0.16 33));
+	--itxs-danger-text: light-dark(oklch(0.364 0.16 33), oklch(0.811 0.16 33));
 	--itxs-danger-solid: oklch(0.5 0.16 33);
 
 	--itxs-warning-wash: light-dark(oklch(0.89 0.064 78), oklch(0.28 0.064 78));
-	--itxs-warning-text: light-dark(oklch(0.385 0.16 78), oklch(0.767 0.16 78));
+	--itxs-warning-text: light-dark(oklch(0.364 0.16 78), oklch(0.811 0.16 78));
 	--itxs-warning-solid: oklch(0.5 0.16 78);
 
 	--itxs-success-wash: light-dark(oklch(0.89 0.064 122), oklch(0.28 0.064 122));
-	--itxs-success-text: light-dark(oklch(0.385 0.16 122), oklch(0.767 0.16 122));
+	--itxs-success-text: light-dark(oklch(0.364 0.16 122), oklch(0.811 0.16 122));
 	--itxs-success-solid: oklch(0.5 0.16 122);
 
 	--itxs-info-wash: light-dark(oklch(0.89 0.064 218), oklch(0.28 0.064 218));
-	--itxs-info-text: light-dark(oklch(0.385 0.16 218), oklch(0.767 0.16 218));
+	--itxs-info-text: light-dark(oklch(0.364 0.16 218), oklch(0.811 0.16 218));
 	--itxs-info-solid: oklch(0.5 0.16 218);
 
 	--itxs-colorway-wash: light-dark(
@@ -129,8 +172,8 @@
 		oklch(0.28 0.064 264)
 	);
 	--itxs-colorway-text: light-dark(
-		oklch(0.385 0.16 264),
-		oklch(0.767 0.16 264)
+		oklch(0.364 0.16 264),
+		oklch(0.811 0.16 264)
 	);
 	--itxs-colorway-solid: oklch(0.5 0.16 264);
 

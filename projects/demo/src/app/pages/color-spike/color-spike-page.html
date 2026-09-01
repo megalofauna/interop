@@ -45,6 +45,19 @@
 				[style.background-color]="'var(--itxs-on-solid)'"
 				data-token="on-solid"
 			></span>
+			<!-- The fill derives from whatever surface it lands on, so each probe
+			     sets a surface and reads back what the one declaration produced. -->
+			@for (s of surfaces; track s) {
+				<span
+					data-surface
+					[style]="
+						'--itxs-surface: var(--itxs-' +
+						s +
+						'); background-color: var(--itxs-fill)'
+					"
+					[attr.data-token]="'fill-' + s"
+				></span>
+			}
 		</div>
 
 		<demo-section
@@ -197,6 +210,60 @@
 			<p>
 				<code>text-0</code> is the 3:1 tier. It is for disabled state and large
 				text, never body copy.
+			</p>
+		</demo-section>
+
+		<demo-section id="fill" heading="Interactive fill">
+			<p description class="demo-section__lede">
+				One declaration, derived from whatever surface it lands on, half a layer
+				step out. Hover and selected share it and do not compound — the
+				difference between them is carried by a mark, which needs only 3:1
+				against the surrounding surface.
+			</p>
+
+			<table class="spike-table">
+				<thead>
+					<tr>
+						<th scope="col">on</th>
+						@for (s of surfaces; track s) {
+							<th scope="col">{{ s }}</th>
+						}
+					</tr>
+				</thead>
+				<tbody>
+					@for (t of texts; track t) {
+						<tr>
+							<th scope="row">
+								<code>{{ t }}</code>
+							</th>
+							@for (s of surfaces; track s) {
+								<td
+									[class.spike-table__miss]="!clears(t, ratio(t, 'fill-' + s))"
+								>
+									{{ formatRatio(ratio(t, "fill-" + s)) }}
+								</td>
+							}
+						</tr>
+					}
+					<tr>
+						<th scope="row"><code>edge</code></th>
+						@for (s of surfaces; track s) {
+							<td
+								[class.spike-table__miss]="
+									!clears('edge', ratio('edge', 'fill-' + s))
+								"
+							>
+								{{ formatRatio(ratio("edge", "fill-" + s)) }}
+							</td>
+						}
+					</tr>
+				</tbody>
+			</table>
+
+			<p>
+				The rightmost column is the one that decides the ramp: the deepest
+				surface with a fill on it is the worst background the system can
+				produce, and the text tiers are solved against it.
 			</p>
 		</demo-section>
 
