@@ -52,6 +52,13 @@ const PAIRINGS = [
 	{ role: "text", on: "", floor: 4.5 },
 	{ role: "border", on: "", floor: 3 },
 	{ role: "on-tint", on: "tint", floor: 4.5 },
+	/*
+	 * The brand fill and its label. The solid sits outside the step ramp — it is
+	 * an authored oklch, not a palette position — so the distance rule cannot
+	 * reach it and nothing else here would catch a drift. Radix hit the same
+	 * gap and answered it with --accent-contrast.
+	 */
+	{ role: "on-solid", on: "solid", floor: 4.5 },
 ];
 /** The page's own text, which is not a family role. */
 const PAGE_TEXT = { fg: "--itx-neutral-14", on: "", floor: 7 };
