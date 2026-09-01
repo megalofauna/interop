@@ -259,8 +259,12 @@ const VOCABULARY: readonly RoleGroup[] = [
 				job: "body copy",
 				note: "unmarked, because it is the most-read token in the system",
 			},
-			{ token: "--itx-role-text-subtle", job: "the 7:1 tier" },
-			{ token: "--itx-role-text-subtler", job: "the 4.5:1 tier" },
+			{ token: "--itx-role-text-quiet", job: "the 7:1 tier" },
+			{
+				token: "--itx-role-text-quieter",
+				job: "the 4.5:1 tier",
+				note: "the comparative makes the order free — -er cannot be misread the way two plain adjectives can",
+			},
 			{
 				token: "--itx-role-text-disabled",
 				job: "the 3:1 tier",
