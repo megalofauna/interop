@@ -255,3 +255,35 @@
 	border-radius: var(--itx-radius);
 	color: var(--itxs-text-2);
 }
+
+/* ── Naming worked sample ────────────────────────────────────────────────── */
+
+.spike-schemes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+	gap: var(--itx-spacing-4);
+}
+
+.spike-scheme__name {
+	margin-block-end: var(--itx-spacing-1);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-scheme__note {
+	margin-block-end: var(--itx-spacing-3);
+	color: var(--itxs-text-0);
+	font-size: var(--itx-font-size-xsmall);
+}
+
+.spike-scheme__code {
+	margin: 0;
+	padding: var(--itx-spacing-3);
+	overflow-x: auto;
+	background-color: var(--itxs-page-0);
+	border: 1px solid var(--itxs-separator);
+	border-radius: var(--itx-radius);
+	color: var(--itxs-text-2);
+	font-size: var(--itx-font-size-xsmall);
+	line-height: 1.7;
+	tab-size: 2;
+}

@@ -72,6 +72,33 @@
 			}
 		</div>
 
+		<demo-section id="naming" heading="Naming, read as code">
+			<p description class="demo-section__lede">
+				Six real declarations from the shipped theme, spanning every hard case:
+				a fill that appears under text, a quiet rule, a family wash, family
+				text, a 3:1 edge, and a secondary tier. The left side is the component's
+				own token and never changes — only the system token being named varies.
+			</p>
+
+			<div class="spike-schemes">
+				@for (s of schemes; track s.name) {
+					<div class="spike-scheme">
+						<h3 class="spike-scheme__name">{{ s.name }}</h3>
+						<p class="spike-scheme__note">{{ s.note }}</p>
+						<pre
+							class="spike-scheme__code"
+						><code>@for (l of sampleLhs; track l; let i = $index) {{{ declaration(s, i) }}
+}</code></pre>
+					</div>
+				}
+			</div>
+
+			<p>
+				Nothing here is measured, because naming has nothing to measure. The
+				test is whether a line reads wrong.
+			</p>
+		</demo-section>
+
 		<demo-section
 			id="page-band"
 			heading="How far apart should the page band sit?"

@@ -134,6 +134,83 @@ const CANDIDATES: readonly Candidate[] = [
 	},
 ];
 
+/*
+ * The naming worked sample.
+ *
+ * Six real declarations from the shipped theme, spanning every hard case: a
+ * fill that appears under text, a quiet rule, a family wash, family text, a
+ * 3:1 edge, and a secondary text tier.
+ *
+ * The left side is the component's own token and never changes — only the
+ * system token being named varies. Scoring names against adjectives is where
+ * bias hides; reading them in the declarations we actually write is not.
+ */
+interface Scheme {
+	readonly name: string;
+	readonly note: string;
+	readonly lines: readonly string[];
+}
+
+const SAMPLE_LHS = [
+	"--itx-table-row-hover-bg",
+	"--itx-content-rule-color",
+	"--itx-callout-background",
+	"--itx-field-error-color",
+	"--itx-toast-border-color",
+	"--itx-field-placeholder-color",
+] as const;
+
+const SCHEMES: readonly Scheme[] = [
+	{
+		name: "Today",
+		note: "Family-first. tint and solid describe how a colour looks, not what it does.",
+		lines: [
+			"var(--itx-neutral-2)",
+			"var(--itx-neutral-3)",
+			"var(--itx-info-tint)",
+			"var(--itx-danger-text)",
+			"var(--itx-neutral-8)",
+			"var(--itx-neutral-10)",
+		],
+	},
+	{
+		name: "Positional",
+		note: "Numbers for everything with an order, names only for the jobs that have no position. Never lies, extends forever, needs no consensus — and says nothing on its own.",
+		lines: [
+			"var(--itx-fill)",
+			"var(--itx-rule)",
+			"var(--itx-info-3)",
+			"var(--itx-danger-11)",
+			"var(--itx-edge)",
+			"var(--itx-neutral-9)",
+		],
+	},
+	{
+		name: "Subtle / bold",
+		note: "Bootstrap and Atlassian. The plurality term for a wash. Family-first, so it sits beside the step tokens without a second shape.",
+		lines: [
+			"var(--itx-fill)",
+			"var(--itx-divider)",
+			"var(--itx-info-subtle)",
+			"var(--itx-danger-text)",
+			"var(--itx-border)",
+			"var(--itx-text-secondary)",
+		],
+	},
+	{
+		name: "Slot-first",
+		note: "Primer and Atlassian structure. Sorts by what you are painting rather than which colour. Breaks the shape of the step tokens, which are family-first.",
+		lines: [
+			"var(--itx-bg-interactive)",
+			"var(--itx-border-subtle)",
+			"var(--itx-bg-info-subtle)",
+			"var(--itx-fg-danger)",
+			"var(--itx-border-default)",
+			"var(--itx-fg-muted)",
+		],
+	},
+];
+
 @Component({
 	selector: "color-spike-page",
 	standalone: true,
@@ -150,6 +227,13 @@ export class ColorSpikePage {
 	protected readonly accents = ACCENTS;
 	protected readonly formatRatio = formatRatio;
 	protected readonly candidates = CANDIDATES;
+	protected readonly schemes = SCHEMES;
+	protected readonly sampleLhs = SAMPLE_LHS;
+
+	/** The declaration as it would be written, padded so the values line up. */
+	protected declaration(scheme: Scheme, i: number): string {
+		return `${SAMPLE_LHS[i]}:`.padEnd(32) + " " + scheme.lines[i] + ";";
+	}
 
 	/** Which arm the candidate ladders paint. Independent of the page theme. */
 	protected readonly candidateArm = signal<"dark" | "light">("dark");
