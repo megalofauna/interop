@@ -315,6 +315,54 @@ const VOCABULARY: readonly RoleGroup[] = [
 	},
 ];
 
+/*
+ * The one grammar mismatch left in the vocabulary.
+ *
+ * Text expresses its loud end by absence. Background expresses it with a word.
+ * Same idea, two grammars — which is what invites a wrong guess: someone who
+ * has learned the text scale reaches for background-danger-subtler, or writes
+ * role-text-bold expecting emphasis. Neither exists.
+ */
+interface Grammar {
+	readonly name: string;
+	readonly textLoud: string;
+	readonly bgLoud: string;
+	readonly bgQuiet: string;
+	readonly label: string;
+	readonly matches: boolean;
+	readonly note: string;
+}
+
+const GRAMMARS: readonly Grammar[] = [
+	{
+		name: "Today",
+		textLoud: "--itx-role-text",
+		bgLoud: "--itx-role-background-danger-bold",
+		bgQuiet: "--itx-role-background-danger-subtle",
+		label: "--itx-role-text-on-bold",
+		matches: false,
+		note: "Text marks only its quiet end; background marks both. bold also collides with font-weight in conversation, and with nothing else in the system.",
+	},
+	{
+		name: "A — unmark the solid",
+		textLoud: "--itx-role-text",
+		bgLoud: "--itx-role-background-danger",
+		bgQuiet: "--itx-role-background-danger-subtle",
+		label: "--itx-role-text-inverse",
+		matches: true,
+		note: "One grammar: unmarked is full strength, subtle is the quiet one. Usage agrees — the solid has 38 reads against the wash's 5, so the common case gets the shorter name. Costs a new name for the label, because there is no longer a word to point at.",
+	},
+	{
+		name: "B — plain adjective",
+		textLoud: "--itx-role-text",
+		bgLoud: "--itx-role-background-danger-strong",
+		bgQuiet: "--itx-role-background-danger-subtle",
+		label: "--itx-role-text-on-strong",
+		matches: false,
+		note: "Still two grammars, but a plain adjective invites no comparative the way bold does. Cheapest, and the label keeps pointing at something real.",
+	},
+];
+
 /** Tokens the vocabulary deliberately does NOT contain, and why. */
 const RETIRED: readonly RoleRow[] = [
 	{
@@ -348,6 +396,7 @@ export class ColorSpikePage {
 	protected readonly schemes = SCHEMES;
 	protected readonly vocabulary = VOCABULARY;
 	protected readonly retired = RETIRED;
+	protected readonly grammars = GRAMMARS;
 	protected readonly sampleLhs = SAMPLE_LHS;
 
 	/** The declaration as it would be written, padded so the values line up. */

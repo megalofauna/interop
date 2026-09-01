@@ -126,6 +126,55 @@
 				</div>
 			}
 
+			<h3>One grammar mismatch</h3>
+			<p>
+				Text expresses its loud end by absence. Background expresses it with a
+				word. Same idea, two grammars — which is what invites a wrong guess:
+				someone who has learned the text scale reaches for
+				<code>background-danger-subtler</code>, or writes
+				<code>role-text-bold</code> expecting emphasis. Neither exists.
+			</p>
+
+			@for (g of grammars; track g.name) {
+				<div class="spike-vocab">
+					<h4 class="spike-vocab__slot">
+						{{ g.name }}
+						@if (g.matches) {
+							<span class="spike-cand__chosen">one grammar</span>
+						}
+					</h4>
+					<table class="spike-table">
+						<tbody>
+							<tr>
+								<th scope="row">text, loud end</th>
+								<td colspan="2">
+									<code>{{ g.textLoud }}</code>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">background, loud end</th>
+								<td colspan="2">
+									<code>{{ g.bgLoud }}</code>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">background, quiet end</th>
+								<td colspan="2">
+									<code>{{ g.bgQuiet }}</code>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">label on the loud one</th>
+								<td colspan="2">
+									<code>{{ g.label }}</code>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="spike-scheme__note">{{ g.note }}</p>
+				</div>
+			}
+
 			<h3>Not in it</h3>
 			<p>Two sets of tokens the measurements retired rather than renamed.</p>
 			<table class="spike-table">
