@@ -17,17 +17,19 @@ import {
 	usedValue,
 } from "interop/lib/dev/contrast";
 
-/** One sequence of six. 1 to 3 are the ground, 4 to 6 sit on it. */
-const SURFACES = [1, 2, 3, 4, 5, 6] as const;
+/** Four values, 5% apart. The number IS the depth. */
+const SURFACES = [0, 1, 2, 3] as const;
 
-/** The depth engine indexes the sequence; it never lands on 1, 3 or 6. */
-const DEPTH_MAP: Readonly<Record<number, number>> = { 0: 2, 1: 4, 2: 5 };
+/**
+ * The depths the counter reaches. surface-3 is outside it — the one
+ * --itx-surface-above resolves to at the deepest layer.
+ */
 const LAYERS = [0, 1, 2] as const;
 
 /**
  * What a component can paint under text: the bare surface, or one of the two
  * derived fills. Both fills come from --itx-surface, so they only appear on
- * the surfaces depth assigns.
+ * the surfaces the counter reaches.
  */
 const BACKDROPS = [
 	{ id: "bare", label: "bare" },
@@ -137,7 +139,6 @@ export class ColorPage {
 	protected readonly borderRoles = BORDER_ROLES;
 	protected readonly families = FAMILIES;
 	protected readonly vocabulary = VOCABULARY;
-	protected readonly depthMap = DEPTH_MAP;
 
 	protected readonly scheme = signal<"light" | "dark">("dark");
 	protected readonly formatRatio = formatRatio;
@@ -155,10 +156,14 @@ export class ColorPage {
 		return fg && bg ? contrastRatio(fg, bg) : Number.NaN;
 	}
 
+	/** Whether the counter reaches this surface, or only --itx-surface-above. */
+	protected reachedByDepth(n: number): boolean {
+		return (LAYERS as readonly number[]).includes(n);
+	}
+
 	/** Which backdrops exist on a surface: fills only land where depth does. */
 	protected backdropsFor(n: number): readonly (typeof BACKDROPS)[number][] {
-		const filled = Object.values(DEPTH_MAP).includes(n);
-		return filled ? BACKDROPS : BACKDROPS.slice(0, 1);
+		return this.reachedByDepth(n) ? BACKDROPS : BACKDROPS.slice(0, 1);
 	}
 
 	protected clears(ratio: number, floor: number): boolean {

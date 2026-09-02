@@ -25,60 +25,55 @@
  * colourway or status-palette variant would keep the root's roles and the swap
  * would be visibly correct in the stylesheet and inert on screen.
  *
- * The surfaces are the exception, and tokens/elevation.css explains why: they
- * are declared at the root alone so a consumer can override them. That file
- * holds no colour — it counts depth and indexes these six.
+ * The surfaces are the exception, and the block below explains why: they are
+ * declared at the root alone so a consumer can override them.
+ * tokens/elevation.css holds no colour — it counts depth and indexes these
+ * four.
  */
 
 /*
  * ── Elevation: the neutral substrate ─────────────────────────────────────
  *
- * One sequence of six, not two named bands. The banding is a spacing property
- * rather than a naming layer: 1 to 3 are the ground, 3% apart, and 4 to 6 sit
- * on it, 5% apart. Spacing tracks how often two members sit side by side —
- * ground levels rarely do and only need to not read as flat, layers sometimes
- * do.
+ * Four values, 5% apart, and the number IS the depth. tokens/elevation.css
+ * indexes them: layer 0 is surface-0, layer 1 is surface-1, layer 2 is
+ * surface-2, and surface-3 is what --itx-surface-above resolves to at the
+ * deepest layer.
  *
- * The page is surface-2, so the ground carries an indent and an outdent that
- * cost no depth. tokens/elevation.css indexes the sequence from --itx-layer;
- * 1 and 3 it never reaches, and a component that wants page-level texture
- * reads them directly.
+ * There is one page and it is layer 0. Nothing sits below it.
+ *
+ * Four is what the text tiers can carry, and it is measured rather than
+ * chosen. A control fill sits 0.05 out from the surface it lands on, so the
+ * deepest painted background is surface-2 plus a fill — which is surface-3
+ * exactly. One more value at this spacing would be 0.41 in dark, and at 0.10
+ * out from the surface three of the four tiers stop clearing.
  *
  * Declared at the root ONLY, which is the opposite of the rule the roles
  * follow, and deliberately. Repeating them on [itx-layer] would recompose the
  * tint at each layer — but a declaration beats inheritance, so every layer
- * would also stomp whatever a consumer set above it, and the six values would
+ * would also stomp whatever a consumer set above it, and the four values would
  * stop being overridable at all. Overriding is worth more than retinting
  * mid-tree, and it costs nothing here: retinting a subtree is redeclaring
- * these six on it, the same act as retuning the ramp.
+ * these four on it, the same act as retuning the ramp.
  *
  * Both are ordinary CSS and need no dials. --itx-tint-* is the shorthand that
- * keeps chroma and hue in one place across all six.
+ * keeps chroma and hue in one place across all four.
  */
 :where([interop-root]) {
-	--itx-surface-1: light-dark(
-		oklch(0.99 var(--itx-tint-light)),
-		oklch(0.18 var(--itx-tint-dark))
-	);
-	--itx-surface-2: light-dark(
+	--itx-surface-0: light-dark(
 		oklch(0.96 var(--itx-tint-light)),
 		oklch(0.21 var(--itx-tint-dark))
 	);
+	--itx-surface-1: light-dark(
+		oklch(0.91 var(--itx-tint-light)),
+		oklch(0.26 var(--itx-tint-dark))
+	);
+	--itx-surface-2: light-dark(
+		oklch(0.86 var(--itx-tint-light)),
+		oklch(0.31 var(--itx-tint-dark))
+	);
 	--itx-surface-3: light-dark(
-		oklch(0.93 var(--itx-tint-light)),
-		oklch(0.24 var(--itx-tint-dark))
-	);
-	--itx-surface-4: light-dark(
-		oklch(0.905 var(--itx-tint-light)),
-		oklch(0.265 var(--itx-tint-dark))
-	);
-	--itx-surface-5: light-dark(
-		oklch(0.855 var(--itx-tint-light)),
-		oklch(0.315 var(--itx-tint-dark))
-	);
-	--itx-surface-6: light-dark(
-		oklch(0.805 var(--itx-tint-light)),
-		oklch(0.365 var(--itx-tint-dark))
+		oklch(0.81 var(--itx-tint-light)),
+		oklch(0.36 var(--itx-tint-dark))
 	);
 }
 

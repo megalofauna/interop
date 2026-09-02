@@ -57,6 +57,6 @@
 :where([interop-root] itx-inline-code .itx-ic__btn) {
 	--itx-button-background: transparent;
 	--itx-button-border-radius: var(--itx-radius-full);
-	--itx-button-background-hover: var(--itx-surface-below);
+	--itx-button-background-hover: var(--itx-surface-above);
 	--itx-button-foreground-hover: var(--itx-role-text);
 }

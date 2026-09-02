@@ -36,22 +36,20 @@ const LADDER = join(
 );
 
 const FAMILIES = ["colorway", "danger", "info", "success", "warning"];
-const SURFACES = [1, 2, 3, 4, 5, 6];
+const SURFACES = [0, 1, 2, 3];
 
 /**
  * Half a step out is the interactive fill; a full step is a control's plane.
  *
- * Both derive from --itx-surface, which tokens/elevation.css only ever sets to
- * 2, 4 or 5 — so those are the only surfaces a fill can land on. Every surface
- * is still measured BARE, including the three the engine never reaches: a
- * component that wants page-level texture reads 1 or 3 directly, and 6 is what
- * --itx-surface-above resolves to at the deepest layer.
+ * Both derive from --itx-surface, and the counter only reaches layer 2 — so a
+ * fill can only land on surfaces 0, 1 and 2. surface-3 is what
+ * --itx-surface-above resolves to at the deepest layer, so it is measured bare.
  *
- * The deepest painted background the system can produce is therefore surface-5
- * plus a control fill, which lands exactly on surface-6's value — inside the
+ * The deepest painted background the system can produce is therefore surface-2
+ * plus a control fill, which lands exactly on surface-3's value — inside the
  * worst case the text tiers were solved against.
  */
-const FILLED_SURFACES = new Set([2, 4, 5]);
+const FILLED_SURFACES = new Set([0, 1, 2]);
 const FILLS = [
 	{ suffix: "", delta: 0 },
 	{ suffix: " + interactive fill", delta: 0.025 },

@@ -4,10 +4,11 @@
  *
  * The colour system has exactly one relative axis left, and one absolute one:
  *
- *   ELEVATION  --itx-surface-1 … -6, and the pointers into them —
- *              --itx-surface / -above / -above-2 / -below
+ *   ELEVATION  --itx-surface-0 … -3, and the pointers into them —
+ *              --itx-surface and --itx-surface-above
  *              The neutral SUBSTRATE a component stands on. Backgrounds only.
- *              The pointers MOVE: every layer boundary redeclares them.
+ *              The number IS the depth, and the pointers MOVE: every layer
+ *              boundary redeclares them.
  *
  *   THE ROLES  --itx-role-*
  *              Everything drawn ON TOP, named by the job it does. Absolute:
@@ -61,7 +62,7 @@ const GENERATED =
 /** Specs deliberately exercise both axes, including the negative cases. */
 const SPECS = /\.spec\.ts$/;
 
-const ELEVATION = /--itx-surface(-above(-2)?|-below|-[1-6])?(?![-a-z0-9])/;
+const ELEVATION = /--itx-surface(-above|-[0-3])?(?![-a-z0-9])/;
 
 /**
  * A raw palette step. The ladder declares these; nothing the library ships

@@ -80,13 +80,7 @@
  *              anything — it is the quote's only signal, and at 2px it is an
  *              emphasis edge, which is rank 3 (3:1).
  *
- *   table head --itx-surface-below -> --itx-surface-above
- *              Still elevation, which is correct for a band that rows sit on,
- *              but `below` is DARKER than the page in both schemes: a header
- *              sunk beneath its own table. The table component reached the
- *              same answer independently (--itx-table-header-bg).
- *
- * Left alone deliberately: `--itx-content-pre-background: var(--itx-surface-below)`.
+ * Left alone deliberately: `--itx-content-pre-background: var(--itx-surface-above)`.
  * A sunken well is a real elevation move and a fenced block is the one place
  * in prose that wants one. And the cell rule stays rank 2 — a cell rule is a
  * divider, verbatim. The table COMPONENT uses rank 3 for its own, a documented
@@ -156,7 +150,7 @@
 	--itx-content-code-border-width: var(--itx-border-width-hairline);
 	--itx-content-code-border-color: var(--itx-role-divider);
 	--itx-content-pre-padding: var(--itx-spacing-4);
-	--itx-content-pre-background: var(--itx-surface-below);
+	--itx-content-pre-background: var(--itx-surface-above);
 
 	/* ── Links ──────────────────────────────────────────────────────────── */
 	--itx-content-link-color: var(--itx-role-text-colorway);

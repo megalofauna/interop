@@ -119,8 +119,8 @@
 	   neutral-10 / neutral-1 is a light-dark() pair on both sides, so the disc
 	   and the X invert together — dark disc with a near-white X in light mode,
 	   light disc with a near-black X in dark. */
-	--itx-cmdp-clear-background: var(--itx-surface-below);
-	--itx-cmdp-clear-background-hover: var(--itx-surface-below);
+	--itx-cmdp-clear-background: var(--itx-surface-above);
+	--itx-cmdp-clear-background-hover: var(--itx-surface-above);
 	--itx-cmdp-clear-color: var(--itx-role-text);
 
 	/* list */

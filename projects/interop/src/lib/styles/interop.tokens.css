@@ -244,7 +244,7 @@
 	/* --itx-cmdp-background: var(--itx-surface-above); */
 	/* --itx-cmdp-border-color: var(--itx-role-divider); */
 	/* --itx-cmdp-border-width: var(--itx-border-width-hairline); */
-	/* --itx-cmdp-clear-background: var(--itx-surface-below); */
+	/* --itx-cmdp-clear-background: var(--itx-surface-above); */
 	/* --itx-cmdp-clear-background-hover: ; */ /* inherits --itx-cmdp-clear-background */
 	/* --itx-cmdp-clear-color: var(--itx-role-text); */
 	/* --itx-cmdp-clear-focus-color: ; */ /* falls through to --itx-focus-color — set globally in interop.globals.css */
@@ -334,7 +334,7 @@
 	/* --itx-content-mark-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-content-mark-color: var(--itx-role-text-colorway); */
 	/* --itx-content-measure: var(--itx-measure); */
-	/* --itx-content-pre-background: var(--itx-surface-below); */
+	/* --itx-content-pre-background: var(--itx-surface-above); */
 	/* --itx-content-pre-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-content-pre-padding: var(--itx-spacing-4); */
 	/* --itx-content-quote-border-color: var(--itx-role-edge); */
@@ -510,7 +510,7 @@
  */
 [interop-root] {
 	/* --itx-indicator-anchor-name: --itx-indicator-anchor; */ /* (fallback) */
-	/* --itx-indicator-background-color: light-dark( var(--itx-surface-4), var(--itx-role-text) ); */
+	/* --itx-indicator-background-color: light-dark( var(--itx-surface-1), var(--itx-role-text) ); */
 	/* --itx-indicator-background-image: none; */
 	/* --itx-indicator-border-color: var(--itx-role-text); */
 	/* --itx-indicator-border-radius: var(--itx-inner-radius, var(--itx-radius)); */ /* (fallback) */
@@ -671,7 +671,7 @@
 	/* --itx-resizable-max-width: 100%; */
 	/* --itx-resizable-min-height: 4rem; */
 	/* --itx-resizable-min-width: 8rem; */
-	/* --itx-resizable-readout-background-color: var(--itx-surface-below); */
+	/* --itx-resizable-readout-background-color: var(--itx-surface-above); */
 	/* --itx-resizable-readout-border-radius: var(--itx-radius-2); */
 	/* --itx-resizable-readout-font-family: var(--itx-font-family-mono); */
 	/* --itx-resizable-readout-font-size: var(--itx-fs-xs); */
@@ -809,7 +809,7 @@
 	/* --itx-step-focus-width: ; */ /* falls through to --itx-focus-width — set globally in interop.globals.css */
 	/* --itx-step-indicator-background: var(--itx-role-background-control); */
 	/* --itx-step-indicator-background-active: ; */ /* inherits --itx-step-indicator-background */
-	/* --itx-step-indicator-background-active-reviewed: var(--itx-surface-below); */
+	/* --itx-step-indicator-background-active-reviewed: var(--itx-surface-above); */
 	/* --itx-step-indicator-background-completed: var(--itx-role-background-control); */
 	/* --itx-step-indicator-background-error: var(--itx-role-background-danger); */
 	/* --itx-step-indicator-background-skipped: var(--itx-surface); */
@@ -1039,7 +1039,7 @@
  * values:     themes/protocol/components/tooltip.css
  */
 [interop-root] {
-	/* --itx-tooltip-background: light-dark( var(--itx-role-text-quiet), var(--itx-surface-2) ); */
+	/* --itx-tooltip-background: light-dark( var(--itx-role-text-quiet), var(--itx-surface-0) ); */
 	/* --itx-tooltip-border-radius: ; */ /* falls through to --itx-radius — set globally in interop.globals.css */
 	/* --itx-tooltip-enter-duration: ; */ /* falls through to --itx-duration-fast — set globally in interop.globals.css */
 	/* --itx-tooltip-enter-easing: ; */ /* falls through to --itx-easing-decelerate — set globally in interop.globals.css */
@@ -1138,7 +1138,7 @@
  */
 [interop-root] {
 	/* --itx-control-accent: var(--itx-role-text); */
-	/* --itx-control-bg: light-dark( var(--itx-surface-below), var(--itx-surface-below) ); */
+	/* --itx-control-bg: light-dark( var(--itx-surface-above), var(--itx-surface-above) ); */
 	/* --itx-control-border-color: var(--itx-role-edge); */
 	/* --itx-control-border-width: ; */ /* falls through to --itx-border-width-thick — set globally in interop.globals.css */
 	/* --itx-control-check-weight: 3px; */

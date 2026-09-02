@@ -32,7 +32,7 @@
 	 */
 	--itx-tooltip-background: light-dark(
 		var(--itx-role-text-quiet),
-		var(--itx-surface-2)
+		var(--itx-surface-0)
 	);
 	--itx-tooltip-foreground: var(--itx-role-text-inverse);
 	--itx-tooltip-padding: 0.375rem 0.625rem;

@@ -66,7 +66,7 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 		</hgroup>
 		<!-- itx-layer, not just a raised colour: painting one step up with a token
 		     leaves everything inside still resolving against the page, so a field
-		     asking for --itx-surface-below would land on the frame's own colour.
+		     asking for --itx-surface would land on the frame's own colour.
 		     Declaring the layer is what makes the contents relative to the frame. -->
 		<div class="demo-example__preview" itx-layer>
 			<ng-content />

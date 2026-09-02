@@ -29,7 +29,7 @@ selection appears below; the full surface and its defaults are catalogued in the
 ```css
 :where([interop-button]) {
   /* Colour — each also takes -hover and -active variants */
-  --itx-button-background: var(--itx-surface-below);
+  --itx-button-background: var(--itx-surface-above);
   --itx-button-foreground: var(--itx-role-text);
   --itx-button-border-color: transparent;
 

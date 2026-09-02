@@ -60,8 +60,8 @@
 	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-control-border-color: var(--itx-role-edge);
 	--itx-control-bg: light-dark(
-		var(--itx-surface-below),
-		var(--itx-surface-below)
+		var(--itx-surface-above),
+		var(--itx-surface-above)
 	);
 	--itx-control-accent: var(--itx-role-text);
 	/* The indicator is drawn ON --itx-control-accent, so the far end of the

@@ -47,10 +47,10 @@ describe("Layer engine", () => {
 	 * Surfaces are authored values now, so there is no formula left to
 	 * reimplement — reading one back would be an echo. What the engine can
 	 * still get wrong is the MAP: which surface each depth indexes. The map is
-	 * written here as the contract and the lightness is read from the theme, so
-	 * a change to either side shows up.
+	 * the identity, written here as the contract rather than assumed, and the
+	 * lightness is read from the theme — so a change to either side shows up.
 	 */
-	const SURFACE_AT = [2, 4, 5] as const;
+	const SURFACE_AT = [0, 1, 2] as const;
 
 	const surfaceL = (scheme: "light" | "dark", layer: number): number => {
 		const index = SURFACE_AT[Math.min(layer, SURFACE_AT.length - 1)];
@@ -279,13 +279,13 @@ describe("Layer engine", () => {
 			// ancestor reaches every layer beneath it — and only the layers that
 			// index that surface.
 			const branch = el(root);
-			branch.style.setProperty("--itx-surface-4", "rgb(9, 8, 7)");
+			branch.style.setProperty("--itx-surface-1", "rgb(9, 8, 7)");
 
-			// Layer 1 indexes surface-4.
+			// Layer 1 indexes surface-1.
 			expect(surfaceOf(el(branch, { "itx-layer": "" }))).toEqual(
 				"rgb(9, 8, 7)",
 			);
-			// Layer 2 indexes surface-5 and is untouched.
+			// Layer 2 indexes surface-2 and is untouched.
 			const two = el(el(branch, { "itx-layer": "" }), { "itx-layer": "" });
 			expect(surfaceOf(two)).not.toEqual("rgb(9, 8, 7)");
 			expect(surfaceOf(two)).toEqual(

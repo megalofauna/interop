@@ -47,7 +47,7 @@ const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const THEMES = join(REPO, "projects/interop/src/lib/styles/themes");
 
 /** A value computed from the boundary's surface, which only composes there. */
-const SURFACE_DERIVED = /var\(\s*--itx-surface(-above(-2)?|-below)?\s*\)/;
+const SURFACE_DERIVED = /var\(\s*--itx-surface(-above)?\s*\)/;
 
 /** Selectors that re-declare at every elevation boundary. */
 const PER_LAYER = /\[itx-layer\]|\[itx-sink\]/;

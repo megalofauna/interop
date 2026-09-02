@@ -43,7 +43,7 @@
 		var(--itx-radius-2) 0;
 
 	/* ── Readout badge (Tier 1, with [showDimensions]) ─────────────────── */
-	--itx-resizable-readout-background-color: var(--itx-surface-below);
+	--itx-resizable-readout-background-color: var(--itx-surface-above);
 	--itx-resizable-readout-foreground: var(--itx-role-text);
 	--itx-resizable-readout-padding: var(--itx-spacing-1) var(--itx-spacing-2);
 	--itx-resizable-readout-border-radius: var(--itx-radius-2);

@@ -32,7 +32,7 @@
 	 * nothing. Preserved exactly as it rendered rather than fixed in passing.
 	 */
 	--itx-indicator-background-color: light-dark(
-		var(--itx-surface-4),
+		var(--itx-surface-1),
 		var(--itx-role-text)
 	);
 

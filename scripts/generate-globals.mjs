@@ -516,7 +516,7 @@ function build() {
 
 	out.push(`\n/* ── Do not set these ${"─".repeat(50)} */
 /*
- * --itx-surface, --itx-surface-above, --itx-surface-above-2, --itx-surface-below
+ * --itx-surface, --itx-surface-above
  *
  * They are a SOURCE, never an override point. The elevation engine re-declares
  * every one of them at each layer boundary, so a value you set here is stomped

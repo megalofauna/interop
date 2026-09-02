@@ -6,22 +6,29 @@ does.
 
 ## The two things
 
-**The substrate** is six authored values. The engine indexes them from depth.
+**The substrate** is four authored values, 5% apart. The number IS the depth.
 
 ```
---itx-surface-1 … -6            values, one sequence
---itx-surface  -above  -above-2  -below      pointers, written from depth
+--itx-surface-0 … -3            values
+--itx-surface  --itx-surface-above          pointers, written from depth
 attributes: itx-layer · itx-sink · itx-layer="N"
 ```
 
-Depth maps 0 → surface-2, 1 → surface-4, 2 → surface-5. `-above` and `-below`
-name the surface the next layer would paint, and they are the same value: a
-raise and a recess at the same depth are the same colour, and the shadow is
-what separates them.
+Layer N is `surface-N`. `--itx-surface-above` is `surface-(N+1)`, the one the
+next layer would paint, clamped at the deepest value. The counter stops at
+layer 2, so `surface-3` is only reached that way.
 
-1 to 3 are the ground, 3% apart; 4 to 6 sit on it, 5% apart. Spacing tracks how
-often two members sit side by side. Depth never lands on 1, 3 or 6 — a
-component that wants page-level texture reads those directly.
+**There is one page and it is layer 0.** Nothing sits below it, which is why
+there is no `-below`: a raise and a recess at the same depth are the same
+colour — light from above separates them, not the substrate — so the token
+named a direction its value did not have. A recess declares `itx-sink` and
+reads `--itx-surface`.
+
+**Four is what the text tiers can carry, and it is measured.** A control fill
+sits 0.05 out from its surface, so the deepest painted background is
+`surface-2` plus a fill, which lands on `surface-3` exactly. One more value at
+this spacing would be 0.41 in dark, and at 0.10 out from the surface three of
+the four tiers stop clearing.
 
 **The roles** are everything drawn on top, named by job.
 
@@ -112,7 +119,7 @@ inherits as a finished colour, so a descendant carrying
 correctly in the stylesheet and does nothing on screen. `accents.spec.ts`
 asserts both directions.
 
-The six surfaces are the deliberate exception: they are declared at the root
+The four surfaces are the deliberate exception: they are declared at the root
 alone. Repeating them per layer would leave the tint unresolved until the
 layer, so a mid-tree retint would reach it — but a declaration beats
 inheritance, so every layer would also stomp whatever a consumer set above it.
@@ -147,7 +154,7 @@ is what makes that survivable.
 
 Both are hand-authored. Edit them directly.
 
-- `styles/themes/protocol/ladder.css` — six surfaces, the roles, the hues, the
+- `styles/themes/protocol/ladder.css` — four surfaces, the roles, the hues, the
   tint packs and the chroma caps.
 - `styles/tokens/elevation.css` — the counter and the depth-to-surface lookup.
   It holds no colour.
@@ -165,8 +172,8 @@ manifest.
 | `check-contrast-render.mjs` | the ladder's literals, resolved by substitution | every value clears its floor, 2228 pairings |
 | `check-contrast-css.mjs` | the real cascade in Chrome, at every layer | each role clears its floor as a consumer receives it, 204 pairings |
 
-Only the first reaches surfaces 1, 3 and 6, which depth never lands on, and
-only it can verify a value before anything wires it up. Only the second sees
+Only the first reaches `surface-3`, which depth never lands on, and only it can
+verify a value before anything wires it up. Only the second sees
 whether a component's token points where it claims. Both are needed.
 
 A translucent foreground is composited over its real background in both. Over
@@ -202,7 +209,7 @@ their chroma and hue.
 
 ```css
 --itx-tint-dark: 0.012 30;
---itx-surface-2: light-dark(
+--itx-surface-0: light-dark(
 	oklch(0.97 var(--itx-tint-light)),
 	oklch(0.2 var(--itx-tint-dark))
 );
@@ -210,7 +217,7 @@ their chroma and hue.
 
 **`--itx-surface` is a source, not an override point.** The engine rewrites it
 at every layer boundary, so a value set on an ancestor is replaced one layer
-down — and so are the two fills derived from it. `elevation.spec.ts` asserts
+down — and so is `--itx-surface-above` and the two fills derived from it. `elevation.spec.ts` asserts
 this as a negative case.
 
 ## Reference

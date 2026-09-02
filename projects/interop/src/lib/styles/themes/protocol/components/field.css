@@ -115,9 +115,8 @@
 :where([interop-root] interop-field-control) {
 	/*
 	 * Rest fill. Carbon's $field-01 is a grey slab on a white page — the field
-	 * is RECESSED, and now so is ours. Reading --itx-surface rather than
-	 * --itx-surface-below is the point: the sink already happened, so this is
-	 * the control's OWN surface.
+	 * is RECESSED, and now so is ours. The element carries `itx-sink`, so the
+	 * sink already happened and --itx-surface IS the control's own surface.
 	 */
 	--itx-field-background: var(--itx-surface);
 

@@ -41,7 +41,7 @@
  * `plain` is the opposite — it is a log panel sitting in the page, so every
  * value is a rank or a surface:
  *
- *   background     --itx-surface-below   elevation: a recessed well
+ *   background     --itx-surface-above   elevation: a well one step out
  *   text           --itx-contrast-6      maximum, for monospace at 13px
  *   prompt, delta  --itx-contrast-4      secondary text (4.5:1)
  *   scrollbar      --itx-contrast-3      was rank 2. A thumb is a control, not
@@ -50,21 +50,14 @@
  *                                        UI component's own boundary. Rank 3 is
  *                                        "border, emphasis edge", verbatim.
  *
- * Known limit, and it changed sign: the plain well paints --itx-surface-below
- * without declaring `itx-sink`, so the contrast ranks above are solved against
- * the PAGE rather than against the well they land on.
+ * Known limit: the plain well paints one step out WITHOUT declaring
+ * `itx-sink`, so the values above are chosen against the page rather than
+ * against the well they land on. Each is taken one tier further out to cover
+ * the gap.
  *
- * That used to cost one step of headroom in the safe direction — below meant a
- * step toward the page's opposite, so a rank solved on the page had MORE
- * contrast on the well, not less. Under one direction of travel "below" is a
- * step AWAY from the page like everything else, and the same gap now runs the
- * wrong way: the prompt measured 4.35:1 against a 4.5 floor.
- *
- * Fixed by taking the rank one step further out rather than by declaring the
- * layer, which would still cost the API the original note describes — the
- * tokens would move to the inner scroll element and shadow a consumer's own
- * --itx-term-color set on the host. Rank 5 on the well measures what rank 4 was
- * meant to measure on the page.
+ * Declaring the layer would fix it properly and cost the API — the tokens
+ * would move to the inner scroll element and shadow a consumer's own
+ * --itx-term-color set on the host.
  */
 
 :where([interop-root] itx-terminal) {
@@ -120,7 +113,7 @@
 /* ── plain variant (minimal, no-frills log) ──────────────────────────────── */
 
 :where([interop-root] itx-terminal.itx-term--plain) {
-	--itx-term-background: var(--itx-surface-below);
+	--itx-term-background: var(--itx-surface-above);
 	--itx-term-color: var(--itx-role-text);
 	--itx-term-glow: none;
 	--itx-term-prompt-color: var(--itx-role-text-quiet);

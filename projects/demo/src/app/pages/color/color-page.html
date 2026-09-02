@@ -7,9 +7,8 @@
 
 	<demo-section id="surfaces" heading="Surfaces">
 		<p description class="demo-section__lede">
-			One sequence of six. 1 to 3 are the ground, 3% apart; 4 to 6 sit on it, 5%
-			apart. Spacing tracks how often two members sit side by side — ground
-			levels rarely do and only need to not read as flat.
+			Four values, 5% apart, and the number is the depth. There is one page and
+			it is layer 0; nothing sits below it.
 		</p>
 
 		<ol class="color-surfaces" interop-typography-isolate>
@@ -20,10 +19,8 @@
 				>
 					<span class="color-surfaces__label">
 						surface-{{ n }}
-						@for (layer of layers; track layer) {
-							@if (depthMap[layer] === n) {
-								<span class="color-surfaces__depth">layer {{ layer }}</span>
-							}
+						@if (reachedByDepth(n)) {
+							<span class="color-surfaces__depth">layer {{ n }}</span>
 						}
 					</span>
 				</li>
@@ -32,19 +29,19 @@
 
 		<p>
 			<code>--itx-surface</code> is the background a component stands on, and
-			the engine writes it from depth: layer 0 is <code>surface-2</code>, layer
-			1 is <code>surface-4</code>, layer 2 is <code>surface-5</code>.
-			<code>--itx-surface-above</code> and <code>--itx-surface-below</code> name
-			the one the next layer would paint; they are the same value, because a
-			raise and a recess at the same depth are the same colour and the shadow is
-			what separates them.
+			the engine writes it from depth — layer N is <code>surface-N</code>.
+			<code>--itx-surface-above</code> names the one the next layer would paint.
+			The counter stops at layer 2, so <code>surface-3</code> is only reached
+			that way.
 		</p>
 
 		<p>
-			Depth never reaches 1, 3 or 6. A component that wants page-level texture
-			reads them directly. Add <code>itx-layer</code> to nest one step further
-			from the page; nesting compounds. <code>itx-sink</code> recesses;
-			<code>itx-layer="2"</code> pins a depth wherever the element sits.
+			There is no <code>-below</code>, because a raise and a recess at the same
+			depth are the same colour: light from above separates them, not the
+			substrate. A recess declares <code>itx-sink</code> and reads
+			<code>--itx-surface</code>. Add <code>itx-layer</code> to nest one step
+			further from the page; nesting compounds. <code>itx-layer="2"</code> pins
+			a depth wherever the element sits.
 		</p>
 
 		<div class="color-nest" itx-layer="0">
@@ -86,8 +83,8 @@
 		}
 
 		<p>
-			Two things sit outside it. <code>--itx-surface-1</code> through
-			<code>-6</code> are the substrate, and they are values rather than roles.
+			Two things sit outside it. <code>--itx-surface-0</code> through
+			<code>-3</code> are the substrate, and they are values rather than roles.
 			<code>--itx-accent-chroma</code> caps how saturated a family may be — past
 			0.18 a hue needs a per-family correction, and the whole point of a family
 			being one number is that it does not.
@@ -328,7 +325,7 @@
 			are ordinary CSS.
 		</p>
 		<pre class="color-code"><code>--itx-tint-dark: 0.012 30;
---itx-surface-2: light-dark(oklch(0.97 var(--itx-tint-light)), oklch(0.2 var(--itx-tint-dark)));</code></pre>
+--itx-surface-0: light-dark(oklch(0.97 var(--itx-tint-light)), oklch(0.2 var(--itx-tint-dark)));</code></pre>
 
 		<h3>What gets overwritten</h3>
 		<p>
@@ -424,11 +421,11 @@
 			<div [attr.itx-layer]="layer">
 				<span
 					[style.background-color]="'var(--itx-role-background-interactive)'"
-					[attr.data-probe]="'bg-' + depthMap[layer] + '-interactive'"
+					[attr.data-probe]="'bg-' + layer + '-interactive'"
 				></span>
 				<span
 					[style.background-color]="'var(--itx-role-background-control)'"
-					[attr.data-probe]="'bg-' + depthMap[layer] + '-control'"
+					[attr.data-probe]="'bg-' + layer + '-control'"
 				></span>
 			</div>
 		}
