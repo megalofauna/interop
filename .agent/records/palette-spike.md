@@ -1,3 +1,9 @@
+> **Superseded 2026-09-01.** The 14-step ramps this record argues for were
+> deleted: the system is six surface values, four text tiers and one hue per
+> family. Kept because the reasoning is the reasoning — if anyone proposes a
+> stepped palette again, this is what was measured last time. See
+> `.agent/color.md` for what ships.
+
 # Palette spike — findings
 
 Branch `itx-53-palette-spike`. Throwaway; the code is evidence, not a deliverable.

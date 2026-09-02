@@ -107,7 +107,7 @@ No per-component `styleUrl` — all rules are globally imported. Components have
 
 ```css
 .my-context {
-  --itx-chip-background: var(--itx-neutral-3);
+  --itx-chip-background: var(--itx-role-background-colorway);
   --itx-chip-radius: var(--itx-radius-md);
 }
 ```
@@ -131,7 +131,7 @@ Carbon's fourth variant, *operational* (a tag that acts as a button opening a po
 The three shapes differ in paint:
 
 - **presentational / dismissible** — solid fill, **no border at all**. Dropping the border is most of what makes the shape read as Carbon.
-- **selectable** — the one outlined variant: transparent fill with a hairline border, flipping to an inverse fill (`--itx-neutral-12` on `--itx-neutral-1`) when checked. Neutral by design; set `--itx-chip-background-selected` / `--itx-chip-color-selected` to brand it.
+- **selectable** — the one outlined variant: transparent fill with a hairline border, flipping to a filled state (`--itx-role-text` on `--itx-role-background-interactive`) when checked. Neutral by design; set `--itx-chip-background-selected` / `--itx-chip-color-selected` to brand it.
 
 Focus rings keep `--itx-colorway` throughout — focus is the one place brand survives an otherwise neutral component.
 
@@ -262,11 +262,11 @@ Carbon caps a tag at 208px (13rem, exactly `--itx-spacing-52`) and ellipsises th
 | `--itx-chip-font-size` | `0.75rem` | Carbon `$label-01`; fixed, not fluid |
 | `--itx-chip-font-weight` | `400` | Font weight |
 | `--itx-chip-line-height` | `1.3333` | 16/12 — Carbon `$label-01` |
-| `--itx-chip-background` | `var(--itx-colorway-6)` | Fill (presentational + dismissible) |
-| `--itx-chip-color` | `var(--itx-colorway-12)` | Text color |
+| `--itx-chip-background` | `var(--itx-role-background-colorway)` | Fill (presentational + dismissible) |
+| `--itx-chip-color` | `var(--itx-role-text-inverse)` | Text color |
 | `--itx-chip-border` | `none` | Border — Carbon's filled tags have none |
-| `--itx-chip-background-hover` | `var(--itx-neutral-5)` | Hover background |
-| `--itx-chip-color-hover` | `var(--itx-neutral-12)` | Hover text color |
+| `--itx-chip-background-hover` | `var(--itx-role-background-control)` | Hover background |
+| `--itx-chip-color-hover` | `var(--itx-role-text)` | Hover text color |
 | `--itx-chip-disabled-opacity` | `0.4` | Disabled opacity |
 | `--itx-chip-transition-duration` | `120ms` | Transition duration |
 | `--itx-chip-transition-timing-function` | `ease` | Transition timing |
@@ -278,13 +278,13 @@ The `--itx-chip-selectable-*` family is read on `[interop-root]` and mapped onto
 
 | Token | Default | Description |
 |---|---|---|
-| `--itx-chip-selectable-background` | `var(--itx-neutral-5)` | Rest fill |
-| `--itx-chip-selectable-color` | `var(--itx-neutral-12)` | Rest text color |
+| `--itx-chip-selectable-background` | `var(--itx-role-background-interactive)` | Rest fill |
+| `--itx-chip-selectable-color` | `var(--itx-role-text)` | Rest text color |
 | `--itx-chip-selectable-border` | `2px solid transparent` | Reserves the border box so checking doesn't shift layout |
-| `--itx-chip-selectable-background-hover` | `var(--itx-neutral-6)` | Hover fill |
-| `--itx-chip-selectable-color-hover` | `var(--itx-neutral-12)` | Hover text color |
-| `--itx-chip-background-selected` | `var(--itx-colorway-6)` | Checked background |
-| `--itx-chip-color-selected` | `var(--itx-colorway-12)` | Checked text color |
+| `--itx-chip-selectable-background-hover` | `var(--itx-role-background-control)` | Hover fill |
+| `--itx-chip-selectable-color-hover` | `var(--itx-role-text)` | Hover text color |
+| `--itx-chip-background-selected` | `var(--itx-role-background-colorway)` | Checked background |
+| `--itx-chip-color-selected` | `var(--itx-role-text-inverse)` | Checked text color |
 | `--itx-chip-border-selected` | `2px solid var(--itx-colorway-10)` | Checked border |
 | `--itx-chip-font-weight-selected` | `400` | Checked font weight |
 | `--itx-chip-outline-color` | `var(--itx-colorway)` | Focus ring color |
@@ -298,8 +298,8 @@ Set on `[interop-root]` so both dismissible contexts read them. The button's box
 
 | Token | Default | Description |
 |---|---|---|
-| `--itx-chip-remove-background` | `var(--itx-colorway-5)` | Rest background |
-| `--itx-chip-remove-background-hover` | `var(--itx-neutral-5)` | Hover background |
+| `--itx-chip-remove-background` | `transparent` | Rest background |
+| `--itx-chip-remove-background-hover` | `var(--itx-role-background-interactive)` | Hover background |
 | `--itx-chip-remove-border` | `none` | Border |
 | `--itx-chip-remove-radius` | `var(--itx-chip-radius)` | Tracks the chip's own radius through the size bundle |
 | `--itx-chip-remove-margin` | `0 0 0 var(--itx-spacing-2)` | Separates the button from the label; replaces an internal chip gap |

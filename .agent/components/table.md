@@ -179,10 +179,10 @@ The active scroll wrapper sets `touch-action: pan-x`. Horizontal pans are claime
 
 Values are borrowed from IBM Carbon's Data Table: `body-compact-01` type (14px / 1.2857 / 400), rows ruled by a single 1px hairline with no vertical rules and no fill, and 16px inline cell padding at every density. Two departures are deliberate:
 
-- **Header emphasis is type, not a slab.** Carbon separates head from body with a solid gray-20 band and no rule at all. Protocol keeps the lighter lift (`--itx-table-header-bg: var(--itx-surface-above)`) and carries the emphasis in 600-weight type (`--itx-table-header-font-weight`) — a slab would put a heavy band across a component whose whole borrowed language is "transparent, hairlines only". For Carbon's actual header, set `--itx-table-header-bg: var(--itx-neutral-4)`.
-- **Body text stays full-strength.** `--itx-table-body-color: var(--itx-on-surface)`, not Carbon's muted secondary.
+- **Header emphasis is type, not a slab.** Carbon separates head from body with a solid gray-20 band and no rule at all. Protocol keeps the lighter lift (`--itx-table-header-bg: var(--itx-surface-above)`) and carries the emphasis in 600-weight type (`--itx-table-header-font-weight`) — a slab would put a heavy band across a component whose whole borrowed language is "transparent, hairlines only". For Carbon's actual header, set `--itx-table-header-bg: var(--itx-role-background-control)`.
+- **Body text stays full-strength.** `--itx-table-body-color: var(--itx-role-text)`, not Carbon's muted secondary.
 
-Striping follows Carbon in being an opt-in modifier rather than a default: `--itx-table-stripe-bg` is `transparent` (set it to `var(--itx-neutral-2)` for the Carbon stripe). `--itx-table-header-border-width` is `1px` — one hairline weight everywhere; the old 2px underline was a second, heavier border language competing with the row rules. The foundation's inline fallback is still `2px`, but the theme is what you get.
+Striping follows Carbon in being an opt-in modifier rather than a default: `--itx-table-stripe-bg` is `transparent` (set it to `var(--itx-role-background-interactive)` for the Carbon stripe). `--itx-table-header-border-width` is `1px` — one hairline weight everywhere; the old 2px underline was a second, heavier border language competing with the row rules. The foundation's inline fallback is still `2px`, but the theme is what you get.
 
 `--itx-table-line-height` is declared on the table rather than inherited: `prose.css` leads per text element and never on a container, so a bare `<td>` would otherwise take whatever line-height happened to be in scope — and row height is a function of it.
 

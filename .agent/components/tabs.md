@@ -100,10 +100,10 @@ declined outright. The shape:
 | label padding-inline (density normal) | 16px | `--itx-spacing-4` |
 | label padding-block (`$spacing-03`) | 8px | `--itx-spacing-2` |
 | `$body-compact-01` | 14 / 18 / 400 | `0.875rem` / `1.2857` / `400` |
-| `$text-secondary` (rest label) | `#525252` | `--itx-neutral-9` |
-| `$text-primary` (hover + selected label) | `#161616` | `--itx-neutral-12` |
-| `$tab-underline-color` | 2px `$border-subtle` | 1px `--itx-neutral-7` |
-| `$tab-underline-color-hover` | 2px `$border-strong` | 2px `--itx-neutral-10` |
+| `$text-secondary` (rest label) | `#525252` | `--itx-role-text-quieter` |
+| `$text-primary` (hover + selected label) | `#161616` | `--itx-role-text` |
+| `$tab-underline-color` | 2px `$border-subtle` | 1px `--itx-role-divider` |
+| `$tab-underline-color-hover` | 2px `$border-strong` | 2px `--itx-role-edge` |
 | `$border-interactive` (selected bar) | blue-60 | 2px `--itx-colorway` |
 | radius | none | `--itx-radius-none` |
 
@@ -116,9 +116,9 @@ Deviations from the literal conversion table, both deliberate:
 
 - **1px rest rule, not Carbon's 2px.** Every structural rule in the library is
   a 1px hairline.
-- **`--itx-neutral-7`, not the `$border-subtle` → `--itx-neutral-4` mapping.**
-  Neutral-4 sits ~0.10 luminance from our page surface and reads as invisible
-  — that is round 7's lesson, and what `--itx-border` already gets wrong.
+- **`--itx-role-edge` on hover, not a second divider.** Carbon distinguishes
+  its two rules by step; ours distinguishes them by job, and the hover rule is
+  the one that has to read.
 
 Declined from Carbon, each with a one-value walk-back in the stylesheet's
 header comment: the `contained` flavour, icon-only tabs, disabled paint (no

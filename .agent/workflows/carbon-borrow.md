@@ -78,17 +78,19 @@ Carbon's neutral ramp maps onto ours closely enough for structural work:
 
 | Carbon (white theme) | hex | Interop |
 |---|---|---|
-| `$background` | `#ffffff` | `--itx-neutral-1` |
-| `$layer-01` | `#f4f4f4` | `--itx-neutral-2` |
-| gray-20 (`$tag-background-gray`) | `#e0e0e0` | `--itx-neutral-4` |
-| gray-30 (`$tag-hover-gray`) | `#c6c6c6` | `--itx-neutral-5` |
-| `$border-subtle` | `#e0e0e0` | `--itx-neutral-4` |
-| `$border-strong` | `#8d8d8d` | `--itx-neutral-8` |
-| `$text-secondary` | `#525252` | `--itx-neutral-9` |
-| `$border-inverse` / `$text-primary` | `#161616` | `--itx-neutral-12` |
-| `$text-inverse` | `#ffffff` | `--itx-neutral-1` |
+| `$background` | `#ffffff` | `--itx-surface` |
+| `$layer-01` | `#f4f4f4` | `--itx-surface-above`, or `--itx-role-background-control` on a control |
+| gray-20 (`$tag-background-gray`) | `#e0e0e0` | `--itx-role-background-control` |
+| gray-30 (`$tag-hover-gray`) | `#c6c6c6` | `--itx-role-background-interactive` |
+| `$border-subtle` | `#e0e0e0` | `--itx-role-divider` |
+| `$border-strong` | `#8d8d8d` | `--itx-role-edge` |
+| `$text-secondary` | `#525252` | `--itx-role-text-quieter` |
+| `$border-inverse` / `$text-primary` | `#161616` | `--itx-role-text` |
+| `$text-inverse` | `#ffffff` | `--itx-role-text-inverse` |
 
-Our `--itx-neutral-*` are already `light-dark()` pairs, so taking the light-theme mapping gets dark mode for free. Do **not** hand-map Carbon's dark theme.
+Every role is already a `light-dark()` pair, so taking the light-theme mapping gets dark mode for free. Do **not** hand-map Carbon's dark theme.
+
+Carbon names a value; we name a job. Where its ramp draws a distinction ours does not — `$layer-01` against gray-20, or `$border-subtle` against a second subtle grey — take the job, not the step. A raw palette step is a lint error, and there is no palette to pick one from.
 
 Carbon's `$focus` is blue-60. We keep `--itx-colorway` for focus rings — focus is where our brand survives an otherwise neutral component.
 
