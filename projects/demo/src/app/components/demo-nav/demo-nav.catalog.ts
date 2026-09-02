@@ -96,7 +96,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 				label: "Colour",
 				route: "/foundation/color",
 				description:
-					"One relative axis for the substrate and a palette of fixed steps for everything drawn on it, with every contrast floor measured in a browser rather than asserted.",
+					"Six surface values the engine indexes from depth, and a role for every job drawn on them, with every contrast floor measured in a browser rather than asserted.",
 			},
 			{
 				label: "Principles",
@@ -304,19 +304,6 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 				internal: true,
 				description:
 					"Minimal tokenized code primitive. Takes pre-tokenized [tokens], or falls back to projected <pre><code>.",
-			},
-		],
-	},
-	{
-		label: "Experiments",
-		id: "experiments",
-		items: [
-			{
-				label: "Colour mechanisms",
-				route: "/foundation/color-spike",
-				internal: true,
-				description:
-					"A parallel token set, read by nothing in the library. Bands spaced by job, borders as one ink at two opacities, and an accent family derived from a single hue number — each one measured in the browser as it resolves.",
 			},
 		],
 	},

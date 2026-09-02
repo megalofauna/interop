@@ -261,16 +261,6 @@ export const routes: Routes = [
 			import("./pages/color/color-page").then((m) => m.ColorPage),
 	},
 	{
-		// Spike. Nothing in the library reads its tokens; delete the directory
-		// and this route and nothing else moves.
-		path: "foundation/color-spike",
-		title: "Colour spike — Interop",
-		loadComponent: () =>
-			import("./pages/color-spike/color-spike-page").then(
-				(m) => m.ColorSpikePage,
-			),
-	},
-	{
 		path: "foundation/typography",
 		title: "Typography — Interop",
 		loadComponent: () =>

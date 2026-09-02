@@ -1,190 +1,303 @@
 <demo-page>
 	<demo-masthead category="Foundations" title="Colour">
 		A component declares that it is a layer, and its surface follows from the
-		depth it sits at. Everything it draws on that surface it names from a
-		palette of fixed steps.
+		depth it sits at. Everything it draws on that surface it names by the job
+		the colour does.
 	</demo-masthead>
 
 	<demo-section id="surfaces" heading="Surfaces">
 		<p description class="demo-section__lede">
-			<code>--itx-surface</code> is the background a component stands on. Its
-			value comes from the element's depth. Add <code>itx-layer</code> to nest
-			one step further from the page; nesting compounds.
+			One sequence of six. 1 to 3 are the ground, 3% apart; 4 to 6 sit on it, 5%
+			apart. Spacing tracks how often two members sit side by side — ground
+			levels rarely do and only need to not read as flat.
 		</p>
 
-		<div class="color-nest" itx-layer="0" data-surface="0">
-			<span class="color-nest__label">
-				Layer 0 · <code>{{ surfaces().get(0) }}</code>
-			</span>
-			<div class="color-nest" itx-layer data-surface="1">
-				<span class="color-nest__label">
-					Layer 1 · <code>{{ surfaces().get(1) }}</code>
-				</span>
-				<div class="color-nest" itx-layer data-surface="2">
-					<span class="color-nest__label">
-						Layer 2 · <code>{{ surfaces().get(2) }}</code>
+		<ol class="color-surfaces" interop-typography-isolate>
+			@for (n of surfaceNumbers; track n) {
+				<li
+					class="color-surfaces__rung"
+					[style.background-color]="'var(--itx-surface-' + n + ')'"
+				>
+					<span class="color-surfaces__label">
+						surface-{{ n }}
+						@for (layer of layers; track layer) {
+							@if (depthMap[layer] === n) {
+								<span class="color-surfaces__depth">layer {{ layer }}</span>
+							}
+						}
 					</span>
+				</li>
+			}
+		</ol>
+
+		<p>
+			<code>--itx-surface</code> is the background a component stands on, and
+			the engine writes it from depth: layer 0 is <code>surface-2</code>, layer
+			1 is <code>surface-4</code>, layer 2 is <code>surface-5</code>.
+			<code>--itx-surface-above</code> and <code>--itx-surface-below</code> name
+			the one the next layer would paint; they are the same value, because a
+			raise and a recess at the same depth are the same colour and the shadow is
+			what separates them.
+		</p>
+
+		<p>
+			Depth never reaches 1, 3 or 6. A component that wants page-level texture
+			reads them directly. Add <code>itx-layer</code> to nest one step further
+			from the page; nesting compounds. <code>itx-sink</code> recesses;
+			<code>itx-layer="2"</code> pins a depth wherever the element sits.
+		</p>
+
+		<div class="color-nest" itx-layer="0">
+			<span class="color-nest__label">Layer 0</span>
+			<div class="color-nest" itx-layer>
+				<span class="color-nest__label">Layer 1</span>
+				<div class="color-nest" itx-layer>
+					<span class="color-nest__label">Layer 2</span>
 				</div>
 			</div>
 		</div>
-
-		<p>
-			Four tokens read the ladder from wherever they are used:
-			<code>--itx-surface</code>, <code>--itx-surface-above</code>,
-			<code>--itx-surface-above-2</code> and <code>--itx-surface-below</code>.
-			<code>itx-sink</code> nests a recess instead of a raise;
-			<code>itx-layer="2"</code> pins a depth regardless of where the element
-			sits.
-		</p>
-
-		<p>
-			Each layer's lightness is computed from six numbers per scheme, so one
-			dial moves every layer at once.
-		</p>
-
-		<pre
-			class="color-code"
-		><code>clamp(min, page + step × layer, max)</code></pre>
 	</demo-section>
 
-	<demo-section id="palette" heading="The palette">
+	<demo-section id="vocabulary" heading="The roles">
 		<p description class="demo-section__lede">
-			Six families, fourteen steps each. A step is one colour at every depth and
-			in both schemes. Every swatch below is painted with the token it names,
-			and the value shown is read back from the page.
+			<code>namespace · type · role · family · modifier</code>. Role is the
+			primary distinction — this is a text thing, an edge thing. Family names
+			the ramp, modifier adjusts the base, and both trailing segments are
+			optional, which keeps the common case short. One grammar in both slots:
+			unmarked is full strength, a modifier is quieter.
 		</p>
 
-		@for (family of families; track family.id) {
-			<div class="color-family">
-				<h3 class="color-family__name">{{ family.label }}</h3>
-				<ol class="color-family__steps" interop-typography-isolate>
-					@for (n of steps; track n) {
-						<li
-							class="color-family__step"
-							[style.background-color]="
-								'var(--itx-' + family.id + '-' + n + ')'
-							"
-							[attr.data-step]="family.id + '-' + n"
-						>
-							<span class="color-family__n">{{ n }}</span>
-						</li>
-					}
-				</ol>
+		@for (group of vocabulary; track group.slot) {
+			<div class="color-vocab">
+				<h3 class="color-vocab__slot">{{ group.slot }}</h3>
+				<table class="color-table">
+					<tbody>
+						@for (row of group.rows; track row.token) {
+							<tr>
+								<th scope="row">
+									<code>{{ row.token }}</code>
+								</th>
+								<td>{{ row.job }}</td>
+							</tr>
+						}
+					</tbody>
+				</table>
 			</div>
 		}
 
 		<p>
-			Families are <code>neutral</code>, <code>colorway</code>,
-			<code>danger</code>, <code>success</code>, <code>warning</code> and
-			<code>info</code>. Write a step as <code>var(--itx-danger-9)</code>.
+			Two things sit outside it. <code>--itx-surface-1</code> through
+			<code>-6</code> are the substrate, and they are values rather than roles.
+			<code>--itx-accent-chroma</code> caps how saturated a family may be — past
+			0.18 a hue needs a per-family correction, and the whole point of a family
+			being one number is that it does not.
 		</p>
 	</demo-section>
 
-	<demo-section id="picking" heading="Picking a step">
+	<demo-section id="text" heading="Text on every surface">
 		<p description class="demo-section__lede">
-			Contrast comes from the distance between two steps. Counting from the
-			background: 7 steps clears 3:1, 8 clears 4.5:1, 10 clears 7:1. The same
-			distances hold for every family in both schemes, because every family
-			shares one lightness ramp.
+			The tiers are solved against the deepest surface with a fill on it, which
+			is the real worst case: a hovered row at the deepest nesting. Each arm is
+			solved from its own floor rather than mirrored, because contrast does not
+			mirror — the two arms land on the same ratios from completely different
+			lightnesses.
 		</p>
 
-		<div class="color-controls">
-			<span id="bg-label">Measure against step</span>
-			<div role="group" aria-labelledby="bg-label" class="color-controls__set">
-				@for (bg of backgrounds; track bg) {
-					<button
-						type="button"
-						interop-button
-						[attr.aria-pressed]="background() === bg"
-						(click)="background.set(bg)"
-					>
-						{{ bg }}
-					</button>
+		<table class="color-table color-table--numeric">
+			<caption>
+				Measured live in
+				{{
+					scheme()
+				}}
+				mode. A fill only appears on the three surfaces depth assigns, because
+				both fills derive from
+				<code>--itx-surface</code
+				>.
+				@if (tightestText(); as t) {
+					Tightest reading: {{ formatRatio(t.ratio) }} against {{ t.floor }} ({{
+						t.label
+					}}).
 				}
-			</div>
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">Background</th>
+					@for (role of textRoles; track role.token) {
+						<th scope="col">
+							{{ role.label }}
+							<span class="color-table__floor">{{ role.floor }}:1</span>
+						</th>
+					}
+					<th scope="col">edge <span class="color-table__floor">3:1</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (n of surfaceNumbers; track n) {
+					@for (b of backdropsFor(n); track b.id) {
+						<tr>
+							<th scope="row">surface-{{ n }} {{ b.label }}</th>
+							@for (role of textRoles; track role.token) {
+								<td
+									[class.color-table__miss]="
+										!clears(
+											ratio(role.label, 'bg-' + n + '-' + b.id),
+											role.floor
+										)
+									"
+								>
+									{{ formatRatio(ratio(role.label, "bg-" + n + "-" + b.id)) }}
+								</td>
+							}
+							<td
+								[class.color-table__miss]="
+									!clears(ratio('edge', 'bg-' + n + '-' + b.id), 3)
+								"
+							>
+								{{ formatRatio(ratio("edge", "bg-" + n + "-" + b.id)) }}
+							</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+	</demo-section>
+
+	<demo-section id="borders" heading="Two weights of one ink">
+		<p description class="demo-section__lede">
+			The edge and the divider are the same ink at two opacities, so they hold
+			their weight as the surface climbs. An opaque border drifts 0.58 across
+			three layers; the divider varies
+			@if (dividerSpread(); as s) {
+				{{ formatRatio(s.hi - s.lo) }}
+			}
+			across every background it can land on. The edge clears 3:1 everywhere.
+			The divider has no floor — its job is to not assert itself.
+		</p>
+
+		<div class="color-borders">
+			@for (n of surfaceNumbers; track n) {
+				<div
+					class="color-borders__box"
+					[style.background-color]="'var(--itx-surface-' + n + ')'"
+				>
+					<span class="color-borders__label">surface-{{ n }}</span>
+					<div class="color-borders__divider">
+						divider · {{ formatRatio(ratio("divider", "bg-" + n + "-bare")) }}
+					</div>
+					<div class="color-borders__edge">
+						edge · {{ formatRatio(ratio("edge", "bg-" + n + "-bare")) }}
+					</div>
+				</div>
+			}
 		</div>
 
-		@for (family of families; track family.id) {
-			<div class="color-board">
-				<h3 class="color-board__name">{{ family.label }}</h3>
-				<ol class="color-board__row" interop-typography-isolate>
-					@for (step of board(family.id); track step.n) {
-						<li
-							class="color-board__cell"
-							[class.color-board__cell--is-background]="step.n === background()"
-							[style.background-color]="step.color"
-						>
-							<span class="color-board__n">{{ step.n }}</span>
-							@if (step.clears) {
-								<span class="color-board__floor">{{ step.clears }}</span>
-							}
-							<span class="color-board__ratio">{{
-								formatRatio(step.ratio)
-							}}</span>
-						</li>
-					}
-				</ol>
-			</div>
-		}
-
-		<h3>Roles</h3>
 		<p>
-			Roles name the common picks so a component does not restate the
-			arithmetic. Each one resolves to a step.
+			Opacity is per-scheme because contrast is not symmetric: the same 25%
+			reads about 2.15 on dark and 1.66 on light. It has to be baked into the
+			colour rather than carried as a number —
+			<code>light-dark()</code> takes a colour only, so
+			<code>light-dark(33%, 25%)</code> silently resolves the whole
+			<code>color-mix</code> to transparent, which measures 1.00 and looks like
+			a border that is not there.
+		</p>
+	</demo-section>
+
+	<demo-section id="accents" heading="A family is one hue">
+		<p description class="demo-section__lede">
+			At fixed lightness and chroma, contrast barely moves around the hue
+			circle. Chroma is the variable that breaks it: spread across these five
+			hues at L 0.60 is 0.06 at chroma 0.02, 0.42 at 0.105 and 1.51 at 0.22.
+			Capped at 0.16, every hue clears its floor without a per-hue correction.
 		</p>
 
-		<table class="color-roles">
+		<table class="color-table color-table--numeric">
 			<caption>
-				Measured against step
-				{{
-					background() === 3 ? 3 : 1
-				}}
-				for tint, border and text;
-				<code>on-tint</code>
-				is measured against the tint it sits on.
+				Family text against the page, against its own wash, and the one label
+				every fill shares.
 			</caption>
 			<thead>
 				<tr>
 					<th scope="col">Family</th>
-					@for (role of roles; track role) {
-						<th scope="col">{{ role }}</th>
-					}
+					<th scope="col">hue</th>
+					<th scope="col">
+						text on the page <span class="color-table__floor">4.5:1</span>
+					</th>
+					<th scope="col">
+						text on its wash <span class="color-table__floor">4.5:1</span>
+					</th>
+					<th scope="col">
+						edge on the page <span class="color-table__floor">3:1</span>
+					</th>
+					<th scope="col">
+						label on the fill <span class="color-table__floor">4.5:1</span>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
-				@for (family of roleFamilies; track family.id) {
+				@for (f of families; track f.id) {
 					<tr>
-						<th scope="row">{{ family.label }}</th>
-						@for (entry of roleTable(family.id); track entry.token) {
-							<td>
-								@if (entry.step) {
-									<span class="color-roles__step">step {{ entry.step }}</span>
-									<span class="color-roles__ratio">
-										{{ formatRatio(entry.ratio) }}
-									</span>
-								} @else {
-									<span class="color-roles__step">—</span>
-								}
-							</td>
-						}
+						<th scope="row">{{ f.label }}</th>
+						<td>{{ f.hue }}</td>
+						<td
+							[class.color-table__miss]="
+								!clears(ratio(f.id + '-text', 'bg-2-bare'), 4.5)
+							"
+						>
+							{{ formatRatio(ratio(f.id + "-text", "bg-2-bare")) }}
+						</td>
+						<td
+							[class.color-table__miss]="
+								!clears(ratio(f.id + '-text', f.id + '-subtle'), 4.5)
+							"
+						>
+							{{ formatRatio(ratio(f.id + "-text", f.id + "-subtle")) }}
+						</td>
+						<td
+							[class.color-table__miss]="
+								!clears(ratio(f.id + '-edge', 'bg-2-bare'), 3)
+							"
+						>
+							{{ formatRatio(ratio(f.id + "-edge", "bg-2-bare")) }}
+						</td>
+						<td
+							[class.color-table__miss]="
+								!clears(ratio('inverse', f.id + '-fill'), 4.5)
+							"
+						>
+							{{ formatRatio(ratio("inverse", f.id + "-fill")) }}
+						</td>
 					</tr>
 				}
 			</tbody>
 		</table>
 
-		<!-- Probes: painted with each role so the table can read it back. -->
-		<div class="color-probes" aria-hidden="true">
-			@for (family of roleFamilies; track family.id) {
-				@for (role of roles; track role) {
+		<div class="color-accents">
+			@for (f of families; track f.id) {
+				<div
+					class="color-accents__card"
+					[style.background-color]="
+						'var(--itx-role-background-' + f.id + '-subtle)'
+					"
+					[style.border-color]="'var(--itx-role-edge-' + f.id + ')'"
+					[style.color]="'var(--itx-role-text-' + f.id + ')'"
+				>
+					{{ f.label }}
 					<span
-						[style.background-color]="
-							'var(--itx-' + family.id + '-' + role + ')'
-						"
-						[attr.data-role]="family.id + '-' + role"
-					></span>
-				}
+						class="color-accents__fill"
+						[style.background-color]="'var(--itx-role-background-' + f.id + ')'"
+						[style.color]="'var(--itx-role-text-inverse)'"
+						>label</span
+					>
+				</div>
 			}
 		</div>
+
+		<p>
+			Four tokens the measurements retired rather than renamed. A per-family
+			label on a fill collapses to one <code>--itx-role-text-inverse</code>,
+			because one label clears all five. A label on a wash disappears entirely,
+			because the family text already clears its own wash.
+		</p>
 	</demo-section>
 
 	<demo-section id="overriding" heading="Overriding">
@@ -210,17 +323,18 @@
 
 		<h3>Move every surface</h3>
 		<p>
-			Redeclare a surface value or a tint pack at the root. Retuning the ramp
-			and retinting a subtree are the same act.
+			Redeclare the surfaces, or the tint pack that supplies their chroma and
+			hue. Retuning the ramp and retinting a subtree are the same act, and both
+			are ordinary CSS.
 		</p>
-		<pre class="color-code"><code>--itx-ramp-dark-page: 0.20;
---itx-tint-dark: 0.006 250;</code></pre>
+		<pre class="color-code"><code>--itx-tint-dark: 0.012 30;
+--itx-surface-2: light-dark(oklch(0.97 var(--itx-tint-light)), oklch(0.2 var(--itx-tint-dark)));</code></pre>
 
 		<h3>What gets overwritten</h3>
 		<p>
 			<code>--itx-surface</code> is written by the engine at every layer
-			boundary, so a value set on an ancestor is replaced one layer down. Reach
-			for a component's own token instead.
+			boundary, so a value set on an ancestor is replaced one layer down. So are
+			the two fills derived from it. Reach for a component's own token instead.
 		</p>
 	</demo-section>
 
@@ -229,85 +343,94 @@
 			Three constraints to design around.
 		</p>
 
-		<h3>Margin shrinks with depth</h3>
+		<h3>The state ramp has two rungs</h3>
 		<p>
-			A step is fixed while the surface climbs, so a pairing measured on the
-			page reads closer once it is nested. Roles are placed to hold at the
-			deepest layer: <code>border</code> sits at step 9 rather than 8 for this
-			reason.
+			A control's plane sits a full step out from its surface and a state one
+			half-step above that. There is no third: at a tenth of a step out, three
+			of the four text tiers stop clearing. A component that needs more states
+			than that carries them with a mark or an edge, not with another fill.
 		</p>
-
-		<table class="color-depth-table">
-			<caption>
-				<code>--itx-&lt;family&gt;-border</code>
-				against the surface it sits on. Floor is 3:1. Tightest reading:
-				{{
-					formatRatio(tightest())
-				}}.
-			</caption>
-			<thead>
-				<tr>
-					<th scope="col">Family</th>
-					@for (layer of layers; track layer) {
-						<th scope="col">Layer {{ layer }}</th>
-					}
-				</tr>
-			</thead>
-			<tbody>
-				@for (family of roleFamilies; track family.id) {
-					<tr>
-						<th scope="row">{{ family.label }}</th>
-						@for (layer of layers; track layer) {
-							<td>{{ formatRatio(depth(family.id, "border", layer)) }}</td>
-						}
-					</tr>
-				}
-			</tbody>
-		</table>
-
-		<!-- Probes: nested, because itx-layer compounds through the tree. -->
-		<div class="color-probes" aria-hidden="true">
-			<div>
-				@for (family of roleFamilies; track family.id) {
-					<span
-						[style.background-color]="'var(--itx-' + family.id + '-border)'"
-						[attr.data-depth]="family.id + '-border-0'"
-					></span>
-				}
-				<div itx-layer>
-					@for (family of roleFamilies; track family.id) {
-						<span
-							[style.background-color]="'var(--itx-' + family.id + '-border)'"
-							[attr.data-depth]="family.id + '-border-1'"
-						></span>
-					}
-					<div itx-layer>
-						@for (family of roleFamilies; track family.id) {
-							<span
-								[style.background-color]="'var(--itx-' + family.id + '-border)'"
-								[attr.data-depth]="family.id + '-border-2'"
-							></span>
-						}
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<h3>Chroma costs contrast</h3>
 		<p>
-			Two steps at the same lightness measure differently if one carries more
-			chroma. A saturated family reaches its ceiling earlier, so a new family
-			has to be checked rather than assumed.
+			Two colours at the same lightness measure differently if one carries more
+			chroma, which is why <code>--itx-accent-chroma</code> is capped rather
+			than free. Raising it is allowed and it is checked:
 			<code>npm run lint</code> measures every pairing in a browser and fails on
 			a miss.
 		</p>
 
 		<h3>Colours are authored, not computed</h3>
 		<p>
-			Steps are literal values in
-			<code>styles/themes/protocol/ladder.css</code>. Adding a family means
-			writing fourteen values and running the checks. Nothing derives a palette
-			from a seed at runtime.
+			The surfaces and the text tiers are literal values in
+			<code>styles/themes/protocol/ladder.css</code>. Adding a family means one
+			hue number and four derived roles. Nothing solves a palette at runtime.
 		</p>
 	</demo-section>
+
+	<!-- Probes. Each paints one token so the tables can read the used value
+	     back, which is what makes the numbers above measurements rather than
+	     transcriptions. The fills are nested, because both derive from
+	     --itx-surface and only compose where a layer declares it. -->
+	<div class="color-probes" aria-hidden="true">
+		@for (role of textRoles; track role.token) {
+			<span
+				[style.background-color]="'var(' + role.token + ')'"
+				[attr.data-probe]="role.label"
+			></span>
+		}
+		<span
+			[style.background-color]="'var(--itx-role-edge)'"
+			data-probe="edge"
+		></span>
+		<span
+			[style.background-color]="'var(--itx-role-divider)'"
+			data-probe="divider"
+		></span>
+		<span
+			[style.background-color]="'var(--itx-role-text-inverse)'"
+			data-probe="inverse"
+		></span>
+
+		@for (f of families; track f.id) {
+			<span
+				[style.background-color]="'var(--itx-role-text-' + f.id + ')'"
+				[attr.data-probe]="f.id + '-text'"
+			></span>
+			<span
+				[style.background-color]="'var(--itx-role-edge-' + f.id + ')'"
+				[attr.data-probe]="f.id + '-edge'"
+			></span>
+			<span
+				[style.background-color]="
+					'var(--itx-role-background-' + f.id + '-subtle)'
+				"
+				[attr.data-probe]="f.id + '-subtle'"
+			></span>
+			<span
+				[style.background-color]="'var(--itx-role-background-' + f.id + ')'"
+				[attr.data-probe]="f.id + '-fill'"
+			></span>
+		}
+
+		@for (n of surfaceNumbers; track n) {
+			<span
+				[style.background-color]="'var(--itx-surface-' + n + ')'"
+				[attr.data-probe]="'bg-' + n + '-bare'"
+			></span>
+		}
+
+		@for (layer of layers; track layer) {
+			<div [attr.itx-layer]="layer">
+				<span
+					[style.background-color]="'var(--itx-role-background-interactive)'"
+					[attr.data-probe]="'bg-' + depthMap[layer] + '-interactive'"
+				></span>
+				<span
+					[style.background-color]="'var(--itx-role-background-control)'"
+					[attr.data-probe]="'bg-' + depthMap[layer] + '-control'"
+				></span>
+			</div>
+		}
+	</div>
 </demo-page>

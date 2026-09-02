@@ -1,8 +1,8 @@
 /*
  * Colour page.
  *
- * Swatches paint themselves with the token they name, so nothing here sets a
- * colour. The only job is layout and legibility over an arbitrary swatch.
+ * Swatches paint themselves with the token they name, so almost nothing here
+ * sets a colour. The job is layout and legibility over an arbitrary swatch.
  */
 
 .color-nest {
@@ -14,10 +14,6 @@
 	display: block;
 	margin-block-end: var(--itx-spacing-3);
 	font-size: var(--itx-font-size-small);
-
-	code {
-		font-size: inherit;
-	}
 }
 
 .color-code {
@@ -29,118 +25,79 @@
 	font-size: var(--itx-font-size-small);
 }
 
-/* ── The palette ─────────────────────────────────────────────────────────── */
+/* ── The surface sequence ────────────────────────────────────────────────── */
 
-.color-family {
-	margin-block-end: var(--itx-spacing-5);
-}
-
-.color-family__name {
-	margin-block-end: var(--itx-spacing-2);
-	font-size: var(--itx-font-size-small);
-}
-
-.color-family__steps {
-	display: grid;
-	grid-template-columns: repeat(14, minmax(0, 1fr));
-	gap: 2px;
-	margin: 0;
+/*
+ * The rungs stack with no gap, so the eye judges each boundary directly. A gap
+ * would let the page colour show between them and manufacture a separation the
+ * sequence does not have.
+ */
+.color-surfaces {
+	margin: 0 0 var(--itx-spacing-4);
 	padding: 0;
+	overflow: hidden;
+	border-radius: var(--itx-radius);
 	list-style: none;
 }
 
-.color-family__step {
-	display: grid;
-	place-items: center;
-	min-block-size: 3.5rem;
-	border-radius: var(--itx-radius-sm);
+.color-surfaces__rung {
+	display: flex;
+	align-items: center;
+	min-block-size: 3rem;
+	padding-inline: var(--itx-spacing-4);
 }
 
 /*
  * The label rides on the swatch, so it cannot read a token — the swatch is a
- * different colour in every cell. A blend mode keeps it legible at both ends
- * of the ramp without picking a colour per step.
+ * different colour on every rung. A blend mode keeps it legible at both ends
+ * without picking a colour per rung.
  */
-.color-family__n,
-.color-board__n {
-	font-size: var(--itx-font-size-small);
-	font-variant-numeric: tabular-nums;
-	color: canvastext;
-	mix-blend-mode: difference;
-	filter: invert(1);
-}
-
-/* ── Picking a step ──────────────────────────────────────────────────────── */
-
-.color-controls {
+.color-surfaces__label {
 	display: flex;
 	gap: var(--itx-spacing-3);
 	align-items: center;
-	margin-block-end: var(--itx-spacing-4);
 	font-size: var(--itx-font-size-small);
-}
-
-.color-controls__set {
-	display: flex;
-	gap: var(--itx-spacing-2);
-}
-
-.color-board {
-	margin-block-end: var(--itx-spacing-5);
-}
-
-.color-board__name {
-	margin-block-end: var(--itx-spacing-2);
-	font-size: var(--itx-font-size-small);
-}
-
-.color-board__row {
-	display: grid;
-	grid-template-columns: repeat(14, minmax(0, 1fr));
-	gap: 2px;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.color-board__cell {
-	display: grid;
-	gap: 2px;
-	place-items: center;
-	align-content: center;
-	min-block-size: 4.5rem;
-	padding-block: var(--itx-spacing-2);
-	border-radius: var(--itx-radius-sm);
-}
-
-.color-board__cell--is-background {
-	outline: var(--itx-border-width-thick) solid var(--itx-role-text-quiet);
-	outline-offset: 2px;
-}
-
-/* The floor a step clears, and what it measured. Same blend trick. */
-.color-board__floor,
-.color-board__ratio {
-	font-size: var(--itx-font-size-xsmall);
 	font-variant-numeric: tabular-nums;
 	color: canvastext;
 	mix-blend-mode: difference;
 	filter: invert(1);
 }
 
-.color-board__floor {
-	font-weight: var(--itx-font-weight-bold);
+.color-surfaces__depth {
+	font-size: var(--itx-font-size-xsmall);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+/* ── Vocabulary ──────────────────────────────────────────────────────────── */
+
+.color-vocab {
+	margin-block-end: var(--itx-spacing-4);
+}
+
+.color-vocab__slot {
+	margin-block-end: var(--itx-spacing-1);
+	color: var(--itx-role-text-quiet);
+	font-size: var(--itx-font-size-small);
+	font-family: var(--itx-font-family-mono, monospace);
+}
+
+.color-vocab .color-table {
+	margin-block: 0;
+
+	th {
+		inline-size: 45%;
+		font-weight: var(--itx-font-weight-normal);
+	}
 }
 
 /* ── Tables ──────────────────────────────────────────────────────────────── */
 
-.color-roles,
-.color-depth-table {
+.color-table {
 	inline-size: 100%;
 	margin-block: var(--itx-spacing-4);
 	border-collapse: collapse;
 	font-size: var(--itx-font-size-small);
-	font-variant-numeric: tabular-nums;
 	text-align: start;
 
 	caption {
@@ -153,7 +110,7 @@
 	td {
 		padding: var(--itx-spacing-2) var(--itx-spacing-3);
 		border-block-end: var(--itx-border-width-hairline) solid
-			var(--itx-role-edge);
+			var(--itx-role-divider);
 		text-align: start;
 	}
 
@@ -163,13 +120,91 @@
 	}
 }
 
-.color-roles__step {
-	display: block;
+.color-table--numeric {
+	font-variant-numeric: tabular-nums;
 }
 
-.color-roles__ratio {
+.color-table__floor {
 	display: block;
-	color: var(--itx-role-text-quiet);
+	color: var(--itx-role-text-quieter);
+	font-size: var(--itx-font-size-xsmall);
+}
+
+/* A miss is the whole point of the table, so it has to be unmissable. */
+.color-table__miss {
+	color: var(--itx-role-text-danger);
+	font-weight: var(--itx-font-weight-bold);
+}
+
+/* ── Borders ─────────────────────────────────────────────────────────────── */
+
+.color-borders {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+	gap: var(--itx-spacing-3);
+	margin-block: var(--itx-spacing-4);
+}
+
+.color-borders__box {
+	display: grid;
+	gap: var(--itx-spacing-2);
+	padding: var(--itx-spacing-3);
+	border-radius: var(--itx-radius);
+	font-size: var(--itx-font-size-xsmall);
+	font-variant-numeric: tabular-nums;
+
+	/*
+	 * The blend is on the TEXT, not on the box. Blending the box would take the
+	 * two borders with it, and those are the thing being looked at — the point
+	 * is to see the real ink at its real opacity on each surface.
+	 */
+	span,
+	div {
+		color: canvastext;
+		mix-blend-mode: difference;
+		filter: invert(1);
+	}
+}
+
+.color-borders__label {
+	font-size: var(--itx-font-size-small);
+}
+
+.color-borders__divider {
+	padding-block-end: var(--itx-spacing-2);
+	border-block-end: var(--itx-border-width-hairline) solid
+		var(--itx-role-divider);
+}
+
+.color-borders__edge {
+	padding: var(--itx-spacing-2);
+	border: var(--itx-border-width-hairline) solid var(--itx-role-edge);
+	border-radius: var(--itx-radius-sm);
+}
+
+/* ── Accents ─────────────────────────────────────────────────────────────── */
+
+.color-accents {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	gap: var(--itx-spacing-3);
+	margin-block: var(--itx-spacing-4);
+}
+
+.color-accents__card {
+	display: flex;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--itx-spacing-3);
+	border: var(--itx-border-width-hairline) solid;
+	border-radius: var(--itx-radius);
+	font-size: var(--itx-font-size-small);
+}
+
+.color-accents__fill {
+	padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
 }
 
 /*
