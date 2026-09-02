@@ -29,26 +29,67 @@
  * so a colourway or status-palette variant would keep the root's roles. Same
  * rule that governs the tint packs — see .agent/color.md.
  *
- * The surfaces are not here — they are computed from the ramp dials below by
- * tokens/elevation.css.
+ * The surfaces ARE here, as six values in their own block above the palette.
+ * tokens/elevation.css holds no colour; it counts depth and indexes them.
  */
+
+/*
+ * ── Elevation: the neutral substrate ─────────────────────────────────────
+ *
+ * One sequence of six, not two named bands. The banding is a spacing property
+ * rather than a naming layer: 1 to 3 are the ground, 3% apart, and 4 to 6 sit
+ * on it, 5% apart. Spacing tracks how often two members sit side by side —
+ * ground levels rarely do and only need to not read as flat, layers sometimes
+ * do.
+ *
+ * The page is surface-2, so the ground carries an indent and an outdent that
+ * cost no depth. tokens/elevation.css indexes the sequence from --itx-layer;
+ * 1 and 3 it never reaches, and a component that wants page-level texture
+ * reads them directly.
+ *
+ * Declared at the root ONLY, which is the opposite of the rule the roles
+ * follow, and deliberately. Repeating them on [itx-layer] would recompose the
+ * tint at each layer — but a declaration beats inheritance, so every layer
+ * would also stomp whatever a consumer set above it, and the six values would
+ * stop being overridable at all. Overriding is worth more than retinting
+ * mid-tree, and it costs nothing here: retinting a subtree is redeclaring
+ * these six on it, the same act as retuning the ramp.
+ *
+ * Both are ordinary CSS and need no dials. --itx-tint-* is the shorthand that
+ * keeps chroma and hue in one place across all six.
+ */
+:where([interop-root]) {
+	--itx-surface-1: light-dark(
+		oklch(0.99 var(--itx-tint-light)),
+		oklch(0.18 var(--itx-tint-dark))
+	);
+	--itx-surface-2: light-dark(
+		oklch(0.96 var(--itx-tint-light)),
+		oklch(0.21 var(--itx-tint-dark))
+	);
+	--itx-surface-3: light-dark(
+		oklch(0.93 var(--itx-tint-light)),
+		oklch(0.24 var(--itx-tint-dark))
+	);
+	--itx-surface-4: light-dark(
+		oklch(0.905 var(--itx-tint-light)),
+		oklch(0.265 var(--itx-tint-dark))
+	);
+	--itx-surface-5: light-dark(
+		oklch(0.855 var(--itx-tint-light)),
+		oklch(0.315 var(--itx-tint-dark))
+	);
+	--itx-surface-6: light-dark(
+		oklch(0.805 var(--itx-tint-light)),
+		oklch(0.365 var(--itx-tint-dark))
+	);
+}
 
 :where([interop-root]) {
 	/* ── Tint packs — chroma + hue, per scheme. The retint knob. ────── */
 	--itx-tint-light: 0.006 250;
 	--itx-tint-dark: 0.006 250;
 
-	/* ── Elevation: the neutral substrate ───────────────────────────── */
-	--itx-ramp-light-page: 0.99;
-	--itx-ramp-light-step: -0.025;
-	--itx-ramp-light-ease: 1;
-	--itx-ramp-light-min: 0.12;
-	--itx-ramp-light-max: 0.99;
-	--itx-ramp-dark-page: 0.17;
-	--itx-ramp-dark-step: 0.032;
-	--itx-ramp-dark-ease: 1;
-	--itx-ramp-dark-min: 0.17;
-	--itx-ramp-dark-max: 0.62;
 
 
 

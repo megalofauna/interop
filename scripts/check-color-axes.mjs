@@ -4,9 +4,10 @@
  *
  * The colour system has exactly one relative axis left, and one absolute one:
  *
- *   ELEVATION  --itx-surface / -above / -above-2 / -below
- *              The neutral SUBSTRATE a component stands on. Backgrounds only,
- *              and it MOVES — every layer boundary redeclares it.
+ *   ELEVATION  --itx-surface-1 … -6, and the pointers into them —
+ *              --itx-surface / -above / -above-2 / -below
+ *              The neutral SUBSTRATE a component stands on. Backgrounds only.
+ *              The pointers MOVE: every layer boundary redeclares them.
  *
  *   THE PALETTE  --itx-<family>-1 … -14, and the roles built on them
  *              Everything drawn ON TOP. Absolute: a step is one colour at
@@ -52,7 +53,7 @@ const GENERATED =
 /** Specs deliberately exercise both axes, including the negative cases. */
 const SPECS = /\.spec\.ts$/;
 
-const ELEVATION = /--itx-surface(-above(-2)?|-below)?(?![-a-z0-9])/;
+const ELEVATION = /--itx-surface(-above(-2)?|-below|-[1-6])?(?![-a-z0-9])/;
 
 /**
  * Properties that paint a MARK. An elevation token here is the error: a border
