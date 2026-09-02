@@ -724,15 +724,15 @@ async save() {
 		},
 
 		{ groupLabel: "Rest" },
-		{ property: "--itx-button-background", default: "var(--itx-neutral-3)" },
-		{ property: "--itx-button-foreground", default: "var(--itx-neutral-14)" },
+		{ property: "--itx-button-background", default: "transparent" },
+		{ property: "--itx-button-foreground", default: "var(--itx-role-text)" },
 		{ property: "--itx-button-border-color", default: "transparent" },
 		{ property: "--itx-button-box-shadow", default: "none" },
 
 		{ groupLabel: "Hover" },
 		{
 			property: "--itx-button-background-hover",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-role-background-interactive)",
 		},
 		{
 			property: "--itx-button-foreground-hover",
@@ -746,7 +746,7 @@ async save() {
 		{ groupLabel: "Active" },
 		{
 			property: "--itx-button-background-active",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-role-background-control)",
 		},
 		{
 			property: "--itx-button-foreground-active",
@@ -762,7 +762,7 @@ async save() {
 		{ property: "--itx-button-outline-style", default: "solid" },
 		{
 			property: "--itx-button-outline-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{ property: "--itx-button-outline-offset", default: "2px" },
 

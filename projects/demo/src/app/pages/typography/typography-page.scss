@@ -18,7 +18,7 @@
 	position: relative;
 
 	--label-gutter: 5.5rem;
-	--label-color: color-mix(in srgb, var(--itx-neutral-14) 80%, transparent);
+	--label-color: color-mix(in srgb, var(--itx-role-text) 80%, transparent);
 	--label-font: "IBM Plex Mono", var(--itx-font-family-mono);
 }
 
@@ -31,7 +31,7 @@
 .specimen__note {
 	max-inline-size: 60ch;
 	margin-block-end: var(--itx-spacing-6);
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 	font-size: var(--itx-font-size-body);
 	line-height: var(--itx-line-height);
 }
@@ -96,7 +96,7 @@
 
 	&__label {
 		font-size: var(--itx-font-size-label);
-		color: var(--itx-neutral-9);
+		color: var(--itx-role-text-quieter);
 	}
 
 	&__value {
@@ -104,7 +104,7 @@
 		align-items: baseline;
 		gap: var(--itx-spacing-2);
 		font-size: var(--itx-font-size-label);
-		color: var(--itx-neutral-11);
+		color: var(--itx-role-text-quiet);
 		/* Stop the row jittering as the number changes width. */
 		font-variant-numeric: tabular-nums;
 	}
@@ -123,16 +123,16 @@
 			display: flex;
 			align-items: baseline;
 			gap: var(--itx-spacing-1);
-			color: var(--itx-neutral-9);
+			color: var(--itx-role-text-quieter);
 
 			span:last-of-type {
-				color: var(--itx-neutral-14);
+				color: var(--itx-role-text);
 			}
 
 			/* A role held by the ceiling rather than by the leading. */
 			&.is-clamped em {
 				font-style: normal;
-				color: var(--itx-colorway-text);
+				color: var(--itx-role-text-colorway);
 			}
 		}
 	}

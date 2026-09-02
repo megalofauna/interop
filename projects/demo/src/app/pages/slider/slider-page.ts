@@ -322,7 +322,7 @@ onSubmit(event: SubmitEvent): void {
 	tokenEntries: TokenEntry[] = [
 		{
 			property: "--itx-slider-track-color",
-			default: "var(--itx-neutral-3)",
+			default: "var(--itx-role-background-control)",
 		},
 		{
 			property: "--itx-slider-track-thickness",
@@ -330,11 +330,11 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-fill-color",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{
 			property: "--itx-slider-thumb-color",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{
 			property: "--itx-slider-thumb-size",
@@ -360,7 +360,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-disabled-color",
-			default: "var(--itx-neutral-3)",
+			default: "var(--itx-role-background-control)",
 		},
 		{
 			property: "--itx-slider-length",
@@ -380,7 +380,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-color",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-role-edge)",
 		},
 		{
 			property: "--itx-slider-mark-thickness",
@@ -393,7 +393,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-legend-color",
-			default: "var(--itx-neutral-9)",
+			default: "var(--itx-role-text-quieter)",
 		},
 		{
 			property: "--itx-slider-legend-font-size",
@@ -409,7 +409,7 @@ onSubmit(event: SubmitEvent): void {
 		},
 		{
 			property: "--itx-slider-mark-minor-color",
-			default: "var(--itx-neutral-3)",
+			default: "var(--itx-role-divider)",
 		},
 		{
 			property: "--itx-slider-mark-minor-thickness",

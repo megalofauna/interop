@@ -172,8 +172,8 @@ const SCHEMES: readonly Scheme[] = [
 		lines: [
 			"var(--itx-neutral-2)",
 			"var(--itx-neutral-3)",
-			"var(--itx-info-tint)",
-			"var(--itx-danger-text)",
+			"var(--itx-role-background-info-subtle)",
+			"var(--itx-role-text-danger)",
 			"var(--itx-neutral-8)",
 			"var(--itx-neutral-10)",
 		],
@@ -187,7 +187,7 @@ const SCHEMES: readonly Scheme[] = [
 			"var(--itx-info-3)",
 			"var(--itx-danger-11)",
 			"var(--itx-edge)",
-			"var(--itx-neutral-9)",
+			"var(--itx-role-text-quieter)",
 		],
 	},
 	{
@@ -197,7 +197,7 @@ const SCHEMES: readonly Scheme[] = [
 			"var(--itx-fill)",
 			"var(--itx-divider)",
 			"var(--itx-info-subtle)",
-			"var(--itx-danger-text)",
+			"var(--itx-role-text-danger)",
 			"var(--itx-border)",
 			"var(--itx-text-secondary)",
 		],

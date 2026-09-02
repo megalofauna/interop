@@ -286,7 +286,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tabs-tablist-flex-wrap", default: "nowrap" },
 		{ property: "--itx-tabs-gap", default: "0" },
 		{ property: "--itx-tabs-rule-width", default: "1px" },
-		{ property: "--itx-tabs-rule-color", default: "var(--itx-neutral-3)" },
+		{ property: "--itx-tabs-rule-color", default: "var(--itx-role-divider)" },
 		// Tab — box
 		{
 			property: "--itx-tab-min-block-size",
@@ -318,19 +318,22 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tab-letter-spacing", default: "normal" },
 		// Tab — states
 		{ property: "--itx-tab-background", default: "transparent" },
-		{ property: "--itx-tab-foreground", default: "var(--itx-neutral-9)" },
+		{
+			property: "--itx-tab-foreground",
+			default: "var(--itx-role-text-quieter)",
+		},
 		{
 			property: "--itx-tab-background-hover",
 			default: "transparent — set var(--itx-surface-above) for a hover fill",
 		},
 		{
 			property: "--itx-tab-foreground-hover",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{ property: "--itx-tab-background-selected", default: "transparent" },
 		{
 			property: "--itx-tab-foreground-selected",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{
 			property: "--itx-tab-font-weight-selected",
@@ -340,18 +343,18 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tab-indicator-size", default: "2px" },
 		{
 			property: "--itx-tab-indicator-color-hover",
-			default: "var(--itx-neutral-11)",
+			default: "var(--itx-role-edge)",
 		},
 		{
 			property: "--itx-tab-indicator-color-selected",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		// Tab — focus + motion
 		{ property: "--itx-tab-focus-width", default: "2px" },
 		{ property: "--itx-tab-focus-style", default: "solid" },
 		{
 			property: "--itx-tab-focus-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{ property: "--itx-tab-focus-offset", default: "-2px — inset" },
 		{
@@ -371,7 +374,7 @@ providers: [provideInteropIcons(TablerRoute, TablerPackage)]`;
 		{ property: "--itx-tab-panel-focus-style", default: "solid" },
 		{
 			property: "--itx-tab-panel-focus-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{
 			property: "--itx-tab-panel-focus-offset",

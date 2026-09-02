@@ -197,21 +197,21 @@
 		<p>Set the component's own token. No layer block touches it.</p>
 		<pre
 			class="color-code"
-		><code>--itx-dialog-background: var(--itx-neutral-2);</code></pre>
+		><code>--itx-dialog-background: var(--itx-role-background-interactive);</code></pre>
 
-		<h3>Change a step everywhere</h3>
+		<h3>Change a role everywhere</h3>
 		<p>
-			Steps are declared once and inherit. Set one on any ancestor and
+			Roles are declared once and inherit. Set one on any ancestor and
 			everything below follows.
 		</p>
 		<pre
 			class="color-code"
-		><code>--itx-neutral-8: oklch(0.55 0.01 250);</code></pre>
+		><code>--itx-role-edge: oklch(0.55 0.01 250);</code></pre>
 
 		<h3>Move every surface</h3>
 		<p>
-			Set a ramp dial or a tint pack on any ancestor. Both reach every layer
-			below, live.
+			Redeclare a surface value or a tint pack at the root. Retuning the ramp
+			and retinting a subtree are the same act.
 		</p>
 		<pre class="color-code"><code>--itx-ramp-dark-page: 0.20;
 --itx-tint-dark: 0.006 250;</code></pre>

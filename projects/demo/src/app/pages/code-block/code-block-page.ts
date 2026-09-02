@@ -52,7 +52,7 @@ increment(): void {
 
 	readonly sampleCss = `:where(progress[interop-progress]) {
   --itx-progress-thickness: 0.5rem;
-  --itx-progress-fill: var(--itx-colorway-solid);
+  --itx-progress-fill: var(--itx-role-background-colorway);
 }`;
 
 	readonly longSample = `export function createActivationHandler(fn, options = {}) {
@@ -134,26 +134,32 @@ increment(): void {
 		{ property: "--itx-cb-tablist-border-bottom-width", default: "2px" },
 		{
 			property: "--itx-cb-tablist-border-bottom-color",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-role-text-disabled)",
 		},
 		{
 			property: "--itx-cb-tab-padding-inline",
 			default: "var(--itx-spacing-4)",
 		},
-		{ property: "--itx-cb-tab-foreground", default: "var(--itx-neutral-9)" },
+		{
+			property: "--itx-cb-tab-foreground",
+			default: "var(--itx-role-text-quieter)",
+		},
 		{
 			property: "--itx-cb-tab-foreground-current",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{
 			property: "--itx-cb-tab-border-bottom-color",
-			default: "var(--itx-colorway-solid) — active tab underline",
+			default: "var(--itx-role-background-colorway) — active tab underline",
 		},
 		{
 			property: "--itx-cb-tab-outline-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
-		{ property: "--itx-cb-label-foreground", default: "var(--itx-neutral-9)" },
+		{
+			property: "--itx-cb-label-foreground",
+			default: "var(--itx-role-text-quieter)",
+		},
 		{ property: "--itx-cb-actions-gap", default: "var(--itx-spacing-1) — 4px" },
 		{ property: "--itx-cb-button-background", default: "transparent" },
 		{
@@ -162,7 +168,7 @@ increment(): void {
 		},
 		{
 			property: "--itx-cb-button-background-pressed",
-			default: "var(--itx-neutral-3) — word-wrap toggle when on",
+			default: "var(--itx-role-background-control) — word-wrap toggle when on",
 		},
 	];
 

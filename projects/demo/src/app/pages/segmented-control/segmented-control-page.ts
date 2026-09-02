@@ -298,7 +298,7 @@ export class SegmentedControlPage {
 		{
 			property: "--itx-segmented-control-track-box-shadow",
 			default:
-				"inset 0 0 0 var(--itx-border-width-hairline) var(--itx-neutral-14) — the frame, drawn inset so it costs no layout",
+				"inset 0 0 0 var(--itx-border-width-hairline) var(--itx-role-text) — the frame, drawn inset so it costs no layout",
 		},
 		{
 			property: "--itx-segmented-control-track-border-radius",
@@ -350,7 +350,7 @@ export class SegmentedControlPage {
 		{ property: "--itx-segment-background", default: "transparent" },
 		{
 			property: "--itx-segment-foreground",
-			default: "var(--itx-neutral-11) — secondary grey",
+			default: "var(--itx-role-text-quiet) — secondary grey",
 		},
 		{ property: "--itx-segment-border-color", default: "transparent" },
 
@@ -361,13 +361,13 @@ export class SegmentedControlPage {
 		},
 		{
 			property: "--itx-segment-foreground-hover",
-			default: "var(--itx-neutral-14) — label comes up to full strength",
+			default: "var(--itx-role-text) — label comes up to full strength",
 		},
 
 		// Segment — selected
 		{
 			property: "--itx-segment-foreground-selected",
-			default: "var(--itx-neutral-14) — label at full strength on the pill",
+			default: "var(--itx-role-text) — label at full strength on the pill",
 		},
 
 		// Segment — focus ring
@@ -404,7 +404,8 @@ export class SegmentedControlPage {
 		// Divider — scoped to the fieldset
 		{
 			property: "--itx-segmented-control-rule-color",
-			default: "var(--itx-neutral-3) — set on the fieldset, not at root",
+			default:
+				"var(--itx-role-background-control) — set on the fieldset, not at root",
 		},
 		{
 			property: "--itx-segmented-control-rule-width",
@@ -414,7 +415,7 @@ export class SegmentedControlPage {
 		// Selection pill — scoped to the fieldset
 		{
 			property: "--itx-indicator-background-color",
-			default: "var(--itx-neutral-2) — the selection wash",
+			default: "var(--itx-role-background-interactive) — the selection wash",
 		},
 		{ property: "--itx-indicator-border-width", default: "0" },
 		{
