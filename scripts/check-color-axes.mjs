@@ -9,9 +9,10 @@
  *              The neutral SUBSTRATE a component stands on. Backgrounds only.
  *              The pointers MOVE: every layer boundary redeclares them.
  *
- *   THE PALETTE  --itx-<family>-1 … -14, and the roles built on them
- *              Everything drawn ON TOP. Absolute: a step is one colour at
- *              every depth, which is what makes it safe to name and reuse.
+ *   THE ROLES  --itx-role-*
+ *              Everything drawn ON TOP, named by the job it does. Absolute:
+ *              a role is one colour at every depth, which is what makes it
+ *              safe to name and reuse.
  *
  * Conflating them is the failure the rewrite exists to fix. An elevation token
  * on a mark property is the error this catches: a border or a glyph is not a
@@ -37,6 +38,13 @@
  * What replaces them is measurement — scripts/check-contrast-css.mjs resolves
  * every role pairing through the real cascade at every depth.
  *
+ * The second rule is vocabulary. A raw palette step read where a role exists
+ * is an error, because that is how the drift got in the first time: component
+ * themes read hand-picked steps 185 times against 64 named roles, and the same
+ * job landed on a different number in each file. One text ramp was discovered
+ * six times under nine names. A separator had three answers. Nothing detected
+ * any of it, because every one of those reads is valid CSS that renders.
+ *
  * This is NOT a restriction on overriding. Consumers may set anything, anywhere;
  * it only governs the CSS this library ships.
  *
@@ -54,6 +62,13 @@ const GENERATED =
 const SPECS = /\.spec\.ts$/;
 
 const ELEVATION = /--itx-surface(-above(-2)?|-below|-[1-6])?(?![-a-z0-9])/;
+
+/**
+ * A raw palette step. The ladder declares these; nothing the library ships
+ * should read one, because every job they used to fill now has a name.
+ */
+const RAW_STEP =
+	/var\(\s*--itx-(neutral|colorway|danger|info|success|warning)-\d{1,2}\s*[,)]/;
 
 /**
  * Properties that paint a MARK. An elevation token here is the error: a border
@@ -162,12 +177,22 @@ for (const file of walk(ROOT)) {
 				!wantsSubstrate &&
 				(isCustom ? MARK_TOKEN.test(base) : MARK_PROPERTY.test(base));
 
+			const step = value.match(RAW_STEP);
+			if (step) {
+				findings.push({
+					file,
+					line: i + 1,
+					text: line.trim(),
+					why: `raw palette step (${step[0].replace(/var\(\s*|\s*[,)]$/g, "")}) — read the role for the job instead. Text is --itx-role-text / -quiet / -quieter / -disabled, a fill is -background-control or -background-interactive, an edge is --itx-role-edge or --itx-role-divider.`,
+				});
+			}
+
 			if (wantsMark && ELEVATION.test(value)) {
 				findings.push({
 					file,
 					line: i + 1,
 					text: line.trim(),
-					why: `elevation token on a mark (${name}) — a border or glyph is not a substrate, and this will not hold its contrast when the layer moves. Use a palette step, or a role like --itx-colorway-border.`,
+					why: `elevation token on a mark (${name}) — a border or glyph is not a substrate, and this will not hold its contrast when the layer moves. Use a role like --itx-role-edge.`,
 				});
 			}
 		});
@@ -175,7 +200,7 @@ for (const file of walk(ROOT)) {
 
 if (!findings.length) {
 	console.log(
-		"✓ colour axes clean — no elevation token on a mark, no token cycles",
+		"✓ colour axes clean — no elevation token on a mark, no raw step, no token cycles",
 	);
 	process.exit(0);
 }
