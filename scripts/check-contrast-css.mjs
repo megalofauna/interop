@@ -94,6 +94,38 @@ const ON_FILL = [
 		what: "placeholder and label on a hovered field",
 	},
 ];
+/*
+ * The role vocabulary. Every one of these is a named job rather than a step,
+ * so this is the half of the guarantee a consumer actually reads.
+ *
+ * The text tiers are measured twice — on the bare surface and on the
+ * interactive fill — because a row has no fill at rest and grows one on hover.
+ * The fill is derived from the surface it lands on, so its value moves with
+ * depth and only the DOM can resolve it.
+ */
+const ROLE_TEXT = [
+	{ role: "text", floor: 7 },
+	{ role: "text-quiet", floor: 7 },
+	{ role: "text-quieter", floor: 4.5 },
+	{ role: "text-disabled", floor: 3 },
+];
+const ROLE_FAMILY = [
+	{ suffix: "text-{f}", on: "", floor: 4.5, what: "family text" },
+	{
+		suffix: "text-{f}",
+		on: "background-{f}-subtle",
+		floor: 4.5,
+		what: "family text on its wash",
+	},
+	{ suffix: "edge-{f}", on: "", floor: 3, what: "family edge" },
+	{
+		suffix: "text-inverse",
+		on: "background-{f}",
+		floor: 4.5,
+		what: "the one label on a family fill",
+	},
+];
+
 const DEPTHS = [0, 1, 2];
 const SCHEMES = ["light", "dark"];
 
@@ -131,6 +163,52 @@ for (const scheme of SCHEMES)
 					floor,
 					label: `${family} ${role}${on ? ` on ${on}` : ""}`,
 				});
+
+		for (const { role, floor } of ROLE_TEXT) {
+			cases.push({
+				scheme,
+				depth,
+				fg: `--itx-role-${role}`,
+				on: "",
+				floor,
+				label: `${role} on the surface`,
+			});
+			cases.push({
+				scheme,
+				depth,
+				fg: `--itx-role-${role}`,
+				on: "--itx-role-background-interactive",
+				floor,
+				label: `${role} on the interactive fill`,
+			});
+		}
+		cases.push({
+			scheme,
+			depth,
+			fg: "--itx-role-edge",
+			on: "",
+			floor: 3,
+			label: "edge on the surface",
+		});
+		cases.push({
+			scheme,
+			depth,
+			fg: "--itx-role-edge",
+			on: "--itx-role-background-interactive",
+			floor: 3,
+			label: "edge on the interactive fill",
+		});
+
+		for (const family of FAMILIES)
+			for (const { suffix, on, floor, what } of ROLE_FAMILY)
+				cases.push({
+					scheme,
+					depth,
+					fg: `--itx-role-${suffix.replace("{f}", family)}`,
+					on: on ? `--itx-role-${on.replace("{f}", family)}` : "",
+					floor,
+					label: `${family}: ${what}`,
+				});
 	}
 
 /** Nest [itx-layer] to `depth`, innermost carrying the probe. */
@@ -164,8 +242,14 @@ ${probes}
 const cv = document.createElement('canvas'); cv.width = cv.height = 1;
 const cx = cv.getContext('2d', { willReadFrequently: true });
 const lin = (v) => { v /= 255; return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); };
-const lum = (s) => {
+/* Painted OVER its background, because a role can be translucent — the edge
+   and the divider are one ink at two opacities. Compositing over black instead
+   would read the ink's own luminance and report a border far darker than the
+   one on screen: 2.44 against the 3.10 it actually renders. Identical for an
+   opaque foreground, so every pairing goes through it. */
+const lum = (s, under) => {
   cx.fillStyle = '#000'; cx.fillRect(0,0,1,1);
+  if (under) { cx.fillStyle = under; cx.fillRect(0,0,1,1); }
   cx.fillStyle = s; cx.fillRect(0,0,1,1);
   const [r,g,b] = cx.getImageData(0,0,1,1).data;
   return 0.2126*lin(r) + 0.7152*lin(g) + 0.0722*lin(b);
@@ -174,7 +258,7 @@ const out = [];
 for (let i = 0; i < ${cases.length}; i++) {
   const bg = getComputedStyle(document.getElementById('b'+i)).backgroundColor;
   const fg = getComputedStyle(document.getElementById('f'+i)).color;
-  const a = lum(fg), b = lum(bg);
+  const a = lum(fg, bg), b = lum(bg);
   const hi = Math.max(a,b), lo = Math.min(a,b);
   out.push(((hi + 0.05) / (lo + 0.05)).toFixed(4) + ' ' + bg + ' | ' + fg);
 }
