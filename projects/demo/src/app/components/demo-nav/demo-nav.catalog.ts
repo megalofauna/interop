@@ -96,7 +96,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 				label: "Colour",
 				route: "/foundation/color",
 				description:
-					"Two relative axes — elevation for the substrate, contrast for everything drawn on it — so a component carries its own depth instead of picking a grey.",
+					"One relative axis for the substrate and a palette of fixed steps for everything drawn on it, with every contrast floor measured in a browser rather than asserted.",
 			},
 			{
 				label: "Principles",
@@ -310,7 +310,15 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 	{
 		label: "Experiments",
 		id: "experiments",
-		items: [],
+		items: [
+			{
+				label: "Colour mechanisms",
+				route: "/foundation/color-spike",
+				internal: true,
+				description:
+					"A parallel token set, read by nothing in the library. Bands spaced by job, borders as one ink at two opacities, and an accent family derived from a single hue number — each one measured in the browser as it resolves.",
+			},
+		],
 	},
 	{ label: "Rigs", id: "rigs", disabled: true, items: [] },
 	{ label: "Services", id: "services", disabled: true, items: [] },

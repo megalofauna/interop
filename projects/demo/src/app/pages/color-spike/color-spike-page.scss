@@ -1,0 +1,318 @@
+/*
+ * Colour spike page. Layout only — every colour on this page comes from the
+ * spike tokens so the measurements read what the spec produces.
+ */
+
+.spike-probes {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	pointer-events: none;
+}
+
+.spike-bands {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+	gap: var(--itx-spacing-3);
+}
+
+.spike-bands__cell {
+	display: grid;
+	gap: var(--itx-spacing-1);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-bands__swatch {
+	block-size: 4rem;
+	border: 1px solid var(--itxs-separator);
+	border-radius: var(--itx-radius);
+}
+
+.spike-bands__value {
+	color: var(--itxs-text-0);
+	font-variant-numeric: tabular-nums;
+}
+
+.spike-table {
+	inline-size: 100%;
+	margin-block: var(--itx-spacing-4);
+	border-collapse: collapse;
+	font-size: var(--itx-font-size-small);
+	font-variant-numeric: tabular-nums;
+
+	th,
+	td {
+		padding: var(--itx-spacing-2);
+		border-block-end: 1px solid var(--itxs-separator);
+		text-align: start;
+	}
+
+	thead th {
+		color: var(--itxs-text-0);
+		font-weight: var(--itx-font-weight-normal);
+	}
+}
+
+/* A miss is the whole point of the table, so it has to be unmissable. */
+.spike-table__miss {
+	color: var(--itxs-danger-text);
+	font-weight: var(--itx-font-weight-bold);
+}
+
+.spike-table__floor,
+.spike-table__spread {
+	color: var(--itxs-text-0);
+}
+
+.spike-demo {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	gap: var(--itx-spacing-3);
+	margin-block-start: var(--itx-spacing-4);
+}
+
+.spike-demo__box {
+	display: grid;
+	gap: var(--itx-spacing-2);
+	padding: var(--itx-spacing-3);
+	border-radius: var(--itx-radius);
+	color: var(--itxs-text-2);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-demo__sep {
+	padding-block-end: var(--itx-spacing-2);
+	border-block-end: 1px solid var(--itxs-separator);
+}
+
+.spike-demo__edge {
+	padding: var(--itx-spacing-2);
+	border: 1px solid var(--itxs-edge);
+	border-radius: var(--itx-radius-sm);
+}
+
+.spike-accents {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	gap: var(--itx-spacing-3);
+	margin-block-start: var(--itx-spacing-4);
+}
+
+.spike-accents__card {
+	display: flex;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--itx-spacing-3);
+	border: 1px solid;
+	border-radius: var(--itx-radius);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-accents__solid {
+	padding: var(--itx-spacing-1) var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+}
+
+/* ── Page-band candidates ────────────────────────────────────────────────── */
+
+.spike-arm {
+	display: flex;
+	gap: var(--itx-spacing-3);
+	align-items: center;
+	margin-block-end: var(--itx-spacing-4);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-arm__set {
+	display: flex;
+	gap: var(--itx-spacing-2);
+}
+
+.spike-arm__btn {
+	padding: var(--itx-spacing-1) var(--itx-spacing-3);
+	border: 1px solid var(--itxs-edge);
+	border-radius: var(--itx-radius-sm);
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+
+	&[aria-pressed="true"] {
+		background-color: var(--itxs-colorway-solid);
+		color: var(--itxs-on-solid);
+		border-color: transparent;
+	}
+}
+
+.spike-cands {
+	display: grid;
+	grid-template-columns: auto repeat(3, minmax(0, 1fr));
+	gap: var(--itx-spacing-4);
+	align-items: end;
+}
+
+/* Aligns to the ladders, so it needs the same rung height and no heading. */
+.spike-cand__key {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: var(--itx-font-size-xsmall);
+	font-variant-numeric: tabular-nums;
+	color: var(--itxs-text-0);
+
+	li {
+		display: flex;
+		align-items: center;
+		min-block-size: 2.25rem;
+		padding-inline-end: var(--itx-spacing-2);
+		white-space: nowrap;
+	}
+}
+
+.spike-cand__name {
+	display: flex;
+	gap: var(--itx-spacing-2);
+	align-items: center;
+	margin-block-end: var(--itx-spacing-2);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-cand__chosen {
+	padding: 0 var(--itx-spacing-2);
+	border-radius: var(--itx-radius-sm);
+	background-color: var(--itxs-colorway-solid);
+	color: var(--itxs-on-solid);
+	font-size: var(--itx-font-size-xsmall);
+	font-weight: var(--itx-font-weight-normal);
+}
+
+.spike-cand__facts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 var(--itx-spacing-3);
+	margin-block-end: var(--itx-spacing-3);
+	font-size: var(--itx-font-size-xsmall);
+	font-variant-numeric: tabular-nums;
+	color: var(--itxs-text-0);
+
+	b {
+		color: var(--itxs-text-2);
+		font-weight: var(--itx-font-weight-normal);
+	}
+}
+
+/*
+ * The rungs stack with no gap, so the eye judges each boundary directly. A gap
+ * would let the page colour show between them and manufacture a separation the
+ * ramp does not have.
+ */
+.spike-cand__ladder {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-radius: var(--itx-radius);
+	overflow: hidden;
+}
+
+.spike-cand__rung {
+	min-block-size: 2.25rem;
+}
+
+/* Where one band ends and the next begins. */
+.spike-cand__rung--band-start {
+	box-shadow: inset 0 1px 0 var(--itxs-edge);
+}
+
+/* ── Scrim ───────────────────────────────────────────────────────────────── */
+
+.spike-scrim {
+	position: relative;
+	margin-block-start: var(--itx-spacing-4);
+	padding: var(--itx-spacing-4);
+	background-color: var(--itxs-surface-2);
+	border-radius: var(--itx-radius);
+	color: var(--itxs-text-2);
+}
+
+.spike-scrim__veil {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	background-color: var(--itxs-scrim);
+	border-radius: inherit;
+}
+
+.spike-scrim__dialog {
+	--itxs-surface: var(--itxs-surface-4);
+
+	padding: var(--itx-spacing-3) var(--itx-spacing-4);
+	background-color: var(--itxs-surface-4);
+	border: 1px solid var(--itxs-edge);
+	border-radius: var(--itx-radius);
+	color: var(--itxs-text-2);
+}
+
+/* ── Naming worked sample ────────────────────────────────────────────────── */
+
+.spike-schemes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+	gap: var(--itx-spacing-4);
+}
+
+.spike-scheme__name {
+	margin-block-end: var(--itx-spacing-1);
+	font-size: var(--itx-font-size-small);
+}
+
+.spike-scheme__note {
+	margin-block-end: var(--itx-spacing-3);
+	color: var(--itxs-text-0);
+	font-size: var(--itx-font-size-xsmall);
+}
+
+/*
+ * Wraps rather than scrolls. A long token is the cost of a scheme, and
+ * truncating it hides the thing worth seeing — the hanging indent keeps a
+ * wrapped value visibly attached to its declaration.
+ */
+.spike-scheme__code {
+	margin: 0;
+	padding: var(--itx-spacing-3);
+	white-space: pre-wrap;
+	text-indent: -2ch hanging;
+	padding-inline-start: calc(var(--itx-spacing-3) + 2ch);
+	background-color: var(--itxs-surface-1);
+	border: 1px solid var(--itxs-separator);
+	border-radius: var(--itx-radius);
+	color: var(--itxs-text-2);
+	font-size: var(--itx-font-size-xsmall);
+	line-height: 1.7;
+	tab-size: 2;
+}
+
+/* ── Role vocabulary ─────────────────────────────────────────────────────── */
+
+.spike-vocab {
+	margin-block-end: var(--itx-spacing-4);
+}
+
+.spike-vocab__slot {
+	margin-block-end: var(--itx-spacing-1);
+	color: var(--itxs-text-1);
+	font-size: var(--itx-font-size-small);
+	font-family: var(--itx-font-family-mono, monospace);
+}
+
+.spike-vocab .spike-table {
+	margin-block: 0;
+
+	th {
+		inline-size: 40%;
+		font-weight: var(--itx-font-weight-normal);
+	}
+}

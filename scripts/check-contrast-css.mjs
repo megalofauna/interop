@@ -52,9 +52,48 @@ const PAIRINGS = [
 	{ role: "text", on: "", floor: 4.5 },
 	{ role: "border", on: "", floor: 3 },
 	{ role: "on-tint", on: "tint", floor: 4.5 },
+	/*
+	 * The brand fill and its label. The solid sits outside the step ramp — it is
+	 * an authored oklch, not a palette position — so the distance rule cannot
+	 * reach it and nothing else here would catch a drift. Radix hit the same
+	 * gap and answered it with --accent-contrast.
+	 */
+	{ role: "on-solid", on: "solid", floor: 4.5 },
 ];
 /** The page's own text, which is not a family role. */
 const PAGE_TEXT = { fg: "--itx-neutral-14", on: "", floor: 7 };
+
+/*
+ * Text on an interactive fill.
+ *
+ * A row has no fill at rest, so its text colour is chosen against the surface.
+ * On hover or selection a fill appears UNDERNEATH that text, and neither check
+ * could see it: both measure a foreground against --itx-surface and never
+ * against a surface with a fill on it.
+ *
+ * These are real pairings, not hypotheticals. Each names the components that
+ * produce it.
+ */
+const ON_FILL = [
+	{
+		fg: "--itx-neutral-14",
+		on: "--itx-neutral-2",
+		floor: 4.5,
+		what: "row text on a hover fill (table, tree, listbox option)",
+	},
+	{
+		fg: "--itx-neutral-9",
+		on: "--itx-neutral-2",
+		floor: 4.5,
+		what: "secondary text on a hover fill (page-nav link, option description)",
+	},
+	{
+		fg: "--itx-neutral-10",
+		on: "--itx-neutral-1",
+		floor: 4.5,
+		what: "placeholder and label on a hovered field",
+	},
+];
 const DEPTHS = [0, 1, 2];
 const SCHEMES = ["light", "dark"];
 
@@ -77,6 +116,11 @@ const cases = [];
 for (const scheme of SCHEMES)
 	for (const depth of DEPTHS) {
 		cases.push({ scheme, depth, ...PAGE_TEXT, label: "page text" });
+		// Fills are fixed steps, so depth does not move them. Measured at each
+		// depth anyway, so this keeps reporting if a fill ever becomes
+		// surface-relative.
+		for (const { fg, on, floor, what } of ON_FILL)
+			cases.push({ scheme, depth, fg, on, floor, label: what });
 		for (const family of FAMILIES)
 			for (const { role, on, floor } of PAIRINGS)
 				cases.push({
