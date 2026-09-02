@@ -13,6 +13,6 @@
 
 :where([interop-root]) {
 	/* ── Missing-icon placeholder (dev only) ───────────────────────────── */
-	--itx-icon-missing-color: var(--itx-danger-solid);
+	--itx-icon-missing-color: var(--itx-role-background-danger);
 	--itx-icon-missing-opacity: 0.35;
 }

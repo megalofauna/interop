@@ -25,8 +25,8 @@
  *   min-block-size $spacing-03         8px        → the dot
  *   padding 0 $spacing-02 $spacing-01  0 4px 2px  → inline breathing room
  *   border-radius 100px                           → round, at both shapes
- *   background $support-error         red-60      → --itx-danger-solid
- *   color $text-on-color              white       → --itx-danger-on-solid
+ *   background $support-error         red-60      → --itx-role-background-danger
+ *   color $text-on-color              white       → --itx-role-text-inverse
  *
  * Declined: Carbon's asymmetric padding (a 2px optical nudge for a line box
  * Carbon does not centre — we do centre it, so the nudge would push the digits
@@ -37,8 +37,8 @@
  *
  * ── Colour ─────────────────────────────────────────────────────────────────
  *
- * The pair is a FILL and its label: --itx-danger-solid is the full-strength
- * status fill, --itx-danger-on-solid the rung solved for 4.5:1 against it. Both
+ * The pair is a FILL and its label: --itx-role-background-danger is the full-strength
+ * status fill, --itx-role-text-inverse the rung solved for 4.5:1 against it. Both
  * re-point with `itx-status-palette`, so a badge follows the active palette
  * without naming a colour. Neither is an elevation token, and neither is a
  * contrast rank — a badge does not sit on the page's ladder, it paints over it.
@@ -61,8 +61,8 @@
 	--itx-badge-offset: 0px;
 
 	/* ── Colour ─────────────────────────────────────────────────────────── */
-	--itx-badge-background: var(--itx-danger-solid);
-	--itx-badge-color: var(--itx-danger-on-solid);
+	--itx-badge-background: var(--itx-role-background-danger);
+	--itx-badge-color: var(--itx-role-text-inverse);
 
 	/* ── Type ───────────────────────────────────────────────────────────────
 	 * Carbon $helper-text-01 — 12 / 16 / 400. Fixed rem, never

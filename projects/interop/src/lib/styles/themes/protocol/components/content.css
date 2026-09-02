@@ -55,14 +55,14 @@
  * everything drawn on top of it. Four values here were on the wrong side of
  * that line or the wrong rung of it.
  *
- *   link       --itx-colorway-solid -> --itx-colorway-text
+ *   link       --itx-role-background-colorway -> --itx-role-text-colorway
  *              `solid` is the brand FILL — a primary button's background,
  *              scheme-independent at L 0.500. A link is a MARK, and the brand
  *              family carries mark rungs solved against the current surface:
  *              `text` reaches L 0.506 light / 0.601 dark. Same category error
  *              the tab indicator had.
  *
- *   mark, ins  --itx-surface -> --itx-colorway-tint / --itx-contrast-1
+ *   mark, ins  --itx-surface -> --itx-role-background-colorway-subtle / --itx-contrast-1
  *              `--itx-surface` is the CURRENT layer. Highlighted text was
  *              painted the exact colour of the page behind it, so neither
  *              element rendered any highlight at all — in any scheme, at any
@@ -137,8 +137,8 @@
 	   and no bold rung, and <strong> that is not bolder than its text is not
 	   strong. The gap is the type system's, not this component's. */
 	--itx-content-strong-font-weight: 600;
-	--itx-content-mark-background: var(--itx-colorway-tint);
-	--itx-content-mark-color: var(--itx-colorway-on-tint);
+	--itx-content-mark-background: var(--itx-role-background-colorway-subtle);
+	--itx-content-mark-color: var(--itx-role-text-colorway);
 	--itx-content-ins-background: var(--itx-role-background-interactive);
 	--itx-content-del-color: var(--itx-role-text-quieter);
 
@@ -159,7 +159,7 @@
 	--itx-content-pre-background: var(--itx-surface-below);
 
 	/* ── Links ──────────────────────────────────────────────────────────── */
-	--itx-content-link-color: var(--itx-colorway-text);
+	--itx-content-link-color: var(--itx-role-text-colorway);
 	--itx-content-link-decoration: underline;
 	--itx-content-link-underline-offset: 0.2em;
 	--itx-content-link-decoration-thickness-hover: var(--itx-border-width-thick);

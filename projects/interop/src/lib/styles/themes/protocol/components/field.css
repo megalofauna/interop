@@ -53,7 +53,7 @@
 	   $spacing-03 between label and control. */
 	--itx-field-label-gap: var(--itx-spacing-1);
 	--itx-field-required-indicator: " *";
-	--itx-field-required-indicator-color: var(--itx-danger-solid);
+	--itx-field-required-indicator-color: var(--itx-role-background-danger);
 
 	/* ── Control row — geometry ──────────────────────────────────────────── */
 	/* md is the default and is restated in the size table at the foot, so the
@@ -87,7 +87,7 @@
 	/* -text, not -solid. The solid is a FILL, positioned by chroma so the hue
 	   reads as itself; as text it measured 2.86:1 once the page moved. The text
 	   role is derived per layer and clears 4.5:1 wherever the field lands. */
-	--itx-field-error-color: var(--itx-danger-text);
+	--itx-field-error-color: var(--itx-role-text-danger);
 	--itx-field-error-font-size: 0.75rem;
 	--itx-field-error-line-height: 1.3333;
 	--itx-field-errors-gap: var(--itx-spacing-1);
@@ -149,7 +149,7 @@
 	--itx-field-addon-color: var(--itx-role-text-quieter);
 	--itx-field-disabled-color: var(--itx-role-text-disabled);
 
-	--itx-field-invalid-color: var(--itx-danger-solid);
+	--itx-field-invalid-color: var(--itx-role-background-danger);
 }
 
 /* ── Text area — value text ──────────────────────────────────────────────── */

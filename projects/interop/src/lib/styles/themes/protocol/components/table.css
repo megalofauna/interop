@@ -106,7 +106,7 @@
 
 	/* ── Scroll-region focus ring ───────────────────────────────────────── */
 	/* Focus is where the brand survives an otherwise neutral component. The
-	   semantic `--itx-colorway-solid` rather than the light-only `-8` step, so the
+	   semantic `--itx-role-background-colorway` rather than the light-only `-8` step, so the
 	   ring holds its contrast in dark mode — matches the contained list. */
 
 	/* ── Group rows ─────────────────────────────────────────────────────── */

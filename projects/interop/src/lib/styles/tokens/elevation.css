@@ -83,7 +83,7 @@
 	--itx-layer: 0;
 
 	background-color: var(--itx-surface);
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 
 	/* ── Z-index scale ───────────────────────────────────────────────── */
 	--itx-z-dropdown: 1000;
@@ -195,7 +195,7 @@
 
 :where([itx-layer], [itx-sink]) {
 	background-color: var(--itx-surface);
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 }
 
 /*

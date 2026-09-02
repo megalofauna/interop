@@ -74,9 +74,9 @@
 	--itx-control-toggle-width: 2.5rem;
 	--itx-control-toggle-height: 1.25rem;
 	--itx-control-toggle-thumb-color: var(--itx-role-text-quieter);
-	--itx-control-toggle-thumb-color-on: var(--itx-colorway-on-solid);
+	--itx-control-toggle-thumb-color-on: var(--itx-role-text-inverse);
 	--itx-control-toggle-thumb-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.18);
-	--itx-control-toggle-border-color-checked: var(--itx-colorway-border);
+	--itx-control-toggle-border-color-checked: var(--itx-role-edge-colorway);
 
 	/* ── Focus ring ─────────────────────────────────────────────────────── */
 	--itx-control-focus-scale: 0.875;

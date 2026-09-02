@@ -38,7 +38,7 @@
 	--itx-resizable-handle-size: 14px;
 	--itx-resizable-handle-color: var(--itx-role-edge);
 	--itx-resizable-handle-color-hover: var(--itx-role-text-quieter);
-	--itx-resizable-handle-color-active: var(--itx-colorway-solid);
+	--itx-resizable-handle-color-active: var(--itx-role-background-colorway);
 	--itx-resizable-handle-corner-radius: var(--itx-radius-nominal) 0
 		var(--itx-radius-2) 0;
 

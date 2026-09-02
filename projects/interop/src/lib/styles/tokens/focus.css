@@ -74,7 +74,7 @@
  */
 
 :where([interop-root]) {
-	--itx-focus-color: var(--itx-colorway-solid);
+	--itx-focus-color: var(--itx-role-background-colorway);
 	--itx-focus-width: var(--itx-border-width-thick);
 	--itx-focus-style: solid;
 	--itx-focus-offset: 2px;

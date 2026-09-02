@@ -101,7 +101,7 @@
 	--itx-pn-link-border-color-hover: var(--itx-role-text-quieter);
 
 	/* focus */
-	--itx-pn-link-border-color-current: var(--itx-colorway-solid);
+	--itx-pn-link-border-color-current: var(--itx-role-background-colorway);
 	--itx-pn-link-background-color-current: var(
 		--itx-role-background-interactive
 	);
@@ -115,7 +115,7 @@
 	   The token is deliberately left undeclared rather than repaired: it stays
 	   a consumer lever, and the library expresses no opinion. To use it, supply
 	   valid syntax and a scheme-aware colour, e.g.
-	   radial-gradient(circle 25% at 0 0, var(--itx-colorway-tint), transparent). */
+	   radial-gradient(circle 25% at 0 0, var(--itx-role-background-colorway-subtle), transparent). */
 
 	/* vertical */
 	--itx-pn-label-color: var(--itx-role-text-quieter);
@@ -125,7 +125,7 @@
 	--itx-pn-child-font-size: var(--itx-font-size-caption);
 	--itx-pn-indicator-size: 5px;
 	--itx-pn-indicator-radius: var(--itx-radius-full);
-	--itx-pn-indicator-color: var(--itx-colorway-solid);
+	--itx-pn-indicator-color: var(--itx-role-background-colorway);
 }
 
 /*

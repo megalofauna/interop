@@ -49,7 +49,7 @@
  * 3: one step stronger than the rule it overlaps, which is the relationship
  * the interaction is meant to express.
  *
- * The selected indicator was --itx-colorway-solid. `solid` is the brand FILL —
+ * The selected indicator was --itx-role-background-colorway. `solid` is the brand FILL —
  * what a primary button's background is — and it is scheme-independent, fixed
  * at L 0.500 in both. The brand family also carries mark rungs that are solved
  * against the current surface and flip per scheme: `border` (edge, L 0.600
@@ -112,7 +112,7 @@
 	/* rank 3 — one step stronger than the rule it overlaps. */
 	--itx-tab-indicator-color-hover: var(--itx-role-edge);
 	/* The brand's mark rung, not its fill rung. */
-	--itx-tab-indicator-color-selected: var(--itx-colorway-text);
+	--itx-tab-indicator-color-selected: var(--itx-role-text-colorway);
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-tab-transition-duration: var(--itx-duration-fast);

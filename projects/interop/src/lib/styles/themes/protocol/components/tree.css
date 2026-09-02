@@ -44,10 +44,12 @@
 	 * Hover is the only paint a resting tree ever applies.               */
 	--itx-tree-row-background: transparent;
 	--itx-tree-row-background-hover: var(--itx-role-background-interactive);
-	--itx-tree-row-background-selected: var(--itx-colorway-tint);
+	--itx-tree-row-background-selected: var(
+		--itx-role-background-colorway-subtle
+	);
 	--itx-tree-row-background-current: var(--itx-surface);
 	--itx-tree-row-color: var(--itx-role-text);
-	--itx-tree-row-color-selected: var(--itx-colorway-text);
+	--itx-tree-row-color-selected: var(--itx-role-text-colorway);
 	--itx-tree-row-disabled-opacity: 0.5;
 
 	/* ── Accent bar ───────────────────────────────────────────────────────
@@ -55,8 +57,8 @@
 	 * which is why the tint underneath can stay as low as it does.       */
 	--itx-tree-row-accent-width: 4px;
 	--itx-tree-row-accent-color: transparent;
-	--itx-tree-row-accent-color-selected: var(--itx-colorway-solid);
-	--itx-tree-row-accent-color-current: var(--itx-colorway-solid);
+	--itx-tree-row-accent-color-selected: var(--itx-role-background-colorway);
+	--itx-tree-row-accent-color-current: var(--itx-role-background-colorway);
 
 	/* ── Guide rails ────────────────────────────────────────────────────── */
 	--itx-tree-guide-color: transparent;

@@ -48,7 +48,7 @@
  * The active fill was already rank 2 and stays there, so hover → active is now
  * a one-rank climb instead of a jump across axes.
  *
- * The selection bar was --itx-colorway-solid. `solid` is the brand FILL — a
+ * The selection bar was --itx-role-background-colorway. `solid` is the brand FILL — a
  * primary button's background — and it is scheme-independent at L 0.500. The
  * brand family also carries mark rungs solved against the current surface;
  * `text` reaches L 0.601 in dark, which is the visible step up for a 4px bar
@@ -86,7 +86,7 @@
 	--itx-option-accent-width: var(--itx-spacing-1);
 	--itx-option-accent-color: transparent;
 	/* The brand's mark rung, not its fill rung. */
-	--itx-option-accent-color-selected: var(--itx-colorway-text);
+	--itx-option-accent-color-selected: var(--itx-role-text-colorway);
 
 	/* ── Disabled ───────────────────────────────────────────────────────── */
 	--itx-option-disabled-opacity: 0.4;

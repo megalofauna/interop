@@ -43,7 +43,7 @@
  *
  * ── On the hardcoded fallbacks this file replaces ─────────────────────────
  *
- * Every colour used to be written `var(--itx-info-solid, #3b82f6)`. Those hexes
+ * Every colour used to be written `var(--itx-role-background-info, #3b82f6)`. Those hexes
  * were dead under [interop-root] — the status palettes always define the token
  * — but not harmless: they are light-only, they silently opt out of
  * `itx-status-palette`, and they are a second home for a value that already has
@@ -61,9 +61,9 @@
 	--itx-callout-accent-width: var(--itx-border-width-heavy);
 
 	/* ── Colour — info is the default variant ───────────────────────────── */
-	--itx-callout-background: var(--itx-info-tint);
-	--itx-callout-color: var(--itx-info-on-tint);
-	--itx-callout-accent: var(--itx-info-border);
+	--itx-callout-background: var(--itx-role-background-info-subtle);
+	--itx-callout-color: var(--itx-role-text-info);
+	--itx-callout-accent: var(--itx-role-edge-info);
 
 	/* ── Type ───────────────────────────────────────────────────────────────
 	 * Fluid on purpose (see the structural file). Leading is the typography
@@ -86,19 +86,19 @@
    with `itx-status-palette` without naming a colour. */
 
 :where([interop-root] interop-callout[data-type="warning"]) {
-	--itx-callout-background: var(--itx-warning-tint);
-	--itx-callout-color: var(--itx-warning-on-tint);
-	--itx-callout-accent: var(--itx-warning-border);
+	--itx-callout-background: var(--itx-role-background-warning-subtle);
+	--itx-callout-color: var(--itx-role-text-warning);
+	--itx-callout-accent: var(--itx-role-edge-warning);
 }
 
 :where([interop-root] interop-callout[data-type="success"]) {
-	--itx-callout-background: var(--itx-success-tint);
-	--itx-callout-color: var(--itx-success-on-tint);
-	--itx-callout-accent: var(--itx-success-border);
+	--itx-callout-background: var(--itx-role-background-success-subtle);
+	--itx-callout-color: var(--itx-role-text-success);
+	--itx-callout-accent: var(--itx-role-edge-success);
 }
 
 :where([interop-root] interop-callout[data-type="danger"]) {
-	--itx-callout-background: var(--itx-danger-tint);
-	--itx-callout-color: var(--itx-danger-on-tint);
-	--itx-callout-accent: var(--itx-danger-border);
+	--itx-callout-background: var(--itx-role-background-danger-subtle);
+	--itx-callout-color: var(--itx-role-text-danger);
+	--itx-callout-accent: var(--itx-role-edge-danger);
 }

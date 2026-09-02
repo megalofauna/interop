@@ -15,8 +15,8 @@
  *
  * Token surface for components/toast.css. Base values are inheritable on
  * [interop-root]; the per-`data-type` blocks rebind only the colour tokens and
- * pull from the status-colour palette (--itx-success-solid / --itx-danger-solid /
- * --itx-warning-solid / --itx-info-solid + their -surface + on-surface pairs), so a toast
+ * pull from the status-colour palette (--itx-role-background-success / --itx-role-background-danger /
+ * --itx-role-background-warning / --itx-role-background-info + their -surface + on-surface pairs), so a toast
  * re-skins with the active itx-status-palette. That mapping already matched
  * Carbon's structure — their `$notification-background-*` is a tint of the
  * status hue and their `$support-*` is the full-strength accent — so the
@@ -111,7 +111,7 @@
 	--itx-toast-close-background-hover: var(--itx-role-background-interactive);
 
 	/* ── Focus ────────────────────────────────────────────────────────────
-	 * Carbon's is 2px inset blue. Kept on --itx-colorway-solid and kept outside
+	 * Carbon's is 2px inset blue. Kept on --itx-role-background-colorway and kept outside
 	 * the box: focus is where our brand survives an otherwise neutral
 	 * component.                                                          */
 	--itx-toast-focus-offset-tight: 1px;
@@ -127,31 +127,31 @@
 /* ── Variants (rebind colour tokens from the status palette) ─────────────── */
 
 :where([interop-root] interop-toast-item[data-type="success"]) {
-	--itx-toast-background: var(--itx-success-tint);
-	--itx-toast-foreground: var(--itx-success-on-tint);
-	--itx-toast-border-color: var(--itx-success-solid);
-	--itx-toast-accent-color: var(--itx-success-solid);
+	--itx-toast-background: var(--itx-role-background-success-subtle);
+	--itx-toast-foreground: var(--itx-role-text-success);
+	--itx-toast-border-color: var(--itx-role-background-success);
+	--itx-toast-accent-color: var(--itx-role-background-success);
 }
 
 :where([interop-root] interop-toast-item[data-type="error"]) {
-	--itx-toast-background: var(--itx-danger-tint);
-	--itx-toast-foreground: var(--itx-danger-on-tint);
-	--itx-toast-border-color: var(--itx-danger-solid);
-	--itx-toast-accent-color: var(--itx-danger-solid);
+	--itx-toast-background: var(--itx-role-background-danger-subtle);
+	--itx-toast-foreground: var(--itx-role-text-danger);
+	--itx-toast-border-color: var(--itx-role-background-danger);
+	--itx-toast-accent-color: var(--itx-role-background-danger);
 }
 
 :where([interop-root] interop-toast-item[data-type="warning"]) {
-	--itx-toast-background: var(--itx-warning-tint);
-	--itx-toast-foreground: var(--itx-warning-on-tint);
-	--itx-toast-border-color: var(--itx-warning-solid);
-	--itx-toast-accent-color: var(--itx-warning-solid);
+	--itx-toast-background: var(--itx-role-background-warning-subtle);
+	--itx-toast-foreground: var(--itx-role-text-warning);
+	--itx-toast-border-color: var(--itx-role-background-warning);
+	--itx-toast-accent-color: var(--itx-role-background-warning);
 }
 
 :where([interop-root] interop-toast-item[data-type="info"]) {
-	--itx-toast-background: var(--itx-info-tint);
-	--itx-toast-foreground: var(--itx-info-on-tint);
-	--itx-toast-border-color: var(--itx-info-solid);
-	--itx-toast-accent-color: var(--itx-info-solid);
+	--itx-toast-background: var(--itx-role-background-info-subtle);
+	--itx-toast-foreground: var(--itx-role-text-info);
+	--itx-toast-border-color: var(--itx-role-background-info);
+	--itx-toast-accent-color: var(--itx-role-background-info);
 }
 
 :where([interop-root] interop-toast-item[data-type="loading"]) {

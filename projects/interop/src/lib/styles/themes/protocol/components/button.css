@@ -99,7 +99,7 @@
 	--itx-button-background-hover: var(--itx-role-background-control);
 	--itx-button-background-active: var(--itx-role-background-control);
 
-	/* Focused/selected state — kept on --itx-colorway-solid rather than Carbon's
+	/* Focused/selected state — kept on --itx-role-background-colorway rather than Carbon's
 	   inset double ring; see the note at the foot of this file. */
 }
 
@@ -112,7 +112,7 @@
 }
 
 /* ── primary ─────────────────────────────────────────────────────────────
-   The fill is the colourway's identity. The label is --itx-colorway-on-solid,
+   The fill is the colourway's identity. The label is --itx-role-text-inverse,
    which is authored for that fill. Inheriting the neutral maximum instead puts
    near-white on the fill in dark mode.
 
@@ -121,16 +121,25 @@
 
 :where(button[interop-button~="primary"]),
 :where([itx-as-button~="primary"]) {
-	--itx-button-background: var(--itx-colorway-solid);
-	--itx-button-foreground: var(--itx-colorway-on-solid);
-	--itx-button-border-color: var(--itx-role-divider);
+	--itx-button-background: var(--itx-role-background-colorway);
+	--itx-button-foreground: var(--itx-role-text-inverse);
+	/* Transparent because the variant is filled — the base's rule, which this
+	   block used to break with an opaque grey ring around a brand fill. */
+	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-colorway-solid-hover);
-	--itx-button-foreground-hover: var(--itx-colorway-on-solid);
+	/* Derived from the fill rather than authored beside it, so a consumer who
+	   changes the colourway gets states that follow. Scheme-invariant, like the
+	   fill. */
+	--itx-button-background-hover: oklch(
+		from var(--itx-button-background) calc(l - 0.05) c h
+	);
+	--itx-button-foreground-hover: var(--itx-role-text-inverse);
 
-	--itx-button-background-active: var(--itx-colorway-solid-active);
-	--itx-button-foreground-active: var(--itx-colorway-on-solid);
+	--itx-button-background-active: oklch(
+		from var(--itx-button-background) calc(l - 0.09) c h
+	);
+	--itx-button-foreground-active: var(--itx-role-text-inverse);
 }
 
 /* ── secondary ───────────────────────────────────────────────────────────
@@ -175,7 +184,7 @@
 	/*--itx-button-border-color-hover: var(--itx-role-edge);*/
 
 	--itx-button-foreground-active: var(--itx-role-text);
-	--itx-button-border-color-active: var(--itx-colorway-8);
+	--itx-button-border-color-active: var(--itx-role-edge-colorway);
 	--itx-button-background-active: var(--itx-button-background-hover);
 }
 
@@ -363,7 +372,7 @@
    background-coloured ring inside it). That needs a box-shadow the foundation
    only resolves for rest/hover/active, so it isn't expressible from the theme —
    and the outset ring is the better floor anyway, since it survives on any
-   fill. Kept as-is on --itx-colorway-solid.
+   fill. Kept as-is on --itx-role-background-colorway.
    Also skipped: ghost and danger (no such variants here), the 2xl size step,
    the 16/64 asymmetric padding (it exists to reserve room for Carbon's
    absolutely-pinned trailing icon; our addons sit in flow), and the
