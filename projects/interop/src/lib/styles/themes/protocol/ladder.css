@@ -195,6 +195,22 @@
 		oklch(from var(--itx-surface) calc(l - 0.025) c h),
 		oklch(from var(--itx-surface) calc(l + 0.025) c h)
 	);
+
+	/*
+	 * A filled control's own plane — button, track, thumb, tab, step indicator,
+	 * list marker. A full step where the interactive fill is half, and permanent
+	 * where that one is a state.
+	 *
+	 * Text clears every tier on it at every depth the engine can reach: 9.69 for
+	 * body, 7.86 quiet, 5.09 quieter, 3.44 disabled, worst arm. There is room
+	 * above it too — a control that hovers derives from its OWN rest fill rather
+	 * than from the surface, so an override carries into the state, and lands at
+	 * a step and a half out, which still clears 4.67 at the 4.5 tier.
+	 */
+	--itx-role-background-control: light-dark(
+		oklch(from var(--itx-surface) calc(l - 0.05) c h),
+		oklch(from var(--itx-surface) calc(l + 0.05) c h)
+	);
 }
 
 :where([interop-root]) {

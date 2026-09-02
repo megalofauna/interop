@@ -181,6 +181,14 @@ for (const scheme of SCHEMES)
 				floor,
 				label: `${role} on the interactive fill`,
 			});
+			cases.push({
+				scheme,
+				depth,
+				fg: `--itx-role-${role}`,
+				on: "--itx-role-background-control",
+				floor,
+				label: `${role} on a control fill`,
+			});
 		}
 		cases.push({
 			scheme,
