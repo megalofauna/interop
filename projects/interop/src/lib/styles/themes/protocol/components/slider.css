@@ -93,14 +93,14 @@
 	[interop-root] interop-slider-legend
 ) {
 	/* ── Track ──────────────────────────────────────────────────────────── */
-	--itx-slider-track-color: var(--itx-neutral-3);
+	--itx-slider-track-color: var(--itx-role-background-control);
 	--itx-slider-track-thickness: var(--itx-spacing-0_5); /* 2px */
 
 	/* ── Fill ───────────────────────────────────────────────────────────── */
-	--itx-slider-fill-color: var(--itx-neutral-14);
+	--itx-slider-fill-color: var(--itx-role-text);
 
 	/* ── Thumb ──────────────────────────────────────────────────────────── */
-	--itx-slider-thumb-color: var(--itx-neutral-14);
+	--itx-slider-thumb-color: var(--itx-role-text);
 	--itx-slider-thumb-size: var(--itx-spacing-3_5); /* 14px, Carbon's handle */
 	--itx-slider-thumb-size-active: var(--itx-spacing-5); /* 20px */
 	/*
@@ -115,7 +115,7 @@
 	--itx-slider-thumb-radius: var(--itx-radius-full);
 
 	/* ── Disabled ───────────────────────────────────────────────────────── */
-	--itx-slider-disabled-color: var(--itx-neutral-3);
+	--itx-slider-disabled-color: var(--itx-role-background-control);
 
 	/* ── Metrics ────────────────────────────────────────────────────────── */
 	/* Length of a VERTICAL slider; a horizontal one takes the full inline size
@@ -132,9 +132,9 @@
 	/* ── Marks ──────────────────────────────────────────────────────────── */
 	/* Read by [interop-slider-marks], which builds the tick gradients in
 	   TypeScript from these tokens. */
-	--itx-slider-mark-color: var(--itx-neutral-8);
+	--itx-slider-mark-color: var(--itx-role-edge);
 	--itx-slider-mark-thickness: var(--itx-border-width-thick); /* 2px */
-	--itx-slider-mark-minor-color: var(--itx-neutral-3);
+	--itx-slider-mark-minor-color: var(--itx-role-divider);
 	--itx-slider-mark-minor-thickness: var(--itx-border-width-hairline); /* 1px */
 	/*
 	 * LONGER than the resting thumb is wide, and that is the whole point. The
@@ -168,7 +168,7 @@
 	 * changed with the viewport would drag its own centring around, and the
 	 * whole component exists to hold that centre still.
 	 */
-	--itx-slider-legend-color: var(--itx-neutral-9);
+	--itx-slider-legend-color: var(--itx-role-text-quieter);
 	--itx-slider-legend-font-size: 0.75rem;
 	--itx-slider-legend-line-height: 1.3333;
 	--itx-slider-legend-gap: var(--itx-spacing-2);

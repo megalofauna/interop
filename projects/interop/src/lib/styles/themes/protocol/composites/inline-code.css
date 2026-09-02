@@ -24,7 +24,7 @@
 
 :where([interop-root] itx-inline-code) {
 	--itx-ic-background: var(--itx-surface-above);
-	--itx-ic-foreground: var(--itx-neutral-14);
+	--itx-ic-foreground: var(--itx-role-text);
 
 	--itx-ic-radius: var(--itx-radius-full);
 
@@ -58,5 +58,5 @@
 	--itx-button-background: transparent;
 	--itx-button-border-radius: var(--itx-radius-full);
 	--itx-button-background-hover: var(--itx-surface-below);
-	--itx-button-foreground-hover: var(--itx-neutral-14);
+	--itx-button-foreground-hover: var(--itx-role-text);
 }

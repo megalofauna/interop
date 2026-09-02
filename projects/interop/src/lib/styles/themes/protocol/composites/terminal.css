@@ -121,10 +121,10 @@
 
 :where([interop-root] itx-terminal.itx-term--plain) {
 	--itx-term-background: var(--itx-surface-below);
-	--itx-term-color: var(--itx-neutral-14);
+	--itx-term-color: var(--itx-role-text);
 	--itx-term-glow: none;
-	--itx-term-prompt-color: var(--itx-neutral-11);
-	--itx-term-delta-color: var(--itx-neutral-9);
-	--itx-term-caret-color: var(--itx-neutral-14);
-	--itx-term-scrollbar-color: var(--itx-neutral-8);
+	--itx-term-prompt-color: var(--itx-role-text-quiet);
+	--itx-term-delta-color: var(--itx-role-text-quieter);
+	--itx-term-caret-color: var(--itx-role-text);
+	--itx-term-scrollbar-color: var(--itx-role-edge);
 }

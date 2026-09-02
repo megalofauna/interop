@@ -106,7 +106,7 @@
 
 :where([interop-root] interop-content) {
 	/* ── Body ───────────────────────────────────────────────────────────── */
-	--itx-content-color: var(--itx-neutral-14);
+	--itx-content-color: var(--itx-role-text);
 	--itx-content-font-family: var(--itx-font-family-sans);
 	--itx-content-font-size: var(--itx-font-size-body);
 	--itx-content-line-height: var(--itx-line-height);
@@ -139,8 +139,8 @@
 	--itx-content-strong-font-weight: 600;
 	--itx-content-mark-background: var(--itx-colorway-tint);
 	--itx-content-mark-color: var(--itx-colorway-on-tint);
-	--itx-content-ins-background: var(--itx-neutral-2);
-	--itx-content-del-color: var(--itx-neutral-9);
+	--itx-content-ins-background: var(--itx-role-background-interactive);
+	--itx-content-del-color: var(--itx-role-text-quieter);
 
 	/* ── Code ───────────────────────────────────────────────────────────── */
 	/* em-relative sizing and padding so the chip tracks its surrounding text;
@@ -148,13 +148,13 @@
 	--itx-content-code-font-family: var(--itx-font-family-mono);
 	--itx-content-code-font-size: 0.875em;
 	--itx-content-code-font-weight: var(--itx-font-weight-body);
-	--itx-content-code-color: var(--itx-neutral-14);
+	--itx-content-code-color: var(--itx-role-text);
 	--itx-content-code-background: var(--itx-surface-above);
 	--itx-content-code-padding: 0.125em 0.275em;
 	/* Was 2px at rank 3 — an emphasis edge around a word. The chip's edge
 	   delimits, so hairline at rank 2. */
 	--itx-content-code-border-width: var(--itx-border-width-hairline);
-	--itx-content-code-border-color: var(--itx-neutral-3);
+	--itx-content-code-border-color: var(--itx-role-divider);
 	--itx-content-pre-padding: var(--itx-spacing-4);
 	--itx-content-pre-background: var(--itx-surface-below);
 
@@ -167,20 +167,20 @@
 	/* ── Quotes ─────────────────────────────────────────────────────────── */
 	--itx-content-quote-padding-inline-start: var(--itx-spacing-4);
 	--itx-content-quote-border-width: var(--itx-border-width-thick);
-	--itx-content-quote-border-color: var(--itx-neutral-8);
-	--itx-content-quote-color: var(--itx-neutral-11);
+	--itx-content-quote-border-color: var(--itx-role-edge);
+	--itx-content-quote-color: var(--itx-role-text-quiet);
 
 	/* ── Tables ─────────────────────────────────────────────────────────── */
 	--itx-content-table-cell-padding: var(--itx-spacing-2) var(--itx-spacing-3);
 	--itx-content-table-border-width: var(--itx-border-width-hairline);
-	--itx-content-table-border-color: var(--itx-neutral-3);
+	--itx-content-table-border-color: var(--itx-role-divider);
 	--itx-content-table-header-background: var(--itx-surface-above);
 	--itx-content-table-header-font-weight: 600;
-	--itx-content-caption-color: var(--itx-neutral-9);
+	--itx-content-caption-color: var(--itx-role-text-quieter);
 	--itx-content-caption-font-size: var(--itx-font-size-label);
 	--itx-content-caption-padding-block-end: var(--itx-spacing-2);
 
 	/* ── Rule ───────────────────────────────────────────────────────────── */
 	--itx-content-rule-width: var(--itx-border-width-hairline);
-	--itx-content-rule-color: var(--itx-neutral-3);
+	--itx-content-rule-color: var(--itx-role-divider);
 }

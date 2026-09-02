@@ -31,13 +31,10 @@
 	 * about tooltips rather than a migration.
 	 */
 	--itx-tooltip-background: light-dark(
-		var(--itx-neutral-11),
-		var(--itx-neutral-2)
+		var(--itx-role-text-quiet),
+		var(--itx-surface-2)
 	);
-	--itx-tooltip-foreground: light-dark(
-		var(--itx-neutral-2),
-		var(--itx-neutral-14)
-	);
+	--itx-tooltip-foreground: var(--itx-role-text-inverse);
 	--itx-tooltip-padding: 0.375rem 0.625rem;
 	--itx-tooltip-font-size: 0.8125rem;
 	--itx-tooltip-max-width: 18rem;

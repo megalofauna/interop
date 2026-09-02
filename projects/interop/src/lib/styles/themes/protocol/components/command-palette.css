@@ -55,12 +55,12 @@
 	--itx-cmdp-offset-block-start: 12vh;
 	--itx-cmdp-aside-inline-size: 12rem;
 	--itx-cmdp-background: var(--itx-surface-above);
-	--itx-cmdp-color: var(--itx-neutral-14);
+	--itx-cmdp-color: var(--itx-role-text);
 	--itx-cmdp-border-width: var(--itx-border-width-hairline);
 	/* The house hairline. NOT --itx-contrast-3, which resolves to neutral-5 — a
 	   sub-0.1 luminance delta against our surfaces, i.e. an edge you cannot
 	   see. Same value as the table's row rules and the tab list. */
-	--itx-cmdp-border-color: var(--itx-neutral-2);
+	--itx-cmdp-border-color: var(--itx-role-divider);
 	/* Follows the house knob, like everything else.
 
 	   There were two radii here, one per state, on the theory that a panel
@@ -79,7 +79,7 @@
 	--itx-cmdp-backdrop-filter: blur(2px);
 
 	/* common */
-	--itx-cmdp-muted: var(--itx-neutral-9);
+	--itx-cmdp-muted: var(--itx-role-text-quieter);
 
 	/*
 	 * The rule under the filter field. Was a hardcoded #ff9c56 — light-only,
@@ -121,7 +121,7 @@
 	   light disc with a near-black X in dark. */
 	--itx-cmdp-clear-background: var(--itx-surface-below);
 	--itx-cmdp-clear-background-hover: var(--itx-surface-below);
-	--itx-cmdp-clear-color: var(--itx-neutral-14);
+	--itx-cmdp-clear-color: var(--itx-role-text);
 
 	/* list */
 	--itx-cmdp-list-padding: var(--itx-spacing-2);
@@ -131,9 +131,9 @@
 	--itx-cmdp-option-padding-block: var(--itx-spacing-2_5);
 	--itx-cmdp-option-padding-inline: var(--itx-spacing-3);
 	--itx-cmdp-option-radius: var(--itx-radius);
-	--itx-cmdp-option-color: var(--itx-neutral-14);
-	--itx-cmdp-option-color-active: var(--itx-neutral-14);
-	--itx-cmdp-option-background-active: var(--itx-neutral-2);
+	--itx-cmdp-option-color: var(--itx-role-text);
+	--itx-cmdp-option-color-active: var(--itx-role-text);
+	--itx-cmdp-option-background-active: var(--itx-role-background-interactive);
 	--itx-cmdp-option-disabled-opacity: 0.45;
 	/* Carbon $label-01 — 12/16. Fixed, for the same reason as the input. */
 	--itx-cmdp-desc-font-size: 0.75rem;

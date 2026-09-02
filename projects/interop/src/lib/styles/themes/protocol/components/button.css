@@ -80,21 +80,24 @@
 	   between that ancestor and the button, which reclaims the token. Variant
 	   rules below stay on button[interop-button~="…"] because they're keyed off
 	   attributes that don't propagate up the tree. */
-	--itx-button-background: var(--itx-neutral-3);
+	--itx-button-background: var(--itx-role-background-control);
 
 	/* aria-pressed="true" — a toggle that is ON. One step past active on the
 	   same monotonic ramp the other states use, so "held down" and "latched on"
 	   read as the same family rather than two vocabularies. */
-	--itx-button-background-pressed: var(--itx-neutral-4);
-	--itx-button-foreground-pressed: var(--itx-neutral-14);
-	--itx-button-foreground: var(--itx-neutral-14);
+	--itx-button-background-pressed: light-dark(
+		oklch(from var(--itx-button-background) calc(l - 0.025) c h),
+		oklch(from var(--itx-button-background) calc(l + 0.025) c h)
+	);
+	--itx-button-foreground-pressed: var(--itx-role-text);
+	--itx-button-foreground: var(--itx-role-text);
 	--itx-button-border-color: transparent;
 	--itx-button-box-shadow: none;
 
 	/* Hover / active — Carbon's state ramps are monotonic: each state sits one
 	   step further from the page than the one before it. */
-	--itx-button-background-hover: var(--itx-neutral-3);
-	--itx-button-background-active: var(--itx-neutral-3);
+	--itx-button-background-hover: var(--itx-role-background-control);
+	--itx-button-background-active: var(--itx-role-background-control);
 
 	/* Focused/selected state — kept on --itx-colorway-solid rather than Carbon's
 	   inset double ring; see the note at the foot of this file. */
@@ -120,7 +123,7 @@
 :where([itx-as-button~="primary"]) {
 	--itx-button-background: var(--itx-colorway-solid);
 	--itx-button-foreground: var(--itx-colorway-on-solid);
-	--itx-button-border-color: var(--itx-neutral-3);
+	--itx-button-border-color: var(--itx-role-divider);
 	--itx-button-box-shadow: none;
 
 	--itx-button-background-hover: var(--itx-colorway-solid-hover);
@@ -135,14 +138,17 @@
 
 :where(button[interop-button~="secondary"]),
 :where([itx-as-button~="secondary"]) {
-	--itx-button-background: var(--itx-neutral-4);
-	--itx-button-foreground: var(--itx-neutral-11);
-	--itx-button-border-color: var(--itx-neutral-1);
+	--itx-button-background: var(--itx-role-background-control);
+	--itx-button-foreground: var(--itx-role-text-quiet);
+	--itx-button-border-color: var(--itx-role-divider);
 	--itx-button-box-shadow: var(--itx-shadow-sm);
 
-	--itx-button-background-hover: var(--itx-neutral-5);
+	--itx-button-background-hover: light-dark(
+		oklch(from var(--itx-button-background) calc(l - 0.025) c h),
+		oklch(from var(--itx-button-background) calc(l + 0.025) c h)
+	);
 
-	--itx-button-background-active: var(--itx-neutral-3);
+	--itx-button-background-active: var(--itx-role-background-control);
 }
 
 /* ── tertiary ────────────────────────────────────────────────────────────
@@ -159,16 +165,16 @@
 
 :where(button[interop-button~="tertiary"]),
 :where([itx-as-button~="tertiary"]) {
-	--itx-button-background: var(--itx-neutral-1);
-	--itx-button-foreground: var(--itx-neutral-10);
-	--itx-button-border-color: var(--itx-neutral-1);
+	--itx-button-background: transparent;
+	--itx-button-foreground: var(--itx-role-text-quieter);
+	--itx-button-border-color: var(--itx-role-divider);
 	--itx-button-box-shadow: none;
 
-	--itx-button-foreground-hover: var(--itx-neutral-12);
-	--itx-button-background-hover: var(--itx-neutral-3);
-	/*--itx-button-border-color-hover: var(--itx-neutral-8);*/
+	--itx-button-foreground-hover: var(--itx-role-text);
+	--itx-button-background-hover: var(--itx-role-background-control);
+	/*--itx-button-border-color-hover: var(--itx-role-edge);*/
 
-	--itx-button-foreground-active: var(--itx-neutral-12);
+	--itx-button-foreground-active: var(--itx-role-text);
 	--itx-button-border-color-active: var(--itx-colorway-8);
 	--itx-button-background-active: var(--itx-button-background-hover);
 }
@@ -319,18 +325,18 @@
 	button[interop-button~="action"][aria-disabled="true"]
 ) {
 	--itx-button-disabled-opacity: 1;
-	--itx-button-background: var(--itx-neutral-3);
-	--itx-button-foreground: var(--itx-neutral-9);
-	--itx-button-border-color: var(--itx-neutral-3);
+	--itx-button-background: var(--itx-role-background-control);
+	--itx-button-foreground: var(--itx-role-text-quieter);
+	--itx-button-border-color: var(--itx-role-divider);
 	--itx-button-box-shadow: none;
 
-	--itx-button-background-hover: var(--itx-neutral-3);
-	--itx-button-foreground-hover: var(--itx-neutral-9);
-	--itx-button-border-color-hover: var(--itx-neutral-3);
+	--itx-button-background-hover: var(--itx-role-background-control);
+	--itx-button-foreground-hover: var(--itx-role-text-quieter);
+	--itx-button-border-color-hover: var(--itx-role-divider);
 
-	--itx-button-background-active: var(--itx-neutral-3);
-	--itx-button-foreground-active: var(--itx-neutral-9);
-	--itx-button-border-color-active: var(--itx-neutral-3);
+	--itx-button-background-active: var(--itx-role-background-control);
+	--itx-button-foreground-active: var(--itx-role-text-quieter);
+	--itx-button-border-color-active: var(--itx-role-divider);
 }
 
 /* Carbon's outline variants stay transparent when disabled — only the border
@@ -345,11 +351,11 @@
 	button[interop-button~="tertiary"][aria-disabled="true"]
 ) {
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-neutral-8);
+	--itx-button-foreground: var(--itx-role-text-disabled);
 	--itx-button-background-hover: transparent;
-	--itx-button-foreground-hover: var(--itx-neutral-8);
+	--itx-button-foreground-hover: var(--itx-role-text-disabled);
 	--itx-button-background-active: transparent;
-	--itx-button-foreground-active: var(--itx-neutral-8);
+	--itx-button-foreground-active: var(--itx-role-text-disabled);
 }
 
 /* ── Not taken from Carbon ───────────────────────────────────────────────── */
