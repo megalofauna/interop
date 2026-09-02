@@ -191,22 +191,44 @@ describe("Layer engine", () => {
 			expect(layerOf(el(pinned, { "itx-layer": "" }))).toEqual("2");
 		});
 
-		it("holds a palette step at exactly one colour, whatever the depth", () => {
+		it("holds a role at exactly one colour, whatever the depth", () => {
 			const a = el(root, { "itx-layer": "" });
 			const b = el(a, { "itx-layer": "" });
 
-			const step = (node: HTMLElement) => {
+			const paint = (node: HTMLElement, token: string) => {
 				const probe = el(node);
-				probe.style.backgroundColor = "var(--itx-neutral-8)";
+				probe.style.backgroundColor = `var(${token})`;
 				return getComputedStyle(probe).backgroundColor;
 			};
 
-			// The bargain the ranks were traded for: position carries the
-			// guarantee, so a step means one colour everywhere and a developer
-			// can hold it in their head. The surfaces still move underneath it.
-			expect(step(a)).toEqual(step(root));
-			expect(step(b)).toEqual(step(root));
+			// The bargain: a role means one colour everywhere, so a developer can
+			// hold it in their head. The surfaces still move underneath it.
+			for (const node of [a, b])
+				expect(paint(node, "--itx-role-text")).toEqual(
+					paint(root, "--itx-role-text"),
+				);
 			expect(surfaceOf(a)).not.toEqual(surfaceOf(root));
+		});
+
+		it("moves the derived fills with the surface, which is the exception", () => {
+			// The two roles computed FROM --itx-surface rather than authored
+			// beside it. They have to move, or a hovered row at depth would paint
+			// the page's hover colour.
+			const a = el(root, { "itx-layer": "" });
+
+			const paint = (node: HTMLElement, token: string) => {
+				const probe = el(node);
+				probe.style.backgroundColor = `var(${token})`;
+				return getComputedStyle(probe).backgroundColor;
+			};
+
+			for (const token of [
+				"--itx-role-background-interactive",
+				"--itx-role-background-control",
+			])
+				expect(paint(a, token))
+					.withContext(`${token} should follow the surface`)
+					.not.toEqual(paint(root, token));
 		});
 	});
 
