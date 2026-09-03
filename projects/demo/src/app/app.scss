@@ -34,11 +34,11 @@
 	// column fills it rather than floating inside something wider.
 	--shell-max: 86rem;
 	--shell-gutter: var(--itx-spacing-4);
-	// Separation rule on the nav's inline end. --itx-neutral-8 is the house
-	// hairline (--itx-neutral-8 resolves to neutral-5, a sub-0.1 luminance delta
-	// that reads as nothing at 1px). Shared with the drawer's own border in
-	// demo-nav.scss so the two modes draw the same line.
-	--shell-rule: var(--itx-neutral-8);
+	// Separation rule on the nav's inline end. --itx-role-edge is the house
+	// hairline: an edge that has to read, so it clears 3:1 on every surface.
+	// Shared with the drawer's own border in demo-nav.scss so the two modes
+	// draw the same line.
+	--shell-rule: var(--itx-role-edge);
 	/* Both nav controls — the header's toggle and the drawer's own close button
 	   — sit at one size, defined once here so they cannot drift apart. They are
 	   in different components, so a shared token is the only thing that can
@@ -163,14 +163,14 @@
 	// opens read as one component.
 	border-radius: var(--itx-radius);
 	background: none;
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 	font-size: 0.75rem;
 	line-height: 1.3333;
 	cursor: pointer;
 
 	&:hover {
-		background: var(--itx-neutral-2);
-		color: var(--itx-neutral-14);
+		background: var(--itx-role-background-interactive);
+		color: var(--itx-role-text);
 	}
 
 	// It is a <button> and it had no focus treatment.
@@ -185,7 +185,7 @@
 	background: none;
 	border: none;
 	cursor: pointer;
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 	/* Through the button's own tokens rather than a `padding` shorthand. The
 	   shorthand was a class beating the foundation's :where() rules, which left
 	   this at 4px and 32×32 — a third smaller than the control it toggles. */
@@ -194,18 +194,18 @@
 	--itx-button-padding-block: var(--shell-nav-btn-pad);
 
 	&:hover {
-		background: var(--itx-neutral-2);
+		background: var(--itx-role-background-interactive);
 	}
 }
 
 .shell__title {
 	font-weight: 700;
 	font-size: 1.125rem;
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 	text-decoration: none;
 
 	&:hover {
-		color: var(--itx-colorway-solid);
+		color: var(--itx-role-background-colorway);
 	}
 
 	&:focus-visible {
@@ -222,7 +222,7 @@
 	text-decoration: none;
 
 	&:hover {
-		color: var(--itx-neutral-14);
+		color: var(--itx-role-text);
 		text-decoration: underline;
 		text-underline-offset: 0.25em;
 	}
@@ -255,7 +255,7 @@
 	align-items: center;
 	gap: var(--itx-spacing-2);
 	font-size: 1.125rem;
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 	white-space: nowrap;
 	// Staying in flow is the point, but nowrap text must clip rather than push:
 	// otherwise the longest page title in the app sets the header's minimum and
@@ -268,7 +268,7 @@
 }
 
 .shell__crumb-title {
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 	min-inline-size: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;

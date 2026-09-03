@@ -431,7 +431,7 @@ All 41, set on `[interop-root]`, verified against
 | Token | Default |
 |---|---|
 | `--itx-toast-background` | `var(--itx-surface-above)` |
-| `--itx-toast-foreground` | `var(--itx-on-surface)` |
+| `--itx-toast-foreground` | `var(--itx-role-text)` |
 | `--itx-toast-border-width` | `0px` |
 | `--itx-toast-border-color` | `var(--itx-border)` |
 | `--itx-toast-border-radius` | `var(--itx-radius-none)` — 0 |

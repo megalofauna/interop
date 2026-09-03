@@ -5,8 +5,8 @@
 	max-width: var(--itx-spacing-64);
 	padding: var(--itx-spacing-4);
 	background: var(--itx-surface);
-	color: var(--itx-neutral-14);
-	/* border: 2px solid var(--itx-neutral-2); */
+	color: var(--itx-role-text);
+	/* border: 2px solid var(--itx-role-divider); */
 	font-size: var(--itx-font-size-caption);
 	margin-bottom: var(--itx-spacing-1);
 	flex: var(--demo-state-flex, 1 1 auto);
@@ -19,5 +19,5 @@
 	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 }

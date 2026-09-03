@@ -65,26 +65,21 @@
 
 	/* Label */
 	--itx-cb-label-padding-inline: 0;
-	--itx-cb-label-foreground: var(--itx-neutral-9);
+	--itx-cb-label-foreground: var(--itx-role-text-quieter);
 	--itx-cb-label-font-size: var(--itx-font-size-caption);
 	--itx-cb-label-font-weight: 500;
 	--itx-cb-label-letter-spacing: 0.05em;
 
 	/* Actions */
-	--itx-toolbar-background: var(--itx-neutral-2);
+	--itx-toolbar-background: var(--itx-role-background-interactive);
 	--itx-toolbar-border-width: 0px;
 	--itx-toolbar-border-style: solid;
-	--itx-toolbar-border-color: var(--itx-neutral-3);
+	--itx-toolbar-border-color: var(--itx-role-divider);
 	--itx-toolbar-border-radius: var(--itx-radius);
 	--itx-cb-actions-radius: var(--itx-radius-full);
 
 	/*
 	 * Action buttons (copy, word-wrap).
-	 *
-	 * These five were hardcoded as literal --itx-neutral-* reads inside the
-	 * FOUNDATION file, which that file's own header explicitly rules out: it
-	 * states it carries no values and that the theme is the single source of
-	 * truth for every --itx-cb-* token. They are tokens now.
 	 *
 	 * Transparent at rest. The header already has its own fill, so a second
 	 * filled rectangle sitting on it made the toolbar read as a control strip

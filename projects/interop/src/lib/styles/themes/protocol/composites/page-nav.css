@@ -73,7 +73,7 @@
 	   links' own padding and --itx-pn-gap. */
 	--itx-pn-border-width: 2px;
 	--itx-pn-border-style: solid;
-	--itx-pn-border-color: var(--itx-neutral-3);
+	--itx-pn-border-color: var(--itx-role-divider);
 	--itx-pn-gap: 0;
 	--itx-pn-z-index: 10;
 
@@ -85,9 +85,9 @@
 	--itx-pn-link-border-color: transparent;
 	--itx-pn-link-border-width: var(--itx-border-width-thick);
 
-	--itx-pn-link-color: var(--itx-neutral-9);
-	--itx-pn-link-color-active: var(--itx-neutral-14);
-	--itx-pn-link-background-hover: var(--itx-neutral-2);
+	--itx-pn-link-color: var(--itx-role-text-quieter);
+	--itx-pn-link-color-active: var(--itx-role-text);
+	--itx-pn-link-background-hover: var(--itx-role-background-interactive);
 	/* One size, in every state. These were 16/32 at rest and 12/16 once stuck,
 	   so the whole bar resized under the reader mid-scroll — motion that drew
 	   attention to the chrome rather than the content, and shifted the link the
@@ -97,12 +97,14 @@
 	--itx-pn-link-radius: var(--itx-radius-sm);
 
 	/* Hover */
-	--itx-pn-link-color-hover: var(--itx-neutral-14);
-	--itx-pn-link-border-color-hover: var(--itx-neutral-9);
+	--itx-pn-link-color-hover: var(--itx-role-text);
+	--itx-pn-link-border-color-hover: var(--itx-role-text-quieter);
 
 	/* focus */
-	--itx-pn-link-border-color-current: var(--itx-colorway-solid);
-	--itx-pn-link-background-color-current: var(--itx-neutral-2);
+	--itx-pn-link-border-color-current: var(--itx-role-background-colorway);
+	--itx-pn-link-background-color-current: var(
+		--itx-role-background-interactive
+	);
 	/* No background image by default. This carried
 	   `radial-gradient(circle at 0 0 25%, #ff9c56, transparent)`, which is
 	   invalid — a radial-gradient's size must precede `at`, and a three-value
@@ -113,17 +115,17 @@
 	   The token is deliberately left undeclared rather than repaired: it stays
 	   a consumer lever, and the library expresses no opinion. To use it, supply
 	   valid syntax and a scheme-aware colour, e.g.
-	   radial-gradient(circle 25% at 0 0, var(--itx-colorway-tint), transparent). */
+	   radial-gradient(circle 25% at 0 0, var(--itx-role-background-colorway-subtle), transparent). */
 
 	/* vertical */
-	--itx-pn-label-color: var(--itx-neutral-9);
+	--itx-pn-label-color: var(--itx-role-text-quieter);
 	--itx-pn-item-gap: var(--itx-spacing-1);
 	--itx-pn-indent: var(--itx-spacing-3);
-	--itx-pn-child-color: var(--itx-neutral-9);
+	--itx-pn-child-color: var(--itx-role-text-quieter);
 	--itx-pn-child-font-size: var(--itx-font-size-caption);
 	--itx-pn-indicator-size: 5px;
 	--itx-pn-indicator-radius: var(--itx-radius-full);
-	--itx-pn-indicator-color: var(--itx-colorway-solid);
+	--itx-pn-indicator-color: var(--itx-role-background-colorway);
 }
 
 /*

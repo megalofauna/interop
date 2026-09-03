@@ -124,7 +124,7 @@
 [interop-root] {
 	/* Defaults to the colourway's solid, so focus follows your brand. This is
 	   the one place brand survives an otherwise neutral component. */
-	--itx-focus-color: var(--itx-colorway-solid);
+	--itx-focus-color: var(--itx-role-background-colorway);
 
 	/* Goes to the heavy border step under a high-contrast preference, automatically. */
 	--itx-focus-width: var(--itx-border-width-thick);
@@ -239,7 +239,7 @@
 
 /* ── Do not set these ────────────────────────────────────────────────── */
 /*
- * --itx-surface, --itx-surface-above, --itx-surface-above-2, --itx-surface-below
+ * --itx-surface, --itx-surface-above
  *
  * They are a SOURCE, never an override point. The elevation engine re-declares
  * every one of them at each layer boundary, so a value you set here is stomped

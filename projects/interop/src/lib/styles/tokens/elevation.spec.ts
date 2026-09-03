@@ -44,31 +44,25 @@ describe("Layer engine", () => {
 	/**
 	 * The surface oracle.
 	 *
-	 * Surfaces are COMPUTED by the engine from six dials, so reading a
-	 * published number back would only prove the engine agrees with itself.
-	 * This evaluates the documented formula —
-	 *
-	 *     clamp(min, page + step * layer, max)
-	 *
-	 * — in TypeScript, from the dials as the theme publishes them. The CSS
-	 * cannot influence it, which is what makes it an oracle rather than an echo.
+	 * Surfaces are authored values now, so there is no formula left to
+	 * reimplement — reading one back would be an echo. What the engine can
+	 * still get wrong is the MAP: which surface each depth indexes. The map is
+	 * the identity, written here as the contract rather than assumed, and the
+	 * lightness is read from the theme — so a change to either side shows up.
 	 */
-	const dial = (scheme: string, name: string): number => {
-		const found = LADDER_CSS.match(
-			new RegExp(`--itx-ramp-${scheme}-${name}:\\s*(-?[\\d.]+)`),
-		);
-		if (!found) throw new Error(`no --itx-ramp-${scheme}-${name} in the theme`);
-		return Number(found[1]);
-	};
+	const SURFACE_AT = [0, 1, 2] as const;
 
-	const surfaceL = (scheme: string, layer: number): number =>
-		Math.min(
-			dial(scheme, "max"),
-			Math.max(
-				dial(scheme, "min"),
-				dial(scheme, "page") + dial(scheme, "step") * layer,
+	const surfaceL = (scheme: "light" | "dark", layer: number): number => {
+		const index = SURFACE_AT[Math.min(layer, SURFACE_AT.length - 1)];
+		const found = LADDER_CSS.match(
+			new RegExp(
+				`--itx-surface-${index}:\\s*light-dark\\(\\s*` +
+					`oklch\\(\\s*([\\d.]+)[\\s\\S]*?\\)\\s*,\\s*oklch\\(\\s*([\\d.]+)`,
 			),
 		);
+		if (!found) throw new Error(`no --itx-surface-${index} in the theme`);
+		return Number(scheme === "light" ? found[1] : found[2]);
+	};
 
 	/** Chrome resolves calc() and serializes as oklch(L C H). */
 	const lightnessOf = (color: string): number => {
@@ -88,18 +82,6 @@ describe("Layer engine", () => {
 		getComputedStyle(node).getPropertyValue("--itx-layer").trim();
 	const surfaceOf = (node: HTMLElement): string =>
 		getComputedStyle(node).backgroundColor;
-
-	/**
-	 * Resolve a published ramp NUMBER to a real colour, composing it the way the
-	 * engine does — the theme publishes lightness numbers, not finished colours.
-	 */
-	const ramp = (name: string, host: HTMLElement = root): string => {
-		const probe = el(host);
-		probe.style.backgroundColor =
-			`light-dark(oklch(var(--itx-ramp-${name}-light) var(--itx-tint-light)),` +
-			` oklch(var(--itx-ramp-${name}-dark) var(--itx-tint-dark)))`;
-		return getComputedStyle(probe).backgroundColor;
-	};
 
 	beforeEach(() => {
 		style = document.createElement("style");
@@ -209,22 +191,44 @@ describe("Layer engine", () => {
 			expect(layerOf(el(pinned, { "itx-layer": "" }))).toEqual("2");
 		});
 
-		it("holds a palette step at exactly one colour, whatever the depth", () => {
+		it("holds a role at exactly one colour, whatever the depth", () => {
 			const a = el(root, { "itx-layer": "" });
 			const b = el(a, { "itx-layer": "" });
 
-			const step = (node: HTMLElement) => {
+			const paint = (node: HTMLElement, token: string) => {
 				const probe = el(node);
-				probe.style.backgroundColor = "var(--itx-neutral-8)";
+				probe.style.backgroundColor = `var(${token})`;
 				return getComputedStyle(probe).backgroundColor;
 			};
 
-			// The bargain the ranks were traded for: position carries the
-			// guarantee, so a step means one colour everywhere and a developer
-			// can hold it in their head. The surfaces still move underneath it.
-			expect(step(a)).toEqual(step(root));
-			expect(step(b)).toEqual(step(root));
+			// The bargain: a role means one colour everywhere, so a developer can
+			// hold it in their head. The surfaces still move underneath it.
+			for (const node of [a, b])
+				expect(paint(node, "--itx-role-text")).toEqual(
+					paint(root, "--itx-role-text"),
+				);
 			expect(surfaceOf(a)).not.toEqual(surfaceOf(root));
+		});
+
+		it("moves the derived fills with the surface, which is the exception", () => {
+			// The two roles computed FROM --itx-surface rather than authored
+			// beside it. They have to move, or a hovered row at depth would paint
+			// the page's hover colour.
+			const a = el(root, { "itx-layer": "" });
+
+			const paint = (node: HTMLElement, token: string) => {
+				const probe = el(node);
+				probe.style.backgroundColor = `var(${token})`;
+				return getComputedStyle(probe).backgroundColor;
+			};
+
+			for (const token of [
+				"--itx-role-background-interactive",
+				"--itx-role-background-control",
+			])
+				expect(paint(a, token))
+					.withContext(`${token} should follow the surface`)
+					.not.toEqual(paint(root, token));
 		});
 	});
 
@@ -241,57 +245,51 @@ describe("Layer engine", () => {
 			expect(getComputedStyle(card).backgroundColor).toEqual("rgb(1, 2, 3)");
 		});
 
-		it("retints every layer below when the tint pack is set on any ancestor", () => {
-			// The engine composes oklch() inside each layer block, not once at the
-			// root, so the tint is still unresolved when it reaches a mid-tree
-			// override. A whole-palette retint is one declaration, anywhere.
+		it("retints the whole substrate when the tint pack is set at the root", () => {
+			// Two declarations move all six surfaces, because chroma and hue live
+			// in one pack rather than being repeated per value.
+			const before = surfaceOf(el(root, { "itx-layer": "" }));
+			root.style.setProperty("--itx-tint-dark", "0.09 30");
+
+			expect(surfaceOf(el(root, { "itx-layer": "" }))).not.toEqual(before);
+		});
+
+		it("does NOT retint from mid-tree — the surfaces are composed at the root", () => {
+			/*
+			 * The trade behind declaring the six surfaces at [interop-root] alone.
+			 * Repeating them on [itx-layer] would leave --itx-tint-* unresolved
+			 * until the layer, so a mid-tree pack would reach it — but a
+			 * declaration beats inheritance, so every layer would also stomp
+			 * whatever a consumer set above it, and the values would stop being
+			 * overridable. Retinting a subtree is redeclaring the surfaces on it,
+			 * which the next test shows working.
+			 */
 			const before = surfaceOf(el(root, { "itx-layer": "" }));
 
 			const branch = el(root);
 			branch.style.setProperty("--itx-tint-dark", "0.09 30");
-			const after = surfaceOf(el(branch, { "itx-layer": "" }));
 
-			expect(after).not.toEqual(before);
+			expect(surfaceOf(el(branch, { "itx-layer": "" }))).toEqual(before);
 		});
 
-		it("re-scales EVERY layer below when a ramp DIAL is set on any ancestor", () => {
-			// The ramp spec is read at use time rather than baked, so one number
-			// retunes the whole ladder underneath it. Strictly more reach than the
-			// per-layer numbers it replaced: those moved one rung, this moves all
-			// of them, and the steps stay proportional to each other.
+		it("moves every layer that indexes it when a surface VALUE is set on any ancestor", () => {
+			// Retuning the ramp is redeclaring a surface, which is ordinary CSS and
+			// is also how a subtree gets a different tint. The engine reads the six
+			// values at use time rather than baking them, so an override on any
+			// ancestor reaches every layer beneath it — and only the layers that
+			// index that surface.
 			const branch = el(root);
-			branch.style.setProperty("--itx-ramp-dark-step", "0.09");
+			branch.style.setProperty("--itx-surface-1", "rgb(9, 8, 7)");
 
-			const one = el(branch, { "itx-layer": "" });
-			const two = el(one, { "itx-layer": "" });
-
-			// page .17 + step .09 per rung, uniform in dark.
-			const expected = (l: number): string => {
-				const probe = el(branch);
-				probe.style.backgroundColor = `oklch(${l} var(--itx-tint-dark))`;
-				return getComputedStyle(probe).backgroundColor;
-			};
-
-			expect(surfaceOf(one)).toEqual(expected(0.17 + 0.09));
-			expect(surfaceOf(two)).toEqual(expected(0.17 + 0.18));
-			expect(surfaceOf(one)).not.toEqual(
-				surfaceOf(el(root, { "itx-layer": "" })),
-			);
-		});
-
-		it("no longer honours a per-layer ramp number — that override became a dial", () => {
-			/*
-			 * A deliberate, documented break. --itx-ramp-surface-N-light/dark used
-			 * to be settable on any ancestor; the engine now computes lightness from
-			 * the ramp spec and never reads those names, so they are gone rather
-			 * than inert. Asserted so the removal stays visible instead of being
-			 * rediscovered by whoever relied on it.
-			 */
-			const branch = el(root);
-			branch.style.setProperty("--itx-ramp-surface-1-dark", "0.9");
-
+			// Layer 1 indexes surface-1.
 			expect(surfaceOf(el(branch, { "itx-layer": "" }))).toEqual(
-				surfaceOf(el(root, { "itx-layer": "" })),
+				"rgb(9, 8, 7)",
+			);
+			// Layer 2 indexes surface-2 and is untouched.
+			const two = el(el(branch, { "itx-layer": "" }), { "itx-layer": "" });
+			expect(surfaceOf(two)).not.toEqual("rgb(9, 8, 7)");
+			expect(surfaceOf(two)).toEqual(
+				surfaceOf(el(el(root, { "itx-layer": "" }), { "itx-layer": "" })),
 			);
 		});
 

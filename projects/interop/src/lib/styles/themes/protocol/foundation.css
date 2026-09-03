@@ -40,9 +40,9 @@
 	 * generated into ladder.css now from a single seed, because a lightness SLOT
 	 * cannot survive a hue change and a contrast TARGET can:
 	 *
-	 *   --itx-colorway-solid / -on-solid    scheme- and layer-invariant identity
-	 *   --itx-colorway-tint / -on-tint      a wash of the hue, per layer
-	 *   --itx-colorway-border / -text       solved for 3:1 / 4.5:1, per layer
+	 *   --itx-role-background-colorway / -on-solid    scheme- and layer-invariant identity
+	 *   --itx-role-background-colorway-subtle / -on-tint      a wash of the hue, per layer
+	 *   --itx-role-edge-colorway / -text       solved for 3:1 / 4.5:1, per layer
 	 *
 	 * Adding a colourway is adding a seed to SEEDS in
 	 * scripts/generate-color-ladder.mjs. See .agent/color.md.

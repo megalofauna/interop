@@ -160,11 +160,11 @@ Backdrop (global) --itx-backdrop-color, --itx-backdrop-blur
 | `--itx-popover-font-size` | `0.875rem` |
 | `--itx-popover-line-height` | `1.4286` — 20/14 |
 | `--itx-popover-background` | `var(--itx-surface-above)` |
-| `--itx-popover-foreground` | `var(--itx-on-surface)` |
+| `--itx-popover-foreground` | `var(--itx-role-text)` |
 | `--itx-popover-border-radius` | `var(--itx-radius-none)` |
 | `--itx-popover-border-width` | `1px` |
 | `--itx-popover-border-style` | `solid` |
-| `--itx-popover-border-color` | `var(--itx-neutral-7)` |
+| `--itx-popover-border-color` | `var(--itx-role-edge)` |
 | `--itx-popover-shadow` | `0 2px 2px oklch(0 0 0 / 0.2)` |
 | `--itx-popover-enter/exit-duration` | `var(--itx-duration-fast)` |
 | `--itx-popover-enter-easing` | `var(--itx-easing-decelerate)` |
@@ -209,15 +209,15 @@ Round 10 of `.agent/workflows/carbon-borrow.md`.
 | Caret box | 12 wide × 6 deep | `--itx-popover-arrow-size: 6px` (was 8 → 16 × 8) |
 | Caret border | `::before` in `$popover-border-color`, `::after` inset 1px | same construction |
 | Fill | `theme.$layer` | `var(--itx-surface-above)` |
-| Text | `theme.$text-primary` | `var(--itx-on-surface)` |
-| Frame | `1px solid $border-subtle` | `1px solid var(--itx-neutral-7)` |
+| Text | `theme.$text-primary` | `var(--itx-role-text)` |
+| Frame | `1px solid $border-subtle` | `1px solid var(--itx-role-edge)` |
 | Shadow | `drop-shadow(0 2px 2px rgba(0,0,0,.2))` | `0 2px 2px oklch(0 0 0 / 0.2)` |
 
 **Declined:**
 
 - **Carbon's 2px `$popover-border-radius`.** Nine rounds have converged on square corners and our tooltip — the sibling surface Carbon builds on this same container — is already at `--itx-radius-none`. Walk back with `--itx-radius-nominal`.
 - **`filter: drop-shadow()`.** Carbon hangs it off an intermediate wrapper so the shadow wraps the caret silhouette. We have no wrapper, and putting `filter` on the panel would make it a containing block for every positioned descendant. Cost: the caret casts no shadow.
-- **Carbon's literal `$border-subtle` (`--itx-neutral-4`).** Two steps too light against `--itx-surface-above`; `--itx-neutral-7` is the house hairline. Also avoids reading `--itx-border`, which this round found was being stomped app-wide by the dialog theme (fixed in the same commit — `dialog.css` was declaring the global `--itx-border` on `[interop-root]` to lighten its own edge, and won on import order).
+- **Carbon's literal `$border-subtle` (our `--itx-role-divider`).** Too light against `--itx-surface-above` to read as a frame; `--itx-role-edge` is the house hairline, and it is the one that clears 3:1. Also avoids reading `--itx-border`, which this round found was being stomped app-wide by the dialog theme (fixed in the same commit — `dialog.css` was declaring the global `--itx-border` on `[interop-root]` to lighten its own edge, and won on import order).
 - **`will-change: transform` on the caret.** Carbon adds it against a subpixel seam between a *sibling* caret and the content. Ours is a pseudo-element of the panel itself, so the seam case differs; not paying for a compositor layer speculatively.
 - **High-contrast (inverse fill/text) and tab-tip variants.** No variant axis on the component, and the inverse pill is already the tooltip's job.
 

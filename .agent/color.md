@@ -1,63 +1,104 @@
 # Interop — Colour
 
 A component declares that it is a layer. Its surface follows from the depth it
-sits at. Everything it draws on that surface it names from a palette of fixed
-steps.
+sits at. Everything it draws on that surface it names by the job the colour
+does.
 
 ## The two things
 
-**Elevation** is the background. It moves with depth.
+**The substrate** is four authored values, 5% apart. The number IS the depth.
 
 ```
---itx-surface  --itx-surface-above  --itx-surface-above-2  --itx-surface-below
+--itx-surface-0 … -3            values
+--itx-surface  --itx-surface-above          pointers, written from depth
 attributes: itx-layer · itx-sink · itx-layer="N"
 ```
 
-**The palette** is everything drawn on top. A step is one colour at every depth
-and in both schemes.
+Layer N is `surface-N`. `--itx-surface-above` is `surface-(N+1)`, the one the
+next layer would paint, clamped at the deepest value. The counter stops at
+layer 2, so `surface-3` is only reached that way.
+
+**There is one page and it is layer 0.** Nothing sits below it, which is why
+there is no `-below`: a raise and a recess at the same depth are the same
+colour — light from above separates them, not the substrate — so the token
+named a direction its value did not have. A recess declares `itx-sink` and
+reads `--itx-surface`.
+
+**Four is what the text tiers can carry, and it is measured.** A control fill
+sits 0.05 out from its surface, so the deepest painted background is
+`surface-2` plus a fill, which lands on `surface-3` exactly. One more value at
+this spacing would be 0.41 in dark, and at 0.10 out from the surface three of
+the four tiers stop clearing.
+
+**The roles** are everything drawn on top, named by job.
 
 ```
---itx-neutral-1…14  --itx-colorway-1…14
---itx-danger-1…14  --itx-success-1…14  --itx-warning-1…14  --itx-info-1…14
-roles: --itx-<family>-tint / -on-tint / -border / -text / -solid / -on-solid
+--itx-role-text  -quiet  -quieter  -disabled     the far end, 7:1, 4.5:1, 3:1
+--itx-role-text-{family}  -text-inverse
+--itx-role-background-interactive                hover and selected
+--itx-role-background-control                    a filled control's own plane
+--itx-role-background-{family}  -{family}-subtle the fill and the wash
+--itx-role-edge  -edge-{family}  --itx-role-divider
+--itx-role-scrim
 ```
 
-Neutral has steps and no roles. The four status families and the colourway have
-both. One colourway ships.
+`namespace · type · role · family · modifier`, both trailing segments optional.
+One grammar in both slots: unmarked is full strength, a modifier is quieter.
 
-## The floor rule
+Named for prominence, not brightness. A brightness word is true in one arm and
+false in the other — the dark text ramp runs 0.664 to 0.970 while the light one
+runs 0.489 to 0.150.
 
-Contrast comes from the distance between two steps, counting from the
-background.
+## A family is one hue
 
-| distance | clears |
-|---|---|
-| 7 steps | 3:1 |
-| 8 steps | 4.5:1 |
-| 10 steps | 7:1 |
+```css
+--itx-danger-hue: 33;
+--itx-accent-chroma: 0.16;
+--itx-accent-chroma-subtle: 0.064;
+```
 
-One rule covers every family in both schemes, because every family sits on one
-lightness ramp. Step 9 is L .596 whatever the hue.
+At fixed lightness and chroma, contrast barely moves around the hue circle.
+Chroma is the variable that breaks it — spread across the five hues at L 0.60
+is 0.06 at chroma 0.02, 0.42 at 0.105, 1.51 at 0.22. Capped at 0.16, every hue
+clears its floor with no per-hue correction. Past 0.18 the correction comes
+back, which is what the deleted solver used to compute.
 
-Chroma costs contrast. Two steps at the same lightness measure differently if
-one carries more chroma, so a saturated family reaches its ceiling earlier. Run
-the checks on a new family rather than assuming the distances hold.
+Adding a family is one hue number and four derived roles.
 
-## Roles sit one step further out
+## Two derived roles, and why they are different
 
-`--itx-<family>-border` is step 9. The rule's minimum is 8.
+`--itx-role-background-interactive` is the surface plus half a step;
+`--itx-role-background-control` is a full step. Both use relative colour syntax
+against `--itx-surface`, so they resolve to real values and both checks can see
+them.
 
-A step is fixed and the surface climbs, so a pairing measured on the page reads
-closer once it is nested. Roles are placed to hold at the deepest layer.
-Measured at dark layer 2:
+They are the only roles that move with depth. Everything else is absolute.
 
-| border at | danger reads |
-|---|---|
-| step 8 | 2.99:1 |
-| step 9 | 3.97:1 |
+**Hover and selected share the interactive fill and do not compound.** At
++0.075 the room between the 7:1 tier and the far end collapses to 0.004 and the
+top two text tiers stop separating. The difference between the two states is
+carried by a mark, which needs 3:1 against *adjacent* colours — and a
+component's two states are never adjacent, because they are the same pixels at
+different times.
 
-The tint is step 3 for the same reason. Step 2 is L .199 and the surface reaches
-L .234, so a step-2 tint inverts against a card.
+**The state ramp has two rungs and no more.** At +0.10 out from the surface,
+three of the four text tiers stop clearing. A control that needs more states
+than rest-and-one carries them with a mark or an edge.
+
+## Two weights of one ink
+
+The edge and the divider are `color-mix()` of `--itx-role-text` at two
+opacities, so they hold as the surface climbs — the divider varies about 0.2
+across every background it can land on, where an opaque border drifts 0.58
+across three layers. The edge clears 3:1 everywhere; the divider has no floor.
+
+Opacity is per-scheme, because contrast is not symmetric: the same 25% reads
+about 2.15 on dark and 1.66 on light.
+
+It has to be baked into the colour, not carried as a number. `light-dark()`
+takes `<color>` only, so `light-dark(33%, 25%)` silently resolves the whole
+`color-mix` to transparent — 1.00:1, and it looks like a border that is not
+there.
 
 ## Two rules that break this
 
@@ -71,11 +112,19 @@ guaranteed-invalid inherits, which takes the subtree with it.
 `elevation-legacy.spec.ts` pins this against the CSS that failed it. Read it
 before proposing anything shaped like a shift register.
 
-**A block that redeclares a family's steps must redeclare its roles.** Same
-rule, applied to the palette. `--itx-danger-tint: var(--itx-danger-3)` written
-at `[interop-root]` composes there and inherits as a finished colour, so a
-descendant carrying `[itx-status-palette="eighties"]` keeps the root's roles.
-`accents.spec.ts` asserts both directions.
+**A block that redeclares a family's hue must redeclare its roles.** Same rule,
+applied to the palette. A role written at `[interop-root]` composes there and
+inherits as a finished colour, so a descendant carrying
+`[itx-status-palette="eighties"]` would keep the root's roles — the swap reads
+correctly in the stylesheet and does nothing on screen. `accents.spec.ts`
+asserts both directions.
+
+The four surfaces are the deliberate exception: they are declared at the root
+alone. Repeating them per layer would leave the tint unresolved until the
+layer, so a mid-tree retint would reach it — but a declaration beats
+inheritance, so every layer would also stomp whatever a consumer set above it.
+Overriding is worth more, and it costs nothing: retinting a subtree is
+redeclaring the surfaces on it, the same act as retuning the ramp.
 
 ## The counter
 
@@ -105,27 +154,38 @@ is what makes that survivable.
 
 Both are hand-authored. Edit them directly.
 
-- `styles/themes/protocol/ladder.css` — the palette, the tint packs, the ramp
-  dials, the roles.
-- `styles/tokens/elevation.css` — the counter and four `clamp()` formulas.
+- `styles/themes/protocol/ladder.css` — four surfaces, the roles, the hues, the
+  tint packs and the chroma caps.
+- `styles/tokens/elevation.css` — the counter and the depth-to-surface lookup.
+  It holds no colour.
 
 `scripts/inline-css-fixture.mjs` copies both into `ladder.css-source.ts` as
 strings, because Karma runs in a browser and cannot read files.
 
 ## Checks
 
-Both run in `npm run lint`.
+Both run in `npm run lint`, and they differ in mechanism rather than only in
+manifest.
 
 | | reads | proves |
 |---|---|---|
-| `check-contrast-render.mjs` | the literal values in `ladder.css` | the floor rule over every palette, 120 pairings |
-| `check-contrast-css.mjs` | the real cascade in Chrome, at every layer | each role clears its floor as a consumer receives it, 96 pairings |
+| `check-contrast-render.mjs` | the ladder's literals, resolved by substitution | every value clears its floor, 2228 pairings |
+| `check-contrast-css.mjs` | the real cascade in Chrome, at every layer | each role clears its floor as a consumer receives it, 204 pairings |
 
-The first cannot see whether a role points where it claims. The second cannot
-see a step nothing has wired up. Both are needed.
+Only the first reaches `surface-3`, which depth never lands on, and only it can
+verify a value before anything wires it up. Only the second sees
+whether a component's token points where it claims. Both are needed.
 
-`check-color-axes.mjs` fails an elevation token used on a mark property, and
-fails a self-referencing custom property.
+A translucent foreground is composited over its real background in both. Over
+black instead, the edge reads 2.44 against the 3.10 it renders.
+
+`check-color-axes.mjs` fails an elevation token on a mark property, a raw
+palette step where a role exists, and a self-referencing custom property.
+
+`check-token-placement.mjs` fails a theme declaration co-declared at the
+elevation boundaries, with one exemption for a value derived from
+`--itx-surface` — that one composes where it is declared and has nowhere else
+to go.
 
 ## Overriding
 
@@ -135,41 +195,36 @@ layer, so any rule a consumer writes wins on contact.
 **Change one component.** Set its own token. No layer block touches it.
 
 ```css
---itx-dialog-background: var(--itx-neutral-2);
+--itx-dialog-background: var(--itx-role-background-interactive);
 ```
 
-**Change a step everywhere.** Steps are declared once and inherit.
+**Change a role everywhere.** Roles are declared once and inherit.
 
 ```css
---itx-neutral-8: oklch(0.55 0.01 250);
+--itx-role-edge: oklch(0.55 0.01 250);
 ```
 
-**Move every surface.** Set a ramp dial or a tint pack on any ancestor.
+**Move every surface.** Redeclare the surfaces, or the tint pack supplying
+their chroma and hue.
 
 ```css
---itx-ramp-dark-page: 0.20;
---itx-tint-dark: 0.006 250;
+--itx-tint-dark: 0.012 30;
+--itx-surface-0: light-dark(
+	oklch(0.97 var(--itx-tint-light)),
+	oklch(0.2 var(--itx-tint-dark))
+);
 ```
 
-Surfaces are computed as `clamp(min, page + step × layer, max)`, so one dial
-retunes the whole ladder live.
-
-The ramp dials move the surface. The palette does not follow, and `--itx-neutral-1`
-restates the page lightness rather than referencing it. Dark has roughly +0.05 of
-headroom before a role drops under its floor; `npm run lint` reports the moment
-it does.
-
-**`--itx-surface` is a source, not an override point.** The engine rewrites it at
-every layer boundary, so a value set on an ancestor is replaced one layer down.
-`elevation.spec.ts` asserts this as a negative case.
+**`--itx-surface` is a source, not an override point.** The engine rewrites it
+at every layer boundary, so a value set on an ancestor is replaced one layer
+down — and so is `--itx-surface-above` and the two fills derived from it. `elevation.spec.ts` asserts
+this as a negative case.
 
 ## Reference
 
-`.agent/records/palette-spike.md` — why 14 steps at curve 1.30, and why 16
-fragments.
-
-`.agent/records/color-naming.md` — the job list, the open naming question, and
-why there is no industry convention to copy. Read it before renaming a role.
+`.agent/records/color-naming.md` — why the vocabulary reads the way it does,
+the names rejected and what for, and the nine-system survey that found no
+convention to copy.
 
 `.agent/todo/colour-followups.md` — what is deferred.
 

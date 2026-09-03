@@ -84,7 +84,7 @@
 	 * its surface the same way, so the two floating surfaces agree.
 	 */
 	--itx-popover-background: var(--itx-surface-above);
-	--itx-popover-foreground: var(--itx-neutral-14); /* $text-primary */
+	--itx-popover-foreground: var(--itx-role-text); /* $text-primary */
 
 	/*
 	 * Carbon specifies `$popover-border-radius: 2px`, which we DECLINE.
@@ -115,7 +115,7 @@
 	 * fixed. Even fixed, --itx-contrast-3 is neutral-5 and too light for a frame
 	 * that has to hold against arbitrary page content.
 	 */
-	--itx-popover-border-color: var(--itx-neutral-8);
+	--itx-popover-border-color: var(--itx-role-edge);
 
 	/*
 	 * Carbon: `drop-shadow(0 $spacing-01 $spacing-01 rgba(0, 0, 0, 0.2))` —

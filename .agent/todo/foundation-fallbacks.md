@@ -26,7 +26,8 @@ Of those last two groups:
 - **148 reads (112 tokens) state a value the theme contradicts.** The
   foundation says buttons are `center`-justified; protocol says `flex-start`.
   Foundation says `--itx-button-disabled-opacity: 0.4`; protocol says `1`.
-  Foundation says the toggle thumb is `#ccc`; protocol says `--itx-neutral-8`.
+  Foundation says the toggle thumb is `#ccc`; protocol says
+  `--itx-role-text-quieter`.
   Concentrated in stepper (59), table (21), segment (15), button (10).
 - **96 reads (81 tokens) have no theme declaration at all.** For these the
   foundation is not a fallback, it *is* the value — the shipped product

@@ -49,7 +49,7 @@
  * 3: one step stronger than the rule it overlaps, which is the relationship
  * the interaction is meant to express.
  *
- * The selected indicator was --itx-colorway-solid. `solid` is the brand FILL —
+ * The selected indicator was --itx-role-background-colorway. `solid` is the brand FILL —
  * what a primary button's background is — and it is scheme-independent, fixed
  * at L 0.500 in both. The brand family also carries mark rungs that are solved
  * against the current surface and flip per scheme: `border` (edge, L 0.600
@@ -67,7 +67,7 @@
 	--itx-tabs-gap: 0;
 	--itx-tabs-rule-width: var(--itx-border-width-hairline);
 	/* rank 2 — "hairline, dividers". See the note above. */
-	--itx-tabs-rule-color: var(--itx-neutral-4);
+	--itx-tabs-rule-color: var(--itx-role-divider);
 
 	/* ── Tab box ────────────────────────────────────────────────────────── */
 	--itx-tab-min-block-size: var(--itx-spacing-10);
@@ -100,19 +100,19 @@
 
 	/* ── Color ─────────────────────────────────────────────────────────── */
 	--itx-tab-background: transparent;
-	--itx-tab-foreground: var(--itx-neutral-9);
+	--itx-tab-foreground: var(--itx-role-text-quieter);
 	--itx-tab-background-hover: transparent;
-	--itx-tab-foreground-hover: var(--itx-neutral-14);
-	--itx-tab-background-selected: var(--itx-neutral-3);
-	--itx-tab-foreground-selected: var(--itx-neutral-14);
+	--itx-tab-foreground-hover: var(--itx-role-text);
+	--itx-tab-background-selected: var(--itx-role-background-control);
+	--itx-tab-foreground-selected: var(--itx-role-text);
 
 	/* ── Indicator ──────────────────────────────────────────────────────── */
 	--itx-tab-indicator-size: var(--itx-border-width-thick);
 	--itx-tab-indicator-color: transparent;
 	/* rank 3 — one step stronger than the rule it overlaps. */
-	--itx-tab-indicator-color-hover: var(--itx-neutral-8);
+	--itx-tab-indicator-color-hover: var(--itx-role-edge);
 	/* The brand's mark rung, not its fill rung. */
-	--itx-tab-indicator-color-selected: var(--itx-colorway-text);
+	--itx-tab-indicator-color-selected: var(--itx-role-text-colorway);
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-tab-transition-duration: var(--itx-duration-fast);

@@ -3,12 +3,22 @@
  *
  * ONE axis lives here: elevation.
  *
- *   --itx-surface / -above / -above-2 / -below — the neutral substrate,
- *   backgrounds only, moving toward light in BOTH schemes.
+ *   --itx-surface and --itx-surface-above — the neutral substrate,
+ *   backgrounds only.
  *
- * Everything drawn ON a surface is a palette step from themes/…/ladder.css.
- * Steps are absolute, so nothing here has to re-derive them per layer — which
- * is why this file is a counter and four formulas rather than a table.
+ * The four surface VALUES live in themes/…/ladder.css. This file holds no
+ * colour: it counts depth and indexes them, and the number IS the depth.
+ * Layer N is surface-N; -above is surface-(N+1), the one the next layer down
+ * would paint, clamped at the deepest value.
+ *
+ * There is one page and it is layer 0. Nothing sits below it, which is why
+ * there is no -below: a layer and a sink at the same depth are the same
+ * colour — light from above is what separates them, not the substrate — so
+ * the token said a direction its value did not have. A recess declares
+ * itx-sink and reads --itx-surface.
+ *
+ * Everything drawn ON a surface is a role from themes/…/ladder.css. Roles are
+ * absolute, so nothing here has to re-derive them per layer.
  *
  * ── Why this file looks the way it does ─────────────────────────────────
  *
@@ -66,61 +76,15 @@
 /* ── Tier 1 — layer 0, unconditional ─────────────────────────────────── */
 
 :where([interop-root], [itx-layer], [itx-sink]) {
-	--itx-surface: light-dark(
-		oklch(clamp(
-				var(--itx-ramp-light-min),
-				calc(var(--itx-ramp-light-page) + var(--itx-ramp-light-step) * var(--itx-layer)),
-				var(--itx-ramp-light-max)
-			) var(--itx-tint-light)),
-		oklch(clamp(
-				var(--itx-ramp-dark-min),
-				calc(var(--itx-ramp-dark-page) + var(--itx-ramp-dark-step) * var(--itx-layer)),
-				var(--itx-ramp-dark-max)
-			) var(--itx-tint-dark))
-	);
-	--itx-surface-above: light-dark(
-		oklch(clamp(
-				var(--itx-ramp-light-min),
-				calc(var(--itx-ramp-light-page) + var(--itx-ramp-light-step) * max(0, calc(var(--itx-layer) + 1))),
-				var(--itx-ramp-light-max)
-			) var(--itx-tint-light)),
-		oklch(clamp(
-				var(--itx-ramp-dark-min),
-				calc(var(--itx-ramp-dark-page) + var(--itx-ramp-dark-step) * max(0, calc(var(--itx-layer) + 1))),
-				var(--itx-ramp-dark-max)
-			) var(--itx-tint-dark))
-	);
-	--itx-surface-above-2: light-dark(
-		oklch(clamp(
-				var(--itx-ramp-light-min),
-				calc(var(--itx-ramp-light-page) + var(--itx-ramp-light-step) * max(0, calc(var(--itx-layer) + 2))),
-				var(--itx-ramp-light-max)
-			) var(--itx-tint-light)),
-		oklch(clamp(
-				var(--itx-ramp-dark-min),
-				calc(var(--itx-ramp-dark-page) + var(--itx-ramp-dark-step) * max(0, calc(var(--itx-layer) + 2))),
-				var(--itx-ramp-dark-max)
-			) var(--itx-tint-dark))
-	);
-	--itx-surface-below: light-dark(
-		oklch(clamp(
-				var(--itx-ramp-light-min),
-				calc(var(--itx-ramp-light-page) + var(--itx-ramp-light-step) * max(0, calc(var(--itx-layer) + 1))),
-				var(--itx-ramp-light-max)
-			) var(--itx-tint-light)),
-		oklch(clamp(
-				var(--itx-ramp-dark-min),
-				calc(var(--itx-ramp-dark-page) + var(--itx-ramp-dark-step) * max(0, calc(var(--itx-layer) + 1))),
-				var(--itx-ramp-dark-max)
-			) var(--itx-tint-dark))
-	);
+	--itx-surface: var(--itx-surface-0);
+	--itx-surface-above: var(--itx-surface-1);
 }
 
 :where([interop-root]) {
 	--itx-layer: 0;
 
 	background-color: var(--itx-surface);
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 
 	/* ── Z-index scale ───────────────────────────────────────────────── */
 	--itx-z-dropdown: 1000;
@@ -132,10 +96,14 @@
 
 :where([itx-layer]) {
 	--itx-layer: 1;
+	--itx-surface: var(--itx-surface-1);
+	--itx-surface-above: var(--itx-surface-2);
 }
 
 :where([itx-sink]) {
 	--itx-layer: 1;
+	--itx-surface: var(--itx-surface-1);
+	--itx-surface-above: var(--itx-surface-2);
 }
 
 /* ── Tier 3 — the counter. Strictly monotone up the tree, so never a cycle. */
@@ -143,30 +111,42 @@
 @container style(--itx-layer: 0) {
 	:where([itx-layer]) {
 		--itx-layer: 1;
+		--itx-surface: var(--itx-surface-1);
+		--itx-surface-above: var(--itx-surface-2);
 	}
 
 	:where([itx-sink]) {
 		--itx-layer: 1;
+		--itx-surface: var(--itx-surface-1);
+		--itx-surface-above: var(--itx-surface-2);
 	}
 }
 
 @container style(--itx-layer: 1) {
 	:where([itx-layer]) {
 		--itx-layer: 2;
+		--itx-surface: var(--itx-surface-2);
+		--itx-surface-above: var(--itx-surface-3);
 	}
 
 	:where([itx-sink]) {
 		--itx-layer: 2;
+		--itx-surface: var(--itx-surface-2);
+		--itx-surface-above: var(--itx-surface-3);
 	}
 }
 
 @container style(--itx-layer: 2) {
 	:where([itx-layer]) { /* terminal — re-asserts without moving */
 		--itx-layer: 2;
+		--itx-surface: var(--itx-surface-2);
+		--itx-surface-above: var(--itx-surface-3);
 	}
 
 	:where([itx-sink]) { /* terminal — re-asserts without moving */
 		--itx-layer: 2;
+		--itx-surface: var(--itx-surface-2);
+		--itx-surface-above: var(--itx-surface-3);
 	}
 }
 
@@ -174,21 +154,27 @@
 
 :where([itx-layer="0"]) {
 	--itx-layer: 0;
+	--itx-surface: var(--itx-surface-0);
+	--itx-surface-above: var(--itx-surface-1);
 }
 
 :where([itx-layer="1"]) {
 	--itx-layer: 1;
+	--itx-surface: var(--itx-surface-1);
+	--itx-surface-above: var(--itx-surface-2);
 }
 
 :where([itx-layer="2"]) {
 	--itx-layer: 2;
+	--itx-surface: var(--itx-surface-2);
+	--itx-surface-above: var(--itx-surface-3);
 }
 
 /* ── Paint. Zero specificity, so any consumer rule wins on contact. ──── */
 
 :where([itx-layer], [itx-sink]) {
 	background-color: var(--itx-surface);
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 }
 
 /*

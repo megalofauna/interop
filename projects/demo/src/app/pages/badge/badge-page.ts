@@ -195,11 +195,11 @@ toggleCart() { this.cartHidden.update((v) => !v); }`;
 		},
 		{
 			property: "--itx-badge-background",
-			default: "var(--itx-danger-solid)",
+			default: "var(--itx-role-background-danger)",
 		},
 		{
 			property: "--itx-badge-color",
-			default: "var(--itx-danger-on-solid)",
+			default: "var(--itx-role-text-inverse)",
 		},
 		{
 			property: "--itx-badge-font-size",

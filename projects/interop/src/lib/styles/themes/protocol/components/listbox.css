@@ -48,7 +48,7 @@
  * The active fill was already rank 2 and stays there, so hover → active is now
  * a one-rank climb instead of a jump across axes.
  *
- * The selection bar was --itx-colorway-solid. `solid` is the brand FILL — a
+ * The selection bar was --itx-role-background-colorway. `solid` is the brand FILL — a
  * primary button's background — and it is scheme-independent at L 0.500. The
  * brand family also carries mark rungs solved against the current surface;
  * `text` reaches L 0.601 in dark, which is the visible step up for a 4px bar
@@ -74,19 +74,19 @@
 	/* ── Colour ─────────────────────────────────────────────────────────── */
 	/* Row text is the house body rank, matching the tree row and the table
 	   cell. */
-	--itx-option-color: var(--itx-neutral-14);
+	--itx-option-color: var(--itx-role-text);
 	--itx-option-background: transparent;
 	/* rank 1 — "wash: hover fills, stripes, selected tints". See above. */
-	--itx-option-background-hover: var(--itx-neutral-2);
-	--itx-option-background-active: var(--itx-neutral-3);
-	--itx-option-background-selected: var(--itx-neutral-2);
-	--itx-option-background-active-selected: var(--itx-neutral-3);
+	--itx-option-background-hover: var(--itx-role-background-interactive);
+	--itx-option-background-active: var(--itx-role-background-control);
+	--itx-option-background-selected: var(--itx-role-background-interactive);
+	--itx-option-background-active-selected: var(--itx-role-background-control);
 
 	/* ── Accent bar ─────────────────────────────────────────────────────── */
 	--itx-option-accent-width: var(--itx-spacing-1);
 	--itx-option-accent-color: transparent;
 	/* The brand's mark rung, not its fill rung. */
-	--itx-option-accent-color-selected: var(--itx-colorway-text);
+	--itx-option-accent-color-selected: var(--itx-role-text-colorway);
 
 	/* ── Disabled ───────────────────────────────────────────────────────── */
 	--itx-option-disabled-opacity: 0.4;
@@ -94,7 +94,7 @@
 	/* ── Description ────────────────────────────────────────────────────── */
 	--itx-option-description-font-size: 0.75rem;
 	/* rank 4 — secondary text. */
-	--itx-option-description-color: var(--itx-neutral-9);
+	--itx-option-description-color: var(--itx-role-text-quieter);
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-option-transition-duration: var(--itx-duration-fast);

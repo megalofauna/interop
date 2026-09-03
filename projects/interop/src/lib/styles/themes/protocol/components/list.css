@@ -37,9 +37,9 @@
 	 */
 	--itx-list-marker-border-width: var(--itx-border-width-thick);
 	--itx-list-marker-border-style: solid;
-	--itx-list-marker-border-color: var(--itx-neutral-9);
+	--itx-list-marker-border-color: var(--itx-role-text-quieter);
 	--itx-list-marker-background: transparent;
-	--itx-list-marker-color: var(--itx-neutral-9);
+	--itx-list-marker-color: var(--itx-role-text-quieter);
 	--itx-list-marker-font-size: 0.8em;
 	--itx-list-marker-font-weight: 600;
 	--itx-list-marker-style: decimal;
@@ -58,10 +58,10 @@
    it is a modifier layered on that variant, not a replacement for it. */
 
 :where(ol[interop-list][itx-marker~="filled"] > li) {
-	--itx-list-marker-background: var(--itx-neutral-3);
+	--itx-list-marker-background: var(--itx-role-background-control);
 	--itx-list-marker-border-width: var(--itx-border-width-thick);
 	--itx-list-marker-border-style: solid;
-	--itx-list-marker-border-color: var(--itx-neutral-9);
+	--itx-list-marker-border-color: var(--itx-role-text-quieter);
 	/*
 	 * One token where there were two.
 	 *
@@ -71,7 +71,7 @@
 	 * step is a distance from the PAGE and the scales are paired, so "the far
 	 * end" is one name that already means the right thing in both.
 	 */
-	--itx-list-marker-color: var(--itx-neutral-14);
+	--itx-list-marker-color: var(--itx-role-text);
 }
 
 /* ── contained variant ───────────────────────────────────────────────────── */
@@ -88,7 +88,7 @@
 	--itx-list-row-background-hover: var(--itx-surface-above);
 
 	--itx-list-row-rule-width: 1px;
-	--itx-list-row-rule-color: var(--itx-neutral-8);
+	--itx-list-row-rule-color: var(--itx-role-edge);
 
 	--itx-list-row-transition-duration: var(--itx-duration-fast);
 	--itx-list-row-transition-timing-function: var(--itx-easing-standard);

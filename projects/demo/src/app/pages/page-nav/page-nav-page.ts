@@ -112,13 +112,19 @@ export class PageNavPage {
 		},
 		{ property: "--itx-pn-border-width", default: "2px" },
 		{ property: "--itx-pn-border-style", default: "solid" },
-		{ property: "--itx-pn-border-color", default: "var(--itx-neutral-3)" },
+		{
+			property: "--itx-pn-border-color",
+			default: "var(--itx-pn-background-color)",
+		},
 		{ property: "--itx-pn-font-size", default: "var(--itx-font-size-body)" },
-		{ property: "--itx-pn-link-color", default: "var(--itx-neutral-9)" },
-		{ property: "--itx-pn-link-color-hover", default: "var(--itx-neutral-14)" },
+		{
+			property: "--itx-pn-link-color",
+			default: "var(--itx-role-text-quieter)",
+		},
+		{ property: "--itx-pn-link-color-hover", default: "var(--itx-role-text)" },
 		{
 			property: "--itx-pn-link-color-active",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{
 			property: "--itx-pn-link-padding-block",
@@ -128,7 +134,10 @@ export class PageNavPage {
 			property: "--itx-pn-link-padding-inline",
 			default: "var(--itx-spacing-4) — 16px",
 		},
-		{ property: "--itx-pn-focus-color", default: "var(--itx-colorway-solid)" },
+		{
+			property: "--itx-pn-focus-color",
+			default: "var(--itx-role-background-colorway)",
+		},
 		{ property: "--itx-pn-indent", default: "Vertical: child indent" },
 		{ property: "--itx-pn-item-gap", default: "Vertical: gap between items" },
 		{
@@ -141,7 +150,7 @@ export class PageNavPage {
 		},
 		{
 			property: "--itx-pn-indicator-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 	];
 

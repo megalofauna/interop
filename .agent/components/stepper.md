@@ -225,9 +225,9 @@ and the numeral `0.8125rem`. Do not "simplify" these back onto a role token.
 
 **`--itx-on-neutral` never existed.** The theme read it twice, with `white` and
 `black` as literal fallbacks, so the active indicator painted white on
-`--itx-neutral-3` — which is *light* in light mode. The current step's number
-measured **1.23:1**. Both now use `--itx-on-surface`, the `light-dark()` pair
-that belongs opposite a neutral surface: 16.0 light, 13.7 dark. The lesson
+what is now `--itx-role-background-control` — which is *light* in light mode. The current step's number
+measured **1.23:1**. Both now use `--itx-role-text`, the `light-dark()` pair that belongs
+opposite a neutral surface: 16.0 light, 13.7 dark. The lesson
 generalises — a fallback on a token that does not exist is not a fallback, it is
 the value, and it cannot follow the scheme.
 
@@ -259,8 +259,8 @@ already use.
 - **`--itx-step-optional-opacity: 0.65`** paints the optional-step hint with
   opacity rather than a colour. Opacity multiplies against whatever is behind,
   so the contrast is unknowable from the token alone; Carbon uses
-  `$text-secondary` (our `--itx-neutral-9`). Switching needs a foundation colour
-  token. No demo currently renders an optional step, so this is untested either
+  `$text-secondary` (our `--itx-role-text-quieter`). Switching needs a
+  foundation colour token. No demo currently renders an optional step, so this is untested either
   way.
 - **The demo page has no CSS-tokens section**, unlike its siblings — so there is
   no table to keep in sync, and no published surface for the ~60 `--itx-step*`

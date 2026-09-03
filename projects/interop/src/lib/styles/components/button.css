@@ -198,7 +198,7 @@
 :where(button[interop-button]),
 :where([itx-as-button]) {
 	--_background: var(--itx-button-background, transparent);
-	--_foreground: var(--itx-button-foreground, var(--itx-neutral-14));
+	--_foreground: var(--itx-button-foreground, var(--itx-role-text));
 	--_border-color: var(--itx-button-border-color, transparent);
 	--_box-shadow: var(--itx-button-box-shadow, none);
 	/* currentColor, so an icon tracks the button's own label unless a consumer
@@ -239,7 +239,7 @@
 	);
 	--_foreground: var(
 		--itx-button-foreground-hover,
-		var(--itx-button-foreground, var(--itx-neutral-14))
+		var(--itx-button-foreground, var(--itx-role-text))
 	);
 	--_border-color: var(
 		--itx-button-border-color-hover,
@@ -260,7 +260,7 @@
 	);
 	--_foreground: var(
 		--itx-button-foreground-active,
-		var(--itx-button-foreground, var(--itx-neutral-14))
+		var(--itx-button-foreground, var(--itx-role-text))
 	);
 	--_border-color: var(
 		--itx-button-border-color-active,
@@ -295,7 +295,7 @@
 	);
 	--_foreground: var(
 		--itx-button-foreground-pressed,
-		var(--itx-button-foreground, var(--itx-neutral-14))
+		var(--itx-button-foreground, var(--itx-role-text))
 	);
 	--_border-color: var(
 		--itx-button-border-color-pressed,

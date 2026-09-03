@@ -120,8 +120,8 @@ Copy uses `navigator.clipboard.writeText` with `interop-button`'s activation gua
 
 | Token | Default (Protocol) | Purpose |
 |---|---|---|
-| `--itx-ic-background` | `var(--itx-neutral-3)` | Chip background |
-| `--itx-ic-foreground` | `var(--itx-on-surface)` | Code text color (token spans set their own `color` inline) |
+| `--itx-ic-background` | `var(--itx-surface-above)` | Chip background |
+| `--itx-ic-foreground` | `var(--itx-role-text)` | Code text color (token spans set their own `color` inline) |
 | `--itx-ic-radius` | `var(--itx-radius-1)` | Chip border-radius (also participates in `--itx-context-radius`) |
 | `--itx-ic-font-family` | `var(--itx-font-family-mono)` | Code font family |
 | `--itx-ic-font-size` | `0.875em` | Code font-size (em-relative on purpose) |

@@ -19,9 +19,17 @@
  * Two rules, both of which currently hold, so this locks in a property rather
  * than reporting a backlog:
  *
- *   1. No per-layer block in the theme. If a value genuinely needs the nearest
- *      boundary's surface it can still read it — `--itx-surface*` is registered
- *      `inherits: true`, so reading it AT the component gives the same answer.
+ *   1. No per-layer block in the theme, with ONE exemption: a declaration
+ *      DERIVED from `--itx-surface`. Reading the surface at the component
+ *      gives the same answer, so a component that just wants the surface needs
+ *      no block — but a value computed FROM it composes where it is declared
+ *      and inherits finished, so a single root declaration would hand every
+ *      depth the root's answer. The interactive fill is the case: one named
+ *      role, half a step out from whatever surface it lands on.
+ *
+ *      The exemption costs what the rule warns about — a consumer override is
+ *      wiped one layer down — and that is the same property `--itx-surface`
+ *      itself has. Overrides for both go through a component namespace.
  *
  *   2. Nothing declared at [interop-root] or on a layer may read a token a
  *      CONTAINER publishes. A var() inside a custom property substitutes where
@@ -37,6 +45,9 @@ import { fileURLToPath } from "node:url";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const THEMES = join(REPO, "projects/interop/src/lib/styles/themes");
+
+/** A value computed from the boundary's surface, which only composes there. */
+const SURFACE_DERIVED = /var\(\s*--itx-surface(-above)?\s*\)/;
 
 /** Selectors that re-declare at every elevation boundary. */
 const PER_LAYER = /\[itx-layer\]|\[itx-sink\]/;
@@ -80,13 +91,18 @@ for (const file of walk(THEMES)) {
 		if (!declarations.length) continue;
 
 		if (PER_LAYER.test(selector)) {
+			// Derived from the boundary's own surface: nowhere else composes.
+			const stray = declarations.filter(
+				([, , value]) => !SURFACE_DERIVED.test(value),
+			);
+			if (!stray.length) continue;
 			findings.push({
 				file: rel,
 				line: lineOf(block.index),
 				text: selector,
 				why:
-					`co-declared on the elevation boundaries (${declarations.length} ` +
-					`declaration${declarations.length === 1 ? "" : "s"}) — this wipes a ` +
+					`co-declared on the elevation boundaries (${stray.length} ` +
+					`declaration${stray.length === 1 ? "" : "s"}) — this wipes a ` +
 					`consumer's override one layer down. Declare on the component instead; ` +
 					`--itx-surface* inherits, so a layer-sensitive value still resolves.`,
 			});

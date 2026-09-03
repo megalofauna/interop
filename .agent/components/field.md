@@ -114,7 +114,7 @@ Textarea variant is identical except for the native element and the `#textareaEl
 The field's look is lifted from IBM Carbon, per `.agent/workflows/carbon-borrow.md`. Four decisions carry it:
 
 1. **A filled slab, not an outlined box.** `--itx-field-background` defaults to `--itx-surface-above`. Carbon's `$field-01` is a grey recess on a white page; our elevation model runs the other way, so the polarity is inverted and the figure/ground relationship preserved. Dark mode comes free from the `light-dark()` neutral pair.
-2. **One border.** `border: none` plus a single `border-block-end` at `--itx-neutral-8` (Carbon's `$border-strong`). Deliberately stronger than the `--itx-neutral-7` hairline the other borrows use, because here the rule *is* the affordance.
+2. **One border.** `border: none` plus a single `border-block-end` at `--itx-role-text-quieter` (Carbon's `$border-strong`). Deliberately stronger than the `--itx-neutral-7` hairline the other borrows use, because here the rule *is* the affordance.
 3. **Fixed heights on `itx-size`** — 32 / 40 / 48, with 16px inline padding and 14px type held constant at every step.
 4. **Label above, helper below**, both at 12/16 and both quieter than the value.
 
@@ -146,7 +146,7 @@ One `--itx-field-*` namespace, shared by both components. Every read carries its
 | Token | Default | Notes |
 |---|---|---|
 | `--itx-field-gap` | `var(--itx-spacing-1)` — 4px | control ↔ helper ↔ error |
-| `--itx-field-label-color` | `var(--itx-neutral-9)` | `$text-secondary` |
+| `--itx-field-label-color` | `var(--itx-role-text-quieter)` | `$text-secondary` |
 | `--itx-field-label-font-size` | `0.75rem` | `$label-01`; fixed rem, never `--itx-font-size-*` |
 | `--itx-field-label-font-weight` | `400` | |
 | `--itx-field-label-line-height` | `1.3333` | |
@@ -158,22 +158,22 @@ One `--itx-field-*` namespace, shared by both components. Every read carries its
 | `--itx-field-background` | `var(--itx-surface-above)` | |
 | `--itx-field-background-hover` | `var(--itx-surface-hover)` | |
 | `--itx-field-underline-width` | `1px` | |
-| `--itx-field-underline-color` | `var(--itx-neutral-8)` | `$border-strong` |
+| `--itx-field-underline-color` | `var(--itx-role-text-quieter)` | `$border-strong` |
 | `--itx-field-border-radius` | `var(--itx-radius-none)` | |
 | `--itx-field-focus-color` | `var(--itx-colorway)` | semantic token, so it survives dark mode |
 | `--itx-field-focus-width` | `2px` | also the invalid ring width |
 | `--itx-field-invalid-color` | `var(--itx-danger)` | ring + underline + glyph |
 | `--itx-field-invalid-icon-size` | `1rem` | |
-| `--itx-field-readonly-underline-color` | `var(--itx-neutral-4)` | `$border-subtle` |
-| `--itx-field-disabled-color` | `var(--itx-neutral-7)` | value, label and notes |
+| `--itx-field-readonly-underline-color` | `var(--itx-role-divider)` | `$border-subtle` |
+| `--itx-field-disabled-color` | `var(--itx-role-text-disabled)` | value, label and notes |
 | `--itx-field-transition-duration` | `var(--itx-duration-fast)` — 100ms | Carbon uses 70ms |
 | `--itx-field-addon-gap` | `var(--itx-spacing-2)` — 8px | |
 | `--itx-field-addon-color` | `var(--itx-muted)` | |
 | `--itx-field-font-family` | `var(--itx-font-family-sans)` | |
 | `--itx-field-font-size` | `0.875rem` | |
 | `--itx-field-line-height` | `1.2857` input / `1.4286` textarea | `$body-compact-01` vs `$body-01` |
-| `--itx-field-color` | `var(--itx-on-surface)` | |
-| `--itx-field-placeholder-color` | `var(--itx-neutral-8)` | one step darker than Carbon's failing gray-40 |
+| `--itx-field-color` | `var(--itx-role-text)` | |
+| `--itx-field-placeholder-color` | `var(--itx-role-text-quieter)` | one step darker than Carbon's failing gray-40 |
 | `--itx-field-textarea-padding-block` | `0.6875rem` — 11px | textarea only |
 | `--itx-field-textarea-min-inline-size` | `10rem` | textarea only |
 | `--itx-field-textarea-resize` | `vertical` | textarea only |

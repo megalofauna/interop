@@ -43,25 +43,27 @@
 	--itx-table-cell-vertical-align: middle;
 
 	/* ── Body ───────────────────────────────────────────────────────────── */
-	--itx-table-body-color: var(--itx-neutral-14);
+	--itx-table-body-color: var(--itx-role-text);
 
 	/* Carbon's default (their `lg`): 48px. Same step as the contained list. */
 	--itx-table-row-block-size: var(--itx-spacing-12);
 
 	/* Carbon ships zebra striping as an opt-in modifier, not a default, and so
-	   do we. Set this to `var(--itx-neutral-2)` for the Carbon stripe. */
+	   do we. Set this to
+	   `var(--itx-role-background-interactive)` for the Carbon stripe. */
 	--itx-table-stripe-bg: transparent;
 
-	--itx-table-row-hover-bg: var(--itx-neutral-2);
+	--itx-table-row-hover-bg: var(--itx-role-background-interactive);
 
 	/* ── Header ─────────────────────────────────────────────────────────── */
 	/* Carbon separates the header from the body with a solid gray-20 slab and
 	   no rule at all. We keep the lighter lift and carry the emphasis in the
 	   type instead — a slab would put a heavy band across a component whose
 	   whole borrowed language is "transparent, hairlines only". For Carbon's
-	   actual header, set `--itx-table-header-bg: var(--itx-neutral-3)`. */
+	   actual header, set
+	   `--itx-table-header-bg: var(--itx-role-background-control)`. */
 	--itx-table-header-bg: var(--itx-surface-above);
-	--itx-table-header-color: var(--itx-neutral-14);
+	--itx-table-header-color: var(--itx-role-text);
 	/* Carbon `heading-compact-01` — same 14/18 as the body, weight 600. */
 	--itx-table-header-font-weight: 600;
 	/* One hairline weight everywhere; the old 2px underline was a second,
@@ -89,7 +91,7 @@
 	 * Drives the header rule and the sticky-column seam as well as the row
 	 * rules; they should stay one language.
 	 */
-	--itx-table-border: var(--itx-neutral-8);
+	--itx-table-border: var(--itx-role-edge);
 
 	/* ── Sticky columns ─────────────────────────────────────────────────── */
 	/* No Carbon counterpart — an Interop affordance. The seam is drawn in the
@@ -99,18 +101,18 @@
 		inset -1px 0 0 var(--itx-table-border), 4px 0 8px -2px oklch(0 0 0 / 0.1);
 
 	/* ── State rows (loading / error / empty) ───────────────────────────── */
-	--itx-table-state-color: var(--itx-neutral-9);
+	--itx-table-state-color: var(--itx-role-text-quieter);
 	--itx-table-state-padding: var(--itx-spacing-8) var(--itx-spacing-4);
 
 	/* ── Scroll-region focus ring ───────────────────────────────────────── */
 	/* Focus is where the brand survives an otherwise neutral component. The
-	   semantic `--itx-colorway-solid` rather than the light-only `-8` step, so the
+	   semantic `--itx-role-background-colorway` rather than the light-only `-8` step, so the
 	   ring holds its contrast in dark mode — matches the contained list. */
 
 	/* ── Group rows ─────────────────────────────────────────────────────── */
 	/* No Carbon counterpart. Fixed rem for the same reason as the body type. */
 	--itx-table-group-label-padding-block-start: var(--itx-spacing-6);
-	--itx-table-group-label-color: var(--itx-neutral-9);
+	--itx-table-group-label-color: var(--itx-role-text-quieter);
 	--itx-table-group-label-font-size: 0.75rem;
 	--itx-table-group-label-font-weight: 500;
 	--itx-table-group-label-letter-spacing: 0.06em;

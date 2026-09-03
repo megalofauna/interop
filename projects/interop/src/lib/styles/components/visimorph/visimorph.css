@@ -71,11 +71,11 @@
 	);
 	--_border-color: var(
 		--itx-control-border-color,
-		var(--itx-neutral-8, var(--itx-neutral-3))
+		var(--itx-role-edge, var(--itx-role-divider))
 	);
-	--_bg: var(--itx-control-bg, var(--itx-neutral-2, #ffffff));
-	--_accent: var(--itx-control-accent, var(--itx-neutral-14));
-	--_indicator: var(--itx-control-indicator, var(--itx-neutral-2, #ffffff));
+	--_bg: var(--itx-control-bg, var(--itx-surface, #ffffff));
+	--_accent: var(--itx-control-accent, var(--itx-role-text));
+	--_indicator: var(--itx-control-indicator, var(--itx-role-divider, #ffffff));
 	--_radius: var(
 		--itx-control-radius,
 		var(--itx-inner-radius, var(--itx-radius))
@@ -88,7 +88,7 @@
 	);
 	--_focus-ring-color: var(
 		--itx-control-focus-color,
-		var(--itx-colorway-solid)
+		var(--itx-role-background-colorway)
 	);
 	--_focus-ring-width: var(--itx-control-focus-width, var(--itx-focus-width));
 	--_focus-ring-offset: var(--itx-control-focus-offset, 3px);
@@ -232,11 +232,11 @@
 :where(interop-visimorph[itx-visimorph="toggle"][data-checked]) {
 	--_toggle-thumb-color: var(
 		--itx-control-toggle-thumb-color-on,
-		var(--itx-neutral-2)
+		var(--itx-role-background-interactive)
 	);
 	border-color: var(--itx-control-toggle-border-color-checked);
 	/*background-color: var(--_accent);*/
-	background-color: var(--itx-colorway-solid);
+	background-color: var(--itx-role-background-colorway);
 }
 
 :where(interop-visimorph[itx-visimorph="toggle"][data-checked])::after {

@@ -14,7 +14,7 @@
 	}
 
 	[interop-step-panel] p {
-		color: var(--itx-neutral-10);
+		color: var(--itx-role-text-quieter);
 	}
 
 	.actions {
@@ -29,8 +29,8 @@
 			letter-spacing: 0.125em;
 			font-size: var(--itx-font-size-caption);
 			padding-bottom: 0.75em;
-			color: var(--itx-neutral-10);
-			border-bottom: 1px solid var(--itx-neutral-3);
+			color: var(--itx-role-text-quieter);
+			border-bottom: 1px solid var(--itx-role-divider);
 		}
 		h2 {
 			font-size: var(--itx-fs-2xl);

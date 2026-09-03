@@ -32,11 +32,11 @@
 	 * nothing. Preserved exactly as it rendered rather than fixed in passing.
 	 */
 	--itx-indicator-background-color: light-dark(
-		var(--itx-neutral-2),
-		var(--itx-neutral-14)
+		var(--itx-surface-1),
+		var(--itx-role-text)
 	);
 
-	--itx-indicator-border-color: var(--itx-neutral-14);
+	--itx-indicator-border-color: var(--itx-role-text);
 	--itx-indicator-border-style: solid;
 
 	--itx-indicator-background-image: none;

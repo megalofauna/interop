@@ -1,24 +1,64 @@
-# Colour role naming — the open question
+# Colour role naming — how the vocabulary was chosen
 
-Recorded 2026-08-29, updated 2026-08-31. Nothing here is decided.
+Recorded 2026-08-29, decided 2026-09-01. `.agent/color.md` is the reference;
+this is why it looks the way it does.
 
-Every role name in play is provisional. Slated to change:
+## What shipped
 
-| name | where it came from |
+```
+--itx-role-text  -quiet  -quieter  -disabled
+--itx-role-text-{family}  -text-inverse
+--itx-role-background-interactive  -background-control
+--itx-role-background-{family}  -{family}-subtle
+--itx-role-edge  -edge-{family}  --itx-role-divider
+--itx-role-scrim
+```
+
+`namespace · type · role · family · modifier`, both trailing segments optional,
+so the common case is the shortest to write. One grammar in both slots:
+unmarked is full strength, a modifier is quieter.
+
+Four decisions worth keeping the reasons for.
+
+**Prominence, not brightness.** A brightness word is true in one arm and false
+in the other — the dark text ramp runs 0.664 to 0.970 while the light one runs
+0.489 to 0.150, so `brightest` would resolve to near-black in light mode. Both
+arms land on the same contrast from opposite lightnesses, which is the property
+a brightness name throws away.
+
+**A comparative rather than two adjectives.** `quiet` and `quieter` carry their
+own order. Two plain adjectives — `subtle` and `muted` — do not, and a reader
+has to learn which is further out.
+
+**The fill is unmarked and the wash is modified.** Usage decided it: the fill
+had 38 reads against the wash's 5, so the common case got the shorter name. It
+cost a new name for the label, because there was no longer a word to point at,
+which is where `--itx-role-text-inverse` comes from.
+
+**Four names retired by measurement rather than renamed.** Per-family
+`on-solid` collapsed to one `--itx-role-text-inverse`, because one label clears
+all five fills at worst 4.75. Per-family `on-tint` disappeared entirely,
+because the family text already clears its own wash at 7.10 to 8.32 — five
+tokens restating a guarantee the pairing already makes.
+
+## Names considered and rejected
+
+| name | why not |
 |---|---|
-| `tint`, `on-tint`, `solid`, `on-solid` | the shipped system |
-| `wash` | the spike, and it is the same job as `tint` under a second name |
-| `ink` | the spike — a metaphor, which `.agent/writing.md` rules out |
-| `separator`, `edge` | the spike, for the two border weights |
-| `page-N`, `layer-N`, `text-N` | the spike, for the three bands |
+| `tint`, `on-tint` | names an appearance, not a job; disliked on sight |
+| `solid`, `on-solid` | same, and the fill is unmarked now |
+| `wash` | the same job as `tint` under a second name |
+| `ink` | a metaphor, which `.agent/writing.md` rules out |
+| `bold` | collides with font-weight in conversation, and invites `bolder` |
+| `strong` | cheaper than `bold`, but keeps two grammars |
+| `container` | Material's word, and it collides with `@container`, which drives the layer counter |
+| `page-N`, `layer-N` | two names for one ramp, and `layer` collides with `itx-layer` |
+| `subtler` | invited by the text scale, and the background scale has no such rung |
 
-The rename waits on the job list below. Naming the names that happen to exist
-means naming again when the missing jobs surface.
+## Why there was nothing to copy
 
-## Why it is not decided yet
-
-**There is no industry consensus to copy.** Nine systems were surveyed and they
-disagree on every axis.
+Nine systems were surveyed and they disagree on every axis. That is what made
+the naming worth doing rather than borrowing.
 
 **Naming a foreground/background pair.** Three strategies, no winner.
 
@@ -40,140 +80,8 @@ disagree on every axis.
 
 **Slot-first or family-first.** Primer, Atlassian and Carbon lead with the slot
 (`--fgColor-danger-emphasis`). Bootstrap and shadcn lead with the family
-(`--bs-danger-bg-subtle`). Ours is family-first and the 84 step tokens
-(`--itx-danger-9`) hold it there.
-
-## The job list
-
-Built from every colour-valued declaration in `styles/themes/`. Steps are what
-components pick today, not what they should pick.
-
-**Fills** — a background that is not the elevation surface.
-
-| job | steps now | consumers |
-|---|---|---|
-| hover wash | 2 | table-row, tree-row, option, pn-link, chip-remove, toast-action, button |
-| selected wash | 2 | option-selected, pn-link-current, chip-selectable |
-| control rest | 3, 4 | button, step-indicator, list-marker, tab-selected |
-| track | 3 | progress, slider, stepper scrollbar |
-| family wash | 3 (`tint`) | callout, toast, tree, content, page-nav |
-| family solid | outside the ramp (`solid`) | 38 reads |
-
-**Text**
-
-| job | steps now | consumers |
-|---|---|---|
-| primary | 14 | ~20 — content, table, dialog, popover, field, term, toast, tree, kbd |
-| middle | 11 | quote, segment, step-label, term-prompt, `as-button~="secondary"` |
-| secondary | **9 and 10** | 9: caption, note, del, muted, description, legend, group-label, link, tab · 10: field label, placeholder, addon, step-indicator |
-| disabled | 8 | field-disabled, button-disabled |
-| on family wash | 13 (`on-tint`) | named |
-| on family solid | outside the ramp (`on-solid`) | named, unverified |
-| on neutral solid | — | **missing** |
-
-**Edges**
-
-| job | steps now | consumers |
-|---|---|---|
-| invisible | 1 | button primary and tertiary — matches the surface so layout does not shift |
-| separator | **2, 3, 5** | 3: content-rule, rig-divider, segmented-control-rule, expansion-panel, toolbar, page-nav, stepper-menu, code, table · 2: dialog, command-palette · 5: popover |
-| visible edge | 8 | kbd, table, toast, step-indicator, content-quote, list-row-rule |
-| emphasized edge | 9, 12, 14 | step-indicator-active, pn-link-hover, list-marker, indicator |
-| family edge | 9 (`border`) | named |
-
-**Marks** — handles, thumbs, indicators, ticks. Steps 3, 8, 9, 14. Slider thumb
-is 14, slider mark 8, minor mark 3, resizable handle 8 hovering to 9.
-
-**Scrim** — three literals with alpha: `dialog-backdrop`, `cmdp-backdrop`,
-`term-scan-line`. The palette cannot express these and they have no name. The
-spike gives the first two one token; the scan line is a decorative overlay, not
-a scrim.
-
-### What the counts say
-
-Named today: 4 surfaces, 6 family roles. In use and unnamed: about fourteen.
-
-Component themes read hand-picked neutral steps **185 times** and named roles
-**64 times**. Neutral is the most-used family and the only one with no roles, so
-every one of those 185 is a bare number chosen in isolation.
-
-One text ramp was discovered six times under nine names. Five components landed
-on step 9 for the same job — `caption-color`, `note-color`, `del-color`,
-`muted`, `marker-color`. Three landed on step 10 — `label-color`,
-`placeholder-color`, `addon-color`.
-
-Three jobs have more than one answer: secondary text (9 and 10), separator
-(2, 3 and 5), edge (neutral 8 versus family 9).
-
-`border` is two jobs. The commonest border in the library is `neutral-3`, ten
-uses, two steps from the page and far under the 7-step floor — a separator that
-must not assert itself. `--itx-<family>-border` at step 9 is an edge that must.
-
-## Open decisions
-
-Answered by the spike at `/foundation/color-spike`, measured rather than argued:
-
-| | answer |
-|---|---|
-| Is `selected` distinct from `hover`? | No. They share one fill and do not compound, because compounding collapses the top of the ramp. The difference is carried by a mark, which needs 3:1 against the surrounding surface only. |
-| Are marks a tier? | No. A quiet mark is the edge (3.05 dark / 3.11 light worst); a loud mark is the far text tier. |
-| Does neutral get a solid? | Yes. The far text end as a background, page end as its label, 17.21:1. |
-| Does scrim join the system? | Yes. One scheme-invariant value replaces two literals. It dims content symmetrically (13.18 to 3.88 dark) but does not separate a dialog in dark mode — 1.27 against 3.29 light — so that separation comes from the shadow. |
-
-Still open:
-
-1. How many text tiers — three or four. The spike ships four.
-2. Is `separator` distinct from `edge`. The evidence says yes and the spike
-   treats them as two.
-
-Both change how things look and want a comparison harness rather than an
-argument.
-
-## Fixable without deciding any of that
-
-- Consolidate the separator to one value.
-- Unify secondary text on one step.
-
-Done since: `check-contrast-css.mjs` now measures text on an interactive fill
-and the brand fill against its label — 96 pairings became 144. The tightest
-reading in the shipped system is one of the new ones, secondary text on a hover
-fill at 4.5382 against a 4.5 floor, which nothing reported before.
-
-## Alpha for borders and rules
-
-Considered and parked. One ink at varying opacity instead of a step per
-prominence — `--itx-neutral-14 / 10%` for a muted border, the same pattern for
-every family. Scoped to borders and rules; backgrounds are out.
-
-**For.** It dissolves the depth limit, because a 10% ink over the surface holds
-a constant relationship as the surface climbs. It is scheme-symmetric in one
-declaration, since `--itx-neutral-14` is near-black in light and near-white in
-dark. It works over unknown backgrounds. It collapses the separator's three
-answers into one expression.
-
-**Against.** Alpha stacks multiplicatively, so a border inside a tinted
-container differs from the same border on the page — desirable for a separator,
-a problem where an absolute value is needed. `forced-colors` drops translucent
-edges, and borders are what that mode cares about. For the 3:1 edge,
-`check-contrast-render.mjs` goes blind, because it reads literal values with no
-DOM, so the context-free half of the guarantee is lost. A separator has no
-floor and loses nothing.
-
-**Two objections that do not apply at this scope**, recorded because they were
-raised and are wrong here: Material's retreat from opacity was about text and
-elevation overlays, and M2's dividers were alpha. The subpixel-rendering concern
-is text-only.
-
-`resolveRgb()` in `lib/dev/contrast.ts` already composites alpha against a
-backdrop, so no tooling work is needed to measure it.
-
-## The reframe worth keeping
-
-Jobs split by whether they carry a contrast floor, and that line cuts across the
-slot-based grouping above. A floored job needs a fixed value measurable without
-a DOM. An unfloored job needs a relationship to whatever is behind it. That may
-be a better organizing principle than slot, and it changes what the naming has
-to describe.
+(`--bs-danger-bg-subtle`). Ours went slot-first once the 84 step tokens that
+were holding it family-first were deleted.
 
 ## What the critiques of other systems say
 
@@ -216,6 +124,15 @@ promising more than it measures.
 catch a wrong choice; does the guarantee survive a palette change and how do you
 know; how many names must a person carry.
 
-Most systems answer the first well and the second not at all. Ours answers the
-second best and the first worst, because the rule is relative and requires
-knowing which step you stand on.
+Most systems answer the first well and the second not at all.
+
+Where this one landed, against those four:
+
+1. **Choosing without docs.** A developer picks a job, not a number. The old
+   answer was worst-in-class — it required knowing which step you stood on.
+2. **Catching a wrong choice.** `check-color-axes.mjs` fails a raw step and an
+   elevation token on a mark. Both contrast checks fail a floor.
+3. **Surviving a palette change.** Redeclare a surface or a hue and both checks
+   re-measure. Nothing restates a relationship that has to be kept in sync.
+4. **Names to carry.** Thirteen roles, six surfaces, five hues, two chroma
+   dials. It was 84 steps plus 30 family roles.

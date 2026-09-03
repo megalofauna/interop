@@ -46,54 +46,45 @@ const STYLES = join(REPO, "projects/interop/src/lib/styles");
  * it judges. Each entry is a real pairing some component paints.
  *
  *   on: the background the foreground sits on, as a token or "" for the surface
+ *
+ * Every entry is a ROLE. The step-based pairings this file used to carry are
+ * gone with the tokens they probed — a component reads a named job now, and
+ * each of those pairings has a role entry that covers it.
  */
 const FAMILIES = ["colorway", "danger", "info", "success", "warning"];
-const PAIRINGS = [
-	{ role: "text", on: "", floor: 4.5 },
-	{ role: "border", on: "", floor: 3 },
-	{ role: "on-tint", on: "tint", floor: 4.5 },
-	/*
-	 * The brand fill and its label. The solid sits outside the step ramp — it is
-	 * an authored oklch, not a palette position — so the distance rule cannot
-	 * reach it and nothing else here would catch a drift. Radix hit the same
-	 * gap and answered it with --accent-contrast.
-	 */
-	{ role: "on-solid", on: "solid", floor: 4.5 },
-];
-/** The page's own text, which is not a family role. */
-const PAGE_TEXT = { fg: "--itx-neutral-14", on: "", floor: 7 };
 
 /*
- * Text on an interactive fill.
+ * The role vocabulary. Every one of these is a named job rather than a step,
+ * so this is the half of the guarantee a consumer actually reads.
  *
- * A row has no fill at rest, so its text colour is chosen against the surface.
- * On hover or selection a fill appears UNDERNEATH that text, and neither check
- * could see it: both measure a foreground against --itx-surface and never
- * against a surface with a fill on it.
- *
- * These are real pairings, not hypotheticals. Each names the components that
- * produce it.
+ * The text tiers are measured twice — on the bare surface and on the
+ * interactive fill — because a row has no fill at rest and grows one on hover.
+ * The fill is derived from the surface it lands on, so its value moves with
+ * depth and only the DOM can resolve it.
  */
-const ON_FILL = [
+const ROLE_TEXT = [
+	{ role: "text", floor: 7 },
+	{ role: "text-quiet", floor: 7 },
+	{ role: "text-quieter", floor: 4.5 },
+	{ role: "text-disabled", floor: 3 },
+];
+const ROLE_FAMILY = [
+	{ suffix: "text-{f}", on: "", floor: 4.5, what: "family text" },
 	{
-		fg: "--itx-neutral-14",
-		on: "--itx-neutral-2",
+		suffix: "text-{f}",
+		on: "background-{f}-subtle",
 		floor: 4.5,
-		what: "row text on a hover fill (table, tree, listbox option)",
+		what: "family text on its wash",
 	},
+	{ suffix: "edge-{f}", on: "", floor: 3, what: "family edge" },
 	{
-		fg: "--itx-neutral-9",
-		on: "--itx-neutral-2",
+		suffix: "text-inverse",
+		on: "background-{f}",
 		floor: 4.5,
-		what: "secondary text on a hover fill (page-nav link, option description)",
-	},
-	{
-		fg: "--itx-neutral-10",
-		on: "--itx-neutral-1",
-		floor: 4.5,
-		what: "placeholder and label on a hovered field",
+		what: "the one label on a family fill",
 	},
 ];
+
 const DEPTHS = [0, 1, 2];
 const SCHEMES = ["light", "dark"];
 
@@ -115,21 +106,58 @@ if (!CHROME) {
 const cases = [];
 for (const scheme of SCHEMES)
 	for (const depth of DEPTHS) {
-		cases.push({ scheme, depth, ...PAGE_TEXT, label: "page text" });
-		// Fills are fixed steps, so depth does not move them. Measured at each
-		// depth anyway, so this keeps reporting if a fill ever becomes
-		// surface-relative.
-		for (const { fg, on, floor, what } of ON_FILL)
-			cases.push({ scheme, depth, fg, on, floor, label: what });
+		for (const { role, floor } of ROLE_TEXT) {
+			cases.push({
+				scheme,
+				depth,
+				fg: `--itx-role-${role}`,
+				on: "",
+				floor,
+				label: `${role} on the surface`,
+			});
+			cases.push({
+				scheme,
+				depth,
+				fg: `--itx-role-${role}`,
+				on: "--itx-role-background-interactive",
+				floor,
+				label: `${role} on the interactive fill`,
+			});
+			cases.push({
+				scheme,
+				depth,
+				fg: `--itx-role-${role}`,
+				on: "--itx-role-background-control",
+				floor,
+				label: `${role} on a control fill`,
+			});
+		}
+		cases.push({
+			scheme,
+			depth,
+			fg: "--itx-role-edge",
+			on: "",
+			floor: 3,
+			label: "edge on the surface",
+		});
+		cases.push({
+			scheme,
+			depth,
+			fg: "--itx-role-edge",
+			on: "--itx-role-background-interactive",
+			floor: 3,
+			label: "edge on the interactive fill",
+		});
+
 		for (const family of FAMILIES)
-			for (const { role, on, floor } of PAIRINGS)
+			for (const { suffix, on, floor, what } of ROLE_FAMILY)
 				cases.push({
 					scheme,
 					depth,
-					fg: `--itx-${family}-${role}`,
-					on: on ? `--itx-${family}-${on}` : "",
+					fg: `--itx-role-${suffix.replace("{f}", family)}`,
+					on: on ? `--itx-role-${on.replace("{f}", family)}` : "",
 					floor,
-					label: `${family} ${role}${on ? ` on ${on}` : ""}`,
+					label: `${family}: ${what}`,
 				});
 	}
 
@@ -164,8 +192,14 @@ ${probes}
 const cv = document.createElement('canvas'); cv.width = cv.height = 1;
 const cx = cv.getContext('2d', { willReadFrequently: true });
 const lin = (v) => { v /= 255; return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); };
-const lum = (s) => {
+/* Painted OVER its background, because a role can be translucent — the edge
+   and the divider are one ink at two opacities. Compositing over black instead
+   would read the ink's own luminance and report a border far darker than the
+   one on screen: 2.44 against the 3.10 it actually renders. Identical for an
+   opaque foreground, so every pairing goes through it. */
+const lum = (s, under) => {
   cx.fillStyle = '#000'; cx.fillRect(0,0,1,1);
+  if (under) { cx.fillStyle = under; cx.fillRect(0,0,1,1); }
   cx.fillStyle = s; cx.fillRect(0,0,1,1);
   const [r,g,b] = cx.getImageData(0,0,1,1).data;
   return 0.2126*lin(r) + 0.7152*lin(g) + 0.0722*lin(b);
@@ -174,7 +208,7 @@ const out = [];
 for (let i = 0; i < ${cases.length}; i++) {
   const bg = getComputedStyle(document.getElementById('b'+i)).backgroundColor;
   const fg = getComputedStyle(document.getElementById('f'+i)).color;
-  const a = lum(fg), b = lum(bg);
+  const a = lum(fg, bg), b = lum(bg);
   const hi = Math.max(a,b), lo = Math.min(a,b);
   out.push(((hi + 0.05) / (lo + 0.05)).toFixed(4) + ' ' + bg + ' | ' + fg);
 }

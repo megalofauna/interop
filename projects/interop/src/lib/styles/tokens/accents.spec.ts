@@ -1,5 +1,5 @@
 /**
- * Accent families — a family's steps, and the roles built on them.
+ * Accent families — one hue number each, and the roles derived from it.
  *
  * Runs the shipped CSS, same as elevation.spec.ts.
  */
@@ -54,11 +54,11 @@ describe("Accent families", () => {
 				"itx-layer": "",
 			});
 
-			expect(resolve("--itx-colorway-solid", deep)).toEqual(
-				resolve("--itx-colorway-solid", root),
+			expect(resolve("--itx-role-background-colorway", deep)).toEqual(
+				resolve("--itx-role-background-colorway", root),
 			);
-			expect(resolve("--itx-colorway-on-solid", deep)).toEqual(
-				resolve("--itx-colorway-on-solid", root),
+			expect(resolve("--itx-role-text-inverse", deep)).toEqual(
+				resolve("--itx-role-text-inverse", root),
 			);
 		});
 
@@ -67,26 +67,30 @@ describe("Accent families", () => {
 			// both schemes, rather than dark-mode mud.
 			const light = makeRoot({}, "light");
 
-			expect(resolve("--itx-colorway-solid", light)).toEqual(
-				resolve("--itx-colorway-solid", root),
+			expect(resolve("--itx-role-background-colorway", light)).toEqual(
+				resolve("--itx-role-background-colorway", root),
 			);
-			expect(resolve("--itx-colorway-on-solid", light)).toEqual(
-				resolve("--itx-colorway-on-solid", root),
+			expect(resolve("--itx-role-text-inverse", light)).toEqual(
+				resolve("--itx-role-text-inverse", root),
 			);
 		});
 	});
 
-	describe("roles are fixed steps, not surface-relative solves", () => {
-		it("holds tint, border and text at one colour, whatever the depth", () => {
+	describe("roles are absolute, not surface-relative solves", () => {
+		it("holds the wash, the edge and the text at one colour, whatever the depth", () => {
 			// The inverse of what this asserted while roles were solved per layer.
-			// A role is now a palette step, and a step is one colour everywhere —
-			// that is the trade the ranks were retired for. Depth safety comes
-			// from the elevation ramp being short, not from re-solving.
+			// A role is one colour everywhere — that is the trade the ranks were
+			// retired for. Depth safety comes from the ramp being short and from
+			// every role being measured at every depth, not from re-solving.
 			const one = el(root, { "itx-layer": "" });
 			const two = el(one, { "itx-layer": "" });
 
-			for (const role of ["tint", "on-tint", "border", "text"]) {
-				const token = `--itx-colorway-${role}`;
+			for (const role of [
+				"background-colorway-subtle",
+				"edge-colorway",
+				"text-colorway",
+			]) {
+				const token = `--itx-role-${role}`;
 				expect(resolve(token, one))
 					.withContext(`${token} should not move between layer 0 and 1`)
 					.toEqual(resolve(token, root));
@@ -98,22 +102,20 @@ describe("Accent families", () => {
 
 		it("differs between schemes, unlike the solid", () => {
 			const light = makeRoot({}, "light");
-			expect(resolve("--itx-colorway-tint", light)).not.toEqual(
-				resolve("--itx-colorway-tint", root),
-			);
+			expect(
+				resolve("--itx-role-background-colorway-subtle", light),
+			).not.toEqual(resolve("--itx-role-background-colorway-subtle", root));
 		});
 	});
 
 	describe("status families", () => {
 		it("gives every status a solid and a label", () => {
 			for (const status of ["danger", "info", "success", "warning"]) {
-				expect(resolve(`--itx-${status}-solid`, root))
-					.withContext(`--itx-${status}-solid`)
-					.toBeTruthy();
-				expect(resolve(`--itx-${status}-on-solid`, root))
-					.withContext(`--itx-${status}-on-solid`)
+				expect(resolve(`--itx-role-background-${status}`, root))
+					.withContext(`--itx-role-background-${status}`)
 					.toBeTruthy();
 			}
+			expect(resolve("--itx-role-text-inverse", root)).toBeTruthy();
 		});
 
 		it("swaps the whole set on a PLAIN DESCENDANT carrying itx-status-palette", () => {
@@ -126,21 +128,21 @@ describe("Accent families", () => {
 			const eighties = el(root, { "itx-status-palette": "eighties" });
 
 			for (const status of ["danger", "success", "warning"]) {
-				expect(resolve(`--itx-${status}-solid`, eighties))
+				expect(resolve(`--itx-role-background-${status}`, eighties))
 					.withContext(`${status} should differ between palettes`)
-					.not.toEqual(resolve(`--itx-${status}-solid`, root));
+					.not.toEqual(resolve(`--itx-role-background-${status}`, root));
 			}
 		});
 
-		it("gives eighties real per-family labels, not one flat value", () => {
-			// seventies documents this as a dark-mode AA failure it had to fix;
-			// eighties still carried the flat values before they were generated.
+		it("needs no per-family label, because one clears every fill", () => {
+			// Four tokens the measurements retired rather than renamed. The worst
+			// reading is 4.75 on info, against a 4.5 floor, and every fill is
+			// scheme-invariant — so the label is too.
 			const eighties = el(root, { "itx-status-palette": "eighties" });
-			const labels = ["danger", "info", "success", "warning"].map((s) =>
-				resolve(`--itx-${s}-on-solid`, eighties),
-			);
 
-			expect(new Set(labels).size).toBeGreaterThan(1);
+			expect(resolve("--itx-role-text-inverse", eighties)).toEqual(
+				resolve("--itx-role-text-inverse", root),
+			);
 		});
 	});
 
@@ -148,10 +150,11 @@ describe("Accent families", () => {
 	 * One colourway ships. The switching mechanism still has a contract, and
 	 * breaking it is silent, so it is tested against a colourway defined here.
 	 *
-	 * The contract: a block that redeclares a family's steps must also
-	 * redeclare its roles. A role written at [interop-root] composes there and
-	 * inherits as a finished colour, so a block that changes only the steps
-	 * keeps the root's roles.
+	 * The contract: a block that redeclares a family's HUE must also redeclare
+	 * its roles. A role written at [interop-root] composes there and inherits as
+	 * a finished colour, so a block that changes only the hue keeps the root's
+	 * roles — the whole swap resolves to nothing, visibly correct in the
+	 * stylesheet and inert on screen.
 	 */
 	describe("a colourway block redeclares its roles", () => {
 		let colorway: HTMLStyleElement;
@@ -164,62 +167,61 @@ describe("Accent families", () => {
 
 		afterEach(() => colorway?.remove());
 
-		/** Fourteen steps at a hue the shipped colourway does not use. */
-		const steps = Array.from(
-			{ length: 14 },
-			(_, i) =>
-				`--itx-colorway-${i + 1}: light-dark(oklch(${(0.97 - i * 0.06).toFixed(3)} 0.1 140), oklch(${(0.17 + i * 0.06).toFixed(3)} 0.1 140));`,
+		/** A hue the shipped colourway does not use. */
+		const HUE = "--itx-colorway-hue: 140;";
+		const ROLES = [
+			"--itx-role-background-colorway",
+			"--itx-role-background-colorway-subtle",
+			"--itx-role-edge-colorway",
+			"--itx-role-text-colorway",
+		];
+		const derived = ROLES.map((r) =>
+			r.endsWith("-subtle")
+				? `${r}: light-dark(oklch(0.89 0.064 140), oklch(0.28 0.064 140));`
+				: r.endsWith("colorway") && r.startsWith("--itx-role-background")
+					? `${r}: oklch(0.5 0.16 140);`
+					: `${r}: light-dark(oklch(0.4 0.16 140), oklch(0.8 0.16 140));`,
 		).join("\n");
 
-		const ROLES = ["tint", "on-tint", "border", "text"];
-
 		it("moves every role when the block redeclares both", () => {
-			define(`:where([itx-colorway="test"]) {
-				${steps}
-				--itx-colorway-tint: var(--itx-colorway-3);
-				--itx-colorway-on-tint: var(--itx-colorway-13);
-				--itx-colorway-border: var(--itx-colorway-9);
-				--itx-colorway-text: var(--itx-colorway-11);
-			}`);
+			define(`:where([itx-colorway="test"]) { ${HUE} ${derived} }`);
 
 			const swapped = el(root, { "itx-colorway": "test" });
 
-			for (const role of ROLES) {
-				const token = `--itx-colorway-${role}`;
+			for (const token of ROLES) {
 				expect(resolve(token, swapped))
 					.withContext(`${token} did not follow the colourway`)
 					.not.toEqual(resolve(token, root));
 			}
 		});
 
-		it("leaves roles behind when the block redeclares only the steps", () => {
-			define(`:where([itx-colorway="test"]) { ${steps} }`);
+		it("leaves roles behind when the block redeclares only the hue", () => {
+			define(`:where([itx-colorway="test"]) { ${HUE} }`);
 
 			const swapped = el(root, { "itx-colorway": "test" });
 
-			expect(resolve("--itx-colorway-3", swapped)).not.toEqual(
-				resolve("--itx-colorway-3", root),
-			);
-			expect(resolve("--itx-colorway-tint", swapped)).toEqual(
-				resolve("--itx-colorway-tint", root),
-			);
+			expect(
+				getComputedStyle(swapped).getPropertyValue("--itx-colorway-hue").trim(),
+			).toEqual("140");
+			for (const token of ROLES) {
+				expect(resolve(token, swapped))
+					.withContext(`${token} should have kept the root's value`)
+					.toEqual(resolve(token, root));
+			}
 		});
 
 		it("follows the colourway at depth", () => {
-			define(`:where([itx-colorway="test"]) {
-				${steps}
-				--itx-colorway-border: var(--itx-colorway-9);
-			}`);
+			define(`:where([itx-colorway="test"]) { ${HUE} ${derived} }`);
 
 			const deep = (host: HTMLElement) =>
 				el(el(host, { "itx-layer": "" }), { "itx-layer": "" });
 
 			expect(
 				resolve(
-					"--itx-colorway-border",
+					"--itx-role-edge-colorway",
 					deep(el(root, { "itx-colorway": "test" })),
 				),
-			).not.toEqual(resolve("--itx-colorway-border", deep(root)));
+			).not.toEqual(resolve("--itx-role-edge-colorway", deep(root)));
 		});
 	});
 });

@@ -197,7 +197,7 @@
 	--itx-chip-color: var(--itx-chip-color-selected);
 	--itx-chip-border: var(
 		--itx-chip-border-selected,
-		var(--itx-border-width-thick) solid var(--itx-colorway-border)
+		var(--itx-border-width-thick) solid var(--itx-role-edge-colorway)
 	);
 	--itx-chip-font-weight: var(--itx-chip-font-weight-selected);
 }

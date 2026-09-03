@@ -363,23 +363,26 @@ export class ChipPage {
 		{ property: "--itx-chip-line-height", default: "1.3333" },
 
 		{ groupLabel: "Paint — presentational & dismissible" },
-		{ property: "--itx-chip-background", default: "var(--itx-colorway-solid)" },
-		{ property: "--itx-chip-color", default: "var(--itx-colorway-on-solid)" },
+		{
+			property: "--itx-chip-background",
+			default: "var(--itx-role-background-colorway)",
+		},
+		{ property: "--itx-chip-color", default: "var(--itx-role-text-inverse)" },
 		{ property: "--itx-chip-border", default: "none" },
 		{
 			property: "--itx-chip-background-hover",
-			default: "var(--itx-neutral-3)",
+			default: "var(--itx-role-background-control)",
 		},
-		{ property: "--itx-chip-color-hover", default: "var(--itx-neutral-14)" },
+		{ property: "--itx-chip-color-hover", default: "var(--itx-role-text)" },
 
 		{ groupLabel: "Paint — selectable (chip-option)" },
 		{
 			property: "--itx-chip-selectable-background",
-			default: "var(--itx-neutral-3)",
+			default: "var(--itx-role-background-interactive)",
 		},
 		{
 			property: "--itx-chip-selectable-color",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 		{
 			property: "--itx-chip-selectable-border",
@@ -387,32 +390,32 @@ export class ChipPage {
 		},
 		{
 			property: "--itx-chip-selectable-background-hover",
-			default: "var(--itx-neutral-8)",
+			default: "var(--itx-role-background-control)",
 		},
 		{
 			property: "--itx-chip-selectable-color-hover",
-			default: "var(--itx-neutral-14)",
+			default: "var(--itx-role-text)",
 		},
 
 		{ groupLabel: "Paint — selected / checked" },
 		{
 			property: "--itx-chip-background-selected",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{
 			property: "--itx-chip-color-selected",
-			default: "var(--itx-colorway-on-solid)",
+			default: "var(--itx-role-text-inverse)",
 		},
 		{
 			property: "--itx-chip-border-selected",
-			default: "2px solid var(--itx-colorway-border)",
+			default: "2px solid var(--itx-role-edge-colorway)",
 		},
 		{ property: "--itx-chip-font-weight-selected", default: "400" },
 
 		{ groupLabel: "Focus ring (chip-option)" },
 		{
 			property: "--itx-chip-outline-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{ property: "--itx-chip-outline-width", default: "2px" },
 		{ property: "--itx-chip-outline-style", default: "solid" },
@@ -421,11 +424,11 @@ export class ChipPage {
 		{ groupLabel: "Remove button (chip-item + chip-input)" },
 		{
 			property: "--itx-chip-remove-background",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{
 			property: "--itx-chip-remove-background-hover",
-			default: "var(--itx-neutral-3)",
+			default: "var(--itx-role-background-interactive)",
 		},
 		{ property: "--itx-chip-remove-border", default: "none" },
 		{
@@ -442,7 +445,7 @@ export class ChipPage {
 		},
 		{
 			property: "--itx-chip-remove-outline-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{ property: "--itx-chip-remove-outline-width", default: "2px" },
 		{ property: "--itx-chip-remove-outline-offset", default: "-2px (inset)" },
@@ -475,7 +478,7 @@ export class ChipPage {
 		{ property: "--itx-chip-input-background", default: "transparent" },
 		{
 			property: "--itx-chip-input-border",
-			default: "1px solid var(--itx-neutral-8)",
+			default: "1px solid var(--itx-role-text-disabled)",
 		},
 		{
 			property: "--itx-chip-input-radius",
@@ -494,7 +497,7 @@ export class ChipPage {
 		{ groupLabel: "chip-input — focus" },
 		{
 			property: "--itx-chip-input-outline-color",
-			default: "var(--itx-colorway-solid)",
+			default: "var(--itx-role-background-colorway)",
 		},
 		{ property: "--itx-chip-input-outline-width", default: "2px" },
 		{ property: "--itx-chip-input-outline-style", default: "solid" },

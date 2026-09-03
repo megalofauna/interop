@@ -1,6 +1,6 @@
 .auto-render-page__scroll {
 	height: 320px;
-	border: 1px solid var(--itx-neutral-8);
+	border: 1px solid var(--itx-role-edge);
 	border-radius: var(--itx-radius-md);
 }
 
@@ -9,7 +9,7 @@
 	gap: var(--itx-spacing-4);
 	align-items: baseline;
 	padding: var(--itx-spacing-2) var(--itx-spacing-4);
-	border-bottom: 1px solid var(--itx-neutral-8);
+	border-bottom: 1px solid var(--itx-role-edge);
 	font-size: var(--itx-font-size-body);
 
 	&:last-child {
@@ -21,7 +21,7 @@
 	flex-shrink: 0;
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-caption);
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 }
 
 .auto-render-page__name {
@@ -31,5 +31,5 @@
 .auto-render-page__qty {
 	flex-shrink: 0;
 	font-variant-numeric: tabular-nums;
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 }

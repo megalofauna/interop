@@ -58,8 +58,8 @@
 	--itx-chip-remove-focus-offset: -2px;
 
 	/* The colour CANNOT fall through, which is why it is stated here.
-	   --itx-focus-color is --itx-colorway-solid, and the remove button is
-	   transparent over a chip whose background is --itx-colorway-solid — so the
+	   --itx-focus-color is --itx-role-background-colorway, and the remove button is
+	   transparent over a chip whose background is --itx-role-background-colorway — so the
 	   inherited ring was drawn in exactly the colour of the thing behind it and
 	   could not be seen. The button still took focus on tab; it just stopped
 	   saying so.
@@ -67,7 +67,7 @@
 	   -on-solid is the rung solved to be legible against the solid fill, which
 	   is what the transparent button reveals. It is also --itx-chip-color, so
 	   the ring matches the label it sits beside. */
-	--itx-chip-remove-focus-color: var(--itx-colorway-on-solid);
+	--itx-chip-remove-focus-color: var(--itx-role-text-inverse);
 
 	/* ── Size steps — the vocabulary ──────────────────────────────────────
 	 * Each step's values are declared exactly ONCE, here. The three sites
@@ -108,13 +108,13 @@
 	/* ── Paint — presentational & dismissible ─────────────────────────────
 	 * Carbon's gray tag is a solid fill with no border at all. Dropping the
 	 * border is most of what makes the shape read as Carbon.               */
-	--itx-chip-background: var(--itx-colorway-solid);
-	--itx-chip-color: var(--itx-colorway-on-solid);
+	--itx-chip-background: var(--itx-role-background-colorway);
+	--itx-chip-color: var(--itx-role-text-inverse);
 	--itx-chip-border-width: 0;
 	--itx-chip-border-style: solid;
 	--itx-chip-border-color: transparent;
-	--itx-chip-background-hover: var(--itx-neutral-3);
-	--itx-chip-color-hover: var(--itx-neutral-14);
+	--itx-chip-background-hover: var(--itx-role-background-control);
+	--itx-chip-color-hover: var(--itx-role-text);
 
 	/* ── Paint — selectable (chip-option) ─────────────────────────────────
 	 * The one outlined variant: hairline border at rest, inverse fill when
@@ -133,13 +133,13 @@
 	 * a rank meant "3:1 against whatever I am on" and a step means "this far
 	 * from the page", which is a thing you can point at in the palette.
 	 */
-	--itx-chip-selectable-background: var(--itx-neutral-2);
-	--itx-chip-selectable-color: var(--itx-neutral-14);
-	--itx-chip-selectable-background-hover: var(--itx-neutral-3);
-	--itx-chip-selectable-color-hover: var(--itx-neutral-14);
+	--itx-chip-selectable-background: var(--itx-role-background-interactive);
+	--itx-chip-selectable-color: var(--itx-role-text);
+	--itx-chip-selectable-background-hover: var(--itx-role-background-control);
+	--itx-chip-selectable-color-hover: var(--itx-role-text);
 
-	--itx-chip-background-selected: var(--itx-colorway-solid);
-	--itx-chip-color-selected: var(--itx-colorway-on-solid);
+	--itx-chip-background-selected: var(--itx-role-background-colorway);
+	--itx-chip-color-selected: var(--itx-role-text-inverse);
 	--itx-chip-font-weight-selected: 400;
 
 	/* ── Focus ring (chip-option) ─────────────────────────────────────────
@@ -151,7 +151,7 @@
 	 * solid fill, so the button announces itself by deepening. The focus ring
 	 * insets so it stays inside the pill rather than orbiting it.           */
 	--itx-chip-remove-background: transparent;
-	--itx-chip-remove-background-hover: var(--itx-neutral-2);
+	--itx-chip-remove-background-hover: var(--itx-role-background-interactive);
 	--itx-chip-remove-margin: 0 0 0 var(--itx-spacing-2);
 	--itx-chip-remove-border-width: 0;
 	--itx-chip-remove-border-style: solid;

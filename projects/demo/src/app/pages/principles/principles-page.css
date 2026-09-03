@@ -12,7 +12,7 @@
 
 	p {
 		font-size: var(--itx-font-size-body-lg);
-		color: var(--itx-neutral-11);
+		color: var(--itx-role-text-quiet);
 		font-weight: 300;
 	}
 
@@ -25,7 +25,7 @@
 		/* 0.9em, not a font-size role: inline code should track the size of the
 		   sentence it sits in, which varies with the fluid ramp. */
 		font-size: 0.9em;
-		color: var(--itx-neutral-14);
+		color: var(--itx-role-text);
 		background: var(--itx-surface);
 		padding-inline: var(--itx-spacing-1);
 		border-radius: var(--itx-radius-sm);
@@ -35,7 +35,7 @@
 /* Closing link on each principle — points at the demo section that proves it. */
 .principles-page__proof a {
 	font-weight: 500;
-	color: var(--itx-colorway-solid);
+	color: var(--itx-role-background-colorway);
 	text-decoration: none;
 	border-bottom: 1px solid transparent;
 

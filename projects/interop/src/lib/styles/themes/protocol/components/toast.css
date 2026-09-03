@@ -15,8 +15,8 @@
  *
  * Token surface for components/toast.css. Base values are inheritable on
  * [interop-root]; the per-`data-type` blocks rebind only the colour tokens and
- * pull from the status-colour palette (--itx-success-solid / --itx-danger-solid /
- * --itx-warning-solid / --itx-info-solid + their -surface + on-surface pairs), so a toast
+ * pull from the status-colour palette (--itx-role-background-success / --itx-role-background-danger /
+ * --itx-role-background-warning / --itx-role-background-info + their -surface + on-surface pairs), so a toast
  * re-skins with the active itx-status-palette. That mapping already matched
  * Carbon's structure — their `$notification-background-*` is a tint of the
  * status hue and their `$support-*` is the full-strength accent — so the
@@ -49,9 +49,9 @@
 	 * No frame: Carbon's toast carries a border on the inline-start edge
 	 * only (the inline notification is the variant that gets all four).   */
 	--itx-toast-background: var(--itx-surface-above);
-	--itx-toast-foreground: var(--itx-neutral-14);
+	--itx-toast-foreground: var(--itx-role-text);
 	--itx-toast-border-width: 0px;
-	--itx-toast-border-color: var(--itx-neutral-8);
+	--itx-toast-border-color: var(--itx-role-edge);
 
 	/* Carbon's status bar is 3px on the notification (the tree's edge marker
 	   is 4px — different components, different weights in Carbon too). It
@@ -59,7 +59,7 @@
 	   already budgets layout for it, and `border-inline-start` flips in RTL
 	   where a box-shadow offset would not. */
 	--itx-toast-accent-width: 3px;
-	--itx-toast-accent-color: var(--itx-neutral-8);
+	--itx-toast-accent-color: var(--itx-role-edge);
 
 	/* Carbon insets content 16px on every side (13px padding + the 3px bar on
 	   the inline-start edge). We keep the padding uniform, so the start edge
@@ -93,10 +93,10 @@
 	--itx-toast-actions-gap: var(--itx-spacing-2);
 	--itx-toast-action-padding-block: var(--itx-spacing-2);
 	--itx-toast-action-padding-inline: var(--itx-spacing-3);
-	--itx-toast-action-border-color: var(--itx-neutral-8);
+	--itx-toast-action-border-color: var(--itx-role-edge);
 	--itx-toast-action-font-size: 0.875rem;
 	--itx-toast-action-font-weight: 400;
-	--itx-toast-action-background-hover: var(--itx-neutral-2);
+	--itx-toast-action-background-hover: var(--itx-role-background-interactive);
 
 	/* ── Close ────────────────────────────────────────────────────────────
 	 * Carbon's close is a 48px flush-corner hit area with a 16px glyph. Ours
@@ -108,10 +108,10 @@
 	--itx-toast-close-size: var(--itx-spacing-8); /* 32px */
 	--itx-toast-close-opacity: 1;
 	--itx-toast-close-opacity-hover: 1;
-	--itx-toast-close-background-hover: var(--itx-neutral-2);
+	--itx-toast-close-background-hover: var(--itx-role-background-interactive);
 
 	/* ── Focus ────────────────────────────────────────────────────────────
-	 * Carbon's is 2px inset blue. Kept on --itx-colorway-solid and kept outside
+	 * Carbon's is 2px inset blue. Kept on --itx-role-background-colorway and kept outside
 	 * the box: focus is where our brand survives an otherwise neutral
 	 * component.                                                          */
 	--itx-toast-focus-offset-tight: 1px;
@@ -127,35 +127,35 @@
 /* ── Variants (rebind colour tokens from the status palette) ─────────────── */
 
 :where([interop-root] interop-toast-item[data-type="success"]) {
-	--itx-toast-background: var(--itx-success-tint);
-	--itx-toast-foreground: var(--itx-success-on-tint);
-	--itx-toast-border-color: var(--itx-success-solid);
-	--itx-toast-accent-color: var(--itx-success-solid);
+	--itx-toast-background: var(--itx-role-background-success-subtle);
+	--itx-toast-foreground: var(--itx-role-text-success);
+	--itx-toast-border-color: var(--itx-role-background-success);
+	--itx-toast-accent-color: var(--itx-role-background-success);
 }
 
 :where([interop-root] interop-toast-item[data-type="error"]) {
-	--itx-toast-background: var(--itx-danger-tint);
-	--itx-toast-foreground: var(--itx-danger-on-tint);
-	--itx-toast-border-color: var(--itx-danger-solid);
-	--itx-toast-accent-color: var(--itx-danger-solid);
+	--itx-toast-background: var(--itx-role-background-danger-subtle);
+	--itx-toast-foreground: var(--itx-role-text-danger);
+	--itx-toast-border-color: var(--itx-role-background-danger);
+	--itx-toast-accent-color: var(--itx-role-background-danger);
 }
 
 :where([interop-root] interop-toast-item[data-type="warning"]) {
-	--itx-toast-background: var(--itx-warning-tint);
-	--itx-toast-foreground: var(--itx-warning-on-tint);
-	--itx-toast-border-color: var(--itx-warning-solid);
-	--itx-toast-accent-color: var(--itx-warning-solid);
+	--itx-toast-background: var(--itx-role-background-warning-subtle);
+	--itx-toast-foreground: var(--itx-role-text-warning);
+	--itx-toast-border-color: var(--itx-role-background-warning);
+	--itx-toast-accent-color: var(--itx-role-background-warning);
 }
 
 :where([interop-root] interop-toast-item[data-type="info"]) {
-	--itx-toast-background: var(--itx-info-tint);
-	--itx-toast-foreground: var(--itx-info-on-tint);
-	--itx-toast-border-color: var(--itx-info-solid);
-	--itx-toast-accent-color: var(--itx-info-solid);
+	--itx-toast-background: var(--itx-role-background-info-subtle);
+	--itx-toast-foreground: var(--itx-role-text-info);
+	--itx-toast-border-color: var(--itx-role-background-info);
+	--itx-toast-accent-color: var(--itx-role-background-info);
 }
 
 :where([interop-root] interop-toast-item[data-type="loading"]) {
-	--itx-toast-accent-color: var(--itx-neutral-9);
+	--itx-toast-accent-color: var(--itx-role-text-quieter);
 }
 
 /*

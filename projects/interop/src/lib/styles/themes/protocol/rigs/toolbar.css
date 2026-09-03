@@ -81,7 +81,7 @@
 	--itx-button-border-style: solid;
 
 	--itx-button-background: transparent;
-	--itx-button-foreground: var(--itx-neutral-14);
+	--itx-button-foreground: var(--itx-role-text);
 
 	/* A wash, not a fill. Rank 1 is defined as "wash — hover fills", which is
 	   exactly this: enough feedback to read as interactive, not enough to stack
@@ -94,12 +94,12 @@
 	   value from its ancestor, which is [interop-root], where the button theme
 	   declares --itx-contrast-2. So the six declarations resolved to the very
 	   fill they were written to suppress, and were exact no-ops. */
-	--itx-button-background-hover: var(--itx-neutral-2);
-	--itx-button-foreground-hover: var(--itx-neutral-14);
+	--itx-button-background-hover: var(--itx-role-background-interactive);
+	--itx-button-foreground-hover: var(--itx-role-text);
 	--itx-button-border-color-hover: transparent;
 
-	--itx-button-background-active: var(--itx-neutral-3);
-	--itx-button-foreground-active: var(--itx-neutral-14);
+	--itx-button-background-active: var(--itx-role-background-control);
+	--itx-button-foreground-active: var(--itx-role-text);
 	--itx-button-border-color-active: transparent;
 
 	/* A latched toggle sits one rung above active and STAYS there — the
@@ -107,8 +107,8 @@
 	   in the code block, because "a toggle button in a toolbar" is a toolbar
 	   fact; the code block's copy of it lost to this rule for its whole life
 	   and the toggle showed nothing. */
-	--itx-button-background-pressed: var(--itx-neutral-3);
-	--itx-button-foreground-pressed: var(--itx-neutral-14);
+	--itx-button-background-pressed: var(--itx-role-background-control);
+	--itx-button-foreground-pressed: var(--itx-role-text);
 	--itx-button-border-color-pressed: transparent;
 
 	/* Square. A toolbar is a strip of adjacent controls, and rounded corners

@@ -13,7 +13,7 @@
 	padding: var(--itx-spacing-5) var(--itx-spacing-5);
 	border-radius: var(--itx-radius-sm);
 	background: var(--itx-surface-above);
-	color: var(--itx-neutral-14);
+	color: var(--itx-role-text);
 	min-height: 4rem;
 	place-items: center;
 }
@@ -21,7 +21,7 @@
 .icon-page__grid-label {
 	font-family: var(--itx-font-family-mono);
 	font-size: var(--itx-font-size-fine-print);
-	color: var(--itx-neutral-9);
+	color: var(--itx-role-text-quieter);
 	text-align: center;
 	word-break: break-all;
 }
