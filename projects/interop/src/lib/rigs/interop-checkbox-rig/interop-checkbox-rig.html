@@ -11,7 +11,7 @@
 		}
 
 		<!-- Select-all checkbox (optional) -->
-		@if (selectAll() && isDeclarativeMode()) {
+		@if (selectAll() && isDataMode()) {
 			<label
 				class="checkbox-control checkbox-select-all"
 				interop-checkbox
@@ -26,8 +26,8 @@
 			</label>
 		}
 
-		@if (isDeclarativeMode()) {
-			<!-- Declarative mode: Generate checkboxes from controls/collection -->
+		@if (isDataMode()) {
+			<!-- Data mode: one checkbox per item from options/collection -->
 			@for (control of resolvedItems(); track trackByFn($index, control)) {
 				<label
 					class="checkbox-control"
@@ -44,7 +44,7 @@
 				</label>
 			}
 		} @else {
-			<!-- Content projection mode: Use projected checkbox inputs -->
+			<!-- Composed mode: consumer-written checkboxes -->
 			<div class="checkbox-rig-content">
 				<ng-content></ng-content>
 			</div>
@@ -54,7 +54,7 @@
 	<!-- Custom mode: User provides their own container, just render content -->
 
 	<!-- Select-all checkbox (optional) -->
-	@if (selectAll() && isDeclarativeMode()) {
+	@if (selectAll() && isDataMode()) {
 		<label
 			class="checkbox-control checkbox-select-all"
 			interop-checkbox
@@ -69,8 +69,8 @@
 		</label>
 	}
 
-	@if (isDeclarativeMode()) {
-		<!-- Declarative mode: Generate checkboxes from controls/collection -->
+	@if (isDataMode()) {
+		<!-- Data mode: one checkbox per item from options/collection -->
 		@for (control of resolvedItems(); track trackByFn($index, control)) {
 			<label
 				class="checkbox-control"
@@ -87,7 +87,7 @@
 			</label>
 		}
 	} @else {
-		<!-- Content projection mode: Use projected checkbox inputs -->
+		<!-- Composed mode: consumer-written checkboxes -->
 		<ng-content></ng-content>
 	}
 }

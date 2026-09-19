@@ -45,12 +45,15 @@ export type CheckboxOption = {
  *
  * ## CONTENT MODES
  *
- * ### 1. Declarative Mode
- * Pass an array of `CheckboxOption` objects via `options` or an async data source
- * via `collection`. The component generates all checkbox inputs automatically.
+ * The content modes differ in who writes the checkbox markup. Data wins when
+ * `options` or `collection` yields items.
  *
- * ### 2. Content Projection Mode
- * Use `<ng-content>` to project your own checkbox layouts.
+ * ### 1. From Data
+ * Pass an array of `CheckboxOption` objects via `options` or an async data source
+ * via `collection`. The component renders one `<label interop-checkbox>` per item.
+ *
+ * ### 2. Composed
+ * Write `<label interop-checkbox>` children yourself; the component projects them.
  *
  * ## FEATURES
  * - Angular Forms integration (ControlValueAccessor emitting T[])
@@ -59,7 +62,7 @@ export type CheckboxOption = {
  * - Two-way data binding with selected values array
  * - Accessibility-first design with fieldset/legend in hands-off mode
  *
- * @example Hands-off + Declarative (pizza toppings)
+ * @example Hands-off, from data (pizza toppings)
  * ```html
  * <interop-checkbox-rig
  *   [options]="toppings"
@@ -79,7 +82,7 @@ export type CheckboxOption = {
  * </interop-checkbox-rig>
  * ```
  *
- * @example Content projection
+ * @example Composed
  * ```html
  * <interop-checkbox-rig [(value)]="selectedToppings">
  *   <label interop-checkbox id="cheese" value="cheese">Cheese</label>
@@ -138,8 +141,8 @@ export class InteropCheckboxRig implements ControlValueAccessor {
 	// Content mode inputs
 
 	/**
-	 * Array of checkbox control configurations for declarative mode.
-	 * When provided, the component generates checkbox inputs automatically.
+	 * Checkbox options as data; the component renders them.
+	 * Wins over composed children when non-empty.
 	 */
 	options = input<CheckboxOption[]>();
 
@@ -240,9 +243,10 @@ export class InteropCheckboxRig implements ControlValueAccessor {
 	});
 
 	/**
-	 * Whether the component is in declarative mode (has renderable items).
+	 * True when options come from `options` or `collection`; false when they are
+	 * composed children.
 	 */
-	isDeclarativeMode = computed(() => {
+	isDataMode = computed(() => {
 		return this.resolvedItems().length > 0;
 	});
 

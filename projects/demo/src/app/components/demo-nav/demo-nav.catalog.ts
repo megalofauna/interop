@@ -205,7 +205,7 @@ export const DEMO_CATALOG: readonly CatalogGroup[] = [
 				label: "Radio",
 				route: "/components/radio",
 				description:
-					"Mutually exclusive selection on native radio inputs — a declarative rig, or projected controls.",
+					"Mutually exclusive selection on native radio inputs — a rig rendered from data, or composed controls.",
 			},
 			{
 				label: "Resizable",

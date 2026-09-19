@@ -17,7 +17,7 @@ const CONTROLS_WITH_DISABLED: CheckboxOption[] = [
 ];
 
 /**
- * Test host for hands-off + declarative mode.
+ * Test host for hands-off + data mode.
  */
 @Component({
 	standalone: true,
@@ -37,7 +37,7 @@ const CONTROLS_WITH_DISABLED: CheckboxOption[] = [
 		</interop-checkbox-rig>
 	`,
 })
-class HandsOffDeclarativeHost {
+class HandsOffDataHost {
 	options = TOPPING_CONTROLS;
 	legend = "Choose toppings";
 	selectAll = false;
@@ -49,7 +49,7 @@ class HandsOffDeclarativeHost {
 }
 
 /**
- * Test host for content projection mode.
+ * Test host for composed mode.
  */
 @Component({
 	standalone: true,
@@ -60,14 +60,14 @@ class HandsOffDeclarativeHost {
 		</interop-checkbox-rig>
 	`,
 })
-class ContentProjectionHost {
+class ComposedHost {
 	selectedValues: (string | number | boolean)[] = [];
 }
 
 describe("InteropCheckboxRig", () => {
-	describe("Hands-off + Declarative Mode", () => {
-		let fixture: ComponentFixture<HandsOffDeclarativeHost>;
-		let host: HandsOffDeclarativeHost;
+	describe("Hands-off + Data Mode", () => {
+		let fixture: ComponentFixture<HandsOffDataHost>;
+		let host: HandsOffDataHost;
 		let groupElement: HTMLElement;
 
 		beforeEach(async () => {
@@ -76,11 +76,11 @@ describe("InteropCheckboxRig", () => {
 			});
 
 			await TestBed.configureTestingModule({
-				imports: [HandsOffDeclarativeHost],
+				imports: [HandsOffDataHost],
 				providers: [{ provide: InteropAttribute, useValue: attrsManagerSpy }],
 			}).compileComponents();
 
-			fixture = TestBed.createComponent(HandsOffDeclarativeHost);
+			fixture = TestBed.createComponent(HandsOffDataHost);
 			host = fixture.componentInstance;
 			groupElement = fixture.nativeElement.querySelector(
 				"interop-checkbox-rig",
@@ -173,8 +173,8 @@ describe("InteropCheckboxRig", () => {
 	});
 
 	describe("Select-All", () => {
-		let fixture: ComponentFixture<HandsOffDeclarativeHost>;
-		let host: HandsOffDeclarativeHost;
+		let fixture: ComponentFixture<HandsOffDataHost>;
+		let host: HandsOffDataHost;
 		let groupElement: HTMLElement;
 
 		beforeEach(async () => {
@@ -183,11 +183,11 @@ describe("InteropCheckboxRig", () => {
 			});
 
 			await TestBed.configureTestingModule({
-				imports: [HandsOffDeclarativeHost],
+				imports: [HandsOffDataHost],
 				providers: [{ provide: InteropAttribute, useValue: attrsManagerSpy }],
 			}).compileComponents();
 
-			fixture = TestBed.createComponent(HandsOffDeclarativeHost);
+			fixture = TestBed.createComponent(HandsOffDataHost);
 			host = fixture.componentInstance;
 			host.selectAll = true;
 			groupElement = fixture.nativeElement.querySelector(
@@ -228,8 +228,8 @@ describe("InteropCheckboxRig", () => {
 	});
 
 	describe("Select-All State Derivation", () => {
-		let fixture: ComponentFixture<HandsOffDeclarativeHost>;
-		let host: HandsOffDeclarativeHost;
+		let fixture: ComponentFixture<HandsOffDataHost>;
+		let host: HandsOffDataHost;
 		let component: InteropCheckboxRig;
 
 		beforeEach(async () => {
@@ -238,11 +238,11 @@ describe("InteropCheckboxRig", () => {
 			});
 
 			await TestBed.configureTestingModule({
-				imports: [HandsOffDeclarativeHost],
+				imports: [HandsOffDataHost],
 				providers: [{ provide: InteropAttribute, useValue: attrsManagerSpy }],
 			}).compileComponents();
 
-			fixture = TestBed.createComponent(HandsOffDeclarativeHost);
+			fixture = TestBed.createComponent(HandsOffDataHost);
 			host = fixture.componentInstance;
 			host.selectAll = true;
 
@@ -282,8 +282,8 @@ describe("InteropCheckboxRig", () => {
 	});
 
 	describe("Select-All with Disabled Items", () => {
-		let fixture: ComponentFixture<HandsOffDeclarativeHost>;
-		let host: HandsOffDeclarativeHost;
+		let fixture: ComponentFixture<HandsOffDataHost>;
+		let host: HandsOffDataHost;
 		let component: InteropCheckboxRig;
 
 		beforeEach(async () => {
@@ -292,11 +292,11 @@ describe("InteropCheckboxRig", () => {
 			});
 
 			await TestBed.configureTestingModule({
-				imports: [HandsOffDeclarativeHost],
+				imports: [HandsOffDataHost],
 				providers: [{ provide: InteropAttribute, useValue: attrsManagerSpy }],
 			}).compileComponents();
 
-			fixture = TestBed.createComponent(HandsOffDeclarativeHost);
+			fixture = TestBed.createComponent(HandsOffDataHost);
 			host = fixture.componentInstance;
 			host.options = CONTROLS_WITH_DISABLED;
 			host.selectAll = true;
@@ -331,8 +331,8 @@ describe("InteropCheckboxRig", () => {
 		});
 	});
 
-	describe("Content Projection Mode", () => {
-		let fixture: ComponentFixture<ContentProjectionHost>;
+	describe("Composed Mode", () => {
+		let fixture: ComponentFixture<ComposedHost>;
 		let component: InteropCheckboxRig;
 
 		beforeEach(async () => {
@@ -341,11 +341,11 @@ describe("InteropCheckboxRig", () => {
 			});
 
 			await TestBed.configureTestingModule({
-				imports: [ContentProjectionHost],
+				imports: [ComposedHost],
 				providers: [{ provide: InteropAttribute, useValue: attrsManagerSpy }],
 			}).compileComponents();
 
-			fixture = TestBed.createComponent(ContentProjectionHost);
+			fixture = TestBed.createComponent(ComposedHost);
 			fixture.detectChanges();
 			await fixture.whenStable();
 
@@ -353,8 +353,8 @@ describe("InteropCheckboxRig", () => {
 			component = groupDebugEl.componentInstance;
 		});
 
-		it("should be in non-declarative mode when no options are provided", () => {
-			expect(component.isDeclarativeMode()).toBe(false);
+		it("should be in composed mode when no options are provided", () => {
+			expect(component.isDataMode()).toBe(false);
 		});
 
 		it("should be in hands-off mode when using element selector", () => {
@@ -363,7 +363,7 @@ describe("InteropCheckboxRig", () => {
 	});
 
 	describe("ControlValueAccessor", () => {
-		let fixture: ComponentFixture<HandsOffDeclarativeHost>;
+		let fixture: ComponentFixture<HandsOffDataHost>;
 		let component: InteropCheckboxRig;
 
 		beforeEach(async () => {
@@ -372,11 +372,11 @@ describe("InteropCheckboxRig", () => {
 			});
 
 			await TestBed.configureTestingModule({
-				imports: [HandsOffDeclarativeHost],
+				imports: [HandsOffDataHost],
 				providers: [{ provide: InteropAttribute, useValue: attrsManagerSpy }],
 			}).compileComponents();
 
-			fixture = TestBed.createComponent(HandsOffDeclarativeHost);
+			fixture = TestBed.createComponent(HandsOffDataHost);
 			fixture.detectChanges();
 			await fixture.whenStable();
 

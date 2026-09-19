@@ -26,9 +26,11 @@ export type RadioControl = {
  *
  * ## Content modes
  *
- * ### Declarative
- * Pass a `RadioControl[]` via `[controls]`. The rig generates all
- * `<label interop-radio>` elements automatically.
+ * The modes differ in who writes the radio markup. `controls` wins when non-empty.
+ *
+ * ### From data
+ * Pass a `RadioControl[]` via `[controls]`. The rig renders one
+ * `<label interop-radio>` per entry.
  *
  * ```html
  * <interop-radio-rig
@@ -39,9 +41,10 @@ export type RadioControl = {
  * />
  * ```
  *
- * ### Content projection
- * Omit `[controls]` and project `<label interop-radio>` elements directly.
- * Use this when you need custom markup, icons, or complex label layouts.
+ * ### Composed
+ * Omit `[controls]` and write `<label interop-radio>` children yourself; the
+ * rig projects them into its `<fieldset>`. Use when a label needs markup,
+ * icons, or a layout beyond the fields `RadioControl` has.
  *
  * ```html
  * <interop-radio-rig groupName="plan" legend="Choose a plan" [(value)]="selectedPlan">
@@ -81,8 +84,8 @@ export type RadioControl = {
 })
 export class InteropRadioRig implements ControlValueAccessor {
 	/**
-	 * Array of radio control configurations for declarative mode.
-	 * When provided, the rig will generate radio inputs automatically.
+	 * Radio options as data; the rig renders them.
+	 * Wins over composed children when non-empty.
 	 */
 	controls = input<RadioControl[]>();
 
@@ -131,9 +134,9 @@ export class InteropRadioRig implements ControlValueAccessor {
 	private onTouchedFn: () => void = () => {};
 
 	/**
-	 * Whether the rig is in declarative mode (has controls input).
+	 * True when options come from `controls`; false when they are composed children.
 	 */
-	isDeclarativeMode = computed(() => {
+	isDataMode = computed(() => {
 		const controls = this.controls();
 		return Array.isArray(controls) && controls.length > 0;
 	});
