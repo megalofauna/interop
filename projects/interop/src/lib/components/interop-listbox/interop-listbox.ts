@@ -43,36 +43,39 @@ let nextListboxId = 0;
 
 /**
  * InteropListbox — accessible listbox with keyboard navigation, single/multi-select,
- * CVA support, and both declarative and content-projection modes.
+ * CVA support, and two ways to supply options: from data or composed.
  *
  * This is the foundational selection primitive. InteropSelect and InteropMultiSelect
  * are built on top of it.
  *
  * ## Modes
  *
- * ### Declarative
- * Pass a `controls` array. The listbox renders options internally.
+ * The modes differ in who writes the option markup. `controls` wins when non-empty.
  *
- * ### Content projection
- * Project `[interop-option]` elements as children. Use when you need custom
- * option markup (icons, avatars, secondary text) beyond what `SelectControl` provides.
+ * ### From data
+ * Pass a `controls` array. The listbox renders one `<li role="option">` per entry.
+ *
+ * ### Composed
+ * Write `<li interop-option>` children yourself; the listbox projects them and
+ * wires each into selection and keyboard navigation. Use when an option needs
+ * markup (icons, avatars, secondary text) beyond the fields `SelectControl` has.
  *
  * ## Selection
  *
  * Single-select by default. Set `[multiselectable]="true"` for multi-select;
  * the CVA value becomes `SelectControlValue[]`.
  *
- * @example Declarative single-select
+ * @example Single-select from data
  * ```html
  * <ul interop-listbox [controls]="options" [(value)]="selected"></ul>
  * ```
  *
- * @example Declarative multi-select
+ * @example Multi-select from data
  * ```html
  * <ul interop-listbox [controls]="options" [multiselectable]="true" [(value)]="selected"></ul>
  * ```
  *
- * @example Content projection
+ * @example Composed
  * ```html
  * <ul interop-listbox [(value)]="selected">
  *   <li interop-option value="a" label="Alpha">
@@ -186,7 +189,7 @@ export class InteropListbox implements ControlValueAccessor, IInteropListbox {
 
 	// ── Inputs ────────────────────────────────────────────────────────────────
 
-	/** Declarative option list. Controls win over content projection when non-empty. */
+	/** Options as data; the listbox renders them. Wins over composed options when non-empty. */
 	controls = input<SelectControl[]>();
 
 	/** Current selected value (single) or values (multi). Two-way bindable. */
@@ -242,17 +245,18 @@ export class InteropListbox implements ControlValueAccessor, IInteropListbox {
 
 	// ── Computed ──────────────────────────────────────────────────────────────
 
-	isDeclarativeMode = computed(() => {
+	/** True when options come from `controls`; false when they are composed children. */
+	isDataMode = computed(() => {
 		const controls = this.controls();
 		return Array.isArray(controls) && controls.length > 0;
 	});
 
 	/**
-	 * Unified option list for navigation. Abstracts over declarative vs. projected mode.
+	 * Unified option list for navigation. Abstracts over data vs. composed mode.
 	 * All keyboard nav and type-ahead operate on this.
 	 */
 	private optionsForNav = computed((): NavOption[] => {
-		if (this.isDeclarativeMode()) {
+		if (this.isDataMode()) {
 			return (this.controls() ?? []).map((c, i) => ({
 				value: c.value,
 				label: c.label,
@@ -301,16 +305,14 @@ export class InteropListbox implements ControlValueAccessor, IInteropListbox {
 	}
 
 	/**
-	 * Declarative-mode click. Mirrors InteropOption.onClick(), which has always
-	 * had this guard — the template used to call selectValue() straight, and
-	 * selectValue() only checks whether the LISTBOX is disabled, never the
-	 * option. The single thing stopping a disabled row being chosen was
-	 * `pointer-events: none` in CSS, which suppresses real pointer hit-testing
-	 * and nothing else: a programmatic .click(), an assistive-technology
-	 * activation, or any synthesised event all went straight through. The two
-	 * modes now behave identically.
+	 * Data-mode click. Mirrors InteropOption.onClick() so both modes behave
+	 * identically. selectValue() checks only whether the LISTBOX is disabled, so
+	 * the option guard lives here. The CSS `pointer-events: none` on a disabled
+	 * row blocks real pointer hit-testing and nothing else: a programmatic
+	 * .click(), an assistive-technology activation, or a synthesized event
+	 * reaches this handler.
 	 */
-	protected onDeclarativeClick(control: {
+	protected onControlClick(control: {
 		value: SelectControlValue;
 		disabled?: boolean;
 	}): void {
@@ -318,8 +320,8 @@ export class InteropListbox implements ControlValueAccessor, IInteropListbox {
 		this.selectValue(control.value);
 	}
 
-	/** Same asymmetry, same fix: the directive guards hover, the template did not. */
-	protected onDeclarativeHover(control: {
+	/** Data-mode hover. Mirrors InteropOption's hover guard. */
+	protected onControlHover(control: {
 		value: SelectControlValue;
 		disabled?: boolean;
 	}): void {
@@ -496,7 +498,7 @@ export class InteropListbox implements ControlValueAccessor, IInteropListbox {
 
 	// ── Helpers ───────────────────────────────────────────────────────────────
 
-	/** Generates a stable, unique ID for a declarative option by index. */
+	/** Generates a stable, unique ID for a data-mode option by index. */
 	optionId(index: number): string {
 		return `${this.instanceId}-option-${index}`;
 	}

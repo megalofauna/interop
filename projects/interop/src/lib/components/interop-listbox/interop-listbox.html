@@ -1,4 +1,4 @@
-@if (isDeclarativeMode()) {
+@if (isDataMode()) {
 	@for (control of controls(); track control.value; let i = $index) {
 		<li
 			[id]="optionId(i)"
@@ -9,8 +9,8 @@
 			[class.interop-option--disabled]="control.disabled"
 			[attr.aria-selected]="isSelected(control.value)"
 			[attr.aria-disabled]="control.disabled || null"
-			(click)="onDeclarativeClick(control)"
-			(mouseenter)="onDeclarativeHover(control)"
+			(click)="onControlClick(control)"
+			(mouseenter)="onControlHover(control)"
 		>
 			@if (control.icon) {
 				<span class="interop-option__icon" aria-hidden="true">{{

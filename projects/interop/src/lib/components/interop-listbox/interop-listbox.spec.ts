@@ -31,7 +31,7 @@ function dispatchKey(el: HTMLElement, key: string): void {
 		<ul interop-listbox [controls]="controls" [(value)]="selected"></ul>
 	`,
 })
-class DeclarativeHost {
+class DataHost {
 	controls = OPTIONS;
 	selected = signal<string | null>(null);
 }
@@ -64,7 +64,7 @@ class MultiSelectHost {
 		</ul>
 	`,
 })
-class ProjectionHost {
+class ComposedHost {
 	selected = signal<string | null>(null);
 }
 
@@ -83,15 +83,15 @@ class CVAHost {
 // ── Tests ──────────────────────────────────────────────────────────────────
 
 describe("InteropListbox", () => {
-	describe("declarative mode", () => {
-		let fixture: ComponentFixture<DeclarativeHost>;
+	describe("data mode", () => {
+		let fixture: ComponentFixture<DataHost>;
 		let host: HTMLElement;
 
 		beforeEach(async () => {
 			await TestBed.configureTestingModule({
-				imports: [DeclarativeHost],
+				imports: [DataHost],
 			}).compileComponents();
-			fixture = TestBed.createComponent(DeclarativeHost);
+			fixture = TestBed.createComponent(DataHost);
 			fixture.detectChanges();
 			host = fixture.nativeElement.querySelector("[interop-listbox]");
 		});
@@ -123,14 +123,14 @@ describe("InteropListbox", () => {
 	});
 
 	describe("keyboard navigation", () => {
-		let fixture: ComponentFixture<DeclarativeHost>;
+		let fixture: ComponentFixture<DataHost>;
 		let host: HTMLElement;
 
 		beforeEach(async () => {
 			await TestBed.configureTestingModule({
-				imports: [DeclarativeHost],
+				imports: [DataHost],
 			}).compileComponents();
-			fixture = TestBed.createComponent(DeclarativeHost);
+			fixture = TestBed.createComponent(DataHost);
 			fixture.detectChanges();
 			host = fixture.nativeElement.querySelector("[interop-listbox]");
 			host.dispatchEvent(new FocusEvent("focus"));
@@ -207,14 +207,14 @@ describe("InteropListbox", () => {
 	});
 
 	describe("type-ahead", () => {
-		let fixture: ComponentFixture<DeclarativeHost>;
+		let fixture: ComponentFixture<DataHost>;
 		let host: HTMLElement;
 
 		beforeEach(async () => {
 			await TestBed.configureTestingModule({
-				imports: [DeclarativeHost],
+				imports: [DataHost],
 			}).compileComponents();
-			fixture = TestBed.createComponent(DeclarativeHost);
+			fixture = TestBed.createComponent(DataHost);
 			fixture.detectChanges();
 			host = fixture.nativeElement.querySelector("[interop-listbox]");
 			host.dispatchEvent(new FocusEvent("focus"));
@@ -272,15 +272,15 @@ describe("InteropListbox", () => {
 		});
 	});
 
-	describe("content projection", () => {
-		let fixture: ComponentFixture<ProjectionHost>;
+	describe("composed mode", () => {
+		let fixture: ComponentFixture<ComposedHost>;
 		let host: HTMLElement;
 
 		beforeEach(async () => {
 			await TestBed.configureTestingModule({
-				imports: [ProjectionHost],
+				imports: [ComposedHost],
 			}).compileComponents();
-			fixture = TestBed.createComponent(ProjectionHost);
+			fixture = TestBed.createComponent(ComposedHost);
 			fixture.detectChanges();
 			host = fixture.nativeElement.querySelector("[interop-listbox]");
 		});

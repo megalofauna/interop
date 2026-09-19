@@ -1,13 +1,13 @@
 <article class="demo-page">
 	<demo-masthead category="Components" title="Listbox">
 		Accessible selection primitive with keyboard navigation, single and
-		multi-select, and Angular Forms integration. Declarative or
-		content-projection modes.
+		multi-select, and Angular Forms integration. Options come from data or
+		are composed as child elements.
 	</demo-masthead>
 
 	<!-- ── Single select ─────────────────────────────────────────────────── -->
 	<demo-section id="single" heading="Single select">
-		<demo-example label="Declarative">
+		<demo-example label="From data">
 			<ul
 				interop-listbox
 				aria-label="Docking bay"
@@ -24,7 +24,7 @@
 
 	<!-- ── Multi select ──────────────────────────────────────────────────── -->
 	<demo-section id="multi" heading="Multi select">
-		<demo-example label="Declarative multi-select">
+		<demo-example label="Multi-select from data">
 			<ul
 				interop-listbox
 				aria-label="Crew manifest"
@@ -37,9 +37,9 @@
 		</demo-example>
 	</demo-section>
 
-	<!-- ── Content projection ────────────────────────────────────────────── -->
-	<demo-section id="projection" heading="Content projection">
-		<demo-example label="User-marked-up options">
+	<!-- ── Composed ──────────────────────────────────────────────────────── -->
+	<demo-section id="composed" heading="Composed">
+		<demo-example label="Options with custom markup">
 			<ul
 				interop-listbox
 				aria-label="Sector"
@@ -70,7 +70,7 @@
 			<demo-state>
 				<demo-state-item label="Sector">{{ selectedSector() }}</demo-state-item>
 			</demo-state>
-			<itx-code-block language="html" [code]="projectionTemplate" />
+			<itx-code-block language="html" [code]="composedTemplate" />
 		</demo-example>
 	</demo-section>
 

@@ -20,7 +20,7 @@
  * opinion inherits one.
  *
  * Rows match the CLASS and the ATTRIBUTE. The class is what the Angular
- * directive adds and what the declarative template writes; the attribute is
+ * directive adds and what the data-mode template writes; the attribute is
  * what a CSS-only consumer authors, and styling only the class would leave
  * exactly the consumer this migration exists for with an unstyled list.
  * `[aria-selected="true"]` / `[aria-disabled="true"]` are matched for the same

@@ -62,7 +62,7 @@ export class ListboxPage {
 	];
 	selectedRoles = signal<(string | number | boolean)[]>(["pilot", "navigator"]);
 
-	// ── Content projection demo ───────────────────────────────────────────
+	// ── Composed demo ─────────────────────────────────────────────────────
 	selectedSector = signal<string | number | boolean | null>("alpha");
 
 	// ── Code snippets ─────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ selectedBay = signal<string | null>('bay-1');`;
 
 selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
 
-	readonly projectionTemplate = `<ul interop-listbox aria-label="Sector" [(value)]="selectedSector">
+	readonly composedTemplate = `<ul interop-listbox aria-label="Sector" [(value)]="selectedSector">
   <li interop-option value="alpha" label="Sector Alpha">
     <span aria-hidden="true">▲</span>
     <span class="interop-option__label">Sector Alpha</span>
@@ -150,7 +150,7 @@ selectedRoles = signal<string[]>(['pilot', 'navigator']);`;
 			type: "SelectControl[]",
 			default: "[]",
 			description:
-				"Declarative option list. Each entry has value, label, and optional disabled.",
+				"Options as data; the listbox renders them. Each entry has value, label, and optional disabled. Wins over composed options when non-empty.",
 		},
 		{
 			name: "value",

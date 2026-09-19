@@ -15,11 +15,11 @@ import {
 let nextOptionId = 0;
 
 /**
- * InteropOption — directive applied to projected list items inside an interop-listbox.
+ * InteropOption — directive for composed options inside an interop-listbox.
  *
- * Use this when you need custom option content beyond what the declarative
- * `controls[]` API supports. The directive wires the host element into the
- * parent listbox's selection and keyboard navigation.
+ * Use this when an option needs content beyond the fields `controls[]` supports.
+ * The directive wires the host element into the parent listbox's selection and
+ * keyboard navigation.
  *
  * Must be used as a `<li>` inside a `<ul interop-listbox>` or `<ol interop-listbox>`.
  *
