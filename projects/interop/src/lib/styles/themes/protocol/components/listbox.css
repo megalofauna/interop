@@ -57,11 +57,18 @@
  */
 
 :where([interop-root] ul[interop-listbox], [interop-root] ol[interop-listbox]) {
+	/* ── Listbox ────────────────────────────────────────────────────────── */
+	--itx-listbox-background: var(--itx-surface-0);
+	--itx-listbox-border: var(--itx-border);
+
 	/* ── Row box ────────────────────────────────────────────────────────── */
 	--itx-option-gap: var(--itx-spacing-2);
 	--itx-option-min-block-size: var(--itx-spacing-10);
+	--itx-option-min-inline-size: var(--itx-spacing-64);
 	--itx-option-padding-block: var(--itx-spacing-2);
 	--itx-option-padding-inline: var(--itx-spacing-4);
+	--itx-option-border-radius: var(--itx-radius-none);
+
 
 	/* ── Type ───────────────────────────────────────────────────────────────
 	 * Fixed rem, NOT --itx-font-size-*. Those are fluid clamp() values, and a

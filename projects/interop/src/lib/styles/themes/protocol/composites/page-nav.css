@@ -71,7 +71,7 @@
 	   or padding rule to attach them to, and inventing one to justify a token
 	   would change the layout to fit the documentation. Spacing comes from the
 	   links' own padding and --itx-pn-gap. */
-	--itx-pn-border-width: 2px;
+	--itx-pn-border-width: 1px;
 	--itx-pn-border-style: solid;
 	--itx-pn-border-color: var(--itx-role-divider);
 	--itx-pn-gap: 0;
@@ -94,7 +94,7 @@
 	   pointer was over. The stuck (smaller) pair is now the only pair. */
 	--itx-pn-link-padding-block: var(--itx-spacing-3);
 	--itx-pn-link-padding-inline: var(--itx-spacing-4);
-	--itx-pn-link-radius: var(--itx-radius-sm);
+	--itx-pn-link-radius: var(--itx-radius-none);
 
 	/* Hover */
 	--itx-pn-link-color-hover: var(--itx-role-text);
@@ -126,6 +126,8 @@
 	--itx-pn-indicator-size: 5px;
 	--itx-pn-indicator-radius: var(--itx-radius-full);
 	--itx-pn-indicator-color: var(--itx-role-background-colorway);
+
+
 }
 
 /*
@@ -139,13 +141,13 @@
 :where([interop-root] itx-page-nav.itx-pn--stuck) {
 	--itx-pn-background-color: color-mix(
 		in srgb,
-		var(--itx-surface) 100%,
+		var(--itx-surface) 87.5%,
 		transparent
 	);
-	--itx-pn-backdrop-filter: blur(12px);
+	--itx-pn-backdrop-filter: blur(8px);
 	/* The stuck border is not a mark — it is the last row of the nav's own
 	   background, and reading that token keeps the two in step at any depth.
 	   Pointing it at the page surface instead only worked while the nav could
 	   not sit on anything but the page. */
-	--itx-pn-border-color: var(--itx-pn-background-color);
+	--itx-pn-border-color: var(--itx-role-divider);
 }

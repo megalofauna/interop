@@ -67,21 +67,22 @@
 	--itx-tabs-gap: 0;
 	--itx-tabs-rule-width: var(--itx-border-width-hairline);
 	/* rank 2 — "hairline, dividers". See the note above. */
-	--itx-tabs-rule-color: var(--itx-role-divider);
+	--itx-tabs-rule-color: transparent;
 
 	/* ── Tab box ────────────────────────────────────────────────────────── */
 	--itx-tab-min-block-size: var(--itx-spacing-10);
 	--itx-tab-gap: var(--itx-spacing-1);
-	--itx-tab-padding-block: var(--itx-spacing-2);
-	--itx-tab-padding-inline: var(--itx-spacing-4);
-	--itx-tab-border-width: 0;
+	--itx-tab-padding-block: var(--itx-spacing-1);
+	--itx-tab-padding-inline: var(--itx-spacing-2);
+	--itx-tab-border-width: 1px;
 	/* Was hardcoded inside the `border` shorthand the structural file used to
 	   write. It has to be declared now that the longhands read it — a border
 	   longhand's initial style is `none`, which would drop any width a consumer
 	   set without also setting a style. */
 	--itx-tab-border-style: solid;
 	--itx-tab-border-color: transparent;
-	--itx-tab-border-radius: var(--itx-radius-none);
+	--itx-tab-border-radius: var(--itx-radius-lg);
+
 
 	/* ── Type ───────────────────────────────────────────────────────────────
 	 * Fixed rem, NOT --itx-font-size-*. Those are fluid clamp() values, and a
@@ -107,12 +108,12 @@
 	--itx-tab-foreground-selected: var(--itx-role-text);
 
 	/* ── Indicator ──────────────────────────────────────────────────────── */
-	--itx-tab-indicator-size: var(--itx-border-width-thick);
+	--itx-tab-indicator-size: var(--itx-border-width-hairline);
 	--itx-tab-indicator-color: transparent;
 	/* rank 3 — one step stronger than the rule it overlaps. */
-	--itx-tab-indicator-color-hover: var(--itx-role-edge);
+	--itx-tab-indicator-color-hover: transparent;
 	/* The brand's mark rung, not its fill rung. */
-	--itx-tab-indicator-color-selected: var(--itx-role-text-colorway);
+	--itx-tab-indicator-color-selected: transparent;
 
 	/* ── Motion ─────────────────────────────────────────────────────────── */
 	--itx-tab-transition-duration: var(--itx-duration-fast);
@@ -132,4 +133,8 @@
 :where(section[interop-tabs]) {
 	--itx-tab-panel-padding-block: var(--itx-spacing-4);
 	--itx-tab-panel-padding-inline: var(--itx-spacing-4);
+}
+
+:where([interop-tabs] button) {
+	--itx-button-height: unset;
 }

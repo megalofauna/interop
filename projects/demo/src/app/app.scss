@@ -25,7 +25,7 @@
 :host {
 	--header-h: 3.5rem;
 	// 20rem (--itx-spacing-80), down one step on the spacing scale from 24rem.
-	--shell-nav-w: var(--itx-spacing-80);
+	--shell-nav-w: var(--itx-spacing-48);
 	// Breathing room between the nav's rule and the content. A real track rather
 	// than padding on either side, so both keep symmetric insets and the sum
 	// below stays readable.
@@ -38,7 +38,7 @@
 	// hairline: an edge that has to read, so it clears 3:1 on every surface.
 	// Shared with the drawer's own border in demo-nav.scss so the two modes
 	// draw the same line.
-	--shell-rule: var(--itx-role-edge);
+	--shell-rule: var(--itx-role-divider);
 	/* Both nav controls — the header's toggle and the drawer's own close button
 	   — sit at one size, defined once here so they cannot drift apart. They are
 	   in different components, so a shared token is the only thing that can
@@ -302,7 +302,7 @@
 	// On the host rather than the panel inside it: the host is sticky and
 	// viewport-tall, so the rule holds the full height instead of ending with
 	// the list and scrolling away with it.
-	border-inline-end: 1px solid var(--shell-rule);
+	border-inline-end: 0px solid var(--shell-rule);
 	// Same content-box trap as the header: demo-nav's host sets inline-size:100%,
 	// so without this the rule lands outside --shell-nav-w and the column is
 	// 321px in a 320px track — overflowing the gap, and a pixel wider than the
@@ -318,8 +318,9 @@
 	grid-column: main;
 	grid-row: 2;
 	min-inline-size: 0;
-	padding-block: var(--itx-spacing-6);
-	padding-inline: var(--itx-spacing-4);
+	// padding-block: var(--itx-spacing-6);
+	// padding-inline: var(--itx-spacing-4);
+	// background-color:var(--itx-surface-1);
 }
 
 // ── Mobile ──────────────────────────────────────────────────────────────────

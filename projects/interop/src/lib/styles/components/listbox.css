@@ -35,6 +35,7 @@
 
 :where(ul[interop-listbox], ol[interop-listbox]) {
 	display: block;
+	background-color: var(--itx-listbox-background);
 	overflow-y: auto;
 	list-style: none;
 	margin: 0;
@@ -93,6 +94,7 @@
 	gap: var(--itx-option-gap);
 
 	min-block-size: var(--itx-option-min-block-size);
+	min-inline-size: var(--itx-option-min-inline-size);
 	padding-block: var(--itx-option-padding-block);
 	padding-inline: var(--itx-option-padding-inline);
 

@@ -136,4 +136,8 @@
 	--itx-icon-stroke-width: 2px;
 }
 
+:where(itx-code-block .itx-cr__body) {
+	background-color: var(--itx-surface-0);
+}
+
 /* ── Screen-reader live region ───────────────────────────────────────────── */

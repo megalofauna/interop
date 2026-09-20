@@ -68,7 +68,7 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 		     leaves everything inside still resolving against the page, so a field
 		     asking for --itx-surface would land on the frame's own colour.
 		     Declaring the layer is what makes the contents relative to the frame. -->
-		<div class="demo-example__preview" itx-layer>
+		<div class="demo-example__preview">
 			<ng-content />
 			<!-- Own slot, wrapped in an element this component owns. A projected
 			     node carries the *page's* encapsulation attribute, so
@@ -86,7 +86,7 @@ import { demoSlug } from "../demo-page/demo-page.registry";
 			</div>
 		}
 		@if (codeBlock()) {
-			<div class="demo-example__code" itx-layer>
+			<div class="demo-example__code">
 				<ng-content select="itx-code-block" />
 			</div>
 		}

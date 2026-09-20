@@ -99,7 +99,7 @@
  */
 :where(section[interop-tabs] [role="tablist"]) {
 	display: var(--itx-tabs-tablist-display);
-	flex: 1 1 auto;
+	flex: 0 1 auto;
 	min-inline-size: 0;
 	flex-wrap: var(--itx-tabs-tablist-flex-wrap);
 	gap: var(--itx-tabs-gap);
@@ -335,8 +335,8 @@
  */
 :where(section[interop-tab-panel]) {
 	display: block;
-	padding-block: var(--itx-tab-panel-padding-block);
-	padding-inline: var(--itx-tab-panel-padding-inline);
+	padding-block: 0;
+	padding-inline: 0;
 
 	/* Only meaningful when the tabs host is a flex row, i.e. vertical
 	   orientation. Inert in the horizontal case, so it costs nothing to declare

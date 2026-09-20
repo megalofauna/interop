@@ -59,7 +59,7 @@
 	/* Header */
 	--itx-cb-header-background: transparent;
 	--itx-cb-header-background-image: none;
-	--itx-cb-header-padding-block: var(--itx-spacing-2);
+	--itx-cb-header-padding-block: var(--itx-spacing-0);
 	--itx-cb-header-padding-inline: var(--itx-cb-header-padding-block);
 	--itx-cb-header-gap: var(--itx-spacing-2);
 

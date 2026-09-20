@@ -1,17 +1,40 @@
 :host {
-	display: block;
+	display: flex;
+	flex-direction: column;
+	row-gap: var(--itx-spacing-4);
 	position: relative;
 	overflow: clip;
+	border-radius: var(--itx-radius-md);
 	border: 1px solid var(--itx-role-divider);
-	border-radius: var(--itx-radius-none);
+	margin-top: var(--itx-spacing-5);
+	padding: var(--itx-spacing-5);
 }
 
 .demo-example__head {
 	/*padding: var(--itx-spacing-10) var(--itx-spacing-10) 0;*/
+	/*border: 1px solid white;*/
+
+	/* HTML: <div class="loader"></div> */
+	.loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #25b09b;
+  --_m:
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: l3 1s infinite linear;
+	}
+	@keyframes l3 {to{transform: rotate(1turn)}}
 }
 
 .demo-example__heading {
-	margin: var(--itx-spacing-2) 0 0 0;
+	margin-block-end:  var(--itx-spacing-10);
 	font-size: var(--itx-font-size-body-lg);
 	font-weight: 400;
 	color: var(--itx-role-text);
@@ -24,14 +47,14 @@
 .demo-example__preview {
 	display: flex;
 	flex-wrap: wrap;
-	margin-block-start: var(--itx-spacing-5);
+	/*margin-block-start: var(--itx-spacing-5);*/
 	align-items: center;
-	justify-content: start;
-	gap: var(--itx-spacing-2);
-	padding: var(--itx-spacing-6);
+	justify-content: center;
+	gap: var(--itx-spacing-4);
+	/*padding: var(--itx-spacing-8);*/
 	/* No background here — [itx-layer] on the host element paints it, and the
 	   engine keeps it in step with whatever depth the frame ends up at. */
-	border-radius: var(--itx-radius-none);
+	/*border-radius: var(--itx-radius-none) var(--itx-radius-md) 0 0;*/
 }
 
 /*
@@ -60,11 +83,12 @@
 .demo-example__reference,
 .demo-example__code,
 .demo-example__output {
-	border-top: 1px solid var(--itx-role-divider);
+	border-top: 0px solid var(--itx-role-divider);
 }
 
 .demo-example__code {
-	padding: var(--itx-spacing-6);
+	padding: var(--itx-spacing-0);
+
 }
 
 /*

@@ -147,9 +147,9 @@
 
 :where(button[interop-button~="secondary"]),
 :where([itx-as-button~="secondary"]) {
-	--itx-button-background: var(--itx-role-background-control);
+	--itx-button-background: var(--itx-surface-0);
 	--itx-button-foreground: var(--itx-role-text-quiet);
-	--itx-button-border-color: var(--itx-role-divider);
+	/*--itx-button-border-color: var(--itx-role-divider);*/
 	--itx-button-box-shadow: var(--itx-shadow-sm);
 
 	--itx-button-background-hover: light-dark(
@@ -157,7 +157,10 @@
 		oklch(from var(--itx-button-background) calc(l + 0.025) c h)
 	);
 
-	--itx-button-background-active: var(--itx-role-background-control);
+	--itx-button-background-active: light-dark(
+		oklch(from var(--itx-button-background) calc(l + 0.075) c h),
+		oklch(from var(--itx-button-background) calc(l - 0.075) c h)
+	);
 }
 
 /* ── tertiary ────────────────────────────────────────────────────────────
