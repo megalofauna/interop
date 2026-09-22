@@ -37,6 +37,14 @@ gets a structure file and no theme file.
 **Variants and sizes are declaration scopes.** There is one `--itx-button-background-color`,
 redeclared under `[itx-variant="danger"]`. Axis values do not appear in token names.
 
+**The config names the axis values.** `vocabulary.ts` fixes the axes and their attributes;
+every value under `variants` or `sizes` is an exception, and an element carrying neither
+attribute takes the base. A component with no named exceptions has no axes.
+
+**A lever carries its own statefulness and its own prerequisites.** `outline-width` is
+stateful and pulls in `outline-style: solid`; `border-width` is neither, because a border that
+thickens on hover moves the layout around it.
+
 **A stateful lever is read as `var(--x-hover, var(--x))`.** An unset state token falls through
 to the base.
 
@@ -72,3 +80,7 @@ sub-elements within one component, not children a component owns.
 on a disabled button.
 
 **Motion.** No levers yet.
+
+**Resetting an axis.** A scope that sets `itx-size="lg"` on an ancestor cannot be overridden
+back to the base from inside it. There is no value meaning "the default", because the default
+has no name.

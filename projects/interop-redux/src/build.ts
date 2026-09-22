@@ -51,7 +51,7 @@ export async function build(config: Config): Promise<BuildResult> {
 		files.set(`${blueprint.name}/structure.css`, structure);
 		if (theme) files.set(`${blueprint.name}/theme.css`, theme);
 		if (properties) files.set(`${blueprint.name}/properties.css`, properties);
-		files.set(`${blueprint.name}/docs.md`, emitDocs(blueprint, component));
+		files.set(`${blueprint.name}/docs.md`, emitDocs(component));
 
 		const stateTokens = new Set(component.tokens.filter((t) => t.state).map((t) => t.name));
 		issues.push(...lintRoundTrip(blueprint.name, structure, theme, stateTokens));

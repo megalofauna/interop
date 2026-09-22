@@ -8,7 +8,6 @@ import {
 	CATEGORIES,
 	PROPERTIES,
 	STATE_NAMES,
-	STATEFUL_CATEGORIES,
 	isCategory,
 	isPropertyKey,
 	isStateName,
@@ -27,19 +26,6 @@ export interface PartSpec {
 	readonly levers: LeverMap;
 }
 
-/**
- * An axis the component varies along: appearance, size, density.
- *
- * Each value becomes a declaration scope. Axis values do not appear in token names.
- */
-export interface AxisSpec {
-	/** The attribute that selects a value, e.g. `itx-variant`. */
-	readonly attribute: string;
-	readonly values: readonly string[];
-	/** The value that the unattributed base scope already represents. */
-	readonly base: string;
-}
-
 export interface Blueprint {
 	/** Kebab-case. Becomes the component segment of every token name. */
 	readonly name: string;
@@ -51,13 +37,11 @@ export interface Blueprint {
 	/** States this component responds to. */
 	readonly states?: readonly StateName[];
 	readonly parts?: Readonly<Record<string, PartSpec>>;
-	readonly variants?: AxisSpec;
-	readonly sizes?: AxisSpec;
-	/** Declarations config cannot reach, such as the `border-style` `border-width` needs. */
+	/** Declarations this component needs that config cannot reach. */
 	readonly mechanics?: readonly string[];
 }
 
-const KEBAB = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
+export const KEBAB = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
 export interface ValidationResult {
 	readonly ok: boolean;
@@ -90,9 +74,6 @@ export function validate(blueprint: Blueprint): ValidationResult {
 		if (countLevers(blueprint.levers) > 0 || partLevers) {
 			at('themeable', 'is false but levers are declared — an unthemeable component has none');
 		}
-		if (blueprint.variants || blueprint.sizes) {
-			at('themeable', 'is false but an axis is declared — axes exist only to redeclare tokens');
-		}
 	}
 
 	for (const state of blueprint.states ?? []) {
@@ -101,11 +82,8 @@ export function validate(blueprint: Blueprint): ValidationResult {
 		}
 	}
 	if ((blueprint.states?.length ?? 0) > 0 && !hasStatefulLever(blueprint)) {
-		at('states', 'declared, but no paint or effect lever exists for them to vary');
+		at('states', 'declared, but no stateful lever exists for them to vary');
 	}
-
-	checkAxis(blueprint.variants, 'variants', at);
-	checkAxis(blueprint.sizes, 'sizes', at);
 
 	return { ok: errors.length === 0, errors };
 }
@@ -141,26 +119,6 @@ function checkLevers(levers: LeverMap, path: string, at: Reporter, seen: Map<Pro
 	}
 }
 
-function checkAxis(axis: AxisSpec | undefined, path: string, at: Reporter): void {
-	if (!axis) return;
-	if (!axis.attribute?.startsWith('itx-')) {
-		at(`${path}.attribute`, `must be namespaced "itx-", got ${JSON.stringify(axis.attribute)}`);
-	}
-	if (!axis.values?.length) {
-		at(`${path}.values`, 'must list at least one value');
-		return;
-	}
-	for (const value of axis.values) {
-		if (!KEBAB.test(value)) at(`${path}.values`, `value ${JSON.stringify(value)} must be kebab-case`);
-	}
-	if (!axis.values.includes(axis.base)) {
-		at(`${path}.base`, `${JSON.stringify(axis.base)} is not one of: ${axis.values.join(', ')}`);
-	}
-	if (new Set(axis.values).size !== axis.values.length) {
-		at(`${path}.values`, 'contains duplicates');
-	}
-}
-
 function countLevers(levers: LeverMap): number {
 	return Object.values(levers).reduce((n, keys) => n + (keys?.length ?? 0), 0);
 }
@@ -168,6 +126,8 @@ function countLevers(levers: LeverMap): number {
 function hasStatefulLever(blueprint: Blueprint): boolean {
 	const maps = [blueprint.levers, ...Object.values(blueprint.parts ?? {}).map((p) => p.levers)];
 	return maps.some((map) =>
-		STATEFUL_CATEGORIES.some((category) => (map[category]?.length ?? 0) > 0),
+		Object.values(map).some((keys) =>
+			(keys ?? []).some((key) => isPropertyKey(key) && PROPERTIES[key].stateful),
+		),
 	);
 }

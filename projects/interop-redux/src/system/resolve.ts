@@ -1,18 +1,20 @@
 /** blueprint + config -> the model every emitter reads. */
 
 import {
+	AXES,
 	PROPERTIES,
-	STATEFUL_CATEGORIES,
 	isUniversal,
 	selectorForState,
 	syntaxFor,
 	tokenName,
+	type Axis,
+	type AxisName,
 	type Category,
 	type PropertyKey,
 	type StateName,
 	type ValueType,
 } from './vocabulary.ts';
-import { assertValid, type AxisSpec, type Blueprint, type LeverMap } from './blueprint.ts';
+import { KEBAB, assertValid, type Blueprint, type LeverMap } from './blueprint.ts';
 
 /**
  * The consumer-facing config. Plain data only: a CLI has to read a value, change it, and
@@ -23,10 +25,15 @@ export interface ComponentConfig {
 	readonly disabledCategories?: readonly Category[];
 	/** Token name -> value, for the base scope. */
 	readonly values?: Readonly<Record<string, string>>;
-	/** Axis value -> the tokens it redeclares. */
-	readonly variants?: Readonly<Record<string, Readonly<Record<string, string>>>>;
-	readonly sizes?: Readonly<Record<string, Readonly<Record<string, string>>>>;
+	/**
+	 * Axis value -> the tokens it redeclares. Every value named here is an exception; the
+	 * unattributed element is the default.
+	 */
+	readonly variants?: AxisValues;
+	readonly sizes?: AxisValues;
 }
+
+export type AxisValues = Readonly<Record<string, Readonly<Record<string, string>>>>;
 
 export interface Config {
 	readonly components: Readonly<Record<string, ComponentConfig>>;
@@ -53,6 +60,13 @@ export interface ResolvedScope {
 	readonly declarations: readonly { readonly token: string; readonly value: string }[];
 }
 
+/** An axis the component varies along, with the values the config gave it. */
+export interface ResolvedAxis {
+	readonly name: AxisName;
+	readonly attribute: string;
+	readonly values: readonly string[];
+}
+
 /** A consumption site in structure.css. */
 export interface ResolvedRule {
 	readonly label: string;
@@ -65,6 +79,7 @@ export interface ResolvedComponent {
 	readonly selector: string;
 	readonly themeable: boolean;
 	readonly tokens: readonly ResolvedToken[];
+	readonly axes: readonly ResolvedAxis[];
 	readonly scopes: readonly ResolvedScope[];
 	readonly rules: readonly ResolvedRule[];
 	/** Base tokens the config gave no value. Fatal. */
@@ -79,6 +94,7 @@ interface Scope {
 
 export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): ResolvedComponent {
 	assertValid(blueprint);
+	assertConfigValid(blueprint, config);
 
 	const disabled = new Set<Category>(config.disabledCategories ?? []);
 	const values = config.values ?? {};
@@ -101,7 +117,9 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		const active = activeLevers(scope.levers, disabled);
 		if (active.length === 0 && !(scope.part === undefined && blueprint.mechanics?.length)) continue;
 
-		const baseDeclarations: string[] = [];
+		// One copy of each, ahead of the declarations that need it.
+		const required = new Set(active.flatMap((property) => PROPERTIES[property].requires ?? []));
+		const baseDeclarations: string[] = [...required];
 
 		for (const property of active) {
 			const def = PROPERTIES[property];
@@ -141,7 +159,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		}
 
 		for (const state of states) {
-			const stateful = active.filter((p) => STATEFUL_CATEGORIES.includes(PROPERTIES[p].category));
+			const stateful = active.filter((p) => PROPERTIES[p].stateful);
 			if (stateful.length === 0) continue;
 
 			const declarations: string[] = [];
@@ -188,18 +206,53 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		themeScopes.push({ label: 'base', selector: blueprint.selector, declarations: baseDeclarations });
 	}
 
-	themeScopes.push(...axisScopes(blueprint, blueprint.variants, config.variants, declared, 'variant'));
-	themeScopes.push(...axisScopes(blueprint, blueprint.sizes, config.sizes, declared, 'size'));
+	const axes: ResolvedAxis[] = [];
+	for (const axis of AXES) {
+		const scoped = axisScopes(blueprint, axis, config[axis.configKey], declared);
+		if (scoped.length === 0) continue;
+		axes.push({ name: axis.name, attribute: axis.attribute, values: scoped.map((s) => s.value) });
+		themeScopes.push(...scoped.map((s) => s.scope));
+	}
 
 	return {
 		name: blueprint.name,
 		selector: blueprint.selector,
 		themeable: blueprint.themeable,
 		tokens,
+		axes,
 		scopes: themeScopes,
 		rules,
 		missing,
 	};
+}
+
+/**
+ * The config names axis values the blueprint knows nothing about, so they are checked here.
+ * A value that redeclares no token this component has is dropped by `axisScopes`. The config
+ * may name it for a category this component disabled.
+ */
+function assertConfigValid(blueprint: Blueprint, config: ComponentConfig): void {
+	const errors: string[] = [];
+
+	for (const axis of AXES) {
+		const configured = config[axis.configKey];
+		if (!configured) continue;
+		if (!blueprint.themeable) {
+			errors.push(
+				`${axis.configKey}: the component is not themeable, so it has no tokens to redeclare`,
+			);
+			continue;
+		}
+		for (const value of Object.keys(configured)) {
+			if (!KEBAB.test(value)) {
+				errors.push(`${axis.configKey}: value ${JSON.stringify(value)} must be kebab-case`);
+			}
+		}
+	}
+
+	if (errors.length > 0) {
+		throw new Error(`Invalid config for ${blueprint.name}:\n  ${errors.join('\n  ')}`);
+	}
 }
 
 function activeLevers(levers: LeverMap, disabled: ReadonlySet<Category>): PropertyKey[] {
@@ -210,29 +263,24 @@ function activeLevers(levers: LeverMap, disabled: ReadonlySet<Category>): Proper
 
 function axisScopes(
 	blueprint: Blueprint,
-	axis: AxisSpec | undefined,
-	configured: Readonly<Record<string, Readonly<Record<string, string>>>> | undefined,
+	axis: Axis,
+	configured: AxisValues | undefined,
 	declared: ReadonlySet<string>,
-	kind: string,
-): ResolvedScope[] {
-	if (!axis) return [];
-
-	return axis.values
-		// The base value is already the unattributed scope.
-		.filter((value) => value !== axis.base)
-		.map((value) => {
-			const declarations = Object.entries(configured?.[value] ?? {})
-				.filter(([token]) => declared.has(token))
-				.map(([token, v]) => ({ token, value: v }));
-			return {
-				label: `${kind}: ${value}`,
+): { readonly value: string; readonly scope: ResolvedScope }[] {
+	return Object.entries(configured ?? {})
+		.map(([value, tokens]) => ({
+			value,
+			scope: {
+				label: `${axis.name}: ${value}`,
 				// Appended rather than woven in, so no selector parsing is needed. The extra
 				// specificity puts the axis scope above the base.
 				selector: `${blueprint.selector}[${axis.attribute}="${value}"]`,
-				declarations,
-			};
-		})
-		.filter((scope) => scope.declarations.length > 0);
+				declarations: Object.entries(tokens)
+					.filter(([token]) => declared.has(token))
+					.map(([token, v]) => ({ token, value: v })),
+			},
+		}))
+		.filter(({ scope }) => scope.declarations.length > 0);
 }
 
 export { isUniversal };

@@ -1,4 +1,4 @@
-import { deepStrictEqual, match, ok, strictEqual } from 'node:assert/strict';
+import { deepStrictEqual, match, ok, strictEqual, throws } from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { describe, it } from 'node:test';
 
@@ -39,17 +39,10 @@ describe('validator', () => {
 		match(errorsFor({ ...base, themeable: false }), /unthemeable component has none/);
 	});
 
-	it('rejects an axis whose base is not one of its values', () => {
-		match(
-			errorsFor({ ...base, variants: { attribute: 'itx-variant', values: ['a', 'b'], base: 'c' } }),
-			/is not one of: a, b/,
-		);
-	});
-
 	it('rejects states with nothing stateful to vary', () => {
 		match(
 			errorsFor({ ...base, levers: { shape: ['border-radius'] }, states: ['hover'] }),
-			/no paint or effect lever exists/,
+			/no stateful lever exists/,
 		);
 	});
 
@@ -76,11 +69,7 @@ describe('resolve', () => {
 	});
 
 	it('keeps the axis out of the token name', () => {
-		const blueprint: Blueprint = {
-			...base,
-			variants: { attribute: 'itx-variant', values: ['plain', 'loud'], base: 'plain' },
-		};
-		const { tokens, scopes } = resolve(blueprint, {
+		const { tokens, axes, scopes } = resolve(base, {
 			values: { '--itx-widget-background-color': 'red' },
 			variants: { loud: { '--itx-widget-background-color': 'blue' } },
 		});
@@ -89,19 +78,65 @@ describe('resolve', () => {
 			tokens.map((t) => t.name),
 			['--itx-widget-background-color'],
 		);
+		deepStrictEqual(axes, [{ name: 'variant', attribute: 'itx-variant', values: ['loud'] }]);
 		strictEqual(scopes.at(-1)?.selector, ':where(.widget)[itx-variant="loud"]');
 	});
 
-	it('omits the base axis value', () => {
+	it('drops an axis value that redeclares nothing the component has', () => {
+		const { axes, scopes } = resolve(base, {
+			values: { '--itx-widget-background-color': 'red' },
+			sizes: { lg: { '--itx-widget-font-size': '2rem' } },
+		});
+		deepStrictEqual(axes, []);
+		ok(!scopes.some((scope) => scope.label.startsWith('size:')));
+	});
+
+	it('rejects an axis value that is not kebab-case', () => {
+		throws(
+			() => resolve(base, { values: { '--itx-widget-background-color': 'red' }, variants: { Loud: {} } }),
+			/kebab-case/,
+		);
+	});
+
+	it('rejects an axis on a component with no tokens to redeclare', () => {
+		throws(
+			() => resolve({ ...base, themeable: false, levers: {} }, { variants: { loud: {} } }),
+			/not themeable/,
+		);
+	});
+
+	it('varies the stateful levers and leaves the rest alone', () => {
+		// Both widths draw a line; only the outline can change width without moving anything.
 		const blueprint: Blueprint = {
 			...base,
-			variants: { attribute: 'itx-variant', values: ['plain', 'loud'], base: 'plain' },
+			levers: { shape: ['border-width'], effect: ['outline-width'] },
+			states: ['focus-visible'],
 		};
-		const { scopes } = resolve(blueprint, {
-			values: { '--itx-widget-background-color': 'red' },
-			variants: { plain: { '--itx-widget-background-color': 'red' } },
+		const { rules } = resolve(blueprint, {
+			values: { '--itx-widget-border-width': '1px', '--itx-widget-outline-width': '0' },
 		});
-		ok(!scopes.some((s) => s.label.includes('plain')));
+
+		deepStrictEqual(rules.find((r) => r.label === 'focus-visible')?.declarations, [
+			'outline-width: var(--itx-widget-outline-width-focus-visible, var(--itx-widget-outline-width))',
+		]);
+	});
+
+	it('leads the rule with the declarations its levers require', () => {
+		const blueprint: Blueprint = {
+			...base,
+			levers: { shape: ['border-width'], effect: ['outline-width'] },
+		};
+		const { rules } = resolve(blueprint, {
+			values: { '--itx-widget-border-width': '1px', '--itx-widget-outline-width': '0' },
+		});
+		const declarations = rules.find((r) => r.label === 'base')?.declarations ?? [];
+
+		deepStrictEqual(declarations, [
+			'border-style: solid',
+			'outline-style: solid',
+			'border-width: var(--itx-widget-border-width)',
+			'outline-width: var(--itx-widget-outline-width)',
+		]);
 	});
 
 	it('drops a disabled category', () => {

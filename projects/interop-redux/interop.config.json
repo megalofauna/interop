@@ -7,6 +7,7 @@
 				"--itx-button-align-items": "center",
 				"--itx-button-justify-content": "center",
 				"--itx-button-gap": "var(--itx-size-value)",
+				"--itx-button-text-align": "center",
 
 				"--itx-button-border-radius": "var(--itx-size-value)",
 				"--itx-button-border-width": "1px",

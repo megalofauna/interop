@@ -30,10 +30,9 @@ export function emitManifest(
 			selector: component.selector,
 			themeable: component.themeable,
 			states: blueprint.states ?? [],
-			axes: {
-				...(blueprint.variants ? { variant: blueprint.variants } : {}),
-				...(blueprint.sizes ? { size: blueprint.sizes } : {}),
-			},
+			axes: Object.fromEntries(
+				component.axes.map((axis) => [axis.name, { attribute: axis.attribute, values: axis.values }]),
+			),
 			tokens: component.tokens.map(
 				(t): ManifestToken => ({
 					name: t.name,

@@ -14,20 +14,16 @@
 				"variant": {
 					"attribute": "itx-variant",
 					"values": [
-						"primary",
 						"secondary",
 						"danger"
-					],
-					"base": "primary"
+					]
 				},
 				"size": {
 					"attribute": "itx-size",
 					"values": [
 						"sm",
-						"md",
 						"lg"
-					],
-					"base": "md"
+					]
 				}
 			},
 			"tokens": [
@@ -84,6 +80,20 @@
 					"value": "var(--itx-size-value)"
 				},
 				{
+					"name": "--itx-button-text-align",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "start | end | center | justify",
+					"description": "Alignment of the text within the box.",
+					"enumValues": [
+						"start",
+						"end",
+						"center",
+						"justify"
+					],
+					"value": "center"
+				},
+				{
 					"name": "--itx-button-border-radius",
 					"category": "shape",
 					"type": "length",
@@ -96,7 +106,7 @@
 					"category": "shape",
 					"type": "length",
 					"syntax": "<length>",
-					"description": "Thickness of the border. Its colour is a paint lever.",
+					"description": "Thickness of the border. Its color is a paint lever.",
 					"value": "1px"
 				},
 				{

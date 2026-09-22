@@ -27,6 +27,12 @@
 	initial-value: 0px;
 }
 
+@property --itx-button-text-align {
+	syntax: "start | end | center | justify";
+	inherits: true;
+	initial-value: start;
+}
+
 @property --itx-button-border-radius {
 	syntax: "<length>";
 	inherits: true;

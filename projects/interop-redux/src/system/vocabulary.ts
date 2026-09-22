@@ -1,11 +1,35 @@
 /**
- * Categories, states, value types, and the lever catalog.
+ * Categories, axes, states, value types, and the lever catalog.
  *
  * A blueprint may only name entries that appear here.
  */
 
+/**
+ * Where a lever acts:
+ *
+ * - `layout` — how the box and its contents are arranged.
+ * - `shape` — the space the box occupies.
+ * - `type` — the text inside it.
+ * - `paint` — the colors filling the box and its border.
+ * - `effect` — what is drawn over or outside the box. Moves no layout.
+ */
 export const CATEGORIES = ['layout', 'shape', 'type', 'paint', 'effect'] as const;
 export type Category = (typeof CATEGORIES)[number];
+
+/**
+ * The axes a component varies along. Each value becomes a declaration scope
+ * selected by the attribute, on the same token names.
+ *
+ * The values themselves come from the config: every one it names is an exception, and the
+ * unattributed element is the default.
+ */
+export const AXES = [
+	{ name: 'variant', attribute: 'itx-variant', configKey: 'variants' },
+	{ name: 'size', attribute: 'itx-size', configKey: 'sizes' },
+] as const;
+
+export type Axis = (typeof AXES)[number];
+export type AxisName = Axis['name'];
 
 /**
  * Stateful tokens are formed by adding `-<state>` to a base token:
@@ -25,9 +49,6 @@ export const STATES = [
 export type StateName = (typeof STATES)[number]['name'];
 
 export const STATE_NAMES = STATES.map((s) => s.name) as readonly StateName[];
-
-/** The categories that cross with states. */
-export const STATEFUL_CATEGORIES: readonly Category[] = ['paint', 'effect'];
 
 export type ValueType =
 	| 'length'
@@ -60,23 +81,46 @@ export interface PropertyDef {
 	readonly type: ValueType;
 	/** Enum members. Also the `@property` syntax alternation. */
 	readonly values?: readonly string[];
+	/** The lever takes a token per state and is read under the state selectors. */
+	readonly stateful: boolean;
+	/** Declarations the lever needs to draw at all. Emitted once, with the rule that reads it. */
+	readonly requires?: readonly string[];
 	/** Declarations emitted where the token is read. `ref` is the full `var(...)` reference. */
 	apply(ref: string): string[];
 }
 
-/** A lever that maps to one CSS property. */
-function direct(category: Category, type: ValueType, css: string): PropertyDef {
-	return { category, type, apply: (ref) => [`${css}: ${ref}`] };
+interface LeverOptions {
+	readonly stateful?: boolean;
+	readonly requires?: readonly string[];
 }
 
-/** A lever with a fixed set of keyword values. */
-function choice(category: Category, css: string, values: readonly string[]): PropertyDef {
-	return { category, type: 'enum', values, apply: (ref) => [`${css}: ${ref}`] };
+function options({ stateful = false, requires }: LeverOptions = {}) {
+	return { stateful, ...(requires ? { requires } : {}) };
+}
+
+/** A lever that maps to one CSS property. */
+function direct(category: Category, type: ValueType, css: string, opts?: LeverOptions): PropertyDef {
+	return { category, type, ...options(opts), apply: (ref) => [`${css}: ${ref}`] };
+}
+
+/** A lever with a fixed set of keyword values. The first is the `@property` initial value. */
+function choice(
+	category: Category,
+	css: string,
+	values: readonly string[],
+	opts?: LeverOptions,
+): PropertyDef {
+	return { category, type: 'enum', values, ...options(opts), apply: (ref) => [`${css}: ${ref}`] };
 }
 
 /** A lever that expands to something other than one property. */
-function composed(category: Category, type: ValueType, apply: (ref: string) => string[]): PropertyDef {
-	return { category, type, apply };
+function composed(
+	category: Category,
+	type: ValueType,
+	apply: (ref: string) => string[],
+	opts?: LeverOptions,
+): PropertyDef {
+	return { category, type, ...options(opts), apply };
 }
 
 /**
@@ -96,11 +140,13 @@ export const PROPERTIES = {
 		'space-between',
 	]),
 	gap: direct('layout', 'length-pair', 'gap'),
+	'text-align': choice('layout', 'text-align', ['start', 'end', 'center', 'justify']),
 
 	/* ── Shape ── */
 	'border-radius': direct('shape', 'length', 'border-radius'),
-	// Border width is shape; border color is paint.
-	'border-width': direct('shape', 'length', 'border-width'),
+	// Border width is shape; border color is paint. Not stateful: a border that thickens on
+	// hover moves everything around it.
+	'border-width': direct('shape', 'length', 'border-width', { requires: ['border-style: solid'] }),
 	'padding-block': direct('shape', 'length-pair', 'padding-block'),
 	'padding-inline': direct('shape', 'length-pair', 'padding-inline'),
 	'min-inline-size': direct('shape', 'length', 'min-inline-size'),
@@ -115,17 +161,22 @@ export const PROPERTIES = {
 	'line-height': direct('type', 'number', 'line-height'),
 
 	/* ── Paint ── */
-	'background-color': direct('paint', 'color', 'background-color'),
-	'border-color': direct('paint', 'color', 'border-color'),
-	'text-color': direct('paint', 'color', 'color'),
+	'background-color': direct('paint', 'color', 'background-color', { stateful: true }),
+	'border-color': direct('paint', 'color', 'border-color', { stateful: true }),
+	'text-color': direct('paint', 'color', 'color', { stateful: true }),
 
 	/* ── Effect ── */
-	'box-shadow': direct('effect', 'shadow', 'box-shadow'),
-	'outline-color': direct('effect', 'color', 'outline-color'),
-	'outline-width': direct('effect', 'length', 'outline-width'),
-	'outline-offset': direct('effect', 'length', 'outline-offset'),
-	'background-image': direct('effect', 'string', 'background-image'),
-	'background-blur': composed('effect', 'length', (ref) => [`backdrop-filter: blur(${ref})`]),
+	'box-shadow': direct('effect', 'shadow', 'box-shadow', { stateful: true }),
+	'outline-color': direct('effect', 'color', 'outline-color', { stateful: true }),
+	'outline-width': direct('effect', 'length', 'outline-width', {
+		stateful: true,
+		requires: ['outline-style: solid'],
+	}),
+	'outline-offset': direct('effect', 'length', 'outline-offset', { stateful: true }),
+	'background-image': direct('effect', 'string', 'background-image', { stateful: true }),
+	'background-blur': composed('effect', 'length', (ref) => [`backdrop-filter: blur(${ref})`], {
+		stateful: true,
+	}),
 } satisfies Record<string, PropertyDef>;
 
 export type PropertyKey = keyof typeof PROPERTIES;
@@ -183,8 +234,9 @@ export const DESCRIPTIONS: Record<PropertyKey, string> = {
 	'align-items': 'Cross-axis placement of the contents.',
 	'justify-content': 'Main-axis distribution of the contents.',
 	gap: 'Space held between the contents.',
+	'text-align': 'Alignment of the text within the box.',
 	'border-radius': 'Corner rounding.',
-	'border-width': 'Thickness of the border. Its colour is a paint lever.',
+	'border-width': 'Thickness of the border. Its color is a paint lever.',
 	'padding-block': 'Inner space above and below the contents.',
 	'padding-inline': 'Inner space to the left and right of the contents.',
 	'min-inline-size': 'Smallest width the box will take.',

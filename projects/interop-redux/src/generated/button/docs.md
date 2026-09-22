@@ -4,10 +4,12 @@ Selector `:where(button)`. Themeable.
 
 ## Axes
 
-| Axis | Attribute | Values | Base |
-| --- | --- | --- | --- |
-| variant | `itx-variant` | `primary`, `secondary`, `danger` | `primary` |
-| size | `itx-size` | `sm`, `md`, `lg` | `md` |
+Each value is an exception. An element carrying none of these attributes takes the base values.
+
+| Axis | Attribute | Values |
+| --- | --- | --- |
+| variant | `itx-variant` | `secondary`, `danger` |
+| size | `itx-size` | `sm`, `lg` |
 
 ## Levers
 
@@ -19,6 +21,7 @@ Selector `:where(button)`. Themeable.
 | `--itx-button-align-items` | — | `center` \| `start` \| `end` \| `stretch` \| `baseline` | `center` | — | Cross-axis placement of the contents. |
 | `--itx-button-justify-content` | — | `center` \| `flex-start` \| `flex-end` \| `space-between` | `center` | — | Main-axis distribution of the contents. |
 | `--itx-button-gap` | — | length-pair | `var(--itx-size-value)` | — | Space held between the contents. |
+| `--itx-button-text-align` | — | `start` \| `end` \| `center` \| `justify` | `center` | — | Alignment of the text within the box. |
 | `--itx-button-icon-flex-shrink` | icon | number | `0` | — | How readily the box gives up space when crowded. |
 
 ### shape
@@ -26,7 +29,7 @@ Selector `:where(button)`. Themeable.
 | Token | Type | Value | States | Description |
 | --- | --- | --- | --- | --- |
 | `--itx-button-border-radius` | length | `var(--itx-size-value)` | — | Corner rounding. |
-| `--itx-button-border-width` | length | `1px` | — | Thickness of the border. Its colour is a paint lever. |
+| `--itx-button-border-width` | length | `1px` | — | Thickness of the border. Its color is a paint lever. |
 | `--itx-button-padding-block` | length-pair | `var(--itx-size-value)` | — | Inner space above and below the contents. |
 | `--itx-button-padding-inline` | length-pair | `var(--itx-size-value)` | — | Inner space to the left and right of the contents. |
 | `--itx-button-min-block-size` | length | `var(--itx-size-value)` | — | Smallest height the box will take. Grows past it rather than clipping. |

@@ -6,10 +6,13 @@
 @layer interop.structure {
 	/* base */
 	:where(button) {
+		border-style: solid;
+		outline-style: solid;
 		display: var(--itx-button-display);
 		align-items: var(--itx-button-align-items);
 		justify-content: var(--itx-button-justify-content);
 		gap: var(--itx-button-gap);
+		text-align: var(--itx-button-text-align);
 		border-radius: var(--itx-button-border-radius);
 		border-width: var(--itx-button-border-width);
 		padding-block: var(--itx-button-padding-block);
@@ -26,10 +29,7 @@
 		outline-width: var(--itx-button-outline-width);
 		outline-offset: var(--itx-button-outline-offset);
 		box-sizing: border-box;
-		border-style: solid;
-		outline-style: solid;
 		cursor: pointer;
-		text-align: center;
 	}
 
 	/* hover */

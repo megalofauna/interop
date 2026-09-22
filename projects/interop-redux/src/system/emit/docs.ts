@@ -1,10 +1,9 @@
 /** docs.md — the lever tables, grouped by category. */
 
 import { CATEGORIES, describe } from '../vocabulary.ts';
-import type { Blueprint } from '../blueprint.ts';
 import type { ResolvedComponent } from '../resolve.ts';
 
-export function emitDocs(blueprint: Blueprint, component: ResolvedComponent): string {
+export function emitDocs(component: ResolvedComponent): string {
 	const lines: string[] = [`# ${component.name}`, ''];
 
 	lines.push(
@@ -12,16 +11,18 @@ export function emitDocs(blueprint: Blueprint, component: ResolvedComponent): st
 		'',
 	);
 
-	const axes = [
-		blueprint.variants ? (['variant', blueprint.variants] as const) : null,
-		blueprint.sizes ? (['size', blueprint.sizes] as const) : null,
-	].filter((a) => a !== null);
-
-	if (axes.length > 0) {
-		lines.push('## Axes', '', '| Axis | Attribute | Values | Base |', '| --- | --- | --- | --- |');
-		for (const [name, axis] of axes) {
+	if (component.axes.length > 0) {
+		lines.push(
+			'## Axes',
+			'',
+			'Each value is an exception. An element carrying none of these attributes takes the base values.',
+			'',
+			'| Axis | Attribute | Values |',
+			'| --- | --- | --- |',
+		);
+		for (const axis of component.axes) {
 			lines.push(
-				`| ${name} | \`${axis.attribute}\` | ${axis.values.map((v) => `\`${v}\``).join(', ')} | \`${axis.base}\` |`,
+				`| ${axis.name} | \`${axis.attribute}\` | ${axis.values.map((v) => `\`${v}\``).join(', ')} |`,
 			);
 		}
 		lines.push('');
