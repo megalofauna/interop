@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>interop-redux — button harness</title>
+
+		<!-- Generated output, in the order the layer statement expects. -->
+		<link rel="stylesheet" href="../src/generated/layers.css" />
+		<link rel="stylesheet" href="../src/generated/button/properties.css" />
+		<link rel="stylesheet" href="../src/generated/button/structure.css" />
+		<link rel="stylesheet" href="../src/generated/button/theme.css" />
+		<link rel="stylesheet" href="../src/generated/visually-hidden/structure.css" />
+
+		<style>
+			/* Consumer CSS: not generated, not layered. Unlayered declarations beat every layer. */
+
+			:root {
+				/* Placeholders for whatever upstream tokens supply color and size. */
+				--itx-color-value: currentColor;
+				--itx-size-value: 0.75rem;
+
+				color-scheme: light;
+				font-family: system-ui, sans-serif;
+			}
+
+			/* Base appearance. */
+			button {
+				--itx-button-background-color: #16161a;
+				--itx-button-border-color: #16161a;
+				--itx-button-text-color: #ffffff;
+				--itx-button-outline-color: #4d7cff;
+
+				/* States are suffixed tokens. */
+				--itx-button-background-color-hover: #35353f;
+				--itx-button-border-color-hover: #35353f;
+				--itx-button-background-color-active: #000000;
+				--itx-button-background-color-disabled: #e4e4e8;
+				--itx-button-border-color-disabled: #e4e4e8;
+				--itx-button-text-color-disabled: #9a9aa4;
+			}
+
+			button[itx-variant='secondary'] {
+				--itx-button-background-color: #ffffff;
+				--itx-button-border-color: #c6c6cf;
+				--itx-button-text-color: #16161a;
+				--itx-button-background-color-hover: #f2f2f5;
+			}
+
+			button[itx-variant='danger'] {
+				--itx-button-background-color: #b3261e;
+				--itx-button-border-color: #b3261e;
+				--itx-button-text-color: #ffffff;
+				--itx-button-background-color-hover: #8f1e18;
+			}
+
+			/* The size axis varies one upstream placeholder. Padding, font size, radius and
+			   min height all read it. */
+			button[itx-size='sm'] {
+				--itx-size-value: 0.5rem;
+			}
+			button[itx-size='lg'] {
+				--itx-size-value: 1.05rem;
+			}
+
+			/* Harness chrome. */
+			body {
+				margin: 0;
+				padding: 2.5rem;
+				background: #fbfbfc;
+				color: #16161a;
+				line-height: 1.5;
+			}
+			h1 {
+				font-size: 1.25rem;
+				margin: 0 0 0.25rem;
+			}
+			p.note {
+				margin: 0 0 2rem;
+				color: #6a6a74;
+				max-inline-size: 60ch;
+			}
+			section {
+				margin-block-end: 2.5rem;
+			}
+			h2 {
+				font-size: 0.8rem;
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				color: #6a6a74;
+				border-block-end: 1px solid #e4e4e8;
+				padding-block-end: 0.5rem;
+				margin-block-end: 1rem;
+			}
+			.row {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				flex-wrap: wrap;
+				margin-block-end: 0.75rem;
+			}
+			.label {
+				inline-size: 7rem;
+				flex: none;
+				font-size: 0.8rem;
+				color: #6a6a74;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Button harness</h1>
+		<p class="note">
+			Every cell is the same generated CSS. Hover, tab through, and hold a button down. A
+			state token that was never given a value falls through to the base.
+		</p>
+
+		<section>
+			<h2>Variant &times; size</h2>
+			<div class="row">
+				<span class="label">primary</span>
+				<button itx-size="sm">Small</button>
+				<button>Medium</button>
+				<button itx-size="lg">Large</button>
+			</div>
+			<div class="row">
+				<span class="label">secondary</span>
+				<button itx-variant="secondary" itx-size="sm">Small</button>
+				<button itx-variant="secondary">Medium</button>
+				<button itx-variant="secondary" itx-size="lg">Large</button>
+			</div>
+			<div class="row">
+				<span class="label">danger</span>
+				<button itx-variant="danger" itx-size="sm">Small</button>
+				<button itx-variant="danger">Medium</button>
+				<button itx-variant="danger" itx-size="lg">Large</button>
+			</div>
+		</section>
+
+		<section>
+			<h2>States</h2>
+			<div class="row">
+				<span class="label">disabled</span>
+				<button disabled>Primary</button>
+				<button itx-variant="secondary" disabled>Secondary</button>
+				<button itx-variant="danger" disabled>Danger</button>
+			</div>
+			<div class="row">
+				<span class="label">focus ring</span>
+				<button autofocus>Tab to me</button>
+				<span class="note" style="margin: 0">
+					The ring is one state token over a base outline width of zero.
+				</span>
+			</div>
+		</section>
+
+		<section>
+			<h2>Icon part</h2>
+			<div class="row">
+				<span class="label">with icon</span>
+				<button>
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+						<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
+					Continue
+				</button>
+				<button itx-variant="secondary">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+						<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					</svg>
+					Continue
+				</button>
+			</div>
+		</section>
+
+		<section>
+			<h2>Unthemeable component</h2>
+			<div class="row">
+				<span class="label">visually-hidden</span>
+				<button>
+					Save
+					<span itx-visually-hidden>changes to your profile</span>
+				</button>
+				<span class="note" style="margin: 0">
+					Structure file only. No levers, so no theme file.
+				</span>
+			</div>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,124 @@
+/*
+ * Generated file. Do not edit by hand.
+ * Source: src/blueprints/button.blueprint.ts
+ */
+
+@property --itx-button-display {
+	syntax: "flex | inline-flex | block | inline-block | grid";
+	inherits: true;
+	initial-value: flex;
+}
+
+@property --itx-button-align-items {
+	syntax: "center | start | end | stretch | baseline";
+	inherits: true;
+	initial-value: center;
+}
+
+@property --itx-button-justify-content {
+	syntax: "center | flex-start | flex-end | space-between";
+	inherits: true;
+	initial-value: center;
+}
+
+@property --itx-button-gap {
+	syntax: "<length>+";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-border-radius {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-border-width {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-padding-block {
+	syntax: "<length>+";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-padding-inline {
+	syntax: "<length>+";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-min-block-size {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-font-size {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-font-weight {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --itx-button-line-height {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --itx-button-background-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-border-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-text-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-outline-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-outline-width {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-outline-offset {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-icon-flex-shrink {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --itx-button-icon-text-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}

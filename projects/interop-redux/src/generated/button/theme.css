@@ -1,0 +1,62 @@
+/*
+ * Generated file. Do not edit by hand.
+ * Source: src/blueprints/button.blueprint.ts
+ */
+
+@layer interop.theme {
+	/* base */
+	:where(button) {
+		--itx-button-display: inline-flex;
+		--itx-button-align-items: center;
+		--itx-button-justify-content: center;
+		--itx-button-gap: var(--itx-size-value);
+		--itx-button-border-radius: var(--itx-size-value);
+		--itx-button-border-width: 1px;
+		--itx-button-padding-block: var(--itx-size-value);
+		--itx-button-padding-inline: var(--itx-size-value);
+		--itx-button-min-block-size: var(--itx-size-value);
+		--itx-button-font-family: system-ui, sans-serif;
+		--itx-button-font-size: var(--itx-size-value);
+		--itx-button-font-weight: 400;
+		--itx-button-line-height: 1.2;
+		--itx-button-background-color: var(--itx-color-value);
+		--itx-button-border-color: var(--itx-color-value);
+		--itx-button-text-color: var(--itx-color-value);
+		--itx-button-outline-color: var(--itx-color-value);
+		--itx-button-outline-width: 0;
+		--itx-button-outline-offset: 2px;
+		--itx-button-outline-width-focus-visible: 2px;
+		--itx-button-icon-flex-shrink: 0;
+		--itx-button-icon-text-color: var(--itx-color-value);
+	}
+
+	/* variant: secondary */
+	:where(button)[itx-variant="secondary"] {
+		--itx-button-background-color: var(--itx-color-value);
+		--itx-button-border-color: var(--itx-color-value);
+		--itx-button-text-color: var(--itx-color-value);
+	}
+
+	/* variant: danger */
+	:where(button)[itx-variant="danger"] {
+		--itx-button-background-color: var(--itx-color-value);
+		--itx-button-border-color: var(--itx-color-value);
+		--itx-button-text-color: var(--itx-color-value);
+	}
+
+	/* size: sm */
+	:where(button)[itx-size="sm"] {
+		--itx-button-padding-block: var(--itx-size-value);
+		--itx-button-padding-inline: var(--itx-size-value);
+		--itx-button-font-size: var(--itx-size-value);
+		--itx-button-min-block-size: var(--itx-size-value);
+	}
+
+	/* size: lg */
+	:where(button)[itx-size="lg"] {
+		--itx-button-padding-block: var(--itx-size-value);
+		--itx-button-padding-inline: var(--itx-size-value);
+		--itx-button-font-size: var(--itx-size-value);
+		--itx-button-min-block-size: var(--itx-size-value);
+	}
+}
