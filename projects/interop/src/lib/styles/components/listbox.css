@@ -20,7 +20,7 @@
  * opinion inherits one.
  *
  * Rows match the CLASS and the ATTRIBUTE. The class is what the Angular
- * directive adds and what the declarative template writes; the attribute is
+ * directive adds and what the data-mode template writes; the attribute is
  * what a CSS-only consumer authors, and styling only the class would leave
  * exactly the consumer this migration exists for with an unstyled list.
  * `[aria-selected="true"]` / `[aria-disabled="true"]` are matched for the same
@@ -35,6 +35,8 @@
 
 :where(ul[interop-listbox], ol[interop-listbox]) {
 	display: block;
+	background-color: var(--itx-listbox-background);
+	border: var(--itx-listbox-border);
 	overflow-y: auto;
 	list-style: none;
 	margin: 0;
@@ -93,6 +95,7 @@
 	gap: var(--itx-option-gap);
 
 	min-block-size: var(--itx-option-min-block-size);
+	min-inline-size: var(--itx-option-min-inline-size);
 	padding-block: var(--itx-option-padding-block);
 	padding-inline: var(--itx-option-padding-inline);
 
