@@ -121,12 +121,12 @@ invalid-at-computed-value-time, which resolves to `transparent` for `background-
 
 `src/system/lint.ts` catches both, reading the emitted CSS rather than the model.
 
-## The CLI seam
+## The CLI
 
-There is no CLI. Two constraints keep it a later addition:
+[`docs/cli.md`](docs/cli.md) specifies it. It is not built. Two constraints hold now:
 
-- It reads `manifest.json`, edits `interop.config.json`, and calls `build()`. It does not
-  write CSS.
+- It reads `manifest.json` and never writes a generated file. A starter file it writes, such
+  as a `theme.css`, belongs to the consumer from then on.
 - The config stays plain data, so a value can be read, changed, and written back.
 
 ## Not modeled
