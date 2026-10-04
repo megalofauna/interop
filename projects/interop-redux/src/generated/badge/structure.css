@@ -1,0 +1,55 @@
+/*
+ * Generated file. Do not edit by hand.
+ * Source: src/blueprints/badge.blueprint.ts
+ */
+
+@layer interop.structure {
+	/* base */
+	:where([interop-badge]) {
+		anchor-name: --itx-badge;
+		anchor-scope: --itx-badge;
+	}
+
+	/* element: indicator */
+	:where([interop-badge]) > :where([interop-badge-indicator]) {
+		position: fixed;
+		position-anchor: --itx-badge;
+		position-area: top right;
+		translate: -50% 50%;
+		box-sizing: border-box;
+		padding-block: 0;
+		white-space: nowrap;
+		display: var(--itx-badge-indicator-display);
+		align-items: var(--itx-badge-indicator-align-items);
+		justify-content: var(--itx-badge-indicator-justify-content);
+		min-inline-size: var(--itx-badge-indicator-min-inline-size);
+		min-block-size: var(--itx-badge-indicator-min-block-size);
+		margin: var(--itx-badge-indicator-margin);
+		z-index: var(--itx-badge-indicator-z-index);
+		border-radius: var(--itx-badge-indicator-border-radius);
+		padding-inline: var(--itx-badge-indicator-padding-inline);
+		font-size: var(--itx-badge-indicator-font-size);
+		font-weight: var(--itx-badge-indicator-font-weight);
+		line-height: var(--itx-badge-indicator-line-height);
+		background-color: var(--itx-badge-indicator-background-color);
+		color: var(--itx-badge-indicator-text-color);
+	}
+
+	/* element: indicator — modifier: top-left */
+	:where([interop-badge])[itx-badge-position="top-left"] > :where([interop-badge-indicator]) {
+		position-area: top left;
+		translate: 50% 50%;
+	}
+
+	/* element: indicator — modifier: bottom-right */
+	:where([interop-badge])[itx-badge-position="bottom-right"] > :where([interop-badge-indicator]) {
+		position-area: bottom right;
+		translate: -50% -50%;
+	}
+
+	/* element: indicator — modifier: bottom-left */
+	:where([interop-badge])[itx-badge-position="bottom-left"] > :where([interop-badge-indicator]) {
+		position-area: bottom left;
+		translate: 50% -50%;
+	}
+}

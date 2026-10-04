@@ -10,10 +10,35 @@
 		<link rel="stylesheet" href="../src/generated/button/properties.css" />
 		<link rel="stylesheet" href="../src/generated/button/structure.css" />
 		<link rel="stylesheet" href="../src/generated/button/base.css" />
+		<link rel="stylesheet" href="../src/generated/badge/properties.css" />
+		<link rel="stylesheet" href="../src/generated/badge/structure.css" />
+		<link rel="stylesheet" href="../src/generated/badge/base.css" />
 		<link
 			rel="stylesheet"
 			href="../src/generated/visually-hidden/structure.css"
 		/>
+
+		<style>
+			/* The badge's theme.css: consumer values in the theme layers. The dot keeps its own
+			   size because the modifier layer comes after the default layer. */
+			@layer interop.default.theme {
+				:where([interop-badge]) {
+					--itx-badge-indicator-min-inline-size: 1rem;
+					--itx-badge-indicator-min-block-size: 1rem;
+					--itx-badge-indicator-padding-inline: 0.25rem;
+					--itx-badge-indicator-font-size: 0.75rem;
+					--itx-badge-indicator-background-color: #da1e28;
+					--itx-badge-indicator-text-color: #ffffff;
+				}
+			}
+
+			@layer interop.modifier.theme {
+				:where([interop-badge])[interop-badge=""] {
+					--itx-badge-indicator-min-inline-size: 0.5rem;
+					--itx-badge-indicator-min-block-size: 0.5rem;
+				}
+			}
+		</style>
 
 		<style>
 			/* Consumer CSS: not generated, not layered. Unlayered declarations beat every layer. */
@@ -107,6 +132,13 @@
 				gap: 1rem;
 				flex-wrap: wrap;
 				margin-block-end: 0.75rem;
+			}
+			.avatar {
+				display: block;
+				inline-size: 2.5rem;
+				block-size: 2.5rem;
+				border-radius: 50%;
+				background: #8aa88a;
 			}
 			.label {
 				inline-size: 7rem;
@@ -226,6 +258,53 @@
 				</button>
 				<span class="note" style="margin: 0">
 					Structure file only. No levers, so no base file.
+				</span>
+			</div>
+		</section>
+
+		<section>
+			<h2>Badge</h2>
+			<div class="row">
+				<span class="label">on a button</span>
+				<button interop-button interop-badge="3">
+					Inbox
+					<span interop-badge-indicator aria-hidden="true">3</span>
+					<span itx-visually-hidden>3 unread messages</span>
+				</button>
+				<button interop-button interop-badge="120">
+					Inbox
+					<span interop-badge-indicator aria-hidden="true">99+</span>
+					<span itx-visually-hidden>More than 99 unread messages</span>
+				</button>
+				<button interop-button interop-badge itx-variant="secondary">
+					Activity
+					<span interop-badge-indicator aria-hidden="true"></span>
+					<span itx-visually-hidden>New activity</span>
+				</button>
+			</div>
+			<div class="row" style="gap: 2rem">
+				<span class="label">position</span>
+				<button interop-button interop-badge="1" itx-badge-position="top-left">
+					Top left
+					<span interop-badge-indicator aria-hidden="true">1</span>
+				</button>
+				<button interop-button interop-badge="2" itx-badge-position="bottom-right">
+					Bottom right
+					<span interop-badge-indicator aria-hidden="true">2</span>
+				</button>
+				<button interop-button interop-badge="3" itx-badge-position="bottom-left">
+					Bottom left
+					<span interop-badge-indicator aria-hidden="true">3</span>
+				</button>
+			</div>
+			<div class="row">
+				<span class="label">wrapped</span>
+				<span interop-badge style="display: inline-block">
+					<span class="avatar"></span>
+					<span interop-badge-indicator aria-hidden="true"></span>
+				</span>
+				<span class="note" style="margin: 0">
+					An element with no badge-capable host of its own gets a wrapper.
 				</span>
 			</div>
 		</section>

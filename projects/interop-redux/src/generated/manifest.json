@@ -1,6 +1,174 @@
 {
 	"schema": 1,
 	"components": {
+		"badge": {
+			"selector": ":where([interop-badge])",
+			"themeable": true,
+			"states": [],
+			"modifiers": {
+				"dot": {
+					"selector": ":where([interop-badge])[interop-badge=\"\"]"
+				},
+				"top-left": {
+					"selector": ":where([interop-badge])[itx-badge-position=\"top-left\"]"
+				},
+				"bottom-right": {
+					"selector": ":where([interop-badge])[itx-badge-position=\"bottom-right\"]"
+				},
+				"bottom-left": {
+					"selector": ":where([interop-badge])[itx-badge-position=\"bottom-left\"]"
+				}
+			},
+			"axes": {},
+			"tokens": [
+				{
+					"name": "--itx-badge-indicator-display",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "flex | inline-flex | block | inline-block | grid",
+					"description": "How the box participates in the surrounding flow.",
+					"element": "indicator",
+					"enumValues": [
+						"flex",
+						"inline-flex",
+						"block",
+						"inline-block",
+						"grid"
+					],
+					"value": "inline-flex"
+				},
+				{
+					"name": "--itx-badge-indicator-align-items",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "center | start | end | stretch | baseline",
+					"description": "Cross-axis placement of the contents.",
+					"element": "indicator",
+					"enumValues": [
+						"center",
+						"start",
+						"end",
+						"stretch",
+						"baseline"
+					],
+					"value": "center"
+				},
+				{
+					"name": "--itx-badge-indicator-justify-content",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "center | flex-start | flex-end | space-between",
+					"description": "Main-axis distribution of the contents.",
+					"element": "indicator",
+					"enumValues": [
+						"center",
+						"flex-start",
+						"flex-end",
+						"space-between"
+					],
+					"value": "center"
+				},
+				{
+					"name": "--itx-badge-indicator-min-inline-size",
+					"category": "layout",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Smallest width the box will take.",
+					"element": "indicator",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-badge-indicator-min-block-size",
+					"category": "layout",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Smallest height the box will take. Grows past it rather than clipping.",
+					"element": "indicator",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-badge-indicator-margin",
+					"category": "layout",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Outer space on every side. On an anchored box, the distance from the anchor.",
+					"element": "indicator",
+					"value": "0px"
+				},
+				{
+					"name": "--itx-badge-indicator-z-index",
+					"category": "layout",
+					"type": "integer-or-auto",
+					"syntax": "<integer> | auto",
+					"description": "Stacking order among positioned boxes. `auto` for none of its own.",
+					"element": "indicator",
+					"value": "1"
+				},
+				{
+					"name": "--itx-badge-indicator-border-radius",
+					"category": "shape",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Corner rounding.",
+					"element": "indicator",
+					"value": "999px"
+				},
+				{
+					"name": "--itx-badge-indicator-padding-inline",
+					"category": "shape",
+					"type": "length-pair",
+					"syntax": "<length>+",
+					"description": "Inner space to the left and right of the contents.",
+					"element": "indicator",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-badge-indicator-font-size",
+					"category": "type",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Text size.",
+					"element": "indicator",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-badge-indicator-font-weight",
+					"category": "type",
+					"type": "number",
+					"syntax": "<number>",
+					"description": "Text weight.",
+					"element": "indicator",
+					"value": "400"
+				},
+				{
+					"name": "--itx-badge-indicator-line-height",
+					"category": "type",
+					"type": "number",
+					"syntax": "<number>",
+					"description": "Leading, as a multiple of the font size.",
+					"element": "indicator",
+					"value": "1.3333"
+				},
+				{
+					"name": "--itx-badge-indicator-background-color",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Fill behind the contents.",
+					"element": "indicator",
+					"value": "var(--itx-color-value)"
+				},
+				{
+					"name": "--itx-badge-indicator-text-color",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"element": "indicator",
+					"value": "var(--itx-color-value)"
+				}
+			]
+		},
 		"button": {
 			"selector": ":where(button[interop-button])",
 			"themeable": true,

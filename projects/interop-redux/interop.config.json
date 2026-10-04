@@ -1,6 +1,34 @@
 {
 	"$comment": "Values only. Right-hand sides are generic placeholders this pass: --itx-color-value and --itx-size-value stand in for whatever upstream token ends up supplying them. No naming pattern for those aliases is being committed to here.",
 	"components": {
+		"badge": {
+			"values": {
+				"--itx-badge-indicator-display": "inline-flex",
+				"--itx-badge-indicator-align-items": "center",
+				"--itx-badge-indicator-justify-content": "center",
+				"--itx-badge-indicator-min-inline-size": "var(--itx-size-value)",
+				"--itx-badge-indicator-min-block-size": "var(--itx-size-value)",
+				"--itx-badge-indicator-margin": "0px",
+				"--itx-badge-indicator-z-index": "1",
+
+				"--itx-badge-indicator-border-radius": "999px",
+				"--itx-badge-indicator-padding-inline": "var(--itx-size-value)",
+
+				"--itx-badge-indicator-font-size": "var(--itx-size-value)",
+				"--itx-badge-indicator-font-weight": "400",
+				"--itx-badge-indicator-line-height": "1.3333",
+
+				"--itx-badge-indicator-background-color": "var(--itx-color-value)",
+				"--itx-badge-indicator-text-color": "var(--itx-color-value)"
+			},
+			"modifiers": {
+				"dot": {
+					"--itx-badge-indicator-min-inline-size": "var(--itx-size-value)",
+					"--itx-badge-indicator-min-block-size": "var(--itx-size-value)",
+					"--itx-badge-indicator-padding-inline": "0px"
+				}
+			}
+		},
 		"button": {
 			"values": {
 				"--itx-button-display": "inline-flex",
