@@ -278,6 +278,28 @@ describe('build', () => {
 		deepStrictEqual([...a.files.entries()], [...b.files.entries()]);
 	});
 
+	it('orders layers by scope, then owner', async () => {
+		const { files } = await build(await config());
+		const order = (files.get('layers.css') ?? '').match(/interop\.[a-z.]+/g);
+		deepStrictEqual(order, [
+			'interop.structure',
+			'interop.default.base',
+			'interop.default.theme',
+			'interop.variant.base',
+			'interop.variant.theme',
+			'interop.size.base',
+			'interop.size.theme',
+		]);
+	});
+
+	it('declares each scope in its own layer', async () => {
+		const { files } = await build(await config());
+		const base = files.get('button/base.css') ?? '';
+		match(base, /@layer interop\.default\.base \{\n\t\/\* base \*\//);
+		match(base, /@layer interop\.variant\.base \{\n\t\/\* variant: secondary \*\//);
+		match(base, /@layer interop\.size\.base \{\n\t\/\* size: sm \*\//);
+	});
+
 	it('never registers a state token', async () => {
 		// A registered token always has a valid value, so the fallback would never be reached.
 		const { files } = await build(await config());

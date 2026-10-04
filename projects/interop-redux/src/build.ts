@@ -10,6 +10,7 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { BLUEPRINTS } from './blueprints/index.ts';
+import { LAYERS } from './system/vocabulary.ts';
 import { lintRoundTrip, type LintIssue } from './system/lint.ts';
 import { resolve as resolveComponent, type Config } from './system/resolve.ts';
 import { emitDocs } from './system/emit/docs.ts';
@@ -28,8 +29,6 @@ export interface BuildResult {
 	readonly missing: readonly string[];
 }
 
-/** Layer order, declared once. Unlayered consumer CSS beats all three. */
-const LAYERS = `@layer interop.structure, interop.base, interop.theme;\n`;
 
 export async function build(config: Config): Promise<BuildResult> {
 	const files = new Map<string, string>();
@@ -37,7 +36,8 @@ export async function build(config: Config): Promise<BuildResult> {
 	const missing: string[] = [];
 	const manifestEntries: { blueprint: Blueprint; component: ReturnType<typeof resolveComponent> }[] = [];
 
-	files.set('layers.css', LAYERS);
+	// Layer order, declared once. See `LAYERS`.
+	files.set('layers.css', `@layer\n\t${LAYERS.join(',\n\t')};\n`);
 
 	for (const blueprint of BLUEPRINTS) {
 		const source = relative(ROOT, join(ROOT, `src/blueprints/${blueprint.name}.blueprint.ts`));

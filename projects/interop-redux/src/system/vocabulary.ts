@@ -49,6 +49,34 @@ export const AXES = [
 export type Axis = (typeof AXES)[number];
 export type AxisName = Axis['name'];
 
+/** The base scope, plus one scope per axis. */
+export type ScopeName = 'default' | AxisName;
+
+/** Who declares the tokens: the build in `base.css`, the consumer in `theme.css`. */
+export type Owner = 'base' | 'theme';
+
+/**
+ * Cascade layers, in order. A later layer wins.
+ *
+ * Scope is the outer layer and owner the inner one, so a theme's default value loses to the
+ * base's variant value:
+ *
+ *   theme variant > base variant > theme default > base default
+ *
+ * A size beats a variant where both set the same token. Unlayered consumer CSS beats every
+ * layer.
+ */
+export const LAYERS: readonly string[] = [
+	'interop.structure',
+	...(['default', ...AXES.map((axis) => axis.name)] as const).flatMap((scope) =>
+		(['base', 'theme'] as const).map((owner) => layerName(scope, owner)),
+	),
+];
+
+export function layerName(scope: ScopeName, owner: Owner): string {
+	return `interop.${scope}.${owner}`;
+}
+
 /**
  * Stateful tokens are formed by adding `-<state>` to a base token:
  *

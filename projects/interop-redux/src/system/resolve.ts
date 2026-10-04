@@ -10,6 +10,7 @@ import {
 	type Axis,
 	type AxisName,
 	type Category,
+	type ScopeName,
 	type PropertyKey,
 	type StateName,
 	type ValueType,
@@ -59,6 +60,8 @@ export interface ResolvedToken {
 
 /** A declaration site in base.css. */
 export interface ResolvedScope {
+	/** The outer cascade layer the scope declares into. */
+	readonly scope: ScopeName;
 	readonly label: string;
 	readonly selector: string;
 	readonly declarations: readonly { readonly token: string; readonly value: string }[];
@@ -214,7 +217,12 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		.filter(([token]) => declared.has(token))
 		.map(([token, value]) => ({ token, value }));
 	if (baseDeclarations.length > 0) {
-		themeScopes.push({ label: 'base', selector: blueprint.selector, declarations: baseDeclarations });
+		themeScopes.push({
+			scope: 'default',
+			label: 'base',
+			selector: blueprint.selector,
+			declarations: baseDeclarations,
+		});
 	}
 
 	const axes: ResolvedAxis[] = [];
@@ -324,6 +332,7 @@ function axisScopes(
 		.map(([value, tokens]) => ({
 			value,
 			scope: {
+				scope: axis.name,
 				label: `${axis.name}: ${value}`,
 				// Appended rather than woven in, so no selector parsing is needed. The extra
 				// specificity puts the axis scope above the base.

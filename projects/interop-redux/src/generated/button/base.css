@@ -3,7 +3,7 @@
  * Source: src/blueprints/button.blueprint.ts
  */
 
-@layer interop.base {
+@layer interop.default.base {
 	/* base */
 	:where(button[interop-button]) {
 		--itx-button-display: inline-flex;
@@ -36,7 +36,9 @@
 		--itx-button-icon-flex-shrink: 0;
 		--itx-button-icon-text-color: var(--itx-color-value);
 	}
+}
 
+@layer interop.variant.base {
 	/* variant: secondary */
 	:where(button[interop-button])[itx-variant="secondary"] {
 		--itx-button-background-color: var(--itx-color-value);
@@ -50,7 +52,9 @@
 		--itx-button-border-color: var(--itx-color-value);
 		--itx-button-text-color: var(--itx-color-value);
 	}
+}
 
+@layer interop.size.base {
 	/* size: sm */
 	:where(button[interop-button])[itx-size="sm"] {
 		--itx-button-padding-block: var(--itx-size-value);

@@ -87,6 +87,25 @@ It is unregistered, so any cursor value is accepted.
 **A stateful lever is read as `var(--x-hover, var(--x))`.** An unset state token falls through
 to the base.
 
+**Layers order scope first, owner second.** `base.css` is the build's; `theme.css` is the
+consumer's. Each scope has a layer per owner:
+
+```css
+@layer
+	interop.structure,
+	interop.default.base,
+	interop.default.theme,
+	interop.variant.base,
+	interop.variant.theme,
+	interop.size.base,
+	interop.size.theme;
+```
+
+A theme's default value loses to a base variant value, so `navy` set at the default scope
+stops at `[itx-variant="danger"]` when danger sets its own background. A theme changes a
+variant inside the variant's scope. A size beats a variant where both set the same token.
+Unlayered consumer CSS beats every layer. `LAYERS` in `vocabulary.ts` holds the order.
+
 **Category conditionals happen at build time, value conditionals in the cascade.** Disabling a
 category drops its tokens from the output. Changing a value needs no rebuild.
 
