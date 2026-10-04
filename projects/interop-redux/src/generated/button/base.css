@@ -3,7 +3,7 @@
  * Source: src/blueprints/button.blueprint.ts
  */
 
-@layer interop.theme {
+@layer interop.base {
 	/* base */
 	:where(button[interop-button]) {
 		--itx-button-display: inline-flex;

@@ -22,5 +22,5 @@ export function emitBase(component: ResolvedComponent, source: string): string |
 		].join('\n'),
 	);
 
-	return file(BANNER(source), layer('interop.theme', blocks));
+	return file(BANNER(source), layer('interop.base', blocks));
 }

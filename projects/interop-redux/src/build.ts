@@ -29,7 +29,7 @@ export interface BuildResult {
 }
 
 /** Layer order, declared once. Unlayered consumer CSS beats all three. */
-const LAYERS = `@layer interop.structure, interop.theme, interop.overrides;\n`;
+const LAYERS = `@layer interop.structure, interop.base, interop.theme;\n`;
 
 export async function build(config: Config): Promise<BuildResult> {
 	const files = new Map<string, string>();
