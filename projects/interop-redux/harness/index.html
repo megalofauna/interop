@@ -10,7 +10,10 @@
 		<link rel="stylesheet" href="../src/generated/button/properties.css" />
 		<link rel="stylesheet" href="../src/generated/button/structure.css" />
 		<link rel="stylesheet" href="../src/generated/button/base.css" />
-		<link rel="stylesheet" href="../src/generated/visually-hidden/structure.css" />
+		<link
+			rel="stylesheet"
+			href="../src/generated/visually-hidden/structure.css"
+		/>
 
 		<style>
 			/* Consumer CSS: not generated, not layered. Unlayered declarations beat every layer. */
@@ -26,13 +29,15 @@
 
 			/* Base appearance. */
 			button[interop-button] {
-				--itx-button-background-color: #16161a;
+				--itx-button-background-color: #202020;
 				--itx-button-border-color: #16161a;
 				--itx-button-text-color: #ffffff;
 				--itx-button-outline-color: #4d7cff;
+				--itx-button-border-radius: 0.375rem;
+				--itx-button-min-inline-size: 4rem;
 
 				/* States are suffixed tokens. */
-				--itx-button-background-color-hover: #35353f;
+				--itx-button-background-color-hover: #404040;
 				--itx-button-border-color-hover: #35353f;
 				--itx-button-background-color-active: #000000;
 				--itx-button-background-color-disabled: #e4e4e8;
@@ -40,14 +45,14 @@
 				--itx-button-text-color-disabled: #9a9aa4;
 			}
 
-			button[interop-button][itx-variant='secondary'] {
+			button[interop-button][itx-variant="secondary"] {
 				--itx-button-background-color: #ffffff;
 				--itx-button-border-color: #c6c6cf;
 				--itx-button-text-color: #16161a;
 				--itx-button-background-color-hover: #f2f2f5;
 			}
 
-			button[interop-button][itx-variant='danger'] {
+			button[interop-button][itx-variant="danger"] {
 				--itx-button-background-color: #b3261e;
 				--itx-button-border-color: #b3261e;
 				--itx-button-text-color: #ffffff;
@@ -56,11 +61,15 @@
 
 			/* The size axis varies one upstream placeholder. Padding, font size, radius and
 			   min height all read it. */
-			button[interop-button][itx-size='sm'] {
+			button[interop-button][itx-size="sm"] {
 				--itx-size-value: 0.5rem;
 			}
-			button[interop-button][itx-size='lg'] {
-				--itx-size-value: 1.05rem;
+			button[interop-button][itx-size="lg"] {
+				--itx-size-value: 0.925rem;
+			}
+
+			button[interop-button]:focus-visible {
+				--itx-outline-width: 53px;
 			}
 
 			/* Harness chrome. */
@@ -111,8 +120,9 @@
 	<body>
 		<h1>Button harness</h1>
 		<p class="note">
-			Every cell is the same generated CSS. Hover, tab through, and hold a button down. A
-			state token that was never given a value falls through to the base.
+			Every cell is the same generated CSS. Hover, tab through, and hold a
+			button down. A state token that was never given a value falls through to
+			the base.
 		</p>
 
 		<section>
@@ -126,9 +136,13 @@
 			</div>
 			<div class="row">
 				<span class="label">secondary</span>
-				<button interop-button itx-variant="secondary" itx-size="sm">Small</button>
+				<button interop-button itx-variant="secondary" itx-size="sm">
+					Small
+				</button>
 				<button interop-button itx-variant="secondary">Medium</button>
-				<button interop-button itx-variant="secondary" itx-size="lg">Large</button>
+				<button interop-button itx-variant="secondary" itx-size="lg">
+					Large
+				</button>
 			</div>
 			<div class="row">
 				<span class="label">danger</span>
@@ -143,7 +157,9 @@
 			<div class="row">
 				<span class="label">disabled</span>
 				<button interop-button disabled>Primary</button>
-				<button interop-button itx-variant="secondary" disabled>Secondary</button>
+				<button interop-button itx-variant="secondary" disabled>
+					Secondary
+				</button>
 				<button interop-button itx-variant="danger" disabled>Danger</button>
 			</div>
 			<div class="row">
@@ -160,14 +176,40 @@
 			<div class="row">
 				<span class="label">with icon</span>
 				<button interop-button>
-					<svg interop-icon width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-						<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					<svg
+						interop-icon
+						width="16"
+						height="16"
+						viewBox="0 0 16 16"
+						fill="none"
+						aria-hidden="true"
+					>
+						<path
+							d="M3 8h10M9 4l4 4-4 4"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
 					</svg>
 					Continue
 				</button>
 				<button interop-button itx-variant="secondary">
-					<svg interop-icon width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-						<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+					<svg
+						interop-icon
+						width="16"
+						height="16"
+						viewBox="0 0 16 16"
+						fill="none"
+						aria-hidden="true"
+					>
+						<path
+							d="M3 8h10M9 4l4 4-4 4"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
 					</svg>
 					Continue
 				</button>
