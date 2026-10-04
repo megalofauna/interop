@@ -1,8 +1,8 @@
 /**
  * Checks run against the emitted CSS text, not the model that produced it:
  *
- * - every token theme.css declares is read by structure.css
- * - every base token structure.css reads is declared by theme.css
+ * - every token base.css declares is read by structure.css
+ * - every base token structure.css reads is declared by base.css
  * - no declared value is a CSS-wide keyword
  */
 
@@ -25,10 +25,10 @@ export interface LintIssue {
 export function lintRoundTrip(
 	component: string,
 	structureCss: string,
-	themeCss: string | null,
+	baseCss: string | null,
 	stateTokens: ReadonlySet<string>,
 ): LintIssue[] {
-	const declared = new Set(matches(themeCss ?? '', DECLARED));
+	const declared = new Set(matches(baseCss ?? '', DECLARED));
 	const consumed = new Set(matches(structureCss, CONSUMED));
 	const issues: LintIssue[] = [];
 
@@ -37,13 +37,13 @@ export function lintRoundTrip(
 			issues.push({
 				kind: 'orphan-declaration',
 				token,
-				detail: `${component}: theme.css declares ${token}, but structure.css never reads it`,
+				detail: `${component}: base.css declares ${token}, but structure.css never reads it`,
 			});
 		}
 	}
 
 	for (const token of consumed) {
-		// Upstream aliases appear inside theme.css values; this component does not declare them.
+		// Upstream aliases appear inside base.css values; this component does not declare them.
 		if (!token.startsWith(`--itx-${component}-`)) continue;
 		// An undeclared state token falls through to the base.
 		if (stateTokens.has(token)) continue;
@@ -56,7 +56,7 @@ export function lintRoundTrip(
 		}
 	}
 
-	for (const [, token, raw] of (themeCss ?? '').matchAll(DECLARATION)) {
+	for (const [, token, raw] of (baseCss ?? '').matchAll(DECLARATION)) {
 		const value = raw!.trim();
 		if (!TRAP_KEYWORDS.has(value)) continue;
 		issues.push({

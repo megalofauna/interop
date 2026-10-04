@@ -57,7 +57,7 @@ export interface ResolvedToken {
 	readonly value?: string;
 }
 
-/** A declaration site in theme.css. */
+/** A declaration site in base.css. */
 export interface ResolvedScope {
 	readonly label: string;
 	readonly selector: string;

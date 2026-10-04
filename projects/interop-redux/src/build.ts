@@ -16,7 +16,7 @@ import { emitDocs } from './system/emit/docs.ts';
 import { emitManifest } from './system/emit/manifest.ts';
 import { emitProperties } from './system/emit/properties.ts';
 import { emitStructure } from './system/emit/structure.ts';
-import { emitTheme } from './system/emit/theme.ts';
+import { emitBase } from './system/emit/base.ts';
 import type { Blueprint } from './system/blueprint.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -45,16 +45,16 @@ export async function build(config: Config): Promise<BuildResult> {
 		missing.push(...component.missing);
 
 		const structure = emitStructure(component, source);
-		const theme = emitTheme(component, source);
+		const base = emitBase(component, source);
 		const properties = emitProperties(component, source);
 
 		files.set(`${blueprint.name}/structure.css`, structure);
-		if (theme) files.set(`${blueprint.name}/theme.css`, theme);
+		if (base) files.set(`${blueprint.name}/base.css`, base);
 		if (properties) files.set(`${blueprint.name}/properties.css`, properties);
 		files.set(`${blueprint.name}/docs.md`, emitDocs(component));
 
 		const stateTokens = new Set(component.tokens.filter((t) => t.state).map((t) => t.name));
-		issues.push(...lintRoundTrip(blueprint.name, structure, theme, stateTokens));
+		issues.push(...lintRoundTrip(blueprint.name, structure, base, stateTokens));
 
 		manifestEntries.push({ blueprint, component });
 	}

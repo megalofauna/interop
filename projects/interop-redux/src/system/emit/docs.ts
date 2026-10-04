@@ -7,7 +7,7 @@ export function emitDocs(component: ResolvedComponent): string {
 	const lines: string[] = [`# ${component.name}`, ''];
 
 	lines.push(
-		`Selector \`${component.selector}\`. ${component.themeable ? 'Themeable.' : 'Not themeable — structure only, no theme file.'}`,
+		`Selector \`${component.selector}\`. ${component.themeable ? 'Themeable.' : 'Not themeable — structure only, no base file.'}`,
 		'',
 	);
 

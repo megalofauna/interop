@@ -32,7 +32,7 @@ export interface Blueprint {
 	readonly name: string;
 	/** The base selector. `:where()` by convention, for zero specificity. */
 	readonly selector: string;
-	/** False: structure file only, no theme file. `properties` must be empty. */
+	/** False: structure file only, no base file. `properties` must be empty. */
 	readonly themeable: boolean;
 	/** Declarations this component needs that config cannot reach. They lead the base rule. */
 	readonly prerequisites?: readonly string[];

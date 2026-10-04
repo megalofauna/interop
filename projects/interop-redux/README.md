@@ -37,7 +37,7 @@ export const button: Blueprint = {
 ```
 vocabulary  ──┐
               ├── resolve ──┬── structure.css    rules that read tokens
-blueprint   ──┤             ├── theme.css        token declarations
+blueprint   ──┤             ├── base.css         token declarations
               │             ├── properties.css   @property registrations
 config      ──┘             ├── manifest.json    every token, for tooling
                             └── docs.md          the lever tables
@@ -58,7 +58,7 @@ No dependencies and no build step. Node runs the TypeScript directly.
 ## Rules
 
 **Structure is what config cannot change; theme is what it can.** A component with no levers
-gets a structure file and no theme file.
+gets a structure file and no base file.
 
 **Variants and sizes are declaration scopes.** There is one `--itx-button-background-color`,
 redeclared under `[itx-variant="danger"]`. Axis values do not appear in token names.

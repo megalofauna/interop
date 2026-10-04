@@ -1,7 +1,7 @@
 /**
  * Visually hidden.
  *
- * No levers, so no theme file and no `@property` block.
+ * No levers, so no base file and no `@property` block.
  */
 
 import type { Blueprint } from '../system/blueprint.ts';
