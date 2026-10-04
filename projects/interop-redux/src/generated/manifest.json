@@ -1,0 +1,555 @@
+{
+	"schema": 1,
+	"components": {
+		"button": {
+			"selector": ":where(button[interop-button])",
+			"themeable": true,
+			"states": [
+				"hover",
+				"focus-visible",
+				"active",
+				"disabled"
+			],
+			"axes": {
+				"variant": {
+					"attribute": "itx-variant",
+					"values": [
+						"secondary",
+						"danger"
+					]
+				},
+				"size": {
+					"attribute": "itx-size",
+					"values": [
+						"sm",
+						"base",
+						"lg"
+					],
+					"default": "base"
+				}
+			},
+			"tokens": [
+				{
+					"name": "--itx-button-border-color",
+					"category": "border",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the border drawn at the border width.",
+					"value": "var(--itx-color-value)"
+				},
+				{
+					"name": "--itx-button-border-style",
+					"category": "border",
+					"type": "enum",
+					"syntax": "solid | dashed | dotted | double | none",
+					"description": "How the border line is drawn.",
+					"enumValues": [
+						"solid",
+						"dashed",
+						"dotted",
+						"double",
+						"none"
+					],
+					"value": "solid"
+				},
+				{
+					"name": "--itx-button-border-width",
+					"category": "border",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Thickness of the border.",
+					"value": "1px"
+				},
+				{
+					"name": "--itx-button-align-items",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "center | start | end | stretch | baseline",
+					"description": "Cross-axis placement of the contents.",
+					"enumValues": [
+						"center",
+						"start",
+						"end",
+						"stretch",
+						"baseline"
+					],
+					"value": "center"
+				},
+				{
+					"name": "--itx-button-display",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "flex | inline-flex | block | inline-block | grid",
+					"description": "How the box participates in the surrounding flow.",
+					"enumValues": [
+						"flex",
+						"inline-flex",
+						"block",
+						"inline-block",
+						"grid"
+					],
+					"value": "inline-flex"
+				},
+				{
+					"name": "--itx-button-gap",
+					"category": "layout",
+					"type": "length-pair",
+					"syntax": "<length>+",
+					"description": "Space held between the contents.",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-button-justify-content",
+					"category": "layout",
+					"type": "enum",
+					"syntax": "center | flex-start | flex-end | space-between",
+					"description": "Main-axis distribution of the contents.",
+					"enumValues": [
+						"center",
+						"flex-start",
+						"flex-end",
+						"space-between"
+					],
+					"value": "center"
+				},
+				{
+					"name": "--itx-button-max-block-size",
+					"category": "layout",
+					"type": "length-or-none",
+					"syntax": "<length> | none",
+					"description": "Largest height the box will take. `none` for no limit.",
+					"value": "none"
+				},
+				{
+					"name": "--itx-button-max-inline-size",
+					"category": "layout",
+					"type": "length-or-none",
+					"syntax": "<length> | none",
+					"description": "Largest width the box will take. `none` for no limit.",
+					"value": "none"
+				},
+				{
+					"name": "--itx-button-min-block-size",
+					"category": "layout",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Smallest height the box will take. Grows past it rather than clipping.",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-button-min-inline-size",
+					"category": "layout",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Smallest width the box will take.",
+					"value": "0"
+				},
+				{
+					"name": "--itx-button-background-color",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Fill behind the contents.",
+					"value": "var(--itx-color-value)"
+				},
+				{
+					"name": "--itx-button-text-color",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"value": "var(--itx-color-value)"
+				},
+				{
+					"name": "--itx-button-border-radius",
+					"category": "shape",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Corner rounding.",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-button-padding-block",
+					"category": "shape",
+					"type": "length-pair",
+					"syntax": "<length>+",
+					"description": "Inner space above and below the contents.",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-button-padding-inline",
+					"category": "shape",
+					"type": "length-pair",
+					"syntax": "<length>+",
+					"description": "Inner space to the left and right of the contents.",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-button-outline-color",
+					"category": "outline",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the outline, normally the focus ring.",
+					"value": "var(--itx-color-value)"
+				},
+				{
+					"name": "--itx-button-outline-offset",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Gap between the border edge and the outline.",
+					"value": "2px"
+				},
+				{
+					"name": "--itx-button-outline-width",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Thickness of the outline. Zero hides it without switching anything off.",
+					"value": "0"
+				},
+				{
+					"name": "--itx-button-font-family",
+					"category": "type",
+					"type": "string",
+					"syntax": "*",
+					"description": "Typeface. Inherits from the page unless set.",
+					"value": "system-ui, sans-serif"
+				},
+				{
+					"name": "--itx-button-font-size",
+					"category": "type",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Text size.",
+					"value": "var(--itx-size-value)"
+				},
+				{
+					"name": "--itx-button-font-weight",
+					"category": "type",
+					"type": "number",
+					"syntax": "<number>",
+					"description": "Text weight.",
+					"value": "400"
+				},
+				{
+					"name": "--itx-button-line-height",
+					"category": "type",
+					"type": "number",
+					"syntax": "<number>",
+					"description": "Leading, as a multiple of the font size.",
+					"value": "1.2"
+				},
+				{
+					"name": "--itx-button-text-align",
+					"category": "type",
+					"type": "enum",
+					"syntax": "start | end | center | justify",
+					"description": "Alignment of the text within the box.",
+					"enumValues": [
+						"start",
+						"end",
+						"center",
+						"justify"
+					],
+					"value": "center"
+				},
+				{
+					"name": "--itx-button-cursor",
+					"category": "cursor",
+					"type": "string",
+					"syntax": "*",
+					"description": "Pointer shown over the box.",
+					"value": "pointer"
+				},
+				{
+					"name": "--itx-button-border-color-hover",
+					"category": "border",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the border drawn at the border width.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-background-color-hover",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Fill behind the contents.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-text-color-hover",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-outline-color-hover",
+					"category": "outline",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the outline, normally the focus ring.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-outline-offset-hover",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Gap between the border edge and the outline.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-outline-width-hover",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Thickness of the outline. Zero hides it without switching anything off.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-cursor-hover",
+					"category": "cursor",
+					"type": "string",
+					"syntax": "*",
+					"description": "Pointer shown over the box.",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-border-color-focus-visible",
+					"category": "border",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the border drawn at the border width.",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-background-color-focus-visible",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Fill behind the contents.",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-text-color-focus-visible",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-outline-color-focus-visible",
+					"category": "outline",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the outline, normally the focus ring.",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-outline-offset-focus-visible",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Gap between the border edge and the outline.",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-outline-width-focus-visible",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Thickness of the outline. Zero hides it without switching anything off.",
+					"state": "focus-visible",
+					"value": "2px"
+				},
+				{
+					"name": "--itx-button-cursor-focus-visible",
+					"category": "cursor",
+					"type": "string",
+					"syntax": "*",
+					"description": "Pointer shown over the box.",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-border-color-active",
+					"category": "border",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the border drawn at the border width.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-background-color-active",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Fill behind the contents.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-text-color-active",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-outline-color-active",
+					"category": "outline",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the outline, normally the focus ring.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-outline-offset-active",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Gap between the border edge and the outline.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-outline-width-active",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Thickness of the outline. Zero hides it without switching anything off.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-cursor-active",
+					"category": "cursor",
+					"type": "string",
+					"syntax": "*",
+					"description": "Pointer shown over the box.",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-border-color-disabled",
+					"category": "border",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the border drawn at the border width.",
+					"state": "disabled"
+				},
+				{
+					"name": "--itx-button-background-color-disabled",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Fill behind the contents.",
+					"state": "disabled"
+				},
+				{
+					"name": "--itx-button-text-color-disabled",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"state": "disabled"
+				},
+				{
+					"name": "--itx-button-outline-color-disabled",
+					"category": "outline",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the outline, normally the focus ring.",
+					"state": "disabled"
+				},
+				{
+					"name": "--itx-button-outline-offset-disabled",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Gap between the border edge and the outline.",
+					"state": "disabled"
+				},
+				{
+					"name": "--itx-button-outline-width-disabled",
+					"category": "outline",
+					"type": "length",
+					"syntax": "<length>",
+					"description": "Thickness of the outline. Zero hides it without switching anything off.",
+					"state": "disabled"
+				},
+				{
+					"name": "--itx-button-cursor-disabled",
+					"category": "cursor",
+					"type": "string",
+					"syntax": "*",
+					"description": "Pointer shown over the box.",
+					"state": "disabled",
+					"value": "not-allowed"
+				},
+				{
+					"name": "--itx-button-icon-flex-shrink",
+					"category": "layout",
+					"type": "number",
+					"syntax": "<number>",
+					"description": "How readily the box gives up space when crowded.",
+					"element": "icon",
+					"value": "0"
+				},
+				{
+					"name": "--itx-button-icon-text-color",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"element": "icon",
+					"value": "var(--itx-color-value)"
+				},
+				{
+					"name": "--itx-button-icon-text-color-hover",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"element": "icon",
+					"state": "hover"
+				},
+				{
+					"name": "--itx-button-icon-text-color-focus-visible",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"element": "icon",
+					"state": "focus-visible"
+				},
+				{
+					"name": "--itx-button-icon-text-color-active",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"element": "icon",
+					"state": "active"
+				},
+				{
+					"name": "--itx-button-icon-text-color-disabled",
+					"category": "paint",
+					"type": "color",
+					"syntax": "<color>",
+					"description": "Color of the text, and of anything following currentColor.",
+					"element": "icon",
+					"state": "disabled"
+				}
+			]
+		},
+		"visually-hidden": {
+			"selector": ":where([itx-visually-hidden])",
+			"themeable": false,
+			"states": [],
+			"axes": {},
+			"tokens": []
+		}
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"name": "interop-redux",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Blueprint-driven component style generator",
+	"scripts": {
+		"build": "node src/build.ts",
+		"check": "node src/build.ts --check",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"test": "node --test src/system/*.test.ts"
+	}
+}

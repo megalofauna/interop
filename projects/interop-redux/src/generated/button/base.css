@@ -1,0 +1,73 @@
+/*
+ * Generated file. Do not edit by hand.
+ * Source: src/blueprints/button.blueprint.ts
+ */
+
+@layer interop.default.base {
+	/* base */
+	:where(button[interop-button]) {
+		--itx-button-display: inline-flex;
+		--itx-button-align-items: center;
+		--itx-button-justify-content: center;
+		--itx-button-gap: var(--itx-size-value);
+		--itx-button-min-inline-size: 0;
+		--itx-button-max-inline-size: none;
+		--itx-button-min-block-size: var(--itx-size-value);
+		--itx-button-max-block-size: none;
+		--itx-button-border-radius: var(--itx-size-value);
+		--itx-button-padding-block: var(--itx-size-value);
+		--itx-button-padding-inline: var(--itx-size-value);
+		--itx-button-border-width: 1px;
+		--itx-button-border-style: solid;
+		--itx-button-border-color: var(--itx-color-value);
+		--itx-button-outline-width: 0;
+		--itx-button-outline-offset: 2px;
+		--itx-button-outline-color: var(--itx-color-value);
+		--itx-button-font-family: system-ui, sans-serif;
+		--itx-button-font-size: var(--itx-size-value);
+		--itx-button-font-weight: 400;
+		--itx-button-line-height: 1.2;
+		--itx-button-text-align: center;
+		--itx-button-background-color: var(--itx-color-value);
+		--itx-button-text-color: var(--itx-color-value);
+		--itx-button-cursor: pointer;
+		--itx-button-outline-width-focus-visible: 2px;
+		--itx-button-cursor-disabled: not-allowed;
+		--itx-button-icon-flex-shrink: 0;
+		--itx-button-icon-text-color: var(--itx-color-value);
+	}
+}
+
+@layer interop.variant.base {
+	/* variant: secondary */
+	:where(button[interop-button])[itx-variant="secondary"] {
+		--itx-button-background-color: var(--itx-color-value);
+		--itx-button-border-color: var(--itx-color-value);
+		--itx-button-text-color: var(--itx-color-value);
+	}
+
+	/* variant: danger */
+	:where(button[interop-button])[itx-variant="danger"] {
+		--itx-button-background-color: var(--itx-color-value);
+		--itx-button-border-color: var(--itx-color-value);
+		--itx-button-text-color: var(--itx-color-value);
+	}
+}
+
+@layer interop.size.base {
+	/* size: sm */
+	:where(button[interop-button])[itx-size="sm"] {
+		--itx-button-padding-block: var(--itx-size-value);
+		--itx-button-padding-inline: var(--itx-size-value);
+		--itx-button-font-size: var(--itx-size-value);
+		--itx-button-min-block-size: var(--itx-size-value);
+	}
+
+	/* size: lg */
+	:where(button[interop-button])[itx-size="lg"] {
+		--itx-button-padding-block: var(--itx-size-value);
+		--itx-button-padding-inline: var(--itx-size-value);
+		--itx-button-font-size: var(--itx-size-value);
+		--itx-button-min-block-size: var(--itx-size-value);
+	}
+}
