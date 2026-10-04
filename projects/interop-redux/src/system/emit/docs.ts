@@ -15,14 +15,14 @@ export function emitDocs(component: ResolvedComponent): string {
 		lines.push(
 			'## Axes',
 			'',
-			'Each value is an exception. An element carrying none of these attributes takes the base values.',
+			'An element carrying none of these attributes takes the base values. So does one carrying a value marked default. Every other value is an exception.',
 			'',
 			'| Axis | Attribute | Values |',
 			'| --- | --- | --- |',
 		);
 		for (const axis of component.axes) {
 			lines.push(
-				`| ${axis.name} | \`${axis.attribute}\` | ${axis.values.map((v) => `\`${v}\``).join(', ')} |`,
+				`| ${axis.name} | \`${axis.attribute}\` | ${axis.values.map((v) => (v === axis.default ? `\`${v}\` (default)` : `\`${v}\``)).join(', ')} |`,
 			);
 		}
 		lines.push('');
@@ -37,17 +37,17 @@ export function emitDocs(component: ResolvedComponent): string {
 			const rows = base.filter((t) => t.category === category);
 			if (rows.length === 0) continue;
 			// The column separates `--itx-button-text-color` from `--itx-button-icon-text-color`.
-			const hasParts = rows.some((t) => t.part);
+			const hasElements = rows.some((t) => t.element);
 			lines.push(
 				`### ${category}`,
 				'',
-				`| Token |${hasParts ? ' Part |' : ''} Type | Value | States | Description |`,
-				`| --- |${hasParts ? ' --- |' : ''} --- | --- | --- | --- |`,
+				`| Token |${hasElements ? ' Element |' : ''} Type | Value | States | Description |`,
+				`| --- |${hasElements ? ' --- |' : ''} --- | --- | --- | --- |`,
 			);
 			for (const token of rows) {
 				const type = token.enumValues ? token.enumValues.map((v) => `\`${v}\``).join(' \\| ') : token.type;
 				lines.push(
-					`| \`${token.name}\` |${hasParts ? ` ${token.part ?? '—'} |` : ''} ${type} | \`${token.value ?? '—'}\` | ${stateful.has(token.name) ? 'yes' : '—'} | ${describe(token.property)} |`,
+					`| \`${token.name}\` |${hasElements ? ` ${token.element ?? '—'} |` : ''} ${type} | \`${token.value ?? '—'}\` | ${stateful.has(token.name) ? 'yes' : '—'} | ${describe(token.property)} |`,
 				);
 			}
 			lines.push('');

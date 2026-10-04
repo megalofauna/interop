@@ -10,9 +10,9 @@ export const visuallyHidden: Blueprint = {
 	name: 'visually-hidden',
 	selector: ':where([itx-visually-hidden])',
 	themeable: false,
-	levers: {},
+	properties: {},
 
-	mechanics: [
+	prerequisites: [
 		'position: absolute',
 		'inline-size: 1px',
 		'block-size: 1px',

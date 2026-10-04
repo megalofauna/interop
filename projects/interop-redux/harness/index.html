@@ -25,7 +25,7 @@
 			}
 
 			/* Base appearance. */
-			button {
+			button[interop-button] {
 				--itx-button-background-color: #16161a;
 				--itx-button-border-color: #16161a;
 				--itx-button-text-color: #ffffff;
@@ -40,14 +40,14 @@
 				--itx-button-text-color-disabled: #9a9aa4;
 			}
 
-			button[itx-variant='secondary'] {
+			button[interop-button][itx-variant='secondary'] {
 				--itx-button-background-color: #ffffff;
 				--itx-button-border-color: #c6c6cf;
 				--itx-button-text-color: #16161a;
 				--itx-button-background-color-hover: #f2f2f5;
 			}
 
-			button[itx-variant='danger'] {
+			button[interop-button][itx-variant='danger'] {
 				--itx-button-background-color: #b3261e;
 				--itx-button-border-color: #b3261e;
 				--itx-button-text-color: #ffffff;
@@ -56,10 +56,10 @@
 
 			/* The size axis varies one upstream placeholder. Padding, font size, radius and
 			   min height all read it. */
-			button[itx-size='sm'] {
+			button[interop-button][itx-size='sm'] {
 				--itx-size-value: 0.5rem;
 			}
-			button[itx-size='lg'] {
+			button[interop-button][itx-size='lg'] {
 				--itx-size-value: 1.05rem;
 			}
 
@@ -119,21 +119,22 @@
 			<h2>Variant &times; size</h2>
 			<div class="row">
 				<span class="label">primary</span>
-				<button itx-size="sm">Small</button>
-				<button>Medium</button>
-				<button itx-size="lg">Large</button>
+				<button interop-button itx-size="sm">Small</button>
+				<button interop-button>Medium</button>
+				<button interop-button itx-size="base">Base</button>
+				<button interop-button itx-size="lg">Large</button>
 			</div>
 			<div class="row">
 				<span class="label">secondary</span>
-				<button itx-variant="secondary" itx-size="sm">Small</button>
-				<button itx-variant="secondary">Medium</button>
-				<button itx-variant="secondary" itx-size="lg">Large</button>
+				<button interop-button itx-variant="secondary" itx-size="sm">Small</button>
+				<button interop-button itx-variant="secondary">Medium</button>
+				<button interop-button itx-variant="secondary" itx-size="lg">Large</button>
 			</div>
 			<div class="row">
 				<span class="label">danger</span>
-				<button itx-variant="danger" itx-size="sm">Small</button>
-				<button itx-variant="danger">Medium</button>
-				<button itx-variant="danger" itx-size="lg">Large</button>
+				<button interop-button itx-variant="danger" itx-size="sm">Small</button>
+				<button interop-button itx-variant="danger">Medium</button>
+				<button interop-button itx-variant="danger" itx-size="lg">Large</button>
 			</div>
 		</section>
 
@@ -141,13 +142,13 @@
 			<h2>States</h2>
 			<div class="row">
 				<span class="label">disabled</span>
-				<button disabled>Primary</button>
-				<button itx-variant="secondary" disabled>Secondary</button>
-				<button itx-variant="danger" disabled>Danger</button>
+				<button interop-button disabled>Primary</button>
+				<button interop-button itx-variant="secondary" disabled>Secondary</button>
+				<button interop-button itx-variant="danger" disabled>Danger</button>
 			</div>
 			<div class="row">
 				<span class="label">focus ring</span>
-				<button autofocus>Tab to me</button>
+				<button interop-button autofocus>Tab to me</button>
 				<span class="note" style="margin: 0">
 					The ring is one state token over a base outline width of zero.
 				</span>
@@ -155,17 +156,17 @@
 		</section>
 
 		<section>
-			<h2>Icon part</h2>
+			<h2>Icon element</h2>
 			<div class="row">
 				<span class="label">with icon</span>
-				<button>
-					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+				<button interop-button>
+					<svg interop-icon width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 						<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
 					</svg>
 					Continue
 				</button>
-				<button itx-variant="secondary">
-					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+				<button interop-button itx-variant="secondary">
+					<svg interop-icon width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 						<path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
 					</svg>
 					Continue
@@ -177,7 +178,7 @@
 			<h2>Unthemeable component</h2>
 			<div class="row">
 				<span class="label">visually-hidden</span>
-				<button>
+				<button interop-button>
 					Save
 					<span itx-visually-hidden>changes to your profile</span>
 				</button>

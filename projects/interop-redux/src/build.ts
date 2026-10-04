@@ -72,8 +72,8 @@ async function main(): Promise<void> {
 	const { files, issues, missing } = await build(await loadConfig());
 	const problems: string[] = [];
 
-	for (const token of missing) {
-		problems.push(`missing value: ${token} is consumed but the config gives it none`);
+	for (const entry of missing) {
+		problems.push(`missing value: ${entry} has no entry in the config`);
 	}
 	for (const issue of issues) {
 		problems.push(`${issue.kind}: ${issue.detail}`);

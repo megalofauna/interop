@@ -3,10 +3,22 @@
  * Source: src/blueprints/button.blueprint.ts
  */
 
-@property --itx-button-display {
-	syntax: "flex | inline-flex | block | inline-block | grid";
+@property --itx-button-border-color {
+	syntax: "<color>";
 	inherits: true;
-	initial-value: flex;
+	initial-value: transparent;
+}
+
+@property --itx-button-border-style {
+	syntax: "solid | dashed | dotted | double | none";
+	inherits: true;
+	initial-value: solid;
+}
+
+@property --itx-button-border-width {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
 }
 
 @property --itx-button-align-items {
@@ -15,10 +27,10 @@
 	initial-value: center;
 }
 
-@property --itx-button-justify-content {
-	syntax: "center | flex-start | flex-end | space-between";
+@property --itx-button-display {
+	syntax: "flex | inline-flex | block | inline-block | grid";
 	inherits: true;
-	initial-value: center;
+	initial-value: flex;
 }
 
 @property --itx-button-gap {
@@ -27,19 +39,49 @@
 	initial-value: 0px;
 }
 
-@property --itx-button-text-align {
-	syntax: "start | end | center | justify";
+@property --itx-button-justify-content {
+	syntax: "center | flex-start | flex-end | space-between";
 	inherits: true;
-	initial-value: start;
+	initial-value: center;
 }
 
-@property --itx-button-border-radius {
+@property --itx-button-max-block-size {
+	syntax: "<length> | none";
+	inherits: true;
+	initial-value: none;
+}
+
+@property --itx-button-max-inline-size {
+	syntax: "<length> | none";
+	inherits: true;
+	initial-value: none;
+}
+
+@property --itx-button-min-block-size {
 	syntax: "<length>";
 	inherits: true;
 	initial-value: 0px;
 }
 
-@property --itx-button-border-width {
+@property --itx-button-min-inline-size {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-background-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-text-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-border-radius {
 	syntax: "<length>";
 	inherits: true;
 	initial-value: 0px;
@@ -57,7 +99,19 @@
 	initial-value: 0px;
 }
 
-@property --itx-button-min-block-size {
+@property --itx-button-outline-color {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+@property --itx-button-outline-offset {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+@property --itx-button-outline-width {
 	syntax: "<length>";
 	inherits: true;
 	initial-value: 0px;
@@ -81,40 +135,10 @@
 	initial-value: 0;
 }
 
-@property --itx-button-background-color {
-	syntax: "<color>";
+@property --itx-button-text-align {
+	syntax: "start | end | center | justify";
 	inherits: true;
-	initial-value: transparent;
-}
-
-@property --itx-button-border-color {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: transparent;
-}
-
-@property --itx-button-text-color {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: transparent;
-}
-
-@property --itx-button-outline-color {
-	syntax: "<color>";
-	inherits: true;
-	initial-value: transparent;
-}
-
-@property --itx-button-outline-width {
-	syntax: "<length>";
-	inherits: true;
-	initial-value: 0px;
-}
-
-@property --itx-button-outline-offset {
-	syntax: "<length>";
-	inherits: true;
-	initial-value: 0px;
+	initial-value: start;
 }
 
 @property --itx-button-icon-flex-shrink {

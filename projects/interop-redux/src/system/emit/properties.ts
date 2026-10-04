@@ -18,7 +18,7 @@ export function emitProperties(component: ResolvedComponent, source: string): st
 
 	const blocks = registrable.map((token) => {
 		const initial = vocabulary.initialValueFor(vocabulary.PROPERTIES[token.property]);
-		// inherits: true — part tokens are declared on the component and read on the part.
+		// inherits: true — element tokens are declared on the component and read on the element.
 		const lines = [`@property ${token.name} {`, `\tsyntax: "${token.syntax}";`, '\tinherits: true;'];
 		if (initial !== undefined) lines.push(`\tinitial-value: ${initial};`);
 		lines.push('}');

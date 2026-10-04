@@ -5,96 +5,103 @@
 
 @layer interop.structure {
 	/* base */
-	:where(button) {
-		border-style: solid;
+	:where(button[interop-button]) {
+		box-sizing: border-box;
 		outline-style: solid;
-		display: var(--itx-button-display);
-		align-items: var(--itx-button-align-items);
-		justify-content: var(--itx-button-justify-content);
-		gap: var(--itx-button-gap);
-		text-align: var(--itx-button-text-align);
-		border-radius: var(--itx-button-border-radius);
+		border-color: var(--itx-button-border-color);
+		border-style: var(--itx-button-border-style);
 		border-width: var(--itx-button-border-width);
+		align-items: var(--itx-button-align-items);
+		display: var(--itx-button-display);
+		gap: var(--itx-button-gap);
+		justify-content: var(--itx-button-justify-content);
+		max-block-size: var(--itx-button-max-block-size);
+		max-inline-size: var(--itx-button-max-inline-size);
+		min-block-size: var(--itx-button-min-block-size);
+		min-inline-size: var(--itx-button-min-inline-size);
+		background-color: var(--itx-button-background-color);
+		color: var(--itx-button-text-color);
+		border-radius: var(--itx-button-border-radius);
 		padding-block: var(--itx-button-padding-block);
 		padding-inline: var(--itx-button-padding-inline);
-		min-block-size: var(--itx-button-min-block-size);
+		outline-color: var(--itx-button-outline-color);
+		outline-offset: var(--itx-button-outline-offset);
+		outline-width: var(--itx-button-outline-width);
 		font-family: var(--itx-button-font-family);
 		font-size: var(--itx-button-font-size);
 		font-weight: var(--itx-button-font-weight);
 		line-height: var(--itx-button-line-height);
-		background-color: var(--itx-button-background-color);
-		border-color: var(--itx-button-border-color);
-		color: var(--itx-button-text-color);
-		outline-color: var(--itx-button-outline-color);
-		outline-width: var(--itx-button-outline-width);
-		outline-offset: var(--itx-button-outline-offset);
-		box-sizing: border-box;
-		cursor: pointer;
+		text-align: var(--itx-button-text-align);
+		cursor: var(--itx-button-cursor);
 	}
 
 	/* hover */
-	:where(button):hover {
-		background-color: var(--itx-button-background-color-hover, var(--itx-button-background-color));
+	:where(button[interop-button]):hover {
 		border-color: var(--itx-button-border-color-hover, var(--itx-button-border-color));
+		background-color: var(--itx-button-background-color-hover, var(--itx-button-background-color));
 		color: var(--itx-button-text-color-hover, var(--itx-button-text-color));
 		outline-color: var(--itx-button-outline-color-hover, var(--itx-button-outline-color));
-		outline-width: var(--itx-button-outline-width-hover, var(--itx-button-outline-width));
 		outline-offset: var(--itx-button-outline-offset-hover, var(--itx-button-outline-offset));
+		outline-width: var(--itx-button-outline-width-hover, var(--itx-button-outline-width));
+		cursor: var(--itx-button-cursor-hover, var(--itx-button-cursor));
 	}
 
 	/* focus-visible */
-	:where(button):focus-visible {
-		background-color: var(--itx-button-background-color-focus-visible, var(--itx-button-background-color));
+	:where(button[interop-button]):focus-visible {
 		border-color: var(--itx-button-border-color-focus-visible, var(--itx-button-border-color));
+		background-color: var(--itx-button-background-color-focus-visible, var(--itx-button-background-color));
 		color: var(--itx-button-text-color-focus-visible, var(--itx-button-text-color));
 		outline-color: var(--itx-button-outline-color-focus-visible, var(--itx-button-outline-color));
-		outline-width: var(--itx-button-outline-width-focus-visible, var(--itx-button-outline-width));
 		outline-offset: var(--itx-button-outline-offset-focus-visible, var(--itx-button-outline-offset));
+		outline-width: var(--itx-button-outline-width-focus-visible, var(--itx-button-outline-width));
+		cursor: var(--itx-button-cursor-focus-visible, var(--itx-button-cursor));
 	}
 
 	/* active */
-	:where(button):active {
-		background-color: var(--itx-button-background-color-active, var(--itx-button-background-color));
+	:where(button[interop-button]):active {
 		border-color: var(--itx-button-border-color-active, var(--itx-button-border-color));
+		background-color: var(--itx-button-background-color-active, var(--itx-button-background-color));
 		color: var(--itx-button-text-color-active, var(--itx-button-text-color));
 		outline-color: var(--itx-button-outline-color-active, var(--itx-button-outline-color));
-		outline-width: var(--itx-button-outline-width-active, var(--itx-button-outline-width));
 		outline-offset: var(--itx-button-outline-offset-active, var(--itx-button-outline-offset));
+		outline-width: var(--itx-button-outline-width-active, var(--itx-button-outline-width));
+		cursor: var(--itx-button-cursor-active, var(--itx-button-cursor));
 	}
 
 	/* disabled */
-	:where(button):disabled {
-		background-color: var(--itx-button-background-color-disabled, var(--itx-button-background-color));
+	:where(button[interop-button]):disabled {
 		border-color: var(--itx-button-border-color-disabled, var(--itx-button-border-color));
+		background-color: var(--itx-button-background-color-disabled, var(--itx-button-background-color));
 		color: var(--itx-button-text-color-disabled, var(--itx-button-text-color));
 		outline-color: var(--itx-button-outline-color-disabled, var(--itx-button-outline-color));
-		outline-width: var(--itx-button-outline-width-disabled, var(--itx-button-outline-width));
 		outline-offset: var(--itx-button-outline-offset-disabled, var(--itx-button-outline-offset));
+		outline-width: var(--itx-button-outline-width-disabled, var(--itx-button-outline-width));
+		cursor: var(--itx-button-cursor-disabled, var(--itx-button-cursor));
 	}
 
-	/* part: icon */
-	:where(button) > :where(svg) {
+	/* element: icon */
+	:where(button[interop-button]) > :where([interop-icon]) {
 		flex-shrink: var(--itx-button-icon-flex-shrink);
 		color: var(--itx-button-icon-text-color);
 	}
 
-	/* part: icon — hover */
-	:where(button):hover > :where(svg) {
+	/* element: icon — hover */
+	:where(button[interop-button]):hover > :where([interop-icon]) {
 		color: var(--itx-button-icon-text-color-hover, var(--itx-button-icon-text-color));
 	}
 
-	/* part: icon — focus-visible */
-	:where(button):focus-visible > :where(svg) {
+	/* element: icon — focus-visible */
+	:where(button[interop-button]):focus-visible > :where([interop-icon]) {
 		color: var(--itx-button-icon-text-color-focus-visible, var(--itx-button-icon-text-color));
 	}
 
-	/* part: icon — active */
-	:where(button):active > :where(svg) {
+	/* element: icon — active */
+	:where(button[interop-button]):active > :where([interop-icon]) {
 		color: var(--itx-button-icon-text-color-active, var(--itx-button-icon-text-color));
 	}
 
-	/* part: icon — disabled */
-	:where(button):disabled > :where(svg) {
+	/* element: icon — disabled */
+	:where(button[interop-button]):disabled > :where([interop-icon]) {
 		color: var(--itx-button-icon-text-color-disabled, var(--itx-button-icon-text-color));
 	}
 }

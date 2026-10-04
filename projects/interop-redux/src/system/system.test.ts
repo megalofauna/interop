@@ -13,8 +13,10 @@ const base: Blueprint = {
 	name: 'widget',
 	selector: ':where(.widget)',
 	themeable: true,
-	levers: { paint: ['background-color'] },
+	properties: { paint: ['background-color'] },
 };
+
+const red = { '--itx-widget-background-color': 'red' };
 
 const errorsFor = (blueprint: Blueprint): string => validate(blueprint).errors.join('\n');
 
@@ -24,13 +26,13 @@ describe('validator', () => {
 	});
 
 	it('rejects an unknown category', () => {
-		const result = validate({ ...base, levers: { surface: ['background-color'] } as never });
-		match(errorsFor({ ...base, levers: { surface: [] } as never }), /unknown category/);
+		const result = validate({ ...base, properties: { surface: ['background-color'] } as never });
+		match(errorsFor({ ...base, properties: { surface: [] } as never }), /unknown category/);
 		ok(!result.ok);
 	});
 
 	it('rejects a lever filed under the wrong category', () => {
-		const result = validate({ ...base, levers: { paint: ['border-radius'] } as never });
+		const result = validate({ ...base, properties: { paint: ['border-radius'] } as never });
 		ok(!result.ok);
 		match(result.errors.join('\n'), /belongs to category "shape"/);
 	});
@@ -41,15 +43,30 @@ describe('validator', () => {
 
 	it('rejects states with nothing stateful to vary', () => {
 		match(
-			errorsFor({ ...base, levers: { shape: ['border-radius'] }, states: ['hover'] }),
+			errorsFor({ ...base, properties: { shape: ['border-radius'] }, states: ['hover'] }),
 			/no stateful lever exists/,
 		);
 	});
 
 	it('rejects a lever declared twice', () => {
 		match(
-			errorsFor({ ...base, levers: { paint: ['background-color', 'background-color'] } }),
+			errorsFor({ ...base, properties: { paint: ['background-color', 'background-color'] } }),
 			/already declared/,
+		);
+	});
+
+	it('rejects sizes without base', () => {
+		match(errorsFor({ ...base, sizes: ['sm', 'lg'] }), /must include "base"/);
+	});
+
+	it('rejects a cursor on a component with no states', () => {
+		match(errorsFor({ ...base, cursor: ['cursor'] }), /cursor: declared on a component with no states/);
+	});
+
+	it('rejects the cursor category inside properties', () => {
+		match(
+			errorsFor({ ...base, properties: { cursor: ['cursor'] } as never }),
+			/belongs in the top-level `cursor` field/,
 		);
 	});
 });
@@ -62,15 +79,13 @@ describe('resolve', () => {
 
 	it('allows an unset state token', () => {
 		const blueprint: Blueprint = { ...base, states: ['hover'] };
-		const { missing } = resolve(blueprint, {
-			values: { '--itx-widget-background-color': 'red' },
-		});
+		const { missing } = resolve(blueprint, { values: red });
 		deepStrictEqual(missing, []);
 	});
 
 	it('keeps the axis out of the token name', () => {
 		const { tokens, axes, scopes } = resolve(base, {
-			values: { '--itx-widget-background-color': 'red' },
+			values: red,
 			variants: { loud: { '--itx-widget-background-color': 'blue' } },
 		});
 
@@ -84,23 +99,23 @@ describe('resolve', () => {
 
 	it('drops an axis value that redeclares nothing the component has', () => {
 		const { axes, scopes } = resolve(base, {
-			values: { '--itx-widget-background-color': 'red' },
-			sizes: { lg: { '--itx-widget-font-size': '2rem' } },
+			values: red,
+			variants: { big: { '--itx-widget-font-size': '2rem' } },
 		});
 		deepStrictEqual(axes, []);
-		ok(!scopes.some((scope) => scope.label.startsWith('size:')));
+		ok(!scopes.some((scope) => scope.label.startsWith('variant:')));
 	});
 
 	it('rejects an axis value that is not kebab-case', () => {
 		throws(
-			() => resolve(base, { values: { '--itx-widget-background-color': 'red' }, variants: { Loud: {} } }),
+			() => resolve(base, { values: red, variants: { Loud: {} } }),
 			/kebab-case/,
 		);
 	});
 
 	it('rejects an axis on a component with no tokens to redeclare', () => {
 		throws(
-			() => resolve({ ...base, themeable: false, levers: {} }, { variants: { loud: {} } }),
+			() => resolve({ ...base, themeable: false, properties: {} }, { variants: { loud: {} } }),
 			/not themeable/,
 		);
 	});
@@ -109,7 +124,7 @@ describe('resolve', () => {
 		// Both widths draw a line; only the outline can change width without moving anything.
 		const blueprint: Blueprint = {
 			...base,
-			levers: { shape: ['border-width'], effect: ['outline-width'] },
+			properties: { border: ['border-width'], outline: ['outline-width'] },
 			states: ['focus-visible'],
 		};
 		const { rules } = resolve(blueprint, {
@@ -121,10 +136,11 @@ describe('resolve', () => {
 		]);
 	});
 
-	it('leads the rule with the declarations its levers require', () => {
+	it('leads the rule with prerequisites, then the declarations its levers require', () => {
 		const blueprint: Blueprint = {
 			...base,
-			levers: { shape: ['border-width'], effect: ['outline-width'] },
+			prerequisites: ['box-sizing: border-box'],
+			properties: { border: ['border-width'], outline: ['outline-width'] },
 		};
 		const { rules } = resolve(blueprint, {
 			values: { '--itx-widget-border-width': '1px', '--itx-widget-outline-width': '0' },
@@ -132,11 +148,78 @@ describe('resolve', () => {
 		const declarations = rules.find((r) => r.label === 'base')?.declarations ?? [];
 
 		deepStrictEqual(declarations, [
+			'box-sizing: border-box',
 			'border-style: solid',
 			'outline-style: solid',
 			'border-width: var(--itx-widget-border-width)',
 			'outline-width: var(--itx-widget-outline-width)',
 		]);
+	});
+
+	it('skips a required declaration an active lever already sets', () => {
+		const blueprint: Blueprint = { ...base, properties: { border: ['border-width', 'border-style'] } };
+		const { rules } = resolve(blueprint, {
+			values: { '--itx-widget-border-width': '1px', '--itx-widget-border-style': 'dashed' },
+		});
+
+		deepStrictEqual(rules.find((r) => r.label === 'base')?.declarations, [
+			'border-width: var(--itx-widget-border-width)',
+			'border-style: var(--itx-widget-border-style)',
+		]);
+	});
+
+	it('reads the cursor under each state, falling through to the base', () => {
+		const blueprint: Blueprint = { ...base, states: ['disabled'], cursor: ['cursor'] };
+		const { rules, tokens } = resolve(blueprint, {
+			values: { ...red, '--itx-widget-cursor': 'pointer' },
+		});
+
+		strictEqual(tokens.find((t) => t.name === '--itx-widget-cursor')?.category, 'cursor');
+		ok(rules.find((r) => r.label === 'base')?.declarations.includes('cursor: var(--itx-widget-cursor)'));
+		ok(
+			rules
+				.find((r) => r.label === 'disabled')
+				?.declarations.includes('cursor: var(--itx-widget-cursor-disabled, var(--itx-widget-cursor))'),
+		);
+	});
+
+	describe('sizes', () => {
+		const sizable: Blueprint = { ...base, properties: { type: ['font-size'] }, sizes: ['sm', 'base', 'lg'] };
+		const values = { '--itx-widget-font-size': '1rem' };
+		const sm = { '--itx-widget-font-size': '0.875rem' };
+		const lg = { '--itx-widget-font-size': '1.25rem' };
+
+		it('takes the values from the blueprint, with base as the default', () => {
+			const { axes } = resolve(sizable, { values, sizes: { sm, lg } });
+			deepStrictEqual(axes, [
+				{ name: 'size', attribute: 'itx-size', values: ['sm', 'base', 'lg'], default: 'base' },
+			]);
+		});
+
+		it('emits no scope for base', () => {
+			const { scopes } = resolve(sizable, { values, sizes: { sm, lg } });
+			deepStrictEqual(
+				scopes.map((scope) => scope.selector),
+				[':where(.widget)', ':where(.widget)[itx-size="sm"]', ':where(.widget)[itx-size="lg"]'],
+			);
+		});
+
+		it('reports a blueprint size the config gives no entry', () => {
+			const { missing } = resolve(sizable, { values, sizes: { sm } });
+			deepStrictEqual(missing, ['sizes.lg']);
+		});
+
+		it('rejects a config size the blueprint does not list', () => {
+			throws(() => resolve(sizable, { values, sizes: { sm, lg, xl: lg } }), /not a size the blueprint lists/);
+		});
+
+		it('rejects config values for base', () => {
+			throws(() => resolve(sizable, { values, sizes: { sm, lg, base: sm } }), /takes the base values/);
+		});
+
+		it('rejects config sizes for a component that is not sizable', () => {
+			throws(() => resolve(base, { values: red, sizes: { sm: {} } }), /the blueprint lists none/);
+		});
 	});
 
 	it('drops a disabled category', () => {

@@ -14,7 +14,7 @@ import {
 	type StateName,
 	type ValueType,
 } from './vocabulary.ts';
-import { KEBAB, assertValid, type Blueprint, type LeverMap } from './blueprint.ts';
+import { KEBAB, assertValid, type Blueprint } from './blueprint.ts';
 
 /**
  * The consumer-facing config. Plain data only: a CLI has to read a value, change it, and
@@ -26,10 +26,14 @@ export interface ComponentConfig {
 	/** Token name -> value, for the base scope. */
 	readonly values?: Readonly<Record<string, string>>;
 	/**
-	 * Axis value -> the tokens it redeclares. Every value named here is an exception; the
-	 * unattributed element is the default.
+	 * Variant -> the tokens it redeclares. Every variant named here is an exception; the
+	 * unattributed element takes the base values.
 	 */
 	readonly variants?: AxisValues;
+	/**
+	 * Size -> the tokens it redeclares. Every size the blueprint lists needs an entry except
+	 * `base`, which takes the base values.
+	 */
 	readonly sizes?: AxisValues;
 }
 
@@ -42,7 +46,7 @@ export interface Config {
 export interface ResolvedToken {
 	readonly name: string;
 	readonly component: string;
-	readonly part?: string;
+	readonly element?: string;
 	readonly property: PropertyKey;
 	readonly category: Category;
 	readonly state?: StateName;
@@ -60,11 +64,13 @@ export interface ResolvedScope {
 	readonly declarations: readonly { readonly token: string; readonly value: string }[];
 }
 
-/** An axis the component varies along, with the values the config gave it. */
+/** An axis the component varies along, with its values. */
 export interface ResolvedAxis {
 	readonly name: AxisName;
 	readonly attribute: string;
 	readonly values: readonly string[];
+	/** The value that takes the base values. Absent: the unattributed element is the only default. */
+	readonly default?: string;
 }
 
 /** A consumption site in structure.css. */
@@ -82,14 +88,14 @@ export interface ResolvedComponent {
 	readonly axes: readonly ResolvedAxis[];
 	readonly scopes: readonly ResolvedScope[];
 	readonly rules: readonly ResolvedRule[];
-	/** Base tokens the config gave no value. Fatal. */
+	/** Base tokens, and blueprint sizes, the config gave no value. Fatal. */
 	readonly missing: readonly string[];
 }
 
 interface Scope {
-	readonly part?: string;
+	readonly element?: string;
 	readonly selector: string;
-	readonly levers: LeverMap;
+	readonly properties: Partial<Record<Category, readonly PropertyKey[]>>;
 }
 
 export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): ResolvedComponent {
@@ -98,13 +104,17 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 	const disabled = new Set<Category>(config.disabledCategories ?? []);
 	const values = config.values ?? {};
+	const prerequisites = blueprint.prerequisites ?? [];
 
 	const scopes: Scope[] = [
-		{ selector: blueprint.selector, levers: blueprint.levers },
-		...Object.entries(blueprint.parts ?? {}).map(([part, spec]) => ({
-			part,
+		{
+			selector: blueprint.selector,
+			properties: { ...blueprint.properties, ...(blueprint.cursor ? { cursor: blueprint.cursor } : {}) },
+		},
+		...Object.entries(blueprint.elements ?? {}).map(([element, spec]) => ({
+			element,
 			selector: `${blueprint.selector}${spec.selector}`,
-			levers: spec.levers,
+			properties: spec.properties,
 		})),
 	];
 
@@ -114,16 +124,23 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 	const states = blueprint.states ?? [];
 
 	for (const scope of scopes) {
-		const active = activeLevers(scope.levers, disabled);
-		if (active.length === 0 && !(scope.part === undefined && blueprint.mechanics?.length)) continue;
+		const active = activeLevers(scope.properties, disabled);
+		const scopePrerequisites = scope.element === undefined ? prerequisites : [];
+		if (active.length === 0 && scopePrerequisites.length === 0) continue;
 
-		// One copy of each, ahead of the declarations that need it.
-		const required = new Set(active.flatMap((property) => PROPERTIES[property].requires ?? []));
-		const baseDeclarations: string[] = [...required];
+		// One copy of each, after the prerequisites and ahead of the declarations that need it.
+		// A required declaration whose property an active lever sets is left to the lever.
+		const set = new Set(active.flatMap((property) => PROPERTIES[property].apply('').map(propertyOf)));
+		const required = new Set(
+			active
+				.flatMap((property) => PROPERTIES[property].requires ?? [])
+				.filter((declaration) => !set.has(propertyOf(declaration))),
+		);
+		const baseDeclarations: string[] = [...scopePrerequisites, ...required];
 
 		for (const property of active) {
 			const def = PROPERTIES[property];
-			const name = tokenName({ component: blueprint.name, part: scope.part, property });
+			const name = tokenName({ component: blueprint.name, element: scope.element, property });
 			const value = values[name];
 
 			// An undeclared base token emits `var(--x)` with nothing behind it: transparent for
@@ -134,7 +151,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 			tokens.push({
 				name,
 				component: blueprint.name,
-				...(scope.part ? { part: scope.part } : {}),
+				...(scope.element ? { element: scope.element } : {}),
 				property,
 				category: def.category,
 				type: def.type,
@@ -146,17 +163,11 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 			baseDeclarations.push(...def.apply(`var(${name})`));
 		}
 
-		if (scope.part === undefined && blueprint.mechanics?.length) {
-			baseDeclarations.push(...blueprint.mechanics);
-		}
-
-		if (baseDeclarations.length > 0) {
-			rules.push({
-				label: scope.part ? `part: ${scope.part}` : 'base',
-				selector: scope.selector,
-				declarations: baseDeclarations,
-			});
-		}
+		rules.push({
+			label: scope.element ? `element: ${scope.element}` : 'base',
+			selector: scope.selector,
+			declarations: baseDeclarations,
+		});
 
 		for (const state of states) {
 			const stateful = active.filter((p) => PROPERTIES[p].stateful);
@@ -165,13 +176,13 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 			const declarations: string[] = [];
 			for (const property of stateful) {
 				const def = PROPERTIES[property];
-				const base = tokenName({ component: blueprint.name, part: scope.part, property });
-				const name = tokenName({ component: blueprint.name, part: scope.part, property, state });
+				const base = tokenName({ component: blueprint.name, element: scope.element, property });
+				const name = tokenName({ component: blueprint.name, element: scope.element, property, state });
 
 				tokens.push({
 					name,
 					component: blueprint.name,
-					...(scope.part ? { part: scope.part } : {}),
+					...(scope.element ? { element: scope.element } : {}),
 					property,
 					category: def.category,
 					state,
@@ -185,12 +196,12 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 				declarations.push(...def.apply(`var(${name}, var(${base}))`));
 			}
 
-			// The state selector goes on the component: the part repaints when the component
+			// The state selector goes on the component: the element repaints when the component
 			// is hovered.
-			const partSuffix = scope.part ? scope.selector.slice(blueprint.selector.length) : '';
+			const elementSuffix = scope.element ? scope.selector.slice(blueprint.selector.length) : '';
 			rules.push({
-				label: scope.part ? `part: ${scope.part} — ${state}` : state,
-				selector: `${blueprint.selector}${selectorForState(state)}${partSuffix}`,
+				label: scope.element ? `element: ${scope.element} — ${state}` : state,
+				selector: `${blueprint.selector}${selectorForState(state)}${elementSuffix}`,
 				declarations,
 			});
 		}
@@ -208,10 +219,26 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 	const axes: ResolvedAxis[] = [];
 	for (const axis of AXES) {
-		const scoped = axisScopes(blueprint, axis, config[axis.configKey], declared);
-		if (scoped.length === 0) continue;
-		axes.push({ name: axis.name, attribute: axis.attribute, values: scoped.map((s) => s.value) });
+		const configured = config[axis.configKey];
+		const scoped = axisScopes(blueprint, axis, configured, declared);
 		themeScopes.push(...scoped.map((s) => s.scope));
+
+		if (axis.source === 'config') {
+			if (scoped.length === 0) continue;
+			axes.push({ name: axis.name, attribute: axis.attribute, values: scoped.map((s) => s.value) });
+			continue;
+		}
+
+		const listed = blueprint[axis.configKey] ?? [];
+		if (listed.length === 0) continue;
+		// Without an entry, the attribute matches no scope and the element silently takes the
+		// base values.
+		for (const value of listed) {
+			if (value !== axis.default && configured?.[value] === undefined) {
+				missing.push(`${axis.configKey}.${value}`);
+			}
+		}
+		axes.push({ name: axis.name, attribute: axis.attribute, values: listed, default: axis.default });
 	}
 
 	return {
@@ -227,9 +254,9 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 }
 
 /**
- * The config names axis values the blueprint knows nothing about, so they are checked here.
- * A value that redeclares no token this component has is dropped by `axisScopes`. The config
- * may name it for a category this component disabled.
+ * Checks the config's axis values against the blueprint. A value that redeclares no token
+ * this component has is dropped by `axisScopes`. The config may name it for a category this
+ * component disabled.
  */
 function assertConfigValid(blueprint: Blueprint, config: ComponentConfig): void {
 	const errors: string[] = [];
@@ -248,6 +275,24 @@ function assertConfigValid(blueprint: Blueprint, config: ComponentConfig): void 
 				errors.push(`${axis.configKey}: value ${JSON.stringify(value)} must be kebab-case`);
 			}
 		}
+		if (axis.source !== 'blueprint') continue;
+
+		const listed = blueprint[axis.configKey];
+		if (!listed?.length) {
+			errors.push(`${axis.configKey}: the blueprint lists none, so the component has no ${axis.name} axis`);
+			continue;
+		}
+		for (const value of Object.keys(configured)) {
+			if (value === axis.default) {
+				errors.push(
+					`${axis.configKey}.${value}: "${value}" takes the base values; set them under \`values\``,
+				);
+			} else if (!listed.includes(value)) {
+				errors.push(
+					`${axis.configKey}.${value}: not a ${axis.name} the blueprint lists (${listed.join(', ')})`,
+				);
+			}
+		}
 	}
 
 	if (errors.length > 0) {
@@ -255,10 +300,18 @@ function assertConfigValid(blueprint: Blueprint, config: ComponentConfig): void 
 	}
 }
 
-function activeLevers(levers: LeverMap, disabled: ReadonlySet<Category>): PropertyKey[] {
-	return Object.entries(levers)
+function activeLevers(
+	properties: Partial<Record<Category, readonly PropertyKey[]>>,
+	disabled: ReadonlySet<Category>,
+): PropertyKey[] {
+	return Object.entries(properties)
 		.filter(([category]) => !disabled.has(category as Category))
 		.flatMap(([, keys]) => [...(keys ?? [])]);
+}
+
+/** `border-style: solid` -> `border-style`. */
+function propertyOf(declaration: string): string {
+	return declaration.slice(0, declaration.indexOf(':')).trim();
 }
 
 function axisScopes(

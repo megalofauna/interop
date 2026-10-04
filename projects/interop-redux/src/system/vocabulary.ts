@@ -7,25 +7,43 @@
 /**
  * Where a lever acts:
  *
- * - `layout` — how the box and its contents are arranged.
- * - `shape` — the space the box occupies.
+ * - `layout` — how the box and its contents are arranged, and the sizes it keeps within.
+ * - `shape` — corner rounding and the space inside the box.
+ * - `border` — the line around the box.
+ * - `outline` — the line outside the border, normally the focus ring. Moves no layout.
  * - `type` — the text inside it.
- * - `paint` — the colors filling the box and its border.
- * - `effect` — what is drawn over or outside the box. Moves no layout.
+ * - `paint` — the colors filling the box and its text.
+ * - `effect` — what is drawn over or behind the box. Moves no layout.
+ * - `cursor` — the pointer over the box. Only a stateful component has it, through the
+ *   blueprint's top-level `cursor` field.
  */
-export const CATEGORIES = ['layout', 'shape', 'type', 'paint', 'effect'] as const;
+export const CATEGORIES = [
+	'layout',
+	'shape',
+	'border',
+	'outline',
+	'type',
+	'paint',
+	'effect',
+	'cursor',
+] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 /**
  * The axes a component varies along. Each value becomes a declaration scope
  * selected by the attribute, on the same token names.
  *
- * The values themselves come from the config: every one it names is an exception, and the
- * unattributed element is the default.
+ * `source` is where the values are named:
+ *
+ * - `config` — every value the config names is an exception. The unattributed element takes
+ *   the base values.
+ * - `blueprint` — the blueprint lists the values, `default` among them. The config gives every
+ *   other value its tokens. `default` takes the base values and emits no scope, so setting it
+ *   on an element is the same as setting nothing.
  */
 export const AXES = [
-	{ name: 'variant', attribute: 'itx-variant', configKey: 'variants' },
-	{ name: 'size', attribute: 'itx-size', configKey: 'sizes' },
+	{ name: 'variant', attribute: 'itx-variant', configKey: 'variants', source: 'config' },
+	{ name: 'size', attribute: 'itx-size', configKey: 'sizes', source: 'blueprint', default: 'base' },
 ] as const;
 
 export type Axis = (typeof AXES)[number];
@@ -52,6 +70,7 @@ export const STATE_NAMES = STATES.map((s) => s.name) as readonly StateName[];
 
 export type ValueType =
 	| 'length'
+	| 'length-or-none'
 	| 'length-pair'
 	| 'color'
 	| 'number'
@@ -68,6 +87,9 @@ export type ValueType =
  */
 const SYNTAX: Record<Exclude<ValueType, 'enum'>, string> = {
 	length: '<length>',
+	// `none` is the normal value of a `max-*` property and is not a `<length>`. Registered as
+	// `<length>`, the token would fall back to `0px` and collapse the box.
+	'length-or-none': '<length> | none',
 	'length-pair': '<length>+',
 	color: '<color>',
 	number: '<number>',
@@ -140,43 +162,52 @@ export const PROPERTIES = {
 		'space-between',
 	]),
 	gap: direct('layout', 'length-pair', 'gap'),
-	'text-align': choice('layout', 'text-align', ['start', 'end', 'center', 'justify']),
+	'min-inline-size': direct('layout', 'length', 'min-inline-size'),
+	'max-inline-size': direct('layout', 'length-or-none', 'max-inline-size'),
+	// No `height` lever: a fixed height clips its own text at 200% zoom.
+	'min-block-size': direct('layout', 'length', 'min-block-size'),
+	'max-block-size': direct('layout', 'length-or-none', 'max-block-size'),
 
 	/* ── Shape ── */
 	'border-radius': direct('shape', 'length', 'border-radius'),
-	// Border width is shape; border color is paint. Not stateful: a border that thickens on
-	// hover moves everything around it.
-	'border-width': direct('shape', 'length', 'border-width', { requires: ['border-style: solid'] }),
 	'padding-block': direct('shape', 'length-pair', 'padding-block'),
 	'padding-inline': direct('shape', 'length-pair', 'padding-inline'),
-	'min-inline-size': direct('shape', 'length', 'min-inline-size'),
-	'max-inline-size': direct('shape', 'length', 'max-inline-size'),
-	// No `height` lever: a fixed height clips its own text at 200% zoom.
-	'min-block-size': direct('shape', 'length', 'min-block-size'),
+
+	/* ── Border ── */
+	// Not stateful: a border that thickens on hover moves everything around it.
+	'border-width': direct('border', 'length', 'border-width', { requires: ['border-style: solid'] }),
+	'border-style': choice('border', 'border-style', ['solid', 'dashed', 'dotted', 'double', 'none']),
+	'border-color': direct('border', 'color', 'border-color', { stateful: true }),
+
+	/* ── Outline ── */
+	'outline-width': direct('outline', 'length', 'outline-width', {
+		stateful: true,
+		requires: ['outline-style: solid'],
+	}),
+	'outline-offset': direct('outline', 'length', 'outline-offset', { stateful: true }),
+	'outline-color': direct('outline', 'color', 'outline-color', { stateful: true }),
 
 	/* ── Type ── */
 	'font-family': direct('type', 'string', 'font-family'),
 	'font-size': direct('type', 'length', 'font-size'),
 	'font-weight': direct('type', 'number', 'font-weight'),
 	'line-height': direct('type', 'number', 'line-height'),
+	'text-align': choice('type', 'text-align', ['start', 'end', 'center', 'justify']),
 
 	/* ── Paint ── */
 	'background-color': direct('paint', 'color', 'background-color', { stateful: true }),
-	'border-color': direct('paint', 'color', 'border-color', { stateful: true }),
 	'text-color': direct('paint', 'color', 'color', { stateful: true }),
 
 	/* ── Effect ── */
 	'box-shadow': direct('effect', 'shadow', 'box-shadow', { stateful: true }),
-	'outline-color': direct('effect', 'color', 'outline-color', { stateful: true }),
-	'outline-width': direct('effect', 'length', 'outline-width', {
-		stateful: true,
-		requires: ['outline-style: solid'],
-	}),
-	'outline-offset': direct('effect', 'length', 'outline-offset', { stateful: true }),
 	'background-image': direct('effect', 'string', 'background-image', { stateful: true }),
 	'background-blur': composed('effect', 'length', (ref) => [`backdrop-filter: blur(${ref})`], {
 		stateful: true,
 	}),
+
+	/* ── Cursor ── */
+	// Universal, so any cursor value stays open to the consumer.
+	cursor: direct('cursor', 'string', 'cursor', { stateful: true }),
 } satisfies Record<string, PropertyDef>;
 
 export type PropertyKey = keyof typeof PROPERTIES;
@@ -195,18 +226,18 @@ export function isUniversal(def: PropertyDef): boolean {
 
 export interface TokenParts {
 	readonly component: string;
-	readonly part?: string | undefined;
+	readonly element?: string | undefined;
 	readonly property: string;
 	readonly state?: string | undefined;
 }
 
 /**
- * `--itx-<component>[-<part>]-<property>[-<state>]`
+ * `--itx-<component>[-<element>]-<property>[-<state>]`
  *
  * Variant and size are declaration scopes, so they do not appear in token names.
  */
-export function tokenName({ component, part, property, state }: TokenParts): string {
-	return ['--itx', component, part, property, state].filter(Boolean).join('-');
+export function tokenName({ component, element, property, state }: TokenParts): string {
+	return ['--itx', component, element, property, state].filter(Boolean).join('-');
 }
 
 export function isCategory(value: string): value is Category {
@@ -234,27 +265,30 @@ export const DESCRIPTIONS: Record<PropertyKey, string> = {
 	'align-items': 'Cross-axis placement of the contents.',
 	'justify-content': 'Main-axis distribution of the contents.',
 	gap: 'Space held between the contents.',
-	'text-align': 'Alignment of the text within the box.',
+	'min-inline-size': 'Smallest width the box will take.',
+	'max-inline-size': 'Largest width the box will take. `none` for no limit.',
+	'min-block-size': 'Smallest height the box will take. Grows past it rather than clipping.',
+	'max-block-size': 'Largest height the box will take. `none` for no limit.',
 	'border-radius': 'Corner rounding.',
-	'border-width': 'Thickness of the border. Its color is a paint lever.',
 	'padding-block': 'Inner space above and below the contents.',
 	'padding-inline': 'Inner space to the left and right of the contents.',
-	'min-inline-size': 'Smallest width the box will take.',
-	'max-inline-size': 'Largest width the box will take.',
-	'min-block-size': 'Smallest height the box will take. Grows past it rather than clipping.',
+	'border-width': 'Thickness of the border.',
+	'border-style': 'How the border line is drawn.',
+	'border-color': 'Color of the border drawn at the border width.',
+	'outline-width': 'Thickness of the outline. Zero hides it without switching anything off.',
+	'outline-offset': 'Gap between the border edge and the outline.',
+	'outline-color': 'Color of the outline, normally the focus ring.',
 	'font-family': 'Typeface. Inherits from the page unless set.',
 	'font-size': 'Text size.',
 	'font-weight': 'Text weight.',
 	'line-height': 'Leading, as a multiple of the font size.',
+	'text-align': 'Alignment of the text within the box.',
 	'background-color': 'Fill behind the contents.',
-	'border-color': 'Color of the border drawn at the border width.',
 	'text-color': 'Color of the text, and of anything following currentColor.',
 	'box-shadow': 'Shadow cast by the box.',
-	'outline-color': 'Color of the outline, normally the focus ring.',
-	'outline-width': 'Thickness of the outline. Zero hides it without switching anything off.',
-	'outline-offset': 'Gap between the border edge and the outline.',
 	'background-image': 'Image or gradient painted over the background color.',
 	'background-blur': 'Blur applied to whatever sits behind the box.',
+	cursor: 'Pointer shown over the box.',
 };
 
 export function describe(key: PropertyKey): string {
@@ -269,6 +303,8 @@ export function initialValueFor(def: PropertyDef): string | undefined {
 			return def.values?.[0];
 		case 'length':
 			return '0px';
+		case 'length-or-none':
+			return 'none';
 		case 'length-pair':
 			return '0px';
 		case 'color':

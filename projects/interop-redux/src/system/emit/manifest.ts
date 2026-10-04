@@ -14,7 +14,7 @@ export interface ManifestToken {
 	readonly type: string;
 	readonly syntax: string;
 	readonly description: string;
-	readonly part?: string;
+	readonly element?: string;
 	readonly state?: string;
 	readonly enumValues?: readonly string[];
 	readonly value?: string;
@@ -31,7 +31,14 @@ export function emitManifest(
 			themeable: component.themeable,
 			states: blueprint.states ?? [],
 			axes: Object.fromEntries(
-				component.axes.map((axis) => [axis.name, { attribute: axis.attribute, values: axis.values }]),
+				component.axes.map((axis) => [
+					axis.name,
+					{
+						attribute: axis.attribute,
+						values: axis.values,
+						...(axis.default ? { default: axis.default } : {}),
+					},
+				]),
 			),
 			tokens: component.tokens.map(
 				(t): ManifestToken => ({
@@ -40,7 +47,7 @@ export function emitManifest(
 					type: t.type,
 					syntax: t.syntax,
 					description: describe(t.property),
-					...(t.part ? { part: t.part } : {}),
+					...(t.element ? { element: t.element } : {}),
 					...(t.state ? { state: t.state } : {}),
 					...(t.enumValues ? { enumValues: t.enumValues } : {}),
 					...(t.value === undefined ? {} : { value: t.value }),
