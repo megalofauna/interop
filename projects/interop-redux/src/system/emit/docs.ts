@@ -28,6 +28,19 @@ export function emitDocs(component: ResolvedComponent): string {
 		lines.push('');
 	}
 
+	if (component.modifiers.length > 0) {
+		lines.push(
+			'## Modifiers',
+			'',
+			'Each applies while its selector matches the component.',
+			'',
+			'| Modifier | Selector |',
+			'| --- | --- |',
+			...component.modifiers.map((m) => `| ${m.name} | \`${m.selector}\` |`),
+			'',
+		);
+	}
+
 	const stateful = new Set(component.tokens.filter((t) => t.state).map((t) => t.name.replace(/-(?:hover|focus-visible|active|disabled)$/, '')));
 	const base = component.tokens.filter((t) => t.state === undefined);
 

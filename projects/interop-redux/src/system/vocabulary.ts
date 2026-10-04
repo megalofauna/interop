@@ -49,8 +49,11 @@ export const AXES = [
 export type Axis = (typeof AXES)[number];
 export type AxisName = Axis['name'];
 
-/** The base scope, plus one scope per axis. */
-export type ScopeName = 'default' | AxisName;
+/**
+ * Where a scope's values apply: `default` to every element of the component, `modifier` to
+ * elements carrying a modifier the blueprint declares, and one scope per axis.
+ */
+export type ScopeName = 'default' | 'modifier' | AxisName;
 
 /** Who declares the tokens: the build in `base.css`, the consumer in `theme.css`. */
 export type Owner = 'base' | 'theme';
@@ -63,12 +66,15 @@ export type Owner = 'base' | 'theme';
  *
  *   theme variant > base variant > theme default > base default
  *
+ * `base` here is the owner. The size named `base` is a different thing: it takes its values
+ * from the `default` scope and has no layer of its own.
+ *
  * A size beats a variant where both set the same token. Unlayered consumer CSS beats every
  * layer.
  */
 export const LAYERS: readonly string[] = [
 	'interop.structure',
-	...(['default', ...AXES.map((axis) => axis.name)] as const).flatMap((scope) =>
+	...(['default', 'modifier', ...AXES.map((axis) => axis.name)] as const).flatMap((scope) =>
 		(['base', 'theme'] as const).map((owner) => layerName(scope, owner)),
 	),
 ];
@@ -99,6 +105,7 @@ export const STATE_NAMES = STATES.map((s) => s.name) as readonly StateName[];
 export type ValueType =
 	| 'length'
 	| 'length-or-none'
+	| 'integer-or-auto'
 	| 'length-pair'
 	| 'color'
 	| 'number'
@@ -118,6 +125,8 @@ const SYNTAX: Record<Exclude<ValueType, 'enum'>, string> = {
 	// `none` is the normal value of a `max-*` property and is not a `<length>`. Registered as
 	// `<length>`, the token would fall back to `0px` and collapse the box.
 	'length-or-none': '<length> | none',
+	// `auto` is the normal `z-index` and is not an `<integer>`.
+	'integer-or-auto': '<integer> | auto',
 	'length-pair': '<length>+',
 	color: '<color>',
 	number: '<number>',
@@ -195,6 +204,9 @@ export const PROPERTIES = {
 	// No `height` lever: a fixed height clips its own text at 200% zoom.
 	'min-block-size': direct('layout', 'length', 'min-block-size'),
 	'max-block-size': direct('layout', 'length-or-none', 'max-block-size'),
+	// One value on every side. Moves a positioned box away from what it is anchored to.
+	margin: direct('layout', 'length', 'margin'),
+	'z-index': direct('layout', 'integer-or-auto', 'z-index'),
 
 	/* ── Shape ── */
 	'border-radius': direct('shape', 'length', 'border-radius'),
@@ -297,6 +309,8 @@ export const DESCRIPTIONS: Record<PropertyKey, string> = {
 	'max-inline-size': 'Largest width the box will take. `none` for no limit.',
 	'min-block-size': 'Smallest height the box will take. Grows past it rather than clipping.',
 	'max-block-size': 'Largest height the box will take. `none` for no limit.',
+	margin: 'Outer space on every side. On an anchored box, the distance from the anchor.',
+	'z-index': 'Stacking order among positioned boxes. `auto` for none of its own.',
 	'border-radius': 'Corner rounding.',
 	'padding-block': 'Inner space above and below the contents.',
 	'padding-inline': 'Inner space to the left and right of the contents.',
@@ -333,6 +347,8 @@ export function initialValueFor(def: PropertyDef): string | undefined {
 			return '0px';
 		case 'length-or-none':
 			return 'none';
+		case 'integer-or-auto':
+			return 'auto';
 		case 'length-pair':
 			return '0px';
 		case 'color':

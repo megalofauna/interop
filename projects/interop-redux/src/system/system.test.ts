@@ -222,6 +222,66 @@ describe('resolve', () => {
 		});
 	});
 
+	describe('elements and modifiers', () => {
+		const decorated: Blueprint = {
+			...base,
+			properties: {},
+			elements: {
+				mark: {
+					selector: ' > :where(.mark)',
+					prerequisites: ['position: fixed'],
+					properties: { paint: ['background-color'] },
+				},
+			},
+			modifiers: {
+				small: { selector: '[small]' },
+				left: { selector: '[at="left"]', elements: { mark: ['inset-inline-start: 0'] } },
+			},
+		};
+		const values = { '--itx-widget-mark-background-color': 'red' };
+
+		it('leads an element rule with its prerequisites', () => {
+			const { rules } = resolve(decorated, { values });
+			deepStrictEqual(rules.find((r) => r.label === 'element: mark')?.declarations, [
+				'position: fixed',
+				'background-color: var(--itx-widget-mark-background-color)',
+			]);
+		});
+
+		it('emits a modifier\'s fixed declarations under its selector', () => {
+			const { rules } = resolve(decorated, { values });
+			deepStrictEqual(rules.find((r) => r.label === 'element: mark — modifier: left'), {
+				label: 'element: mark — modifier: left',
+				selector: ':where(.widget)[at="left"] > :where(.mark)',
+				declarations: ['inset-inline-start: 0'],
+			});
+		});
+
+		it('declares a modifier\'s token values in the modifier scope', () => {
+			const { scopes } = resolve(decorated, {
+				values,
+				modifiers: { small: { '--itx-widget-mark-background-color': 'blue' } },
+			});
+			deepStrictEqual(scopes.at(-1), {
+				scope: 'modifier',
+				label: 'modifier: small',
+				selector: ':where(.widget)[small]',
+				declarations: [{ token: '--itx-widget-mark-background-color', value: 'blue' }],
+			});
+		});
+
+		it('rejects config for a modifier the blueprint does not declare', () => {
+			throws(() => resolve(decorated, { values, modifiers: { large: {} } }), /not a modifier the blueprint declares/);
+		});
+
+		it('rejects a modifier naming an element the component does not have', () => {
+			match(
+				errorsFor({ ...decorated, modifiers: { left: { selector: '[at]', elements: { tail: [] } } } }),
+				/names no element of this component/,
+			);
+		});
+	});
+
 	it('drops a disabled category', () => {
 		const { tokens } = resolve(base, { disabledCategories: ['paint'] });
 		deepStrictEqual(tokens, []);
@@ -285,6 +345,8 @@ describe('build', () => {
 			'interop.structure',
 			'interop.default.base',
 			'interop.default.theme',
+			'interop.modifier.base',
+			'interop.modifier.theme',
 			'interop.variant.base',
 			'interop.variant.theme',
 			'interop.size.base',

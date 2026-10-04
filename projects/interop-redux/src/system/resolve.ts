@@ -36,6 +36,8 @@ export interface ComponentConfig {
 	 * `base`, which takes the base values.
 	 */
 	readonly sizes?: AxisValues;
+	/** Modifier -> the tokens it redeclares. Only modifiers the blueprint declares. */
+	readonly modifiers?: AxisValues;
 }
 
 export type AxisValues = Readonly<Record<string, Readonly<Record<string, string>>>>;
@@ -76,6 +78,12 @@ export interface ResolvedAxis {
 	readonly default?: string;
 }
 
+/** A modifier the blueprint declares, with its full selector. */
+export interface ResolvedModifier {
+	readonly name: string;
+	readonly selector: string;
+}
+
 /** A consumption site in structure.css. */
 export interface ResolvedRule {
 	readonly label: string;
@@ -89,6 +97,7 @@ export interface ResolvedComponent {
 	readonly themeable: boolean;
 	readonly tokens: readonly ResolvedToken[];
 	readonly axes: readonly ResolvedAxis[];
+	readonly modifiers: readonly ResolvedModifier[];
 	readonly scopes: readonly ResolvedScope[];
 	readonly rules: readonly ResolvedRule[];
 	/** Base tokens, and blueprint sizes, the config gave no value. Fatal. */
@@ -98,6 +107,7 @@ export interface ResolvedComponent {
 interface Scope {
 	readonly element?: string;
 	readonly selector: string;
+	readonly prerequisites: readonly string[];
 	readonly properties: Partial<Record<Category, readonly PropertyKey[]>>;
 }
 
@@ -107,16 +117,17 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 	const disabled = new Set<Category>(config.disabledCategories ?? []);
 	const values = config.values ?? {};
-	const prerequisites = blueprint.prerequisites ?? [];
 
 	const scopes: Scope[] = [
 		{
 			selector: blueprint.selector,
+			prerequisites: blueprint.prerequisites ?? [],
 			properties: { ...blueprint.properties, ...(blueprint.cursor ? { cursor: blueprint.cursor } : {}) },
 		},
 		...Object.entries(blueprint.elements ?? {}).map(([element, spec]) => ({
 			element,
 			selector: `${blueprint.selector}${spec.selector}`,
+			prerequisites: spec.prerequisites ?? [],
 			properties: spec.properties,
 		})),
 	];
@@ -128,8 +139,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 	for (const scope of scopes) {
 		const active = activeLevers(scope.properties, disabled);
-		const scopePrerequisites = scope.element === undefined ? prerequisites : [];
-		if (active.length === 0 && scopePrerequisites.length === 0) continue;
+		if (active.length === 0 && scope.prerequisites.length === 0) continue;
 
 		// One copy of each, after the prerequisites and ahead of the declarations that need it.
 		// A required declaration whose property an active lever sets is left to the lever.
@@ -139,7 +149,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 				.flatMap((property) => PROPERTIES[property].requires ?? [])
 				.filter((declaration) => !set.has(propertyOf(declaration))),
 		);
-		const baseDeclarations: string[] = [...scopePrerequisites, ...required];
+		const baseDeclarations: string[] = [...scope.prerequisites, ...required];
 
 		for (const property of active) {
 			const def = PROPERTIES[property];
@@ -210,6 +220,23 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		}
 	}
 
+	// A modifier's fixed declarations. The attribute's specificity puts them above the base rule.
+	const modifiers: ResolvedModifier[] = [];
+	for (const [name, modifier] of Object.entries(blueprint.modifiers ?? {})) {
+		const selector = `${blueprint.selector}${modifier.selector}`;
+		modifiers.push({ name, selector });
+		if (modifier.prerequisites?.length) {
+			rules.push({ label: `modifier: ${name}`, selector, declarations: modifier.prerequisites });
+		}
+		for (const [element, declarations] of Object.entries(modifier.elements ?? {})) {
+			rules.push({
+				label: `element: ${element} — modifier: ${name}`,
+				selector: `${selector}${blueprint.elements![element]!.selector}`,
+				declarations,
+			});
+		}
+	}
+
 	const declared = new Set(tokens.map((t) => t.name));
 	const themeScopes: ResolvedScope[] = [];
 
@@ -222,6 +249,19 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 			label: 'base',
 			selector: blueprint.selector,
 			declarations: baseDeclarations,
+		});
+	}
+
+	for (const [name, redeclared] of Object.entries(config.modifiers ?? {})) {
+		const declarations = Object.entries(redeclared)
+			.filter(([token]) => declared.has(token))
+			.map(([token, value]) => ({ token, value }));
+		if (declarations.length === 0) continue;
+		themeScopes.push({
+			scope: 'modifier',
+			label: `modifier: ${name}`,
+			selector: modifiers.find((m) => m.name === name)!.selector,
+			declarations,
 		});
 	}
 
@@ -255,6 +295,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		themeable: blueprint.themeable,
 		tokens,
 		axes,
+		modifiers,
 		scopes: themeScopes,
 		rules,
 		missing,
@@ -262,7 +303,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 }
 
 /**
- * Checks the config's axis values against the blueprint. A value that redeclares no token
+ * Checks the config's axis values and modifiers against the blueprint. A value that redeclares no token
  * this component has is dropped by `axisScopes`. The config may name it for a category this
  * component disabled.
  */
@@ -300,6 +341,14 @@ function assertConfigValid(blueprint: Blueprint, config: ComponentConfig): void 
 					`${axis.configKey}.${value}: not a ${axis.name} the blueprint lists (${listed.join(', ')})`,
 				);
 			}
+		}
+	}
+
+	for (const name of Object.keys(config.modifiers ?? {})) {
+		if (!blueprint.themeable) {
+			errors.push(`modifiers.${name}: the component is not themeable, so it has no tokens to redeclare`);
+		} else if (!blueprint.modifiers?.[name]) {
+			errors.push(`modifiers.${name}: not a modifier the blueprint declares`);
 		}
 	}
 

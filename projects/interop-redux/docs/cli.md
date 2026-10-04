@@ -287,13 +287,13 @@ has been added and the line is not there.
 ### Scopes
 
 The file repeats the scopes of `base.css`, each in its own layer. A token set in the default
-scope reaches every element except those whose variant or size sets the same token. To change
-a variant, set the token in that variant's scope.
+scope reaches every element except those whose modifier, variant or size sets the same token.
+To change a variant, set the token in that variant's scope.
 
 | Scope | Lists |
 | --- | --- |
 | default | Every base token, each followed by its state tokens. |
-| a variant or size | The tokens `base.css` sets in that scope, each followed by its state tokens. |
+| a modifier, variant or size | The tokens `base.css` sets in that scope, each followed by its state tokens. |
 
 A state token is shown with its fallback, `var(<base token>)`. Uncommented unchanged, it
 behaves the same as leaving it unset.

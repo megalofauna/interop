@@ -24,7 +24,24 @@ export type PropertyMap = Partial<Record<Exclude<Category, 'cursor'>, readonly P
 export interface ElementSpec {
 	/** Appended to the component selector, so `' > svg'` becomes `:where(button) > svg`. */
 	readonly selector: string;
+	/** Declarations the element needs that config cannot reach. They lead its base rule. */
+	readonly prerequisites?: readonly string[];
 	readonly properties: PropertyMap;
+}
+
+/**
+ * A variation one component offers, selected by an attribute on the component.
+ *
+ * It can carry fixed declarations, emitted into structure.css, and token values, which the
+ * config gives under `modifiers.<name>`. Either may be absent.
+ */
+export interface ModifierSpec {
+	/** Appended to the component selector, so `'[interop-badge=""]'` matches an empty value. */
+	readonly selector: string;
+	/** Fixed declarations on the component while the modifier applies. */
+	readonly prerequisites?: readonly string[];
+	/** Fixed declarations on an element while the modifier applies, by element name. */
+	readonly elements?: Readonly<Record<string, readonly string[]>>;
 }
 
 export interface Blueprint {
@@ -47,6 +64,7 @@ export interface Blueprint {
 	readonly cursor?: readonly PropertyKey[];
 	readonly properties: PropertyMap;
 	readonly elements?: Readonly<Record<string, ElementSpec>>;
+	readonly modifiers?: Readonly<Record<string, ModifierSpec>>;
 }
 
 export const KEBAB = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
@@ -78,6 +96,17 @@ export function validate(blueprint: Blueprint): ValidationResult {
 		if (!element.selector?.trim()) at(`elements.${elementName}.selector`, 'must be a non-empty selector');
 		// An element has its own token namespace, so it gets its own duplicate check.
 		checkProperties(element.properties, `elements.${elementName}.properties`, at, new Map());
+	}
+
+	for (const [modifierName, modifier] of Object.entries(blueprint.modifiers ?? {})) {
+		const path = `modifiers.${modifierName}`;
+		if (!KEBAB.test(modifierName)) at(path, 'modifier name must be kebab-case');
+		if (!modifier.selector?.trim()) at(`${path}.selector`, 'must be a non-empty selector');
+		for (const elementName of Object.keys(modifier.elements ?? {})) {
+			if (!blueprint.elements?.[elementName]) {
+				at(`${path}.elements.${elementName}`, 'names no element of this component');
+			}
+		}
 	}
 
 	if (!blueprint.themeable) {

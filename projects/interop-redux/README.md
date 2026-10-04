@@ -28,7 +28,8 @@ export const button: Blueprint = {
 | --- | --- |
 | `selector` | The component's attribute selector, inside `:where()` for zero specificity. |
 | `properties` | Levers, filed by category: `layout shape border outline type paint effect`. |
-| `elements` | Sub-elements, each with a selector appended to the component's and its own `properties`. |
+| `elements` | Sub-elements, each with a selector appended to the component's, its own `properties`, and its own `prerequisites`. |
+| `modifiers` | Variations selected by an attribute on the component. Each carries fixed declarations, token values from config, or both. |
 | `prerequisites` | Declarations config cannot reach. They lead the base rule. |
 | `sizes` | The size axis values, `base` among them. Absent: not sizable. |
 | `states` | The states the component responds to. |
@@ -75,6 +76,24 @@ list.
 scope, and axis scopes match on the element itself, so `itx-size="base"` matches no size scope
 and the element takes the base values.
 
+**A modifier belongs to one component.** The blueprint names its selector, appended to the
+component's. Its fixed declarations go in `structure.css`, on the component or on an element.
+Its token values come from the config under `modifiers` and go in the `modifier` layers.
+Badge's dot is a modifier with values only; its corners are modifiers with declarations only:
+
+```ts
+modifiers: {
+	dot: { selector: '[interop-badge=""]' },
+	'top-left': {
+		selector: '[itx-badge-position="top-left"]',
+		elements: { indicator: ['position-area: top left', 'translate: 50% 50%'] },
+	},
+},
+```
+
+The axes differ in two ways: the system defines them for every component, and they carry
+token values only.
+
 **A lever carries its own statefulness and the declarations it requires.** `outline-width` is
 stateful and pulls in `outline-style: solid`. `border-width` is neither, because a border that
 thickens on hover moves the layout around it. It requires `border-style: solid`, which is
@@ -95,6 +114,8 @@ consumer's. Each scope has a layer per owner:
 	interop.structure,
 	interop.default.base,
 	interop.default.theme,
+	interop.modifier.base,
+	interop.modifier.theme,
 	interop.variant.base,
 	interop.variant.theme,
 	interop.size.base,
@@ -105,6 +126,9 @@ A theme's default value loses to a base variant value, so `navy` set at the defa
 stops at `[itx-variant="danger"]` when danger sets its own background. A theme changes a
 variant inside the variant's scope. A size beats a variant where both set the same token.
 Unlayered consumer CSS beats every layer. `LAYERS` in `vocabulary.ts` holds the order.
+
+`base` names two things. As a layer, it is the owner: the build's values. As a size, it is
+the default size, which takes its values from `interop.default.base` and has no size layer.
 
 **Category conditionals happen at build time, value conditionals in the cascade.** Disabling a
 category drops its tokens from the output. Changing a value needs no rebuild.

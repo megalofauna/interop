@@ -30,6 +30,7 @@ export function emitManifest(
 			selector: component.selector,
 			themeable: component.themeable,
 			states: blueprint.states ?? [],
+			modifiers: Object.fromEntries(component.modifiers.map((m) => [m.name, { selector: m.selector }])),
 			axes: Object.fromEntries(
 				component.axes.map((axis) => [
 					axis.name,
