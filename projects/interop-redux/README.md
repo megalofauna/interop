@@ -147,7 +147,17 @@ invalid-at-computed-value-time, which resolves to `transparent` for `background-
 
 ## The CLI
 
-[`docs/cli.md`](docs/cli.md) specifies it. It is not built. Two constraints hold now:
+[`docs/cli.md`](docs/cli.md) specifies it. `cli/` is its own package, so the generator keeps
+no dependencies. Of the commands, `theme` is built.
+
+```sh
+cd cli && npm install
+node src/main.ts theme button             # asks for anything not given
+node src/main.ts theme button --dry-run   # names the file, writes nothing
+node --test src/*.test.ts
+```
+
+Two constraints hold:
 
 - It reads `manifest.json` and never writes a generated file. A starter file it writes, such
   as a `theme.css`, belongs to the consumer from then on.

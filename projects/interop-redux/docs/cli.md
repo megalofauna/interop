@@ -1,6 +1,9 @@
 # interop CLI
 
-Specification. Nothing on this page is built yet.
+Specification. `theme` is built, except the import line it inserts into `stylesEntry`, which
+waits on `add`. Detecting settings and writing `interop.project.json` are not built either:
+the CLI reads the file if it exists and uses the defaults otherwise. The other commands are
+not built.
 
 `interop` sets up Interop components in a project. It makes new components, wires shipped
 ones into the project's styles, and writes starter files for a component's theme and template.
