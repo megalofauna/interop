@@ -64,6 +64,8 @@ export interface ResolvedToken {
 export interface ResolvedScope {
 	/** The outer cascade layer the scope declares into. */
 	readonly scope: ScopeName;
+	/** The modifier name or axis value. Absent for the default scope. */
+	readonly name?: string;
 	readonly label: string;
 	readonly selector: string;
 	readonly declarations: readonly { readonly token: string; readonly value: string }[];
@@ -259,6 +261,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		if (declarations.length === 0) continue;
 		themeScopes.push({
 			scope: 'modifier',
+			name,
 			label: `modifier: ${name}`,
 			selector: modifiers.find((m) => m.name === name)!.selector,
 			declarations,
@@ -382,6 +385,7 @@ function axisScopes(
 			value,
 			scope: {
 				scope: axis.name,
+				name: value,
 				label: `${axis.name}: ${value}`,
 				// Appended rather than woven in, so no selector parsing is needed. The extra
 				// specificity puts the axis scope above the base.

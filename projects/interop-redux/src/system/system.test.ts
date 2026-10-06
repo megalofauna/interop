@@ -264,6 +264,7 @@ describe('resolve', () => {
 			});
 			deepStrictEqual(scopes.at(-1), {
 				scope: 'modifier',
+				name: 'small',
 				label: 'modifier: small',
 				selector: ':where(.widget)[small]',
 				declarations: [{ token: '--itx-widget-mark-background-color', value: 'blue' }],
@@ -372,5 +373,28 @@ describe('build', () => {
 				`${state} token must not be registered`,
 			);
 		}
+	});
+
+	it('lists every scope in the manifest with its theme layer and declarations', async () => {
+		const { files } = await build(await config());
+		const button = JSON.parse(files.get('manifest.json') ?? '{}').components.button;
+
+		deepStrictEqual(
+			button.scopes.map((s: { scope: string; name?: string; themeLayer: string }) => [s.scope, s.name, s.themeLayer]),
+			[
+				['default', undefined, 'interop.default.theme'],
+				['variant', 'secondary', 'interop.variant.theme'],
+				['variant', 'danger', 'interop.variant.theme'],
+				['size', 'sm', 'interop.size.theme'],
+				['size', 'lg', 'interop.size.theme'],
+			],
+		);
+	});
+
+	it('names the base token on each state token in the manifest', async () => {
+		const { files } = await build(await config());
+		const tokens = JSON.parse(files.get('manifest.json') ?? '{}').components.button.tokens;
+		const hover = tokens.find((t: { name: string }) => t.name === '--itx-button-icon-text-color-hover');
+		strictEqual(hover.base, '--itx-button-icon-text-color');
 	});
 });

@@ -1,5 +1,15 @@
 {
 	"schema": 1,
+	"categories": [
+		"layout",
+		"shape",
+		"border",
+		"outline",
+		"type",
+		"paint",
+		"effect",
+		"cursor"
+	],
 	"components": {
 		"badge": {
 			"selector": ":where([interop-badge])",
@@ -166,6 +176,91 @@
 					"description": "Color of the text, and of anything following currentColor.",
 					"element": "indicator",
 					"value": "var(--itx-color-value)"
+				}
+			],
+			"scopes": [
+				{
+					"scope": "default",
+					"selector": ":where([interop-badge])",
+					"themeLayer": "interop.default.theme",
+					"declarations": [
+						{
+							"token": "--itx-badge-indicator-display",
+							"value": "inline-flex"
+						},
+						{
+							"token": "--itx-badge-indicator-align-items",
+							"value": "center"
+						},
+						{
+							"token": "--itx-badge-indicator-justify-content",
+							"value": "center"
+						},
+						{
+							"token": "--itx-badge-indicator-min-inline-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-min-block-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-margin",
+							"value": "0px"
+						},
+						{
+							"token": "--itx-badge-indicator-z-index",
+							"value": "1"
+						},
+						{
+							"token": "--itx-badge-indicator-border-radius",
+							"value": "999px"
+						},
+						{
+							"token": "--itx-badge-indicator-padding-inline",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-font-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-font-weight",
+							"value": "400"
+						},
+						{
+							"token": "--itx-badge-indicator-line-height",
+							"value": "1.3333"
+						},
+						{
+							"token": "--itx-badge-indicator-background-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-text-color",
+							"value": "var(--itx-color-value)"
+						}
+					]
+				},
+				{
+					"scope": "modifier",
+					"name": "dot",
+					"selector": ":where([interop-badge])[interop-badge=\"\"]",
+					"themeLayer": "interop.modifier.theme",
+					"declarations": [
+						{
+							"token": "--itx-badge-indicator-min-inline-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-min-block-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-badge-indicator-padding-inline",
+							"value": "0px"
+						}
+					]
 				}
 			]
 		},
@@ -437,7 +532,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the border drawn at the border width.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-border-color"
 				},
 				{
 					"name": "--itx-button-background-color-hover",
@@ -445,7 +541,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Fill behind the contents.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-background-color"
 				},
 				{
 					"name": "--itx-button-text-color-hover",
@@ -453,7 +550,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-text-color"
 				},
 				{
 					"name": "--itx-button-outline-color-hover",
@@ -461,7 +559,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the outline, normally the focus ring.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-outline-color"
 				},
 				{
 					"name": "--itx-button-outline-offset-hover",
@@ -469,7 +568,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Gap between the border edge and the outline.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-outline-offset"
 				},
 				{
 					"name": "--itx-button-outline-width-hover",
@@ -477,7 +577,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Thickness of the outline. Zero hides it without switching anything off.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-outline-width"
 				},
 				{
 					"name": "--itx-button-cursor-hover",
@@ -485,7 +586,8 @@
 					"type": "string",
 					"syntax": "*",
 					"description": "Pointer shown over the box.",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-cursor"
 				},
 				{
 					"name": "--itx-button-border-color-focus-visible",
@@ -493,7 +595,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the border drawn at the border width.",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-border-color"
 				},
 				{
 					"name": "--itx-button-background-color-focus-visible",
@@ -501,7 +604,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Fill behind the contents.",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-background-color"
 				},
 				{
 					"name": "--itx-button-text-color-focus-visible",
@@ -509,7 +613,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-text-color"
 				},
 				{
 					"name": "--itx-button-outline-color-focus-visible",
@@ -517,7 +622,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the outline, normally the focus ring.",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-outline-color"
 				},
 				{
 					"name": "--itx-button-outline-offset-focus-visible",
@@ -525,7 +631,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Gap between the border edge and the outline.",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-outline-offset"
 				},
 				{
 					"name": "--itx-button-outline-width-focus-visible",
@@ -534,6 +641,7 @@
 					"syntax": "<length>",
 					"description": "Thickness of the outline. Zero hides it without switching anything off.",
 					"state": "focus-visible",
+					"base": "--itx-button-outline-width",
 					"value": "2px"
 				},
 				{
@@ -542,7 +650,8 @@
 					"type": "string",
 					"syntax": "*",
 					"description": "Pointer shown over the box.",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-cursor"
 				},
 				{
 					"name": "--itx-button-border-color-active",
@@ -550,7 +659,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the border drawn at the border width.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-border-color"
 				},
 				{
 					"name": "--itx-button-background-color-active",
@@ -558,7 +668,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Fill behind the contents.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-background-color"
 				},
 				{
 					"name": "--itx-button-text-color-active",
@@ -566,7 +677,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-text-color"
 				},
 				{
 					"name": "--itx-button-outline-color-active",
@@ -574,7 +686,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the outline, normally the focus ring.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-outline-color"
 				},
 				{
 					"name": "--itx-button-outline-offset-active",
@@ -582,7 +695,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Gap between the border edge and the outline.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-outline-offset"
 				},
 				{
 					"name": "--itx-button-outline-width-active",
@@ -590,7 +704,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Thickness of the outline. Zero hides it without switching anything off.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-outline-width"
 				},
 				{
 					"name": "--itx-button-cursor-active",
@@ -598,7 +713,8 @@
 					"type": "string",
 					"syntax": "*",
 					"description": "Pointer shown over the box.",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-cursor"
 				},
 				{
 					"name": "--itx-button-border-color-disabled",
@@ -606,7 +722,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the border drawn at the border width.",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-border-color"
 				},
 				{
 					"name": "--itx-button-background-color-disabled",
@@ -614,7 +731,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Fill behind the contents.",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-background-color"
 				},
 				{
 					"name": "--itx-button-text-color-disabled",
@@ -622,7 +740,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-text-color"
 				},
 				{
 					"name": "--itx-button-outline-color-disabled",
@@ -630,7 +749,8 @@
 					"type": "color",
 					"syntax": "<color>",
 					"description": "Color of the outline, normally the focus ring.",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-outline-color"
 				},
 				{
 					"name": "--itx-button-outline-offset-disabled",
@@ -638,7 +758,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Gap between the border edge and the outline.",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-outline-offset"
 				},
 				{
 					"name": "--itx-button-outline-width-disabled",
@@ -646,7 +767,8 @@
 					"type": "length",
 					"syntax": "<length>",
 					"description": "Thickness of the outline. Zero hides it without switching anything off.",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-outline-width"
 				},
 				{
 					"name": "--itx-button-cursor-disabled",
@@ -655,6 +777,7 @@
 					"syntax": "*",
 					"description": "Pointer shown over the box.",
 					"state": "disabled",
+					"base": "--itx-button-cursor",
 					"value": "not-allowed"
 				},
 				{
@@ -682,7 +805,8 @@
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
 					"element": "icon",
-					"state": "hover"
+					"state": "hover",
+					"base": "--itx-button-icon-text-color"
 				},
 				{
 					"name": "--itx-button-icon-text-color-focus-visible",
@@ -691,7 +815,8 @@
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
 					"element": "icon",
-					"state": "focus-visible"
+					"state": "focus-visible",
+					"base": "--itx-button-icon-text-color"
 				},
 				{
 					"name": "--itx-button-icon-text-color-active",
@@ -700,7 +825,8 @@
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
 					"element": "icon",
-					"state": "active"
+					"state": "active",
+					"base": "--itx-button-icon-text-color"
 				},
 				{
 					"name": "--itx-button-icon-text-color-disabled",
@@ -709,7 +835,221 @@
 					"syntax": "<color>",
 					"description": "Color of the text, and of anything following currentColor.",
 					"element": "icon",
-					"state": "disabled"
+					"state": "disabled",
+					"base": "--itx-button-icon-text-color"
+				}
+			],
+			"scopes": [
+				{
+					"scope": "default",
+					"selector": ":where(button[interop-button])",
+					"themeLayer": "interop.default.theme",
+					"declarations": [
+						{
+							"token": "--itx-button-display",
+							"value": "inline-flex"
+						},
+						{
+							"token": "--itx-button-align-items",
+							"value": "center"
+						},
+						{
+							"token": "--itx-button-justify-content",
+							"value": "center"
+						},
+						{
+							"token": "--itx-button-gap",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-min-inline-size",
+							"value": "0"
+						},
+						{
+							"token": "--itx-button-max-inline-size",
+							"value": "none"
+						},
+						{
+							"token": "--itx-button-min-block-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-max-block-size",
+							"value": "none"
+						},
+						{
+							"token": "--itx-button-border-radius",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-padding-block",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-padding-inline",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-border-width",
+							"value": "1px"
+						},
+						{
+							"token": "--itx-button-border-style",
+							"value": "solid"
+						},
+						{
+							"token": "--itx-button-border-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-outline-width",
+							"value": "0"
+						},
+						{
+							"token": "--itx-button-outline-offset",
+							"value": "2px"
+						},
+						{
+							"token": "--itx-button-outline-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-font-family",
+							"value": "system-ui, sans-serif"
+						},
+						{
+							"token": "--itx-button-font-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-font-weight",
+							"value": "400"
+						},
+						{
+							"token": "--itx-button-line-height",
+							"value": "1.2"
+						},
+						{
+							"token": "--itx-button-text-align",
+							"value": "center"
+						},
+						{
+							"token": "--itx-button-background-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-text-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-cursor",
+							"value": "pointer"
+						},
+						{
+							"token": "--itx-button-outline-width-focus-visible",
+							"value": "2px"
+						},
+						{
+							"token": "--itx-button-cursor-disabled",
+							"value": "not-allowed"
+						},
+						{
+							"token": "--itx-button-icon-flex-shrink",
+							"value": "0"
+						},
+						{
+							"token": "--itx-button-icon-text-color",
+							"value": "var(--itx-color-value)"
+						}
+					]
+				},
+				{
+					"scope": "variant",
+					"name": "secondary",
+					"selector": ":where(button[interop-button])[itx-variant=\"secondary\"]",
+					"themeLayer": "interop.variant.theme",
+					"declarations": [
+						{
+							"token": "--itx-button-background-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-border-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-text-color",
+							"value": "var(--itx-color-value)"
+						}
+					]
+				},
+				{
+					"scope": "variant",
+					"name": "danger",
+					"selector": ":where(button[interop-button])[itx-variant=\"danger\"]",
+					"themeLayer": "interop.variant.theme",
+					"declarations": [
+						{
+							"token": "--itx-button-background-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-border-color",
+							"value": "var(--itx-color-value)"
+						},
+						{
+							"token": "--itx-button-text-color",
+							"value": "var(--itx-color-value)"
+						}
+					]
+				},
+				{
+					"scope": "size",
+					"name": "sm",
+					"selector": ":where(button[interop-button])[itx-size=\"sm\"]",
+					"themeLayer": "interop.size.theme",
+					"declarations": [
+						{
+							"token": "--itx-button-padding-block",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-padding-inline",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-font-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-min-block-size",
+							"value": "var(--itx-size-value)"
+						}
+					]
+				},
+				{
+					"scope": "size",
+					"name": "lg",
+					"selector": ":where(button[interop-button])[itx-size=\"lg\"]",
+					"themeLayer": "interop.size.theme",
+					"declarations": [
+						{
+							"token": "--itx-button-padding-block",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-padding-inline",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-font-size",
+							"value": "var(--itx-size-value)"
+						},
+						{
+							"token": "--itx-button-min-block-size",
+							"value": "var(--itx-size-value)"
+						}
+					]
 				}
 			]
 		},
@@ -719,7 +1059,8 @@
 			"states": [],
 			"modifiers": {},
 			"axes": {},
-			"tokens": []
+			"tokens": [],
+			"scopes": []
 		}
 	}
 }
