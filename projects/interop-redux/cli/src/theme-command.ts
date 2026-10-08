@@ -2,23 +2,28 @@
  * `interop theme <component>`. Writes `<out>/<component>/theme.<styles>` once; after that the
  * file belongs to the consumer.
  *
- * Inserting the import into `stylesEntry` belongs with `add`, which is not built yet.
+ * The theme's import goes into `stylesEntry` once the component has been added there.
  */
 
-import { mkdir, stat, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 
 import type { Ask } from './ask.ts';
 import { CliError } from './errors.ts';
-import { closest, type Manifest } from './manifest.ts';
-import { readSettings } from './settings.ts';
-import { categoryChoices, parseCategories, parseScopes, renderTheme, scopeChoices } from './theme.ts';
+import { chooseThemeable } from './choose.ts';
+import type { Manifest } from './manifest.ts';
+import { imports, insertImports, readEntry, relativeSpecifier, writeEntry } from './entry.ts';
+import { PACKAGE } from './package.ts';
+import { loadSettings, type Settings } from './settings.ts';
+import { report, writeStarter } from './starter.ts';
+import { categoryChoices, parseCategories, parseScopes, renderTheme, scopeChoices, type ThemeSelection } from './theme.ts';
 
 export interface ThemeArgs {
 	readonly component?: string | undefined;
 	readonly categories?: readonly string[] | undefined;
 	readonly scopes?: readonly string[] | undefined;
+	readonly script?: string | undefined;
 	readonly styles?: string | undefined;
+	readonly framework?: string | undefined;
 	readonly out?: string | undefined;
 	readonly dryRun: boolean;
 	readonly force: boolean;
@@ -34,29 +39,15 @@ export interface Context {
 
 export async function runTheme(args: ThemeArgs, context: Context): Promise<void> {
 	const { manifest, ask } = context;
-	const themeable = Object.keys(manifest.components).filter((n) => manifest.components[n]!.themeable);
-
 	ask?.intro('interop theme');
 
-	let name = args.component;
-	if (name === undefined) {
-		if (!ask) {
-			throw new CliError(`theme needs a component: interop theme <component>. One of: ${themeable.join(', ')}.`, 2);
-		}
-		name = await ask.select(
-			'Component',
-			themeable.map((n) => ({ value: n })),
-		);
-	}
+	const settings = await loadSettings(
+		context.cwd,
+		{ script: args.script, styles: args.styles, framework: args.framework, out: args.out },
+		{ ask, dryRun: args.dryRun, print: context.print },
+	);
 
-	const component = manifest.components[name];
-	if (!component) {
-		const suggestion = closest(name, Object.keys(manifest.components));
-		throw new CliError(`Unknown component "${name}".${suggestion ? ` Did you mean ${suggestion}?` : ''}`, 1);
-	}
-	if (!component.themeable) {
-		throw new CliError(`${name} is not themeable: it has no tokens. Themeable: ${themeable.join(', ')}.`, 1);
-	}
+	const { name, component } = await chooseThemeable('theme', args.component, manifest, ask);
 
 	const allCategories = categoryChoices(manifest, component);
 	const categories = args.categories
@@ -80,42 +71,44 @@ export async function runTheme(args: ThemeArgs, context: Context): Promise<void>
 				)
 			: allScopes.map((s) => s.id);
 
-	const settings = await readSettings(context.cwd, { styles: args.styles, out: args.out });
-	const text = renderTheme(name, component, manifest, { categories, scopes }, settings.styles);
+	await writeTheme(name, { categories, scopes }, settings, args, context);
+	ask?.outro(args.dryRun ? 'Nothing was written.' : 'Uncomment a token to change it.');
+}
+
+/**
+ * Writes the theme file, then imports it from the styles entry if the component has been
+ * added there. Used by `theme`, and by `add --theme`.
+ */
+export async function writeTheme(
+	name: string,
+	selection: ThemeSelection,
+	settings: Settings,
+	args: { readonly dryRun: boolean; readonly force: boolean },
+	context: Context,
+): Promise<void> {
+	const component = context.manifest.components[name]!;
+	const text = renderTheme(name, component, context.manifest, selection, settings.styles);
 	if (text === null) {
 		throw new CliError('No token matches the chosen categories and scopes.', 2);
 	}
 
-	const path = join(settings.out, name, `theme.${settings.styles}`);
-	const target = join(context.cwd, path);
+	const path = themePath(name, settings);
+	await writeStarter(path, text, args, context);
 
+	const entry = await readEntry(context.cwd, settings.stylesEntry);
+	const added = entry !== null && component.stylesheets.some((file) => imports(entry, `${PACKAGE}/${name}/${file}`));
+	if (!added) return;
+
+	const insertion = insertImports(entry, [relativeSpecifier(settings.stylesEntry, path)]);
+	if (insertion.added.length === 0) return;
 	if (args.dryRun) {
-		report(context, `Would write ${path}`);
+		report(context, `Would import it in ${settings.stylesEntry}`);
 		return;
 	}
-	if (!args.force && (await exists(target))) {
-		throw new CliError(`${path} exists. Pass --force to overwrite it.`, 1);
-	}
-
-	await mkdir(dirname(target), { recursive: true });
-	await writeFile(target, text, 'utf8');
-
-	if (ask) {
-		ask.success(`Wrote ${path}`);
-		ask.outro('Uncomment a token to change it.');
-	} else {
-		context.print(`Wrote ${path}`);
-	}
+	await writeEntry(context.cwd, settings.stylesEntry, insertion.text);
+	report(context, `Imported it in ${settings.stylesEntry}`);
 }
 
-function report(context: Context, line: string): void {
-	if (context.ask) context.ask.outro(line);
-	else context.print(line);
-}
-
-async function exists(path: string): Promise<boolean> {
-	return stat(path).then(
-		() => true,
-		() => false,
-	);
+export function themePath(name: string, settings: Settings): string {
+	return join(settings.out, name, `theme.${settings.styles}`);
 }

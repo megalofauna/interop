@@ -11,7 +11,7 @@ Everything shipped is generated from the two together.
 ```ts
 export const button: Blueprint = {
 	name: 'button',
-	selector: ':where(button[interop-button])',
+	host: { element: 'button' },
 	themeable: true,
 	prerequisites: ['box-sizing: border-box'],
 	sizes: ['sm', 'base', 'lg'],
@@ -19,16 +19,17 @@ export const button: Blueprint = {
 	cursor: ['cursor'],
 	properties: { paint: ['background-color', 'text-color'] /* … */ },
 	elements: {
-		icon: { selector: ' > :where([interop-icon])', properties: { paint: ['text-color'] } },
+		icon: { attribute: 'interop-icon', tag: 'svg', optional: true, properties: { paint: ['text-color'] } },
 	},
 };
 ```
 
 | Field | Holds |
 | --- | --- |
-| `selector` | The component's attribute selector, inside `:where()` for zero specificity. |
+| `host` | Where the component goes in markup. The selector is built from it, inside `:where()` for zero specificity. |
+| `attribute` | The identity attribute, when it is not `interop-<name>`. |
 | `properties` | Levers, filed by category: `layout shape border outline type paint effect`. |
-| `elements` | Sub-elements, each with a selector appended to the component's, its own `properties`, and its own `prerequisites`. |
+| `elements` | Sub-elements, each marked by an attribute, a child of the host unless `relation` says `descendant`, with its own `properties` and `prerequisites`. `tag` and `optional` shape the template starter. |
 | `modifiers` | Variations selected by an attribute on the component. Each carries fixed declarations, token values from config, or both. |
 | `prerequisites` | Declarations config cannot reach. They lead the base rule. |
 | `sizes` | The size axis values, `base` among them. Absent: not sizable. |
@@ -57,6 +58,18 @@ open harness/index.html
 No dependencies and no build step. Node runs the TypeScript directly.
 
 ## Rules
+
+**A blueprint declares its host, and the selector is built from it.** Three kinds:
+
+| Host | Blueprint | Selector |
+| --- | --- | --- |
+| An HTML element serves | `host: { element: 'button' }` | `:where(button[interop-button])` |
+| No element is obvious, or any block element would do | `host: 'custom-element'` | `:where(interop-toolbar-section, [interop-toolbar-section])` |
+| The attribute decorates an element another component may own | `host: 'any-element'` | `:where([interop-badge])` |
+
+The identity attribute is `interop-<name>`, or `attribute` where the blueprint names it.
+`visually-hidden` is a utility, so it is `itx-visually-hidden`. Where an element choice is
+contested, the component's docs give the reason for it.
 
 **Structure is what config cannot change; theme is what it can.** A component with no levers
 gets a structure file and no base file.
@@ -147,15 +160,20 @@ invalid-at-computed-value-time, which resolves to `transparent` for `background-
 
 ## The CLI
 
-[`docs/cli.md`](docs/cli.md) specifies it. `cli/` is its own package, so the generator keeps
-no dependencies. Of the commands, `theme` is built.
+[`docs/cli.md`](docs/cli.md) specifies it. It ships in this package as the `interop` bin, beside
+the generated stylesheets, which `package.json` exports as `interop/<file>.css`. The generator
+source imports nothing; `@clack/prompts` is the CLI's one dependency. Built: `add`, `theme` and `template`.
 
 ```sh
-cd cli && npm install
-node src/main.ts theme button             # asks for anything not given
-node src/main.ts theme button --dry-run   # names the file, writes nothing
-node --test src/*.test.ts
+npm install
+node cli/src/main.ts add button             # asks for anything not given
+node cli/src/main.ts theme button --dry-run # names the files, writes nothing
+npm test                                    # generator and CLI
 ```
+
+`sandbox/` is a Vite project that depends on this package through a `file:` link. Run
+`npm install` there, then `npx interop add button --theme` and `npm run dev`, to use the
+package the way a project would.
 
 Two constraints hold:
 

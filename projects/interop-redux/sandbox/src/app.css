@@ -1,0 +1,17 @@
+/* The sandbox's own rules. `src/styles.css` is the styles entry the CLI writes. */
+
+/* Placeholders for the upstream tokens the generated base points at. */
+:root {
+	--itx-color-value: currentColor;
+	--itx-size-value: 0.75rem;
+	font-family: system-ui, sans-serif;
+}
+
+body {
+	margin: 0;
+	padding: 2rem;
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	flex-wrap: wrap;
+}

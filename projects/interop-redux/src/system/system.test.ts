@@ -6,12 +6,12 @@ import { build } from '../build.ts';
 import { button } from '../blueprints/button.blueprint.ts';
 import { lintRoundTrip } from './lint.ts';
 import { resolve, type Config } from './resolve.ts';
-import { validate, type Blueprint } from './blueprint.ts';
+import { elementSelector, hostSelector, validate, type Blueprint } from './blueprint.ts';
 import { tokenName } from './vocabulary.ts';
 
 const base: Blueprint = {
 	name: 'widget',
-	selector: ':where(.widget)',
+	host: 'any-element',
 	themeable: true,
 	properties: { paint: ['background-color'] },
 };
@@ -94,7 +94,7 @@ describe('resolve', () => {
 			['--itx-widget-background-color'],
 		);
 		deepStrictEqual(axes, [{ name: 'variant', attribute: 'itx-variant', values: ['loud'] }]);
-		strictEqual(scopes.at(-1)?.selector, ':where(.widget)[itx-variant="loud"]');
+		strictEqual(scopes.at(-1)?.selector, ':where([interop-widget])[itx-variant="loud"]');
 	});
 
 	it('drops an axis value that redeclares nothing the component has', () => {
@@ -200,7 +200,7 @@ describe('resolve', () => {
 			const { scopes } = resolve(sizable, { values, sizes: { sm, lg } });
 			deepStrictEqual(
 				scopes.map((scope) => scope.selector),
-				[':where(.widget)', ':where(.widget)[itx-size="sm"]', ':where(.widget)[itx-size="lg"]'],
+				[':where([interop-widget])', ':where([interop-widget])[itx-size="sm"]', ':where([interop-widget])[itx-size="lg"]'],
 			);
 		});
 
@@ -228,7 +228,7 @@ describe('resolve', () => {
 			properties: {},
 			elements: {
 				mark: {
-					selector: ' > :where(.mark)',
+					attribute: 'interop-mark',
 					prerequisites: ['position: fixed'],
 					properties: { paint: ['background-color'] },
 				},
@@ -252,7 +252,7 @@ describe('resolve', () => {
 			const { rules } = resolve(decorated, { values });
 			deepStrictEqual(rules.find((r) => r.label === 'element: mark — modifier: left'), {
 				label: 'element: mark — modifier: left',
-				selector: ':where(.widget)[at="left"] > :where(.mark)',
+				selector: ':where([interop-widget])[at="left"] > :where([interop-mark])',
 				declarations: ['inset-inline-start: 0'],
 			});
 		});
@@ -266,7 +266,7 @@ describe('resolve', () => {
 				scope: 'modifier',
 				name: 'small',
 				label: 'modifier: small',
-				selector: ':where(.widget)[small]',
+				selector: ':where([interop-widget])[small]',
 				declarations: [{ token: '--itx-widget-mark-background-color', value: 'blue' }],
 			});
 		});
@@ -286,6 +286,66 @@ describe('resolve', () => {
 	it('drops a disabled category', () => {
 		const { tokens } = resolve(base, { disabledCategories: ['paint'] });
 		deepStrictEqual(tokens, []);
+	});
+});
+
+describe('host', () => {
+	const named = (host: Blueprint['host'], extra: Partial<Blueprint> = {}): Blueprint => ({
+		...base,
+		name: 'toolbar-section',
+		host,
+		...extra,
+	});
+
+	it('selects an HTML element by its identity attribute', () => {
+		strictEqual(hostSelector(named({ element: 'section' })), ':where(section[interop-toolbar-section])');
+	});
+
+	it('selects a custom element and the attribute form together', () => {
+		strictEqual(
+			hostSelector(named('custom-element')),
+			':where(interop-toolbar-section, [interop-toolbar-section])',
+		);
+	});
+
+	it('selects an any-element host by attribute alone', () => {
+		strictEqual(hostSelector(named('any-element')), ':where([interop-toolbar-section])');
+	});
+
+	it('takes an explicit identity attribute', () => {
+		strictEqual(hostSelector(named('any-element', { attribute: 'itx-toolbar-section' })), ':where([itx-toolbar-section])');
+	});
+
+	it('builds child and descendant element selectors', () => {
+		strictEqual(elementSelector({ attribute: 'interop-icon', properties: {} }), ' > :where([interop-icon])');
+		strictEqual(
+			elementSelector({ attribute: 'interop-icon', relation: 'descendant', properties: {} }),
+			' :where([interop-icon])',
+		);
+	});
+
+	it('requires a display for a custom-element host', () => {
+		match(errorsFor(named('custom-element')), /needs a display lever or a display prerequisite/);
+		ok(validate(named('custom-element', { prerequisites: ['display: block'] })).ok);
+	});
+
+	it('rejects an attribute outside the interop- and itx- namespaces', () => {
+		match(errorsFor(named('any-element', { attribute: 'data-section' })), /must start interop- or itx-/);
+		match(
+			errorsFor({ ...base, elements: { mark: { attribute: 'mark', properties: {} } } }),
+			/elements\.mark\.attribute: must start interop- or itx-/,
+		);
+	});
+
+	it('rejects a custom element whose attribute form would differ from its tag', () => {
+		match(
+			errorsFor(named('custom-element', { attribute: 'itx-toolbar-section', prerequisites: ['display: block'] })),
+			/uses interop-toolbar-section for both forms/,
+		);
+	});
+
+	it('rejects a host that is none of the three kinds', () => {
+		match(errorsFor(named('slot' as never)), /must be \{ element/);
 	});
 });
 
@@ -389,6 +449,20 @@ describe('build', () => {
 				['size', 'lg', 'interop.size.theme'],
 			],
 		);
+	});
+
+	it('describes each host and element in the manifest', async () => {
+		const { files } = await build(await config());
+		const { components } = JSON.parse(files.get('manifest.json') ?? '{}');
+		deepStrictEqual(components.button.host, { kind: 'element', element: 'button', attribute: 'interop-button' });
+		deepStrictEqual(components.button.elements.icon, {
+			attribute: 'interop-icon',
+			relation: 'child',
+			tag: 'svg',
+			optional: true,
+		});
+		deepStrictEqual(components.badge.host, { kind: 'any-element', attribute: 'interop-badge' });
+		deepStrictEqual(components['visually-hidden'].host, { kind: 'any-element', attribute: 'itx-visually-hidden' });
 	});
 
 	it('names the base token on each state token in the manifest', async () => {

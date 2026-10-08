@@ -1,14 +1,19 @@
 import { deepStrictEqual, match, ok, rejects, strictEqual, throws } from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 import type { Ask, Choice } from './ask.ts';
-import { closest, loadManifest, type Manifest } from './manifest.ts';
+import { Cancelled } from './errors.ts';
+import { detectSettings } from './settings.ts';
+import { addSpecifiers } from './add-command.ts';
+import { insertImports, relativeSpecifier } from './entry.ts';
+import { closest, loadManifest, type Manifest, type ManifestComponent } from './manifest.ts';
+import { renderTemplate } from './template.ts';
 import { runTheme, type Context, type ThemeArgs } from './theme-command.ts';
 import { categoryChoices, parseCategories, parseScopes, renderTheme, scopeChoices } from './theme.ts';
 
@@ -18,7 +23,12 @@ const fixture: Manifest = {
 	components: {
 		chip: {
 			selector: ':where([interop-chip])',
+			host: { kind: 'any-element', attribute: 'interop-chip' },
+			elements: {},
+			axes: { variant: { attribute: 'itx-variant', values: ['loud', 'quiet'] } },
+			modifiers: {},
 			themeable: true,
+			stylesheets: ['properties.css', 'structure.css', 'base.css'],
 			states: ['hover'],
 			tokens: [
 				{ name: '--itx-chip-border-radius', category: 'shape', type: 'length', syntax: '<length>', description: '', value: '4px' },
@@ -72,7 +82,7 @@ const fixture: Manifest = {
 				},
 			],
 		},
-		hidden: { selector: ':where([hidden])', themeable: false, states: [], tokens: [], scopes: [] },
+		hidden: { selector: ':where([hidden])', host: { kind: 'any-element', attribute: 'itx-hidden' }, elements: {}, axes: {}, modifiers: {}, themeable: false, stylesheets: ['structure.css'], states: [], tokens: [], scopes: [] },
 	},
 };
 
@@ -190,6 +200,11 @@ describe('runTheme', () => {
 			outro: quiet,
 			success: quiet,
 			error: quiet,
+			note: quiet,
+			async confirm(message: string) {
+				asked.push(message);
+				return true;
+			},
 			async select<T extends string>(message: string, choices: readonly Choice<T>[]) {
 				asked.push(message);
 				return choices[0]!.value;
@@ -204,7 +219,7 @@ describe('runTheme', () => {
 	it('writes the theme under the default out directory', async () => {
 		const ctx = await context();
 		await runTheme({ ...args, component: 'chip' }, ctx);
-		deepStrictEqual(ctx.lines, ['Wrote src/interop/chip/theme.css']);
+		deepStrictEqual(ctx.lines, ['Wrote interop.project.json', 'Wrote src/interop/chip/theme.css']);
 		ok((await readFile(join(ctx.cwd, 'src/interop/chip/theme.css'), 'utf8')).includes('@layer interop.default.theme'));
 	});
 
@@ -212,14 +227,14 @@ describe('runTheme', () => {
 		const ask = scripted();
 		const ctx = await context(ask);
 		await runTheme(args, ctx);
-		deepStrictEqual(ask.asked, ['Component', 'Categories', 'Scopes']);
+		deepStrictEqual(ask.asked, ['Use these settings?', 'Component', 'Categories', 'Scopes']);
 		ok(existsSync(join(ctx.cwd, 'src/interop/chip/theme.css')));
 	});
 
 	it('skips a question its flag answers', async () => {
 		const ask = scripted();
 		await runTheme({ ...args, component: 'chip', categories: ['paint'] }, await context(ask));
-		deepStrictEqual(ask.asked, ['Scopes']);
+		deepStrictEqual(ask.asked, ['Use these settings?', 'Scopes']);
 	});
 
 	it('offers only themeable components', async () => {
@@ -246,8 +261,210 @@ describe('runTheme', () => {
 		ok(existsSync(join(ctx.cwd, 'src/interop/chip/theme.css')));
 	});
 
+	it('asks nothing about settings once interop.project.json exists', async () => {
+		const ask = scripted();
+		const ctx = await context(ask);
+		await writeFile(join(ctx.cwd, 'interop.project.json'), '{}');
+		await runTheme({ ...args, component: 'chip', categories: ['paint'], scopes: ['default'] }, ctx);
+		deepStrictEqual(ask.asked, []);
+	});
+
+	it('writes nothing when the detected settings are declined', async () => {
+		const ask = { ...scripted(), confirm: async () => false };
+		const ctx = await context(ask);
+		await rejects(runTheme({ ...args, component: 'chip' }, ctx), Cancelled);
+		ok(!existsSync(join(ctx.cwd, 'interop.project.json')));
+		ok(!existsSync(join(ctx.cwd, 'src')));
+	});
+
+	it('records the detected settings, not the flags given for one run', async () => {
+		const ctx = await context();
+		await runTheme({ ...args, component: 'chip', styles: 'scss' }, ctx);
+		const recorded = JSON.parse(await readFile(join(ctx.cwd, 'interop.project.json'), 'utf8'));
+		strictEqual(recorded.styles, 'css');
+		ok(existsSync(join(ctx.cwd, 'src/interop/chip/theme.scss')));
+	});
+
+	it('writes no settings file on --dry-run', async () => {
+		const ctx = await context();
+		await runTheme({ ...args, component: 'chip', dryRun: true }, ctx);
+		deepStrictEqual(ctx.lines, ['Would write interop.project.json', 'Would write src/interop/chip/theme.css']);
+		ok(!existsSync(join(ctx.cwd, 'interop.project.json')));
+	});
+
 	it('rejects a style language it does not write', async () => {
 		await rejects(runTheme({ ...args, component: 'chip', styles: 'less' }, await context()), /--styles must be css or scss/);
+	});
+});
+
+describe('insertImports', () => {
+	it('starts an empty entry with the imports', () => {
+		deepStrictEqual(insertImports('', ['a.css', 'b.css']), {
+			text: "@import 'a.css';\n@import 'b.css';\n",
+			added: ['a.css', 'b.css'],
+		});
+	});
+
+	it('goes after the last import at the top', () => {
+		const text = "@import 'x.css';\n@import 'y.css';\n\nbody { margin: 0; }\n";
+		strictEqual(
+			insertImports(text, ['a.css']).text,
+			"@import 'x.css';\n@import 'y.css';\n@import 'a.css';\n\nbody { margin: 0; }\n",
+		);
+	});
+
+	it('goes after leading comments and @layer statements, ahead of the first rule', () => {
+		const text = '/* Project styles.\n   Second line. */\n@layer app;\nbody { margin: 0; }\n';
+		strictEqual(
+			insertImports(text, ['a.css']).text,
+			"/* Project styles.\n   Second line. */\n@layer app;\n\n@import 'a.css';\n\nbody { margin: 0; }\n",
+		);
+	});
+
+	it('keeps a comment with the rule directly under it', () => {
+		const text = '/* File header. */\n\n/* About the root rule. */\n:root { color: red; }\n';
+		strictEqual(
+			insertImports(text, ['a.css']).text,
+			"/* File header. */\n\n@import 'a.css';\n\n/* About the root rule. */\n:root { color: red; }\n",
+		);
+	});
+
+	it('skips a specifier already imported, in either quote style or url()', () => {
+		const text = '@import "a.css";\n@import url(\'b.css\');\n';
+		deepStrictEqual(insertImports(text, ['a.css', 'b.css', 'c.css']).added, ['c.css']);
+	});
+
+	it('changes nothing when every import is there', () => {
+		const text = "@import 'a.css';\nbody {}\n";
+		deepStrictEqual(insertImports(text, ['a.css']), { text, added: [] });
+	});
+
+	it('writes a theme specifier relative to the entry', () => {
+		strictEqual(relativeSpecifier('src/styles.css', 'src/interop/button/theme.css'), './interop/button/theme.css');
+		strictEqual(relativeSpecifier('styles/main.css', 'src/interop/button/theme.css'), '../src/interop/button/theme.css');
+	});
+});
+
+describe('renderTemplate', () => {
+	const component = (overrides: Partial<ManifestComponent>): ManifestComponent => ({
+		...chip,
+		axes: {},
+		modifiers: {},
+		...overrides,
+	});
+	const markup = (text: string) => text.slice(text.indexOf('-->') + 4);
+
+	it('puts the identity attribute on an HTML host, with an optional element commented out', () => {
+		const text = renderTemplate(
+			'button',
+			component({
+				selector: ':where(button[interop-button])',
+				host: { kind: 'element', element: 'button', attribute: 'interop-button' },
+				elements: { icon: { attribute: 'interop-icon', relation: 'child', tag: 'svg', optional: true } },
+			}),
+		);
+		strictEqual(markup(text), '<button interop-button>\n\t<!-- <svg interop-icon></svg> -->\n</button>\n');
+	});
+
+	it('writes a custom element on its own, noting the attribute form', () => {
+		const text = renderTemplate(
+			'toolbar-section',
+			component({
+				host: { kind: 'custom-element', element: 'interop-toolbar-section', attribute: 'interop-toolbar-section' },
+				elements: {},
+			}),
+		);
+		strictEqual(markup(text), '<interop-toolbar-section></interop-toolbar-section>\n');
+		ok(text.includes('interop-toolbar-section also works as an attribute on any element.'));
+	});
+
+	it('puts an any-element attribute on a stand-in div, with modifiers as attributes', () => {
+		const text = renderTemplate(
+			'chip',
+			component({
+				elements: { mark: { attribute: 'interop-chip-mark', relation: 'child', tag: 'span', optional: false } },
+				axes: { variant: { attribute: 'itx-variant', values: ['loud', 'quiet'] } },
+				modifiers: { dot: { selector: ':where([interop-chip])[interop-chip=""]' } },
+			}),
+		);
+		strictEqual(markup(text), '<div interop-chip>\n\t<span interop-chip-mark></span>\n</div>\n');
+		ok(text.includes('goes on the element it decorates. The div stands in for it.'));
+		ok(text.includes('variant: itx-variant="loud | quiet"'));
+		ok(text.includes('dot: interop-chip=""'));
+	});
+
+	it('writes a void host without children', () => {
+		const text = renderTemplate('field', component({ host: { kind: 'element', element: 'input', attribute: 'interop-field' } }));
+		strictEqual(markup(text), '<input interop-field>\n');
+	});
+});
+
+describe('addSpecifiers', () => {
+	it('puts layers.css first, then each component in cascade order', () => {
+		deepStrictEqual(addSpecifiers(fixture, ['hidden', 'chip']), [
+			'interop/layers.css',
+			'interop/hidden/structure.css',
+			'interop/chip/properties.css',
+			'interop/chip/structure.css',
+			'interop/chip/base.css',
+		]);
+	});
+});
+
+describe('detectSettings', () => {
+	async function project(files: Record<string, string>): Promise<string> {
+		const root = await mkdtemp(join(tmpdir(), 'interop-'));
+		for (const [path, text] of Object.entries(files)) {
+			await mkdir(dirname(join(root, path)), { recursive: true });
+			await writeFile(join(root, path), text);
+		}
+		return root;
+	}
+
+	it('defaults an empty directory to plain HTML and CSS', async () => {
+		deepStrictEqual(await detectSettings(await project({})), {
+			script: 'js',
+			styles: 'css',
+			framework: 'html',
+			out: 'src/interop',
+			stylesEntry: 'src/styles.css',
+		});
+	});
+
+	it('reads an Angular workspace: framework, styles entry, and SCSS', async () => {
+		const root = await project({
+			'package.json': JSON.stringify({ dependencies: { '@angular/core': '^21.0.0' } }),
+			'tsconfig.json': '{}',
+			'angular.json': JSON.stringify({
+				projects: { app: { architect: { build: { options: { styles: ['src/global.scss'] } } } } },
+			}),
+		});
+		deepStrictEqual(await detectSettings(root), {
+			script: 'ts',
+			styles: 'scss',
+			framework: 'angular',
+			out: 'src/interop',
+			stylesEntry: 'src/global.scss',
+		});
+	});
+
+	it('takes SCSS from a sass dependency', async () => {
+		const root = await project({ 'package.json': JSON.stringify({ devDependencies: { sass: '^1.0.0' } }) });
+		const { styles, stylesEntry } = await detectSettings(root);
+		strictEqual(styles, 'scss');
+		strictEqual(stylesEntry, 'src/styles.scss');
+	});
+
+	it('keeps an existing CSS entry when the project also uses sass', async () => {
+		const root = await project({
+			'package.json': JSON.stringify({ devDependencies: { sass: '^1.0.0' } }),
+			'src/styles.css': '',
+		});
+		strictEqual((await detectSettings(root)).stylesEntry, 'src/styles.css');
+	});
+
+	it('finds src/styles.scss', async () => {
+		strictEqual((await detectSettings(await project({ 'src/styles.scss': '' }))).stylesEntry, 'src/styles.scss');
 	});
 });
 
@@ -309,9 +526,94 @@ describe('the interop command', () => {
 	});
 
 	it('exits 2 on a command that is not built', async () => {
-		const { status, stderr } = await interop('add', 'button');
+		const { status, stderr } = await interop('new', 'rating');
 		strictEqual(status, 2);
 		match(stderr, /not built yet/);
+	});
+
+	it('adds a component, then imports its theme', async () => {
+		const { cwd, status } = await interop('add', 'button', 'visually-hidden', '--theme');
+		strictEqual(status, 0);
+		strictEqual(
+			await readFile(join(cwd, 'src/styles.css'), 'utf8'),
+			[
+				"@import 'interop/layers.css';",
+				"@import 'interop/button/properties.css';",
+				"@import 'interop/button/structure.css';",
+				"@import 'interop/button/base.css';",
+				"@import 'interop/visually-hidden/structure.css';",
+				"@import './interop/button/theme.css';",
+				'',
+			].join('\n'),
+		);
+		ok(existsSync(join(cwd, 'src/interop/button/theme.css')));
+		ok(!existsSync(join(cwd, 'src/interop/visually-hidden')));
+	});
+
+	it('imports a theme written after its component was added', async () => {
+		const { cwd } = await interop('add', 'button');
+		const result = run(cwd, ['theme', 'button']);
+		strictEqual(result.status, 0);
+		match(result.stdout, /Imported it in src\/styles\.css/);
+		match(await readFile(join(cwd, 'src/styles.css'), 'utf8'), /@import '\.\/interop\/button\/theme\.css';\n$/);
+	});
+
+	it('leaves the entry alone for a theme whose component is not added', async () => {
+		const { cwd } = await interop('theme', 'button');
+		ok(!existsSync(join(cwd, 'src/styles.css')));
+	});
+
+	it('adds nothing twice', async () => {
+		const { cwd } = await interop('add', 'button');
+		const before = await readFile(join(cwd, 'src/styles.css'), 'utf8');
+		const again = run(cwd, ['add', 'button']);
+		strictEqual(again.status, 0);
+		match(again.stdout, /already imports button/);
+		strictEqual(await readFile(join(cwd, 'src/styles.css'), 'utf8'), before);
+	});
+
+	it('refuses --theme over an existing theme before touching the entry', async () => {
+		const { cwd } = await interop('theme', 'button');
+		const result = run(cwd, ['add', 'button', '--theme']);
+		strictEqual(result.status, 1);
+		ok(!existsSync(join(cwd, 'src/styles.css')));
+	});
+
+	it('writes nothing on add --dry-run', async () => {
+		const { cwd, status, stdout } = await interop('add', 'button', '--dry-run');
+		strictEqual(status, 0);
+		match(stdout, /Would add to src\/styles\.css:\n  @import 'interop\/layers\.css';/);
+		ok(!existsSync(join(cwd, 'src/styles.css')));
+	});
+
+	it('writes a template starter', async () => {
+		const { cwd, status, stdout } = await interop('template', 'button');
+		strictEqual(status, 0);
+		match(stdout, /Wrote src\/interop\/button\/template\.html/);
+		const text = await readFile(join(cwd, 'src/interop/button/template.html'), 'utf8');
+		ok(text.includes('<button interop-button>\n\t<!-- <svg interop-icon></svg> -->\n</button>'));
+		strictEqual(run(cwd, ['template', 'button']).status, 1);
+	});
+
+	it('exits 1 on a template for a component that is not themeable', async () => {
+		strictEqual((await interop('template', 'visually-hidden')).status, 1);
+	});
+
+	it('adds a component with a template starter', async () => {
+		const { cwd, status } = await interop('add', 'badge', '--template');
+		strictEqual(status, 0);
+		ok(existsSync(join(cwd, 'src/interop/badge/template.html')));
+		ok(!existsSync(join(cwd, 'src/interop/badge/theme.css')));
+	});
+
+	it('refuses --template over an existing template before touching the entry', async () => {
+		const { cwd } = await interop('template', 'badge');
+		strictEqual(run(cwd, ['add', 'badge', '--template']).status, 1);
+		ok(!existsSync(join(cwd, 'src/styles.css')));
+	});
+
+	it('exits 2 on add with no component and no terminal', async () => {
+		strictEqual((await interop('add')).status, 2);
 	});
 
 	it('lists the commands with no arguments', async () => {
@@ -326,6 +628,14 @@ describe('the interop command', () => {
 		const text = await readFile(join(cwd, 'src/interop/button/theme.css'), 'utf8');
 		ok(!text.includes('interop.variant.theme'));
 		ok(text.includes('/* size: lg */'));
+	});
+
+	it('runs through a symlinked bin, as npx runs it', async () => {
+		const cwd = await mkdtemp(join(tmpdir(), 'interop-'));
+		const bin = join(cwd, 'interop');
+		await symlink(main, bin);
+		const result = spawnSync(process.execPath, [bin, '--version'], { cwd, encoding: 'utf8' });
+		strictEqual(result.stdout.trim(), '0.0.0');
 	});
 
 	it('loads the real manifest', async () => {

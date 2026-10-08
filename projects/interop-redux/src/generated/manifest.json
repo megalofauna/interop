@@ -14,6 +14,23 @@
 		"badge": {
 			"selector": ":where([interop-badge])",
 			"themeable": true,
+			"stylesheets": [
+				"properties.css",
+				"structure.css",
+				"base.css"
+			],
+			"host": {
+				"kind": "any-element",
+				"attribute": "interop-badge"
+			},
+			"elements": {
+				"indicator": {
+					"attribute": "interop-badge-indicator",
+					"relation": "child",
+					"tag": "span",
+					"optional": false
+				}
+			},
 			"states": [],
 			"modifiers": {
 				"dot": {
@@ -267,6 +284,24 @@
 		"button": {
 			"selector": ":where(button[interop-button])",
 			"themeable": true,
+			"stylesheets": [
+				"properties.css",
+				"structure.css",
+				"base.css"
+			],
+			"host": {
+				"kind": "element",
+				"element": "button",
+				"attribute": "interop-button"
+			},
+			"elements": {
+				"icon": {
+					"attribute": "interop-icon",
+					"relation": "child",
+					"tag": "svg",
+					"optional": true
+				}
+			},
 			"states": [
 				"hover",
 				"focus-visible",
@@ -1056,6 +1091,14 @@
 		"visually-hidden": {
 			"selector": ":where([itx-visually-hidden])",
 			"themeable": false,
+			"stylesheets": [
+				"structure.css"
+			],
+			"host": {
+				"kind": "any-element",
+				"attribute": "itx-visually-hidden"
+			},
+			"elements": {},
 			"states": [],
 			"modifiers": {},
 			"axes": {},

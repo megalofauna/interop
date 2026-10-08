@@ -24,9 +24,36 @@ export interface ManifestScope {
 	readonly declarations: readonly { readonly token: string; readonly value: string }[];
 }
 
+export interface ManifestHost {
+	readonly kind: 'element' | 'custom-element' | 'any-element';
+	/** The HTML or custom element. Absent for an `any-element` host. */
+	readonly element?: string;
+	readonly attribute: string;
+}
+
+export interface ManifestElement {
+	readonly attribute: string;
+	readonly relation: 'child' | 'descendant';
+	readonly tag: string;
+	readonly optional: boolean;
+}
+
+export interface ManifestAxis {
+	readonly attribute: string;
+	readonly values: readonly string[];
+	readonly default?: string;
+}
+
 export interface ManifestComponent {
+	readonly host: ManifestHost;
+	readonly elements: Readonly<Record<string, ManifestElement>>;
+	readonly axes: Readonly<Record<string, ManifestAxis>>;
+	/** Each modifier's selector, appended to the host selector. */
+	readonly modifiers: Readonly<Record<string, { readonly selector: string }>>;
 	readonly selector: string;
 	readonly themeable: boolean;
+	/** The files the package ships for the component, in import order. */
+	readonly stylesheets: readonly string[];
 	readonly states: readonly string[];
 	readonly tokens: readonly ManifestToken[];
 	readonly scopes: readonly ManifestScope[];

@@ -8,7 +8,9 @@ import type { Blueprint } from '../system/blueprint.ts';
 
 export const visuallyHidden: Blueprint = {
 	name: 'visually-hidden',
-	selector: ':where([itx-visually-hidden])',
+	host: 'any-element',
+	// A utility, so `itx-`, though the grammar would name it `interop-visually-hidden`.
+	attribute: 'itx-visually-hidden',
 	themeable: false,
 	properties: {},
 

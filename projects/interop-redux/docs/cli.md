@@ -1,9 +1,7 @@
 # interop CLI
 
-Specification. `theme` is built, except the import line it inserts into `stylesEntry`, which
-waits on `add`. Detecting settings and writing `interop.project.json` are not built either:
-the CLI reads the file if it exists and uses the defaults otherwise. The other commands are
-not built.
+Specification. Built: `add`, `theme`, `template`, and project settings, detected and
+confirmed on the first run. `new` and `init` are not built.
 
 `interop` sets up Interop components in a project. It makes new components, wires shipped
 ones into the project's styles, and writes starter files for a component's theme and template.
@@ -74,8 +72,9 @@ A session looks like this:
 └  Uncomment a token to change it.
 ```
 
-The prompts use [`@clack/prompts`](https://github.com/bombshell-dev/clack). The CLI is its own
-package, so the generator keeps no dependencies.
+The prompts use [`@clack/prompts`](https://github.com/bombshell-dev/clack). The CLI ships in the
+`interop` package as its `interop` bin, so one install gives a project both the stylesheets
+and the command. The generator source imports nothing.
 
 ## Naming a component
 
@@ -149,7 +148,7 @@ npx interop new rating
 | Question | Flag | Default |
 | --- | --- | --- |
 | Name, kebab-case | the argument | none |
-| Selector | `--selector` | `:where([interop-<name>])` |
+| Host: an HTML element, `custom-element`, or `any-element` | `--host` | `custom-element` |
 | Themeable | `--no-themeable` | yes |
 | Levers, by category | `--properties` | none |
 | States | `--states` | none |
@@ -171,7 +170,7 @@ build accepts it, so a new component builds as soon as it is created.
 A JavaScript blueprint types itself with JSDoc:
 
 ```js
-/** @type {import('<package>').Blueprint} */
+/** @type {import('interop').Blueprint} */
 export const rating = {
 	name: 'rating',
 	selector: ':where([interop-rating])',
@@ -210,10 +209,10 @@ npx interop add button
 Into `stylesEntry`:
 
 ```css
-@import '<package>/layers.css';
-@import '<package>/button/properties.css';
-@import '<package>/button/structure.css';
-@import '<package>/button/base.css';
+@import 'interop/layers.css';
+@import 'interop/button/properties.css';
+@import 'interop/button/structure.css';
+@import 'interop/button/base.css';
 ```
 
 `layers.css` comes first and appears once, however many components are added. It declares
@@ -310,8 +309,8 @@ behaves the same as leaving it unset.
 
 ## `interop template <component>`
 
-Creates a markup starter for a custom template. It holds what the component needs to work and
-nothing else. Hand-written templates work the same way. This command is a convenience.
+Creates a markup starter: the markup the component's CSS needs to match, and nothing else.
+Hand-written markup works the same way. This command is a convenience.
 
 ```sh
 npx interop template button
@@ -319,50 +318,56 @@ npx interop template button
 
 ### What the starter carries
 
-Each requirement comes from the blueprint:
+Components are CSS-only, so a template is markup the consumer writes. Each requirement comes
+from the blueprint, through the manifest:
 
 | Requirement | Source | For button |
 | --- | --- | --- |
-| The host element | the element in `selector` | `<button>`. `:disabled` and `:focus-visible` depend on it. |
-| The host attribute | the attribute in `selector` | `interop-button` |
-| One attribute per element | each selector in `elements` | `interop-icon`, a direct child |
+| The host | `host` | `<button>`. `:disabled` and `:focus-visible` depend on it. |
+| The identity attribute | `attribute`, default `interop-<name>` | `interop-button` |
+| One attribute per element | `elements` | `interop-icon`, a direct child |
+| Axis and modifier attributes | `sizes`, the config, `modifiers` | listed in the comment |
 
 Everything else belongs to the consumer: content, other attributes, wrapping markup.
+
+The host decides the outer element:
+
+| Host | Starter |
+| --- | --- |
+| an HTML element | That element, with the identity attribute: `<button interop-button>`. |
+| `custom-element` | The custom element: `<interop-toolbar-section>`. The comment notes the attribute form, for any element. |
+| `any-element` | A `div` with the identity attribute, standing in for the element it decorates. |
 
 ### Asks
 
 | Question | Flag | Default |
 | --- | --- | --- |
 | Component | the argument | none |
-| Format | `--framework` | the project setting |
 
 ### Writes
 
-`<out>/<component>/template.html`.
-
-Angular:
+`<out>/<component>/template.html`, the same for Angular and plain HTML:
 
 ```html
-<ng-template>
-	<button interop-button>
-		<!-- <svg interop-icon aria-hidden="true"></svg> -->
-	</button>
-</ng-template>
-```
+<!--
+	button template starter. Written by `interop template button`. This file is yours.
 
-HTML:
-
-```html
+	Options on the host:
+	  variant: itx-variant="secondary | danger"
+	  size: itx-size="sm | base | lg"
+-->
 <button interop-button>
-	<!-- <svg interop-icon aria-hidden="true"></svg> -->
+	<!-- <svg interop-icon></svg> -->
 </button>
 ```
 
-An element the blueprint names is optional, so it is written commented out.
+An element the blueprint marks `optional` is written commented out.
 
 ### Constraints
 
 - Themeable components only.
+- No `<ng-template>` wrapper. Nothing yet renders a consumer's template, so there is no
+  template context to declare. The contract is the attributes above.
 
 ---
 
@@ -377,8 +382,6 @@ Planned. Creates a project with Interop installed, writes `interop.project.json`
 
 | Question | Blocks |
 | --- | --- |
-| The package name, written as `<package>` above | `add` |
 | How the build finds blueprints in a consumer project | `new` |
-| `manifest.json` carries no host element, host attribute, or element selectors | `template` |
-| The template context contract: what data a custom template receives | `template` |
+| The template context contract: what data a custom template receives, once a runtime renders one | a runtime |
 | A browser view for `theme`, rendering the component as tokens change | none |

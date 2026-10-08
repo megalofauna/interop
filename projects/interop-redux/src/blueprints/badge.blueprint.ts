@@ -10,7 +10,7 @@ import type { Blueprint } from '../system/blueprint.ts';
 
 export const badge: Blueprint = {
 	name: 'badge',
-	selector: ':where([interop-badge])',
+	host: 'any-element',
 	themeable: true,
 	// `anchor-scope` limits the name to this host, so every badge can use the same one.
 	prerequisites: ['anchor-name: --itx-badge', 'anchor-scope: --itx-badge'],
@@ -19,7 +19,7 @@ export const badge: Blueprint = {
 
 	elements: {
 		indicator: {
-			selector: ' > :where([interop-badge-indicator])',
+			attribute: 'interop-badge-indicator',
 			// Fixed positioning escapes every overflow the host sits in. `position-area` puts
 			// the indicator in the corner cell, and the translate centers it on the corner.
 			prerequisites: [

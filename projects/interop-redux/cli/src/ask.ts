@@ -19,6 +19,8 @@ export interface Ask {
 	outro(message: string): void;
 	success(message: string): void;
 	error(message: string): void;
+	note(message: string, title: string): void;
+	confirm(message: string, initial?: boolean): Promise<boolean>;
 	select<T extends string>(message: string, choices: readonly Choice<T>[]): Promise<T>;
 	multiselect<T extends string>(message: string, choices: readonly Choice<T>[], initial: readonly T[]): Promise<T[]>;
 }
@@ -42,6 +44,10 @@ export const terminal: Ask = {
 	outro: (message) => clack.outro(message),
 	success: (message) => clack.log.success(message),
 	error: (message) => clack.log.error(message),
+	note: (message, title) => clack.note(message, title),
+	async confirm(message, initial = true) {
+		return settled<boolean>(await clack.confirm({ message, initialValue: initial }));
+	},
 	async select<T extends string>(message: string, choices: readonly Choice<T>[]) {
 		return settled<T>(await clack.select<T>({ message, options: options(choices) }));
 	},

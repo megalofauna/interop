@@ -2,7 +2,7 @@ import type { Blueprint } from '../system/blueprint.ts';
 
 export const button: Blueprint = {
 	name: 'button',
-	selector: ':where(button[interop-button])',
+	host: { element: 'button' },
 	themeable: true,
 	prerequisites: ['box-sizing: border-box'],
 	sizes: ['sm', 'base', 'lg'],
@@ -35,7 +35,9 @@ export const button: Blueprint = {
 
 	elements: {
 		icon: {
-			selector: ' > :where([interop-icon])',
+			attribute: 'interop-icon',
+			tag: 'svg',
+			optional: true,
 			properties: {
 				layout: ['flex-shrink'],
 				paint: ['text-color'],

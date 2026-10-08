@@ -14,11 +14,10 @@ import { LAYERS } from './system/vocabulary.ts';
 import { lintRoundTrip, type LintIssue } from './system/lint.ts';
 import { resolve as resolveComponent, type Config } from './system/resolve.ts';
 import { emitDocs } from './system/emit/docs.ts';
-import { emitManifest } from './system/emit/manifest.ts';
+import { emitManifest, type ManifestEntry } from './system/emit/manifest.ts';
 import { emitProperties } from './system/emit/properties.ts';
 import { emitStructure } from './system/emit/structure.ts';
 import { emitBase } from './system/emit/base.ts';
-import type { Blueprint } from './system/blueprint.ts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'src/generated');
@@ -34,7 +33,7 @@ export async function build(config: Config): Promise<BuildResult> {
 	const files = new Map<string, string>();
 	const issues: LintIssue[] = [];
 	const missing: string[] = [];
-	const manifestEntries: { blueprint: Blueprint; component: ReturnType<typeof resolveComponent> }[] = [];
+	const manifestEntries: ManifestEntry[] = [];
 
 	// Layer order, declared once. See `LAYERS`.
 	files.set('layers.css', `@layer\n\t${LAYERS.join(',\n\t')};\n`);
@@ -56,7 +55,11 @@ export async function build(config: Config): Promise<BuildResult> {
 		const stateTokens = new Set(component.tokens.filter((t) => t.state).map((t) => t.name));
 		issues.push(...lintRoundTrip(blueprint.name, structure, base, stateTokens));
 
-		manifestEntries.push({ blueprint, component });
+		// Cascade order for a consumer's imports. `layers.css` precedes all of them.
+		const stylesheets = [properties && 'properties.css', 'structure.css', base && 'base.css'].filter(
+			(name): name is string => typeof name === 'string',
+		);
+		manifestEntries.push({ blueprint, component, stylesheets });
 	}
 
 	files.set('manifest.json', emitManifest(manifestEntries));

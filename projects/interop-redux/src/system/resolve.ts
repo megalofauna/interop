@@ -15,7 +15,7 @@ import {
 	type StateName,
 	type ValueType,
 } from './vocabulary.ts';
-import { KEBAB, assertValid, type Blueprint } from './blueprint.ts';
+import { KEBAB, assertValid, elementSelector, hostSelector, type Blueprint } from './blueprint.ts';
 
 /**
  * The consumer-facing config. Plain data only: a CLI has to read a value, change it, and
@@ -122,13 +122,13 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 	const scopes: Scope[] = [
 		{
-			selector: blueprint.selector,
+			selector: hostSelector(blueprint),
 			prerequisites: blueprint.prerequisites ?? [],
 			properties: { ...blueprint.properties, ...(blueprint.cursor ? { cursor: blueprint.cursor } : {}) },
 		},
 		...Object.entries(blueprint.elements ?? {}).map(([element, spec]) => ({
 			element,
-			selector: `${blueprint.selector}${spec.selector}`,
+			selector: `${hostSelector(blueprint)}${elementSelector(spec)}`,
 			prerequisites: spec.prerequisites ?? [],
 			properties: spec.properties,
 		})),
@@ -213,10 +213,10 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 			// The state selector goes on the component: the element repaints when the component
 			// is hovered.
-			const elementSuffix = scope.element ? scope.selector.slice(blueprint.selector.length) : '';
+			const elementSuffix = scope.element ? scope.selector.slice(hostSelector(blueprint).length) : '';
 			rules.push({
 				label: scope.element ? `element: ${scope.element} — ${state}` : state,
-				selector: `${blueprint.selector}${selectorForState(state)}${elementSuffix}`,
+				selector: `${hostSelector(blueprint)}${selectorForState(state)}${elementSuffix}`,
 				declarations,
 			});
 		}
@@ -225,7 +225,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 	// A modifier's fixed declarations. The attribute's specificity puts them above the base rule.
 	const modifiers: ResolvedModifier[] = [];
 	for (const [name, modifier] of Object.entries(blueprint.modifiers ?? {})) {
-		const selector = `${blueprint.selector}${modifier.selector}`;
+		const selector = `${hostSelector(blueprint)}${modifier.selector}`;
 		modifiers.push({ name, selector });
 		if (modifier.prerequisites?.length) {
 			rules.push({ label: `modifier: ${name}`, selector, declarations: modifier.prerequisites });
@@ -233,7 +233,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		for (const [element, declarations] of Object.entries(modifier.elements ?? {})) {
 			rules.push({
 				label: `element: ${element} — modifier: ${name}`,
-				selector: `${selector}${blueprint.elements![element]!.selector}`,
+				selector: `${selector}${elementSelector(blueprint.elements![element]!)}`,
 				declarations,
 			});
 		}
@@ -249,7 +249,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 		themeScopes.push({
 			scope: 'default',
 			label: 'base',
-			selector: blueprint.selector,
+			selector: hostSelector(blueprint),
 			declarations: baseDeclarations,
 		});
 	}
@@ -294,7 +294,7 @@ export function resolve(blueprint: Blueprint, config: ComponentConfig = {}): Res
 
 	return {
 		name: blueprint.name,
-		selector: blueprint.selector,
+		selector: hostSelector(blueprint),
 		themeable: blueprint.themeable,
 		tokens,
 		axes,
@@ -389,7 +389,7 @@ function axisScopes(
 				label: `${axis.name}: ${value}`,
 				// Appended rather than woven in, so no selector parsing is needed. The extra
 				// specificity puts the axis scope above the base.
-				selector: `${blueprint.selector}[${axis.attribute}="${value}"]`,
+				selector: `${hostSelector(blueprint)}[${axis.attribute}="${value}"]`,
 				declarations: Object.entries(tokens)
 					.filter(([token]) => declared.has(token))
 					.map(([token, v]) => ({ token, value: v })),

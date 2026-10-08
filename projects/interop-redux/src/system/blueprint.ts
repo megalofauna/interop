@@ -20,10 +20,28 @@ import {
 /** Which levers a scope offers, filed under the category each belongs to. */
 export type PropertyMap = Partial<Record<Exclude<Category, 'cursor'>, readonly PropertyKey[]>>;
 
+/**
+ * Where a component goes in markup. The host selector is built from this.
+ *
+ * - `{ element: 'button' }` — an HTML element serves: `:where(button[interop-button])`.
+ * - `'custom-element'` — no HTML element is obvious, or any block element would do:
+ *   `:where(interop-toolbar-section, [interop-toolbar-section])`. The attribute form goes on
+ *   whatever element the consumer picks.
+ * - `'any-element'` — the attribute decorates an element that may already belong to another
+ *   component, so there is no custom element form: `:where([interop-badge])`.
+ */
+export type HostSpec = { readonly element: string } | 'custom-element' | 'any-element';
+
 /** A sub-element of the component, styled from the component's token namespace. */
 export interface ElementSpec {
-	/** Appended to the component selector, so `' > svg'` becomes `:where(button) > svg`. */
-	readonly selector: string;
+	/** The attribute that marks the element, such as `interop-icon`. */
+	readonly attribute: string;
+	/** Where the element sits under the host. Default `child`. */
+	readonly relation?: 'child' | 'descendant';
+	/** The tag the template starter writes. Not part of the selector. Default `span`. */
+	readonly tag?: string;
+	/** The component works without it. The template starter writes it commented out. */
+	readonly optional?: boolean;
 	/** Declarations the element needs that config cannot reach. They lead its base rule. */
 	readonly prerequisites?: readonly string[];
 	readonly properties: PropertyMap;
@@ -47,8 +65,9 @@ export interface ModifierSpec {
 export interface Blueprint {
 	/** Kebab-case. Becomes the component segment of every token name. */
 	readonly name: string;
-	/** The base selector. `:where()` by convention, for zero specificity. */
-	readonly selector: string;
+	readonly host: HostSpec;
+	/** The identity attribute. Default `interop-<name>`. */
+	readonly attribute?: string;
 	/** False: structure file only, no base file. `properties` must be empty. */
 	readonly themeable: boolean;
 	/** Declarations this component needs that config cannot reach. They lead the base rule. */
@@ -69,6 +88,32 @@ export interface Blueprint {
 
 export const KEBAB = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
+/** The custom element for a `custom-element` host. */
+export function customElementName(blueprint: Blueprint): string {
+	return `interop-${blueprint.name}`;
+}
+
+export function identityAttribute(blueprint: Blueprint): string {
+	return blueprint.attribute ?? `interop-${blueprint.name}`;
+}
+
+/** Zero specificity, so a consumer's single class overrides it. */
+export function hostSelector(blueprint: Blueprint): string {
+	const attribute = identityAttribute(blueprint);
+	if (blueprint.host === 'custom-element') return `:where(${customElementName(blueprint)}, [${attribute}])`;
+	if (blueprint.host === 'any-element') return `:where([${attribute}])`;
+	return `:where(${blueprint.host.element}[${attribute}])`;
+}
+
+/** Appended to the host selector. */
+export function elementSelector(element: ElementSpec): string {
+	return `${element.relation === 'descendant' ? ' ' : ' > '}:where([${element.attribute}])`;
+}
+
+/** Identity is `interop-`; `itx-` is configuration, and the utilities that read as it. */
+const ATTRIBUTE = /^(interop|itx)-[a-z0-9]+(-[a-z0-9]+)*$/;
+const TAG = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
+
 export interface ValidationResult {
 	readonly ok: boolean;
 	readonly errors: readonly string[];
@@ -83,9 +128,7 @@ export function validate(blueprint: Blueprint): ValidationResult {
 	if (!blueprint.name || !KEBAB.test(blueprint.name)) {
 		at('name', `must be kebab-case, got ${JSON.stringify(blueprint.name)}`);
 	}
-	if (!blueprint.selector?.trim()) {
-		at('selector', 'must be a non-empty selector');
-	}
+	checkHost(blueprint, at);
 
 	const seen = new Map<PropertyKey, string>();
 	checkProperties(blueprint.properties, 'properties', at, seen);
@@ -93,7 +136,12 @@ export function validate(blueprint: Blueprint): ValidationResult {
 
 	for (const [elementName, element] of Object.entries(blueprint.elements ?? {})) {
 		if (!KEBAB.test(elementName)) at(`elements.${elementName}`, 'element name must be kebab-case');
-		if (!element.selector?.trim()) at(`elements.${elementName}.selector`, 'must be a non-empty selector');
+		if (!ATTRIBUTE.test(element.attribute ?? '')) {
+			at(`elements.${elementName}.attribute`, `must start interop- or itx-, got ${JSON.stringify(element.attribute)}`);
+		}
+		if (element.tag !== undefined && !TAG.test(element.tag)) {
+			at(`elements.${elementName}.tag`, `${JSON.stringify(element.tag)} is not an element name`);
+		}
 		// An element has its own token namespace, so it gets its own duplicate check.
 		checkProperties(element.properties, `elements.${elementName}.properties`, at, new Map());
 	}
@@ -152,6 +200,27 @@ export function assertValid(blueprint: Blueprint): Blueprint {
 	const { ok, errors } = validate(blueprint);
 	if (!ok) throw new Error(`Invalid blueprint:\n  ${errors.join('\n  ')}`);
 	return blueprint;
+}
+
+function checkHost(blueprint: Blueprint, at: Reporter): void {
+	const { host } = blueprint;
+	const kinds = host === 'custom-element' || host === 'any-element';
+	if (!kinds && !(typeof host === 'object' && host !== null && TAG.test(host.element ?? ''))) {
+		at('host', `must be { element: '<tag>' }, 'custom-element' or 'any-element', got ${JSON.stringify(host)}`);
+	}
+	if (blueprint.attribute !== undefined && !ATTRIBUTE.test(blueprint.attribute)) {
+		at('attribute', `must start interop- or itx-, got ${JSON.stringify(blueprint.attribute)}`);
+	}
+	if (host === 'custom-element' && blueprint.attribute !== undefined && blueprint.attribute !== customElementName(blueprint)) {
+		at('attribute', `a custom-element host uses ${customElementName(blueprint)} for both forms`);
+	}
+	// A custom element is inline until something says otherwise.
+	if (host === 'custom-element') {
+		const display =
+			(blueprint.properties.layout ?? []).includes('display') ||
+			(blueprint.prerequisites ?? []).some((d) => /^\s*display\s*:/.test(d));
+		if (!display) at('host', 'a custom-element host needs a display lever or a display prerequisite');
+	}
 }
 
 type Reporter = (path: string, message: string) => void;
