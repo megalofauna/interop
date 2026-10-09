@@ -40,12 +40,7 @@
 		 * ordering before anything else.
 		 */
 		"paths": {
-			"interop": ["projects/interop/src/public-api.ts", "dist/interop"],
-			"interop/highlighters/shiki": [
-				"projects/interop/highlighters/shiki/src/public-api.ts",
-				"dist/interop/highlighters/shiki"
-			],
-			"interop/*": ["projects/interop/src/*", "dist/interop/*"]
+			"interop": ["projects/interop/src/public-api.ts", "dist/interop"]
 		}
 	},
 	"angularCompilerOptions": {
