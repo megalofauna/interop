@@ -49,5 +49,13 @@
 		"strictInputAccessModifiers": true,
 		"strictTemplates": true,
 		"compilationMode": "partial"
-	}
+	},
+	"references": [
+		{
+			"path": "./projects/interop/tsconfig.lib.json"
+		},
+		{
+			"path": "./projects/interop/tsconfig.spec.json"
+		}
+	]
 }
