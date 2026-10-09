@@ -40,7 +40,8 @@
 		 * ordering before anything else.
 		 */
 		"paths": {
-			"interop": ["projects/interop/src/public-api.ts", "dist/interop"]
+			"interop": ["projects/interop/src/public-api.ts", "dist/interop"],
+			"interop/*": ["projects/interop/*/public-api.ts", "dist/interop/*"]
 		}
 	},
 	"angularCompilerOptions": {
