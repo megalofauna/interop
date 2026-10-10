@@ -4,28 +4,8 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"outDir": "../../out-tsc/app",
-		"types": [],
-		"baseUrl": "../../",
-		"paths": {
-			"interop": ["projects/interop/src/public-api"],
-			"interop/highlighters/shiki": [
-				"projects/interop/highlighters/shiki/src/public-api.ts"
-			],
-			"interop/*": ["projects/interop/src/*"]
-		}
+		"types": []
 	},
-	"include": [
-		"src/**/*.ts",
-		"../../projects/interop/src/lib/**/*.ts",
-		"../../projects/interop/src/types/**/*.ts",
-		"../../projects/interop/highlighters/**/*.ts"
-	],
-	"exclude": [
-		"src/**/*.spec.ts",
-		"../../projects/interop/src/**/*.spec.ts",
-		"../../projects/interop/src/examples/**/*"
-	],
-	"angularCompilerOptions": {
-		"compilationMode": "full"
-	}
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/**/*.spec.ts"]
 }

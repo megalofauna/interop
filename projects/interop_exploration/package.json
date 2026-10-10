@@ -1,0 +1,24 @@
+{
+	"name": "interop",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Interop components: generated stylesheets and the interop command line",
+	"bin": {
+		"interop": "./cli/src/main.ts"
+	},
+	"exports": {
+		"./package.json": "./package.json",
+		"./manifest.json": "./src/generated/manifest.json",
+		"./*.css": "./src/generated/*.css"
+	},
+	"scripts": {
+		"build": "node src/build.ts",
+		"check": "node src/build.ts --check",
+		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"test": "node --test src/system/*.test.ts cli/src/*.test.ts"
+	},
+	"dependencies": {
+		"@clack/prompts": "^1.8.1"
+	}
+}

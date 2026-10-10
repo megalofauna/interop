@@ -1,0 +1,14 @@
+:root {
+	--itx-transition-duration-faster: 100ms;
+	--itx-transition-duration: 150ms;
+	--itx-transition-duration-slower: 250ms;
+	--itx-transition-timing-function: cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--itx-transition-duration-faster: 0ms;
+		--itx-transition-duration: 0ms;
+		--itx-transition-duration-slower: 0ms;
+	}
+}

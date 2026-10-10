@@ -7,13 +7,10 @@
 			"projectType": "library",
 			"root": "projects/interop",
 			"sourceRoot": "projects/interop/src",
-			"prefix": "itx",
+			"prefix": "interop",
 			"architect": {
 				"build": {
 					"builder": "@angular/build:ng-packagr",
-					"options": {
-						"project": "projects/interop/ng-package.json"
-					},
 					"configurations": {
 						"production": {
 							"tsConfig": "projects/interop/tsconfig.lib.prod.json"
@@ -25,76 +22,52 @@
 					"defaultConfiguration": "production"
 				},
 				"test": {
-					"builder": "@angular/build:karma",
+					"builder": "@angular/build:unit-test",
 					"options": {
 						"tsConfig": "projects/interop/tsconfig.spec.json",
-						"polyfills": ["zone.js", "zone.js/testing"]
+						"include": [
+							"**/*.spec.ts",
+							"../**/*.spec.ts"
+						]
 					}
 				}
 			}
 		},
 		"demo": {
 			"projectType": "application",
-			"schematics": {
-				"@schematics/angular:component": {
-					"style": "scss",
-					"skipTests": true
-				},
-				"@schematics/angular:class": {
-					"skipTests": true
-				},
-				"@schematics/angular:directive": {
-					"skipTests": true
-				},
-				"@schematics/angular:guard": {
-					"skipTests": true
-				},
-				"@schematics/angular:interceptor": {
-					"skipTests": true
-				},
-				"@schematics/angular:pipe": {
-					"skipTests": true
-				},
-				"@schematics/angular:resolver": {
-					"skipTests": true
-				},
-				"@schematics/angular:service": {
-					"skipTests": true
-				}
-			},
+			"schematics": {},
 			"root": "projects/demo",
 			"sourceRoot": "projects/demo/src",
-			"prefix": "dtx",
+			"prefix": "demo",
 			"architect": {
 				"build": {
 					"builder": "@angular/build:application",
 					"options": {
 						"browser": "projects/demo/src/main.ts",
 						"tsConfig": "projects/demo/tsconfig.app.json",
-						"inlineStyleLanguage": "scss",
 						"assets": [
 							{
 								"glob": "**/*",
 								"input": "projects/demo/public"
 							}
 						],
-						"styles": ["projects/demo/src/styles.scss"],
-						"stylePreprocessorOptions": {
-							"includePaths": ["projects/interop/src", "projects/demo/src"]
-						}
+						"styles": [
+							"projects/interop/interop.css",
+							"projects/demo/src/styles.css"
+						]
 					},
 					"configurations": {
 						"production": {
 							"budgets": [
 								{
 									"type": "initial",
-									"maximumWarning": "1.25MB",
-									"maximumError": "1.75MB"
+									"maximumWarning": "500kB",
+									"maximumError": "1MB"
 								},
 								{
 									"type": "anyComponentStyle",
-									"maximumWarning": "8kB",
-									"maximumError": "16kB"
+									"maximumWarning": "4kB",
+									"maximumError": "8kB"
 								}
 							],
 							"outputHashing": "all"
@@ -109,9 +82,6 @@
 				},
 				"serve": {
 					"builder": "@angular/build:dev-server",
-					"options": {
-						"port": 1337
-					},
 					"configurations": {
 						"production": {
 							"buildTarget": "demo:build:production"
@@ -120,90 +90,13 @@
 							"buildTarget": "demo:build:development"
 						}
 					},
-					"defaultConfiguration": "development"
-				}
-			}
-		},
-		"protocol": {
-			"projectType": "application",
-			"schematics": {
-				"@schematics/angular:component": {
-					"style": "scss",
-					"skipTests": true
-				},
-				"@schematics/angular:class": {
-					"skipTests": true
-				},
-				"@schematics/angular:directive": {
-					"skipTests": true
-				},
-				"@schematics/angular:service": {
-					"skipTests": true
-				}
-			},
-			"root": "projects/protocol",
-			"sourceRoot": "projects/protocol/src",
-			"prefix": "ptx",
-			"architect": {
-				"build": {
-					"builder": "@angular/build:application",
+					"defaultConfiguration": "development",
 					"options": {
-						"browser": "projects/protocol/src/main.ts",
-						"index": "projects/protocol/src/index.html",
-						"tsConfig": "projects/protocol/tsconfig.app.json",
-						"inlineStyleLanguage": "scss",
-						"assets": [
-							{
-								"glob": "**/*.md",
-								"input": "projects/protocol/src/content",
-								"output": "content"
-							},
-							{
-								"glob": "**/*.woff2",
-								"input": "projects/protocol/src/fonts",
-								"output": "fonts"
-							}
-						],
-						"styles": ["projects/protocol/src/styles.scss"],
-						"stylePreprocessorOptions": {
-							"includePaths": ["projects/interop/src", "projects/protocol/src"]
-						}
-					},
-					"configurations": {
-						"production": {
-							"budgets": [
-								{
-									"type": "initial",
-									"maximumWarning": "1MB",
-									"maximumError": "1.5MB"
-								},
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "8kB",
-									"maximumError": "16kB"
-								}
-							],
-							"outputHashing": "all"
-						},
-						"development": {
-							"optimization": false,
-							"extractLicenses": false,
-							"sourceMap": true
-						}
-					},
-					"defaultConfiguration": "production"
+						"port": 1337
+					}
 				},
-				"serve": {
-					"builder": "@angular/build:dev-server",
-					"configurations": {
-						"production": {
-							"buildTarget": "protocol:build:production"
-						},
-						"development": {
-							"buildTarget": "protocol:build:development"
-						}
-					},
-					"defaultConfiguration": "development"
+				"test": {
+					"builder": "@angular/build:unit-test"
 				}
 			}
 		}

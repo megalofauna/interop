@@ -1,0 +1,49 @@
+/*
+ * Corner radius, set by `itx-radius` on a themeable component:
+ *
+ *   <button interop-button itx-radius="full">
+ *
+ * The attribute sets --itx-radius on the element that carries it, and the component reads it.
+ * The token does not inherit, so the attribute reaches only that element. `md`, `base` and no
+ * attribute at all are the same: the initial value.
+ */
+
+:root {
+	--itx-radius-none: 0px;
+	--itx-radius-nominal: 2px;
+	--itx-radius-sm: 4px;
+	--itx-radius-md: 8px;
+	--itx-radius-lg: 16px;
+	--itx-radius-full: 9999px;
+}
+
+/* A registered initial value cannot read another property, so md's 8px is written out here. */
+@property --itx-radius {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: 8px;
+}
+
+/* Read with `corner-shape: var(--itx-corner-shape)`. `full` is round; every other radius is a squircle. */
+@property --itx-corner-shape {
+	syntax: "*";
+	inherits: false;
+	initial-value: squircle;
+}
+
+:where([itx-radius="none"]) {
+	--itx-radius: var(--itx-radius-none);
+}
+:where([itx-radius="nominal"]) {
+	--itx-radius: var(--itx-radius-nominal);
+}
+:where([itx-radius="sm"]) {
+	--itx-radius: var(--itx-radius-sm);
+}
+:where([itx-radius="lg"]) {
+	--itx-radius: var(--itx-radius-lg);
+}
+:where([itx-radius="full"]) {
+	--itx-radius: var(--itx-radius-full);
+	--itx-corner-shape: round;
+}

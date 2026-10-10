@@ -1,0 +1,42 @@
+/*
+ * The length scale. Step n is n × 0.25rem; `px` is 1px. A decimal step uses an underscore:
+ * --itx-space-0_5 is 0.125rem.
+ */
+
+:root {
+	--itx-space-0: 0px;
+	--itx-space-px: 1px;
+	--itx-space-0_5: 0.125rem;
+	--itx-space-1: 0.25rem;
+	--itx-space-1_5: 0.375rem;
+	--itx-space-2: 0.5rem;
+	--itx-space-2_5: 0.625rem;
+	--itx-space-3: 0.75rem;
+	--itx-space-3_5: 0.875rem;
+	--itx-space-4: 1rem;
+	--itx-space-5: 1.25rem;
+	--itx-space-6: 1.5rem;
+	--itx-space-7: 1.75rem;
+	--itx-space-8: 2rem;
+	--itx-space-9: 2.25rem;
+	--itx-space-10: 2.5rem;
+	--itx-space-11: 2.75rem;
+	--itx-space-12: 3rem;
+	--itx-space-14: 3.5rem;
+	--itx-space-16: 4rem;
+	--itx-space-20: 5rem;
+	--itx-space-24: 6rem;
+	--itx-space-28: 7rem;
+	--itx-space-32: 8rem;
+	--itx-space-36: 9rem;
+	--itx-space-40: 10rem;
+	--itx-space-44: 11rem;
+	--itx-space-48: 12rem;
+	--itx-space-52: 13rem;
+	--itx-space-56: 14rem;
+	--itx-space-60: 15rem;
+	--itx-space-64: 16rem;
+	--itx-space-72: 18rem;
+	--itx-space-80: 20rem;
+	--itx-space-96: 24rem;
+}

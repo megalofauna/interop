@@ -1,80 +1,13 @@
-<!-- The header spans the viewport so its background and sticky edge are full
-     bleed, but its contents ride the same centred measure as the nav + main
-     block beneath it — hence the inner wrapper. -->
-<header class="shell__header">
-	<div class="shell__header-inner">
-		<div class="shell__header-start">
-			<button
-				interop-button="icon"
-				itx-radius="lg"
-				class="shell__menu-btn"
-				command="toggle-popover"
-				commandfor="site-nav"
-				aria-label="Toggle navigation"
-			>
-				<interop-icon
-					name="tabler-layout-sidebar-left-expand"
-					[size]="24"
-				></interop-icon>
-			</button>
-			<a class="shell__title" routerLink="/">Interop</a>
-			@if (meta().title) {
-				<!-- Real navigation now that the crumbs are links, so it is a
-				     breadcrumb landmark rather than the aria-hidden decoration it
-				     was. It is hidden until the page <h1> scrolls away; the CSS
-				     pairs that with `visibility` so these links leave the tab
-				     order while invisible instead of being silent focus targets. -->
-				<nav class="shell__crumb" aria-label="Breadcrumb">
-					<span class="shell__crumb-sep" aria-hidden="true">›</span>
-					@if (meta().category) {
-						@if (categoryRoute(); as route) {
-							<a class="shell__crumb-category" [routerLink]="route">{{
-								meta().category
-							}}</a>
-						} @else {
-							<span class="shell__crumb-category">{{ meta().category }}</span>
-						}
-						<span class="shell__crumb-sep" aria-hidden="true">›</span>
-					}
-					<span class="shell__crumb-title" aria-current="page">{{
-						meta().title
-					}}</span>
-				</nav>
-			}
-		</div>
+<header>Interop</header>
 
-		<div class="shell__header-end">
-			<button
-				interop-button="secondary"
-				class="shell__cmdk"
-				type="button"
-				(click)="openPalette()"
-				aria-label="Command palette"
-			>
-				<span>Search</span>
-				<kbd>⌘K</kbd>
-			</button>
-			<demo-theme-toggle />
-		</div>
-	</div>
-</header>
+<nav aria-label="Components">
+	<ul>
+		<li><a routerLink="/components/button" routerLinkActive="active" ariaCurrentWhenActive="page">Button</a></li>
+	</ul>
+</nav>
 
-<demo-nav class="shell__sidebar" />
-
-<main class="shell__content">
+<main>
 	<router-outlet />
 </main>
 
-<!-- ⌘K / Ctrl+K opens the command palette (the hotkey listens on document). -->
-<div interopHotkey="mod+k" (hotkey)="openPalette()" hidden></div>
-
-<dialog
-	interop-command-palette
-	label="Command palette"
-	placeholder="Search pages…"
-	[open]="paletteOpen()"
-	(closed)="paletteOpen.set(false)"
-	[commands]="filteredCommands()"
-	(queryChange)="query.set($event)"
-	(command)="runCommand($event)"
-></dialog>
+<footer>Interop demo</footer>

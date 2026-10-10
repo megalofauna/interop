@@ -1,0 +1,43 @@
+:host {
+	display: grid;
+	grid-template-columns: 16rem 1fr;
+	grid-template-rows: auto 1fr auto;
+	grid-template-areas:
+		"header header"
+		"nav main"
+		"footer footer";
+	min-block-size: 100dvh;
+}
+
+header {
+	grid-area: header;
+	padding: var(--itx-space-4);
+	border-block-end: 1px solid var(--itx-neutral-200);
+}
+
+nav {
+	grid-area: nav;
+	padding: var(--itx-space-4);
+	border-inline-end: 1px solid var(--itx-neutral-200);
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+nav a.active {
+	font-weight: 600;
+}
+
+main {
+	grid-area: main;
+	padding: var(--itx-space-8);
+}
+
+footer {
+	grid-area: footer;
+	padding: var(--itx-space-4);
+	border-block-start: 1px solid var(--itx-neutral-200);
+}

@@ -1,0 +1,380 @@
+/*
+ * InteropButton — protocol theme values.
+ *
+ * Borrowed from IBM Carbon's Button (round 6). Carbon's model in one line:
+ * **size changes the height and nothing else** — the label is $body-compact-01
+ * (14px) at every step, so the box grows around a constant label rather than
+ * scaling with it.
+ *
+ * Carbon's side padding is $spacing-05 (16px) at every step too. That is kept
+ * from md up, but the two small steps pull it in: block padding is derived from
+ * the height, so a constant beside it inverts the padding box on a short
+ * button. See the note above the size blocks.
+ *
+ * Assigns custom properties only. Structure, state selectors and the focus
+ * ring live in `components/button.css`.
+ */
+
+/* ── Base (default, no variant) ──────────────────────────────────────────── */
+
+/* Declared on the component, not on the elevation boundaries.
+
+   This block was co-declared at every layer because the colour tokens it
+   aliased were ranks solved per surface, and a rank parked at the root froze
+   layer 0's value for the whole tree. The palette replaced those ranks and is
+   page-relative, so the reason expired. Co-declaration is not free: it
+   re-declares at every boundary, which wipes a consumer's override one layer
+   down.
+
+   On the component the value substitutes at the element, which still sees
+   layer-sensitive inputs (--itx-surface* is registered `inherits: true`) and
+   additionally sees what an ancestor sets. `[interop-button]` rather than
+   `button[interop-button]`: the foundation styles the bare attribute at
+   components/button.css:66, so an `a[interop-button]` is supported. */
+:where([interop-button], [itx-as-button]) {
+	/* Sizing — pin the height; the foundation derives block padding as
+	   (height − 1em) / 2, so the visible pill lands at exactly the height.
+	   Default size = md (40), Carbon's medium step. */
+	--itx-button-height: 2.5rem;
+
+	/* Carbon $spacing-05 — "a button cannot have a label or any element within
+	   16px of its borders". The base, and the value md/lg/xl keep; xs and sm
+	   override it below. */
+	--itx-button-padding-inline: var(--itx-spacing-4);
+
+	/* layout */
+	--itx-button-display: inline-flex;
+	--itx-button-align-items: center;
+	--itx-button-width: auto;
+	--itx-button-flex: 1 1 auto;
+	--itx-button-min-width: max-content;
+	--itx-button-max-width: var(--itx-spacing-32);
+	--itx-button-justify-content: center;
+
+	/* Carbon $spacing-03 — the gap it uses between label and icon wherever the
+	   icon is laid out in flow rather than pinned to the trailing edge. */
+	--itx-button-gap: var(--itx-spacing-2);
+
+	/* typography — Carbon $body-compact-01 (14 / 400), fixed at every size.
+	   line-height stays 1: the foundation derives block padding from 1em, so
+	   Carbon's 18/14 leading would push the pill past --itx-button-height. */
+	--itx-button-font-family: var(--itx-font-family-sans);
+	--itx-button-font-size: 0.875rem;
+	--itx-button-font-weight: 400;
+	--itx-button-line-height: 1;
+
+	/* edge — Carbon $button-outline-width is 1px, and every variant carries a
+	   border (transparent on the filled ones) so the box never shifts. Radius
+	   is 0: Carbon has no rounded buttons. */
+	--itx-button-border-style: solid;
+
+	/* transition — Carbon $duration-fast-01 (70ms) on a productive entrance
+	   curve; rounded onto our motion scale. */
+	--itx-button-transition-properties:
+		background-color, border-color, box-shadow;
+
+	/* Rest state — declared on the elevation boundaries rather than the bare
+	   root, so the rank re-resolves per layer. An ancestor can still override
+	   the same token via inheritance, which is the point of not scoping this
+	   block to the button itself; the one exception is an [itx-layer] sitting
+	   between that ancestor and the button, which reclaims the token. Variant
+	   rules below stay on button[interop-button~="…"] because they're keyed off
+	   attributes that don't propagate up the tree. */
+	--itx-button-background: var(--itx-role-background-control);
+
+	/* aria-pressed="true" — a toggle that is ON. One step past active on the
+	   same monotonic ramp the other states use, so "held down" and "latched on"
+	   read as the same family rather than two vocabularies. */
+	--itx-button-background-pressed: light-dark(
+		oklch(from var(--itx-button-background) calc(l - 0.025) c h),
+		oklch(from var(--itx-button-background) calc(l + 0.025) c h)
+	);
+	--itx-button-foreground-pressed: var(--itx-role-text);
+	--itx-button-foreground: var(--itx-role-text);
+	--itx-button-border-color: transparent;
+	--itx-button-box-shadow: none;
+
+	/* Hover / active — Carbon's state ramps are monotonic: each state sits one
+	   step further from the page than the one before it. */
+	--itx-button-background-hover: var(--itx-role-background-control);
+	--itx-button-background-active: var(--itx-role-background-control);
+
+	/* Focused/selected state — kept on --itx-role-background-colorway rather than Carbon's
+	   inset double ring; see the note at the foot of this file. */
+}
+
+/* ── Variants ────────────────────────────────────────────────────────────── */
+
+:where(button[interop-button~="grow"]),
+:where([itx-as-button~="grow"]) {
+	--itx-button-flex: 1;
+	--itx-button-max-width: none;
+}
+
+/* ── primary ─────────────────────────────────────────────────────────────
+   The fill is the colourway's identity. The label is --itx-role-text-inverse,
+   which is authored for that fill. Inheriting the neutral maximum instead puts
+   near-white on the fill in dark mode.
+
+   Hover and active are generated by stepping the solid AWAY from its label, so
+   a state can only ever increase the label's contrast, never break it. */
+
+:where(button[interop-button~="primary"]),
+:where([itx-as-button~="primary"]) {
+	--itx-button-background: var(--itx-neutral-12);
+	--itx-button-foreground: var(--itx-role-text);
+	/* Transparent because the variant is filled — the base's rule, which this
+	   block used to break with an opaque grey ring around a brand fill. */
+	--itx-button-border-color: transparent;
+	--itx-button-box-shadow: none;
+
+	/* Derived from the fill rather than authored beside it, so a consumer who
+	   changes the colourway gets states that follow. Scheme-invariant, like the
+	   fill. */
+	--itx-button-background-hover: oklch(
+		from var(--itx-button-background) calc(l - 0.05) c h
+	);
+	--itx-button-foreground-hover: var(--itx-role-text-inverse);
+
+	--itx-button-background-active: oklch(
+		from var(--itx-button-background) calc(l - 0.09) c h
+	);
+	--itx-button-foreground-active: var(--itx-role-text-inverse);
+}
+
+/* ── secondary ───────────────────────────────────────────────────────────
+   A light neutral, not Carbon's dark solid. */
+
+:where(button[interop-button~="secondary"]),
+:where([itx-as-button~="secondary"]) {
+	--itx-button-background: var(--itx-role-background-control);
+	--itx-button-foreground: var(--itx-role-text-quiet);
+	--itx-button-border-color: var(--itx-role-divider);
+	--itx-button-box-shadow: var(--itx-shadow-sm);
+
+	--itx-button-background-hover: light-dark(
+		oklch(from var(--itx-button-background) calc(l - 0.025) c h),
+		oklch(from var(--itx-button-background) calc(l + 0.025) c h)
+	);
+
+	--itx-button-background-active: var(--itx-role-background-control);
+}
+
+/* ── tertiary ────────────────────────────────────────────────────────────
+   A neutral outline that stays an outline — the label darkens and the fill
+   never arrives. Carbon's tertiary fills with brand colour on hover; this
+   does not.
+
+   NOTE: restored from the pre-Carbon values with one deliberate correction.
+   The original was missing a semicolon after --itx-button-border-color-hover,
+   which voided BOTH that declaration and the --itx-button-foreground-active
+   that followed it. So the hover border and the active label had never
+   actually applied. Reinstating the values means reinstating what they were
+   meant to do, not the typo. */
+
+:where(button[interop-button~="tertiary"]),
+:where([itx-as-button~="tertiary"]) {
+	--itx-button-background: transparent;
+	--itx-button-foreground: var(--itx-role-text-quieter);
+	--itx-button-border-color: var(--itx-role-divider);
+	--itx-button-box-shadow: none;
+
+	--itx-button-foreground-hover: var(--itx-role-text);
+	--itx-button-background-hover: var(--itx-role-background-control);
+	/*--itx-button-border-color-hover: var(--itx-role-edge);*/
+
+	--itx-button-foreground-active: var(--itx-role-text);
+	--itx-button-border-color-active: var(--itx-role-edge-colorway);
+	--itx-button-background-active: var(--itx-button-background-hover);
+}
+
+:where(button[interop-button~="icon"]),
+:where([itx-as-button~="icon"]) {
+	/* Square, stated rather than derived: the inline size matches the height
+	   floor. The old version reproduced the block-padding arithmetic on the
+	   inline axis, which only worked while line-height was exactly 1. */
+	--itx-button-min-width: var(--itx-button-height, 2.5rem);
+	--itx-button-padding-inline: 0;
+	--itx-button-max-width: none;
+
+	/* The base sets flex-start, which is right for a labelled button — Carbon
+	   left-aligns the label so a column of buttons reads as a column of text.
+	   An icon button has no label to align: its glyph is the whole content, so
+	   flex-start parked it against the left edge of a square frame. */
+	--itx-button-justify-content: center;
+}
+
+/* ── Sizes ───────────────────────────────────────────────────────────────── */
+/* Carbon's layout size ramp. The label is constant at every step; the height
+   is the one value each block pins (xs and sm also pull in the side padding —
+   see the note below).
+       xs  24
+       sm  32
+       md  40   ← default (declared on the base)
+       lg  48
+       xl  64   ← Carbon's "full bleed" step; takes the expressive 16px label
+   Carbon's 2xl (80) is not taken — Interop's axis stops at xl.                */
+
+/* ── The two small steps also pull their side padding in ──────────────────
+   Carbon holds 16px at every step. That works from md up, but it breaks down
+   below it, because only one of the two padding axes is a constant: the block
+   padding is derived from the height, so across the ramp it runs 5 / 9 / 13 /
+   17 / 24 while the inline padding sits at 16 throughout. The padding box
+   therefore inverts — at xs it is more than three times wider than it is tall,
+   at xl it is narrower — and a 24px-tall button ends up with two thirds of its
+   own height in air on each side of the label.
+
+   So xs and sm step down one and two places on the spacing scale. md keeps
+   Carbon's 16 as the anchor; lg and xl keep it too, where a constant still
+   reads correctly against a tall box.
+
+   Excluding `icon` is load-bearing. That variant squares itself by deriving
+   BOTH paddings from the height, and it is declared above this block — so at
+   equal (zero) specificity a padding declared here would win on source order
+   and leave an icon button 8px wide by 5px tall in its padding. Every real
+   xs button in the product is an icon button (the terminal's reset, the
+   popover placement grid), so this is the common path, not the edge case. */
+
+:where(button[interop-button][itx-size="xs"]),
+:where([itx-as-button][itx-size="xs"]) {
+	--itx-button-height: 1.5rem;
+}
+
+:where(button[interop-button][itx-size="xs"]:not([interop-button~="icon"])),
+:where([itx-as-button][itx-size="xs"]:not([itx-as-button~="icon"])) {
+	--itx-button-padding-inline: var(--itx-spacing-2);
+}
+
+:where(button[interop-button][itx-size="sm"]),
+:where([itx-as-button][itx-size="sm"]) {
+	--itx-button-height: 2rem;
+}
+
+:where(button[interop-button][itx-size="sm"]:not([interop-button~="icon"])),
+:where([itx-as-button][itx-size="sm"]:not([itx-as-button~="icon"])) {
+	--itx-button-padding-inline: var(--itx-spacing-3);
+}
+
+:where(button[interop-button][itx-size="md"]),
+:where([itx-as-button][itx-size="md"]) {
+	--itx-button-height: 2.5rem;
+}
+
+:where(button[interop-button][itx-size="lg"]),
+:where([itx-as-button][itx-size="lg"]) {
+	--itx-button-height: 3rem;
+}
+
+:where(button[interop-button][itx-size="xl"]),
+:where([itx-as-button][itx-size="xl"]) {
+	--itx-button-height: 4rem;
+	/* Carbon $body-compact-02 — the one step that changes the label, and only
+	   because Carbon's expressive large does the same. */
+	--itx-button-font-size: 1rem;
+}
+
+/* ── Layer ───────────────────────────────────────────────────────────────── */
+/*confirm / caution / destroy*/
+/*:where(button[interop-button~="destroy"]) {
+	--itx-button-background: oklch(70.07% 65% 28.7);
+	--itx-button-foreground: var(--itx-contrast-1);
+	--itx-button-border-color: oklch(30% 0.25% 30);
+	--itx-button-box-shadow: 0 0.12em 0 rgb(0 0 0 / 0.25);
+
+	--itx-button-background-hover: oklch(75.07% 50% 28.7);
+	--itx-button-foreground-hover: var(--itx-contrast-1);
+	--itx-button-border-color-hover: var(--itx-contrast-1);
+	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
+
+	--itx-button-background-active: oklch(70.07% 65% 28.7);
+	--itx-button-foreground-active: var(--itx-contrast-1);
+	--itx-button-box-shadow-active: inset 0 0.12em 0 rgb(0 0 0 / 0.15);
+}
+
+:where(button[interop-button~="caution"]) {
+	--itx-button-background: hsla(50, 90%, 4%, 100%);
+	--itx-button-foreground: hsla(50, 50%, 85%, 100%);
+	--itx-button-box-shadow: none;
+	--itx-button-icon-color: hsla(50, 50%, 50%, 100%);
+
+	--itx-button-background-hover: hsla(50, 50%, 50%, 100%);
+	--itx-button-foreground-hover: var(--itx-contrast-1);
+	--itx-button-border-color-hover: var(--itx-contrast-1);
+	--itx-button-box-shadow-hover: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	--itx-button-icon-color-hover: hsla(50, 10%, 8%, 100%);
+
+	--itx-button-background-active: hsla(50, 85%, 35%, 100%);
+	--itx-button-foreground-active: var(--itx-contrast-1);
+	--itx-button-border-color-active: var(--itx-contrast-1);
+	--itx-button-box-shadow-active: 0 0.12em 0 rgb(0 0 0 / 0.25);
+	--itx-button-icon-color-active: hsla(50, 10%, 8%, 100%);
+}*/
+
+/* ── Radius ───────────────────────────────────────────────────────────────── */
+/* Priority: --itx-button-border-radius (hard override) > itx-radius="…" attribute */
+/* > --itx-button-radius-default (the per-variant defaults set above). The pill is */
+/* Set --itx-button-border-radius directly                                        */
+/* only to force a single instance to an absolute value past the attribute.        */
+
+/* ── Disabled ────────────────────────────────────────────────────────────── */
+/* Carbon paints disabled as a flat gray-30 fill with gray-50 text and no
+   opacity change. Scoped to the variants Carbon actually defines it for — the
+   bare button's rest fill *is* gray-30, so a global rule would make a disabled
+   bare button indistinguishable from a live one. It keeps the foundation's
+   opacity treatment instead.                                                  */
+
+:where(
+	button[interop-button~="primary"]:disabled,
+	button[interop-button~="primary"][aria-disabled="true"],
+	button[interop-button~="secondary"]:disabled,
+	button[interop-button~="secondary"][aria-disabled="true"],
+	button[interop-button~="tertiary"]:disabled,
+	button[interop-button~="tertiary"][aria-disabled="true"],
+	button[interop-button~="action"]:disabled,
+	button[interop-button~="action"][aria-disabled="true"]
+) {
+	--itx-button-disabled-opacity: 1;
+	--itx-button-background: var(--itx-role-background-control);
+	--itx-button-foreground: var(--itx-role-text-quieter);
+	--itx-button-border-color: var(--itx-role-divider);
+	--itx-button-box-shadow: none;
+
+	--itx-button-background-hover: var(--itx-role-background-control);
+	--itx-button-foreground-hover: var(--itx-role-text-quieter);
+	--itx-button-border-color-hover: var(--itx-role-divider);
+
+	--itx-button-background-active: var(--itx-role-background-control);
+	--itx-button-foreground-active: var(--itx-role-text-quieter);
+	--itx-button-border-color-active: var(--itx-role-divider);
+}
+
+/* Carbon's outline variants stay transparent when disabled — only the border
+   and the label go gray.
+
+   Rank 3, not rank 2. Disabled text is exempt from the WCAG contrast minimum,
+   but 1.5:1 is not "muted", it is gone — and this repo already has a recorded
+   defect for disabled field labels sitting at 2.2:1. 3:1 still reads as
+   unavailable without disappearing. */
+:where(
+	button[interop-button~="tertiary"]:disabled,
+	button[interop-button~="tertiary"][aria-disabled="true"]
+) {
+	--itx-button-background: transparent;
+	--itx-button-foreground: var(--itx-role-text-disabled);
+	--itx-button-background-hover: transparent;
+	--itx-button-foreground-hover: var(--itx-role-text-disabled);
+	--itx-button-background-active: transparent;
+	--itx-button-foreground-active: var(--itx-role-text-disabled);
+}
+
+/* ── Not taken from Carbon ───────────────────────────────────────────────── */
+/* Focus: Carbon draws an inset double ring (1px $focus at the edge plus a 2px
+   background-coloured ring inside it). That needs a box-shadow the foundation
+   only resolves for rest/hover/active, so it isn't expressible from the theme —
+   and the outset ring is the better floor anyway, since it survives on any
+   fill. Kept as-is on --itx-role-background-colorway.
+   Also skipped: ghost and danger (no such variants here), the 2xl size step,
+   the 16/64 asymmetric padding (it exists to reserve room for Carbon's
+   absolutely-pinned trailing icon; our addons sit in flow), and the
+   `@media (any-hover: hover)` gate on tertiary's hover fill (the hover
+   selector is structural). */

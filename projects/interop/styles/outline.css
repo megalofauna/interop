@@ -1,0 +1,18 @@
+/*
+ * The focus ring for every interactive component. Add each one to the selector list.
+ * Override a ring by setting these properties on the element, a class, or a component.
+ */
+
+:root {
+	--itx-outline-width: 2px;
+	--itx-outline-style: solid;
+	--itx-outline-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-300));
+	--itx-outline-offset: 2px;
+}
+
+:where(button[interop-button]:focus-visible) {
+	outline-width: var(--itx-outline-width);
+	outline-style: var(--itx-outline-style);
+	outline-color: var(--itx-outline-color);
+	outline-offset: var(--itx-outline-offset);
+}

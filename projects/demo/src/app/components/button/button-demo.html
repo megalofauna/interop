@@ -1,0 +1,54 @@
+<h1>Button</h1>
+
+<h2>Sizes</h2>
+<p>
+	<button interop-button itx-size="sm">Small</button>
+	<button interop-button>Medium</button>
+	<button interop-button itx-size="lg">Large</button>
+</p>
+
+<h2>Radius</h2>
+<p>
+	<button interop-button itx-radius="none">None</button>
+	<button interop-button itx-radius="nominal">Nominal</button>
+	<button interop-button itx-radius="sm">Small</button>
+	<button interop-button>Medium</button>
+	<button interop-button itx-radius="lg">Large</button>
+	<button interop-button itx-radius="full">Full</button>
+</p>
+
+<h2>Disabled</h2>
+<p>
+	<button interop-button disabled>Disabled</button>
+	<button interop-button aria-disabled="true">aria-disabled</button>
+</p>
+
+<h2>Pressed</h2>
+<p>
+	<button interop-button type="button" [attr.aria-pressed]="bold()" (click)="bold.set(!bold())">Bold</button>
+</p>
+
+<h2>Busy</h2>
+<p>
+	<button interop-button type="button" [attr.aria-busy]="busy() ? 'true' : null">Save changes</button>
+	<button interop-button type="button" [attr.aria-pressed]="busy()" (click)="busy.set(!busy())">Busy</button>
+</p>
+
+<h2>Pending action</h2>
+<p>
+	<button interop-button type="button" [pendingAction]="save">Save</button>
+	<span>Saved {{ saved() }} times</span>
+</p>
+
+<h2>Invokers</h2>
+<p>
+	<button interop-button type="button" command="show-modal" [commandFor]="confirm">Delete…</button>
+	<button interop-button type="button" [popoverTarget]="menu">Options</button>
+</p>
+
+<dialog #confirm>
+	<p>Delete this item?</p>
+	<button interop-button type="button" command="close" [commandFor]="confirm">Cancel</button>
+</dialog>
+
+<div popover #menu>Options go here.</div>

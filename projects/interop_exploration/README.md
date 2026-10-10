@@ -1,0 +1,189 @@
+# Component style generator
+
+Interop rebuilt, starting with how a component receives its styles. Early exploration —
+nothing here is settled, and the two blueprints are written fresh rather than ported.
+
+## How it works
+
+A blueprint declares which levers a component has. Values live in `interop.config.json`.
+Everything shipped is generated from the two together.
+
+```ts
+export const button: Blueprint = {
+	name: 'button',
+	host: { element: 'button' },
+	themeable: true,
+	prerequisites: ['box-sizing: border-box'],
+	sizes: ['sm', 'base', 'lg'],
+	states: ['hover', 'focus-visible', 'active', 'disabled'],
+	cursor: ['cursor'],
+	properties: { paint: ['background-color', 'text-color'] /* … */ },
+	elements: {
+		icon: { attribute: 'interop-icon', tag: 'svg', optional: true, properties: { paint: ['text-color'] } },
+	},
+};
+```
+
+| Field | Holds |
+| --- | --- |
+| `host` | Where the component goes in markup. The selector is built from it, inside `:where()` for zero specificity. |
+| `attribute` | The identity attribute, when it is not `interop-<name>`. |
+| `properties` | Levers, filed by category: `layout shape border outline type paint effect`. |
+| `elements` | Sub-elements, each marked by an attribute, a child of the host unless `relation` says `descendant`, with its own `properties` and `prerequisites`. `tag` and `optional` shape the template starter. |
+| `modifiers` | Variations selected by an attribute on the component. Each carries fixed declarations, token values from config, or both. |
+| `prerequisites` | Declarations config cannot reach. They lead the base rule. |
+| `sizes` | The size axis values, `base` among them. Absent: not sizable. |
+| `states` | The states the component responds to. |
+| `cursor` | The `cursor` category. Only on a component with `states`. |
+
+```
+vocabulary  ──┐
+              ├── resolve ──┬── structure.css    rules that read tokens
+blueprint   ──┤             ├── base.css         token declarations
+              │             ├── properties.css   @property registrations
+config      ──┘             ├── manifest.json    every token, for tooling
+                            └── docs.md          the lever tables
+```
+
+## Running it
+
+```sh
+node src/build.ts           # write src/generated/
+node src/build.ts --check   # fail if anything on disk differs from a fresh build
+node --test src/system/*.test.ts
+npx tsc -p tsconfig.json --noEmit
+open harness/index.html
+```
+
+No dependencies and no build step. Node runs the TypeScript directly.
+
+## Rules
+
+**A blueprint declares its host, and the selector is built from it.** Three kinds:
+
+| Host | Blueprint | Selector |
+| --- | --- | --- |
+| An HTML element serves | `host: { element: 'button' }` | `:where(button[interop-button])` |
+| No element is obvious, or any block element would do | `host: 'custom-element'` | `:where(interop-toolbar-section, [interop-toolbar-section])` |
+| The attribute decorates an element another component may own | `host: 'any-element'` | `:where([interop-badge])` |
+
+The identity attribute is `interop-<name>`, or `attribute` where the blueprint names it.
+`visually-hidden` is a utility, so it is `itx-visually-hidden`. Where an element choice is
+contested, the component's docs give the reason for it.
+
+**Structure is what config cannot change; theme is what it can.** A component with no levers
+gets a structure file and no base file.
+
+**Variants and sizes are declaration scopes.** There is one `--itx-button-background-color`,
+redeclared under `[itx-variant="danger"]`. Axis values do not appear in token names.
+
+**The config names the variants.** `vocabulary.ts` fixes the axes and their attributes. Every
+value under `variants` is an exception, and an element carrying no `itx-variant` takes the base.
+
+**The blueprint names the sizes.** A non-empty `sizes` includes `base`. The config gives every
+other size its tokens under `sizes`; a listed size with no entry fails the build, as an
+unvalued base token does. The config may not name `base` or a size the blueprint does not
+list.
+
+**`base` is the explicit reset.** It is the same as no `itx-size` attribute. It emits no
+scope, and axis scopes match on the element itself, so `itx-size="base"` matches no size scope
+and the element takes the base values.
+
+**A modifier belongs to one component.** The blueprint names its selector, appended to the
+component's. Its fixed declarations go in `structure.css`, on the component or on an element.
+Its token values come from the config under `modifiers` and go in the `modifier` layers.
+Badge's dot is a modifier with values only; its corners are modifiers with declarations only:
+
+```ts
+modifiers: {
+	dot: { selector: '[interop-badge=""]' },
+	'top-left': {
+		selector: '[itx-badge-position="top-left"]',
+		elements: { indicator: ['position-area: top left', 'translate: 50% 50%'] },
+	},
+},
+```
+
+The axes differ in two ways: the system defines them for every component, and they carry
+token values only.
+
+**A lever carries its own statefulness and the declarations it requires.** `outline-width` is
+stateful and pulls in `outline-style: solid`. `border-width` is neither, because a border that
+thickens on hover moves the layout around it. It requires `border-style: solid`, which is
+skipped when `border-style` is a lever on the same scope.
+
+**The cursor belongs to a stateful component.** It is read under every state like any stateful
+lever, so `--itx-button-cursor-disabled: not-allowed` replaces the pointer on a disabled button.
+It is unregistered, so any cursor value is accepted.
+
+**A stateful lever is read as `var(--x-hover, var(--x))`.** An unset state token falls through
+to the base.
+
+**Layers order scope first, owner second.** `base.css` is the build's; `theme.css` is the
+consumer's. Each scope has a layer per owner:
+
+```css
+@layer
+	interop.structure,
+	interop.default.base,
+	interop.default.theme,
+	interop.modifier.base,
+	interop.modifier.theme,
+	interop.variant.base,
+	interop.variant.theme,
+	interop.size.base,
+	interop.size.theme;
+```
+
+A theme's default value loses to a base variant value, so `navy` set at the default scope
+stops at `[itx-variant="danger"]` when danger sets its own background. A theme changes a
+variant inside the variant's scope. A size beats a variant where both set the same token.
+Unlayered consumer CSS beats every layer. `LAYERS` in `vocabulary.ts` holds the order.
+
+`base` names two things. As a layer, it is the owner: the build's values. As a size, it is
+the default size, which takes its values from `interop.default.base` and has no size layer.
+
+**Category conditionals happen at build time, value conditionals in the cascade.** Disabling a
+category drops its tokens from the output. Changing a value needs no rebuild.
+
+**One lever per CSS property.** Shorthands are composed where they are read.
+
+## Two rejected values
+
+`--x: null` sets the token to the characters `null`. The consuming declaration goes
+invalid-at-computed-value-time, which resolves to `transparent` for `background-color` and
+*inherits* for `color`.
+
+`--x: inherit` inherits the token from the parent element. It does not mean "same as the base".
+
+`src/system/lint.ts` catches both, reading the emitted CSS rather than the model.
+
+## The CLI
+
+[`docs/cli.md`](docs/cli.md) specifies it. It ships in this package as the `interop` bin, beside
+the generated stylesheets, which `package.json` exports as `interop/<file>.css`. The generator
+source imports nothing; `@clack/prompts` is the CLI's one dependency. Built: `add`, `theme` and `template`.
+
+```sh
+npm install
+node cli/src/main.ts add button             # asks for anything not given
+node cli/src/main.ts theme button --dry-run # names the files, writes nothing
+npm test                                    # generator and CLI
+```
+
+`sandbox/` is a Vite project that depends on this package through a `file:` link. Run
+`npm install` there, then `npx interop add button --theme` and `npm run dev`, to use the
+package the way a project would.
+
+Two constraints hold:
+
+- It reads `manifest.json` and never writes a generated file. A starter file it writes, such
+  as a `theme.css`, belongs to the consumer from then on.
+- The config stays plain data, so a value can be read, changed, and written back.
+
+## Not modeled
+
+**Orchestrator components** — those that render mandatory children. `elements` covers
+sub-elements within one component, not children a component owns.
+
+**Motion.** No levers yet.

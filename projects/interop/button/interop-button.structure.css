@@ -1,0 +1,91 @@
+:where(button[interop-button]) {
+	appearance: none;
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--itx-button-gap);
+	min-block-size: var(--itx-button-min-block-size);
+	padding-block: 0;
+	padding-inline: var(--itx-button-padding-inline);
+	font: inherit;
+	font-size: var(--itx-button-font-size);
+	line-height: var(--itx-button-line-height);
+	color: var(--itx-button-color);
+	background-color: var(--itx-button-background-color);
+	border-width: var(--itx-button-border-width);
+	border-style: var(--itx-button-border-style);
+	border-color: var(--itx-button-border-color);
+	border-radius: var(--itx-button-border-radius);
+	corner-shape: var(--itx-button-corner-shape);
+	cursor: var(--itx-button-cursor);
+	transition-property: var(--itx-button-transition-property);
+	transition-duration: var(--itx-button-transition-duration);
+	transition-timing-function: var(--itx-button-transition-timing-function);
+}
+
+:where(button[interop-button]:focus-visible) {
+	color: var(--itx-button-color-focus-visible);
+	background-color: var(--itx-button-background-color-focus-visible);
+	border-color: var(--itx-button-border-color-focus-visible);
+}
+
+:where(button[interop-button]:hover:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
+	color: var(--itx-button-color-hover);
+	background-color: var(--itx-button-background-color-hover);
+	border-color: var(--itx-button-border-color-hover);
+}
+
+/* Pressed shares the active fill, so held down and latched on read alike. */
+:where(button[interop-button][aria-pressed="true"]:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
+	color: var(--itx-button-color-pressed);
+	background-color: var(--itx-button-background-color-pressed);
+	border-color: var(--itx-button-border-color-pressed);
+}
+
+:where(button[interop-button]:active:not(:disabled, [aria-disabled="true"], [aria-busy="true"])) {
+	color: var(--itx-button-color-active);
+	background-color: var(--itx-button-background-color-active);
+	border-color: var(--itx-button-border-color-active);
+}
+
+/* `aria-disabled` stays focusable and clickable; the consumer guards the action. */
+:where(button[interop-button]:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"])) {
+	opacity: var(--itx-button-opacity-disabled);
+	cursor: var(--itx-button-cursor-disabled);
+}
+
+/* Busy keeps the label in place, transparent, so the name and the width do not change. */
+:where(button[interop-button][aria-busy="true"]) {
+	position: relative;
+	color: transparent;
+	cursor: var(--itx-button-cursor-busy);
+}
+
+:where(button[interop-button][aria-busy="true"])::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	inline-size: var(--itx-button-spinner-inline-size);
+	block-size: var(--itx-button-spinner-block-size);
+	border-width: var(--itx-button-spinner-border-width);
+	border-style: solid;
+	border-color: var(--itx-button-color);
+	border-inline-end-color: transparent;
+	border-radius: 50%;
+	animation: itx-button-spin var(--itx-button-spinner-animation-duration) linear infinite;
+}
+
+@keyframes itx-button-spin {
+	to {
+		rotate: 1turn;
+	}
+}
+
+/* Touch-target floor: 44px on coarse pointers. */
+@media (pointer: coarse) {
+	:where(button[interop-button]) {
+		min-block-size: max(var(--itx-button-min-block-size), 2.75rem);
+	}
+}
