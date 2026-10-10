@@ -10,11 +10,13 @@
 	--itx-button-color-hover: var(--itx-button-color);
 	--itx-button-color-active: var(--itx-button-color);
 	--itx-button-color-focus-visible: var(--itx-button-color);
+	--itx-button-color-pressed: var(--itx-button-color);
 
 	--itx-button-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
 	--itx-button-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
 	--itx-button-background-color-active: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
 	--itx-button-background-color-focus-visible: var(--itx-button-background-color);
+	--itx-button-background-color-pressed: var(--itx-button-background-color-active);
 
 	--itx-button-border-width: 1px;
 	--itx-button-border-style: solid;
@@ -22,16 +24,29 @@
 	--itx-button-border-color-hover: var(--itx-button-border-color);
 	--itx-button-border-color-active: var(--itx-button-border-color);
 	--itx-button-border-color-focus-visible: var(--itx-button-border-color);
+	--itx-button-border-color-pressed: var(--itx-button-border-color);
 	--itx-button-border-radius: var(--itx-radius);
 	--itx-button-corner-shape: var(--itx-corner-shape);
 
 	--itx-button-cursor: default;
 	--itx-button-cursor-disabled: not-allowed;
+	--itx-button-cursor-busy: progress;
 	--itx-button-opacity-disabled: 0.5;
 
 	--itx-button-transition-property: border, background-color, color;
 	--itx-button-transition-duration: var(--itx-transition-duration);
 	--itx-button-transition-timing-function: var(--itx-transition-timing-function);
+
+	--itx-button-spinner-inline-size: 1em;
+	--itx-button-spinner-block-size: 1em;
+	--itx-button-spinner-border-width: 2px;
+	--itx-button-spinner-animation-duration: 0.75s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:where(button[interop-button]) {
+		--itx-button-spinner-animation-duration: 1.5s;
+	}
 }
 
 :where(button[interop-button][itx-size="sm"]) {

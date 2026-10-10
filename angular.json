@@ -24,7 +24,11 @@
 				"test": {
 					"builder": "@angular/build:unit-test",
 					"options": {
-						"tsConfig": "projects/interop/tsconfig.spec.json"
+						"tsConfig": "projects/interop/tsconfig.spec.json",
+						"include": [
+							"**/*.spec.ts",
+							"../**/*.spec.ts"
+						]
 					}
 				}
 			}
@@ -48,6 +52,7 @@
 							}
 						],
 						"styles": [
+							"projects/interop/interop.css",
 							"projects/demo/src/styles.css"
 						]
 					},

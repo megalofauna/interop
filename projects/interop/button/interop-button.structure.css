@@ -30,22 +30,57 @@
 	border-color: var(--itx-button-border-color-focus-visible);
 }
 
-:where(button[interop-button]:hover:not(:active, :disabled, [aria-disabled="true"])) {
+:where(button[interop-button]:hover:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
 	color: var(--itx-button-color-hover);
 	background-color: var(--itx-button-background-color-hover);
 	border-color: var(--itx-button-border-color-hover);
 }
 
-:where(button[interop-button]:active:not(:disabled, [aria-disabled="true"])) {
+/* Pressed shares the active fill, so held down and latched on read alike. */
+:where(button[interop-button][aria-pressed="true"]:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
+	color: var(--itx-button-color-pressed);
+	background-color: var(--itx-button-background-color-pressed);
+	border-color: var(--itx-button-border-color-pressed);
+}
+
+:where(button[interop-button]:active:not(:disabled, [aria-disabled="true"], [aria-busy="true"])) {
 	color: var(--itx-button-color-active);
 	background-color: var(--itx-button-background-color-active);
 	border-color: var(--itx-button-border-color-active);
 }
 
 /* `aria-disabled` stays focusable and clickable; the consumer guards the action. */
-:where(button[interop-button]:is(:disabled, [aria-disabled="true"])) {
+:where(button[interop-button]:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"])) {
 	opacity: var(--itx-button-opacity-disabled);
 	cursor: var(--itx-button-cursor-disabled);
+}
+
+/* Busy keeps the label in place, transparent, so the name and the width do not change. */
+:where(button[interop-button][aria-busy="true"]) {
+	position: relative;
+	color: transparent;
+	cursor: var(--itx-button-cursor-busy);
+}
+
+:where(button[interop-button][aria-busy="true"])::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	inline-size: var(--itx-button-spinner-inline-size);
+	block-size: var(--itx-button-spinner-block-size);
+	border-width: var(--itx-button-spinner-border-width);
+	border-style: solid;
+	border-color: var(--itx-button-color);
+	border-inline-end-color: transparent;
+	border-radius: 50%;
+	animation: itx-button-spin var(--itx-button-spinner-animation-duration) linear infinite;
+}
+
+@keyframes itx-button-spin {
+	to {
+		rotate: 1turn;
+	}
 }
 
 /* Touch-target floor: 44px on coarse pointers. */
