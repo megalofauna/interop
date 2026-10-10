@@ -24,6 +24,13 @@
 	initial-value: 8px;
 }
 
+/* Read with `corner-shape: var(--itx-corner-shape)`. `full` is round; every other radius is a squircle. */
+@property --itx-corner-shape {
+	syntax: "*";
+	inherits: false;
+	initial-value: squircle;
+}
+
 :where([itx-radius="none"]) {
 	--itx-radius: var(--itx-radius-none);
 }
@@ -38,4 +45,5 @@
 }
 :where([itx-radius="full"]) {
 	--itx-radius: var(--itx-radius-full);
+	--itx-corner-shape: round;
 }

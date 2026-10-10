@@ -1,3 +1,56 @@
 :where(button[interop-button]) {
-	border-radius: var(--itx-radius);
+	appearance: none;
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--itx-button-gap);
+	min-block-size: var(--itx-button-min-block-size);
+	padding-block: 0;
+	padding-inline: var(--itx-button-padding-inline);
+	font: inherit;
+	font-size: var(--itx-button-font-size);
+	line-height: var(--itx-button-line-height);
+	color: var(--itx-button-color);
+	background-color: var(--itx-button-background-color);
+	border-width: var(--itx-button-border-width);
+	border-style: var(--itx-button-border-style);
+	border-color: var(--itx-button-border-color);
+	border-radius: var(--itx-button-border-radius);
+	corner-shape: var(--itx-button-corner-shape);
+	cursor: var(--itx-button-cursor);
+	transition-property: var(--itx-button-transition-property);
+	transition-duration: var(--itx-button-transition-duration);
+	transition-timing-function: var(--itx-button-transition-timing-function);
+}
+
+:where(button[interop-button]:focus-visible) {
+	color: var(--itx-button-color-focus-visible);
+	background-color: var(--itx-button-background-color-focus-visible);
+	border-color: var(--itx-button-border-color-focus-visible);
+}
+
+:where(button[interop-button]:hover:not(:active, :disabled, [aria-disabled="true"])) {
+	color: var(--itx-button-color-hover);
+	background-color: var(--itx-button-background-color-hover);
+	border-color: var(--itx-button-border-color-hover);
+}
+
+:where(button[interop-button]:active:not(:disabled, [aria-disabled="true"])) {
+	color: var(--itx-button-color-active);
+	background-color: var(--itx-button-background-color-active);
+	border-color: var(--itx-button-border-color-active);
+}
+
+/* `aria-disabled` stays focusable and clickable; the consumer guards the action. */
+:where(button[interop-button]:is(:disabled, [aria-disabled="true"])) {
+	opacity: var(--itx-button-opacity-disabled);
+	cursor: var(--itx-button-cursor-disabled);
+}
+
+/* Touch-target floor: 44px on coarse pointers. */
+@media (pointer: coarse) {
+	:where(button[interop-button]) {
+		min-block-size: max(var(--itx-button-min-block-size), 2.75rem);
+	}
 }

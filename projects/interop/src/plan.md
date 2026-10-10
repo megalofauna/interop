@@ -78,3 +78,34 @@ button[interop-button][itx-radius="full"] {
 How far can we get with the implicit plan contained in this document?
 Let's go slowly and methodically, but act decisively. 
 -->
+
+## Additional Notes
+	Button block sizing will be implemented using a height constraint 
+ 	- sm			= height: 2rem
+  - md|base = height: 2.5rem 
+  - lg			= height: 3.5rem
+
+	Button inline padding will be configurable, but will express a default ratio of 1.5:1 (as compared to block padding). E.g., if padding-block (implicit, given the height constraint) is 0.75rem, padding-inline would be 1.25rem.
+
+	Button should be able to express the corner-shape property. Default is "sqircle." itx-radius=full should set corner-shape to "round."
+
+	button is subclassified (via this note only for now) as an interactive element. that means it must express stateful aspects:
+	- rest (assumed)
+	- hover
+	- active
+	- focus(-visible)
+
+  ## Relationship between CSS styles and component imports
+  Consumer should NOT need to import the InteropButton component ts just in order to enjoy the CSS that Interop provides. This rule should be extrapolate to all components. 
+
+  The component file is only required when the consumer chooses to layer in additional InteropButton functionality. At the moment, there is none, so this is future-facing. But for now, CSS is import free. Global under [interop-root].
+
+## Documentation writing style reminder
+The Interop documentation writing style is boring. 
+- Unadorned, simple, straightforward sentences
+- No component history; just always what this does/what this is RIGHT NOW
+- Comment sparingly, documenting areas that require implicit knowledge
+- Never tell the consumer something she already knows
+- Never burden the consumer with past implementation failures we've abondoned
+- No personality
+- The writing should be transparent, should disappear into the background
