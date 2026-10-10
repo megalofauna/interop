@@ -1,9 +1,10 @@
 import { Component, signal } from "@angular/core";
+import { InteropIcon } from "interop/icon";
 import { InteropInvoker } from "interop/invoker";
 
 @Component({
 	selector: "demo-button",
-	imports: [InteropInvoker],
+	imports: [InteropIcon, InteropInvoker],
 	templateUrl: "./button-demo.html",
 	styleUrl: "./button-demo.css",
 })

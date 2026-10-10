@@ -28,6 +28,9 @@
 						"include": [
 							"**/*.spec.ts",
 							"../**/*.spec.ts"
+						],
+						"setupFiles": [
+							"projects/interop/test-setup.ts"
 						]
 					}
 				}

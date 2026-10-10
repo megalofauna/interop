@@ -5,3 +5,5 @@
 @import "./styles/outline.css";
 @import "./button/interop-button.base.css";
 @import "./button/interop-button.structure.css";
+@import "./icon/interop-icon.base.css";
+@import "./icon/interop-icon.structure.css";

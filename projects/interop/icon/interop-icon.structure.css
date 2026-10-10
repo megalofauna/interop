@@ -1,0 +1,9 @@
+:where(svg[interop-icon]) {
+	display: inline-block;
+	flex-shrink: 0;
+	inline-size: var(--itx-icon-inline-size);
+	block-size: var(--itx-icon-block-size);
+	vertical-align: var(--itx-icon-vertical-align);
+	color: var(--itx-icon-color);
+	stroke-width: var(--itx-icon-stroke-width);
+}
