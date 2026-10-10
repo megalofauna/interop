@@ -1,0 +1,3 @@
+:where(button[interop-button]) {
+	border-radius: var(--itx-radius);
+}

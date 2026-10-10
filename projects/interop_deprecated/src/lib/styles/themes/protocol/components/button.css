@@ -48,8 +48,8 @@
 	--itx-button-width: auto;
 	--itx-button-flex: 1 1 auto;
 	--itx-button-min-width: max-content;
-	--itx-button-max-width: var(--itx-spacing-56);
-	--itx-button-justify-content: flex-start;
+	--itx-button-max-width: var(--itx-spacing-32);
+	--itx-button-justify-content: center;
 
 	/* Carbon $spacing-03 — the gap it uses between label and icon wherever the
 	   icon is laid out in flow rather than pinned to the trailing edge. */
@@ -121,8 +121,8 @@
 
 :where(button[interop-button~="primary"]),
 :where([itx-as-button~="primary"]) {
-	--itx-button-background: var(--itx-role-background-colorway);
-	--itx-button-foreground: var(--itx-role-text-inverse);
+	--itx-button-background: var(--itx-neutral-12);
+	--itx-button-foreground: var(--itx-role-text);
 	/* Transparent because the variant is filled — the base's rule, which this
 	   block used to break with an opaque grey ring around a brand fill. */
 	--itx-button-border-color: transparent;
