@@ -30,11 +30,25 @@
 
 <h2>Busy</h2>
 <p>
-	<button interop-button type="button" aria-busy="true">Save changes</button>
+	<button interop-button type="button" [attr.aria-busy]="busy() ? 'true' : null">Save changes</button>
+	<button interop-button type="button" [attr.aria-pressed]="busy()" (click)="busy.set(!busy())">Busy</button>
 </p>
 
 <h2>Pending action</h2>
 <p>
-	<button interop-button type="button" #save>Save</button>
+	<button interop-button type="button" [pendingAction]="save">Save</button>
 	<span>Saved {{ saved() }} times</span>
 </p>
+
+<h2>Invokers</h2>
+<p>
+	<button interop-button type="button" command="show-modal" [commandFor]="confirm">Delete…</button>
+	<button interop-button type="button" [popoverTarget]="menu">Options</button>
+</p>
+
+<dialog #confirm>
+	<p>Delete this item?</p>
+	<button interop-button type="button" command="close" [commandFor]="confirm">Cancel</button>
+</dialog>
+
+<div popover #menu>Options go here.</div>
