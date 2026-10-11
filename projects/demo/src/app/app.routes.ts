@@ -23,6 +23,16 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/icon/icon-demo").then((m) => m.IconDemo),
 	},
 	{
+		path: "components/popover",
+		title: "Popover",
+		loadComponent: () => import("./components/popover/popover-demo").then((m) => m.PopoverDemo),
+	},
+	{
+		path: "components/tooltip",
+		title: "Tooltip",
+		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
+	},
+	{
 		path: "foundations/typography",
 		title: "Typography",
 		loadComponent: () => import("./foundations/typography/typography-demo").then((m) => m.TypographyDemo),

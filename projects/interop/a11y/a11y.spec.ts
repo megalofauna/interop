@@ -6,9 +6,10 @@ import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
-import { TablerCheck, TablerCopy, TablerSearch } from 'interop/tabler';
+import { InteropTooltip } from 'interop/tooltip';
+import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
-registerIcons(TablerCheck, TablerCopy, TablerSearch);
+registerIcons(TablerCheck, TablerCopy, TablerSearch, TablerX);
 
 // jsdom computes no colors, so contrast is checked in a browser instead.
 const OPTIONS: axe.RunOptions = { rules: { 'color-contrast': { enabled: false } } };
@@ -17,7 +18,7 @@ const violations = async (element: Element) =>
 	(await axe.run(element, OPTIONS)).violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(', ')}`);
 
 @Component({
-	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker],
+	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropTooltip],
 	template: `
 		<main>
 			<button interop-button type="button">Save</button>
@@ -40,6 +41,12 @@ const violations = async (element: Element) =>
 				Activity
 				<span interop-badge="dot" itx-badge-position="top-end">New activity</span>
 			</button>
+			<button interop-button type="button" [interopTooltip]="close"><svg interop-icon name="tabler-x"></svg></button>
+			<span interop-tooltip="label" #close>Close</span>
+			<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
+			<span interop-tooltip #draft>Saves without publishing</span>
+			<button interop-button type="button" [popoverTarget]="menu">Options</button>
+			<div interop-popover popover #menu><p>Popover content</p></div>
 			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
 	`,

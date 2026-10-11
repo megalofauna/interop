@@ -21,6 +21,7 @@ type Rule = (element: Element) => Omit<AuditIssue, 'rule' | 'element'> | null;
 const BUTTONS = 'button[interop-button], button:has(svg[interop-icon])';
 const BADGES = '[interop-badge]:not([hidden])';
 const LIVE = '[role="status"], [aria-live]';
+const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabindex], [contenteditable]';
 
 const RULES: Record<string, { selector: string; check: Rule }> = {
 	'button-name': {
@@ -145,6 +146,38 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null,
 	},
+	'tooltip-interactive': {
+		selector: `[interop-tooltip]:has(${INTERACTIVE})`,
+		check: () => ({
+			problem: 'This tooltip holds a link, button or other control.',
+			reason: 'A tooltip closes when focus leaves its trigger, so keyboard and screen reader users can never reach what is inside it.',
+			advice: 'Keep the tooltip to text. Put controls in a popover opened by a button.',
+		}),
+	},
+	'tooltip-trigger-disabled': {
+		selector: ':disabled:is([aria-labelledby], [aria-describedby])',
+		check: (trigger) =>
+			tooltipsOf(trigger, 'aria-labelledby').length || tooltipsOf(trigger, 'aria-describedby').length
+				? {
+						problem: 'This control has a tooltip but is disabled.',
+						reason: 'A disabled control cannot take focus, so keyboard users never see the tooltip, and some browsers send it no pointer events either.',
+						advice: 'Use aria-disabled="true" with guardActivation() instead of disabled.',
+					}
+				: null,
+	},
+	'tooltip-repeats-name': {
+		selector: '[aria-describedby]',
+		check: (trigger) => {
+			const name = accessibleName(trigger).toLowerCase();
+			return name && tooltipsOf(trigger, 'aria-describedby').some((tooltip) => tooltip.textContent?.trim().toLowerCase() === name)
+				? {
+						problem: 'This tooltip repeats the name of the control it describes.',
+						reason: 'A screen reader reads the name and then the description, so it says the same thing twice.',
+						advice: 'If the tooltip is the only name, make it interop-tooltip="label" and remove the other name. Otherwise remove the tooltip or say something new in it.',
+					}
+				: null;
+		},
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>
@@ -255,6 +288,14 @@ function ariaName(element: Element): string {
 		if (text) return text;
 	}
 	return element.getAttribute('aria-label')?.trim() ?? '';
+}
+
+/** The tooltips an element references through `relation`. */
+function tooltipsOf(element: Element, relation: 'aria-labelledby' | 'aria-describedby'): HTMLElement[] {
+	return (element.getAttribute(relation) ?? '')
+		.split(/\s+/)
+		.map((id) => (id ? element.ownerDocument.getElementById(id) : null))
+		.filter((target): target is HTMLElement => !!target?.matches('[interop-tooltip]'));
 }
 
 /** The text assistive technology reads inside an element. */

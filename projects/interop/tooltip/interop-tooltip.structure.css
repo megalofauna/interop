@@ -1,0 +1,44 @@
+/* bindTooltip() opens the tooltip with its trigger as the source, which makes the trigger its anchor. */
+:where([interop-tooltip]) {
+	inset: auto;
+	position-area: var(--itx-tooltip-position-area);
+	position-try-fallbacks: var(--itx-tooltip-position-try-fallbacks);
+	margin-block: var(--itx-tooltip-margin-block);
+	margin-inline: var(--itx-tooltip-margin-inline);
+	box-sizing: border-box;
+	/* As wide as its content, so a tooltip that does not fit overflows and takes a fallback instead of wrapping. */
+	inline-size: max-content;
+	max-inline-size: min(var(--itx-tooltip-max-inline-size), 100vw - 2 * var(--itx-space-2));
+	padding-block: var(--itx-tooltip-padding-block);
+	padding-inline: var(--itx-tooltip-padding-inline);
+	font-family: var(--itx-tooltip-font-family);
+	font-weight: var(--itx-tooltip-font-weight);
+	font-size: var(--itx-tooltip-font-size);
+	line-height: var(--itx-tooltip-line-height);
+	overflow-wrap: break-word;
+	color: var(--itx-tooltip-color);
+	background-color: var(--itx-tooltip-background-color);
+	border-width: var(--itx-tooltip-border-width);
+	border-style: var(--itx-tooltip-border-style);
+	border-color: var(--itx-tooltip-border-color);
+	border-radius: var(--itx-tooltip-border-radius);
+	corner-shape: var(--itx-tooltip-corner-shape);
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: var(--itx-tooltip-transition-duration);
+	transition-timing-function: var(--itx-tooltip-transition-timing-function);
+}
+
+:where([interop-tooltip]:popover-open) {
+	opacity: 1;
+}
+
+/*
+ * It fades in and disappears at once. A fade out keeps a closed tooltip rendered, and Chrome can
+ * then lose the name or description of the control it points to.
+ */
+@starting-style {
+	:where([interop-tooltip]:popover-open) {
+		opacity: 0;
+	}
+}

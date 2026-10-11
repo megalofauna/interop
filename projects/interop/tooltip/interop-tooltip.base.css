@@ -1,0 +1,31 @@
+:where([interop-tooltip]) {
+	/* Above the anchor and centered on it. It flips below when there is no room above, and slides along the anchor to stay on screen. */
+	--itx-tooltip-position-area: block-start;
+	--itx-tooltip-position-try-fallbacks: flip-block;
+	/* The gap between the tooltip and its anchor. A tooltip placed to the side takes it inline. */
+	--itx-tooltip-margin-block: var(--itx-space-1);
+	--itx-tooltip-margin-inline: 0px;
+	--itx-tooltip-max-inline-size: 20rem;
+	--itx-tooltip-padding-block: var(--itx-space-1);
+	--itx-tooltip-padding-inline: var(--itx-space-2);
+	/* Set here so a tooltip inside code or a heading does not take that text's font. */
+	--itx-tooltip-font-family: var(--itx-font-family);
+	--itx-tooltip-font-weight: var(--itx-font-weight);
+	--itx-tooltip-font-size: var(--itx-font-size-p-sm);
+	--itx-tooltip-line-height: var(--itx-line-height-p-sm);
+
+	--itx-tooltip-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-tooltip-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-100));
+	--itx-tooltip-border-width: 0px;
+	--itx-tooltip-border-style: solid;
+	--itx-tooltip-border-color: transparent;
+	--itx-tooltip-border-radius: var(--itx-radius-sm);
+	--itx-tooltip-corner-shape: var(--itx-corner-shape);
+
+	/* How long the pointer rests on the trigger before the tooltip opens, and how long after it leaves the tooltip closes. */
+	--itx-tooltip-interest-delay-start: 0.5s;
+	--itx-tooltip-interest-delay-end: 0.25s;
+
+	--itx-tooltip-transition-duration: var(--itx-transition-duration-faster);
+	--itx-tooltip-transition-timing-function: var(--itx-transition-timing-function);
+}

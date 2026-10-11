@@ -14,6 +14,7 @@ import { registerIcons, scopeSelectAll, splitLines, watchInteropInDevMode } from
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
 import { TablerCheck, TablerCopy } from 'interop/tabler';
+import { InteropTooltip } from 'interop/tooltip';
 
 let nextId = 0;
 
@@ -29,15 +30,16 @@ let nextId = 0;
  */
 @Component({
 	selector: 'figure[interop-code-block]',
-	imports: [InteropIcon],
+	imports: [InteropIcon, InteropTooltip],
 	template: `
 		@if (caption()) {
 			<figcaption [id]="captionId">{{ caption() }}</figcaption>
 		}
 		@if (canCopy) {
-			<button interop-button type="button" itx-size="sm" aria-label="Copy code" (click)="copy()">
+			<button interop-button type="button" itx-size="sm" [interopTooltip]="copyLabel" (click)="copy()">
 				<svg interop-icon [name]="copied() ? 'tabler-check' : 'tabler-copy'"></svg>
 			</button>
+			<span interop-tooltip="label" #copyLabel>Copy code</span>
 		}
 		<!--
 			TODO: An overflowing block is focusable but has no name. Look deeper at naming it.

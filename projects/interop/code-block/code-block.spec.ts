@@ -60,13 +60,14 @@ describe('InteropCodeBlock', () => {
 		const { get, fixture } = setup();
 		const figure = get('captioned');
 		const button = figure.querySelector('button')!;
-		expect(button.getAttribute('aria-label')).toBe('Copy code');
+		const name = () => document.getElementById(button.getAttribute('aria-labelledby')!)!.textContent;
+		expect(name()).toBe('Copy code');
 		button.click();
 		await fixture.whenStable();
 		fixture.detectChanges();
 		expect(writeText).toHaveBeenCalledWith(fixture.componentInstance.source());
 		expect(figure.querySelector('[role="status"]')!.textContent).toBe('Copied');
-		expect(button.getAttribute('aria-label')).toBe('Copy code');
+		expect(name()).toBe('Copy code');
 		expect(button.querySelector('[role="status"]')).toBeNull();
 	});
 

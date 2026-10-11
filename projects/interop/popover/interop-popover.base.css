@@ -1,0 +1,23 @@
+:where([interop-popover]) {
+	/* Below the anchor, starting at its inline-start edge. Each fallback flips to the other side. */
+	--itx-popover-position-area: block-end span-inline-end;
+	--itx-popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+	/* The gap between the popover and its anchor. A popover placed to the side takes it inline. */
+	--itx-popover-margin-block: var(--itx-space-1);
+	--itx-popover-margin-inline: 0px;
+	--itx-popover-max-inline-size: 32rem;
+	--itx-popover-padding-block: var(--itx-space-2);
+	--itx-popover-padding-inline: var(--itx-space-3);
+
+	--itx-popover-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-popover-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	--itx-popover-border-width: 1px;
+	--itx-popover-border-style: solid;
+	--itx-popover-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+	--itx-popover-border-radius: var(--itx-radius);
+	--itx-popover-corner-shape: var(--itx-corner-shape);
+	--itx-popover-box-shadow: 0 var(--itx-space-1) var(--itx-space-4) oklch(0 0 0 / 0.15);
+
+	--itx-popover-transition-duration: var(--itx-transition-duration);
+	--itx-popover-transition-timing-function: var(--itx-transition-timing-function);
+}

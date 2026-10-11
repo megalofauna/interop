@@ -1,0 +1,14 @@
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-2);
+	align-items: center;
+}
+
+* + .row {
+	margin-block-start: var(--itx-space-4);
+}
+
+.edge {
+	justify-content: flex-end;
+}
