@@ -16,7 +16,8 @@
 
 	--itx-tooltip-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
 	--itx-tooltip-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-100));
-	--itx-tooltip-border-width: 0px;
+	/* Forced colors drop the background but draw a transparent border, so this keeps the tooltip's edge in high contrast mode. */
+	--itx-tooltip-border-width: 1px;
 	--itx-tooltip-border-style: solid;
 	--itx-tooltip-border-color: transparent;
 	--itx-tooltip-border-radius: var(--itx-radius-sm);

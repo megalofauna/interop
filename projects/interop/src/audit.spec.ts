@@ -163,6 +163,15 @@ describe('auditInterop', () => {
 		`);
 		expect(rules()).toEqual(['tooltip-repeats-name']);
 	});
+
+	it('flags a label tooltip that replaces visible text, and accepts one that keeps it', () => {
+		render(`
+			<button interop-button type="button" aria-labelledby="a">Delete</button><span interop-tooltip="label" id="a">Remove this item</span>
+			<button interop-button type="button" aria-labelledby="b">Delete</button><span interop-tooltip="label" id="b">Delete this item</span>
+			<button interop-button type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c">Copy code</span>
+		`);
+		expect(rules()).toEqual(['tooltip-label-in-name']);
+	});
 });
 
 describe('watchInterop', () => {

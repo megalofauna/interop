@@ -1,7 +1,11 @@
 :where([interop-popover]) {
-	/* Below the anchor, starting at its inline-start edge. Each fallback flips to the other side. */
+	/*
+	 * Below the anchor, starting at its inline-start edge. The fallbacks flip it to the other side.
+	 * When it fits nowhere, --itx-popover-scroll centers it below or above and caps it to the space there.
+	 */
 	--itx-popover-position-area: block-end span-inline-end;
-	--itx-popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+	--itx-popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline, --itx-popover-scroll,
+		--itx-popover-scroll flip-block;
 	/* The gap between the popover and its anchor. A popover placed to the side takes it inline. */
 	--itx-popover-margin-block: var(--itx-space-1);
 	--itx-popover-margin-inline: 0px;
@@ -13,7 +17,8 @@
 	--itx-popover-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
 	--itx-popover-border-width: 1px;
 	--itx-popover-border-style: solid;
-	--itx-popover-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+	/* 3:1 against the page in both schemes, so the popover's edge is visible (WCAG 1.4.11). */
+	--itx-popover-border-color: var(--itx-neutral-500);
 	--itx-popover-border-radius: var(--itx-radius);
 	--itx-popover-corner-shape: var(--itx-corner-shape);
 	--itx-popover-box-shadow: 0 var(--itx-space-1) var(--itx-space-4) oklch(0 0 0 / 0.15);

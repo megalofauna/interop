@@ -33,6 +33,17 @@
 }
 
 /*
+ * The last resort: centered on the anchor, where it can use the full width and slides to stay on
+ * screen, and no taller than the space, so its content scrolls and none of it is out of reach (WCAG 1.4.10).
+ */
+@position-try --itx-popover-scroll {
+	position-area: block-end;
+	margin-block: var(--itx-space-1);
+	margin-inline: 0px;
+	max-block-size: calc(100% - 2 * var(--itx-space-1));
+}
+
+/*
  * It fades in and disappears at once. A fade out keeps a closed popover rendered, and Chrome can
  * then lose the name or description of a control that points into it.
  */

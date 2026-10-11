@@ -101,7 +101,7 @@ describe('bindTooltip', () => {
 		expect(open.has(tooltip)).toBe(false);
 	});
 
-	it('closes on Escape and takes the key from anything around it', () => {
+	it('closes on Escape where the browser does not, one layer per press, and lets the key through', () => {
 		trigger.dispatchEvent(new FocusEvent('focusin'));
 		const outer = vi.fn();
 		document.body.addEventListener('keydown', outer);
@@ -109,9 +109,27 @@ describe('bindTooltip', () => {
 		trigger.dispatchEvent(escape);
 		expect(open.has(tooltip)).toBe(false);
 		expect(escape.defaultPrevented).toBe(true);
-		expect(outer).not.toHaveBeenCalled();
-		trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 		expect(outer).toHaveBeenCalledTimes(1);
+		const next = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+		trigger.dispatchEvent(next);
+		expect(next.defaultPrevented).toBe(false);
+	});
+
+	it('leaves Escape to the browser where hint is supported, and follows the browser closing it', () => {
+		unbind();
+		Object.defineProperty(tooltip, 'popover', { value: 'hint', configurable: true });
+		unbind = bindTooltip(trigger, tooltip);
+		trigger.dispatchEvent(new FocusEvent('focusin'));
+		const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+		trigger.dispatchEvent(escape);
+		expect(escape.defaultPrevented).toBe(false);
+		expect(open.has(tooltip)).toBe(true);
+		// The browser closes it.
+		open.delete(tooltip);
+		toggle(tooltip, 'closed');
+		trigger.dispatchEvent(new FocusEvent('focusout'));
+		trigger.dispatchEvent(new FocusEvent('focusin'));
+		expect(open.has(tooltip)).toBe(true);
 	});
 
 	it('closes when the trigger is pressed, and waits for the pointer to leave before opening again', () => {

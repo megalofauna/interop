@@ -96,11 +96,13 @@ export function bindTooltip(trigger: HTMLElement, tooltip: HTMLElement): () => v
 		focused = false;
 		hide();
 	};
+	// Where `hint` is supported, the browser closes the tooltip on Escape, one layer per press, and
+	// the key still reaches the page. A manual popover gets neither, so this does the same.
+	const closesItself = tooltip.popover === 'hint';
 	const onKeyDown = (event: KeyboardEvent) => {
 		if (event.key !== 'Escape' || !open) return;
-		// The tooltip takes this Escape, so a dialog or menu around it stays open.
+		// One Escape closes one layer, so a dialog around the tooltip stays open.
 		event.preventDefault();
-		event.stopPropagation();
 		hovered = focused = false;
 		hide();
 	};
@@ -114,7 +116,7 @@ export function bindTooltip(trigger: HTMLElement, tooltip: HTMLElement): () => v
 	trigger.addEventListener('focusin', onFocusIn);
 	trigger.addEventListener('focusout', onFocusOut);
 	trigger.addEventListener('pointerdown', onPointerDown);
-	document.addEventListener('keydown', onKeyDown, { capture: true });
+	if (!closesItself) document.addEventListener('keydown', onKeyDown, { capture: true });
 	watchInteropInDevMode();
 
 	return () => {

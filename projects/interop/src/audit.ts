@@ -178,6 +178,19 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
+	'tooltip-label-in-name': {
+		selector: '[aria-labelledby]',
+		check: (trigger) => {
+			const text = squash(spokenText(trigger));
+			return text && tooltipsOf(trigger, 'aria-labelledby').length && !squash(ariaName(trigger)).includes(text)
+				? {
+						problem: 'This control’s label tooltip replaces its visible text with different words.',
+						reason: 'A label tooltip becomes the whole name, so a voice control user who says the visible text cannot reach the control (WCAG 2.5.3).',
+						advice: 'Use a describing tooltip, interop-tooltip without "label", or start the tooltip with the visible text.',
+					}
+				: null;
+		},
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>
@@ -288,6 +301,11 @@ function ariaName(element: Element): string {
 		if (text) return text;
 	}
 	return element.getAttribute('aria-label')?.trim() ?? '';
+}
+
+/** Lowercase, with runs of white space as one space. */
+function squash(text: string): string {
+	return text.toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
 /** The tooltips an element references through `relation`. */

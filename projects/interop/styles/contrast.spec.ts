@@ -4,10 +4,12 @@ import colorCss from './color.css' with { loader: 'text' };
 import codeCss from './code.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import codeBlockCss from '../code-block/interop-code-block.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import popoverCss from '../popover/interop-popover.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -59,6 +61,19 @@ describe('code colors', () => {
 				.filter(([, ratio]) => ratio < 4.5)
 				.map(([role, ratio]) => `${role} ${ratio.toFixed(2)}`);
 			expect(failing).toEqual([]);
+		});
+	}
+});
+
+/** The browser's default page background in each scheme: white, and Chrome's dark #121212. */
+const CANVAS = ['oklch(1 0 0)', 'oklch(0.2178 0 0)'] as const;
+
+describe('popover boundary', () => {
+	for (const [scheme, label] of [[0, 'light'], [1, 'dark']] as const) {
+		// WCAG 1.4.11: the edge that separates a popover from the page needs 3:1.
+		it(`has a border of 3:1 against the page in ${label}`, () => {
+			const border = resolve(declarations.get('--itx-popover-border-color')!, scheme);
+			expect(contrast(border, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
 	}
 });
