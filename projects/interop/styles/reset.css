@@ -1,8 +1,11 @@
 /*
  * An opt-in page reset. It applies the type scale to text elements and sets the rest of the
- * page to predictable defaults. Import it after interop.css:
+ * page to predictable defaults:
  *
  *   @import "interop/styles/reset.css";
+ *
+ * Its rules sit in the itx-reset cascade layer, so every unlayered style wins over them,
+ * whatever the import order. That includes Interop's components and the page's own styles.
  *
  * `itx-font` gives any element a role's size, line height and weight:
  *
@@ -11,94 +14,96 @@
  * Roles: display, h1–h5, p-lg, p, p-sm, label, caption, fine-print.
  */
 
-*,
-::before,
-::after {
-	box-sizing: border-box;
-	margin: 0;
-}
+@layer itx-reset {
+	*,
+	::before,
+	::after {
+		box-sizing: border-box;
+		margin: 0;
+	}
 
-:where(body) {
-	font-family: var(--itx-font-family);
-	font-weight: var(--itx-font-weight);
-	font-size: var(--itx-font-size-p);
-	line-height: var(--itx-line-height-p);
-}
+	:where(body) {
+		font-family: var(--itx-font-family);
+		font-weight: var(--itx-font-weight);
+		font-size: var(--itx-font-size-p);
+		line-height: var(--itx-line-height-p);
+	}
 
-:where(input, button, textarea, select) {
-	font: inherit;
-}
+	:where(input, button, textarea, select) {
+		font: inherit;
+	}
 
-/* A family list that does not end in the bare keyword monospace keeps code at the body size. */
-:where(code, kbd, samp, pre) {
-	font-family: var(--itx-font-family-mono);
-}
+	/* A family list that does not end in the bare keyword monospace keeps code at the body size. */
+	:where(code, kbd, samp, pre) {
+		font-family: var(--itx-font-family-mono);
+	}
 
-:where(img, picture, video, canvas) {
-	display: block;
-	max-inline-size: 100%;
-}
+	:where(img, picture, video, canvas) {
+		display: block;
+		max-inline-size: 100%;
+	}
 
-:where(p, h1, h2, h3, h4, h5, h6, li, dt, dd, figcaption, blockquote) {
-	overflow-wrap: break-word;
-}
+	:where(p, h1, h2, h3, h4, h5, h6, li, dt, dd, figcaption, blockquote) {
+		overflow-wrap: break-word;
+	}
 
-:where(h1, h2, h3, h4, h5, h6) {
-	text-wrap: balance;
-}
+	:where(h1, h2, h3, h4, h5, h6) {
+		text-wrap: balance;
+	}
 
-/* An element takes its role unless it carries `itx-font`, which names a role of its own. */
-:where([itx-font]) {
-	font-weight: var(--itx-font-weight);
-}
-:where(:is(h1, h2, h3, h4, h5, h6):not([itx-font]), [itx-font="display"], [itx-font="h1"], [itx-font="h2"], [itx-font="h3"], [itx-font="h4"], [itx-font="h5"]) {
-	font-weight: var(--itx-font-weight-heading);
-}
-:where([itx-font="display"]) {
-	font-size: var(--itx-font-size-display);
-	line-height: var(--itx-line-height-display);
-}
-:where(h1:not([itx-font]), [itx-font="h1"]) {
-	font-size: var(--itx-font-size-h1);
-	line-height: var(--itx-line-height-h1);
-}
-:where(h2:not([itx-font]), [itx-font="h2"]) {
-	font-size: var(--itx-font-size-h2);
-	line-height: var(--itx-line-height-h2);
-}
-:where(h3:not([itx-font]), [itx-font="h3"]) {
-	font-size: var(--itx-font-size-h3);
-	line-height: var(--itx-line-height-h3);
-}
-:where(h4:not([itx-font]), [itx-font="h4"]) {
-	font-size: var(--itx-font-size-h4);
-	line-height: var(--itx-line-height-h4);
-}
-:where(:is(h5, h6):not([itx-font]), [itx-font="h5"]) {
-	font-size: var(--itx-font-size-h5);
-	line-height: var(--itx-line-height-h5);
-}
-:where([itx-font="p-lg"]) {
-	font-size: var(--itx-font-size-p-lg);
-	line-height: var(--itx-line-height-p-lg);
-}
-:where(p:not([itx-font]), [itx-font="p"]) {
-	font-size: var(--itx-font-size-p);
-	line-height: var(--itx-line-height-p);
-}
-:where([itx-font="p-sm"]) {
-	font-size: var(--itx-font-size-p-sm);
-	line-height: var(--itx-line-height-p-sm);
-}
-:where(label:not([itx-font]), [itx-font="label"]) {
-	font-size: var(--itx-font-size-label);
-	line-height: var(--itx-line-height-label);
-}
-:where(:is(figcaption, caption):not([itx-font]), [itx-font="caption"]) {
-	font-size: var(--itx-font-size-caption);
-	line-height: var(--itx-line-height-caption);
-}
-:where(small:not([itx-font]), [itx-font="fine-print"]) {
-	font-size: var(--itx-font-size-fine-print);
-	line-height: var(--itx-line-height-fine-print);
+	/* An element takes its role unless it carries `itx-font`, which names a role of its own. */
+	:where([itx-font]) {
+		font-weight: var(--itx-font-weight);
+	}
+	:where(:is(h1, h2, h3, h4, h5, h6):not([itx-font]), [itx-font="display"], [itx-font="h1"], [itx-font="h2"], [itx-font="h3"], [itx-font="h4"], [itx-font="h5"]) {
+		font-weight: var(--itx-font-weight-heading);
+	}
+	:where([itx-font="display"]) {
+		font-size: var(--itx-font-size-display);
+		line-height: var(--itx-line-height-display);
+	}
+	:where(h1:not([itx-font]), [itx-font="h1"]) {
+		font-size: var(--itx-font-size-h1);
+		line-height: var(--itx-line-height-h1);
+	}
+	:where(h2:not([itx-font]), [itx-font="h2"]) {
+		font-size: var(--itx-font-size-h2);
+		line-height: var(--itx-line-height-h2);
+	}
+	:where(h3:not([itx-font]), [itx-font="h3"]) {
+		font-size: var(--itx-font-size-h3);
+		line-height: var(--itx-line-height-h3);
+	}
+	:where(h4:not([itx-font]), [itx-font="h4"]) {
+		font-size: var(--itx-font-size-h4);
+		line-height: var(--itx-line-height-h4);
+	}
+	:where(:is(h5, h6):not([itx-font]), [itx-font="h5"]) {
+		font-size: var(--itx-font-size-h5);
+		line-height: var(--itx-line-height-h5);
+	}
+	:where([itx-font="p-lg"]) {
+		font-size: var(--itx-font-size-p-lg);
+		line-height: var(--itx-line-height-p-lg);
+	}
+	:where(p:not([itx-font]), [itx-font="p"]) {
+		font-size: var(--itx-font-size-p);
+		line-height: var(--itx-line-height-p);
+	}
+	:where([itx-font="p-sm"]) {
+		font-size: var(--itx-font-size-p-sm);
+		line-height: var(--itx-line-height-p-sm);
+	}
+	:where(label:not([itx-font]), [itx-font="label"]) {
+		font-size: var(--itx-font-size-label);
+		line-height: var(--itx-line-height-label);
+	}
+	:where(:is(figcaption, caption):not([itx-font]), [itx-font="caption"]) {
+		font-size: var(--itx-font-size-caption);
+		line-height: var(--itx-line-height-caption);
+	}
+	:where(small:not([itx-font]), [itx-font="fine-print"]) {
+		font-size: var(--itx-font-size-fine-print);
+		line-height: var(--itx-line-height-fine-print);
+	}
 }
