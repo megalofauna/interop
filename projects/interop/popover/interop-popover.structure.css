@@ -1,0 +1,54 @@
+/*
+ * A popover placed beside the button that opens it. The button is its anchor when it opens the
+ * popover with `popovertarget` or `commandfor`, so no `anchor-name` is needed.
+ */
+:where([interop-popover]) {
+	inset: auto;
+	position-area: var(--itx-popover-position-area);
+	position-try-fallbacks: var(--itx-popover-position-try-fallbacks);
+	margin-block: var(--itx-popover-margin-block);
+	margin-inline: var(--itx-popover-margin-inline);
+	box-sizing: border-box;
+	/* As wide as its content, so a popover that does not fit overflows and takes a fallback instead of wrapping. */
+	inline-size: max-content;
+	max-inline-size: min(var(--itx-popover-max-inline-size), 100vw - 2 * var(--itx-space-2));
+	padding-block: var(--itx-popover-padding-block);
+	padding-inline: var(--itx-popover-padding-inline);
+	color: var(--itx-popover-color);
+	background-color: var(--itx-popover-background-color);
+	border-width: var(--itx-popover-border-width);
+	border-style: var(--itx-popover-border-style);
+	border-color: var(--itx-popover-border-color);
+	border-radius: var(--itx-popover-border-radius);
+	corner-shape: var(--itx-popover-corner-shape);
+	box-shadow: var(--itx-popover-box-shadow);
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: var(--itx-popover-transition-duration);
+	transition-timing-function: var(--itx-popover-transition-timing-function);
+}
+
+:where([interop-popover]:popover-open) {
+	opacity: 1;
+}
+
+/*
+ * The last resort: centered on the anchor, where it can use the full width and slides to stay on
+ * screen, and no taller than the space, so its content scrolls and none of it is out of reach (WCAG 1.4.10).
+ */
+@position-try --itx-popover-scroll {
+	position-area: block-end;
+	margin-block: var(--itx-space-1);
+	margin-inline: 0px;
+	max-block-size: calc(100% - 2 * var(--itx-space-1));
+}
+
+/*
+ * It fades in and disappears at once. A fade out keeps a closed popover rendered, and Chrome can
+ * then lose the name or description of a control that points into it.
+ */
+@starting-style {
+	:where([interop-popover]:popover-open) {
+		opacity: 0;
+	}
+}

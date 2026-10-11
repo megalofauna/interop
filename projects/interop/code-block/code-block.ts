@@ -14,6 +14,7 @@ import { registerIcons, scopeSelectAll, splitLines, watchInteropInDevMode } from
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
 import { TablerCheck, TablerCopy } from 'interop/tabler';
+import { InteropTooltip } from 'interop/tooltip';
 
 let nextId = 0;
 
@@ -29,15 +30,24 @@ let nextId = 0;
  */
 @Component({
 	selector: 'figure[interop-code-block]',
-	imports: [InteropIcon],
+	imports: [InteropIcon, InteropTooltip],
 	template: `
 		@if (caption()) {
 			<figcaption [id]="captionId">{{ caption() }}</figcaption>
 		}
 		@if (canCopy) {
-			<button interop-button type="button" itx-size="sm" aria-label="Copy code" (click)="copy()">
+			<!-- The caption joins the name, so each block's button says which code it copies. -->
+			<button
+				interop-button
+				type="button"
+				itx-size="sm"
+				[interopTooltip]="copyLabel"
+				[attr.aria-labelledby]="caption() ? copyLabelId + ' ' + captionId : copyLabelId"
+				(click)="copy()"
+			>
 				<svg interop-icon [name]="copied() ? 'tabler-check' : 'tabler-copy'"></svg>
 			</button>
+			<span interop-tooltip="label" [id]="copyLabelId" #copyLabel>Copy code</span>
 		}
 		<!--
 			TODO: An overflowing block is focusable but has no name. Look deeper at naming it.
@@ -63,6 +73,7 @@ export class InteropCodeBlock {
 	readonly captionText = input<string | undefined>(undefined, { alias: 'caption' });
 
 	protected readonly captionId = `itx-code-block-${nextId++}`;
+	protected readonly copyLabelId = `${this.captionId}-copy`;
 	protected readonly caption = computed(() => {
 		const language = this.language();
 		return this.captionText() ?? (language ? getLanguage(language)?.label : undefined);

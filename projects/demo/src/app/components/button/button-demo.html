@@ -12,7 +12,8 @@
 	<button interop-button type="button" itx-size="sm"><svg interop-icon name="tabler-copy"></svg>Copy</button>
 	<button interop-button type="button"><svg interop-icon name="tabler-copy"></svg>Copy</button>
 	<button interop-button type="button" itx-size="lg"><svg interop-icon name="tabler-copy"></svg>Copy</button>
-	<button interop-button type="button" aria-label="Search"><svg interop-icon name="tabler-search"></svg></button>
+	<button interop-button type="button" [interopTooltip]="search"><svg interop-icon name="tabler-search"></svg></button>
+	<span interop-tooltip="label" #search>Search</span>
 </p>
 
 <h2>Radius</h2>

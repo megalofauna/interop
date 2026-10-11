@@ -122,6 +122,56 @@ describe('auditInterop', () => {
 		expect(issue!.reason).toContain('screen reader');
 		expect(issue!.advice).toContain('aria-label');
 	});
+	it('flags a code block with no name, and accepts a caption or a label', () => {
+		render(`
+			<figure interop-code-block><pre><code>a</code></pre></figure>
+			<figure interop-code-block><figcaption>a.ts</figcaption><pre><code>a</code></pre></figure>
+			<figure interop-code-block aria-label="Example"><pre><code>a</code></pre></figure>
+		`);
+		expect(rules()).toEqual(['code-block-name']);
+	});
+
+	it('flags code that scrolls without a tabindex', () => {
+		render('<pre><code class="language-ts">a</code></pre><pre tabindex="0"><code class="language-ts">b</code></pre>');
+		const [scrolling, focusable] = Array.from(document.querySelectorAll('pre'));
+		for (const pre of [scrolling, focusable]) Object.defineProperty(pre, 'scrollWidth', { value: 900 });
+		expect(rules()).toEqual(['code-scroll-focusable']);
+	});
+
+	it('flags a tooltip holding a control', () => {
+		render(`
+			<span interop-tooltip>Read <a href="/docs">the docs</a></span>
+			<span interop-tooltip>Saves a draft</span>
+		`);
+		expect(rules()).toEqual(['tooltip-interactive']);
+	});
+
+	it('flags a disabled control with a tooltip', () => {
+		render(`
+			<button type="button" disabled aria-describedby="t">Save</button><span interop-tooltip id="t">Saves a draft</span>
+			<button type="button" disabled aria-describedby="d">Save</button><span id="d">Saves a draft</span>
+			<button type="button" aria-disabled="true" aria-describedby="t">Save</button>
+		`);
+		expect(rules()).toEqual(['tooltip-trigger-disabled']);
+	});
+
+	it('flags a describing tooltip that repeats the name, and accepts one that labels', () => {
+		render(`
+			<button interop-button type="button" aria-label="Copy code" aria-describedby="a"></button><span interop-tooltip id="a">Copy code</span>
+			<button interop-button type="button" aria-labelledby="b"></button><span interop-tooltip="label" id="b">Copy code</span>
+			<button interop-button type="button" aria-describedby="c">Save</button><span interop-tooltip id="c">Saves a draft</span>
+		`);
+		expect(rules()).toEqual(['tooltip-repeats-name']);
+	});
+
+	it('flags a label tooltip that replaces visible text, and accepts one that keeps it', () => {
+		render(`
+			<button interop-button type="button" aria-labelledby="a">Delete</button><span interop-tooltip="label" id="a">Remove this item</span>
+			<button interop-button type="button" aria-labelledby="b">Delete</button><span interop-tooltip="label" id="b">Delete this item</span>
+			<button interop-button type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c">Copy code</span>
+		`);
+		expect(rules()).toEqual(['tooltip-label-in-name']);
+	});
 });
 
 describe('watchInterop', () => {
@@ -180,20 +230,5 @@ describe('watchInterop', () => {
 		expect(info).not.toHaveBeenCalled();
 		expect(warn).not.toHaveBeenCalled();
 		stop();
-	});
-	it('flags a code block with no name, and accepts a caption or a label', () => {
-		render(`
-			<figure interop-code-block><pre><code>a</code></pre></figure>
-			<figure interop-code-block><figcaption>a.ts</figcaption><pre><code>a</code></pre></figure>
-			<figure interop-code-block aria-label="Example"><pre><code>a</code></pre></figure>
-		`);
-		expect(rules()).toEqual(['code-block-name']);
-	});
-
-	it('flags code that scrolls without a tabindex', () => {
-		render('<pre><code class="language-ts">a</code></pre><pre tabindex="0"><code class="language-ts">b</code></pre>');
-		const [scrolling, focusable] = Array.from(document.querySelectorAll('pre'));
-		for (const pre of [scrolling, focusable]) Object.defineProperty(pre, 'scrollWidth', { value: 900 });
-		expect(rules()).toEqual(['code-scroll-focusable']);
 	});
 });
