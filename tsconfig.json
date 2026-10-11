@@ -18,7 +18,7 @@
 		"target": "ES2022",
 		"module": "ES2022",
 		"useDefineForClassFields": false,
-		"lib": ["ES2023", "dom"],
+		"lib": ["ES2023", "dom", "dom.iterable"],
 		"skipLibCheck": true,
 		"allowSyntheticDefaultImports": true,
 		/*

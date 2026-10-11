@@ -1,0 +1,41 @@
+/*
+ * Syntax colors, painted by highlightCode() as ::highlight(itx-code-<role>). Each color is chosen
+ * against the code block's background and measures at least 4.5:1 in light and dark.
+ */
+
+:root {
+	--itx-code-color-keyword: light-dark(oklch(0.5 0.2 300), oklch(0.78 0.13 300));
+	--itx-code-color-string: light-dark(oklch(0.5 0.13 150), oklch(0.8 0.14 150));
+	--itx-code-color-comment: light-dark(oklch(0.52 0 0), oklch(0.7 0 0));
+	--itx-code-color-function: light-dark(oklch(0.5 0.15 250), oklch(0.78 0.11 250));
+	--itx-code-color-constant: light-dark(oklch(0.52 0.15 50), oklch(0.8 0.12 60));
+	--itx-code-color-parameter: light-dark(oklch(0.5 0.12 20), oklch(0.8 0.1 20));
+	--itx-code-color-punctuation: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}
+
+::highlight(itx-code-keyword) {
+	color: var(--itx-code-color-keyword);
+}
+::highlight(itx-code-string),
+::highlight(itx-code-string-expression) {
+	color: var(--itx-code-color-string);
+}
+::highlight(itx-code-comment) {
+	color: var(--itx-code-color-comment);
+}
+::highlight(itx-code-function) {
+	color: var(--itx-code-color-function);
+}
+::highlight(itx-code-constant) {
+	color: var(--itx-code-color-constant);
+}
+::highlight(itx-code-parameter) {
+	color: var(--itx-code-color-parameter);
+}
+::highlight(itx-code-punctuation) {
+	color: var(--itx-code-color-punctuation);
+}
+::highlight(itx-code-link) {
+	color: var(--itx-code-color-function);
+	text-decoration-line: underline;
+}
