@@ -1,4 +1,10 @@
-body {
-	margin: 0;
-	font-family: system-ui, sans-serif;
+/* Vertical rhythm for the demo pages: 1rem between blocks, 2rem before a heading, 0.5rem after one. */
+:where(main :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, figure, table, pre, section) + :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, figure, table, pre, section)) {
+	margin-block-start: var(--itx-space-4);
+}
+:where(main :is(h1, h2, h3, h4, h5, h6) + *) {
+	margin-block-start: var(--itx-space-2);
+}
+:where(main * + :is(h2, h3, h4, h5, h6)) {
+	margin-block-start: var(--itx-space-8);
 }

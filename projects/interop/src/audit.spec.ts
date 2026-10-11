@@ -65,6 +65,44 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual(['pressed-value']);
 	});
 
+	it('flags a badge with no text for assistive technology', () => {
+		render('<span interop-badge="dot"></span>');
+		expect(rules()).toEqual(['badge-text']);
+	});
+
+	it('flags a badge whose only text is a number', () => {
+		render('<button interop-button type="button">Inbox <span interop-badge>3</span></button>');
+		expect(rules()).toEqual(['badge-count-label']);
+	});
+
+	it('reminds that a count badge does not announce changes, unless it has a live region', () => {
+		render(`
+			<span interop-badge><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span></span>
+			<span interop-badge><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span><span itx-visually-hidden role="status">3 unread messages</span></span>
+		`);
+		expect(rules()).toEqual(['badge-announcement']);
+	});
+
+	it('flags a live-region badge inside a button, which drops the count from its name', () => {
+		render(`
+			<button interop-button type="button">Inbox
+				<span interop-badge role="status"><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span></span>
+			</button>
+			<p>Standalone <span interop-badge role="status"><span aria-hidden="true">3</span><span itx-visually-hidden>3 alerts</span></span></p>
+		`);
+		expect(rules()).toEqual(['badge-live-region-name']);
+	});
+
+	it('accepts a status badge, a labelled count, and a hidden badge', () => {
+		render(`
+			<span interop-badge>Beta</span>
+			<span interop-badge>v0.1.0</span>
+			<span interop-badge="dot"><span itx-visually-hidden>New activity</span></span>
+			<span interop-badge hidden></span>
+		`);
+		expect(rules()).toEqual([]);
+	});
+
 	it('skips the rules named by itx-audit-ignore, or every rule when it is empty', () => {
 		render(`
 			<button interop-button type="button" itx-audit-ignore="button-name"></button>

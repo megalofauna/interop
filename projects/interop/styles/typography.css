@@ -1,0 +1,60 @@
+/*
+ * The type scale: Major Second (1.125) from 16px, sizes kept on a 4px grid above 20px.
+ *
+ * A fluid size grows linearly from a 320px viewport to a 1280px one:
+ *
+ *   clamp(min, intercept + slope, max)
+ *   slope     = (max − min) / 960px, written in vw
+ *   intercept = min − slope × 320px
+ *
+ * Each font size has its own line height, rounded to 0.25rem so every line box sits on a 4px grid.
+ * Sizes from p down are fixed. A role that shares a value with another reads its tokens.
+ */
+
+:root {
+	--itx-font-family: system-ui, sans-serif;
+	--itx-font-weight: 400;
+	--itx-font-weight-heading: 600;
+
+	/* 40 → 64px, line 48 → 72px. */
+	--itx-font-size-display: clamp(2.5rem, 2rem + 2.5vw, 4rem);
+	--itx-line-height-display: round(clamp(3rem, 2.5rem + 2.5vw, 4.5rem), 0.25rem);
+
+	/* 32 → 40px, line 40 → 48px. */
+	--itx-font-size-h1: clamp(2rem, 1.8333rem + 0.8333vw, 2.5rem);
+	--itx-line-height-h1: round(clamp(2.5rem, 2.3333rem + 0.8333vw, 3rem), 0.25rem);
+
+	/* 28 → 36px, line 36 → 44px. */
+	--itx-font-size-h2: clamp(1.75rem, 1.5833rem + 0.8333vw, 2.25rem);
+	--itx-line-height-h2: round(clamp(2.25rem, 2.0833rem + 0.8333vw, 2.75rem), 0.25rem);
+
+	/* 24 → 28px, line 32 → 36px. */
+	--itx-font-size-h3: clamp(1.5rem, 1.4167rem + 0.4167vw, 1.75rem);
+	--itx-line-height-h3: round(clamp(2rem, 1.9167rem + 0.4167vw, 2.25rem), 0.25rem);
+
+	/* 20 → 24px, line 28 → 32px. */
+	--itx-font-size-h4: clamp(1.25rem, 1.1667rem + 0.4167vw, 1.5rem);
+	--itx-line-height-h4: round(clamp(1.75rem, 1.6667rem + 0.4167vw, 2rem), 0.25rem);
+
+	/* 18 → 20px, line 28px. */
+	--itx-font-size-h5: clamp(1.125rem, 1.0833rem + 0.2083vw, 1.25rem);
+	--itx-line-height-h5: 1.75rem;
+
+	--itx-font-size-p-lg: var(--itx-font-size-h5);
+	--itx-line-height-p-lg: var(--itx-line-height-h5);
+
+	/* 16px, line 24px. */
+	--itx-font-size-p: 1rem;
+	--itx-line-height-p: 1.5rem;
+
+	/* 14px, line 20px. */
+	--itx-font-size-p-sm: 0.875rem;
+	--itx-line-height-p-sm: 1.25rem;
+
+	--itx-font-size-label: var(--itx-font-size-p-sm);
+	--itx-line-height-label: var(--itx-line-height-p-sm);
+
+	/* 12px, line 16px. */
+	--itx-font-size-caption: 0.75rem;
+	--itx-line-height-caption: 1rem;
+}

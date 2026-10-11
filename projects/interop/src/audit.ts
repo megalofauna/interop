@@ -19,6 +19,8 @@ export function noteActivationGuard(change: 1 | -1): void {
 type Rule = (element: Element) => Omit<AuditIssue, 'rule' | 'element'> | null;
 
 const BUTTONS = 'button[interop-button], button:has(svg[interop-icon])';
+const BADGES = '[interop-badge]:not([hidden])';
+const LIVE = '[role="status"], [aria-live]';
 
 const RULES: Record<string, { selector: string; check: Rule }> = {
 	'button-name': {
@@ -79,6 +81,47 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null;
 		},
+	},
+	'badge-text': {
+		selector: BADGES,
+		check: (badge) =>
+			spokenText(badge)
+				? null
+				: {
+						problem: 'This badge has no text for assistive technology.',
+						reason: 'A dot or an empty badge says nothing to a screen reader user, so whatever it marks is lost.',
+						advice: 'Give it text, hidden when it shows a dot: <span interop-badge="dot"><span itx-visually-hidden>New activity</span></span>.',
+					},
+	},
+	'badge-count-label': {
+		selector: BADGES,
+		check: (badge) =>
+			/^[\d\s.,+]+$/.test(spokenText(badge))
+				? {
+						problem: 'This badge shows a count, but nothing says what it counts.',
+						reason: 'A screen reader reads the bare number, e.g. "Inbox 3".',
+						advice: 'Set [label], e.g. { one: "unread message", other: "unread messages" }, or put hidden text beside the number.',
+					}
+				: null,
+	},
+	'badge-announcement': {
+		selector: `${BADGES}:is(:has(> [aria-hidden="true"]), [interop-badge~="dot"])`,
+		check: (badge) =>
+			/\d/.test(spokenText(badge)) && !badge.matches(LIVE) && !badge.querySelector(LIVE)
+				? {
+						problem: 'Changes to this count are not announced.',
+						reason: 'A screen reader user hears the new count only when they come back to the badge.',
+						advice: 'If they need to hear changes as they happen, set [announce]="true". If not, this badge is fine as it is.',
+					}
+				: null,
+	},
+	'badge-live-region-name': {
+		selector: `:is(button, a[href], [role="button"], [role="link"]) ${BADGES}:is(${LIVE})`,
+		check: () => ({
+			problem: 'This badge is a live region inside a control, so its text is left out of the control’s name.',
+			reason: 'Browsers do not include a live region’s text in the name of the control around it, so the control is announced without its count.',
+			advice: 'Remove role="status" from the badge. To announce changes, set [announce]="true", which keeps the count in the name.',
+		}),
 	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
@@ -187,9 +230,16 @@ function accessibleName(element: Element): string {
 	return element.getAttribute('title')?.trim() ?? '';
 }
 
+/** The text assistive technology reads inside an element. */
+function spokenText(element: Element): string {
+	return Array.from(element.childNodes).map(visibleText).join('').trim();
+}
+
 function visibleText(node: Node): string {
 	if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? '';
 	if (!(node instanceof Element) || node.getAttribute('aria-hidden') === 'true') return '';
+	// Chrome leaves a status region's text out of the name of the control around it.
+	if (node.getAttribute('role') === 'status') return '';
 	const label = node.getAttribute('aria-label') ?? (node instanceof HTMLImageElement ? node.alt : null);
 	if (label) return ` ${label} `;
 	return Array.from(node.childNodes).map(visibleText).join('');

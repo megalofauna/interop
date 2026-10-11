@@ -1,0 +1,18 @@
+dl {
+	display: grid;
+	gap: var(--itx-space-2);
+}
+
+dt {
+	font-size: var(--itx-font-size-caption);
+	line-height: var(--itx-line-height-caption);
+	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}
+
+dt:not(:first-child) {
+	margin-block-start: var(--itx-space-4);
+}
+
+dd {
+	background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--itx-space-1) - 1px), light-dark(var(--itx-neutral-100), var(--itx-neutral-800)) 0 var(--itx-space-1));
+}

@@ -1,0 +1,11 @@
+p {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-3);
+}
+
+.positions {
+	gap: var(--itx-space-8);
+	padding-block: var(--itx-space-2);
+}

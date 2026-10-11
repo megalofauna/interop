@@ -56,6 +56,7 @@
 						],
 						"styles": [
 							"projects/interop/interop.css",
+							"projects/interop/styles/reset.css",
 							"projects/demo/src/styles.css"
 						]
 					},

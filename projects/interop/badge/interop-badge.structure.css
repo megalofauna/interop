@@ -1,0 +1,51 @@
+:where([interop-badge]) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	block-size: var(--itx-badge-block-size);
+	min-inline-size: var(--itx-badge-min-inline-size);
+	/* The border takes its width from the padding, so a border never widens the badge. */
+	padding-inline: calc(var(--itx-badge-padding-inline) - var(--itx-badge-border-width));
+	font-size: var(--itx-badge-font-size);
+	font-weight: var(--itx-badge-font-weight);
+	line-height: var(--itx-badge-line-height);
+	/* Equal-width digits, so a count keeps its width as it changes. */
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	color: var(--itx-badge-color);
+	background-color: var(--itx-badge-background-color);
+	border-width: var(--itx-badge-border-width);
+	border-style: solid;
+	border-color: var(--itx-badge-border-color);
+	border-radius: var(--itx-badge-border-radius);
+}
+
+:where([interop-badge][hidden]) {
+	display: none;
+}
+
+/* A placed badge sits on a corner of its parent, half outside it. */
+:where(:has(> [interop-badge][itx-badge-position])) {
+	position: relative;
+}
+
+:where([interop-badge][itx-badge-position]) {
+	position: absolute;
+}
+
+:where([interop-badge][itx-badge-position^="top"]) {
+	inset-block-start: var(--itx-badge-inset);
+}
+
+:where([interop-badge][itx-badge-position^="bottom"]) {
+	inset-block-end: var(--itx-badge-inset);
+}
+
+:where([interop-badge][itx-badge-position$="end"]) {
+	inset-inline-end: var(--itx-badge-inset);
+}
+
+:where([interop-badge][itx-badge-position$="start"]) {
+	inset-inline-start: var(--itx-badge-inset);
+}
