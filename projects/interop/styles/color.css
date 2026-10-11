@@ -10,4 +10,9 @@
 	--itx-neutral-800: oklch(0.269 0 0);
 	--itx-neutral-900: oklch(0.205 0 0);
 	--itx-neutral-950: oklch(0.145 0 0);
+
+	--itx-role-background-danger: oklch(0.577 0.245 27.325);
+	--itx-role-background-warning: oklch(0.769 0.188 70.08);
+	--itx-role-background-success: oklch(0.627 0.194 149.214);
+	--itx-role-background-info: oklch(0.546 0.245 262.881);
 }

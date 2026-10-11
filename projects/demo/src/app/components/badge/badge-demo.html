@@ -1,0 +1,70 @@
+<h1>Badge</h1>
+
+<h2 itx-font="h5">As text</h2>
+<p>itx-color accepts named role colors <LINK> as well as arbitrary CSS color values.</p>
+<p>
+	<span interop-badge>Draft</span>
+	<span interop-badge itx-color="info">Beta</span>
+	<span interop-badge itx-color="success">Operational</span>
+	<span interop-badge itx-color="warning">Degraded</span>
+	<span interop-badge itx-color="danger">Outage</span>
+	<span interop-badge itx-color="oklch(0.85 0.12 200)">Custom color</span>
+</p>
+
+<h2 itx-font="h5">Sizes</h2>
+<p>
+	<span interop-badge itx-size="sm">Small</span>
+	<span interop-badge>Medium</span>
+	<span interop-badge itx-size="lg">Large</span>
+</p>
+
+<h2 itx-font="h5">As an announced count</h2>
+<p>
+	<button interop-button type="button">
+		Inbox
+		<span interop-badge itx-badge-position="top-end" itx-size="sm" itx-color="danger" announce [count]="unread()" [label]="messages"></span>
+	</button>
+	<button interop-button type="button">
+		Inbox
+		<span interop-badge itx-badge-position="top-end" itx-color="danger" announce [count]="unread()" [label]="messages"></span>
+	</button>
+	<button interop-button type="button">
+		Inbox
+		<span interop-badge itx-badge-position="top-end" itx-size="lg" itx-color="danger" announce [count]="unread()" [label]="messages"></span>
+	</button>
+	<button interop-button type="button" (click)="unread.set(unread() + 1)">Add one</button>
+	<button interop-button type="button" (click)="unread.set(120)">Make it 120</button>
+	<button interop-button type="button" (click)="unread.set(0)">Clear</button>
+</p>
+
+<h2 itx-font="h5">As a status dot</h2>
+<p>
+	<button interop-button type="button">
+		Activity
+		<span interop-badge="dot" itx-badge-position="top-end" itx-color="info" itx-size="sm">New activity</span>
+	</button>
+	<button interop-button type="button">
+		Activity
+		<span interop-badge="dot" itx-badge-position="top-end" itx-color="info">New activity</span>
+	</button>
+	<button interop-button type="button">
+		Activity
+		<span interop-badge="dot" itx-badge-position="top-end" itx-color="info" itx-size="lg">New activity</span>
+	</button>
+</p>
+
+<h2 itx-font="h5">Positions</h2>
+<p class="positions">
+	@for (position of ["top-start", "top-end", "bottom-start", "bottom-end"]; track position) {
+		<button interop-button type="button">
+			{{ position }}
+			<span interop-badge [attr.itx-badge-position]="position" itx-color="danger" itx-size="sm" [count]="1" label="alert"></span>
+		</button>
+	}
+</p>
+<p class="positions" dir="rtl">
+	<button interop-button type="button">
+		Right to left
+		<span interop-badge itx-badge-position="top-end" itx-color="danger" itx-size="sm" [count]="1" label="alert"></span>
+	</button>
+</p>

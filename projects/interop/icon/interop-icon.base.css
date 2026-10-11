@@ -1,0 +1,7 @@
+:where(svg[interop-icon]) {
+	--itx-icon-inline-size: 1em;
+	--itx-icon-block-size: 1em;
+	--itx-icon-vertical-align: -0.125em;
+	--itx-icon-color: currentColor;
+	--itx-icon-stroke-width: 2;
+}

@@ -1,3 +1,5 @@
+import { noteActivationGuard, watchInteropInDevMode } from './audit';
+
 const UNAVAILABLE = '[aria-disabled="true"], [aria-busy="true"]';
 
 /**
@@ -14,5 +16,10 @@ export function guardActivation(root: Document | ShadowRoot = document): () => v
 		}
 	};
 	root.addEventListener('click', onClick, { capture: true });
-	return () => root.removeEventListener('click', onClick, { capture: true });
+	noteActivationGuard(1);
+	watchInteropInDevMode();
+	return () => {
+		root.removeEventListener('click', onClick, { capture: true });
+		noteActivationGuard(-1);
+	};
 }

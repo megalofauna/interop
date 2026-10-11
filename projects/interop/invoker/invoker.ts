@@ -1,5 +1,5 @@
 import { Directive, ElementRef, effect, inject, input } from '@angular/core';
-import { bindPendingAction } from 'interop';
+import { bindPendingAction, watchInteropInDevMode } from 'interop';
 
 type Target = HTMLElement | string | null;
 
@@ -32,6 +32,7 @@ export class InteropInvoker {
 	readonly pendingAction = input<((event: MouseEvent) => Promise<unknown>) | null>(null);
 
 	constructor() {
+		watchInteropInDevMode();
 		effect(() => target(this.button, 'commandForElement', 'commandfor', this.commandFor()));
 		effect(() => target(this.button, 'popoverTargetElement', 'popovertarget', this.popoverTarget()));
 		effect((onCleanup) => {

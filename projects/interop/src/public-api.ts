@@ -2,5 +2,7 @@
  * Public API Surface of interop
  */
 
+export { auditInterop, watchInterop, watchInteropInDevMode, type AuditIssue } from './audit';
 export { bindPendingAction } from './bind-pending-action';
 export { guardActivation } from './guard-activation';
+export { getIcon, registerIcons, type IconDefinition, type IconPath } from './icon-registry';
