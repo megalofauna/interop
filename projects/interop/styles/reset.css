@@ -29,6 +29,11 @@
 	font: inherit;
 }
 
+/* A family list that does not end in the bare keyword monospace keeps code at the body size. */
+:where(code, kbd, samp, pre) {
+	font-family: var(--itx-font-family-mono);
+}
+
 :where(img, picture, video, canvas) {
 	display: block;
 	max-inline-size: 100%;

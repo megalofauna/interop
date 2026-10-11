@@ -13,6 +13,7 @@
 
 :root {
 	--itx-font-family: system-ui, sans-serif;
+	--itx-font-family-mono: ui-monospace, monospace;
 	--itx-font-weight: 400;
 	--itx-font-weight-heading: 600;
 

@@ -181,4 +181,19 @@ describe('watchInterop', () => {
 		expect(warn).not.toHaveBeenCalled();
 		stop();
 	});
+	it('flags a code block with no name, and accepts a caption or a label', () => {
+		render(`
+			<figure interop-code-block><pre><code>a</code></pre></figure>
+			<figure interop-code-block><figcaption>a.ts</figcaption><pre><code>a</code></pre></figure>
+			<figure interop-code-block aria-label="Example"><pre><code>a</code></pre></figure>
+		`);
+		expect(rules()).toEqual(['code-block-name']);
+	});
+
+	it('flags code that scrolls without a tabindex', () => {
+		render('<pre><code class="language-ts">a</code></pre><pre tabindex="0"><code class="language-ts">b</code></pre>');
+		const [scrolling, focusable] = Array.from(document.querySelectorAll('pre'));
+		for (const pre of [scrolling, focusable]) Object.defineProperty(pre, 'scrollWidth', { value: 900 });
+		expect(rules()).toEqual(['code-scroll-focusable']);
+	});
 });

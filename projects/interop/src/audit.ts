@@ -123,6 +123,28 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Remove role="status" from the badge. To announce changes, set [announce]="true", which keeps the count in the name.',
 		}),
 	},
+	'code-block-name': {
+		selector: 'figure[interop-code-block]',
+		check: (figure) =>
+			ariaName(figure) || figure.querySelector(':scope > figcaption')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This code block has no name.',
+						reason: 'A screen reader announces it only as "figure", with nothing to say what the code is.',
+						advice: 'Give it a caption, e.g. caption="badge.ts", or register its language with a label.',
+					},
+	},
+	'code-scroll-focusable': {
+		selector: 'pre:is([interop-code-block] > pre, :has(> code[class*="language-"])):not([tabindex])',
+		check: (pre) =>
+			pre.scrollWidth > pre.clientWidth || pre.scrollHeight > pre.clientHeight
+				? {
+						problem: 'This code scrolls, but the keyboard cannot reach it.',
+						reason: 'Safari does not focus a scrolling element on its own, so keyboard users cannot scroll to the rest of the code.',
+						advice: 'Add tabindex="0" to the <pre> while it overflows. InteropCodeBlock does this for you.',
+					}
+				: null,
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>
@@ -214,6 +236,15 @@ function ignored(element: Element, rule: string): boolean {
 
 /** A simplified accessible name: aria-labelledby, aria-label, visible text, then title. */
 function accessibleName(element: Element): string {
+	const name = ariaName(element);
+	if (name) return name;
+	const text = Array.from(element.childNodes).map(visibleText).join('').trim();
+	if (text) return text;
+	return element.getAttribute('title')?.trim() ?? '';
+}
+
+/** The name from aria-labelledby or aria-label alone. */
+function ariaName(element: Element): string {
 	const labelledby = element.getAttribute('aria-labelledby');
 	if (labelledby) {
 		const text = labelledby
@@ -223,11 +254,7 @@ function accessibleName(element: Element): string {
 			.trim();
 		if (text) return text;
 	}
-	const label = element.getAttribute('aria-label')?.trim();
-	if (label) return label;
-	const text = Array.from(element.childNodes).map(visibleText).join('').trim();
-	if (text) return text;
-	return element.getAttribute('title')?.trim() ?? '';
+	return element.getAttribute('aria-label')?.trim() ?? '';
 }
 
 /** The text assistive technology reads inside an element. */

@@ -13,6 +13,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/button/button-demo").then((m) => m.ButtonDemo),
 	},
 	{
+		path: "components/code-block",
+		title: "Code block",
+		loadComponent: () => import("./components/code-block/code-block-demo").then((m) => m.CodeBlockDemo),
+	},
+	{
 		path: "components/icon",
 		title: "Icon",
 		loadComponent: () => import("./components/icon/icon-demo").then((m) => m.IconDemo),

@@ -5,4 +5,6 @@
 export { auditInterop, watchInterop, watchInteropInDevMode, type AuditIssue } from './audit';
 export { bindPendingAction } from './bind-pending-action';
 export { guardActivation } from './guard-activation';
+export { scopeSelectAll } from './scope-select-all';
+export { splitLines } from './split-lines';
 export { getIcon, registerIcons, type IconDefinition, type IconPath } from './icon-registry';

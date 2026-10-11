@@ -1,5 +1,6 @@
 @import "./styles/space.css";
 @import "./styles/typography.css";
+@import "./styles/code.css";
 @import "./styles/radius.css";
 @import "./styles/color.css";
 @import "./styles/transition.css";
@@ -11,3 +12,5 @@
 @import "./icon/interop-icon.structure.css";
 @import "./badge/interop-badge.base.css";
 @import "./badge/interop-badge.structure.css";
+@import "./code-block/interop-code-block.base.css";
+@import "./code-block/interop-code-block.structure.css";

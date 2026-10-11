@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
 import { registerIcons } from 'interop';
 import { InteropBadge } from 'interop/badge';
+import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
 import { TablerCheck, TablerCopy, TablerSearch } from 'interop/tabler';
@@ -16,7 +17,7 @@ const violations = async (element: Element) =>
 	(await axe.run(element, OPTIONS)).violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(', ')}`);
 
 @Component({
-	imports: [InteropBadge, InteropIcon, InteropInvoker],
+	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker],
 	template: `
 		<main>
 			<button interop-button type="button">Save</button>
@@ -39,6 +40,7 @@ const violations = async (element: Element) =>
 				Activity
 				<span interop-badge="dot" itx-badge-position="top-end">New activity</span>
 			</button>
+			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
 	`,
 })
@@ -46,6 +48,7 @@ class Components {
 	readonly pressed = signal(true);
 	readonly save = () => Promise.resolve();
 	readonly unread = { one: 'unread message', other: 'unread messages' };
+	readonly example = 'const a = 1;\n\nconst b = 2;\n';
 }
 
 describe('accessibility (axe-core)', () => {

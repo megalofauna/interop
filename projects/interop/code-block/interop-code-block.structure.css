@@ -1,0 +1,86 @@
+/* Caption and copy button share the first row; the code spans the second. */
+:where(figure[interop-code-block]) {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	column-gap: var(--itx-code-block-gap);
+	margin: 0;
+	color: var(--itx-code-block-color);
+	background-color: var(--itx-code-block-background-color);
+	border-width: var(--itx-code-block-border-width);
+	border-style: var(--itx-code-block-border-style);
+	border-color: var(--itx-code-block-border-color);
+	border-radius: var(--itx-code-block-border-radius);
+	corner-shape: var(--itx-code-block-corner-shape);
+	font-family: var(--itx-code-block-font-family);
+}
+
+:where(figure[interop-code-block] > figcaption) {
+	grid-column: 1;
+	grid-row: 1;
+	padding-block-start: var(--itx-code-block-padding-block);
+	padding-inline-start: var(--itx-code-block-padding-inline);
+	font-size: var(--itx-code-block-caption-font-size);
+	line-height: var(--itx-code-block-caption-line-height);
+	color: var(--itx-code-block-caption-color);
+}
+
+:where(figure[interop-code-block] > button) {
+	grid-column: 2;
+	grid-row: 1;
+	margin-block-start: var(--itx-code-block-gap);
+	margin-inline-end: var(--itx-code-block-gap);
+}
+
+:where(figure[interop-code-block] > pre) {
+	grid-column: 1 / -1;
+	margin: 0;
+	padding-block: var(--itx-code-block-padding-block);
+	padding-inline: var(--itx-code-block-padding-inline);
+	max-block-size: var(--itx-code-block-max-block-size);
+	overflow: auto;
+	font-family: inherit;
+	font-size: var(--itx-code-block-font-size);
+	line-height: var(--itx-code-block-line-height);
+	tab-size: var(--itx-code-block-tab-size);
+	white-space: pre;
+}
+
+:where(figure[interop-code-block] > pre > code) {
+	display: block;
+	font: inherit;
+	counter-reset: line;
+}
+
+:where(figure[interop-code-block][itx-wrap] > pre) {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+/*
+ * Numbered lines are plain blocks. A grid or flex line would drop a blank line, because those
+ * layouts do not render text that is only white space.
+ */
+:where(figure[interop-code-block] [itx-code-line]) {
+	display: block;
+	position: relative;
+	padding-inline-start: calc(var(--itx-code-block-gutter-inline-size) + var(--itx-code-block-gutter-gap));
+	counter-increment: line;
+}
+
+/* The empty alternative text keeps numbers out of what screen readers read. */
+:where(figure[interop-code-block] [itx-code-line])::before {
+	content: counter(line) / "";
+	position: absolute;
+	inset-inline-start: 0;
+	inline-size: var(--itx-code-block-gutter-inline-size);
+	text-align: end;
+	color: var(--itx-code-block-line-number-color);
+}
+
+:where(figure[interop-code-block][itx-wrap] [itx-code-line]) {
+	padding-inline-start: calc(
+		var(--itx-code-block-gutter-inline-size) + var(--itx-code-block-gutter-gap) + var(--itx-code-block-wrap-indent)
+	);
+	text-indent: calc(var(--itx-code-block-wrap-indent) * -1);
+}
