@@ -21,6 +21,8 @@ import outlineCss from './outline.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import cardsCss from './cards.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
@@ -29,7 +31,7 @@ import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: '
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -256,6 +258,15 @@ describe('tabs', () => {
 		// WCAG 1.4.11: the bar carries the selection.
 		it(`has a selected bar of 3:1 against the page in ${label}`, () => {
 			expect(contrast(tabs('indicator-background-color-selected', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
+describe('cards', () => {
+	// WCAG 1.4.11: the checked card's border marks the choice alongside the input's own mark.
+	for (const [scheme, label] of SCHEMES) {
+		it(`has a checked border of 3:1 against the page in ${label}`, () => {
+			expect(contrast(token('--itx-cards-card-border-color-checked', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
 	}
 });

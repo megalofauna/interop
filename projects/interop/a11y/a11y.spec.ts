@@ -120,6 +120,24 @@ const reveal = (element: Element) => {
 				<section role="tabpanel" id="p-profile" aria-labelledby="t-profile"><a href="/profile">Edit profile</a></section>
 				<section role="tabpanel" id="p-billing" aria-labelledby="t-billing" hidden="until-found"><a href="/billing">Invoices</a></section>
 			</div>
+			<fieldset interop-radio-group="cards">
+				<legend>Plan</legend>
+				<label>
+					<input type="radio" name="plan" value="free" aria-labelledby="plan-free" aria-describedby="plan-free-details" checked />
+					<strong id="plan-free">Free</strong>
+					<span id="plan-free-details">Three projects</span>
+				</label>
+				<label>
+					<input type="radio" name="plan" value="pro" aria-labelledby="plan-pro" aria-describedby="plan-pro-details" />
+					<strong id="plan-pro">Pro</strong>
+					<span id="plan-pro-details">$29 a month <span interop-badge>Most popular</span></span>
+				</label>
+			</fieldset>
+			<fieldset interop-checkbox-group="cards">
+				<legend>Add-ons</legend>
+				<label interop-checkbox><input type="checkbox" name="addon" value="backup" checked /> <strong>Backups</strong></label>
+				<label interop-checkbox><input type="checkbox" name="addon" value="sso" disabled /> <strong>Single sign-on</strong></label>
+			</fieldset>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>

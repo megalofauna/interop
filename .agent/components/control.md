@@ -216,6 +216,9 @@ own family.
 | `radio-group-shared-name` | Radios in a group with a missing or differing `name`. Angular's `formControlName` does not write `name`, so the consumer must |
 | `radio-group-options` | A radio group with fewer than two radios |
 | `checkbox-group-required` | A checkbox group where every box is `required`, which demands all of them |
+| `control-label-block` | Block content (`div`, `p`, a list, a heading) inside a control label |
+| `control-label-control` | A button or another control inside a control label |
+| `card-name` | A card with several parts of text and no `aria-labelledby`, so its whole text is the name |
 
 ## Checkbox groups
 
@@ -246,6 +249,64 @@ Give a select-all box no `name`, so it does not submit.
 - A switch has no indeterminate state.
 - `role="radiogroup"` is not added. Fieldset and legend are the robust group
   semantics. A consumer may add the role.
+
+## Templates
+
+A group's look is a template: the consumer writes what goes in each label, and
+CSS lays it out. Interop ships two named templates on the radio group,
+`segmented` and `cards`, and `cards` on the checkbox group. A consumer writes
+any number more with no API: Interop's rules have no specificity, so the
+consumer's own classes win, and `label:has(> input:checked)`,
+`:has(> input:focus-visible)` and `:has(> input:disabled)` are the state hooks.
+
+| A template may | A template must keep |
+|---|---|
+| Lay out the label any way | The input inside its label, with a shared `name` for radios |
+| Decorate it | A visible checked mark that does not rely on color |
+| Hold any inline content: names, prices, badges, icons | Inline content only. A label allows phrasing content; no `div`, `p`, list or heading |
+| Hold a link, for short text such as terms | No button or other control inside the label |
+| — | Rich content split: `aria-labelledby` on the input for the title, `aria-describedby` for the rest |
+| — | The group's `<legend>` |
+
+The behavior, the drawn mark, the focus ring, the disabled state and the audit
+rules stay the group's whatever the template. The radio group demo page shows
+cards and a five-line template of the page's own.
+
+## Cards
+
+`fieldset[interop-radio-group="cards"]` and
+`fieldset[interop-checkbox-group="cards"]` draw each option as a card, from the
+shared `styles/cards.css`. Use it for a choice with rich options, such as plans
+or add-ons.
+
+```html
+<fieldset interop-radio-group="cards">
+  <legend>Plan</legend>
+  <label>
+    <input type="radio" name="plan" value="pro" aria-labelledby="pro-name" aria-describedby="pro-details">
+    <strong id="pro-name">Pro</strong>
+    <span id="pro-details">$29 a month. Unlimited projects.</span>
+  </label>
+</fieldset>
+```
+
+| Part | How |
+|---|---|
+| Layout | The fieldset is a grid of cards that wraps at `--itx-cards-min-inline-size`; rows share a height |
+| Card | The label, a two-column grid. Its direct children stack in the first column; what is inside them is the template's |
+| Input | Top of the second column, drawn as it always is. It stays `position: relative`, so its mark stays inside it |
+| Checked | The border thickens to 2px and darkens to 3:1 against the page. Padding shrinks by the same amount, so the content does not move. The input's mark is the cue that does not rely on color |
+| Focus | The whole card takes the ring; the input's own ring is not drawn |
+| Forced colors | The checked card's border is `Highlight` |
+
+| Cards token | Default |
+|---|---|
+| `--itx-cards-min-inline-size`, `--itx-cards-gap` | 12rem, `--itx-space-3` |
+| `--itx-cards-card-padding`, `-card-column-gap`, `-card-row-gap` | `--itx-space-4`, `--itx-space-3`, `--itx-space-1` |
+| `--itx-cards-card-background-color` | transparent |
+| `--itx-cards-card-border-width[-checked]` | 1px, 2px |
+| `--itx-cards-card-border-color[-hover\|-checked]` | neutral-300/700, 500/400, 900/50 |
+| `--itx-cards-card-border-radius` | the house radius |
 
 ## Segmented control
 

@@ -25,6 +25,11 @@ const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabinde
 const CONTROL_LABELS = 'label:is([interop-switch], [interop-checkbox]), fieldset[interop-radio-group] label:has(> input[type="radio"])';
 const GROUPS = 'fieldset:is([interop-radio-group], [interop-checkbox-group])';
 const TABLISTS = '[interop-tabs] > [role="tablist"]';
+const CARDS = 'fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label';
+/** Elements a label may not hold: it allows phrasing content only. */
+const BLOCK = 'address, article, aside, blockquote, details, div, dl, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, li, main, nav, ol, p, pre, section, table, ul';
+/** Controls a label may not hold besides its own: they would be labeled by it too. */
+const LABELABLE = 'button, input, meter, output, progress, select, textarea';
 
 /** The tabs a tab list owns. */
 const tabsIn = (tablist: Element) => Array.from(tablist.children).filter((child) => child.getAttribute('role') === 'tab');
@@ -214,6 +219,44 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						reason: 'A screen reader announces only "checkbox", "switch" or "radio button", with nothing to say what it controls.',
 						advice: 'Put the text inside the label, after the input: <label interop-checkbox><input type="checkbox"> Accept terms</label>.',
 					};
+		},
+	},
+	'control-label-block': {
+		selector: CONTROL_LABELS,
+		check: (label) =>
+			label.querySelector(BLOCK)
+				? {
+						problem: 'This control’s label holds block content, such as a div, p, list or heading.',
+						reason: 'A label may hold only inline content. Browsers render it, but the HTML is invalid, and headings or lists inside it are not announced as such.',
+						advice: 'Use spans and other inline elements. A card template stacks them for you.',
+					}
+				: null,
+	},
+	'control-label-control': {
+		selector: CONTROL_LABELS,
+		check: (label) => {
+			const own = label.querySelector(':scope > input');
+			return Array.from(label.querySelectorAll(LABELABLE)).some((element) => element !== own)
+				? {
+						problem: 'This control’s label holds another control, such as a button or input.',
+						reason: 'A label names every control inside it, so both get the same name, and a click on the label may reach the wrong one.',
+						advice: 'Move the other control out of the label, beside the card or the group.',
+					}
+				: null;
+		},
+	},
+	'card-name': {
+		selector: CARDS,
+		check: (label) => {
+			const input = label.querySelector(':scope > input');
+			const parts = Array.from(label.children).filter((child) => child !== input && visibleText(child).trim());
+			return input && parts.length > 1 && !input.hasAttribute('aria-labelledby')
+				? {
+						problem: 'This card’s whole text is its name.',
+						reason: 'A screen reader reads every part of the card as the option’s name, on every arrow press.',
+						advice: 'Point aria-labelledby on the input at the title, and aria-describedby at the rest.',
+					}
+				: null;
 		},
 	},
 	'control-aria-checked': {

@@ -28,3 +28,39 @@
 * + form {
 	margin-block-start: var(--itx-space-4);
 }
+
+/* The cards template stacks a card's direct children. What sits inside them is the page's to lay out. */
+.price,
+.summary {
+	display: block;
+}
+
+.price {
+	margin-block: var(--itx-space-1);
+	font-size: var(--itx-font-size-h5);
+	line-height: var(--itx-line-height-h5);
+}
+
+.summary + [interop-badge] {
+	margin-block-start: var(--itx-space-2);
+}
+
+/* Your own template: a muted description under each option. */
+.described .description {
+	display: block;
+	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+	font-size: var(--itx-font-size-caption);
+	line-height: var(--itx-line-height-caption);
+}
+
+table {
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: var(--itx-space-2) var(--itx-space-3);
+	text-align: start;
+	vertical-align: top;
+	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+}

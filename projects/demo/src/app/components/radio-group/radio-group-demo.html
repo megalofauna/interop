@@ -82,6 +82,70 @@
 	<label><input type="radio" name="where" value="elsewhere" /> Somewhere else</label>
 </fieldset>
 
+<h2>Templates</h2>
+<p>
+	A radio group's look is a template: you write what goes in each label, and its CSS lays it out. Interop ships
+	<code>interop-radio-group="cards"</code>, one template among any number. Under the template the group is the same
+	radio group, with the same behavior, the same checked mark, focus ring and disabled state, and the same audit rules.
+</p>
+
+<h3>Cards</h3>
+<p>
+	Each option is a card. The input names the option with <code>aria-labelledby</code> pointing at its title and
+	describes it with <code>aria-describedby</code>, so a screen reader reads "Pro, radio button, 2 of 3" and then the
+	details, not the whole card on every arrow press.
+</p>
+<fieldset interop-radio-group="cards">
+	<legend>Plan</legend>
+	@for (plan of plans; track plan.id) {
+		<label>
+			<input type="radio" name="plan" [value]="plan.id" [checked]="plan.id === 'pro'"
+				[attr.aria-labelledby]="'plan-' + plan.id" [attr.aria-describedby]="'plan-' + plan.id + '-details'" />
+			<strong [id]="'plan-' + plan.id">{{ plan.name }}</strong>
+			<span [id]="'plan-' + plan.id + '-details'">
+				<span class="price">{{ plan.price }}</span>
+				<span class="summary">{{ plan.summary }}</span>
+				@if (plan.popular) {
+					<span interop-badge itx-color="info">Most popular</span>
+				}
+			</span>
+		</label>
+	}
+</fieldset>
+
+<h3>Your own template</h3>
+<p>
+	A template needs no API. This one adds a muted description under each option, in about five lines of the page's own
+	CSS. Interop's rules have no specificity, so a class of yours always wins.
+</p>
+<fieldset interop-radio-group class="described">
+	<legend>Backups</legend>
+	<label>
+		<input type="radio" name="backup" value="daily" checked aria-describedby="backup-daily" />
+		Daily <span class="description" id="backup-daily">Kept for 30 days.</span>
+	</label>
+	<label>
+		<input type="radio" name="backup" value="hourly" aria-describedby="backup-hourly" />
+		Hourly <span class="description" id="backup-hourly">Kept for 7 days. Uses more storage.</span>
+	</label>
+</fieldset>
+
+<h3>What a template can and cannot do</h3>
+<table>
+	<thead>
+		<tr><th scope="col">A template may</th><th scope="col">A template must keep</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Lay out the label any way: grid, card, row, tile</td><td>The input inside its label, with a shared <code>name</code></td></tr>
+		<tr><td>Decorate it: borders, fills, shadows, images</td><td>A visible checked mark that does not rely on color</td></tr>
+		<tr><td>Put any inline content in the label: names, prices, badges, icons</td><td>Inline content only: spans and other inline elements, no <code>div</code>, <code>p</code>, list or heading</td></tr>
+		<tr><td>Style states with <code>label:has(&gt; input:checked)</code>, <code>:focus-visible</code> and <code>:disabled</code></td><td>No button or other control inside the label</td></tr>
+		<tr><td>Hold links in the label, for short text such as terms</td><td>Rich content split into a name and a description</td></tr>
+		<tr><td></td><td>The group's <code>&lt;legend&gt;</code></td></tr>
+	</tbody>
+</table>
+<p>The development audit flags block content, another control, and a card whose whole text is its name.</p>
+
 <h2>Bound to a signal</h2>
 <p>
 	Bind <code>[checked]</code> on each radio. A radio's <code>change</code> event bubbles, so one listener on the

@@ -29,5 +29,6 @@
 @import "./checkbox/interop-checkbox.structure.css";
 @import "./tabs/interop-tabs.base.css";
 @import "./tabs/interop-tabs.structure.css";
-/* After the components that wear the segmented look, because it overrides their item layout. */
+/* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
+@import "./styles/cards.css";
