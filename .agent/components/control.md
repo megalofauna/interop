@@ -287,15 +287,26 @@ positioned containing block, so several controls on one page do not collide.
 These match the button's steps, so a segmented control lines up with the
 buttons beside it.
 
+The look lives in `styles/segmented.css`, shared with tabs. Each of its rules
+lists the container, segment and selected segment of every component that wears
+it. The radio group's structure file keeps only the radio half: the input that
+fills its label, and the focus ring on it.
+
 | Segmented token | Default |
 |---|---|
-| `--itx-radio-group-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-12` |
-| `--itx-radio-group-segment-block-size` | the block size less the frame padding and border on both sides |
-| `--itx-radio-group-segment-padding-inline` | `--itx-space-4`; `sm` `--itx-space-3`, `lg` `--itx-space-5` |
-| `--itx-radio-group-segment-color[-hover\|-checked]` | neutral-700/300, 950/50, 50/900 |
-| `--itx-radio-group-frame-padding`, `-frame-border-width`, `-frame-border-color` | `--itx-space-0_5`, 1px, neutral-500/400 |
-| `--itx-radio-group-pill-background-color` | neutral-900/50 |
-| `--itx-radio-group-divider-width`, `-divider-inset-block`, `-divider-color` | 1px, `--itx-space-2`, neutral-300/700 |
+| `--itx-segmented-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-12` |
+| `--itx-segmented-segment-block-size` | the block size less the frame padding and border on both sides |
+| `--itx-segmented-segment-padding-inline` | `--itx-space-4`; `sm` `--itx-space-3`, `lg` `--itx-space-5` |
+| `--itx-segmented-segment-font-size`, `-segment-line-height` | `p`; `sm` `p-sm`, `lg` `p-lg` |
+| `--itx-segmented-segment-color[-hover\|-selected]` | neutral-700/300, 950/50, 50/900 |
+| `--itx-segmented-segment-opacity-disabled` | 0.5 |
+| `--itx-segmented-frame-padding`, `-frame-border-width`, `-frame-border-color` | `--itx-space-0_5`, 1px, neutral-500/400 |
+| `--itx-segmented-pill-background-color` | neutral-900/50 |
+| `--itx-segmented-divider-width`, `-divider-inset-block`, `-divider-color` | 1px, `--itx-space-2`, neutral-300/700 |
+| `--itx-segmented-transition-duration`, `-transition-timing-function` | the shared transition tokens |
+
+Anchor names are `--itx-segmented-first`, `--itx-segmented-last` and
+`--itx-segmented-selected`.
 
 `bindRadioHomeEnd(root)` from `interop` adds Home and End to any radio group:
 they focus and check the first or last enabled radio with the same name. It is

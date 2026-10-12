@@ -27,3 +27,5 @@
 @import "./radio-group/interop-radio-group.structure.css";
 @import "./checkbox/interop-checkbox.base.css";
 @import "./checkbox/interop-checkbox.structure.css";
+/* After the components that wear the segmented look, because it overrides their item layout. */
+@import "./styles/segmented.css";

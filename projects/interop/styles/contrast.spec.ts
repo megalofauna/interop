@@ -21,11 +21,13 @@ import outlineCss from './outline.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import segmentedCss from './segmented.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -220,7 +222,7 @@ describe('checkbox', () => {
 });
 
 describe('segmented control', () => {
-	const segmented = (name: string, scheme: 0 | 1) => token(`--itx-radio-group-${name}`, scheme);
+	const segmented = (name: string, scheme: 0 | 1) => token(`--itx-segmented-${name}`, scheme);
 
 	for (const [scheme, label] of SCHEMES) {
 		// WCAG 1.4.3: segment text on the page, and the checked segment's text on the pill.
@@ -230,7 +232,7 @@ describe('segmented control', () => {
 			}
 		});
 		it(`has checked text of 4.5:1 against the pill in ${label}`, () => {
-			expect(contrast(segmented('segment-color-checked', scheme), segmented('pill-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+			expect(contrast(segmented('segment-color-selected', scheme), segmented('pill-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
 		// WCAG 1.4.11: the frame and the pill against the page.
 		it(`has a frame and a pill of 3:1 against the page in ${label}`, () => {
