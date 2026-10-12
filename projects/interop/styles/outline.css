@@ -11,7 +11,7 @@
 }
 
 :where(
-	button[interop-button]:focus-visible,
+	:is(button, summary)[interop-button]:focus-visible,
 	[interop-scroll-area]:focus-visible,
 	figure[interop-code-block] > pre:focus-visible,
 	label[interop-switch] > input:is([role="switch"], [switch]):focus-visible,

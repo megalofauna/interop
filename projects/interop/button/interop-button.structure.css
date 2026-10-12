@@ -1,4 +1,4 @@
-:where(button[interop-button]) {
+:where(:is(button, summary)[interop-button]) {
 	appearance: none;
 	box-sizing: border-box;
 	display: inline-flex;
@@ -24,45 +24,57 @@
 	transition-timing-function: var(--itx-button-transition-timing-function);
 }
 
-:where(button[interop-button]:focus-visible) {
+:where(:is(button, summary)[interop-button]:focus-visible) {
 	color: var(--itx-button-color-focus-visible);
 	background-color: var(--itx-button-background-color-focus-visible);
 	border-color: var(--itx-button-border-color-focus-visible);
 }
 
-:where(button[interop-button]:hover:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
+:where(:is(button, summary)[interop-button]:hover:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
 	color: var(--itx-button-color-hover);
 	background-color: var(--itx-button-background-color-hover);
 	border-color: var(--itx-button-border-color-hover);
 }
 
-/* Pressed shares the active fill, so held down and latched on read alike. */
-:where(button[interop-button][aria-pressed="true"]:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"])) {
+/* A summary is a disclosure's button. It draws no marker; its open state reads as pressed. */
+:where(summary[interop-button]) {
+	list-style: none;
+}
+
+:where(summary[interop-button])::-webkit-details-marker {
+	display: none;
+}
+
+/* Pressed shares the active fill, so held down and latched on read alike. An open disclosure's summary is latched on too. */
+:where(
+	:is(button, summary)[interop-button][aria-pressed="true"]:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"]),
+	details[open] > summary[interop-button]:not(:active)
+) {
 	color: var(--itx-button-color-pressed);
 	background-color: var(--itx-button-background-color-pressed);
 	border-color: var(--itx-button-border-color-pressed);
 }
 
-:where(button[interop-button]:active:not(:disabled, [aria-disabled="true"], [aria-busy="true"])) {
+:where(:is(button, summary)[interop-button]:active:not(:disabled, [aria-disabled="true"], [aria-busy="true"])) {
 	color: var(--itx-button-color-active);
 	background-color: var(--itx-button-background-color-active);
 	border-color: var(--itx-button-border-color-active);
 }
 
 /* `aria-disabled` stays focusable and clickable; the consumer guards the action. */
-:where(button[interop-button]:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"])) {
+:where(:is(button, summary)[interop-button]:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"])) {
 	opacity: var(--itx-button-opacity-disabled);
 	cursor: var(--itx-button-cursor-disabled);
 }
 
 /* Busy keeps the label in place, transparent, so the name and the width do not change. */
-:where(button[interop-button][aria-busy="true"]) {
+:where(:is(button, summary)[interop-button][aria-busy="true"]) {
 	position: relative;
 	color: transparent;
 	cursor: var(--itx-button-cursor-busy);
 }
 
-:where(button[interop-button][aria-busy="true"])::after {
+:where(:is(button, summary)[interop-button][aria-busy="true"])::after {
 	content: "";
 	position: absolute;
 	inset: 0;
@@ -85,7 +97,7 @@
 
 /* Touch-target floor: 44px on coarse pointers. */
 @media (pointer: coarse) {
-	:where(button[interop-button]) {
+	:where(:is(button, summary)[interop-button]) {
 		min-block-size: max(var(--itx-button-min-block-size), 2.75rem);
 	}
 }
