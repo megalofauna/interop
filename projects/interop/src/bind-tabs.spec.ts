@@ -51,9 +51,16 @@ describe('bindTabs', () => {
 		expect(panel('a').getAttribute('aria-labelledby')).toBe(tab('a').id);
 	});
 
-	it('makes a panel reachable only when nothing in it is focusable, and leaves a consumer tabindex alone', () => {
+	it('makes the shown panel reachable when nothing in it is focusable, and leaves a consumer tabindex alone', () => {
+		const { tab, panel } = setup();
+		expect(panel('b').tabIndex).toBe(0);
+		tab('c').click();
+		expect([panel('b').hasAttribute('tabindex'), panel('c').hasAttribute('tabindex'), panel('d').tabIndex]).toEqual([false, false, -1]);
+	});
+
+	it('never makes a hidden panel a tab stop', () => {
 		const { panel } = setup();
-		expect([panel('a').tabIndex, panel('c').hasAttribute('tabindex'), panel('d').tabIndex]).toEqual([0, false, -1]);
+		expect(['a', 'c'].map((key) => panel(key).hasAttribute('tabindex'))).toEqual([false, false]);
 	});
 
 	it('selects with the arrow keys, wrapping, and with Home and End', () => {

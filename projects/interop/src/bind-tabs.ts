@@ -30,8 +30,9 @@ const FOCUSABLE =
  * - With automatic activation, the arrow keys select. With manual activation they move focus, and
  *   the button's own click on Enter or Space selects. Leaving the tab list returns its tab stop to
  *   the selected tab.
- * - A tab without an `id` gets one, and its panel gets `aria-labelledby` if it has none. A panel
- *   with nothing focusable in it gets `tabindex="0"`, so the keyboard can reach its content.
+ * - A tab without an `id` gets one, and its panel gets `aria-labelledby` if it has none. The shown
+ *   panel gets `tabindex="0"` when nothing in it is focusable, so the keyboard can reach its
+ *   content. Hidden panels never do.
  * - Selecting a different tab fires `interop-tabs-change` on the tab list, with the tab and the
  *   panel as its detail. If the selected tab is removed, a neighbor is selected.
  *
@@ -59,14 +60,18 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	};
 	const selected = () => tabs().find((tab) => tab.getAttribute('aria-selected') === 'true');
 
-	const setReachable = (panel: HTMLElement) => {
+	/**
+	 * Only the shown panel can be a tab stop. A hidden="until-found" panel keeps its box, so it stays
+	 * focusable, and a tabindex on it would be a stop with nothing visible.
+	 */
+	const setReachable = (panel: HTMLElement, shown: boolean) => {
 		if (panel.hasAttribute('tabindex') && !reachable.has(panel)) return;
-		if (panel.querySelector(FOCUSABLE)) {
-			panel.removeAttribute('tabindex');
-			reachable.delete(panel);
-		} else {
+		if (shown && !panel.querySelector(FOCUSABLE)) {
 			panel.tabIndex = 0;
 			reachable.add(panel);
+		} else {
+			panel.removeAttribute('tabindex');
+			reachable.delete(panel);
 		}
 	};
 
@@ -82,7 +87,7 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 			if (!panel) continue;
 			if (isTarget) panel.removeAttribute('hidden');
 			else panel.setAttribute('hidden', 'until-found');
-			setReachable(panel);
+			setReachable(panel, isTarget);
 		}
 		lastIndex = all.indexOf(target);
 		current = target;
