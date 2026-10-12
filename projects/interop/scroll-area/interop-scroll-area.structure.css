@@ -1,0 +1,102 @@
+/*
+ * A scroll container with a "more content" shadow at each edge that has content beyond it.
+ * bindScrollArea() makes it reachable from the keyboard.
+ *
+ * The shadows are inset box shadows, so they sit behind the content and never cover text or a
+ * focus ring. Scroll-driven animations set each one's strength, which sets both how dark and how
+ * large it is. Firefox does not support scroll-driven animations yet and shows no shadows.
+ */
+
+/* Each edge's shadow strength, from 0 to 1. Registered so the animations can interpolate them. */
+@property --itx-scroll-area-block-start {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --itx-scroll-area-block-end {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --itx-scroll-area-inline-start {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+@property --itx-scroll-area-inline-end {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+
+:where([interop-scroll-area]) {
+	overflow: auto;
+}
+
+@supports (animation-timeline: scroll()) {
+	:where([interop-scroll-area]) {
+		/* Strength by physical side, since box shadows are physical. Right-to-left swaps left and right below. */
+		--_top: var(--itx-scroll-area-block-start);
+		--_bottom: var(--itx-scroll-area-block-end);
+		--_left: var(--itx-scroll-area-inline-start);
+		--_right: var(--itx-scroll-area-inline-end);
+		/* Each shadow is offset into the area by its strength and blurred by the same amount, so it grows as it darkens. */
+		box-shadow:
+			inset 0 calc(var(--_top) * var(--itx-scroll-area-shadow-size)) calc(var(--_top) * var(--itx-scroll-area-shadow-size))
+				calc(var(--_top) * var(--itx-scroll-area-shadow-size) * -1)
+				color-mix(in srgb, var(--itx-scroll-area-shadow-color) calc(var(--_top) * 100%), transparent),
+			inset 0 calc(var(--_bottom) * var(--itx-scroll-area-shadow-size) * -1) calc(var(--_bottom) * var(--itx-scroll-area-shadow-size))
+				calc(var(--_bottom) * var(--itx-scroll-area-shadow-size) * -1)
+				color-mix(in srgb, var(--itx-scroll-area-shadow-color) calc(var(--_bottom) * 100%), transparent),
+			inset calc(var(--_left) * var(--itx-scroll-area-shadow-size)) 0 calc(var(--_left) * var(--itx-scroll-area-shadow-size))
+				calc(var(--_left) * var(--itx-scroll-area-shadow-size) * -1)
+				color-mix(in srgb, var(--itx-scroll-area-shadow-color) calc(var(--_left) * 100%), transparent),
+			inset calc(var(--_right) * var(--itx-scroll-area-shadow-size) * -1) 0 calc(var(--_right) * var(--itx-scroll-area-shadow-size))
+				calc(var(--_right) * var(--itx-scroll-area-shadow-size) * -1)
+				color-mix(in srgb, var(--itx-scroll-area-shadow-color) calc(var(--_right) * 100%), transparent);
+		animation-name:
+			itx-scroll-area-block-start-shadow, itx-scroll-area-block-end-shadow, itx-scroll-area-inline-start-shadow,
+			itx-scroll-area-inline-end-shadow;
+		animation-duration: auto;
+		animation-timing-function: linear;
+		animation-fill-mode: both;
+		animation-timeline: scroll(self block), scroll(self block), scroll(self inline), scroll(self inline);
+		animation-range:
+			0 var(--itx-scroll-area-shadow-range),
+			calc(100% - var(--itx-scroll-area-shadow-range)) 100%,
+			0 var(--itx-scroll-area-shadow-range),
+			calc(100% - var(--itx-scroll-area-shadow-range)) 100%;
+	}
+
+	:where([interop-scroll-area]:dir(rtl)) {
+		--_left: var(--itx-scroll-area-inline-end);
+		--_right: var(--itx-scroll-area-inline-start);
+	}
+}
+
+@keyframes itx-scroll-area-block-start-shadow {
+	to {
+		--itx-scroll-area-block-start: 1;
+	}
+}
+@keyframes itx-scroll-area-block-end-shadow {
+	from {
+		--itx-scroll-area-block-end: 1;
+	}
+	to {
+		--itx-scroll-area-block-end: 0;
+	}
+}
+@keyframes itx-scroll-area-inline-start-shadow {
+	to {
+		--itx-scroll-area-inline-start: 1;
+	}
+}
+@keyframes itx-scroll-area-inline-end-shadow {
+	from {
+		--itx-scroll-area-inline-end: 1;
+	}
+	to {
+		--itx-scroll-area-inline-end: 0;
+	}
+}

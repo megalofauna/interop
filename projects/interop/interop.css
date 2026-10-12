@@ -12,6 +12,8 @@
 @import "./icon/interop-icon.structure.css";
 @import "./badge/interop-badge.base.css";
 @import "./badge/interop-badge.structure.css";
+@import "./scroll-area/interop-scroll-area.base.css";
+@import "./scroll-area/interop-scroll-area.structure.css";
 @import "./code-block/interop-code-block.base.css";
 @import "./code-block/interop-code-block.structure.css";
 @import "./popover/interop-popover.base.css";

@@ -1,0 +1,41 @@
+[interop-scroll-area] {
+	max-inline-size: 40rem;
+	padding: var(--itx-space-3);
+	border: 1px solid light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	border-radius: var(--itx-radius-md);
+}
+
+.tall {
+	max-block-size: 16rem;
+}
+
+.strip {
+	display: flex;
+	gap: var(--itx-space-2);
+}
+
+.strip > * {
+	flex: none;
+}
+
+.table {
+	max-block-size: 16rem;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: var(--itx-space-1) var(--itx-space-3);
+	white-space: nowrap;
+	text-align: start;
+}
+
+.chip {
+	padding: var(--itx-space-1) var(--itx-space-3);
+	border: 1px solid light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	border-radius: var(--itx-radius-full);
+	white-space: nowrap;
+}

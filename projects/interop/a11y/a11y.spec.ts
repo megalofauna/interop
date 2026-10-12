@@ -6,6 +6,7 @@ import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
+import { InteropScrollArea } from 'interop/scroll-area';
 import { InteropTooltip } from 'interop/tooltip';
 import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
@@ -18,7 +19,7 @@ const violations = async (element: Element) =>
 	(await axe.run(element, OPTIONS)).violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(', ')}`);
 
 @Component({
-	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropTooltip],
+	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea, InteropTooltip],
 	template: `
 		<main>
 			<button interop-button type="button">Save</button>
@@ -47,6 +48,8 @@ const violations = async (element: Element) =>
 			<span interop-tooltip #draft>Saves without publishing</span>
 			<button interop-button type="button" [popoverTarget]="menu">Options</button>
 			<div interop-popover popover #menu><p>Popover content</p></div>
+			<h2 id="notes">Notes</h2>
+			<div interop-scroll-area aria-labelledby="notes"><p>Note one.</p><p>Note two.</p></div>
 			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
 	`,

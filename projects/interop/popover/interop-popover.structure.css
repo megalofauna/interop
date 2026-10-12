@@ -35,6 +35,8 @@
 /*
  * The last resort: centered on the anchor, where it can use the full width and slides to stay on
  * screen, and no taller than the space, so its content scrolls and none of it is out of reach (WCAG 1.4.10).
+ * A popover with only text needs tabindex="-1" and autofocus, so focus moves into it on opening and the
+ * keyboard can scroll it.
  */
 @position-try --itx-popover-scroll {
 	position-area: block-end;

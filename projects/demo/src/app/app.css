@@ -11,14 +11,17 @@
 
 header {
 	grid-area: header;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	padding: var(--itx-space-4);
-	border-block-end: 1px solid var(--itx-neutral-200);
+	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 nav {
 	grid-area: nav;
 	padding: var(--itx-space-4);
-	border-inline-end: 1px solid var(--itx-neutral-200);
+	border-inline-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 nav ul {
@@ -42,5 +45,5 @@ main {
 footer {
 	grid-area: footer;
 	padding: var(--itx-space-4);
-	border-block-start: 1px solid var(--itx-neutral-200);
+	border-block-start: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }

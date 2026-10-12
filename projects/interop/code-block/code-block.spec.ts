@@ -81,15 +81,16 @@ describe('InteropCodeBlock', () => {
 		expect(get('captioned').querySelector('button')).toBeNull();
 	});
 
-	it('is focusable only while the code overflows', () => {
+	it('is focusable only while the code overflows', async () => {
 		const { get, fixture } = setup();
+		await fixture.whenStable();
 		const pre = get('captioned').querySelector('pre')!;
 		expect(pre.hasAttribute('tabindex')).toBe(false);
 		Object.defineProperty(pre, 'scrollHeight', { value: 900, configurable: true });
 		Object.defineProperty(pre, 'clientHeight', { value: 300, configurable: true });
 		fixture.componentInstance.source.set('{}\n');
 		fixture.detectChanges();
-		fixture.detectChanges();
+		await new Promise((resolve) => setTimeout(resolve));
 		expect(pre.getAttribute('tabindex')).toBe('0');
 	});
 });

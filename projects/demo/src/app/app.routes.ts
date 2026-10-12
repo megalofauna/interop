@@ -28,6 +28,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/popover/popover-demo").then((m) => m.PopoverDemo),
 	},
 	{
+		path: "components/scroll-area",
+		title: "Scroll area",
+		loadComponent: () => import("./components/scroll-area/scroll-area-demo").then((m) => m.ScrollAreaDemo),
+	},
+	{
 		path: "components/tooltip",
 		title: "Tooltip",
 		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
