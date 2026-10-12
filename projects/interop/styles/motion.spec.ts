@@ -66,8 +66,12 @@ import tooltipInteropTooltipBase from '../tooltip/interop-tooltip.base.css' with
 // @ts-expect-error The text loader turns the file into a string.
 import tooltipInteropTooltipStructure from '../tooltip/interop-tooltip.structure.css' with { loader: 'text' };
 
+// @ts-expect-error The text loader turns the file into a string.
+import cardsCss from './cards.css' with { loader: 'text' };
+
 // Every stylesheet in the library, read as text. Add a new one here.
 const sheets = {
+	'styles/cards.css': cardsCss,
 	'badge/interop-badge.base.css': badgeInteropBadgeBase,
 	'badge/interop-badge.structure.css': badgeInteropBadgeStructure,
 	'button/interop-button.base.css': buttonInteropButtonBase,

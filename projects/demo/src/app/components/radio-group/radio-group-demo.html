@@ -15,6 +15,8 @@
 	<label><input type="radio" name="basic" value="pickup" /> Pick up in store</label>
 </fieldset>
 
+<figure interop-code-block language="html" [code]="examples.group"></figure>
+
 <h2>Required, in a form</h2>
 <p>
 	<code>required</code> on any one radio makes the group required. Submit with nothing chosen to see the browser's
@@ -37,6 +39,8 @@
 	}
 </form>
 
+<figure interop-code-block language="html" [code]="examples.required"></figure>
+
 <h2>In a line</h2>
 <p>Set <code>--itx-fieldset-flex-direction: row</code> on the fieldset.</p>
 <fieldset interop-radio-group class="inline">
@@ -45,6 +49,9 @@
 	<label><input type="radio" name="inline" value="m" checked /> Medium</label>
 	<label><input type="radio" name="inline" value="l" /> Large</label>
 </fieldset>
+
+<figure interop-code-block language="html" [code]="examples.inline"></figure>
+<figure interop-code-block language="css" [code]="examples.inlineCss"></figure>
 
 <h2>Long labels</h2>
 <p>Each circle is centered on the first line of its label, and the text wraps beside it.</p>
@@ -60,6 +67,8 @@
 	</label>
 </fieldset>
 
+<figure interop-code-block language="html" [code]="examples.long"></figure>
+
 <h2>Disabled</h2>
 <p>A disabled radio dims its own label. A disabled fieldset disables every radio in it.</p>
 <fieldset interop-radio-group>
@@ -73,6 +82,8 @@
 	<label><input type="radio" name="plan" value="pro" /> Pro</label>
 </fieldset>
 
+<figure interop-code-block language="html" [code]="examples.disabled"></figure>
+
 <h2>Hint text</h2>
 <p>Point <code>aria-describedby</code> on the fieldset at the hint, so it is read with the group's name.</p>
 <fieldset interop-radio-group aria-describedby="where-hint">
@@ -81,6 +92,78 @@
 	<label><input type="radio" name="where" value="uk" /> United Kingdom</label>
 	<label><input type="radio" name="where" value="elsewhere" /> Somewhere else</label>
 </fieldset>
+
+<figure interop-code-block language="html" [code]="examples.hint"></figure>
+
+<h2>Templates</h2>
+<p>
+	A radio group's look is a template: you write what goes in each label, and its CSS lays it out. Interop ships
+	<code>interop-radio-group="cards"</code>, one template among any number. Under the template the group is the same
+	radio group, with the same behavior, the same checked mark, focus ring and disabled state, and the same audit rules.
+</p>
+
+<h3>Cards</h3>
+<p>
+	Each option is a card. The input names the option with <code>aria-labelledby</code> pointing at its title and
+	describes it with <code>aria-describedby</code>, so a screen reader reads "Pro, radio button, 2 of 3" and then the
+	details, not the whole card on every arrow press.
+</p>
+<fieldset interop-radio-group="cards">
+	<legend>Plan</legend>
+	@for (plan of plans; track plan.id) {
+		<label>
+			<input type="radio" name="plan" [value]="plan.id" [checked]="plan.id === 'pro'"
+				[attr.aria-labelledby]="'plan-' + plan.id" [attr.aria-describedby]="'plan-' + plan.id + '-details'" />
+			<strong [id]="'plan-' + plan.id">{{ plan.name }}</strong>
+			<span [id]="'plan-' + plan.id + '-details'">
+				<span class="price">{{ plan.price }}</span>
+				<span class="summary">{{ plan.summary }}</span>
+				@if (plan.popular) {
+					<span interop-badge itx-color="info">Most popular</span>
+				}
+			</span>
+		</label>
+	}
+</fieldset>
+
+<figure interop-code-block language="html" caption="Angular template" [code]="examples.cards"></figure>
+<figure interop-code-block language="css" [code]="examples.cardsCss"></figure>
+
+<h3>Your own template</h3>
+<p>
+	A template needs no API. This one adds a muted description under each option, in about five lines of the page's own
+	CSS. Interop's rules have no specificity, so a class of yours always wins.
+</p>
+<fieldset interop-radio-group class="described">
+	<legend>Backups</legend>
+	<label>
+		<input type="radio" name="backup" value="daily" checked aria-describedby="backup-daily" />
+		Daily <span class="description" id="backup-daily">Kept for 30 days.</span>
+	</label>
+	<label>
+		<input type="radio" name="backup" value="hourly" aria-describedby="backup-hourly" />
+		Hourly <span class="description" id="backup-hourly">Kept for 7 days. Uses more storage.</span>
+	</label>
+</fieldset>
+
+<figure interop-code-block language="html" [code]="examples.template"></figure>
+<figure interop-code-block language="css" [code]="examples.templateCss"></figure>
+
+<h3>What a template can and cannot do</h3>
+<table>
+	<thead>
+		<tr><th scope="col">A template may</th><th scope="col">A template must keep</th></tr>
+	</thead>
+	<tbody>
+		<tr><td>Lay out the label any way: grid, card, row, tile</td><td>The input inside its label, with a shared <code>name</code></td></tr>
+		<tr><td>Decorate it: borders, fills, shadows, images</td><td>A visible checked mark that does not rely on color</td></tr>
+		<tr><td>Put any inline content in the label: names, prices, badges, icons</td><td>Inline content only: spans and other inline elements, no <code>div</code>, <code>p</code>, list or heading</td></tr>
+		<tr><td>Style states with <code>label:has(&gt; input:checked)</code>, <code>:focus-visible</code> and <code>:disabled</code></td><td>No button or other control inside the label</td></tr>
+		<tr><td>Hold links in the label, for short text such as terms</td><td>Rich content split into a name and a description</td></tr>
+		<tr><td></td><td>The group's <code>&lt;legend&gt;</code></td></tr>
+	</tbody>
+</table>
+<p>The development audit flags block content, another control, and a card whose whole text is its name.</p>
 
 <h2>Bound to a signal</h2>
 <p>
@@ -93,6 +176,9 @@
 	<label><input type="radio" name="bound" value="express" [checked]="shipping() === 'express'" /> Express</label>
 </fieldset>
 <p>Shipping is {{ shipping() }}.</p>
+
+<figure interop-code-block language="html" caption="Angular template" [code]="examples.signal"></figure>
+<figure interop-code-block language="ts" [code]="examples.signalTs"></figure>
 
 <h2>With ngModel</h2>
 <p>
@@ -107,12 +193,16 @@
 </fieldset>
 <p>Theme is {{ theme() }}.</p>
 
+<figure interop-code-block language="html" caption="Angular template" [code]="examples.ngModel"></figure>
+
 <h2>Right to left</h2>
 <fieldset interop-radio-group dir="rtl" lang="ar">
 	<legend>الحجم</legend>
 	<label><input type="radio" name="rtl" value="s" checked /> صغير</label>
 	<label><input type="radio" name="rtl" value="l" /> كبير</label>
 </fieldset>
+
+<figure interop-code-block language="html" [code]="examples.rtl"></figure>
 
 <h2>Sizes</h2>
 <p>The default size has no attribute. <code>itx-size="lg"</code> on the fieldset makes every option larger.</p>
@@ -127,6 +217,8 @@
 	<label><input type="radio" name="size-lg" value="b" /> Option B</label>
 </fieldset>
 
+<figure interop-code-block language="html" [code]="examples.sizes"></figure>
+
 <h2>Custom tokens</h2>
 <p>Set <code>--itx-radio-group-*</code> properties on the fieldset, or on a class that matches it.</p>
 <fieldset interop-radio-group class="large-dot">
@@ -134,3 +226,5 @@
 	<label><input type="radio" name="tokens" value="a" checked /> Option A</label>
 	<label><input type="radio" name="tokens" value="b" /> Option B</label>
 </fieldset>
+<figure interop-code-block language="html" [code]="examples.tokens"></figure>
+<figure interop-code-block language="css" [code]="examples.tokensCss"></figure>

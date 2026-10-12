@@ -1,0 +1,129 @@
+/*
+ * Cards: a radio group or checkbox group drawn as a grid of cards, one per option. It is a template:
+ * it changes only the layout and decoration of each label. The behavior, the drawn circle or box,
+ * the disabled state and the audit rules are the group's own.
+ *
+ *   <fieldset interop-radio-group="cards">
+ *     <legend>Plan</legend>
+ *     <label>
+ *       <input type="radio" name="plan" value="pro" aria-labelledby="pro-name" aria-describedby="pro-details">
+ *       <strong id="pro-name">Pro</strong>
+ *       <span id="pro-details">$29 a month. Unlimited projects.</span>
+ *     </label>
+ *   </fieldset>
+ *
+ *   <fieldset interop-checkbox-group="cards"> … <label interop-checkbox> … </label> … </fieldset>
+ *
+ * Each card is a two-column grid: its content stacks in the first column and the input sits at the
+ * top of the second. The checked card thickens and darkens its border; the input's own mark is the
+ * cue that does not rely on color. The whole card takes the focus ring.
+ *
+ * A label holds inline content only, so a card's parts are spans and other phrasing elements, which
+ * this file stacks. Give rich content a name and a description: aria-labelledby on the input for
+ * the title, aria-describedby for the rest.
+ *
+ * Also known as radio cards, selectable cards, option cards, choice cards, tiles.
+ *
+ * Loaded after the radio group and checkbox, because it overrides their item layout.
+ */
+
+:where(fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"])) {
+	--itx-cards-min-inline-size: 12rem;
+	--itx-cards-gap: var(--itx-space-3);
+	--itx-cards-card-padding: var(--itx-space-4);
+	--itx-cards-card-column-gap: var(--itx-space-3);
+	--itx-cards-card-row-gap: var(--itx-space-1);
+	--itx-cards-card-background-color: transparent;
+	/* The card's edge. The input carries the 3:1 state edge, so this can be quiet. */
+	--itx-cards-card-border-width: 1px;
+	--itx-cards-card-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-cards-card-border-color-hover: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	/* Checked: thicker, so the change survives forced colors, and 3:1 against the page. */
+	--itx-cards-card-border-width-checked: 2px;
+	--itx-cards-card-border-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-cards-card-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-cards-transition-duration: var(--itx-transition-duration);
+	--itx-cards-transition-timing-function: var(--itx-transition-timing-function);
+
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(var(--itx-cards-min-inline-size), 100%), 1fr));
+	gap: var(--itx-cards-gap);
+}
+
+/* ── The card ──────────────────────────────────────────────────────────── */
+
+:where(
+	fieldset[interop-radio-group~="cards"] > label:has(> input[type="radio"]),
+	fieldset[interop-checkbox-group~="cards"] > label[interop-checkbox]
+) {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-content: start;
+	column-gap: var(--itx-cards-card-column-gap);
+	row-gap: var(--itx-cards-card-row-gap);
+	min-block-size: 0;
+	/* The border is inside the padding, so a thicker checked border does not move the content. */
+	padding: calc(var(--itx-cards-card-padding) - var(--itx-cards-card-border-width));
+	background-color: var(--itx-cards-card-background-color);
+	border-width: var(--itx-cards-card-border-width);
+	border-style: solid;
+	border-color: var(--itx-cards-card-border-color);
+	border-radius: var(--itx-cards-card-border-radius);
+	corner-shape: var(--itx-corner-shape);
+	transition-property: border-color;
+	transition-duration: var(--itx-cards-transition-duration);
+	transition-timing-function: var(--itx-cards-transition-timing-function);
+}
+
+/* Content stacks in the first column. */
+:where(fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label > :not(input)) {
+	display: block;
+	grid-column: 1;
+}
+
+/*
+ * The input sits at the top of the second column, drawn as it always is. It stays positioned, so its
+ * mark (an absolutely positioned ::before) is placed in the input, not in the card.
+ */
+:where(fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label > input) {
+	position: relative;
+	/* The group's own layout offsets the input from the label's edge; in a card it sits where the grid puts it. */
+	inset: auto;
+	grid-column: 2;
+	grid-row: 1;
+}
+
+:where(
+	fieldset[interop-radio-group~="cards"] > label:hover:has(> input[type="radio"]:not(:checked, :disabled)),
+	fieldset[interop-checkbox-group~="cards"] > label[interop-checkbox]:hover:has(> input:not(:checked, :disabled))
+) {
+	border-color: var(--itx-cards-card-border-color-hover, var(--itx-cards-card-border-color));
+}
+
+:where(
+	fieldset[interop-radio-group~="cards"] > label:has(> input[type="radio"]:checked),
+	fieldset[interop-checkbox-group~="cards"] > label[interop-checkbox]:has(> input:checked)
+) {
+	padding: calc(var(--itx-cards-card-padding) - var(--itx-cards-card-border-width-checked));
+	border-width: var(--itx-cards-card-border-width-checked);
+	border-color: var(--itx-cards-card-border-color-checked);
+}
+
+/* The whole card takes the focus ring (styles/outline.css), so the input's own ring is not drawn. */
+:where(fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label > input:focus-visible) {
+	outline: none;
+}
+
+/* ── Forced colors ─────────────────────────────────────────────────────── */
+
+@media (forced-colors: active) {
+	:where(
+		fieldset[interop-radio-group~="cards"] > label:has(> input[type="radio"]:checked),
+		fieldset[interop-checkbox-group~="cards"] > label[interop-checkbox]:has(> input:checked)
+	) {
+		forced-color-adjust: none;
+		color: CanvasText;
+		background-color: Canvas;
+		border-color: Highlight;
+	}
+}

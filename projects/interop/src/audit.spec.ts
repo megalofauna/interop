@@ -185,6 +185,29 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual(['control-name']);
 	});
 
+	it('flags block content inside a control label', () => {
+		render(`
+			<label interop-checkbox><input type="checkbox"> <div>Accept</div></label>
+			<label interop-checkbox><input type="checkbox"> <span>Accept</span> the <a href="/terms">terms</a></label>
+		`);
+		expect(rules()).toEqual(['control-label-block']);
+	});
+
+	it('flags another control inside a control label', () => {
+		render(`
+			<label interop-switch><input type="checkbox" role="switch"> Alerts <button type="button">Edit</button></label>
+			<label interop-switch><input type="checkbox" role="switch"> Sounds</label>
+		`);
+		expect(rules()).toEqual(['control-label-control']);
+	});
+
+	it('flags a card whose whole text is its name, and accepts one with a name and a description', () => {
+		const card = (labelled: string) => `
+			<label><input type="radio" name="p" ${labelled}><strong id="n">Pro</strong><span id="d">$29 a month</span></label>`;
+		render(`<fieldset interop-radio-group="cards"><legend>Plan</legend>${card('')}${card('aria-labelledby="n" aria-describedby="d"')}</fieldset>`);
+		expect(rules()).toEqual(['card-name']);
+	});
+
 	it('flags aria-checked on a native checkbox or radio', () => {
 		render('<label interop-checkbox><input type="checkbox" aria-checked="mixed"> All</label>');
 		expect(rules()).toEqual(['control-aria-checked']);
