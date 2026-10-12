@@ -268,7 +268,7 @@ the same content; tabs switch between different sections.
 | Layout | The fieldset is an `inline-grid` with `grid-auto-columns: 1fr`, so every segment is as wide as the widest label. The labels are direct children |
 | Segment | The label. The input is transparent and fills it (`inset: 0`), so it takes the clicks and the focus ring |
 | Frame | `fieldset::before`, anchored from the first segment's start to the last segment's end with logical `anchor()` sides, outset by the frame padding and border. The legend stays outside it with no wrapper |
-| Pill | `fieldset::after`, anchored to the checked segment. It slides when the selection changes, with the shared transition tokens |
+| Pill | `fieldset::after`, anchored to the checked segment. In Chromium it slides when the selection changes, with the shared transition tokens. Firefox and Safari move it without the slide: they do not transition an inset when its anchor changes |
 | Divider | `label::before` between two unchecked segments |
 | Focus ring | Inside the segment. On the pill it takes the checked text color, which contrasts with the pill |
 | Fallback | Without anchor positioning, each segment draws its own border and the checked one paints the pill color |
