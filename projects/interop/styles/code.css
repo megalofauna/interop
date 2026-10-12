@@ -5,10 +5,10 @@
 
 :root {
 	--itx-code-color-keyword: light-dark(oklch(0.5 0.2 300), oklch(0.78 0.13 300));
-	--itx-code-color-string: light-dark(oklch(0.5 0.13 150), oklch(0.8 0.14 150));
-	--itx-code-color-comment: light-dark(oklch(0.52 0 0), oklch(0.7 0 0));
-	--itx-code-color-function: light-dark(oklch(0.5 0.15 250), oklch(0.78 0.11 250));
-	--itx-code-color-constant: light-dark(oklch(0.52 0.15 50), oklch(0.8 0.12 60));
+	--itx-code-color-string: light-dark(oklch(0.47 0.13 150), oklch(0.8 0.14 150));
+	--itx-code-color-comment: light-dark(oklch(0.485 0 0), oklch(0.7 0 0));
+	--itx-code-color-function: light-dark(oklch(0.485 0.15 250), oklch(0.78 0.11 250));
+	--itx-code-color-constant: light-dark(oklch(0.5 0.15 50), oklch(0.8 0.12 60));
 	--itx-code-color-parameter: light-dark(oklch(0.5 0.12 20), oklch(0.8 0.1 20));
 	--itx-code-color-punctuation: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
 }

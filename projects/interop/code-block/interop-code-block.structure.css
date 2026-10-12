@@ -38,7 +38,6 @@
 	padding-block: var(--itx-code-block-padding-block);
 	padding-inline: var(--itx-code-block-padding-inline);
 	max-block-size: var(--itx-code-block-max-block-size);
-	overflow: auto;
 	font-family: inherit;
 	font-size: var(--itx-code-block-font-size);
 	line-height: var(--itx-code-block-line-height);

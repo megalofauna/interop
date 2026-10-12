@@ -1,0 +1,15 @@
+:where([interop-scroll-area]) {
+	/*
+	 * An inner shadow at each edge with content beyond it. It darkens and grows over the first
+	 * --itx-scroll-area-shadow-range of hidden content, and fades and shrinks over the last.
+	 *
+	 * The color is the darkest a shadow gets. Text in it sits on a darker background, so in light
+	 * mode it stays light enough to keep the code colors at 4.5:1 (checked in
+	 * styles/contrast.spec.ts). Dark mode darkens more, so the shadow still reads on a dark surface.
+	 */
+	--itx-scroll-area-shadow-color: light-dark(oklch(0 0 0 / 0.12), oklch(0 0 0 / 0.7));
+	/* How far a shadow at full strength reaches into the scroll area. A fainter one reaches less far. */
+	--itx-scroll-area-shadow-size: var(--itx-space-8);
+	/* How much hidden content takes the shadow from nothing to full. */
+	--itx-scroll-area-shadow-range: var(--itx-space-12);
+}

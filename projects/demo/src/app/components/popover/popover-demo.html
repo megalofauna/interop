@@ -42,3 +42,18 @@
 		<p>This popover would overflow the window, so it opens toward the start.</p>
 	</div>
 </div>
+
+<h2>Long content</h2>
+<p>
+	A popover too tall for the window scrolls. With only text inside, <code>tabindex="-1"</code> and
+	<code>autofocus</code> move focus into it when it opens, so the keyboard can scroll it. Escape returns focus to
+	the button.
+</p>
+<div class="row">
+	<button interop-button type="button" popovertarget="long">Release notes</button>
+	<div interop-popover popover id="long" tabindex="-1" autofocus role="dialog" aria-label="Release notes">
+		@for (line of lines; track line) {
+			<p>Release note {{ line }}.</p>
+		}
+	</div>
+</div>

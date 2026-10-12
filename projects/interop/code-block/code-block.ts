@@ -13,6 +13,7 @@ import {
 import { registerIcons, scopeSelectAll, splitLines, watchInteropInDevMode } from 'interop';
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
+import { InteropScrollArea } from 'interop/scroll-area';
 import { TablerCheck, TablerCopy } from 'interop/tabler';
 import { InteropTooltip } from 'interop/tooltip';
 
@@ -30,7 +31,7 @@ let nextId = 0;
  */
 @Component({
 	selector: 'figure[interop-code-block]',
-	imports: [InteropIcon, InteropTooltip],
+	imports: [InteropIcon, InteropScrollArea, InteropTooltip],
 	template: `
 		@if (caption()) {
 			<figcaption [id]="captionId">{{ caption() }}</figcaption>
@@ -50,10 +51,10 @@ let nextId = 0;
 			<span interop-tooltip="label" [id]="copyLabelId" #copyLabel>Copy code</span>
 		}
 		<!--
-			TODO: An overflowing block is focusable but has no name. Look deeper at naming it.
-			role="region" with aria-labelledby gives it one, but makes every scrolling block a landmark.
+			TODO: An overflowing block is focusable but has no name of its own. The figure around it has
+			one, which screen readers usually announce as focus enters it. Confirm that with VoiceOver and NVDA.
 		-->
-		<pre #pre [attr.tabindex]="overflowing() ? 0 : null"><code
+		<pre interop-scroll-area><code
 			#codeElement
 			[class]="language() ? 'language-' + language() : ''"
 			[textContent]="code()"
@@ -87,9 +88,7 @@ export class InteropCodeBlock {
 	protected readonly canCopy = typeof navigator !== 'undefined' && !!navigator.clipboard?.writeText;
 	protected readonly copied = signal(false);
 	protected readonly status = signal('');
-	protected readonly overflowing = signal(false);
 
-	private readonly pre = viewChild.required<ElementRef<HTMLPreElement>>('pre');
 	private readonly codeElement = viewChild.required<ElementRef<HTMLElement>>('codeElement');
 	private resetCopied?: ReturnType<typeof setTimeout>;
 
@@ -109,22 +108,11 @@ export class InteropCodeBlock {
 			removeColors();
 			removeColors = () => {};
 			if (this.numbered) splitLines(code);
-			this.measure();
 			highlightCode(code).then((remove) => {
 				if (current === run) removeColors = remove;
 				else remove();
 			});
 		});
-
-		if (typeof ResizeObserver !== 'undefined') {
-			const observer = new ResizeObserver(() => this.measure());
-			afterRenderEffect(() => {
-				observer.disconnect();
-				observer.observe(this.pre().nativeElement);
-				observer.observe(this.codeElement().nativeElement);
-			});
-			destroyRef.onDestroy(() => observer.disconnect());
-		}
 
 		destroyRef.onDestroy(() => {
 			run++;
@@ -149,8 +137,4 @@ export class InteropCodeBlock {
 		}, 2000);
 	}
 
-	private measure(): void {
-		const pre = this.pre().nativeElement;
-		this.overflowing.set(pre.scrollWidth > pre.clientWidth || pre.scrollHeight > pre.clientHeight);
-	}
 }

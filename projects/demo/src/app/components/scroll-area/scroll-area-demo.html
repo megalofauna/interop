@@ -1,0 +1,54 @@
+<h1>Scroll area</h1>
+<p>
+	A scroll area shows an inner shadow at each edge with content beyond it. The shadow darkens as more content
+	is hidden on that side and fades as the last of it comes into view. When nothing inside can take focus, the
+	area takes focus itself, so the keyboard can scroll it.
+</p>
+<p>
+	Firefox does not support scroll-driven animations yet, so it shows no shadows. Everything else works there.
+</p>
+
+<h2 id="release-notes">Text</h2>
+<p>Named by the heading above with <code>aria-labelledby</code>, so it is a group with that name.</p>
+<div interop-scroll-area class="tall" aria-labelledby="release-notes">
+	@for (line of lines; track line) {
+		<p>Release note {{ line }}. A line of text that is long enough to wrap at narrow widths.</p>
+	}
+</div>
+
+<h2>Controls</h2>
+<p>The buttons take focus, so the area does not. Tabbing to a button scrolls it into view.</p>
+<div interop-scroll-area class="strip">
+	@for (column of columns; track column) {
+		<button interop-button type="button">Filter {{ column }}</button>
+	}
+</div>
+
+<h2 id="wide-table">Both directions</h2>
+<div interop-scroll-area class="table" aria-labelledby="wide-table">
+	<table>
+		<thead>
+			<tr>
+				@for (column of columns; track column) {
+					<th scope="col">Column {{ column }}</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@for (line of lines; track line) {
+				<tr>
+					@for (column of columns; track column) {
+						<td>{{ line }}.{{ column }}</td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<h2>Right to left</h2>
+<div interop-scroll-area class="strip" dir="rtl" lang="ar">
+	@for (column of columns; track column) {
+		<span class="chip">عنصر {{ column }}</span>
+	}
+</div>
