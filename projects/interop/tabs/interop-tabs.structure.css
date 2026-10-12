@@ -15,6 +15,8 @@
  * not over it, because the tab list scrolls when its tabs overflow and a scroll container clips its
  * children to its padding box. `aria-orientation="vertical"` on the tab list stands it beside the
  * panels, with the rule and the bar on its inline-end edge. `itx-size` on the wrapper sets the size.
+ * `interop-tabs="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
+ * segments.
  *
  * A hidden="until-found" panel keeps its box, so only the shown panel gets padding.
  *
@@ -29,7 +31,7 @@
 
 /* ── Tab list ──────────────────────────────────────────────────────────── */
 
-:where([interop-tabs] > [role="tablist"]) {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"]) {
 	display: flex;
 	/* Tabs scroll rather than wrap or spill when they overflow. */
 	overflow-x: auto;
@@ -72,7 +74,7 @@
 }
 
 /* The bar, on the tab's edge against the rule. */
-:where([interop-tabs] > [role="tablist"] > [role="tab"])::after {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"])::after {
 	content: "";
 	position: absolute;
 	inset-inline: 0;
@@ -84,25 +86,35 @@
 	transition-timing-function: var(--itx-tabs-transition-timing-function);
 }
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
 	color: var(--itx-tabs-tab-color-hover, var(--itx-tabs-tab-color));
 }
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
 	background-color: var(--itx-tabs-indicator-background-color-hover, var(--itx-tabs-indicator-background-color));
 }
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"]) {
 	color: var(--itx-tabs-tab-color-selected);
 }
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
 	background-color: var(--itx-tabs-indicator-background-color-selected);
 }
 
 :where([interop-tabs] > [role="tablist"] > [role="tab"]:disabled) {
 	opacity: var(--itx-tabs-tab-opacity-disabled);
 	cursor: var(--itx-tabs-tab-cursor-disabled);
+}
+
+/*
+ * Segmented: `interop-tabs="segmented"` wears the look in styles/segmented.css, shared with the
+ * segmented radio group. It is horizontal only. These rules are the tabs half: on the pill, the
+ * focus ring takes the selected text color, which contrasts with the pill.
+ */
+:where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
+	--itx-outline-color: var(--itx-segmented-segment-color-selected);
+	--itx-outline-offset: calc(var(--itx-outline-width) * -2);
 }
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
@@ -149,15 +161,15 @@
 /* ── Forced colors ─────────────────────────────────────────────────────── */
 
 @media (forced-colors: active) {
-	:where([interop-tabs] > [role="tablist"] > [role="tab"])::after {
+	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"])::after {
 		forced-color-adjust: none;
 	}
 
-	:where([interop-tabs] > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
+	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
 		background-color: Highlight;
 	}
 
-	:where([interop-tabs] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
+	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
 		background-color: CanvasText;
 	}
 

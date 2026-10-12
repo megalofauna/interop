@@ -95,6 +95,14 @@ const openPopovers = (element: Element) => element.querySelectorAll('[popover]')
 				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found"><p>Reactor steady.</p></section>
 				<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
 			</div>
+			<div interop-tabs="segmented icon">
+				<div role="tablist" aria-label="Layout">
+					<button type="button" role="tab" id="t-list" aria-controls="p-list" aria-selected="true"><svg interop-icon name="tabler-check"></svg><span itx-visually-hidden>List</span></button>
+					<button type="button" role="tab" id="t-grid" aria-controls="p-grid" aria-selected="false" tabindex="-1"><svg interop-icon name="tabler-x"></svg><span itx-visually-hidden>Grid</span></button>
+				</div>
+				<section role="tabpanel" id="p-list" aria-labelledby="t-list" tabindex="0"><p>List.</p></section>
+				<section role="tabpanel" id="p-grid" aria-labelledby="t-grid" hidden="until-found"><p>Grid.</p></section>
+			</div>
 			<div interop-tabs itx-size="sm">
 				<div role="tablist" aria-label="Account" aria-orientation="vertical">
 					<button type="button" role="tab" id="t-profile" aria-controls="p-profile" aria-selected="true">Profile</button>

@@ -1,12 +1,20 @@
 /*
  * The segmented look: a row of equal segments in a frame, with a pill on the selected one. The
- * segmented radio group wears it today, and tabs will too:
+ * segmented radio group and segmented tabs wear it:
  *
  *   <fieldset interop-radio-group="segmented">
  *     <legend>View</legend>
  *     <label><input type="radio" name="view" value="list" checked> List</label>
  *     <label><input type="radio" name="view" value="grid"> Grid</label>
  *   </fieldset>
+ *
+ *   <div interop-tabs="segmented">
+ *     <div role="tablist" aria-label="Report">
+ *       <button type="button" role="tab" aria-controls="daily" aria-selected="true">Daily</button>
+ *       …
+ *
+ * Choose by meaning, not look: the radio group picks a value or a view of the same content; tabs
+ * show a different section.
  *
  * Each rule names the container, the segment and the selected segment for every component that
  * wears the look. The segments are direct children of the container. The frame (::before) spans the
@@ -20,7 +28,7 @@
 
 /* ── Container ─────────────────────────────────────────────────────────── */
 
-:where(fieldset[interop-radio-group~="segmented"]) {
+:where(fieldset[interop-radio-group~="segmented"], [interop-tabs~="segmented"] > [role="tablist"]) {
 	--itx-segmented-block-size: var(--itx-space-10);
 	/* The segment fills the control less the frame's padding and border, top and bottom. */
 	--itx-segmented-segment-block-size: calc(
@@ -59,7 +67,7 @@
 	padding: calc(var(--itx-segmented-frame-padding) + var(--itx-segmented-frame-border-width));
 }
 
-:where(fieldset[interop-radio-group~="segmented"][itx-size="sm"]) {
+:where(fieldset[interop-radio-group~="segmented"][itx-size="sm"], [interop-tabs~="segmented"][itx-size="sm"] > [role="tablist"]) {
 	--itx-segmented-block-size: var(--itx-space-8);
 	--itx-segmented-segment-padding-inline: var(--itx-space-3);
 	--itx-segmented-segment-font-size: var(--itx-font-size-p-sm);
@@ -67,7 +75,7 @@
 	--itx-segmented-divider-inset-block: var(--itx-space-1_5);
 }
 
-:where(fieldset[interop-radio-group~="segmented"][itx-size="lg"]) {
+:where(fieldset[interop-radio-group~="segmented"][itx-size="lg"], [interop-tabs~="segmented"][itx-size="lg"] > [role="tablist"]) {
 	--itx-segmented-block-size: var(--itx-space-12);
 	--itx-segmented-segment-padding-inline: var(--itx-space-5);
 	--itx-segmented-segment-font-size: var(--itx-font-size-p-lg);
@@ -76,7 +84,7 @@
 
 /* ── Segments ──────────────────────────────────────────────────────────── */
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"])) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
 	position: relative;
 	z-index: 1;
 	display: flex;
@@ -95,43 +103,43 @@
 	transition-timing-function: var(--itx-segmented-transition-timing-function);
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:hover:not(:has(> input:checked, > input:disabled))) {
+:where(fieldset[interop-radio-group~="segmented"] > label:hover:not(:has(> input:checked, > input:disabled)), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
 	color: var(--itx-segmented-segment-color-hover, var(--itx-segmented-segment-color));
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked)) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
 	color: var(--itx-segmented-segment-color-selected);
 	anchor-name: --itx-segmented-selected;
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]):first-of-type) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]):first-of-type, [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]:first-of-type) {
 	anchor-name: --itx-segmented-first;
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]):last-of-type) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]):last-of-type, [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]:last-of-type) {
 	anchor-name: --itx-segmented-last;
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked):first-of-type) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked):first-of-type, [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]:first-of-type) {
 	anchor-name: --itx-segmented-first, --itx-segmented-selected;
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked):last-of-type) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked):last-of-type, [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]:last-of-type) {
 	anchor-name: --itx-segmented-last, --itx-segmented-selected;
 }
 
 /* A square segment that holds only an icon. Name it with visually hidden text. */
-:where(fieldset[interop-radio-group~="segmented"][interop-radio-group~="icon"] > label:has(> input[type="radio"])) {
+:where(fieldset[interop-radio-group~="segmented"][interop-radio-group~="icon"] > label:has(> input[type="radio"]), [interop-tabs~="segmented"][interop-tabs~="icon"] > [role="tablist"] > [role="tab"]) {
 	min-inline-size: var(--itx-segmented-segment-block-size);
 	padding-inline: 0;
 }
 
-:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:disabled)) {
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:disabled), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]:disabled) {
 	opacity: var(--itx-segmented-segment-opacity-disabled);
 }
 
 /* A divider between two unselected segments. */
-:where(fieldset[interop-radio-group~="segmented"] > label:not(:has(> input:checked)) + label:not(:has(> input:checked)))::before {
+:where(fieldset[interop-radio-group~="segmented"] > label:not(:has(> input:checked)) + label:not(:has(> input:checked)), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]:not([aria-selected="true"]) + [role="tab"]:not([aria-selected="true"]))::before {
 	content: "";
 	position: absolute;
 	inset-block: var(--itx-segmented-divider-inset-block);
@@ -144,7 +152,7 @@
 
 @supports (anchor-name: --a) {
 	/* The frame, from the first segment to the last, outset by its padding and border. */
-	:where(fieldset[interop-radio-group~="segmented"])::before {
+	:where(fieldset[interop-radio-group~="segmented"], [interop-tabs~="segmented"] > [role="tablist"])::before {
 		content: "";
 		position: absolute;
 		top: calc(anchor(--itx-segmented-first top) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width));
@@ -160,7 +168,7 @@
 	}
 
 	/* The pill, on the selected segment. A nested corner: the frame's radius less the gap. */
-	:where(fieldset[interop-radio-group~="segmented"]:has(> label > input:checked))::after {
+	:where(fieldset[interop-radio-group~="segmented"]:has(> label > input:checked), [interop-tabs~="segmented"] > [role="tablist"]:has(> [role="tab"][aria-selected="true"]))::after {
 		content: "";
 		position: absolute;
 		position-anchor: --itx-segmented-selected;
@@ -179,15 +187,15 @@
 }
 
 @supports not (anchor-name: --a) {
-	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"])) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
 		border: var(--itx-segmented-frame-border-width) solid var(--itx-segmented-frame-border-color);
 	}
 
-	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]) + label) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]) + label, [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"] + [role="tab"]) {
 		margin-inline-start: calc(var(--itx-segmented-frame-border-width) * -1);
 	}
 
-	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked)) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
 		background-color: var(--itx-segmented-pill-background-color);
 	}
 }
@@ -199,16 +207,16 @@
 /* ── Forced colors ─────────────────────────────────────────────────────── */
 
 @media (forced-colors: active) {
-	:where(fieldset[interop-radio-group~="segmented"])::before {
+	:where(fieldset[interop-radio-group~="segmented"], [interop-tabs~="segmented"] > [role="tablist"])::before {
 		border-color: CanvasText;
 	}
 
-	:where(fieldset[interop-radio-group~="segmented"])::after {
+	:where(fieldset[interop-radio-group~="segmented"], [interop-tabs~="segmented"] > [role="tablist"])::after {
 		forced-color-adjust: none;
 		background-color: Highlight;
 	}
 
-	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked)) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked), [interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
 		forced-color-adjust: none;
 		color: HighlightText;
 	}

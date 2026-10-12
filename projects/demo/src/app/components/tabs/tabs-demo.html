@@ -31,6 +31,30 @@
 	</div>
 }
 
+<h2>Segmented</h2>
+<p>
+	<code>interop-tabs="segmented"</code> gives tabs the segmented control's look. They are still tabs: each one shows a
+	different section. To choose a value or a view of the same content, use the segmented control itself.
+</p>
+<div #tabs interop-tabs="segmented">
+	<div role="tablist" aria-label="Report">
+		<button type="button" role="tab" aria-controls="seg-summary" aria-selected="true">Summary</button>
+		<button type="button" role="tab" aria-controls="seg-details" aria-selected="false" tabindex="-1">Details</button>
+		<button type="button" role="tab" aria-controls="seg-history" aria-selected="false" tabindex="-1">History</button>
+	</div>
+	<section role="tabpanel" id="seg-summary"><p>Revenue up 4 percent on last quarter.</p></section>
+	<section role="tabpanel" id="seg-details" hidden="until-found"><p>Revenue by region and product line.</p></section>
+	<section role="tabpanel" id="seg-history" hidden="until-found"><p>Every quarter since launch.</p></section>
+</div>
+<div #tabs interop-tabs="segmented icon" itx-size="sm">
+	<div role="tablist" aria-label="Layout">
+		<button type="button" role="tab" aria-controls="seg-list" aria-selected="true"><svg interop-icon name="tabler-minus"></svg><span itx-visually-hidden>List</span></button>
+		<button type="button" role="tab" aria-controls="seg-grid" aria-selected="false" tabindex="-1"><svg interop-icon name="tabler-plus"></svg><span itx-visually-hidden>Grid</span></button>
+	</div>
+	<section role="tabpanel" id="seg-list"><p>A small segmented tab list with icons.</p></section>
+	<section role="tabpanel" id="seg-grid" hidden="until-found"><p>The second section.</p></section>
+</div>
+
 <h2>Icons and counts</h2>
 <p>You own the buttons, so icons, badges and tooltips work as anywhere else.</p>
 <div #tabs interop-tabs>
