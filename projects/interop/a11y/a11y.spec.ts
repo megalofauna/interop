@@ -57,6 +57,12 @@ const reveal = (element: Element) => {
 			<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
 			<span interop-tooltip #draft>Saves without publishing</span>
 			<button interop-button type="button" [popoverTarget]="menu">Options</button>
+			<button interop-button type="button" commandfor="axe-drawer" command="toggle-popover">Menu</button>
+			<nav id="axe-drawer" interop-popover="drawer" popover aria-label="Pages"><ul><li><a href="/a" aria-current="page">A</a></li><li><a href="/b">B</a></li></ul></nav>
+			<details>
+				<summary interop-button>More pages</summary>
+				<nav aria-label="More pages"><ul><li><a href="/c">C</a></li></ul></nav>
+			</details>
 			<div interop-popover popover #menu>
 				<p>Popover content</p>
 				<button interop-button type="button" aria-label="Remove"><svg interop-icon name="tabler-x"></svg></button>

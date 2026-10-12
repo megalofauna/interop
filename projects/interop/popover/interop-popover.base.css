@@ -26,3 +26,10 @@
 	--itx-popover-transition-duration: var(--itx-transition-duration);
 	--itx-popover-transition-timing-function: var(--itx-transition-timing-function);
 }
+
+:where([interop-popover~="drawer"]) {
+	/* Leaves a strip of the page in view, so the drawer reads as on top of it and a tap there closes it. */
+	--itx-popover-drawer-inline-size: min(20rem, 100% - var(--itx-space-12));
+	--itx-popover-backdrop-color: oklch(0 0 0 / 0.4);
+}
+

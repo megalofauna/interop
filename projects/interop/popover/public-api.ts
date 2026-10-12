@@ -1,7 +1,8 @@
 /*
  * Public API Surface of interop/popover
  *
- * Popover is CSS only. The browser opens and closes it.
+ * Popover is CSS only: the browser opens and closes it. A drawer adds InteropDrawer, which calls
+ * bindDrawer() from interop.
  */
 
-export {};
+export { InteropDrawer } from './popover';
