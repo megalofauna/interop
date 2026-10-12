@@ -20,3 +20,5 @@
 @import "./popover/interop-popover.structure.css";
 @import "./tooltip/interop-tooltip.base.css";
 @import "./tooltip/interop-tooltip.structure.css";
+@import "./switch/interop-switch.base.css";
+@import "./switch/interop-switch.structure.css";

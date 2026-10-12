@@ -108,6 +108,24 @@ CSS selectors follow the same split:
 :where(button[interop-button][itx-variant="action"]) { … }
 ```
 
+## Size steps
+
+`itx-size` works the same way on every component that has it.
+
+- No attribute is the default step. `md` means the same thing.
+- A step is a block in the base file that reassigns the component's own
+  tokens: `:where(<selector>[itx-size="lg"]) { … }`. The structure file never
+  mentions `itx-size`.
+- A step changes the component's height and its text size together.
+- Lengths come from `--itx-space-*`. Text sizes come from the typography
+  roles (`--itx-font-size-<role>` with its `--itx-line-height-<role>`). No raw
+  `rem` values for either.
+- A component ships only the steps it needs. Leave a step out when it would
+  break a minimum, such as the 24px target size of WCAG 2.5.8.
+
+One way per pattern. When two components solve the same problem differently,
+fix the outlier before adding a third.
+
 ## What NOT to do
 
 - Don't add fallbacks or validation for scenarios that can't happen inside the library

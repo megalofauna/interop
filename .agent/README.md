@@ -21,7 +21,8 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Indicator component deep-dive | [components/indicator.md](components/indicator.md) |
 | Segmented-control deep-dive | [components/segmented-control.md](components/segmented-control.md) |
 | Tree component deep-dive | [components/tree.md](components/tree.md) |
-| Visimorph (faux-control surface) deep-dive | [components/visimorph.md](components/visimorph.md) |
+| Control (checkbox / radio / switch, CSS only, designed) | [components/control.md](components/control.md) |
+| Visimorph — retired, and why not to rebuild it | [components/visimorph.md](components/visimorph.md) |
 | Collection service deep-dive | [services/collection.md](services/collection.md) |
 | Adding a demo page (workflow) | [workflows/new-demo-page.md](workflows/new-demo-page.md) |
 | Borrowing visual language from IBM Carbon (workflow) | [workflows/carbon-borrow.md](workflows/carbon-borrow.md) |

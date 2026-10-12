@@ -52,3 +52,10 @@
 :where([interop-badge][itx-color="info"]) {
 	--itx-badge-background-color: var(--itx-role-background-info);
 }
+
+/* Forced colors drop the background, so a border keeps the badge, and the dot, visible. Forced colors also set its color. */
+@media (forced-colors: active) {
+	:where([interop-badge]) {
+		--itx-badge-border-width: 1px;
+	}
+}

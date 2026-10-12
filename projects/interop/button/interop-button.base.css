@@ -1,9 +1,9 @@
 :where(button[interop-button]) {
-	--itx-button-min-block-size: 2.5rem;
+	--itx-button-min-block-size: var(--itx-space-10);
 	/* 1.5 × the block padding that the height leaves around one line. */
 	--itx-button-padding-inline: calc((var(--itx-button-min-block-size) - 1lh) * 0.75);
 	--itx-button-gap: var(--itx-space-2);
-	--itx-button-font-size: 1rem;
+	--itx-button-font-size: var(--itx-font-size-p);
 	--itx-button-line-height: 1;
 
 	--itx-button-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
@@ -50,11 +50,11 @@
 }
 
 :where(button[interop-button][itx-size="sm"]) {
-	--itx-button-min-block-size: 2rem;
-	--itx-button-font-size: 0.875rem;
+	--itx-button-min-block-size: var(--itx-space-8);
+	--itx-button-font-size: var(--itx-font-size-p-sm);
 }
 
 :where(button[interop-button][itx-size="lg"]) {
-	--itx-button-min-block-size: 3.5rem;
-	--itx-button-font-size: 1.125rem;
+	--itx-button-min-block-size: var(--itx-space-14);
+	--itx-button-font-size: var(--itx-font-size-p-lg);
 }

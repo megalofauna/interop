@@ -8,10 +8,20 @@ import codeBlockCss from '../code-block/interop-code-block.base.css' with { load
 import popoverCss from '../popover/interop-popover.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import scrollAreaCss from '../scroll-area/interop-scroll-area.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import switchCss from '../switch/interop-switch.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import buttonCss from '../button/interop-button.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tooltipCss from '../tooltip/interop-tooltip.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import badgeCss from '../badge/interop-badge.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import outlineCss from './outline.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -93,6 +103,76 @@ describe('popover boundary', () => {
 		it(`has a border of 3:1 against the page in ${label}`, () => {
 			const border = resolve(declarations.get('--itx-popover-border-color')!, scheme);
 			expect(contrast(border, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
+describe('switch', () => {
+	const token = (name: string, scheme: 0 | 1) => resolve(declarations.get(`--itx-switch-${name}`)!, scheme);
+
+	for (const [scheme, label] of [[0, 'light'], [1, 'dark']] as const) {
+		// WCAG 1.4.11: the track's edge against the page, and the thumb against the track, in every state.
+		for (const state of ['', '-hover']) {
+			it(`has an off${state} track border of 3:1 against the page in ${label}`, () => {
+				expect(contrast(token(`track-border-color${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+			it(`has an off thumb of 3:1 against the off${state} track in ${label}`, () => {
+				expect(contrast(token('thumb-background-color', scheme), token(`track-background-color${state}`, scheme))).toBeGreaterThanOrEqual(3);
+			});
+			it(`has an on${state} track of 3:1 against the page in ${label}`, () => {
+				expect(contrast(token(`track-background-color-checked${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+			it(`has an on thumb of 3:1 against the on${state} track in ${label}`, () => {
+				expect(
+					contrast(token('thumb-background-color-checked', scheme), token(`track-background-color-checked${state}`, scheme)),
+				).toBeGreaterThanOrEqual(3);
+			});
+		}
+	}
+});
+
+const SCHEMES = [[0, 'light'], [1, 'dark']] as const;
+const token = (name: string, scheme: 0 | 1) => resolve(declarations.get(name)!, scheme);
+
+describe('button text', () => {
+	// WCAG 1.4.3. Disabled buttons are exempt, and pressed shares the active fill.
+	for (const state of ['', '-hover', '-active', '-focus-visible', '-pressed']) {
+		for (const [scheme, label] of SCHEMES) {
+			it(`reaches 4.5:1 on its background${state ? ` when ${state.slice(1)}` : ''} in ${label}`, () => {
+				const ratio = contrast(token(`--itx-button-color${state}`, scheme), token(`--itx-button-background-color${state}`, scheme));
+				expect(ratio).toBeGreaterThanOrEqual(4.5);
+			});
+		}
+	}
+});
+
+describe('tooltip text', () => {
+	for (const [scheme, label] of SCHEMES) {
+		it(`reaches 4.5:1 on its background in ${label}`, () => {
+			expect(contrast(token('--itx-tooltip-color', scheme), token('--itx-tooltip-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
+describe('badge text', () => {
+	// The text is contrast-color() of the background, which picks black or white, whichever contrasts more.
+	const backgrounds = ['--itx-badge-background-color', ...[...declarations.keys()].filter((name) => name.startsWith('--itx-role-background-'))];
+	const best = (background: string) => Math.max(contrast('oklch(0 0 0)', background), contrast('oklch(1 0 0)', background));
+
+	for (const background of backgrounds) {
+		for (const [scheme, label] of SCHEMES) {
+			it(`reaches 4.5:1 on ${background} in ${label}`, () => {
+				expect(best(token(background, scheme))).toBeGreaterThanOrEqual(4.5);
+			});
+		}
+	}
+});
+
+describe('focus ring', () => {
+	// WCAG 1.4.11. The outline is offset from the control, so it sits on the page.
+	for (const [scheme, label] of SCHEMES) {
+		it(`reaches 3:1 against the page in ${label}`, () => {
+			expect(contrast(token('--itx-outline-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
 	}
 });

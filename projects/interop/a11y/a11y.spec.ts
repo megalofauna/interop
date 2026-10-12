@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
-import { registerIcons } from 'interop';
+import { guardActivation, registerIcons } from 'interop';
 import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
@@ -12,11 +12,15 @@ import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
 registerIcons(TablerCheck, TablerCopy, TablerSearch, TablerX);
 
-// jsdom computes no colors, so contrast is checked in a browser instead.
+// jsdom computes no colors, so styles/contrast.spec.ts checks contrast from the declared values instead.
 const OPTIONS: axe.RunOptions = { rules: { 'color-contrast': { enabled: false } } };
 
 const violations = async (element: Element) =>
 	(await axe.run(element, OPTIONS)).violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(', ')}`);
+
+// jsdom has no popover API, so a popover never opens and axe skips everything inside it.
+// Removing the attribute shows the content, which is what opening it does.
+const openPopovers = (element: Element) => element.querySelectorAll('[popover]').forEach((popover) => popover.removeAttribute('popover'));
 
 @Component({
 	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea, InteropTooltip],
@@ -47,9 +51,16 @@ const violations = async (element: Element) =>
 			<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
 			<span interop-tooltip #draft>Saves without publishing</span>
 			<button interop-button type="button" [popoverTarget]="menu">Options</button>
-			<div interop-popover popover #menu><p>Popover content</p></div>
+			<div interop-popover popover #menu>
+				<p>Popover content</p>
+				<button interop-button type="button" aria-label="Remove"><svg interop-icon name="tabler-x"></svg></button>
+			</div>
 			<h2 id="notes">Notes</h2>
 			<div interop-scroll-area aria-labelledby="notes"><p>Note one.</p><p>Note two.</p></div>
+			<label interop-switch><input type="checkbox" role="switch" /> Notifications</label>
+			<label interop-switch><input type="checkbox" role="switch" checked /> Dark mode</label>
+			<label interop-switch>Autosave <input type="checkbox" role="switch" disabled /></label>
+			<label interop-switch itx-size="lg"><input type="checkbox" switch /> Bluetooth</label>
 			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
 	`,
@@ -62,15 +73,48 @@ class Components {
 }
 
 describe('accessibility (axe-core)', () => {
-	it('finds no violations in the components as a consumer writes them', async () => {
+	// A consumer who marks buttons aria-disabled or aria-busy installs the guard, so the fixture does too.
+	let unguard: () => void;
+	beforeAll(() => (unguard = guardActivation()));
+	afterAll(() => unguard());
+
+	// jsdom has no clipboard, and the code block shows its copy button only when there is one.
+	beforeEach(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.resolve() }, configurable: true }));
+	afterEach(() => Reflect.deleteProperty(navigator, 'clipboard'));
+
+	const render = async () => {
 		const fixture = TestBed.createComponent(Components);
 		fixture.detectChanges();
 		await fixture.whenStable();
-		expect(await violations(fixture.nativeElement)).toEqual([]);
+		return fixture.nativeElement as HTMLElement;
+	};
+
+	it('finds no violations in the components as a consumer writes them', async () => {
+		const element = await render();
+		expect(element.querySelector('figure[interop-code-block] button')).not.toBeNull();
+		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations inside open popovers and tooltips', async () => {
+		const element = await render();
+		openPopovers(element);
+		expect(await violations(element)).toEqual([]);
+	});
+
+	it('checks inside a popover only once it is open, so the second pass is needed', async () => {
+		document.body.innerHTML = '<main><div popover><button type="button"></button></div></main>';
+		expect(await violations(document.body)).toEqual([]);
+		openPopovers(document.body);
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
 	});
 
 	it('catches an icon button with no label, so the gate is real', async () => {
 		document.body.innerHTML = '<main><button type="button"><svg aria-hidden="true"></svg></button></main>';
 		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
+	});
+
+	it('catches a switch with no label', async () => {
+		document.body.innerHTML = '<main><input type="checkbox" role="switch"></main>';
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^aria-toggle-field-name:|^label:/));
 	});
 });

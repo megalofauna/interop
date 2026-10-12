@@ -1,0 +1,138 @@
+/*
+ * Switch: an on/off control. A native checkbox with `role="switch"` inside a label.
+ *
+ *   <label interop-switch><input type="checkbox" role="switch"> Dark mode</label>
+ *   <label interop-switch itx-size="lg"><input type="checkbox" role="switch"> Dark mode</label>
+ *
+ * The input is the track and its ::before is the thumb. Every state comes from the input's own
+ * pseudo-classes, so a form reset, autofill, or a disabled fieldset needs no script. An input
+ * without `role="switch"` or `switch` keeps the native checkbox look, which shows the missing role.
+ *
+ * Also known as:
+ *   toggle            Carbon, Atlassian, Apple HIG (SwiftUI Toggle)
+ *   toggle switch     WinUI ToggleSwitch, Primer ToggleSwitch, PrimeNG ToggleSwitch
+ *   slide toggle      Angular Material (mat-slide-toggle)
+ *   checkbox toggle   Salesforce Lightning
+ *   on/off switch, lightswitch
+ * Switch is the ARIA role, the HTML `switch` attribute, and the name in Material Design, Fluent,
+ * Spectrum, MUI, Radix, Chakra, Mantine, Ant Design, Bootstrap and UIKit (UISwitch).
+ */
+
+:where(label[interop-switch]) {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-switch-gap);
+	min-block-size: var(--itx-switch-min-block-size);
+	font-size: var(--itx-switch-font-size);
+	line-height: var(--itx-switch-line-height);
+	cursor: var(--itx-switch-cursor);
+}
+
+/* The label and its text dim with the track. */
+:where(label[interop-switch]:has(> input:disabled)) {
+	opacity: var(--itx-switch-opacity-disabled);
+	cursor: var(--itx-switch-cursor-disabled);
+}
+
+/*
+ * The track. Content-box sizing makes the thumb size the content height, so the thumb travels
+ * `100% - thumb size` with no border or padding arithmetic.
+ */
+:where(label[interop-switch] > input:is([role="switch"], [switch])) {
+	appearance: none;
+	box-sizing: content-box;
+	display: inline-flex;
+	flex-shrink: 0;
+	inline-size: var(--itx-switch-track-inline-size);
+	block-size: var(--itx-switch-thumb-size);
+	margin: 0;
+	padding: var(--itx-switch-track-padding);
+	background-color: var(--itx-switch-track-background-color);
+	border-width: var(--itx-switch-track-border-width);
+	border-style: var(--itx-switch-track-border-style);
+	border-color: var(--itx-switch-track-border-color);
+	border-radius: var(--itx-switch-track-border-radius);
+	cursor: inherit;
+	transition-property: background-color, border-color;
+	transition-duration: var(--itx-switch-transition-duration);
+	transition-timing-function: var(--itx-switch-transition-timing-function);
+}
+
+/* The thumb. Firefox creates it only because the track sets `appearance: none`. */
+:where(label[interop-switch] > input:is([role="switch"], [switch]))::before {
+	content: "";
+	flex-shrink: 0;
+	inline-size: var(--itx-switch-thumb-size);
+	block-size: var(--itx-switch-thumb-size);
+	margin-inline-start: 0;
+	background-color: var(--itx-switch-thumb-background-color);
+	border-radius: var(--itx-switch-thumb-border-radius);
+	transition-property: margin-inline-start, background-color;
+	transition-duration: var(--itx-switch-transition-duration);
+	transition-timing-function: var(--itx-switch-transition-timing-function);
+}
+
+:where(label[interop-switch]:hover > input:is([role="switch"], [switch]):not(:checked, :disabled)) {
+	background-color: var(--itx-switch-track-background-color-hover, var(--itx-switch-track-background-color));
+	border-color: var(--itx-switch-track-border-color-hover, var(--itx-switch-track-border-color));
+}
+
+:where(label[interop-switch] > input:is([role="switch"], [switch]):checked) {
+	background-color: var(--itx-switch-track-background-color-checked);
+	border-color: var(--itx-switch-track-border-color-checked);
+}
+
+:where(label[interop-switch]:hover > input:is([role="switch"], [switch]):checked:not(:disabled)) {
+	background-color: var(
+		--itx-switch-track-background-color-checked-hover,
+		var(--itx-switch-track-background-color-checked)
+	);
+}
+
+/* A logical margin, so the thumb travels toward inline-end in either writing direction. */
+:where(label[interop-switch] > input:is([role="switch"], [switch]):checked)::before {
+	margin-inline-start: calc(100% - var(--itx-switch-thumb-size));
+	background-color: var(--itx-switch-thumb-background-color-checked);
+}
+
+/* System colors, so the thumb and the on state stay visible when the user forces colors. */
+@media (forced-colors: active) {
+	:where(label[interop-switch] > input:is([role="switch"], [switch])) {
+		forced-color-adjust: none;
+		background-color: Canvas;
+		border-color: CanvasText;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]))::before {
+		background-color: CanvasText;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):checked) {
+		background-color: Highlight;
+		border-color: Highlight;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):checked)::before {
+		background-color: HighlightText;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):disabled) {
+		border-color: GrayText;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):disabled)::before {
+		background-color: GrayText;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):checked:disabled) {
+		background-color: GrayText;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):checked:disabled)::before {
+		background-color: Canvas;
+	}
+
+	:where(label[interop-switch] > input:is([role="switch"], [switch]):focus-visible) {
+		outline-color: Highlight;
+	}
+}
