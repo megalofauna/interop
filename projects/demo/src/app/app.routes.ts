@@ -48,6 +48,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/segmented-control/segmented-control-demo").then((m) => m.SegmentedControlDemo),
 	},
 	{
+		path: "components/steps",
+		title: "Steps",
+		loadComponent: () => import("./components/steps/steps-demo").then((m) => m.StepsDemo),
+	},
+	{
 		path: "components/switch",
 		title: "Switch",
 		loadComponent: () => import("./components/switch/switch-demo").then((m) => m.SwitchDemo),

@@ -1,0 +1,32 @@
+.aka {
+	font-style: italic;
+}
+
+.narrow {
+	max-inline-size: 24rem;
+}
+
+* + ol[interop-steps] {
+	margin-block-start: var(--itx-space-4);
+}
+
+fieldset {
+	margin: var(--itx-space-4) 0 0;
+	padding: 0;
+	border: 0;
+}
+
+legend {
+	padding: 0;
+}
+
+legend > h3 {
+	margin: 0;
+}
+
+label > input {
+	display: block;
+	margin-block-start: var(--itx-space-1);
+	padding: var(--itx-space-2);
+	font: inherit;
+}

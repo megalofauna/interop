@@ -23,6 +23,8 @@ import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { l
 // @ts-expect-error The text loader turns the file into a string.
 import cardsCss from './cards.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import stepsCss from '../steps/interop-steps.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
@@ -31,7 +33,7 @@ import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: '
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -267,6 +269,25 @@ describe('cards', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`has a checked border of 3:1 against the page in ${label}`, () => {
 			expect(contrast(token('--itx-cards-card-border-color-checked', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
+describe('step indicator', () => {
+	const steps = (name: string, scheme: 0 | 1) => token(`--itx-steps-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has step text of 4.5:1 against the page in ${label}`, () => {
+			for (const state of ['color', 'color-current']) expect(contrast(steps(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the ring, the current disc and the completed disc tell the steps apart.
+		it(`has indicators of 3:1 against the page in ${label}`, () => {
+			for (const state of ['indicator-border-color', 'indicator-background-color-current', 'indicator-color-completed']) {
+				expect(contrast(steps(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			}
+		});
+		it(`has a current number of 4.5:1 on its disc in ${label}`, () => {
+			expect(contrast(steps('indicator-color-current', scheme), steps('indicator-background-color-current', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
 	}
 });
