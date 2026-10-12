@@ -380,6 +380,48 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
+	'steps-name': {
+		selector: 'ol[interop-steps]',
+		check: (list) =>
+			ariaName(list)
+				? null
+				: {
+						problem: 'This step indicator has no name.',
+						reason: 'A screen reader announces a list of steps with nothing to say what process they belong to.',
+						advice: 'Add aria-label="…" to the list, e.g. aria-label="Application progress".',
+					},
+	},
+	'steps-current': {
+		selector: 'ol[interop-steps]',
+		check: (list) =>
+			list.querySelectorAll(':scope > li[aria-current="step"]').length === 1
+				? null
+				: {
+						problem: 'This step indicator does not mark exactly one current step.',
+						reason: 'The current step, and every completed step before it, are drawn from aria-current="step". With none or several, the indicator and the page disagree.',
+						advice: 'Mark the current step <li aria-current="step">, and only that one.',
+					},
+	},
+	'steps-control': {
+		selector: 'ol[interop-steps] > li',
+		check: (step) => {
+			const current = step.parentElement!.querySelector(':scope > li[aria-current="step"]');
+			const future = current ? current.compareDocumentPosition(step) & Node.DOCUMENT_POSITION_FOLLOWING : 0;
+			if (step.querySelector('button, [role="tab"], [role="button"]'))
+				return {
+					problem: 'This step holds a button or a tab.',
+					reason: 'A step indicator shows progress. Buttons and tabs in it promise a way to jump between steps that the process does not offer.',
+					advice: 'Link back to a completed step with <a href>. To move between sections in any order, use tabs.',
+				};
+			return future && step.querySelector('a[href]')
+				? {
+						problem: 'A future step links ahead.',
+						reason: 'A later step depends on the ones before it, so a link to it skips steps the user has not done.',
+						advice: 'Link only completed steps.',
+					}
+				: null;
+		},
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>

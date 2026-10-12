@@ -1,0 +1,156 @@
+/*
+ * Step indicator: where you are in a process of ordered steps. An ordered list, with the current
+ * step marked `aria-current="step"`. It shows progress; it is not a control.
+ *
+ *   <ol interop-steps aria-label="Application progress">
+ *     <li><a href="/apply/details">Your details</a> <span itx-visually-hidden>completed</span></li>
+ *     <li aria-current="step">Documents</li>
+ *     <li>Sign <span itx-visually-hidden>not completed</span></li>
+ *   </ol>
+ *
+ * The list numbers the steps. Every step before the current one is completed, so CSS draws it with
+ * a check from `:has()`, with no attribute of its own. A completed step may link back to review it;
+ * a future step is never a link or a button. Write the status in visually hidden text, because
+ * screen readers do not all announce `aria-current` on a list item. Put "Step N of M" in the page
+ * title and the step's heading as well.
+ *
+ * In a narrow container only the current step keeps its label on screen; the others keep it for
+ * assistive technology.
+ *
+ * Also known as:
+ *   stepper             MUI, Angular Material (Apple and Spectrum mean a +/- number control by it)
+ *   progress indicator  Carbon
+ *   progress tracker    Atlassian
+ *   progress steps      Red Hat
+ *   wizard steps
+ * Step indicator is the name in USWDS. ARIA has no role for it; aria-current="step" is the
+ * semantics that exist.
+ */
+
+:where(ol[interop-steps]) {
+	container-type: inline-size;
+	display: flex;
+	gap: var(--itx-steps-gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: list-item;
+}
+
+:where(ol[interop-steps] > li) {
+	display: flex;
+	flex: 1 1 0;
+	align-items: center;
+	gap: var(--itx-steps-gap);
+	min-inline-size: 0;
+	font-size: var(--itx-steps-font-size);
+	line-height: var(--itx-steps-line-height);
+	color: var(--itx-steps-color);
+	counter-increment: list-item;
+}
+
+/* The last step takes only its own width, so the connectors share the rest. */
+:where(ol[interop-steps] > li:last-child) {
+	flex: 0 0 auto;
+}
+
+/* The indicator: the step's number, in a circle. */
+:where(ol[interop-steps] > li)::before {
+	content: counter(list-item);
+	flex-shrink: 0;
+	display: grid;
+	place-content: center;
+	box-sizing: border-box;
+	inline-size: var(--itx-steps-indicator-size);
+	block-size: var(--itx-steps-indicator-size);
+	font-size: var(--itx-steps-indicator-font-size);
+	font-variant-numeric: tabular-nums;
+	color: var(--itx-steps-indicator-color);
+	background-color: var(--itx-steps-indicator-background-color);
+	border-width: var(--itx-steps-indicator-border-width);
+	border-style: solid;
+	border-color: var(--itx-steps-indicator-border-color);
+	border-radius: var(--itx-radius-full);
+}
+
+/* The connector to the next step. */
+:where(ol[interop-steps] > li:not(:last-child))::after {
+	content: "";
+	flex: 1 1 var(--itx-steps-connector-min-inline-size);
+	min-inline-size: var(--itx-steps-connector-min-inline-size);
+	block-size: var(--itx-steps-connector-block-size);
+	background-color: var(--itx-steps-connector-background-color);
+}
+
+/* The current step: a filled indicator, a different shape from a future step's ring. */
+:where(ol[interop-steps] > li[aria-current="step"]) {
+	font-weight: var(--itx-steps-font-weight-current);
+	color: var(--itx-steps-color-current, var(--itx-steps-color));
+}
+
+:where(ol[interop-steps] > li[aria-current="step"])::before {
+	color: var(--itx-steps-indicator-color-current);
+	background-color: var(--itx-steps-indicator-background-color-current);
+	border-color: var(--itx-steps-indicator-background-color-current);
+}
+
+/* Completed: every step before the current one. A check replaces the number. */
+:where(ol[interop-steps] > li:has(~ li[aria-current="step"]))::before {
+	content: "";
+	background-color: var(--itx-steps-indicator-color-completed);
+	border-color: var(--itx-steps-indicator-color-completed);
+	mask-image: var(--itx-steps-indicator-mask-image-completed), linear-gradient(#000 0 0);
+	mask-composite: exclude;
+	mask-size: 70%, 100%;
+	mask-position: center;
+	mask-repeat: no-repeat;
+}
+
+:where(ol[interop-steps] > li:has(~ li[aria-current="step"]))::after {
+	background-color: var(--itx-steps-connector-background-color-completed);
+}
+
+/* In a narrow container only the current step keeps its label on screen. */
+@container (inline-size < 36rem) {
+	:where(ol[interop-steps] > li:not([aria-current="step"])) {
+		font-size: 0;
+	}
+
+	:where(ol[interop-steps] > li:not([aria-current="step"]) > *) {
+		position: absolute;
+		inline-size: 1px;
+		block-size: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	:where(ol[interop-steps] > li:not([aria-current="step"]))::before {
+		font-size: var(--itx-steps-indicator-font-size);
+	}
+}
+
+@media (forced-colors: active) {
+	:where(ol[interop-steps] > li)::before {
+		forced-color-adjust: none;
+		color: CanvasText;
+		background-color: Canvas;
+		border-color: CanvasText;
+	}
+
+	:where(ol[interop-steps] > li[aria-current="step"])::before {
+		color: HighlightText;
+		background-color: Highlight;
+		border-color: Highlight;
+	}
+
+	:where(ol[interop-steps] > li:has(~ li[aria-current="step"]))::before {
+		background-color: CanvasText;
+		border-color: CanvasText;
+	}
+
+	:where(ol[interop-steps] > li:not(:last-child))::after {
+		forced-color-adjust: none;
+		background-color: CanvasText;
+	}
+}

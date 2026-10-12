@@ -1,0 +1,11 @@
+.aka {
+	font-style: italic;
+}
+
+.narrow {
+	max-inline-size: 24rem;
+}
+
+* + ol[interop-steps] {
+	margin-block-start: var(--itx-space-4);
+}

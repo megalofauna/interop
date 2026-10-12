@@ -1,0 +1,55 @@
+<h1>Steps</h1>
+<p class="aka">
+	Also known as stepper, step indicator, progress indicator, progress tracker, progress steps, wizard, multi-step
+	form.
+</p>
+<p>
+	A process split into ordered steps has two parts: a step indicator that shows where you are, and the steps
+	themselves. The indicator is an ordered list with the current step marked <code>aria-current="step"</code>. It
+	shows progress; it is not a control. If the sections can be visited in any order, use tabs instead. A +/- number
+	control, which some systems call a stepper, is an <code>input type="number"</code>.
+</p>
+
+<h2>Step indicator</h2>
+<ol interop-steps aria-label="Application progress">
+	<li><a href="#details">Your details</a> <span itx-visually-hidden>completed</span></li>
+	<li><a href="#address">Address</a> <span itx-visually-hidden>completed</span></li>
+	<li aria-current="step">Documents</li>
+	<li>Payment <span itx-visually-hidden>not completed</span></li>
+	<li>Sign <span itx-visually-hidden>not completed</span></li>
+</ol>
+<p>
+	Every step before the current one is drawn as completed, with no attribute of its own. A completed step may link back
+	to review it. A future step is never a link or a button. Write each status in visually hidden text, and put "Step 3
+	of 5" in the page title and the step's heading.
+</p>
+
+<h2>The first and the last step</h2>
+<ol interop-steps aria-label="Checkout progress, first step">
+	<li aria-current="step">Basket</li>
+	<li>Delivery <span itx-visually-hidden>not completed</span></li>
+	<li>Payment <span itx-visually-hidden>not completed</span></li>
+</ol>
+<ol interop-steps aria-label="Checkout progress, last step">
+	<li>Basket <span itx-visually-hidden>completed</span></li>
+	<li>Delivery <span itx-visually-hidden>completed</span></li>
+	<li aria-current="step">Payment</li>
+</ol>
+
+<h2>In a narrow space</h2>
+<p>Below 36rem only the current step keeps its label on screen. The others keep it for screen readers.</p>
+<div class="narrow">
+	<ol interop-steps aria-label="Narrow progress">
+		<li>Basket <span itx-visually-hidden>completed</span></li>
+		<li aria-current="step">Delivery</li>
+		<li>Payment <span itx-visually-hidden>not completed</span></li>
+		<li>Review <span itx-visually-hidden>not completed</span></li>
+	</ol>
+</div>
+
+<h2>Right to left</h2>
+<ol interop-steps aria-label="التقدم" dir="rtl" lang="ar">
+	<li>التفاصيل <span itx-visually-hidden>مكتمل</span></li>
+	<li aria-current="step">العنوان</li>
+	<li>الدفع <span itx-visually-hidden>غير مكتمل</span></li>
+</ol>

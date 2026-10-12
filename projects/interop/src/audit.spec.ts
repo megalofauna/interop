@@ -280,6 +280,31 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('step indicator', () => {
+		const steps = (name: string, items: string) => `<ol interop-steps ${name}>${items}</ol>`;
+		const good = '<li><a href="/a">A</a></li><li aria-current="step">B</li><li>C</li>';
+
+		it('accepts a named indicator with one current step and links back only', () => {
+			render(steps('aria-label="Progress"', good));
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags an indicator with no name', () => {
+			render(steps('', good));
+			expect(rules()).toEqual(['steps-name']);
+		});
+
+		it('flags an indicator without exactly one current step', () => {
+			render(steps('aria-label="Progress"', '<li>A</li><li>B</li>') + steps('aria-label="Other"', '<li aria-current="step">A</li><li aria-current="step">B</li>'));
+			expect(rules()).toEqual(['steps-current', 'steps-current']);
+		});
+
+		it('flags a button in a step, and a link ahead of the current step', () => {
+			render(steps('aria-label="Progress"', '<li><button type="button">A</button></li><li aria-current="step">B</li><li><a href="/c">C</a></li>'));
+			expect(rules()).toEqual(['steps-control', 'steps-control']);
+		});
+	});
+
 	it('flags a radio group with one radio', () => {
 		render('<fieldset interop-radio-group><legend>Agree</legend><label><input type="radio" name="a"> Yes</label></fieldset>');
 		expect(rules()).toEqual(['radio-group-options']);

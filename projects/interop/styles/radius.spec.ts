@@ -17,6 +17,8 @@ import radioGroupCss from '../radio-group/interop-radio-group.structure.css' wit
 // @ts-expect-error The text loader turns the file into a string.
 import cardsCss from './cards.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import stepsCss from '../steps/interop-steps.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
@@ -33,7 +35,7 @@ const RULES = [
 	(value: string) => value.startsWith('max(0px,') && value.includes('--itx-radius'),
 ];
 
-const files = { badgeCss, buttonCss, checkboxCss, codeBlockCss, popoverCss, switchCss, tooltipCss, radioGroupCss, buttonStructureCss, segmentedCss, tabsCss, cardsCss } as Record<string, string>;
+const files = { badgeCss, buttonCss, checkboxCss, codeBlockCss, popoverCss, switchCss, tooltipCss, radioGroupCss, buttonStructureCss, segmentedCss, tabsCss, cardsCss, stepsCss } as Record<string, string>;
 
 /** A structure file reading the component's own token, e.g. var(--itx-button-border-radius). */
 const readsToken = (value: string) => /^var\(--itx-[\w-]+-border-radius\)$/.test(value);

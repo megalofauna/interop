@@ -138,6 +138,11 @@ const reveal = (element: Element) => {
 				<label interop-checkbox><input type="checkbox" name="addon" value="backup" checked /> <strong>Backups</strong></label>
 				<label interop-checkbox><input type="checkbox" name="addon" value="sso" disabled /> <strong>Single sign-on</strong></label>
 			</fieldset>
+			<ol interop-steps aria-label="Application progress">
+				<li><a href="/details">Your details</a> <span itx-visually-hidden>completed</span></li>
+				<li aria-current="step">Documents</li>
+				<li>Sign <span itx-visually-hidden>not completed</span></li>
+			</ol>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>

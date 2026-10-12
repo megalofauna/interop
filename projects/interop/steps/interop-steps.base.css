@@ -1,0 +1,29 @@
+:where(ol[interop-steps]) {
+	--itx-steps-gap: var(--itx-space-2);
+	--itx-steps-font-size: var(--itx-font-size-label);
+	--itx-steps-line-height: var(--itx-line-height-label);
+	--itx-steps-font-weight-current: 600;
+	/* 4.5:1 against the page (WCAG 1.4.3). */
+	--itx-steps-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	--itx-steps-color-current: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+
+	--itx-steps-indicator-size: var(--itx-space-6);
+	--itx-steps-indicator-font-size: var(--itx-font-size-caption);
+	--itx-steps-indicator-border-width: 1px;
+	/* A future step's ring: 3:1 against the page (WCAG 1.4.11). */
+	--itx-steps-indicator-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-steps-indicator-background-color: transparent;
+	--itx-steps-indicator-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	/* The current step's disc, 3:1 against the page, and its number on it. */
+	--itx-steps-indicator-background-color-current: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-steps-indicator-color-current: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	/* A completed step's disc, with its check cut out of it. */
+	--itx-steps-indicator-color-completed: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	/* Only the mask's shape counts, so its stroke color does not matter. */
+	--itx-steps-indicator-mask-image-completed: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+
+	--itx-steps-connector-block-size: 1px;
+	--itx-steps-connector-min-inline-size: var(--itx-space-4);
+	--itx-steps-connector-background-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-steps-connector-background-color-completed: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+}
