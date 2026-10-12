@@ -1,0 +1,76 @@
+table {
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: var(--itx-space-2) var(--itx-space-3);
+	text-align: start;
+	vertical-align: top;
+	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+}
+
+figure[interop-code-block] {
+	margin-block-start: var(--itx-space-3);
+}
+
+/* A box to resize, standing in for the app's main container. */
+.frame {
+	container: example-shell / inline-size;
+	inline-size: 52rem;
+	min-inline-size: 16rem;
+	max-inline-size: 100%;
+	resize: inline;
+	overflow: auto;
+	border: 1px dashed light-dark(var(--itx-neutral-400), var(--itx-neutral-600));
+}
+
+.shell {
+	display: grid;
+	grid-template-areas: "header" "nav" "main";
+}
+
+.shell > header {
+	grid-area: header;
+	padding: var(--itx-space-3);
+	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+}
+
+.site-nav {
+	grid-area: nav;
+	padding: var(--itx-space-3);
+}
+
+.site-nav ul {
+	margin: var(--itx-space-2) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.main {
+	grid-area: main;
+	padding: var(--itx-space-3);
+}
+
+@container example-shell (inline-size >= 48rem) {
+	.shell {
+		grid-template-columns: 12rem 1fr;
+		grid-template-areas: "header header" "nav main";
+	}
+
+	.site-nav {
+		border-inline-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	}
+
+	.site-nav > summary {
+		display: none;
+	}
+
+	.site-nav ul {
+		margin: 0;
+	}
+
+	.site-nav::details-content {
+		content-visibility: visible;
+	}
+}

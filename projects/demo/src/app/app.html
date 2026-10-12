@@ -1,10 +1,13 @@
+<div class="shell">
 <header>
-	Interop
+	<button interop-button type="button" itx-size="sm" class="menu" commandfor="site-nav" command="toggle-popover">Menu</button>
+	<span class="title">Interop</span>
 	<button interop-button type="button" itx-size="sm" [attr.aria-pressed]="dark()" (click)="dark.set(!dark())">Dark mode</button>
 </header>
 
-<nav aria-label="Pages">
+<nav #nav id="site-nav" interop-popover="drawer" popover aria-label="Pages">
 	<ul>
+		<li><a routerLink="/foundations/app-shell" routerLinkActive="active" ariaCurrentWhenActive="page">App shell</a></li>
 		<li><a routerLink="/foundations/radius" routerLinkActive="active" ariaCurrentWhenActive="page">Radius (comparison)</a></li>
 		<li><a routerLink="/foundations/typography" routerLinkActive="active" ariaCurrentWhenActive="page">Typography</a></li>
 	</ul>
@@ -31,3 +34,4 @@
 </main>
 
 <footer>Interop demo</footer>
+</div>

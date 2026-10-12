@@ -11,7 +11,8 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | CSS split (structural vs theme) | [css-strategy.md](css-strategy.md) |
 | Colour — the two axes, layers, contrast ranks | [color.md](color.md) |
 | Dialog directive deep-dive | [components/dialog.md](components/dialog.md) |
-| Popover directive deep-dive | [components/popover.md](components/popover.md) |
+| Popover (anchored popover, drawer, bindDrawer) | [components/popover.md](components/popover.md) |
+| App shell recipe (sidebar or drawer navigation) | [components/app-shell.md](components/app-shell.md) |
 | Stepper — retired; step indicator, recipe and bindSteps instead | [components/stepper.md](components/stepper.md) |
 | Steps (step indicator, multi-step form, bindSteps) | [components/steps.md](components/steps.md) |
 | Table component deep-dive | [components/table.md](components/table.md) |

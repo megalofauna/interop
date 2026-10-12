@@ -73,6 +73,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
 	},
 	{
+		path: "foundations/app-shell",
+		title: "App shell",
+		loadComponent: () => import("./foundations/app-shell/app-shell-demo").then((m) => m.AppShellDemo),
+	},
+	{
 		path: "foundations/radius",
 		title: "Radius (comparison)",
 		loadComponent: () => import("./foundations/radius/radius-demo").then((m) => m.RadiusDemo),
