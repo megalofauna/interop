@@ -29,13 +29,16 @@ export const examples = {
 	</ul>
 	<input #entry id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint"
 		interop-tag-input [tags]="skillList" tagsRequired="Add at least one skill."
+		[status]="announcer" [rejected]="alreadyAdded"
 		(interop-tags-add)="addSkill($event)">
 	<datalist id="skill-options">…</datalist>
 	<p id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one.</p>
+	<p #announcer role="status" itx-visually-hidden></p>
 	<button interop-button type="submit">Save</button>
 </form>
 `,
 	inputTs: `readonly skills = signal(["Angular", "CSS"]);
+readonly alreadyAdded = (value: string) => \`\${value} is already added.\`;
 
 addSkill(event: Event): void {
 	const { value } = (event as CustomEvent<TagAddDetail>).detail;

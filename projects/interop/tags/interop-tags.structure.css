@@ -30,15 +30,22 @@
 
 :where(ul[interop-tags] > li) {
 	display: inline-flex;
-	align-items: center;
+	align-items: flex-start;
 	column-gap: var(--itx-tags-tag-column-gap);
 	box-sizing: border-box;
 	min-block-size: var(--itx-tags-tag-min-block-size);
+	/*
+	 * A long tag wraps inside the pill rather than overflowing a narrow page (WCAG 1.4.10). The
+	 * block padding is what one line leaves of the minimum height, so a wrapped tag keeps the same
+	 * space above and below its text as a single line.
+	 */
+	max-inline-size: 100%;
+	padding-block: calc((var(--itx-tags-tag-min-block-size) - 2 * var(--itx-tags-tag-border-width) - 1lh) / 2);
 	/* The remove button sits at the inline end, so the padding there is the button's own. */
 	padding-inline: var(--itx-tags-tag-padding-inline) var(--itx-tags-button-inset);
 	font-size: var(--itx-tags-tag-font-size);
 	line-height: var(--itx-tags-tag-line-height);
-	white-space: nowrap;
+	overflow-wrap: anywhere;
 	color: var(--itx-tags-tag-color);
 	background-color: var(--itx-tags-tag-background-color);
 	border-width: var(--itx-tags-tag-border-width);
@@ -56,7 +63,12 @@
 	box-sizing: border-box;
 	inline-size: var(--itx-tags-button-size);
 	block-size: var(--itx-tags-button-size);
-	margin: 0;
+	/*
+	 * Centered on the first line of text, and taking only a line's height, so the button does not
+	 * make the pill taller than its text does. It reaches into the padding instead.
+	 */
+	margin-block: calc((1lh - var(--itx-tags-button-size)) / 2);
+	margin-inline: 0;
 	padding: 0;
 	font: inherit;
 	color: inherit;

@@ -13,7 +13,14 @@ import { examples } from "./tags-examples";
 })
 export class TagsDemo {
 	protected readonly examples = examples;
-	protected readonly filters = signal(["In stock", "Under $50", "Free delivery", "4 stars and up"]);
+	protected readonly filters = signal([
+		"In stock",
+		"Under $50",
+		"Free delivery",
+		"4 stars and up",
+		"Ships to every country in the European Economic Area within five working days",
+	]);
+	protected readonly alreadyAdded = (value: string) => `${value} is already added.`;
 	protected readonly skills = signal(["Angular", "CSS"]);
 	protected readonly saved = signal<string | null>(null);
 	protected readonly sizes = [

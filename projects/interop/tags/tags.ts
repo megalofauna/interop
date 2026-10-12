@@ -50,12 +50,27 @@ export class InteropTagInput {
 
 	/** The tag list this input adds to. */
 	readonly tags = input.required<HTMLElement>();
-	/** With a message, the input is invalid while the list is empty. */
+	/** With a message, the input is required and invalid while the list is empty. */
 	readonly tagsRequired = input<string | undefined>(undefined);
+	/** A visually hidden `role="status"` element for announcing added tags. */
+	readonly status = input<HTMLElement | null>(null);
+	/** The announcement for an added tag. */
+	readonly added = input<((text: string) => string) | undefined>(undefined);
+	/** The message for a rejected value, shown and spoken as the input's validation message. */
+	readonly rejected = input<((value: string) => string) | undefined>(undefined);
 
 	constructor() {
 		afterRenderEffect((onCleanup) => {
-			onCleanup(bindTagInput(this.element, { list: this.tags(), required: this.tagsRequired(), tags: false }));
+			onCleanup(
+				bindTagInput(this.element, {
+					list: this.tags(),
+					required: this.tagsRequired(),
+					status: this.status(),
+					added: this.added(),
+					rejected: this.rejected(),
+					tags: false,
+				}),
+			);
 		});
 	}
 }

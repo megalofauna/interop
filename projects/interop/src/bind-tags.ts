@@ -12,8 +12,21 @@ export interface TagsOptions {
 export interface TagInputOptions {
 	/** The tag list the input adds to. Backspace in the empty input moves focus to its last remove button. */
 	list: HTMLElement;
-	/** With a message, the input is invalid while the list has no tags, so a form will not submit without one. */
+	/**
+	 * With a message, the input is required: `aria-required="true"`, and invalid while the list has no
+	 * tags, so a form will not submit without one.
+	 */
 	required?: string;
+	/** A visually hidden `role="status"` element. When given, each added tag is announced in it. */
+	status?: HTMLElement | null;
+	/** The announcement for an added tag, so translations can replace it. */
+	added?: (text: string) => string;
+	/**
+	 * The message for a value the consumer rejected, e.g. "Football is already added". The input
+	 * shows it as its validation message until the user types again. Without it, a rejection keeps
+	 * the text and says nothing, so give one.
+	 */
+	rejected?: (value: string) => string;
 	/**
 	 * Passed to bindTags() for the list; the input is the fallback unless another is given. `false`
 	 * when the list is bound elsewhere, e.g. by the InteropTags directive.
@@ -23,6 +36,15 @@ export interface TagInputOptions {
 
 export interface TagAddDetail {
 	value: string;
+}
+
+/**
+ * Writes a message to a live region. It empties the region first, so the same message twice in a row
+ * is announced twice.
+ */
+function announce(status: HTMLElement, message: string): void {
+	status.textContent = '';
+	setTimeout(() => (status.textContent = message), 50);
 }
 
 /** A tag's own text: everything in it but its button and its hidden input. */
@@ -66,7 +88,7 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 	const observer = new MutationObserver((records) => {
 		const gone = records.flatMap((record) => Array.from(record.removedNodes)).filter((node): node is Element => node instanceof Element && node.tagName === 'LI');
 		if (!gone.length) return;
-		if (options.status) options.status.textContent = gone.map((tag) => removed(tagText(tag))).join('. ');
+		if (options.status) announce(options.status, gone.map((tag) => removed(tagText(tag))).join('. '));
 		if (!focusedTag || !gone.includes(focusedTag)) return;
 		const remaining = tags();
 		const next = remaining[Math.min(focusedIndex, remaining.length - 1)]?.querySelector<HTMLElement>('button');
@@ -93,20 +115,25 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
  * Turns a text input into a way to add tags to a list.
  *
  * - Enter with text fires `interop-tags-add` on the input, detail `{ value }`, and stops the form
- *   submitting. The consumer adds the tag. Calling `preventDefault()` on the event rejects the
- *   value, e.g. a duplicate, and keeps it in the input; otherwise the input empties.
+ *   submitting. The consumer adds the tag, and with `status` it is announced. Calling
+ *   `preventDefault()` on the event rejects the value, e.g. a duplicate: the text stays, and the
+ *   `rejected` message is shown and spoken as the input's validation message.
  * - Enter during IME composition is left alone. Commas do not add a tag.
  * - Backspace in the empty input moves focus to the last remove button. It deletes nothing.
- * - With `required`, the input is invalid while the list is empty.
+ * - With `required`, the input is `aria-required` and invalid while the list is empty.
  * - The list gets bindTags(), with the input as the fallback for focus, unless `tags` is `false`.
  *
  * Returns a function that removes the behavior.
  */
 export function bindTagInput(input: HTMLInputElement, options: TagInputOptions): () => void {
 	const { list } = options;
+	const added = options.added ?? ((text: string) => `${text} added`);
+	/** A rejection's message, kept until the user types again. */
+	let rejection = '';
 
 	const validate = () => {
-		if (options.required) input.setCustomValidity(list.querySelector(':scope > li') ? '' : options.required);
+		const empty = options.required && !list.querySelector(':scope > li') ? options.required : '';
+		input.setCustomValidity(rejection || empty);
 	};
 
 	const onKeydown = (event: KeyboardEvent) => {
@@ -116,7 +143,14 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 			if (!value) return;
 			event.preventDefault();
 			const add = new CustomEvent<TagAddDetail>('interop-tags-add', { bubbles: true, cancelable: true, detail: { value } });
-			if (input.dispatchEvent(add)) input.value = '';
+			if (input.dispatchEvent(add)) {
+				input.value = '';
+				if (options.status) announce(options.status, added(value));
+			} else if (options.rejected) {
+				rejection = options.rejected(value);
+				validate();
+				input.reportValidity();
+			}
 		} else if (event.key === 'Backspace' && !input.value) {
 			const buttons = list.querySelectorAll<HTMLElement>(':scope > li button');
 			const last = buttons[buttons.length - 1];
@@ -126,16 +160,26 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 		}
 	};
 
+	const onInput = () => {
+		if (!rejection) return;
+		rejection = '';
+		validate();
+	};
+
 	const observer = new MutationObserver(validate);
 	observer.observe(list, { childList: true });
 	input.addEventListener('keydown', onKeydown);
+	input.addEventListener('input', onInput);
+	if (options.required) input.setAttribute('aria-required', 'true');
 	const unbindTags = options.tags === false ? () => {} : bindTags(list, { fallback: input, ...options.tags });
 	validate();
 
 	return () => {
 		observer.disconnect();
 		input.removeEventListener('keydown', onKeydown);
+		input.removeEventListener('input', onInput);
 		unbindTags();
-		if (options.required) input.setCustomValidity('');
+		input.setCustomValidity('');
+		if (options.required) input.removeAttribute('aria-required');
 	};
 }

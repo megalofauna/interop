@@ -29,8 +29,9 @@
 <h2>Tag input</h2>
 <p>
 	The tags come first, then the field: tested this way round, people found and removed tags most reliably. Enter adds
-	a tag; a comma does not. The <code>datalist</code> offers suggestions. Each tag holds a hidden input, so the values
-	submit with the form, and the field is invalid until there is at least one.
+	a tag, and the addition is announced; a comma does not add one. A duplicate is rejected with a message the field
+	shows and speaks. The <code>datalist</code> offers suggestions. Each tag holds a hidden input, so the values submit
+	with the form, and the field is required until there is at least one.
 </p>
 <form (submit)="submit($event)">
 	<label for="tag-entry">Skills</label>
@@ -55,6 +56,8 @@
 		interop-tag-input
 		[tags]="skillList"
 		tagsRequired="Add at least one skill."
+		[status]="skillAnnouncer"
+		[rejected]="alreadyAdded"
 		(interop-tags-add)="addSkill($event)"
 	/>
 	<datalist id="skill-options">
@@ -65,6 +68,7 @@
 		<option value="TypeScript"></option>
 	</datalist>
 	<p id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one.</p>
+	<p #skillAnnouncer role="status" itx-visually-hidden></p>
 	<p><button interop-button type="submit">Save</button></p>
 	@if (saved(); as values) {
 		<p>Saved: {{ values }}</p>

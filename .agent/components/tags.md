@@ -53,7 +53,8 @@ The demo page is `projects/demo/src/app/components/tags/`.
   the remove button now at its place, else the one before, else `fallback`
   (given `tabindex="-1"` if it needs one). Without this, focus falls to the page.
 - With `status`, a `role="status"` element, each removal is announced:
-  "Angular removed", or `removed(text)` for translations. Opt-in.
+  "Angular removed", or `removed(text)` for translations. Opt-in. The region is
+  emptied before each message, so the same message twice is announced twice.
 
 `bindTagInput(input, { list, required, tags })`:
 
@@ -64,7 +65,13 @@ The demo page is `projects/demo/src/app/components/tags/`.
   unreliable on Android keyboards and can be part of a value.
 - Backspace in the empty field moves focus to the last remove button. It
   deletes nothing.
-- With `required`, a message, the field is invalid while the list is empty.
+- With `required`, a message, the field is `aria-required` and invalid while the
+  list is empty.
+- With `status`, each added tag is announced: "Angular added", or `added(text)`.
+- With `rejected`, a message function, a rejected value's message becomes the
+  field's validation message, shown and spoken at once and cleared when the user
+  types. A rejection without a message says nothing, which fails WCAG 3.3.1 when
+  the rejection is an error, so give one.
 - It calls `bindTags()` on the list with the input as `fallback`, unless `tags`
   is `false`.
 
@@ -73,7 +80,8 @@ renders every tag, so they work with Angular's `@for`.
 
 In Angular, `InteropTags` on `ul[interop-tags]` (inputs `fallback`, `status`,
 `removed`) binds the list, and `InteropTagInput` on `input[interop-tag-input]`
-(inputs `tags`, `tagsRequired`) binds the field with `tags: false`, so the list
+(inputs `tags`, `tagsRequired`, `status`, `added`, `rejected`) binds the field
+with `tags: false`, so the list
 is bound once. The inputs are not named `list` and `required`: those are the
 input element's own attributes, and `list` names its datalist.
 
@@ -82,6 +90,13 @@ adding, rejecting a duplicate, Backspace, the required message, and submitting
 the hidden inputs.
 
 ## Look
+
+A long tag wraps inside its pill rather than overflowing a narrow page (WCAG
+1.4.10). The block padding is what one line leaves of the minimum height,
+`(min-block-size − 2 × border − 1lh) / 2`, so a wrapped tag keeps the space a
+single line has above and below its text. The remove button is centered on the
+first line and takes only a line's height, reaching into the padding, so it does
+not make the pill taller than its text.
 
 | Size | Pill height | Remove button | Text |
 |---|---|---|---|

@@ -54,6 +54,19 @@ describe('bindTags', () => {
 		expect(document.activeElement).toBe(button('Football'));
 	});
 
+	it('announces the same removal twice when it happens twice', async () => {
+		const { list, remove } = setup(() => ({ status: document.getElementById('status') }));
+		remove('Rugby');
+		await new Promise((resolve) => setTimeout(resolve, 80));
+		expect(document.getElementById('status')!.textContent).toBe('Rugby removed');
+		list.insertAdjacentHTML('beforeend', tag('Rugby'));
+		remove('Rugby');
+		await settle();
+		expect(document.getElementById('status')!.textContent).toBe('');
+		await new Promise((resolve) => setTimeout(resolve, 80));
+		expect(document.getElementById('status')!.textContent).toBe('Rugby removed');
+	});
+
 	it('announces a removal only when given a status element', async () => {
 		const status = () => document.getElementById('status')!;
 		let view = setup();
@@ -63,23 +76,25 @@ describe('bindTags', () => {
 		unbind!();
 		view = setup(() => ({ status: document.getElementById('status'), removed: (text) => `Removed ${text}` }));
 		view.remove('Cricket');
-		await settle();
+		await new Promise((resolve) => setTimeout(resolve, 80));
 		expect(status().textContent).toBe('Removed Cricket');
 	});
 });
 
 describe('bindTagInput', () => {
 	let unbind: (() => void) | undefined;
-	const setup = (required?: string) => {
+	// Only options that hold no elements: an element passed in would belong to the previous page.
+	const setup = (required?: string, extra: Partial<Parameters<typeof bindTagInput>[1]> = {}) => {
 		document.body.innerHTML = `
 			<form>
 				<label for="entry">Tags</label>
 				<ul interop-tags role="list" aria-label="Tags">${tag('Football')}</ul>
 				<input id="entry" type="text">
+				<p id="status" role="status"></p>
 			</form>`;
 		const list = document.querySelector<HTMLElement>('ul')!;
 		const input = document.querySelector<HTMLInputElement>('#entry')!;
-		unbind = bindTagInput(input, { list, required });
+		unbind = bindTagInput(input, { list, required, ...extra });
 		const press = (key: string, init: KeyboardEventInit = {}) => {
 			const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init });
 			input.dispatchEvent(event);
@@ -99,6 +114,28 @@ describe('bindTagInput', () => {
 		input.value = '  Cricket ';
 		expect(press('Enter').defaultPrevented).toBe(true);
 		expect([added, input.value]).toEqual([['Cricket'], '']);
+	});
+
+	it('announces an added tag when given a status element', async () => {
+		const { list, input, press } = setup();
+		unbind!();
+		const status = document.getElementById('status')!;
+		unbind = bindTagInput(input, { list, status });
+		input.value = 'Cricket';
+		press('Enter');
+		await new Promise((resolve) => setTimeout(resolve, 80));
+		expect(status.textContent).toBe('Cricket added');
+	});
+
+	it('shows and speaks the rejection message until the user types again', () => {
+		const { input, press } = setup(undefined, { rejected: (value) => `${value} is already added` });
+		input.addEventListener('interop-tags-add', (event) => event.preventDefault());
+		input.value = 'Football';
+		press('Enter');
+		expect([input.value, input.validationMessage]).toEqual(['Football', 'Football is already added']);
+		input.value = 'Footbal';
+		input.dispatchEvent(new Event('input'));
+		expect(input.validity.valid).toBe(true);
 	});
 
 	it('keeps the text when the consumer rejects it', () => {
@@ -125,8 +162,9 @@ describe('bindTagInput', () => {
 		expect(list.children).toHaveLength(1);
 	});
 
-	it('is invalid while the list is empty when required', async () => {
+	it('is required and invalid while the list is empty when required', async () => {
 		const { list, input } = setup('Add at least one tag.');
+		expect(input.getAttribute('aria-required')).toBe('true');
 		expect(input.validity.customError).toBe(false);
 		list.querySelector('li')!.remove();
 		await settle();

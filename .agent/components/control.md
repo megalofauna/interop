@@ -281,10 +281,11 @@ chips for many short options; segmented is for a short row of equal ones.
 
 | Part | How |
 |---|---|
-| Pill | The label: inline-flex, a border at 3:1 against the page, a full radius |
+| Pill | The label: inline-flex, a border at 3:1 against the page, a full radius. A long label wraps inside it (WCAG 1.4.10); the block padding is `(min-block-size − 2 × border − 1lh) / 2`, so a wrapped label keeps a single line's space above and below its text |
 | Input | Transparent and fills the pill (`inset: 0`), so it takes the clicks and the focus ring. Its own mark is not drawn |
 | Checked | The pill fills, and a check appears before the text through a mask, so the state does not rely on color |
-| Forced colors | The checked pill is `Highlight` with `HighlightText` |
+| Forced colors | The checked pill is `Highlight` with `HighlightText`; a disabled pill is `GrayText` |
+| `prefers-contrast: more` | 2px border |
 
 | Size | Pill height | Text |
 |---|---|---|

@@ -82,11 +82,17 @@
 	column-gap: var(--itx-chips-chip-column-gap);
 	box-sizing: border-box;
 	min-block-size: var(--itx-chips-chip-min-block-size);
-	padding-block: 0;
+	/*
+	 * A long label wraps inside the pill rather than overflowing a narrow page (WCAG 1.4.10). The
+	 * block padding is what one line leaves of the minimum height, so a wrapped label keeps the same
+	 * space above and below its text as a single line.
+	 */
+	max-inline-size: 100%;
+	padding-block: calc((var(--itx-chips-chip-min-block-size) - 2 * var(--itx-chips-chip-border-width) - 1lh) / 2);
 	padding-inline: var(--itx-chips-chip-padding-inline);
 	font-size: var(--itx-chips-chip-font-size);
 	line-height: var(--itx-chips-chip-line-height);
-	white-space: nowrap;
+	overflow-wrap: anywhere;
 	color: var(--itx-chips-chip-color);
 	background-color: var(--itx-chips-chip-background-color);
 	border-width: var(--itx-chips-chip-border-width);
@@ -171,5 +177,28 @@
 		color: HighlightText;
 		background-color: Highlight;
 		border-color: Highlight;
+	}
+
+	:where(
+		fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:checked:disabled),
+		fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:checked:disabled)
+	) {
+		color: Canvas;
+		background-color: GrayText;
+		border-color: GrayText;
+	}
+
+	:where(
+		fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:disabled:not(:checked)),
+		fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:disabled:not(:checked))
+	) {
+		color: GrayText;
+		border-color: GrayText;
+	}
+}
+
+@media (prefers-contrast: more) {
+	:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"])) {
+		--itx-chips-chip-border-width: 2px;
 	}
 }
