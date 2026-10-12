@@ -1,0 +1,52 @@
+:where(label[interop-switch]) {
+	--itx-switch-gap: var(--itx-space-2);
+	--itx-switch-min-block-size: var(--itx-space-10);
+	--itx-switch-font-size: var(--itx-font-size-label);
+	--itx-switch-line-height: var(--itx-line-height-label);
+	--itx-switch-cursor: default;
+	--itx-switch-cursor-disabled: not-allowed;
+	--itx-switch-opacity-disabled: 0.5;
+
+	/* Outer height: 24px, the WCAG 2.5.8 minimum without the label. */
+	--itx-switch-track-block-size: var(--itx-space-6);
+	/* Content width. The thumb travels one thumb width. */
+	--itx-switch-track-inline-size: calc(2 * var(--itx-switch-thumb-size));
+	--itx-switch-track-padding: var(--itx-space-0_5);
+	--itx-switch-track-border-width: 1px;
+	--itx-switch-track-border-style: solid;
+	/* Off: the border carries the 3:1 edge against the page (WCAG 1.4.11). */
+	--itx-switch-track-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-switch-track-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	/* On: the fill carries the edge, so the border lets it show through. */
+	--itx-switch-track-border-color-checked: transparent;
+	--itx-switch-track-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-switch-track-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-switch-track-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-switch-track-background-color-checked-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-200));
+	--itx-switch-track-border-radius: var(--itx-radius-full);
+
+	/* Whatever the track's height leaves inside its padding and border. */
+	--itx-switch-thumb-size: calc(
+		var(--itx-switch-track-block-size) - 2 * var(--itx-switch-track-padding) - 2 *
+			var(--itx-switch-track-border-width)
+	);
+	--itx-switch-thumb-background-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-switch-thumb-background-color-checked: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-switch-thumb-border-radius: var(--itx-radius-full);
+
+	--itx-switch-transition-duration: var(--itx-transition-duration);
+	--itx-switch-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+:where(label[interop-switch][itx-size="lg"]) {
+	--itx-switch-min-block-size: var(--itx-space-12);
+	--itx-switch-font-size: var(--itx-font-size-p);
+	--itx-switch-line-height: var(--itx-line-height-p);
+	--itx-switch-track-block-size: var(--itx-space-8);
+}
+
+@media (prefers-contrast: more) {
+	:where(label[interop-switch]) {
+		--itx-switch-track-border-width: 2px;
+	}
+}

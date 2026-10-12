@@ -50,6 +50,9 @@ const violations = async (element: Element) =>
 			<div interop-popover popover #menu><p>Popover content</p></div>
 			<h2 id="notes">Notes</h2>
 			<div interop-scroll-area aria-labelledby="notes"><p>Note one.</p><p>Note two.</p></div>
+			<label interop-switch><input type="checkbox" role="switch" /> Notifications</label>
+			<label interop-switch><input type="checkbox" role="switch" checked /> Dark mode</label>
+			<label interop-switch>Autosave <input type="checkbox" role="switch" disabled /></label>
 			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
 	`,
@@ -72,5 +75,10 @@ describe('accessibility (axe-core)', () => {
 	it('catches an icon button with no label, so the gate is real', async () => {
 		document.body.innerHTML = '<main><button type="button"><svg aria-hidden="true"></svg></button></main>';
 		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
+	});
+
+	it('catches a switch with no label', async () => {
+		document.body.innerHTML = '<main><input type="checkbox" role="switch"></main>';
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^aria-toggle-field-name:|^label:/));
 	});
 });

@@ -14,8 +14,8 @@ comes from `:checked`, `:indeterminate`, `:disabled` and `:focus-visible`.
 
 | Question | Decision |
 |---|---|
-| Name | `control` |
-| Scope of input styling | Inputs inside `label[interop-checkbox]`, `label[interop-radio]`, `label[interop-toggle]` only. No opt-in attribute for bare inputs yet |
+| Name | `control`. The toggle's label attribute is `interop-switch`, after the ARIA role and HTML attribute |
+| Scope of input styling | Inputs inside `label[interop-checkbox]`, `label[interop-radio]`, `label[interop-switch]` only. No opt-in attribute for bare inputs yet |
 | Angular components | None. Markup + CSS is the API. A TS component ships only when a concrete need appears (CVA, a checkbox group) |
 
 The deprecated controls mirror input state into a second element. Every

@@ -33,6 +33,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/scroll-area/scroll-area-demo").then((m) => m.ScrollAreaDemo),
 	},
 	{
+		path: "components/switch",
+		title: "Switch",
+		loadComponent: () => import("./components/switch/switch-demo").then((m) => m.SwitchDemo),
+	},
+	{
 		path: "components/tooltip",
 		title: "Tooltip",
 		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),

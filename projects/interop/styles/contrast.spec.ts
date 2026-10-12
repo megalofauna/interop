@@ -8,10 +8,12 @@ import codeBlockCss from '../code-block/interop-code-block.base.css' with { load
 import popoverCss from '../popover/interop-popover.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import scrollAreaCss from '../scroll-area/interop-scroll-area.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import switchCss from '../switch/interop-switch.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -94,5 +96,29 @@ describe('popover boundary', () => {
 			const border = resolve(declarations.get('--itx-popover-border-color')!, scheme);
 			expect(contrast(border, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
+	}
+});
+
+describe('switch', () => {
+	const token = (name: string, scheme: 0 | 1) => resolve(declarations.get(`--itx-switch-${name}`)!, scheme);
+
+	for (const [scheme, label] of [[0, 'light'], [1, 'dark']] as const) {
+		// WCAG 1.4.11: the track's edge against the page, and the thumb against the track, in every state.
+		for (const state of ['', '-hover']) {
+			it(`has an off${state} track border of 3:1 against the page in ${label}`, () => {
+				expect(contrast(token(`track-border-color${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+			it(`has an off thumb of 3:1 against the off${state} track in ${label}`, () => {
+				expect(contrast(token('thumb-background-color', scheme), token(`track-background-color${state}`, scheme))).toBeGreaterThanOrEqual(3);
+			});
+			it(`has an on${state} track of 3:1 against the page in ${label}`, () => {
+				expect(contrast(token(`track-background-color-checked${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+			it(`has an on thumb of 3:1 against the on${state} track in ${label}`, () => {
+				expect(
+					contrast(token('thumb-background-color-checked', scheme), token(`track-background-color-checked${state}`, scheme)),
+				).toBeGreaterThanOrEqual(3);
+			});
+		}
 	}
 });
