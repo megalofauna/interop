@@ -123,6 +123,23 @@ CSS selectors follow the same split:
 - A component ships only the steps it needs. Leave a step out when it would
   break a minimum, such as the 24px target size of WCAG 2.5.8.
 
+## Corner radius
+
+Every component corner follows one of four rules. `styles/radius.css` states
+them, and `styles/radius.spec.ts` fails on a corner that follows none.
+
+| Rule | Value | Used by |
+|---|---|---|
+| Round by shape | `var(--itx-radius-full)` | badge, switch track and thumb, radio circle and dot, spinner |
+| House | `var(--itx-radius, var(--itx-radius-md))` | button, popover, code block, any container |
+| Small | half the house radius, capped where it would change the shape | tooltip; checkbox box, capped at a quarter of its size |
+| Nested | outer radius less the gap, never below `0px` | an inset pill or panel |
+
+The house radius is `--itx-radius-md`, 6px, with squircle corners
+(`--itx-corner-shape`). A theme sets `--itx-radius-md` on `:root` to change it
+everywhere; `itx-radius` overrides it on one element. Never write a radius
+literal or a fixed scale step in a component.
+
 One way per pattern. When two components solve the same problem differently,
 fix the outlier before adding a third.
 

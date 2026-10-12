@@ -55,7 +55,8 @@
 	border-width: var(--itx-radio-group-circle-border-width);
 	border-style: var(--itx-radio-group-circle-border-style);
 	border-color: var(--itx-radio-group-circle-border-color);
-	border-radius: 50%;
+	/* Round by shape. */
+	border-radius: var(--itx-radius-full);
 	cursor: inherit;
 	transition-property: background-color, border-color;
 	transition-duration: var(--itx-radio-group-transition-duration);
@@ -71,7 +72,7 @@
 	inline-size: var(--itx-radio-group-dot-size);
 	block-size: var(--itx-radio-group-dot-size);
 	background-color: var(--itx-radio-group-dot-background-color);
-	border-radius: 50%;
+	border-radius: var(--itx-radius-full);
 	scale: 0;
 	transition-property: scale;
 	transition-duration: var(--itx-radio-group-transition-duration);

@@ -6,26 +6,15 @@
 	font-size: var(--itx-font-size-p-sm);
 }
 
-/*
- * The candidate radius on every element in the row: --itx-radius does not inherit, so it is declared
- * on each one. The proposed small and nested rules are written out here, as the components would carry them.
- */
+/* Each row sets the house radius, as a theme would on :root. */
+.candidate {
+	--itx-radius-md: var(--candidate-radius);
+}
+
+/* --itx-corner-shape does not inherit, so it is declared on each element. */
 .candidate,
 .candidate * {
-	--itx-radius: var(--candidate-radius);
 	--itx-corner-shape: var(--candidate-shape);
-}
-
-.candidate label[interop-checkbox] {
-	--itx-checkbox-box-border-radius: min(var(--itx-radius) / 2, var(--itx-checkbox-box-size) / 4);
-}
-
-.candidate label[interop-checkbox] > input {
-	corner-shape: var(--itx-corner-shape);
-}
-
-.candidate [interop-tooltip] {
-	--itx-tooltip-border-radius: min(var(--itx-radius) / 2, 1lh / 2);
 }
 
 /* Popover and tooltip open in the top layer. Here they sit in the row so they can be compared. */
@@ -67,7 +56,7 @@
 	display: inline-flex;
 	padding: var(--gap);
 	border: 1px solid light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	border-radius: var(--itx-radius);
+	border-radius: var(--itx-radius-md);
 	corner-shape: var(--itx-corner-shape);
 }
 
@@ -75,7 +64,7 @@
 	padding: var(--itx-space-2) var(--itx-space-4);
 	font-size: var(--itx-font-size-p-sm);
 	line-height: var(--itx-line-height-p-sm);
-	border-radius: max(0px, var(--itx-radius) - var(--gap) - 1px);
+	border-radius: max(0px, var(--itx-radius-md) - var(--gap) - 1px);
 	corner-shape: var(--itx-corner-shape);
 }
 

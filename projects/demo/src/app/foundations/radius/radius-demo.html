@@ -1,12 +1,12 @@
 <h1>Radius (comparison)</h1>
 <p>
-	Every row renders the components at one candidate house radius, under the proposed rules. This page is a tool for
-	choosing the default, not documentation.
+	Every row renders the components at one candidate house radius. The house radius is 6px with squircle corners;
+	this page compares it with the alternatives.
 </p>
 <ul>
 	<li>Shape-defined corners stay round at every radius: badge, switch, radio.</li>
 	<li>Container corners take the house radius: button, popover, the segmented frame.</li>
-	<li>Small corners take half of it, capped at a quarter of their size: checkbox box, tooltip.</li>
+	<li>Small corners take half of it: tooltip, and the checkbox box, capped at a quarter of its size.</li>
 	<li>Nested corners take the outer radius less the gap, never below zero: the segmented pill.</li>
 </ul>
 

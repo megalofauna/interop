@@ -121,7 +121,7 @@ fieldset at it.
 | Control | Drawing |
 |---|---|
 | Switch | The input is the track, a flex box. `::before` is the thumb. It moves by `margin-inline-start: calc(100% - thumb size)`, a logical property, so right-to-left needs no rule |
-| Radio | The input is the circle (`border-radius: 50%`, fixed). `::before` is the dot, centered with `inset: 0; margin: auto`, and `scale: 0` until checked |
+| Radio | The input is the circle (`--itx-radius-full`, round by shape). `::before` is the dot, centered with `inset: 0; margin: auto`, and `scale: 0` until checked |
 | Checkbox | The input is the box. `::before` fills it and paints the mark through `mask-image`: a check, or a dash when `:indeterminate`. Indeterminate shares the checked fill and wins over checked, as native boxes do. A theme swaps the shape through the mask token |
 
 ## Tokens
@@ -161,7 +161,8 @@ own family.
 | `--itx-checkbox-gap`, `-min-block-size` | `--itx-space-2`, `--itx-space-10` |
 | `--itx-checkbox-font-size`, `-line-height` | the `label` role |
 | `--itx-checkbox-cursor[-disabled]`, `-opacity-disabled` | default, not-allowed, 0.5 |
-| `--itx-checkbox-box-size`, `-box-border-width`, `-box-border-style`, `-box-border-radius` | `--itx-space-5`, 1px, solid, `--itx-radius-sm` |
+| `--itx-checkbox-box-size`, `-box-border-width`, `-box-border-style` | `--itx-space-5`, 1px, solid |
+| `--itx-checkbox-box-border-radius`, `-box-corner-shape` | half the house radius, at most a quarter of the box; the house corner shape |
 | `--itx-checkbox-box-border-color[-hover\|-checked]` | neutral-500/400, 600/300, transparent |
 | `--itx-checkbox-box-background-color[-hover\|-checked\|-checked-hover]` | neutral-50/900, 100/800, 900/50, 700/200 |
 | `--itx-checkbox-mark-mask-image[-indeterminate]` | an SVG check, an SVG dash |

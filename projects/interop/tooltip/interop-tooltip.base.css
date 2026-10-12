@@ -20,7 +20,8 @@
 	--itx-tooltip-border-width: 1px;
 	--itx-tooltip-border-style: solid;
 	--itx-tooltip-border-color: transparent;
-	--itx-tooltip-border-radius: var(--itx-radius-sm);
+	/* A small corner: half the house radius. */
+	--itx-tooltip-border-radius: calc(var(--itx-radius, var(--itx-radius-md)) / 2);
 	--itx-tooltip-corner-shape: var(--itx-corner-shape);
 
 	/* How long the pointer rests on the trigger before the tooltip opens, and how long after it leaves the tooltip closes. */

@@ -73,7 +73,7 @@
 	border-style: solid;
 	border-color: var(--itx-button-color);
 	border-inline-end-color: transparent;
-	border-radius: 50%;
+	border-radius: var(--itx-radius-full);
 	animation: itx-button-spin var(--itx-button-spinner-animation-duration) linear infinite;
 }
 
