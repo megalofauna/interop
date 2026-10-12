@@ -1,13 +1,14 @@
 <h1>Tabs</h1>
 <p class="aka"><em>Also known as tab list, tab group, tab strip, pivot.</em></p>
 <p>
-	Tabs show one of several sections at a time. You write the tab list and the panels; <code>bindTabs(root)</code>
-	from <code>interop</code> adds the keyboard, selection and panel hiding. Each tab names its panel with
-	<code>aria-controls</code>. To choose a value or a view of the same content, use a segmented control.
+	Tabs show one of several sections at a time. You write the tab list and the panels, and each tab names its panel
+	with <code>aria-controls</code>. In Angular, the <code>InteropTabs</code> directive from <code>interop/tabs</code>
+	adds the keyboard, selection and panel hiding. Elsewhere, call <code>bindTabs(root)</code> from
+	<code>interop</code>. To choose a value or a view of the same content, use a segmented control.
 </p>
 
 <h2>Tabs</h2>
-<div #tabs interop-tabs (interop-tabs-change)="changed($event)">
+<div interop-tabs (interop-tabs-change)="changed($event)">
 	<div role="tablist" aria-label="Station systems">
 		<button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
 		<button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
@@ -21,7 +22,7 @@
 
 <h2>Sizes</h2>
 @for (size of ["sm", "md", "lg"]; track size) {
-	<div #tabs interop-tabs [attr.itx-size]="size">
+	<div interop-tabs [attr.itx-size]="size">
 		<div role="tablist" [attr.aria-label]="'Size ' + size">
 			<button type="button" role="tab" [attr.aria-controls]="size + '-a'" aria-selected="true">Overview</button>
 			<button type="button" role="tab" [attr.aria-controls]="size + '-b'" aria-selected="false" tabindex="-1">Settings</button>
@@ -36,7 +37,7 @@
 	<code>interop-tabs="segmented"</code> gives tabs the segmented control's look. They are still tabs: each one shows a
 	different section. To choose a value or a view of the same content, use the segmented control itself.
 </p>
-<div #tabs interop-tabs="segmented">
+<div interop-tabs="segmented">
 	<div role="tablist" aria-label="Report">
 		<button type="button" role="tab" aria-controls="seg-summary" aria-selected="true">Summary</button>
 		<button type="button" role="tab" aria-controls="seg-details" aria-selected="false" tabindex="-1">Details</button>
@@ -46,7 +47,7 @@
 	<section role="tabpanel" id="seg-details" hidden="until-found"><p>Revenue by region and product line.</p></section>
 	<section role="tabpanel" id="seg-history" hidden="until-found"><p>Every quarter since launch.</p></section>
 </div>
-<div #tabs interop-tabs="segmented icon" itx-size="sm">
+<div interop-tabs="segmented icon" itx-size="sm">
 	<div role="tablist" aria-label="Layout">
 		<button type="button" role="tab" aria-controls="seg-list" aria-selected="true"><svg interop-icon name="tabler-minus"></svg><span itx-visually-hidden>List</span></button>
 		<button type="button" role="tab" aria-controls="seg-grid" aria-selected="false" tabindex="-1"><svg interop-icon name="tabler-plus"></svg><span itx-visually-hidden>Grid</span></button>
@@ -57,7 +58,7 @@
 
 <h2>Icons and counts</h2>
 <p>You own the buttons, so icons, badges and tooltips work as anywhere else.</p>
-<div #tabs interop-tabs>
+<div interop-tabs>
 	<div role="tablist" aria-label="Mail">
 		<button type="button" role="tab" aria-controls="inbox" aria-selected="true">
 			<svg interop-icon name="tabler-check"></svg>Inbox <span interop-badge itx-audit-ignore="badge-announcement" [count]="3" [label]="{ one: 'unread message', other: 'unread messages' }"></span>
@@ -69,7 +70,7 @@
 </div>
 
 <h2>A disabled tab</h2>
-<div #tabs interop-tabs>
+<div interop-tabs>
 	<div role="tablist" aria-label="Release">
 		<button type="button" role="tab" aria-controls="draft" aria-selected="true">Draft</button>
 		<button type="button" role="tab" aria-controls="review" disabled>Review</button>
@@ -81,8 +82,8 @@
 </div>
 
 <h2>Manual activation</h2>
-<p>With <code>{{ "{" }} activation: 'manual' {{ "}" }}</code>, the arrow keys move focus and Enter or Space selects.</p>
-<div #manual interop-tabs>
+<p>With <code>activation="manual"</code>, the arrow keys move focus and Enter or Space selects.</p>
+<div interop-tabs activation="manual">
 	<div role="tablist" aria-label="Reports">
 		<button type="button" role="tab" aria-controls="daily" aria-selected="true">Daily</button>
 		<button type="button" role="tab" aria-controls="weekly" aria-selected="false" tabindex="-1">Weekly</button>
@@ -95,7 +96,7 @@
 
 <h2>Many tabs</h2>
 <p>When the tabs overflow, the tab list scrolls.</p>
-<div #tabs interop-tabs class="narrow">
+<div interop-tabs class="narrow">
 	<div role="tablist" aria-label="Month">
 		@for (month of months; track month; let first = $first) {
 			<button type="button" role="tab" [attr.aria-controls]="'m-' + month" [attr.aria-selected]="first">{{ month }}</button>
@@ -107,7 +108,7 @@
 </div>
 
 <h2>Vertical</h2>
-<div #tabs interop-tabs>
+<div interop-tabs>
 	<div role="tablist" aria-label="Account" aria-orientation="vertical">
 		<button type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button>
 		<button type="button" role="tab" aria-controls="security" aria-selected="false" tabindex="-1">Security</button>
@@ -119,7 +120,7 @@
 </div>
 
 <h2>Right to left</h2>
-<div #tabs interop-tabs dir="rtl" lang="ar">
+<div interop-tabs dir="rtl" lang="ar">
 	<div role="tablist" aria-label="الأقسام">
 		<button type="button" role="tab" aria-controls="r1" aria-selected="true">نظرة عامة</button>
 		<button type="button" role="tab" aria-controls="r2" aria-selected="false" tabindex="-1">الإعدادات</button>

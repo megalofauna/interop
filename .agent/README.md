@@ -14,7 +14,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Popover directive deep-dive | [components/popover.md](components/popover.md) |
 | Stepper component deep-dive | [components/stepper.md](components/stepper.md) |
 | Table component deep-dive | [components/table.md](components/table.md) |
-| Tabs — retired, and why the strip is not generated | [components/tabs.md](components/tabs.md) |
+| Tabs (consumer markup, bindTabs, InteropTabs) | [components/tabs.md](components/tabs.md) |
 | Toast component deep-dive | [components/toast.md](components/toast.md) |
 | Resizable directive deep-dive | [components/resizable.md](components/resizable.md) |
 | Scroll-area component deep-dive | [components/scroll-area.md](components/scroll-area.md) |
