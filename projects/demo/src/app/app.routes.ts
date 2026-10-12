@@ -13,6 +13,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/button/button-demo").then((m) => m.ButtonDemo),
 	},
 	{
+		path: "components/checkbox",
+		title: "Checkbox",
+		loadComponent: () => import("./components/checkbox/checkbox-demo").then((m) => m.CheckboxDemo),
+	},
+	{
 		path: "components/code-block",
 		title: "Code block",
 		loadComponent: () => import("./components/code-block/code-block-demo").then((m) => m.CodeBlockDemo),
@@ -26,6 +31,11 @@ export const routes: Routes = [
 		path: "components/popover",
 		title: "Popover",
 		loadComponent: () => import("./components/popover/popover-demo").then((m) => m.PopoverDemo),
+	},
+	{
+		path: "components/radio-group",
+		title: "Radio group",
+		loadComponent: () => import("./components/radio-group/radio-group-demo").then((m) => m.RadioGroupDemo),
 	},
 	{
 		path: "components/scroll-area",

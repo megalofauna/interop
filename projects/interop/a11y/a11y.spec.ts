@@ -59,8 +59,27 @@ const openPopovers = (element: Element) => element.querySelectorAll('[popover]')
 			<div interop-scroll-area aria-labelledby="notes"><p>Note one.</p><p>Note two.</p></div>
 			<label interop-switch><input type="checkbox" role="switch" /> Notifications</label>
 			<label interop-switch><input type="checkbox" role="switch" checked /> Dark mode</label>
-			<label interop-switch>Autosave <input type="checkbox" role="switch" disabled /></label>
+			<label interop-switch><input type="checkbox" role="switch" disabled /> Autosave</label>
 			<label interop-switch itx-size="lg"><input type="checkbox" switch /> Bluetooth</label>
+			<fieldset interop-radio-group>
+				<legend>Shipping</legend>
+				<label><input type="radio" name="shipping" value="standard" checked /> Standard</label>
+				<label><input type="radio" name="shipping" value="express" /> Express</label>
+				<label><input type="radio" name="shipping" value="pickup" disabled /> Pickup</label>
+			</fieldset>
+			<label interop-checkbox><input type="checkbox" name="terms" required /> I accept the <a href="/terms">terms</a></label>
+			<label interop-checkbox itx-size="lg"><input type="checkbox" checked disabled /> Saved</label>
+			<fieldset interop-checkbox-group>
+				<legend>Toppings</legend>
+				<label interop-checkbox><input type="checkbox" [indeterminate]="true" /> All toppings</label>
+				<label interop-checkbox><input type="checkbox" name="topping" value="cheese" checked /> Cheese</label>
+				<label interop-checkbox><input type="checkbox" name="topping" value="olives" /> Olives</label>
+			</fieldset>
+			<fieldset interop-radio-group itx-size="lg" disabled>
+				<legend>Size</legend>
+				<label><input type="radio" name="size" value="s" /> Small</label>
+				<label><input type="radio" name="size" value="l" /> Large</label>
+			</fieldset>
 			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
 	`,
@@ -111,6 +130,23 @@ describe('accessibility (axe-core)', () => {
 	it('catches an icon button with no label, so the gate is real', async () => {
 		document.body.innerHTML = '<main><button type="button"><svg aria-hidden="true"></svg></button></main>';
 		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
+	});
+
+	it('leaves the mixed state to the browser, with no aria-checked', async () => {
+		const element = await render();
+		const mixed = element.querySelector<HTMLInputElement>('[interop-checkbox-group] input')!;
+		expect(mixed.indeterminate).toBe(true);
+		expect(element.querySelector('input[aria-checked]')).toBeNull();
+	});
+
+	it('catches a checkbox with no label', async () => {
+		document.body.innerHTML = '<main><input type="checkbox"></main>';
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^label:/));
+	});
+
+	it('catches a radio with no label', async () => {
+		document.body.innerHTML = '<main><fieldset><legend>Size</legend><input type="radio" name="s"></fieldset></main>';
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^label:/));
 	});
 
 	it('catches a switch with no label', async () => {

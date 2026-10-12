@@ -4,7 +4,11 @@
  *   <label interop-switch><input type="checkbox" role="switch"> Dark mode</label>
  *   <label interop-switch itx-size="lg"><input type="checkbox" role="switch"> Dark mode</label>
  *
- * The input is the track and its ::before is the thumb. Every state comes from the input's own
+ * The input is the track and its ::before is the thumb. The track sits at the label's inline start,
+ * centered on the first line of text, and the text wraps beside it. The text stays in normal flow,
+ * so a link or other inline element in the label wraps with it.
+ *
+ * Every state comes from the input's own
  * pseudo-classes, so a form reset, autofill, or a disabled fieldset needs no script. An input
  * without `role="switch"` or `switch` keeps the native checkbox look, which shows the missing role.
  *
@@ -19,10 +23,13 @@
  */
 
 :where(label[interop-switch]) {
-	display: inline-flex;
-	align-items: center;
-	gap: var(--itx-switch-gap);
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
 	min-block-size: var(--itx-switch-min-block-size);
+	/* One line of text sits in the middle of the minimum height. More lines grow the label downward. */
+	padding-block: calc((var(--itx-switch-min-block-size) - 1lh) / 2);
+	padding-inline-start: calc(var(--itx-switch-track-inline-size) + var(--itx-switch-gap));
 	font-size: var(--itx-switch-font-size);
 	line-height: var(--itx-switch-line-height);
 	cursor: var(--itx-switch-cursor);
@@ -34,17 +41,16 @@
 	cursor: var(--itx-switch-cursor-disabled);
 }
 
-/*
- * The track. Content-box sizing makes the thumb size the content height, so the thumb travels
- * `100% - thumb size` with no border or padding arithmetic.
- */
+/* The track. It is centered on the first line: half the minimum height down, less half its own. */
 :where(label[interop-switch] > input:is([role="switch"], [switch])) {
 	appearance: none;
-	box-sizing: content-box;
-	display: inline-flex;
-	flex-shrink: 0;
+	position: absolute;
+	inset-block-start: calc((var(--itx-switch-min-block-size) - var(--itx-switch-track-block-size)) / 2);
+	inset-inline-start: 0;
+	box-sizing: border-box;
+	display: flex;
 	inline-size: var(--itx-switch-track-inline-size);
-	block-size: var(--itx-switch-thumb-size);
+	block-size: var(--itx-switch-track-block-size);
 	margin: 0;
 	padding: var(--itx-switch-track-padding);
 	background-color: var(--itx-switch-track-background-color);
@@ -89,7 +95,7 @@
 	);
 }
 
-/* A logical margin, so the thumb travels toward inline-end in either writing direction. */
+/* The thumb travels the track's content width less its own. A logical margin moves it toward inline-end in either writing direction. */
 :where(label[interop-switch] > input:is([role="switch"], [switch]):checked)::before {
 	margin-inline-start: calc(100% - var(--itx-switch-thumb-size));
 	background-color: var(--itx-switch-thumb-background-color-checked);

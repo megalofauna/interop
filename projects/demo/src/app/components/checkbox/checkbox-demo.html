@@ -1,0 +1,138 @@
+<h1>Checkbox</h1>
+<p class="aka">Also known as check box, checks, checkboxes, tick box, tri-state or mixed checkbox.</p>
+<p>
+	A checkbox is a native checkbox inside a <code>label interop-checkbox</code>. The input draws the box and its mark.
+	Each checkbox is its own yes or no, so it stands alone or in a group. It submits with its form and needs no
+	script.
+</p>
+
+<h2>On its own</h2>
+<div class="stack">
+	<label interop-checkbox><input type="checkbox" name="news" /> Email me product news</label>
+	<label interop-checkbox><input type="checkbox" name="saved" checked /> Remember this device</label>
+</div>
+
+<h2>Long label</h2>
+<p>The box is centered on the first line of text, and the text wraps beside it. Links wrap with the text.</p>
+<div class="stack narrow">
+	<label interop-checkbox>
+		<input type="checkbox" name="terms" />
+		I have read and accept the <a href="#terms">terms of service</a> and the
+		<a href="#privacy">privacy policy</a>
+	</label>
+</div>
+
+<h2>Disabled</h2>
+<div class="stack">
+	<label interop-checkbox><input type="checkbox" disabled /> Unchecked and disabled</label>
+	<label interop-checkbox><input type="checkbox" checked disabled /> Checked and disabled</label>
+</div>
+
+<h2>A group</h2>
+<p>
+	A group is a <code>fieldset interop-checkbox-group</code> named by its legend. Boxes that share a
+	<code>name</code> submit every checked value.
+</p>
+<fieldset interop-checkbox-group>
+	<legend>Notify me about</legend>
+	<label interop-checkbox><input type="checkbox" name="notify" value="replies" checked /> Replies</label>
+	<label interop-checkbox><input type="checkbox" name="notify" value="mentions" /> Mentions</label>
+	<label interop-checkbox><input type="checkbox" name="notify" value="digest" /> Weekly digest</label>
+</fieldset>
+<fieldset interop-checkbox-group disabled>
+	<legend>Sync (a disabled fieldset)</legend>
+	<label interop-checkbox><input type="checkbox" checked /> Contacts</label>
+	<label interop-checkbox><input type="checkbox" /> Calendar</label>
+</fieldset>
+
+<h2>Select all, from a signal</h2>
+<p>
+	Indeterminate is a property, not an attribute. In Angular, bind <code>[indeterminate]</code> on the input. Here the
+	select-all box reads the same signal as the toppings.
+</p>
+<fieldset interop-checkbox-group>
+	<legend>Toppings</legend>
+	<label interop-checkbox>
+		<input type="checkbox" [checked]="all()" [indeterminate]="some()" (change)="setAll($any($event.target).checked)" />
+		All toppings
+	</label>
+	<div class="stack nested">
+		<label interop-checkbox>
+			<input type="checkbox" name="topping" value="cheese" [checked]="toppings().cheese" (change)="set('cheese', $any($event.target).checked)" />
+			Cheese
+		</label>
+		<label interop-checkbox>
+			<input type="checkbox" name="topping" value="olives" [checked]="toppings().olives" (change)="set('olives', $any($event.target).checked)" />
+			Olives
+		</label>
+		<label interop-checkbox>
+			<input type="checkbox" name="topping" value="peppers" [checked]="toppings().peppers" (change)="set('peppers', $any($event.target).checked)" />
+			Peppers
+		</label>
+	</div>
+</fieldset>
+
+<h2>Select all, with bindSelectAll()</h2>
+<p>
+	Without a model, <code>bindSelectAll(parent)</code> keeps the select-all box in step with the other boxes in its
+	fieldset. It leaves disabled boxes alone, fires <code>change</code> on each box it changes, and follows a form
+	reset. Give the select-all box no <code>name</code>, so it does not submit.
+</p>
+<form>
+	<fieldset interop-checkbox-group>
+		<legend>Columns</legend>
+		<label interop-checkbox><input #helperParent type="checkbox" /> All columns</label>
+		<div class="stack nested">
+			<label interop-checkbox><input type="checkbox" name="column" value="name" checked /> Name</label>
+			<label interop-checkbox><input type="checkbox" name="column" value="email" /> Email</label>
+			<label interop-checkbox><input type="checkbox" name="column" value="id" checked disabled /> ID (always shown)</label>
+		</div>
+	</fieldset>
+	<div class="row">
+		<button interop-button type="reset">Reset</button>
+	</div>
+</form>
+
+<h2>Choose at least one</h2>
+<p>
+	<code>required</code> on a checkbox means that box must be checked, so it cannot express "at least one". Instead,
+	set <code>setCustomValidity()</code> on the first box whenever the group changes. The browser then blocks submit
+	and shows the message.
+</p>
+<form (submit)="submit($event)" (reset)="afterReset()">
+	<fieldset #atLeastOne interop-checkbox-group aria-describedby="days-hint" (change)="checkAtLeastOne()">
+		<legend>Delivery days</legend>
+		<p class="hint" id="days-hint">Choose at least one.</p>
+		<label interop-checkbox><input type="checkbox" name="day" value="mon" /> Monday</label>
+		<label interop-checkbox><input type="checkbox" name="day" value="wed" /> Wednesday</label>
+		<label interop-checkbox><input type="checkbox" name="day" value="fri" /> Friday</label>
+	</fieldset>
+	<div class="row">
+		<button interop-button type="submit">Submit</button>
+		<button interop-button type="reset">Reset</button>
+	</div>
+	@if (submitted(); as days) {
+		<p>Submitted: {{ days }}.</p>
+	}
+</form>
+
+<h2>Right to left</h2>
+<div class="stack" dir="rtl" lang="ar">
+	<label interop-checkbox><input type="checkbox" checked /> تذكرني</label>
+</div>
+
+<h2>Sizes</h2>
+<p>The default size has no attribute. <code>itx-size="lg"</code> on the label makes the checkbox larger.</p>
+<div class="stack">
+	<label interop-checkbox><input type="checkbox" checked /> Default</label>
+	<label interop-checkbox itx-size="lg"><input type="checkbox" checked /> Large</label>
+</div>
+
+<h2>Custom tokens</h2>
+<p>
+	Set <code>--itx-checkbox-*</code> properties on the label, or on a class that matches it. The mark is a mask, so
+	<code>--itx-checkbox-mark-mask-image</code> swaps its shape.
+</p>
+<div class="stack">
+	<label interop-checkbox class="heavy"><input type="checkbox" checked /> Heavier check</label>
+</div>

@@ -7,10 +7,8 @@
 	--itx-switch-cursor-disabled: not-allowed;
 	--itx-switch-opacity-disabled: 0.5;
 
-	/* Outer height: 24px, the WCAG 2.5.8 minimum without the label. */
 	--itx-switch-track-block-size: var(--itx-space-6);
-	/* Content width. The thumb travels one thumb width. */
-	--itx-switch-track-inline-size: calc(2 * var(--itx-switch-thumb-size));
+	--itx-switch-track-inline-size: calc(var(--itx-switch-track-block-size) * 1.75);
 	--itx-switch-track-padding: var(--itx-space-0_5);
 	--itx-switch-track-border-width: 1px;
 	--itx-switch-track-border-style: solid;

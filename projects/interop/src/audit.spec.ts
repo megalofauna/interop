@@ -172,6 +172,51 @@ describe('auditInterop', () => {
 		`);
 		expect(rules()).toEqual(['tooltip-label-in-name']);
 	});
+
+	it('flags a control label with no text, and accepts text or a label on the input', () => {
+		render(`
+			<label interop-switch><input type="checkbox" role="switch"></label>
+			<label interop-checkbox><input type="checkbox"> Accept terms</label>
+			<fieldset interop-radio-group><legend>Size</legend>
+				<label><input type="radio" name="s" aria-label="Small"></label>
+				<label><input type="radio" name="s"> Large</label>
+			</fieldset>
+		`);
+		expect(rules()).toEqual(['control-name']);
+	});
+
+	it('flags aria-checked on a native checkbox or radio', () => {
+		render('<label interop-checkbox><input type="checkbox" aria-checked="mixed"> All</label>');
+		expect(rules()).toEqual(['control-aria-checked']);
+	});
+
+	it('flags a group with no legend, and accepts a legend or a label', () => {
+		render(`
+			<fieldset interop-checkbox-group><label interop-checkbox><input type="checkbox"> A</label></fieldset>
+			<fieldset interop-checkbox-group><legend>Toppings</legend><label interop-checkbox><input type="checkbox"> A</label></fieldset>
+			<fieldset interop-checkbox-group aria-label="Toppings"><label interop-checkbox><input type="checkbox"> A</label></fieldset>
+		`);
+		expect(rules()).toEqual(['group-name']);
+	});
+
+	it('flags radios that do not share a name', () => {
+		const group = (a: string, b: string) =>
+			`<fieldset interop-radio-group><legend>Size</legend><label><input type="radio" ${a}> S</label><label><input type="radio" ${b}> L</label></fieldset>`;
+		render(group('name="a"', 'name="b"') + group('', '') + group('name="c"', 'name="c"'));
+		expect(rules()).toEqual(['radio-group-shared-name', 'radio-group-shared-name']);
+	});
+
+	it('flags a checkbox group where every box is required', () => {
+		const group = (a: string, b: string) =>
+			`<fieldset interop-checkbox-group><legend>T</legend><label interop-checkbox><input type="checkbox" ${a}> A</label><label interop-checkbox><input type="checkbox" ${b}> B</label></fieldset>`;
+		render(group('required', 'required') + group('required', ''));
+		expect(rules()).toEqual(['checkbox-group-required']);
+	});
+
+	it('flags a radio group with one radio', () => {
+		render('<fieldset interop-radio-group><legend>Agree</legend><label><input type="radio" name="a"> Yes</label></fieldset>');
+		expect(rules()).toEqual(['radio-group-options']);
+	});
 });
 
 describe('watchInterop', () => {

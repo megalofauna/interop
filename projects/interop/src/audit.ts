@@ -22,6 +22,8 @@ const BUTTONS = 'button[interop-button], button:has(svg[interop-icon])';
 const BADGES = '[interop-badge]:not([hidden])';
 const LIVE = '[role="status"], [aria-live]';
 const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabindex], [contenteditable]';
+const CONTROL_LABELS = 'label:is([interop-switch], [interop-checkbox]), fieldset[interop-radio-group] label:has(> input[type="radio"])';
+const GROUPS = 'fieldset:is([interop-radio-group], [interop-checkbox-group])';
 
 const RULES: Record<string, { selector: string; check: Rule }> = {
 	'button-name': {
@@ -187,6 +189,75 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						problem: 'This control’s label tooltip replaces its visible text with different words.',
 						reason: 'A label tooltip becomes the whole name, so a voice control user who says the visible text cannot reach the control (WCAG 2.5.3).',
 						advice: 'Use a describing tooltip, interop-tooltip without "label", or start the tooltip with the visible text.',
+					}
+				: null;
+		},
+	},
+	'control-name': {
+		selector: CONTROL_LABELS,
+		check: (label) => {
+			const input = label.querySelector(':scope > input');
+			return spokenText(label) || (input && ariaName(input))
+				? null
+				: {
+						problem: 'This control’s label has no text.',
+						reason: 'A screen reader announces only "checkbox", "switch" or "radio button", with nothing to say what it controls.',
+						advice: 'Put the text inside the label, after the input: <label interop-checkbox><input type="checkbox"> Accept terms</label>.',
+					};
+		},
+	},
+	'control-aria-checked': {
+		selector: 'input:is([type="checkbox"], [type="radio"])[aria-checked]',
+		check: () => ({
+			problem: 'This checkbox or radio has aria-checked.',
+			reason: 'The browser already reports a native input’s state. aria-checked overrides it and goes stale, e.g. "mixed" after the user checks the box.',
+			advice: 'Remove aria-checked. For a mixed checkbox, set the indeterminate property: [indeterminate]="…" in Angular.',
+		}),
+	},
+	'group-name': {
+		selector: GROUPS,
+		check: (fieldset) =>
+			ariaName(fieldset) || fieldset.querySelector(':scope > legend')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This group has no legend.',
+						reason: 'A screen reader announces the options without the question they answer.',
+						advice: 'Add a <legend> as the fieldset’s first child, e.g. <legend>Shipping</legend>.',
+					},
+	},
+	'radio-group-shared-name': {
+		selector: 'fieldset[interop-radio-group]',
+		check: (fieldset) => {
+			const names = new Set(Array.from(fieldset.querySelectorAll('input[type="radio"]'), (radio) => radio.getAttribute('name') ?? ''));
+			return names.size > 1 || names.has('')
+				? {
+						problem: 'The radios in this group do not all share one name.',
+						reason: 'Radios with the same name are one control: one checked at a time, one tab stop, arrow keys, and required for the group. Without it each radio stands alone.',
+						advice: 'Give every radio the same name="…". Angular’s formControlName does not set it, so add name as well.',
+					}
+				: null;
+		},
+	},
+	'radio-group-options': {
+		selector: 'fieldset[interop-radio-group]',
+		check: (fieldset) =>
+			fieldset.querySelectorAll('input[type="radio"]').length < 2
+				? {
+						problem: 'This radio group has fewer than two radios.',
+						reason: 'A radio cannot be unchecked once checked, so a single radio is a choice the user cannot take back.',
+						advice: 'Add the other options, or use a checkbox for a single yes or no.',
+					}
+				: null,
+	},
+	'checkbox-group-required': {
+		selector: 'fieldset[interop-checkbox-group]',
+		check: (fieldset) => {
+			const boxes = Array.from(fieldset.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
+			return boxes.length > 1 && boxes.every((box) => box.required)
+				? {
+						problem: 'Every checkbox in this group is required.',
+						reason: 'required on a checkbox means that box must be checked, so the form will not submit until all of them are.',
+						advice: 'For "choose at least one", remove required and check the group: setCustomValidity() on one box, or a validator in your form model.',
 					}
 				: null;
 		},
