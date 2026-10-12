@@ -64,3 +64,7 @@ td {
 	vertical-align: top;
 	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
+
+figure[interop-code-block] {
+	margin-block-start: var(--itx-space-3);
+}
