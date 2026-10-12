@@ -13,6 +13,11 @@ export class CheckboxDemo {
 	protected readonly all = computed(() => Object.values(this.toppings()).every(Boolean));
 	protected readonly some = computed(() => Object.values(this.toppings()).some(Boolean) && !this.all());
 	protected readonly submitted = signal<string | null>(null);
+	protected readonly chipSizes = [
+		{ value: "sm", label: "small" },
+		{ value: null, label: "default" },
+		{ value: "lg", label: "large" },
+	];
 
 	private readonly helperParent = viewChild.required<ElementRef<HTMLInputElement>>("helperParent");
 	private readonly atLeastOne = viewChild.required<ElementRef<HTMLFieldSetElement>>("atLeastOne");

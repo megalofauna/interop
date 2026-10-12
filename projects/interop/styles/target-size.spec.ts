@@ -9,6 +9,8 @@ import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { l
 // @ts-expect-error The text loader turns the file into a string.
 import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import chipsCss from './chips.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
@@ -37,6 +39,7 @@ describe('target size', () => {
 		['radio label', radioGroupCss, '--itx-radio-group-label-min-block-size'],
 		['segmented control', segmentedCss, '--itx-segmented-block-size'],
 		['tab', tabsCss, '--itx-tabs-tab-min-block-size'],
+		['chip', chipsCss, '--itx-chips-chip-min-block-size'],
 		['checkbox label', checkboxCss, '--itx-checkbox-min-block-size'],
 	] as const;
 

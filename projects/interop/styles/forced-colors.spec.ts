@@ -13,12 +13,14 @@ import cardsCss from './cards.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stepsCss from '../steps/interop-steps.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import chipsCss from './chips.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
 
 // Forced colors replace every background with Canvas. A component that shows its state with a fill
 // (a checked box, a selected bar, a pill, a dot) loses that state unless it maps it to system colors.
 // jsdom cannot emulate forced colors, so this checks each such stylesheet keeps its rules.
-const files = { badgeCss, checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss } as Record<string, string>;
+const files = { badgeCss, checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss } as Record<string, string>;
 
 describe('forced colors', () => {
 	for (const [file, css] of Object.entries(files)) {
@@ -28,6 +30,6 @@ describe('forced colors', () => {
 	}
 
 	it('maps the selected and checked states to Highlight', () => {
-		for (const css of [checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss]) expect(css).toContain('Highlight');
+		for (const css of [checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss]) expect(css).toContain('Highlight');
 	});
 });

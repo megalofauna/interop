@@ -25,6 +25,8 @@ import cardsCss from './cards.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stepsCss from '../steps/interop-steps.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import chipsCss from './chips.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
@@ -33,7 +35,7 @@ import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: '
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -288,6 +290,25 @@ describe('step indicator', () => {
 		});
 		it(`has a current number of 4.5:1 on its disc in ${label}`, () => {
 			expect(contrast(steps('indicator-color-current', scheme), steps('indicator-background-color-current', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
+describe('chips', () => {
+	const chips = (name: string, scheme: 0 | 1) => token(`--itx-chips-chip-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has chip text of 4.5:1 against the page, and checked text of 4.5:1 on its fill, in ${label}`, () => {
+			expect(contrast(chips('color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			for (const fill of ['background-color-checked', 'background-color-checked-hover']) {
+				expect(contrast(chips('color-checked', scheme), chips(fill, scheme))).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		// WCAG 1.4.11: the pill's edge, and the checked fill, against the page.
+		it(`has a border and a checked fill of 3:1 against the page in ${label}`, () => {
+			for (const name of ['border-color', 'border-color-hover', 'background-color-checked']) {
+				expect(contrast(chips(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			}
 		});
 	}
 });

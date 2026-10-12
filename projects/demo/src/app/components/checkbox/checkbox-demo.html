@@ -45,6 +45,22 @@
 	<label interop-checkbox><input type="checkbox" /> Calendar</label>
 </fieldset>
 
+<h2>Chips</h2>
+<p>
+	<code>interop-checkbox-group="chips"</code> draws each option as a pill: filter chips. A checked chip fills and
+	shows a check, so the state does not rely on color. <code>itx-size</code> on the fieldset makes them smaller or
+	larger.
+</p>
+@for (size of chipSizes; track size.value) {
+	<fieldset interop-checkbox-group="chips" [attr.itx-size]="size.value">
+		<legend>Topics ({{ size.label }})</legend>
+		<label interop-checkbox><input type="checkbox" name="topic" value="design" checked /> Design</label>
+		<label interop-checkbox><input type="checkbox" name="topic" value="code" /> Code</label>
+		<label interop-checkbox><input type="checkbox" name="topic" value="research" checked /> Research</label>
+		<label interop-checkbox><input type="checkbox" name="topic" value="ops" disabled /> Operations</label>
+	</fieldset>
+}
+
 <h2>Cards</h2>
 <p>
 	<code>interop-checkbox-group="cards"</code> is the same card template as the radio group's, for choosing several

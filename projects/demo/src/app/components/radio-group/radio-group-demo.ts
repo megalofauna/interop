@@ -15,6 +15,7 @@ export class RadioGroupDemo {
 	protected readonly theme = signal("system");
 	protected readonly examples = examples;
 	protected readonly submitted = signal<string | null>(null);
+	protected readonly sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 	protected readonly plans = [
 		{ id: "free", name: "Free", price: "$0", summary: "Three projects, community support.", popular: false },
 		{ id: "pro", name: "Pro", price: "$29 a month", summary: "Unlimited projects, priority support.", popular: true },

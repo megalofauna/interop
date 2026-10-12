@@ -144,6 +144,17 @@ const reveal = (element: Element) => {
 				<li aria-current="step">Documents</li>
 				<li>Sign <span itx-visually-hidden>not completed</span></li>
 			</ol>
+			<fieldset interop-checkbox-group="chips">
+				<legend>Topics</legend>
+				<label interop-checkbox><input type="checkbox" name="topic" value="design" checked /> Design</label>
+				<label interop-checkbox><input type="checkbox" name="topic" value="code" /> Code</label>
+				<label interop-checkbox><input type="checkbox" name="topic" value="ops" disabled /> Operations</label>
+			</fieldset>
+			<fieldset interop-radio-group="chips" itx-size="sm">
+				<legend>Shirt size</legend>
+				<label><input type="radio" name="shirt" value="s" checked /> S</label>
+				<label><input type="radio" name="shirt" value="m" /> M</label>
+			</fieldset>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>

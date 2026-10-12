@@ -34,3 +34,4 @@
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";
+@import "./styles/chips.css";
