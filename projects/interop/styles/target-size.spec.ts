@@ -11,6 +11,8 @@ import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: '
 // @ts-expect-error The text loader turns the file into a string.
 import chipsCss from './chips.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import tagsCss from '../tags/interop-tags.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
@@ -40,6 +42,7 @@ describe('target size', () => {
 		['segmented control', segmentedCss, '--itx-segmented-block-size'],
 		['tab', tabsCss, '--itx-tabs-tab-min-block-size'],
 		['chip', chipsCss, '--itx-chips-chip-min-block-size'],
+		['tag remove button', tagsCss, '--itx-tags-button-size'],
 		['checkbox label', checkboxCss, '--itx-checkbox-min-block-size'],
 	] as const;
 

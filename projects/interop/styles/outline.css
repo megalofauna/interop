@@ -19,7 +19,8 @@
 	label[interop-checkbox] > input[type="checkbox"]:focus-visible,
 	[interop-tabs] > [role="tablist"] > [role="tab"]:focus-visible,
 	[interop-tabs] > [role="tabpanel"]:focus-visible,
-	fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label:has(> input:focus-visible)
+	fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label:has(> input:focus-visible),
+	ul[interop-tags] > li > button:focus-visible
 ) {
 	outline-width: var(--itx-outline-width);
 	outline-style: var(--itx-outline-style);

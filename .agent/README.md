@@ -15,6 +15,8 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Stepper — retired; step indicator, recipe and bindSteps instead | [components/stepper.md](components/stepper.md) |
 | Steps (step indicator, multi-step form, bindSteps) | [components/steps.md](components/steps.md) |
 | Table component deep-dive | [components/table.md](components/table.md) |
+| Tags (removable values, tag input, bindTags, bindTagInput) | [components/tags.md](components/tags.md) |
+| Chips — retired; mapped to checkbox, radio, badge, button and tags | [components/chip.md](components/chip.md) |
 | Tabs (consumer markup, bindTabs, InteropTabs) | [components/tabs.md](components/tabs.md) |
 | Toast component deep-dive | [components/toast.md](components/toast.md) |
 | Resizable directive deep-dive | [components/resizable.md](components/resizable.md) |

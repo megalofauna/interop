@@ -1,0 +1,43 @@
+:where(ul[interop-tags]) {
+	--itx-tags-gap: var(--itx-space-2);
+	--itx-tags-tag-min-block-size: var(--itx-space-8);
+	--itx-tags-tag-padding-inline: var(--itx-space-3);
+	--itx-tags-tag-column-gap: var(--itx-space-1);
+	--itx-tags-tag-font-size: var(--itx-font-size-p-sm);
+	--itx-tags-tag-line-height: var(--itx-line-height-p-sm);
+	/* 4.5:1 against the page (WCAG 1.4.3). */
+	--itx-tags-tag-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-tags-tag-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-tags-tag-border-width: 1px;
+	--itx-tags-tag-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-tags-tag-border-radius: var(--itx-radius-full);
+
+	--itx-tags-button-size: var(--itx-space-6);
+	/* Room between the button and the pill's edge. */
+	--itx-tags-button-inset: var(--itx-space-1);
+	--itx-tags-button-border-radius: var(--itx-radius-full);
+	--itx-tags-button-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
+	--itx-tags-button-cursor: default;
+	--itx-tags-button-cursor-disabled: not-allowed;
+	--itx-tags-button-opacity-disabled: 0.5;
+
+	--itx-tags-transition-duration: var(--itx-transition-duration);
+	--itx-tags-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+/* The small step keeps the button at 24px, the target-size floor, so the pill is as tall as it. */
+:where(ul[interop-tags][itx-size="sm"]) {
+	--itx-tags-tag-min-block-size: var(--itx-space-6);
+	--itx-tags-tag-padding-inline: var(--itx-space-2_5);
+	--itx-tags-tag-font-size: var(--itx-font-size-caption);
+	--itx-tags-tag-line-height: var(--itx-line-height-caption);
+	--itx-tags-button-inset: var(--itx-space-0);
+}
+
+:where(ul[interop-tags][itx-size="lg"]) {
+	--itx-tags-tag-min-block-size: var(--itx-space-10);
+	--itx-tags-tag-padding-inline: var(--itx-space-4);
+	--itx-tags-tag-font-size: var(--itx-font-size-p);
+	--itx-tags-tag-line-height: var(--itx-line-height-p);
+	--itx-tags-button-size: var(--itx-space-8);
+}

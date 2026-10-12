@@ -280,6 +280,21 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('tags', () => {
+		it('accepts remove buttons named for their tag', () => {
+			render(`<ul interop-tags role="list" aria-label="Tags">
+				<li>Football <button type="button"><span itx-visually-hidden>Remove Football</span></button></li>
+				<li>Cricket <button type="button" aria-label="Remove Cricket"></button></li>
+			</ul>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a remove button with a generic name, and a list without role="list"', () => {
+			render('<ul interop-tags aria-label="Tags"><li>Football <button type="button">Remove</button></li></ul>');
+			expect(rules().sort()).toEqual(['tags-list-role', 'tags-remove-name']);
+		});
+	});
+
 	describe('multi-step form', () => {
 		it('accepts steps with a legend, hidden plainly', () => {
 			render('<form interop-steps-form><fieldset><legend>A</legend></fieldset><fieldset hidden><legend>B</legend></fieldset></form>');

@@ -9,6 +9,7 @@ export { bindScrollArea } from './bind-scroll-area';
 export { bindSelectAll } from './bind-select-all';
 export { bindSteps, type StepsChangeDetail, type StepsOptions } from './bind-steps';
 export { bindTabs, type TabsChangeDetail, type TabsOptions } from './bind-tabs';
+export { bindTagInput, bindTags, type TagAddDetail, type TagInputOptions, type TagsOptions } from './bind-tags';
 export { bindTooltip } from './bind-tooltip';
 export { guardActivation } from './guard-activation';
 export { scopeSelectAll } from './scope-select-all';

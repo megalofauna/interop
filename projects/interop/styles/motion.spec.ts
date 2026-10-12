@@ -77,8 +77,15 @@ import stepsStructureCss from '../steps/interop-steps.structure.css' with { load
 // @ts-expect-error The text loader turns the file into a string.
 import chipsCss from './chips.css' with { loader: 'text' };
 
+// @ts-expect-error The text loader turns the file into a string.
+import tagsBaseCss from '../tags/interop-tags.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tagsStructureCss from '../tags/interop-tags.structure.css' with { loader: 'text' };
+
 // Every stylesheet in the library, read as text. Add a new one here.
 const sheets = {
+	'tags/interop-tags.base.css': tagsBaseCss,
+	'tags/interop-tags.structure.css': tagsStructureCss,
 	'styles/chips.css': chipsCss,
 	'steps/interop-steps.base.css': stepsBaseCss,
 	'steps/interop-steps.structure.css': stepsStructureCss,

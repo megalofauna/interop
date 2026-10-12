@@ -1,0 +1,89 @@
+/*
+ * Tags: a list of values the user can remove, such as applied filters or the entries of a tag input.
+ * Each tag is its text, a button that removes it, and usually a hidden input that submits its value.
+ *
+ *   <ul interop-tags role="list" aria-label="Selected tags">
+ *     <li>
+ *       Football
+ *       <button type="button"><span itx-visually-hidden>Remove Football</span><svg interop-icon name="tabler-x"></svg></button>
+ *       <input type="hidden" name="tags" value="football">
+ *     </li>
+ *   </ul>
+ *
+ * A tag that cannot be removed is a badge. The remove button's name says what it removes; a name
+ * like "Remove" alone is the same for every tag. Every remove button is a tab stop; there are no
+ * arrow keys and no Delete shortcut. bindTags() keeps focus in place when a tag goes, and
+ * bindTagInput() turns a text input into a way to add them. `role="list"` stays because Safari drops
+ * a list's semantics when its markers are removed.
+ *
+ * Also known as removable chips, input chips, tokens, pills, dismissible tags.
+ */
+
+:where(ul[interop-tags]) {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-tags-gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+:where(ul[interop-tags] > li) {
+	display: inline-flex;
+	align-items: center;
+	column-gap: var(--itx-tags-tag-column-gap);
+	box-sizing: border-box;
+	min-block-size: var(--itx-tags-tag-min-block-size);
+	/* The remove button sits at the inline end, so the padding there is the button's own. */
+	padding-inline: var(--itx-tags-tag-padding-inline) var(--itx-tags-button-inset);
+	font-size: var(--itx-tags-tag-font-size);
+	line-height: var(--itx-tags-tag-line-height);
+	white-space: nowrap;
+	color: var(--itx-tags-tag-color);
+	background-color: var(--itx-tags-tag-background-color);
+	border-width: var(--itx-tags-tag-border-width);
+	border-style: solid;
+	border-color: var(--itx-tags-tag-border-color);
+	border-radius: var(--itx-tags-tag-border-radius);
+}
+
+/* The remove button: a 24px square at least (WCAG 2.5.8), round, inside the pill. */
+:where(ul[interop-tags] > li > button) {
+	appearance: none;
+	display: inline-grid;
+	place-content: center;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	inline-size: var(--itx-tags-button-size);
+	block-size: var(--itx-tags-button-size);
+	margin: 0;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	background-color: transparent;
+	border: 0;
+	border-radius: var(--itx-tags-button-border-radius);
+	cursor: var(--itx-tags-button-cursor);
+	transition-property: background-color;
+	transition-duration: var(--itx-tags-transition-duration);
+	transition-timing-function: var(--itx-tags-transition-timing-function);
+}
+
+:where(ul[interop-tags] > li > button:hover:not(:disabled)) {
+	background-color: var(--itx-tags-button-background-color-hover);
+}
+
+:where(ul[interop-tags] > li > button:disabled) {
+	opacity: var(--itx-tags-button-opacity-disabled);
+	cursor: var(--itx-tags-button-cursor-disabled);
+}
+
+@media (forced-colors: active) {
+	:where(ul[interop-tags] > li) {
+		border-color: CanvasText;
+	}
+
+	:where(ul[interop-tags] > li > button:focus-visible) {
+		outline-color: Highlight;
+	}
+}

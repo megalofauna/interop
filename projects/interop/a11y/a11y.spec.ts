@@ -155,6 +155,13 @@ const reveal = (element: Element) => {
 				<label><input type="radio" name="shirt" value="s" checked /> S</label>
 				<label><input type="radio" name="shirt" value="m" /> M</label>
 			</fieldset>
+			<label for="tag-entry">Tags</label>
+			<ul interop-tags role="list" aria-label="Selected tags">
+				<li>Football <button type="button"><span itx-visually-hidden>Remove Football</span><svg interop-icon name="tabler-x"></svg></button><input type="hidden" name="tags" value="football" /></li>
+				<li>Cricket <button type="button" disabled><span itx-visually-hidden>Remove Cricket</span><svg interop-icon name="tabler-x"></svg></button></li>
+			</ul>
+			<input id="tag-entry" type="text" />
+			<p role="status" itx-visually-hidden></p>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>
