@@ -53,6 +53,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
 	},
 	{
+		path: "foundations/radius",
+		title: "Radius (comparison)",
+		loadComponent: () => import("./foundations/radius/radius-demo").then((m) => m.RadiusDemo),
+	},
+	{
 		path: "foundations/typography",
 		title: "Typography",
 		loadComponent: () => import("./foundations/typography/typography-demo").then((m) => m.TypographyDemo),
