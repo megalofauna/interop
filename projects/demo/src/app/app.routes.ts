@@ -13,6 +13,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/button/button-demo").then((m) => m.ButtonDemo),
 	},
 	{
+		path: "components/checkbox",
+		title: "Checkbox",
+		loadComponent: () => import("./components/checkbox/checkbox-demo").then((m) => m.CheckboxDemo),
+	},
+	{
 		path: "components/code-block",
 		title: "Code block",
 		loadComponent: () => import("./components/code-block/code-block-demo").then((m) => m.CodeBlockDemo),

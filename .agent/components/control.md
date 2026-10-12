@@ -1,6 +1,6 @@
 # Control — Mental Model Card
 
-**Status:** switch and radio group built. Checkbox designed, not built.
+**Status:** switch, radio group and checkbox built.
 Research: [VISIMORPH](../../prompts/VISIMORPH-RESEARCH.md),
 [RADIO-GROUP](../../prompts/RADIO-GROUP-RESEARCH.md),
 [CHECKBOX](../../prompts/CHECKBOX-RESEARCH.md).
@@ -122,6 +122,7 @@ fieldset at it.
 |---|---|
 | Switch | The input is the track, a flex box. `::before` is the thumb. It moves by `margin-inline-start: calc(100% - thumb size)`, a logical property, so right-to-left needs no rule |
 | Radio | The input is the circle (`border-radius: 50%`, fixed). `::before` is the dot, centered with `inset: 0; margin: auto`, and `scale: 0` until checked |
+| Checkbox | The input is the box. `::before` fills it and paints the mark through `mask-image`: a check, or a dash when `:indeterminate`. Indeterminate shares the checked fill and wins over checked, as native boxes do. A theme swaps the shape through the mask token |
 
 ## Tokens
 
@@ -155,6 +156,18 @@ own family.
 | `--itx-radio-group-dot-size`, `-dot-background-color` | `--itx-space-2`, neutral-50/900 |
 | `--itx-radio-group-transition-duration`, `-timing-function` | the shared transition tokens |
 
+| Checkbox token | Default |
+|---|---|
+| `--itx-checkbox-gap`, `-min-block-size` | `--itx-space-2`, `--itx-space-10` |
+| `--itx-checkbox-font-size`, `-line-height` | the `label` role |
+| `--itx-checkbox-cursor[-disabled]`, `-opacity-disabled` | default, not-allowed, 0.5 |
+| `--itx-checkbox-box-size`, `-box-border-width`, `-box-border-style`, `-box-border-radius` | `--itx-space-5`, 1px, solid, `--itx-radius-sm` |
+| `--itx-checkbox-box-border-color[-hover\|-checked]` | neutral-500/400, 600/300, transparent |
+| `--itx-checkbox-box-background-color[-hover\|-checked\|-checked-hover]` | neutral-50/900, 100/800, 900/50, 700/200 |
+| `--itx-checkbox-mark-mask-image[-indeterminate]` | an SVG check, an SVG dash |
+| `--itx-checkbox-mark-background-color` | neutral-50/900 |
+| `--itx-checkbox-transition-duration`, `-timing-function` | the shared transition tokens |
+
 | Fieldset token | Default |
 |---|---|
 | `--itx-fieldset-flex-direction` | column |
@@ -173,6 +186,8 @@ own family.
 | Switch | `lg` | track 56 × 32px, thumb 26px | 48px | `p` role |
 | Radio | default | circle 20px, dot 8px | 40px | `label` role |
 | Radio | `lg` | circle 24px, dot 10px | 48px | `p` role |
+| Checkbox | default | box 20px | 40px | `label` role |
+| Checkbox | `lg` | box 24px | 48px | `p` role |
 
 ## Tests
 
@@ -182,7 +197,9 @@ own family.
 - `styles/target-size.spec.ts`: every label minimum height at every size step
   is 24px or more.
 - `a11y/a11y.spec.ts`: axe on every control and state, plus negative controls
-  for an unlabeled switch and radio.
+  for an unlabeled switch, radio and checkbox. It asserts that an indeterminate
+  box has no `aria-checked`.
+- `src/bind-select-all.spec.ts`: the select-all helper.
 - `src/audit.spec.ts`: the dev audit rules below.
 
 ## Dev audit rules
@@ -194,6 +211,20 @@ own family.
 | `group-name` | A radio or checkbox group with no legend and no `aria-label` |
 | `radio-group-shared-name` | Radios in a group with a missing or differing `name`. Angular's `formControlName` does not write `name`, so the consumer must |
 | `radio-group-options` | A radio group with fewer than two radios |
+| `checkbox-group-required` | A checkbox group where every box is `required`, which demands all of them |
+
+## Checkbox groups
+
+The platform covers most of a group: the legend names it, a shared `name`
+submits every checked value, and `<fieldset disabled>` disables it. Two needs
+are not native:
+
+| Need | Help |
+|---|---|
+| Select-all | `bindSelectAll(parent, group?)` from `interop`. Checking the parent checks every enabled box; it shows mixed when some boxes are checked, counting disabled ones; it fires `input` and `change` on each box it changes; it follows form reset. A box changed from script fires no event, so dispatch `change` on it, or bind the parent from the same model in Angular. Returns an unbind function |
+| "At least one" | `setCustomValidity()` on the first box whenever the group changes and after reset. In Angular, a validator in the form model. `required` on every box demands all of them |
+
+Give a select-all box no `name`, so it does not submit.
 
 ## Media queries
 

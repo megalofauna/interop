@@ -1,0 +1,135 @@
+/*
+ * Checkbox: an independent yes or no. A native checkbox inside a label.
+ *
+ *   <label interop-checkbox><input type="checkbox" name="terms" required> I accept the terms</label>
+ *   <label interop-checkbox itx-size="lg"><input type="checkbox"> I accept the terms</label>
+ *
+ * The input is the box and its ::before is the mark: a check when checked, a dash when indeterminate.
+ * Indeterminate is a DOM property: bind [indeterminate] in Angular, or set it from script. Every state
+ * comes from the input's pseudo-classes. A group of checkboxes is a <fieldset interop-checkbox-group>
+ * with a legend. Its layout is in styles/fieldset.css, and bindSelectAll() keeps a select-all box in step.
+ *
+ * Also known as:
+ *   check box          WinUI prose
+ *   checks             Bootstrap
+ *   checkboxes         GOV.UK
+ *   tick box           British usage
+ *   tri-state or mixed checkbox   APG, for the indeterminate state
+ * Checkbox is the HTML input type, the ARIA role, and the name in Material, Fluent, Carbon, Spectrum,
+ * Angular Material, PrimeNG, Radix and MUI.
+ */
+
+/* The box sits at the inline start, centered on the first line, and the text wraps beside it. */
+:where(label[interop-checkbox]) {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	min-block-size: var(--itx-checkbox-min-block-size);
+	padding-block: calc((var(--itx-checkbox-min-block-size) - 1lh) / 2);
+	padding-inline-start: calc(var(--itx-checkbox-box-size) + var(--itx-checkbox-gap));
+	font-size: var(--itx-checkbox-font-size);
+	line-height: var(--itx-checkbox-line-height);
+	cursor: var(--itx-checkbox-cursor);
+}
+
+:where(label[interop-checkbox]:has(> input[type="checkbox"]:disabled)) {
+	opacity: var(--itx-checkbox-opacity-disabled);
+	cursor: var(--itx-checkbox-cursor-disabled);
+}
+
+/* The box. Firefox draws the ::before only because this sets `appearance: none`. */
+:where(label[interop-checkbox] > input[type="checkbox"]) {
+	appearance: none;
+	position: absolute;
+	inset-block-start: calc((var(--itx-checkbox-min-block-size) - var(--itx-checkbox-box-size)) / 2);
+	inset-inline-start: 0;
+	box-sizing: border-box;
+	inline-size: var(--itx-checkbox-box-size);
+	block-size: var(--itx-checkbox-box-size);
+	margin: 0;
+	background-color: var(--itx-checkbox-box-background-color);
+	border-width: var(--itx-checkbox-box-border-width);
+	border-style: var(--itx-checkbox-box-border-style);
+	border-color: var(--itx-checkbox-box-border-color);
+	border-radius: var(--itx-checkbox-box-border-radius);
+	cursor: inherit;
+	transition-property: background-color, border-color;
+	transition-duration: var(--itx-checkbox-transition-duration);
+	transition-timing-function: var(--itx-checkbox-transition-timing-function);
+}
+
+/* The mark, painted through a mask so a theme can swap the shape. Hidden until checked. */
+:where(label[interop-checkbox] > input[type="checkbox"])::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-color: var(--itx-checkbox-mark-background-color);
+	mask-image: var(--itx-checkbox-mark-mask-image);
+	mask-position: center;
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	scale: 0;
+	transition-property: scale;
+	transition-duration: var(--itx-checkbox-transition-duration);
+	transition-timing-function: var(--itx-checkbox-transition-timing-function);
+}
+
+:where(label[interop-checkbox]:hover > input[type="checkbox"]:not(:checked, :indeterminate, :disabled)) {
+	background-color: var(--itx-checkbox-box-background-color-hover, var(--itx-checkbox-box-background-color));
+	border-color: var(--itx-checkbox-box-border-color-hover, var(--itx-checkbox-box-border-color));
+}
+
+/* Indeterminate shares the checked fill. It shows whether or not the box is also checked, as native boxes do. */
+:where(label[interop-checkbox] > input[type="checkbox"]:is(:checked, :indeterminate)) {
+	background-color: var(--itx-checkbox-box-background-color-checked);
+	border-color: var(--itx-checkbox-box-border-color-checked);
+}
+
+:where(label[interop-checkbox]:hover > input[type="checkbox"]:is(:checked, :indeterminate):not(:disabled)) {
+	background-color: var(
+		--itx-checkbox-box-background-color-checked-hover,
+		var(--itx-checkbox-box-background-color-checked)
+	);
+}
+
+:where(label[interop-checkbox] > input[type="checkbox"]:is(:checked, :indeterminate))::before {
+	scale: 1;
+}
+
+:where(label[interop-checkbox] > input[type="checkbox"]:indeterminate)::before {
+	mask-image: var(--itx-checkbox-mark-mask-image-indeterminate);
+}
+
+/* System colors, so the box and the mark stay visible when the user forces colors. */
+@media (forced-colors: active) {
+	:where(label[interop-checkbox] > input[type="checkbox"]) {
+		forced-color-adjust: none;
+		background-color: Canvas;
+		border-color: CanvasText;
+	}
+
+	:where(label[interop-checkbox] > input[type="checkbox"]:is(:checked, :indeterminate)) {
+		background-color: Highlight;
+		border-color: Highlight;
+	}
+
+	:where(label[interop-checkbox] > input[type="checkbox"])::before {
+		background-color: HighlightText;
+	}
+
+	:where(label[interop-checkbox] > input[type="checkbox"]:disabled) {
+		border-color: GrayText;
+	}
+
+	:where(label[interop-checkbox] > input[type="checkbox"]:is(:checked, :indeterminate):disabled) {
+		background-color: GrayText;
+	}
+
+	:where(label[interop-checkbox] > input[type="checkbox"]:disabled)::before {
+		background-color: Canvas;
+	}
+
+	:where(label[interop-checkbox] > input[type="checkbox"]:focus-visible) {
+		outline-color: Highlight;
+	}
+}

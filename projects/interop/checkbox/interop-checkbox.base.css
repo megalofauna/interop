@@ -1,0 +1,44 @@
+:where(label[interop-checkbox]) {
+	--itx-checkbox-gap: var(--itx-space-2);
+	--itx-checkbox-min-block-size: var(--itx-space-10);
+	--itx-checkbox-font-size: var(--itx-font-size-label);
+	--itx-checkbox-line-height: var(--itx-line-height-label);
+	--itx-checkbox-cursor: default;
+	--itx-checkbox-cursor-disabled: not-allowed;
+	--itx-checkbox-opacity-disabled: 0.5;
+
+	--itx-checkbox-box-size: var(--itx-space-5);
+	--itx-checkbox-box-border-width: 1px;
+	--itx-checkbox-box-border-style: solid;
+	--itx-checkbox-box-border-radius: var(--itx-radius-sm);
+	/* Unchecked: the border carries the 3:1 edge against the page (WCAG 1.4.11). */
+	--itx-checkbox-box-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-checkbox-box-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	/* Checked: the fill carries the edge, so the border lets it show through. */
+	--itx-checkbox-box-border-color-checked: transparent;
+	--itx-checkbox-box-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-checkbox-box-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-checkbox-box-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-checkbox-box-background-color-checked-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-200));
+
+	/* Only the mask's shape counts, so its stroke color does not matter. */
+	--itx-checkbox-mark-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+	--itx-checkbox-mark-mask-image-indeterminate: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 8h8'/%3E%3C/svg%3E");
+	--itx-checkbox-mark-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+
+	--itx-checkbox-transition-duration: var(--itx-transition-duration);
+	--itx-checkbox-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+:where(label[interop-checkbox][itx-size="lg"]) {
+	--itx-checkbox-min-block-size: var(--itx-space-12);
+	--itx-checkbox-font-size: var(--itx-font-size-p);
+	--itx-checkbox-line-height: var(--itx-line-height-p);
+	--itx-checkbox-box-size: var(--itx-space-6);
+}
+
+@media (prefers-contrast: more) {
+	:where(label[interop-checkbox]) {
+		--itx-checkbox-box-border-width: 2px;
+	}
+}

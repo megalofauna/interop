@@ -20,10 +20,12 @@ import badgeCss from '../badge/interop-badge.base.css' with { loader: 'text' };
 import outlineCss from './outline.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -193,6 +195,25 @@ describe('radio', () => {
 			});
 			it(`has a dot of 3:1 against the checked${state} fill in ${label}`, () => {
 				expect(contrast(radio('dot-background-color', scheme), radio(`circle-background-color-checked${state}`, scheme))).toBeGreaterThanOrEqual(3);
+			});
+		}
+	}
+});
+
+describe('checkbox', () => {
+	const checkbox = (name: string, scheme: 0 | 1) => token(`--itx-checkbox-${name}`, scheme);
+
+	// WCAG 1.4.11: the box's edge against the page, and the mark against the checked fill.
+	for (const state of ['', '-hover']) {
+		for (const [scheme, label] of SCHEMES) {
+			it(`has an unchecked${state} border of 3:1 against the page in ${label}`, () => {
+				expect(contrast(checkbox(`box-border-color${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+			it(`has a checked${state} fill of 3:1 against the page in ${label}`, () => {
+				expect(contrast(checkbox(`box-background-color-checked${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+			it(`has a mark of 3:1 against the checked${state} fill in ${label}`, () => {
+				expect(contrast(checkbox('mark-background-color', scheme), checkbox(`box-background-color-checked${state}`, scheme))).toBeGreaterThanOrEqual(3);
 			});
 		}
 	}

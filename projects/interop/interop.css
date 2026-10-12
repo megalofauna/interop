@@ -25,3 +25,5 @@
 @import "./switch/interop-switch.structure.css";
 @import "./radio-group/interop-radio-group.base.css";
 @import "./radio-group/interop-radio-group.structure.css";
+@import "./checkbox/interop-checkbox.base.css";
+@import "./checkbox/interop-checkbox.structure.css";

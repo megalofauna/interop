@@ -249,6 +249,19 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null,
 	},
+	'checkbox-group-required': {
+		selector: 'fieldset[interop-checkbox-group]',
+		check: (fieldset) => {
+			const boxes = Array.from(fieldset.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
+			return boxes.length > 1 && boxes.every((box) => box.required)
+				? {
+						problem: 'Every checkbox in this group is required.',
+						reason: 'required on a checkbox means that box must be checked, so the form will not submit until all of them are.',
+						advice: 'For "choose at least one", remove required and check the group: setCustomValidity() on one box, or a validator in your form model.',
+					}
+				: null;
+		},
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>

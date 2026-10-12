@@ -206,6 +206,13 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual(['radio-group-shared-name', 'radio-group-shared-name']);
 	});
 
+	it('flags a checkbox group where every box is required', () => {
+		const group = (a: string, b: string) =>
+			`<fieldset interop-checkbox-group><legend>T</legend><label interop-checkbox><input type="checkbox" ${a}> A</label><label interop-checkbox><input type="checkbox" ${b}> B</label></fieldset>`;
+		render(group('required', 'required') + group('required', ''));
+		expect(rules()).toEqual(['checkbox-group-required']);
+	});
+
 	it('flags a radio group with one radio', () => {
 		render('<fieldset interop-radio-group><legend>Agree</legend><label><input type="radio" name="a"> Yes</label></fieldset>');
 		expect(rules()).toEqual(['radio-group-options']);
