@@ -84,17 +84,27 @@ mixed, and ARIA in HTML disallows `aria-checked` on a native checkbox.
 
 ## Label
 
-The label is the hit target: `inline-flex`, a gap, and a minimum block size.
-It has no background or border of its own. Markup order sets the side: text
-before the input puts the control at the end. There are no layout modifiers.
+The label is the click target, and the WCAG 2.5.8 measurement. Every control
+lays out its label the same way:
+
+- The label is `inline-block` with `position: relative`. Its text stays in
+  normal flow, so links and other inline elements wrap with it.
+- `padding-block: calc((min-block-size - 1lh) / 2)` puts one line of text in
+  the middle of the minimum height. More lines grow the label downward.
+- `padding-inline-start` reserves the control's width plus the gap.
+- The input is `position: absolute` at the inline start, with
+  `inset-block-start: calc((min-block-size - control height) / 2)`. That
+  centers it on the first line of text, whatever the line count.
+
+The control always sits at the inline start. The label has no background or
+border of its own, and there are no layout modifiers.
 
 ## Switch geometry
 
-The input is the track and its `::before` is the thumb. The track uses
-`box-sizing: content-box` with `block-size` equal to the thumb size, so padding
-and border sit outside the content box. The thumb moves by
-`margin-inline-start: calc(100% - thumb size)`. That is a logical property,
-so right-to-left needs no rule, and the travel needs no border arithmetic.
+The input is the track and its `::before` is the thumb. The track is a flex
+box, and the thumb moves by `margin-inline-start: calc(100% - thumb size)`,
+where `100%` is the track's content width. That is a logical property, so
+right-to-left needs no rule.
 
 ## Tokens
 
@@ -108,8 +118,8 @@ except state tokens, which fall back to the rest value.
 | `--itx-switch-gap`, `-min-block-size` | `--itx-space-2`, `--itx-space-10` |
 | `--itx-switch-font-size`, `-line-height` | the `label` role |
 | `--itx-switch-cursor[-disabled]`, `-opacity-disabled` | default, not-allowed, 0.5 |
-| `--itx-switch-track-block-size` | `--itx-space-6` (outer) |
-| `--itx-switch-track-inline-size`, `-padding`, `-border-width`, `-border-style`, `-border-radius` | 2 × thumb (content), `--itx-space-0_5`, 1px, solid, full |
+| `--itx-switch-track-block-size` | `--itx-space-6` |
+| `--itx-switch-track-inline-size`, `-padding`, `-border-width`, `-border-style`, `-border-radius` | 1.75 × track height, `--itx-space-0_5`, 1px, solid, full |
 | `--itx-switch-track-border-color[-hover\|-checked]` | neutral-500/400, 600/300, transparent |
 | `--itx-switch-track-background-color[-hover\|-checked\|-checked-hover]` | neutral-50/900, 100/800, 900/50, 700/200 |
 | `--itx-switch-thumb-size`, `-border-radius` | track height − 2 × padding − 2 × border, full |
@@ -121,12 +131,12 @@ except state tokens, which fall back to the rest value.
 | `itx-size` on the label | Track (outer) | Thumb | Label min block size | Text |
 |---|---|---|---|---|
 | none, `md` | 42 × 24px (`space-6`) | 18px | 40px (`space-10`) | `label` role |
-| `lg` | 58 × 32px (`space-8`) | 26px | 48px (`space-12`) | `p` role |
+| `lg` | 56 × 32px (`space-8`) | 26px | 48px (`space-12`) | `p` role |
 
-`lg` sets the track's outer height, the label's minimum height, and the text
-role. The thumb size is the track height minus padding and border. The track's
-content width is two thumbs. There is no `sm`: 24px is the WCAG 2.5.8 minimum
-for the track on its own.
+`lg` sets the track height, the label's minimum height, and the text role. The
+thumb size is the track height minus padding and border. The track is 1.75
+times as wide as it is tall. There is no `sm`. `styles/target-size.spec.ts`
+checks the label's minimum height at every step.
 
 `styles/contrast.spec.ts` checks every pair at 3:1 in both schemes:
 off and hover track border against the page, off thumb against the off and

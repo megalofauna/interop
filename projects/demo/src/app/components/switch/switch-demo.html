@@ -12,17 +12,19 @@
 	<label interop-switch><input type="checkbox" role="switch" checked /> Dark mode</label>
 </div>
 
-<h2>Text first</h2>
-<p>The markup order is the layout. Put the text before the input to put the switch at the end.</p>
-<div class="stack">
-	<label interop-switch>Autosave <input type="checkbox" role="switch" checked /></label>
-</div>
-
 <h2>Long label</h2>
+<p>
+	The switch is centered on the first line of text, and the text wraps beside it. Links and other inline elements
+	wrap with the text.
+</p>
 <div class="stack narrow">
 	<label interop-switch>
 		<input type="checkbox" role="switch" />
 		Send me a weekly summary of activity in every project I belong to, including archived ones
+	</label>
+	<label interop-switch>
+		<input type="checkbox" role="switch" />
+		Share usage data as described in the <a href="#privacy">privacy policy</a>
 	</label>
 </div>
 

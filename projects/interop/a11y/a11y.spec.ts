@@ -59,7 +59,7 @@ const openPopovers = (element: Element) => element.querySelectorAll('[popover]')
 			<div interop-scroll-area aria-labelledby="notes"><p>Note one.</p><p>Note two.</p></div>
 			<label interop-switch><input type="checkbox" role="switch" /> Notifications</label>
 			<label interop-switch><input type="checkbox" role="switch" checked /> Dark mode</label>
-			<label interop-switch>Autosave <input type="checkbox" role="switch" disabled /></label>
+			<label interop-switch><input type="checkbox" role="switch" disabled /> Autosave</label>
 			<label interop-switch itx-size="lg"><input type="checkbox" switch /> Bluetooth</label>
 			<figure interop-code-block itx-line-numbers language="ts" caption="example.ts" [code]="example"></figure>
 		</main>
