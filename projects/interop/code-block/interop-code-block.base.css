@@ -4,7 +4,7 @@
 	--itx-code-block-border-width: 1px;
 	--itx-code-block-border-style: solid;
 	--itx-code-block-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
-	--itx-code-block-border-radius: var(--itx-radius);
+	--itx-code-block-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-code-block-corner-shape: var(--itx-corner-shape);
 	--itx-code-block-padding-block: var(--itx-space-3);
 	--itx-code-block-padding-inline: var(--itx-space-4);

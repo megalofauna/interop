@@ -123,6 +123,37 @@ CSS selectors follow the same split:
 - A component ships only the steps it needs. Leave a step out when it would
   break a minimum, such as the 24px target size of WCAG 2.5.8.
 
+## Corner radius
+
+Every component corner follows one of four rules. `styles/radius.css` states
+them, and `styles/radius.spec.ts` fails on a corner that follows none.
+
+| Rule | Value | Used by |
+|---|---|---|
+| Round by shape | `var(--itx-radius-full)` | badge, switch track and thumb, radio circle and dot, spinner |
+| House | `var(--itx-radius, var(--itx-radius-base))` | button, popover, code block, any container |
+| Small | half the house radius, capped where it would change the shape | tooltip; checkbox box, capped at a quarter of its size |
+| Nested | outer radius less the gap, never below `0px` | an inset pill or panel |
+
+The house radius is `--itx-radius-base`, 6px, with squircle corners
+(`--itx-corner-shape`). A theme sets `--itx-radius-base` on `:root` to change it
+everywhere. Never write a radius literal or a fixed step in a component.
+
+`itx-radius` picks a step on one element. Each step is a multiple of the house
+radius, worked out on that element, so the whole scale moves with the theme:
+
+| `itx-radius` | Multiple | At 6px |
+|---|---|---|
+| `none` | 0 | 0 |
+| `sm` | ½ | 3px |
+| `md`, `base`, no attribute | 1 | 6px |
+| `lg` | 1½ | 9px |
+| `xl` | 2 | 12px |
+| `full` | pill or circle, round corners | — |
+
+The 3px steps sit off the 4px layout grid on purpose. A corner positions
+nothing, so nothing has to line up with it.
+
 One way per pattern. When two components solve the same problem differently,
 fix the outlier before adding a third.
 

@@ -19,7 +19,7 @@
 	--itx-popover-border-style: solid;
 	/* 3:1 against the page in both schemes, so the popover's edge is visible (WCAG 1.4.11). */
 	--itx-popover-border-color: var(--itx-neutral-500);
-	--itx-popover-border-radius: var(--itx-radius);
+	--itx-popover-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-popover-corner-shape: var(--itx-corner-shape);
 	--itx-popover-box-shadow: 0 var(--itx-space-1) var(--itx-space-4) oklch(0 0 0 / 0.15);
 

@@ -31,6 +31,7 @@ describe('target size', () => {
 		['button', buttonCss, '--itx-button-min-block-size'],
 		['switch label', switchCss, '--itx-switch-min-block-size'],
 		['radio label', radioGroupCss, '--itx-radio-group-label-min-block-size'],
+		['segmented control', radioGroupCss, '--itx-radio-group-block-size'],
 		['checkbox label', checkboxCss, '--itx-checkbox-min-block-size'],
 	] as const;
 

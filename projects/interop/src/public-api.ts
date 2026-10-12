@@ -4,6 +4,7 @@
 
 export { auditInterop, watchInterop, watchInteropInDevMode, type AuditIssue } from './audit';
 export { bindPendingAction } from './bind-pending-action';
+export { bindRadioHomeEnd } from './bind-radio-home-end';
 export { bindScrollArea } from './bind-scroll-area';
 export { bindSelectAll } from './bind-select-all';
 export { bindTooltip } from './bind-tooltip';

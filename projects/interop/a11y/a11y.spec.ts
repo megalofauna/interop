@@ -75,6 +75,16 @@ const openPopovers = (element: Element) => element.querySelectorAll('[popover]')
 				<label interop-checkbox><input type="checkbox" name="topping" value="cheese" checked /> Cheese</label>
 				<label interop-checkbox><input type="checkbox" name="topping" value="olives" /> Olives</label>
 			</fieldset>
+			<fieldset interop-radio-group="segmented">
+				<legend>View</legend>
+				<label><input type="radio" name="view" value="list" checked /> List</label>
+				<label><input type="radio" name="view" value="grid" /> Grid</label>
+			</fieldset>
+			<fieldset interop-radio-group="segmented icon" itx-size="sm">
+				<legend>Alignment</legend>
+				<label><input type="radio" name="align" value="start" checked /><svg interop-icon name="tabler-check"></svg><span itx-visually-hidden>Start</span></label>
+				<label><input type="radio" name="align" value="end" /><svg interop-icon name="tabler-x"></svg><span itx-visually-hidden>End</span></label>
+			</fieldset>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>

@@ -43,6 +43,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/scroll-area/scroll-area-demo").then((m) => m.ScrollAreaDemo),
 	},
 	{
+		path: "components/segmented-control",
+		title: "Segmented control",
+		loadComponent: () => import("./components/segmented-control/segmented-control-demo").then((m) => m.SegmentedControlDemo),
+	},
+	{
 		path: "components/switch",
 		title: "Switch",
 		loadComponent: () => import("./components/switch/switch-demo").then((m) => m.SwitchDemo),
@@ -51,6 +56,11 @@ export const routes: Routes = [
 		path: "components/tooltip",
 		title: "Tooltip",
 		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
+	},
+	{
+		path: "foundations/radius",
+		title: "Radius (comparison)",
+		loadComponent: () => import("./foundations/radius/radius-demo").then((m) => m.RadiusDemo),
 	},
 	{
 		path: "foundations/typography",

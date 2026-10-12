@@ -2,7 +2,7 @@
 	max-inline-size: 40rem;
 	padding: var(--itx-space-3);
 	border: 1px solid light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-	border-radius: var(--itx-radius-md);
+	border-radius: var(--itx-radius-base);
 }
 
 .tall {

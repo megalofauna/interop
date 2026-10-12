@@ -1,0 +1,74 @@
+.inline {
+	--itx-fieldset-flex-direction: row;
+}
+
+.note {
+	font-size: var(--itx-font-size-p-sm);
+}
+
+/* Each row sets the house radius, as a theme would on :root. */
+.candidate {
+	--itx-radius-base: var(--candidate-radius);
+}
+
+/* --itx-corner-shape does not inherit, so it is declared on each element. */
+.candidate,
+.candidate * {
+	--itx-corner-shape: var(--candidate-shape);
+}
+
+/* Popover and tooltip open in the top layer. Here they sit in the row so they can be compared. */
+.static {
+	position: static;
+	opacity: 1;
+	inset: auto;
+	margin: 0;
+}
+
+.candidate {
+	padding-block: var(--itx-space-4);
+	border-block-start: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+}
+
+.candidate h2 {
+	margin: 0 0 var(--itx-space-2);
+	font-size: var(--itx-font-size-h5);
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-4);
+}
+
+.row + .row {
+	margin-block-start: var(--itx-space-3);
+}
+
+.top {
+	align-items: flex-start;
+}
+
+/* A sketch of the segmented control: a frame at the house radius, and a pill inset by the gap. */
+.segmented {
+	--gap: 2px;
+	display: inline-flex;
+	padding: var(--gap);
+	border: 1px solid light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	border-radius: var(--itx-radius-base);
+	corner-shape: var(--itx-corner-shape);
+}
+
+.segment {
+	padding: var(--itx-space-2) var(--itx-space-4);
+	font-size: var(--itx-font-size-p-sm);
+	line-height: var(--itx-line-height-p-sm);
+	border-radius: max(0px, var(--itx-radius-base) - var(--gap) - 1px);
+	corner-shape: var(--itx-corner-shape);
+}
+
+.selected {
+	color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+}

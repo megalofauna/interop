@@ -19,7 +19,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Scroll-area component deep-dive | [components/scroll-area.md](components/scroll-area.md) |
 | Tooltip component deep-dive | [components/tooltip.md](components/tooltip.md) |
 | Indicator component deep-dive | [components/indicator.md](components/indicator.md) |
-| Segmented-control deep-dive | [components/segmented-control.md](components/segmented-control.md) |
+| Segmented control — retired, and why not to rebuild it | [components/segmented-control.md](components/segmented-control.md) |
 | Tree component deep-dive | [components/tree.md](components/tree.md) |
 | Control (checkbox / radio / switch, CSS only, designed) | [components/control.md](components/control.md) |
 | Visimorph — retired, and why not to rebuild it | [components/visimorph.md](components/visimorph.md) |

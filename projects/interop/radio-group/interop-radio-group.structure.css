@@ -55,7 +55,8 @@
 	border-width: var(--itx-radio-group-circle-border-width);
 	border-style: var(--itx-radio-group-circle-border-style);
 	border-color: var(--itx-radio-group-circle-border-color);
-	border-radius: 50%;
+	/* Round by shape. */
+	border-radius: var(--itx-radius-full);
 	cursor: inherit;
 	transition-property: background-color, border-color;
 	transition-duration: var(--itx-radio-group-transition-duration);
@@ -71,7 +72,7 @@
 	inline-size: var(--itx-radio-group-dot-size);
 	block-size: var(--itx-radio-group-dot-size);
 	background-color: var(--itx-radio-group-dot-background-color);
-	border-radius: 50%;
+	border-radius: var(--itx-radius-full);
 	scale: 0;
 	transition-property: scale;
 	transition-duration: var(--itx-radio-group-transition-duration);
@@ -130,5 +131,196 @@
 
 	:where(fieldset[interop-radio-group] label > input[type="radio"]:focus-visible) {
 		outline-color: Highlight;
+	}
+}
+
+/*
+ * Segmented: the same radio group drawn as a row of equal segments in a frame, with a pill on the
+ * checked one. Also known as segmented button, button toggle group, toggle group, content switcher,
+ * segment group. It is still a radio group: one value, one tab stop, arrow keys, form participation.
+ *
+ *   <fieldset interop-radio-group="segmented">
+ *     <legend>View</legend>
+ *     <label><input type="radio" name="view" value="list" checked> List</label>
+ *     <label><input type="radio" name="view" value="grid"> Grid</label>
+ *   </fieldset>
+ *
+ * The labels are direct children of the fieldset. Each input is transparent and fills its label, so
+ * the label is the segment and the focus ring is the input's. The frame (::before) spans the first
+ * and last segments and the pill (::after) covers the checked one, both through anchor positioning,
+ * so the legend stays outside the frame with no wrapper element. Without anchor positioning, the
+ * segments draw their own borders and the checked one paints its own fill.
+ */
+
+:where(fieldset[interop-radio-group~="segmented"]) {
+	position: relative;
+	display: inline-grid;
+	grid-auto-flow: column;
+	/* Every segment as wide as the widest label, with no gap between them. */
+	grid-auto-columns: 1fr;
+	gap: 0;
+	padding: calc(var(--itx-radio-group-frame-padding) + var(--itx-radio-group-frame-border-width));
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"])) {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-block-size: var(--itx-radio-group-segment-block-size);
+	padding-block: 0;
+	padding-inline: var(--itx-radio-group-segment-padding-inline);
+	font-size: var(--itx-radio-group-label-font-size);
+	line-height: var(--itx-radio-group-label-line-height);
+	white-space: nowrap;
+	color: var(--itx-radio-group-segment-color);
+	transition-property: color;
+	transition-duration: var(--itx-radio-group-transition-duration);
+	transition-timing-function: var(--itx-radio-group-transition-timing-function);
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:hover:not(:has(> input:checked, > input:disabled))) {
+	color: var(--itx-radio-group-segment-color-hover, var(--itx-radio-group-segment-color));
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked)) {
+	color: var(--itx-radio-group-segment-color-checked);
+	anchor-name: --itx-segment-checked;
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]):first-of-type) {
+	anchor-name: --itx-segment-first;
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]):last-of-type) {
+	anchor-name: --itx-segment-last;
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked):first-of-type) {
+	anchor-name: --itx-segment-first, --itx-segment-checked;
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked):last-of-type) {
+	anchor-name: --itx-segment-last, --itx-segment-checked;
+}
+
+/* A square segment that holds only an icon. Name it with visually hidden text in the label. */
+:where(fieldset[interop-radio-group~="segmented"][interop-radio-group~="icon"] > label:has(> input[type="radio"])) {
+	min-inline-size: var(--itx-radio-group-segment-block-size);
+	padding-inline: 0;
+}
+
+/* The input fills its segment. It draws nothing; it takes the clicks and the focus ring. */
+:where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]) {
+	inset: 0;
+	inline-size: auto;
+	block-size: auto;
+	background-color: transparent;
+	border: 0;
+	border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-radio-group-frame-padding) - var(--itx-radio-group-frame-border-width));
+	corner-shape: var(--itx-corner-shape);
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"])::before {
+	content: none;
+}
+
+/* The focus ring sits inside the segment. On the pill it takes the checked label's color, which contrasts with the pill. */
+:where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]) {
+	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]:checked) {
+	--itx-outline-color: var(--itx-radio-group-segment-color-checked);
+	--itx-outline-offset: calc(var(--itx-outline-width) * -2);
+}
+
+/* A divider between two unchecked segments. */
+:where(fieldset[interop-radio-group~="segmented"] > label:not(:has(> input:checked)) + label:not(:has(> input:checked)))::before {
+	content: "";
+	position: absolute;
+	inset-block: var(--itx-radio-group-divider-inset-block);
+	inset-inline-start: calc(var(--itx-radio-group-divider-width) / -2);
+	inline-size: var(--itx-radio-group-divider-width);
+	background-color: var(--itx-radio-group-divider-color);
+}
+
+@supports (anchor-name: --a) {
+	/* The frame, from the first segment to the last, outset by its padding and border. */
+	:where(fieldset[interop-radio-group~="segmented"])::before {
+		content: "";
+		position: absolute;
+		top: calc(anchor(--itx-segment-first top) - var(--itx-radio-group-frame-padding) - var(--itx-radio-group-frame-border-width));
+		bottom: calc(anchor(--itx-segment-first bottom) - var(--itx-radio-group-frame-padding) - var(--itx-radio-group-frame-border-width));
+		/* Logical sides, so the first segment is at the inline start in either direction. */
+		inset-inline-start: calc(anchor(--itx-segment-first start) - var(--itx-radio-group-frame-padding) - var(--itx-radio-group-frame-border-width));
+		inset-inline-end: calc(anchor(--itx-segment-last end) - var(--itx-radio-group-frame-padding) - var(--itx-radio-group-frame-border-width));
+		border-width: var(--itx-radio-group-frame-border-width);
+		border-style: solid;
+		border-color: var(--itx-radio-group-frame-border-color);
+		border-radius: var(--itx-radius, var(--itx-radius-base));
+		corner-shape: var(--itx-corner-shape);
+	}
+
+	/* The pill, on the checked segment. A nested corner: the frame's radius less the gap. */
+	:where(fieldset[interop-radio-group~="segmented"]:has(> label > input:checked))::after {
+		content: "";
+		position: absolute;
+		position-anchor: --itx-segment-checked;
+		top: anchor(top);
+		bottom: anchor(bottom);
+		left: anchor(left);
+		right: anchor(right);
+		background-color: var(--itx-radio-group-pill-background-color);
+		border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-radio-group-frame-padding) - var(--itx-radio-group-frame-border-width));
+		corner-shape: var(--itx-corner-shape);
+		transition-property: top, bottom, left, right;
+		transition-duration: var(--itx-radio-group-transition-duration);
+		transition-timing-function: var(--itx-radio-group-transition-timing-function);
+	}
+}
+
+@supports not (anchor-name: --a) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"])) {
+		border: var(--itx-radio-group-frame-border-width) solid var(--itx-radio-group-frame-border-color);
+	}
+
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]) + label) {
+		margin-inline-start: calc(var(--itx-radio-group-frame-border-width) * -1);
+	}
+
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked)) {
+		background-color: var(--itx-radio-group-pill-background-color);
+	}
+}
+
+:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:disabled)) {
+	opacity: var(--itx-radio-group-label-opacity-disabled);
+}
+
+:where(fieldset[interop-radio-group~="segmented"]:disabled)::after {
+	opacity: var(--itx-radio-group-label-opacity-disabled);
+}
+
+@media (forced-colors: active) {
+	:where(fieldset[interop-radio-group~="segmented"])::before {
+		border-color: CanvasText;
+	}
+
+	:where(fieldset[interop-radio-group~="segmented"])::after {
+		forced-color-adjust: none;
+		background-color: Highlight;
+	}
+
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input:checked)) {
+		forced-color-adjust: none;
+		color: HighlightText;
+	}
+
+	:where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]) {
+		background-color: transparent;
+		border: 0;
 	}
 }
