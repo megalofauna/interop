@@ -1,0 +1,60 @@
+:where([interop-tabs]) {
+	--itx-tabs-tab-min-block-size: var(--itx-space-10);
+	--itx-tabs-tab-padding-inline: var(--itx-space-4);
+	/* The same type steps as a button. */
+	--itx-tabs-tab-font-size: var(--itx-font-size-p);
+	--itx-tabs-tab-line-height: var(--itx-line-height-p);
+	/* 4.5:1 against the page (WCAG 1.4.3). */
+	--itx-tabs-tab-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	--itx-tabs-tab-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	--itx-tabs-tab-color-selected: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	--itx-tabs-tab-cursor: default;
+	--itx-tabs-tab-cursor-disabled: not-allowed;
+	--itx-tabs-tab-opacity-disabled: 0.5;
+	/* The tab paints no background; the radius shapes its focus ring. */
+	--itx-tabs-tab-border-radius: var(--itx-radius, var(--itx-radius-base));
+
+	/* The bar's thickness: its block size, or its inline size when the tab list is vertical. */
+	--itx-tabs-indicator-size: 2px;
+	--itx-tabs-indicator-background-color: transparent;
+	--itx-tabs-indicator-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	/* 3:1 against the page, so the selection shows without the text color (WCAG 1.4.11). */
+	--itx-tabs-indicator-background-color-selected: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+
+	/* The rule carries no state, so it needs no contrast floor. The bar does. */
+	--itx-tabs-tablist-border-width: 1px;
+	--itx-tabs-tablist-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+
+	--itx-tabs-panel-padding-block: var(--itx-space-4);
+	--itx-tabs-column-gap: var(--itx-space-6);
+
+	--itx-tabs-transition-duration: var(--itx-transition-duration);
+	--itx-tabs-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+:where([interop-tabs][itx-size="sm"]) {
+	--itx-tabs-tab-min-block-size: var(--itx-space-8);
+	--itx-tabs-tab-padding-inline: var(--itx-space-3);
+	--itx-tabs-tab-font-size: var(--itx-font-size-p-sm);
+	--itx-tabs-tab-line-height: var(--itx-line-height-p-sm);
+}
+
+:where([interop-tabs][itx-size="lg"]) {
+	--itx-tabs-tab-min-block-size: var(--itx-space-12);
+	--itx-tabs-tab-padding-inline: var(--itx-space-5);
+	--itx-tabs-tab-font-size: var(--itx-font-size-p-lg);
+	--itx-tabs-tab-line-height: var(--itx-line-height-p-lg);
+}
+
+/* The bar stays thicker than the rule when the rule thickens. */
+:where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
+	/* A nested corner inside the frame, the same as the pill's, so the focus ring matches it. Declared
+	   on the tab because the frame's tokens are declared on the tab list. */
+	--itx-tabs-tab-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width));
+}
+
+@media (prefers-contrast: more) {
+	:where([interop-tabs]) {
+		--itx-tabs-indicator-size: 3px;
+	}
+}

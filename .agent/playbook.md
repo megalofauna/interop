@@ -154,6 +154,21 @@ radius, worked out on that element, so the whole scale moves with the theme:
 The 3px steps sit off the 4px layout grid on purpose. A corner positions
 nothing, so nothing has to line up with it.
 
+## Style guards
+
+jsdom computes no styles, so these specs read the stylesheets as text. Each
+lists its files explicitly. A new component adds its stylesheets to every
+guard that applies:
+
+| Spec | Guards |
+|---|---|
+| `styles/contrast.spec.ts` | Text 4.5:1 and state indicators 3:1 against the page, in both schemes |
+| `styles/target-size.spec.ts` | Every control's target height at every size step is 24px or more |
+| `styles/radius.spec.ts` | Every corner follows one of the four corner rules |
+| `styles/forced-colors.spec.ts` | A component that shows state with a fill keeps a forced-colors block |
+| `styles/motion.spec.ts` | Every transition reads a shared duration token, so reduced motion reaches it |
+| `a11y/a11y.spec.ts` | axe on every component and state, including inside popovers and unselected tab panels, and on markup a helper has finished |
+
 One way per pattern. When two components solve the same problem differently,
 fix the outlier before adding a third.
 

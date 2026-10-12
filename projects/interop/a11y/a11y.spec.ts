@@ -7,6 +7,7 @@ import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
+import { InteropTabs } from 'interop/tabs';
 import { InteropTooltip } from 'interop/tooltip';
 import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
@@ -18,9 +19,13 @@ const OPTIONS: axe.RunOptions = { rules: { 'color-contrast': { enabled: false } 
 const violations = async (element: Element) =>
 	(await axe.run(element, OPTIONS)).violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(', ')}`);
 
-// jsdom has no popover API, so a popover never opens and axe skips everything inside it.
-// Removing the attribute shows the content, which is what opening it does.
-const openPopovers = (element: Element) => element.querySelectorAll('[popover]').forEach((popover) => popover.removeAttribute('popover'));
+// jsdom has no popover API, so a popover never opens and axe skips everything inside it. It also
+// treats hidden="until-found" as hidden, so axe skips every unselected tab panel. Removing the
+// attributes shows the content, which is what opening the popover or selecting the tab does.
+const reveal = (element: Element) => {
+	element.querySelectorAll('[popover]').forEach((popover) => popover.removeAttribute('popover'));
+	element.querySelectorAll('[hidden="until-found"]').forEach((panel) => panel.removeAttribute('hidden'));
+};
 
 @Component({
 	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea, InteropTooltip],
@@ -85,6 +90,36 @@ const openPopovers = (element: Element) => element.querySelectorAll('[popover]')
 				<label><input type="radio" name="align" value="start" checked /><svg interop-icon name="tabler-check"></svg><span itx-visually-hidden>Start</span></label>
 				<label><input type="radio" name="align" value="end" /><svg interop-icon name="tabler-x"></svg><span itx-visually-hidden>End</span></label>
 			</fieldset>
+			<div interop-tabs>
+				<div role="tablist" aria-label="Station systems">
+					<button type="button" role="tab" id="t-nav" aria-controls="p-nav" aria-selected="true">Navigation</button>
+					<button type="button" role="tab" id="t-eng" aria-controls="p-eng" aria-selected="false" tabindex="-1">Engineering <span interop-badge [count]="3" [label]="unread"></span></button>
+					<button type="button" role="tab" id="t-life" aria-controls="p-life" aria-selected="false" tabindex="-1" disabled>Life support</button>
+				</div>
+				<section role="tabpanel" id="p-nav" aria-labelledby="t-nav" tabindex="0"><p>Course plotted.</p></section>
+				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found">
+					<p>Reactor steady.</p>
+					<button interop-button type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
+					<label interop-switch><input type="checkbox" role="switch" /> Auto-throttle</label>
+				</section>
+				<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
+			</div>
+			<div interop-tabs="segmented icon">
+				<div role="tablist" aria-label="Layout">
+					<button type="button" role="tab" id="t-list" aria-controls="p-list" aria-selected="true"><svg interop-icon name="tabler-check"></svg><span itx-visually-hidden>List</span></button>
+					<button type="button" role="tab" id="t-grid" aria-controls="p-grid" aria-selected="false" tabindex="-1"><svg interop-icon name="tabler-x"></svg><span itx-visually-hidden>Grid</span></button>
+				</div>
+				<section role="tabpanel" id="p-list" aria-labelledby="t-list" tabindex="0"><p>List.</p></section>
+				<section role="tabpanel" id="p-grid" aria-labelledby="t-grid" hidden="until-found"><p>Grid.</p></section>
+			</div>
+			<div interop-tabs itx-size="sm">
+				<div role="tablist" aria-label="Account" aria-orientation="vertical">
+					<button type="button" role="tab" id="t-profile" aria-controls="p-profile" aria-selected="true">Profile</button>
+					<button type="button" role="tab" id="t-billing" aria-controls="p-billing" aria-selected="false" tabindex="-1">Billing</button>
+				</div>
+				<section role="tabpanel" id="p-profile" aria-labelledby="t-profile"><a href="/profile">Edit profile</a></section>
+				<section role="tabpanel" id="p-billing" aria-labelledby="t-billing" hidden="until-found"><a href="/billing">Invoices</a></section>
+			</div>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>
@@ -100,6 +135,24 @@ class Components {
 	readonly unread = { one: 'unread message', other: 'unread messages' };
 	readonly example = 'const a = 1;\n\nconst b = 2;\n';
 }
+
+// Only what a consumer must write: the helper fills in ids, aria-labelledby, tabindex and hidden.
+@Component({
+	imports: [InteropTabs],
+	template: `
+		<div>
+			<div interop-tabs>
+				<div role="tablist" aria-label="Bound">
+					<button type="button" role="tab" aria-controls="bound-a" aria-selected="true">First</button>
+					<button type="button" role="tab" aria-controls="bound-b">Second</button>
+				</div>
+				<section role="tabpanel" id="bound-a"><p>First panel.</p></section>
+				<section role="tabpanel" id="bound-b"><a href="/second">Second panel</a></section>
+			</div>
+		</div>
+	`,
+})
+class BoundTabs {}
 
 describe('accessibility (axe-core)', () => {
 	// A consumer who marks buttons aria-disabled or aria-busy installs the guard, so the fixture does too.
@@ -124,16 +177,36 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(element)).toEqual([]);
 	});
 
-	it('finds no violations inside open popovers and tooltips', async () => {
+	it('finds no violations inside open popovers, tooltips and unselected tab panels', async () => {
 		const element = await render();
-		openPopovers(element);
+		reveal(element);
+		expect(await violations(element)).toEqual([]);
+	});
+
+	it('checks inside an unselected tab panel only once it is shown, so the second pass is needed', async () => {
+		document.body.innerHTML = '<main><section role="tabpanel" hidden="until-found"><button type="button"></button></section></main>';
+		expect(await violations(document.body)).toEqual([]);
+		reveal(document.body);
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
+	});
+
+	it('finds no violations in tabs as bindTabs leaves them, from the minimal markup', async () => {
+		const fixture = TestBed.createComponent(BoundTabs);
+		fixture.detectChanges();
+		TestBed.tick();
+		const element = fixture.nativeElement as HTMLElement;
+		const panel = element.querySelector('#bound-b')!;
+		expect(panel.getAttribute('aria-labelledby')).toBe(element.querySelector('[aria-controls="bound-b"]')!.id);
+		expect(panel.getAttribute('hidden')).toBe('until-found');
+		expect(await violations(element)).toEqual([]);
+		reveal(element);
 		expect(await violations(element)).toEqual([]);
 	});
 
 	it('checks inside a popover only once it is open, so the second pass is needed', async () => {
 		document.body.innerHTML = '<main><div popover><button type="button"></button></div></main>';
 		expect(await violations(document.body)).toEqual([]);
-		openPopovers(document.body);
+		reveal(document.body);
 		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
 	});
 

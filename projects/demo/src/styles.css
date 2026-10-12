@@ -1,5 +1,9 @@
-/* Vertical rhythm for the demo pages: 1rem between blocks, 2rem before a heading, 0.5rem after one. */
-:where(main :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, figure, table, pre, section) + :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, figure, table, pre, section)) {
+/*
+ * Vertical rhythm for the demo pages: 1rem between blocks, 2rem before a heading, 0.5rem after one.
+ * Hidden elements are skipped: a hidden="until-found" tab panel keeps its box, so a margin on it
+ * would leave a gap.
+ */
+:where(main :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, figure, table, pre, section):not([hidden]) + :is(h1, h2, h3, h4, h5, h6, p, ul, ol, dl, figure, table, pre, section):not([hidden])) {
 	margin-block-start: var(--itx-space-4);
 }
 :where(main :is(h1, h2, h3, h4, h5, h6) + *) {
