@@ -24,6 +24,16 @@ const LIVE = '[role="status"], [aria-live]';
 const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabindex], [contenteditable]';
 const CONTROL_LABELS = 'label:is([interop-switch], [interop-checkbox]), fieldset[interop-radio-group] label:has(> input[type="radio"])';
 const GROUPS = 'fieldset:is([interop-radio-group], [interop-checkbox-group])';
+const TABLISTS = '[interop-tabs] > [role="tablist"]';
+
+/** The tabs a tab list owns. */
+const tabsIn = (tablist: Element) => Array.from(tablist.children).filter((child) => child.getAttribute('role') === 'tab');
+/** The panel a tab controls, if it is a tab panel. */
+const panelOf = (tab: Element) => {
+	const id = tab.getAttribute('aria-controls');
+	const panel = id ? tab.ownerDocument.getElementById(id) : null;
+	return panel?.getAttribute('role') === 'tabpanel' ? panel : null;
+};
 
 const RULES: Record<string, { selector: string; check: Rule }> = {
 	'button-name': {
@@ -258,6 +268,71 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						problem: 'Every checkbox in this group is required.',
 						reason: 'required on a checkbox means that box must be checked, so the form will not submit until all of them are.',
 						advice: 'For "choose at least one", remove required and check the group: setCustomValidity() on one box, or a validator in your form model.',
+					}
+				: null;
+		},
+	},
+	'tabs-name': {
+		selector: TABLISTS,
+		check: (tablist) =>
+			ariaName(tablist)
+				? null
+				: {
+						problem: 'This tab list has no name.',
+						reason: 'A screen reader announces "tab list" with nothing to say what the tabs are for.',
+						advice: 'Add aria-label="…" to the tab list, or aria-labelledby pointing at a heading.',
+					},
+	},
+	'tabs-empty': {
+		selector: TABLISTS,
+		check: (tablist) =>
+			tabsIn(tablist).length
+				? null
+				: {
+						problem: 'This tab list has no tabs.',
+						reason: 'A tab list must own tabs. An empty one is announced as a control with nothing in it.',
+						advice: 'Render the tab list only when it has tabs.',
+					},
+	},
+	'tabs-children': {
+		selector: `${TABLISTS} > :not([role="tab"])`,
+		check: () => ({
+			problem: 'This element is inside a tab list but is not a tab.',
+			reason: 'A tab list may own only tabs. Anything else is skipped by the arrow keys, or announced as part of the tabs.',
+			advice: 'Move it out of the tab list. Put actions in a toolbar beside it.',
+		}),
+	},
+	'tabs-panel': {
+		selector: `${TABLISTS} > [role="tab"]`,
+		check: (tab) =>
+			panelOf(tab)
+				? null
+				: {
+						problem: 'This tab does not control a tab panel.',
+						reason: 'A tab shows its panel through aria-controls. Without one, choosing it shows nothing, and screen readers cannot find its content.',
+						advice: 'Set aria-controls to the id of a role="tabpanel" element.',
+					},
+	},
+	'tabs-selected': {
+		selector: TABLISTS,
+		check: (tablist) =>
+			tabsIn(tablist).filter((tab) => tab.getAttribute('aria-selected') === 'true').length === 1 || !tabsIn(tablist).length
+				? null
+				: {
+						problem: 'This tab list does not have exactly one selected tab.',
+						reason: 'One tab is always selected, and its panel shown. With none or several, the shown panel and the announced tab disagree.',
+						advice: 'Mark one tab aria-selected="true" in the markup, and call bindTabs() to keep it so.',
+					},
+	},
+	'tabs-panel-hidden': {
+		selector: `${TABLISTS} > [role="tab"]:not([aria-selected="true"])`,
+		check: (tab) => {
+			const panel = panelOf(tab);
+			return panel && !panel.hasAttribute('hidden')
+				? {
+						problem: 'The panel of an unselected tab is not hidden.',
+						reason: 'Every panel shows at once until the tabs bind, and screen readers read panels that are not selected.',
+						advice: 'Write hidden="until-found" on every panel but the selected one, so the page renders right before bindTabs() runs.',
 					}
 				: null;
 		},

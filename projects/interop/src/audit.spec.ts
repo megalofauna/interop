@@ -213,6 +213,50 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual(['checkbox-group-required']);
 	});
 
+	describe('tabs', () => {
+		const tabs = ({ name = 'aria-label="Sections"', tabs: tabMarkup = '', panels = '' } = {}) =>
+			`<div interop-tabs><div role="tablist" ${name}>${tabMarkup}</div>${panels}</div>`;
+		const tab = (key: string, selected: boolean) =>
+			`<button type="button" role="tab" aria-controls="p-${key}" aria-selected="${selected}">${key}</button>`;
+		const panel = (key: string, hidden: boolean) => `<section role="tabpanel" id="p-${key}" ${hidden ? 'hidden="until-found"' : ''}>${key}</section>`;
+		const good = { tabs: tab('a', true) + tab('b', false), panels: panel('a', false) + panel('b', true) };
+
+		it('accepts tabs written as the helper expects', () => {
+			render(tabs(good));
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a tab list with no name', () => {
+			render(tabs({ ...good, name: '' }));
+			expect(rules()).toEqual(['tabs-name']);
+		});
+
+		it('flags a tab list with no tabs', () => {
+			render(tabs({ tabs: '', panels: '' }));
+			expect(rules()).toEqual(['tabs-empty']);
+		});
+
+		it('flags something other than a tab inside the tab list', () => {
+			render(tabs({ ...good, tabs: good.tabs + '<button type="button">More</button>' }));
+			expect(rules()).toEqual(['tabs-children']);
+		});
+
+		it('flags a tab that controls no panel', () => {
+			render(tabs({ ...good, panels: panel('a', false) }));
+			expect(rules()).toEqual(['tabs-panel']);
+		});
+
+		it('flags a tab list without exactly one selected tab', () => {
+			render(tabs({ ...good, tabs: tab('a', true) + tab('b', true), panels: panel('a', false) + panel('b', false) }));
+			expect(rules()).toEqual(['tabs-selected']);
+		});
+
+		it('flags the shown panel of an unselected tab', () => {
+			render(tabs({ ...good, panels: panel('a', false) + panel('b', false) }));
+			expect(rules()).toEqual(['tabs-panel-hidden']);
+		});
+	});
+
 	it('flags a radio group with one radio', () => {
 		render('<fieldset interop-radio-group><legend>Agree</legend><label><input type="radio" name="a"> Yes</label></fieldset>');
 		expect(rules()).toEqual(['radio-group-options']);
