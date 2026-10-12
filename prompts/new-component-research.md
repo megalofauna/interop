@@ -39,6 +39,21 @@ Before a single line of implementation is written, answer the following.
 
 ---
 
+## 0. Names
+
+List the names consumers use for **[COMPONENT]**. Sources: the HTML and ARIA
+specs, platform guidelines (Apple HIG, Material, Fluent), and the libraries in
+[research/library-catalog.md](research/library-catalog.md). Record which
+source uses which name.
+
+- Pick the name that fits best. Platform terms (an ARIA role, an HTML element
+  or attribute) win ties.
+- Put the full list in a comment at the top of the component's structure CSS
+  file.
+- Show the alternatives on the demo page as one line: "Also known as …".
+
+---
+
 ## 1. Semantic Correctness & Accessibility
 
 What is the most correct, industry-standard way to mark up **[COMPONENT]**
@@ -199,7 +214,8 @@ Once satisfied with the above, produce:
 - **devMode warnings:** specific runtime guards (missing accessible name,
   invalid parent, required directive missing, conflicting attributes)
 - **Demo page outline:** examples to ship in
-  `projects/demo/src/app/pages/[component]/` — golden path + edge cases
+  `projects/demo/src/app/components/[component]/` — golden path + edge cases,
+  plus the "Also known as" line from §0
 - **Open questions:** anything that needs user input before implementation
   begins. Be specific — "should X default to Y or Z?" beats "API shape TBD."
 
