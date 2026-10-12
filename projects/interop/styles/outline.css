@@ -13,6 +13,7 @@
 :where(
 	button[interop-button]:focus-visible,
 	[interop-scroll-area]:focus-visible,
+	figure[interop-code-block] > pre:focus-visible,
 	label[interop-switch] > input:is([role="switch"], [switch]):focus-visible
 ) {
 	outline-width: var(--itx-outline-width);
