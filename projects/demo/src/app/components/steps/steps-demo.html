@@ -53,3 +53,53 @@
 	<li aria-current="step">العنوان</li>
 	<li>الدفع <span itx-visually-hidden>غير مكتمل</span></li>
 </ol>
+
+<h2>A multi-step form</h2>
+<p>
+	One <code>form interop-steps-form</code>, with a <code>fieldset</code> per step. Each step holds its own buttons,
+	which send <code>--next</code>, <code>--back</code> or <code>--show-step</code> to the form as invoker commands.
+	Hidden steps are <code>hidden</code>, never <code>disabled</code>, so every value submits. Next checks only the
+	current step. Enter in a field means Next. After a step change, focus moves to the step's heading. Without script,
+	every step shows, as one long form.
+</p>
+<form id="apply" interop-steps-form [history]="true" (interop-steps-change)="changed($event)" (submit)="submit($event)">
+	<ol interop-steps aria-label="Application progress">
+		<li>Your details <span itx-visually-hidden data-step-status></span></li>
+		<li>Address <span itx-visually-hidden data-step-status></span></li>
+		<li>Check your answers <span itx-visually-hidden data-step-status></span></li>
+	</ol>
+	<fieldset id="details">
+		<legend><h3>Your details (step 1 of 3)</h3></legend>
+		<p><label>Full name <input name="name" required autocomplete="name" /></label></p>
+		<p><label>Email <input name="email" type="email" required autocomplete="email" /></label></p>
+		<p><button interop-button type="button" command="--next" commandfor="apply">Next</button></p>
+	</fieldset>
+	<fieldset id="address" hidden>
+		<legend><h3>Address (step 2 of 3)</h3></legend>
+		<p><label>Street <input name="street" required autocomplete="street-address" /></label></p>
+		<p><label>Postcode <input name="postcode" required autocomplete="postal-code" /></label></p>
+		<p>
+			<button interop-button type="button" command="--back" commandfor="apply">Back</button>
+			<button interop-button type="button" command="--next" commandfor="apply">Next</button>
+		</p>
+	</fieldset>
+	<fieldset id="review" hidden>
+		<legend><h3>Check your answers (step 3 of 3)</h3></legend>
+		<p>
+			Your details
+			<button interop-button type="button" itx-size="sm" command="--show-step" value="details" commandfor="apply">Change</button>
+		</p>
+		<p>
+			Address
+			<button interop-button type="button" itx-size="sm" command="--show-step" value="address" commandfor="apply">Change</button>
+		</p>
+		<p>
+			<button interop-button type="button" command="--back" commandfor="apply">Back</button>
+			<button interop-button type="submit">Send application</button>
+		</p>
+	</fieldset>
+</form>
+<p>Current step: {{ step() }}.</p>
+@if (sent(); as values) {
+	<p>Sent: {{ values }}</p>
+}

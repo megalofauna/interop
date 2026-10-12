@@ -1,7 +1,8 @@
 /*
  * Public API Surface of interop/steps
  *
- * The step indicator is CSS only. bindSteps() is exported from interop.
+ * The directive. The step indicator is CSS only and loads from interop.css; bindSteps() is
+ * exported from interop.
  */
 
-export {};
+export { InteropStepsForm } from './steps';

@@ -7,6 +7,7 @@ import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
+import { InteropStepsForm } from 'interop/steps';
 import { InteropTabs } from 'interop/tabs';
 import { InteropTooltip } from 'interop/tooltip';
 import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
@@ -177,6 +178,32 @@ class Components {
 })
 class BoundTabs {}
 
+@Component({
+	imports: [InteropStepsForm],
+	template: `
+		<div>
+			<form id="axe-steps" interop-steps-form>
+				<ol interop-steps aria-label="Application progress">
+					<li>Details <span itx-visually-hidden data-step-status></span></li>
+					<li>Address <span itx-visually-hidden data-step-status></span></li>
+				</ol>
+				<fieldset id="axe-details">
+					<legend><h2>Your details (step 1 of 2)</h2></legend>
+					<label>Full name <input name="name" required /></label>
+					<button type="button" command="--next" commandfor="axe-steps">Next</button>
+				</fieldset>
+				<fieldset id="axe-address" hidden>
+					<legend><h2>Address (step 2 of 2)</h2></legend>
+					<label>Street <input name="street" required /></label>
+					<button type="button" command="--back" commandfor="axe-steps">Back</button>
+					<button type="submit">Send</button>
+				</fieldset>
+			</form>
+		</div>
+	`,
+})
+class BoundSteps {}
+
 describe('accessibility (axe-core)', () => {
 	// A consumer who marks buttons aria-disabled or aria-busy installs the guard, so the fixture does too.
 	let unguard: () => void;
@@ -223,6 +250,17 @@ describe('accessibility (axe-core)', () => {
 		expect(panel.getAttribute('hidden')).toBe('until-found');
 		expect(await violations(element)).toEqual([]);
 		reveal(element);
+		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations in a multi-step form as bindSteps leaves it, with every step shown', async () => {
+		const fixture = TestBed.createComponent(BoundSteps);
+		fixture.detectChanges();
+		TestBed.tick();
+		const element = fixture.nativeElement as HTMLElement;
+		expect(element.querySelector('li[aria-current="step"]')?.textContent).toContain('current');
+		expect(await violations(element)).toEqual([]);
+		element.querySelectorAll('fieldset[hidden]').forEach((step) => step.removeAttribute('hidden'));
 		expect(await violations(element)).toEqual([]);
 	});
 

@@ -13,6 +13,7 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 | Dialog directive deep-dive | [components/dialog.md](components/dialog.md) |
 | Popover directive deep-dive | [components/popover.md](components/popover.md) |
 | Stepper — retired; step indicator, recipe and bindSteps instead | [components/stepper.md](components/stepper.md) |
+| Steps (step indicator, multi-step form, bindSteps) | [components/steps.md](components/steps.md) |
 | Table component deep-dive | [components/table.md](components/table.md) |
 | Tabs (consumer markup, bindTabs, InteropTabs) | [components/tabs.md](components/tabs.md) |
 | Toast component deep-dive | [components/toast.md](components/toast.md) |

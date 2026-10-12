@@ -280,6 +280,23 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('multi-step form', () => {
+		it('accepts steps with a legend, hidden plainly', () => {
+			render('<form interop-steps-form><fieldset><legend>A</legend></fieldset><fieldset hidden><legend>B</legend></fieldset></form>');
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a step with no legend or heading', () => {
+			render('<form interop-steps-form><fieldset><input name="a"></fieldset></form>');
+			expect(rules()).toEqual(['steps-form-heading']);
+		});
+
+		it('flags a step hidden by disabled or until-found', () => {
+			render('<form interop-steps-form><fieldset disabled><legend>A</legend></fieldset><fieldset hidden="until-found"><legend>B</legend></fieldset></form>');
+			expect(rules()).toEqual(['steps-form-hidden', 'steps-form-hidden']);
+		});
+	});
+
 	describe('step indicator', () => {
 		const steps = (name: string, items: string) => `<ol interop-steps ${name}>${items}</ol>`;
 		const good = '<li><a href="/a">A</a></li><li aria-current="step">B</li><li>C</li>';

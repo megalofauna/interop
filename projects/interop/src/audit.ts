@@ -422,6 +422,27 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
+	'steps-form-heading': {
+		selector: 'form[interop-steps-form] > fieldset',
+		check: (step) =>
+			step.querySelector('legend, h1, h2, h3, h4, h5, h6')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This step has no legend or heading.',
+						reason: 'After a step change focus moves to the step’s heading, which says where the user is. Without one, focus has nowhere useful to go.',
+						advice: 'Start the step with a <legend>, e.g. <legend><h2>Address (step 2 of 3)</h2></legend>.',
+					},
+	},
+	'steps-form-hidden': {
+		selector: 'form[interop-steps-form] > fieldset:is([disabled], [hidden="until-found"])',
+		check: (step) => ({
+			problem: step.hasAttribute('disabled') ? 'This step is disabled.' : 'This step is hidden until found.',
+			reason: step.hasAttribute('disabled')
+				? 'A disabled fieldset leaves its values out of the submission.'
+				: 'Find-in-page would reveal a step the user has not reached.',
+			advice: 'Hide a step with plain hidden. bindSteps() shows and hides them for you.',
+		}),
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>
