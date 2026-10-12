@@ -1,90 +1,96 @@
 # Control — Mental Model Card
 
-**Status:** switch built. Checkbox and radio designed, not built. Research and
-remediation list:
-[prompts/VISIMORPH-RESEARCH.md](../../prompts/VISIMORPH-RESEARCH.md).
+**Status:** switch and radio group built. Checkbox designed, not built.
+Research: [VISIMORPH](../../prompts/VISIMORPH-RESEARCH.md),
+[RADIO-GROUP](../../prompts/RADIO-GROUP-RESEARCH.md),
+[CHECKBOX](../../prompts/CHECKBOX-RESEARCH.md).
 
-Control styles the three binary form controls: checkbox, radio, and switch.
-It is CSS only. The native `<input>` draws its own indicator with
-`appearance: none` and `::before`/`::after`. The browser holds all state.
-There is no TS component.
+Control is the shared approach for the binary form controls: switch, radio
+group, and checkbox. Each is CSS only. The native `<input>` draws itself with
+`appearance: none` and `::before`. The browser holds all state. There is no
+TS component.
 
 ```html
-<label interop-checkbox><input type="checkbox" name="terms"> Accept terms</label>
-<label interop-radio><input type="radio" name="size" value="s"> Small</label>
 <label interop-switch><input type="checkbox" role="switch" name="dark"> Dark mode</label>
+
+<fieldset interop-radio-group>
+  <legend>Shipping</legend>
+  <label><input type="radio" name="shipping" value="standard" checked> Standard</label>
+  <label><input type="radio" name="shipping" value="express"> Express</label>
+</fieldset>
+
+<label interop-checkbox><input type="checkbox" name="terms"> Accept terms</label>
 ```
+
+## Where the attribute goes
+
+The identity attribute goes on the smallest element that is a complete control.
+
+| Control | Complete control | Attribute |
+|---|---|---|
+| Switch | One labeled input | `label[interop-switch]` |
+| Checkbox | One labeled input | `label[interop-checkbox]` |
+| Radio | The set of same-`name` radios | `fieldset[interop-radio-group]`. Item labels carry no attribute |
+
+A radio cannot be unchecked by the user, so a single radio is never a control.
+The shared `name` gives the group its behavior: one checked radio, one tab stop,
+arrow keys, group `required`, and form reset. The fieldset and legend name the
+group.
+
+A bare `<input>` outside these selectors keeps its native rendering.
 
 ## Files
 
 ```
-projects/interop/switch/
-  interop-switch.structure.css    label, track, thumb, states, forced colors; names list at the top
-  interop-switch.base.css         token values
+projects/interop/<name>/
+  interop-<name>.structure.css    label, input, pseudo-elements, states, forced colors; names list at the top
+  interop-<name>.base.css         token values and size steps
   public-api.ts                   export {};  (CSS only, same as popover)
   ng-package.json
+projects/interop/styles/fieldset.css   group layout shared by radio and checkbox groups
+projects/interop/styles/outline.css    focus ring; every control's input is in its selector list
 ```
 
-Each variant is its own flat folder (`switch/`, later `checkbox/` and
-`radio/`), imported as `interop/<name>`. All CSS is imported from
-`interop.css`. This card covers the approach the three share. Anything they
-share in code goes in `styles/`, the way `outline.css` serves several
-components.
-The switch focus ring is in the shared selector list in `styles/outline.css`.
-The demo page is `projects/demo/src/app/components/switch/`.
+Folders: `switch/`, `radio-group/`, `checkbox/`. Each is imported as
+`interop/<name>`, and its CSS from `interop.css`. Demo pages are in
+`projects/demo/src/app/components/<name>/`.
 
-## Scope
+## Selectors
 
-The input styles apply only inside the three label selectors:
-
-```css
-:where(label:is([interop-checkbox], [interop-radio], [interop-switch])) > input
-```
-
-A bare `<input>` outside those labels keeps its native rendering. There is no
-opt-in attribute for bare inputs.
-
-## Variant selection
-
-The input's own semantics select the variant. There is no `type` attribute.
-
-| Variant | Selector |
+| Control | Input selector |
 |---|---|
-| radio | `input[type=radio]` |
-| checkbox | `input[type=checkbox]:not([role=switch], [switch])` |
 | switch | `label[interop-switch] > input:is([role=switch], [switch])` |
+| radio | `fieldset[interop-radio-group] label > input[type=radio]` |
+| checkbox | `label[interop-checkbox] > input[type=checkbox]` |
 
-`role="switch"` is the supported spelling. `[switch]` is matched because Safari
-17.4+ ships it; other engines ignore it. `appearance: none` also turns off
-Safari's native switch rendering. A switch input with neither keeps the native
-checkbox look, so a missing role is visible.
+`role="switch"` is the supported switch spelling. `[switch]` is matched because
+Safari 17.4+ ships it. A switch input with neither keeps the native checkbox
+look, so a missing role is visible.
+
+The radio item selector is a descendant selector, so items can sit in lists or
+other wrappers. A label in the group without a radio, such as an "Other" text
+box, is not styled.
 
 ## State
 
 | State | Selector | Effect |
 |---|---|---|
-| checked | `:checked` | fill changes; switch thumb moves to inline-end |
+| checked | `:checked` | fill changes; switch thumb moves to inline-end; radio dot scales in |
 | indeterminate | `:indeterminate` | checkbox only, dash replaces check |
 | disabled | `:disabled` | the label and its text take reduced opacity |
 | focus | `:focus-visible` | outline on the input |
-| hover | label `:hover` | track background and border only |
+| hover | label `:hover` | the input's background and border only |
 
-Every state comes from a pseudo-class. Nothing reflects state into attributes.
-`form.reset()`, bfcache restore, autofill, and `<fieldset disabled>` update the
-visual with no extra code.
+Every state comes from a pseudo-class. `form.reset()`, bfcache restore,
+autofill, and `<fieldset disabled>` update the visual with no extra code.
 
 Indeterminate is a DOM property. In Angular, bind it directly:
-
-```html
-<input type="checkbox" [checked]="all()" [indeterminate]="some()">
-```
-
-Do not set `aria-checked` on the input. Browsers map `.indeterminate` to
-mixed, and ARIA in HTML disallows `aria-checked` on a native checkbox.
+`[indeterminate]="some()"`. Do not set `aria-checked` on a native checkbox or
+radio. Browsers report the state, and ARIA in HTML disallows it.
 
 ## Label
 
-The label is the click target, and the WCAG 2.5.8 measurement. Every control
+The label is the click target and the WCAG 2.5.8 measurement. Every control
 lays out its label the same way:
 
 - The label is `inline-block` with `position: relative`. Its text stays in
@@ -99,19 +105,31 @@ lays out its label the same way:
 The control always sits at the inline start. The label has no background or
 border of its own, and there are no layout modifiers.
 
-## Switch geometry
+## Group layout
 
-The input is the track and its `::before` is the thumb. The track is a flex
-box, and the thumb moves by `margin-inline-start: calc(100% - thumb size)`,
-where `100%` is the track's content width. That is a logical property, so
-right-to-left needs no rule.
+`styles/fieldset.css` lays out `fieldset[interop-radio-group]` and
+`fieldset[interop-checkbox-group]`: a flex column, no fieldset border or
+padding, `min-inline-size: 0`, and a legend in the `p` role.
+`--itx-fieldset-flex-direction: row` puts the options in a line. The legend is
+spaced with padding because some engines ignore a legend's margin.
+
+Put a hint or error under the legend and point `aria-describedby` on the
+fieldset at it.
+
+## Geometry
+
+| Control | Drawing |
+|---|---|
+| Switch | The input is the track, a flex box. `::before` is the thumb. It moves by `margin-inline-start: calc(100% - thumb size)`, a logical property, so right-to-left needs no rule |
+| Radio | The input is the circle (`border-radius: 50%`, fixed). `::before` is the dot, centered with `inset: 0; margin: auto`, and `scale: 0` until checked |
 
 ## Tokens
 
 Names follow `--itx-<component>[-<element>]-<css-property>[-<state>]`. Values
-are declared on the label in the base file. Override them on the label or a
-class that matches it. The structure file reads tokens with no fallbacks,
-except state tokens, which fall back to the rest value.
+are declared on the element that carries the attribute. Override them there or
+on a class that matches it. The structure file reads tokens with no fallbacks,
+except state tokens, which fall back to the rest value. Each control has its
+own family.
 
 | Switch token | Default |
 |---|---|
@@ -126,45 +144,83 @@ except state tokens, which fall back to the rest value.
 | `--itx-switch-thumb-background-color[-checked]` | neutral-500/400, 50/900 |
 | `--itx-switch-transition-duration`, `-timing-function` | the shared transition tokens |
 
+| Radio group token | Default |
+|---|---|
+| `--itx-radio-group-label-gap`, `-label-min-block-size` | `--itx-space-2`, `--itx-space-10` |
+| `--itx-radio-group-label-font-size`, `-label-line-height` | the `label` role |
+| `--itx-radio-group-label-cursor[-disabled]`, `-label-opacity-disabled` | default, not-allowed, 0.5 |
+| `--itx-radio-group-circle-size`, `-circle-border-width`, `-circle-border-style` | `--itx-space-5`, 1px, solid |
+| `--itx-radio-group-circle-border-color[-hover\|-checked]` | neutral-500/400, 600/300, transparent |
+| `--itx-radio-group-circle-background-color[-hover\|-checked\|-checked-hover]` | neutral-50/900, 100/800, 900/50, 700/200 |
+| `--itx-radio-group-dot-size`, `-dot-background-color` | `--itx-space-2`, neutral-50/900 |
+| `--itx-radio-group-transition-duration`, `-timing-function` | the shared transition tokens |
+
+| Fieldset token | Default |
+|---|---|
+| `--itx-fieldset-flex-direction` | column |
+| `--itx-fieldset-row-gap`, `-column-gap` | `--itx-space-0`, `--itx-space-6` |
+| `--itx-fieldset-legend-font-size`, `-legend-line-height` | the `p` role |
+| `--itx-fieldset-legend-padding-block-end` | `--itx-space-1` |
+
 ## Size
 
-| `itx-size` on the label | Track (outer) | Thumb | Label min block size | Text |
+`itx-size="lg"` goes on the element that carries the attribute. There is no
+`sm`.
+
+| Control | Step | Indicator | Label min block size | Text |
 |---|---|---|---|---|
-| none, `md` | 42 × 24px (`space-6`) | 18px | 40px (`space-10`) | `label` role |
-| `lg` | 56 × 32px (`space-8`) | 26px | 48px (`space-12`) | `p` role |
+| Switch | default | track 42 × 24px, thumb 18px | 40px | `label` role |
+| Switch | `lg` | track 56 × 32px, thumb 26px | 48px | `p` role |
+| Radio | default | circle 20px, dot 8px | 40px | `label` role |
+| Radio | `lg` | circle 24px, dot 10px | 48px | `p` role |
 
-`lg` sets the track height, the label's minimum height, and the text role. The
-thumb size is the track height minus padding and border. The track is 1.75
-times as wide as it is tall. There is no `sm`. `styles/target-size.spec.ts`
-checks the label's minimum height at every step.
+## Tests
 
-`styles/contrast.spec.ts` checks every pair at 3:1 in both schemes:
-off and hover track border against the page, off thumb against the off and
-hover tracks, on and on-hover track against the page, and on thumb against
-the on tracks.
+- `styles/contrast.spec.ts`: 3:1 in both schemes for every unchecked border and
+  checked fill against the page, and every thumb or dot against its fill, at
+  rest and on hover.
+- `styles/target-size.spec.ts`: every label minimum height at every size step
+  is 24px or more.
+- `a11y/a11y.spec.ts`: axe on every control and state, plus negative controls
+  for an unlabeled switch and radio.
+- `src/audit.spec.ts`: the dev audit rules below.
 
-Each variant has its own token family (`--itx-switch-*`). A cross-variant
-layer that re-themes all three at once is decided when the checkbox lands,
-and only if it removes duplication without adding aliases.
+## Dev audit rules
+
+| Rule | Flags |
+|---|---|
+| `control-name` | A control label with no text and no label on its input |
+| `control-aria-checked` | `aria-checked` on a native checkbox or radio |
+| `group-name` | A radio or checkbox group with no legend and no `aria-label` |
+| `radio-group-shared-name` | Radios in a group with a missing or differing `name`. Angular's `formControlName` does not write `name`, so the consumer must |
+| `radio-group-options` | A radio group with fewer than two radios |
 
 ## Media queries
 
 | Query | Behavior |
 |---|---|
-| `forced-colors: active` | `forced-color-adjust: none` with system colors: track `Canvas`/`CanvasText`, on `Highlight`/`HighlightText`, disabled `GrayText`, focus ring `Highlight` |
+| `forced-colors: active` | `forced-color-adjust: none` with system colors: rest `Canvas`/`CanvasText`, checked `Highlight`/`HighlightText`, disabled `GrayText`, focus ring `Highlight` |
 | `prefers-reduced-motion: reduce` | The shared transition tokens are 0ms (`styles/transition.css`) |
-| `prefers-contrast: more` | 2px track border |
+| `prefers-contrast: more` | 2px border |
 
 ## Constraints
 
-- Firefox creates `::before`/`::after` on checkbox and radio only when
-  `appearance: none` is set. The structural file always sets it.
-- Focus never changes the control's size.
+- Firefox creates `::before` on checkbox and radio only when `appearance: none`
+  is set. Every structure file sets it.
+- Focus never changes a control's size.
 - A switch has no indeterminate state.
+- `role="radiogroup"` is not added. Fieldset and legend are the robust group
+  semantics. A consumer may add the role.
+
+## Angular
+
+Angular forms need no Interop code. `[(ngModel)]` and `formControlName` use
+Angular's built-in checkbox and radio accessors on the native input, and
+Signal Forms bind it too. Radios also need `name`. A `FormsModule` import adds
+`novalidate` to every form; `ngNativeValidate` keeps the browser's validation.
 
 ## When a TS component is warranted
 
-None ships until a concrete need exists. Angular forms need none: the built-in
-checkbox value accessor and Signal Forms bind the native input. Likely first
-needs: a checkbox group, or app-level data passing. A component added then wraps this markup. It does not mirror
-input state into another element. See [visimorph.md](visimorph.md) for why.
+None ships until a concrete need exists. A component added then wraps this
+markup. It does not mirror input state into another element. See
+[visimorph.md](visimorph.md) for why.

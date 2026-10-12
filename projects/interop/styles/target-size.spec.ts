@@ -4,6 +4,8 @@ import spaceCss from './space.css' with { loader: 'text' };
 import buttonCss from '../button/interop-button.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import switchCss from '../switch/interop-switch.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
 
 // jsdom has no layout, so axe cannot measure targets. This reads every size step's declared height instead.
 // A control's input sits inside its label, so the label is the target.
@@ -26,6 +28,7 @@ describe('target size', () => {
 	const targets = [
 		['button', buttonCss, '--itx-button-min-block-size'],
 		['switch label', switchCss, '--itx-switch-min-block-size'],
+		['radio label', radioGroupCss, '--itx-radio-group-label-min-block-size'],
 	] as const;
 
 	for (const [label, css, name] of targets) {

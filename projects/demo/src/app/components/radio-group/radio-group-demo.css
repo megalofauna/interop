@@ -1,0 +1,30 @@
+.aka {
+	font-style: italic;
+}
+
+.narrow {
+	max-inline-size: 20rem;
+}
+
+.row {
+	display: flex;
+	gap: var(--itx-space-2);
+	margin-block-start: var(--itx-space-2);
+}
+
+.inline {
+	--itx-fieldset-flex-direction: row;
+}
+
+.hint {
+	margin-block: 0 var(--itx-space-1);
+}
+
+.large-dot {
+	--itx-radio-group-dot-size: var(--itx-space-3);
+}
+
+* + fieldset,
+* + form {
+	margin-block-start: var(--itx-space-4);
+}

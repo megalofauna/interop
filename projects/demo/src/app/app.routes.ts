@@ -28,6 +28,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/popover/popover-demo").then((m) => m.PopoverDemo),
 	},
 	{
+		path: "components/radio-group",
+		title: "Radio group",
+		loadComponent: () => import("./components/radio-group/radio-group-demo").then((m) => m.RadioGroupDemo),
+	},
+	{
 		path: "components/scroll-area",
 		title: "Scroll area",
 		loadComponent: () => import("./components/scroll-area/scroll-area-demo").then((m) => m.ScrollAreaDemo),

@@ -1,0 +1,41 @@
+/*
+ * The layout for a fieldset of controls. Radio groups and checkbox groups share it.
+ *
+ *   <fieldset interop-radio-group>
+ *     <legend>Shipping</legend>
+ *     <label><input type="radio" name="shipping" value="standard"> Standard</label>
+ *     <label><input type="radio" name="shipping" value="express"> Express</label>
+ *   </fieldset>
+ *
+ * The legend names the group. Override these properties on the fieldset, or on a class that matches it.
+ * Set --itx-fieldset-flex-direction to row to lay the options out in a line.
+ */
+
+:where(fieldset:is([interop-radio-group], [interop-checkbox-group])) {
+	--itx-fieldset-flex-direction: column;
+	--itx-fieldset-row-gap: var(--itx-space-0);
+	--itx-fieldset-column-gap: var(--itx-space-6);
+	--itx-fieldset-legend-font-size: var(--itx-font-size-p);
+	--itx-fieldset-legend-line-height: var(--itx-line-height-p);
+	--itx-fieldset-legend-padding-block-end: var(--itx-space-1);
+
+	display: flex;
+	flex-direction: var(--itx-fieldset-flex-direction);
+	flex-wrap: wrap;
+	align-items: flex-start;
+	row-gap: var(--itx-fieldset-row-gap);
+	column-gap: var(--itx-fieldset-column-gap);
+	/* A fieldset is as wide as its content by default, which stops long labels wrapping. */
+	min-inline-size: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* The legend sits above the flex items, not among them. Padding spaces it because some engines ignore its margin. */
+:where(fieldset:is([interop-radio-group], [interop-checkbox-group]) > legend) {
+	padding: 0;
+	padding-block-end: var(--itx-fieldset-legend-padding-block-end);
+	font-size: var(--itx-fieldset-legend-font-size);
+	line-height: var(--itx-fieldset-legend-line-height);
+}

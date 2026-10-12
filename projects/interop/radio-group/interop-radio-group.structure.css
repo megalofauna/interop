@@ -1,0 +1,134 @@
+/*
+ * Radio group: one choice from a set. A fieldset of native radios that share a name, named by its legend.
+ *
+ *   <fieldset interop-radio-group>
+ *     <legend>Shipping</legend>
+ *     <label><input type="radio" name="shipping" value="standard" checked> Standard</label>
+ *     <label><input type="radio" name="shipping" value="express"> Express</label>
+ *   </fieldset>
+ *   <fieldset interop-radio-group itx-size="lg">…</fieldset>
+ *
+ * The shared name gives the group its behavior: one radio checked at a time, one tab stop, arrow keys,
+ * `required` on any one radio for the whole group, and form reset. The fieldset and legend name the
+ * group. The attribute sits on the fieldset because a radio is never a control on its own. Each input
+ * draws its circle and its ::before draws the dot. Every state comes from the input's pseudo-classes.
+ * The group layout is in styles/fieldset.css.
+ *
+ * Also known as:
+ *   radio buttons     Carbon, Material, HTML ("radio button group")
+ *   radios            GOV.UK
+ *   choice group      Fluent v8 (ChoiceGroup)
+ *   option buttons    Microsoft Office
+ * Radio group is the ARIA role and APG pattern, and the name in Fluent v9, Spectrum, Calcite, MUI,
+ * Radix, Chakra, Angular Material and Ant Design.
+ */
+
+/* Each option. The circle sits at the inline start, centered on the first line, and the text wraps beside it. */
+:where(fieldset[interop-radio-group] label:has(> input[type="radio"])) {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	min-block-size: var(--itx-radio-group-label-min-block-size);
+	padding-block: calc((var(--itx-radio-group-label-min-block-size) - 1lh) / 2);
+	padding-inline-start: calc(var(--itx-radio-group-circle-size) + var(--itx-radio-group-label-gap));
+	font-size: var(--itx-radio-group-label-font-size);
+	line-height: var(--itx-radio-group-label-line-height);
+	cursor: var(--itx-radio-group-label-cursor);
+}
+
+:where(fieldset[interop-radio-group] label:has(> input[type="radio"]:disabled)) {
+	opacity: var(--itx-radio-group-label-opacity-disabled);
+	cursor: var(--itx-radio-group-label-cursor-disabled);
+}
+
+/* The circle. Firefox draws the ::before only because this sets `appearance: none`. */
+:where(fieldset[interop-radio-group] label > input[type="radio"]) {
+	appearance: none;
+	position: absolute;
+	inset-block-start: calc((var(--itx-radio-group-label-min-block-size) - var(--itx-radio-group-circle-size)) / 2);
+	inset-inline-start: 0;
+	box-sizing: border-box;
+	inline-size: var(--itx-radio-group-circle-size);
+	block-size: var(--itx-radio-group-circle-size);
+	margin: 0;
+	background-color: var(--itx-radio-group-circle-background-color);
+	border-width: var(--itx-radio-group-circle-border-width);
+	border-style: var(--itx-radio-group-circle-border-style);
+	border-color: var(--itx-radio-group-circle-border-color);
+	border-radius: 50%;
+	cursor: inherit;
+	transition-property: background-color, border-color;
+	transition-duration: var(--itx-radio-group-transition-duration);
+	transition-timing-function: var(--itx-radio-group-transition-timing-function);
+}
+
+/* The dot, hidden until the radio is checked. */
+:where(fieldset[interop-radio-group] label > input[type="radio"])::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	inline-size: var(--itx-radio-group-dot-size);
+	block-size: var(--itx-radio-group-dot-size);
+	background-color: var(--itx-radio-group-dot-background-color);
+	border-radius: 50%;
+	scale: 0;
+	transition-property: scale;
+	transition-duration: var(--itx-radio-group-transition-duration);
+	transition-timing-function: var(--itx-radio-group-transition-timing-function);
+}
+
+:where(fieldset[interop-radio-group] label:hover > input[type="radio"]:not(:checked, :disabled)) {
+	background-color: var(--itx-radio-group-circle-background-color-hover, var(--itx-radio-group-circle-background-color));
+	border-color: var(--itx-radio-group-circle-border-color-hover, var(--itx-radio-group-circle-border-color));
+}
+
+:where(fieldset[interop-radio-group] label > input[type="radio"]:checked) {
+	background-color: var(--itx-radio-group-circle-background-color-checked);
+	border-color: var(--itx-radio-group-circle-border-color-checked);
+}
+
+:where(fieldset[interop-radio-group] label:hover > input[type="radio"]:checked:not(:disabled)) {
+	background-color: var(
+		--itx-radio-group-circle-background-color-checked-hover,
+		var(--itx-radio-group-circle-background-color-checked)
+	);
+}
+
+:where(fieldset[interop-radio-group] label > input[type="radio"]:checked)::before {
+	scale: 1;
+}
+
+/* System colors, so the circle and the dot stay visible when the user forces colors. */
+@media (forced-colors: active) {
+	:where(fieldset[interop-radio-group] label > input[type="radio"]) {
+		forced-color-adjust: none;
+		background-color: Canvas;
+		border-color: CanvasText;
+	}
+
+	:where(fieldset[interop-radio-group] label > input[type="radio"]:checked) {
+		background-color: Highlight;
+		border-color: Highlight;
+	}
+
+	:where(fieldset[interop-radio-group] label > input[type="radio"]:checked)::before {
+		background-color: HighlightText;
+	}
+
+	:where(fieldset[interop-radio-group] label > input[type="radio"]:disabled) {
+		border-color: GrayText;
+	}
+
+	:where(fieldset[interop-radio-group] label > input[type="radio"]:checked:disabled) {
+		background-color: GrayText;
+	}
+
+	:where(fieldset[interop-radio-group] label > input[type="radio"]:checked:disabled)::before {
+		background-color: Canvas;
+	}
+
+	:where(fieldset[interop-radio-group] label > input[type="radio"]:focus-visible) {
+		outline-color: Highlight;
+	}
+}

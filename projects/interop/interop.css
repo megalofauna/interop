@@ -6,6 +6,7 @@
 @import "./styles/transition.css";
 @import "./styles/outline.css";
 @import "./styles/visually-hidden.css";
+@import "./styles/fieldset.css";
 @import "./button/interop-button.base.css";
 @import "./button/interop-button.structure.css";
 @import "./icon/interop-icon.base.css";
@@ -22,3 +23,5 @@
 @import "./tooltip/interop-tooltip.structure.css";
 @import "./switch/interop-switch.base.css";
 @import "./switch/interop-switch.structure.css";
+@import "./radio-group/interop-radio-group.base.css";
+@import "./radio-group/interop-radio-group.structure.css";
