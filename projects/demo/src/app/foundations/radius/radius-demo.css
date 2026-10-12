@@ -8,7 +8,7 @@
 
 /* Each row sets the house radius, as a theme would on :root. */
 .candidate {
-	--itx-radius-md: var(--candidate-radius);
+	--itx-radius-base: var(--candidate-radius);
 }
 
 /* --itx-corner-shape does not inherit, so it is declared on each element. */
@@ -56,7 +56,7 @@
 	display: inline-flex;
 	padding: var(--gap);
 	border: 1px solid light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	border-radius: var(--itx-radius-md);
+	border-radius: var(--itx-radius-base);
 	corner-shape: var(--itx-corner-shape);
 }
 
@@ -64,7 +64,7 @@
 	padding: var(--itx-space-2) var(--itx-space-4);
 	font-size: var(--itx-font-size-p-sm);
 	line-height: var(--itx-line-height-p-sm);
-	border-radius: max(0px, var(--itx-radius-md) - var(--gap) - 1px);
+	border-radius: max(0px, var(--itx-radius-base) - var(--gap) - 1px);
 	corner-shape: var(--itx-corner-shape);
 }
 

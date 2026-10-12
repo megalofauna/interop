@@ -3,33 +3,41 @@
  *
  *   Round by shape     a badge, switch, radio, dot, thumb or spinner is var(--itx-radius-full),
  *                      whatever the house radius
- *   House              a container reads var(--itx-radius, var(--itx-radius-md))
+ *   House              a container reads var(--itx-radius, var(--itx-radius-base))
  *   Small              a corner on a small element takes half the house radius, capped where
  *                      it would change the element's shape: a checkbox box stops at a quarter
  *                      of its size, so it never reads as a radio
  *   Nested             a corner inset inside another takes the outer radius less the gap,
  *                      never below 0px
  *
- * --itx-radius-md is the house radius. A theme changes it for the whole page on :root:
+ * --itx-radius-base is the house radius. A theme changes it for the whole page on :root:
  *
- *   :root { --itx-radius-md: 4px; }
+ *   :root { --itx-radius-base: 8px; }
  *
- * `itx-radius` overrides it on one component:
+ * `itx-radius` picks a step for one component:
  *
- *   <button interop-button itx-radius="full">
+ *   <button interop-button itx-radius="lg">
+ *
+ *   none   0
+ *   sm     half the house radius        3px at the default
+ *   md     the house radius             6px   (also `base`, and no attribute)
+ *   lg     one and a half times it      9px
+ *   xl     twice it                     12px
+ *   full   a pill or circle
+ *
+ * The steps are multiples of the house radius, so a theme that changes it moves the whole scale.
+ * They are worked out on the element that carries the attribute, so a section that sets its own
+ * house radius gets a matching scale. At 6px they fall on a 3px scale, off the 4px layout grid:
+ * a corner positions nothing, so nothing has to line up with it.
  *
  * The attribute sets --itx-radius on the element that carries it. --itx-radius does not inherit
  * and has no initial value, so the attribute reaches only that element, and without it the
- * component falls back to the house radius. `md`, `base` and no attribute at all are the same.
+ * component falls back to the house radius.
  */
 
 :root {
-	--itx-radius-none: 0px;
-	--itx-radius-nominal: 2px;
-	--itx-radius-sm: 4px;
-	/* The house radius. 6px breaks the 4px grid on purpose: it is the value that looked right beside every component. */
-	--itx-radius-md: 6px;
-	--itx-radius-lg: 16px;
+	/* 6px breaks the 4px grid on purpose: it is the value that looked right beside every component. */
+	--itx-radius-base: 6px;
 	--itx-radius-full: 9999px;
 }
 
@@ -47,16 +55,19 @@
 }
 
 :where([itx-radius="none"]) {
-	--itx-radius: var(--itx-radius-none);
-}
-:where([itx-radius="nominal"]) {
-	--itx-radius: var(--itx-radius-nominal);
+	--itx-radius: 0px;
 }
 :where([itx-radius="sm"]) {
-	--itx-radius: var(--itx-radius-sm);
+	--itx-radius: calc(var(--itx-radius-base) * 0.5);
+}
+:where([itx-radius="md"], [itx-radius="base"]) {
+	--itx-radius: var(--itx-radius-base);
 }
 :where([itx-radius="lg"]) {
-	--itx-radius: var(--itx-radius-lg);
+	--itx-radius: calc(var(--itx-radius-base) * 1.5);
+}
+:where([itx-radius="xl"]) {
+	--itx-radius: calc(var(--itx-radius-base) * 2);
 }
 :where([itx-radius="full"]) {
 	--itx-radius: var(--itx-radius-full);

@@ -1,7 +1,7 @@
 <h1>Radius (comparison)</h1>
 <p>
-	Every row renders the components at one candidate house radius. The house radius is 6px with squircle corners;
-	this page compares it with the alternatives.
+	Every row renders the components at one candidate house radius, and the <code>itx-radius</code> scale it produces.
+	The house radius is 6px with squircle corners; this page compares it with the alternatives.
 </p>
 <ul>
 	<li>Shape-defined corners stay round at every radius: badge, switch, radio.</li>
@@ -25,6 +25,11 @@
 			<button interop-button type="button">Save changes</button>
 			<button interop-button type="button" itx-size="lg">Large</button>
 			<button interop-button type="button" aria-label="Search"><svg interop-icon name="tabler-search"></svg></button>
+		</div>
+		<div class="row">
+			@for (step of steps; track step) {
+				<button interop-button type="button" [attr.itx-radius]="step">{{ step }}</button>
+			}
 		</div>
 		<div class="row">
 			<label interop-checkbox><input type="checkbox" checked /> Checkbox</label>

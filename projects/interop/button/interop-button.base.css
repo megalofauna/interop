@@ -25,7 +25,7 @@
 	--itx-button-border-color-active: var(--itx-button-border-color);
 	--itx-button-border-color-focus-visible: var(--itx-button-border-color);
 	--itx-button-border-color-pressed: var(--itx-button-border-color);
-	--itx-button-border-radius: var(--itx-radius, var(--itx-radius-md));
+	--itx-button-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-button-corner-shape: var(--itx-corner-shape);
 
 	--itx-button-cursor: default;

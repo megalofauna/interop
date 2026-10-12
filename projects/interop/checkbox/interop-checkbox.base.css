@@ -11,7 +11,7 @@
 	--itx-checkbox-box-border-width: 1px;
 	--itx-checkbox-box-border-style: solid;
 	/* A small corner: half the house radius, and never more than a quarter of the box, so it never reads as a radio. */
-	--itx-checkbox-box-border-radius: min(var(--itx-radius, var(--itx-radius-md)) / 2, var(--itx-checkbox-box-size) / 4);
+	--itx-checkbox-box-border-radius: min(var(--itx-radius, var(--itx-radius-base)) / 2, var(--itx-checkbox-box-size) / 4);
 	--itx-checkbox-box-corner-shape: var(--itx-corner-shape);
 	/* Unchecked: the border carries the 3:1 edge against the page (WCAG 1.4.11). */
 	--itx-checkbox-box-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));

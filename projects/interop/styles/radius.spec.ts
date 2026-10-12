@@ -18,8 +18,8 @@ import radioGroupCss from '../radio-group/interop-radio-group.structure.css' wit
 import buttonStructureCss from '../button/interop-button.structure.css' with { loader: 'text' };
 
 // The four corner rules in styles/radius.css. Every component radius reads one of them, so a theme's
-// --itx-radius-md reaches every corner that is not round by shape.
-const HOUSE = 'var(--itx-radius, var(--itx-radius-md))';
+// --itx-radius-base reaches every corner that is not round by shape.
+const HOUSE = 'var(--itx-radius, var(--itx-radius-base))';
 const RULES = [
 	(value: string) => value === 'var(--itx-radius-full)',
 	(value: string) => value === HOUSE,
@@ -35,7 +35,7 @@ const follows = (value: string) => readsToken(value) || RULES.some((rule) => rul
 
 describe('corner radius', () => {
 	it('rejects a corner that follows no rule', () => {
-		expect(['var(--itx-radius-sm)', '50%', '4px', 'var(--itx-radius)'].filter(follows)).toEqual([]);
+		expect(['var(--itx-radius-base)', '50%', '4px', 'var(--itx-radius)'].filter(follows)).toEqual([]);
 	});
 
 	for (const [file, css] of Object.entries(files)) {

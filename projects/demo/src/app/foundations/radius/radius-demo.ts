@@ -9,5 +9,6 @@ import { InteropIcon } from "interop/icon";
 })
 export class RadiusDemo {
 	protected readonly candidates = [0, 2, 4, 6, 8, 12];
+	protected readonly steps = ["none", "sm", "md", "lg", "xl", "full"];
 	protected readonly shape = signal<"squircle" | "round">("squircle");
 }
