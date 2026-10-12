@@ -1,7 +1,8 @@
 # Control — Mental Model Card
 
-**Status:** switch, radio group and checkbox built.
+**Status:** switch, radio group (with the segmented variant) and checkbox built.
 Research: [VISIMORPH](../../prompts/VISIMORPH-RESEARCH.md),
+[SEGMENTED-CONTROL](../../prompts/SEGMENTED-CONTROL-RESEARCH.md),
 [RADIO-GROUP](../../prompts/RADIO-GROUP-RESEARCH.md),
 [CHECKBOX](../../prompts/CHECKBOX-RESEARCH.md).
 
@@ -200,7 +201,9 @@ own family.
 - `a11y/a11y.spec.ts`: axe on every control and state, plus negative controls
   for an unlabeled switch, radio and checkbox. It asserts that an indeterminate
   box has no `aria-checked`.
-- `src/bind-select-all.spec.ts`: the select-all helper.
+- `src/bind-select-all.spec.ts`, `src/bind-radio-home-end.spec.ts`: the helpers.
+- `styles/contrast.spec.ts` also checks segment text on the page and checked
+  text on the pill at 4.5:1, and the frame and pill against the page at 3:1.
 - `src/audit.spec.ts`: the dev audit rules below.
 
 ## Dev audit rules
@@ -243,6 +246,61 @@ Give a select-all box no `name`, so it does not submit.
 - A switch has no indeterminate state.
 - `role="radiogroup"` is not added. Fieldset and legend are the robust group
   semantics. A consumer may add the role.
+
+## Segmented control
+
+`interop-radio-group="segmented"` draws the radio group as a row of equal
+segments in a frame, with a pill on the checked one. It is the same radio
+group: one value, one tab stop, arrow keys, form participation, and the same
+dev audit rules. It has its own demo page. Use it to choose a value or a view of
+the same content; tabs switch between different sections.
+
+```html
+<fieldset interop-radio-group="segmented" itx-size="sm">
+  <legend>View</legend>
+  <label><input type="radio" name="view" value="list" checked> List</label>
+  <label><input type="radio" name="view" value="grid"> Grid</label>
+</fieldset>
+```
+
+| Part | How |
+|---|---|
+| Layout | The fieldset is an `inline-grid` with `grid-auto-columns: 1fr`, so every segment is as wide as the widest label. The labels are direct children |
+| Segment | The label. The input is transparent and fills it (`inset: 0`), so it takes the clicks and the focus ring |
+| Frame | `fieldset::before`, anchored from the first segment's start to the last segment's end with logical `anchor()` sides, outset by the frame padding and border. The legend stays outside it with no wrapper |
+| Pill | `fieldset::after`, anchored to the checked segment. It slides when the selection changes, with the shared transition tokens |
+| Divider | `label::before` between two unchecked segments |
+| Focus ring | Inside the segment. On the pill it takes the checked text color, which contrasts with the pill |
+| Fallback | Without anchor positioning, each segment draws its own border and the checked one paints the pill color |
+| Icons | `interop-radio-group="segmented icon"` makes square segments. Name each with visually hidden text in the label |
+| Radius | The frame takes the house radius; the pill and the focus ring take the nested radius, the frame's less its padding and border |
+
+Anchor names are found only inside the fieldset, because the fieldset is the
+positioned containing block, so several controls on one page do not collide.
+
+| Size | Control height | Text |
+|---|---|---|
+| `sm` | 32px | `p-sm` role |
+| default | 40px | `p` role |
+| `lg` | 48px | `p-lg` role |
+
+These match the button's steps, so a segmented control lines up with the
+buttons beside it.
+
+| Segmented token | Default |
+|---|---|
+| `--itx-radio-group-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-12` |
+| `--itx-radio-group-segment-block-size` | the block size less the frame padding and border on both sides |
+| `--itx-radio-group-segment-padding-inline` | `--itx-space-4`; `sm` `--itx-space-3`, `lg` `--itx-space-5` |
+| `--itx-radio-group-segment-color[-hover\|-checked]` | neutral-700/300, 950/50, 50/900 |
+| `--itx-radio-group-frame-padding`, `-frame-border-width`, `-frame-border-color` | `--itx-space-0_5`, 1px, neutral-500/400 |
+| `--itx-radio-group-pill-background-color` | neutral-900/50 |
+| `--itx-radio-group-divider-width`, `-divider-inset-block`, `-divider-color` | 1px, `--itx-space-2`, neutral-300/700 |
+
+`bindRadioHomeEnd(root)` from `interop` adds Home and End to any radio group:
+they focus and check the first or last enabled radio with the same name. It is
+optional, ignores the keys when a modifier is held, and returns an unbind
+function.
 
 ## Angular
 

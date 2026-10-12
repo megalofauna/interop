@@ -1,0 +1,90 @@
+<h1>Segmented control</h1>
+<p class="aka">Also known as segmented button, button toggle group, toggle group, content switcher, segment group.</p>
+<p>
+	A segmented control is a radio group drawn as a row of segments: <code>interop-radio-group="segmented"</code>.
+	It is still a radio group. Screen readers announce each segment as a radio button, checked or not, and its position
+	in the set. Tab reaches the control once, and the arrow keys move the choice. Use it to pick a value or a view of
+	the same content. To switch between different sections, use tabs.
+</p>
+
+<h2>A segmented control</h2>
+<fieldset interop-radio-group="segmented" (change)="view.set($any($event.target).value)">
+	<legend>View</legend>
+	<label><input type="radio" name="view" value="list" [checked]="view() === 'list'" /> List</label>
+	<label><input type="radio" name="view" value="grid" [checked]="view() === 'grid'" /> Grid</label>
+	<label><input type="radio" name="view" value="detail" [checked]="view() === 'detail'" /> Detail</label>
+</fieldset>
+<p>View is {{ view() }}.</p>
+
+<h2>Sizes</h2>
+<fieldset interop-radio-group="segmented" itx-size="sm">
+	<legend>Small</legend>
+	<label><input type="radio" name="size-sm" value="day" checked /> Day</label>
+	<label><input type="radio" name="size-sm" value="week" /> Week</label>
+	<label><input type="radio" name="size-sm" value="month" /> Month</label>
+</fieldset>
+<fieldset interop-radio-group="segmented">
+	<legend>Medium</legend>
+	<label><input type="radio" name="size-md" value="day" /> Day</label>
+	<label><input type="radio" name="size-md" value="week" checked /> Week</label>
+	<label><input type="radio" name="size-md" value="month" /> Month</label>
+</fieldset>
+<fieldset interop-radio-group="segmented" itx-size="lg">
+	<legend>Large</legend>
+	<label><input type="radio" name="size-lg" value="day" /> Day</label>
+	<label><input type="radio" name="size-lg" value="week" /> Week</label>
+	<label><input type="radio" name="size-lg" value="month" checked /> Month</label>
+</fieldset>
+
+<h2>Icons</h2>
+<p>Add <code>icon</code> to the attribute for square segments. Name each one with visually hidden text in its label.</p>
+<fieldset interop-radio-group="segmented icon">
+	<legend>Alignment</legend>
+	<label><input type="radio" name="align" value="start" checked /><svg interop-icon name="tabler-chevron-left"></svg><span itx-visually-hidden>Start</span></label>
+	<label><input type="radio" name="align" value="center" /><svg interop-icon name="tabler-minus"></svg><span itx-visually-hidden>Center</span></label>
+	<label><input type="radio" name="align" value="end" /><svg interop-icon name="tabler-chevron-right"></svg><span itx-visually-hidden>End</span></label>
+</fieldset>
+
+<h2>Home and End</h2>
+<p>
+	Native radios move with the arrow keys only. <code>bindRadioHomeEnd(fieldset)</code> adds Home and End, which
+	check the first and last enabled segment. It is optional.
+</p>
+<fieldset #homeEnd interop-radio-group="segmented">
+	<legend>Month</legend>
+	<label><input type="radio" name="month" value="jan" /> Jan</label>
+	<label><input type="radio" name="month" value="feb" /> Feb</label>
+	<label><input type="radio" name="month" value="mar" checked /> Mar</label>
+	<label><input type="radio" name="month" value="apr" /> Apr</label>
+	<label><input type="radio" name="month" value="may" /> May</label>
+	<label><input type="radio" name="month" value="jun" /> Jun</label>
+</fieldset>
+
+<h2>Disabled</h2>
+<fieldset interop-radio-group="segmented">
+	<legend>One segment</legend>
+	<label><input type="radio" name="dis-one" value="a" checked /> Draft</label>
+	<label><input type="radio" name="dis-one" value="b" disabled /> Scheduled</label>
+	<label><input type="radio" name="dis-one" value="c" /> Published</label>
+</fieldset>
+<fieldset interop-radio-group="segmented" disabled>
+	<legend>The whole control</legend>
+	<label><input type="radio" name="dis-all" value="a" /> Draft</label>
+	<label><input type="radio" name="dis-all" value="b" checked /> Published</label>
+</fieldset>
+
+<h2>Nothing chosen yet</h2>
+<fieldset interop-radio-group="segmented">
+	<legend>Priority</legend>
+	<label><input type="radio" name="none" value="low" /> Low</label>
+	<label><input type="radio" name="none" value="normal" /> Normal</label>
+	<label><input type="radio" name="none" value="high" /> High</label>
+</fieldset>
+
+<h2>Right to left</h2>
+<fieldset interop-radio-group="segmented" dir="rtl" lang="ar">
+	<legend>العرض</legend>
+	<label><input type="radio" name="rtl" value="list" checked /> قائمة</label>
+	<label><input type="radio" name="rtl" value="grid" /> شبكة</label>
+	<label><input type="radio" name="rtl" value="detail" /> تفاصيل</label>
+</fieldset>

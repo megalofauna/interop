@@ -218,3 +218,24 @@ describe('checkbox', () => {
 		}
 	}
 });
+
+describe('segmented control', () => {
+	const segmented = (name: string, scheme: 0 | 1) => token(`--itx-radio-group-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		// WCAG 1.4.3: segment text on the page, and the checked segment's text on the pill.
+		it(`has segment text of 4.5:1 against the page in ${label}`, () => {
+			for (const state of ['segment-color', 'segment-color-hover']) {
+				expect(contrast(segmented(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		it(`has checked text of 4.5:1 against the pill in ${label}`, () => {
+			expect(contrast(segmented('segment-color-checked', scheme), segmented('pill-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the frame and the pill against the page.
+		it(`has a frame and a pill of 3:1 against the page in ${label}`, () => {
+			expect(contrast(segmented('frame-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			expect(contrast(segmented('pill-background-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
