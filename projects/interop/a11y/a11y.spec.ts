@@ -7,6 +7,7 @@ import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
+import { InteropTabs } from 'interop/tabs';
 import { InteropTooltip } from 'interop/tooltip';
 import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
@@ -18,9 +19,13 @@ const OPTIONS: axe.RunOptions = { rules: { 'color-contrast': { enabled: false } 
 const violations = async (element: Element) =>
 	(await axe.run(element, OPTIONS)).violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(', ')}`);
 
-// jsdom has no popover API, so a popover never opens and axe skips everything inside it.
-// Removing the attribute shows the content, which is what opening it does.
-const openPopovers = (element: Element) => element.querySelectorAll('[popover]').forEach((popover) => popover.removeAttribute('popover'));
+// jsdom has no popover API, so a popover never opens and axe skips everything inside it. It also
+// treats hidden="until-found" as hidden, so axe skips every unselected tab panel. Removing the
+// attributes shows the content, which is what opening the popover or selecting the tab does.
+const reveal = (element: Element) => {
+	element.querySelectorAll('[popover]').forEach((popover) => popover.removeAttribute('popover'));
+	element.querySelectorAll('[hidden="until-found"]').forEach((panel) => panel.removeAttribute('hidden'));
+};
 
 @Component({
 	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea, InteropTooltip],
@@ -92,7 +97,11 @@ const openPopovers = (element: Element) => element.querySelectorAll('[popover]')
 					<button type="button" role="tab" id="t-life" aria-controls="p-life" aria-selected="false" tabindex="-1" disabled>Life support</button>
 				</div>
 				<section role="tabpanel" id="p-nav" aria-labelledby="t-nav" tabindex="0"><p>Course plotted.</p></section>
-				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found"><p>Reactor steady.</p></section>
+				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found">
+					<p>Reactor steady.</p>
+					<button interop-button type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
+					<label interop-switch><input type="checkbox" role="switch" /> Auto-throttle</label>
+				</section>
 				<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
 			</div>
 			<div interop-tabs="segmented icon">
@@ -127,6 +136,24 @@ class Components {
 	readonly example = 'const a = 1;\n\nconst b = 2;\n';
 }
 
+// Only what a consumer must write: the helper fills in ids, aria-labelledby, tabindex and hidden.
+@Component({
+	imports: [InteropTabs],
+	template: `
+		<div>
+			<div interop-tabs>
+				<div role="tablist" aria-label="Bound">
+					<button type="button" role="tab" aria-controls="bound-a" aria-selected="true">First</button>
+					<button type="button" role="tab" aria-controls="bound-b">Second</button>
+				</div>
+				<section role="tabpanel" id="bound-a"><p>First panel.</p></section>
+				<section role="tabpanel" id="bound-b"><a href="/second">Second panel</a></section>
+			</div>
+		</div>
+	`,
+})
+class BoundTabs {}
+
 describe('accessibility (axe-core)', () => {
 	// A consumer who marks buttons aria-disabled or aria-busy installs the guard, so the fixture does too.
 	let unguard: () => void;
@@ -150,16 +177,36 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(element)).toEqual([]);
 	});
 
-	it('finds no violations inside open popovers and tooltips', async () => {
+	it('finds no violations inside open popovers, tooltips and unselected tab panels', async () => {
 		const element = await render();
-		openPopovers(element);
+		reveal(element);
+		expect(await violations(element)).toEqual([]);
+	});
+
+	it('checks inside an unselected tab panel only once it is shown, so the second pass is needed', async () => {
+		document.body.innerHTML = '<main><section role="tabpanel" hidden="until-found"><button type="button"></button></section></main>';
+		expect(await violations(document.body)).toEqual([]);
+		reveal(document.body);
+		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
+	});
+
+	it('finds no violations in tabs as bindTabs leaves them, from the minimal markup', async () => {
+		const fixture = TestBed.createComponent(BoundTabs);
+		fixture.detectChanges();
+		TestBed.tick();
+		const element = fixture.nativeElement as HTMLElement;
+		const panel = element.querySelector('#bound-b')!;
+		expect(panel.getAttribute('aria-labelledby')).toBe(element.querySelector('[aria-controls="bound-b"]')!.id);
+		expect(panel.getAttribute('hidden')).toBe('until-found');
+		expect(await violations(element)).toEqual([]);
+		reveal(element);
 		expect(await violations(element)).toEqual([]);
 	});
 
 	it('checks inside a popover only once it is open, so the second pass is needed', async () => {
 		document.body.innerHTML = '<main><div popover><button type="button"></button></div></main>';
 		expect(await violations(document.body)).toEqual([]);
-		openPopovers(document.body);
+		reveal(document.body);
 		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
 	});
 

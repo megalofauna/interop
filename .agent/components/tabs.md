@@ -137,9 +137,16 @@ The structure file pads only the shown panel for the same reason.
 
 ## Tests
 
-`src/bind-tabs.spec.ts`, `tabs/tabs.spec.ts`, the tabs blocks in
-`styles/contrast.spec.ts` (text 4.5:1, selected bar 3:1), `target-size.spec.ts`,
-`radius.spec.ts`, `a11y/a11y.spec.ts`, and `src/audit.spec.ts`.
+- `src/bind-tabs.spec.ts`: keyboard, activation, the tab stop, panels,
+  find-in-page, removal, the hash, and that a tab is selected before it takes
+  focus, so it is announced as selected.
+- `tabs/tabs.spec.ts`: the directive.
+- `a11y/a11y.spec.ts`: axe on written markup, inside unselected panels (a
+  second pass reveals them, since jsdom hides `hidden="until-found"`), and on
+  the minimal markup after `InteropTabs` binds it.
+- `styles/contrast.spec.ts` (text 4.5:1, selected bar 3:1),
+  `target-size.spec.ts`, `radius.spec.ts`, `forced-colors.spec.ts`,
+  `motion.spec.ts`, and `src/audit.spec.ts`.
 
 ## Not built
 

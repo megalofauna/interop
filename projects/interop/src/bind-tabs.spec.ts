@@ -77,6 +77,15 @@ describe('bindTabs', () => {
 		expect(tab('a').getAttribute('aria-selected')).toBe('true');
 	});
 
+	it('marks a tab selected before it takes focus, so it is announced as selected', () => {
+		const { tab, press } = setup();
+		let selectedAtFocus: string | null = null;
+		tab('c').addEventListener('focus', () => (selectedAtFocus = tab('c').getAttribute('aria-selected')));
+		tab('b').focus();
+		press('ArrowRight');
+		expect(selectedAtFocus).toBe('true');
+	});
+
 	it('skips disabled tabs', () => {
 		const { tab, press } = setup({ disabled: 'c' });
 		tab('b').focus();
