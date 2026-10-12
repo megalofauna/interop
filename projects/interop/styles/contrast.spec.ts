@@ -21,13 +21,15 @@ import outlineCss from './outline.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -238,6 +240,22 @@ describe('segmented control', () => {
 		it(`has a frame and a pill of 3:1 against the page in ${label}`, () => {
 			expect(contrast(segmented('frame-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			expect(contrast(segmented('pill-background-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
+describe('tabs', () => {
+	const tabs = (name: string, scheme: 0 | 1) => token(`--itx-tabs-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has tab text of 4.5:1 against the page at rest, on hover and selected in ${label}`, () => {
+			for (const state of ['tab-color', 'tab-color-hover', 'tab-color-selected']) {
+				expect(contrast(tabs(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		// WCAG 1.4.11: the bar carries the selection.
+		it(`has a selected bar of 3:1 against the page in ${label}`, () => {
+			expect(contrast(tabs('indicator-background-color-selected', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
 	}
 });

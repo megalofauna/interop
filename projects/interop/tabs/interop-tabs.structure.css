@@ -1,0 +1,167 @@
+/*
+ * Tabs: one of several panels shown at a time, chosen from a tab list. The consumer writes the
+ * markup; bindTabs() from interop adds the behavior.
+ *
+ *   <div interop-tabs>
+ *     <div role="tablist" aria-label="Station systems">
+ *       <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
+ *       <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
+ *     </div>
+ *     <section role="tabpanel" id="nav">…</section>
+ *     <section role="tabpanel" id="eng" hidden="until-found">…</section>
+ *   </div>
+ *
+ * The tab list sits on a rule, and the selected tab carries a bar on it. The bar sits on the rule,
+ * not over it, because the tab list scrolls when its tabs overflow and a scroll container clips its
+ * children to its padding box. `aria-orientation="vertical"` on the tab list stands it beside the
+ * panels, with the rule and the bar on its inline-end edge. `itx-size` on the wrapper sets the size.
+ *
+ * A hidden="until-found" panel keeps its box, so only the shown panel gets padding.
+ *
+ * Also known as:
+ *   tab list        Fluent v9
+ *   tab group       Shoelace, Web Awesome, Angular Material
+ *   tab strip       Kendo
+ *   pivot           Fluent v8
+ * Tabs is the ARIA pattern, and the name in Carbon, Material, Spectrum, Radix, React Aria, Ark,
+ * Chakra, Mantine, MUI, Ant Design, PatternFly and GOV.UK.
+ */
+
+/* ── Tab list ──────────────────────────────────────────────────────────── */
+
+:where([interop-tabs] > [role="tablist"]) {
+	display: flex;
+	/* Tabs scroll rather than wrap or spill when they overflow. */
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	scrollbar-width: thin;
+	border-block-end-width: var(--itx-tabs-tablist-border-width);
+	border-block-end-style: solid;
+	border-block-end-color: var(--itx-tabs-tablist-border-color);
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+
+:where([interop-tabs] > [role="tablist"] > [role="tab"]) {
+	appearance: none;
+	position: relative;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-space-2);
+	min-block-size: var(--itx-tabs-tab-min-block-size);
+	margin: 0;
+	padding-block: 0;
+	padding-inline: var(--itx-tabs-tab-padding-inline);
+	font: inherit;
+	font-size: var(--itx-tabs-tab-font-size);
+	line-height: var(--itx-tabs-tab-line-height);
+	white-space: nowrap;
+	color: var(--itx-tabs-tab-color);
+	background-color: transparent;
+	border: 0;
+	border-radius: var(--itx-tabs-tab-border-radius);
+	corner-shape: var(--itx-corner-shape);
+	cursor: var(--itx-tabs-tab-cursor);
+	transition-property: color;
+	transition-duration: var(--itx-tabs-transition-duration);
+	transition-timing-function: var(--itx-tabs-transition-timing-function);
+	/* The focus ring sits inside the tab, so it does not overlap its neighbors in a gapless row. */
+	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
+}
+
+/* The bar, on the tab's edge against the rule. */
+:where([interop-tabs] > [role="tablist"] > [role="tab"])::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	inset-block-end: 0;
+	block-size: var(--itx-tabs-indicator-size);
+	background-color: var(--itx-tabs-indicator-background-color);
+	transition-property: background-color;
+	transition-duration: var(--itx-tabs-transition-duration);
+	transition-timing-function: var(--itx-tabs-transition-timing-function);
+}
+
+:where([interop-tabs] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
+	color: var(--itx-tabs-tab-color-hover, var(--itx-tabs-tab-color));
+}
+
+:where([interop-tabs] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
+	background-color: var(--itx-tabs-indicator-background-color-hover, var(--itx-tabs-indicator-background-color));
+}
+
+:where([interop-tabs] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
+	color: var(--itx-tabs-tab-color-selected);
+}
+
+:where([interop-tabs] > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
+	background-color: var(--itx-tabs-indicator-background-color-selected);
+}
+
+:where([interop-tabs] > [role="tablist"] > [role="tab"]:disabled) {
+	opacity: var(--itx-tabs-tab-opacity-disabled);
+	cursor: var(--itx-tabs-tab-cursor-disabled);
+}
+
+/* ── Panels ────────────────────────────────────────────────────────────── */
+
+:where([interop-tabs] > [role="tabpanel"]:not([hidden])) {
+	padding-block: var(--itx-tabs-panel-padding-block);
+}
+
+/* ── Vertical ──────────────────────────────────────────────────────────── */
+
+:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"])) {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	align-items: start;
+	column-gap: var(--itx-tabs-column-gap);
+}
+
+:where([interop-tabs] > [role="tablist"][aria-orientation="vertical"]) {
+	flex-direction: column;
+	overflow-x: visible;
+	border-block-end-width: 0;
+	border-inline-end-width: var(--itx-tabs-tablist-border-width);
+	border-inline-end-style: solid;
+	border-inline-end-color: var(--itx-tabs-tablist-border-color);
+}
+
+:where([interop-tabs] > [role="tablist"][aria-orientation="vertical"] > [role="tab"])::after {
+	inset-block: 0;
+	inset-inline: auto 0;
+	block-size: auto;
+	inline-size: var(--itx-tabs-indicator-size);
+}
+
+/* Every panel shares the one cell beside the tab list. Only the selected one shows. */
+:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]) {
+	grid-column: 2;
+	grid-row: 1;
+}
+
+:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
+	padding-block: 0;
+}
+
+/* ── Forced colors ─────────────────────────────────────────────────────── */
+
+@media (forced-colors: active) {
+	:where([interop-tabs] > [role="tablist"] > [role="tab"])::after {
+		forced-color-adjust: none;
+	}
+
+	:where([interop-tabs] > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
+		background-color: Highlight;
+	}
+
+	:where([interop-tabs] > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
+		background-color: CanvasText;
+	}
+
+	:where([interop-tabs] > [role="tablist"] > [role="tab"]:focus-visible) {
+		outline-color: Highlight;
+	}
+}
