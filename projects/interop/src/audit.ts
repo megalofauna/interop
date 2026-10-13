@@ -470,6 +470,25 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Add role="list" to the <ul>.',
 		}),
 	},
+	'select-option-text': {
+		selector: 'select[interop-select] option',
+		check: (option) =>
+			squash(option.getAttribute('label') ?? '') || squash(spokenText(option))
+				? null
+				: {
+						problem: 'This option has no text.',
+						reason: 'Screen readers read an option’s text, and browsers without customizable select show only its text, so the option is blank to both.',
+						advice: 'Give every option text. Hide it visually with itx-visually-hidden if an icon shows instead.',
+					},
+	},
+	'select-multiple': {
+		selector: 'select[interop-select][multiple]',
+		check: () => ({
+			problem: 'This select takes several choices.',
+			reason: 'Keyboard and screen reader users struggle with a multiple select: in testing it reached 25% task success, against 100% for a single select.',
+			advice: 'Use a <fieldset interop-checkbox-group> with a checkbox per option.',
+		}),
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>

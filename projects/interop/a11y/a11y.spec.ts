@@ -168,6 +168,14 @@ const reveal = (element: Element) => {
 			</ul>
 			<input id="tag-entry" type="text" />
 			<p role="status" itx-visually-hidden></p>
+			<label for="city">City</label>
+			<select id="city" interop-select name="city">
+				<optgroup label="Europe"><option>Lisbon</option><option disabled>Oslo</option></optgroup>
+				<hr />
+				<optgroup label="Asia"><option>Seoul</option></optgroup>
+			</select>
+			<label for="team">Team</label>
+			<select id="team" interop-select size="3" itx-size="sm"><option>Design</option><option selected>Engineering</option><option>Research</option></select>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>

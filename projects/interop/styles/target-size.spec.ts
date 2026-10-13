@@ -16,6 +16,8 @@ import tagsCss from '../tags/interop-tags.base.css' with { loader: 'text' };
 import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import segmentedCss from './segmented.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
 
 // jsdom has no layout, so axe cannot measure targets. This reads every size step's declared height instead.
 // A control's input sits inside its label, so the label is the target.
@@ -44,6 +46,8 @@ describe('target size', () => {
 		['chip', chipsCss, '--itx-chips-chip-min-block-size'],
 		['tag remove button', tagsCss, '--itx-tags-button-size'],
 		['checkbox label', checkboxCss, '--itx-checkbox-min-block-size'],
+		['select', selectCss, '--itx-select-min-block-size'],
+		['select option', selectCss, '--itx-select-option-min-block-size'],
 	] as const;
 
 	for (const [label, css, name] of targets) {

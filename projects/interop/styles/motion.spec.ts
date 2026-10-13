@@ -81,9 +81,15 @@ import chipsCss from './chips.css' with { loader: 'text' };
 import tagsBaseCss from '../tags/interop-tags.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import tagsStructureCss from '../tags/interop-tags.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import selectBaseCss from '../select/interop-select.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import selectStructureCss from '../select/interop-select.structure.css' with { loader: 'text' };
 
 // Every stylesheet in the library, read as text. Add a new one here.
 const sheets = {
+	'select/interop-select.base.css': selectBaseCss,
+	'select/interop-select.structure.css': selectStructureCss,
 	'tags/interop-tags.base.css': tagsBaseCss,
 	'tags/interop-tags.structure.css': tagsStructureCss,
 	'styles/chips.css': chipsCss,

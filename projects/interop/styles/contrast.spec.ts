@@ -34,10 +34,12 @@ import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
 import segmentedCss from './segmented.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -321,6 +323,25 @@ describe('tags', () => {
 			for (const background of ['--itx-tags-tag-background-color', '--itx-tags-button-background-color-hover']) {
 				expect(contrast(token('--itx-tags-tag-color', scheme), token(background, scheme))).toBeGreaterThanOrEqual(4.5);
 			}
+		});
+	}
+});
+
+describe('select', () => {
+	const select = (name: string, scheme: 0 | 1) => token(`--itx-select-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has text of 4.5:1 on the field, hovered or not, in ${label}`, () => {
+			for (const background of ['background-color', 'background-color-hover']) {
+				expect(contrast(select('color', scheme), select(background, scheme))).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		// WCAG 1.4.11: the field's edge against the page.
+		it(`has a border of 3:1 against the page in ${label}`, () => {
+			for (const name of ['border-color', 'border-color-hover']) expect(contrast(select(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+		it(`has option text of 4.5:1 on a hovered or focused option in ${label}`, () => {
+			expect(contrast(token('--itx-popover-color', scheme), select('option-background-color-hover', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
 	}
 });
