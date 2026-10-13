@@ -72,6 +72,9 @@ At minimum, the output of this section must include:
 - Reduced-motion, forced-colors, RTL, and touch-target plan
 - Form participation decision: `ControlValueAccessor`, ElementInternals
   (form-associated custom element), both, or neither
+- Invokers: for each scripted behavior, can a `command`/`commandfor` button do
+  it, with a built-in command or a custom `--command` handled by the helper?
+  List what they do and what they cannot express
 - **An explicit divergence section** — where the W3C spec letter, ARIA APG,
   AT reality, and mainstream design systems disagree, state the camps and
   recommend a path with reasoning
