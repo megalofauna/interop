@@ -10,7 +10,7 @@ with CSS in `styles/components/listbox.css` and
 |---|---|
 | Stepper "jump to step" menu | The step list in `ol[interop-steps]`; `--show-step` for "Change" links |
 | One choice from a short list | `fieldset[interop-radio-group]` |
-| One choice from a long list | `<select>` |
+| One choice from a long list | `select[interop-select]`: see [select.md](select.md) |
 | Several choices | `fieldset[interop-checkbox-group]` + `bindSelectAll()` |
 
 ## Why it is not rebuilt

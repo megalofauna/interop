@@ -164,7 +164,7 @@ the mobile picker come from the browser.
 | Popover anchored to its button | Built: `[interop-popover]` |
 | Radio and checkbox groups, select all, Home/End for radios | Built |
 | Arrow keys with Home/End, skipping disabled items, right-to-left | Built inside `bindTabs()`; not yet shared |
-| `<select>` styles, including base-select | Not built. Next, on its own merits |
+| `<select>` styles, including base-select | Built: `select[interop-select]`, see [SELECT-RESEARCH.md](SELECT-RESEARCH.md) |
 | Typeahead | Not built. Needed by a combobox, and by a menu |
 | Combobox (editable, filtering) | Not built. Deferred from the tag input. The listbox is its popup |
 | Roving focus helper over `focusgroup` | Not needed until a second composite widget needs arrow keys; `bindTabs()` handles tabs |
