@@ -85,9 +85,15 @@ import tagsStructureCss from '../tags/interop-tags.structure.css' with { loader:
 import selectBaseCss from '../select/interop-select.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import selectStructureCss from '../select/interop-select.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import dialogBaseCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import dialogStructureCss from '../dialog/interop-dialog.structure.css' with { loader: 'text' };
 
 // Every stylesheet in the library, read as text. Add a new one here.
 const sheets = {
+	'dialog/interop-dialog.base.css': dialogBaseCss,
+	'dialog/interop-dialog.structure.css': dialogStructureCss,
 	'select/interop-select.base.css': selectBaseCss,
 	'select/interop-select.structure.css': selectStructureCss,
 	'tags/interop-tags.base.css': tagsBaseCss,

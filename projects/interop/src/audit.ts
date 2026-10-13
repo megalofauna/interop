@@ -470,6 +470,36 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Add role="list" to the <ul>.',
 		}),
 	},
+	'dialog-name': {
+		selector: 'dialog[interop-dialog]',
+		check: (dialog) =>
+			ariaName(dialog)
+				? null
+				: {
+						problem: dialog.hasAttribute('aria-labelledby') ? 'This dialog’s aria-labelledby points at nothing with text.' : 'This dialog has no name.',
+						reason: 'A screen reader announces a dialog by its name when it opens. Without one, the user hears "dialog" and nothing about what it is for.',
+						advice: 'Point aria-labelledby at the dialog’s heading: <dialog aria-labelledby="title"><h2 id="title">…</h2>.',
+					},
+	},
+	'dialog-close': {
+		selector: 'dialog[interop-dialog][closedby="none"]',
+		check: (dialog) =>
+			dialog.querySelector('button:is([command="close"], [command="request-close"], [formmethod="dialog"]), form[method="dialog"] button:not([type="button"], [type="reset"])')
+				? null
+				: {
+						problem: 'This dialog cannot be closed.',
+						reason: 'closedby="none" turns off Escape and clicks outside, and no button inside closes it, so a keyboard user is trapped (WCAG 2.1.2).',
+						advice: 'Add a button with command="request-close" or command="close", or a button in <form method="dialog">.',
+					},
+	},
+	'dialog-alert-description': {
+		selector: 'dialog[interop-dialog][role="alertdialog"]:not([aria-describedby])',
+		check: () => ({
+			problem: 'This alert dialog has no description.',
+			reason: 'An alert dialog interrupts with an urgent message. Screen readers read its description with its name, so without one the message itself is not announced.',
+			advice: 'Point aria-describedby at the message: <p id="message">…</p>.',
+		}),
+	},
 	'select-option-text': {
 		selector: 'select[interop-select] option',
 		check: (option) =>
