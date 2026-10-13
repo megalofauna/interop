@@ -85,6 +85,14 @@ export const examples = {
 	display: block;
 }
 `,
+	chips: `<fieldset interop-radio-group="chips">
+	<legend>Shirt size</legend>
+	<label><input type="radio" name="shirt" value="XS"> XS</label>
+	<label><input type="radio" name="shirt" value="S"> S</label>
+	<label><input type="radio" name="shirt" value="M" checked> M</label>
+	<label><input type="radio" name="shirt" value="L"> L</label>
+</fieldset>
+`,
 	template: `<fieldset interop-radio-group class="described">
 	<legend>Backups</legend>
 	<label>

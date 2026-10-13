@@ -1,5 +1,7 @@
-:where([interop-popover]) {
+:where([interop-popover], select[interop-select]) {
 	/*
+	 * A select's picker is a popover too, so it reads these.
+	 *
 	 * Below the anchor, starting at its inline-start edge. The fallbacks flip it to the other side.
 	 * When it fits nowhere, --itx-popover-scroll centers it below or above and caps it to the space there.
 	 */
@@ -26,3 +28,10 @@
 	--itx-popover-transition-duration: var(--itx-transition-duration);
 	--itx-popover-transition-timing-function: var(--itx-transition-timing-function);
 }
+
+:where([interop-popover~="drawer"]) {
+	/* Leaves a strip of the page in view, so the drawer reads as on top of it and a tap there closes it. */
+	--itx-popover-drawer-inline-size: min(20rem, 100% - var(--itx-space-12));
+	--itx-popover-backdrop-color: oklch(0 0 0 / 0.4);
+}
+

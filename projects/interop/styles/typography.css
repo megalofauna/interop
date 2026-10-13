@@ -15,7 +15,7 @@
 	--itx-font-family: system-ui, sans-serif;
 	--itx-font-family-mono: ui-monospace, monospace;
 	--itx-font-weight: 400;
-	--itx-font-weight-heading: 600;
+	--itx-font-weight-heading: 400;
 
 	/* 40 → 64px, line 48 → 72px. */
 	--itx-font-size-display: clamp(2.5rem, 2rem + 2.5vw, 4rem);

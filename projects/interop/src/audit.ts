@@ -443,6 +443,52 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Hide a step with plain hidden. bindSteps() shows and hides them for you.',
 		}),
 	},
+	'tags-remove-name': {
+		selector: 'ul[interop-tags] > li > button',
+		check: (button) => {
+			const tag = button.parentElement!;
+			const text = squash(
+				Array.from(tag.childNodes)
+					.filter((node) => !(node instanceof HTMLButtonElement) && !(node instanceof HTMLInputElement))
+					.map(visibleText)
+					.join(''),
+			);
+			return text && !squash(accessibleName(button)).includes(text)
+				? {
+						problem: 'This remove button’s name does not say which tag it removes.',
+						reason: 'Every tag’s button is announced the same, e.g. "Remove, button", so a screen reader user cannot tell them apart.',
+						advice: 'Name it for its tag: <span itx-visually-hidden>Remove Football</span>, or aria-label="Remove Football".',
+					}
+				: null;
+		},
+	},
+	'tags-list-role': {
+		selector: 'ul[interop-tags]:not([role="list"])',
+		check: () => ({
+			problem: 'This tag list has no role="list".',
+			reason: 'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many tags there are.',
+			advice: 'Add role="list" to the <ul>.',
+		}),
+	},
+	'select-option-text': {
+		selector: 'select[interop-select] option',
+		check: (option) =>
+			squash(option.getAttribute('label') ?? '') || squash(spokenText(option))
+				? null
+				: {
+						problem: 'This option has no text.',
+						reason: 'Screen readers read an option’s text, and browsers without customizable select show only its text, so the option is blank to both.',
+						advice: 'Give every option text. Hide it visually with itx-visually-hidden if an icon shows instead.',
+					},
+	},
+	'select-multiple': {
+		selector: 'select[interop-select][multiple]',
+		check: () => ({
+			problem: 'This select takes several choices.',
+			reason: 'Keyboard and screen reader users struggle with a multiple select: in testing it reached 25% task success, against 100% for a single select.',
+			advice: 'Use a <fieldset interop-checkbox-group> with a checkbox per option.',
+		}),
+	},
 	'pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>

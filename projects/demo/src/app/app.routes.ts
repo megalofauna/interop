@@ -48,6 +48,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/segmented-control/segmented-control-demo").then((m) => m.SegmentedControlDemo),
 	},
 	{
+		path: "components/select",
+		title: "Select",
+		loadComponent: () => import("./components/select/select-demo").then((m) => m.SelectDemo),
+	},
+	{
 		path: "components/steps",
 		title: "Steps",
 		loadComponent: () => import("./components/steps/steps-demo").then((m) => m.StepsDemo),
@@ -63,9 +68,19 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/tabs/tabs-demo").then((m) => m.TabsDemo),
 	},
 	{
+		path: "components/tags",
+		title: "Tags",
+		loadComponent: () => import("./components/tags/tags-demo").then((m) => m.TagsDemo),
+	},
+	{
 		path: "components/tooltip",
 		title: "Tooltip",
 		loadComponent: () => import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
+	},
+	{
+		path: "foundations/app-shell",
+		title: "App shell",
+		loadComponent: () => import("./foundations/app-shell/app-shell-demo").then((m) => m.AppShellDemo),
 	},
 	{
 		path: "foundations/radius",

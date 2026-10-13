@@ -1,30 +1,39 @@
 :host {
+	display: block;
+	container: shell / inline-size;
+}
+
+/*
+ * The app shell. Narrow, the navigation is a drawer behind the Menu button. From a 48rem container
+ * up it is a sidebar in the page, and the button goes. A container query's size cannot come from a
+ * custom property, so 48rem is written here, once.
+ */
+.shell {
 	display: grid;
-	grid-template-columns: 16rem 1fr;
+	grid-template-columns: 1fr;
 	grid-template-rows: auto 1fr auto;
 	grid-template-areas:
-		"header header"
-		"nav main"
-		"footer footer";
+		"header"
+		"main"
+		"footer";
 	min-block-size: 100dvh;
 }
 
 header {
 	grid-area: header;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+	gap: var(--itx-space-3);
 	padding: var(--itx-space-4);
 	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
-nav {
-	grid-area: nav;
-	padding: var(--itx-space-4);
-	border-inline-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+.title {
+	flex: 1;
 }
 
 nav ul {
+	margin: 0;
 	padding: 0;
 	list-style: none;
 }
@@ -39,11 +48,50 @@ nav a.active {
 
 main {
 	grid-area: main;
-	padding: var(--itx-space-8);
+	min-inline-size: 0;
+	padding: var(--itx-space-4);
 }
 
 footer {
 	grid-area: footer;
 	padding: var(--itx-space-4);
 	border-block-start: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+}
+
+@container shell (inline-size >= 48rem) {
+	.shell {
+		grid-template-columns: 16rem 1fr;
+		grid-template-areas:
+			"header header"
+			"nav main"
+			"footer footer";
+	}
+
+	.menu {
+		display: none;
+	}
+
+	/* The same popover, shown in the page: a closed popover is only hidden by the browser's display: none. */
+	nav[popover] {
+		grid-area: nav;
+		display: block;
+		position: static;
+		inline-size: auto;
+		block-size: auto;
+		overflow: visible;
+		opacity: 1;
+		translate: none;
+		color: inherit;
+		background-color: transparent;
+		border-width: 0;
+		border-inline-end-width: 1px;
+		border-inline-end-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+		border-radius: 0;
+		box-shadow: none;
+		padding: var(--itx-space-4);
+	}
+
+	main {
+		padding: var(--itx-space-8);
+	}
 }

@@ -57,6 +57,12 @@ const reveal = (element: Element) => {
 			<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
 			<span interop-tooltip #draft>Saves without publishing</span>
 			<button interop-button type="button" [popoverTarget]="menu">Options</button>
+			<button interop-button type="button" commandfor="axe-drawer" command="toggle-popover">Menu</button>
+			<nav id="axe-drawer" interop-popover="drawer" popover aria-label="Pages"><ul><li><a href="/a" aria-current="page">A</a></li><li><a href="/b">B</a></li></ul></nav>
+			<details>
+				<summary interop-button>More pages</summary>
+				<nav aria-label="More pages"><ul><li><a href="/c">C</a></li></ul></nav>
+			</details>
 			<div interop-popover popover #menu>
 				<p>Popover content</p>
 				<button interop-button type="button" aria-label="Remove"><svg interop-icon name="tabler-x"></svg></button>
@@ -144,6 +150,32 @@ const reveal = (element: Element) => {
 				<li aria-current="step">Documents</li>
 				<li>Sign <span itx-visually-hidden>not completed</span></li>
 			</ol>
+			<fieldset interop-checkbox-group="chips">
+				<legend>Topics</legend>
+				<label interop-checkbox><input type="checkbox" name="topic" value="design" checked /> Design</label>
+				<label interop-checkbox><input type="checkbox" name="topic" value="code" /> Code</label>
+				<label interop-checkbox><input type="checkbox" name="topic" value="ops" disabled /> Operations</label>
+			</fieldset>
+			<fieldset interop-radio-group="chips" itx-size="sm">
+				<legend>Shirt size</legend>
+				<label><input type="radio" name="shirt" value="s" checked /> S</label>
+				<label><input type="radio" name="shirt" value="m" /> M</label>
+			</fieldset>
+			<label for="tag-entry">Tags</label>
+			<ul interop-tags role="list" aria-label="Selected tags">
+				<li>Football <button type="button"><span itx-visually-hidden>Remove Football</span><svg interop-icon name="tabler-x"></svg></button><input type="hidden" name="tags" value="football" /></li>
+				<li>Cricket <button type="button" disabled><span itx-visually-hidden>Remove Cricket</span><svg interop-icon name="tabler-x"></svg></button></li>
+			</ul>
+			<input id="tag-entry" type="text" />
+			<p role="status" itx-visually-hidden></p>
+			<label for="city">City</label>
+			<select id="city" interop-select name="city">
+				<optgroup label="Europe"><option>Lisbon</option><option disabled>Oslo</option></optgroup>
+				<hr />
+				<optgroup label="Asia"><option>Seoul</option></optgroup>
+			</select>
+			<label for="team">Team</label>
+			<select id="team" interop-select size="3" itx-size="sm"><option>Design</option><option selected>Engineering</option><option>Research</option></select>
 			<fieldset interop-radio-group itx-size="lg" disabled>
 				<legend>Size</legend>
 				<label><input type="radio" name="size" value="s" /> Small</label>

@@ -1,0 +1,226 @@
+/*
+ * Select: one choice from a list, or several with `multiple`. A native <select> with a field's look.
+ *
+ *   <label for="fruit">Fruit</label>
+ *   <select id="fruit" interop-select name="fruit">
+ *     <option>Apple</option>
+ *     <optgroup label="Stone fruit"><option>Cherry</option><option>Plum</option></optgroup>
+ *   </select>
+ *
+ * Every browser gets the field: border, radius, size steps and an arrow. Where `appearance: base-select`
+ * is supported (Chrome 135, Safari 27), the list of options takes the house look too: the picker reads
+ * the popover's tokens, the chosen option shows a check, and option text wraps. Elsewhere the browser
+ * draws the list. A select with `multiple` or a `size` above 1 shows its options in the page.
+ *
+ * Rules for the parts only base-select has (::picker(select), ::picker-icon, ::checkmark, :open) stay in
+ * their own rules inside @supports: one selector a browser does not know drops the whole rule.
+ *
+ * Also known as:
+ *   drop-down box, list box   HTML, for its two renderings
+ *   select-only combobox      APG
+ *   combo box                 Windows
+ *   pop-up button             Apple
+ *   dropdown, dropdown list   Carbon, Fluent, Office
+ *   picker                    Spectrum, Chrome's customizable select
+ *   select menu               Primer
+ * Select is the HTML element, and the name in GOV.UK, USWDS, Bootstrap, Material, Radix and Base UI.
+ */
+
+:where(select[interop-select]) {
+	box-sizing: border-box;
+	min-block-size: var(--itx-select-min-block-size);
+	min-inline-size: min(var(--itx-select-min-inline-size), 100%);
+	max-inline-size: 100%;
+	margin: 0;
+	/* The space one line leaves inside the minimum height, so a select is as tall as a button. */
+	padding-block: calc((var(--itx-select-min-block-size) - 2 * var(--itx-select-border-width) - 1lh) / 2);
+	padding-inline: var(--itx-select-padding-inline);
+	font-family: inherit;
+	font-size: var(--itx-select-font-size);
+	line-height: var(--itx-select-line-height);
+	color: var(--itx-select-color);
+	background-color: var(--itx-select-background-color);
+	border-width: var(--itx-select-border-width);
+	border-style: var(--itx-select-border-style);
+	border-color: var(--itx-select-border-color);
+	border-radius: var(--itx-select-border-radius);
+	corner-shape: var(--itx-select-corner-shape);
+	cursor: var(--itx-select-cursor);
+	transition-property: background-color, border-color;
+	transition-duration: var(--itx-select-transition-duration);
+	transition-timing-function: var(--itx-select-transition-timing-function);
+}
+
+:where(select[interop-select]:hover:not(:disabled)) {
+	background-color: var(--itx-select-background-color-hover, var(--itx-select-background-color));
+	border-color: var(--itx-select-border-color-hover, var(--itx-select-border-color));
+}
+
+:where(select[interop-select]:disabled) {
+	opacity: var(--itx-select-opacity-disabled);
+	cursor: var(--itx-select-cursor-disabled);
+}
+
+/* A select that shows its options in the page is a box of rows. */
+:where(select[interop-select]:is([multiple], [size]:not([size="1"]))) {
+	padding: var(--itx-select-list-padding);
+}
+
+/*
+ * The classic select. The arrow is two triangles drawn with gradients in the text color, so it follows
+ * the color scheme. Forced colors remove gradients, so there the browser's own arrow comes back.
+ */
+@supports not (appearance: base-select) {
+	:where(select[interop-select]:not([multiple], [size]:not([size="1"]))) {
+		appearance: none;
+		padding-inline-end: calc(var(--itx-select-padding-inline) + var(--itx-select-icon-size) + var(--itx-select-gap));
+		background-image:
+			linear-gradient(to top right, transparent 50%, currentColor 50%),
+			linear-gradient(to top left, transparent 50%, currentColor 50%);
+		background-size: calc(var(--itx-select-icon-size) / 2) calc(var(--itx-select-icon-size) / 2);
+		background-repeat: no-repeat;
+		background-position:
+			right calc(var(--itx-select-padding-inline) + var(--itx-select-icon-size) / 2) center,
+			right var(--itx-select-padding-inline) center;
+	}
+
+	:where(select[interop-select]:not([multiple], [size]:not([size="1"])):dir(rtl)) {
+		background-position:
+			left var(--itx-select-padding-inline) center,
+			left calc(var(--itx-select-padding-inline) + var(--itx-select-icon-size) / 2) center;
+	}
+
+	@media (forced-colors: active) {
+		:where(select[interop-select]:not([multiple], [size]:not([size="1"]))) {
+			appearance: auto;
+			background-image: none;
+		}
+	}
+}
+
+@supports (appearance: base-select) {
+	:where(select[interop-select]) {
+		appearance: base-select;
+		gap: var(--itx-select-gap);
+		align-items: center;
+	}
+
+	/* As many rows as `size` asks for, at the option height. */
+	:where(select[interop-select]:is([multiple], [size]:not([size="1"]))) {
+		block-size: calc(
+			var(--itx-select-option-min-block-size) * attr(size type(<integer>), 4) + 2 * (var(--itx-select-list-padding) + var(--itx-select-border-width))
+		);
+	}
+
+	/* The picker is a popover anchored to the select, so it reads the popover's tokens. */
+	:where(select[interop-select])::picker(select) {
+		appearance: base-select;
+		box-sizing: border-box;
+		max-inline-size: min(var(--itx-popover-max-inline-size), 100vw - 2 * var(--itx-space-2));
+		margin-block: var(--itx-popover-margin-block);
+		padding: var(--itx-select-list-padding);
+		color: var(--itx-popover-color);
+		background-color: var(--itx-popover-background-color);
+		border-width: var(--itx-popover-border-width);
+		border-style: var(--itx-popover-border-style);
+		border-color: var(--itx-popover-border-color);
+		border-radius: var(--itx-popover-border-radius);
+		corner-shape: var(--itx-popover-corner-shape);
+		box-shadow: var(--itx-popover-box-shadow);
+		opacity: 0;
+		transition-property: opacity;
+		transition-duration: var(--itx-popover-transition-duration);
+		transition-timing-function: var(--itx-popover-transition-timing-function);
+	}
+
+	/* It fades in and disappears at once, like every popover. */
+	:where(select[interop-select]:open)::picker(select) {
+		opacity: 1;
+	}
+
+	@starting-style {
+		:where(select[interop-select]:open)::picker(select) {
+			opacity: 0;
+		}
+	}
+
+	/* A triangle in the text color. It opts out of forced colors so it keeps that color there. */
+	:where(select[interop-select])::picker-icon {
+		content: "";
+		inline-size: var(--itx-select-icon-size);
+		block-size: calc(var(--itx-select-icon-size) / 2);
+		background-color: currentColor;
+		clip-path: polygon(0 0, 100% 0, 50% 100%);
+		forced-color-adjust: none;
+	}
+
+	/*
+	 * Rows: the check in the first column, everything else in the second, so an option with several
+	 * elements stacks them beside the check. Text wraps, so a long option stays readable in a narrow
+	 * window (WCAG 1.4.10).
+	 */
+	:where(select[interop-select] option) {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: start;
+		box-sizing: border-box;
+		min-block-size: var(--itx-select-option-min-block-size);
+		padding-block: calc((var(--itx-select-option-min-block-size) - 1lh) / 2);
+		padding-inline: var(--itx-select-option-padding-inline);
+		column-gap: var(--itx-select-gap);
+		white-space: normal;
+		color: inherit;
+		border-radius: var(--itx-select-option-border-radius);
+		corner-shape: var(--itx-select-corner-shape);
+		transition-property: background-color;
+		transition-duration: var(--itx-select-transition-duration);
+		transition-timing-function: var(--itx-select-transition-timing-function);
+	}
+
+	:where(select[interop-select] option > *) {
+		grid-column: 2;
+	}
+
+	:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {
+		background-color: var(--itx-select-option-background-color-hover);
+	}
+
+	:where(select[interop-select] option:disabled) {
+		opacity: var(--itx-select-opacity-disabled);
+		cursor: var(--itx-select-cursor-disabled);
+	}
+
+	/* A group's name, from its `label` or a <legend>, is a small heading. Its options keep the select's text. */
+	:where(select[interop-select] optgroup) {
+		font-size: var(--itx-select-legend-font-size);
+		line-height: var(--itx-select-legend-line-height);
+		font-weight: var(--itx-font-weight-heading);
+	}
+
+	:where(select[interop-select] optgroup > option) {
+		font-size: var(--itx-select-font-size);
+		line-height: var(--itx-select-line-height);
+		font-weight: var(--itx-font-weight);
+	}
+
+	:where(select[interop-select] optgroup > legend) {
+		padding-block: var(--itx-space-2) var(--itx-space-1);
+		padding-inline: var(--itx-select-option-padding-inline);
+	}
+
+	:where(select[interop-select] hr) {
+		margin-block: var(--itx-select-list-padding);
+		margin-inline: 0;
+		border: 0;
+		border-block-start: 1px solid var(--itx-select-separator-color);
+	}
+
+	/* Forced colors remove the hover fill, so the option under the pointer or the keyboard shows in Highlight. */
+	@media (forced-colors: active) {
+		:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {
+			forced-color-adjust: none;
+			color: HighlightText;
+			background-color: Highlight;
+		}
+	}
+}

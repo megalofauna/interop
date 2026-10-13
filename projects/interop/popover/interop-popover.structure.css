@@ -54,3 +54,48 @@
 		opacity: 0;
 	}
 }
+
+/*
+ * A drawer: `interop-popover="drawer"` is a full-height panel at the inline start of the window, over
+ * the page, with a backdrop. It slides in and, like every popover here, disappears at once. bindDrawer()
+ * closes it when focus leaves it, so focus never lands on the page hidden behind it (WCAG 2.4.11).
+ * A drawer can also show in the page's flow at wide sizes; see the app shell recipe.
+ */
+:where([interop-popover~="drawer"]) {
+	position: fixed;
+	inset-block: 0;
+	inset-inline: 0 auto;
+	position-area: none;
+	margin: 0;
+	inline-size: var(--itx-popover-drawer-inline-size);
+	max-inline-size: none;
+	block-size: 100dvh;
+	max-block-size: none;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	border-block-width: 0;
+	border-inline-start-width: 0;
+	/* Square where it meets the edge of the window. */
+	border-start-start-radius: 0px;
+	border-end-start-radius: 0px;
+	transition-property: opacity, translate;
+}
+
+:where([interop-popover~="drawer"]:popover-open) {
+	translate: 0;
+}
+
+:where([interop-popover~="drawer"])::backdrop {
+	background-color: var(--itx-popover-backdrop-color);
+}
+
+@starting-style {
+	:where([interop-popover~="drawer"]:popover-open) {
+		translate: -100% 0;
+	}
+
+	:where([interop-popover~="drawer"]:popover-open:dir(rtl)) {
+		translate: 100% 0;
+	}
+}
+

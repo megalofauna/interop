@@ -1,4 +1,4 @@
-:where(button[interop-button]) {
+:where(:is(button, summary)[interop-button]) {
 	--itx-button-min-block-size: var(--itx-space-10);
 	/* 1.5 × the block padding that the height leaves around one line. */
 	--itx-button-padding-inline: calc((var(--itx-button-min-block-size) - 1lh) * 0.75);
@@ -44,17 +44,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	:where(button[interop-button]) {
+	:where(:is(button, summary)[interop-button]) {
 		--itx-button-spinner-animation-duration: 1.5s;
 	}
 }
 
-:where(button[interop-button][itx-size="sm"]) {
+:where(:is(button, summary)[interop-button][itx-size="sm"]) {
 	--itx-button-min-block-size: var(--itx-space-8);
 	--itx-button-font-size: var(--itx-font-size-p-sm);
 }
 
-:where(button[interop-button][itx-size="lg"]) {
+:where(:is(button, summary)[interop-button][itx-size="lg"]) {
 	--itx-button-min-block-size: var(--itx-space-14);
 	--itx-button-font-size: var(--itx-font-size-p-lg);
 }

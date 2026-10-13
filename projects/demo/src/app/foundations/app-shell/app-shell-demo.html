@@ -1,0 +1,51 @@
+<h1>App shell</h1>
+<p>
+	An app's primary navigation shows as a sidebar when its container is wide enough, and goes behind a Menu button when
+	it is not. It is a grid and a container query over platform elements. There are two ways to hide the navigation when
+	narrow; the wide layout is the same in both.
+</p>
+
+<table>
+	<thead>
+		<tr><th scope="col"></th><th scope="col">Disclosure (default)</th><th scope="col">Drawer</th></tr>
+	</thead>
+	<tbody>
+		<tr><th scope="row">Narrow</th><td>The navigation opens in the page and pushes the content down</td><td>The navigation slides over the page, with a backdrop</td></tr>
+		<tr><th scope="row">Built from</th><td><code>&lt;details&gt;</code> with its <code>&lt;summary&gt;</code> as the button</td><td><code>&lt;nav popover&gt;</code> with <code>interop-popover="drawer"</code>, and a <code>command="toggle-popover"</code> button</td></tr>
+		<tr><th scope="row">Script</th><td>None</td><td><code>bindDrawer()</code>, about 30 lines</td></tr>
+		<tr><th scope="row">Keyboard</th><td>The summary opens and closes it; focus stays in page order</td><td>Opening moves focus to the current link. Escape, a click outside, following a link, or tabbing out closes it, and focus never lands on the page behind it</td></tr>
+		<tr><th scope="row">Announced</th><td>"Menu, button, collapsed" or "expanded"</td><td>"Menu, button, collapsed" or "expanded"</td></tr>
+	</tbody>
+</table>
+<p>This site uses the drawer. Narrow the window to see it.</p>
+
+<h2>Disclosure</h2>
+<p>Drag the box's corner to narrow it. The layout follows the box, not the window.</p>
+<div class="frame">
+	<div class="shell">
+		<header>Example app</header>
+		<details class="site-nav">
+			<summary interop-button itx-size="sm">Menu</summary>
+			<nav aria-label="Example pages">
+				<ul>
+					@for (page of pages; track page; let first = $first) {
+						<li><a href="#app-shell" [attr.aria-current]="first ? 'page' : null">{{ page }}</a></li>
+					}
+				</ul>
+			</nav>
+		</details>
+		<div class="main"><p>The page's content.</p></div>
+	</div>
+</div>
+<figure interop-code-block language="html" [code]="examples.disclosure"></figure>
+<figure interop-code-block language="css" [code]="examples.disclosureCss"></figure>
+
+<h2>Drawer</h2>
+<p>
+	A popover is not modal, so on its own the keyboard could move on to page content hidden behind it.
+	<code>bindDrawer()</code> closes the drawer when focus leaves it. The browser does the rest: Escape and a click
+	outside close it, and closing returns focus to the Menu button.
+</p>
+<figure interop-code-block language="html" [code]="examples.drawer"></figure>
+<figure interop-code-block language="css" [code]="examples.drawerCss"></figure>
+<figure interop-code-block language="ts" [code]="examples.drawerTs"></figure>

@@ -272,6 +272,35 @@ The behavior, the drawn mark, the focus ring, the disabled state and the audit
 rules stay the group's whatever the template. The radio group demo page shows
 cards and a five-line template of the page's own.
 
+## Chips
+
+`fieldset[interop-checkbox-group="chips"]` (filter chips) and
+`fieldset[interop-radio-group="chips"]` (choice chips) draw each option as a pill
+that sizes to its text and wraps, from the shared `styles/chips.css`. Use radio
+chips for many short options; segmented is for a short row of equal ones.
+
+| Part | How |
+|---|---|
+| Pill | The label: inline-flex, a border at 3:1 against the page, a full radius. A long label wraps inside it (WCAG 1.4.10); the block padding is `(min-block-size − 2 × border − 1lh) / 2`, so a wrapped label keeps a single line's space above and below its text |
+| Input | Transparent and fills the pill (`inset: 0`), so it takes the clicks and the focus ring. Its own mark is not drawn |
+| Checked | The pill fills, and a check appears before the text through a mask, so the state does not rely on color |
+| Forced colors | The checked pill is `Highlight` with `HighlightText`; a disabled pill is `GrayText` |
+| `prefers-contrast: more` | 2px border |
+
+| Size | Pill height | Text |
+|---|---|---|
+| `sm` | 24px | `caption` |
+| default | 32px | `p-sm` |
+| `lg` | 40px | `p` |
+
+Tokens are `--itx-chips-*`: `gap`, `chip-min-block-size`,
+`chip-padding-inline`, `chip-column-gap`, `chip-font-size`, `chip-line-height`,
+`chip-color[-checked]`, `chip-background-color[-hover|-checked|-checked-hover]`,
+`chip-border-width`, `chip-border-color[-hover|-checked]`,
+`chip-border-radius`, `check-size`, `check-mask-image`, and the transition pair.
+
+A chip that removes a value is a tag, not a template: see [tags.md](tags.md).
+
 ## Cards
 
 `fieldset[interop-radio-group="cards"]` and

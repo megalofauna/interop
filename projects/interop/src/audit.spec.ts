@@ -280,6 +280,44 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('tags', () => {
+		it('accepts remove buttons named for their tag', () => {
+			render(`<ul interop-tags role="list" aria-label="Tags">
+				<li>Football <button type="button"><span itx-visually-hidden>Remove Football</span></button></li>
+				<li>Cricket <button type="button" aria-label="Remove Cricket"></button></li>
+			</ul>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a remove button with a generic name, and a list without role="list"', () => {
+			render('<ul interop-tags aria-label="Tags"><li>Football <button type="button">Remove</button></li></ul>');
+			expect(rules().sort()).toEqual(['tags-list-role', 'tags-remove-name']);
+		});
+	});
+
+	describe('select', () => {
+		it('accepts options with text, a label, or visually hidden text', () => {
+			render(`
+				<select interop-select aria-label="Fruit">
+					<option>Apple</option>
+					<option label="Banana"></option>
+					<option><svg interop-icon aria-hidden="true"></svg><span itx-visually-hidden>Cherry</span></option>
+				</select>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags an option with no text', () => {
+			render('<select interop-select aria-label="Fruit"><option><svg interop-icon aria-hidden="true"></svg></option></select>');
+			expect(rules()).toEqual(['select-option-text']);
+		});
+
+		it('flags a multiple select', () => {
+			render('<select interop-select aria-label="Toppings" multiple><option>Basil</option></select>');
+			expect(rules()).toEqual(['select-multiple']);
+		});
+	});
+
 	describe('multi-step form', () => {
 		it('accepts steps with a legend, hidden plainly', () => {
 			render('<form interop-steps-form><fieldset><legend>A</legend></fieldset><fieldset hidden><legend>B</legend></fieldset></form>');

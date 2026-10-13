@@ -31,6 +31,11 @@
 @import "./tabs/interop-tabs.structure.css";
 @import "./steps/interop-steps.base.css";
 @import "./steps/interop-steps.structure.css";
+@import "./tags/interop-tags.base.css";
+@import "./tags/interop-tags.structure.css";
+@import "./select/interop-select.base.css";
+@import "./select/interop-select.structure.css";
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";
+@import "./styles/chips.css";

@@ -1,0 +1,204 @@
+/*
+ * Chips: a checkbox group or radio group drawn as a wrapping row of pills, one per option. A
+ * template like cards: it changes only the layout and decoration of each label. The behavior, the
+ * focus ring, the disabled state and the audit rules are the group's own.
+ *
+ *   <fieldset interop-checkbox-group="chips">
+ *     <legend>Size</legend>
+ *     <label interop-checkbox><input type="checkbox" name="size" value="s"> Small</label>
+ *     <label interop-checkbox><input type="checkbox" name="size" value="m"> Medium</label>
+ *   </fieldset>
+ *
+ *   <fieldset interop-radio-group="chips"> … <label><input type="radio" name="…" value="…"> …</label> … </fieldset>
+ *
+ * Each label is a pill. Its input is transparent and fills it, so the input takes the clicks and the
+ * focus ring. A checked pill fills, and a check appears before its text, so the state does not rely
+ * on color. Pills size to their text and wrap; for a short row of equal options, use segmented.
+ * `itx-size` on the fieldset sets the size: sm, the default, or lg.
+ *
+ * Also known as filter chips, choice chips, toggle chips, pills, tags, tokens.
+ *
+ * Loaded after the radio group and checkbox, because it overrides their item layout.
+ */
+
+:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"])) {
+	--itx-chips-gap: var(--itx-space-2);
+	--itx-chips-chip-min-block-size: var(--itx-space-8);
+	--itx-chips-chip-padding-inline: var(--itx-space-3);
+	--itx-chips-chip-column-gap: var(--itx-space-1_5);
+	--itx-chips-chip-font-size: var(--itx-font-size-p-sm);
+	--itx-chips-chip-line-height: var(--itx-line-height-p-sm);
+	/* 4.5:1 against the page (WCAG 1.4.3). */
+	--itx-chips-chip-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-chips-chip-color-checked: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-chips-chip-background-color: transparent;
+	--itx-chips-chip-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	/* 3:1 against the page, so the selection shows without the text color (WCAG 1.4.11). */
+	--itx-chips-chip-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-chips-chip-background-color-checked-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-200));
+	--itx-chips-chip-border-width: 1px;
+	/* The pill's edge: 3:1 against the page, so an unchecked chip reads as a control. */
+	--itx-chips-chip-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-chips-chip-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	--itx-chips-chip-border-color-checked: transparent;
+	--itx-chips-chip-border-radius: var(--itx-radius-full);
+	--itx-chips-check-size: 1em;
+	/* Only the mask's shape counts, so its stroke color does not matter. */
+	--itx-chips-check-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E");
+	--itx-chips-transition-duration: var(--itx-transition-duration);
+	--itx-chips-transition-timing-function: var(--itx-transition-timing-function);
+
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-chips-gap);
+}
+
+:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"])[itx-size="sm"]) {
+	--itx-chips-chip-min-block-size: var(--itx-space-6);
+	--itx-chips-chip-padding-inline: var(--itx-space-2_5);
+	--itx-chips-chip-column-gap: var(--itx-space-1);
+	--itx-chips-chip-font-size: var(--itx-font-size-caption);
+	--itx-chips-chip-line-height: var(--itx-line-height-caption);
+}
+
+:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"])[itx-size="lg"]) {
+	--itx-chips-chip-min-block-size: var(--itx-space-10);
+	--itx-chips-chip-padding-inline: var(--itx-space-4);
+	--itx-chips-chip-column-gap: var(--itx-space-2);
+	--itx-chips-chip-font-size: var(--itx-font-size-p);
+	--itx-chips-chip-line-height: var(--itx-line-height-p);
+}
+
+/* ── The pill ──────────────────────────────────────────────────────────── */
+
+:where(
+	fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox],
+	fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"])
+) {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	column-gap: var(--itx-chips-chip-column-gap);
+	box-sizing: border-box;
+	min-block-size: var(--itx-chips-chip-min-block-size);
+	/*
+	 * A long label wraps inside the pill rather than overflowing a narrow page (WCAG 1.4.10). The
+	 * block padding is what one line leaves of the minimum height, so a wrapped label keeps the same
+	 * space above and below its text as a single line.
+	 */
+	max-inline-size: 100%;
+	padding-block: calc((var(--itx-chips-chip-min-block-size) - 2 * var(--itx-chips-chip-border-width) - 1lh) / 2);
+	padding-inline: var(--itx-chips-chip-padding-inline);
+	font-size: var(--itx-chips-chip-font-size);
+	line-height: var(--itx-chips-chip-line-height);
+	overflow-wrap: anywhere;
+	color: var(--itx-chips-chip-color);
+	background-color: var(--itx-chips-chip-background-color);
+	border-width: var(--itx-chips-chip-border-width);
+	border-style: solid;
+	border-color: var(--itx-chips-chip-border-color);
+	border-radius: var(--itx-chips-chip-border-radius);
+	transition-property: color, background-color, border-color;
+	transition-duration: var(--itx-chips-transition-duration);
+	transition-timing-function: var(--itx-chips-transition-timing-function);
+}
+
+/* The input fills the pill and draws nothing. It takes the clicks and the focus ring. */
+:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"]) > label > input) {
+	inset: 0;
+	inline-size: auto;
+	block-size: auto;
+	margin: 0;
+	background-color: transparent;
+	border: 0;
+	border-radius: var(--itx-chips-chip-border-radius);
+}
+
+:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"]) > label > input)::before {
+	content: none;
+}
+
+:where(
+	fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:hover:has(> input:not(:checked, :disabled)),
+	fieldset[interop-radio-group~="chips"] > label:hover:has(> input[type="radio"]:not(:checked, :disabled))
+) {
+	background-color: var(--itx-chips-chip-background-color-hover, var(--itx-chips-chip-background-color));
+	border-color: var(--itx-chips-chip-border-color-hover, var(--itx-chips-chip-border-color));
+}
+
+:where(
+	fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:checked),
+	fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:checked)
+) {
+	color: var(--itx-chips-chip-color-checked);
+	background-color: var(--itx-chips-chip-background-color-checked);
+	border-color: var(--itx-chips-chip-border-color-checked);
+}
+
+:where(
+	fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:hover:has(> input:checked:not(:disabled)),
+	fieldset[interop-radio-group~="chips"] > label:hover:has(> input[type="radio"]:checked:not(:disabled))
+) {
+	background-color: var(--itx-chips-chip-background-color-checked-hover, var(--itx-chips-chip-background-color-checked));
+}
+
+/* The check before a checked pill's text: the cue that does not rely on color. */
+:where(
+	fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:checked),
+	fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:checked)
+)::before {
+	content: "";
+	flex-shrink: 0;
+	inline-size: var(--itx-chips-check-size);
+	block-size: var(--itx-chips-check-size);
+	background-color: currentColor;
+	mask-image: var(--itx-chips-check-mask-image);
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+/* ── Forced colors ─────────────────────────────────────────────────────── */
+
+@media (forced-colors: active) {
+	:where(
+		fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox],
+		fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"])
+	) {
+		border-color: CanvasText;
+	}
+
+	:where(
+		fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:checked),
+		fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:checked)
+	) {
+		forced-color-adjust: none;
+		color: HighlightText;
+		background-color: Highlight;
+		border-color: Highlight;
+	}
+
+	:where(
+		fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:checked:disabled),
+		fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:checked:disabled)
+	) {
+		color: Canvas;
+		background-color: GrayText;
+		border-color: GrayText;
+	}
+
+	:where(
+		fieldset[interop-checkbox-group~="chips"] > label[interop-checkbox]:has(> input:disabled:not(:checked)),
+		fieldset[interop-radio-group~="chips"] > label:has(> input[type="radio"]:disabled:not(:checked))
+	) {
+		color: GrayText;
+		border-color: GrayText;
+	}
+}
+
+@media (prefers-contrast: more) {
+	:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"])) {
+		--itx-chips-chip-border-width: 2px;
+	}
+}
