@@ -42,7 +42,7 @@
 	max-inline-size: 100%;
 	padding-block: calc((var(--itx-tags-tag-min-block-size) - 2 * var(--itx-tags-tag-border-width) - 1lh) / 2);
 	/* The remove button sits at the inline end, so the padding there is the button's own. */
-	padding-inline: var(--itx-tags-tag-padding-inline) var(--itx-tags-button-inset);
+	padding-inline: var(--itx-tags-tag-padding-inline) calc(var(--itx-tags-button-inset) / 2);
 	font-size: var(--itx-tags-tag-font-size);
 	line-height: var(--itx-tags-tag-line-height);
 	overflow-wrap: anywhere;
