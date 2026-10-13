@@ -1,0 +1,12 @@
+.aka {
+	font-style: italic;
+}
+
+label {
+	display: block;
+}
+
+input {
+	font: inherit;
+	padding: var(--itx-space-2);
+}

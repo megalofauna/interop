@@ -56,9 +56,9 @@
 	<button interop-button type="button" [popoverTarget]="menu">Options</button>
 </p>
 
-<dialog #confirm>
-	<p>Delete this item?</p>
-	<button interop-button type="button" command="close" [commandFor]="confirm">Cancel</button>
+<dialog #confirm interop-dialog aria-labelledby="confirm-title">
+	<h2 id="confirm-title">Delete this item?</h2>
+	<footer><button interop-button type="button" command="close" [commandFor]="confirm">Cancel</button></footer>
 </dialog>
 
 <div popover #menu>Options go here.</div>

@@ -23,6 +23,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/code-block/code-block-demo").then((m) => m.CodeBlockDemo),
 	},
 	{
+		path: "components/dialog",
+		title: "Dialog",
+		loadComponent: () => import("./components/dialog/dialog-demo").then((m) => m.DialogDemo),
+	},
+	{
 		path: "components/icon",
 		title: "Icon",
 		loadComponent: () => import("./components/icon/icon-demo").then((m) => m.IconDemo),
