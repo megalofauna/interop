@@ -177,7 +177,7 @@ still lets Escape close the dialog.
 |---|---|
 | Open as a modal | Yes: `command="show-modal"` |
 | Close | Yes: `command="close"`, or a button in `<form method="dialog">` |
-| A Cancel button that behaves like Escape | Yes: `command="request-close"` |
+| A Cancel or X button that behaves like Escape | Yes: `command="request-close"`; a `cancel` guard runs on every click |
 | Return which button closed it | Yes: the button's `value` becomes `returnValue` |
 | Open non-modally | No built-in command. `popover` covers non-modal panels |
 | Open from a hotkey or an event | No: script calls `showModal()` |
@@ -215,14 +215,37 @@ still lets Escape close the dialog.
 5. **Variants.** None now. `role="alertdialog"` is markup plus an audit rule
    that requires a description. A modal side sheet waits for a use.
    Recommended.
-6. **Close button.** No built-in one. Document an `interop-button` with
-   `command="close"`, and add an audit rule for `closedby="none"` with no
-   control inside that closes the dialog. Recommended.
+6. **Close button.** The consumer writes it; Interop inserts no nodes. Recommended
+   pattern, checked in Chrome 155:
+
+   ```html
+   <dialog id="edit" interop-dialog aria-labelledby="edit-title">
+     <header>
+       <h2 id="edit-title">Edit name</h2>
+       <button interop-button type="button" commandfor="edit" command="request-close">
+         <span itx-visually-hidden>Close</span><svg interop-icon name="tabler-x"></svg>
+       </button>
+     </header>
+     …
+   </dialog>
+   ```
+
+   - `request-close` takes the Escape path: it fires `cancel`, so a guard for
+     unsaved input runs for the X as well. A click counts as user activation,
+     so the guard holds on every click (three of three blocked). `close`
+     skips `cancel`; use it where nothing needs guarding.
+   - It works with `closedby="none"`, which blocks only Escape and the backdrop.
+   - The CSS lays out `header` as the heading with the button at the inline end.
+   - Put `autofocus` on the first field. Otherwise the X, as the first control,
+     takes focus on opening.
+   - Audit rule: a `closedby="none"` dialog with no control inside that closes it.
+
 7. **Scroll lock scope.** `html:has(dialog[interop-dialog]:modal)`, Interop
    dialogs only. Recommended over every `dialog:modal` on the page.
 
 ## Unverified
 
+- Safari support for the `request-close` command (Safari has `requestClose()` from 18.4 and invoker commands from 26.2).
 - Safari and Firefox behavior; iOS scroll lock with `overflow: hidden` on the root.
 - Screen reader output with real assistive technology.
 - Windows forced colors for the backdrop.
