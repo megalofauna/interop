@@ -1,0 +1,31 @@
+.aka {
+	font-style: italic;
+}
+
+label {
+	display: block;
+	margin-block-end: var(--itx-space-1);
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-2);
+}
+
+select[interop-select] + figure {
+	margin-block-start: var(--itx-space-3);
+}
+
+select[interop-select] .hint {
+	font-size: var(--itx-font-size-p-sm);
+}
+
+selectedcontent .hint {
+	display: none;
+}
+
+.row + .row {
+	margin-block-start: var(--itx-space-2);
+}
