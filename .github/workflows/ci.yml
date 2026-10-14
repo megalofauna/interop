@@ -1,7 +1,7 @@
 # Continuous integration for the Interop workspace.
 #
-# This exists because everything that guards this repo — nine lint checks, 573
-# specs, three builds — used to run only on a maintainer's machine. That is how
+# This exists because everything that guards this repo — the lint checks, the
+# specs, the builds — used to run only on a maintainer's machine. That is how
 # a red deploy reached main: the build passed locally on Node 25 and the first
 # environment to run Node 22 was production.
 #
@@ -49,10 +49,10 @@ jobs:
         # motivated this workflow.
         run: npm ci
 
-      # Nine checks: prettier --check, stylelint, and the seven token guards
-      # (private tokens, colour axes, focus, motion, shape, CSS-wide keywords,
-      # plus drift checks on the two generated stylesheets and the composites
-      # boundary rule).
+      # Prettier, stylelint, and three token guards: no private token read across
+      # a component boundary, no CSS-wide keyword as a token value, and no var()
+      # read of a token nothing declares. Contrast, target size, radius, forced
+      # colors and motion are guarded by specs, in the Test step.
       - name: Lint
         run: npm run lint
 
@@ -61,21 +61,6 @@ jobs:
         env:
           CHROME_BIN: /usr/bin/google-chrome
 
-      # The colour ladder, twice over: the generator validates its own
-      # arithmetic, then every floor it claims is painted in Chrome and
-      # measured. The second half exists because the first once passed while
-      # --itx-contrast-4 rendered at 4.48:1 against a 4.5 floor — the model and
-      # the engine round one 8-bit channel differently. Runs after Test so it
-      # inherits the same browser.
-      - name: Colour
-        run: npm run check:color
-        env:
-          CHROME_BIN: /usr/bin/google-chrome
-          REQUIRE_BROWSER: "1"
-
-      # The library and the demo only. projects/protocol is no longer developed;
-      # building it here gated every PR on a project nobody was changing. Its
-      # `build:protocol` script still exists, so reviving it is one line back.
       - name: Build library
         run: npm run build:lib
 

@@ -11,7 +11,7 @@
  *
  *   <p itx-font="p-lg">
  *
- * Roles: display, h1–h5, p-lg, p, p-sm, label, caption, fine-print.
+ * Roles: display, h1–h5, p-lg, p, p-sm, label, caption.
  */
 
 @layer itx-reset {
@@ -98,12 +98,8 @@
 		font-size: var(--itx-font-size-label);
 		line-height: var(--itx-line-height-label);
 	}
-	:where(:is(figcaption, caption):not([itx-font]), [itx-font="caption"]) {
+	:where(:is(figcaption, caption, small):not([itx-font]), [itx-font="caption"]) {
 		font-size: var(--itx-font-size-caption);
 		line-height: var(--itx-line-height-caption);
-	}
-	:where(small:not([itx-font]), [itx-font="fine-print"]) {
-		font-size: var(--itx-font-size-fine-print);
-		line-height: var(--itx-line-height-fine-print);
 	}
 }

@@ -41,7 +41,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const ROOT = process.argv[2] ?? "projects/interop/src";
+/** Every root is read together, so a page's stylesheets can read the library's tokens. */
+const ROOTS = process.argv.length > 2 ? process.argv.slice(2) : ["projects/interop"];
 
 /** Generated files and specs that exercise the failure mode deliberately. */
 const SKIP = /interop\.(globals|tokens)\.css$|\.spec\.ts$/;
@@ -75,7 +76,7 @@ function walk(dir, out = []) {
 	return out;
 }
 
-const files = walk(ROOT);
+const files = ROOTS.flatMap((root) => walk(root));
 const declared = new Set(CONSUMER_SUPPLIED.keys());
 const references = [];
 
