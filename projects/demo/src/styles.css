@@ -1,4 +1,13 @@
 /*
+ * The page's colors, stated: they are what the browser draws anyway, but a checker such as axe
+ * cannot read the canvas and assumes white, so in dark mode it would measure text against white.
+ */
+:where(:root) {
+	color: CanvasText;
+	background-color: Canvas;
+}
+
+/*
  * Vertical rhythm for the demo pages: 1rem between blocks, 2rem before a heading, 0.5rem after one.
  * Hidden elements are skipped: a hidden="until-found" tab panel keeps its box, so a margin on it
  * would leave a gap. The parts of a field, a fieldset and an error summary are left to their own gaps.
