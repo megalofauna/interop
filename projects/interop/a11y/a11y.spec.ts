@@ -1,7 +1,15 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
-import { guardActivation, registerIcons } from 'interop';
+import {
+	bindCharacterCount,
+	bindPasswordToggle,
+	bindSelectAll,
+	bindTagInput,
+	bindValidation,
+	guardActivation,
+	registerIcons,
+} from 'interop';
 import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
 import { InteropIcon } from 'interop/icon';
@@ -381,6 +389,94 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(element)).toEqual([]);
 		element.querySelectorAll('fieldset[hidden]').forEach((step) => step.removeAttribute('hidden'));
 		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations in forms as the field helpers leave them, after a failed submit', async () => {
+		document.body.innerHTML = `
+			<main>
+				<div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
+				<form>
+					<div interop-field>
+						<label for="h-email">Email address</label>
+						<p interop-hint id="h-email-hint">For the receipt</p>
+						<p interop-error hidden></p>
+						<input interop-input id="h-email" type="email" name="email" autocomplete="email" required aria-describedby="h-email-hint" />
+					</div>
+					<fieldset interop-radio-group>
+						<legend>Delivery</legend>
+						<p interop-error hidden></p>
+						<label><input type="radio" name="delivery" value="post" required /> Post</label>
+						<label><input type="radio" name="delivery" value="collect" /> Collect</label>
+					</fieldset>
+					<div interop-field>
+						<label for="h-summary">Summary</label>
+						<p interop-error hidden></p>
+						<textarea interop-input id="h-summary" name="summary"></textarea>
+						<p interop-count></p>
+						<p role="status" itx-visually-hidden></p>
+					</div>
+					<div interop-field>
+						<label for="h-password">Password</label>
+						<div>
+							<input interop-input id="h-password" type="password" name="password" autocomplete="current-password" />
+							<button interop-button type="button" commandfor="h-password" command="--toggle-password" aria-pressed="false" hidden>Show password</button>
+						</div>
+					</div>
+					<div interop-field>
+						<label for="h-tag">Skills</label>
+						<p interop-error hidden></p>
+						<ul interop-tags role="list" aria-label="Skills">
+							<li>CSS <button type="button"><span itx-visually-hidden>Remove CSS</span></button></li>
+							<li>HTML <button type="button"><span itx-visually-hidden>Remove HTML</span></button></li>
+						</ul>
+						<input interop-input id="h-tag" type="text" />
+						<p id="h-tag-status" role="status" itx-visually-hidden></p>
+					</div>
+					<fieldset interop-checkbox-group>
+						<legend>Notifications</legend>
+						<label interop-checkbox><input type="checkbox" id="h-all" /> All</label>
+						<label interop-checkbox><input type="checkbox" name="n" value="email" checked /> Email</label>
+						<label interop-checkbox><input type="checkbox" name="n" value="sms" /> Text</label>
+					</fieldset>
+					<button interop-button type="submit">Send</button>
+				</form>
+			</main>`;
+		const $ = <T extends Element>(selector: string) => document.querySelector<T>(selector)!;
+		const form = $<HTMLFormElement>('form');
+		const summary = $<HTMLElement>('[interop-error-summary]');
+		const textarea = $<HTMLTextAreaElement>('#h-summary');
+		const password = $<HTMLInputElement>('#h-password');
+		const unbind = [
+			bindValidation(form, { summary }),
+			bindCharacterCount(textarea, {
+				limit: 5,
+				count: textarea.nextElementSibling as HTMLElement,
+				status: textarea.parentElement!.querySelector<HTMLElement>('[role="status"]'),
+			}),
+			bindPasswordToggle(password),
+			bindTagInput($<HTMLInputElement>('#h-tag'), {
+				list: $<HTMLElement>('ul[interop-tags]'),
+				required: 'Add a skill',
+				status: $<HTMLElement>('#h-tag-status'),
+			}),
+			bindSelectAll($<HTMLInputElement>('#h-all')),
+		];
+		textarea.value = 'Too long';
+		textarea.dispatchEvent(new Event('input', { bubbles: true }));
+		password.dispatchEvent(
+			Object.assign(new Event('command'), { command: '--toggle-password', source: $('[command="--toggle-password"]') }),
+		);
+		$('ul[interop-tags] > li')!.remove();
+		await new Promise((resolve) => setTimeout(resolve));
+		form.dispatchEvent(new SubmitEvent('submit', { cancelable: true }));
+
+		// The states these fixtures are for.
+		expect(summary.hidden).toBe(false);
+		expect($('#h-email').getAttribute('aria-invalid')).toBe('true');
+		expect($('[command="--toggle-password"]').getAttribute('aria-pressed')).toBe('true');
+		expect($<HTMLInputElement>('#h-all').indeterminate).toBe(true);
+		expect(await violations(document.body)).toEqual([]);
+		unbind.forEach((off) => off());
 	});
 
 	it('checks inside a popover only once it is open, so the second pass is needed', async () => {
