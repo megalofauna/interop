@@ -169,6 +169,8 @@ describe('bindTagInput', () => {
 		list.querySelector('li')!.remove();
 		await settle();
 		expect(input.validationMessage).toBe('Add at least one tag.');
+		// Not announced as invalid before the user has done anything.
+		expect(input.getAttribute('aria-invalid')).toBe('false');
 	});
 
 	it('returns focus to the input when the last tag is removed', async () => {

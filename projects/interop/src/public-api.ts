@@ -12,6 +12,13 @@ export { bindSteps, type StepsChangeDetail, type StepsOptions } from './bind-ste
 export { bindTabs, type TabsChangeDetail, type TabsOptions } from './bind-tabs';
 export { bindTagInput, bindTags, type TagAddDetail, type TagInputOptions, type TagsOptions } from './bind-tags';
 export { bindTooltip } from './bind-tooltip';
+export {
+	bindValidation,
+	defaultValidationMessages,
+	type ValidationMessage,
+	type ValidationOptions,
+	type ValidityKey,
+} from './bind-validation';
 export { guardActivation } from './guard-activation';
 export { scopeSelectAll } from './scope-select-all';
 export { splitLines } from './split-lines';
