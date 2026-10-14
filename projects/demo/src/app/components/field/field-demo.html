@@ -117,6 +117,62 @@
 </div>
 <figure interop-code-block language="html" [code]="examples.textarea"></figure>
 
+<h2>Password</h2>
+<p>
+	A button beside the field shows the password, so people can check what they typed. It is an invoker:
+	<code>command="--toggle-password"</code> aimed at the input. It keeps its label and reports its state with
+	<code>aria-pressed</code>. It is <code>hidden</code> until script runs, and the password is hidden again when the form
+	is submitted, so the browser does not save it as plain text.
+</p>
+<form (submit)="$event.preventDefault()">
+	<div interop-field>
+		<label for="password">Password</label>
+		<div>
+			<input
+				interop-input
+				interop-password-toggle
+				id="password"
+				type="password"
+				name="password"
+				autocomplete="current-password"
+				autocapitalize="off"
+				spellcheck="false"
+			/>
+			<button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false" hidden>
+				Show password
+			</button>
+		</div>
+	</div>
+</form>
+<figure interop-code-block language="html" [code]="examples.password"></figure>
+
+<h2>Character count</h2>
+<p>
+	The count shows how many characters are left as you type, and a screen reader hears it once typing pauses. Going
+	over the limit is allowed: the count says by how much, and the field is invalid until it is shortened.
+</p>
+<form interop-form (submit)="$event.preventDefault()">
+	<div interop-field>
+		<label for="summary-text">Summary</label>
+		<p interop-hint id="summary-hint">You can enter up to 100 characters</p>
+		<p interop-error hidden></p>
+		<textarea
+			interop-input
+			interop-character-count
+			id="summary-text"
+			name="summary"
+			aria-describedby="summary-hint"
+			[characterLimit]="100"
+			[count]="count"
+			[status]="countStatus"
+		></textarea>
+		<p #count interop-count></p>
+		<p #countStatus role="status" itx-visually-hidden></p>
+	</div>
+	<div class="row"><button interop-button type="submit">Save</button></div>
+</form>
+<figure interop-code-block language="html" [code]="examples.count"></figure>
+
 <h2>A date people know</h2>
 <p>
 	Three text fields, not a date picker: people know their date of birth and type it faster than they find it in a

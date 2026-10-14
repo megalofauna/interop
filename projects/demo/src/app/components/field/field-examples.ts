@@ -79,6 +79,26 @@ send(event: SubmitEvent): void {
 	(input)="username.set($any($event.target).value)"
 	[interopCustomValidity]="username() === 'admin' ? 'That username is taken. Choose another' : ''">
 `,
+	password: `<div interop-field>
+	<label for="password">Password</label>
+	<div>
+		<input interop-input interop-password-toggle id="password" type="password" name="password"
+			autocomplete="current-password" autocapitalize="off" spellcheck="false">
+		<button interop-button type="button" commandfor="password" command="--toggle-password"
+			aria-pressed="false" hidden>Show password</button>
+	</div>
+</div>
+`,
+	count: `<div interop-field>
+	<label for="summary-text">Summary</label>
+	<p interop-hint id="summary-hint">You can enter up to 100 characters</p>
+	<p interop-error hidden></p>
+	<textarea interop-input interop-character-count id="summary-text" name="summary"
+		aria-describedby="summary-hint" [characterLimit]="100" [count]="count" [status]="status"></textarea>
+	<p #count interop-count></p>
+	<p #status role="status" itx-visually-hidden></p>
+</div>
+`,
 	sizes: `<div interop-field itx-size="sm">…</div>
 <div interop-field>…</div>
 <div interop-field itx-size="lg">…</div>

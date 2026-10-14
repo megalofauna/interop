@@ -1,12 +1,12 @@
 import { Component, signal } from "@angular/core";
 import { defaultValidationMessages, type ValidationOptions } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
-import { InteropCustomValidity, InteropForm } from "interop/field";
+import { InteropCharacterCount, InteropCustomValidity, InteropForm, InteropPasswordToggle } from "interop/field";
 import { examples } from "./field-examples";
 
 @Component({
 	selector: "demo-field",
-	imports: [InteropCodeBlock, InteropCustomValidity, InteropForm],
+	imports: [InteropCharacterCount, InteropCodeBlock, InteropCustomValidity, InteropForm, InteropPasswordToggle],
 	templateUrl: "./field-demo.html",
 	styleUrl: "./field-demo.css",
 })
