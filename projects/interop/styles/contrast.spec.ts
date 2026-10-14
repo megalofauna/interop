@@ -1,72 +1,9 @@
-// @ts-expect-error The text loader turns the file into a string.
-import colorCss from './color.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import codeCss from './code.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import codeBlockCss from '../code-block/interop-code-block.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import popoverCss from '../popover/interop-popover.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import scrollAreaCss from '../scroll-area/interop-scroll-area.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import switchCss from '../switch/interop-switch.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import buttonCss from '../button/interop-button.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tooltipCss from '../tooltip/interop-tooltip.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import badgeCss from '../badge/interop-badge.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import outlineCss from './outline.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import cardsCss from './cards.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import stepsCss from '../steps/interop-steps.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import chipsCss from './chips.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tagsCss from '../tags/interop-tags.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import segmentedCss from './segmented.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import dialogCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import fieldCss from '../field/interop-field.base.css' with { loader: 'text' };
 import { oneLine } from './css-text';
+import { sheets } from './sheets';
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [
-	colorCss,
-	codeCss,
-	codeBlockCss,
-	popoverCss,
-	scrollAreaCss,
-	switchCss,
-	buttonCss,
-	tooltipCss,
-	badgeCss,
-	outlineCss,
-	radioGroupCss,
-	checkboxCss,
-	segmentedCss,
-	tabsCss,
-	cardsCss,
-	stepsCss,
-	chipsCss,
-	tagsCss,
-	selectCss,
-	dialogCss,
-	fieldCss,
-] as string[]) {
+for (const css of Object.values(sheets)) {
 	// The first declaration of each token is its base value; later ones are size steps and system modes.
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g))
 		if (!declarations.has(name)) declarations.set(name, oneLine(value));
