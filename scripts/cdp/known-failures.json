@@ -1,3 +1,1 @@
-{
-	"components/segmented-control · reflow · demo-segmented-control": "Segments do not wrap at 320px. Decided 2026-10-14: the segmented control stacks into the radio layout when narrow; not built yet."
-}
+{}

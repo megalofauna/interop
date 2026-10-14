@@ -72,6 +72,28 @@
 	>
 </fieldset>
 
+<h2>Fitting the space</h2>
+<p>
+	A row that runs past its container fails reflow (WCAG 1.4.10). Three ways
+	stack it, and with none the control stays a row:
+</p>
+<ul>
+	<li><code>itx-orientation="vertical"</code> stacks it always.</li>
+	<li>
+		<code>--itx-segmented-orientation: vertical</code>, set in the page's own
+		<code>@media</code> or <code>@container</code> rule, stacks it below a width
+		you choose. No script.
+	</li>
+	<li>
+		<code>bindSegmentedFit()</code>, or <code>interop-segmented-fit</code> in
+		Angular, measures the row and stacks it only when it does not fit, whatever
+		the labels say once translated. The month control below uses it: narrow the
+		window to see it stack.
+	</li>
+</ul>
+<figure interop-code-block language="css" [code]="examples.fitCss"></figure>
+<figure interop-code-block language="html" [code]="examples.fitHtml"></figure>
+
 <h2>Two looks</h2>
 <p>
 	The selected segment is a raised pill on a filled channel. Its fill is only
@@ -157,7 +179,7 @@
 	<code>bindRadioHomeEnd(fieldset)</code> adds Home and End, which check the
 	first and last enabled segment. It is optional.
 </p>
-<fieldset #homeEnd interop-radio-group="segmented">
+<fieldset #homeEnd interop-radio-group="segmented" interop-segmented-fit>
 	<legend>Month</legend>
 	<label><input type="radio" name="month" value="jan" /> Jan</label>
 	<label><input type="radio" name="month" value="feb" /> Feb</label>

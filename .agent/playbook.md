@@ -217,6 +217,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindCharacterCount` | A count that does not block typing, announced on a pause | Nothing proposed |
 | `bindValidation` | Error messages in the page, at the right time, wired to the field; an error summary | Nothing proposed. The browser checks the constraints; only its message bubbles are replaced |
 | `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
+| `bindSegmentedFit` | Stacking a segmented control when its row does not fit | Nothing proposed: CSS cannot measure whether content fits. Optional: `itx-orientation` and the page's own threshold need no script |
 | `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
 | `bindSteps` | Steps of one form, and their validation | Nothing proposed |
 | `bindTags`, `bindTagInput` | Focus after a removal, announcements, adding by Enter | Nothing proposed |

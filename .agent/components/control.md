@@ -347,10 +347,19 @@ group: one value, one tab stop, arrow keys, form participation, and the same
 dev audit rules. It has its own demo page. Use it to choose a value or a view of
 the same content; tabs switch between different sections.
 
-`itx-orientation="vertical"` stacks the segments in a column, each as wide as
-the widest, with dividers across. The frame reaches from the first segment's
-top to the last one's bottom, so one rule frames both orientations. Segmented
-tabs are horizontal.
+The segments stack in a column, each as wide as the widest, with dividers
+across, while `--itx-segmented-orientation` is `vertical` on the group or an
+ancestor; they read it with a container style query (Chrome 111, Safari 18,
+Firefox 151). Three ways set it; with none the control is a row:
+
+| Way | Stacks |
+|---|---|
+| `itx-orientation="vertical"` | Always |
+| `--itx-segmented-orientation: vertical` in the page's own `@media` or `@container` rule | Below a width the page chooses, with no script |
+| `bindSegmentedFit(group)`, or `fieldset[interop-segmented-fit]` in Angular | When the row does not fit its container, measured, so translated labels are covered. It sets `data-stacked` and checks again when the container's width or a label changes |
+
+The frame reaches from the first segment's top to the last one's bottom, so one
+rule frames both orientations. Segmented tabs are horizontal.
 
 ```html
 <fieldset interop-radio-group="segmented" itx-size="sm">
