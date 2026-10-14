@@ -172,6 +172,42 @@ guard that applies:
 One way per pattern. When two components solve the same problem differently,
 fix the outlier before adding a third.
 
+## Helpers
+
+A helper fills one gap the platform leaves, in `projects/interop/src/`. It is
+`bindX(element, options) → unbind`, framework-free, with an Angular directive
+of a few lines that calls it from `afterRenderEffect`.
+
+A helper:
+
+- listens, and sets attributes, focus or status text. It never inserts nodes;
+  the consumer's markup or Angular renders them;
+- keeps no state the page cannot read from the DOM;
+- binds only the element it is given. Nothing scans the page and binds by
+  itself;
+- adds every listener with `{ signal }` from one `AbortController`, and its
+  unbind calls `abort()` and disconnects its observers;
+- finds focus targets with `focusables()` or `isFocusable()` from
+  `src/focusable.ts`, the one definition of what the keyboard can reach.
+
+Shared code is extracted when a second helper needs it, not before.
+
+Each helper names what would retire it. The list should shrink as browsers
+ship; a helper with nothing on the horizon needs a reason to exist.
+
+| Helper | Gap | Retired by |
+|---|---|---|
+| `bindTabs` | Arrow keys, selection, panels | `focusgroup` takes the arrow keys (Chrome 150); nothing proposed for selection |
+| `bindRadioHomeEnd` | Home and End in a radio group | `focusgroup` moves focus with them, but does not check the radio |
+| `bindTooltip` | Show on hover and keyboard focus | Interest invokers, `interestfor` (Chrome 142) |
+| `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
+| `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
+| `bindSteps` | Steps of one form, and their validation | Nothing proposed |
+| `bindTags`, `bindTagInput` | Focus after a removal, announcements, adding by Enter | Nothing proposed |
+| `bindSelectAll` | A select-all checkbox | Nothing proposed |
+| `bindPendingAction`, `guardActivation` | A busy button that ignores repeat clicks | Nothing proposed |
+| `scopeSelectAll` | Ctrl+A inside a code block | Nothing proposed |
+
 ## What NOT to do
 
 - Don't add fallbacks or validation for scenarios that can't happen inside the library
