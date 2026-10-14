@@ -201,6 +201,8 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindTabs` | Arrow keys, selection, panels | `focusgroup` takes the arrow keys (Chrome 150); nothing proposed for selection |
 | `bindRadioHomeEnd` | Home and End in a radio group | `focusgroup` moves focus with them, but does not check the radio |
 | `bindTooltip` | Show on hover and keyboard focus | Interest invokers, `interestfor` (Chrome 142) |
+| `bindPasswordToggle` | Showing a password | Nothing proposed; Open UI has no command for it |
+| `bindCharacterCount` | A count that does not block typing, announced on a pause | Nothing proposed |
 | `bindValidation` | Error messages in the page, at the right time, wired to the field; an error summary | Nothing proposed. The browser checks the constraints; only its message bubbles are replaced |
 | `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
 | `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
