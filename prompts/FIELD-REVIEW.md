@@ -240,7 +240,9 @@ From sources:
    `select[interop-select]`, `input[interop-input]` and
    `textarea[interop-input]`. Select keeps `--itx-select-*` for its picker and
    options only. Recommended.
-2. **Names.**
+2. **Names.** Decided: the hint and error are `[interop-hint]` and
+   `[interop-error]`, usable in a field or a fieldset, and `bindValidation()`
+   wires the error, so the author writes no error `id`. As first proposed:
    - The control: `input[interop-input]` and `textarea[interop-input]`.
    - The unit: `[interop-field]` around the label, the hint
      (`[interop-field-hint]`), the error (`[interop-field-error]`) and the
