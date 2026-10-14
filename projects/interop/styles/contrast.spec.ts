@@ -343,6 +343,9 @@ describe('field', () => {
 		// WCAG 1.4.11: the field's edge against the page, at rest, hovered and invalid.
 		it(`has a border of 3:1 against the page in ${label}`, () => {
 			for (const name of ['border-color', 'border-color-hover', 'border-color-invalid']) expect(contrast(field(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			for (const name of ['--itx-radio-group-circle-border-color-invalid', '--itx-checkbox-box-border-color-invalid']) {
+				expect(contrast(token(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			}
 		});
 		it(`has hint and error text of 4.5:1 against the page in ${label}`, () => {
 			for (const name of ['--itx-hint-color', '--itx-error-color', '--itx-error-summary-link-color']) {

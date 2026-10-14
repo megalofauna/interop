@@ -161,3 +161,40 @@ describe('bindValidation', () => {
 		expect(month.getAttribute('aria-invalid')).toBe('true');
 	});
 });
+
+describe('bindValidation with bindSteps', () => {
+	it('shows a step’s error on Next, and on submit shows the hidden step that holds an error', async () => {
+		const { bindSteps } = await import('./bind-steps');
+		document.body.innerHTML = `
+			<form id="apply">
+				<fieldset id="details">
+					<legend><h2>Details</h2></legend>
+					<div interop-field><label for="name">Name</label><p interop-error hidden></p><input interop-input id="name" name="name" required></div>
+				</fieldset>
+				<fieldset id="address" hidden>
+					<legend><h2>Address</h2></legend>
+					<div interop-field><label for="street">Street</label><p interop-error hidden></p><input interop-input id="street" name="street" required></div>
+				</fieldset>
+			</form>`;
+		const form = document.getElementById('apply') as HTMLFormElement;
+		const unbindSteps = bindSteps(form);
+		const unbindValidation = bindValidation(form);
+		const error = (id: string) => document.getElementById(id)!.closest('[interop-field]')!.querySelector<HTMLElement>('[interop-error]')!;
+		const command = (name: string) => form.dispatchEvent(Object.assign(new Event('command'), { command: name, source: null }));
+
+		command('--next');
+		expect(error('name').textContent).toBe('Enter name');
+		expect(document.getElementById('details')!.hidden).toBe(false);
+
+		(document.getElementById('name') as HTMLInputElement).value = 'Ada';
+		document.getElementById('name')!.dispatchEvent(new Event('input', { bubbles: true }));
+		command('--next');
+		command('--back');
+		form.dispatchEvent(new SubmitEvent('submit', { cancelable: true }));
+		expect(document.getElementById('address')!.hidden).toBe(false);
+		expect(error('street').textContent).toBe('Enter street');
+
+		unbindValidation();
+		unbindSteps();
+	});
+});

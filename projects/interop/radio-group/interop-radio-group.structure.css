@@ -100,6 +100,15 @@
 	scale: 1;
 }
 
+/*
+ * Invalid: a thicker circle in the danger color, so the state is not color alone. bindValidation()
+ * decides when, through aria-invalid; without it, :user-invalid does.
+ */
+:where(fieldset[interop-radio-group] label > input[type="radio"]):where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {
+	border-width: var(--itx-radio-group-circle-border-width-invalid);
+	border-color: var(--itx-radio-group-circle-border-color-invalid);
+}
+
 /* System colors, so the circle and the dot stay visible when the user forces colors. */
 @media (forced-colors: active) {
 	:where(fieldset[interop-radio-group] label > input[type="radio"]) {
