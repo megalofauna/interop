@@ -43,7 +43,7 @@ The demo page is `projects/demo/src/app/components/field/`.
 | `[interop-unit]` | Beside the input, in a `<div>` inside the field. `aria-hidden="true"`, with the unit in the label |
 | A button beside the input | In the same `<div>`, a gap away: "Show password" |
 | `[interop-count]` | Below the control, filled by `bindCharacterCount()`. Hint-colored; error-colored and bold with `data-over` |
-| Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby` |
+| Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby`. Invalid radios and checkboxes get a 2px danger border |
 | `[interop-error-summary]` | A heading and an empty `<ul>`, `hidden`. Filled and focused on a failed submit |
 
 Optional fields say "(optional)" in their label; required ones have `required`
@@ -168,5 +168,7 @@ Not tested: Safari, Firefox, screen reader output, iOS and Android keyboards.
 
 ## Not built
 
-A search clear button (Chrome and Safari have their own), number steppers, a
-combobox, an invalid border on radio groups.
+A search clear button: Chrome and Safari have their own, and one for Firefox
+alone would only empty the field. Number steppers, a combobox. Invalid looks
+for the segmented, chips and cards templates: they show the group's message
+only.

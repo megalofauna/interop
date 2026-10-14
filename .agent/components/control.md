@@ -81,6 +81,7 @@ box, is not styled.
 | disabled | `:disabled` | the label and its text take reduced opacity |
 | focus | `:focus-visible` | outline on the input |
 | hover | label `:hover` | the input's background and border only |
+| invalid | `[aria-invalid="true"]`, or `:user-invalid` without `bindValidation()` | radio and checkbox: a 2px border in `--itx-role-text-danger`. The message is the group's `[interop-error]`: see [field.md](field.md) |
 
 Every state comes from a pseudo-class. `form.reset()`, bfcache restore,
 autofill, and `<fieldset disabled>` update the visual with no extra code.
