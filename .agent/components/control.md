@@ -186,11 +186,11 @@ own family.
 | Control | Step | Indicator | Label min block size | Text |
 |---|---|---|---|---|
 | Switch | default | track 42 × 24px, thumb 18px | 40px | `label` role |
-| Switch | `lg` | track 56 × 32px, thumb 26px | 48px | `p` role |
+| Switch | `lg` | track 56 × 32px, thumb 26px | 56px | `p` role |
 | Radio | default | circle 20px, dot 8px | 40px | `label` role |
-| Radio | `lg` | circle 24px, dot 10px | 48px | `p` role |
+| Radio | `lg` | circle 24px, dot 10px | 56px | `p` role |
 | Checkbox | default | box 20px | 40px | `label` role |
-| Checkbox | `lg` | box 24px | 48px | `p` role |
+| Checkbox | `lg` | box 24px | 56px | `p` role |
 
 ## Tests
 
@@ -373,7 +373,7 @@ positioned containing block, so several controls on one page do not collide.
 |---|---|---|
 | `sm` | 32px | `p-sm` role |
 | default | 40px | `p` role |
-| `lg` | 48px | `p-lg` role |
+| `lg` | 56px | `p-lg` role |
 
 These match the button's steps, so a segmented control lines up with the
 buttons beside it.
@@ -385,7 +385,7 @@ fills its label, and the focus ring on it.
 
 | Segmented token | Default |
 |---|---|
-| `--itx-segmented-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-12` |
+| `--itx-segmented-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-14` |
 | `--itx-segmented-segment-block-size` | the block size less the frame padding and border on both sides |
 | `--itx-segmented-segment-padding-inline` | `--itx-space-4`; `sm` `--itx-space-3`, `lg` `--itx-space-5` |
 | `--itx-segmented-segment-font-size`, `-segment-line-height` | `p`; `sm` `p-sm`, `lg` `p-lg` |

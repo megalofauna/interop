@@ -91,7 +91,7 @@ text color.
 |---|---|---|
 | `sm` | 32px | `p-sm` |
 | default | 40px | `p` |
-| `lg` | 48px | `p-lg` |
+| `lg` | 56px | `p-lg` |
 
 | Token | Default |
 |---|---|

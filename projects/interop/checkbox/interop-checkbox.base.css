@@ -35,7 +35,7 @@
 }
 
 :where(label[interop-checkbox][itx-size="lg"]) {
-	--itx-checkbox-min-block-size: var(--itx-space-12);
+	--itx-checkbox-min-block-size: var(--itx-space-14);
 	--itx-checkbox-font-size: var(--itx-font-size-p);
 	--itx-checkbox-line-height: var(--itx-line-height-p);
 	--itx-checkbox-box-size: var(--itx-space-6);

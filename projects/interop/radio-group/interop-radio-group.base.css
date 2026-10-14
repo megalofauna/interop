@@ -30,7 +30,7 @@
 }
 
 :where(fieldset[interop-radio-group][itx-size="lg"]) {
-	--itx-radio-group-label-min-block-size: var(--itx-space-12);
+	--itx-radio-group-label-min-block-size: var(--itx-space-14);
 	--itx-radio-group-label-font-size: var(--itx-font-size-p);
 	--itx-radio-group-label-line-height: var(--itx-line-height-p);
 	--itx-radio-group-circle-size: var(--itx-space-6);

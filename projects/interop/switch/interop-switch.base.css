@@ -36,7 +36,7 @@
 }
 
 :where(label[interop-switch][itx-size="lg"]) {
-	--itx-switch-min-block-size: var(--itx-space-12);
+	--itx-switch-min-block-size: var(--itx-space-14);
 	--itx-switch-font-size: var(--itx-font-size-p);
 	--itx-switch-line-height: var(--itx-line-height-p);
 	--itx-switch-track-block-size: var(--itx-space-8);

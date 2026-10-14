@@ -76,7 +76,7 @@
 }
 
 :where(fieldset[interop-radio-group~="segmented"][itx-size="lg"], [interop-tabs~="segmented"][itx-size="lg"] > [role="tablist"]) {
-	--itx-segmented-block-size: var(--itx-space-12);
+	--itx-segmented-block-size: var(--itx-space-14);
 	--itx-segmented-segment-padding-inline: var(--itx-space-5);
 	--itx-segmented-segment-font-size: var(--itx-font-size-p-lg);
 	--itx-segmented-segment-line-height: var(--itx-line-height-p-lg);

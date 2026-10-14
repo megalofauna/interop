@@ -110,6 +110,9 @@ CSS selectors follow the same split:
   tokens: `:where(<selector>[itx-size="lg"]) { … }`. The structure file never
   mentions `itx-size`.
 - A step changes the component's height and its text size together.
+- Every control's `lg` step is 56px (`--itx-space-14`), so controls line up in
+  a row at every size: 32, 40, 56. Tags, chips and badges keep their own
+  smaller pill scale.
 - Lengths come from `--itx-space-*`. Text sizes come from the typography
   roles (`--itx-font-size-<role>` with its `--itx-line-height-<role>`). No raw
   `rem` values for either.

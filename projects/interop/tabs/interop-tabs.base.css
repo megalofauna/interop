@@ -40,7 +40,7 @@
 }
 
 :where([interop-tabs][itx-size="lg"]) {
-	--itx-tabs-tab-min-block-size: var(--itx-space-12);
+	--itx-tabs-tab-min-block-size: var(--itx-space-14);
 	--itx-tabs-tab-padding-inline: var(--itx-space-5);
 	--itx-tabs-tab-font-size: var(--itx-font-size-p-lg);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p-lg);
