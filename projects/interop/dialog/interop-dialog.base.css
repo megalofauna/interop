@@ -8,7 +8,7 @@
 
 	--itx-dialog-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 	--itx-dialog-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
-	--itx-dialog-border-width: 1px;
+	--itx-dialog-border-width: var(--itx-border-width);
 	--itx-dialog-border-style: solid;
 	/* 3:1 against the page under the backdrop, so the dialog's edge is visible (WCAG 1.4.11). */
 	--itx-dialog-border-color: var(--itx-neutral-500);
@@ -20,10 +20,4 @@
 
 	--itx-dialog-transition-duration: var(--itx-transition-duration-slower);
 	--itx-dialog-transition-timing-function: var(--itx-transition-timing-function);
-}
-
-@media (prefers-contrast: more) {
-	:where(dialog[interop-dialog]) {
-		--itx-dialog-border-width: 2px;
-	}
 }

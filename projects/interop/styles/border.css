@@ -1,0 +1,19 @@
+/*
+ * Border widths, and the system's contrast preference in one place. Every component border reads one
+ * of these, so `prefers-contrast: more` thickens every edge and every state border together.
+ *
+ *   --itx-border-width          an edge: a field, a card, a popover, a track
+ *   --itx-border-width-strong   a state shown by a thicker border: invalid, a checked card, an error summary
+ */
+
+:root {
+	--itx-border-width: 1px;
+	--itx-border-width-strong: 2px;
+}
+
+@media (prefers-contrast: more) {
+	:root {
+		--itx-border-width: 2px;
+		--itx-border-width-strong: 3px;
+	}
+}

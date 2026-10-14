@@ -1,7 +1,7 @@
 :where(figure[interop-code-block]) {
 	--itx-code-block-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-100));
 	--itx-code-block-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
-	--itx-code-block-border-width: 1px;
+	--itx-code-block-border-width: var(--itx-border-width);
 	--itx-code-block-border-style: solid;
 	--itx-code-block-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
 	--itx-code-block-border-radius: var(--itx-radius, var(--itx-radius-base));

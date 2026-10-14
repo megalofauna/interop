@@ -8,7 +8,7 @@
 	/* 4.5:1 against the page (WCAG 1.4.3). */
 	--itx-tags-tag-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 	--itx-tags-tag-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-tags-tag-border-width: 1px;
+	--itx-tags-tag-border-width: var(--itx-border-width);
 	--itx-tags-tag-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 	--itx-tags-tag-border-radius: var(--itx-radius-full);
 
@@ -40,10 +40,4 @@
 	--itx-tags-tag-font-size: var(--itx-font-size-p);
 	--itx-tags-tag-line-height: var(--itx-line-height-p);
 	--itx-tags-button-size: var(--itx-space-8);
-}
-
-@media (prefers-contrast: more) {
-	:where(ul[interop-tags]) {
-		--itx-tags-tag-border-width: 2px;
-	}
 }

@@ -56,6 +56,6 @@
 /* Forced colors drop the background, so a border keeps the badge, and the dot, visible. Forced colors also set its color. */
 @media (forced-colors: active) {
 	:where([interop-badge]) {
-		--itx-badge-border-width: 1px;
+		--itx-badge-border-width: var(--itx-border-width);
 	}
 }

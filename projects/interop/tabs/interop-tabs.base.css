@@ -15,14 +15,14 @@
 	--itx-tabs-tab-border-radius: var(--itx-radius, var(--itx-radius-base));
 
 	/* The bar's thickness: its block size, or its inline size when the tab list is vertical. */
-	--itx-tabs-indicator-size: 2px;
+	--itx-tabs-indicator-size: var(--itx-border-width-strong);
 	--itx-tabs-indicator-background-color: transparent;
 	--itx-tabs-indicator-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 	/* 3:1 against the page, so the selection shows without the text color (WCAG 1.4.11). */
 	--itx-tabs-indicator-background-color-selected: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 
 	/* The rule carries no state, so it needs no contrast floor. The bar does. */
-	--itx-tabs-tablist-border-width: 1px;
+	--itx-tabs-tablist-border-width: var(--itx-border-width);
 	--itx-tabs-tablist-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 
 	--itx-tabs-panel-padding-block: var(--itx-space-4);
@@ -54,10 +54,4 @@
 		0px,
 		var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width)
 	);
-}
-
-@media (prefers-contrast: more) {
-	:where([interop-tabs]) {
-		--itx-tabs-indicator-size: 3px;
-	}
 }

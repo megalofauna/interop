@@ -168,6 +168,7 @@ block.
 | `styles/forced-colors.spec.ts` | Every component stylesheet keeps a forced-colors block or is exempt with a reason; selected states map to Highlight |
 | `styles/motion.spec.ts` | Every transition in every stylesheet reads a shared duration token, so reduced motion reaches it |
 | `styles/focus.spec.ts` | Only `outline.css` sets a focus ring or its tokens; nothing styles bare `:focus` |
+| `styles/preferences.spec.ts` | Only `border.css` answers `prefers-contrast` and only `transition.css` answers `prefers-reduced-motion`; every border width reads a shared token |
 | `a11y/a11y.spec.ts` | axe on every component and state, including inside popovers and unselected tab panels, and on markup the helpers have finished |
 
 `npm run test:pages` (`scripts/cdp/check-pages.mjs`) checks what jsdom cannot,

@@ -15,6 +15,8 @@ import stylesCode from '../styles/code.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesRadius from '../styles/radius.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import stylesBorder from '../styles/border.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesColor from '../styles/color.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesTransition from '../styles/transition.css' with { loader: 'text' };
@@ -104,6 +106,7 @@ export const sheets: Record<string, string> = {
 	'styles/typography.css': stylesTypography,
 	'styles/code.css': stylesCode,
 	'styles/radius.css': stylesRadius,
+	'styles/border.css': stylesBorder,
 	'styles/color.css': stylesColor,
 	'styles/transition.css': stylesTransition,
 	'styles/outline.css': stylesOutline,

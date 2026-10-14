@@ -17,7 +17,7 @@
 	--itx-tooltip-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
 	--itx-tooltip-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-100));
 	/* Forced colors drop the background but draw a transparent border, so this keeps the tooltip's edge in high contrast mode. */
-	--itx-tooltip-border-width: 1px;
+	--itx-tooltip-border-width: var(--itx-border-width);
 	--itx-tooltip-border-style: solid;
 	--itx-tooltip-border-color: transparent;
 	/* A small corner: half the house radius. */

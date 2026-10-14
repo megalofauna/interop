@@ -44,7 +44,7 @@
 	--itx-segmented-segment-opacity-disabled: 0.5;
 
 	--itx-segmented-frame-padding: var(--itx-space-0_5);
-	--itx-segmented-frame-border-width: 1px;
+	--itx-segmented-frame-border-width: var(--itx-border-width);
 	/* 3:1 against the page (WCAG 1.4.11). */
 	--itx-segmented-frame-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 

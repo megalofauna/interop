@@ -38,15 +38,17 @@ load last.
   var(--itx-neutral-50))`; `styles/contrast.spec.ts` measures every pair that
   carries text, an edge or a state.
 - Lengths come from `--itx-space-*`, text sizes from the typography roles,
-  durations from the shared transition tokens, corners from the four corner
-  rules.
+  durations from the shared transition tokens, border widths from
+  `--itx-border-width` and `--itx-border-width-strong`, corners from the four
+  corner rules.
 
 ## Shared rules
 
 | Concern | One home |
 |---|---|
 | Focus ring, its color and offset, in every mode | `styles/outline.css` |
-| Reduced motion | `styles/transition.css` zeroes the shared durations |
+| Reduced motion | `styles/transition.css` zeroes the shared durations and slows the spinner |
+| More contrast | `styles/border.css`: every border reads `--itx-border-width` or `--itx-border-width-strong`, which thicken together |
 | Corner radius and `itx-radius` | `styles/radius.css` |
 | Fieldset layout for groups | `styles/fieldset.css` |
 | Visually hidden text | `styles/visually-hidden.css` (`itx-visually-hidden`) |

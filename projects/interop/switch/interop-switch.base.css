@@ -10,7 +10,7 @@
 	--itx-switch-track-block-size: var(--itx-space-6);
 	--itx-switch-track-inline-size: calc(var(--itx-switch-track-block-size) * 1.75);
 	--itx-switch-track-padding: var(--itx-space-0_5);
-	--itx-switch-track-border-width: 1px;
+	--itx-switch-track-border-width: var(--itx-border-width);
 	--itx-switch-track-border-style: solid;
 	/* Off: the border carries the 3:1 edge against the page (WCAG 1.4.11). */
 	--itx-switch-track-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
@@ -40,10 +40,4 @@
 	--itx-switch-font-size: var(--itx-font-size-p);
 	--itx-switch-line-height: var(--itx-line-height-p);
 	--itx-switch-track-block-size: var(--itx-space-8);
-}
-
-@media (prefers-contrast: more) {
-	:where(label[interop-switch]) {
-		--itx-switch-track-border-width: 2px;
-	}
 }
