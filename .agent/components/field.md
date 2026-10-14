@@ -150,7 +150,7 @@ attribute).
 | `field-describedby` | `aria-describedby` naming an id that does not exist |
 | `field-number` | `type="number"` (advisory: use `inputmode`) |
 | `field-autocomplete` | `type="email"` or `"tel"` with no `autocomplete` |
-| `hint-link` | A link inside a hint |
+| `field-hint-link` | A link inside a hint |
 | `error-summary-list` | An error summary with no `<ul>` |
 
 ## Tested

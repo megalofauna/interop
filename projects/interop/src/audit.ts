@@ -18,7 +18,7 @@ export function noteActivationGuard(change: 1 | -1): void {
 
 type Rule = (element: Element) => Omit<AuditIssue, 'rule' | 'element'> | null;
 
-const BUTTONS = 'button[interop-button], button:has(svg[interop-icon])';
+const BUTTONS = ':is(button, summary)[interop-button], button:has(svg[interop-icon])';
 const BADGES = '[interop-badge]:not([hidden])';
 const LIVE = '[role="status"], [aria-live]';
 const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabindex], [contenteditable]';
@@ -52,7 +52,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Give it visible text, or aria-label="…" if it shows only an icon.',
 					},
 	},
-	'activation-guard': {
+	'button-activation-guard': {
 		selector: '[interop-button]:is([aria-disabled="true"], [aria-busy="true"])',
 		check: () =>
 			activationGuards > 0
@@ -141,7 +141,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Give it a caption, e.g. caption="badge.ts", or register its language with a label.',
 					},
 	},
-	'code-scroll-focusable': {
+	'code-block-scroll-focusable': {
 		selector: 'pre:is([interop-code-block] > pre, :has(> code[class*="language-"])):not([tabindex])',
 		check: (pre) =>
 			pre.scrollWidth > pre.clientWidth || pre.scrollHeight > pre.clientHeight
@@ -234,7 +234,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
-	'card-name': {
+	'cards-name': {
 		selector: CARDS,
 		check: (label) => {
 			const input = label.querySelector(':scope > input');
@@ -496,7 +496,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: control.hasAttribute('placeholder') ? 'This field has only a placeholder for a label.' : 'This field has no label.',
-						reason: 'Without a label, a screen reader announces only "edit text", and a placeholder disappears as soon as the user types. Two elements with the same id also leave a label pointing at the wrong one.',
+						reason: 'Without a label, a screen reader announces only what kind of field it is, and a placeholder disappears as soon as the user types. Two elements with the same id also leave a label pointing at the wrong one.',
 						advice: 'Add <label for="…"> with the field’s id, and check that the id is unique.',
 					},
 	},
@@ -532,7 +532,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: `Add autocomplete="${input.getAttribute('type')}" if it is the user’s own, or autocomplete="off" if it is someone else’s.`,
 		}),
 	},
-	'hint-link': {
+	'field-hint-link': {
 		selector: '[interop-hint] a[href]',
 		check: () => ({
 			problem: 'This hint holds a link.',
@@ -567,7 +567,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Use a <fieldset interop-checkbox-group> with a checkbox per option.',
 		}),
 	},
-	'pressed-value': {
+	'button-pressed-value': {
 		selector: '[interop-button][aria-pressed]',
 		check: (button) =>
 			['true', 'false', 'mixed'].includes(button.getAttribute('aria-pressed')!)
@@ -699,7 +699,8 @@ function spokenText(element: Element): string {
 
 function visibleText(node: Node): string {
 	if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? '';
-	if (!(node instanceof Element) || node.getAttribute('aria-hidden') === 'true') return '';
+	// Hidden content is not read, so it names nothing.
+	if (!(node instanceof Element) || node.getAttribute('aria-hidden') === 'true' || node.hasAttribute('hidden')) return '';
 	// Chrome leaves a status region's text out of the name of the control around it.
 	if (node.getAttribute('role') === 'status') return '';
 	const label = node.getAttribute('aria-label') ?? (node instanceof HTMLImageElement ? node.alt : null);

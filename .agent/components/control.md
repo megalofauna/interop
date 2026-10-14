@@ -219,7 +219,7 @@ own family.
 | `checkbox-group-required` | A checkbox group where every box is `required`, which demands all of them |
 | `control-label-block` | Block content (`div`, `p`, a list, a heading) inside a control label |
 | `control-label-control` | A button or another control inside a control label |
-| `card-name` | A card with several parts of text and no `aria-labelledby`, so its whole text is the name |
+| `cards-name` | A card with several parts of text and no `aria-labelledby`, so its whole text is the name |
 
 ## Checkbox groups
 

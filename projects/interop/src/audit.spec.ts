@@ -25,6 +25,14 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual([]);
 	});
 
+	it('flags an unnamed summary button, and does not count hidden text as a name', () => {
+		render(`
+			<details><summary interop-button><svg interop-icon aria-hidden="true"></svg></summary></details>
+			<button interop-button type="button"><span hidden>Close</span><svg interop-icon aria-hidden="true"></svg></button>
+		`);
+		expect(rules()).toEqual(['button-name', 'button-name']);
+	});
+
 	it('flags an icon-only plain button too', () => {
 		render('<button type="button"><svg interop-icon aria-hidden="true"></svg></button>');
 		expect(rules()).toEqual(['button-name']);
@@ -35,11 +43,11 @@ describe('auditInterop', () => {
 			<button interop-button type="button" aria-disabled="true">Save</button>
 			<button interop-button type="button" aria-busy="true">Save</button>
 		`);
-		expect(rules()).toEqual(['activation-guard', 'activation-guard']);
+		expect(rules()).toEqual(['button-activation-guard', 'button-activation-guard']);
 		const unguard = guardActivation();
 		expect(rules()).toEqual([]);
 		unguard();
-		expect(rules()).toEqual(['activation-guard', 'activation-guard']);
+		expect(rules()).toEqual(['button-activation-guard', 'button-activation-guard']);
 	});
 
 	it('flags a button in a form with no type', () => {
@@ -62,7 +70,7 @@ describe('auditInterop', () => {
 			<button interop-button type="button" aria-pressed="yes">Bold</button>
 			<button interop-button type="button" aria-pressed="true">Bold</button>
 		`);
-		expect(rules()).toEqual(['pressed-value']);
+		expect(rules()).toEqual(['button-pressed-value']);
 	});
 
 	it('flags a badge with no text for assistive technology', () => {
@@ -98,7 +106,7 @@ describe('auditInterop', () => {
 	it('skips the rules named by itx-audit-ignore, or every rule when it is empty', () => {
 		render(`
 			<button interop-button type="button" itx-audit-ignore="button-name"></button>
-			<button interop-button type="button" itx-audit-ignore="pressed-value"></button>
+			<button interop-button type="button" itx-audit-ignore="button-pressed-value"></button>
 			<form><button interop-button itx-audit-ignore></button></form>
 		`);
 		expect(rules()).toEqual(['button-name']);
@@ -127,7 +135,7 @@ describe('auditInterop', () => {
 		render('<pre><code class="language-ts">a</code></pre><pre tabindex="0"><code class="language-ts">b</code></pre>');
 		const [scrolling, focusable] = Array.from(document.querySelectorAll('pre'));
 		for (const pre of [scrolling, focusable]) Object.defineProperty(pre, 'scrollWidth', { value: 900 });
-		expect(rules()).toEqual(['code-scroll-focusable']);
+		expect(rules()).toEqual(['code-block-scroll-focusable']);
 	});
 
 	it('flags a tooltip holding a control', () => {
@@ -197,7 +205,7 @@ describe('auditInterop', () => {
 		const card = (labelled: string) => `
 			<label><input type="radio" name="p" ${labelled}><strong id="n">Pro</strong><span id="d">$29 a month</span></label>`;
 		render(`<fieldset interop-radio-group="cards"><legend>Plan</legend>${card('')}${card('aria-labelledby="n" aria-describedby="d"')}</fieldset>`);
-		expect(rules()).toEqual(['card-name']);
+		expect(rules()).toEqual(['cards-name']);
 	});
 
 	it('flags aria-checked on a native checkbox or radio', () => {
@@ -340,7 +348,7 @@ describe('auditInterop', () => {
 				<p interop-hint>See <a href="/help">help</a></p>
 				<div interop-error-summary><h2>There is a problem</h2></div>
 			`);
-			expect(rules().sort()).toEqual(['error-summary-list', 'field-autocomplete', 'field-number', 'hint-link']);
+			expect(rules().sort()).toEqual(['error-summary-list', 'field-autocomplete', 'field-hint-link', 'field-number']);
 		});
 	});
 
