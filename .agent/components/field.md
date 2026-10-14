@@ -22,9 +22,11 @@ CSS, plus `bindValidation()` for errors. Research:
 projects/interop/field/
   interop-field.structure.css   the box, states, layout, hint, error, units, summary; names list at the top
   interop-field.base.css        token values and size steps
-  field.ts                      InteropForm, InteropCustomValidity directives
+  field.ts                      InteropForm, InteropCustomValidity, InteropPasswordToggle, InteropCharacterCount
   public-api.ts
-projects/interop/src/bind-validation.ts   bindValidation(), defaultValidationMessages
+projects/interop/src/bind-validation.ts        bindValidation(), defaultValidationMessages
+projects/interop/src/bind-password-toggle.ts   bindPasswordToggle()
+projects/interop/src/bind-character-count.ts   bindCharacterCount()
 ```
 
 The demo page is `projects/demo/src/app/components/field/`.
@@ -39,7 +41,9 @@ The demo page is `projects/demo/src/app/components/field/`.
 | `[interop-error]` | Above the control, below the hint, `hidden` and empty in the markup. `bindValidation()` fills it and adds it to `aria-describedby` while it shows. Its icon reads "Error:", from `--itx-error-content` (translate it on `:root:lang(…)`) |
 | The control | `input`, `textarea` or `select[interop-select]` with `interop-input` or `interop-select`. Fills its container up to `--itx-field-max-inline-size`; `size` asks for an expected length |
 | `[interop-unit]` | Beside the input, in a `<div>` inside the field. `aria-hidden="true"`, with the unit in the label |
-| Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby` |
+| A button beside the input | In the same `<div>`, a gap away: "Show password" |
+| `[interop-count]` | Below the control, filled by `bindCharacterCount()`. Hint-colored; error-colored and bold with `data-over` |
+| Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby`. Invalid radios and checkboxes get a 2px danger border |
 | `[interop-error-summary]` | A heading and an empty `<ul>`, `hidden`. Filled and focused on a failed submit |
 
 Optional fields say "(optional)" in their label; required ones have `required`
@@ -93,6 +97,48 @@ fires `interop-validity-change`; use it for server checks and Angular-only
 validators. No value accessor: native attributes drive Angular's validators and
 the browser alike.
 
+## Password
+
+`bindPasswordToggle(input)`, or `input[interop-password-toggle]` in Angular. A
+button aimed at the input with `commandfor` and `command="--toggle-password"`
+shows or hides the password: a custom invoker command, so no click handler.
+
+```html
+<div>
+  <input interop-input interop-password-toggle id="password" type="password" autocomplete="current-password"
+    autocapitalize="off" spellcheck="false">
+  <button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false" hidden>
+    Show password
+  </button>
+</div>
+```
+
+- The label stays "Show password", and `aria-pressed` says whether it is
+  showing: "Show password, toggle button, pressed". One way, not both, so the
+  label and the state cannot disagree.
+- The button is `hidden` in the markup and unhidden by the helper, so it never
+  shows where script does not run.
+- Submit and reset hide the password again, so the browser does not save it as
+  plain text.
+
+## Character count
+
+`bindCharacterCount(control, { limit, count, status, threshold, message,
+tooLong })`, or `[interop-character-count]` with `[characterLimit]` in Angular
+(not `maxlength`, which stops typing, and not `max`, the input's own
+attribute).
+
+- The user can type past the limit. `count` says how many are left or how many
+  too many, on every keystroke, and is `aria-hidden`.
+- `status`, a visually hidden `role="status"`, gets the same text once typing
+  pauses for one second, so a screen reader is not interrupted on every key.
+- Over the limit the control's custom validity says "<label> must be <limit>
+  characters or fewer", and `interop-validity-change` tells `bindValidation()`.
+- Characters are counted as people see them: an emoji or an accented letter is
+  one (`Intl.Segmenter`).
+- Put the limit in the hint: "You can enter up to 200 characters".
+- `threshold` hides the count until that share of the limit is used.
+
 ## Dev audit rules
 
 | Rule | Flags |
@@ -108,17 +154,21 @@ the browser alike.
 
 Style guards: contrast (text, placeholder, hint, error, borders at rest, hover
 and invalid), target size, radius, motion. axe on a field with a shown error,
-units, a read-only textarea and a summary. `bindValidation()` has 12 specs.
+units, a read-only textarea and a summary. `bindValidation()` has 12 specs, `bindPasswordToggle()` 3,
+`bindCharacterCount()` 5.
 
 In Chrome 155 with real keys: no error on leaving an empty field; the format
 error on leaving a changed field, clearing as it is fixed; a failed submit
 filling and focusing the summary, each link moving to its field; a date's
 shared error flagging only the field reached; the required tag input; forced
-colors.
+colors; the password toggle's state in the accessibility tree; the count going
+over the limit and the error on submit.
 
 Not tested: Safari, Firefox, screen reader output, iOS and Android keyboards.
 
 ## Not built
 
-Password reveal, character count (each its own helper, next), a search clear
-button, number steppers, a combobox.
+A search clear button: Chrome and Safari have their own, and one for Firefox
+alone would only empty the field. Number steppers, a combobox. Invalid looks
+for the segmented, chips and cards templates: they show the group's message
+only.

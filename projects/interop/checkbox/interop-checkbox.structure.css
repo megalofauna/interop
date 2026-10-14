@@ -101,6 +101,15 @@
 	mask-image: var(--itx-checkbox-mark-mask-image-indeterminate);
 }
 
+/*
+ * Invalid: a thicker box in the danger color, so the state is not color alone. bindValidation()
+ * decides when, through aria-invalid; without it, :user-invalid does.
+ */
+:where(label[interop-checkbox] > input[type="checkbox"]):where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {
+	border-width: var(--itx-checkbox-box-border-width-invalid);
+	border-color: var(--itx-checkbox-box-border-color-invalid);
+}
+
 /* System colors, so the box and the mark stay visible when the user forces colors. */
 @media (forced-colors: active) {
 	:where(label[interop-checkbox] > input[type="checkbox"]) {
