@@ -149,18 +149,30 @@ nothing, so nothing has to line up with it.
 
 ## Style guards
 
-jsdom computes no styles, so these specs read the stylesheets as text. Each
-lists its files explicitly. A new component adds its stylesheets to every
-guard that applies:
+jsdom computes no styles, so these specs read the stylesheets as text, from one
+list: `styles/sheets.ts` imports every stylesheet, and `styles/sheets.spec.ts`
+fails when it disagrees with `interop.css`. A new component adds its
+stylesheets to `interop.css` and `sheets.ts`; contrast, radius, motion and
+focus then read them, and forced colors makes it decide whether it needs a
+block.
 
 | Spec | Guards |
 |---|---|
-| `styles/contrast.spec.ts` | Text 4.5:1 and state indicators 3:1 against the page, in both schemes |
+| `styles/sheets.spec.ts` | Every stylesheet in `interop.css` is in the list the guards read |
+| `styles/contrast.spec.ts` | Text 4.5:1 and state indicators 3:1 against the page, in both schemes; a pressed edge 3:1 against rest |
 | `styles/target-size.spec.ts` | Every control's target height at every size step is 24px or more |
-| `styles/radius.spec.ts` | Every corner follows one of the four corner rules |
-| `styles/forced-colors.spec.ts` | A component that shows state with a fill keeps a forced-colors block |
-| `styles/motion.spec.ts` | Every transition reads a shared duration token, so reduced motion reaches it |
-| `a11y/a11y.spec.ts` | axe on every component and state, including inside popovers and unselected tab panels, and on markup a helper has finished |
+| `styles/radius.spec.ts` | Every corner in every stylesheet follows one of the four corner rules |
+| `styles/forced-colors.spec.ts` | Every component stylesheet keeps a forced-colors block or is exempt with a reason; selected states map to Highlight |
+| `styles/motion.spec.ts` | Every transition in every stylesheet reads a shared duration token, so reduced motion reaches it |
+| `styles/focus.spec.ts` | Only `outline.css` sets a focus ring or its tokens; nothing styles bare `:focus` |
+| `a11y/a11y.spec.ts` | axe on every component and state, including inside popovers and unselected tab panels, and on markup the helpers have finished |
+
+`npm run test:pages` (`scripts/cdp/check-pages.mjs`) checks what jsdom cannot,
+on every demo page in headless Chrome: axe with color contrast in light and
+dark, no sideways scroll at 320px, and a focus ring at every Tab stop, also in
+forced colors. It reports how many Tab stops it reached. A known failure is
+listed with its reason in `scripts/cdp/known-failures.json`, and the run says
+when a listed one stops failing. CI runs it after building the demo.
 
 One way per pattern. When two components solve the same problem differently,
 fix the outlier before adding a third.
