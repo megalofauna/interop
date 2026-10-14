@@ -2,9 +2,9 @@
  * Step indicator: where you are in a process of ordered steps. An ordered list, with the current
  * step marked `aria-current="step"`. It shows progress; it is not a control.
  *
- *   <ol interop-steps aria-label="Application progress">
+ *   <ol interop-steps role="list" aria-label="Application progress">
  *     <li><a href="/apply/details">Your details</a> <span itx-visually-hidden>completed</span></li>
- *     <li aria-current="step">Documents</li>
+ *     <li aria-current="step">Documents <span itx-visually-hidden>current</span></li>
  *     <li>Sign <span itx-visually-hidden>not completed</span></li>
  *   </ol>
  *
@@ -14,8 +14,10 @@
  * screen readers do not all announce `aria-current` on a list item. Put "Step N of M" in the page
  * title and the step's heading as well.
  *
+ * `role="list"` keeps the list's count in Safari, which drops list semantics when markers are removed.
+ *
  * In a narrow container only the current step keeps its label on screen; the others keep it for
- * assistive technology.
+ * assistive technology, and a completed step's link covers its number.
  *
  * Also known as:
  *   stepper             MUI, Angular Material (Apple and Spectrum mean a +/- number control by it)
@@ -127,6 +129,25 @@
 
 	:where(ol[interop-steps] > li:not([aria-current="step"]))::before {
 		font-size: var(--itx-steps-indicator-font-size);
+	}
+
+	/*
+	 * A completed step's link covers its number, so the step can still be focused and tapped, with
+	 * the focus ring around the number. Its text keeps its size, transparent, for assistive technology.
+	 */
+	:where(ol[interop-steps] > li:not([aria-current="step"]):has(> a[href])) {
+		position: relative;
+	}
+
+	:where(ol[interop-steps] > li:not([aria-current="step"]) > a[href]) {
+		inset-block-start: calc(50% - var(--itx-steps-indicator-size) / 2);
+		inset-inline-start: 0;
+		inline-size: var(--itx-steps-indicator-size);
+		block-size: var(--itx-steps-indicator-size);
+		clip-path: none;
+		font-size: var(--itx-steps-font-size);
+		color: transparent;
+		border-radius: var(--itx-radius-full);
 	}
 }
 

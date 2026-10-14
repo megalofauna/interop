@@ -12,9 +12,24 @@ import { InteropTabs } from "interop/tabs";
 })
 export class TabsDemo {
 	protected readonly last = signal("nav");
-	protected readonly months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	protected readonly months = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
 
 	protected changed(event: Event): void {
-		this.last.set((event as CustomEvent<TabsChangeDetail>).detail.panel?.id ?? "");
+		this.last.set(
+			(event as CustomEvent<TabsChangeDetail>).detail.panel?.id ?? "",
+		);
 	}
 }

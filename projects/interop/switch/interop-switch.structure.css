@@ -89,10 +89,7 @@
 }
 
 :where(label[interop-switch]:hover > input:is([role="switch"], [switch]):checked:not(:disabled)) {
-	background-color: var(
-		--itx-switch-track-background-color-checked-hover,
-		var(--itx-switch-track-background-color-checked)
-	);
+	background-color: var(--itx-switch-track-background-color-checked-hover, var(--itx-switch-track-background-color-checked));
 }
 
 /* The thumb travels the track's content width less its own. A logical margin moves it toward inline-end in either writing direction. */
@@ -136,9 +133,5 @@
 
 	:where(label[interop-switch] > input:is([role="switch"], [switch]):checked:disabled)::before {
 		background-color: Canvas;
-	}
-
-	:where(label[interop-switch] > input:is([role="switch"], [switch]):focus-visible) {
-		outline-color: Highlight;
 	}
 }

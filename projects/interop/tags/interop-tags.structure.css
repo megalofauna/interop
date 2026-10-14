@@ -94,8 +94,4 @@
 	:where(ul[interop-tags] > li) {
 		border-color: CanvasText;
 	}
-
-	:where(ul[interop-tags] > li > button:focus-visible) {
-		outline-color: Highlight;
-	}
 }

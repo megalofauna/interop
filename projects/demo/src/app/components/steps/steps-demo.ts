@@ -19,6 +19,8 @@ export class StepsDemo {
 	protected submit(event: SubmitEvent): void {
 		event.preventDefault();
 		const data = new FormData(event.target as HTMLFormElement);
-		this.sent.set([...data.entries()].map(([name, value]) => `${name}=${value}`).join(", "));
+		this.sent.set(
+			[...data.entries()].map(([name, value]) => `${name}=${value}`).join(", "),
+		);
 	}
 }

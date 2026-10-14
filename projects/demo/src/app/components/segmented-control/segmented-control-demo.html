@@ -1,20 +1,125 @@
 <h1>Segmented control</h1>
-<p class="aka">Also known as segmented button, button toggle group, toggle group, content switcher, segment group.</p>
+<p class="aka">
+	Also known as segmented button, button toggle group, toggle group, content
+	switcher, segment group.
+</p>
 <p>
-	A segmented control is a radio group drawn as a row of segments: <code>interop-radio-group="segmented"</code>.
-	It is still a radio group. Screen readers announce each segment as a radio button, checked or not, and its position
-	in the set. Tab reaches the control once, and the arrow keys move the choice. Use it to pick a value or a view of
-	the same content. To switch between different sections, use tabs.
+	A segmented control is a radio group drawn as a row of segments:
+	<code>interop-radio-group="segmented"</code>. It is still a radio group.
+	Screen readers announce each segment as a radio button, checked or not, and
+	its position in the set. Tab reaches the control once, and the arrow keys move
+	the choice. Use it to pick a value or a view of the same content. To switch
+	between different sections, use tabs.
 </p>
 
 <h2>A segmented control</h2>
-<fieldset interop-radio-group="segmented" (change)="view.set($any($event.target).value)">
+<fieldset
+	interop-radio-group="segmented"
+	(change)="view.set($any($event.target).value)"
+>
 	<legend>View</legend>
-	<label><input type="radio" name="view" value="list" [checked]="view() === 'list'" /> List</label>
-	<label><input type="radio" name="view" value="grid" [checked]="view() === 'grid'" /> Grid</label>
-	<label><input type="radio" name="view" value="detail" [checked]="view() === 'detail'" /> Detail</label>
+	<label
+		><input
+			type="radio"
+			name="view"
+			value="list"
+			[checked]="view() === 'list'"
+		/>
+		List</label
+	>
+	<label
+		><input
+			type="radio"
+			name="view"
+			value="grid"
+			[checked]="view() === 'grid'"
+		/>
+		Grid</label
+	>
+	<label
+		><input
+			type="radio"
+			name="view"
+			value="detail"
+			[checked]="view() === 'detail'"
+		/>
+		Detail</label
+	>
 </fieldset>
 <p>View is {{ view() }}.</p>
+
+<h2>Vertical</h2>
+<p>
+	<code>itx-orientation="vertical"</code> stacks the segments, each as wide as
+	the widest. Use it where the row does not fit: a narrow column, or labels that
+	run long once translated.
+</p>
+<fieldset interop-radio-group="segmented" itx-orientation="vertical">
+	<legend>Sort by</legend>
+	<label
+		><input type="radio" name="sort" value="newest first" checked /> Newest
+		first</label
+	>
+	<label
+		><input type="radio" name="sort" value="oldest first" /> Oldest first</label
+	>
+	<label
+		><input type="radio" name="sort" value="most popular" /> Most popular</label
+	>
+	<label
+		><input type="radio" name="sort" value="price, low to high" /> Price, low to
+		high</label
+	>
+</fieldset>
+
+<h2>Fitting the space</h2>
+<p>
+	A row that runs past its container fails reflow (WCAG 1.4.10). Three ways
+	stack it, and with none the control stays a row:
+</p>
+<ul>
+	<li><code>itx-orientation="vertical"</code> stacks it always.</li>
+	<li>
+		<code>--itx-segmented-orientation: vertical</code>, set in the page's own
+		<code>@media</code> or <code>@container</code> rule, stacks it below a width
+		you choose. No script.
+	</li>
+	<li>
+		<code>bindSegmentedFit()</code>, or <code>interop-segmented-fit</code> in
+		Angular, measures the row and stacks it only when it does not fit, whatever
+		the labels say once translated. The month control below uses it: narrow the
+		window to see it stack.
+	</li>
+</ul>
+<figure interop-code-block language="css" [code]="examples.fitCss"></figure>
+<figure interop-code-block language="html" [code]="examples.fitHtml"></figure>
+
+<h2>Two looks</h2>
+<p>
+	The selected segment is a raised pill on a filled channel. Its fill is only
+	1.2:1 against the channel in light and 1.45:1 in dark, so its edge carries the
+	selection: 3.76:1 and 5.83:1 (WCAG 1.4.11). An inverted pill, the same fill as
+	an on switch, is a set of token values: 17.9:1 against the page in light,
+	16.7:1 in dark.
+</p>
+<div class="compare">
+	<fieldset interop-radio-group="segmented">
+		<legend>Raised (default)</legend>
+		<label><input type="radio" name="look-a" value="day" /> Day</label>
+		<label
+			><input type="radio" name="look-a" value="week" checked /> Week</label
+		>
+		<label><input type="radio" name="look-a" value="month" /> Month</label>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" class="inverted">
+		<legend>Inverted</legend>
+		<label><input type="radio" name="look-b" value="day" /> Day</label>
+		<label
+			><input type="radio" name="look-b" value="week" checked /> Week</label
+		>
+		<label><input type="radio" name="look-b" value="month" /> Month</label>
+	</fieldset>
+</div>
 
 <h2>Sizes</h2>
 <fieldset interop-radio-group="segmented" itx-size="sm">
@@ -33,24 +138,48 @@
 	<legend>Large</legend>
 	<label><input type="radio" name="size-lg" value="day" /> Day</label>
 	<label><input type="radio" name="size-lg" value="week" /> Week</label>
-	<label><input type="radio" name="size-lg" value="month" checked /> Month</label>
+	<label
+		><input type="radio" name="size-lg" value="month" checked /> Month</label
+	>
 </fieldset>
 
 <h2>Icons</h2>
-<p>Add <code>icon</code> to the attribute for square segments. Name each one with visually hidden text in its label.</p>
+<p>
+	Add <code>icon</code> to the attribute for square segments. Name each one with
+	visually hidden text in its label.
+</p>
 <fieldset interop-radio-group="segmented icon">
 	<legend>Alignment</legend>
-	<label><input type="radio" name="align" value="start" checked /><svg interop-icon name="tabler-chevron-left"></svg><span itx-visually-hidden>Start</span></label>
-	<label><input type="radio" name="align" value="center" /><svg interop-icon name="tabler-minus"></svg><span itx-visually-hidden>Center</span></label>
-	<label><input type="radio" name="align" value="end" /><svg interop-icon name="tabler-chevron-right"></svg><span itx-visually-hidden>End</span></label>
+	<label
+		><input type="radio" name="align" value="start" checked /><svg
+			interop-icon
+			name="tabler-chevron-left"
+		></svg
+		><span itx-visually-hidden>Start</span></label
+	>
+	<label
+		><input type="radio" name="align" value="center" /><svg
+			interop-icon
+			name="tabler-minus"
+		></svg
+		><span itx-visually-hidden>Center</span></label
+	>
+	<label
+		><input type="radio" name="align" value="end" /><svg
+			interop-icon
+			name="tabler-chevron-right"
+		></svg
+		><span itx-visually-hidden>End</span></label
+	>
 </fieldset>
 
 <h2>Home and End</h2>
 <p>
-	Native radios move with the arrow keys only. <code>bindRadioHomeEnd(fieldset)</code> adds Home and End, which
-	check the first and last enabled segment. It is optional.
+	Native radios move with the arrow keys only.
+	<code>bindRadioHomeEnd(fieldset)</code> adds Home and End, which check the
+	first and last enabled segment. It is optional.
 </p>
-<fieldset #homeEnd interop-radio-group="segmented">
+<fieldset #homeEnd interop-radio-group="segmented" interop-segmented-fit>
 	<legend>Month</legend>
 	<label><input type="radio" name="month" value="jan" /> Jan</label>
 	<label><input type="radio" name="month" value="feb" /> Feb</label>
@@ -64,13 +193,17 @@
 <fieldset interop-radio-group="segmented">
 	<legend>One segment</legend>
 	<label><input type="radio" name="dis-one" value="a" checked /> Draft</label>
-	<label><input type="radio" name="dis-one" value="b" disabled /> Scheduled</label>
+	<label
+		><input type="radio" name="dis-one" value="b" disabled /> Scheduled</label
+	>
 	<label><input type="radio" name="dis-one" value="c" /> Published</label>
 </fieldset>
 <fieldset interop-radio-group="segmented" disabled>
 	<legend>The whole control</legend>
 	<label><input type="radio" name="dis-all" value="a" /> Draft</label>
-	<label><input type="radio" name="dis-all" value="b" checked /> Published</label>
+	<label
+		><input type="radio" name="dis-all" value="b" checked /> Published</label
+	>
 </fieldset>
 
 <h2>Nothing chosen yet</h2>

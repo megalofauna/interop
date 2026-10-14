@@ -14,5 +14,10 @@ dt:not(:first-child) {
 }
 
 dd {
-	background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--itx-space-1) - 1px), light-dark(var(--itx-neutral-100), var(--itx-neutral-800)) 0 var(--itx-space-1));
+	background-image: repeating-linear-gradient(
+		to bottom,
+		transparent 0 calc(var(--itx-space-1) - 1px),
+		light-dark(var(--itx-neutral-100), var(--itx-neutral-800)) 0
+			var(--itx-space-1)
+	);
 }

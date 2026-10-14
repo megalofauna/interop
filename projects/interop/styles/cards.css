@@ -35,11 +35,11 @@
 	--itx-cards-card-row-gap: var(--itx-space-1);
 	--itx-cards-card-background-color: transparent;
 	/* The card's edge. The input carries the 3:1 state edge, so this can be quiet. */
-	--itx-cards-card-border-width: 1px;
+	--itx-cards-card-border-width: var(--itx-border-width);
 	--itx-cards-card-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 	--itx-cards-card-border-color-hover: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	/* Checked: thicker, so the change survives forced colors, and 3:1 against the page. */
-	--itx-cards-card-border-width-checked: 2px;
+	--itx-cards-card-border-width-checked: var(--itx-border-width-strong);
 	--itx-cards-card-border-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 	--itx-cards-card-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-cards-transition-duration: var(--itx-transition-duration);

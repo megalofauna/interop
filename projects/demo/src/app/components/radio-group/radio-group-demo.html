@@ -1,32 +1,45 @@
 <h1>Radio group</h1>
-<p class="aka">Also known as radio buttons, radios, radio button group, option buttons, choice group.</p>
+<p class="aka">
+	Also known as radio buttons, radios, radio button group, option buttons,
+	choice group.
+</p>
 <p>
-	A radio group is a <code>fieldset interop-radio-group</code> of native radios that share a <code>name</code>. The
-	shared name makes them one control: one is checked at a time, Tab reaches the group once, and the arrow keys move
-	the choice. The legend names the group. Each label holds its radio and its text, and needs no attribute. None of
-	this needs script.
+	A radio group is a <code>fieldset interop-radio-group</code> of native radios
+	that share a <code>name</code>. The shared name makes them one control: one is
+	checked at a time, Tab reaches the group once, and the arrow keys move the
+	choice. The legend names the group. Each label holds its radio and its text,
+	and needs no attribute. None of this needs script.
 </p>
 
 <h2>A group</h2>
 <fieldset interop-radio-group>
 	<legend>Shipping</legend>
-	<label><input type="radio" name="basic" value="standard" checked /> Standard</label>
+	<label
+		><input type="radio" name="basic" value="standard" checked />
+		Standard</label
+	>
 	<label><input type="radio" name="basic" value="express" /> Express</label>
-	<label><input type="radio" name="basic" value="pickup" /> Pick up in store</label>
+	<label
+		><input type="radio" name="basic" value="pickup" /> Pick up in store</label
+	>
 </fieldset>
 
 <figure interop-code-block language="html" [code]="examples.group"></figure>
 
 <h2>Required, in a form</h2>
 <p>
-	<code>required</code> on any one radio makes the group required. Submit with nothing chosen to see the browser's
-	message, then reset the form. With <code>FormsModule</code> imported, Angular adds <code>novalidate</code> to every
-	form, so this one sets <code>ngNativeValidate</code> to keep the browser's validation.
+	<code>required</code> on any one radio makes the group required. Submit with
+	nothing chosen to see the browser's message, then reset the form. With
+	<code>FormsModule</code> imported, Angular adds <code>novalidate</code> to
+	every form, so this one sets <code>ngNativeValidate</code> to keep the
+	browser's validation.
 </p>
 <form ngNativeValidate (submit)="submit($event)">
 	<fieldset interop-radio-group>
 		<legend>How should we contact you?</legend>
-		<label><input type="radio" name="contact" value="email" required /> Email</label>
+		<label
+			><input type="radio" name="contact" value="email" required /> Email</label
+		>
 		<label><input type="radio" name="contact" value="phone" /> Phone</label>
 		<label><input type="radio" name="contact" value="post" /> Post</label>
 	</fieldset>
@@ -54,7 +67,10 @@
 <figure interop-code-block language="css" [code]="examples.inlineCss"></figure>
 
 <h2>Long labels</h2>
-<p>Each circle is centered on the first line of its label, and the text wraps beside it.</p>
+<p>
+	Each circle is centered on the first line of its label, and the text wraps
+	beside it.
+</p>
 <fieldset interop-radio-group class="narrow">
 	<legend>Billing</legend>
 	<label>
@@ -63,14 +79,18 @@
 	</label>
 	<label>
 		<input type="radio" name="long" value="yearly" />
-		Yearly, with two months free, as described in the <a href="#terms">terms</a>
+		Yearly, with two months free, as described in the
+		<a href="https://example.com/terms">terms</a>
 	</label>
 </fieldset>
 
 <figure interop-code-block language="html" [code]="examples.long"></figure>
 
 <h2>Disabled</h2>
-<p>A disabled radio dims its own label. A disabled fieldset disables every radio in it.</p>
+<p>
+	A disabled radio dims its own label. A disabled fieldset disables every radio
+	in it.
+</p>
 <fieldset interop-radio-group>
 	<legend>Delivery day</legend>
 	<label><input type="radio" name="day" value="mon" checked /> Monday</label>
@@ -85,35 +105,49 @@
 <figure interop-code-block language="html" [code]="examples.disabled"></figure>
 
 <h2>Hint text</h2>
-<p>Point <code>aria-describedby</code> on the fieldset at the hint, so it is read with the group's name.</p>
+<p>
+	Point <code>aria-describedby</code> on the fieldset at the hint, so it is read
+	with the group's name.
+</p>
 <fieldset interop-radio-group aria-describedby="where-hint">
 	<legend>Where do you live?</legend>
 	<p class="hint" id="where-hint">This decides which tax rules apply.</p>
 	<label><input type="radio" name="where" value="uk" /> United Kingdom</label>
-	<label><input type="radio" name="where" value="elsewhere" /> Somewhere else</label>
+	<label
+		><input type="radio" name="where" value="elsewhere" /> Somewhere else</label
+	>
 </fieldset>
 
 <figure interop-code-block language="html" [code]="examples.hint"></figure>
 
 <h2>Templates</h2>
 <p>
-	A radio group's look is a template: you write what goes in each label, and its CSS lays it out. Interop ships
-	<code>interop-radio-group="cards"</code>, one template among any number. Under the template the group is the same
-	radio group, with the same behavior, the same checked mark, focus ring and disabled state, and the same audit rules.
+	A radio group's look is a template: you write what goes in each label, and its
+	CSS lays it out. Interop ships
+	<code>interop-radio-group="cards"</code>, one template among any number. Under
+	the template the group is the same radio group, with the same behavior, the
+	same checked mark, focus ring and disabled state, and the same audit rules.
 </p>
 
 <h3>Cards</h3>
 <p>
-	Each option is a card. The input names the option with <code>aria-labelledby</code> pointing at its title and
-	describes it with <code>aria-describedby</code>, so a screen reader reads "Pro, radio button, 2 of 3" and then the
-	details, not the whole card on every arrow press.
+	Each option is a card. The input names the option with
+	<code>aria-labelledby</code> pointing at its title and describes it with
+	<code>aria-describedby</code>, so a screen reader reads "Pro, radio button, 2
+	of 3" and then the details, not the whole card on every arrow press.
 </p>
 <fieldset interop-radio-group="cards">
 	<legend>Plan</legend>
 	@for (plan of plans; track plan.id) {
 		<label>
-			<input type="radio" name="plan" [value]="plan.id" [checked]="plan.id === 'pro'"
-				[attr.aria-labelledby]="'plan-' + plan.id" [attr.aria-describedby]="'plan-' + plan.id + '-details'" />
+			<input
+				type="radio"
+				name="plan"
+				[value]="plan.id"
+				[checked]="plan.id === 'pro'"
+				[attr.aria-labelledby]="'plan-' + plan.id"
+				[attr.aria-describedby]="'plan-' + plan.id + '-details'"
+			/>
 			<strong [id]="'plan-' + plan.id">{{ plan.name }}</strong>
 			<span [id]="'plan-' + plan.id + '-details'">
 				<span class="price">{{ plan.price }}</span>
@@ -126,87 +160,192 @@
 	}
 </fieldset>
 
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.cards"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.cards"
+></figure>
 <figure interop-code-block language="css" [code]="examples.cardsCss"></figure>
 
 <h3>Chips</h3>
 <p>
-	<code>interop-radio-group="chips"</code> draws each option as a pill that sizes to its text and wraps. Use it for
-	many short options. For a short row of equal options, use the segmented control.
+	<code>interop-radio-group="chips"</code> draws each option as a pill that
+	sizes to its text and wraps. Use it for many short options. For a short row of
+	equal options, use the segmented control.
 </p>
 <fieldset interop-radio-group="chips">
 	<legend>Shirt size</legend>
 	@for (size of sizes; track size) {
-		<label><input type="radio" name="shirt" [value]="size" [checked]="size === 'M'" /> {{ size }}</label>
+		<label
+			><input
+				type="radio"
+				name="shirt"
+				[value]="size"
+				[checked]="size === 'M'"
+			/>
+			{{ size }}</label
+		>
 	}
 </fieldset>
 <figure interop-code-block language="html" [code]="examples.chips"></figure>
 
 <h3>Your own template</h3>
 <p>
-	A template needs no API. This one adds a muted description under each option, in about five lines of the page's own
-	CSS. Interop's rules have no specificity, so a class of yours always wins.
+	A template needs no API. This one adds a muted description under each option,
+	in about five lines of the page's own CSS. Interop's rules have no
+	specificity, so a class of yours always wins.
 </p>
 <fieldset interop-radio-group class="described">
 	<legend>Backups</legend>
 	<label>
-		<input type="radio" name="backup" value="daily" checked aria-describedby="backup-daily" />
-		Daily <span class="description" id="backup-daily">Kept for 30 days.</span>
+		<input
+			type="radio"
+			name="backup"
+			value="daily"
+			checked
+			aria-labelledby="backup-daily-name"
+			aria-describedby="backup-daily"
+		/>
+		<span id="backup-daily-name">Daily</span>
+		<span class="description" id="backup-daily">Kept for 30 days.</span>
 	</label>
 	<label>
-		<input type="radio" name="backup" value="hourly" aria-describedby="backup-hourly" />
-		Hourly <span class="description" id="backup-hourly">Kept for 7 days. Uses more storage.</span>
+		<input
+			type="radio"
+			name="backup"
+			value="hourly"
+			aria-labelledby="backup-hourly-name"
+			aria-describedby="backup-hourly"
+		/>
+		<span id="backup-hourly-name">Hourly</span>
+		<span class="description" id="backup-hourly"
+			>Kept for 7 days. Uses more storage.</span
+		>
 	</label>
 </fieldset>
 
 <figure interop-code-block language="html" [code]="examples.template"></figure>
-<figure interop-code-block language="css" [code]="examples.templateCss"></figure>
+<figure
+	interop-code-block
+	language="css"
+	[code]="examples.templateCss"
+></figure>
 
 <h3>What a template can and cannot do</h3>
 <table>
 	<thead>
-		<tr><th scope="col">A template may</th><th scope="col">A template must keep</th></tr>
+		<tr>
+			<th scope="col">A template may</th>
+			<th scope="col">A template must keep</th>
+		</tr>
 	</thead>
 	<tbody>
-		<tr><td>Lay out the label any way: grid, card, row, tile</td><td>The input inside its label, with a shared <code>name</code></td></tr>
-		<tr><td>Decorate it: borders, fills, shadows, images</td><td>A visible checked mark that does not rely on color</td></tr>
-		<tr><td>Put any inline content in the label: names, prices, badges, icons</td><td>Inline content only: spans and other inline elements, no <code>div</code>, <code>p</code>, list or heading</td></tr>
-		<tr><td>Style states with <code>label:has(&gt; input:checked)</code>, <code>:focus-visible</code> and <code>:disabled</code></td><td>No button or other control inside the label</td></tr>
-		<tr><td>Hold links in the label, for short text such as terms</td><td>Rich content split into a name and a description</td></tr>
-		<tr><td></td><td>The group's <code>&lt;legend&gt;</code></td></tr>
+		<tr>
+			<td>Lay out the label any way: grid, card, row, tile</td>
+			<td>The input inside its label, with a shared <code>name</code></td>
+		</tr>
+		<tr>
+			<td>Decorate it: borders, fills, shadows, images</td>
+			<td>A visible checked mark that does not rely on color</td>
+		</tr>
+		<tr>
+			<td>Put any inline content in the label: names, prices, badges, icons</td>
+			<td>
+				Inline content only: spans and other inline elements, no
+				<code>div</code>, <code>p</code>, list or heading
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Style states with <code>label:has(&gt; input:checked)</code>,
+				<code>:focus-visible</code> and <code>:disabled</code>
+			</td>
+			<td>No button or other control inside the label</td>
+		</tr>
+		<tr>
+			<td>Hold links in the label, for short text such as terms</td>
+			<td>Rich content split into a name and a description</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>The group's <code>&lt;legend&gt;</code></td>
+		</tr>
 	</tbody>
 </table>
-<p>The development audit flags block content, another control, and a card whose whole text is its name.</p>
+<p>
+	The development audit flags block content, another control, and a card whose
+	whole text is its name.
+</p>
 
 <h2>Bound to a signal</h2>
 <p>
-	Bind <code>[checked]</code> on each radio. A radio's <code>change</code> event bubbles, so one listener on the
-	fieldset reads the choice.
+	Bind <code>[checked]</code> on each radio. A radio's <code>change</code> event
+	bubbles, so one listener on the fieldset reads the choice.
 </p>
-<fieldset interop-radio-group (change)="shipping.set($any($event.target).value)">
+<fieldset
+	interop-radio-group
+	(change)="shipping.set($any($event.target).value)"
+>
 	<legend>Shipping</legend>
-	<label><input type="radio" name="bound" value="standard" [checked]="shipping() === 'standard'" /> Standard</label>
-	<label><input type="radio" name="bound" value="express" [checked]="shipping() === 'express'" /> Express</label>
+	<label
+		><input
+			type="radio"
+			name="bound"
+			value="standard"
+			[checked]="shipping() === 'standard'"
+		/>
+		Standard</label
+	>
+	<label
+		><input
+			type="radio"
+			name="bound"
+			value="express"
+			[checked]="shipping() === 'express'"
+		/>
+		Express</label
+	>
 </fieldset>
 <p>Shipping is {{ shipping() }}.</p>
 
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.signal"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.signal"
+></figure>
 <figure interop-code-block language="ts" [code]="examples.signalTs"></figure>
 
 <h2>With ngModel</h2>
 <p>
-	Angular's radio accessor works on the native radios. It does not write <code>name</code> to the page, so set it
-	yourself. Without it the radios are not one group.
+	Angular's radio accessor works on the native radios. It does not write
+	<code>name</code> to the page, so set it yourself. Without it the radios are
+	not one group.
 </p>
 <fieldset interop-radio-group>
 	<legend>Theme</legend>
-	<label><input type="radio" name="theme" value="system" [(ngModel)]="theme" /> System</label>
-	<label><input type="radio" name="theme" value="light" [(ngModel)]="theme" /> Light</label>
-	<label><input type="radio" name="theme" value="dark" [(ngModel)]="theme" /> Dark</label>
+	<label
+		><input type="radio" name="theme" value="system" [(ngModel)]="theme" />
+		System</label
+	>
+	<label
+		><input type="radio" name="theme" value="light" [(ngModel)]="theme" />
+		Light</label
+	>
+	<label
+		><input type="radio" name="theme" value="dark" [(ngModel)]="theme" />
+		Dark</label
+	>
 </fieldset>
 <p>Theme is {{ theme() }}.</p>
 
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.ngModel"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.ngModel"
+></figure>
 
 <h2>Right to left</h2>
 <fieldset interop-radio-group dir="rtl" lang="ar">
@@ -218,22 +357,32 @@
 <figure interop-code-block language="html" [code]="examples.rtl"></figure>
 
 <h2>Sizes</h2>
-<p>The default size has no attribute. <code>itx-size="lg"</code> on the fieldset makes every option larger.</p>
+<p>
+	The default size has no attribute. <code>itx-size="lg"</code> on the fieldset
+	makes every option larger.
+</p>
 <fieldset interop-radio-group>
 	<legend>Default</legend>
-	<label><input type="radio" name="size-md" value="a" checked /> Option A</label>
+	<label
+		><input type="radio" name="size-md" value="a" checked /> Option A</label
+	>
 	<label><input type="radio" name="size-md" value="b" /> Option B</label>
 </fieldset>
 <fieldset interop-radio-group itx-size="lg">
 	<legend>Large</legend>
-	<label><input type="radio" name="size-lg" value="a" checked /> Option A</label>
+	<label
+		><input type="radio" name="size-lg" value="a" checked /> Option A</label
+	>
 	<label><input type="radio" name="size-lg" value="b" /> Option B</label>
 </fieldset>
 
 <figure interop-code-block language="html" [code]="examples.sizes"></figure>
 
 <h2>Custom tokens</h2>
-<p>Set <code>--itx-radio-group-*</code> properties on the fieldset, or on a class that matches it.</p>
+<p>
+	Set <code>--itx-radio-group-*</code> properties on the fieldset, or on a class
+	that matches it.
+</p>
 <fieldset interop-radio-group class="large-dot">
 	<legend>Larger dot</legend>
 	<label><input type="radio" name="tokens" value="a" checked /> Option A</label>

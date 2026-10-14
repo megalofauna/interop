@@ -1,0 +1,156 @@
+/*
+ * Every stylesheet in the library, read as text, keyed by its path in projects/interop. The style
+ * guards read their stylesheets from here, and sheets.spec.ts checks this list against interop.css,
+ * so a new stylesheet cannot be left out of the guards.
+ */
+
+// @ts-expect-error The text loader turns the file into a string.
+import stylesReset from '../styles/reset.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesSpace from '../styles/space.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesTypography from '../styles/typography.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesCode from '../styles/code.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesRadius from '../styles/radius.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesBorder from '../styles/border.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesColor from '../styles/color.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesTransition from '../styles/transition.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesOutline from '../styles/outline.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesVisuallyHidden from '../styles/visually-hidden.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesFieldset from '../styles/fieldset.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import buttonInteropButtonBase from '../button/interop-button.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import buttonInteropButtonStructure from '../button/interop-button.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import iconInteropIconBase from '../icon/interop-icon.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import iconInteropIconStructure from '../icon/interop-icon.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import badgeInteropBadgeBase from '../badge/interop-badge.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import badgeInteropBadgeStructure from '../badge/interop-badge.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import scrollAreaInteropScrollAreaBase from '../scroll-area/interop-scroll-area.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import scrollAreaInteropScrollAreaStructure from '../scroll-area/interop-scroll-area.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import codeBlockInteropCodeBlockBase from '../code-block/interop-code-block.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import codeBlockInteropCodeBlockStructure from '../code-block/interop-code-block.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import popoverInteropPopoverBase from '../popover/interop-popover.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import popoverInteropPopoverStructure from '../popover/interop-popover.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tooltipInteropTooltipBase from '../tooltip/interop-tooltip.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tooltipInteropTooltipStructure from '../tooltip/interop-tooltip.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import switchInteropSwitchBase from '../switch/interop-switch.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import switchInteropSwitchStructure from '../switch/interop-switch.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import radioGroupInteropRadioGroupBase from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import radioGroupInteropRadioGroupStructure from '../radio-group/interop-radio-group.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import checkboxInteropCheckboxBase from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import checkboxInteropCheckboxStructure from '../checkbox/interop-checkbox.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tabsInteropTabsBase from '../tabs/interop-tabs.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tabsInteropTabsStructure from '../tabs/interop-tabs.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stepsInteropStepsBase from '../steps/interop-steps.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stepsInteropStepsStructure from '../steps/interop-steps.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tagsInteropTagsBase from '../tags/interop-tags.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tagsInteropTagsStructure from '../tags/interop-tags.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldInteropFieldBase from '../field/interop-field.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldInteropFieldStructure from '../field/interop-field.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import selectInteropSelectBase from '../select/interop-select.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import selectInteropSelectStructure from '../select/interop-select.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import dialogInteropDialogBase from '../dialog/interop-dialog.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import dialogInteropDialogStructure from '../dialog/interop-dialog.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesSegmented from '../styles/segmented.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesCards from '../styles/cards.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesChips from '../styles/chips.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import interopCss from '../interop.css' with { loader: 'text' };
+
+/** The stylesheets, in interop.css order; reset.css, which is opt-in, first. */
+export const sheets: Record<string, string> = {
+	'styles/reset.css': stylesReset,
+	'styles/space.css': stylesSpace,
+	'styles/typography.css': stylesTypography,
+	'styles/code.css': stylesCode,
+	'styles/radius.css': stylesRadius,
+	'styles/border.css': stylesBorder,
+	'styles/color.css': stylesColor,
+	'styles/transition.css': stylesTransition,
+	'styles/outline.css': stylesOutline,
+	'styles/visually-hidden.css': stylesVisuallyHidden,
+	'styles/fieldset.css': stylesFieldset,
+	'button/interop-button.base.css': buttonInteropButtonBase,
+	'button/interop-button.structure.css': buttonInteropButtonStructure,
+	'icon/interop-icon.base.css': iconInteropIconBase,
+	'icon/interop-icon.structure.css': iconInteropIconStructure,
+	'badge/interop-badge.base.css': badgeInteropBadgeBase,
+	'badge/interop-badge.structure.css': badgeInteropBadgeStructure,
+	'scroll-area/interop-scroll-area.base.css': scrollAreaInteropScrollAreaBase,
+	'scroll-area/interop-scroll-area.structure.css': scrollAreaInteropScrollAreaStructure,
+	'code-block/interop-code-block.base.css': codeBlockInteropCodeBlockBase,
+	'code-block/interop-code-block.structure.css': codeBlockInteropCodeBlockStructure,
+	'popover/interop-popover.base.css': popoverInteropPopoverBase,
+	'popover/interop-popover.structure.css': popoverInteropPopoverStructure,
+	'tooltip/interop-tooltip.base.css': tooltipInteropTooltipBase,
+	'tooltip/interop-tooltip.structure.css': tooltipInteropTooltipStructure,
+	'switch/interop-switch.base.css': switchInteropSwitchBase,
+	'switch/interop-switch.structure.css': switchInteropSwitchStructure,
+	'radio-group/interop-radio-group.base.css': radioGroupInteropRadioGroupBase,
+	'radio-group/interop-radio-group.structure.css': radioGroupInteropRadioGroupStructure,
+	'checkbox/interop-checkbox.base.css': checkboxInteropCheckboxBase,
+	'checkbox/interop-checkbox.structure.css': checkboxInteropCheckboxStructure,
+	'tabs/interop-tabs.base.css': tabsInteropTabsBase,
+	'tabs/interop-tabs.structure.css': tabsInteropTabsStructure,
+	'steps/interop-steps.base.css': stepsInteropStepsBase,
+	'steps/interop-steps.structure.css': stepsInteropStepsStructure,
+	'tags/interop-tags.base.css': tagsInteropTagsBase,
+	'tags/interop-tags.structure.css': tagsInteropTagsStructure,
+	'field/interop-field.base.css': fieldInteropFieldBase,
+	'field/interop-field.structure.css': fieldInteropFieldStructure,
+	'select/interop-select.base.css': selectInteropSelectBase,
+	'select/interop-select.structure.css': selectInteropSelectStructure,
+	'dialog/interop-dialog.base.css': dialogInteropDialogBase,
+	'dialog/interop-dialog.structure.css': dialogInteropDialogStructure,
+	'styles/segmented.css': stylesSegmented,
+	'styles/cards.css': stylesCards,
+	'styles/chips.css': stylesChips,
+};
+
+/** interop.css itself, for checking the list against it. */
+export const bundle: string = interopCss;
+
+/** Every stylesheet's text, in order, as one string. */
+export const allCss = (): string => Object.values(sheets).join('\n');

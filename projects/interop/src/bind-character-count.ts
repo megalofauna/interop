@@ -1,4 +1,4 @@
-import { watchInteropInDevMode } from './audit';
+import { announce } from './announce';
 
 type TextControl = HTMLInputElement | HTMLTextAreaElement;
 
@@ -35,7 +35,8 @@ const defaultMessage = (left: number) =>
  * - `count` shows how many are left, or how many too many, as the user types. Over the limit it
  *   gets `data-over`. It is `aria-hidden`: a count that changes on every keystroke would talk over
  *   the typing.
- * - `status` announces the same text once typing pauses for a second.
+ * - `status` announces the same text once typing pauses for a second, and only while the count
+ *   shows, so a threshold quiets both.
  * - Over the limit the field's custom validity says so, so the form does not submit and
  *   bindValidation() shows the error. It fires `interop-validity-change` as that changes.
  * - Put the limit in the field's hint too: "You can enter up to 200 characters".
@@ -50,13 +51,14 @@ export function bindCharacterCount(control: TextControl, options: CharacterCount
 	let over = false;
 	let timer: ReturnType<typeof setTimeout> | undefined;
 
-	const update = (announce: boolean) => {
+	const update = (speak: boolean) => {
 		const used = length(control.value);
 		const left = limit - used;
 		const text = message(left);
+		const shown = used >= limit * threshold;
 		if (count) {
 			count.textContent = text;
-			count.hidden = used < limit * threshold;
+			count.hidden = !shown;
 			count.toggleAttribute('data-over', left < 0);
 		}
 		if (left < 0 !== over) {
@@ -64,9 +66,10 @@ export function bindCharacterCount(control: TextControl, options: CharacterCount
 			control.setCustomValidity(over ? tooLong(limit, label) : '');
 			control.dispatchEvent(new Event('interop-validity-change', { bubbles: true }));
 		}
-		if (!announce || !status) return;
+		// Below the threshold nothing shows, so nothing is said either.
+		if (!speak || !status || !shown) return;
 		clearTimeout(timer);
-		timer = setTimeout(() => (status.textContent = text), PAUSE);
+		timer = setTimeout(() => announce(status, text), PAUSE);
 	};
 
 	const listening = new AbortController();
@@ -75,7 +78,6 @@ export function bindCharacterCount(control: TextControl, options: CharacterCount
 	control.form?.addEventListener('reset', () => setTimeout(() => update(false)), { signal: listening.signal });
 	count?.setAttribute('aria-hidden', 'true');
 	update(false);
-	watchInteropInDevMode();
 
 	return () => {
 		listening.abort();

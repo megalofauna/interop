@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 import { focusables } from './focusable';
 
 /**
@@ -19,8 +18,7 @@ export function bindScrollArea(element: HTMLElement): () => void {
 	let addedRole = false;
 
 	const canFocusInside = () => focusables(element).length > 0;
-	const overflows = () =>
-		element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+	const overflows = () => element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 
 	const update = () => {
 		const named = element.hasAttribute('aria-label') || element.hasAttribute('aria-labelledby');
@@ -72,7 +70,6 @@ export function bindScrollArea(element: HTMLElement): () => void {
 	element.addEventListener('focusout', update, { signal: listening.signal });
 	observeSizes();
 	update();
-	watchInteropInDevMode();
 
 	return () => {
 		cancelAnimationFrame(frame);

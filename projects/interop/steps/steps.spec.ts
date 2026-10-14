@@ -6,7 +6,10 @@ import { InteropStepsForm } from './steps';
 	imports: [InteropStepsForm],
 	template: `
 		<form id="spec-steps" interop-steps-form [history]="history()" (interop-steps-change)="changes.push($any($event).detail.step.id)">
-			<fieldset id="one"><legend>One</legend><input name="a" /></fieldset>
+			<fieldset id="one">
+				<legend>One</legend>
+				<input name="a" />
+			</fieldset>
 			<fieldset id="two" hidden><legend>Two</legend></fieldset>
 		</form>
 	`,

@@ -1,49 +1,90 @@
 <h1>Dialog</h1>
-<p class="aka">Also known as modal, modal dialog, alert dialog, sheet, lightbox.</p>
-<p>
-	A dialog is a native <code>&lt;dialog interop-dialog&gt;</code>. A button with <code>command="show-modal"</code> opens
-	it. The browser keeps focus inside it, makes the page behind it inert, closes it on Escape, and returns focus to the
-	button that opened it. Interop adds the look, the motion, and stops the page scrolling behind it. It needs no
-	script.
+<p class="aka">
+	Also known as modal, modal dialog, alert dialog, sheet, lightbox.
 </p>
 <p>
-	Name every dialog with <code>aria-labelledby</code> pointing at its heading, so a screen reader says what it is
-	for when it opens.
+	A dialog is a native <code>&lt;dialog interop-dialog&gt;</code>. A button with
+	<code>command="show-modal"</code> opens it. The browser keeps focus inside it,
+	makes the page behind it inert, closes it on Escape, and returns focus to the
+	button that opened it. Interop adds the look, the motion, and stops the page
+	scrolling behind it. It needs no script.
+</p>
+<p>
+	Name every dialog with <code>aria-labelledby</code> pointing at its heading,
+	so a screen reader says what it is for when it opens.
 </p>
 
 <h2>Confirm an action</h2>
 <p>
-	The buttons sit in <code>&lt;form method="dialog"&gt;</code>: pressing one closes the dialog, and its
-	<code>value</code> becomes the dialog's <code>returnValue</code>. Escape leaves it empty. Focus starts on the least
+	The buttons sit in <code>&lt;form method="dialog"&gt;</code>: pressing one
+	closes the dialog, and its <code>value</code> becomes the dialog's
+	<code>returnValue</code>. Escape leaves it empty. Focus starts on the least
 	destructive button.
 </p>
-<button interop-button type="button" commandfor="delete" command="show-modal">Delete file…</button>
+<button interop-button type="button" commandfor="delete" command="show-modal">
+	Delete file…
+</button>
 <p>Result: {{ result() || "(none)" }}</p>
-<dialog id="delete" interop-dialog aria-labelledby="delete-title" (close)="result.set($any($event.target).returnValue || 'closed without a choice')">
+<dialog
+	id="delete"
+	interop-dialog
+	aria-labelledby="delete-title"
+	(close)="
+		result.set($any($event.target).returnValue || 'closed without a choice')
+	"
+>
 	<h2 id="delete-title">Delete "notes.txt"?</h2>
 	<p>The file moves to the trash for 30 days.</p>
 	<form method="dialog">
 		<footer>
-			<button interop-button type="submit" value="cancel" autofocus>Cancel</button>
+			<button interop-button type="submit" value="cancel" autofocus>
+				Cancel
+			</button>
 			<button interop-button type="submit" value="delete">Delete</button>
 		</footer>
 	</form>
 </dialog>
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.confirm"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.confirm"
+></figure>
 
 <h2>A close button</h2>
 <p>
-	The close button uses <code>command="request-close"</code>, which takes the same path as Escape: the dialog fires
-	<code>cancel</code> first. Type in the field, then press Escape or the close button: the <code>cancel</code> listener
-	keeps the dialog open and says why. A browser lets a page refuse Escape only once per user action, so Escape pressed
-	again and again closes it anyway; a click on the close button is refused every time. Put <code>autofocus</code> on
+	The close button uses <code>command="request-close"</code>, which takes the
+	same path as Escape: the dialog fires <code>cancel</code> first. Type in the
+	field, then press Escape or the close button: the <code>cancel</code> listener
+	keeps the dialog open and says why. A browser lets a page refuse Escape only
+	once per user action, so Escape pressed again and again closes it anyway; a
+	click on the close button is refused every time. Put <code>autofocus</code> on
 	the first field, or the close button takes focus on opening.
 </p>
-<button interop-button type="button" commandfor="rename" command="show-modal" (click)="reset()">Rename file…</button>
-<dialog id="rename" interop-dialog aria-labelledby="rename-title" (cancel)="guard($event)">
+<button
+	interop-button
+	type="button"
+	commandfor="rename"
+	command="show-modal"
+	(click)="reset()"
+>
+	Rename file…
+</button>
+<dialog
+	id="rename"
+	interop-dialog
+	aria-labelledby="rename-title"
+	(cancel)="guard($event)"
+>
 	<header>
 		<h2 id="rename-title">Rename file</h2>
-		<button interop-button itx-size="sm" type="button" commandfor="rename" command="request-close">
+		<button
+			interop-button
+			itx-size="sm"
+			type="button"
+			commandfor="rename"
+			command="request-close"
+		>
 			<span itx-visually-hidden>Close</span>
 			<svg interop-icon name="tabler-x"></svg>
 		</button>
@@ -56,25 +97,59 @@
 		@if (warning()) {
 			<p role="alert">
 				You have unsaved changes.
-				<button interop-button itx-size="sm" type="button" commandfor="rename" command="close">Discard them</button>
+				<button
+					interop-button
+					itx-size="sm"
+					type="button"
+					commandfor="rename"
+					command="close"
+				>
+					Discard them
+				</button>
 			</p>
 		}
-		<footer><button interop-button type="submit" value="save">Save</button></footer>
+		<footer>
+			<button interop-button type="submit" value="save">Save</button>
+		</footer>
 	</form>
 </dialog>
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.form"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.form"
+></figure>
 <figure interop-code-block language="ts" [code]="examples.formTs"></figure>
 
 <h2>Close on a click outside</h2>
 <p>
-	<code>closedby="any"</code> also closes the dialog on a click outside it. Use it where nothing is lost: never for a
-	form or an alert. Safari does not support it yet, and there the dialog closes with Escape and its buttons.
+	<code>closedby="any"</code> also closes the dialog on a click outside it. Use
+	it where nothing is lost: never for a form or an alert. Safari does not
+	support it yet, and there the dialog closes with Escape and its buttons.
 </p>
-<button interop-button type="button" commandfor="shortcuts" command="show-modal">Keyboard shortcuts</button>
-<dialog id="shortcuts" interop-dialog closedby="any" aria-labelledby="shortcuts-title">
+<button
+	interop-button
+	type="button"
+	commandfor="shortcuts"
+	command="show-modal"
+>
+	Keyboard shortcuts
+</button>
+<dialog
+	id="shortcuts"
+	interop-dialog
+	closedby="any"
+	aria-labelledby="shortcuts-title"
+>
 	<header>
 		<h2 id="shortcuts-title">Keyboard shortcuts</h2>
-		<button interop-button itx-size="sm" type="button" commandfor="shortcuts" command="close">
+		<button
+			interop-button
+			itx-size="sm"
+			type="button"
+			commandfor="shortcuts"
+			command="close"
+		>
 			<span itx-visually-hidden>Close</span>
 			<svg interop-icon name="tabler-x"></svg>
 		</button>
@@ -86,15 +161,22 @@
 		<dd>Show this list</dd>
 	</dl>
 </dialog>
-<figure interop-code-block language="html" [code]="examples.lightDismiss"></figure>
+<figure
+	interop-code-block
+	language="html"
+	[code]="examples.lightDismiss"
+></figure>
 
 <h2>Alert dialog</h2>
 <p>
-	For an urgent message that needs an answer, add <code>role="alertdialog"</code> and point
-	<code>aria-describedby</code> at the message, so it is read with the title. <code>closedby="none"</code> turns off
+	For an urgent message that needs an answer, add
+	<code>role="alertdialog"</code> and point <code>aria-describedby</code> at the
+	message, so it is read with the title. <code>closedby="none"</code> turns off
 	Escape and clicks outside, so only a button closes it.
 </p>
-<button interop-button type="button" commandfor="timeout" command="show-modal">Show the session warning</button>
+<button interop-button type="button" commandfor="timeout" command="show-modal">
+	Show the session warning
+</button>
 <dialog
 	id="timeout"
 	interop-dialog
@@ -104,11 +186,15 @@
 	aria-describedby="timeout-message"
 >
 	<h2 id="timeout-title">Your session is about to end</h2>
-	<p id="timeout-message">You will be signed out in 2 minutes. Unsaved work will be lost.</p>
+	<p id="timeout-message">
+		You will be signed out in 2 minutes. Unsaved work will be lost.
+	</p>
 	<form method="dialog">
 		<footer>
 			<button interop-button type="submit" value="sign-out">Sign out</button>
-			<button interop-button type="submit" value="stay" autofocus>Stay signed in</button>
+			<button interop-button type="submit" value="stay" autofocus>
+				Stay signed in
+			</button>
 		</footer>
 	</form>
 </dialog>
@@ -116,36 +202,51 @@
 
 <h2>Long content</h2>
 <p>
-	The dialog is never taller than the window. Its content scrolls inside it, and scrolling past the end does not move
-	the page. <code>tabindex="-1" autofocus</code> on the heading puts focus at the top, so a screen reader starts at
-	the beginning and the arrow keys scroll. Chrome ignores <code>autofocus</code> on the dialog itself.
+	The dialog is never taller than the window. Its content scrolls inside it, and
+	scrolling past the end does not move the page.
+	<code>tabindex="-1" autofocus</code> on the heading puts focus at the top, so
+	a screen reader starts at the beginning and the arrow keys scroll. Chrome
+	ignores <code>autofocus</code> on the dialog itself.
 </p>
-<button interop-button type="button" commandfor="terms" command="show-modal">Read the terms</button>
+<button interop-button type="button" commandfor="terms" command="show-modal">
+	Read the terms
+</button>
 <dialog id="terms" interop-dialog aria-labelledby="terms-title">
 	<header>
 		<h2 id="terms-title" tabindex="-1" autofocus>Terms of service</h2>
-		<button interop-button itx-size="sm" type="button" commandfor="terms" command="close">
+		<button
+			interop-button
+			itx-size="sm"
+			type="button"
+			commandfor="terms"
+			command="close"
+		>
 			<span itx-visually-hidden>Close</span>
 			<svg interop-icon name="tabler-x"></svg>
 		</button>
 	</header>
 	@for (n of [1, 2, 3, 4, 5, 6, 7, 8]; track n) {
 		<p>
-			Section {{ n }}. These terms govern your use of the service. They describe what you may do, what we will do,
-			and what happens when either of us does not. Read them before you continue.
+			Section {{ n }}. These terms govern your use of the service. They describe
+			what you may do, what we will do, and what happens when either of us does
+			not. Read them before you continue.
 		</p>
 	}
 	<form method="dialog">
-		<footer><button interop-button type="submit" value="accept">Accept</button></footer>
+		<footer>
+			<button interop-button type="submit" value="accept">Accept</button>
+		</footer>
 	</form>
 </dialog>
 
 <h2>Opened from code</h2>
 <p>
-	When no button opens the dialog, such as after a task finishes, call <code>showModal()</code>. Focus then returns to
-	whatever had it before.
+	When no button opens the dialog, such as after a task finishes, call
+	<code>showModal()</code>. Focus then returns to whatever had it before.
 </p>
-<button interop-button type="button" (click)="export()">Export (opens a dialog when done)</button>
+<button interop-button type="button" (click)="export()">
+	Export (opens a dialog when done)
+</button>
 <dialog #saved interop-dialog aria-labelledby="saved-title">
 	<h2 id="saved-title">Export finished</h2>
 	<p>Your file is ready in Downloads.</p>

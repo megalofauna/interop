@@ -1,5 +1,3 @@
-import { watchInteropInDevMode } from './audit';
-
 let ids = 0;
 /** The tooltip on screen. Showing one hides it, as a `hint` popover does where it is supported. */
 let shown: (() => void) | null = null;
@@ -118,7 +116,6 @@ export function bindTooltip(trigger: HTMLElement, tooltip: HTMLElement): () => v
 	trigger.addEventListener('focusout', onFocusOut, { signal });
 	trigger.addEventListener('pointerdown', onPointerDown, { signal });
 	if (!closesItself) trigger.ownerDocument.addEventListener('keydown', onKeyDown, { capture: true, signal });
-	watchInteropInDevMode();
 
 	return () => {
 		hide();

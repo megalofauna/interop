@@ -19,9 +19,9 @@
 	--itx-field-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
 	--itx-field-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
 	--itx-field-background-color-readonly: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-field-border-width: 1px;
+	--itx-field-border-width: var(--itx-border-width);
 	/* An invalid field's border thickens, so its state is not color alone (WCAG 1.4.1). */
-	--itx-field-border-width-invalid: 2px;
+	--itx-field-border-width-invalid: var(--itx-border-width-strong);
 	--itx-field-border-style: solid;
 	--itx-field-border-style-readonly: dashed;
 	/* 3:1 against the page, so the field's edge is visible (WCAG 1.4.11). */
@@ -50,13 +50,6 @@
 	--itx-field-padding-inline: var(--itx-space-4);
 	--itx-field-font-size: var(--itx-font-size-p-lg);
 	--itx-field-line-height: var(--itx-line-height-p-lg);
-}
-
-@media (prefers-contrast: more) {
-	:where([interop-field], :is(select[interop-select], :is(input, textarea)[interop-input]):not([interop-field] *)) {
-		--itx-field-border-width: 2px;
-		--itx-field-border-width-invalid: 3px;
-	}
 }
 
 /* The four parts of a field. */
@@ -91,7 +84,7 @@
 :where([interop-error-summary]) {
 	--itx-error-summary-padding-block: var(--itx-space-4);
 	--itx-error-summary-padding-inline: var(--itx-space-4);
-	--itx-error-summary-border-width: 2px;
+	--itx-error-summary-border-width: var(--itx-border-width-strong);
 	--itx-error-summary-border-color: var(--itx-role-text-danger);
 	--itx-error-summary-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-error-summary-corner-shape: var(--itx-corner-shape);

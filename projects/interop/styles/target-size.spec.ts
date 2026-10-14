@@ -1,30 +1,22 @@
-// @ts-expect-error The text loader turns the file into a string.
-import spaceCss from './space.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import buttonCss from '../button/interop-button.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import switchCss from '../switch/interop-switch.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import chipsCss from './chips.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tagsCss from '../tags/interop-tags.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import segmentedCss from './segmented.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import fieldCss from '../field/interop-field.base.css' with { loader: 'text' };
+import { oneLine } from './css-text';
+import { sheets } from './sheets';
+
+const spaceCss = sheets['styles/space.css'];
+const buttonCss = sheets['button/interop-button.base.css'];
+const switchCss = sheets['switch/interop-switch.base.css'];
+const radioGroupCss = sheets['radio-group/interop-radio-group.base.css'];
+const checkboxCss = sheets['checkbox/interop-checkbox.base.css'];
+const chipsCss = sheets['styles/chips.css'];
+const tagsCss = sheets['tags/interop-tags.base.css'];
+const tabsCss = sheets['tabs/interop-tabs.base.css'];
+const segmentedCss = sheets['styles/segmented.css'];
+const selectCss = sheets['select/interop-select.base.css'];
+const fieldCss = sheets['field/interop-field.base.css'];
 
 // jsdom has no layout, so axe cannot measure targets. This reads every size step's declared height instead.
 // A control's input sits inside its label, so the label is the target.
 const space = new Map<string, string>();
-for (const [, name, value] of (spaceCss as string).matchAll(/(--itx-space-[\w-]+):\s*([^;]+);/g)) space.set(name, value.trim());
+for (const [, name, value] of (spaceCss as string).matchAll(/(--itx-space-[\w-]+):\s*([^;]+);/g)) space.set(name, oneLine(value));
 
 /** A declared length in CSS pixels, at the default 16px root font size. */
 function pixels(value: string): number {
@@ -35,7 +27,7 @@ function pixels(value: string): number {
 }
 
 /** Every value the file declares for `name`, one per size step. */
-const steps = (css: string, name: string) => [...css.matchAll(new RegExp(`${name}:\\s*([^;]+);`, 'g'))].map(([, value]) => value.trim());
+const steps = (css: string, name: string) => [...css.matchAll(new RegExp(`${name}:\\s*([^;]+);`, 'g'))].map(([, value]) => oneLine(value));
 
 describe('target size', () => {
 	// WCAG 2.5.8: a pointer target is at least 24 × 24 CSS px.

@@ -11,7 +11,7 @@
  *
  *   <p itx-font="p-lg">
  *
- * Roles: display, h1–h5, p-lg, p, p-sm, label, caption, fine-print.
+ * Roles: display, h1–h5, p-lg, p, p-sm, label, caption.
  */
 
 @layer itx-reset {
@@ -55,7 +55,15 @@
 	:where([itx-font]) {
 		font-weight: var(--itx-font-weight);
 	}
-	:where(:is(h1, h2, h3, h4, h5, h6):not([itx-font]), [itx-font="display"], [itx-font="h1"], [itx-font="h2"], [itx-font="h3"], [itx-font="h4"], [itx-font="h5"]) {
+	:where(
+		:is(h1, h2, h3, h4, h5, h6):not([itx-font]),
+		[itx-font="display"],
+		[itx-font="h1"],
+		[itx-font="h2"],
+		[itx-font="h3"],
+		[itx-font="h4"],
+		[itx-font="h5"]
+	) {
 		font-weight: var(--itx-font-weight-heading);
 	}
 	:where([itx-font="display"]) {
@@ -98,12 +106,8 @@
 		font-size: var(--itx-font-size-label);
 		line-height: var(--itx-line-height-label);
 	}
-	:where(:is(figcaption, caption):not([itx-font]), [itx-font="caption"]) {
+	:where(:is(figcaption, caption, small):not([itx-font]), [itx-font="caption"]) {
 		font-size: var(--itx-font-size-caption);
 		line-height: var(--itx-line-height-caption);
-	}
-	:where(small:not([itx-font]), [itx-font="fine-print"]) {
-		font-size: var(--itx-font-size-fine-print);
-		line-height: var(--itx-line-height-fine-print);
 	}
 }

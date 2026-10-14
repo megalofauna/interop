@@ -1,44 +1,50 @@
 # Interop — Playbook
 
+How the canonical library, `projects/interop`, is built. Prime, the deprecated
+library in `projects/interop_deprecated`, followed other rules; its cards say
+so in their file paths (`src/lib/…`).
+
 ## Spirit
 
 Interop components are semantically correct, accessible first, and performant by default. The right HTML element always wins over a styled `<div>`. Complexity is opt-in — simpler code paths are the default.
 
 ## Architecture
 
-### Standalone components
-Every component is `standalone: true` with `ChangeDetectionStrategy.OnPush`. No NgModules.
-
-### Signal-based reactivity
-- `input<T>()` for all inputs, `output<T>()` for all outputs
-- `signal<T>()` for writable internal state
-- `computed()` for derived state — never manually sync
-- `effect()` sparingly, only when side-effects must track signal changes
-
-### Injection token pattern
-Cross-component coordination uses `InjectionToken`. The parent provides itself:
-```typescript
-providers: [{ provide: INTEROP_STEPPER_TOKEN, useExisting: InteropStepper }]
-```
-Children inject via `inject(INTEROP_STEPPER_TOKEN, { optional: true })`.
-
-### Host directives
-Structural or behavioral concerns that belong on the host element are host directives, not wrapper divs. The component's selector IS the element.
-
-### Icon registry
-`provideInteropIcons(...icons)` registers icons at a given scope. An icon lookup walks the injector tree. A component that needs specific icons out-of-the-box should call `provideInteropIcons(...)` in its own `providers` array — this scopes the defaults to the component so consumers don't need to know about them. Per-scope registration does NOT propagate up.
-
-## CSS strategy — see css-strategy.md for full detail
-
-Two-file split: structural rules go in `styles/components/X.css`, token values go in `styles/themes/protocol/components/X.css`. Both are imported globally.
-
-## Action bar layout pattern
-
-Source order = priority order. The "primary" pair (Back, Next) is written first. Secondary items (menu trigger, cancel) are written after. CSS layout rules:
-
-- `margin-inline-start: auto` on `:first-child` pushes the first item — and everything following it in flow — to the inline-end.
-- `order: -1` on `:nth-child(n+3)` lifts items 3+ to the inline-start.
-- Result: `[secondary] → [space] → [primary-1] [primary-2]`
+- **Native elements, styled by attribute.** A component is an attribute on the
+  native element that does the job: `button[interop-button]`,
+  `select[interop-select]`, `dialog[interop-dialog]`, `label[interop-switch]`.
+  The identity attribute goes on the smallest complete control. A variant is a
+  value of it: `interop-radio-group="cards"`.
+- **One flat folder per component**, `projects/interop/<name>/`, imported as
+  `interop/<name>`:
+  - `interop-<name>.structure.css`: layout, states, forced colors, with the
+    names list ("Also known as") in its header comment.
+  - `interop-<name>.base.css`: token values and size steps.
+  - `<name>.ts`, only when the component needs script: thin directives.
+  - `public-api.ts`, empty for a CSS-only component.
+- **Shared looks** a template wears across components live in `styles/`:
+  `segmented.css`, `cards.css`, `chips.css`. `interop.css` imports
+  foundations, then components, then these.
+- **Helpers** in `projects/interop/src/` fill the gaps the platform leaves.
+  They are framework-free and exported from `interop`. See Helpers.
+- **Angular directives** are standalone, take signal `input()`s, bind their
+  helper in `afterRenderEffect`, and unbind in `onCleanup`. A component with a
+  template exists only where it renders something (badge, icon, code block).
+  No injection tokens, no host directives, no value accessors: native controls
+  work with Angular forms as they are.
+- **Light DOM.** No shadow roots, no view encapsulation; styles ship globally
+  from `interop.css`.
+- **Tokens** are named `--itx-<component>[-<element>]-<property>[-<state>]`.
+  A state token is read with a fallback to the rest token. Colors are neutral
+  pairs through `light-dark()`, and `styles/contrast.spec.ts` measures them;
+  there are no role tokens.
+- **The focus ring** for every component, and every decision about its color
+  and offset, is in `styles/outline.css`.
+- **The dev audit** (`src/audit.ts`) checks component contracts in the page
+  and warns problem, reason, advice. The app starts it once with
+  `watchInteropInDevMode()`.
+- **Invokers first.** Before writing a click handler, ask whether
+  `command`/`commandfor`, built-in or a custom `--command`, does the job.
 
 ## DOM writes during animation/drag
 
@@ -46,36 +52,24 @@ Never trigger Angular change detection inside a drag or animation loop. Write di
 
 ## Scroll management
 
-Use `element.scrollTo({ top, left })` computed from `getBoundingClientRect()` rather than `scrollIntoView()`. `scrollIntoView()` walks all scrollable ancestors including the page — this causes the page to scroll when only the component viewport should move.
-
-Defer scroll calls with `requestAnimationFrame()` when they follow an Angular CD flush (e.g., after a `[hidden]` binding changes). Without the defer, the panel may still have `display: none` at the time of the call.
+To move a component's own viewport, use `element.scrollTo()` computed from `getBoundingClientRect()`. `scrollIntoView()` scrolls every scrollable ancestor, the page included; use it only when moving the page is the point, such as bringing a field's label into view.
 
 ## Container queries
 
-Components that need responsive layout declare `container-type: inline-size; container-name: <name>` on the host. Hard-coded pixel thresholds in `@container` rules are intentional — CSS `@container` parens cannot read custom properties.
+Components that need responsive layout declare `container-type: inline-size` on the host. A `@container` condition cannot read a custom property, so its length is written in the query.
 
-## Popover / anchor positioning
+## Popover and anchor positioning
 
-When a component needs an anchored overlay (menu, picker, etc.), prefer composing `InteropPopover` + `InteropPopoverTrigger` over hand-rolling the native `popover` attribute and CSS-anchor wiring. The directive owns per-instance id, `anchor-name` / `position-anchor`, ARIA wiring, and delegates positioning to `INTEROP_POSITION_STRATEGY` (FloatingUI by default).
-
-Pattern:
-```html
-<button [interop-popover-trigger]="menu" [popoverHaspopup]="'menu'">…</button>
-
-<!-- Hoist the popover to the root template scope when multiple triggers
-     in sibling @if branches need to bind to it: template ref vars declared
-     inside @if are scoped to that block. -->
-<div #menu="interopPopover" interop-popover placement="top-start">…</div>
-```
-
-Programmatic dismissal: `popoverInstance.close()` (uses the directive's API; do not call raw `.hidePopover()` on the host).
+A popover is the platform's `popover` attribute with `interop-popover` styles. A button opens it with `popovertarget` or `command="toggle-popover"` and is its anchor, so anchor positioning needs no `anchor-name`. See [components/popover.md](components/popover.md).
 
 ## Accessibility
 
-- Wizard steppers: `<nav>` landmark with `aria-label`, step buttons with `aria-current` and `aria-disabled`
-- Drag handles: `role="separator"`, `aria-valuenow/min/max`, `tabindex="0"` when keyboard-enabled
-- Focus management: move focus to the destination panel after scroll settles (not during scroll)
-- `:focus-visible` for form controls; `:focus-visible` CSS pseudo-class for buttons
+- Every component has a card in `components/` with its accessibility rules,
+  audit rules and what was tested.
+- One Escape closes one layer.
+- State is never color alone: a shape, a border width, an icon or text goes
+  with it, and forced colors map it to system colors.
+- Nothing appears or disappears on hover alone.
 
 ## Attribute naming convention
 
@@ -84,7 +78,7 @@ Two namespaces. Never mix their roles.
 | Prefix | Role | Examples |
 |---|---|---|
 | `interop-*` | **Identity / activation** — declares "this element IS an interop component" | `interop-button`, `interop-root`, `interop-dialog`, `interop-popover` |
-| `itx-*` | **System configuration** — cross-component modifier axes owned by the design system | `itx-size="md"`, `itx-radius="sm"`, `itx-variant="icon"` |
+| `itx-*` | **System configuration** — cross-component modifier axes owned by the design system | `itx-size="md"`, `itx-radius="sm"`, `itx-color="danger"` |
 
 Rules:
 - `interop-*` answers **what is this element**. Never use it to configure appearance.
@@ -94,8 +88,8 @@ Rules:
 
 Well-formed example:
 ```html
-<!-- identity       system axes -->
-<button interop-button itx-size="md" itx-radius="sm" itx-variant="action">Save</button>
+<!-- identity        system axes -->
+<span interop-badge="dot" itx-size="sm" itx-color="info">New activity</span>
 ```
 
 CSS selectors follow the same split:
@@ -103,9 +97,8 @@ CSS selectors follow the same split:
 /* identity selector */
 :where(button[interop-button]) { … }
 
-/* system modifier selectors */
-:where(button[interop-button][itx-size="md"]) { … }
-:where(button[interop-button][itx-variant="action"]) { … }
+/* system modifier selector */
+:where(button[interop-button][itx-size="lg"]) { … }
 ```
 
 ## Size steps
@@ -117,6 +110,9 @@ CSS selectors follow the same split:
   tokens: `:where(<selector>[itx-size="lg"]) { … }`. The structure file never
   mentions `itx-size`.
 - A step changes the component's height and its text size together.
+- Every control's `lg` step is 56px (`--itx-space-14`), so controls line up in
+  a row at every size: 32, 40, 56. Tags, chips and badges keep their own
+  smaller pill scale.
 - Lengths come from `--itx-space-*`. Text sizes come from the typography
   roles (`--itx-font-size-<role>` with its `--itx-line-height-<role>`). No raw
   `rem` values for either.
@@ -156,18 +152,31 @@ nothing, so nothing has to line up with it.
 
 ## Style guards
 
-jsdom computes no styles, so these specs read the stylesheets as text. Each
-lists its files explicitly. A new component adds its stylesheets to every
-guard that applies:
+jsdom computes no styles, so these specs read the stylesheets as text, from one
+list: `styles/sheets.ts` imports every stylesheet, and `styles/sheets.spec.ts`
+fails when it disagrees with `interop.css`. A new component adds its
+stylesheets to `interop.css` and `sheets.ts`; contrast, radius, motion and
+focus then read them, and forced colors makes it decide whether it needs a
+block.
 
 | Spec | Guards |
 |---|---|
-| `styles/contrast.spec.ts` | Text 4.5:1 and state indicators 3:1 against the page, in both schemes |
+| `styles/sheets.spec.ts` | Every stylesheet in `interop.css` is in the list the guards read |
+| `styles/contrast.spec.ts` | Text 4.5:1 and state indicators 3:1 against the page, in both schemes; a pressed edge 3:1 against rest |
 | `styles/target-size.spec.ts` | Every control's target height at every size step is 24px or more |
-| `styles/radius.spec.ts` | Every corner follows one of the four corner rules |
-| `styles/forced-colors.spec.ts` | A component that shows state with a fill keeps a forced-colors block |
-| `styles/motion.spec.ts` | Every transition reads a shared duration token, so reduced motion reaches it |
-| `a11y/a11y.spec.ts` | axe on every component and state, including inside popovers and unselected tab panels, and on markup a helper has finished |
+| `styles/radius.spec.ts` | Every corner in every stylesheet follows one of the four corner rules |
+| `styles/forced-colors.spec.ts` | Every component stylesheet keeps a forced-colors block or is exempt with a reason; selected states map to Highlight |
+| `styles/motion.spec.ts` | Every transition in every stylesheet reads a shared duration token, so reduced motion reaches it |
+| `styles/focus.spec.ts` | Only `outline.css` sets a focus ring or its tokens; nothing styles bare `:focus` |
+| `styles/preferences.spec.ts` | Only `border.css` answers `prefers-contrast` and only `transition.css` answers `prefers-reduced-motion`; every border width reads a shared token |
+| `a11y/a11y.spec.ts` | axe on every component and state, including inside popovers and unselected tab panels, and on markup the helpers have finished |
+
+`npm run test:pages` (`scripts/cdp/check-pages.mjs`) checks what jsdom cannot,
+on every demo page in headless Chrome: axe with color contrast in light and
+dark, no sideways scroll at 320px, and a focus ring at every Tab stop, also in
+forced colors. It reports how many Tab stops it reached. A known failure is
+listed with its reason in `scripts/cdp/known-failures.json`, and the run says
+when a listed one stops failing. CI runs it after building the demo.
 
 One way per pattern. When two components solve the same problem differently,
 fix the outlier before adding a third.
@@ -193,6 +202,9 @@ A helper:
 
 Shared code is extracted when a second helper needs it, not before.
 
+A helper does not start the dev audit. The app calls `watchInteropInDevMode()`
+once at startup, so the audit runs on pages built only from CSS components too.
+
 Each helper names what would retire it. The list should shrink as browsers
 ship; a helper with nothing on the horizon needs a reason to exist.
 
@@ -205,6 +217,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindCharacterCount` | A count that does not block typing, announced on a pause | Nothing proposed |
 | `bindValidation` | Error messages in the page, at the right time, wired to the field; an error summary | Nothing proposed. The browser checks the constraints; only its message bubbles are replaced |
 | `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
+| `bindSegmentedFit` | Stacking a segmented control when its row does not fit | Nothing proposed: CSS cannot measure whether content fits. Optional: `itx-orientation` and the page's own threshold need no script |
 | `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
 | `bindSteps` | Steps of one form, and their validation | Nothing proposed |
 | `bindTags`, `bindTagInput` | Focus after a removal, announcements, adding by Enter | Nothing proposed |
@@ -216,6 +229,6 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 
 - Don't add fallbacks or validation for scenarios that can't happen inside the library
 - Don't write comments that describe WHAT code does — only WHY it does something non-obvious
-- Don't create intermediate wrapper divs when a host directive solves the problem
+- Don't wrap a native control in a custom element: its attributes stop reaching it
 - Don't use `scrollIntoView()` for scroll-snap viewports (see above)
 - Don't trigger Angular CD in pointer/animation loops

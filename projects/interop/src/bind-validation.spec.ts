@@ -24,7 +24,8 @@ describe('bindValidation', () => {
 		const summaryElement = document.querySelector<HTMLElement>('[interop-error-summary]')!;
 		unbind = bindValidation(form, { messages, summary: summary ? summaryElement : null });
 		const email = document.getElementById('email') as HTMLInputElement;
-		const errorOf = (element: Element) => element.closest('[interop-field], fieldset')!.querySelector<HTMLElement>(':scope > [interop-error]')!;
+		const errorOf = (element: Element) =>
+			element.closest('[interop-field], fieldset')!.querySelector<HTMLElement>(':scope > [interop-error]')!;
 		const submit = () => form.dispatchEvent(new SubmitEvent('submit', { cancelable: true }));
 		const type = (value: string) => {
 			email.value = value;
@@ -97,7 +98,9 @@ describe('bindValidation', () => {
 	});
 
 	it('merges messages over the defaults, as strings or functions', () => {
-		const { email, errorOf, submit } = setup({ messages: { valueMissing: (control, label) => (control.name === 'email' ? 'Enter your email address' : `Choose ${label}`) } });
+		const { email, errorOf, submit } = setup({
+			messages: { valueMissing: (control, label) => (control.name === 'email' ? 'Enter your email address' : `Choose ${label}`) },
+		});
 		submit();
 		expect(errorOf(email).textContent).toBe('Enter your email address');
 		expect(errorOf(document.getElementById('post')!).textContent).toBe('Choose Delivery');

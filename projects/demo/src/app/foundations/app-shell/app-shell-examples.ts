@@ -25,13 +25,18 @@ export const examples = {
 		grid-template-areas: "header header" "nav main";
 	}
 
-	/* The summary goes, and the nav shows whether the disclosure is open or not. */
-	.site-nav > summary {
-		display: none;
-	}
+	/*
+	 * The summary goes, and the nav shows whether the disclosure is open or not. Only where
+	 * ::details-content is supported: elsewhere the summary stays, so the nav can still be opened.
+	 */
+	@supports selector(::details-content) {
+		.site-nav > summary {
+			display: none;
+		}
 
-	.site-nav::details-content {
-		content-visibility: visible;
+		.site-nav::details-content {
+			content-visibility: visible;
+		}
 	}
 }
 `,

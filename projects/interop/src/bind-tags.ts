@@ -1,4 +1,4 @@
-import { watchInteropInDevMode } from './audit';
+import { announce } from './announce';
 import { isFocusable } from './focusable';
 
 export interface TagsOptions {
@@ -37,15 +37,6 @@ export interface TagInputOptions {
 
 export interface TagAddDetail {
 	value: string;
-}
-
-/**
- * Writes a message to a live region. It empties the region first, so the same message twice in a row
- * is announced twice.
- */
-function announce(status: HTMLElement, message: string): void {
-	status.textContent = '';
-	setTimeout(() => (status.textContent = message), 50);
 }
 
 /** A tag's own text: everything in it but its button and its hidden input. */
@@ -87,7 +78,9 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 	};
 
 	const observer = new MutationObserver((records) => {
-		const gone = records.flatMap((record) => Array.from(record.removedNodes)).filter((node): node is Element => node instanceof Element && node.tagName === 'LI');
+		const gone = records
+			.flatMap((record) => Array.from(record.removedNodes))
+			.filter((node): node is Element => node instanceof Element && node.tagName === 'LI');
 		if (!gone.length) return;
 		if (options.status) announce(options.status, gone.map((tag) => removed(tagText(tag))).join('. '));
 		if (!focusedTag || !gone.includes(focusedTag)) return;
@@ -104,7 +97,6 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 	list.addEventListener('focusin', onFocusin, { signal: listening.signal });
 	list.addEventListener('focusout', onFocusout, { signal: listening.signal });
 	observer.observe(list, { childList: true });
-	watchInteropInDevMode();
 
 	return () => {
 		observer.disconnect();

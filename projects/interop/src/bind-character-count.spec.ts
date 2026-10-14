@@ -59,8 +59,19 @@ describe('bindCharacterCount', () => {
 		type('a');
 		type('ab');
 		expect(status.textContent).toBe('');
-		vi.advanceTimersByTime(1000);
+		vi.advanceTimersByTime(1050);
 		expect(status.textContent).toBe('You have 8 characters remaining');
+	});
+
+	it('says nothing while the count is below the threshold', () => {
+		vi.useFakeTimers();
+		const { status, type } = setup(0.5);
+		type('12');
+		vi.advanceTimersByTime(1050);
+		expect(status.textContent).toBe('');
+		type('123456');
+		vi.advanceTimersByTime(1050);
+		expect(status.textContent).toBe('You have 4 characters remaining');
 	});
 
 	it('shows the count only from the threshold', () => {

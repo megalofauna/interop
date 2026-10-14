@@ -36,7 +36,7 @@
 	/* 3:1 against the page, so the selection shows without the text color (WCAG 1.4.11). */
 	--itx-chips-chip-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 	--itx-chips-chip-background-color-checked-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-200));
-	--itx-chips-chip-border-width: 1px;
+	--itx-chips-chip-border-width: var(--itx-border-width);
 	/* The pill's edge: 3:1 against the page, so an unchecked chip reads as a control. */
 	--itx-chips-chip-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-chips-chip-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
@@ -194,11 +194,5 @@
 	) {
 		color: GrayText;
 		border-color: GrayText;
-	}
-}
-
-@media (prefers-contrast: more) {
-	:where(fieldset:is([interop-checkbox-group~="chips"], [interop-radio-group~="chips"])) {
-		--itx-chips-chip-border-width: 2px;
 	}
 }

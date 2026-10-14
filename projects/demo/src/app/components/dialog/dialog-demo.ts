@@ -14,7 +14,8 @@ export class DialogDemo {
 	protected readonly result = signal("");
 	protected readonly dirty = signal(false);
 	protected readonly warning = signal(false);
-	protected readonly saved = viewChild.required<ElementRef<HTMLDialogElement>>("saved");
+	protected readonly saved =
+		viewChild.required<ElementRef<HTMLDialogElement>>("saved");
 
 	/** Escape and the close button fire cancel. Keep the dialog open while there is unsaved input. */
 	protected guard(event: Event): void {

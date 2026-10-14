@@ -47,8 +47,7 @@
 		appearance: none;
 		padding-inline-end: calc(var(--itx-field-padding-inline) + var(--itx-select-icon-size) + var(--itx-select-gap));
 		background-image:
-			linear-gradient(to top right, transparent 50%, currentColor 50%),
-			linear-gradient(to top left, transparent 50%, currentColor 50%);
+			linear-gradient(to top right, transparent 50%, currentColor 50%), linear-gradient(to top left, transparent 50%, currentColor 50%);
 		background-size: calc(var(--itx-select-icon-size) / 2) calc(var(--itx-select-icon-size) / 2);
 		background-repeat: no-repeat;
 		background-position:
@@ -80,7 +79,8 @@
 	/* As many rows as `size` asks for, at the option height. */
 	:where(select[interop-select]:is([multiple], [size]:not([size="1"]))) {
 		block-size: calc(
-			var(--itx-select-option-min-block-size) * attr(size type(<integer>), 4) + 2 * (var(--itx-select-list-padding) + var(--itx-field-border-width))
+			var(--itx-select-option-min-block-size) * attr(size type(<integer>), 4) + 2 *
+				(var(--itx-select-list-padding) + var(--itx-field-border-width))
 		);
 	}
 

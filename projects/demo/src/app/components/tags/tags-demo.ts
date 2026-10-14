@@ -8,7 +8,13 @@ import { examples } from "./tags-examples";
 
 @Component({
 	selector: "demo-tags",
-	imports: [InteropCodeBlock, InteropForm, InteropIcon, InteropTagInput, InteropTags],
+	imports: [
+		InteropCodeBlock,
+		InteropForm,
+		InteropIcon,
+		InteropTagInput,
+		InteropTags,
+	],
 	templateUrl: "./tags-demo.html",
 	styleUrl: "./tags-demo.css",
 })
@@ -21,7 +27,8 @@ export class TagsDemo {
 		"4 stars and up",
 		"Ships to every country in the European Economic Area within five working days",
 	]);
-	protected readonly alreadyAdded = (value: string) => `${value} is already added.`;
+	protected readonly alreadyAdded = (value: string) =>
+		`${value} is already added.`;
 	protected readonly skills = signal(["Angular", "CSS"]);
 	protected readonly saved = signal<string | null>(null);
 	protected readonly sizes = [
@@ -46,6 +53,8 @@ export class TagsDemo {
 
 	protected submit(event: SubmitEvent): void {
 		event.preventDefault();
-		this.saved.set(new FormData(event.target as HTMLFormElement).getAll("skills").join(", "));
+		this.saved.set(
+			new FormData(event.target as HTMLFormElement).getAll("skills").join(", "),
+		);
 	}
 }

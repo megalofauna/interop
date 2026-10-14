@@ -1,55 +1,83 @@
 <h1>Switch</h1>
-<p class="aka">Also known as toggle, toggle switch, slide toggle, checkbox toggle, on/off switch.</p>
+<p class="aka">
+	Also known as toggle, toggle switch, slide toggle, checkbox toggle, on/off
+	switch.
+</p>
 <p>
-	A switch is a native checkbox with <code>role="switch"</code> inside a <code>label interop-switch</code>. The input
-	draws the track and the thumb. Screen readers announce it as a switch that is on or off. It submits with its form
-	like any checkbox, and needs no script.
+	A switch is a native checkbox with <code>role="switch"</code> inside a
+	<code>label interop-switch</code>. The input draws the track and the thumb.
+	Screen readers announce it as a switch that is on or off. It submits with its
+	form like any checkbox, and needs no script.
 </p>
 
 <h2>On and off</h2>
 <div class="stack">
-	<label interop-switch><input type="checkbox" role="switch" /> Notifications</label>
-	<label interop-switch><input type="checkbox" role="switch" checked /> Dark mode</label>
+	<label interop-switch
+		><input type="checkbox" role="switch" /> Notifications</label
+	>
+	<label interop-switch
+		><input type="checkbox" role="switch" checked /> Dark mode</label
+	>
 </div>
 
 <h2>Long label</h2>
 <p>
-	The switch is centered on the first line of text, and the text wraps beside it. Links and other inline elements
-	wrap with the text.
+	The switch is centered on the first line of text, and the text wraps beside
+	it. Links and other inline elements wrap with the text.
 </p>
 <div class="stack narrow">
 	<label interop-switch>
 		<input type="checkbox" role="switch" />
-		Send me a weekly summary of activity in every project I belong to, including archived ones
+		Send me a weekly summary of activity in every project I belong to, including
+		archived ones
 	</label>
 	<label interop-switch>
 		<input type="checkbox" role="switch" />
-		Share usage data as described in the <a href="#privacy">privacy policy</a>
+		Share usage data as described in the
+		<a href="https://example.com/privacy">privacy policy</a>
 	</label>
 </div>
 
 <h2>Disabled</h2>
 <div class="stack">
-	<label interop-switch><input type="checkbox" role="switch" disabled /> Off and disabled</label>
-	<label interop-switch><input type="checkbox" role="switch" checked disabled /> On and disabled</label>
+	<label interop-switch
+		><input type="checkbox" role="switch" disabled /> Off and disabled</label
+	>
+	<label interop-switch
+		><input type="checkbox" role="switch" checked disabled /> On and
+		disabled</label
+	>
 </div>
 
 <h2>In a disabled fieldset</h2>
-<p>The fieldset disables its inputs, and the switches show it with no binding.</p>
+<p>
+	The fieldset disables its inputs, and the switches show it with no binding.
+</p>
 <fieldset disabled>
 	<legend>Sync</legend>
 	<div class="stack">
-		<label interop-switch><input type="checkbox" role="switch" checked /> Contacts</label>
-		<label interop-switch><input type="checkbox" role="switch" /> Calendar</label>
+		<label interop-switch
+			><input type="checkbox" role="switch" checked /> Contacts</label
+		>
+		<label interop-switch
+			><input type="checkbox" role="switch" /> Calendar</label
+		>
 	</div>
 </fieldset>
 
 <h2>In a form</h2>
-<p>Change the switches, then reset the form. The switches return to their initial state.</p>
+<p>
+	Change the switches, then reset the form. The switches return to their initial
+	state.
+</p>
 <form>
 	<div class="stack">
-		<label interop-switch><input type="checkbox" role="switch" name="email" checked /> Email</label>
-		<label interop-switch><input type="checkbox" role="switch" name="sms" /> Text messages</label>
+		<label interop-switch
+			><input type="checkbox" role="switch" name="email" checked /> Email</label
+		>
+		<label interop-switch
+			><input type="checkbox" role="switch" name="sms" /> Text messages</label
+		>
 	</div>
 	<div class="row">
 		<button interop-button type="reset">Reset</button>
@@ -57,10 +85,17 @@
 </form>
 
 <h2>Bound to a signal</h2>
-<p>Bind <code>[checked]</code> and listen to <code>(change)</code> on the input.</p>
+<p>
+	Bind <code>[checked]</code> and listen to <code>(change)</code> on the input.
+</p>
 <div class="stack">
 	<label interop-switch>
-		<input type="checkbox" role="switch" [checked]="wifi()" (change)="wifi.set($any($event.target).checked)" />
+		<input
+			type="checkbox"
+			role="switch"
+			[checked]="wifi()"
+			(change)="wifi.set($any($event.target).checked)"
+		/>
 		Wi-Fi
 	</label>
 	<p>Wi-Fi is {{ wifi() ? "on" : "off" }}.</p>
@@ -68,18 +103,32 @@
 
 <h2>Right to left</h2>
 <div class="stack" dir="rtl" lang="ar">
-	<label interop-switch><input type="checkbox" role="switch" checked /> الإشعارات</label>
+	<label interop-switch
+		><input type="checkbox" role="switch" checked /> الإشعارات</label
+	>
 </div>
 
 <h2>Sizes</h2>
-<p>The default size has no attribute. <code>itx-size="lg"</code> on the label makes the switch larger.</p>
+<p>
+	The default size has no attribute. <code>itx-size="lg"</code> on the label
+	makes the switch larger.
+</p>
 <div class="stack">
-	<label interop-switch><input type="checkbox" role="switch" checked /> Default</label>
-	<label interop-switch itx-size="lg"><input type="checkbox" role="switch" checked /> Large</label>
+	<label interop-switch
+		><input type="checkbox" role="switch" checked /> Default</label
+	>
+	<label interop-switch itx-size="lg"
+		><input type="checkbox" role="switch" checked /> Large</label
+	>
 </div>
 
 <h2>Custom tokens</h2>
-<p>Set <code>--itx-switch-*</code> properties on the label, or on a class that matches it.</p>
+<p>
+	Set <code>--itx-switch-*</code> properties on the label, or on a class that
+	matches it.
+</p>
 <div class="stack">
-	<label interop-switch class="long"><input type="checkbox" role="switch" checked /> Longer track</label>
+	<label interop-switch class="long"
+		><input type="checkbox" role="switch" checked /> Longer track</label
+	>
 </div>

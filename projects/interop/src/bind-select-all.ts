@@ -10,12 +10,8 @@
  * A box changed from script fires no event. Dispatch a bubbling `change` on it afterward, or in
  * Angular bind the parent from the same model instead. Returns a function that unbinds.
  */
-export function bindSelectAll(
-	parent: HTMLInputElement,
-	group: ParentNode = parent.closest('fieldset')!,
-): () => void {
-	const boxes = () =>
-		Array.from(group.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).filter((box) => box !== parent);
+export function bindSelectAll(parent: HTMLInputElement, group: ParentNode = parent.closest('fieldset')!): () => void {
+	const boxes = () => Array.from(group.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')).filter((box) => box !== parent);
 
 	const sync = () => {
 		const all = boxes();

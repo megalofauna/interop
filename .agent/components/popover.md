@@ -30,7 +30,7 @@ projects/interop/src/bind-drawer.ts   bindDrawer(), framework-free
 | Width | As wide as its content, up to `--itx-popover-max-inline-size` and the window |
 | Edge | A border at 3:1 against the page (WCAG 1.4.11) |
 | Motion | It fades in and disappears at once. A fade out keeps a closed popover rendered, and Chrome can then lose the name or description of a control that points into it |
-| Text only | A popover with only text needs `tabindex="-1"` and `autofocus`, so the keyboard can scroll it |
+| Text only | A popover with only text needs `tabindex="-1"` and `autofocus`, so the keyboard can scroll it, and `role="dialog"` with a name, so the element that takes focus is announced |
 
 ## Drawer
 

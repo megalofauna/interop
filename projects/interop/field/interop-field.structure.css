@@ -67,7 +67,10 @@
  * Invalid: a thicker border in the danger color. bindValidation() decides when, through aria-invalid.
  * Without it, the browser's :user-invalid does, after the user has changed the field.
  */
-:where(select[interop-select], :is(input, textarea)[interop-input]):where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {
+:where(select[interop-select], :is(input, textarea)[interop-input]):where(
+	[aria-invalid="true"],
+	:user-invalid:not([aria-invalid="false"])
+) {
 	padding-block: calc((var(--itx-field-min-block-size) - 2 * var(--itx-field-border-width-invalid) - 1lh) / 2);
 	border-width: var(--itx-field-border-width-invalid);
 	border-color: var(--itx-field-border-color-invalid);
@@ -97,7 +100,9 @@
 /* A textarea grows with its text, from three lines. */
 :where(textarea[interop-input]) {
 	field-sizing: content;
-	min-block-size: calc(3lh + 2 * (var(--itx-field-border-width) + (var(--itx-field-min-block-size) - 2 * var(--itx-field-border-width) - 1lh) / 2));
+	min-block-size: calc(
+		3lh + 2 * (var(--itx-field-border-width) + (var(--itx-field-min-block-size) - 2 * var(--itx-field-border-width) - 1lh) / 2)
+	);
 	resize: vertical;
 }
 

@@ -186,11 +186,11 @@ own family.
 | Control | Step | Indicator | Label min block size | Text |
 |---|---|---|---|---|
 | Switch | default | track 42 × 24px, thumb 18px | 40px | `label` role |
-| Switch | `lg` | track 56 × 32px, thumb 26px | 48px | `p` role |
+| Switch | `lg` | track 56 × 32px, thumb 26px | 56px | `p` role |
 | Radio | default | circle 20px, dot 8px | 40px | `label` role |
-| Radio | `lg` | circle 24px, dot 10px | 48px | `p` role |
+| Radio | `lg` | circle 24px, dot 10px | 56px | `p` role |
 | Checkbox | default | box 20px | 40px | `label` role |
-| Checkbox | `lg` | box 24px | 48px | `p` role |
+| Checkbox | `lg` | box 24px | 56px | `p` role |
 
 ## Tests
 
@@ -219,7 +219,7 @@ own family.
 | `checkbox-group-required` | A checkbox group where every box is `required`, which demands all of them |
 | `control-label-block` | Block content (`div`, `p`, a list, a heading) inside a control label |
 | `control-label-control` | A button or another control inside a control label |
-| `card-name` | A card with several parts of text and no `aria-labelledby`, so its whole text is the name |
+| `cards-name` | A card with several parts of text and no `aria-labelledby`, so its whole text is the name |
 
 ## Checkbox groups
 
@@ -341,10 +341,25 @@ or add-ons.
 ## Segmented control
 
 `interop-radio-group="segmented"` draws the radio group as a row of equal
-segments in a frame, with a pill on the checked one. It is the same radio
+segments in a filled channel, with a raised pill on the checked one; the pill's
+edge, 3:1 against the channel, carries the selection. It is the same radio
 group: one value, one tab stop, arrow keys, form participation, and the same
 dev audit rules. It has its own demo page. Use it to choose a value or a view of
 the same content; tabs switch between different sections.
+
+The segments stack in a column, each as wide as the widest, with dividers
+across, while `--itx-segmented-orientation` is `vertical` on the group or an
+ancestor; they read it with a container style query (Chrome 111, Safari 18,
+Firefox 151). Three ways set it; with none the control is a row:
+
+| Way | Stacks |
+|---|---|
+| `itx-orientation="vertical"` | Always |
+| `--itx-segmented-orientation: vertical` in the page's own `@media` or `@container` rule | Below a width the page chooses, with no script |
+| `bindSegmentedFit(group)`, or `fieldset[interop-segmented-fit]` in Angular | When the row does not fit its container, measured, so translated labels are covered. It sets `data-stacked` and checks again when the container's width or a label changes |
+
+The frame reaches from the first segment's top to the last one's bottom, so one
+rule frames both orientations. Segmented tabs are horizontal.
 
 ```html
 <fieldset interop-radio-group="segmented" itx-size="sm">
@@ -373,7 +388,7 @@ positioned containing block, so several controls on one page do not collide.
 |---|---|---|
 | `sm` | 32px | `p-sm` role |
 | default | 40px | `p` role |
-| `lg` | 48px | `p-lg` role |
+| `lg` | 56px | `p-lg` role |
 
 These match the button's steps, so a segmented control lines up with the
 buttons beside it.
@@ -385,14 +400,16 @@ fills its label, and the focus ring on it.
 
 | Segmented token | Default |
 |---|---|
-| `--itx-segmented-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-12` |
+| `--itx-segmented-block-size` | `--itx-space-10`; `sm` `--itx-space-8`, `lg` `--itx-space-14` |
 | `--itx-segmented-segment-block-size` | the block size less the frame padding and border on both sides |
 | `--itx-segmented-segment-padding-inline` | `--itx-space-4`; `sm` `--itx-space-3`, `lg` `--itx-space-5` |
 | `--itx-segmented-segment-font-size`, `-segment-line-height` | `p`; `sm` `p-sm`, `lg` `p-lg` |
 | `--itx-segmented-segment-color[-hover\|-selected]` | neutral-700/300, 950/50, 50/900 |
 | `--itx-segmented-segment-opacity-disabled` | 0.5 |
 | `--itx-segmented-frame-padding`, `-frame-border-width`, `-frame-border-color` | `--itx-space-0_5`, 1px, neutral-500/400 |
-| `--itx-segmented-pill-background-color` | neutral-900/50 |
+| `--itx-segmented-pill-background-color` | neutral-50/700: a raised pill, close to the channel |
+| `--itx-segmented-pill-border-width`, `-pill-border-color`, `-pill-box-shadow` | the shared edge width, neutral-500/400 (3:1 against the channel, which carries the selection), a soft shadow |
+| `--itx-segmented-frame-background-color` | neutral-200/800: the channel |
 | `--itx-segmented-divider-width`, `-divider-inset-block`, `-divider-color` | 1px, `--itx-space-2`, neutral-300/700 |
 | `--itx-segmented-transition-duration`, `-transition-timing-function` | the shared transition tokens |
 

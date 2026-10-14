@@ -1,5 +1,3 @@
-import { watchInteropInDevMode } from './audit';
-
 /** One shape. Every Tabler icon is drawn with paths only. */
 export interface IconPath {
 	readonly d: string;
@@ -23,7 +21,6 @@ const icons = new Map<string, IconDefinition>();
 /** Makes icons available by name. A later definition with the same name replaces the earlier one. */
 export function registerIcons(...definitions: readonly IconDefinition[]): void {
 	for (const definition of definitions) icons.set(definition.name, definition);
-	watchInteropInDevMode();
 }
 
 export function getIcon(name: string): IconDefinition | undefined {

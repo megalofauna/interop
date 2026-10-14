@@ -1,4 +1,13 @@
-import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, signal, viewChild } from "@angular/core";
+import {
+	Component,
+	DestroyRef,
+	ElementRef,
+	afterNextRender,
+	computed,
+	inject,
+	signal,
+	viewChild,
+} from "@angular/core";
 import { bindSelectAll } from "interop";
 
 type Topping = "cheese" | "olives" | "peppers";
@@ -9,9 +18,17 @@ type Topping = "cheese" | "olives" | "peppers";
 	styleUrl: "./checkbox-demo.css",
 })
 export class CheckboxDemo {
-	protected readonly toppings = signal<Record<Topping, boolean>>({ cheese: true, olives: false, peppers: false });
-	protected readonly all = computed(() => Object.values(this.toppings()).every(Boolean));
-	protected readonly some = computed(() => Object.values(this.toppings()).some(Boolean) && !this.all());
+	protected readonly toppings = signal<Record<Topping, boolean>>({
+		cheese: true,
+		olives: false,
+		peppers: false,
+	});
+	protected readonly all = computed(() =>
+		Object.values(this.toppings()).every(Boolean),
+	);
+	protected readonly some = computed(
+		() => Object.values(this.toppings()).some(Boolean) && !this.all(),
+	);
 	protected readonly submitted = signal<string | null>(null);
 	protected readonly chipSizes = [
 		{ value: "sm", label: "small" },
@@ -19,8 +36,10 @@ export class CheckboxDemo {
 		{ value: "lg", label: "large" },
 	];
 
-	private readonly helperParent = viewChild.required<ElementRef<HTMLInputElement>>("helperParent");
-	private readonly atLeastOne = viewChild.required<ElementRef<HTMLFieldSetElement>>("atLeastOne");
+	private readonly helperParent =
+		viewChild.required<ElementRef<HTMLInputElement>>("helperParent");
+	private readonly atLeastOne =
+		viewChild.required<ElementRef<HTMLFieldSetElement>>("atLeastOne");
 
 	constructor() {
 		const destroyRef = inject(DestroyRef);
@@ -40,8 +59,14 @@ export class CheckboxDemo {
 
 	/** "Choose at least one": the first box carries the group's validity, so the browser blocks submit and says why. */
 	protected checkAtLeastOne(): void {
-		const boxes = Array.from(this.atLeastOne().nativeElement.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'));
-		boxes[0].setCustomValidity(boxes.some((box) => box.checked) ? "" : "Choose at least one day.");
+		const boxes = Array.from(
+			this.atLeastOne().nativeElement.querySelectorAll<HTMLInputElement>(
+				'input[type="checkbox"]',
+			),
+		);
+		boxes[0].setCustomValidity(
+			boxes.some((box) => box.checked) ? "" : "Choose at least one day.",
+		);
 	}
 
 	/** The reset event fires before the form resets, so read the boxes after it. */
@@ -51,6 +76,8 @@ export class CheckboxDemo {
 
 	protected submit(event: SubmitEvent): void {
 		event.preventDefault();
-		this.submitted.set(new FormData(event.target as HTMLFormElement).getAll("day").join(", "));
+		this.submitted.set(
+			new FormData(event.target as HTMLFormElement).getAll("day").join(", "),
+		);
 	}
 }

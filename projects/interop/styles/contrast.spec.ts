@@ -1,50 +1,12 @@
-// @ts-expect-error The text loader turns the file into a string.
-import colorCss from './color.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import codeCss from './code.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import codeBlockCss from '../code-block/interop-code-block.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import popoverCss from '../popover/interop-popover.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import scrollAreaCss from '../scroll-area/interop-scroll-area.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import switchCss from '../switch/interop-switch.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import buttonCss from '../button/interop-button.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tooltipCss from '../tooltip/interop-tooltip.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import badgeCss from '../badge/interop-badge.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import outlineCss from './outline.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import radioGroupCss from '../radio-group/interop-radio-group.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import cardsCss from './cards.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import stepsCss from '../steps/interop-steps.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import chipsCss from './chips.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tagsCss from '../tags/interop-tags.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import tabsCss from '../tabs/interop-tabs.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import segmentedCss from './segmented.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import dialogCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import fieldCss from '../field/interop-field.base.css' with { loader: 'text' };
+import { oneLine } from './css-text';
+import { sheets } from './sheets';
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, dialogCss, fieldCss] as string[]) {
-	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
+for (const css of Object.values(sheets)) {
+	// The first declaration of each token is its base value; later ones are size steps and system modes.
+	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g))
+		if (!declarations.has(name)) declarations.set(name, oneLine(value));
 }
 
 /** A declared value in one scheme, with var() and light-dark() resolved. */
@@ -61,12 +23,17 @@ function resolve(value: string, scheme: 0 | 1): string {
 
 /** An oklch() color as gamma-encoded sRGB channels from 0 to 1, and its alpha. */
 function srgb(color: string): { rgb: number[]; alpha: number } {
-	const [l, c, h, alpha] = /^oklch\(([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/.exec(color)!.slice(1).map((v) => (v === undefined ? 1 : Number(v)));
+	const [l, c, h, alpha] = /^oklch\(([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/
+		.exec(color)!
+		.slice(1)
+		.map((v) => (v === undefined ? 1 : Number(v)));
 	const a = c * Math.cos((h * Math.PI) / 180);
 	const b = c * Math.sin((h * Math.PI) / 180);
-	const lms = [l + 0.3963377774 * a + 0.2158037573 * b, l - 0.1055613458 * a - 0.0638541728 * b, l - 0.0894841775 * a - 1.291485548 * b].map(
-		(v) => v ** 3,
-	);
+	const lms = [
+		l + 0.3963377774 * a + 0.2158037573 * b,
+		l - 0.1055613458 * a - 0.0638541728 * b,
+		l - 0.0894841775 * a - 1.291485548 * b,
+	].map((v) => v ** 3);
 	const linear = [
 		4.0767416621 * lms[0] - 3.3077115913 * lms[1] + 0.2309699292 * lms[2],
 		-1.2684380046 * lms[0] + 2.6097574011 * lms[1] - 0.3413193965 * lms[2],
@@ -100,7 +67,10 @@ describe('code colors', () => {
 		expect(roles.length).toBe(7);
 	});
 
-	for (const [scheme, label] of [[0, 'light'], [1, 'dark']] as const) {
+	for (const [scheme, label] of [
+		[0, 'light'],
+		[1, 'dark'],
+	] as const) {
 		// The code scrolls, so its strongest edge shadow is the darkest (or lightest) background it sits on.
 		it(`reaches 4.5:1 on the code block under its scroll shadow in ${label}`, () => {
 			const background = over(
@@ -120,7 +90,10 @@ describe('code colors', () => {
 const CANVAS = ['oklch(1 0 0)', 'oklch(0.2178 0 0)'] as const;
 
 describe('popover boundary', () => {
-	for (const [scheme, label] of [[0, 'light'], [1, 'dark']] as const) {
+	for (const [scheme, label] of [
+		[0, 'light'],
+		[1, 'dark'],
+	] as const) {
 		// WCAG 1.4.11: the edge that separates a popover from the page needs 3:1.
 		it(`has a border of 3:1 against the page in ${label}`, () => {
 			const border = resolve(declarations.get('--itx-popover-border-color')!, scheme);
@@ -132,14 +105,19 @@ describe('popover boundary', () => {
 describe('switch', () => {
 	const token = (name: string, scheme: 0 | 1) => resolve(declarations.get(`--itx-switch-${name}`)!, scheme);
 
-	for (const [scheme, label] of [[0, 'light'], [1, 'dark']] as const) {
+	for (const [scheme, label] of [
+		[0, 'light'],
+		[1, 'dark'],
+	] as const) {
 		// WCAG 1.4.11: the track's edge against the page, and the thumb against the track, in every state.
 		for (const state of ['', '-hover']) {
 			it(`has an off${state} track border of 3:1 against the page in ${label}`, () => {
 				expect(contrast(token(`track-border-color${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			});
 			it(`has an off thumb of 3:1 against the off${state} track in ${label}`, () => {
-				expect(contrast(token('thumb-background-color', scheme), token(`track-background-color${state}`, scheme))).toBeGreaterThanOrEqual(3);
+				expect(contrast(token('thumb-background-color', scheme), token(`track-background-color${state}`, scheme))).toBeGreaterThanOrEqual(
+					3,
+				);
 			});
 			it(`has an on${state} track of 3:1 against the page in ${label}`, () => {
 				expect(contrast(token(`track-background-color-checked${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
@@ -153,7 +131,10 @@ describe('switch', () => {
 	}
 });
 
-const SCHEMES = [[0, 'light'], [1, 'dark']] as const;
+const SCHEMES = [
+	[0, 'light'],
+	[1, 'dark'],
+] as const;
 const token = (name: string, scheme: 0 | 1) => resolve(declarations.get(name)!, scheme);
 
 describe('button text', () => {
@@ -168,6 +149,17 @@ describe('button text', () => {
 	}
 });
 
+describe('button pressed', () => {
+	// WCAG 1.4.11: a toggle's state is told apart from rest by its edge, not by the fill alone.
+	for (const [scheme, label] of SCHEMES) {
+		it(`has an edge of 3:1 against the rest edge and the page in ${label}`, () => {
+			const pressed = token('--itx-button-border-color-pressed', scheme);
+			expect(contrast(pressed, token('--itx-button-border-color', scheme))).toBeGreaterThanOrEqual(3);
+			expect(contrast(pressed, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
 describe('tooltip text', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`reaches 4.5:1 on its background in ${label}`, () => {
@@ -178,7 +170,10 @@ describe('tooltip text', () => {
 
 describe('badge text', () => {
 	// The text is contrast-color() of the background, which picks black or white, whichever contrasts more.
-	const backgrounds = ['--itx-badge-background-color', ...[...declarations.keys()].filter((name) => name.startsWith('--itx-role-background-'))];
+	const backgrounds = [
+		'--itx-badge-background-color',
+		...[...declarations.keys()].filter((name) => name.startsWith('--itx-role-background-')),
+	];
 	const best = (background: string) => Math.max(contrast('oklch(0 0 0)', background), contrast('oklch(1 0 0)', background));
 
 	for (const background of backgrounds) {
@@ -212,7 +207,9 @@ describe('radio', () => {
 				expect(contrast(radio(`circle-background-color-checked${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			});
 			it(`has a dot of 3:1 against the checked${state} fill in ${label}`, () => {
-				expect(contrast(radio('dot-background-color', scheme), radio(`circle-background-color-checked${state}`, scheme))).toBeGreaterThanOrEqual(3);
+				expect(
+					contrast(radio('dot-background-color', scheme), radio(`circle-background-color-checked${state}`, scheme)),
+				).toBeGreaterThanOrEqual(3);
 			});
 		}
 	}
@@ -231,7 +228,9 @@ describe('checkbox', () => {
 				expect(contrast(checkbox(`box-background-color-checked${state}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			});
 			it(`has a mark of 3:1 against the checked${state} fill in ${label}`, () => {
-				expect(contrast(checkbox('mark-background-color', scheme), checkbox(`box-background-color-checked${state}`, scheme))).toBeGreaterThanOrEqual(3);
+				expect(
+					contrast(checkbox('mark-background-color', scheme), checkbox(`box-background-color-checked${state}`, scheme)),
+				).toBeGreaterThanOrEqual(3);
 			});
 		}
 	}
@@ -241,19 +240,19 @@ describe('segmented control', () => {
 	const segmented = (name: string, scheme: 0 | 1) => token(`--itx-segmented-${name}`, scheme);
 
 	for (const [scheme, label] of SCHEMES) {
-		// WCAG 1.4.3: segment text on the page, and the checked segment's text on the pill.
-		it(`has segment text of 4.5:1 against the page in ${label}`, () => {
+		// WCAG 1.4.3: segment text on the channel, and the selected segment's text on the pill.
+		it(`has segment text of 4.5:1 against the channel in ${label}`, () => {
 			for (const state of ['segment-color', 'segment-color-hover']) {
-				expect(contrast(segmented(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+				expect(contrast(segmented(state, scheme), segmented('frame-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
-		it(`has checked text of 4.5:1 against the pill in ${label}`, () => {
+		it(`has selected text of 4.5:1 against the pill in ${label}`, () => {
 			expect(contrast(segmented('segment-color-selected', scheme), segmented('pill-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
-		// WCAG 1.4.11: the frame and the pill against the page.
-		it(`has a frame and a pill of 3:1 against the page in ${label}`, () => {
+		// WCAG 1.4.11: the frame against the page, and the pill's edge, which carries the selection, against the channel.
+		it(`has a frame of 3:1 against the page, and a pill edge of 3:1 against the channel, in ${label}`, () => {
 			expect(contrast(segmented('frame-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-			expect(contrast(segmented('pill-background-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			expect(contrast(segmented('pill-border-color', scheme), segmented('frame-background-color', scheme))).toBeGreaterThanOrEqual(3);
 		});
 	}
 });
@@ -297,7 +296,9 @@ describe('step indicator', () => {
 			}
 		});
 		it(`has a current number of 4.5:1 on its disc in ${label}`, () => {
-			expect(contrast(steps('indicator-color-current', scheme), steps('indicator-background-color-current', scheme))).toBeGreaterThanOrEqual(4.5);
+			expect(
+				contrast(steps('indicator-color-current', scheme), steps('indicator-background-color-current', scheme)),
+			).toBeGreaterThanOrEqual(4.5);
 		});
 	}
 });
@@ -337,12 +338,14 @@ describe('field', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`has text and placeholder of 4.5:1 on the field, hovered or not, in ${label}`, () => {
 			for (const background of ['background-color', 'background-color-hover', 'background-color-readonly']) {
-				for (const text of ['color', 'placeholder-color']) expect(contrast(field(text, scheme), field(background, scheme))).toBeGreaterThanOrEqual(4.5);
+				for (const text of ['color', 'placeholder-color'])
+					expect(contrast(field(text, scheme), field(background, scheme))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
 		// WCAG 1.4.11: the field's edge against the page, at rest, hovered and invalid.
 		it(`has a border of 3:1 against the page in ${label}`, () => {
-			for (const name of ['border-color', 'border-color-hover', 'border-color-invalid']) expect(contrast(field(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			for (const name of ['border-color', 'border-color-hover', 'border-color-invalid'])
+				expect(contrast(field(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			for (const name of ['--itx-radio-group-circle-border-color-invalid', '--itx-checkbox-box-border-color-invalid']) {
 				expect(contrast(token(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			}
@@ -358,7 +361,9 @@ describe('field', () => {
 describe('select', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`has option text of 4.5:1 on a hovered or focused option in ${label}`, () => {
-			expect(contrast(token('--itx-popover-color', scheme), token('--itx-select-option-background-color-hover', scheme))).toBeGreaterThanOrEqual(4.5);
+			expect(
+				contrast(token('--itx-popover-color', scheme), token('--itx-select-option-background-color-hover', scheme)),
+			).toBeGreaterThanOrEqual(4.5);
 		});
 	}
 });

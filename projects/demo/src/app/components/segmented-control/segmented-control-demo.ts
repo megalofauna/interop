@@ -1,19 +1,34 @@
-import { Component, DestroyRef, ElementRef, afterNextRender, inject, signal, viewChild } from "@angular/core";
+import {
+	Component,
+	DestroyRef,
+	ElementRef,
+	afterNextRender,
+	inject,
+	signal,
+	viewChild,
+} from "@angular/core";
 import { bindRadioHomeEnd } from "interop";
+import { InteropCodeBlock } from "interop/code-block";
 import { InteropIcon } from "interop/icon";
+import { InteropSegmentedFit } from "interop/radio-group";
+import { examples } from "./segmented-control-examples";
 
 @Component({
 	selector: "demo-segmented-control",
-	imports: [InteropIcon],
+	imports: [InteropCodeBlock, InteropIcon, InteropSegmentedFit],
 	templateUrl: "./segmented-control-demo.html",
 	styleUrl: "./segmented-control-demo.css",
 })
 export class SegmentedControlDemo {
+	protected readonly examples = examples;
 	protected readonly view = signal("grid");
-	private readonly homeEnd = viewChild.required<ElementRef<HTMLFieldSetElement>>("homeEnd");
+	private readonly homeEnd =
+		viewChild.required<ElementRef<HTMLFieldSetElement>>("homeEnd");
 
 	constructor() {
 		const destroyRef = inject(DestroyRef);
-		afterNextRender(() => destroyRef.onDestroy(bindRadioHomeEnd(this.homeEnd().nativeElement)));
+		afterNextRender(() =>
+			destroyRef.onDestroy(bindRadioHomeEnd(this.homeEnd().nativeElement)),
+		);
 	}
 }

@@ -8,7 +8,7 @@ import { bindSteps } from 'interop';
  *
  * ```html
  * <form id="apply" interop-steps-form ngNativeValidate>
- *   <ol interop-steps aria-label="Application progress">…</ol>
+ *   <ol interop-steps role="list" aria-label="Application progress">…</ol>
  *   <fieldset id="details">…<button type="button" command="--next" commandfor="apply">Next</button></fieldset>
  *   <fieldset id="address" hidden>…</fieldset>
  * </form>

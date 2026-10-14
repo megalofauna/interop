@@ -25,6 +25,14 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual([]);
 	});
 
+	it('flags an unnamed summary button, and does not count hidden text as a name', () => {
+		render(`
+			<details><summary interop-button><svg interop-icon aria-hidden="true"></svg></summary></details>
+			<button interop-button type="button"><span hidden>Close</span><svg interop-icon aria-hidden="true"></svg></button>
+		`);
+		expect(rules()).toEqual(['button-name', 'button-name']);
+	});
+
 	it('flags an icon-only plain button too', () => {
 		render('<button type="button"><svg interop-icon aria-hidden="true"></svg></button>');
 		expect(rules()).toEqual(['button-name']);
@@ -35,11 +43,11 @@ describe('auditInterop', () => {
 			<button interop-button type="button" aria-disabled="true">Save</button>
 			<button interop-button type="button" aria-busy="true">Save</button>
 		`);
-		expect(rules()).toEqual(['activation-guard', 'activation-guard']);
+		expect(rules()).toEqual(['button-activation-guard', 'button-activation-guard']);
 		const unguard = guardActivation();
 		expect(rules()).toEqual([]);
 		unguard();
-		expect(rules()).toEqual(['activation-guard', 'activation-guard']);
+		expect(rules()).toEqual(['button-activation-guard', 'button-activation-guard']);
 	});
 
 	it('flags a button in a form with no type', () => {
@@ -62,7 +70,7 @@ describe('auditInterop', () => {
 			<button interop-button type="button" aria-pressed="yes">Bold</button>
 			<button interop-button type="button" aria-pressed="true">Bold</button>
 		`);
-		expect(rules()).toEqual(['pressed-value']);
+		expect(rules()).toEqual(['button-pressed-value']);
 	});
 
 	it('flags a badge with no text for assistive technology', () => {
@@ -73,14 +81,6 @@ describe('auditInterop', () => {
 	it('flags a badge whose only text is a number', () => {
 		render('<button interop-button type="button">Inbox <span interop-badge>3</span></button>');
 		expect(rules()).toEqual(['badge-count-label']);
-	});
-
-	it('reminds that a count badge does not announce changes, unless it has a live region', () => {
-		render(`
-			<span interop-badge><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span></span>
-			<span interop-badge><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span><span itx-visually-hidden role="status">3 unread messages</span></span>
-		`);
-		expect(rules()).toEqual(['badge-announcement']);
 	});
 
 	it('flags a live-region badge inside a button, which drops the count from its name', () => {
@@ -106,7 +106,7 @@ describe('auditInterop', () => {
 	it('skips the rules named by itx-audit-ignore, or every rule when it is empty', () => {
 		render(`
 			<button interop-button type="button" itx-audit-ignore="button-name"></button>
-			<button interop-button type="button" itx-audit-ignore="pressed-value"></button>
+			<button interop-button type="button" itx-audit-ignore="button-pressed-value"></button>
 			<form><button interop-button itx-audit-ignore></button></form>
 		`);
 		expect(rules()).toEqual(['button-name']);
@@ -135,7 +135,7 @@ describe('auditInterop', () => {
 		render('<pre><code class="language-ts">a</code></pre><pre tabindex="0"><code class="language-ts">b</code></pre>');
 		const [scrolling, focusable] = Array.from(document.querySelectorAll('pre'));
 		for (const pre of [scrolling, focusable]) Object.defineProperty(pre, 'scrollWidth', { value: 900 });
-		expect(rules()).toEqual(['code-scroll-focusable']);
+		expect(rules()).toEqual(['code-block-scroll-focusable']);
 	});
 
 	it('flags a tooltip holding a control', () => {
@@ -204,8 +204,10 @@ describe('auditInterop', () => {
 	it('flags a card whose whole text is its name, and accepts one with a name and a description', () => {
 		const card = (labelled: string) => `
 			<label><input type="radio" name="p" ${labelled}><strong id="n">Pro</strong><span id="d">$29 a month</span></label>`;
-		render(`<fieldset interop-radio-group="cards"><legend>Plan</legend>${card('')}${card('aria-labelledby="n" aria-describedby="d"')}</fieldset>`);
-		expect(rules()).toEqual(['card-name']);
+		render(
+			`<fieldset interop-radio-group="cards"><legend>Plan</legend>${card('')}${card('aria-labelledby="n" aria-describedby="d"')}</fieldset>`,
+		);
+		expect(rules()).toEqual(['cards-name']);
 	});
 
 	it('flags aria-checked on a native checkbox or radio', () => {
@@ -241,7 +243,8 @@ describe('auditInterop', () => {
 			`<div interop-tabs><div role="tablist" ${name}>${tabMarkup}</div>${panels}</div>`;
 		const tab = (key: string, selected: boolean) =>
 			`<button type="button" role="tab" aria-controls="p-${key}" aria-selected="${selected}">${key}</button>`;
-		const panel = (key: string, hidden: boolean) => `<section role="tabpanel" id="p-${key}" ${hidden ? 'hidden="until-found"' : ''}>${key}</section>`;
+		const panel = (key: string, hidden: boolean) =>
+			`<section role="tabpanel" id="p-${key}" ${hidden ? 'hidden="until-found"' : ''}>${key}</section>`;
 		const good = { tabs: tab('a', true) + tab('b', false), panels: panel('a', false) + panel('b', true) };
 
 		it('accepts tabs written as the helper expects', () => {
@@ -291,7 +294,7 @@ describe('auditInterop', () => {
 
 		it('flags a remove button with a generic name, and a list without role="list"', () => {
 			render('<ul interop-tags aria-label="Tags"><li>Football <button type="button">Remove</button></li></ul>');
-			expect(rules().sort()).toEqual(['tags-list-role', 'tags-remove-name']);
+			expect(rules().sort()).toEqual(['list-role', 'tags-remove-name']);
 		});
 	});
 
@@ -312,7 +315,9 @@ describe('auditInterop', () => {
 		});
 
 		it('flags a closedby="none" dialog with no button that closes it', () => {
-			render('<dialog interop-dialog aria-label="Stuck" closedby="none"><button type="button">Help</button><form method="dialog"><button type="button">No</button></form></dialog>');
+			render(
+				'<dialog interop-dialog aria-label="Stuck" closedby="none"><button type="button">Help</button><form method="dialog"><button type="button">No</button></form></dialog>',
+			);
 			expect(rules()).toEqual(['dialog-close']);
 		});
 
@@ -348,7 +353,7 @@ describe('auditInterop', () => {
 				<p interop-hint>See <a href="/help">help</a></p>
 				<div interop-error-summary><h2>There is a problem</h2></div>
 			`);
-			expect(rules().sort()).toEqual(['error-summary-list', 'field-autocomplete', 'field-number', 'hint-link']);
+			expect(rules().sort()).toEqual(['error-summary-list', 'field-autocomplete', 'field-hint-link', 'field-number']);
 		});
 	});
 
@@ -387,13 +392,15 @@ describe('auditInterop', () => {
 		});
 
 		it('flags a step hidden by disabled or until-found', () => {
-			render('<form interop-steps-form><fieldset disabled><legend>A</legend></fieldset><fieldset hidden="until-found"><legend>B</legend></fieldset></form>');
+			render(
+				'<form interop-steps-form><fieldset disabled><legend>A</legend></fieldset><fieldset hidden="until-found"><legend>B</legend></fieldset></form>',
+			);
 			expect(rules()).toEqual(['steps-form-hidden', 'steps-form-hidden']);
 		});
 	});
 
 	describe('step indicator', () => {
-		const steps = (name: string, items: string) => `<ol interop-steps ${name}>${items}</ol>`;
+		const steps = (name: string, items: string) => `<ol interop-steps role="list" ${name}>${items}</ol>`;
 		const good = '<li><a href="/a">A</a></li><li aria-current="step">B</li><li>C</li>';
 
 		it('accepts a named indicator with one current step and links back only', () => {
@@ -407,12 +414,20 @@ describe('auditInterop', () => {
 		});
 
 		it('flags an indicator without exactly one current step', () => {
-			render(steps('aria-label="Progress"', '<li>A</li><li>B</li>') + steps('aria-label="Other"', '<li aria-current="step">A</li><li aria-current="step">B</li>'));
+			render(
+				steps('aria-label="Progress"', '<li>A</li><li>B</li>') +
+					steps('aria-label="Other"', '<li aria-current="step">A</li><li aria-current="step">B</li>'),
+			);
 			expect(rules()).toEqual(['steps-current', 'steps-current']);
 		});
 
 		it('flags a button in a step, and a link ahead of the current step', () => {
-			render(steps('aria-label="Progress"', '<li><button type="button">A</button></li><li aria-current="step">B</li><li><a href="/c">C</a></li>'));
+			render(
+				steps(
+					'aria-label="Progress"',
+					'<li><button type="button">A</button></li><li aria-current="step">B</li><li><a href="/c">C</a></li>',
+				),
+			);
 			expect(rules()).toEqual(['steps-control', 'steps-control']);
 		});
 	});

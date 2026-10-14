@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 import { focusables } from './focusable';
 
 let ids = 0;
@@ -136,11 +135,15 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		const back = vertical ? 'ArrowUp' : rtl ? 'ArrowRight' : 'ArrowLeft';
 		const count = candidates.length;
 		const next =
-			event.key === forward ? (index + 1) % count
-			: event.key === back ? (index - 1 + count) % count
-			: event.key === 'Home' ? 0
-			: event.key === 'End' ? count - 1
-			: -1;
+			event.key === forward
+				? (index + 1) % count
+				: event.key === back
+					? (index - 1 + count) % count
+					: event.key === 'Home'
+						? 0
+						: event.key === 'End'
+							? count - 1
+							: -1;
 		if (next < 0) return;
 		event.preventDefault();
 		const target = candidates[next];
@@ -191,7 +194,6 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	const initial = hash ? fromHash() : undefined;
 	if (initial) select(initial, false, false);
 	observer.takeRecords();
-	watchInteropInDevMode();
 
 	return () => {
 		observer.disconnect();

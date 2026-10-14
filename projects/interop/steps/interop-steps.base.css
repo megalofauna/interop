@@ -9,7 +9,7 @@
 
 	--itx-steps-indicator-size: var(--itx-space-6);
 	--itx-steps-indicator-font-size: var(--itx-font-size-caption);
-	--itx-steps-indicator-border-width: 1px;
+	--itx-steps-indicator-border-width: var(--itx-border-width);
 	/* A future step's ring: 3:1 against the page (WCAG 1.4.11). */
 	--itx-steps-indicator-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-steps-indicator-background-color: transparent;

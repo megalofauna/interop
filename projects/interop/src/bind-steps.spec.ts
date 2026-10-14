@@ -5,7 +5,7 @@ describe('bindSteps', () => {
 	const setup = (options: Parameters<typeof bindSteps>[1] = {}) => {
 		document.body.innerHTML = `
 			<form id="apply">
-				<ol interop-steps aria-label="Progress">
+				<ol interop-steps role="list" aria-label="Progress">
 					<li>Details <span data-step-status></span></li>
 					<li>Address <span data-step-status></span></li>
 					<li>Review <span data-step-status></span></li>
@@ -29,9 +29,14 @@ describe('bindSteps', () => {
 		const step = (id: string) => document.getElementById(id) as HTMLFieldSetElement;
 		const field = (name: string) => form.querySelector<HTMLInputElement>(`[name="${name}"]`)!;
 		const command = (name: string, value = '') =>
-			form.dispatchEvent(Object.assign(new Event('command'), { command: name, source: Object.assign(document.createElement('button'), { value }) }));
+			form.dispatchEvent(
+				Object.assign(new Event('command'), { command: name, source: Object.assign(document.createElement('button'), { value }) }),
+			);
 		const shown = () => ['details', 'address', 'review'].filter((id) => !step(id).hidden);
-		const indicator = () => Array.from(form.querySelectorAll('li')).map((li) => `${li.getAttribute('aria-current') ?? '-'}:${li.querySelector('span')!.textContent}`);
+		const indicator = () =>
+			Array.from(form.querySelectorAll('li')).map(
+				(li) => `${li.getAttribute('aria-current') ?? '-'}:${li.querySelector('span')!.textContent}`,
+			);
 		return { form, step, field, command, shown, indicator };
 	};
 	afterEach(() => {

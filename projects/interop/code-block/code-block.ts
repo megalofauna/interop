@@ -10,7 +10,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { registerIcons, scopeSelectAll, splitLines, watchInteropInDevMode } from 'interop';
+import { registerIcons, scopeSelectAll, splitLines } from 'interop';
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
 import { InteropScrollArea } from 'interop/scroll-area';
@@ -81,9 +81,7 @@ export class InteropCodeBlock {
 	});
 
 	private readonly numbered = inject(new HostAttributeToken('itx-line-numbers'), { optional: true }) !== null;
-	protected readonly gutter = computed(() =>
-		this.numbered ? `${Math.max(2, String(this.code().split('\n').length).length)}ch` : null,
-	);
+	protected readonly gutter = computed(() => (this.numbered ? `${Math.max(2, String(this.code().split('\n').length).length)}ch` : null));
 
 	protected readonly canCopy = typeof navigator !== 'undefined' && !!navigator.clipboard?.writeText;
 	protected readonly copied = signal(false);
@@ -93,7 +91,6 @@ export class InteropCodeBlock {
 	private resetCopied?: ReturnType<typeof setTimeout>;
 
 	constructor() {
-		watchInteropInDevMode();
 		registerIcons(TablerCopy, TablerCheck);
 		const destroyRef = inject(DestroyRef);
 		if (typeof document !== 'undefined') scopeSelectAll();
@@ -136,5 +133,4 @@ export class InteropCodeBlock {
 			this.status.set('');
 		}, 2000);
 	}
-
 }

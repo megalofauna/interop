@@ -35,7 +35,10 @@ describe('InteropCodeBlock', () => {
 
 	it('is named by its caption, or by the label of its language', () => {
 		const { get } = setup();
-		for (const [id, name] of [['captioned', 'package.json'], ['labelled', 'JSON']]) {
+		for (const [id, name] of [
+			['captioned', 'package.json'],
+			['labelled', 'JSON'],
+		]) {
 			const figure = get(id);
 			const caption = figure.querySelector('figcaption')!;
 			expect(caption.textContent).toBe(name);

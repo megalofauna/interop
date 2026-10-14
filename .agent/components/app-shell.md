@@ -41,5 +41,6 @@ written by hand.
 ## Disclosure details
 
 - `::details-content` is how the nav shows at wide sizes while the disclosure is
-  closed. Browsers without it show the nav only when it is open.
+  closed. Both rules sit in `@supports selector(::details-content)`, so browsers
+  without it keep the summary at wide sizes and the nav can still be opened.
 - An open disclosure's summary takes the button's pressed look.

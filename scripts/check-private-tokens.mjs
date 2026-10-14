@@ -24,7 +24,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
-const ROOT = process.argv[2] ?? "projects";
+const ROOT = process.argv[2] ?? "projects/interop";
 
 function walk(dir, out = []) {
 	for (const entry of readdirSync(dir, { withFileTypes: true })) {

@@ -10,3 +10,33 @@
 fieldset + fieldset {
 	margin-inline-start: var(--itx-space-4);
 }
+
+.compare {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-6);
+}
+
+.compare > fieldset {
+	margin: 0;
+}
+
+/* The inverted look, as token values: the page as the channel, a dark pill with no edge. */
+.inverted {
+	--itx-segmented-frame-background-color: transparent;
+	--itx-segmented-pill-background-color: light-dark(
+		var(--itx-neutral-900),
+		var(--itx-neutral-50)
+	);
+	--itx-segmented-pill-border-width: 0px;
+	--itx-segmented-pill-border-color: transparent;
+	--itx-segmented-pill-box-shadow: none;
+	--itx-segmented-segment-color-selected: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-900)
+	);
+	--itx-segmented-divider-color: light-dark(
+		var(--itx-neutral-300),
+		var(--itx-neutral-700)
+	);
+}

@@ -9,5 +9,8 @@ import { InteropBadge, type BadgeLabel } from "interop/badge";
 })
 export class BadgeDemo {
 	protected readonly unread = signal(3);
-	protected readonly messages: BadgeLabel = { one: "unread message", other: "unread messages" };
+	protected readonly messages: BadgeLabel = {
+		one: "unread message",
+		other: "unread messages",
+	};
 }
