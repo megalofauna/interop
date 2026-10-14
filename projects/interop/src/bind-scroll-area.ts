@@ -18,8 +18,7 @@ export function bindScrollArea(element: HTMLElement): () => void {
 	let addedRole = false;
 
 	const canFocusInside = () => focusables(element).length > 0;
-	const overflows = () =>
-		element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+	const overflows = () => element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 
 	const update = () => {
 		const named = element.hasAttribute('aria-label') || element.hasAttribute('aria-labelledby');

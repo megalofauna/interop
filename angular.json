@@ -25,13 +25,8 @@
 					"builder": "@angular/build:unit-test",
 					"options": {
 						"tsConfig": "projects/interop/tsconfig.spec.json",
-						"include": [
-							"**/*.spec.ts",
-							"../**/*.spec.ts"
-						],
-						"setupFiles": [
-							"projects/interop/test-setup.ts"
-						]
+						"include": ["**/*.spec.ts", "../**/*.spec.ts"],
+						"setupFiles": ["projects/interop/test-setup.ts"]
 					}
 				}
 			}

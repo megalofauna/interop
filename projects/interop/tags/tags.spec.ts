@@ -8,7 +8,9 @@ import { InteropTagInput, InteropTags } from './tags';
 	template: `
 		<ul #list interop-tags role="list" aria-label="Tags" [fallback]="entry">
 			@for (tag of tags(); track tag) {
-				<li>{{ tag }} <button type="button" (click)="remove(tag)">Remove {{ tag }}</button></li>
+				<li>
+					{{ tag }} <button type="button" (click)="remove(tag)">Remove {{ tag }}</button>
+				</li>
 			}
 		</ul>
 		<input #entry interop-tag-input [tags]="list" (interop-tags-add)="add($any($event).detail)" />

@@ -36,7 +36,11 @@
 }
 
 /* A tab, a segment or an option sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
-:where([interop-tabs] > [role="tablist"] > [role="tab"], fieldset[interop-radio-group~="segmented"] > label > input[type="radio"], select[interop-select] option) {
+:where(
+	[interop-tabs] > [role="tablist"] > [role="tab"],
+	fieldset[interop-radio-group~="segmented"] > label > input[type="radio"],
+	select[interop-select] option
+) {
 	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
 }
 

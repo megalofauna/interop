@@ -1,4 +1,3 @@
-
 type Control = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
 /** The `ValidityState` keys a message can be given for. */
@@ -25,7 +24,18 @@ export interface ValidationOptions {
 }
 
 /** The order errors are checked in: the first that applies is shown. */
-const KEYS: ValidityKey[] = ['badInput', 'valueMissing', 'typeMismatch', 'tooShort', 'tooLong', 'rangeUnderflow', 'rangeOverflow', 'stepMismatch', 'patternMismatch', 'customError'];
+const KEYS: ValidityKey[] = [
+	'badInput',
+	'valueMissing',
+	'typeMismatch',
+	'tooShort',
+	'tooLong',
+	'rangeUnderflow',
+	'rangeOverflow',
+	'stepMismatch',
+	'patternMismatch',
+	'customError',
+];
 
 /** "Email address" becomes "email address" inside a sentence; "URL" stays. */
 const inSentence = (label: string) => (/^.[a-z]/.test(label) ? label[0].toLowerCase() + label.slice(1) : label);
@@ -35,10 +45,14 @@ export const defaultValidationMessages: Record<ValidityKey, (control: Control, l
 	// A question cannot go inside a sentence, so its message is general.
 	valueMissing: (control, label) =>
 		control instanceof HTMLSelectElement || control.type === 'radio'
-			? label.endsWith('?') ? 'Select an option' : `Select ${inSentence(label)}`
+			? label.endsWith('?')
+				? 'Select an option'
+				: `Select ${inSentence(label)}`
 			: control.type === 'checkbox'
 				? `${label} is required`
-				: label.endsWith('?') ? 'Enter an answer' : `Enter ${inSentence(label)}`,
+				: label.endsWith('?')
+					? 'Enter an answer'
+					: `Enter ${inSentence(label)}`,
 	typeMismatch: (control, label) =>
 		control.type === 'email'
 			? 'Enter an email address like name@example.com'
@@ -97,7 +111,8 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 	const controls = () => Array.from(form.elements).filter((element): element is Control => isControl(element) && element.willValidate);
 	/** Where a control's error is: the nearest field or fieldset with an `[interop-error]`. */
 	const ownerOf = (control: Control) =>
-		control.closest<HTMLElement>(':is([interop-field], fieldset):has(> [interop-error])') ?? control.closest<HTMLElement>('[interop-field], fieldset');
+		control.closest<HTMLElement>(':is([interop-field], fieldset):has(> [interop-error])') ??
+		control.closest<HTMLElement>('[interop-field], fieldset');
 	const isGrouped = (control: Control) => ownerOf(control)?.tagName === 'FIELDSET';
 	/** The controls one error speaks for: every control under a fieldset's error, else the control alone. */
 	const groupOf = (control: Control) => {

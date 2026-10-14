@@ -1,13 +1,4 @@
-import {
-	Component,
-	HostAttributeToken,
-	LOCALE_ID,
-	booleanAttribute,
-	computed,
-	inject,
-	input,
-	numberAttribute,
-} from '@angular/core';
+import { Component, HostAttributeToken, LOCALE_ID, booleanAttribute, computed, inject, input, numberAttribute } from '@angular/core';
 
 /** What a count counts, by plural form: `{ one: 'unread message', other: 'unread messages' }`. */
 export type BadgeLabel = string | Partial<Record<Intl.LDMLPluralRule, string>>;
@@ -64,9 +55,7 @@ export class InteropBadge {
 	private readonly locale = inject(LOCALE_ID);
 	protected readonly ownHidden = inject(new HostAttributeToken('hidden'), { optional: true });
 	/** Variants are static, so the attribute as written in the template is enough. */
-	protected readonly dot = (inject(new HostAttributeToken('interop-badge'), { optional: true }) ?? '')
-		.split(/\s+/)
-		.includes('dot');
+	protected readonly dot = (inject(new HostAttributeToken('interop-badge'), { optional: true }) ?? '').split(/\s+/).includes('dot');
 
 	protected readonly counting = computed(() => {
 		const count = this.count();
@@ -82,10 +71,7 @@ export class InteropBadge {
 	protected readonly spoken = computed(() => {
 		const count = this.count()!;
 		const label = this.label();
-		const form =
-			typeof label === 'string'
-				? label
-				: label && (label[new Intl.PluralRules(this.locale).select(count)] ?? label.other);
+		const form = typeof label === 'string' ? label : label && (label[new Intl.PluralRules(this.locale).select(count)] ?? label.other);
 		return [new Intl.NumberFormat(this.locale).format(count), form].filter(Boolean).join(' ');
 	});
 

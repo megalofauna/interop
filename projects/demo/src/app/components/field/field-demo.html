@@ -1,15 +1,21 @@
 <h1>Field</h1>
-<p class="aka">Also known as text field, text input, text box, textarea, form field.</p>
-<p>
-	A field is a label, an optional hint, an optional error, and a native control, in that order:
-	<code>&lt;input interop-input&gt;</code>, <code>&lt;textarea interop-input&gt;</code> or a
-	<code>select interop-select</code>. The control's own attributes do the work: <code>type</code>,
-	<code>name</code>, <code>autocomplete</code>, <code>inputmode</code>, <code>required</code>.
+<p class="aka">
+	Also known as text field, text input, text box, textarea, form field.
 </p>
 <p>
-	The hint and the error sit above the control, where autocomplete lists and on-screen keyboards cannot cover them. The
-	hint is wired with <code>aria-describedby</code>; <code>bindValidation()</code> fills the error, shows it, and adds it
-	to <code>aria-describedby</code> while it shows.
+	A field is a label, an optional hint, an optional error, and a native control,
+	in that order:
+	<code>&lt;input interop-input&gt;</code>,
+	<code>&lt;textarea interop-input&gt;</code> or a
+	<code>select interop-select</code>. The control's own attributes do the work:
+	<code>type</code>, <code>name</code>, <code>autocomplete</code>,
+	<code>inputmode</code>, <code>required</code>.
+</p>
+<p>
+	The hint and the error sit above the control, where autocomplete lists and
+	on-screen keyboards cannot cover them. The hint is wired with
+	<code>aria-describedby</code>; <code>bindValidation()</code> fills the error,
+	shows it, and adds it to <code>aria-describedby</code> while it shows.
 </p>
 
 <h2>A field</h2>
@@ -17,20 +23,37 @@
 	<label for="email">Email address</label>
 	<p interop-hint id="email-hint">We send the receipt here</p>
 	<p interop-error hidden></p>
-	<input interop-input id="email" type="email" name="email" autocomplete="email" spellcheck="false" aria-describedby="email-hint" />
+	<input
+		interop-input
+		id="email"
+		type="email"
+		name="email"
+		autocomplete="email"
+		spellcheck="false"
+		aria-describedby="email-hint"
+	/>
 </div>
 <figure interop-code-block language="html" [code]="examples.basic"></figure>
 
 <h2>Validation</h2>
 <p>
-	<code>interop-form</code> calls <code>bindValidation()</code>. The browser checks the constraints; Interop decides
-	when to show the result, and says it in the page. Try it:
+	<code>interop-form</code> calls <code>bindValidation()</code>. The browser
+	checks the constraints; Interop decides when to show the result, and says it
+	in the page. Try it:
 </p>
 <ul>
-	<li>Leave a field empty and move on: nothing yet. An empty required field waits for submit.</li>
-	<li>Type "abc" in the email field and move on: the format error shows at once.</li>
+	<li>
+		Leave a field empty and move on: nothing yet. An empty required field waits
+		for submit.
+	</li>
+	<li>
+		Type "abc" in the email field and move on: the format error shows at once.
+	</li>
 	<li>Fix it: the error clears as you type.</li>
-	<li>Submit with errors: the summary lists them and takes focus. Each link moves to its field.</li>
+	<li>
+		Submit with errors: the summary lists them and takes focus. Each link moves
+		to its field.
+	</li>
 </ul>
 <div #summary interop-error-summary hidden>
 	<h2>There is a problem</h2>
@@ -39,7 +62,12 @@
 @if (sent()) {
 	<p role="status">Sent. Thank you.</p>
 }
-<form interop-form [summary]="summary" [messages]="messages" (submit)="send($event)">
+<form
+	interop-form
+	[summary]="summary"
+	[messages]="messages"
+	(submit)="send($event)"
+>
 	<div interop-field>
 		<label for="name">Full name</label>
 		<p interop-error hidden></p>
@@ -48,33 +76,56 @@
 	<div interop-field>
 		<label for="contact-email">Email address</label>
 		<p interop-error hidden></p>
-		<input interop-input id="contact-email" type="email" name="email" autocomplete="email" spellcheck="false" required />
+		<input
+			interop-input
+			id="contact-email"
+			type="email"
+			name="email"
+			autocomplete="email"
+			spellcheck="false"
+			required
+		/>
 	</div>
 	<fieldset interop-radio-group>
 		<legend>How should we contact you?</legend>
 		<p interop-error hidden></p>
-		<label><input type="radio" name="contact" value="email" required /> Email</label>
+		<label
+			><input type="radio" name="contact" value="email" required /> Email</label
+		>
 		<label><input type="radio" name="contact" value="phone" /> Phone</label>
 	</fieldset>
 	<div interop-field>
 		<label for="message">Message</label>
 		<p interop-hint id="message-hint">At least 20 characters</p>
 		<p interop-error hidden></p>
-		<textarea interop-input id="message" name="message" minlength="20" required aria-describedby="message-hint"></textarea>
+		<textarea
+			interop-input
+			id="message"
+			name="message"
+			minlength="20"
+			required
+			aria-describedby="message-hint"
+		></textarea>
 	</div>
 	<div class="row">
 		<button interop-button type="submit">Send</button>
 		<button interop-button type="reset" (click)="sent.set(false)">Clear</button>
 	</div>
 </form>
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.form"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.form"
+></figure>
 <figure interop-code-block language="ts" [code]="examples.formTs"></figure>
 
 <h2>A message from elsewhere</h2>
 <p>
-	For a rule the browser cannot check, such as a username already taken, set the control's custom validity.
-	<code>[interopCustomValidity]</code> does that from an Angular value, and the error follows it. Type "admin", then
-	move on.
+	For a rule the browser cannot check, such as a username already taken, set the
+	control's custom validity.
+	<code>[interopCustomValidity]</code> does that from an Angular value, and the
+	error follows it. Type "admin", then move on.
 </p>
 <form interop-form (submit)="$event.preventDefault()">
 	<div interop-field>
@@ -88,7 +139,9 @@
 			spellcheck="false"
 			required
 			(input)="username.set($any($event.target).value)"
-			[interopCustomValidity]="username() === 'admin' ? 'That username is taken. Choose another' : ''"
+			[interopCustomValidity]="
+				username() === 'admin' ? 'That username is taken. Choose another' : ''
+			"
 		/>
 	</div>
 </form>
@@ -96,16 +149,28 @@
 
 <h2>Units</h2>
 <p>
-	A unit sits in the box beside the input. Say the unit in the label too, and hide the unit from screen readers: the
-	input does not announce it. <code>size</code> sets the field's width to the expected length.
+	A unit sits in the box beside the input. Say the unit in the label too, and
+	hide the unit from screen readers: the input does not announce it.
+	<code>size</code> sets the field's width to the expected length.
 </p>
 <div interop-field>
 	<label for="cost">Cost, in pounds</label>
-	<div><span interop-unit aria-hidden="true">£</span><input interop-input id="cost" name="cost" inputmode="decimal" size="10" /></div>
+	<div>
+		<span interop-unit aria-hidden="true">£</span
+		><input interop-input id="cost" name="cost" inputmode="decimal" size="10" />
+	</div>
 </div>
 <div interop-field>
 	<label for="weight">Weight, in kilograms</label>
-	<div><input interop-input id="weight" name="weight" inputmode="decimal" size="6" /><span interop-unit aria-hidden="true">kg</span></div>
+	<div>
+		<input
+			interop-input
+			id="weight"
+			name="weight"
+			inputmode="decimal"
+			size="6"
+		/><span interop-unit aria-hidden="true">kg</span>
+	</div>
 </div>
 <figure interop-code-block language="html" [code]="examples.units"></figure>
 
@@ -119,10 +184,12 @@
 
 <h2>Password</h2>
 <p>
-	A button beside the field shows the password, so people can check what they typed. It is an invoker:
-	<code>command="--toggle-password"</code> aimed at the input. It keeps its label and reports its state with
-	<code>aria-pressed</code>. It is <code>hidden</code> until script runs, and the password is hidden again when the form
-	is submitted, so the browser does not save it as plain text.
+	A button beside the field shows the password, so people can check what they
+	typed. It is an invoker:
+	<code>command="--toggle-password"</code> aimed at the input. It keeps its
+	label and reports its state with <code>aria-pressed</code>. It is
+	<code>hidden</code> until script runs, and the password is hidden again when
+	the form is submitted, so the browser does not save it as plain text.
 </p>
 <form (submit)="$event.preventDefault()">
 	<div interop-field>
@@ -138,7 +205,14 @@
 				autocapitalize="off"
 				spellcheck="false"
 			/>
-			<button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false" hidden>
+			<button
+				interop-button
+				type="button"
+				commandfor="password"
+				command="--toggle-password"
+				aria-pressed="false"
+				hidden
+			>
 				Show password
 			</button>
 		</div>
@@ -148,8 +222,9 @@
 
 <h2>Character count</h2>
 <p>
-	The count shows how many characters are left as you type, and a screen reader hears it once typing pauses. Going
-	over the limit is allowed: the count says by how much, and the field is invalid until it is shortened.
+	The count shows how many characters are left as you type, and a screen reader
+	hears it once typing pauses. Going over the limit is allowed: the count says
+	by how much, and the field is invalid until it is shortened.
 </p>
 <form interop-form (submit)="$event.preventDefault()">
 	<div interop-field>
@@ -175,8 +250,8 @@
 
 <h2>A date people know</h2>
 <p>
-	Three text fields, not a date picker: people know their date of birth and type it faster than they find it in a
-	calendar. One error speaks for all three.
+	Three text fields, not a date picker: people know their date of birth and type
+	it faster than they find it in a calendar. One error speaks for all three.
 </p>
 <form interop-form (submit)="$event.preventDefault()">
 	<fieldset class="date" aria-describedby="dob-hint">
@@ -186,15 +261,42 @@
 		<div>
 			<div interop-field>
 				<label for="dob-day">Day</label>
-				<input interop-input id="dob-day" name="dob-day" inputmode="numeric" autocomplete="bday-day" pattern="[0-9]{1,2}" size="2" required />
+				<input
+					interop-input
+					id="dob-day"
+					name="dob-day"
+					inputmode="numeric"
+					autocomplete="bday-day"
+					pattern="[0-9]{1,2}"
+					size="2"
+					required
+				/>
 			</div>
 			<div interop-field>
 				<label for="dob-month">Month</label>
-				<input interop-input id="dob-month" name="dob-month" inputmode="numeric" autocomplete="bday-month" pattern="[0-9]{1,2}" size="2" required />
+				<input
+					interop-input
+					id="dob-month"
+					name="dob-month"
+					inputmode="numeric"
+					autocomplete="bday-month"
+					pattern="[0-9]{1,2}"
+					size="2"
+					required
+				/>
 			</div>
 			<div interop-field>
 				<label for="dob-year">Year</label>
-				<input interop-input id="dob-year" name="dob-year" inputmode="numeric" autocomplete="bday-year" pattern="[0-9]{4}" size="4" required />
+				<input
+					interop-input
+					id="dob-year"
+					name="dob-year"
+					inputmode="numeric"
+					autocomplete="bday-year"
+					pattern="[0-9]{4}"
+					size="4"
+					required
+				/>
 			</div>
 		</div>
 	</fieldset>
@@ -203,7 +305,10 @@
 <figure interop-code-block language="html" [code]="examples.date"></figure>
 
 <h2>Sizes</h2>
-<p><code>itx-size</code> on the field sizes the control and its units. The heights match the button's.</p>
+<p>
+	<code>itx-size</code> on the field sizes the control and its units. The
+	heights match the button's.
+</p>
 <div class="stack">
 	@for (size of sizes; track size.label) {
 		<div interop-field [attr.itx-size]="size.value">
@@ -216,13 +321,21 @@
 
 <h2>Read-only and disabled</h2>
 <p>
-	A read-only field can still be focused, read and copied, and its value submits. A disabled one can do none of these,
-	so prefer read-only for a value the user should see.
+	A read-only field can still be focused, read and copied, and its value
+	submits. A disabled one can do none of these, so prefer read-only for a value
+	the user should see.
 </p>
 <div class="stack">
 	<div interop-field>
 		<label for="reference">Reference</label>
-		<input interop-input id="reference" name="reference" value="AB-1234" readonly size="10" />
+		<input
+			interop-input
+			id="reference"
+			name="reference"
+			value="AB-1234"
+			readonly
+			size="10"
+		/>
 	</div>
 	<div interop-field>
 		<label for="disabled">Disabled</label>
@@ -233,17 +346,55 @@
 <h2>Which attributes</h2>
 <table>
 	<thead>
-		<tr><th scope="col">Asking for</th><th scope="col">Attributes</th></tr>
+		<tr>
+			<th scope="col">Asking for</th>
+			<th scope="col">Attributes</th>
+		</tr>
 	</thead>
 	<tbody>
-		<tr><td>Email address</td><td><code>type="email" autocomplete="email" spellcheck="false"</code></td></tr>
-		<tr><td>Phone number</td><td><code>type="tel" autocomplete="tel"</code></td></tr>
-		<tr><td>Web address</td><td><code>type="url" autocomplete="url"</code></td></tr>
-		<tr><td>A whole number, a reference</td><td><code>inputmode="numeric" spellcheck="false"</code>, not <code>type="number"</code></td></tr>
-		<tr><td>An amount</td><td><code>inputmode="decimal"</code></td></tr>
-		<tr><td>Search</td><td><code>type="search"</code></td></tr>
-		<tr><td>Password</td><td><code>type="password" autocomplete="current-password"</code>, or <code>new-password</code></td></tr>
-		<tr><td>A code sent by text message</td><td><code>autocomplete="one-time-code" inputmode="numeric"</code>, one field</td></tr>
+		<tr>
+			<td>Email address</td>
+			<td><code>type="email" autocomplete="email" spellcheck="false"</code></td>
+		</tr>
+		<tr>
+			<td>Phone number</td>
+			<td><code>type="tel" autocomplete="tel"</code></td>
+		</tr>
+		<tr>
+			<td>Web address</td>
+			<td><code>type="url" autocomplete="url"</code></td>
+		</tr>
+		<tr>
+			<td>A whole number, a reference</td>
+			<td>
+				<code>inputmode="numeric" spellcheck="false"</code>, not
+				<code>type="number"</code>
+			</td>
+		</tr>
+		<tr>
+			<td>An amount</td>
+			<td><code>inputmode="decimal"</code></td>
+		</tr>
+		<tr>
+			<td>Search</td>
+			<td><code>type="search"</code></td>
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td>
+				<code>type="password" autocomplete="current-password"</code>, or
+				<code>new-password</code>
+			</td>
+		</tr>
+		<tr>
+			<td>A code sent by text message</td>
+			<td>
+				<code>autocomplete="one-time-code" inputmode="numeric"</code>, one field
+			</td>
+		</tr>
 	</tbody>
 </table>
-<p>Mark the fields that are optional with "(optional)" in their label, rather than the required ones with an asterisk.</p>
+<p>
+	Mark the fields that are optional with "(optional)" in their label, rather
+	than the required ones with an asterisk.
+</p>

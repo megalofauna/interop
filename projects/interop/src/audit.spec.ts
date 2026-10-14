@@ -204,7 +204,9 @@ describe('auditInterop', () => {
 	it('flags a card whose whole text is its name, and accepts one with a name and a description', () => {
 		const card = (labelled: string) => `
 			<label><input type="radio" name="p" ${labelled}><strong id="n">Pro</strong><span id="d">$29 a month</span></label>`;
-		render(`<fieldset interop-radio-group="cards"><legend>Plan</legend>${card('')}${card('aria-labelledby="n" aria-describedby="d"')}</fieldset>`);
+		render(
+			`<fieldset interop-radio-group="cards"><legend>Plan</legend>${card('')}${card('aria-labelledby="n" aria-describedby="d"')}</fieldset>`,
+		);
 		expect(rules()).toEqual(['cards-name']);
 	});
 
@@ -241,7 +243,8 @@ describe('auditInterop', () => {
 			`<div interop-tabs><div role="tablist" ${name}>${tabMarkup}</div>${panels}</div>`;
 		const tab = (key: string, selected: boolean) =>
 			`<button type="button" role="tab" aria-controls="p-${key}" aria-selected="${selected}">${key}</button>`;
-		const panel = (key: string, hidden: boolean) => `<section role="tabpanel" id="p-${key}" ${hidden ? 'hidden="until-found"' : ''}>${key}</section>`;
+		const panel = (key: string, hidden: boolean) =>
+			`<section role="tabpanel" id="p-${key}" ${hidden ? 'hidden="until-found"' : ''}>${key}</section>`;
 		const good = { tabs: tab('a', true) + tab('b', false), panels: panel('a', false) + panel('b', true) };
 
 		it('accepts tabs written as the helper expects', () => {
@@ -312,7 +315,9 @@ describe('auditInterop', () => {
 		});
 
 		it('flags a closedby="none" dialog with no button that closes it', () => {
-			render('<dialog interop-dialog aria-label="Stuck" closedby="none"><button type="button">Help</button><form method="dialog"><button type="button">No</button></form></dialog>');
+			render(
+				'<dialog interop-dialog aria-label="Stuck" closedby="none"><button type="button">Help</button><form method="dialog"><button type="button">No</button></form></dialog>',
+			);
 			expect(rules()).toEqual(['dialog-close']);
 		});
 
@@ -387,7 +392,9 @@ describe('auditInterop', () => {
 		});
 
 		it('flags a step hidden by disabled or until-found', () => {
-			render('<form interop-steps-form><fieldset disabled><legend>A</legend></fieldset><fieldset hidden="until-found"><legend>B</legend></fieldset></form>');
+			render(
+				'<form interop-steps-form><fieldset disabled><legend>A</legend></fieldset><fieldset hidden="until-found"><legend>B</legend></fieldset></form>',
+			);
 			expect(rules()).toEqual(['steps-form-hidden', 'steps-form-hidden']);
 		});
 	});
@@ -407,12 +414,20 @@ describe('auditInterop', () => {
 		});
 
 		it('flags an indicator without exactly one current step', () => {
-			render(steps('aria-label="Progress"', '<li>A</li><li>B</li>') + steps('aria-label="Other"', '<li aria-current="step">A</li><li aria-current="step">B</li>'));
+			render(
+				steps('aria-label="Progress"', '<li>A</li><li>B</li>') +
+					steps('aria-label="Other"', '<li aria-current="step">A</li><li aria-current="step">B</li>'),
+			);
 			expect(rules()).toEqual(['steps-current', 'steps-current']);
 		});
 
 		it('flags a button in a step, and a link ahead of the current step', () => {
-			render(steps('aria-label="Progress"', '<li><button type="button">A</button></li><li aria-current="step">B</li><li><a href="/c">C</a></li>'));
+			render(
+				steps(
+					'aria-label="Progress"',
+					'<li><button type="button">A</button></li><li aria-current="step">B</li><li><a href="/c">C</a></li>',
+				),
+			);
 			expect(rules()).toEqual(['steps-control', 'steps-control']);
 		});
 	});

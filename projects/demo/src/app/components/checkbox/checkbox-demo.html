@@ -1,43 +1,65 @@
 <h1>Checkbox</h1>
-<p class="aka">Also known as check box, checks, checkboxes, tick box, tri-state or mixed checkbox.</p>
+<p class="aka">
+	Also known as check box, checks, checkboxes, tick box, tri-state or mixed
+	checkbox.
+</p>
 <p>
-	A checkbox is a native checkbox inside a <code>label interop-checkbox</code>. The input draws the box and its mark.
-	Each checkbox is its own yes or no, so it stands alone or in a group. It submits with its form and needs no
-	script.
+	A checkbox is a native checkbox inside a <code>label interop-checkbox</code>.
+	The input draws the box and its mark. Each checkbox is its own yes or no, so
+	it stands alone or in a group. It submits with its form and needs no script.
 </p>
 
 <h2>On its own</h2>
 <div class="stack">
-	<label interop-checkbox><input type="checkbox" name="news" /> Email me product news</label>
-	<label interop-checkbox><input type="checkbox" name="saved" checked /> Remember this device</label>
+	<label interop-checkbox
+		><input type="checkbox" name="news" /> Email me product news</label
+	>
+	<label interop-checkbox
+		><input type="checkbox" name="saved" checked /> Remember this device</label
+	>
 </div>
 
 <h2>Long label</h2>
-<p>The box is centered on the first line of text, and the text wraps beside it. Links wrap with the text.</p>
+<p>
+	The box is centered on the first line of text, and the text wraps beside it.
+	Links wrap with the text.
+</p>
 <div class="stack narrow">
 	<label interop-checkbox>
 		<input type="checkbox" name="terms" />
-		I have read and accept the <a href="https://example.com/terms">terms of service</a> and the
+		I have read and accept the
+		<a href="https://example.com/terms">terms of service</a> and the
 		<a href="https://example.com/privacy">privacy policy</a>
 	</label>
 </div>
 
 <h2>Disabled</h2>
 <div class="stack">
-	<label interop-checkbox><input type="checkbox" disabled /> Unchecked and disabled</label>
-	<label interop-checkbox><input type="checkbox" checked disabled /> Checked and disabled</label>
+	<label interop-checkbox
+		><input type="checkbox" disabled /> Unchecked and disabled</label
+	>
+	<label interop-checkbox
+		><input type="checkbox" checked disabled /> Checked and disabled</label
+	>
 </div>
 
 <h2>A group</h2>
 <p>
-	A group is a <code>fieldset interop-checkbox-group</code> named by its legend. Boxes that share a
-	<code>name</code> submit every checked value.
+	A group is a <code>fieldset interop-checkbox-group</code> named by its legend.
+	Boxes that share a <code>name</code> submit every checked value.
 </p>
 <fieldset interop-checkbox-group>
 	<legend>Notify me about</legend>
-	<label interop-checkbox><input type="checkbox" name="notify" value="replies" checked /> Replies</label>
-	<label interop-checkbox><input type="checkbox" name="notify" value="mentions" /> Mentions</label>
-	<label interop-checkbox><input type="checkbox" name="notify" value="digest" /> Weekly digest</label>
+	<label interop-checkbox
+		><input type="checkbox" name="notify" value="replies" checked />
+		Replies</label
+	>
+	<label interop-checkbox
+		><input type="checkbox" name="notify" value="mentions" /> Mentions</label
+	>
+	<label interop-checkbox
+		><input type="checkbox" name="notify" value="digest" /> Weekly digest</label
+	>
 </fieldset>
 <fieldset interop-checkbox-group disabled>
 	<legend>Sync (a disabled fieldset)</legend>
@@ -47,40 +69,76 @@
 
 <h2>Chips</h2>
 <p>
-	<code>interop-checkbox-group="chips"</code> draws each option as a pill: filter chips. A checked chip fills and
-	shows a check, so the state does not rely on color. <code>itx-size</code> on the fieldset makes them smaller or
+	<code>interop-checkbox-group="chips"</code> draws each option as a pill:
+	filter chips. A checked chip fills and shows a check, so the state does not
+	rely on color. <code>itx-size</code> on the fieldset makes them smaller or
 	larger.
 </p>
 @for (size of chipSizes; track size.value) {
 	<fieldset interop-checkbox-group="chips" [attr.itx-size]="size.value">
 		<legend>Topics ({{ size.label }})</legend>
-		<label interop-checkbox><input type="checkbox" name="topic" value="design" checked /> Design</label>
-		<label interop-checkbox><input type="checkbox" name="topic" value="code" /> Code</label>
-		<label interop-checkbox><input type="checkbox" name="topic" value="research" checked /> Research</label>
-		<label interop-checkbox><input type="checkbox" name="topic" value="ops" disabled /> Operations</label>
-		<label interop-checkbox><input type="checkbox" name="topic" value="inclusive" /> Inclusive design research and usability testing with assistive technology</label>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="design" checked />
+			Design</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="code" /> Code</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="research" checked />
+			Research</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="ops" disabled />
+			Operations</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="inclusive" /> Inclusive design
+			research and usability testing with assistive technology</label
+		>
 	</fieldset>
 }
 
 <h2>Cards</h2>
 <p>
-	<code>interop-checkbox-group="cards"</code> is the same card template as the radio group's, for choosing several
-	options. See the radio group page for what any template can and cannot do.
+	<code>interop-checkbox-group="cards"</code> is the same card template as the
+	radio group's, for choosing several options. See the radio group page for what
+	any template can and cannot do.
 </p>
 <fieldset interop-checkbox-group="cards">
 	<legend>Add-ons</legend>
 	<label interop-checkbox>
-		<input type="checkbox" name="addon" value="backup" checked aria-labelledby="addon-backup" aria-describedby="addon-backup-details" />
+		<input
+			type="checkbox"
+			name="addon"
+			value="backup"
+			checked
+			aria-labelledby="addon-backup"
+			aria-describedby="addon-backup-details"
+		/>
 		<strong id="addon-backup">Backups</strong>
 		<span id="addon-backup-details">$5 a month. Hourly, kept for a week.</span>
 	</label>
 	<label interop-checkbox>
-		<input type="checkbox" name="addon" value="domain" aria-labelledby="addon-domain" aria-describedby="addon-domain-details" />
+		<input
+			type="checkbox"
+			name="addon"
+			value="domain"
+			aria-labelledby="addon-domain"
+			aria-describedby="addon-domain-details"
+		/>
 		<strong id="addon-domain">Custom domain</strong>
 		<span id="addon-domain-details">$2 a month. Your own address.</span>
 	</label>
 	<label interop-checkbox>
-		<input type="checkbox" name="addon" value="sso" disabled aria-labelledby="addon-sso" aria-describedby="addon-sso-details" />
+		<input
+			type="checkbox"
+			name="addon"
+			value="sso"
+			disabled
+			aria-labelledby="addon-sso"
+			aria-describedby="addon-sso-details"
+		/>
 		<strong id="addon-sso">Single sign-on</strong>
 		<span id="addon-sso-details">Team plan only.</span>
 	</label>
@@ -88,26 +146,50 @@
 
 <h2>Select all, from a signal</h2>
 <p>
-	Indeterminate is a property, not an attribute. In Angular, bind <code>[indeterminate]</code> on the input. Here the
-	select-all box reads the same signal as the toppings.
+	Indeterminate is a property, not an attribute. In Angular, bind
+	<code>[indeterminate]</code> on the input. Here the select-all box reads the
+	same signal as the toppings.
 </p>
 <fieldset interop-checkbox-group>
 	<legend>Toppings</legend>
 	<label interop-checkbox>
-		<input type="checkbox" [checked]="all()" [indeterminate]="some()" (change)="setAll($any($event.target).checked)" />
+		<input
+			type="checkbox"
+			[checked]="all()"
+			[indeterminate]="some()"
+			(change)="setAll($any($event.target).checked)"
+		/>
 		All toppings
 	</label>
 	<div class="stack nested">
 		<label interop-checkbox>
-			<input type="checkbox" name="topping" value="cheese" [checked]="toppings().cheese" (change)="set('cheese', $any($event.target).checked)" />
+			<input
+				type="checkbox"
+				name="topping"
+				value="cheese"
+				[checked]="toppings().cheese"
+				(change)="set('cheese', $any($event.target).checked)"
+			/>
 			Cheese
 		</label>
 		<label interop-checkbox>
-			<input type="checkbox" name="topping" value="olives" [checked]="toppings().olives" (change)="set('olives', $any($event.target).checked)" />
+			<input
+				type="checkbox"
+				name="topping"
+				value="olives"
+				[checked]="toppings().olives"
+				(change)="set('olives', $any($event.target).checked)"
+			/>
 			Olives
 		</label>
 		<label interop-checkbox>
-			<input type="checkbox" name="topping" value="peppers" [checked]="toppings().peppers" (change)="set('peppers', $any($event.target).checked)" />
+			<input
+				type="checkbox"
+				name="topping"
+				value="peppers"
+				[checked]="toppings().peppers"
+				(change)="set('peppers', $any($event.target).checked)"
+			/>
 			Peppers
 		</label>
 	</div>
@@ -115,18 +197,29 @@
 
 <h2>Select all, with bindSelectAll()</h2>
 <p>
-	Without a model, <code>bindSelectAll(parent)</code> keeps the select-all box in step with the other boxes in its
-	fieldset. It leaves disabled boxes alone, fires <code>change</code> on each box it changes, and follows a form
-	reset. Give the select-all box no <code>name</code>, so it does not submit.
+	Without a model, <code>bindSelectAll(parent)</code> keeps the select-all box
+	in step with the other boxes in its fieldset. It leaves disabled boxes alone,
+	fires <code>change</code> on each box it changes, and follows a form reset.
+	Give the select-all box no <code>name</code>, so it does not submit.
 </p>
 <form>
 	<fieldset interop-checkbox-group>
 		<legend>Columns</legend>
-		<label interop-checkbox><input #helperParent type="checkbox" /> All columns</label>
+		<label interop-checkbox
+			><input #helperParent type="checkbox" /> All columns</label
+		>
 		<div class="stack nested">
-			<label interop-checkbox><input type="checkbox" name="column" value="name" checked /> Name</label>
-			<label interop-checkbox><input type="checkbox" name="column" value="email" /> Email</label>
-			<label interop-checkbox><input type="checkbox" name="column" value="id" checked disabled /> ID (always shown)</label>
+			<label interop-checkbox
+				><input type="checkbox" name="column" value="name" checked />
+				Name</label
+			>
+			<label interop-checkbox
+				><input type="checkbox" name="column" value="email" /> Email</label
+			>
+			<label interop-checkbox
+				><input type="checkbox" name="column" value="id" checked disabled /> ID
+				(always shown)</label
+			>
 		</div>
 	</fieldset>
 	<div class="row">
@@ -136,17 +229,29 @@
 
 <h2>Choose at least one</h2>
 <p>
-	<code>required</code> on a checkbox means that box must be checked, so it cannot express "at least one". Instead,
-	set <code>setCustomValidity()</code> on the first box whenever the group changes. The browser then blocks submit
-	and shows the message.
+	<code>required</code> on a checkbox means that box must be checked, so it
+	cannot express "at least one". Instead, set
+	<code>setCustomValidity()</code> on the first box whenever the group changes.
+	The browser then blocks submit and shows the message.
 </p>
 <form (submit)="submit($event)" (reset)="afterReset()">
-	<fieldset #atLeastOne interop-checkbox-group aria-describedby="days-hint" (change)="checkAtLeastOne()">
+	<fieldset
+		#atLeastOne
+		interop-checkbox-group
+		aria-describedby="days-hint"
+		(change)="checkAtLeastOne()"
+	>
 		<legend>Delivery days</legend>
 		<p class="hint" id="days-hint">Choose at least one.</p>
-		<label interop-checkbox><input type="checkbox" name="day" value="mon" /> Monday</label>
-		<label interop-checkbox><input type="checkbox" name="day" value="wed" /> Wednesday</label>
-		<label interop-checkbox><input type="checkbox" name="day" value="fri" /> Friday</label>
+		<label interop-checkbox
+			><input type="checkbox" name="day" value="mon" /> Monday</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="day" value="wed" /> Wednesday</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="day" value="fri" /> Friday</label
+		>
 	</fieldset>
 	<div class="row">
 		<button interop-button type="submit">Submit</button>
@@ -163,17 +268,25 @@
 </div>
 
 <h2>Sizes</h2>
-<p>The default size has no attribute. <code>itx-size="lg"</code> on the label makes the checkbox larger.</p>
+<p>
+	The default size has no attribute. <code>itx-size="lg"</code> on the label
+	makes the checkbox larger.
+</p>
 <div class="stack">
 	<label interop-checkbox><input type="checkbox" checked /> Default</label>
-	<label interop-checkbox itx-size="lg"><input type="checkbox" checked /> Large</label>
+	<label interop-checkbox itx-size="lg"
+		><input type="checkbox" checked /> Large</label
+	>
 </div>
 
 <h2>Custom tokens</h2>
 <p>
-	Set <code>--itx-checkbox-*</code> properties on the label, or on a class that matches it. The mark is a mask, so
+	Set <code>--itx-checkbox-*</code> properties on the label, or on a class that
+	matches it. The mark is a mask, so
 	<code>--itx-checkbox-mark-mask-image</code> swaps its shape.
 </p>
 <div class="stack">
-	<label interop-checkbox class="heavy"><input type="checkbox" checked /> Heavier check</label>
+	<label interop-checkbox class="heavy"
+		><input type="checkbox" checked /> Heavier check</label
+	>
 </div>

@@ -29,9 +29,14 @@ describe('bindSteps', () => {
 		const step = (id: string) => document.getElementById(id) as HTMLFieldSetElement;
 		const field = (name: string) => form.querySelector<HTMLInputElement>(`[name="${name}"]`)!;
 		const command = (name: string, value = '') =>
-			form.dispatchEvent(Object.assign(new Event('command'), { command: name, source: Object.assign(document.createElement('button'), { value }) }));
+			form.dispatchEvent(
+				Object.assign(new Event('command'), { command: name, source: Object.assign(document.createElement('button'), { value }) }),
+			);
 		const shown = () => ['details', 'address', 'review'].filter((id) => !step(id).hidden);
-		const indicator = () => Array.from(form.querySelectorAll('li')).map((li) => `${li.getAttribute('aria-current') ?? '-'}:${li.querySelector('span')!.textContent}`);
+		const indicator = () =>
+			Array.from(form.querySelectorAll('li')).map(
+				(li) => `${li.getAttribute('aria-current') ?? '-'}:${li.querySelector('span')!.textContent}`,
+			);
 		return { form, step, field, command, shown, indicator };
 	};
 	afterEach(() => {

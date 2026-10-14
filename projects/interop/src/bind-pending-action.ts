@@ -4,10 +4,7 @@
  * A rejected action still clears the busy state, and its error goes to `reportError()`.
  * Returns a function that unbinds.
  */
-export function bindPendingAction(
-	button: HTMLButtonElement,
-	action: (event: MouseEvent) => Promise<unknown>,
-): () => void {
+export function bindPendingAction(button: HTMLButtonElement, action: (event: MouseEvent) => Promise<unknown>): () => void {
 	const onClick = async (event: MouseEvent) => {
 		if (button.matches('[aria-disabled="true"], [aria-busy="true"]')) return;
 		button.setAttribute('aria-busy', 'true');

@@ -1,18 +1,28 @@
 <h1>Tags</h1>
-<p class="aka">Also known as removable chips, input chips, tokens, pills, dismissible tags.</p>
+<p class="aka">
+	Also known as removable chips, input chips, tokens, pills, dismissible tags.
+</p>
 <p>
-	Tags are values the user can remove: applied filters, or the entries of a tag input. Each tag is its text and a
-	button that removes it, named for the tag. A tag that cannot be removed is a badge. A chip you select is a checkbox
-	or radio: see the chips template on the checkbox and radio group pages.
+	Tags are values the user can remove: applied filters, or the entries of a tag
+	input. Each tag is its text and a button that removes it, named for the tag. A
+	tag that cannot be removed is a badge. A chip you select is a checkbox or
+	radio: see the chips template on the checkbox and radio group pages.
 </p>
 
 <h2>Removable tags</h2>
 <p>
-	Remove a tag with the keyboard: focus moves to the tag now in its place, or the one before, or the heading when none
-	are left. The removal is announced through the <code>role="status"</code> element, which is optional.
+	Remove a tag with the keyboard: focus moves to the tag now in its place, or
+	the one before, or the heading when none are left. The removal is announced
+	through the <code>role="status"</code> element, which is optional.
 </p>
 <h3 #heading>Applied filters</h3>
-<ul interop-tags role="list" aria-label="Applied filters" [fallback]="heading" [status]="announcer">
+<ul
+	interop-tags
+	role="list"
+	aria-label="Applied filters"
+	[fallback]="heading"
+	[status]="announcer"
+>
 	@for (filter of filters(); track filter) {
 		<li>
 			{{ filter }}
@@ -24,21 +34,37 @@
 	}
 </ul>
 <p #announcer role="status" itx-visually-hidden></p>
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.removable"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.removable"
+></figure>
 
 <h2>Tag input</h2>
 <p>
-	The tags come first, then the field: tested this way round, people found and removed tags most reliably. Enter adds
-	a tag, and the addition is announced; a comma does not add one. A duplicate is rejected with a message the field
-	shows and speaks. The <code>datalist</code> offers suggestions. Each tag holds a hidden input, so the values submit
-	with the form, and the field is required until there is at least one.
+	The tags come first, then the field: tested this way round, people found and
+	removed tags most reliably. Enter adds a tag, and the addition is announced; a
+	comma does not add one. A duplicate is rejected with a message the field shows
+	and speaks. The <code>datalist</code> offers suggestions. Each tag holds a
+	hidden input, so the values submit with the form, and the field is required
+	until there is at least one.
 </p>
 <form interop-form (submit)="submit($event)">
 	<div interop-field>
 		<label for="tag-entry">Skills</label>
-		<p interop-hint id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one</p>
+		<p interop-hint id="tag-hint">
+			Press Enter to add a skill. Backspace in the empty field moves to the last
+			one
+		</p>
 		<p interop-error hidden></p>
-		<ul #skillList interop-tags role="list" aria-label="Skills" [fallback]="entry">
+		<ul
+			#skillList
+			interop-tags
+			role="list"
+			aria-label="Skills"
+			[fallback]="entry"
+		>
 			@for (skill of skills(); track skill) {
 				<li>
 					{{ skill }}
@@ -78,15 +104,28 @@
 		<p>Saved: {{ values }}</p>
 	}
 </form>
-<figure interop-code-block language="html" caption="Angular template" [code]="examples.input"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.input"
+></figure>
 <figure interop-code-block language="ts" [code]="examples.inputTs"></figure>
 
 <h2>Sizes</h2>
 @for (size of sizes; track size.label) {
-	<ul interop-tags role="list" [attr.itx-size]="size.value" [attr.aria-label]="size.label + ' tags'">
+	<ul
+		interop-tags
+		role="list"
+		[attr.itx-size]="size.value"
+		[attr.aria-label]="size.label + ' tags'"
+	>
 		<li>
 			{{ size.label }}
-			<button type="button"><span itx-visually-hidden>Remove {{ size.label }}</span><svg interop-icon name="tabler-x"></svg></button>
+			<button type="button">
+				<span itx-visually-hidden>Remove {{ size.label }}</span
+				><svg interop-icon name="tabler-x"></svg>
+			</button>
 		</li>
 	</ul>
 }

@@ -42,7 +42,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /** Every root is read together, so a page's stylesheets can read the library's tokens. */
-const ROOTS = process.argv.length > 2 ? process.argv.slice(2) : ["projects/interop"];
+const ROOTS =
+	process.argv.length > 2 ? process.argv.slice(2) : ["projects/interop"];
 
 /** Generated files and specs that exercise the failure mode deliberately. */
 const SKIP = /interop\.(globals|tokens)\.css$|\.spec\.ts$/;

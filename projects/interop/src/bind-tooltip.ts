@@ -1,4 +1,3 @@
-
 let ids = 0;
 /** The tooltip on screen. Showing one hides it, as a `hint` popover does where it is supported. */
 let shown: (() => void) | null = null;

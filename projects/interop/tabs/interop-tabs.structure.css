@@ -88,7 +88,9 @@
 	color: var(--itx-tabs-tab-color-hover, var(--itx-tabs-tab-color));
 }
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
+:where(
+	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)
+)::after {
 	background-color: var(--itx-tabs-indicator-background-color-hover, var(--itx-tabs-indicator-background-color));
 }
 
@@ -162,7 +164,9 @@
 		background-color: Highlight;
 	}
 
-	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
+	:where(
+		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)
+	)::after {
 		background-color: CanvasText;
 	}
 }

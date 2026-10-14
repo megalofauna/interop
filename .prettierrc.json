@@ -3,7 +3,22 @@
 	"overrides": [
 		{
 			"files": ["projects/**/*.html"],
-			"options": { "parser": "angular" }
+			"options": {
+				"parser": "angular"
+			}
+		},
+		{
+			"files": ["projects/interop/**/*.ts"],
+			"options": {
+				"singleQuote": true,
+				"printWidth": 140
+			}
+		},
+		{
+			"files": ["projects/interop/**/*.css"],
+			"options": {
+				"printWidth": 140
+			}
 		}
 	]
 }

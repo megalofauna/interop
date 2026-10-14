@@ -46,7 +46,8 @@ describe('bindSelectAll', () => {
 	it('fires input and change on each box it changes', () => {
 		const { parent, boxes } = setup(box() + box('checked'));
 		const events: string[] = [];
-		for (const b of boxes) for (const type of ['input', 'change']) b.addEventListener(type, () => events.push(`${b === boxes[0] ? 0 : 1}:${type}`));
+		for (const b of boxes)
+			for (const type of ['input', 'change']) b.addEventListener(type, () => events.push(`${b === boxes[0] ? 0 : 1}:${type}`));
 		parent.click();
 		expect(events).toEqual(['0:input', '0:change']);
 	});

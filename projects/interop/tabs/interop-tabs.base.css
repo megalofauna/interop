@@ -50,7 +50,10 @@
 :where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
 	/* A nested corner inside the frame, the same as the pill's, so the focus ring matches it. Declared
 	   on the tab because the frame's tokens are declared on the tab list. */
-	--itx-tabs-tab-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width));
+	--itx-tabs-tab-border-radius: max(
+		0px,
+		var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width)
+	);
 }
 
 @media (prefers-contrast: more) {

@@ -93,6 +93,7 @@ import dialogStructureCss from '../dialog/interop-dialog.structure.css' with { l
 import fieldBaseCss from '../field/interop-field.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import fieldStructureCss from '../field/interop-field.structure.css' with { loader: 'text' };
+import { oneLine } from './css-text';
 
 // Every stylesheet in the library, read as text. Add a new one here.
 const sheets = {
@@ -145,7 +146,7 @@ const sheets = {
 /** Transition declarations whose duration does not read a shared --itx-transition-duration* token. */
 const outliers = (css: string) =>
 	[...css.matchAll(/(?:^|[;{\s])(--itx-[\w-]*transition-duration|transition-duration|transition):\s*([^;]+);/g)]
-		.map(([, property, value]) => `${property}: ${value.trim()}`)
+		.map(([, property, value]) => `${property}: ${oneLine(value)}`)
 		.filter((declaration) => !/var\(--itx-[\w-]*transition-duration/.test(declaration) && !/:\s*none$/.test(declaration));
 
 // Reduced motion works by zeroing the shared --itx-transition-duration* tokens. A transition reaches
@@ -157,8 +158,12 @@ describe('reduced motion', () => {
 	});
 
 	it('rejects a duration written as a number', () => {
-		expect(outliers('a { transition-duration: 150ms; } b { transition: color 0.2s; } c { --itx-x-transition-duration: 1s; }')).toHaveLength(3);
-		expect(outliers('a { transition-duration: var(--itx-a-transition-duration); --itx-a-transition-duration: var(--itx-transition-duration); }')).toEqual([]);
+		expect(outliers('a { transition-duration: 150ms; } b { transition: color 0.2s; } c { --itx-x-transition-duration: 1s; }')).toHaveLength(
+			3,
+		);
+		expect(
+			outliers('a { transition-duration: var(--itx-a-transition-duration); --itx-a-transition-duration: var(--itx-transition-duration); }'),
+		).toEqual([]);
 	});
 
 	for (const [file, css] of Object.entries(sheets)) {

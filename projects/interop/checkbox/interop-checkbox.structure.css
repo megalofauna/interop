@@ -87,10 +87,7 @@
 }
 
 :where(label[interop-checkbox]:hover > input[type="checkbox"]:is(:checked, :indeterminate):not(:disabled)) {
-	background-color: var(
-		--itx-checkbox-box-background-color-checked-hover,
-		var(--itx-checkbox-box-background-color-checked)
-	);
+	background-color: var(--itx-checkbox-box-background-color-checked-hover, var(--itx-checkbox-box-background-color-checked));
 }
 
 :where(label[interop-checkbox] > input[type="checkbox"]:is(:checked, :indeterminate))::before {

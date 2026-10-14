@@ -27,7 +27,8 @@
 
 .candidate {
 	padding-block: var(--itx-space-4);
-	border-block-start: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	border-block-start: 1px solid
+		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 .candidate h2 {

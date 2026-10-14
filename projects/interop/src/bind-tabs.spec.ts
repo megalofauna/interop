@@ -4,7 +4,10 @@ const markup = ({ orientation = '', dir = '', selected = 'b', disabled = '' } = 
 	<div interop-tabs ${dir ? `dir="${dir}"` : ''}>
 		<div role="tablist" aria-label="Sections" ${orientation ? `aria-orientation="${orientation}"` : ''}>
 			${['a', 'b', 'c', 'd']
-				.map((key) => `<button type="button" role="tab" aria-controls="p-${key}" ${key === selected ? 'aria-selected="true"' : ''} ${key === disabled ? 'disabled' : ''}>${key}</button>`)
+				.map(
+					(key) =>
+						`<button type="button" role="tab" aria-controls="p-${key}" ${key === selected ? 'aria-selected="true"' : ''} ${key === disabled ? 'disabled' : ''}>${key}</button>`,
+				)
 				.join('')}
 		</div>
 		<section role="tabpanel" id="p-a"><p>A</p></section>
@@ -26,7 +29,10 @@ describe('bindTabs', () => {
 			(document.activeElement as HTMLElement).dispatchEvent(event);
 			return event;
 		};
-		const state = () => ['a', 'b', 'c', 'd'].map((key) => `${key}:${tab(key).getAttribute('aria-selected')}/${tab(key).tabIndex}/${panel(key).getAttribute('hidden') ?? 'shown'}`);
+		const state = () =>
+			['a', 'b', 'c', 'd'].map(
+				(key) => `${key}:${tab(key).getAttribute('aria-selected')}/${tab(key).tabIndex}/${panel(key).getAttribute('hidden') ?? 'shown'}`,
+			);
 		return { root, tab, panel, press, state };
 	};
 	afterEach(() => {
@@ -128,7 +134,9 @@ describe('bindTabs', () => {
 	it('fires interop-tabs-change when the selection changes, and not on bind', () => {
 		document.body.innerHTML = markup();
 		const changes: string[] = [];
-		document.body.addEventListener('interop-tabs-change', (event) => changes.push((event as CustomEvent<TabsChangeDetail>).detail.panel!.id));
+		document.body.addEventListener('interop-tabs-change', (event) =>
+			changes.push((event as CustomEvent<TabsChangeDetail>).detail.panel!.id),
+		);
 		unbind = bindTabs(document.querySelector('[interop-tabs]')!);
 		expect(changes).toEqual([]);
 		document.querySelector<HTMLElement>('[aria-controls="p-c"]')!.click();
@@ -151,10 +159,15 @@ describe('bindTabs', () => {
 
 	it('wires a tab added later', async () => {
 		const { root } = setup();
-		root.querySelector('[role="tablist"]')!.insertAdjacentHTML('beforeend', '<button type="button" role="tab" aria-controls="p-e">e</button>');
+		root
+			.querySelector('[role="tablist"]')!
+			.insertAdjacentHTML('beforeend', '<button type="button" role="tab" aria-controls="p-e">e</button>');
 		root.insertAdjacentHTML('beforeend', '<section role="tabpanel" id="p-e">E</section>');
 		await new Promise((resolve) => setTimeout(resolve));
-		expect([document.getElementById('p-e')!.getAttribute('hidden'), document.querySelector('[aria-controls="p-e"]')!.id]).toEqual(['until-found', expect.stringMatching(/^itx-tab-/)]);
+		expect([document.getElementById('p-e')!.getAttribute('hidden'), document.querySelector('[aria-controls="p-e"]')!.id]).toEqual([
+			'until-found',
+			expect.stringMatching(/^itx-tab-/),
+		]);
 	});
 
 	it('follows the URL fragment when asked', () => {

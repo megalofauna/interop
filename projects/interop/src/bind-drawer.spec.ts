@@ -37,7 +37,9 @@ describe('bindDrawer', () => {
 		toggle('open');
 		drawer.querySelector('a')!.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
 		expect(hides()).toBe(0);
-		drawer.querySelector('a')!.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: document.getElementById('outside') }));
+		drawer
+			.querySelector('a')!
+			.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: document.getElementById('outside') }));
 		expect(hides()).toBe(1);
 	});
 

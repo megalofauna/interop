@@ -90,10 +90,7 @@
 }
 
 :where(fieldset[interop-radio-group] label:hover > input[type="radio"]:checked:not(:disabled)) {
-	background-color: var(
-		--itx-radio-group-circle-background-color-checked-hover,
-		var(--itx-radio-group-circle-background-color-checked)
-	);
+	background-color: var(--itx-radio-group-circle-background-color-checked-hover, var(--itx-radio-group-circle-background-color-checked));
 }
 
 :where(fieldset[interop-radio-group] label > input[type="radio"]:checked)::before {
@@ -152,14 +149,16 @@
 	background-color: transparent;
 	border: 0;
 	/* A nested corner, the same as the pill's. */
-	border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width));
+	border-radius: max(
+		0px,
+		var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width)
+	);
 	corner-shape: var(--itx-corner-shape);
 }
 
 :where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"])::before {
 	content: none;
 }
-
 
 @media (forced-colors: active) {
 	:where(fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]) {

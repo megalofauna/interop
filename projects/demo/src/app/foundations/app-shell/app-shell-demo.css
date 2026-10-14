@@ -7,7 +7,8 @@ td {
 	padding: var(--itx-space-2) var(--itx-space-3);
 	text-align: start;
 	vertical-align: top;
-	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	border-block-end: 1px solid
+		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 figure[interop-code-block] {
@@ -33,7 +34,8 @@ figure[interop-code-block] {
 .shell > header {
 	grid-area: header;
 	padding: var(--itx-space-3);
-	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	border-block-end: 1px solid
+		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 .site-nav {
@@ -59,7 +61,8 @@ figure[interop-code-block] {
 	}
 
 	.site-nav {
-		border-inline-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+		border-inline-end: 1px solid
+			light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 	}
 
 	.site-nav ul {

@@ -1,12 +1,23 @@
 import { Component, signal } from "@angular/core";
 import { defaultValidationMessages, type ValidationOptions } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
-import { InteropCharacterCount, InteropCustomValidity, InteropForm, InteropPasswordToggle } from "interop/field";
+import {
+	InteropCharacterCount,
+	InteropCustomValidity,
+	InteropForm,
+	InteropPasswordToggle,
+} from "interop/field";
 import { examples } from "./field-examples";
 
 @Component({
 	selector: "demo-field",
-	imports: [InteropCharacterCount, InteropCodeBlock, InteropCustomValidity, InteropForm, InteropPasswordToggle],
+	imports: [
+		InteropCharacterCount,
+		InteropCodeBlock,
+		InteropCustomValidity,
+		InteropForm,
+		InteropPasswordToggle,
+	],
 	templateUrl: "./field-demo.html",
 	styleUrl: "./field-demo.css",
 })
@@ -17,7 +28,9 @@ export class FieldDemo {
 	/** A message per field where the default cannot say it well, such as a question. */
 	protected readonly messages: ValidationOptions["messages"] = {
 		valueMissing: (control, label) =>
-			control.name === "contact" ? "Select how you want us to contact you" : defaultValidationMessages.valueMissing(control, label),
+			control.name === "contact"
+				? "Select how you want us to contact you"
+				: defaultValidationMessages.valueMissing(control, label),
 	};
 	protected readonly sizes = [
 		{ value: "sm", label: "Small" },

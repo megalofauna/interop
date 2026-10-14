@@ -42,12 +42,7 @@ export class InteropInvoker {
 }
 
 /** An element sets the reference property; a string sets the ID attribute, as in plain HTML. */
-function target(
-	button: InvokerButton,
-	property: 'commandForElement' | 'popoverTargetElement',
-	attribute: string,
-	value: Target,
-): void {
+function target(button: InvokerButton, property: 'commandForElement' | 'popoverTargetElement', attribute: string, value: Target): void {
 	if (typeof value === 'string') {
 		button[property] = null;
 		button.setAttribute(attribute, value);

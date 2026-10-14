@@ -1,4 +1,3 @@
-
 /**
  * Lets the user see the password they type. A button aimed at the input with the custom command
  * `--toggle-password` shows or hides it:

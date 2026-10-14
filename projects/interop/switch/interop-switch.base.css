@@ -25,8 +25,7 @@
 
 	/* Whatever the track's height leaves inside its padding and border. */
 	--itx-switch-thumb-size: calc(
-		var(--itx-switch-track-block-size) - 2 * var(--itx-switch-track-padding) - 2 *
-			var(--itx-switch-track-border-width)
+		var(--itx-switch-track-block-size) - 2 * var(--itx-switch-track-padding) - 2 * var(--itx-switch-track-border-width)
 	);
 	--itx-switch-thumb-background-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-switch-thumb-background-color-checked: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));

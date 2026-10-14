@@ -26,7 +26,20 @@ import buttonCss from '../button/interop-button.structure.css' with { loader: 't
 // Forced colors replace every background with Canvas. A component that shows its state with a fill
 // (a checked box, a selected bar, a pill, a dot) loses that state unless it maps it to system colors.
 // jsdom cannot emulate forced colors, so this checks each such stylesheet keeps its rules.
-const files = { badgeCss, buttonCss, checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss } as Record<string, string>;
+const files = {
+	badgeCss,
+	buttonCss,
+	checkboxCss,
+	radioGroupCss,
+	switchCss,
+	tabsCss,
+	segmentedCss,
+	cardsCss,
+	stepsCss,
+	chipsCss,
+	tagsCss,
+	selectCss,
+} as Record<string, string>;
 
 describe('forced colors', () => {
 	for (const [file, css] of Object.entries(files)) {
@@ -36,6 +49,7 @@ describe('forced colors', () => {
 	}
 
 	it('maps the selected and checked states to Highlight', () => {
-		for (const css of [buttonCss, checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss, selectCss]) expect(css).toContain('Highlight');
+		for (const css of [buttonCss, checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss, selectCss])
+			expect(css).toContain('Highlight');
 	});
 });

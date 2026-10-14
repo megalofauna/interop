@@ -1,33 +1,52 @@
 <h1>Tooltip</h1>
 <p>
-	A tooltip opens while the pointer rests on its trigger or the trigger has keyboard focus. Escape, blur and
-	pressing the trigger close it. Touch never opens it: on a touch screen a label tooltip still names its button
-	for screen readers, but a sighted user sees only the icon, so pick an icon whose meaning is clear without it.
+	A tooltip opens while the pointer rests on its trigger or the trigger has
+	keyboard focus. Escape, blur and pressing the trigger close it. Touch never
+	opens it: on a touch screen a label tooltip still names its button for screen
+	readers, but a sighted user sees only the icon, so pick an icon whose meaning
+	is clear without it.
 </p>
 
 <h2>Naming an icon button</h2>
-<p>With <code>interop-tooltip="label"</code> the tooltip is the button's name. The button needs no other.</p>
+<p>
+	With <code>interop-tooltip="label"</code> the tooltip is the button's name.
+	The button needs no other.
+</p>
 <div class="row">
-	<button interop-button type="button" [interopTooltip]="copy"><svg interop-icon name="tabler-copy"></svg></button>
+	<button interop-button type="button" [interopTooltip]="copy">
+		<svg interop-icon name="tabler-copy"></svg>
+	</button>
 	<span interop-tooltip="label" #copy>Copy</span>
-	<button interop-button type="button" [interopTooltip]="search"><svg interop-icon name="tabler-search"></svg></button>
+	<button interop-button type="button" [interopTooltip]="search">
+		<svg interop-icon name="tabler-search"></svg>
+	</button>
 	<span interop-tooltip="label" #search>Search</span>
-	<button interop-button type="button" [interopTooltip]="close"><svg interop-icon name="tabler-x"></svg></button>
+	<button interop-button type="button" [interopTooltip]="close">
+		<svg interop-icon name="tabler-x"></svg>
+	</button>
 	<span interop-tooltip="label" #close>Close</span>
 </div>
 
 <h2>Describing a button</h2>
 <p>With no value the tooltip describes a button that already has a name.</p>
 <div class="row">
-	<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
-	<span interop-tooltip #draft>Saves without publishing. Only you can see a draft.</span>
+	<button interop-button type="button" [interopTooltip]="draft">
+		Save draft
+	</button>
+	<span interop-tooltip #draft
+		>Saves without publishing. Only you can see a draft.</span
+	>
 </div>
 
 <h2>Near an edge</h2>
 <p>A tooltip moves below its trigger, or along it, to stay on screen.</p>
 <div class="row edge">
-	<button interop-button type="button" [interopTooltip]="edge"><svg interop-icon name="tabler-plus"></svg></button>
-	<span interop-tooltip="label" #edge>Add a section at the end of the page</span>
+	<button interop-button type="button" [interopTooltip]="edge">
+		<svg interop-icon name="tabler-plus"></svg>
+	</button>
+	<span interop-tooltip="label" #edge
+		>Add a section at the end of the page</span
+	>
 </div>
 
 <h2>Inside a popover</h2>
@@ -36,9 +55,13 @@
 	<button interop-button type="button" [popoverTarget]="menu">Options</button>
 	<div interop-popover popover #menu>
 		<div class="row">
-			<button interop-button type="button" [interopTooltip]="minus"><svg interop-icon name="tabler-minus"></svg></button>
+			<button interop-button type="button" [interopTooltip]="minus">
+				<svg interop-icon name="tabler-minus"></svg>
+			</button>
 			<span interop-tooltip="label" #minus>Zoom out</span>
-			<button interop-button type="button" [interopTooltip]="plus"><svg interop-icon name="tabler-plus"></svg></button>
+			<button interop-button type="button" [interopTooltip]="plus">
+				<svg interop-icon name="tabler-plus"></svg>
+			</button>
 			<span interop-tooltip="label" #plus>Zoom in</span>
 		</div>
 	</div>
@@ -46,12 +69,27 @@
 
 <h2>Timing</h2>
 <p>
-	<code>--itx-tooltip-interest-delay-start</code> and <code>--itx-tooltip-interest-delay-end</code> set the
-	delays. Set them on the tooltip. These open at once.
+	<code>--itx-tooltip-interest-delay-start</code> and
+	<code>--itx-tooltip-interest-delay-end</code> set the delays. Set them on the
+	tooltip. These open at once.
 </p>
 <div class="row">
-	<button interop-button type="button" [interopTooltip]="bold"><b aria-hidden="true">B</b></button>
-	<span interop-tooltip="label" style="--itx-tooltip-interest-delay-start: 0s" #bold>Bold</span>
-	<button interop-button type="button" [interopTooltip]="italic"><i aria-hidden="true">I</i></button>
-	<span interop-tooltip="label" style="--itx-tooltip-interest-delay-start: 0s" #italic>Italic</span>
+	<button interop-button type="button" [interopTooltip]="bold">
+		<b aria-hidden="true">B</b>
+	</button>
+	<span
+		interop-tooltip="label"
+		style="--itx-tooltip-interest-delay-start: 0s"
+		#bold
+		>Bold</span
+	>
+	<button interop-button type="button" [interopTooltip]="italic">
+		<i aria-hidden="true">I</i>
+	</button>
+	<span
+		interop-tooltip="label"
+		style="--itx-tooltip-interest-delay-start: 0s"
+		#italic
+		>Italic</span
+	>
 </div>

@@ -55,7 +55,15 @@
 	:where([itx-font]) {
 		font-weight: var(--itx-font-weight);
 	}
-	:where(:is(h1, h2, h3, h4, h5, h6):not([itx-font]), [itx-font="display"], [itx-font="h1"], [itx-font="h2"], [itx-font="h3"], [itx-font="h4"], [itx-font="h5"]) {
+	:where(
+		:is(h1, h2, h3, h4, h5, h6):not([itx-font]),
+		[itx-font="display"],
+		[itx-font="h1"],
+		[itx-font="h2"],
+		[itx-font="h3"],
+		[itx-font="h4"],
+		[itx-font="h5"]
+	) {
 		font-weight: var(--itx-font-weight-heading);
 	}
 	:where([itx-font="display"]) {

@@ -1,59 +1,158 @@
 <h1>Tabs</h1>
 <p class="aka"><em>Also known as tab list, tab group, tab strip, pivot.</em></p>
 <p>
-	Tabs show one of several sections at a time. You write the tab list and the panels, and each tab names its panel
-	with <code>aria-controls</code>. In Angular, the <code>InteropTabs</code> directive from <code>interop/tabs</code>
-	adds the keyboard, selection and panel hiding. Elsewhere, call <code>bindTabs(root)</code> from
-	<code>interop</code>. To choose a value or a view of the same content, use a segmented control.
+	Tabs show one of several sections at a time. You write the tab list and the
+	panels, and each tab names its panel with <code>aria-controls</code>. In
+	Angular, the <code>InteropTabs</code> directive from
+	<code>interop/tabs</code> adds the keyboard, selection and panel hiding.
+	Elsewhere, call <code>bindTabs(root)</code> from <code>interop</code>. To
+	choose a value or a view of the same content, use a segmented control.
 </p>
 
 <h2>Tabs</h2>
 <div interop-tabs (interop-tabs-change)="changed($event)">
 	<div role="tablist" aria-label="Station systems">
-		<button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
-		<button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
-		<button type="button" role="tab" aria-controls="life" aria-selected="false" tabindex="-1">Life support</button>
+		<button type="button" role="tab" aria-controls="nav" aria-selected="true">
+			Navigation
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="eng"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Engineering
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="life"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Life support
+		</button>
 	</div>
-	<section role="tabpanel" id="nav"><p>Course plotted. Next waypoint in 42 minutes.</p></section>
-	<section role="tabpanel" id="eng" hidden="until-found"><p>Reactor output steady at 98 percent.</p></section>
-	<section role="tabpanel" id="life" hidden="until-found"><p>Oxygen and pressure nominal in every module.</p></section>
+	<section role="tabpanel" id="nav">
+		<p>Course plotted. Next waypoint in 42 minutes.</p>
+	</section>
+	<section role="tabpanel" id="eng" hidden="until-found">
+		<p>Reactor output steady at 98 percent.</p>
+	</section>
+	<section role="tabpanel" id="life" hidden="until-found">
+		<p>Oxygen and pressure nominal in every module.</p>
+	</section>
 </div>
-<p>Last change: {{ last() }}. Inactive panels are <code>hidden="until-found"</code>: search the page for "reactor".</p>
+<p>
+	Last change: {{ last() }}. Inactive panels are
+	<code>hidden="until-found"</code>: search the page for "reactor".
+</p>
 
 <h2>Sizes</h2>
 @for (size of ["sm", "md", "lg"]; track size) {
 	<div interop-tabs [attr.itx-size]="size">
 		<div role="tablist" [attr.aria-label]="'Size ' + size">
-			<button type="button" role="tab" [attr.aria-controls]="size + '-a'" aria-selected="true">Overview</button>
-			<button type="button" role="tab" [attr.aria-controls]="size + '-b'" aria-selected="false" tabindex="-1">Settings</button>
+			<button
+				type="button"
+				role="tab"
+				[attr.aria-controls]="size + '-a'"
+				aria-selected="true"
+			>
+				Overview
+			</button>
+			<button
+				type="button"
+				role="tab"
+				[attr.aria-controls]="size + '-b'"
+				aria-selected="false"
+				tabindex="-1"
+			>
+				Settings
+			</button>
 		</div>
-		<section role="tabpanel" [id]="size + '-a'"><p>{{ size }} overview.</p></section>
-		<section role="tabpanel" [id]="size + '-b'" hidden="until-found"><p>{{ size }} settings.</p></section>
+		<section role="tabpanel" [id]="size + '-a'">
+			<p>{{ size }} overview.</p>
+		</section>
+		<section role="tabpanel" [id]="size + '-b'" hidden="until-found">
+			<p>{{ size }} settings.</p>
+		</section>
 	</div>
 }
 
 <h2>Segmented</h2>
 <p>
-	<code>interop-tabs="segmented"</code> gives tabs the segmented control's look. They are still tabs: each one shows a
-	different section. To choose a value or a view of the same content, use the segmented control itself.
+	<code>interop-tabs="segmented"</code> gives tabs the segmented control's look.
+	They are still tabs: each one shows a different section. To choose a value or
+	a view of the same content, use the segmented control itself.
 </p>
 <div interop-tabs="segmented">
 	<div role="tablist" aria-label="Report">
-		<button type="button" role="tab" aria-controls="seg-summary" aria-selected="true">Summary</button>
-		<button type="button" role="tab" aria-controls="seg-details" aria-selected="false" tabindex="-1">Details</button>
-		<button type="button" role="tab" aria-controls="seg-history" aria-selected="false" tabindex="-1">History</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-summary"
+			aria-selected="true"
+		>
+			Summary
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-details"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Details
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-history"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			History
+		</button>
 	</div>
-	<section role="tabpanel" id="seg-summary"><p>Revenue up 4 percent on last quarter.</p></section>
-	<section role="tabpanel" id="seg-details" hidden="until-found"><p>Revenue by region and product line.</p></section>
-	<section role="tabpanel" id="seg-history" hidden="until-found"><p>Every quarter since launch.</p></section>
+	<section role="tabpanel" id="seg-summary">
+		<p>Revenue up 4 percent on last quarter.</p>
+	</section>
+	<section role="tabpanel" id="seg-details" hidden="until-found">
+		<p>Revenue by region and product line.</p>
+	</section>
+	<section role="tabpanel" id="seg-history" hidden="until-found">
+		<p>Every quarter since launch.</p>
+	</section>
 </div>
 <div interop-tabs="segmented icon" itx-size="sm">
 	<div role="tablist" aria-label="Layout">
-		<button type="button" role="tab" aria-controls="seg-list" aria-selected="true"><svg interop-icon name="tabler-minus"></svg><span itx-visually-hidden>List</span></button>
-		<button type="button" role="tab" aria-controls="seg-grid" aria-selected="false" tabindex="-1"><svg interop-icon name="tabler-plus"></svg><span itx-visually-hidden>Grid</span></button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-list"
+			aria-selected="true"
+		>
+			<svg interop-icon name="tabler-minus"></svg
+			><span itx-visually-hidden>List</span>
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-grid"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			<svg interop-icon name="tabler-plus"></svg
+			><span itx-visually-hidden>Grid</span>
+		</button>
 	</div>
-	<section role="tabpanel" id="seg-list"><p>A small segmented tab list with icons.</p></section>
-	<section role="tabpanel" id="seg-grid" hidden="until-found"><p>The second section.</p></section>
+	<section role="tabpanel" id="seg-list">
+		<p>A small segmented tab list with icons.</p>
+	</section>
+	<section role="tabpanel" id="seg-grid" hidden="until-found">
+		<p>The second section.</p>
+	</section>
 </div>
 
 <h2>Icons and counts</h2>
@@ -61,37 +160,93 @@
 <div interop-tabs>
 	<div role="tablist" aria-label="Mail">
 		<button type="button" role="tab" aria-controls="inbox" aria-selected="true">
-			<svg interop-icon name="tabler-check"></svg>Inbox <span interop-badge [count]="3" [label]="{ one: 'unread message', other: 'unread messages' }"></span>
+			<svg interop-icon name="tabler-check"></svg>Inbox
+			<span
+				interop-badge
+				[count]="3"
+				[label]="{ one: 'unread message', other: 'unread messages' }"
+			></span>
 		</button>
-		<button type="button" role="tab" aria-controls="sent" aria-selected="false" tabindex="-1">Sent</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="sent"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Sent
+		</button>
 	</div>
 	<section role="tabpanel" id="inbox"><p>Three unread messages.</p></section>
-	<section role="tabpanel" id="sent" hidden="until-found"><p>Nothing sent today.</p></section>
+	<section role="tabpanel" id="sent" hidden="until-found">
+		<p>Nothing sent today.</p>
+	</section>
 </div>
 
 <h2>A disabled tab</h2>
 <div interop-tabs>
 	<div role="tablist" aria-label="Release">
-		<button type="button" role="tab" aria-controls="draft" aria-selected="true">Draft</button>
-		<button type="button" role="tab" aria-controls="review" disabled>Review</button>
-		<button type="button" role="tab" aria-controls="live" aria-selected="false" tabindex="-1">Live</button>
+		<button type="button" role="tab" aria-controls="draft" aria-selected="true">
+			Draft
+		</button>
+		<button type="button" role="tab" aria-controls="review" disabled>
+			Review
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="live"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Live
+		</button>
 	</div>
-	<section role="tabpanel" id="draft"><p>The arrow keys skip the disabled tab.</p></section>
-	<section role="tabpanel" id="review" hidden="until-found"><p>Review.</p></section>
+	<section role="tabpanel" id="draft">
+		<p>The arrow keys skip the disabled tab.</p>
+	</section>
+	<section role="tabpanel" id="review" hidden="until-found">
+		<p>Review.</p>
+	</section>
 	<section role="tabpanel" id="live" hidden="until-found"><p>Live.</p></section>
 </div>
 
 <h2>Manual activation</h2>
-<p>With <code>activation="manual"</code>, the arrow keys move focus and Enter or Space selects.</p>
+<p>
+	With <code>activation="manual"</code>, the arrow keys move focus and Enter or
+	Space selects.
+</p>
 <div interop-tabs activation="manual">
 	<div role="tablist" aria-label="Reports">
-		<button type="button" role="tab" aria-controls="daily" aria-selected="true">Daily</button>
-		<button type="button" role="tab" aria-controls="weekly" aria-selected="false" tabindex="-1">Weekly</button>
-		<button type="button" role="tab" aria-controls="yearly" aria-selected="false" tabindex="-1">Yearly</button>
+		<button type="button" role="tab" aria-controls="daily" aria-selected="true">
+			Daily
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="weekly"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Weekly
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="yearly"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Yearly
+		</button>
 	</div>
 	<section role="tabpanel" id="daily"><p>Daily report.</p></section>
-	<section role="tabpanel" id="weekly" hidden="until-found"><p>Weekly report.</p></section>
-	<section role="tabpanel" id="yearly" hidden="until-found"><p>Yearly report.</p></section>
+	<section role="tabpanel" id="weekly" hidden="until-found">
+		<p>Weekly report.</p>
+	</section>
+	<section role="tabpanel" id="yearly" hidden="until-found">
+		<p>Yearly report.</p>
+	</section>
 </div>
 
 <h2>Many tabs</h2>
@@ -99,32 +254,86 @@
 <div interop-tabs class="narrow">
 	<div role="tablist" aria-label="Month">
 		@for (month of months; track month; let first = $first) {
-			<button type="button" role="tab" [attr.aria-controls]="'m-' + month" [attr.aria-selected]="first">{{ month }}</button>
+			<button
+				type="button"
+				role="tab"
+				[attr.aria-controls]="'m-' + month"
+				[attr.aria-selected]="first"
+			>
+				{{ month }}
+			</button>
 		}
 	</div>
 	@for (month of months; track month; let first = $first) {
-		<section role="tabpanel" [id]="'m-' + month" [attr.hidden]="first ? null : 'until-found'"><p>{{ month }}.</p></section>
+		<section
+			role="tabpanel"
+			[id]="'m-' + month"
+			[attr.hidden]="first ? null : 'until-found'"
+		>
+			<p>{{ month }}.</p>
+		</section>
 	}
 </div>
 
 <h2>Vertical</h2>
 <div interop-tabs>
 	<div role="tablist" aria-label="Account" aria-orientation="vertical">
-		<button type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button>
-		<button type="button" role="tab" aria-controls="security" aria-selected="false" tabindex="-1">Security</button>
-		<button type="button" role="tab" aria-controls="billing" aria-selected="false" tabindex="-1">Billing</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="profile"
+			aria-selected="true"
+		>
+			Profile
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="security"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Security
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="billing"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Billing
+		</button>
 	</div>
-	<section role="tabpanel" id="profile"><p>Name, photo and contact details.</p></section>
-	<section role="tabpanel" id="security" hidden="until-found"><p>Password and two-step sign-in.</p></section>
-	<section role="tabpanel" id="billing" hidden="until-found"><p>Plan and invoices.</p></section>
+	<section role="tabpanel" id="profile">
+		<p>Name, photo and contact details.</p>
+	</section>
+	<section role="tabpanel" id="security" hidden="until-found">
+		<p>Password and two-step sign-in.</p>
+	</section>
+	<section role="tabpanel" id="billing" hidden="until-found">
+		<p>Plan and invoices.</p>
+	</section>
 </div>
 
 <h2>Right to left</h2>
 <div interop-tabs dir="rtl" lang="ar">
 	<div role="tablist" aria-label="الأقسام">
-		<button type="button" role="tab" aria-controls="r1" aria-selected="true">نظرة عامة</button>
-		<button type="button" role="tab" aria-controls="r2" aria-selected="false" tabindex="-1">الإعدادات</button>
+		<button type="button" role="tab" aria-controls="r1" aria-selected="true">
+			نظرة عامة
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="r2"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			الإعدادات
+		</button>
 	</div>
 	<section role="tabpanel" id="r1"><p>نظرة عامة.</p></section>
-	<section role="tabpanel" id="r2" hidden="until-found"><p>الإعدادات.</p></section>
+	<section role="tabpanel" id="r2" hidden="until-found">
+		<p>الإعدادات.</p>
+	</section>
 </div>

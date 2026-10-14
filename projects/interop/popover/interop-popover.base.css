@@ -6,8 +6,8 @@
 	 * When it fits nowhere, --itx-popover-scroll centers it below or above and caps it to the space there.
 	 */
 	--itx-popover-position-area: block-end span-inline-end;
-	--itx-popover-position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline, --itx-popover-scroll,
-		--itx-popover-scroll flip-block;
+	--itx-popover-position-try-fallbacks:
+		flip-block, flip-inline, flip-block flip-inline, --itx-popover-scroll, --itx-popover-scroll flip-block;
 	/* The gap between the popover and its anchor. A popover placed to the side takes it inline. */
 	--itx-popover-margin-block: var(--itx-space-1);
 	--itx-popover-margin-inline: 0px;
@@ -34,4 +34,3 @@
 	--itx-popover-drawer-inline-size: min(20rem, 100% - var(--itx-space-12));
 	--itx-popover-backdrop-color: oklch(0 0 0 / 0.5);
 }
-

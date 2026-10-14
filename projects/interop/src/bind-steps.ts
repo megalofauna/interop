@@ -1,4 +1,3 @@
-
 export interface StepsOptions {
 	/** The step indicator to keep in step. Defaults to an `ol[interop-steps]` inside the form. */
 	indicator?: HTMLOListElement | null;
@@ -46,7 +45,10 @@ export function bindSteps(form: HTMLFormElement, options: StepsOptions = {}): ()
 	const key = `itx-step:${form.id}`;
 
 	const steps = () => Array.from(form.querySelectorAll<HTMLFieldSetElement>(':scope > fieldset'));
-	let current = Math.max(0, steps().findIndex((step) => !step.hidden));
+	let current = Math.max(
+		0,
+		steps().findIndex((step) => !step.hidden),
+	);
 	let furthest = current;
 	/** Set while one submit's invalid events are handled, so only the first one moves the form. */
 	let rescuing = false;
@@ -85,7 +87,8 @@ export function bindSteps(form: HTMLFormElement, options: StepsOptions = {}): ()
 	/** The current step's first invalid field, reported, or nothing when the step is valid. */
 	const reportStep = () => {
 		const invalid = Array.from(steps()[current]?.elements ?? []).find(
-			(element) => 'checkValidity' in element && (element as HTMLInputElement).willValidate && !(element as HTMLInputElement).checkValidity(),
+			(element) =>
+				'checkValidity' in element && (element as HTMLInputElement).willValidate && !(element as HTMLInputElement).checkValidity(),
 		) as HTMLInputElement | undefined;
 		invalid?.reportValidity();
 		return invalid;

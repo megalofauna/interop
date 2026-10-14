@@ -1,4 +1,3 @@
-
 /** One shape. Every Tabler icon is drawn with paths only. */
 export interface IconPath {
 	readonly d: string;

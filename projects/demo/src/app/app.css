@@ -25,7 +25,8 @@ header {
 	align-items: center;
 	gap: var(--itx-space-3);
 	padding: var(--itx-space-4);
-	border-block-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	border-block-end: 1px solid
+		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 .title {
@@ -55,7 +56,8 @@ main {
 footer {
 	grid-area: footer;
 	padding: var(--itx-space-4);
-	border-block-start: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	border-block-start: 1px solid
+		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 @container shell (inline-size >= 48rem) {
@@ -85,7 +87,10 @@ footer {
 		background-color: transparent;
 		border-width: 0;
 		border-inline-end-width: 1px;
-		border-inline-end-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+		border-inline-end-color: light-dark(
+			var(--itx-neutral-200),
+			var(--itx-neutral-800)
+		);
 		border-radius: 0;
 		box-shadow: none;
 		padding: var(--itx-space-4);

@@ -81,9 +81,7 @@ export class InteropCodeBlock {
 	});
 
 	private readonly numbered = inject(new HostAttributeToken('itx-line-numbers'), { optional: true }) !== null;
-	protected readonly gutter = computed(() =>
-		this.numbered ? `${Math.max(2, String(this.code().split('\n').length).length)}ch` : null,
-	);
+	protected readonly gutter = computed(() => (this.numbered ? `${Math.max(2, String(this.code().split('\n').length).length)}ch` : null));
 
 	protected readonly canCopy = typeof navigator !== 'undefined' && !!navigator.clipboard?.writeText;
 	protected readonly copied = signal(false);
@@ -135,5 +133,4 @@ export class InteropCodeBlock {
 			this.status.set('');
 		}, 2000);
 	}
-
 }

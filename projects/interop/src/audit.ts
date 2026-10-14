@@ -27,7 +27,8 @@ const GROUPS = 'fieldset:is([interop-radio-group], [interop-checkbox-group])';
 const TABLISTS = '[interop-tabs] > [role="tablist"]';
 const CARDS = 'fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label';
 /** Elements a label may not hold: it allows phrasing content only. */
-const BLOCK = 'address, article, aside, blockquote, details, div, dl, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, li, main, nav, ol, p, pre, section, table, ul';
+const BLOCK =
+	'address, article, aside, blockquote, details, div, dl, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hr, li, main, nav, ol, p, pre, section, table, ul';
 /** Controls a label may not hold besides its own: they would be labeled by it too. */
 const LABELABLE = 'button, input, meter, output, progress, select, textarea';
 
@@ -59,7 +60,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: 'This button is aria-disabled or aria-busy, but guardActivation() is not installed.',
-						reason: 'Unlike native disabled, these attributes do not stop clicks, so the button still runs its handlers, submits its form and sends its command.',
+						reason:
+							'Unlike native disabled, these attributes do not stop clicks, so the button still runs its handlers, submits its form and sends its command.',
 						advice: 'Call guardActivation() once when the app starts.',
 					},
 	},
@@ -108,7 +110,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: {
 						problem: 'This badge has no text for assistive technology.',
 						reason: 'A dot or an empty badge says nothing to a screen reader user, so whatever it marks is lost.',
-						advice: 'Give it text, hidden when it shows a dot: <span interop-badge="dot"><span itx-visually-hidden>New activity</span></span>.',
+						advice:
+							'Give it text, hidden when it shows a dot: <span interop-badge="dot"><span itx-visually-hidden>New activity</span></span>.',
 					},
 	},
 	'badge-count-label': {
@@ -126,7 +129,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: `:is(button, a[href], [role="button"], [role="link"]) ${BADGES}:is(${LIVE})`,
 		check: () => ({
 			problem: 'This badge is a live region inside a control, so its text is left out of the control’s name.',
-			reason: 'Browsers do not include a live region’s text in the name of the control around it, so the control is announced without its count.',
+			reason:
+				'Browsers do not include a live region’s text in the name of the control around it, so the control is announced without its count.',
 			advice: 'Remove role="status" from the badge. To announce changes, set [announce]="true", which keeps the count in the name.',
 		}),
 	},
@@ -166,7 +170,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			tooltipsOf(trigger, 'aria-labelledby').length || tooltipsOf(trigger, 'aria-describedby').length
 				? {
 						problem: 'This control has a tooltip but is disabled.',
-						reason: 'A disabled control cannot take focus, so keyboard users never see the tooltip, and some browsers send it no pointer events either.',
+						reason:
+							'A disabled control cannot take focus, so keyboard users never see the tooltip, and some browsers send it no pointer events either.',
 						advice: 'Use aria-disabled="true" with guardActivation() instead of disabled.',
 					}
 				: null,
@@ -179,7 +184,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? {
 						problem: 'This tooltip repeats the name of the control it describes.',
 						reason: 'A screen reader reads the name and then the description, so it says the same thing twice.',
-						advice: 'If the tooltip is the only name, make it interop-tooltip="label" and remove the other name. Otherwise remove the tooltip or say something new in it.',
+						advice:
+							'If the tooltip is the only name, make it interop-tooltip="label" and remove the other name. Otherwise remove the tooltip or say something new in it.',
 					}
 				: null;
 		},
@@ -191,7 +197,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			return text && tooltipsOf(trigger, 'aria-labelledby').length && !squash(ariaName(trigger)).includes(text)
 				? {
 						problem: 'This control’s label tooltip replaces its visible text with different words.',
-						reason: 'A label tooltip becomes the whole name, so a voice control user who says the visible text cannot reach the control (WCAG 2.5.3).',
+						reason:
+							'A label tooltip becomes the whole name, so a voice control user who says the visible text cannot reach the control (WCAG 2.5.3).',
 						advice: 'Use a describing tooltip, interop-tooltip without "label", or start the tooltip with the visible text.',
 					}
 				: null;
@@ -216,7 +223,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			label.querySelector(BLOCK)
 				? {
 						problem: 'This control’s label holds block content, such as a div, p, list or heading.',
-						reason: 'A label may hold only inline content. Browsers render it, but the HTML is invalid, and headings or lists inside it are not announced as such.',
+						reason:
+							'A label may hold only inline content. Browsers render it, but the HTML is invalid, and headings or lists inside it are not announced as such.',
 						advice: 'Use spans and other inline elements. A card template stacks them for you.',
 					}
 				: null,
@@ -252,7 +260,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: 'input:is([type="checkbox"], [type="radio"])[aria-checked]',
 		check: () => ({
 			problem: 'This checkbox or radio has aria-checked.',
-			reason: 'The browser already reports a native input’s state. aria-checked overrides it and goes stale, e.g. "mixed" after the user checks the box.',
+			reason:
+				'The browser already reports a native input’s state. aria-checked overrides it and goes stale, e.g. "mixed" after the user checks the box.',
 			advice: 'Remove aria-checked. For a mixed checkbox, set the indeterminate property: [indeterminate]="…" in Angular.',
 		}),
 	},
@@ -274,7 +283,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			return names.size > 1 || names.has('')
 				? {
 						problem: 'The radios in this group do not all share one name.',
-						reason: 'Radios with the same name are one control: one checked at a time, one tab stop, arrow keys, and required for the group. Without it each radio stands alone.',
+						reason:
+							'Radios with the same name are one control: one checked at a time, one tab stop, arrow keys, and required for the group. Without it each radio stands alone.',
 						advice: 'Give every radio the same name="…". Angular’s formControlName does not set it, so add name as well.',
 					}
 				: null;
@@ -299,7 +309,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? {
 						problem: 'Every checkbox in this group is required.',
 						reason: 'required on a checkbox means that box must be checked, so the form will not submit until all of them are.',
-						advice: 'For "choose at least one", remove required and check the group: setCustomValidity() on one box, or a validator in your form model.',
+						advice:
+							'For "choose at least one", remove required and check the group: setCustomValidity() on one box, or a validator in your form model.',
 					}
 				: null;
 		},
@@ -341,7 +352,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: 'This tab does not control a tab panel.',
-						reason: 'A tab shows its panel through aria-controls. Without one, choosing it shows nothing, and screen readers cannot find its content.',
+						reason:
+							'A tab shows its panel through aria-controls. Without one, choosing it shows nothing, and screen readers cannot find its content.',
 						advice: 'Set aria-controls to the id of a role="tabpanel" element.',
 					},
 	},
@@ -352,7 +364,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: 'This tab list does not have exactly one selected tab.',
-						reason: 'One tab is always selected, and its panel shown. With none or several, the shown panel and the announced tab disagree.',
+						reason:
+							'One tab is always selected, and its panel shown. With none or several, the shown panel and the announced tab disagree.',
 						advice: 'Mark one tab aria-selected="true" in the markup, and call bindTabs() to keep it so.',
 					},
 	},
@@ -387,7 +400,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: 'This step indicator does not mark exactly one current step.',
-						reason: 'The current step, and every completed step before it, are drawn from aria-current="step". With none or several, the indicator and the page disagree.',
+						reason:
+							'The current step, and every completed step before it, are drawn from aria-current="step". With none or several, the indicator and the page disagree.',
 						advice: 'Mark the current step <li aria-current="step">, and only that one.',
 					},
 	},
@@ -399,7 +413,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			if (step.querySelector('button, [role="tab"], [role="button"]'))
 				return {
 					problem: 'This step holds a button or a tab.',
-					reason: 'A step indicator shows progress. Buttons and tabs in it promise a way to jump between steps that the process does not offer.',
+					reason:
+						'A step indicator shows progress. Buttons and tabs in it promise a way to jump between steps that the process does not offer.',
 					advice: 'Link back to a completed step with <a href>. To move between sections in any order, use tabs.',
 				};
 			return future && step.querySelector('a[href]')
@@ -418,7 +433,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: 'This step has no legend or heading.',
-						reason: 'After a step change focus moves to the step’s heading, which says where the user is. Without one, focus has nowhere useful to go.',
+						reason:
+							'After a step change focus moves to the step’s heading, which says where the user is. Without one, focus has nowhere useful to go.',
 						advice: 'Start the step with a <legend>, e.g. <legend><h2>Address (step 2 of 3)</h2></legend>.',
 					},
 	},
@@ -455,7 +471,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: ':is(ul[interop-tags], ol[interop-steps]):not([role="list"])',
 		check: (list) => ({
 			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : 'tag list'} has no role="list".`,
-			reason: 'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many items there are, or which step of how many this is.',
+			reason:
+				'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many items there are, or which step of how many this is.',
 			advice: `Add role="list" to the <${list.tagName.toLowerCase()}>.`,
 		}),
 	},
@@ -465,19 +482,25 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			ariaName(dialog)
 				? null
 				: {
-						problem: dialog.hasAttribute('aria-labelledby') ? 'This dialog’s aria-labelledby points at nothing with text.' : 'This dialog has no name.',
-						reason: 'A screen reader announces a dialog by its name when it opens. Without one, the user hears "dialog" and nothing about what it is for.',
+						problem: dialog.hasAttribute('aria-labelledby')
+							? 'This dialog’s aria-labelledby points at nothing with text.'
+							: 'This dialog has no name.',
+						reason:
+							'A screen reader announces a dialog by its name when it opens. Without one, the user hears "dialog" and nothing about what it is for.',
 						advice: 'Point aria-labelledby at the dialog’s heading: <dialog aria-labelledby="title"><h2 id="title">…</h2>.',
 					},
 	},
 	'dialog-close': {
 		selector: 'dialog[interop-dialog][closedby="none"]',
 		check: (dialog) =>
-			dialog.querySelector('button:is([command="close"], [command="request-close"], [formmethod="dialog"]), form[method="dialog"] button:not([type="button"], [type="reset"])')
+			dialog.querySelector(
+				'button:is([command="close"], [command="request-close"], [formmethod="dialog"]), form[method="dialog"] button:not([type="button"], [type="reset"])',
+			)
 				? null
 				: {
 						problem: 'This dialog cannot be closed.',
-						reason: 'closedby="none" turns off Escape and clicks outside, and no button inside closes it, so a keyboard user is trapped (WCAG 2.1.2).',
+						reason:
+							'closedby="none" turns off Escape and clicks outside, and no button inside closes it, so a keyboard user is trapped (WCAG 2.1.2).',
 						advice: 'Add a button with command="request-close" or command="close", or a button in <form method="dialog">.',
 					},
 	},
@@ -485,7 +508,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: 'dialog[interop-dialog][role="alertdialog"]:not([aria-describedby])',
 		check: () => ({
 			problem: 'This alert dialog has no description.',
-			reason: 'An alert dialog interrupts with an urgent message. Screen readers read its description with its name, so without one the message itself is not announced.',
+			reason:
+				'An alert dialog interrupts with an urgent message. Screen readers read its description with its name, so without one the message itself is not announced.',
 			advice: 'Point aria-describedby at the message: <p id="message">…</p>.',
 		}),
 	},
@@ -496,7 +520,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: control.hasAttribute('placeholder') ? 'This field has only a placeholder for a label.' : 'This field has no label.',
-						reason: 'Without a label, a screen reader announces only what kind of field it is, and a placeholder disappears as soon as the user types. Two elements with the same id also leave a label pointing at the wrong one.',
+						reason:
+							'Without a label, a screen reader announces only what kind of field it is, and a placeholder disappears as soon as the user types. Two elements with the same id also leave a label pointing at the wrong one.',
 						advice: 'Add <label for="…"> with the field’s id, and check that the id is unique.',
 					},
 	},
@@ -520,15 +545,18 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: 'input[interop-input][type="number"]',
 		check: () => ({
 			problem: 'This field is type="number".',
-			reason: 'Number inputs change value when the page is scrolled over them, drop letters silently, round long numbers, and some voice and screen reader software cannot use them.',
-			advice: 'Use type="text" with inputmode="numeric", or inputmode="decimal" for amounts. Keep type="number" only for values people step through, like a quantity.',
+			reason:
+				'Number inputs change value when the page is scrolled over them, drop letters silently, round long numbers, and some voice and screen reader software cannot use them.',
+			advice:
+				'Use type="text" with inputmode="numeric", or inputmode="decimal" for amounts. Keep type="number" only for values people step through, like a quantity.',
 		}),
 	},
 	'field-autocomplete': {
 		selector: 'input[interop-input]:is([type="email"], [type="tel"]):not([autocomplete])',
 		check: (input) => ({
 			problem: `This ${input.getAttribute('type')} field has no autocomplete attribute.`,
-			reason: 'When a field asks for the user’s own details, autocomplete lets the browser fill it in and tells assistive technology what it is for (WCAG 1.3.5).',
+			reason:
+				'When a field asks for the user’s own details, autocomplete lets the browser fill it in and tells assistive technology what it is for (WCAG 1.3.5).',
 			advice: `Add autocomplete="${input.getAttribute('type')}" if it is the user’s own, or autocomplete="off" if it is someone else’s.`,
 		}),
 	},
@@ -536,7 +564,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: '[interop-hint] a[href]',
 		check: () => ({
 			problem: 'This hint holds a link.',
-			reason: 'A hint is read as the field’s description, and screen readers do not say that text in a description is a link, or let the user follow it from the field.',
+			reason:
+				'A hint is read as the field’s description, and screen readers do not say that text in a description is a link, or let the user follow it from the field.',
 			advice: 'Move the link out of the hint, before the field.',
 		}),
 	},
@@ -555,7 +584,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				? null
 				: {
 						problem: 'This option has no text.',
-						reason: 'Screen readers read an option’s text, and browsers without customizable select show only its text, so the option is blank to both.',
+						reason:
+							'Screen readers read an option’s text, and browsers without customizable select show only its text, so the option is blank to both.',
 						advice: 'Give every option text. Hide it visually with itx-visually-hidden if an icon shows instead.',
 					},
 	},
@@ -563,7 +593,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: 'select[interop-select][multiple]',
 		check: () => ({
 			problem: 'This select takes several choices.',
-			reason: 'Keyboard and screen reader users struggle with a multiple select: in testing it reached 25% task success, against 100% for a single select.',
+			reason:
+				'Keyboard and screen reader users struggle with a multiple select: in testing it reached 25% task success, against 100% for a single select.',
 			advice: 'Use a <fieldset interop-checkbox-group> with a checkbox per option.',
 		}),
 	},

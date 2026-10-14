@@ -78,7 +78,9 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 	};
 
 	const observer = new MutationObserver((records) => {
-		const gone = records.flatMap((record) => Array.from(record.removedNodes)).filter((node): node is Element => node instanceof Element && node.tagName === 'LI');
+		const gone = records
+			.flatMap((record) => Array.from(record.removedNodes))
+			.filter((node): node is Element => node instanceof Element && node.tagName === 'LI');
 		if (!gone.length) return;
 		if (options.status) announce(options.status, gone.map((tag) => removed(tagText(tag))).join('. '));
 		if (!focusedTag || !gone.includes(focusedTag)) return;

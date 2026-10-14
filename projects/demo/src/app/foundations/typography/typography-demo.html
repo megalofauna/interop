@@ -1,10 +1,17 @@
 <h1>Typography</h1>
 
-<p>Major Second (1.125) from 16px. Headings grow from a 320px viewport to a 1280px one. Viewport: {{ viewport() }}px.</p>
+<p>
+	Major Second (1.125) from 16px. Headings grow from a 320px viewport to a
+	1280px one. Viewport: {{ viewport() }}px.
+</p>
 
 <dl>
 	@for (role of roles; track role; let i = $index) {
-		<dt><code>itx-font="{{ role }}"</code> {{ measures()[i] }}</dt>
-		<dd #sample [attr.itx-font]="role">The quick brown fox jumps over the lazy dog</dd>
+		<dt>
+			<code>itx-font="{{ role }}"</code> {{ measures()[i] }}
+		</dt>
+		<dd #sample [attr.itx-font]="role">
+			The quick brown fox jumps over the lazy dog
+		</dd>
 	}
 </dl>

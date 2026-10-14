@@ -9,15 +9,26 @@
 
 <h2>With an icon</h2>
 <p>
-	<button interop-button type="button" itx-size="sm"><svg interop-icon name="tabler-copy"></svg>Copy</button>
-	<button interop-button type="button"><svg interop-icon name="tabler-copy"></svg>Copy</button>
-	<button interop-button type="button" itx-size="lg"><svg interop-icon name="tabler-copy"></svg>Copy</button>
-	<button interop-button type="button" [interopTooltip]="search"><svg interop-icon name="tabler-search"></svg></button>
+	<button interop-button type="button" itx-size="sm">
+		<svg interop-icon name="tabler-copy"></svg>Copy
+	</button>
+	<button interop-button type="button">
+		<svg interop-icon name="tabler-copy"></svg>Copy
+	</button>
+	<button interop-button type="button" itx-size="lg">
+		<svg interop-icon name="tabler-copy"></svg>Copy
+	</button>
+	<button interop-button type="button" [interopTooltip]="search">
+		<svg interop-icon name="tabler-search"></svg>
+	</button>
 	<span interop-tooltip="label" #search>Search</span>
 </p>
 
 <h2>Radius</h2>
-<p>Each step is a multiple of the house radius, 6px by default. No attribute is the house radius.</p>
+<p>
+	Each step is a multiple of the house radius, 6px by default. No attribute is
+	the house radius.
+</p>
 <p>
 	<button interop-button itx-radius="none">None</button>
 	<button interop-button itx-radius="sm">Small</button>
@@ -35,13 +46,33 @@
 
 <h2>Pressed</h2>
 <p>
-	<button interop-button type="button" [attr.aria-pressed]="bold()" (click)="bold.set(!bold())">Bold</button>
+	<button
+		interop-button
+		type="button"
+		[attr.aria-pressed]="bold()"
+		(click)="bold.set(!bold())"
+	>
+		Bold
+	</button>
 </p>
 
 <h2>Busy</h2>
 <p>
-	<button interop-button type="button" [attr.aria-busy]="busy() ? 'true' : null">Save changes</button>
-	<button interop-button type="button" [attr.aria-pressed]="busy()" (click)="busy.set(!busy())">Busy</button>
+	<button
+		interop-button
+		type="button"
+		[attr.aria-busy]="busy() ? 'true' : null"
+	>
+		Save changes
+	</button>
+	<button
+		interop-button
+		type="button"
+		[attr.aria-pressed]="busy()"
+		(click)="busy.set(!busy())"
+	>
+		Busy
+	</button>
 </p>
 
 <h2>Pending action</h2>
@@ -52,13 +83,24 @@
 
 <h2>Invokers</h2>
 <p>
-	<button interop-button type="button" command="show-modal" [commandFor]="confirm">Delete…</button>
+	<button
+		interop-button
+		type="button"
+		command="show-modal"
+		[commandFor]="confirm"
+	>
+		Delete…
+	</button>
 	<button interop-button type="button" [popoverTarget]="menu">Options</button>
 </p>
 
 <dialog #confirm interop-dialog aria-labelledby="confirm-title">
 	<h2 id="confirm-title">Delete this item?</h2>
-	<footer><button interop-button type="button" command="close" [commandFor]="confirm">Cancel</button></footer>
+	<footer>
+		<button interop-button type="button" command="close" [commandFor]="confirm">
+			Cancel
+		</button>
+	</footer>
 </dialog>
 
 <div popover #menu>Options go here.</div>

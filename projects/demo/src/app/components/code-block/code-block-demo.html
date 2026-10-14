@@ -1,25 +1,55 @@
 <h1>Code block</h1>
 
 <h2>With a caption</h2>
-<figure interop-code-block language="ts" caption="split-lines.ts" [code]="splitLines"></figure>
+<figure
+	interop-code-block
+	language="ts"
+	caption="split-lines.ts"
+	[code]="splitLines"
+></figure>
 
 <h2>Named by its language</h2>
-<p>With no caption, the block takes the label its language was registered with.</p>
+<p>
+	With no caption, the block takes the label its language was registered with.
+</p>
 <figure interop-code-block language="css" [code]="radius"></figure>
 
 <h2>Line numbers</h2>
-<p>Taller code scrolls, and its <code>&lt;pre&gt;</code> becomes focusable so the keyboard can scroll it.</p>
-<figure interop-code-block itx-line-numbers language="ts" caption="badge.ts" [code]="badge"></figure>
+<p>
+	Taller code scrolls, and its <code>&lt;pre&gt;</code> becomes focusable so the
+	keyboard can scroll it.
+</p>
+<figure
+	interop-code-block
+	itx-line-numbers
+	language="ts"
+	caption="badge.ts"
+	[code]="badge"
+></figure>
 
 <h2>Line numbers and wrapping</h2>
-<figure interop-code-block itx-line-numbers itx-wrap language="html" caption="badge-demo.html" [code]="badgeDemo"></figure>
+<figure
+	interop-code-block
+	itx-line-numbers
+	itx-wrap
+	language="html"
+	caption="badge-demo.html"
+	[code]="badgeDemo"
+></figure>
 
 <h2>An unregistered language</h2>
 <p>The code shows without colors.</p>
-<figure interop-code-block language="shell" caption="Build and test" [code]="shell"></figure>
+<figure
+	interop-code-block
+	language="shell"
+	caption="Build and test"
+	[code]="shell"
+></figure>
 
 <h2>Inline code</h2>
 <p>
 	Colors work on any <code>code</code> element with a language:
-	<code class="language-ts">registerLanguages(&#123; ts: definition &#125;)</code>.
+	<code class="language-ts"
+		>registerLanguages(&#123; ts: definition &#125;)</code
+	>.
 </p>

@@ -2,8 +2,7 @@ import { bindTooltip } from './bind-tooltip';
 
 /** jsdom has no popover API. These stand in for it and keep the state the browser would. */
 const open = new Set<Element>();
-const toggle = (element: Element, newState: string) =>
-	element.dispatchEvent(Object.assign(new Event('toggle'), { newState }));
+const toggle = (element: Element, newState: string) => element.dispatchEvent(Object.assign(new Event('toggle'), { newState }));
 
 const pointer = (element: Element, type: string, init: { pointerType?: string; relatedTarget?: Element } = {}) =>
 	element.dispatchEvent(
@@ -147,7 +146,10 @@ describe('bindTooltip', () => {
 
 	it('closes another tooltip when it opens', () => {
 		document.body.insertAdjacentHTML('beforeend', '<button type="button">Other</button><span interop-tooltip>Other tip</span>');
-		const [otherTrigger, otherTooltip] = [document.body.lastElementChild!.previousElementSibling as HTMLElement, document.body.lastElementChild as HTMLElement];
+		const [otherTrigger, otherTooltip] = [
+			document.body.lastElementChild!.previousElementSibling as HTMLElement,
+			document.body.lastElementChild as HTMLElement,
+		];
 		const unbindOther = bindTooltip(otherTrigger, otherTooltip);
 		trigger.dispatchEvent(new FocusEvent('focusin'));
 		pointer(otherTrigger, 'pointerenter');
