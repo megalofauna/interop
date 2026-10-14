@@ -257,6 +257,9 @@ No native tree element is proposed.
 5. **Expand all / collapse all.** Recommend leaving it out until someone asks.
    When asked, add a custom `--expand-all` command and its listener.
 
+Answered 2026-10-14: 1 yes; 2 (a) only; 3 yes; 4 built now, and the demo's
+site navigation uses it; 5 open.
+
 ## Unverified
 
 - Screen reader output for nested `<details>` in lists (NVDA, JAWS,

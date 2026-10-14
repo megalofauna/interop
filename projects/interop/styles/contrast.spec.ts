@@ -303,6 +303,23 @@ describe('step indicator', () => {
 	}
 });
 
+describe('tree', () => {
+	const tree = (name: string, scheme: 0 | 1) => token(`--itx-tree-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has row text of 4.5:1 against the page and on the hover and current fills in ${label}`, () => {
+			for (const background of [CANVAS[scheme], tree('background-color-hover', scheme)])
+				expect(contrast(tree('color', scheme), background)).toBeGreaterThanOrEqual(4.5);
+			expect(contrast(tree('color-current', scheme), tree('background-color-current', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the bar marks the current page beside its fill.
+		it(`has a current-page bar of 3:1 against the page and its fill in ${label}`, () => {
+			for (const background of [CANVAS[scheme], tree('background-color-current', scheme)])
+				expect(contrast(tree('row-border-inline-start-color-current', scheme), background)).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
 describe('chips', () => {
 	const chips = (name: string, scheme: 0 | 1) => token(`--itx-chips-chip-${name}`, scheme);
 

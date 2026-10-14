@@ -298,6 +298,26 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('tree', () => {
+		const tree = (summary: string, inner = ' role="list"') =>
+			`<ul interop-tree role="list"><li><details open><summary>${summary}</summary><ul${inner}><li><a href="/a">A</a></li></ul></details></li></ul>`;
+
+		it('accepts branches labeled with text, and every list with role="list"', () => {
+			render(tree('Guides'));
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a link inside a summary', () => {
+			render(tree('<a href="/guides">Guides</a>'));
+			expect(rules()).toEqual(['tree-summary-control']);
+		});
+
+		it('flags a nested list without role="list"', () => {
+			render(tree('Guides', ''));
+			expect(rules()).toEqual(['list-role']);
+		});
+	});
+
 	describe('dialog', () => {
 		it('accepts a dialog named by its heading, with a way to close', () => {
 			render(`

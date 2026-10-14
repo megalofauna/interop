@@ -1,0 +1,95 @@
+<h1>Tree</h1>
+<p class="aka">
+	Also known as tree view, outline view, side navigation, nested navigation.
+</p>
+<p>
+	A tree is navigation through a hierarchy of pages. It is nested lists of
+	links, with a <code>&lt;details&gt;</code> for each branch, and
+	<code>ul interop-tree</code> on the outer list. It needs no script and no
+	ARIA. Screen readers announce each branch as expanded or collapsed and each
+	link's level from the nesting. Every link and every branch is its own Tab
+	stop. The site navigation on this page is one.
+</p>
+
+<h2>Navigation</h2>
+<p>
+	The current page has <code>aria-current="page"</code>, which draws a bar,
+	heavier text and a fill. Open the branch that holds it.
+</p>
+<nav aria-label="Docs example" class="narrow">
+	<ul interop-tree role="list">
+		<li>
+			<details open>
+				<summary>Guides</summary>
+				<ul role="list">
+					<li>
+						<a routerLink="/components/tree" fragment="overview">Overview</a>
+					</li>
+					<li>
+						<a
+							routerLink="/components/tree"
+							fragment="install"
+							aria-current="page"
+							>Install</a
+						>
+					</li>
+					<li>
+						<details>
+							<summary>Deploy</summary>
+							<ul role="list">
+								<li>
+									<a routerLink="/components/tree" fragment="netlify"
+										>Netlify</a
+									>
+								</li>
+								<li>
+									<a routerLink="/components/tree" fragment="vercel">Vercel</a>
+								</li>
+							</ul>
+						</details>
+					</li>
+				</ul>
+			</details>
+		</li>
+		<li>
+			<a routerLink="/components/tree" fragment="changelog">Changelog</a>
+		</li>
+	</ul>
+</nav>
+<figure interop-code-block language="html" [code]="examples.nav"></figure>
+
+<h2>A branch with a page of its own</h2>
+<p>
+	A branch is a label. Its <code>&lt;summary&gt;</code> opens and closes it,
+	so it cannot also be a link. When a branch has a page of its own, list that
+	page as its first child, as Overview is above. The dev audit warns about a
+	link or a button inside a summary.
+</p>
+
+<h2>Find in page</h2>
+<p>
+	Search this page for "Netlify" while Deploy is closed. The browser opens
+	every branch above the match and scrolls to it.
+</p>
+
+<h2>One branch open at a time</h2>
+<p>
+	Give the <code>&lt;details&gt;</code> of one level the same
+	<code>name</code>. Opening one closes the others, with no script.
+</p>
+<figure interop-code-block language="html" [code]="examples.exclusive"></figure>
+
+<h2>In Angular</h2>
+<p>
+	<code>ariaCurrentWhenActive</code> sets <code>aria-current="page"</code> on
+	the link to the current route.
+</p>
+<figure interop-code-block language="html" [code]="examples.angular"></figure>
+
+<h2>When not to use it</h2>
+<p>
+	A tree here is for navigation. A file browser where arrow keys move between
+	items and select them is an ARIA tree, with one Tab stop and a different
+	keyboard. Interop does not ship one. For one level of show and hide, use a
+	plain <code>&lt;details&gt;</code>.
+</p>

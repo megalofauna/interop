@@ -467,10 +467,22 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
+	'tree-summary-control': {
+		selector: 'ul[interop-tree] summary',
+		check: (summary) =>
+			summary.querySelector('a[href], button, input, select, textarea, [tabindex]')
+				? {
+						problem: 'This branch’s summary holds a link or a control.',
+						reason:
+							'The summary is the control that opens the branch. A link or button inside it is a control inside a control: screen readers announce one of them, and a click does both.',
+						advice: 'Write the summary as text, and list the branch’s own page as its first child: <li><a href="…">Overview</a></li>.',
+					}
+				: null,
+	},
 	'list-role': {
-		selector: ':is(ul[interop-tags], ol[interop-steps]):not([role="list"])',
+		selector: ':is(ul[interop-tags], ol[interop-steps], ul[interop-tree], ul[interop-tree] ul):not([role="list"])',
 		check: (list) => ({
-			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : 'tag list'} has no role="list".`,
+			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : list.closest('ul[interop-tree]') ? 'tree list' : 'tag list'} has no role="list".`,
 			reason:
 				'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many items there are, or which step of how many this is.',
 			advice: `Add role="list" to the <${list.tagName.toLowerCase()}>.`,

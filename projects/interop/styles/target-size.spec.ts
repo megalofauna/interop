@@ -12,6 +12,7 @@ const tabsCss = sheets['tabs/interop-tabs.base.css'];
 const segmentedCss = sheets['styles/segmented.css'];
 const selectCss = sheets['select/interop-select.base.css'];
 const fieldCss = sheets['field/interop-field.base.css'];
+const treeCss = sheets['tree/interop-tree.base.css'];
 
 // jsdom has no layout, so axe cannot measure targets. This reads every size step's declared height instead.
 // A control's input sits inside its label, so the label is the target.
@@ -42,6 +43,7 @@ describe('target size', () => {
 		['checkbox label', checkboxCss, '--itx-checkbox-min-block-size'],
 		['field', fieldCss, '--itx-field-min-block-size'],
 		['select option', selectCss, '--itx-select-option-min-block-size'],
+		['tree row', treeCss, '--itx-tree-row-min-block-size'],
 	] as const;
 
 	for (const [label, css, name] of targets) {
