@@ -107,29 +107,22 @@ export function bindTooltip(trigger: HTMLElement, tooltip: HTMLElement): () => v
 		hide();
 	};
 
-	const document = trigger.ownerDocument;
-	tooltip.addEventListener('toggle', onToggle);
+	const listening = new AbortController();
+	const { signal } = listening;
+	tooltip.addEventListener('toggle', onToggle, { signal });
 	for (const element of [trigger, tooltip]) {
-		element.addEventListener('pointerenter', onPointerEnter);
-		element.addEventListener('pointerleave', onPointerLeave);
+		element.addEventListener('pointerenter', onPointerEnter, { signal });
+		element.addEventListener('pointerleave', onPointerLeave, { signal });
 	}
-	trigger.addEventListener('focusin', onFocusIn);
-	trigger.addEventListener('focusout', onFocusOut);
-	trigger.addEventListener('pointerdown', onPointerDown);
-	if (!closesItself) document.addEventListener('keydown', onKeyDown, { capture: true });
+	trigger.addEventListener('focusin', onFocusIn, { signal });
+	trigger.addEventListener('focusout', onFocusOut, { signal });
+	trigger.addEventListener('pointerdown', onPointerDown, { signal });
+	if (!closesItself) trigger.ownerDocument.addEventListener('keydown', onKeyDown, { capture: true, signal });
 	watchInteropInDevMode();
 
 	return () => {
 		hide();
-		tooltip.removeEventListener('toggle', onToggle);
-		for (const element of [trigger, tooltip]) {
-			element.removeEventListener('pointerenter', onPointerEnter);
-			element.removeEventListener('pointerleave', onPointerLeave);
-		}
-		trigger.removeEventListener('focusin', onFocusIn);
-		trigger.removeEventListener('focusout', onFocusOut);
-		trigger.removeEventListener('pointerdown', onPointerDown);
-		document.removeEventListener('keydown', onKeyDown, { capture: true });
+		listening.abort();
 		if (added) {
 			const rest = (trigger.getAttribute(relation) ?? '').split(/\s+/).filter((id) => id && id !== tooltip.id);
 			if (rest.length) trigger.setAttribute(relation, rest.join(' '));

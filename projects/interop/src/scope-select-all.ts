@@ -22,9 +22,10 @@ export function scopeSelectAll(root: Document = document): () => void {
 		selection.addRange(range);
 	};
 
-	root.addEventListener('keydown', listener);
+	const listening = new AbortController();
+	root.addEventListener('keydown', listener, { signal: listening.signal });
 	installed = () => {
-		root.removeEventListener('keydown', listener);
+		listening.abort();
 		installed = null;
 	};
 	return installed;

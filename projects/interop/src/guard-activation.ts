@@ -15,11 +15,12 @@ export function guardActivation(root: Document | ShadowRoot = document): () => v
 			event.stopImmediatePropagation();
 		}
 	};
-	root.addEventListener('click', onClick, { capture: true });
+	const listening = new AbortController();
+	root.addEventListener('click', onClick, { capture: true, signal: listening.signal });
 	noteActivationGuard(1);
 	watchInteropInDevMode();
 	return () => {
-		root.removeEventListener('click', onClick, { capture: true });
+		listening.abort();
 		noteActivationGuard(-1);
 	};
 }

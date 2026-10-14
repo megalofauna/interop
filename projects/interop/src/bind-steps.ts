@@ -133,20 +133,17 @@ export function bindSteps(form: HTMLFormElement, options: StepsOptions = {}): ()
 		if (typeof index === 'number' && index <= furthest) go(index, { record: false });
 	};
 
-	form.addEventListener('command', onCommand);
-	form.addEventListener('keydown', onKeydown);
-	form.addEventListener('invalid', onInvalid, true);
+	const listening = new AbortController();
+	const { signal } = listening;
+	form.addEventListener('command', onCommand, { signal });
+	form.addEventListener('keydown', onKeydown, { signal });
+	form.addEventListener('invalid', onInvalid, { capture: true, signal });
 	if (options.history && view) {
 		view.history.replaceState({ ...view.history.state, [key]: current }, '');
-		view.addEventListener('popstate', onPopstate);
+		view.addEventListener('popstate', onPopstate, { signal });
 	}
 	update();
 	watchInteropInDevMode();
 
-	return () => {
-		form.removeEventListener('command', onCommand);
-		form.removeEventListener('keydown', onKeydown);
-		form.removeEventListener('invalid', onInvalid, true);
-		view?.removeEventListener('popstate', onPopstate);
-	};
+	return () => listening.abort();
 }

@@ -1,7 +1,5 @@
 import { watchInteropInDevMode } from './audit';
-
-/** Elements that take focus, in the order a drawer prefers them. */
-const FOCUSABLE = 'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])';
+import { focusables } from './focusable';
 
 /**
  * Makes a popover behave as a drawer over the page.
@@ -21,7 +19,7 @@ export function bindDrawer(popover: HTMLElement): () => void {
 	const onToggle = (event: Event) => {
 		open = (event as ToggleEvent).newState === 'open';
 		if (!open) return;
-		const target = popover.querySelector<HTMLElement>('[aria-current]:is(a[href], button)') ?? popover.querySelector<HTMLElement>(FOCUSABLE);
+		const target = popover.querySelector<HTMLElement>('[aria-current]:is(a[href], button)') ?? focusables(popover)[0];
 		target?.focus();
 	};
 
@@ -35,14 +33,12 @@ export function bindDrawer(popover: HTMLElement): () => void {
 		if (open && (event.target as Element).closest('a[href]')) popover.hidePopover();
 	};
 
-	popover.addEventListener('toggle', onToggle);
-	popover.addEventListener('focusout', onFocusout);
-	popover.addEventListener('click', onClick);
+	const listening = new AbortController();
+	const { signal } = listening;
+	popover.addEventListener('toggle', onToggle, { signal });
+	popover.addEventListener('focusout', onFocusout, { signal });
+	popover.addEventListener('click', onClick, { signal });
 	watchInteropInDevMode();
 
-	return () => {
-		popover.removeEventListener('toggle', onToggle);
-		popover.removeEventListener('focusout', onFocusout);
-		popover.removeEventListener('click', onClick);
-	};
+	return () => listening.abort();
 }

@@ -1,4 +1,5 @@
 import { watchInteropInDevMode } from './audit';
+import { focusables } from './focusable';
 
 let ids = 0;
 
@@ -13,9 +14,6 @@ export interface TabsChangeDetail {
 	tab: HTMLElement;
 	panel: HTMLElement | null;
 }
-
-const FOCUSABLE =
-	'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"]), [contenteditable]';
 
 /**
  * Adds tab behavior to markup the consumer writes: a `[role=tablist]` of `[role=tab]` buttons in
@@ -66,7 +64,7 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	 */
 	const setReachable = (panel: HTMLElement, shown: boolean) => {
 		if (panel.hasAttribute('tabindex') && !reachable.has(panel)) return;
-		if (shown && !panel.querySelector(FOCUSABLE)) {
+		if (shown && !focusables(panel).length) {
 			panel.tabIndex = 0;
 			reachable.add(panel);
 		} else {
@@ -181,11 +179,13 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 
 	const observer = new MutationObserver(reconcile);
 	observer.observe(root, { childList: true, subtree: true });
-	root.addEventListener('keydown', onKeydown);
-	root.addEventListener('click', onClick);
-	root.addEventListener('focusout', onFocusout);
-	root.addEventListener('beforematch', onBeforematch);
-	if (hash) document.defaultView?.addEventListener('hashchange', onHashchange);
+	const listening = new AbortController();
+	const { signal } = listening;
+	root.addEventListener('keydown', onKeydown, { signal });
+	root.addEventListener('click', onClick, { signal });
+	root.addEventListener('focusout', onFocusout, { signal });
+	root.addEventListener('beforematch', onBeforematch, { signal });
+	if (hash) document.defaultView?.addEventListener('hashchange', onHashchange, { signal });
 
 	reconcile();
 	const initial = hash ? fromHash() : undefined;
@@ -195,10 +195,6 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 
 	return () => {
 		observer.disconnect();
-		root.removeEventListener('keydown', onKeydown);
-		root.removeEventListener('click', onClick);
-		root.removeEventListener('focusout', onFocusout);
-		root.removeEventListener('beforematch', onBeforematch);
-		if (hash) document.defaultView?.removeEventListener('hashchange', onHashchange);
+		listening.abort();
 	};
 }

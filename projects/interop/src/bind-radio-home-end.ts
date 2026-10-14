@@ -18,6 +18,7 @@ export function bindRadioHomeEnd(root: HTMLElement): () => void {
 		// click() checks the radio and fires input and change, as a user's choice does.
 		target.click();
 	};
-	root.addEventListener('keydown', onKeydown);
-	return () => root.removeEventListener('keydown', onKeydown);
+	const listening = new AbortController();
+	root.addEventListener('keydown', onKeydown, { signal: listening.signal });
+	return () => listening.abort();
 }
