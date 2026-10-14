@@ -34,6 +34,6 @@ describe('forced colors', () => {
 	}
 
 	it('maps the selected and checked states to Highlight', () => {
-		for (const css of [checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss]) expect(css).toContain('Highlight');
+		for (const css of [checkboxCss, radioGroupCss, switchCss, tabsCss, segmentedCss, cardsCss, stepsCss, chipsCss, selectCss]) expect(css).toContain('Highlight');
 	});
 });

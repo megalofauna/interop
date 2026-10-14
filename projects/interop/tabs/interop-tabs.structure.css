@@ -69,8 +69,6 @@
 	transition-property: color;
 	transition-duration: var(--itx-tabs-transition-duration);
 	transition-timing-function: var(--itx-tabs-transition-timing-function);
-	/* The focus ring sits inside the tab, so it does not overlap its neighbors in a gapless row. */
-	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
 }
 
 /* The bar, on the tab's edge against the rule. */
@@ -109,13 +107,8 @@
 
 /*
  * Segmented: `interop-tabs="segmented"` wears the look in styles/segmented.css, shared with the
- * segmented radio group. It is horizontal only. These rules are the tabs half: on the pill, the
- * focus ring takes the selected text color, which contrasts with the pill.
+ * segmented radio group. Its focus ring on the pill is in styles/outline.css.
  */
-:where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]) {
-	--itx-outline-color: var(--itx-segmented-segment-color-selected);
-	--itx-outline-offset: calc(var(--itx-outline-width) * -2);
-}
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
 
@@ -171,9 +164,5 @@
 
 	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled))::after {
 		background-color: CanvasText;
-	}
-
-	:where([interop-tabs] > [role="tablist"] > [role="tab"]:focus-visible) {
-		outline-color: Highlight;
 	}
 }

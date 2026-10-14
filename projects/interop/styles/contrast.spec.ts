@@ -44,7 +44,8 @@ import fieldCss from '../field/interop-field.base.css' with { loader: 'text' };
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
 for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, dialogCss, fieldCss] as string[]) {
-	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
+	// The first declaration of each token is its base value; later ones are size steps and system modes.
+	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) if (!declarations.has(name)) declarations.set(name, value.trim());
 }
 
 /** A declared value in one scheme, with var() and light-dark() resolved. */

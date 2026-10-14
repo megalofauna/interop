@@ -137,8 +137,4 @@
 	:where(label[interop-switch] > input:is([role="switch"], [switch]):checked:disabled)::before {
 		background-color: Canvas;
 	}
-
-	:where(label[interop-switch] > input:is([role="switch"], [switch]):focus-visible) {
-		outline-color: Highlight;
-	}
 }

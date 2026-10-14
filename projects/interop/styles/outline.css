@@ -1,6 +1,7 @@
 /*
- * The focus ring for every interactive component. Add each one to the selector list.
- * Override a ring by setting these properties on the element, a class, or a component.
+ * The focus ring for every interactive component, and every decision about its color. Add each
+ * component to the selector list. Override a ring by setting these properties on the element, a
+ * class, or a component.
  */
 
 :root {
@@ -30,4 +31,38 @@
 	outline-style: var(--itx-outline-style);
 	outline-color: var(--itx-outline-color);
 	outline-offset: var(--itx-outline-offset);
+}
+
+/* A tab or segment sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
+:where([interop-tabs] > [role="tablist"] > [role="tab"], fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]) {
+	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
+}
+
+/*
+ * On a segmented control's pill the ring sits further inside, with the pill showing on both sides of
+ * it, and takes the pill's text color, which contrasts with it.
+ */
+:where(
+	[interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"],
+	fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]:checked
+) {
+	--itx-outline-color: var(--itx-segmented-segment-color-selected);
+	--itx-outline-offset: calc(var(--itx-outline-width) * -2);
+}
+
+/*
+ * Forced colors: every ring is Highlight, the system's focus color. On the pill, which is Highlight
+ * there, the ring is HighlightText, so it shows against it.
+ */
+@media (forced-colors: active) {
+	:root {
+		--itx-outline-color: Highlight;
+	}
+
+	:where(
+		[interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"],
+		fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]:checked
+	) {
+		--itx-outline-color: HighlightText;
+	}
 }

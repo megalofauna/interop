@@ -138,8 +138,4 @@
 	:where(label[interop-checkbox] > input[type="checkbox"]:disabled)::before {
 		background-color: Canvas;
 	}
-
-	:where(label[interop-checkbox] > input[type="checkbox"]:focus-visible) {
-		outline-color: Highlight;
-	}
 }
