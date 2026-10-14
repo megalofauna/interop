@@ -23,7 +23,7 @@ export const examples = {
 	</header>
 	<form method="dialog">
 		<label for="file-name">Name</label>
-		<input id="file-name" autofocus (input)="dirty.set(true)" />
+		<input interop-input id="file-name" autofocus (input)="dirty.set(true)" />
 		@if (warning()) {
 			<p role="alert">You have unsaved changes. <button type="button" commandfor="rename" command="close">Discard them</button></p>
 		}

@@ -13,26 +13,29 @@ export const examples = {
 </ul>
 <p #announcer role="status" itx-visually-hidden></p>
 `,
-	input: `<form (submit)="submit($event)">
-	<label for="tag-entry">Skills</label>
-	<ul #skillList interop-tags role="list" aria-label="Skills" [fallback]="entry">
-		@for (skill of skills(); track skill) {
-			<li>
-				{{ skill }}
-				<button type="button" (click)="removeSkill(skill)">
-					<span itx-visually-hidden>Remove {{ skill }}</span>
-					<svg interop-icon name="tabler-x"></svg>
-				</button>
-				<input type="hidden" name="skills" [value]="skill">
-			</li>
-		}
-	</ul>
-	<input #entry id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint"
-		interop-tag-input [tags]="skillList" tagsRequired="Add at least one skill."
-		[status]="announcer" [rejected]="alreadyAdded"
-		(interop-tags-add)="addSkill($event)">
-	<datalist id="skill-options">…</datalist>
-	<p id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one.</p>
+	input: `<form interop-form (submit)="submit($event)">
+	<div interop-field>
+		<label for="tag-entry">Skills</label>
+		<p interop-hint id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one</p>
+		<p interop-error hidden></p>
+		<ul #skillList interop-tags role="list" aria-label="Skills" [fallback]="entry">
+			@for (skill of skills(); track skill) {
+				<li>
+					{{ skill }}
+					<button type="button" (click)="removeSkill(skill)">
+						<span itx-visually-hidden>Remove {{ skill }}</span>
+						<svg interop-icon name="tabler-x"></svg>
+					</button>
+					<input type="hidden" name="skills" [value]="skill">
+				</li>
+			}
+		</ul>
+		<input #entry interop-input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint"
+			interop-tag-input [tags]="skillList" tagsRequired="Add at least one skill."
+			[status]="announcer" [rejected]="alreadyAdded"
+			(interop-tags-add)="addSkill($event)">
+		<datalist id="skill-options">…</datalist>
+	</div>
 	<p #announcer role="status" itx-visually-hidden></p>
 	<button interop-button type="submit">Save</button>
 </form>

@@ -1,13 +1,14 @@
 import { Component, signal } from "@angular/core";
 import { type TagAddDetail } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
+import { InteropForm } from "interop/field";
 import { InteropIcon } from "interop/icon";
 import { InteropTagInput, InteropTags } from "interop/tags";
 import { examples } from "./tags-examples";
 
 @Component({
 	selector: "demo-tags",
-	imports: [InteropCodeBlock, InteropIcon, InteropTagInput, InteropTags],
+	imports: [InteropCodeBlock, InteropForm, InteropIcon, InteropTagInput, InteropTags],
 	templateUrl: "./tags-demo.html",
 	styleUrl: "./tags-demo.css",
 })

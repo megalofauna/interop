@@ -2,18 +2,11 @@
 	font-style: italic;
 }
 
-input[type="text"] {
-	display: block;
-	margin-block-start: var(--itx-space-2);
-	padding: var(--itx-space-2);
-	font: inherit;
-}
-
-* + ul[interop-tags],
+* + ul[interop-tags]:not([interop-field] > *),
 * + figure[interop-code-block] {
 	margin-block-start: var(--itx-space-3);
 }
 
-label + ul[interop-tags] {
-	margin-block-start: var(--itx-space-2);
+[interop-field] + p {
+	margin-block-start: var(--itx-space-3);
 }
