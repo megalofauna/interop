@@ -72,26 +72,25 @@
 	>
 </fieldset>
 
-<h2>Two looks, compared</h2>
+<h2>Two looks</h2>
 <p>
-	The selected segment is an inverted fill, the same as an on switch and a
-	checked chip: 17.9:1 against the page in light, 16.7:1 in dark. The raised
-	look puts a light pill on a filled channel, as Apple's control does. Its fill
-	is only 1.2:1 against the channel in light and 1.45:1 in dark, so its edge
-	carries the selection: 3.76:1 and 5.83:1 (WCAG 1.4.11). The raised look is a
-	set of token values, shown here for comparison.
+	The selected segment is a raised pill on a filled channel. Its fill is only
+	1.2:1 against the channel in light and 1.45:1 in dark, so its edge carries the
+	selection: 3.76:1 and 5.83:1 (WCAG 1.4.11). An inverted pill, the same fill as
+	an on switch, is a set of token values: 17.9:1 against the page in light,
+	16.7:1 in dark.
 </p>
 <div class="compare">
 	<fieldset interop-radio-group="segmented">
-		<legend>Inverted (current)</legend>
+		<legend>Raised (default)</legend>
 		<label><input type="radio" name="look-a" value="day" /> Day</label>
 		<label
 			><input type="radio" name="look-a" value="week" checked /> Week</label
 		>
 		<label><input type="radio" name="look-a" value="month" /> Month</label>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" class="raised">
-		<legend>Raised</legend>
+	<fieldset interop-radio-group="segmented" class="inverted">
+		<legend>Inverted</legend>
 		<label><input type="radio" name="look-b" value="day" /> Day</label>
 		<label
 			><input type="radio" name="look-b" value="week" checked /> Week</label

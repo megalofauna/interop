@@ -240,19 +240,19 @@ describe('segmented control', () => {
 	const segmented = (name: string, scheme: 0 | 1) => token(`--itx-segmented-${name}`, scheme);
 
 	for (const [scheme, label] of SCHEMES) {
-		// WCAG 1.4.3: segment text on the page, and the checked segment's text on the pill.
-		it(`has segment text of 4.5:1 against the page in ${label}`, () => {
+		// WCAG 1.4.3: segment text on the channel, and the selected segment's text on the pill.
+		it(`has segment text of 4.5:1 against the channel in ${label}`, () => {
 			for (const state of ['segment-color', 'segment-color-hover']) {
-				expect(contrast(segmented(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+				expect(contrast(segmented(state, scheme), segmented('frame-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
-		it(`has checked text of 4.5:1 against the pill in ${label}`, () => {
+		it(`has selected text of 4.5:1 against the pill in ${label}`, () => {
 			expect(contrast(segmented('segment-color-selected', scheme), segmented('pill-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
-		// WCAG 1.4.11: the frame and the pill against the page.
-		it(`has a frame and a pill of 3:1 against the page in ${label}`, () => {
+		// WCAG 1.4.11: the frame against the page, and the pill's edge, which carries the selection, against the channel.
+		it(`has a frame of 3:1 against the page, and a pill edge of 3:1 against the channel, in ${label}`, () => {
 			expect(contrast(segmented('frame-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-			expect(contrast(segmented('pill-background-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			expect(contrast(segmented('pill-border-color', scheme), segmented('frame-background-color', scheme))).toBeGreaterThanOrEqual(3);
 		});
 	}
 });

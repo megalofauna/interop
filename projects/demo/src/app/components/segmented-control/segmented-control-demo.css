@@ -21,24 +21,22 @@ fieldset + fieldset {
 	margin: 0;
 }
 
-/* The raised look, as token values: a filled channel, a light pill with an edge of 3:1 against it. */
-.raised {
-	--itx-segmented-frame-background-color: light-dark(
-		var(--itx-neutral-200),
-		var(--itx-neutral-800)
-	);
+/* The inverted look, as token values: the page as the channel, a dark pill with no edge. */
+.inverted {
+	--itx-segmented-frame-background-color: transparent;
 	--itx-segmented-pill-background-color: light-dark(
-		var(--itx-neutral-50),
-		var(--itx-neutral-700)
-	);
-	--itx-segmented-pill-border-width: var(--itx-border-width);
-	--itx-segmented-pill-border-color: light-dark(
-		var(--itx-neutral-500),
-		var(--itx-neutral-400)
-	);
-	--itx-segmented-pill-box-shadow: 0 1px 2px oklch(0 0 0 / 0.15);
-	--itx-segmented-segment-color-selected: light-dark(
-		var(--itx-neutral-950),
+		var(--itx-neutral-900),
 		var(--itx-neutral-50)
+	);
+	--itx-segmented-pill-border-width: 0px;
+	--itx-segmented-pill-border-color: transparent;
+	--itx-segmented-pill-box-shadow: none;
+	--itx-segmented-segment-color-selected: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-900)
+	);
+	--itx-segmented-divider-color: light-dark(
+		var(--itx-neutral-300),
+		var(--itx-neutral-700)
 	);
 }

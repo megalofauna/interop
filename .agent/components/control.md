@@ -341,7 +341,8 @@ or add-ons.
 ## Segmented control
 
 `interop-radio-group="segmented"` draws the radio group as a row of equal
-segments in a frame, with a pill on the checked one. It is the same radio
+segments in a filled channel, with a raised pill on the checked one; the pill's
+edge, 3:1 against the channel, carries the selection. It is the same radio
 group: one value, one tab stop, arrow keys, form participation, and the same
 dev audit rules. It has its own demo page. Use it to choose a value or a view of
 the same content; tabs switch between different sections.
@@ -397,9 +398,9 @@ fills its label, and the focus ring on it.
 | `--itx-segmented-segment-color[-hover\|-selected]` | neutral-700/300, 950/50, 50/900 |
 | `--itx-segmented-segment-opacity-disabled` | 0.5 |
 | `--itx-segmented-frame-padding`, `-frame-border-width`, `-frame-border-color` | `--itx-space-0_5`, 1px, neutral-500/400 |
-| `--itx-segmented-pill-background-color` | neutral-900/50 |
-| `--itx-segmented-pill-border-width`, `-pill-border-color`, `-pill-box-shadow` | 0px, transparent, none: the inverted fill carries the selection |
-| `--itx-segmented-frame-background-color` | transparent: the page is the channel |
+| `--itx-segmented-pill-background-color` | neutral-50/700: a raised pill, close to the channel |
+| `--itx-segmented-pill-border-width`, `-pill-border-color`, `-pill-box-shadow` | the shared edge width, neutral-500/400 (3:1 against the channel, which carries the selection), a soft shadow |
+| `--itx-segmented-frame-background-color` | neutral-200/800: the channel |
 | `--itx-segmented-divider-width`, `-divider-inset-block`, `-divider-color` | 1px, `--itx-space-2`, neutral-300/700 |
 | `--itx-segmented-transition-duration`, `-transition-timing-function` | the shared transition tokens |
 

@@ -1,5 +1,5 @@
 /*
- * The segmented look: a row of equal segments in a frame, with a pill on the selected one. The
+ * The segmented look: a row of equal segments in a channel, with a raised pill on the selected one. The
  * segmented radio group and segmented tabs wear it:
  *
  *   <fieldset interop-radio-group="segmented">
@@ -43,26 +43,28 @@
 	--itx-segmented-segment-line-height: var(--itx-line-height-p);
 	--itx-segmented-segment-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
 	--itx-segmented-segment-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
-	--itx-segmented-segment-color-selected: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-segmented-segment-color-selected: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-segmented-segment-opacity-disabled: 0.5;
 
 	--itx-segmented-frame-padding: var(--itx-space-0_5);
 	--itx-segmented-frame-border-width: var(--itx-border-width);
 	/* 3:1 against the page (WCAG 1.4.11). */
 	--itx-segmented-frame-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	/* The channel. Transparent: the page shows through. */
-	--itx-segmented-frame-background-color: transparent;
+	/* The channel the segments sit in. */
+	--itx-segmented-frame-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 
-	/* 3:1 against the page, so the selection shows without the text color. */
-	--itx-segmented-pill-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
-	/* No edge and no shadow: the inverted fill carries the selection. A raised pill needs an edge of 3:1 against the channel. */
-	--itx-segmented-pill-border-width: 0px;
-	--itx-segmented-pill-border-color: transparent;
-	--itx-segmented-pill-box-shadow: none;
+	/*
+	 * The selected segment is a raised pill on the channel. Its fill is close to the channel's, so its
+	 * edge carries the selection: 3:1 against the channel (WCAG 1.4.11).
+	 */
+	--itx-segmented-pill-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-700));
+	--itx-segmented-pill-border-width: var(--itx-border-width);
+	--itx-segmented-pill-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-segmented-pill-box-shadow: 0 1px 2px oklch(0 0 0 / 0.15);
 
 	--itx-segmented-divider-width: 1px;
 	--itx-segmented-divider-inset-block: var(--itx-space-2);
-	--itx-segmented-divider-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-segmented-divider-color: light-dark(var(--itx-neutral-400), var(--itx-neutral-600));
 
 	--itx-segmented-transition-duration: var(--itx-transition-duration);
 	--itx-segmented-transition-timing-function: var(--itx-transition-timing-function);
@@ -267,6 +269,7 @@
 		[interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]
 	) {
 		border: var(--itx-segmented-frame-border-width) solid var(--itx-segmented-frame-border-color);
+		background-color: var(--itx-segmented-frame-background-color);
 	}
 
 	:where(
@@ -285,7 +288,10 @@
 		fieldset[interop-radio-group~="segmented"] > label:has(> input:checked),
 		[interop-tabs~="segmented"] > [role="tablist"] > [role="tab"][aria-selected="true"]
 	) {
+		position: relative;
+		z-index: 2;
 		background-color: var(--itx-segmented-pill-background-color);
+		border-color: var(--itx-segmented-pill-border-color);
 	}
 }
 
