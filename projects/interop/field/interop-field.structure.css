@@ -152,20 +152,33 @@
 	forced-color-adjust: none;
 }
 
-/* A text field and its units, in one box. */
-:where([interop-field] > div:has(> [interop-unit])) {
+/*
+ * A text field and what sits beside it, in a row: units joined to the box, or a button such as
+ * "Show password" a gap away.
+ */
+:where([interop-field] > div:has(> [interop-input])) {
 	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-field-gap);
 	inline-size: 100%;
 	max-inline-size: min(var(--itx-field-max-inline-size), 100%);
 }
 
-:where([interop-field] > div:has(> [interop-unit]) > [interop-input]) {
+:where([interop-field] > div:has(> [interop-unit])) {
+	gap: 0;
+}
+
+:where([interop-field] > div > [interop-input]) {
 	flex: 1;
 	min-inline-size: 0;
 	max-inline-size: none;
 }
 
-:where([interop-field] > div:has(> [interop-unit]) > [interop-input][size]) {
+:where([interop-field] > div > [interop-input][size]) {
+	flex: none;
+}
+
+:where([interop-field] > div > button) {
 	flex: none;
 }
 
@@ -207,6 +220,19 @@
 :where([interop-input]:has(+ [interop-unit])) {
 	border-start-end-radius: 0px;
 	border-end-end-radius: 0px;
+}
+
+/* A character count, below its field: how many are left, or how many too many. */
+:where([interop-count]) {
+	margin: 0;
+	font-size: var(--itx-hint-font-size);
+	line-height: var(--itx-hint-line-height);
+	color: var(--itx-hint-color);
+}
+
+:where([interop-count][data-over]) {
+	font-weight: var(--itx-error-font-weight);
+	color: var(--itx-error-color);
 }
 
 /* The summary of a form's errors, filled and focused by bindValidation() on a failed submit. */

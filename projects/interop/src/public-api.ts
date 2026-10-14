@@ -3,7 +3,9 @@
  */
 
 export { auditInterop, watchInterop, watchInteropInDevMode, type AuditIssue } from './audit';
+export { bindCharacterCount, type CharacterCountOptions } from './bind-character-count';
 export { bindDrawer } from './bind-drawer';
+export { bindPasswordToggle } from './bind-password-toggle';
 export { bindPendingAction } from './bind-pending-action';
 export { bindRadioHomeEnd } from './bind-radio-home-end';
 export { bindScrollArea } from './bind-scroll-area';
