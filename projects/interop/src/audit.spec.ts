@@ -75,14 +75,6 @@ describe('auditInterop', () => {
 		expect(rules()).toEqual(['badge-count-label']);
 	});
 
-	it('reminds that a count badge does not announce changes, unless it has a live region', () => {
-		render(`
-			<span interop-badge><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span></span>
-			<span interop-badge><span aria-hidden="true">3</span><span itx-visually-hidden>3 unread messages</span><span itx-visually-hidden role="status">3 unread messages</span></span>
-		`);
-		expect(rules()).toEqual(['badge-announcement']);
-	});
-
 	it('flags a live-region badge inside a button, which drops the count from its name', () => {
 		render(`
 			<button interop-button type="button">Inbox

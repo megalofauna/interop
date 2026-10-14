@@ -131,13 +131,16 @@ attribute).
 - The user can type past the limit. `count` says how many are left or how many
   too many, on every keystroke, and is `aria-hidden`.
 - `status`, a visually hidden `role="status"`, gets the same text once typing
-  pauses for one second, so a screen reader is not interrupted on every key.
+  pauses for one second, so a screen reader is not interrupted on every key. It
+  is written with `announce()`, which empties the region first, so the same
+  message twice is read twice.
 - Over the limit the control's custom validity says "<label> must be <limit>
   characters or fewer", and `interop-validity-change` tells `bindValidation()`.
 - Characters are counted as people see them: an emoji or an accented letter is
   one (`Intl.Segmenter`).
 - Put the limit in the hint: "You can enter up to 200 characters".
-- `threshold` hides the count until that share of the limit is used.
+- `threshold` hides the count until that share of the limit is used, and keeps
+  `status` quiet until then too.
 
 ## Dev audit rules
 

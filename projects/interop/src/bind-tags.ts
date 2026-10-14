@@ -1,3 +1,4 @@
+import { announce } from './announce';
 import { watchInteropInDevMode } from './audit';
 import { isFocusable } from './focusable';
 
@@ -37,15 +38,6 @@ export interface TagInputOptions {
 
 export interface TagAddDetail {
 	value: string;
-}
-
-/**
- * Writes a message to a live region. It empties the region first, so the same message twice in a row
- * is announced twice.
- */
-function announce(status: HTMLElement, message: string): void {
-	status.textContent = '';
-	setTimeout(() => (status.textContent = message), 50);
 }
 
 /** A tag's own text: everything in it but its button and its hidden input. */

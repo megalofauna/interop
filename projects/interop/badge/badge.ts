@@ -45,7 +45,10 @@ const ROLES = new Set(['danger', 'warning', 'success', 'info']);
 		}
 	`,
 	host: {
-		'[attr.hidden]': 'counting() && count()! <= 0 ? "" : ownHidden',
+		// With announce, a zero count is visually hidden rather than hidden, so its live region exists
+		// before the count changes: a region that appears with its text already in it is often not read.
+		'[attr.hidden]': 'counting() && count()! <= 0 && !announce() ? "" : ownHidden',
+		'[attr.itx-visually-hidden]': 'counting() && count()! <= 0 && announce() ? "" : null',
 		'[style.--itx-badge-background-color]': 'customColor()',
 	},
 })

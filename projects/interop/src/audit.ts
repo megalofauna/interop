@@ -122,17 +122,6 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null,
 	},
-	'badge-announcement': {
-		selector: `${BADGES}:is(:has(> [aria-hidden="true"]), [interop-badge~="dot"])`,
-		check: (badge) =>
-			/\d/.test(spokenText(badge)) && !badge.matches(LIVE) && !badge.querySelector(LIVE)
-				? {
-						problem: 'Changes to this count are not announced.',
-						reason: 'A screen reader user hears the new count only when they come back to the badge.',
-						advice: 'If they need to hear changes as they happen, set [announce]="true". If not, this badge is fine as it is.',
-					}
-				: null,
-	},
 	'badge-live-region-name': {
 		selector: `:is(button, a[href], [role="button"], [role="link"]) ${BADGES}:is(${LIVE})`,
 		check: () => ({

@@ -48,7 +48,7 @@ projects/interop/badge/
 | `count` | Shows the number, capped at `max` (`99+`), and speaks the real count with `label`, e.g. "120 unread messages". A count of zero hides the badge |
 | `max` | The largest number shown. The spoken count is never capped |
 | `label` | What the count counts: a string, or plural forms keyed by `Intl.PluralRules` |
-| `announce` | Speaks each change through a visually hidden `role="status"` sibling. Off by default. A live region's text is left out of the surrounding control's name, so the count is said once |
+| `announce` | Speaks each change through a visually hidden `role="status"` inside the badge. Off by default. At zero the badge is visually hidden instead of `hidden`, so the region exists before the count changes; a region that appears with its text already in it is often not read. A live region's text is left out of the surrounding control's name, so the count is said once |
 | `itx-color` | A role (`danger`, `warning`, `success`, `info`) or any CSS color |
 
 | Attribute | Does |
@@ -66,7 +66,6 @@ width. Forced colors give it a border, so it keeps its shape.
 |---|---|
 | `badge-text` | A badge with no text for assistive technology |
 | `badge-count-label` | A count with nothing saying what it counts |
-| `badge-announcement` | A count that changes without being announced (advisory) |
 | `badge-live-region-name` | A live-region badge inside a control, which drops the count from its name |
 
 ## Not built

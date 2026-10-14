@@ -57,6 +57,18 @@ describe('InteropBadge', () => {
 		expect(live()?.textContent?.trim()).toBe('4 unread messages');
 	});
 
+	it('keeps its live region rendered at zero, so the next count is announced', () => {
+		const { fixture, get } = setup();
+		fixture.componentInstance.count.set(0);
+		fixture.detectChanges();
+		expect(get('announced').hasAttribute('hidden')).toBe(false);
+		expect(get('announced').hasAttribute('itx-visually-hidden')).toBe(true);
+		expect(get('announced').querySelector('[role="status"]')?.textContent?.trim()).toBe('');
+		fixture.componentInstance.count.set(1);
+		fixture.detectChanges();
+		expect(get('announced').hasAttribute('itx-visually-hidden')).toBe(false);
+	});
+
 	it('caps the visible number at max and speaks the real count', () => {
 		const { shown, spoken } = setup();
 		expect(shown('capped')).toBe('99+');
