@@ -168,6 +168,17 @@ const reveal = (element: Element) => {
 			</ul>
 			<input id="tag-entry" type="text" />
 			<p role="status" itx-visually-hidden></p>
+			<dialog interop-dialog open aria-labelledby="rename-title">
+				<header>
+					<h2 id="rename-title">Rename file</h2>
+					<button interop-button itx-size="sm" type="button" command="request-close"><span itx-visually-hidden>Close</span><svg interop-icon name="tabler-x"></svg></button>
+				</header>
+				<form method="dialog">
+					<label for="file-name">Name</label>
+					<input id="file-name" name="file" />
+					<footer><button interop-button type="submit" value="cancel" formnovalidate>Cancel</button><button interop-button type="submit" value="save">Save</button></footer>
+				</form>
+			</dialog>
 			<label for="city">City</label>
 			<select id="city" interop-select name="city">
 				<optgroup label="Europe"><option>Lisbon</option><option disabled>Oslo</option></optgroup>

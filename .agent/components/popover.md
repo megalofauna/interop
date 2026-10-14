@@ -72,4 +72,4 @@ A drawer can also show in the page as a sidebar at wide sizes: see
 | `--itx-popover-box-shadow` | a soft shadow |
 | `--itx-popover-transition-duration`, `-transition-timing-function` | the shared transition tokens |
 | `--itx-popover-drawer-inline-size` | `min(20rem, 100% − --itx-space-12)`: a strip of the page stays in view |
-| `--itx-popover-backdrop-color` | black at 40% |
+| `--itx-popover-backdrop-color` | black at 50% |

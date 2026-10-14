@@ -35,6 +35,8 @@
 @import "./tags/interop-tags.structure.css";
 @import "./select/interop-select.base.css";
 @import "./select/interop-select.structure.css";
+@import "./dialog/interop-dialog.base.css";
+@import "./dialog/interop-dialog.structure.css";
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";

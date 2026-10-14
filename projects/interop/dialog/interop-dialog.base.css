@@ -1,0 +1,29 @@
+:where(dialog[interop-dialog]) {
+	--itx-dialog-inline-size: 32rem;
+	/* Room kept between the dialog and the window's edges. */
+	--itx-dialog-inset: var(--itx-space-4);
+	--itx-dialog-padding-block: var(--itx-space-6);
+	--itx-dialog-padding-inline: var(--itx-space-6);
+	--itx-dialog-gap: var(--itx-space-4);
+
+	--itx-dialog-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-dialog-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	--itx-dialog-border-width: 1px;
+	--itx-dialog-border-style: solid;
+	/* 3:1 against the page under the backdrop, so the dialog's edge is visible (WCAG 1.4.11). */
+	--itx-dialog-border-color: var(--itx-neutral-500);
+	--itx-dialog-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-dialog-corner-shape: var(--itx-corner-shape);
+	--itx-dialog-box-shadow: 0 var(--itx-space-2) var(--itx-space-8) oklch(0 0 0 / 0.25);
+	/* Dark enough that the light dialog stands out from the dimmed page by its fill. */
+	--itx-dialog-backdrop-color: oklch(0 0 0 / 0.5);
+
+	--itx-dialog-transition-duration: var(--itx-transition-duration-slower);
+	--itx-dialog-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+@media (prefers-contrast: more) {
+	:where(dialog[interop-dialog]) {
+		--itx-dialog-border-width: 2px;
+	}
+}

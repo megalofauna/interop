@@ -1,0 +1,130 @@
+/*
+ * Dialog: a native <dialog> with the house look. The browser opens it, closes it on Escape, keeps
+ * focus inside a modal, makes the page behind it inert, and returns focus to the button that opened it.
+ *
+ *   <button interop-button type="button" commandfor="rename" command="show-modal">Rename…</button>
+ *   <dialog id="rename" interop-dialog aria-labelledby="rename-title">
+ *     <header>
+ *       <h2 id="rename-title">Rename file</h2>
+ *       <button interop-button itx-size="sm" type="button" commandfor="rename" command="request-close">
+ *         <span itx-visually-hidden>Close</span><svg interop-icon name="tabler-x"></svg>
+ *       </button>
+ *     </header>
+ *     <form method="dialog">
+ *       <label for="file-name">Name</label> <input id="file-name" autofocus>
+ *       <footer><button interop-button type="submit" value="save">Save</button></footer>
+ *     </form>
+ *   </dialog>
+ *
+ * `command="request-close"` takes the Escape path, so a `cancel` listener can keep a dialog with unsaved
+ * input open. `closedby="any"` also closes it on a click outside; `closedby="none"` leaves only its
+ * buttons. A button in <form method="dialog"> closes it and its `value` becomes the dialog's returnValue.
+ *
+ * Also known as:
+ *   modal, modal dialog         Carbon, USWDS; HTML's showModal() and :modal
+ *   alert dialog                ARIA alertdialog, for an urgent message that needs a response
+ *   sheet                       Apple, Material
+ *   panel, flyout               Fluent (WinUI)
+ *   lightbox, overlay           informal
+ * Dialog is the HTML element and the ARIA role, and the name in Fluent, Spectrum, Radix, Base UI,
+ * Angular CDK and Web Awesome.
+ */
+
+/* Centered with place-self on a full inset, so a page's margin reset cannot move it. */
+:where(dialog[interop-dialog]) {
+	position: fixed;
+	inset: 0;
+	place-self: center;
+	box-sizing: border-box;
+	inline-size: min(var(--itx-dialog-inline-size), 100% - 2 * var(--itx-dialog-inset));
+	max-inline-size: none;
+	max-block-size: calc(100dvh - 2 * var(--itx-dialog-inset));
+	margin: 0;
+	/* Long content scrolls inside the dialog, and scrolling past its end does not move the page. */
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding-block: var(--itx-dialog-padding-block);
+	padding-inline: var(--itx-dialog-padding-inline);
+	color: var(--itx-dialog-color);
+	background-color: var(--itx-dialog-background-color);
+	border-width: var(--itx-dialog-border-width);
+	border-style: var(--itx-dialog-border-style);
+	border-color: var(--itx-dialog-border-color);
+	border-radius: var(--itx-dialog-border-radius);
+	corner-shape: var(--itx-dialog-corner-shape);
+	box-shadow: var(--itx-dialog-box-shadow);
+	opacity: 0;
+	translate: 0 var(--itx-space-2);
+	transition-property: opacity, translate;
+	transition-duration: var(--itx-dialog-transition-duration);
+	transition-timing-function: var(--itx-dialog-transition-timing-function);
+}
+
+:where(dialog[interop-dialog][open]) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-dialog-gap);
+	opacity: 1;
+	translate: 0;
+}
+
+/*
+ * It fades and rises in, and disappears at once, like every popover. A fade out keeps a closed
+ * dialog rendered, and only Chrome keeps it above the page while it fades.
+ */
+@starting-style {
+	:where(dialog[interop-dialog][open]) {
+		opacity: 0;
+		translate: 0 var(--itx-space-2);
+	}
+}
+
+:where(dialog[interop-dialog])::backdrop {
+	background-color: var(--itx-dialog-backdrop-color);
+	transition-property: background-color;
+	transition-duration: var(--itx-dialog-transition-duration);
+	transition-timing-function: var(--itx-dialog-transition-timing-function);
+}
+
+@starting-style {
+	:where(dialog[interop-dialog][open])::backdrop {
+		background-color: transparent;
+	}
+}
+
+/* The page behind a modal dialog does not scroll, and keeps its scrollbar's space so it does not shift. */
+:where(:root:has(dialog[interop-dialog]:modal)) {
+	overflow: hidden;
+	scrollbar-gutter: stable;
+}
+
+/* The heading, with a close button at the inline end of its first line. */
+:where(dialog[interop-dialog] > header) {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-dialog-gap);
+}
+
+:where(dialog[interop-dialog] > header > :is(h1, h2, h3, h4, h5, h6)) {
+	flex: 1;
+	margin: 0;
+}
+
+:where(dialog[interop-dialog] > header > button) {
+	flex: none;
+	margin-inline-start: auto;
+}
+
+/* The actions, at the inline end. They wrap in a narrow window. */
+:where(dialog[interop-dialog] > footer, dialog[interop-dialog] > form > footer) {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: var(--itx-space-2);
+}
+
+:where(dialog[interop-dialog] > form) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-dialog-gap);
+}

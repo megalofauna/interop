@@ -295,6 +295,33 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('dialog', () => {
+		it('accepts a dialog named by its heading, with a way to close', () => {
+			render(`
+				<dialog interop-dialog aria-labelledby="t"><h2 id="t">Rename</h2></dialog>
+				<dialog interop-dialog aria-label="Settings" closedby="none"><button command="request-close">Close</button></dialog>
+				<dialog interop-dialog aria-label="Delete" closedby="none"><form method="dialog"><button value="ok">OK</button></form></dialog>
+				<dialog interop-dialog role="alertdialog" aria-label="Session ending" aria-describedby="m"><p id="m">Two minutes left.</p></dialog>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a dialog with no name, or a name that points at nothing', () => {
+			render('<dialog interop-dialog><p>Hi</p></dialog><dialog interop-dialog aria-labelledby="missing"></dialog>');
+			expect(rules()).toEqual(['dialog-name', 'dialog-name']);
+		});
+
+		it('flags a closedby="none" dialog with no button that closes it', () => {
+			render('<dialog interop-dialog aria-label="Stuck" closedby="none"><button type="button">Help</button><form method="dialog"><button type="button">No</button></form></dialog>');
+			expect(rules()).toEqual(['dialog-close']);
+		});
+
+		it('flags an alert dialog with no description', () => {
+			render('<dialog interop-dialog role="alertdialog" aria-label="Session ending"></dialog>');
+			expect(rules()).toEqual(['dialog-alert-description']);
+		});
+	});
+
 	describe('select', () => {
 		it('accepts options with text, a label, or visually hidden text', () => {
 			render(`

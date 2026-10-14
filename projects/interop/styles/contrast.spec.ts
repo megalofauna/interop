@@ -36,10 +36,12 @@ import segmentedCss from './segmented.css' with { loader: 'text' };
 import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import dialogCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, dialogCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -342,6 +344,23 @@ describe('select', () => {
 		});
 		it(`has option text of 4.5:1 on a hovered or focused option in ${label}`, () => {
 			expect(contrast(token('--itx-popover-color', scheme), select('option-background-color-hover', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
+describe('dialog', () => {
+	const dialog = (name: string, scheme: 0 | 1) => token(`--itx-dialog-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has text of 4.5:1 on the dialog in ${label}`, () => {
+			expect(contrast(dialog('color', scheme), dialog('background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the dialog's edge against the page dimmed by the backdrop. Its border or its
+		// background carries it: the light dialog stands out by its fill, the dark one by its border.
+		it(`has an edge of 3:1 against the page under the backdrop in ${label}`, () => {
+			const dimmed = over(resolve(declarations.get('--itx-dialog-backdrop-color')!, scheme), CANVAS[scheme]);
+			const edges = [contrast(dialog('border-color', scheme), dimmed), contrast(dialog('background-color', scheme), dimmed)];
+			expect(Math.max(...edges)).toBeGreaterThanOrEqual(3);
 		});
 	}
 });

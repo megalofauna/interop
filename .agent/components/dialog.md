@@ -1,102 +1,106 @@
-# InteropDialog — Mental Model Card
+# Dialog — Mental Model Card
+
+A dialog is a native `<dialog interop-dialog>` with the house look. CSS only.
+The browser opens it, keeps focus inside a modal, makes the page inert, closes
+it on Escape and returns focus. Research:
+[prompts/DIALOG-REVIEW.md](../../prompts/DIALOG-REVIEW.md).
+
+```html
+<button interop-button type="button" commandfor="rename" command="show-modal">Rename…</button>
+<dialog id="rename" interop-dialog aria-labelledby="rename-title">
+  <header>
+    <h2 id="rename-title">Rename file</h2>
+    <button interop-button itx-size="sm" type="button" commandfor="rename" command="request-close">
+      <span itx-visually-hidden>Close</span><svg interop-icon name="tabler-x"></svg>
+    </button>
+  </header>
+  <form method="dialog">
+    <label for="file-name">Name</label> <input id="file-name" autofocus>
+    <footer><button interop-button type="submit" value="save">Save</button></footer>
+  </form>
+</dialog>
+```
 
 ## Files
 
 ```
-src/lib/components/interop-dialog/
-  interop-dialog.ts             directive implementation
-  public-api.ts                 barrel
-src/lib/styles/components/dialog.css            structural rules
-src/lib/styles/themes/protocol/components/dialog.css  token values
-projects/demo/src/app/pages/dialog/             demo page
+projects/interop/dialog/
+  interop-dialog.structure.css   layout, header and footer, motion, backdrop, scroll lock; names list at the top
+  interop-dialog.base.css        token values
+  public-api.ts                  empty: CSS only
 ```
 
-## Selector
+The demo page is `projects/demo/src/app/components/dialog/`.
 
-```html
-<dialog interop-dialog [isOpen]="open()" (closed)="onClosed($event)">
-  ...
-</dialog>
-```
+## Behavior, all native
 
-`InteropDialog` is a **Directive**, not a Component. The selector is an attribute on the native `<dialog>` element. The CSS targets `dialog[interop-dialog]` globally — no Angular component encapsulation involved.
+| Job | Markup |
+|---|---|
+| Open as a modal | `command="show-modal"`, or `dialog.showModal()` from code when no button opens it |
+| Close | `command="close"`, or a submit button in `<form method="dialog">` |
+| Close the way Escape does | `command="request-close"`: fires `cancel` first, so a guard runs |
+| Report the choice | The submit button's `value` becomes `dialog.returnValue`; Escape leaves it empty. Read it on `close` |
+| Close on a click outside | `closedby="any"`. Never for a form or an alert. Not in Safari yet: there it closes with Escape and its buttons |
+| Only buttons close it | `closedby="none"`. Safari still closes it on Escape |
+| Guard unsaved input | A `cancel` listener that calls `preventDefault()`. A browser allows this once per user action: Escape pressed repeatedly closes the dialog anyway; a click on a `request-close` button is refused every time |
+| Initial focus | The first control, or the element with `autofocus`. A destructive confirmation focuses the least destructive button. Long content: `tabindex="-1" autofocus` on the heading. Chrome 155 ignores `autofocus` on the dialog itself |
+| Focus return | To the button that opened it, or to what had focus before `showModal()` |
+| An open popover | `showModal()` closes it |
 
-## Inputs
+Never mirror the open state in a signal, cancel `cancel` to lock Escape, or
+test for a click outside with `event.target === dialog`: a click on the
+dialog's own padding has that target.
 
-| Input | Default | Effect |
-|---|---|---|
-| `isOpen` | `false` | Opens (`showModal()`) or closes (`close()`) the dialog |
-| `dismissOnBackdrop` | `true` | Click outside the dialog emits `(closed)` with reason `'backdrop'` |
-| `disableEscape` | `false` | When true, ESC key is suppressed; explicit close button required |
-| `autoFocus` | `null` | CSS selector for the element to focus on open; null = native autofocus |
-| `returnFocus` | `null` | `ElementRef`, CSS selector, or null (restores previously focused element) |
-| `autoClose` | `false` | Close on internal form submit, emit reason `'form-submit'` |
+## Look
 
-## Outputs
+| Concern | How |
+|---|---|
+| Placement | `position: fixed; inset: 0; place-self: center; margin: 0`, so a page's margin reset cannot move it |
+| Size | Up to `--itx-dialog-inline-size`, and the window less `--itx-dialog-inset` on each side. Taller content scrolls inside the dialog; `overscroll-behavior: contain` stops the page moving |
+| Layout | A flex column with `--itx-dialog-gap`. `> header` puts the heading and a close button in a row, the button at the inline end of the first line. `> footer` and `> form > footer` put the actions at the inline end and wrap them |
+| Scroll lock | `:root:has(dialog[interop-dialog]:modal) { overflow: hidden; scrollbar-gutter: stable }` |
+| Motion | Fades and rises in; the backdrop fades in. It disappears at once, like the popover |
+| Edge | In light, the dialog's fill against the dimmed page: 3.81:1. In dark, its border: 4.11:1 (WCAG 1.4.11, tested) |
+| Focus | The shared ring, when the dialog itself has focus |
+| Forced colors | The border and the focus ring remain; the backdrop still dims |
 
-| Output | Type | Fired when |
-|---|---|---|
-| `closed` | `{ reason: DialogCloseReason }` | Any close path — see reasons below |
+| Token | Default |
+|---|---|
+| `--itx-dialog-inline-size`, `-inset` | 32rem, `--itx-space-4` |
+| `--itx-dialog-padding-block`, `-padding-inline`, `-gap` | `--itx-space-6`, `--itx-space-6`, `--itx-space-4` |
+| `--itx-dialog-color`, `-background-color` | neutral-900/50, neutral-50/800 |
+| `--itx-dialog-border-width`, `-border-style`, `-border-color` | 1px (2px with more contrast), solid, neutral-500 |
+| `--itx-dialog-border-radius`, `-corner-shape` | the house radius and corner shape |
+| `--itx-dialog-box-shadow` | a soft shadow |
+| `--itx-dialog-backdrop-color` | black at 50%, the same as the drawer's |
+| `--itx-dialog-transition-duration`, `-transition-timing-function` | the slower shared duration, the shared easing |
 
-### Close reasons
+## Alert dialog
 
-```typescript
-type DialogCloseReason = 'backdrop' | 'escape' | 'programmatic' | 'form-submit';
-```
+`role="alertdialog"` with `aria-describedby` on the message, usually
+`closedby="none"`, and `autofocus` on the safe answer.
 
-- `'programmatic'` — `isOpen` was set to `false`
-- `'backdrop'` — user clicked outside the dialog
-- `'escape'` — user pressed ESC (when `disableEscape=false`)
-- `'form-submit'` — form inside dialog submitted with `autoClose=true`
+## Dev audit rules
 
-**Consumer responsibility**: when `(closed)` fires with reason `'backdrop'` or `'escape'`, the consumer must set `isOpen=false` to keep the signal in sync with the actual dialog state.
+| Rule | Flags |
+|---|---|
+| `dialog-name` | No name, or `aria-labelledby` pointing at nothing with text |
+| `dialog-close` | `closedby="none"` with no button inside that closes it |
+| `dialog-alert-description` | An alert dialog with no `aria-describedby` |
 
-## Open/close mechanics
+## Tested
 
-`isOpen` is driven by an `effect()`. When it flips to `true`, `dialog.showModal()` is called, which:
-- Promotes the element to the top layer
-- Creates the `::backdrop` pseudo-element
-- Traps focus inside the dialog (native browser behavior)
+Style guards: contrast, radius, motion. axe on an open dialog with a header,
+close button and form. Audit rules have specs.
 
-When `isOpen` flips to `false`, `dialog.close()` is called, which fires the `'programmatic'` closed event.
+In Chrome 155 with real keys: opening, focus on the first control or
+`autofocus`, Escape, focus return, the `cancel` guard with Escape and with the
+close button, `closedby` both ways, the alert dialog's role and description,
+scroll lock, a long dialog at 320px, light, dark and forced colors.
 
-ESC key fires the native `cancel` event on `<dialog>`. The directive always `preventDefault()` to keep the close path unified — it then emits `(closed)` with reason `'escape'` if `disableEscape=false`. The consumer's response (setting `isOpen=false`) then drives the actual `dialog.close()` through the effect.
+Not tested: Safari, Firefox, iOS scroll lock, screen reader output.
 
-## Focus management
+## Not built
 
-On open: `previousFocus` captures `document.activeElement`, then `autoFocus` selector is applied via `afterNextRender()` (deferred until the top-layer has been entered).
-
-On close: `restoreFocus()` checks (in priority order):
-1. `returnFocus()` as `ElementRef`
-2. `returnFocus()` as a CSS selector string
-3. `previousFocus()` — the element that was focused before open
-
-## Form submit
-
-Do **not** use `<form method="dialog">` when `autoClose=true`. The browser closes the dialog before the directive's submit listener fires. Use a plain `<form>` (no method attribute).
-
-## Dev-mode warnings
-
-`afterNextRender` in devMode checks:
-1. Missing `aria-label` or `aria-labelledby` on the `<dialog>` element
-2. CSS transforms on any ancestor element (breaks top-layer fixed positioning)
-
-## CSS structure (summary)
-
-`dialog[interop-dialog]` — sizing (`width`, `max-height`, `padding`), appearance (background/color/border/shadow via tokens), entry/exit transitions.
-
-`@starting-style` — entry: `opacity: 0; translate: 0 -0.75rem` → fades and slides in.
-
-`:not([open])` exit — `opacity: 0; translate: 0 0.25rem` + exit-duration/easing tokens.
-
-`dialog[interop-dialog]::backdrop` — `background` + `backdrop-filter` with enter transition. The `::backdrop` rule intentionally does NOT use `:where()` — pseudo-elements cannot appear inside `:where()`, so it carries its natural specificity.
-
-`@starting-style { dialog[interop-dialog][open]::backdrop }` — entry: background fades from `transparent`.
-
-Browsers without `transition-behavior: allow-discrete` get a `@supports not` fallback that only animates `opacity` and `translate` (no animated display/overlay).
-
-## Accessibility notes
-
-- The native `<dialog>` provides focus trap, ARIA `role="dialog"`, and scroll lock automatically.
-- Add `aria-label` or `aria-labelledby` on the `<dialog>` element to announce purpose.
-- Nested dialogs are architecturally possible but not recommended — focus and escape management across dialog stacks is complex and not currently supported.
+A non-modal dialog (use a popover), a modal side sheet, a `closedby`
+polyfill, exit motion, a close button inserted by Interop.
