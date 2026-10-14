@@ -47,7 +47,10 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 [resizable.md](components/resizable.md), [slider.md](components/slider.md),
 [table.md](components/table.md), [toast.md](components/toast.md),
 [tree.md](components/tree.md), and the `composites/` and `services/` cards.
-They describe Prime's code.
+They describe Prime's code. `composites/code-block.md`, `highlighter.md` and
+`imports.md` describe Prime's code block, highlighter and icon paths; the
+current ones are in [components/code-block.md](components/code-block.md) and
+[components/icon.md](components/icon.md).
 
 ## Key paths
 

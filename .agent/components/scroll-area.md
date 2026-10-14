@@ -1,240 +1,78 @@
-# InteropScrollArea — Mental Model Card
+# Scroll Area — Mental Model Card
 
-A general-purpose scroll container that adds overflow-awareness on top of a
-native scrollport: detects when content overflows, exposes scroll position
-state as signals + an output, fades content at scrollable edges via mask
-gradients, and auto-promotes itself to a focusable keyboard scroll target
-when overflow exists without focusable descendants.
+A scroll area is any element with `interop-scroll-area`: `overflow: auto`,
+and an inset shadow at each edge that has content beyond it. CSS draws the
+shadows with scroll-driven animations. `bindScrollArea()`, or
+`InteropScrollArea` in Angular, makes it reachable from the keyboard and gives
+it a role when it has a name.
 
-The component does not introduce its own scroll model. The host element
-itself is the scroll container; the structural CSS sets `overflow` per
-orientation.
-All work the JS does is observation: detecting overflow, tracking scroll
-position, updating shadow custom properties, watching for DOM changes that
-would affect either.
+```html
+<h2 id="release-notes">Release notes</h2>
+<div interop-scroll-area aria-labelledby="release-notes">…</div>
+```
 
 ## Files
 
 ```
-src/lib/components/interop-scroll-area/
-  interop-scroll-area.ts          component
-  interop-scroll-area.config.ts   config interface, defaults, INJECTION_TOKEN
-  public-api.ts                   barrel
-
-src/lib/styles/components/scroll-area.css                  overflow, mask
-                                                           shadows, focus ring
-src/lib/styles/themes/protocol/components/scroll-area.css  four values
+projects/interop/scroll-area/
+  interop-scroll-area.structure.css   overflow, the four edge shadows, right-to-left
+  interop-scroll-area.base.css        token values
+  scroll-area.ts                      InteropScrollArea directive
+  public-api.ts
+projects/interop/src/bind-scroll-area.ts   bindScrollArea(), framework-free
+projects/interop/src/focusable.ts          focusables(), isFocusable()
 ```
 
-Two files since 2026-08-17, both imported globally and both layered; there is
-no `styleUrl`. That migration is also where the library's only `!important`
-went: `scroll-behavior: auto !important` inside the reduced-motion block. In an
-UNLAYERED sheet it was the highest-priority declaration Interop shipped, and
-layered it would be worse — important declarations invert layer order, so an
-important rule in `interop.foundation` beats everything a consumer writes. The
-block survives without the flag; `scroll-behavior` carries no duration, so
-`--itx-duration-base: 0ms` cannot reach it.
+The demo page is `projects/demo/src/app/components/scroll-area/`. The code
+block's `<pre>` is a scroll area.
 
-The focus ring reads the system chain and the theme declares no focus token.
-The old sheet pinned `outline-offset: 2px` by hand, which is exactly what
-`--itx-focus-offset` is — the literal only meant the ring stopped following the
-system.
+## Shadows
 
-## DOM structure
-
-```html
-<interop-scroll-area
-  orientation="horizontal"
-  ariaLabel="Steps"
-  (scrollState)="onScroll($event)"
-  (overflowChange)="onOverflow($event)"
->
-  <ol>
-    <li>...</li>
-    ...
-  </ol>
-</interop-scroll-area>
-```
-
-The host element is the scrollport. Children are projected as-is into the
-default slot. The host carries:
-
-- `data-orientation` — `vertical` / `horizontal` / `both`
-- `data-overflowing` — present when content overflows
-- `data-shadows` — present when shadow fades are enabled
-- `tabindex` — `0` only when overflowing AND no focusable descendants
-- `role` — `region` only when `[ariaLabel]` is set; null otherwise
-- `aria-label` — present only when `[ariaLabel]` is set
-
-## Resolution chain (per-prop)
-
-Three-level lookup, with the first non-undefined value winning:
-
-```
-input prop  →  INTEROP_SCROLL_AREA_CONFIG (root or scoped)  →  INTEROP_SCROLL_AREA_DEFAULTS
-```
-
-Applies to `orientation`, `showShadows`, `shadowThreshold`. `tabIndex` and
-`ariaLabel` are direct inputs — no config layer.
-
-Defaults (`interop-scroll-area.config.ts`):
-
-| Field | Default |
+| Concern | How |
 |---|---|
-| `orientation` | `'vertical'` |
-| `showShadows` | `true` |
-| `shadowThreshold` | `60` (px distance from edge across which the fade ramps 0 → 1) |
-| `overscrollBehavior` | `'contain'` |
+| Strength | Each edge has a registered number from 0 to 1, animated on `scroll(self block)` or `scroll(self inline)`. It rises over the first `--itx-scroll-area-shadow-range` of hidden content at that edge and falls over the last |
+| Size | One strength sets the offset, the blur and the color mix, so a shadow grows as it darkens. At full strength it reaches `--itx-scroll-area-shadow-size` into the area |
+| Layer | Inset box shadows, painted behind the content: they never cover text or a focus ring |
+| Right-to-left | `:dir(rtl)` swaps the left and right shadows, since box shadows are physical |
+| Support | Inside `@supports (animation-timeline: scroll())`. Firefox shows no shadows; scrolling and focus still work |
+| Contrast | The shadow color is the darkest a background gets. In light it stays light enough that every code color keeps 4.5:1 on the code block under it (tested) |
 
-**Footgun:** `overscrollBehavior` is declared in the config interface but
-the TS component never imperatively applies it. The structural rule reads
-`--itx-scroll-area-overscroll`, whose value (`contain`) is declared in the
-theme. To set it, callers must set the CSS variable; the config field is
-documentation, not wiring.
+## Behavior: bindScrollArea(element)
 
-## Outputs and exposed signals
+| Job | Behavior |
+|---|---|
+| Keyboard reach | While it overflows and nothing inside can take focus, it gets `tabindex="0"`. Chrome and Firefox do this on their own; Safari does not |
+| Something inside can take focus | No `tabindex`: the control is the tab stop, and tabbing to it scrolls it into view. `focusables()` skips content that is hidden, `inert` or disabled, and `tabindex="-1"` |
+| Stops overflowing while focused | Keeps `tabindex` until focus leaves, so focus is not lost |
+| Author's `tabindex` | Left alone |
+| Name | `aria-label` or `aria-labelledby` with no `role` adds `role="group"`, which carries the name without a landmark. Removing the name removes the role. With no name, no role |
+| Updates | A `ResizeObserver` on the area and its children, checked in the next animation frame; a `MutationObserver` on content and on `hidden`, `inert`, `disabled`, `tabindex`, `href`, `contenteditable`, `aria-label`, `aria-labelledby`; `focusout` |
+| Unbind | The returned function stops observing and removes the `tabindex` and `role` it added |
 
-Outputs:
+`InteropScrollArea` (selector `[interop-scroll-area]`) calls
+`bindScrollArea()` after the first render and unbinds on destroy.
 
-- `scrollState: ScrollStateEvent` — fires on every settled scroll frame
-  (RAF-throttled). Carries `scrollTop`, `scrollLeft`, `atTop`, `atBottom`,
-  `atStart`, `atEnd`, `overflowing`, and `direction` (`up|down|left|right|idle`).
-- `overflowChange: boolean` — fires only when `overflowing()` flips.
+Focus shows the shared ring from `styles/outline.css`.
 
-Public signals (read freely from the template ref):
+| Token | Default |
+|---|---|
+| `--itx-scroll-area-shadow-color` | black at 12% in light, black at 70% in dark |
+| `--itx-scroll-area-shadow-size` | `--itx-space-8` |
+| `--itx-scroll-area-shadow-range` | `--itx-space-12` |
 
-- `atTop`, `atBottom`, `atStart`, `atEnd` — edge state
-- `overflowing` — overflow on either axis (respecting `orientation`)
-- `scrollDirection` — last move direction
+## Dev audit rules
 
-## Overflow detection
+None of its own. `code-block-scroll-focusable` flags code in a `<pre>` that scrolls
+with no `tabindex`: see [code-block.md](code-block.md).
 
-Triggered by `init()`, `ResizeObserver` (host + every direct child), and
-`MutationObserver` (childList + subtree). Compares `scrollHeight`/`Width`
-against `clientHeight`/`Width` with a 1px tolerance. Respects orientation
-— vertical orientation never reports horizontal overflow, etc.
+## Tested
 
-Newly-added subtree elements are automatically observed by the
-`ResizeObserver` (the MutationObserver hooks up the observation when an
-`HTMLElement` is added). No cleanup of removed elements — the observer
-silently drops them on its own.
+Style guards: code colors at 4.5:1 under the strongest shadow, light and dark;
+motion. axe on a named scroll area. `bindScrollArea()` has 7 specs,
+`focusables()` and `isFocusable()` 2.
 
-## Scroll state (RAF-throttled)
+Not recorded: browser runs, screen reader output.
 
-The `scroll` listener (passive) schedules a single
-`requestAnimationFrame` per frame; subsequent scroll events while one is
-pending are coalesced. Inside the RAF, `updateScrollState()`:
+## Not built
 
-1. Reads `scrollTop`/`Left` and `scroll*`/`client*` dimensions once
-2. Sets `atTop`/`atBottom`/`atStart`/`atEnd` (1px tolerance)
-3. Derives `scrollDirection` by comparing against `lastScroll*` deltas
-4. If `showShadows`, sets four `--_shadow-*` custom properties (0–1)
-   based on distance from each edge, capped at `shadowThreshold` px
-5. Emits `scrollState`
-
-All four shadow vars are always written when shadows are enabled, even
-on a single-axis scroll. The structural CSS only consumes the ones relevant to
-the current `[data-orientation]`.
-
-## Auto tabindex / role
-
-Two host attributes are derived rather than configured directly:
-
-```
-effectiveTabIndex():
-  if [tabIndex] explicitly set        → use it (including null to disable)
-  else if overflowing && no focusable → 0
-  else                                → null
-
-effectiveRole():
-  if [ariaLabel] set                  → 'region'
-  else                                → null
-```
-
-The "no focusable child" heuristic uses a `querySelector` against
-`a[href], button:not([disabled]), input:not([disabled]), …, [tabindex]:not([tabindex="-1"])`.
-It is rechecked on every mutation.
-
-**Rationale:** a scroll container with no focusable content can't be
-keyboard-scrolled at all without a tabindex; one *with* focusable content
-already gets keyboard access for free via the child controls, and giving
-it tabindex=0 would inject an unhelpful tab stop on the container itself.
-
-The role-from-aria-label coupling is intentional: a region landmark
-without an accessible name is worse than no landmark, so the role only
-activates when a name is present. DevMode warns on the explicit
-empty-string case (`ariaLabel=""`).
-
-## Shadows (mask-image based)
-
-Visual fades at scrollable edges use `mask-image` rather than
-overlay elements — no extra DOM, no background-color assumption, works
-on any backdrop.
-
-The structural CSS computes a linear gradient with stops at
-`var(--_shadow-{top|bottom|start|end}) * var(--itx-scroll-area-shadow-size)`.
-The `--_shadow-size` alias is gone — it was a public token plus a literal
-fallback, which the theme now owns outright. When a
-shadow var is 0, that gradient stop collapses to 0px and the edge is
-fully opaque (no fade). When it's 1, the full `--itx-scroll-area-shadow-size`
-fades the content out.
-
-The `both` orientation composes two gradients with `mask-composite:
-intersect`, intersecting horizontal and vertical fades.
-
-## Public API
-
-```ts
-scrollTo(options: ScrollToOptions): Promise<void>
-scrollToTop(behavior?: ScrollBehavior): Promise<void>
-scrollToBottom(behavior?: ScrollBehavior): Promise<void>
-```
-
-All three return a Promise that resolves on `scrollend` (with a 1-second
-`setTimeout` fallback for browsers where `scrollend` doesn't fire or the
-scroll is interrupted). A no-op scroll (target within 1px of current
-position) resolves immediately without dispatching anything.
-
-## Lifecycle
-
-- `afterNextRender(() => init())` — wires listeners and observers after
-  the first browser frame; safe to run inside SSR / hydration
-- `ngOnDestroy()` — disconnects both observers, cancels any pending RAF,
-  removes the scroll listener
-
-The `boundScrollHandler` reference is stored so it can be reliably
-removed (anonymous bind would leak).
-
-## DevMode warnings
-
-- `ariaLabel=""` (empty string) — flagged. A region landmark with no
-  accessible name is worse than no landmark. Omit the input or set a
-  meaningful value.
-
-No warnings yet for: a scroll-area with explicit `[ariaLabel]` but
-`orientation="both"` (region landmarks named for layout aren't
-necessarily meaningful), or a scroll-area whose only focusable child
-is a focus trap.
-
-## When to use
-
-- **Horizontal-overflow strips** of tabs, chips, breadcrumbs, step
-  indicators — where the natural pattern is "let it scroll, but show
-  affordances that more exists off-edge"
-- **Card decks** that need to scroll on narrow viewports
-- **Code blocks / pre** that need keyboard scroll for AT users
-- **Modals or sheets** with scrollable bodies (replace ad-hoc overflow:
-  auto with this so the affordances and edge-state outputs come for free)
-
-## When NOT to use
-
-- **Inside a scroll-snap viewport already managed by another component**
-  (e.g. the stepper's panel viewport) — that container handles snap and
-  doesn't want a second overflow observer fighting it
-- **Around content with its own infinite-scroll loader** — the
-  ResizeObserver will fire repeatedly as content loads; consider gating
-  the loader by `(scrollState)` rather than wrapping
-- **As a substitute for a popover/menu** when the goal is "hide the long
-  list until the user asks" — that's overlay UX, not overflow UX
-- **For document-level scrolling** — the component owns its host's
-  overflow; document body scroll is a separate concern
+Custom scrollbars, a shadow for Firefox, a landmark role.
