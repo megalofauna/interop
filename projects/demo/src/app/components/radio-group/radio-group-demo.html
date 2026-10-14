@@ -63,7 +63,7 @@
 	</label>
 	<label>
 		<input type="radio" name="long" value="yearly" />
-		Yearly, with two months free, as described in the <a href="#terms">terms</a>
+		Yearly, with two months free, as described in the <a href="https://example.com/terms">terms</a>
 	</label>
 </fieldset>
 
@@ -150,12 +150,12 @@
 <fieldset interop-radio-group class="described">
 	<legend>Backups</legend>
 	<label>
-		<input type="radio" name="backup" value="daily" checked aria-describedby="backup-daily" />
-		Daily <span class="description" id="backup-daily">Kept for 30 days.</span>
+		<input type="radio" name="backup" value="daily" checked aria-labelledby="backup-daily-name" aria-describedby="backup-daily" />
+		<span id="backup-daily-name">Daily</span> <span class="description" id="backup-daily">Kept for 30 days.</span>
 	</label>
 	<label>
-		<input type="radio" name="backup" value="hourly" aria-describedby="backup-hourly" />
-		Hourly <span class="description" id="backup-hourly">Kept for 7 days. Uses more storage.</span>
+		<input type="radio" name="backup" value="hourly" aria-labelledby="backup-hourly-name" aria-describedby="backup-hourly" />
+		<span id="backup-hourly-name">Hourly</span> <span class="description" id="backup-hourly">Kept for 7 days. Uses more storage.</span>
 	</label>
 </fieldset>
 
