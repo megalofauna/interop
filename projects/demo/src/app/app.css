@@ -7,8 +7,13 @@
  * The app shell. Narrow, the navigation is a drawer behind the Menu button. From a 48rem container
  * up it is a sidebar in the page, and the button goes. A container query's size cannot come from a
  * custom property, so 48rem is written here, once.
+ *
+ * The content is at most 80rem wide and centered. The gutter is what is left of the container's
+ * width (100cqi) either side of it, so the header and footer rules still run edge to edge.
  */
 .shell {
+	--shell-max-inline-size: 80rem;
+	--shell-gutter: max(0px, (100cqi - var(--shell-max-inline-size)) / 2);
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: auto 1fr auto;
@@ -25,6 +30,7 @@ header {
 	align-items: center;
 	gap: var(--itx-space-3);
 	padding: var(--itx-space-4);
+	padding-inline: calc(var(--shell-gutter) + var(--itx-space-4));
 	border-block-end: 1px solid
 		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
@@ -42,17 +48,18 @@ main {
 footer {
 	grid-area: footer;
 	padding: var(--itx-space-4);
+	padding-inline: calc(var(--shell-gutter) + var(--itx-space-4));
 	border-block-start: 1px solid
 		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
 @container shell (inline-size >= 48rem) {
 	.shell {
-		grid-template-columns: 16rem 1fr;
+		grid-template-columns: var(--shell-gutter) 16rem minmax(0, 1fr) var(--shell-gutter);
 		grid-template-areas:
-			"header header"
-			"nav main"
-			"footer footer";
+			"header header header header"
+			". nav main ."
+			"footer footer footer footer";
 	}
 
 	.menu {
