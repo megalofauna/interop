@@ -24,6 +24,7 @@
 	ul[interop-tags] > li > button:focus-visible,
 	ol[interop-steps] > li > a[href]:focus-visible,
 	select[interop-select]:focus-visible,
+	select[interop-select] option:focus-visible,
 	:is(input, textarea)[interop-input]:focus-visible,
 	[interop-error-summary]:focus-visible,
 	dialog[interop-dialog]:focus-visible
@@ -34,8 +35,8 @@
 	outline-offset: var(--itx-outline-offset);
 }
 
-/* A tab or segment sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
-:where([interop-tabs] > [role="tablist"] > [role="tab"], fieldset[interop-radio-group~="segmented"] > label > input[type="radio"]) {
+/* A tab, a segment or an option sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
+:where([interop-tabs] > [role="tablist"] > [role="tab"], fieldset[interop-radio-group~="segmented"] > label > input[type="radio"], select[interop-select] option) {
 	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
 }
 
