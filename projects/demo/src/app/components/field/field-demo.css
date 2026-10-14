@@ -1,0 +1,55 @@
+.aka {
+	font-style: italic;
+}
+
+form,
+.stack {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-space-6);
+}
+
+fieldset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* A date as three fields: the legend, hint and error, then the fields in a row. */
+.date {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-space-1);
+}
+
+.date > legend {
+	padding: 0;
+	margin-block-end: var(--itx-space-1);
+}
+
+.date > div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-4);
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: var(--itx-space-2);
+}
+
+[interop-field] + figure,
+ul + [interop-error-summary],
+ul + form {
+	margin-block-start: var(--itx-space-4);
+}
+
+[interop-error-summary] + form {
+	margin-block-start: var(--itx-space-4);
+}
+
+[interop-field] + [interop-field] {
+	margin-block-start: var(--itx-space-4);
+}

@@ -180,8 +180,9 @@ of a few lines that calls it from `afterRenderEffect`.
 
 A helper:
 
-- listens, and sets attributes, focus or status text. It never inserts nodes;
-  the consumer's markup or Angular renders them;
+- listens, and sets attributes, focus or status text. It never inserts nodes
+  into content the page renders. It may fill an element the author leaves empty
+  for it: a status region's text, or an error summary's `<ul>`;
 - keeps no state the page cannot read from the DOM;
 - binds only the element it is given. Nothing scans the page and binds by
   itself;
@@ -200,6 +201,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindTabs` | Arrow keys, selection, panels | `focusgroup` takes the arrow keys (Chrome 150); nothing proposed for selection |
 | `bindRadioHomeEnd` | Home and End in a radio group | `focusgroup` moves focus with them, but does not check the radio |
 | `bindTooltip` | Show on hover and keyboard focus | Interest invokers, `interestfor` (Chrome 142) |
+| `bindValidation` | Error messages in the page, at the right time, wired to the field; an error summary | Nothing proposed. The browser checks the constraints; only its message bubbles are replaced |
 | `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
 | `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
 | `bindSteps` | Steps of one form, and their validation | Nothing proposed |

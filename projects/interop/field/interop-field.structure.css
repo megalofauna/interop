@@ -1,0 +1,242 @@
+/*
+ * Field: a label, an optional hint, an optional error, and a native control, in that order.
+ *
+ *   <div interop-field>
+ *     <label for="email">Email address</label>
+ *     <p interop-hint id="email-hint">We send the receipt here</p>
+ *     <p interop-error hidden></p>
+ *     <input interop-input id="email" type="email" name="email" autocomplete="email" spellcheck="false"
+ *       aria-describedby="email-hint">
+ *   </div>
+ *
+ * The control is a native <input>, <textarea> or select[interop-select], so its attributes do the
+ * work: type, name, autocomplete, inputmode, required, minlength. The hint and the error sit above
+ * the control, where autocomplete lists and on-screen keyboards cannot cover them. The hint is wired
+ * in the markup; bindValidation() fills the error, shows it, and adds it to aria-describedby while it
+ * shows. In a fieldset of radios or checkboxes, the hint and error follow the legend.
+ *
+ * A unit sits in the box beside the input, inside a <div>. Say the unit in the label too, and hide the
+ * unit from screen readers, since the input does not announce it:
+ *
+ *   <label for="cost">Cost, in pounds</label>
+ *   <div><span interop-unit aria-hidden="true">£</span><input interop-input id="cost" inputmode="decimal"></div>
+ *
+ * Also known as:
+ *   text field, text view      Apple (single line, multiline), Material, React Aria, Spectrum
+ *   text input, text area      GOV.UK, USWDS, Carbon
+ *   text box                   Windows
+ *   form field                 Angular Material, Radix
+ *   textbox                    ARIA, the role of both
+ * Field, for the unit around a control, is the name in Fluent and Base UI; input and textarea are the HTML elements.
+ */
+
+/* The box, for every control. */
+:where(select[interop-select], :is(input, textarea)[interop-input]) {
+	box-sizing: border-box;
+	min-block-size: var(--itx-field-min-block-size);
+	margin: 0;
+	/* The space one line leaves inside the minimum height, so a field is as tall as a button. */
+	padding-block: calc((var(--itx-field-min-block-size) - 2 * var(--itx-field-border-width) - 1lh) / 2);
+	padding-inline: var(--itx-field-padding-inline);
+	font-family: inherit;
+	font-size: var(--itx-field-font-size);
+	line-height: var(--itx-field-line-height);
+	color: var(--itx-field-color);
+	background-color: var(--itx-field-background-color);
+	border-width: var(--itx-field-border-width);
+	border-style: var(--itx-field-border-style);
+	border-color: var(--itx-field-border-color);
+	border-radius: var(--itx-field-border-radius);
+	corner-shape: var(--itx-field-corner-shape);
+	transition-property: background-color, border-color;
+	transition-duration: var(--itx-field-transition-duration);
+	transition-timing-function: var(--itx-field-transition-timing-function);
+}
+
+:where(select[interop-select], :is(input, textarea)[interop-input]):where(:hover:not(:disabled, [readonly])) {
+	background-color: var(--itx-field-background-color-hover, var(--itx-field-background-color));
+	border-color: var(--itx-field-border-color-hover, var(--itx-field-border-color));
+}
+
+:where(select[interop-select], :is(input, textarea)[interop-input]):where(:disabled) {
+	opacity: var(--itx-field-opacity-disabled);
+	cursor: var(--itx-field-cursor-disabled);
+}
+
+/*
+ * Invalid: a thicker border in the danger color. bindValidation() decides when, through aria-invalid.
+ * Without it, the browser's :user-invalid does, after the user has changed the field.
+ */
+:where(select[interop-select], :is(input, textarea)[interop-input]):where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {
+	padding-block: calc((var(--itx-field-min-block-size) - 2 * var(--itx-field-border-width-invalid) - 1lh) / 2);
+	border-width: var(--itx-field-border-width-invalid);
+	border-color: var(--itx-field-border-color-invalid);
+}
+
+/* Text fields fill their container, up to a maximum. The `size` attribute asks for an expected length. */
+:where(:is(input, textarea)[interop-input]) {
+	inline-size: 100%;
+	max-inline-size: min(var(--itx-field-max-inline-size), 100%);
+}
+
+:where(input[interop-input][size]) {
+	inline-size: auto;
+}
+
+:where(:is(input, textarea)[interop-input])::placeholder {
+	color: var(--itx-field-placeholder-color);
+	opacity: 1;
+}
+
+/* Read-only: still focusable and readable, with a dashed edge so it does not look editable. */
+:where(:is(input, textarea)[interop-input][readonly]) {
+	background-color: var(--itx-field-background-color-readonly);
+	border-style: var(--itx-field-border-style-readonly);
+}
+
+/* A textarea grows with its text, from three lines. */
+:where(textarea[interop-input]) {
+	field-sizing: content;
+	min-block-size: calc(3lh + 2 * (var(--itx-field-border-width) + (var(--itx-field-min-block-size) - 2 * var(--itx-field-border-width) - 1lh) / 2));
+	resize: vertical;
+}
+
+/* The parts, stacked: label, hint, error, control. */
+:where([interop-field]) {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--itx-field-gap);
+}
+
+:where([interop-field] > label) {
+	font-size: var(--itx-field-label-font-size);
+	line-height: var(--itx-field-label-line-height);
+}
+
+:where([interop-field] > *) {
+	margin: 0;
+}
+
+:where([interop-hint]) {
+	margin: 0;
+	font-size: var(--itx-hint-font-size);
+	line-height: var(--itx-hint-line-height);
+	color: var(--itx-hint-color);
+}
+
+/* The icon reads as "Error:", so the message is announced as an error without extra markup. */
+:where([interop-error]:not([hidden])) {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-error-gap);
+	margin: 0;
+	font-size: var(--itx-error-font-size);
+	line-height: var(--itx-error-line-height);
+	font-weight: var(--itx-error-font-weight);
+	color: var(--itx-error-color);
+}
+
+:where([interop-error])::before {
+	content: var(--itx-error-content);
+	flex: none;
+	inline-size: var(--itx-error-icon-size);
+	block-size: var(--itx-error-icon-size);
+	/* Centered on the first line. */
+	margin-block-start: calc((1lh - var(--itx-error-icon-size)) / 2);
+	background-color: currentColor;
+	mask-image: var(--itx-error-icon-mask-image);
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	/* Forced colors would fill it with the page color; it keeps the text color instead. */
+	forced-color-adjust: none;
+}
+
+/* A text field and its units, in one box. */
+:where([interop-field] > div:has(> [interop-unit])) {
+	display: flex;
+	inline-size: 100%;
+	max-inline-size: min(var(--itx-field-max-inline-size), 100%);
+}
+
+:where([interop-field] > div:has(> [interop-unit]) > [interop-input]) {
+	flex: 1;
+	min-inline-size: 0;
+	max-inline-size: none;
+}
+
+:where([interop-field] > div:has(> [interop-unit]) > [interop-input][size]) {
+	flex: none;
+}
+
+:where([interop-unit]) {
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	min-block-size: var(--itx-field-min-block-size);
+	padding-inline: var(--itx-field-padding-inline);
+	font-size: var(--itx-field-font-size);
+	line-height: var(--itx-field-line-height);
+	color: var(--itx-field-color);
+	background-color: var(--itx-unit-background-color);
+	border-width: var(--itx-field-border-width);
+	border-style: var(--itx-field-border-style);
+	border-color: var(--itx-field-border-color);
+	border-radius: var(--itx-field-border-radius);
+	corner-shape: var(--itx-field-corner-shape);
+}
+
+/* Where a unit meets the input, the corners are square and only one border shows. */
+:where([interop-unit]:first-child) {
+	border-inline-end-width: 0;
+	border-start-end-radius: 0px;
+	border-end-end-radius: 0px;
+}
+
+:where([interop-unit]:last-child) {
+	border-inline-start-width: 0;
+	border-start-start-radius: 0px;
+	border-end-start-radius: 0px;
+}
+
+:where([interop-unit] + [interop-input]) {
+	border-start-start-radius: 0px;
+	border-end-start-radius: 0px;
+}
+
+:where([interop-input]:has(+ [interop-unit])) {
+	border-start-end-radius: 0px;
+	border-end-end-radius: 0px;
+}
+
+/* The summary of a form's errors, filled and focused by bindValidation() on a failed submit. */
+:where([interop-error-summary]:not([hidden])) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-space-2);
+	padding-block: var(--itx-error-summary-padding-block);
+	padding-inline: var(--itx-error-summary-padding-inline);
+	border: var(--itx-error-summary-border-width) solid var(--itx-error-summary-border-color);
+	border-radius: var(--itx-error-summary-border-radius);
+	corner-shape: var(--itx-error-summary-corner-shape);
+}
+
+:where([interop-error-summary] > *) {
+	margin: 0;
+}
+
+:where([interop-error-summary] ul) {
+	margin: 0;
+	padding-inline-start: var(--itx-space-5);
+}
+
+:where([interop-error-summary] a) {
+	color: var(--itx-error-summary-link-color);
+}
+
+@media (forced-colors: active) {
+	/* The icon opts out of forced colors, so it takes the system's text color here instead of its own red. */
+	:where([interop-error])::before {
+		background-color: CanvasText;
+	}
+}

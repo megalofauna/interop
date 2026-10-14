@@ -23,7 +23,10 @@ The demo page is `projects/demo/src/app/components/tags/`.
 ## Markup
 
 ```html
+<div interop-field>
 <label for="tag-entry">Skills</label>
+<p interop-hint id="tag-hint">Press Enter to add a skill</p>
+<p interop-error hidden></p>
 <ul interop-tags role="list" aria-label="Skills">
   <li>
     Angular
@@ -31,8 +34,8 @@ The demo page is `projects/demo/src/app/components/tags/`.
     <input type="hidden" name="skills" value="Angular">
   </li>
 </ul>
-<input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint">
-<p id="tag-hint">Press Enter to add a skill.</p>
+<input interop-input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint">
+</div>
 <p role="status" itx-visually-hidden></p>
 ```
 
@@ -66,7 +69,10 @@ The demo page is `projects/demo/src/app/components/tags/`.
 - Backspace in the empty field moves focus to the last remove button. It
   deletes nothing.
 - With `required`, a message, the field is `aria-required` and invalid while the
-  list is empty.
+  list is empty. It stays `aria-invalid="false"` until a value is rejected, since
+  `setCustomValidity()` would otherwise have screen readers announce it invalid
+  before the user does anything. In a form with `bindValidation()`, the required
+  message shows in the field's `[interop-error]` on submit.
 - With `status`, each added tag is announced: "Angular added", or `added(text)`.
 - With `rejected`, a message function, a rejected value's message becomes the
   field's validation message, shown and spoken at once and cleared when the user

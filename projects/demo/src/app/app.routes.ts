@@ -28,6 +28,11 @@ export const routes: Routes = [
 		loadComponent: () => import("./components/dialog/dialog-demo").then((m) => m.DialogDemo),
 	},
 	{
+		path: "components/field",
+		title: "Field",
+		loadComponent: () => import("./components/field/field-demo").then((m) => m.FieldDemo),
+	},
+	{
 		path: "components/icon",
 		title: "Icon",
 		loadComponent: () => import("./components/icon/icon-demo").then((m) => m.IconDemo),

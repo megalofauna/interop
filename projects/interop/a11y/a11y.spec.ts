@@ -179,6 +179,23 @@ const reveal = (element: Element) => {
 					<footer><button interop-button type="submit" value="cancel" formnovalidate>Cancel</button><button interop-button type="submit" value="save">Save</button></footer>
 				</form>
 			</dialog>
+			<div interop-error-summary tabindex="-1"><h2>There is a problem</h2><ul><li><a href="#field-email">Enter an email address like name@example.com</a></li></ul></div>
+			<form novalidate>
+				<div interop-field>
+					<label for="field-email">Email address</label>
+					<p interop-hint id="field-email-hint">We send the receipt here</p>
+					<p interop-error id="field-email-error">Enter an email address like name@example.com</p>
+					<input interop-input id="field-email" type="email" name="email" autocomplete="email" aria-invalid="true" aria-describedby="field-email-hint field-email-error" />
+				</div>
+				<div interop-field itx-size="sm">
+					<label for="field-cost">Cost, in pounds (optional)</label>
+					<div><span interop-unit aria-hidden="true">£</span><input interop-input id="field-cost" name="cost" inputmode="decimal" size="8" /></div>
+				</div>
+				<div interop-field>
+					<label for="field-notes">Notes</label>
+					<textarea interop-input id="field-notes" name="notes" readonly>Leave at the door</textarea>
+				</div>
+			</form>
 			<label for="city">City</label>
 			<select id="city" interop-select name="city">
 				<optgroup label="Europe"><option>Lisbon</option><option disabled>Oslo</option></optgroup>

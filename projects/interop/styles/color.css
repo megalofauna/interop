@@ -15,4 +15,7 @@
 	--itx-role-background-warning: oklch(0.769 0.188 70.08);
 	--itx-role-background-success: oklch(0.627 0.194 149.214);
 	--itx-role-background-info: oklch(0.546 0.245 262.881);
+
+	/* Danger as text and as an edge: 4.5:1 against the page in both schemes. */
+	--itx-role-text-danger: light-dark(oklch(0.505 0.213 27.518), oklch(0.704 0.191 22.216));
 }

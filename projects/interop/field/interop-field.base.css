@@ -1,0 +1,104 @@
+/*
+ * The field box, shared by every control that takes typed or chosen values. Inside a field the
+ * values come from the field, so `itx-size` on it sizes the control and its units together.
+ */
+:where([interop-field], :is(select[interop-select], :is(input, textarea)[interop-input]):not([interop-field] *)) {
+	/* The button's heights, so a field and a button line up in a row. */
+	--itx-field-min-block-size: var(--itx-space-10);
+	/* Base-select sizes a select to its chosen option, so a minimum keeps it from jumping as the choice changes. */
+	--itx-field-min-inline-size: 12rem;
+	/* A text field fills its container up to this. The `size` attribute sets an expected length instead. */
+	--itx-field-max-inline-size: 32rem;
+	--itx-field-padding-inline: var(--itx-space-3);
+	--itx-field-font-size: var(--itx-font-size-p);
+	--itx-field-line-height: var(--itx-line-height-p);
+
+	--itx-field-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	/* 4.5:1 against the field, so a placeholder can be read (WCAG 1.4.3). */
+	--itx-field-placeholder-color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+	--itx-field-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-field-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-field-background-color-readonly: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-field-border-width: 1px;
+	/* An invalid field's border thickens, so its state is not color alone (WCAG 1.4.1). */
+	--itx-field-border-width-invalid: 2px;
+	--itx-field-border-style: solid;
+	--itx-field-border-style-readonly: dashed;
+	/* 3:1 against the page, so the field's edge is visible (WCAG 1.4.11). */
+	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-field-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	--itx-field-border-color-invalid: var(--itx-role-text-danger);
+	--itx-field-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-field-corner-shape: var(--itx-corner-shape);
+
+	--itx-field-cursor-disabled: not-allowed;
+	--itx-field-opacity-disabled: 0.5;
+
+	--itx-field-transition-duration: var(--itx-transition-duration);
+	--itx-field-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+:where([interop-field], select[interop-select], :is(input, textarea)[interop-input]):where([itx-size="sm"]) {
+	--itx-field-min-block-size: var(--itx-space-8);
+	--itx-field-padding-inline: var(--itx-space-2_5);
+	--itx-field-font-size: var(--itx-font-size-p-sm);
+	--itx-field-line-height: var(--itx-line-height-p-sm);
+}
+
+:where([interop-field], select[interop-select], :is(input, textarea)[interop-input]):where([itx-size="lg"]) {
+	--itx-field-min-block-size: var(--itx-space-14);
+	--itx-field-padding-inline: var(--itx-space-4);
+	--itx-field-font-size: var(--itx-font-size-p-lg);
+	--itx-field-line-height: var(--itx-line-height-p-lg);
+}
+
+@media (prefers-contrast: more) {
+	:where([interop-field], :is(select[interop-select], :is(input, textarea)[interop-input]):not([interop-field] *)) {
+		--itx-field-border-width: 2px;
+		--itx-field-border-width-invalid: 3px;
+	}
+}
+
+/* The four parts of a field. */
+:where([interop-field]) {
+	--itx-field-gap: var(--itx-space-1);
+	--itx-field-label-font-size: var(--itx-font-size-label);
+	--itx-field-label-line-height: var(--itx-line-height-label);
+}
+
+:where([interop-hint]) {
+	--itx-hint-font-size: var(--itx-font-size-p-sm);
+	--itx-hint-line-height: var(--itx-line-height-p-sm);
+	/* 4.5:1 against the page (WCAG 1.4.3). */
+	--itx-hint-color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}
+
+:root {
+	/* Read before every error message, and not shown. Translate it: :root:lang(cy) { --itx-error-content: "" / "Gwall: "; } */
+	--itx-error-content: "" / "Error: ";
+}
+
+:where([interop-error]) {
+	--itx-error-font-size: var(--itx-font-size-p-sm);
+	--itx-error-line-height: var(--itx-line-height-p-sm);
+	--itx-error-font-weight: 600;
+	--itx-error-color: var(--itx-role-text-danger);
+	--itx-error-gap: var(--itx-space-1);
+	--itx-error-icon-size: 1em;
+	--itx-error-icon-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6.5'/%3E%3Cpath d='M8 4.75v3.75M8 11.25v.01'/%3E%3C/svg%3E");
+}
+
+:where([interop-error-summary]) {
+	--itx-error-summary-padding-block: var(--itx-space-4);
+	--itx-error-summary-padding-inline: var(--itx-space-4);
+	--itx-error-summary-border-width: 2px;
+	--itx-error-summary-border-color: var(--itx-role-text-danger);
+	--itx-error-summary-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-error-summary-corner-shape: var(--itx-corner-shape);
+	--itx-error-summary-link-color: var(--itx-role-text-danger);
+}
+
+/* A unit takes the field's box values from its field, and adds a fill. */
+:where([interop-unit]) {
+	--itx-unit-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+}

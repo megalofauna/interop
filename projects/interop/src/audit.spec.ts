@@ -322,6 +322,36 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('field', () => {
+		it('accepts a labeled field with a hint that exists', () => {
+			render(`
+				<div interop-field>
+					<label for="email">Email</label>
+					<p interop-hint id="email-hint">For the receipt</p>
+					<input interop-input id="email" type="email" autocomplete="email" aria-describedby="email-hint">
+				</div>
+				<textarea interop-input aria-label="Notes"></textarea>
+				<div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a field with only a placeholder, and a description that points at nothing', () => {
+			render('<input interop-input placeholder="Email"><label for="b">B</label><input interop-input id="b" aria-describedby="nope">');
+			expect(rules().sort()).toEqual(['field-describedby', 'field-label']);
+		});
+
+		it('flags type="number", an email field without autocomplete, a link in a hint, and a summary without a list', () => {
+			render(`
+				<label for="n">N</label><input interop-input id="n" type="number">
+				<label for="e">E</label><input interop-input id="e" type="email">
+				<p interop-hint>See <a href="/help">help</a></p>
+				<div interop-error-summary><h2>There is a problem</h2></div>
+			`);
+			expect(rules().sort()).toEqual(['error-summary-list', 'field-autocomplete', 'field-number', 'hint-link']);
+		});
+	});
+
 	describe('select', () => {
 		it('accepts options with text, a label, or visually hidden text', () => {
 			render(`

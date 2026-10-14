@@ -121,7 +121,9 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
  *   `rejected` message is shown and spoken as the input's validation message.
  * - Enter during IME composition is left alone. Commas do not add a tag.
  * - Backspace in the empty input moves focus to the last remove button. It deletes nothing.
- * - With `required`, the input is `aria-required` and invalid while the list is empty.
+ * - With `required`, the input is `aria-required` and invalid while the list is empty. It is
+ *   `aria-invalid="false"` until a value is rejected, so it is not announced as invalid before the
+ *   user has done anything; bindValidation() takes over from there when the form has it.
  * - The list gets bindTags(), with the input as the fallback for focus, unless `tags` is `false`.
  *
  * Returns a function that removes the behavior.
@@ -150,6 +152,7 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 			} else if (options.rejected) {
 				rejection = options.rejected(value);
 				validate();
+				input.setAttribute('aria-invalid', 'true');
 				input.reportValidity();
 			}
 		} else if (event.key === 'Backspace' && !input.value) {
@@ -165,6 +168,7 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 		if (!rejection) return;
 		rejection = '';
 		validate();
+		input.setAttribute('aria-invalid', 'false');
 	};
 
 	const observer = new MutationObserver(validate);
@@ -173,6 +177,9 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 	input.addEventListener('keydown', onKeydown, { signal: listening.signal });
 	input.addEventListener('input', onInput, { signal: listening.signal });
 	if (options.required) input.setAttribute('aria-required', 'true');
+	// setCustomValidity() marks a field invalid for screen readers at once; it waits for the user.
+	const addedInvalid = !input.hasAttribute('aria-invalid');
+	if (addedInvalid) input.setAttribute('aria-invalid', 'false');
 	const unbindTags = options.tags === false ? () => {} : bindTags(list, { fallback: input, ...options.tags });
 	validate();
 
@@ -182,5 +189,6 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 		unbindTags();
 		input.setCustomValidity('');
 		if (options.required) input.removeAttribute('aria-required');
+		if (addedInvalid) input.removeAttribute('aria-invalid');
 	};
 }

@@ -69,14 +69,9 @@ The heights are the button's, so a select and a button line up.
 
 | Token | Default |
 |---|---|
-| `--itx-select-min-block-size`, `-min-inline-size` | `--itx-space-10`, 12rem |
-| `--itx-select-padding-inline`, `-gap` | `--itx-space-3`, `--itx-space-2` |
-| `--itx-select-font-size`, `-line-height` | the `p` role |
-| `--itx-select-color`, `-background-color[-hover]` | neutral-900/50, neutral-50/900, neutral-100/800 |
-| `--itx-select-border-width`, `-border-style`, `-border-color[-hover]` | 1px (2px with more contrast), solid, neutral-500/400, neutral-600/300 |
-| `--itx-select-border-radius`, `-corner-shape` | the house radius and corner shape |
-| `--itx-select-icon-size` | 0.625rem wide, half as tall |
-| `--itx-select-cursor[-disabled]`, `-opacity-disabled` | default, not-allowed, 0.5 |
+| The box: height, padding, text, colors, border, radius, disabled | The field's `--itx-field-*` tokens, shared with text fields: see [field.md](field.md) |
+| `--itx-select-gap`, `-icon-size` | `--itx-space-2`; 0.625rem wide, half as tall |
+| `--itx-select-cursor` | default |
 | `--itx-select-list-padding` | `--itx-space-1` |
 | `--itx-select-option-min-block-size`, `-option-padding-inline` | `--itx-space-8`, `--itx-space-2` |
 | `--itx-select-option-background-color-hover` | neutral-200/700 |
