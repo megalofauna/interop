@@ -291,7 +291,7 @@ describe('auditInterop', () => {
 
 		it('flags a remove button with a generic name, and a list without role="list"', () => {
 			render('<ul interop-tags aria-label="Tags"><li>Football <button type="button">Remove</button></li></ul>');
-			expect(rules().sort()).toEqual(['tags-list-role', 'tags-remove-name']);
+			expect(rules().sort()).toEqual(['list-role', 'tags-remove-name']);
 		});
 	});
 
@@ -393,7 +393,7 @@ describe('auditInterop', () => {
 	});
 
 	describe('step indicator', () => {
-		const steps = (name: string, items: string) => `<ol interop-steps ${name}>${items}</ol>`;
+		const steps = (name: string, items: string) => `<ol interop-steps role="list" ${name}>${items}</ol>`;
 		const good = '<li><a href="/a">A</a></li><li aria-current="step">B</li><li>C</li>';
 
 		it('accepts a named indicator with one current step and links back only', () => {

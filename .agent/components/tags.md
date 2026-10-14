@@ -126,7 +126,7 @@ not make the pill taller than its text.
 | Rule | Flags |
 |---|---|
 | `tags-remove-name` | A remove button whose name does not include its tag's text |
-| `tags-list-role` | A tag list without `role="list"` |
+| `list-role` | A tag list, or a step indicator, without `role="list"` |
 
 ## Not built
 

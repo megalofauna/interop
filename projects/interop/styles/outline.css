@@ -22,6 +22,7 @@
 	[interop-tabs] > [role="tabpanel"]:focus-visible,
 	fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label:has(> input:focus-visible),
 	ul[interop-tags] > li > button:focus-visible,
+	ol[interop-steps] > li > a[href]:focus-visible,
 	select[interop-select]:focus-visible,
 	:is(input, textarea)[interop-input]:focus-visible,
 	[interop-error-summary]:focus-visible,

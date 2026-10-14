@@ -11,10 +11,10 @@
 </p>
 
 <h2>Step indicator</h2>
-<ol interop-steps aria-label="Application progress">
-	<li><a href="#details">Your details</a> <span itx-visually-hidden>completed</span></li>
-	<li><a href="#address">Address</a> <span itx-visually-hidden>completed</span></li>
-	<li aria-current="step">Documents</li>
+<ol interop-steps role="list" aria-label="Application progress">
+	<li><a href="#multi-step-form">Your details</a> <span itx-visually-hidden>completed</span></li>
+	<li><a href="#multi-step-form">Address</a> <span itx-visually-hidden>completed</span></li>
+	<li aria-current="step">Documents <span itx-visually-hidden>current</span></li>
 	<li>Payment <span itx-visually-hidden>not completed</span></li>
 	<li>Sign <span itx-visually-hidden>not completed</span></li>
 </ol>
@@ -25,36 +25,39 @@
 </p>
 
 <h2>The first and the last step</h2>
-<ol interop-steps aria-label="Checkout progress, first step">
-	<li aria-current="step">Basket</li>
+<ol interop-steps role="list" aria-label="Checkout progress, first step">
+	<li aria-current="step">Basket <span itx-visually-hidden>current</span></li>
 	<li>Delivery <span itx-visually-hidden>not completed</span></li>
 	<li>Payment <span itx-visually-hidden>not completed</span></li>
 </ol>
-<ol interop-steps aria-label="Checkout progress, last step">
+<ol interop-steps role="list" aria-label="Checkout progress, last step">
 	<li>Basket <span itx-visually-hidden>completed</span></li>
 	<li>Delivery <span itx-visually-hidden>completed</span></li>
-	<li aria-current="step">Payment</li>
+	<li aria-current="step">Payment <span itx-visually-hidden>current</span></li>
 </ol>
 
 <h2>In a narrow space</h2>
-<p>Below 36rem only the current step keeps its label on screen. The others keep it for screen readers.</p>
+<p>
+	Below 36rem only the current step keeps its label on screen. The others keep it for screen readers. A completed
+	step's link covers its number, so it can still be focused and tapped.
+</p>
 <div class="narrow">
-	<ol interop-steps aria-label="Narrow progress">
-		<li>Basket <span itx-visually-hidden>completed</span></li>
-		<li aria-current="step">Delivery</li>
+	<ol interop-steps role="list" aria-label="Narrow progress">
+		<li><a href="#multi-step-form">Basket</a> <span itx-visually-hidden>completed</span></li>
+		<li aria-current="step">Delivery <span itx-visually-hidden>current</span></li>
 		<li>Payment <span itx-visually-hidden>not completed</span></li>
 		<li>Review <span itx-visually-hidden>not completed</span></li>
 	</ol>
 </div>
 
 <h2>Right to left</h2>
-<ol interop-steps aria-label="التقدم" dir="rtl" lang="ar">
+<ol interop-steps role="list" aria-label="التقدم" dir="rtl" lang="ar">
 	<li>التفاصيل <span itx-visually-hidden>مكتمل</span></li>
-	<li aria-current="step">العنوان</li>
+	<li aria-current="step">العنوان <span itx-visually-hidden>الحالية</span></li>
 	<li>الدفع <span itx-visually-hidden>غير مكتمل</span></li>
 </ol>
 
-<h2>A multi-step form</h2>
+<h2 id="multi-step-form">A multi-step form</h2>
 <p>
 	One <code>form interop-steps-form</code>, with a <code>fieldset</code> per step. Each step holds its own buttons,
 	which send <code>--next</code>, <code>--back</code> or <code>--show-step</code> to the form as invoker commands.
@@ -63,7 +66,7 @@
 	every step shows, as one long form.
 </p>
 <form id="apply" interop-steps-form [history]="true" (interop-steps-change)="changed($event)" (submit)="submit($event)">
-	<ol interop-steps aria-label="Application progress">
+	<ol interop-steps role="list" aria-label="Application progress">
 		<li>Your details <span itx-visually-hidden data-step-status></span></li>
 		<li>Address <span itx-visually-hidden data-step-status></span></li>
 		<li>Check your answers <span itx-visually-hidden data-step-status></span></li>

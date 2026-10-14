@@ -14,8 +14,8 @@ export interface StepsChangeDetail {
 	index: number;
 }
 
-/** Where focus goes after a step change: the step's first heading, or its legend. */
-const HEADING = 'h1, h2, h3, h4, h5, h6, legend';
+/** Where focus goes after a step change: the step's first heading, else its legend, else the step. */
+const HEADINGS = 'h1, h2, h3, h4, h5, h6';
 
 /**
  * Turns a form into a multi-step form. Each direct child `<fieldset>` is a step, with its own
@@ -32,7 +32,7 @@ const HEADING = 'h1, h2, h3, h4, h5, h6, legend';
  * - Enter in a field of any step but the last means Next, not submit.
  * - On submit, an invalid field in a hidden step cannot be shown or focused by the browser, so the
  *   submit fails silently. The helper shows that step and reports the field.
- * - After a step change, focus moves to the step's first heading or legend, which gets
+ * - After a step change, focus moves to the step's first heading, else its legend, which gets
  *   `tabindex="-1"`.
  * - The indicator's `aria-current="step"` follows, and `data-step-status` elements in it get the
  *   status text.
@@ -65,7 +65,8 @@ export function bindSteps(form: HTMLFormElement, options: StepsOptions = {}): ()
 	};
 
 	const focusHeading = (step: HTMLFieldSetElement) => {
-		const heading = step.querySelector<HTMLElement>(HEADING) ?? step;
+		// A heading inside the legend wins over the legend, so focus lands on something announced as a heading.
+		const heading = step.querySelector<HTMLElement>(HEADINGS) ?? step.querySelector<HTMLElement>('legend') ?? step;
 		if (!heading.hasAttribute('tabindex')) heading.tabIndex = -1;
 		heading.focus();
 	};

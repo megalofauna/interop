@@ -5,7 +5,7 @@ describe('bindSteps', () => {
 	const setup = (options: Parameters<typeof bindSteps>[1] = {}) => {
 		document.body.innerHTML = `
 			<form id="apply">
-				<ol interop-steps aria-label="Progress">
+				<ol interop-steps role="list" aria-label="Progress">
 					<li>Details <span data-step-status></span></li>
 					<li>Address <span data-step-status></span></li>
 					<li>Review <span data-step-status></span></li>

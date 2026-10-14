@@ -145,7 +145,7 @@ const reveal = (element: Element) => {
 				<label interop-checkbox><input type="checkbox" name="addon" value="backup" checked /> <strong>Backups</strong></label>
 				<label interop-checkbox><input type="checkbox" name="addon" value="sso" disabled /> <strong>Single sign-on</strong></label>
 			</fieldset>
-			<ol interop-steps aria-label="Application progress">
+			<ol interop-steps role="list" aria-label="Application progress">
 				<li><a href="/details">Your details</a> <span itx-visually-hidden>completed</span></li>
 				<li aria-current="step">Documents</li>
 				<li>Sign <span itx-visually-hidden>not completed</span></li>
@@ -243,7 +243,7 @@ class BoundTabs {}
 	template: `
 		<div>
 			<form id="axe-steps" interop-steps-form>
-				<ol interop-steps aria-label="Application progress">
+				<ol interop-steps role="list" aria-label="Application progress">
 					<li>Details <span itx-visually-hidden data-step-status></span></li>
 					<li>Address <span itx-visually-hidden data-step-status></span></li>
 				</ol>

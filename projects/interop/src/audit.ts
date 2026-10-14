@@ -462,12 +462,12 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
-	'tags-list-role': {
-		selector: 'ul[interop-tags]:not([role="list"])',
-		check: () => ({
-			problem: 'This tag list has no role="list".',
-			reason: 'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many tags there are.',
-			advice: 'Add role="list" to the <ul>.',
+	'list-role': {
+		selector: ':is(ul[interop-tags], ol[interop-steps]):not([role="list"])',
+		check: (list) => ({
+			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : 'tag list'} has no role="list".`,
+			reason: 'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many items there are, or which step of how many this is.',
+			advice: `Add role="list" to the <${list.tagName.toLowerCase()}>.`,
 		}),
 	},
 	'dialog-name': {

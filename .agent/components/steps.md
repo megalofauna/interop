@@ -28,9 +28,9 @@ The demo page is `projects/demo/src/app/components/steps/`.
 ## Step indicator
 
 ```html
-<ol interop-steps aria-label="Application progress">
+<ol interop-steps role="list" aria-label="Application progress">
   <li><a href="/apply/details">Your details</a> <span itx-visually-hidden>completed</span></li>
-  <li aria-current="step">Documents</li>
+  <li aria-current="step">Documents <span itx-visually-hidden>current</span></li>
   <li>Sign <span itx-visually-hidden>not completed</span></li>
 </ol>
 ```
@@ -65,7 +65,7 @@ advice stands: try the process without an indicator first.
 
 ```html
 <form id="apply" interop-steps-form>
-  <ol interop-steps aria-label="Application progress">
+  <ol interop-steps role="list" aria-label="Application progress">
     <li>Your details <span itx-visually-hidden data-step-status></span></li>
     <li>Address <span itx-visually-hidden data-step-status></span></li>
   </ol>
