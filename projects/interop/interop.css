@@ -40,6 +40,8 @@
 @import "./select/interop-select.structure.css";
 @import "./dialog/interop-dialog.base.css";
 @import "./dialog/interop-dialog.structure.css";
+@import "./tree/interop-tree.base.css";
+@import "./tree/interop-tree.structure.css";
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";

@@ -184,6 +184,28 @@ const reveal = (element: Element) => {
 				<li aria-current="step">Documents</li>
 				<li>Sign <span itx-visually-hidden>not completed</span></li>
 			</ol>
+			<nav aria-label="Docs">
+				<ul interop-tree role="list">
+					<li>
+						<details open>
+							<summary>Guides</summary>
+							<ul role="list">
+								<li><a href="/guides">Overview</a></li>
+								<li><a href="/guides/install" aria-current="page">Install</a></li>
+								<li>
+									<details>
+										<summary>Deploy</summary>
+										<ul role="list">
+											<li><a href="/guides/deploy/netlify">Netlify</a></li>
+										</ul>
+									</details>
+								</li>
+							</ul>
+						</details>
+					</li>
+					<li><a href="/changelog">Changelog</a></li>
+				</ul>
+			</nav>
 			<fieldset interop-checkbox-group="chips">
 				<legend>Topics</legend>
 				<label interop-checkbox><input type="checkbox" name="topic" value="design" checked /> Design</label>

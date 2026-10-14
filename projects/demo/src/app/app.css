@@ -33,20 +33,6 @@ header {
 	flex: 1;
 }
 
-nav ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-nav ul + ul {
-	margin-block-start: var(--itx-space-4);
-}
-
-nav a.active {
-	font-weight: 600;
-}
-
 main {
 	grid-area: main;
 	min-inline-size: 0;

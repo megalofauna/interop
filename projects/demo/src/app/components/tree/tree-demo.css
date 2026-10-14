@@ -1,0 +1,11 @@
+.aka {
+	font-style: italic;
+}
+
+.narrow {
+	max-inline-size: 16rem;
+}
+
+* + figure[interop-code-block] {
+	margin-block-start: var(--itx-space-3);
+}

@@ -113,6 +113,12 @@ export const routes: Routes = [
 			import("./components/tooltip/tooltip-demo").then((m) => m.TooltipDemo),
 	},
 	{
+		path: "components/tree",
+		title: "Tree",
+		loadComponent: () =>
+			import("./components/tree/tree-demo").then((m) => m.TreeDemo),
+	},
+	{
 		path: "foundations/app-shell",
 		title: "App shell",
 		loadComponent: () =>

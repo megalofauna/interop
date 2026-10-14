@@ -91,6 +91,10 @@ import dialogInteropDialogBase from '../dialog/interop-dialog.base.css' with { l
 // @ts-expect-error The text loader turns the file into a string.
 import dialogInteropDialogStructure from '../dialog/interop-dialog.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import treeInteropTreeBase from '../tree/interop-tree.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import treeInteropTreeStructure from '../tree/interop-tree.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesSegmented from '../styles/segmented.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesCards from '../styles/cards.css' with { loader: 'text' };
@@ -144,6 +148,8 @@ export const sheets: Record<string, string> = {
 	'select/interop-select.structure.css': selectInteropSelectStructure,
 	'dialog/interop-dialog.base.css': dialogInteropDialogBase,
 	'dialog/interop-dialog.structure.css': dialogInteropDialogStructure,
+	'tree/interop-tree.base.css': treeInteropTreeBase,
+	'tree/interop-tree.structure.css': treeInteropTreeStructure,
 	'styles/segmented.css': stylesSegmented,
 	'styles/cards.css': stylesCards,
 	'styles/chips.css': stylesChips,

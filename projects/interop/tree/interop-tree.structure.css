@@ -1,0 +1,103 @@
+/*
+ * Tree: navigation through a hierarchy of pages. Nested lists of links, with a <details> for each
+ * branch. It carries no tree role and needs no script.
+ *
+ *   <nav aria-label="Docs">
+ *     <ul interop-tree role="list">
+ *       <li>
+ *         <details open>
+ *           <summary>Guides</summary>
+ *           <ul role="list">
+ *             <li><a href="/guides">Overview</a></li>
+ *             <li><a href="/guides/install" aria-current="page">Install</a></li>
+ *           </ul>
+ *         </details>
+ *       </li>
+ *       <li><a href="/changelog">Changelog</a></li>
+ *     </ul>
+ *   </nav>
+ *
+ * A branch is a label, never a link: <summary> opens and closes it, and a link or button inside it
+ * would be a control inside a control. A branch with a page of its own lists that page as its first
+ * child. Every link and summary is its own Tab stop. The browser announces each branch as expanded
+ * or collapsed, numbers the levels from the nesting, and opens a closed branch to show a
+ * find-in-page match.
+ *
+ * Open the branch that holds the current page. Give the <details> of one level the same `name` to
+ * keep one branch open at a time.
+ *
+ * `role="list"` keeps each list's count in Safari, which drops list semantics when markers are
+ * removed.
+ *
+ * Use it for navigation. A file browser that selects items with arrow keys is an ARIA tree (role
+ * tree), with a different keyboard contract; this is not that.
+ *
+ * Also known as:
+ *   tree view            Carbon, Ark, Primer, React Spectrum
+ *   outline view         Apple HIG (NSOutlineView)
+ *   side navigation      USWDS
+ *   navigation treeview  APG
+ *   nested navigation
+ * Tree is the name in Fluent, React Aria, Angular Aria, Angular Material and Web Awesome.
+ */
+
+:where(ul[interop-tree], ul[interop-tree] ul) {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* A rail under each branch's marker shows which items it holds. */
+:where(ul[interop-tree] ul) {
+	margin-inline-start: var(--itx-tree-rail-inset);
+	padding-inline-start: var(--itx-tree-indent);
+	border-inline-start: var(--itx-tree-rail-border-width) solid var(--itx-tree-rail-border-color);
+}
+
+/*
+ * A row: a link, or a branch's summary. It keeps its own display, so a summary stays a list item and
+ * keeps the browser's disclosure marker, which points the right way in either writing direction.
+ */
+:where(ul[interop-tree] :is(li > a, details > summary)) {
+	box-sizing: border-box;
+	min-block-size: var(--itx-tree-row-min-block-size);
+	/* One line of text sits in the middle of the minimum height. More lines grow the row downward. */
+	padding-block: calc((var(--itx-tree-row-min-block-size) - 1lh) / 2);
+	padding-inline: var(--itx-tree-row-padding-inline);
+	font-size: var(--itx-tree-font-size);
+	line-height: var(--itx-tree-line-height);
+	color: var(--itx-tree-color);
+	text-decoration: none;
+	border-inline-start: var(--itx-tree-row-border-inline-start-width) solid transparent;
+	cursor: pointer;
+	transition-property: background-color;
+	transition-duration: var(--itx-tree-transition-duration);
+	transition-timing-function: var(--itx-tree-transition-timing-function);
+}
+
+:where(ul[interop-tree] li > a) {
+	display: block;
+}
+
+:where(ul[interop-tree] :is(li > a, details > summary):hover) {
+	background-color: var(--itx-tree-background-color-hover);
+}
+
+/* The current page: a bar, heavier text and a fill, so it does not rely on color. */
+:where(ul[interop-tree] li > a[aria-current="page"]) {
+	font-weight: var(--itx-tree-font-weight-current);
+	color: var(--itx-tree-color-current, var(--itx-tree-color));
+	background-color: var(--itx-tree-background-color-current);
+	border-inline-start-color: var(--itx-tree-row-border-inline-start-color-current);
+}
+
+/* Forced colors draw a transparent border in the text color, so the rest bar takes the page color. */
+@media (forced-colors: active) {
+	:where(ul[interop-tree] :is(li > a, details > summary)) {
+		border-inline-start-color: Canvas;
+	}
+
+	:where(ul[interop-tree] li > a[aria-current="page"]) {
+		border-inline-start-color: Highlight;
+	}
+}
