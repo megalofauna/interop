@@ -346,6 +346,11 @@ group: one value, one tab stop, arrow keys, form participation, and the same
 dev audit rules. It has its own demo page. Use it to choose a value or a view of
 the same content; tabs switch between different sections.
 
+`itx-orientation="vertical"` stacks the segments in a column, each as wide as
+the widest, with dividers across. The frame reaches from the first segment's
+top to the last one's bottom, so one rule frames both orientations. Segmented
+tabs are horizontal.
+
 ```html
 <fieldset interop-radio-group="segmented" itx-size="sm">
   <legend>View</legend>
@@ -393,6 +398,8 @@ fills its label, and the focus ring on it.
 | `--itx-segmented-segment-opacity-disabled` | 0.5 |
 | `--itx-segmented-frame-padding`, `-frame-border-width`, `-frame-border-color` | `--itx-space-0_5`, 1px, neutral-500/400 |
 | `--itx-segmented-pill-background-color` | neutral-900/50 |
+| `--itx-segmented-pill-border-width`, `-pill-border-color`, `-pill-box-shadow` | 0px, transparent, none: the inverted fill carries the selection |
+| `--itx-segmented-frame-background-color` | transparent: the page is the channel |
 | `--itx-segmented-divider-width`, `-divider-inset-block`, `-divider-color` | 1px, `--itx-space-2`, neutral-300/700 |
 | `--itx-segmented-transition-duration`, `-transition-timing-function` | the shared transition tokens |
 
