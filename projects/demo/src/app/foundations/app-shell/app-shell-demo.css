@@ -62,15 +62,18 @@ figure[interop-code-block] {
 		border-inline-end: 1px solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 	}
 
-	.site-nav > summary {
-		display: none;
-	}
-
 	.site-nav ul {
 		margin: 0;
 	}
 
-	.site-nav::details-content {
-		content-visibility: visible;
+	/* Only where the nav can show while closed; elsewhere the summary stays, so the nav can open. */
+	@supports selector(::details-content) {
+		.site-nav > summary {
+			display: none;
+		}
+
+		.site-nav::details-content {
+			content-visibility: visible;
+		}
 	}
 }
