@@ -45,7 +45,10 @@
 	display: none;
 }
 
-/* Pressed shares the active fill, so held down and latched on read alike. An open disclosure's summary is latched on too. */
+/*
+ * Pressed shares the active fill, and its edge takes the text color and doubles, so the state does
+ * not rest on a fill change alone. An open disclosure's summary is latched on too.
+ */
 :where(
 	:is(button, summary)[interop-button][aria-pressed="true"]:not(:active, :disabled, [aria-disabled="true"], [aria-busy="true"]),
 	details[open] > summary[interop-button]:not(:active)
@@ -53,6 +56,20 @@
 	color: var(--itx-button-color-pressed);
 	background-color: var(--itx-button-background-color-pressed);
 	border-color: var(--itx-button-border-color-pressed);
+	box-shadow: var(--itx-button-box-shadow-pressed);
+}
+
+/* Forced colors replace fills and drop shadows, so pressed takes the system's selected colors. */
+@media (forced-colors: active) {
+	:where(
+		:is(button, summary)[interop-button][aria-pressed="true"]:not(:disabled, [aria-disabled="true"]),
+		details[open] > summary[interop-button]
+	) {
+		forced-color-adjust: none;
+		color: HighlightText;
+		background-color: Highlight;
+		border-color: Highlight;
+	}
 }
 
 :where(:is(button, summary)[interop-button]:active:not(:disabled, [aria-disabled="true"], [aria-busy="true"])) {

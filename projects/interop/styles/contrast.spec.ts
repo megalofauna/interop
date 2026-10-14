@@ -169,6 +169,17 @@ describe('button text', () => {
 	}
 });
 
+describe('button pressed', () => {
+	// WCAG 1.4.11: a toggle's state is told apart from rest by its edge, not by the fill alone.
+	for (const [scheme, label] of SCHEMES) {
+		it(`has an edge of 3:1 against the rest edge and the page in ${label}`, () => {
+			const pressed = token('--itx-button-border-color-pressed', scheme);
+			expect(contrast(pressed, token('--itx-button-border-color', scheme))).toBeGreaterThanOrEqual(3);
+			expect(contrast(pressed, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
 describe('tooltip text', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`reaches 4.5:1 on its background in ${label}`, () => {

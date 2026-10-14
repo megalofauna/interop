@@ -24,7 +24,9 @@
 	--itx-button-border-color-hover: var(--itx-button-border-color);
 	--itx-button-border-color-active: var(--itx-button-border-color);
 	--itx-button-border-color-focus-visible: var(--itx-button-border-color);
-	--itx-button-border-color-pressed: var(--itx-button-border-color);
+	/* Pressed is not a fill alone: the edge takes the text color and doubles, 3:1 against rest and the page (WCAG 1.4.11). */
+	--itx-button-border-color-pressed: var(--itx-button-color);
+	--itx-button-box-shadow-pressed: inset 0 0 0 var(--itx-button-border-width) var(--itx-button-border-color-pressed);
 	--itx-button-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-button-corner-shape: var(--itx-corner-shape);
 
