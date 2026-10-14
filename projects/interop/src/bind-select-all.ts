@@ -44,14 +44,12 @@ export function bindSelectAll(
 	// The reset event fires before the form resets, so read the boxes after it.
 	const onReset = () => setTimeout(sync);
 
-	parent.addEventListener('change', onParentChange);
-	group.addEventListener('change', onGroupChange);
-	parent.form?.addEventListener('reset', onReset);
+	const listening = new AbortController();
+	const { signal } = listening;
+	parent.addEventListener('change', onParentChange, { signal });
+	group.addEventListener('change', onGroupChange, { signal });
+	parent.form?.addEventListener('reset', onReset, { signal });
 	sync();
 
-	return () => {
-		parent.removeEventListener('change', onParentChange);
-		group.removeEventListener('change', onGroupChange);
-		parent.form?.removeEventListener('reset', onReset);
-	};
+	return () => listening.abort();
 }

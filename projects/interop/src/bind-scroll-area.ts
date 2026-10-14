@@ -1,19 +1,5 @@
 import { watchInteropInDevMode } from './audit';
-
-const FOCUSABLE = [
-	'a[href]',
-	'area[href]',
-	'button:not(:disabled)',
-	'input:not(:disabled):not([type="hidden"])',
-	'select:not(:disabled)',
-	'textarea:not(:disabled)',
-	'summary',
-	'iframe',
-	'audio[controls]',
-	'video[controls]',
-	'[contenteditable]:not([contenteditable="false"])',
-	'[tabindex]:not([tabindex="-1"])',
-].join(', ');
+import { focusables } from './focusable';
 
 /**
  * Makes a scroll container reachable from the keyboard and names it when the author does.
@@ -32,10 +18,7 @@ export function bindScrollArea(element: HTMLElement): () => void {
 	let addedTabIndex = false;
 	let addedRole = false;
 
-	const canFocusInside = () =>
-		Array.from(element.querySelectorAll<HTMLElement>(FOCUSABLE)).some(
-			(candidate) => !candidate.closest('[inert]') && candidate.checkVisibility?.() !== false,
-		);
+	const canFocusInside = () => focusables(element).length > 0;
 	const overflows = () =>
 		element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 
@@ -85,7 +68,8 @@ export function bindScrollArea(element: HTMLElement): () => void {
 		attributes: true,
 		attributeFilter: ['hidden', 'inert', 'disabled', 'tabindex', 'href', 'contenteditable', 'aria-label', 'aria-labelledby'],
 	});
-	element.addEventListener('focusout', update);
+	const listening = new AbortController();
+	element.addEventListener('focusout', update, { signal: listening.signal });
 	observeSizes();
 	update();
 	watchInteropInDevMode();
@@ -94,7 +78,7 @@ export function bindScrollArea(element: HTMLElement): () => void {
 		cancelAnimationFrame(frame);
 		resizes?.disconnect();
 		mutations.disconnect();
-		element.removeEventListener('focusout', update);
+		listening.abort();
 		if (addedTabIndex) element.removeAttribute('tabindex');
 		if (addedRole) element.removeAttribute('role');
 	};

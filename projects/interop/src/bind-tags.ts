@@ -1,4 +1,5 @@
 import { watchInteropInDevMode } from './audit';
+import { isFocusable } from './focusable';
 
 export interface TagsOptions {
 	/** Where focus goes when the last tag is removed: the tag input, or a heading. Given tabindex="-1" if it needs one. */
@@ -95,19 +96,19 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 		const target = next ?? options.fallback;
 		focusedTag = null;
 		if (!target) return;
-		if (!next && !target.matches('a[href], button, input, select, textarea, [tabindex]')) target.tabIndex = -1;
+		if (!next && !isFocusable(target) && !target.hasAttribute('tabindex')) target.tabIndex = -1;
 		target.focus();
 	});
 
-	list.addEventListener('focusin', onFocusin);
-	list.addEventListener('focusout', onFocusout);
+	const listening = new AbortController();
+	list.addEventListener('focusin', onFocusin, { signal: listening.signal });
+	list.addEventListener('focusout', onFocusout, { signal: listening.signal });
 	observer.observe(list, { childList: true });
 	watchInteropInDevMode();
 
 	return () => {
 		observer.disconnect();
-		list.removeEventListener('focusin', onFocusin);
-		list.removeEventListener('focusout', onFocusout);
+		listening.abort();
 	};
 }
 
@@ -168,16 +169,16 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 
 	const observer = new MutationObserver(validate);
 	observer.observe(list, { childList: true });
-	input.addEventListener('keydown', onKeydown);
-	input.addEventListener('input', onInput);
+	const listening = new AbortController();
+	input.addEventListener('keydown', onKeydown, { signal: listening.signal });
+	input.addEventListener('input', onInput, { signal: listening.signal });
 	if (options.required) input.setAttribute('aria-required', 'true');
 	const unbindTags = options.tags === false ? () => {} : bindTags(list, { fallback: input, ...options.tags });
 	validate();
 
 	return () => {
 		observer.disconnect();
-		input.removeEventListener('keydown', onKeydown);
-		input.removeEventListener('input', onInput);
+		listening.abort();
 		unbindTags();
 		input.setCustomValidity('');
 		if (options.required) input.removeAttribute('aria-required');

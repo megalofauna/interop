@@ -21,6 +21,7 @@ export function bindPendingAction(
 			button.removeAttribute('aria-disabled');
 		}
 	};
-	button.addEventListener('click', onClick);
-	return () => button.removeEventListener('click', onClick);
+	const listening = new AbortController();
+	button.addEventListener('click', onClick, { signal: listening.signal });
+	return () => listening.abort();
 }
