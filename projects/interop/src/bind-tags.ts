@@ -1,5 +1,4 @@
 import { announce } from './announce';
-import { watchInteropInDevMode } from './audit';
 import { isFocusable } from './focusable';
 
 export interface TagsOptions {
@@ -96,7 +95,6 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 	list.addEventListener('focusin', onFocusin, { signal: listening.signal });
 	list.addEventListener('focusout', onFocusout, { signal: listening.signal });
 	observer.observe(list, { childList: true });
-	watchInteropInDevMode();
 
 	return () => {
 		observer.disconnect();

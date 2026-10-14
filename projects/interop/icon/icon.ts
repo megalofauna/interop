@@ -11,7 +11,7 @@ import {
 	numberAttribute,
 	signal,
 } from '@angular/core';
-import { getIcon, watchInteropInDevMode } from 'interop';
+import { getIcon } from 'interop';
 
 const attribute = (name: string) => inject(new HostAttributeToken(name), { optional: true });
 
@@ -73,7 +73,6 @@ export class InteropIcon {
 	});
 
 	constructor() {
-		watchInteropInDevMode();
 		const host = inject<ElementRef<SVGSVGElement>>(ElementRef).nativeElement;
 		if (typeof MutationObserver !== 'undefined') {
 			const label = () => this.labelled.set(host.hasAttribute('aria-label') || host.hasAttribute('aria-labelledby'));

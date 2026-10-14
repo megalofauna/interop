@@ -2,6 +2,22 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
 
+## Setup
+
+```css
+@import "interop/interop.css";
+```
+
+```ts
+import { watchInteropInDevMode } from "interop";
+
+// The accessibility audit: warnings in the console while developing, removed from production
+// builds. Call it once, at startup; nothing else starts it.
+watchInteropInDevMode();
+```
+
+Outside Angular, call `watchInterop()` in development instead.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:

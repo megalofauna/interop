@@ -10,7 +10,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { registerIcons, scopeSelectAll, splitLines, watchInteropInDevMode } from 'interop';
+import { registerIcons, scopeSelectAll, splitLines } from 'interop';
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
 import { InteropScrollArea } from 'interop/scroll-area';
@@ -93,7 +93,6 @@ export class InteropCodeBlock {
 	private resetCopied?: ReturnType<typeof setTimeout>;
 
 	constructor() {
-		watchInteropInDevMode();
 		registerIcons(TablerCopy, TablerCheck);
 		const destroyRef = inject(DestroyRef);
 		if (typeof document !== 'undefined') scopeSelectAll();

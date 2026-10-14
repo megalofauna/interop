@@ -1,5 +1,4 @@
 import { announce } from './announce';
-import { watchInteropInDevMode } from './audit';
 
 type TextControl = HTMLInputElement | HTMLTextAreaElement;
 
@@ -79,7 +78,6 @@ export function bindCharacterCount(control: TextControl, options: CharacterCount
 	control.form?.addEventListener('reset', () => setTimeout(() => update(false)), { signal: listening.signal });
 	count?.setAttribute('aria-hidden', 'true');
 	update(false);
-	watchInteropInDevMode();
 
 	return () => {
 		listening.abort();

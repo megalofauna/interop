@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 import { focusables } from './focusable';
 
 let ids = 0;
@@ -191,7 +190,6 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	const initial = hash ? fromHash() : undefined;
 	if (initial) select(initial, false, false);
 	observer.takeRecords();
-	watchInteropInDevMode();
 
 	return () => {
 		observer.disconnect();

@@ -193,6 +193,9 @@ A helper:
 
 Shared code is extracted when a second helper needs it, not before.
 
+A helper does not start the dev audit. The app calls `watchInteropInDevMode()`
+once at startup, so the audit runs on pages built only from CSS components too.
+
 Each helper names what would retire it. The list should shrink as browsers
 ship; a helper with nothing on the horizon needs a reason to exist.
 

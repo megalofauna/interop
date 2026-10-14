@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 
 export interface StepsOptions {
 	/** The step indicator to keep in step. Defaults to an `ol[interop-steps]` inside the form. */
@@ -144,7 +143,6 @@ export function bindSteps(form: HTMLFormElement, options: StepsOptions = {}): ()
 		view.addEventListener('popstate', onPopstate, { signal });
 	}
 	update();
-	watchInteropInDevMode();
 
 	return () => listening.abort();
 }

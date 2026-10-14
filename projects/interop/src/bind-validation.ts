@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 
 type Control = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
@@ -273,7 +272,6 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 	form.addEventListener('reset', onReset, { signal });
 	form.addEventListener('interop-validity-change', onValidityChange, { signal });
 	summary?.addEventListener('click', onSummaryClick, { signal });
-	watchInteropInDevMode();
 
 	return () => {
 		listening.abort();

@@ -1,4 +1,4 @@
-import { noteActivationGuard, watchInteropInDevMode } from './audit';
+import { noteActivationGuard } from './audit';
 
 const UNAVAILABLE = '[aria-disabled="true"], [aria-busy="true"]';
 
@@ -18,7 +18,6 @@ export function guardActivation(root: Document | ShadowRoot = document): () => v
 	const listening = new AbortController();
 	root.addEventListener('click', onClick, { capture: true, signal: listening.signal });
 	noteActivationGuard(1);
-	watchInteropInDevMode();
 	return () => {
 		listening.abort();
 		noteActivationGuard(-1);

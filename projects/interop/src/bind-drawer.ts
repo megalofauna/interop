@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 import { focusables } from './focusable';
 
 /**
@@ -38,7 +37,6 @@ export function bindDrawer(popover: HTMLElement): () => void {
 	popover.addEventListener('toggle', onToggle, { signal });
 	popover.addEventListener('focusout', onFocusout, { signal });
 	popover.addEventListener('click', onClick, { signal });
-	watchInteropInDevMode();
 
 	return () => listening.abort();
 }

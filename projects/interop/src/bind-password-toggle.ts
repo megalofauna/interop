@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 
 /**
  * Lets the user see the password they type. A button aimed at the input with the custom command
@@ -42,7 +41,6 @@ export function bindPasswordToggle(input: HTMLInputElement): () => void {
 		button.setAttribute('aria-pressed', 'false');
 		button.hidden = false;
 	}
-	watchInteropInDevMode();
 
 	return () => {
 		listening.abort();

@@ -8,7 +8,6 @@ import {
 	input,
 	numberAttribute,
 } from '@angular/core';
-import { watchInteropInDevMode } from 'interop';
 
 /** What a count counts, by plural form: `{ one: 'unread message', other: 'unread messages' }`. */
 export type BadgeLabel = string | Partial<Record<Intl.LDMLPluralRule, string>>;
@@ -94,8 +93,4 @@ export class InteropBadge {
 		const color = this.color();
 		return color && !ROLES.has(color) ? color : null;
 	});
-
-	constructor() {
-		watchInteropInDevMode();
-	}
 }

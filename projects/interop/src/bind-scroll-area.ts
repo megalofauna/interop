@@ -1,4 +1,3 @@
-import { watchInteropInDevMode } from './audit';
 import { focusables } from './focusable';
 
 /**
@@ -72,7 +71,6 @@ export function bindScrollArea(element: HTMLElement): () => void {
 	element.addEventListener('focusout', update, { signal: listening.signal });
 	observeSizes();
 	update();
-	watchInteropInDevMode();
 
 	return () => {
 		cancelAnimationFrame(frame);
