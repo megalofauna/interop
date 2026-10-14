@@ -28,6 +28,12 @@ written by hand.
   column. A container query's size cannot come from a custom property, so 48rem
   is written once, in the query.
 - `main` gets `min-inline-size: 0`, so wide content cannot widen the grid.
+- The content is at most 80rem wide, centered. The gutter is
+  `max(0px, (100cqi - 80rem) / 2)`: container units, so it follows the app's
+  width, not the window. Wide, the grid has a gutter column either side of the
+  nav and main columns. The header and footer span all four columns, so their
+  rules run edge to edge, and add the gutter to their inline padding, so their
+  contents line up with the columns. No wrapper element.
 
 ## Drawer details
 
