@@ -16,8 +16,14 @@
  * Choose by meaning, not look: the radio group picks a value or a view of the same content; tabs
  * show a different section.
  *
- * `itx-orientation="vertical"` on the radio group stacks the segments in a column, for a narrow
- * space or long labels. Segmented tabs are horizontal.
+ * A segmented radio group stacks its segments in a column while --itx-segmented-orientation is
+ * `vertical` on it or an ancestor. Three ways set it, and with none the control stays horizontal:
+ *
+ *   itx-orientation="vertical"              always stacked
+ *   --itx-segmented-orientation: vertical    in the page's own @media or @container rule: a static threshold
+ *   bindSegmentedFit()                       stacked whenever the row does not fit, measured (data-stacked)
+ *
+ * The segments read it with a container style query. Segmented tabs are horizontal.
  *
  * Each rule names the container, the segment and the selected segment for every component that
  * wears the look. The segments are direct children of the container. The frame (::before) spans the
@@ -78,14 +84,20 @@
 	padding: calc(var(--itx-segmented-frame-padding) + var(--itx-segmented-frame-border-width));
 }
 
-/* Vertical: the segments stack, each as wide as the widest, with their text at the inline start. */
-:where(fieldset[interop-radio-group~="segmented"][itx-orientation="vertical"]) {
-	grid-auto-flow: row;
-	grid-auto-columns: auto;
+/* The attribute and the fit helper both set the one token the stacked layout reads. */
+:where(fieldset[interop-radio-group~="segmented"]:is([itx-orientation="vertical"], [data-stacked])) {
+	--itx-segmented-orientation: vertical;
 }
 
-:where(fieldset[interop-radio-group~="segmented"][itx-orientation="vertical"] > label:has(> input[type="radio"])) {
-	justify-content: flex-start;
+/*
+ * Stacked: every segment goes in the first column, so each starts a row, as wide as the widest, with
+ * its text at the inline start.
+ */
+@container style(--itx-segmented-orientation: vertical) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"])) {
+		grid-column: 1;
+		justify-content: flex-start;
+	}
 }
 
 :where(fieldset[interop-radio-group~="segmented"][itx-size="sm"], [interop-tabs~="segmented"][itx-size="sm"] > [role="tablist"]) {
@@ -200,16 +212,14 @@
 }
 
 /* Stacked, the divider runs across, between two rows. */
-:where(
-	fieldset[interop-radio-group~="segmented"][itx-orientation="vertical"]
-		> label:not(:has(> input:checked))
-		+ label:not(:has(> input:checked))
-)::before {
-	inset-block: auto;
-	inset-block-start: calc(var(--itx-segmented-divider-width) / -2);
-	inset-inline: var(--itx-segmented-divider-inset-block);
-	inline-size: auto;
-	block-size: var(--itx-segmented-divider-width);
+@container style(--itx-segmented-orientation: vertical) {
+	:where(fieldset[interop-radio-group~="segmented"] > label:not(:has(> input:checked)) + label:not(:has(> input:checked)))::before {
+		inset-block: auto;
+		inset-block-start: calc(var(--itx-segmented-divider-width) / -2);
+		inset-inline: var(--itx-segmented-divider-inset-block);
+		inline-size: auto;
+		block-size: var(--itx-segmented-divider-width);
+	}
 }
 
 /* ── Frame and pill ────────────────────────────────────────────────────── */
@@ -279,9 +289,11 @@
 		margin-inline-start: calc(var(--itx-segmented-frame-border-width) * -1);
 	}
 
-	:where(fieldset[interop-radio-group~="segmented"][itx-orientation="vertical"] > label:has(> input[type="radio"]) + label) {
-		margin-inline-start: 0;
-		margin-block-start: calc(var(--itx-segmented-frame-border-width) * -1);
+	@container style(--itx-segmented-orientation: vertical) {
+		:where(fieldset[interop-radio-group~="segmented"] > label:has(> input[type="radio"]) + label) {
+			margin-inline-start: 0;
+			margin-block-start: calc(var(--itx-segmented-frame-border-width) * -1);
+		}
 	}
 
 	:where(
