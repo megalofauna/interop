@@ -34,6 +34,10 @@ import selectCss from '../select/interop-select.base.css' with { loader: 'text' 
 import selectStructureCss from '../select/interop-select.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import dialogCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldCss from '../field/interop-field.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldStructureCss from '../field/interop-field.structure.css' with { loader: 'text' };
 
 // The four corner rules in styles/radius.css. Every component radius reads one of them, so a theme's
 // --itx-radius-base reaches every corner that is not round by shape.
@@ -45,7 +49,7 @@ const RULES = [
 	(value: string) => value.startsWith('max(0px,') && value.includes('--itx-radius'),
 ];
 
-const files = { badgeCss, buttonCss, checkboxCss, codeBlockCss, popoverCss, switchCss, tooltipCss, radioGroupCss, buttonStructureCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, selectStructureCss, dialogCss } as Record<string, string>;
+const files = { badgeCss, buttonCss, checkboxCss, codeBlockCss, popoverCss, switchCss, tooltipCss, radioGroupCss, buttonStructureCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, selectStructureCss, dialogCss, fieldCss, fieldStructureCss } as Record<string, string>;
 
 /** A structure file reading the component's own token, e.g. var(--itx-button-border-radius). */
 const readsToken = (value: string) => /^var\(--itx-[\w-]+-border-radius\)$/.test(value);

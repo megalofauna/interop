@@ -38,10 +38,12 @@ import checkboxCss from '../checkbox/interop-checkbox.base.css' with { loader: '
 import selectCss from '../select/interop-select.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import dialogCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldCss from '../field/interop-field.base.css' with { loader: 'text' };
 
 // jsdom computes no colors, so this reads the declarations and does the color math itself.
 const declarations = new Map<string, string>();
-for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, dialogCss] as string[]) {
+for (const css of [colorCss, codeCss, codeBlockCss, popoverCss, scrollAreaCss, switchCss, buttonCss, tooltipCss, badgeCss, outlineCss, radioGroupCss, checkboxCss, segmentedCss, tabsCss, cardsCss, stepsCss, chipsCss, tagsCss, selectCss, dialogCss, fieldCss] as string[]) {
 	for (const [, name, value] of css.matchAll(/(--itx-[\w-]+):\s*([^;]+);/g)) declarations.set(name, value.trim());
 }
 
@@ -329,21 +331,31 @@ describe('tags', () => {
 	}
 });
 
-describe('select', () => {
-	const select = (name: string, scheme: 0 | 1) => token(`--itx-select-${name}`, scheme);
+describe('field', () => {
+	const field = (name: string, scheme: 0 | 1) => token(`--itx-field-${name}`, scheme);
 
 	for (const [scheme, label] of SCHEMES) {
-		it(`has text of 4.5:1 on the field, hovered or not, in ${label}`, () => {
-			for (const background of ['background-color', 'background-color-hover']) {
-				expect(contrast(select('color', scheme), select(background, scheme))).toBeGreaterThanOrEqual(4.5);
+		it(`has text and placeholder of 4.5:1 on the field, hovered or not, in ${label}`, () => {
+			for (const background of ['background-color', 'background-color-hover', 'background-color-readonly']) {
+				for (const text of ['color', 'placeholder-color']) expect(contrast(field(text, scheme), field(background, scheme))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
-		// WCAG 1.4.11: the field's edge against the page.
+		// WCAG 1.4.11: the field's edge against the page, at rest, hovered and invalid.
 		it(`has a border of 3:1 against the page in ${label}`, () => {
-			for (const name of ['border-color', 'border-color-hover']) expect(contrast(select(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			for (const name of ['border-color', 'border-color-hover', 'border-color-invalid']) expect(contrast(field(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
+		it(`has hint and error text of 4.5:1 against the page in ${label}`, () => {
+			for (const name of ['--itx-hint-color', '--itx-error-color', '--itx-error-summary-link-color']) {
+				expect(contrast(token(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+	}
+});
+
+describe('select', () => {
+	for (const [scheme, label] of SCHEMES) {
 		it(`has option text of 4.5:1 on a hovered or focused option in ${label}`, () => {
-			expect(contrast(token('--itx-popover-color', scheme), select('option-background-color-hover', scheme))).toBeGreaterThanOrEqual(4.5);
+			expect(contrast(token('--itx-popover-color', scheme), token('--itx-select-option-background-color-hover', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
 	}
 });

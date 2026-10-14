@@ -89,9 +89,15 @@ import selectStructureCss from '../select/interop-select.structure.css' with { l
 import dialogBaseCss from '../dialog/interop-dialog.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import dialogStructureCss from '../dialog/interop-dialog.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldBaseCss from '../field/interop-field.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import fieldStructureCss from '../field/interop-field.structure.css' with { loader: 'text' };
 
 // Every stylesheet in the library, read as text. Add a new one here.
 const sheets = {
+	'field/interop-field.base.css': fieldBaseCss,
+	'field/interop-field.structure.css': fieldStructureCss,
 	'dialog/interop-dialog.base.css': dialogBaseCss,
 	'dialog/interop-dialog.structure.css': dialogStructureCss,
 	'select/interop-select.base.css': selectBaseCss,

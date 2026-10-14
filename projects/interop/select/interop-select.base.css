@@ -1,29 +1,9 @@
+/* The box's values are the field's, in field/interop-field.base.css. These are the select's own. */
 :where(select[interop-select]) {
-	/* The button's heights, so a select and a button line up in a row. */
-	--itx-select-min-block-size: var(--itx-space-10);
-	/* Base-select sizes the select to its chosen option, so a minimum keeps it from jumping as the choice changes. */
-	--itx-select-min-inline-size: 12rem;
-	--itx-select-padding-inline: var(--itx-space-3);
 	--itx-select-gap: var(--itx-space-2);
-	--itx-select-font-size: var(--itx-font-size-p);
-	--itx-select-line-height: var(--itx-line-height-p);
-
-	--itx-select-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
-	--itx-select-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
-	--itx-select-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-select-border-width: 1px;
-	--itx-select-border-style: solid;
-	/* 3:1 against the page, so the field's edge is visible (WCAG 1.4.11). */
-	--itx-select-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-select-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
-	--itx-select-border-radius: var(--itx-radius, var(--itx-radius-base));
-	--itx-select-corner-shape: var(--itx-corner-shape);
 	/* The width of the arrow; its height is half that. */
 	--itx-select-icon-size: 0.625rem;
-
 	--itx-select-cursor: default;
-	--itx-select-cursor-disabled: not-allowed;
-	--itx-select-opacity-disabled: 0.5;
 
 	/* The list, in the picker and in a select that shows its options in the page. */
 	--itx-select-list-padding: var(--itx-space-1);
@@ -35,29 +15,12 @@
 	--itx-select-legend-font-size: var(--itx-font-size-p-sm);
 	--itx-select-legend-line-height: var(--itx-line-height-p-sm);
 	--itx-select-separator-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-
-	--itx-select-transition-duration: var(--itx-transition-duration);
-	--itx-select-transition-timing-function: var(--itx-transition-timing-function);
 }
 
 :where(select[interop-select][itx-size="sm"]) {
-	--itx-select-min-block-size: var(--itx-space-8);
-	--itx-select-padding-inline: var(--itx-space-2_5);
-	--itx-select-font-size: var(--itx-font-size-p-sm);
-	--itx-select-line-height: var(--itx-line-height-p-sm);
 	--itx-select-option-min-block-size: var(--itx-space-6);
 }
 
 :where(select[interop-select][itx-size="lg"]) {
-	--itx-select-min-block-size: var(--itx-space-14);
-	--itx-select-padding-inline: var(--itx-space-4);
-	--itx-select-font-size: var(--itx-font-size-p-lg);
-	--itx-select-line-height: var(--itx-line-height-p-lg);
 	--itx-select-option-min-block-size: var(--itx-space-10);
-}
-
-@media (prefers-contrast: more) {
-	:where(select[interop-select]) {
-		--itx-select-border-width: 2px;
-	}
 }

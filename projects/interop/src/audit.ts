@@ -500,6 +500,65 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Point aria-describedby at the message: <p id="message">…</p>.',
 		}),
 	},
+	'field-label': {
+		selector: ':is(input, textarea)[interop-input], select[interop-select]',
+		check: (control) =>
+			(control as HTMLInputElement).labels?.length || ariaName(control)
+				? null
+				: {
+						problem: control.hasAttribute('placeholder') ? 'This field has only a placeholder for a label.' : 'This field has no label.',
+						reason: 'Without a label, a screen reader announces only "edit text", and a placeholder disappears as soon as the user types. Two elements with the same id also leave a label pointing at the wrong one.',
+						advice: 'Add <label for="…"> with the field’s id, and check that the id is unique.',
+					},
+	},
+	'field-describedby': {
+		selector: ':is(input, textarea)[interop-input][aria-describedby], select[interop-select][aria-describedby]',
+		check: (control) => {
+			const missing = control
+				.getAttribute('aria-describedby')!
+				.split(/\s+/)
+				.filter((id) => id && !control.ownerDocument.getElementById(id));
+			return missing.length
+				? {
+						problem: `aria-describedby points at ${missing.map((id) => `#${id}`).join(', ')}, which does not exist.`,
+						reason: 'The hint or error it should read is never announced.',
+						advice: 'Give the hint the id that aria-describedby names, or correct the reference.',
+					}
+				: null;
+		},
+	},
+	'field-number': {
+		selector: 'input[interop-input][type="number"]',
+		check: () => ({
+			problem: 'This field is type="number".',
+			reason: 'Number inputs change value when the page is scrolled over them, drop letters silently, round long numbers, and some voice and screen reader software cannot use them.',
+			advice: 'Use type="text" with inputmode="numeric", or inputmode="decimal" for amounts. Keep type="number" only for values people step through, like a quantity.',
+		}),
+	},
+	'field-autocomplete': {
+		selector: 'input[interop-input]:is([type="email"], [type="tel"]):not([autocomplete])',
+		check: (input) => ({
+			problem: `This ${input.getAttribute('type')} field has no autocomplete attribute.`,
+			reason: 'When a field asks for the user’s own details, autocomplete lets the browser fill it in and tells assistive technology what it is for (WCAG 1.3.5).',
+			advice: `Add autocomplete="${input.getAttribute('type')}" if it is the user’s own, or autocomplete="off" if it is someone else’s.`,
+		}),
+	},
+	'hint-link': {
+		selector: '[interop-hint] a[href]',
+		check: () => ({
+			problem: 'This hint holds a link.',
+			reason: 'A hint is read as the field’s description, and screen readers do not say that text in a description is a link, or let the user follow it from the field.',
+			advice: 'Move the link out of the hint, before the field.',
+		}),
+	},
+	'error-summary-list': {
+		selector: '[interop-error-summary]:not(:has(ul))',
+		check: () => ({
+			problem: 'This error summary has no list.',
+			reason: 'bindValidation() fills the summary’s <ul> with a link to each error; without one, the summary shows only its heading.',
+			advice: 'Add an empty <ul> after the heading.',
+		}),
+	},
 	'select-option-text': {
 		selector: 'select[interop-select] option',
 		check: (option) =>
