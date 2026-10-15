@@ -130,10 +130,10 @@ attribute).
 
 - The user can type past the limit. `count` says how many are left or how many
   too many, on every keystroke, and is `aria-hidden`.
-- `status`, a visually hidden `role="status"`, gets the same text once typing
-  pauses for one second, so a screen reader is not interrupted on every key. It
-  is written with `announce()`, which empties the region first, so the same
-  message twice is read twice.
+- The same text is announced with `announce()` once typing pauses for one
+  second, so a screen reader is not interrupted on every key. `status`, a
+  visually hidden `role="status"`, is only for browsers without
+  `ariaNotify()`.
 - Over the limit the control's custom validity says "<label> must be <limit>
   characters or fewer", and `interop-validity-change` tells `bindValidation()`.
 - Characters are counted as people see them: an emoji or an accented letter is

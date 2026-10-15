@@ -4,7 +4,7 @@ import { isFocusable } from './focusable';
 export interface TagsOptions {
 	/** Where focus goes when the last tag is removed: the tag input, or a heading. Given tabindex="-1" if it needs one. */
 	fallback?: HTMLElement | null;
-	/** A visually hidden `role="status"` element. When given, each removal is announced in it. */
+	/** A visually hidden `role="status"` element, for browsers without `ariaNotify()`. See `announce()`. */
 	status?: HTMLElement | null;
 	/** The announcement for a removed tag, so translations can replace it. */
 	removed?: (text: string) => string;
@@ -18,7 +18,7 @@ export interface TagInputOptions {
 	 * tags, so a form will not submit without one.
 	 */
 	required?: string;
-	/** A visually hidden `role="status"` element. When given, each added tag is announced in it. */
+	/** A visually hidden `role="status"` element, for browsers without `ariaNotify()`. See `announce()`. */
 	status?: HTMLElement | null;
 	/** The announcement for an added tag, so translations can replace it. */
 	added?: (text: string) => string;
@@ -54,8 +54,8 @@ function tagText(tag: Element): string {
  * when the removed tag held focus, focus moves to the remove button now at its place, else the one
  * before it, else `fallback`. Without this, focus falls to the page.
  *
- * With `status`, each removal is announced there ("Football removed"), because moving focus to the
- * next tag does not say the last one went.
+ * Each removal is announced ("Football removed"), because moving focus to the next tag does not say
+ * the last one went.
  *
  * Returns a function that removes the behavior.
  */
@@ -82,7 +82,7 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
 			.flatMap((record) => Array.from(record.removedNodes))
 			.filter((node): node is Element => node instanceof Element && node.tagName === 'LI');
 		if (!gone.length) return;
-		if (options.status) announce(options.status, gone.map((tag) => removed(tagText(tag))).join('. '));
+		announce(gone.map((tag) => removed(tagText(tag))).join('. '), { from: list, status: options.status });
 		if (!focusedTag || !gone.includes(focusedTag)) return;
 		const remaining = tags();
 		const next = remaining[Math.min(focusedIndex, remaining.length - 1)]?.querySelector<HTMLElement>('button');
@@ -108,7 +108,7 @@ export function bindTags(list: HTMLElement, options: TagsOptions = {}): () => vo
  * Turns a text input into a way to add tags to a list.
  *
  * - Enter with text fires `interop-tags-add` on the input, detail `{ value }`, and stops the form
- *   submitting. The consumer adds the tag, and with `status` it is announced. Calling
+ *   submitting. The consumer adds the tag, and it is announced. Calling
  *   `preventDefault()` on the event rejects the value, e.g. a duplicate: the text stays, and the
  *   `rejected` message is shown and spoken as the input's validation message.
  * - Enter during IME composition is left alone. Commas do not add a tag.
@@ -140,7 +140,7 @@ export function bindTagInput(input: HTMLInputElement, options: TagInputOptions):
 			const add = new CustomEvent<TagAddDetail>('interop-tags-add', { bubbles: true, cancelable: true, detail: { value } });
 			if (input.dispatchEvent(add)) {
 				input.value = '';
-				if (options.status) announce(options.status, added(value));
+				announce(added(value), { from: input, status: options.status });
 			} else if (options.rejected) {
 				rejection = options.rejected(value);
 				validate();

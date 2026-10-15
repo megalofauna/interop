@@ -36,7 +36,6 @@ The demo page is `projects/demo/src/app/components/tags/`.
 </ul>
 <input interop-input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint">
 </div>
-<p role="status" itx-visually-hidden></p>
 ```
 
 | Part | Rule |
@@ -55,9 +54,9 @@ The demo page is `projects/demo/src/app/components/tags/`.
 - The consumer removes the tag. When the removed tag held focus, focus moves to
   the remove button now at its place, else the one before, else `fallback`
   (given `tabindex="-1"` if it needs one). Without this, focus falls to the page.
-- With `status`, a `role="status"` element, each removal is announced:
-  "Angular removed", or `removed(text)` for translations. Opt-in. The region is
-  emptied before each message, so the same message twice is announced twice.
+- Each removal is announced with `announce()` from the list: "Angular
+  removed", or `removed(text)` for translations. `status`, a `role="status"`
+  element, is only for browsers without `ariaNotify()`.
 
 `bindTagInput(input, { list, required, tags })`:
 

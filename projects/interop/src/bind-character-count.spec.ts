@@ -53,7 +53,7 @@ describe('bindCharacterCount', () => {
 		expect(count.textContent).toBe('You have 8 characters remaining');
 	});
 
-	it('announces the count once typing pauses', () => {
+	it('announces the count once typing pauses, in the status element without ariaNotify()', () => {
 		vi.useFakeTimers();
 		const { status, type } = setup();
 		type('a');
@@ -61,6 +61,19 @@ describe('bindCharacterCount', () => {
 		expect(status.textContent).toBe('');
 		vi.advanceTimersByTime(1050);
 		expect(status.textContent).toBe('You have 8 characters remaining');
+	});
+
+	it('announces from the field with ariaNotify() when the browser has it', () => {
+		vi.useFakeTimers();
+		const notify = vi.fn();
+		(Element.prototype as { ariaNotify?: unknown }).ariaNotify = notify;
+		const { control, status, type } = setup();
+		type('ab');
+		vi.advanceTimersByTime(1050);
+		expect(notify.mock.calls).toEqual([['You have 8 characters remaining', { priority: 'normal' }]]);
+		expect(notify.mock.contexts[0]).toBe(control);
+		expect(status.textContent).toBe('');
+		delete (Element.prototype as { ariaNotify?: unknown }).ariaNotify;
 	});
 
 	it('says nothing while the count is below the threshold', () => {

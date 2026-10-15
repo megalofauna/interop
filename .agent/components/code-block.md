@@ -43,7 +43,7 @@ The demo page is `projects/demo/src/app/components/code-block/`.
 | Copy button | `interop-button`, `itx-size="sm"`, a copy icon. Named by a label tooltip, "Copy code", plus the caption: "Copy code badge.ts". Absent when `navigator.clipboard.writeText` is missing |
 | `<pre interop-scroll-area>` | Scrolls past `--itx-code-block-max-block-size` (32rem) and sideways. `bindScrollArea()` gives it `tabindex="0"` while it overflows. Focus shows the shared ring |
 | `<code class="language-…">` | The code as its exact text, through `textContent` |
-| Status | A visually hidden `role="status"` after the code, outside the button |
+| Status | "Copied" or "Couldn’t copy", announced with `announce()` from the figure. Nothing is added to the button's name |
 
 ## Behavior
 

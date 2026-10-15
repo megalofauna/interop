@@ -229,7 +229,6 @@ const reveal = (element: Element) => {
 				</li>
 			</ul>
 			<input id="tag-entry" type="text" />
-			<p role="status" itx-visually-hidden></p>
 			<dialog interop-dialog open aria-labelledby="rename-title">
 				<header>
 					<h2 id="rename-title">Rename file</h2>
@@ -435,7 +434,6 @@ describe('accessibility (axe-core)', () => {
 						<p interop-error hidden></p>
 						<textarea interop-input id="h-summary" name="summary"></textarea>
 						<p interop-count></p>
-						<p role="status" itx-visually-hidden></p>
 					</div>
 					<div interop-field>
 						<label for="h-password">Password</label>
@@ -452,7 +450,6 @@ describe('accessibility (axe-core)', () => {
 							<li>HTML <button type="button"><span itx-visually-hidden>Remove HTML</span></button></li>
 						</ul>
 						<input interop-input id="h-tag" type="text" />
-						<p id="h-tag-status" role="status" itx-visually-hidden></p>
 					</div>
 					<fieldset interop-checkbox-group>
 						<legend>Notifications</legend>
@@ -473,13 +470,11 @@ describe('accessibility (axe-core)', () => {
 			bindCharacterCount(textarea, {
 				limit: 5,
 				count: textarea.nextElementSibling as HTMLElement,
-				status: textarea.parentElement!.querySelector<HTMLElement>('[role="status"]'),
 			}),
 			bindPasswordToggle(password),
 			bindTagInput($<HTMLInputElement>('#h-tag'), {
 				list: $<HTMLElement>('ul[interop-tags]'),
 				required: 'Add a skill',
-				status: $<HTMLElement>('#h-tag-status'),
 			}),
 			bindSelectAll($<HTMLInputElement>('#h-all')),
 		];

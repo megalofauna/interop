@@ -10,7 +10,7 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { registerIcons, scopeSelectAll, splitLines } from 'interop';
+import { announce, registerIcons, scopeSelectAll, splitLines } from 'interop';
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
 import { InteropScrollArea } from 'interop/scroll-area';
@@ -59,7 +59,6 @@ let nextId = 0;
 			[class]="language() ? 'language-' + language() : ''"
 			[textContent]="code()"
 		></code></pre>
-		<span itx-visually-hidden role="status">{{ status() }}</span>
 	`,
 	host: {
 		'[attr.aria-labelledby]': 'caption() ? captionId : null',
@@ -85,7 +84,7 @@ export class InteropCodeBlock {
 
 	protected readonly canCopy = typeof navigator !== 'undefined' && !!navigator.clipboard?.writeText;
 	protected readonly copied = signal(false);
-	protected readonly status = signal('');
+	private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
 	private readonly codeElement = viewChild.required<ElementRef<HTMLElement>>('codeElement');
 	private resetCopied?: ReturnType<typeof setTimeout>;
@@ -123,14 +122,13 @@ export class InteropCodeBlock {
 		try {
 			await navigator.clipboard.writeText(this.code());
 			this.copied.set(true);
-			this.status.set('Copied');
+			announce('Copied', { from: this.host });
 		} catch (error) {
-			this.status.set('Couldn’t copy');
+			announce('Couldn’t copy', { from: this.host });
 			(globalThis.reportError ?? console.error)(error);
 		}
 		this.resetCopied = setTimeout(() => {
 			this.copied.set(false);
-			this.status.set('');
 		}, 2000);
 	}
 }

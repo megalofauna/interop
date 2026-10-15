@@ -54,7 +54,7 @@ describe('bindTags', () => {
 		expect(document.activeElement).toBe(button('Football'));
 	});
 
-	it('announces the same removal twice when it happens twice', async () => {
+	it('announces the same removal twice in the status element without ariaNotify()', async () => {
 		const { list, remove } = setup(() => ({ status: document.getElementById('status') }));
 		remove('Rugby');
 		await new Promise((resolve) => setTimeout(resolve, 80));
@@ -67,17 +67,15 @@ describe('bindTags', () => {
 		expect(document.getElementById('status')!.textContent).toBe('Rugby removed');
 	});
 
-	it('announces a removal only when given a status element', async () => {
-		const status = () => document.getElementById('status')!;
-		let view = setup();
-		view.remove('Rugby');
+	it('announces each removal from the list with ariaNotify(), with no status element', async () => {
+		const notify = vi.fn();
+		(Element.prototype as { ariaNotify?: unknown }).ariaNotify = notify;
+		const { list, remove } = setup(() => ({ removed: (text) => `Removed ${text}` }));
+		remove('Cricket');
 		await settle();
-		expect(status().textContent).toBe('');
-		unbind!();
-		view = setup(() => ({ status: document.getElementById('status'), removed: (text) => `Removed ${text}` }));
-		view.remove('Cricket');
-		await new Promise((resolve) => setTimeout(resolve, 80));
-		expect(status().textContent).toBe('Removed Cricket');
+		expect(notify.mock.calls).toEqual([['Removed Cricket', { priority: 'normal' }]]);
+		expect(notify.mock.contexts[0]).toBe(list);
+		delete (Element.prototype as { ariaNotify?: unknown }).ariaNotify;
 	});
 });
 
@@ -116,7 +114,18 @@ describe('bindTagInput', () => {
 		expect([added, input.value]).toEqual([['Cricket'], '']);
 	});
 
-	it('announces an added tag when given a status element', async () => {
+	it('announces an added tag from the input with ariaNotify()', () => {
+		const notify = vi.fn();
+		(Element.prototype as { ariaNotify?: unknown }).ariaNotify = notify;
+		const { input, press } = setup();
+		input.value = 'Cricket';
+		press('Enter');
+		expect(notify.mock.calls).toEqual([['Cricket added', { priority: 'normal' }]]);
+		expect(notify.mock.contexts[0]).toBe(input);
+		delete (Element.prototype as { ariaNotify?: unknown }).ariaNotify;
+	});
+
+	it('announces an added tag in the status element without ariaNotify()', async () => {
 		const { list, input, press } = setup();
 		unbind!();
 		const status = document.getElementById('status')!;

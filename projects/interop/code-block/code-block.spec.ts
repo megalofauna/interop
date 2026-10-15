@@ -57,9 +57,11 @@ describe('InteropCodeBlock', () => {
 		expect(code.textContent).toBe('a\nb\n');
 	});
 
-	it('copies the code and says so once, outside the button', async () => {
+	it('copies the code and announces it, leaving the button’s name alone', async () => {
 		const writeText = vi.fn(() => Promise.resolve());
 		Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+		const notify = vi.fn();
+		(Element.prototype as { ariaNotify?: unknown }).ariaNotify = notify;
 		const { get, fixture } = setup();
 		const figure = get('captioned');
 		const button = figure.querySelector('button')!;
@@ -74,9 +76,10 @@ describe('InteropCodeBlock', () => {
 		await fixture.whenStable();
 		fixture.detectChanges();
 		expect(writeText).toHaveBeenCalledWith(fixture.componentInstance.source());
-		expect(figure.querySelector('[role="status"]')!.textContent).toBe('Copied');
+		expect(notify).toHaveBeenCalledWith('Copied', { priority: 'normal' });
+		expect(notify.mock.contexts[0]).toBe(figure);
 		expect(name()).toBe(`Copy code ${figure.querySelector('figcaption')!.textContent}`);
-		expect(button.querySelector('[role="status"]')).toBeNull();
+		delete (Element.prototype as { ariaNotify?: unknown }).ariaNotify;
 	});
 
 	it('has no copy button without a clipboard', () => {

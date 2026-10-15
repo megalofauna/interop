@@ -7,7 +7,7 @@ export interface CharacterCountOptions {
 	limit: number;
 	/** The visible count, an empty `[interop-count]`. It updates on every keystroke and is hidden from screen readers. */
 	count?: HTMLElement | null;
-	/** A visually hidden `role="status"` element. The count is announced there once the user pauses. */
+	/** A visually hidden `role="status"` element, for browsers without `ariaNotify()`. See `announce()`. */
 	status?: HTMLElement | null;
 	/** Show the count only from this share of the limit, e.g. `0.75`. Default `0`: always. */
 	threshold?: number;
@@ -35,8 +35,8 @@ const defaultMessage = (left: number) =>
  * - `count` shows how many are left, or how many too many, as the user types. Over the limit it
  *   gets `data-over`. It is `aria-hidden`: a count that changes on every keystroke would talk over
  *   the typing.
- * - `status` announces the same text once typing pauses for a second, and only while the count
- *   shows, so a threshold quiets both.
+ * - The same text is announced once typing pauses for a second, and only while the count shows,
+ *   so a threshold quiets both.
  * - Over the limit the field's custom validity says so, so the form does not submit and
  *   bindValidation() shows the error. It fires `interop-validity-change` as that changes.
  * - Put the limit in the field's hint too: "You can enter up to 200 characters".
@@ -67,9 +67,9 @@ export function bindCharacterCount(control: TextControl, options: CharacterCount
 			control.dispatchEvent(new Event('interop-validity-change', { bubbles: true }));
 		}
 		// Below the threshold nothing shows, so nothing is said either.
-		if (!speak || !status || !shown) return;
+		if (!speak || !shown) return;
 		clearTimeout(timer);
-		timer = setTimeout(() => announce(status, text), PAUSE);
+		timer = setTimeout(() => announce(text, { from: control, status }), PAUSE);
 	};
 
 	const listening = new AbortController();
