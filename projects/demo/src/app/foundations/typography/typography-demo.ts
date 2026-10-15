@@ -28,6 +28,7 @@ export class TypographyDemo {
 		"caption",
 		"fine-print",
 	];
+	protected readonly scales = ["current", "pinned", "docs"];
 	protected readonly measures = signal<string[]>([]);
 	protected readonly viewport = signal(0);
 	private readonly samples = viewChildren<ElementRef<HTMLElement>>("sample");
@@ -42,12 +43,18 @@ export class TypographyDemo {
 				}),
 			);
 		};
+		// The header's type scale select changes the root's data-type-scale.
+		const scale = new MutationObserver(measure);
 		afterNextRender(() => {
 			measure();
 			window.addEventListener("resize", measure);
+			scale.observe(document.documentElement, {
+				attributeFilter: ["data-type-scale"],
+			});
 		});
-		inject(DestroyRef).onDestroy(() =>
-			window.removeEventListener("resize", measure),
-		);
+		inject(DestroyRef).onDestroy(() => {
+			window.removeEventListener("resize", measure);
+			scale.disconnect();
+		});
 	}
 }

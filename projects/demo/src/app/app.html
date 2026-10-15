@@ -11,6 +11,18 @@
 			Menu
 		</button>
 		<span class="title">Interop</span>
+		<label for="type-scale" itx-visually-hidden>Type scale</label>
+		<select
+			id="type-scale"
+			interop-select
+			itx-size="sm"
+			[value]="typeScale()"
+			(change)="typeScale.set($any($event.target).value)"
+		>
+			<option value="">Type: current</option>
+			<option value="pinned">Type: pinned</option>
+			<option value="docs">Type: docs</option>
+		</select>
 		<button
 			interop-button
 			type="button"
