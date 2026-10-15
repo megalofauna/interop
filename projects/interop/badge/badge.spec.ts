@@ -46,27 +46,21 @@ describe('InteropBadge', () => {
 		expect(spoken('count')).toBe('3 unread messages');
 	});
 
-	it('announces through a separate live region only when asked', () => {
+	it('announces each change of the count only when asked, and never zero', () => {
+		const notify = vi.fn();
+		(Element.prototype as { ariaNotify?: unknown }).ariaNotify = notify;
 		const { fixture, get } = setup();
-		expect(get('count').querySelector('[role="status"]')).toBeNull();
-		const live = () => get('announced').querySelector('[role="status"]');
-		expect(live()?.textContent?.trim()).toBe('1 unread message');
-		expect(get('announced').hasAttribute('role')).toBe(false);
+		expect(notify).not.toHaveBeenCalled();
+		expect(get('announced').querySelector('[role="status"]')).toBeNull();
 		fixture.componentInstance.count.set(4);
 		fixture.detectChanges();
-		expect(live()?.textContent?.trim()).toBe('4 unread messages');
-	});
-
-	it('keeps its live region rendered at zero, so the next count is announced', () => {
-		const { fixture, get } = setup();
+		expect(notify.mock.calls).toEqual([['4 unread messages', { priority: 'normal' }]]);
+		expect(notify.mock.contexts[0]).toBe(get('announced'));
 		fixture.componentInstance.count.set(0);
 		fixture.detectChanges();
-		expect(get('announced').hasAttribute('hidden')).toBe(false);
-		expect(get('announced').hasAttribute('itx-visually-hidden')).toBe(true);
-		expect(get('announced').querySelector('[role="status"]')?.textContent?.trim()).toBe('');
-		fixture.componentInstance.count.set(1);
-		fixture.detectChanges();
-		expect(get('announced').hasAttribute('itx-visually-hidden')).toBe(false);
+		expect(notify).toHaveBeenCalledTimes(1);
+		expect(get('announced').hasAttribute('hidden')).toBe(true);
+		delete (Element.prototype as { ariaNotify?: unknown }).ariaNotify;
 	});
 
 	it('caps the visible number at max and speaks the real count', () => {

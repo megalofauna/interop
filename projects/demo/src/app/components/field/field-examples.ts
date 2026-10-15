@@ -94,9 +94,8 @@ send(event: SubmitEvent): void {
 	<p interop-hint id="summary-hint">You can enter up to 100 characters</p>
 	<p interop-error hidden></p>
 	<textarea interop-input interop-character-count id="summary-text" name="summary"
-		aria-describedby="summary-hint" [characterLimit]="100" [count]="count" [status]="status"></textarea>
+		aria-describedby="summary-hint" [characterLimit]="100" [count]="count"></textarea>
 	<p #count interop-count></p>
-	<p #status role="status" itx-visually-hidden></p>
 </div>
 `,
 	sizes: `<div interop-field itx-size="sm">…</div>

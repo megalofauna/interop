@@ -3,16 +3,15 @@ import { bindTagInput, bindTags } from 'interop';
 
 /**
  * Calls `bindTags()` on the list, after it renders in the browser: focus stays in place as tags are
- * removed, and with `status` each removal is announced.
+ * removed, and each removal is announced.
  *
  * ```html
- * <ul interop-tags role="list" aria-label="Tags" [fallback]="entry" [status]="announcer">
+ * <ul interop-tags role="list" aria-label="Tags" [fallback]="entry">
  *   @for (tag of tags(); track tag) {
  *     <li>{{ tag }} <button type="button" (click)="remove(tag)"><span itx-visually-hidden>Remove {{ tag }}</span>…</button></li>
  *   }
  * </ul>
  * <input #entry interop-tag-input [tags]="list" (interop-tags-add)="add($event)">
- * <p #announcer role="status" itx-visually-hidden></p>
  * ```
  */
 @Directive({
@@ -24,7 +23,7 @@ export class InteropTags {
 
 	/** Where focus goes when the last tag is removed, e.g. the tag input. */
 	readonly fallback = input<HTMLElement | null>(null);
-	/** A visually hidden `role="status"` element for announcing removals. */
+	/** A visually hidden `role="status"` element, for browsers without `ariaNotify()`. */
 	readonly status = input<HTMLElement | null>(null);
 	/** The announcement for a removed tag. */
 	readonly removed = input<((text: string) => string) | undefined>(undefined);
@@ -52,7 +51,7 @@ export class InteropTagInput {
 	readonly tags = input.required<HTMLElement>();
 	/** With a message, the input is required and invalid while the list is empty. */
 	readonly tagsRequired = input<string | undefined>(undefined);
-	/** A visually hidden `role="status"` element for announcing added tags. */
+	/** A visually hidden `role="status"` element, for browsers without `ariaNotify()`. */
 	readonly status = input<HTMLElement | null>(null);
 	/** The announcement for an added tag. */
 	readonly added = input<((text: string) => string) | undefined>(undefined);

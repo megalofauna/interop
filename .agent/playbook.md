@@ -67,6 +67,10 @@ A popover is the platform's `popover` attribute with `interop-popover` styles. A
 - Every component has a card in `components/` with its accessibility rules,
   audit rules and what was tested.
 - One Escape closes one layer.
+- A change that moves no focus is spoken with `announce()` from `interop`, from
+  the element it is about. Helpers and components do not render live regions;
+  `status` options exist only as the fallback for browsers without
+  `ariaNotify()`.
 - State is never color alone: a shape, a border width, an icon or text goes
   with it, and forced colors map it to system colors.
 - Nothing appears or disappears on hover alone.
@@ -224,6 +228,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindSelectAll` | A select-all checkbox | Nothing proposed |
 | `bindPendingAction`, `guardActivation` | A busy button that ignores repeat clicks | Nothing proposed |
 | `scopeSelectAll` | Ctrl+A inside a code block | Nothing proposed |
+| `announce` | Speaking a change that moves no focus, in browsers without `ariaNotify()` | `ariaNotify()` Baseline widely available, about March 2029: the `status` fallback goes, and `announce()` is one call |
 
 ## What NOT to do
 

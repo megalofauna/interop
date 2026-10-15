@@ -1,4 +1,5 @@
-import { Component, HostAttributeToken, LOCALE_ID, booleanAttribute, computed, inject, input, numberAttribute } from '@angular/core';
+import { Component, ElementRef, HostAttributeToken, LOCALE_ID, booleanAttribute, computed, effect, inject, input, numberAttribute, untracked } from '@angular/core';
+import { announce } from 'interop';
 
 /** What a count counts, by plural form: `{ one: 'unread message', other: 'unread messages' }`. */
 export type BadgeLabel = string | Partial<Record<Intl.LDMLPluralRule, string>>;
@@ -26,19 +27,12 @@ const ROLES = new Set(['danger', 'warning', 'success', 'info']);
 				}
 				<span itx-visually-hidden>{{ spoken() }}</span>
 			}
-			@if (announce()) {
-				<!-- A live region's text is left out of the surrounding control's name, so the count is said once. -->
-				<span itx-visually-hidden role="status">{{ count()! > 0 ? spoken() : '' }}</span>
-			}
 		} @else {
 			<span [attr.itx-visually-hidden]="dot ? '' : null"><ng-content /></span>
 		}
 	`,
 	host: {
-		// With announce, a zero count is visually hidden rather than hidden, so its live region exists
-		// before the count changes: a region that appears with its text already in it is often not read.
-		'[attr.hidden]': 'counting() && count()! <= 0 && !announce() ? "" : ownHidden',
-		'[attr.itx-visually-hidden]': 'counting() && count()! <= 0 && announce() ? "" : null',
+		'[attr.hidden]': 'counting() && count()! <= 0 ? "" : ownHidden',
 		'[style.--itx-badge-background-color]': 'customColor()',
 	},
 })
@@ -47,7 +41,7 @@ export class InteropBadge {
 	/** The largest number shown; above it the badge shows `max+`. The spoken count is never capped. */
 	readonly max = input(99, { transform: numberAttribute });
 	readonly label = input<BadgeLabel>();
-	/** Announces count changes as they happen. Off by default. */
+	/** Announces each change of a count above zero, with `announce()`. Off by default. */
 	readonly announce = input(false, { transform: booleanAttribute });
 	/** A role, `danger` `warning` `success` `info`, or any CSS color. */
 	readonly color = input<string>(undefined, { alias: 'itx-color' });
@@ -74,6 +68,18 @@ export class InteropBadge {
 		const form = typeof label === 'string' ? label : label && (label[new Intl.PluralRules(this.locale).select(count)] ?? label.other);
 		return [new Intl.NumberFormat(this.locale).format(count), form].filter(Boolean).join(' ');
 	});
+
+	constructor() {
+		const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+		let previous: number | undefined;
+		effect(() => {
+			const count = this.count();
+			const first = previous === undefined;
+			previous = count;
+			if (first || !this.announce() || !this.counting() || count! <= 0) return;
+			announce(untracked(this.spoken), { from: host });
+		});
+	}
 
 	protected readonly customColor = computed(() => {
 		const color = this.color();

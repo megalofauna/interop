@@ -79,9 +79,8 @@ export class InteropPasswordToggle {
  * would stop the user typing.
  *
  * ```html
- * <textarea interop-input interop-character-count [characterLimit]="200" [count]="count" [status]="status"></textarea>
+ * <textarea interop-input interop-character-count [characterLimit]="200" [count]="count"></textarea>
  * <p #count interop-count></p>
- * <p #status role="status" itx-visually-hidden></p>
  * ```
  */
 @Directive({

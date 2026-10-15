@@ -2,6 +2,7 @@
  * Public API Surface of interop
  */
 
+export { announce, type AnnounceOptions } from './announce';
 export { auditInterop, watchInterop, watchInteropInDevMode, type AuditIssue } from './audit';
 export { bindCharacterCount, type CharacterCountOptions } from './bind-character-count';
 export { bindDrawer } from './bind-drawer';

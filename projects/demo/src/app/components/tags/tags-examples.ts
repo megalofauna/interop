@@ -1,6 +1,6 @@
 /** The markup each example on the tags page shows, written to be copied. */
 export const examples = {
-	removable: `<ul interop-tags role="list" aria-label="Applied filters" [fallback]="heading" [status]="announcer">
+	removable: `<ul interop-tags role="list" aria-label="Applied filters" [fallback]="heading">
 	@for (filter of filters(); track filter) {
 		<li>
 			{{ filter }}
@@ -11,7 +11,6 @@ export const examples = {
 		</li>
 	}
 </ul>
-<p #announcer role="status" itx-visually-hidden></p>
 `,
 	input: `<form interop-form (submit)="submit($event)">
 	<div interop-field>
@@ -32,11 +31,10 @@ export const examples = {
 		</ul>
 		<input #entry interop-input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint"
 			interop-tag-input [tags]="skillList" tagsRequired="Add at least one skill."
-			[status]="announcer" [rejected]="alreadyAdded"
+			[rejected]="alreadyAdded"
 			(interop-tags-add)="addSkill($event)">
 		<datalist id="skill-options">…</datalist>
 	</div>
-	<p #announcer role="status" itx-visually-hidden></p>
 	<button interop-button type="submit">Save</button>
 </form>
 `,

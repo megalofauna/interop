@@ -13,7 +13,7 @@
 <p>
 	Remove a tag with the keyboard: focus moves to the tag now in its place, or
 	the one before, or the heading when none are left. The removal is announced
-	through the <code>role="status"</code> element, which is optional.
+	with <code>ariaNotify()</code>, so the page needs no live region.
 </p>
 <h3 #heading>Applied filters</h3>
 <ul
@@ -21,7 +21,6 @@
 	role="list"
 	aria-label="Applied filters"
 	[fallback]="heading"
-	[status]="announcer"
 >
 	@for (filter of filters(); track filter) {
 		<li>
@@ -33,7 +32,6 @@
 		</li>
 	}
 </ul>
-<p #announcer role="status" itx-visually-hidden></p>
 <figure
 	interop-code-block
 	language="html"
@@ -86,7 +84,6 @@
 			interop-tag-input
 			[tags]="skillList"
 			tagsRequired="Add at least one skill."
-			[status]="skillAnnouncer"
 			[rejected]="alreadyAdded"
 			(interop-tags-add)="addSkill($event)"
 		/>
@@ -98,7 +95,6 @@
 			<option value="TypeScript"></option>
 		</datalist>
 	</div>
-	<p #skillAnnouncer role="status" itx-visually-hidden></p>
 	<p><button interop-button type="submit">Save</button></p>
 	@if (saved(); as values) {
 		<p>Saved: {{ values }}</p>
