@@ -22,6 +22,7 @@ const required = [
 	'styles/outline.css',
 	'styles/segmented.css',
 	'styles/underscore.css',
+	'styles/disclosure.css',
 ];
 
 /** Every other component and shared stylesheet, and why it needs no block. */
@@ -58,7 +59,7 @@ describe('forced colors', () => {
 		const components = Object.keys(sheets).filter(
 			(path) =>
 				path.endsWith('.structure.css') ||
-				['styles/cards.css', 'styles/chips.css', 'styles/segmented.css', 'styles/underscore.css', 'styles/outline.css', 'styles/fieldset.css'].includes(path),
+				['styles/cards.css', 'styles/chips.css', 'styles/segmented.css', 'styles/underscore.css', 'styles/disclosure.css', 'styles/outline.css', 'styles/fieldset.css'].includes(path),
 		);
 		expect(components.filter((path) => !required.includes(path) && !(path in exempt))).toEqual([]);
 	});

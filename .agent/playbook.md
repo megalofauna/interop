@@ -23,7 +23,7 @@ Interop components are semantically correct, accessible first, and performant by
   - `<name>.ts`, only when the component needs script: thin directives.
   - `public-api.ts`, empty for a CSS-only component.
 - **Shared looks** a template wears across components live in `styles/`:
-  `segmented.css`, `cards.css`, `chips.css`, `underscore.css`. `interop.css` imports
+  `segmented.css`, `cards.css`, `chips.css`, `underscore.css`, `disclosure.css`. `interop.css` imports
   foundations, then components, then these.
 - **Helpers** in `projects/interop/src/` fill the gaps the platform leaves.
   They are framework-free and exported from `interop`. See Helpers.

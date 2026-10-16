@@ -50,7 +50,7 @@ navigation in `app.html` is a tree too.
 | Branch | `<details>`/`<summary>`. The browser exposes the summary as a disclosure with its expanded state and opens a closed branch for a find-in-page match, at any depth |
 | Branch with its own page | The summary is a label. The page is the branch's first child link. A link inside `<summary>` is a control inside a control |
 | Levels | From the nesting: Chrome reports `listitem level=N`. No `aria-level` |
-| Marker | The browser's `::marker` on the summary, which points the right way in RTL. Kept by leaving the summary `display: list-item` |
+| Marker | A chevron from `styles/disclosure.css`, the shared disclosure look: a mask over the text color that turns 90° on open, mirrored in RTL, `CanvasText` in forced colors. It replaces the browser's triangle (`list-style: none`, and `::-webkit-details-marker` for Safari) |
 | Indent | Nested `<ul>` margin and padding, with a 1px rail on its inline-start under the parent's marker |
 | Rows | Links and summaries, 32px minimum, text wraps |
 | Current | `aria-current="page"`: a 2px inline-start bar (`--itx-border-width-strong`), weight 600 and a fill |
@@ -81,6 +81,7 @@ Not tested: screen reader output, Safari and Firefox.
 ## Declined
 
 - A depth number (`--itx-tree-level` or `attr(aria-level)`). Nesting does it.
+- The browser's disclosure triangle. Replaced by the chevron in `styles/disclosure.css`.
 - Full-width row highlights. The `border-image` bleed works in Chrome, but its
   outset is physical, so it points the wrong way in RTL.
 - Expand all and collapse all. Not built; see the review.

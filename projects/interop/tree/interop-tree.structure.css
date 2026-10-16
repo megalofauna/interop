@@ -56,17 +56,14 @@
 	list-style: none;
 }
 
-/* A rail under each branch's marker shows which items it holds. */
+/* A rail under each branch's chevron shows which items it holds. */
 :where(ul[interop-tree] ul) {
 	margin-inline-start: var(--itx-tree-rail-inset);
 	padding-inline-start: var(--itx-tree-indent);
 	border-inline-start: var(--itx-tree-rail-border-width) solid var(--itx-tree-rail-border-color);
 }
 
-/*
- * A row: a link, or a branch's summary. It keeps its own display, so a summary stays a list item and
- * keeps the browser's disclosure marker, which points the right way in either writing direction.
- */
+/* A row: a link, or a branch's summary, which wears the chevron from styles/disclosure.css. */
 :where(ul[interop-tree] :is(li > a, details > summary)) {
 	box-sizing: border-box;
 	min-block-size: var(--itx-tree-row-min-block-size);
