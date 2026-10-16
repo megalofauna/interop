@@ -1,0 +1,35 @@
+/*
+ * On the root, because the page's scroll padding reads them there: the gap above a stuck nav, and
+ * the bar's height. Set --itx-page-nav-inset-block-start on :root, e.g. to a fixed header's height.
+ */
+:where(:root) {
+	--itx-page-nav-inset-block-start: 0px;
+	--itx-page-nav-link-min-block-size: var(--itx-space-10);
+	/* The stuck bar's height and the gap above it, plus room to breathe. */
+	--itx-page-nav-scroll-padding-block-start: calc(
+		var(--itx-page-nav-inset-block-start) + var(--itx-page-nav-link-min-block-size) + var(--itx-space-4)
+	);
+}
+
+:where(nav[interop-page-nav]) {
+	--itx-page-nav-z-index: 1;
+	/* The page's own color, so the stuck bar hides the content scrolling under it. */
+	--itx-page-nav-background-color: Canvas;
+	--itx-page-nav-box-shadow-stuck: 0 var(--itx-space-1) var(--itx-space-4) oklch(0 0 0 / 0.15);
+
+	--itx-page-nav-link-padding-inline: var(--itx-space-3);
+	--itx-page-nav-link-font-size: var(--itx-font-size-label);
+	--itx-page-nav-link-line-height: var(--itx-line-height-label);
+	/* 4.5:1 against the page (WCAG 1.4.3). */
+	--itx-page-nav-link-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	--itx-page-nav-link-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	--itx-page-nav-link-color-current: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	/* The link paints no background; the radius shapes its focus ring. */
+	--itx-page-nav-link-border-radius: var(--itx-radius, var(--itx-radius-base));
+
+	/* The vertical list fits the window below the gap above it. */
+	--itx-page-nav-max-block-size: calc(100dvh - var(--itx-page-nav-inset-block-start) - var(--itx-space-8));
+
+	--itx-page-nav-transition-duration: var(--itx-transition-duration);
+	--itx-page-nav-transition-timing-function: var(--itx-transition-timing-function);
+}

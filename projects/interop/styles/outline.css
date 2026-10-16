@@ -28,7 +28,8 @@
 	:is(input, textarea)[interop-input]:focus-visible,
 	[interop-error-summary]:focus-visible,
 	dialog[interop-dialog]:focus-visible,
-	ul[interop-tree] :is(li > a[href], details > summary):focus-visible
+	ul[interop-tree] :is(li > a[href], details > summary):focus-visible,
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a[href]:focus-visible
 ) {
 	outline-width: var(--itx-outline-width);
 	outline-style: var(--itx-outline-style);
@@ -36,12 +37,13 @@
 	outline-offset: var(--itx-outline-offset);
 }
 
-/* A tab, a segment, an option or a tree row sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
+/* A tab, a segment, an option, a tree row or a page nav link sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
 :where(
 	[interop-tabs] > [role="tablist"] > [role="tab"],
 	fieldset[interop-radio-group~="segmented"] > label > input[type="radio"],
 	select[interop-select] option,
-	ul[interop-tree] :is(li > a[href], details > summary)
+	ul[interop-tree] :is(li > a[href], details > summary),
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a[href]
 ) {
 	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
 }

@@ -26,6 +26,10 @@
  * Open the branch that holds the current page. Give the <details> of one level the same `name` to
  * keep one branch open at a time.
  *
+ * A link to a section of this page is marked while that section is in view, the same as the current
+ * page. Inside `nav[interop-page-nav]` the tree is the vertical page nav, and bindTargetCurrent()
+ * adds `aria-current="true"` for screen readers.
+ *
  * `role="list"` keeps each list's count in Safari, which drops list semantics when markers are
  * removed.
  *
@@ -40,6 +44,11 @@
  *   nested navigation
  * Tree is the name in Fluent, React Aria, Angular Aria, Angular Material and Web Awesome.
  */
+
+/* Links to sections of this page mark the one in view (:target-current). Other links are left alone. */
+:where(ul[interop-tree]) {
+	scroll-target-group: auto;
+}
 
 :where(ul[interop-tree], ul[interop-tree] ul) {
 	margin: 0;
@@ -83,8 +92,11 @@
 	background-color: var(--itx-tree-background-color-hover);
 }
 
-/* The current page: a bar, heavier text and a fill, so it does not rely on color. */
-:where(ul[interop-tree] li > a[aria-current="page"]) {
+/*
+ * The current page, or the section of this page in view: a bar, heavier text and a fill, so it does
+ * not rely on color.
+ */
+:where(ul[interop-tree] li > a:is([aria-current="page"], [aria-current="true"], :target-current)) {
 	font-weight: var(--itx-tree-font-weight-current);
 	color: var(--itx-tree-color-current, var(--itx-tree-color));
 	background-color: var(--itx-tree-background-color-current);
@@ -97,7 +109,7 @@
 		border-inline-start-color: Canvas;
 	}
 
-	:where(ul[interop-tree] li > a[aria-current="page"]) {
+	:where(ul[interop-tree] li > a:is([aria-current="page"], [aria-current="true"], :target-current)) {
 		border-inline-start-color: Highlight;
 	}
 }

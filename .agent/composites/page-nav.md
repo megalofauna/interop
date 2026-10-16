@@ -8,7 +8,7 @@ CSS in `styles/composites/page-nav.css` and
 
 | Prime use | Now |
 |---|---|
-| Horizontal bar, `[sticky]` | `nav[interop-page-nav]`: links that wear the underline look shared with tabs, sticky, with a stuck state from a scroll-state query |
+| Horizontal bar, `[sticky]` | `nav[interop-page-nav]`: links that wear the underscore look shared with tabs, sticky, with a stuck state from a scroll-state query |
 | Vertical sidebar | `nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree]` |
 | `activeHref` fed by page code | `scroll-target-group` and `:target-current`, with `bindTargetCurrent()` for `aria-current` and other engines |
 

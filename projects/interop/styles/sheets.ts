@@ -95,11 +95,17 @@ import treeInteropTreeBase from '../tree/interop-tree.base.css' with { loader: '
 // @ts-expect-error The text loader turns the file into a string.
 import treeInteropTreeStructure from '../tree/interop-tree.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import pageNavInteropPageNavBase from '../page-nav/interop-page-nav.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import pageNavInteropPageNavStructure from '../page-nav/interop-page-nav.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesSegmented from '../styles/segmented.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesCards from '../styles/cards.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesChips from '../styles/chips.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesUnderscore from '../styles/underscore.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import interopCss from '../interop.css' with { loader: 'text' };
 
@@ -150,9 +156,12 @@ export const sheets: Record<string, string> = {
 	'dialog/interop-dialog.structure.css': dialogInteropDialogStructure,
 	'tree/interop-tree.base.css': treeInteropTreeBase,
 	'tree/interop-tree.structure.css': treeInteropTreeStructure,
+	'page-nav/interop-page-nav.base.css': pageNavInteropPageNavBase,
+	'page-nav/interop-page-nav.structure.css': pageNavInteropPageNavStructure,
 	'styles/segmented.css': stylesSegmented,
 	'styles/cards.css': stylesCards,
 	'styles/chips.css': stylesChips,
+	'styles/underscore.css': stylesUnderscore,
 };
 
 /** interop.css itself, for checking the list against it. */

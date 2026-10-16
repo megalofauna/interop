@@ -1,0 +1,119 @@
+/*
+ * Page nav: links to the sections of the page, with the section in view marked. Two orientations.
+ *
+ * Horizontal, a bar that sticks to the top of the page as it scrolls:
+ *
+ *   <nav interop-page-nav aria-label="On this page">
+ *     <ul role="list">
+ *       <li><a href="#install">Install</a></li>
+ *       <li><a href="#usage">Usage</a></li>
+ *     </ul>
+ *   </nav>
+ *
+ * Vertical, a list in a narrow column, usually beside the content. It is a tree, so sections can
+ * nest:
+ *
+ *   <nav interop-page-nav itx-orientation="vertical" aria-label="On this page">
+ *     <ul interop-tree role="list">
+ *       <li><a href="#install">Install</a></li>
+ *       <li><a href="#usage">Usage</a><ul role="list"><li><a href="#options">Options</a></li></ul></li>
+ *     </ul>
+ *   </nav>
+ *
+ * The browser marks the link to the section in view (`scroll-target-group`, `:target-current`).
+ * bindTargetCurrent() mirrors it as `aria-current="true"` for screen readers, marks it in browsers
+ * without `:target-current`, and keeps it in view in a bar that overflows. The links scroll to
+ * their sections with no script; set `scroll-behavior` on the page for smooth scrolling.
+ *
+ * The bar wears the underscore look from styles/underscore.css, shared with tabs. It always paints
+ * the page color, so content does not show through it; once it sticks, a shadow separates it
+ * (`scroll-state` container query). The page keeps a scroll padding of the bar's height, so a
+ * section scrolled to does not start under it. `--itx-page-nav-inset-block-start`, set on :root,
+ * is the gap above a stuck nav, e.g. a fixed header's height.
+ *
+ * Use it for the page's own sections. Links to other pages belong in the site navigation. Tabs show
+ * one section and hide the others; a page nav shows them all.
+ *
+ * Also known as:
+ *   table of contents    MDN, Starlight, Docusaurus
+ *   on this page         GitHub Docs, GOV.UK (contents list)
+ *   in-page navigation   USWDS
+ *   scroll-spy           Bootstrap
+ *   anchor navigation    Carbon
+ * CSS calls the links scroll markers, and the list a scroll target group.
+ */
+
+:where(nav[interop-page-nav]) {
+	position: sticky;
+	inset-block-start: var(--itx-page-nav-inset-block-start);
+	z-index: var(--itx-page-nav-z-index);
+}
+
+/* ── Horizontal ────────────────────────────────────────────────────────── */
+
+:where(nav[interop-page-nav]:not([itx-orientation="vertical"])) {
+	container-type: scroll-state;
+	background-color: var(--itx-page-nav-background-color);
+}
+
+/* A section scrolled to starts below the stuck bar. */
+:where(:root:has(nav[interop-page-nav]:not([itx-orientation="vertical"]))) {
+	scroll-padding-block-start: var(--itx-page-nav-scroll-padding-block-start);
+}
+
+:where(nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul) {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	scroll-target-group: auto;
+}
+
+:where(nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li) {
+	flex-shrink: 0;
+}
+
+:where(nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a) {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	min-block-size: var(--itx-page-nav-link-min-block-size);
+	padding-inline: var(--itx-page-nav-link-padding-inline);
+	font-size: var(--itx-page-nav-link-font-size);
+	line-height: var(--itx-page-nav-link-line-height);
+	white-space: nowrap;
+	color: var(--itx-page-nav-link-color);
+	text-decoration: none;
+	border-radius: var(--itx-page-nav-link-border-radius);
+	corner-shape: var(--itx-corner-shape);
+	transition-property: color;
+	transition-duration: var(--itx-page-nav-transition-duration);
+	transition-timing-function: var(--itx-page-nav-transition-timing-function);
+}
+
+:where(nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:hover:not([aria-current="true"], :is(:target-current))) {
+	color: var(--itx-page-nav-link-color-hover, var(--itx-page-nav-link-color));
+}
+
+:where(nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:is([aria-current="true"], :target-current)) {
+	color: var(--itx-page-nav-link-color-current, var(--itx-page-nav-link-color));
+}
+
+@container scroll-state(stuck: top) {
+	:where(nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul) {
+		box-shadow: var(--itx-page-nav-box-shadow-stuck);
+	}
+}
+
+/* ── Vertical ──────────────────────────────────────────────────────────── */
+
+/* At the top of its column, so it has room to stick as the page scrolls. */
+:where(nav[interop-page-nav][itx-orientation="vertical"]) {
+	align-self: start;
+}
+
+/* A list longer than the window scrolls on its own. */
+:where(nav[interop-page-nav][itx-orientation="vertical"] > ul) {
+	max-block-size: var(--itx-page-nav-max-block-size);
+	overflow-y: auto;
+	overscroll-behavior-block: contain;
+}

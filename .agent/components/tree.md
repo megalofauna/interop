@@ -54,6 +54,7 @@ navigation in `app.html` is a tree too.
 | Indent | Nested `<ul>` margin and padding, with a 1px rail on its inline-start under the parent's marker |
 | Rows | Links and summaries, 32px minimum, text wraps |
 | Current | `aria-current="page"`: a 2px inline-start bar (`--itx-border-width-strong`), weight 600 and a fill |
+| Section in view | `scroll-target-group: auto` on the outer list. A link to a section of this page takes the current look while that section is in view (`:target-current`, or `aria-current="true"` from `bindTargetCurrent()`). Links to other pages are untouched. Inside `nav[interop-page-nav]` the tree is the vertical page nav |
 | One branch open | Same `name` on the `<details>` of one level |
 | Focus | `outline.css`, inside the row (offset −2px), because rows are gapless |
 | Forced colors | A transparent border renders as CanvasText there, so rest bars are set to `Canvas` and the current bar to `Highlight` |

@@ -11,7 +11,7 @@ links, in two orientations from the start:
 
 | Orientation | Use | Built from |
 |---|---|---|
-| Horizontal (default) | A bar under the page header that sticks to the top | `nav[interop-page-nav] > ul` with the underline look shared with tabs |
+| Horizontal (default) | A bar under the page header that sticks to the top | `nav[interop-page-nav] > ul` with the underscore look shared with tabs |
 | Vertical, `itx-orientation="vertical"` | A narrow column, usually to the right of the content | `nav[interop-page-nav] > ul[interop-tree]`: the tree, which tracks the current section once it sets `scroll-target-group` |
 
 The browser decides the current section (`scroll-target-group`,
@@ -116,7 +116,7 @@ None of these exists in Interop. Each is raised before it is built.
 
 | # | Primitive | What | Why it is needed |
 |---|---|---|---|
-| A | Underline look, `styles/underline.css` | The rule under a strip and the bar on its current item, moved out of `interop-tabs.structure.css`. Tabs (selected) and the horizontal page nav (current) wear it, as `styles/segmented.css` is worn by tabs and the radio group | One look for "this one" across content navigation. Without it the page nav copies 60 lines of tabs CSS |
+| A | Underscore look, `styles/underscore.css` | The rule under a strip and the bar on its current item, moved out of `interop-tabs.structure.css`. Tabs (selected) and the horizontal page nav (current) wear it, as `styles/segmented.css` is worn by tabs and the radio group | One look for "this one" across content navigation. Without it the page nav copies 60 lines of tabs CSS |
 | B | `bindTargetCurrent(list)` | Writes `aria-current="true"` on the current link, read from `:target-current` where it exists and from an IntersectionObserver where it does not; keeps the current link visible in the list's own scroller | Screen readers get no current state from CSS; Firefox and Safari have no `:target-current`; an overflowing bar does not reveal its current link |
 | C | Sticky bar with a stuck state | `position: sticky` on the nav and `container-type: scroll-state`; `@container scroll-state(stuck: top)` adds the bar's edge | Nothing in Interop sticks today. The app shell header may want it next |
 | D | `itx-orientation` beyond the segmented radio group | The page nav reads `itx-orientation="vertical"` | Exists as a system axis; this is its second user |
@@ -141,6 +141,10 @@ and `bindScrollArea()` (a vertical nav taller than its column).
 4. Dropped: the `PageNavLink[]` data API (the consumer writes the list), the
    view-transition `fade`, the stuck IntersectionObserver, the two template
    branches, the inert tokens.
+
+Answered 2026-10-16: A yes, named `underscore` (`styles/underscore.css`,
+`--itx-underscore-*`); B yes; C yes, inside the page nav's CSS; both
+orientations from the start.
 
 ## Unverified
 

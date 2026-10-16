@@ -1,0 +1,36 @@
+:host {
+	display: block;
+	container-type: inline-size;
+}
+
+.aka {
+	font-style: italic;
+}
+
+/* The content, with the vertical page nav in a column beside it when there is room. */
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--itx-space-8);
+}
+
+/* Below the horizontal bar, which sticks above it on this page. */
+.layout > nav {
+	display: none;
+	inset-block-start: var(--itx-page-nav-scroll-padding-block-start);
+	--itx-page-nav-max-block-size: calc(100dvh - var(--itx-page-nav-scroll-padding-block-start) - var(--itx-space-8));
+}
+
+@container (inline-size >= 48rem) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr) 12rem;
+	}
+
+	.layout > nav {
+		display: block;
+	}
+}
+
+* + figure[interop-code-block] {
+	margin-block-start: var(--itx-space-3);
+}

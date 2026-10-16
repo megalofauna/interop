@@ -206,6 +206,23 @@ const reveal = (element: Element) => {
 					<li><a href="/changelog">Changelog</a></li>
 				</ul>
 			</nav>
+			<nav interop-page-nav aria-label="On this page">
+				<ul role="list">
+					<li><a href="#install" aria-current="true">Install</a></li>
+					<li><a href="#usage">Usage</a></li>
+				</ul>
+			</nav>
+			<nav interop-page-nav itx-orientation="vertical" aria-label="Sections">
+				<ul interop-tree role="list">
+					<li><a href="#install">Install</a></li>
+					<li>
+						<a href="#usage" aria-current="true">Usage</a>
+						<ul role="list">
+							<li><a href="#options">Options</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
 			<fieldset interop-checkbox-group="chips">
 				<legend>Topics</legend>
 				<label interop-checkbox><input type="checkbox" name="topic" value="design" checked /> Design</label>
