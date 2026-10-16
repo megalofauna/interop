@@ -1,3 +1,6 @@
+/* Type scale candidates: remove with the file once a scale is chosen. */
+@import "./type-scale.css";
+
 /*
  * The page's colors, stated: they are what the browser draws anyway, but a checker such as axe
  * cannot read the canvas and assumes white, so in dark mode it would measure text against white.

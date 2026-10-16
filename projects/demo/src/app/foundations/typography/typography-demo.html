@@ -15,3 +15,33 @@
 		</dd>
 	}
 </dl>
+
+<h2>Compare scales</h2>
+<p>
+	The same documentation excerpt in each candidate scale. The Type select in
+	the header applies one to every page. Candidates are in
+	<code>projects/demo/src/type-scale.css</code>.
+</p>
+<div class="compare">
+	@for (scale of scales; track scale) {
+		<section [attr.data-type-scale]="scale" [attr.aria-label]="scale + ' scale'">
+			<p itx-font="caption" class="scale-name">{{ scale }}</p>
+			<h2>Installation</h2>
+			<p>
+				Add the package, then import its stylesheet once at the root of the app.
+			</p>
+			<h3>Styles</h3>
+			<p>
+				The stylesheet holds every component's structure and tokens. The reset
+				is optional.
+			</p>
+			<h4>Cascade layers</h4>
+			<p>
+				The reset sits in its own layer, so every unlayered style wins over it.
+			</p>
+			<h5>Import order</h5>
+			<p>Order does not matter: the layer decides.</p>
+			<p itx-font="p-lg">A lead paragraph in p-lg, for comparison.</p>
+		</section>
+	}
+</div>
