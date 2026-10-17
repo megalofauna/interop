@@ -41,6 +41,22 @@
 		font-family: var(--itx-font-family-mono);
 	}
 
+	/*
+	 * Inline code: a chip in the text around it. Code in a <pre> is a code block's and is left alone.
+	 * Monospace runs large beside proportional text, so it steps down to match. Padding is inline
+	 * only, so the chip does not push lines apart, and a chip that wraps keeps its edges at the break.
+	 */
+	:where(:not(pre) > code) {
+		font-size: var(--itx-code-inline-font-size);
+		padding-inline: var(--itx-code-iline-padding-inline);
+		padding-block: var(--itx-code-inline-padding-block);
+		background-color: var(--itx-code-inline-background-color);
+		border: var(--itx-code-inline-border-width) solid var(--itx-code-inline-border-color);
+		border-radius: var(--itx-code-inline-border-radius);
+		corner-shape: var(--itx-corner-shape);
+		box-decoration-break: clone;
+	}
+
 	:where(img, picture, video, canvas) {
 		display: block;
 		max-inline-size: 100%;

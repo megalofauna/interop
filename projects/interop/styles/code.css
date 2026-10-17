@@ -1,9 +1,20 @@
 /*
  * Syntax colors, painted by highlightCode() as ::highlight(itx-code-<role>). Each color is chosen
  * against the code block's background and measures at least 4.5:1 in light and dark.
+ *
+ * Inline code, the chip the reset draws around a <code> in running text, takes its tokens from here
+ * too. Its text keeps the color of the text around it, so code in a heading reads as the heading.
  */
 
 :root {
+	--itx-code-inline-font-size: 0.875em;
+	--itx-code-inline-padding-inline: var(--itx-space-1);
+	--itx-code-inline-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-900));
+	--itx-code-inline-border-width: var(--itx-border-width);
+	--itx-code-inline-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+	/* A small corner: half the house radius. */
+	--itx-code-inline-border-radius: calc(var(--itx-radius, var(--itx-radius-base)) / 2);
+
 	--itx-code-color-keyword: light-dark(oklch(0.5 0.2 300), oklch(0.78 0.13 300));
 	--itx-code-color-string: light-dark(oklch(0.47 0.13 150), oklch(0.8 0.14 150));
 	--itx-code-color-comment: light-dark(oklch(0.485 0 0), oklch(0.7 0 0));

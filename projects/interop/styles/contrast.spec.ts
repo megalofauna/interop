@@ -331,6 +331,17 @@ describe('step indicator', () => {
 	}
 });
 
+describe('inline code', () => {
+	for (const [scheme, label] of SCHEMES) {
+		// The chip keeps the text color around it: body text, and every heading.
+		it(`keeps body and heading text at 4.5:1 on the chip in ${label}`, () => {
+			for (const role of ['', '-h1', '-h2', '-h3', '-h4', '-h5']) {
+				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+	}
+});
+
 describe('type roles', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`keeps every role's text at 4.5:1 against the page in ${label}`, () => {
