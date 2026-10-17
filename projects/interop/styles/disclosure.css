@@ -1,0 +1,75 @@
+/*
+ * The disclosure look: a chevron before a <summary>'s text that turns to point down when its
+ * <details> opens. It replaces the browser's triangle. The tree's branches wear it:
+ *
+ *   <ul interop-tree role="list">
+ *     <li>
+ *       <details open>
+ *         <summary>Guides</summary>
+ *         …
+ *
+ * The chevron is a mask over the text color, so it follows hover and current; in forced colors it is
+ * CanvasText. It sits in the middle of the summary's first line, and a long label wraps beside it.
+ * In right-to-left text it points left when closed. The turn reads the shared duration, so reduced
+ * motion stops it. The summary keeps its role: screen readers still announce it as expanded or
+ * collapsed.
+ *
+ * Each rule names the summary of every component that wears the look. Loaded after the components
+ * that wear it, because it overrides their summary's display.
+ */
+
+:where(ul[interop-tree] details > summary) {
+	--itx-disclosure-marker-size: 1em;
+	--itx-disclosure-marker-gap: var(--itx-space-1_5);
+	/* Tabler's chevron-right. Only the mask's shape counts, so its stroke color does not matter. */
+	--itx-disclosure-marker-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6l-6 6'/%3E%3C/svg%3E");
+	--itx-disclosure-transition-duration: var(--itx-transition-duration);
+	--itx-disclosure-transition-timing-function: var(--itx-transition-timing-function);
+
+	display: flex;
+	align-items: start;
+	gap: var(--itx-disclosure-marker-gap);
+	/* Removes the triangle in Chrome and Firefox; Safari's is removed below. */
+	list-style: none;
+}
+
+:where(ul[interop-tree] details > summary)::-webkit-details-marker {
+	display: none;
+}
+
+/* One line tall, so the chevron sits in the middle of the first line. */
+:where(ul[interop-tree] details > summary)::before {
+	content: "";
+	flex: none;
+	inline-size: var(--itx-disclosure-marker-size);
+	block-size: 1lh;
+	background-color: currentColor;
+	mask-image: var(--itx-disclosure-marker-mask-image);
+	mask-size: var(--itx-disclosure-marker-size);
+	mask-position: center;
+	mask-repeat: no-repeat;
+	transition-property: rotate;
+	transition-duration: var(--itx-disclosure-transition-duration);
+	transition-timing-function: var(--itx-disclosure-transition-timing-function);
+}
+
+:where(ul[interop-tree] details[open] > summary)::before {
+	rotate: 90deg;
+}
+
+/* Mirrored, it points left when closed, and turns the other way to point down. */
+:where(ul[interop-tree] details > summary:dir(rtl))::before {
+	scale: -1 1;
+}
+
+:where(ul[interop-tree] details[open] > summary:dir(rtl))::before {
+	rotate: -90deg;
+}
+
+/* Forced colors would paint the fill the page color, so it takes the system text color. */
+@media (forced-colors: active) {
+	:where(ul[interop-tree] details > summary)::before {
+		forced-color-adjust: none;
+		background-color: CanvasText;
+	}
+}

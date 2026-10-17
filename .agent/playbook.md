@@ -23,7 +23,7 @@ Interop components are semantically correct, accessible first, and performant by
   - `<name>.ts`, only when the component needs script: thin directives.
   - `public-api.ts`, empty for a CSS-only component.
 - **Shared looks** a template wears across components live in `styles/`:
-  `segmented.css`, `cards.css`, `chips.css`. `interop.css` imports
+  `segmented.css`, `cards.css`, `chips.css`, `underscore.css`, `disclosure.css`. `interop.css` imports
   foundations, then components, then these.
 - **Helpers** in `projects/interop/src/` fill the gaps the platform leaves.
   They are framework-free and exported from `interop`. See Helpers.
@@ -226,6 +226,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindSteps` | Steps of one form, and their validation | Nothing proposed |
 | `bindTags`, `bindTagInput` | Focus after a removal, announcements, adding by Enter | Nothing proposed |
 | `bindSelectAll` | A select-all checkbox | Nothing proposed |
+| `bindTargetCurrent` | `aria-current` for the section in view; choosing it without `:target-current`; keeping the current link in view in an overflowing bar | Chrome exposing `:target-current` as `aria-current` (ARIA WG, 2026-01-29) and Firefox and Safari shipping `scroll-target-group`. Nothing proposed for the reveal |
 | `bindPendingAction`, `guardActivation` | A busy button that ignores repeat clicks | Nothing proposed |
 | `scopeSelectAll` | Ctrl+A inside a code block | Nothing proposed |
 | `announce` | Speaking a change that moves no focus, in browsers without `ariaNotify()` | `ariaNotify()` Baseline widely available, about March 2029: the `status` fallback goes, and `announce()` is one call |

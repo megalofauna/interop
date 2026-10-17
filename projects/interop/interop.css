@@ -42,7 +42,11 @@
 @import "./dialog/interop-dialog.structure.css";
 @import "./tree/interop-tree.base.css";
 @import "./tree/interop-tree.structure.css";
+@import "./page-nav/interop-page-nav.base.css";
+@import "./page-nav/interop-page-nav.structure.css";
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";
 @import "./styles/chips.css";
+@import "./styles/underscore.css";
+@import "./styles/disclosure.css";

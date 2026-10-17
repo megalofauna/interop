@@ -479,10 +479,22 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null,
 	},
+	'page-nav-name': {
+		selector: 'nav[interop-page-nav]',
+		check: (nav) =>
+			ariaName(nav)
+				? null
+				: {
+						problem: 'This page nav has no name.',
+						reason: 'A page usually has more than one navigation landmark, and screen readers list them by name.',
+						advice: 'Add aria-label="On this page" to the <nav>.',
+					},
+	},
 	'list-role': {
-		selector: ':is(ul[interop-tags], ol[interop-steps], ul[interop-tree], ul[interop-tree] ul):not([role="list"])',
+		selector:
+			':is(ul[interop-tags], ol[interop-steps], ul[interop-tree], ul[interop-tree] ul, nav[interop-page-nav] > ul):not([role="list"])',
 		check: (list) => ({
-			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : list.closest('ul[interop-tree]') ? 'tree list' : 'tag list'} has no role="list".`,
+			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : list.closest('ul[interop-tree]') ? 'tree list' : list.parentElement?.matches('nav[interop-page-nav]') ? 'page nav list' : 'tag list'} has no role="list".`,
 			reason:
 				'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many items there are, or which step of how many this is.',
 			advice: `Add role="list" to the <${list.tagName.toLowerCase()}>.`,

@@ -4,8 +4,9 @@
 	/* The same type steps as a button. */
 	--itx-tabs-tab-font-size: var(--itx-font-size-p);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p);
-	/* 4.5:1 against the page (WCAG 1.4.3). */
-	--itx-tabs-tab-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	/* At rest, the dimmest steps that keep 4.5:1 against the page (WCAG 1.4.3): 4.73:1 light, 6.71:1 dark.
+	   Content navigation shares this rest color, so hover and the current item stand out. */
+	--itx-tabs-tab-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-tabs-tab-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-tabs-tab-color-selected: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-tabs-tab-cursor: default;
@@ -13,17 +14,6 @@
 	--itx-tabs-tab-opacity-disabled: 0.5;
 	/* The tab paints no background; the radius shapes its focus ring. */
 	--itx-tabs-tab-border-radius: var(--itx-radius, var(--itx-radius-base));
-
-	/* The bar's thickness: its block size, or its inline size when the tab list is vertical. */
-	--itx-tabs-indicator-size: var(--itx-border-width-strong);
-	--itx-tabs-indicator-background-color: transparent;
-	--itx-tabs-indicator-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-	/* 3:1 against the page, so the selection shows without the text color (WCAG 1.4.11). */
-	--itx-tabs-indicator-background-color-selected: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
-
-	/* The rule carries no state, so it needs no contrast floor. The bar does. */
-	--itx-tabs-tablist-border-width: var(--itx-border-width);
-	--itx-tabs-tablist-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 
 	--itx-tabs-panel-padding-block: var(--itx-space-4);
 	--itx-tabs-column-gap: var(--itx-space-6);
@@ -46,7 +36,6 @@
 	--itx-tabs-tab-line-height: var(--itx-line-height-p-lg);
 }
 
-/* The bar stays thicker than the rule when the rule thickens. */
 :where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
 	/* A nested corner inside the frame, the same as the pill's, so the focus ring matches it. Declared
 	   on the tab because the frame's tokens are declared on the tab list. */

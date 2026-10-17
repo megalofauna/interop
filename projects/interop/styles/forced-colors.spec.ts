@@ -15,13 +15,14 @@ const required = [
 	'select/interop-select.structure.css',
 	'steps/interop-steps.structure.css',
 	'switch/interop-switch.structure.css',
-	'tabs/interop-tabs.structure.css',
 	'tags/interop-tags.structure.css',
 	'tree/interop-tree.structure.css',
 	'styles/cards.css',
 	'styles/chips.css',
 	'styles/outline.css',
 	'styles/segmented.css',
+	'styles/underscore.css',
+	'styles/disclosure.css',
 ];
 
 /** Every other component and shared stylesheet, and why it needs no block. */
@@ -34,6 +35,8 @@ const exempt: Record<string, string> = {
 	'scroll-area/interop-scroll-area.structure.css': 'The edge shadows are a hint; the content scrolls the same without them.',
 	'tooltip/interop-tooltip.structure.css': 'Text and a border, which the browser maps.',
 	'styles/fieldset.css': 'Layout only.',
+	'tabs/interop-tabs.structure.css': 'Its bar is in styles/underscore.css and its segmented look in styles/segmented.css.',
+	'page-nav/interop-page-nav.structure.css': 'Its current bar is in styles/underscore.css or the tree; the stuck shadow is decoration.',
 };
 
 /** Stylesheets that show a selected, checked or pressed state, which forced colors give to Highlight. */
@@ -44,11 +47,11 @@ const selected = [
 	'select/interop-select.structure.css',
 	'steps/interop-steps.structure.css',
 	'switch/interop-switch.structure.css',
-	'tabs/interop-tabs.structure.css',
 	'tree/interop-tree.structure.css',
 	'styles/cards.css',
 	'styles/chips.css',
 	'styles/segmented.css',
+	'styles/underscore.css',
 ];
 
 describe('forced colors', () => {
@@ -56,7 +59,7 @@ describe('forced colors', () => {
 		const components = Object.keys(sheets).filter(
 			(path) =>
 				path.endsWith('.structure.css') ||
-				['styles/cards.css', 'styles/chips.css', 'styles/segmented.css', 'styles/outline.css', 'styles/fieldset.css'].includes(path),
+				['styles/cards.css', 'styles/chips.css', 'styles/segmented.css', 'styles/underscore.css', 'styles/disclosure.css', 'styles/outline.css', 'styles/fieldset.css'].includes(path),
 		);
 		expect(components.filter((path) => !required.includes(path) && !(path in exempt))).toEqual([]);
 	});

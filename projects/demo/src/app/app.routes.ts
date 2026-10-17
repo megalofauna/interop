@@ -47,6 +47,12 @@ export const routes: Routes = [
 			import("./components/icon/icon-demo").then((m) => m.IconDemo),
 	},
 	{
+		path: "components/page-nav",
+		title: "Page nav",
+		loadComponent: () =>
+			import("./components/page-nav/page-nav-demo").then((m) => m.PageNavDemo),
+	},
+	{
 		path: "components/popover",
 		title: "Popover",
 		loadComponent: () =>

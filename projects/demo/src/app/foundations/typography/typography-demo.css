@@ -22,28 +22,12 @@ dd {
 	);
 }
 
-.compare {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-	gap: var(--itx-space-6);
-}
-
-.compare > section {
+.excerpt {
 	padding: var(--itx-space-4);
 	border: var(--itx-border-width) solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
 
-.scale-name {
-	text-transform: uppercase;
-	letter-spacing: 0.05em;
-	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
-}
-
-/* The page's block rhythm would push the second and third samples down. */
-.compare > section {
+/* The excerpt's first heading sits at the top of its frame. */
+.excerpt > :first-child {
 	margin-block-start: 0;
-}
-
-.scale-name + h2 {
-	margin-block-start: var(--itx-space-2);
 }

@@ -1,0 +1,135 @@
+/*
+ * The underscore look: a strip of items on a rule, with a bar on the current item. Tabs and the
+ * horizontal page nav wear it:
+ *
+ *   <div interop-tabs>
+ *     <div role="tablist" aria-label="Station systems">
+ *       <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
+ *       …
+ *
+ *   <nav interop-page-nav aria-label="On this page">
+ *     <ul role="list">
+ *       <li><a href="#install">Install</a></li>
+ *       …
+ *
+ * The current item is the selected tab, or the page nav's link to the section in view
+ * (`:target-current`, or `aria-current="true"` from bindTargetCurrent()). Each component keeps its
+ * own item text, size and padding; this file draws the strip, the rule and the bar.
+ *
+ * The strip scrolls when its items overflow. A scroll container clips its children to its padding
+ * box, so the bar sits on the rule rather than over it. A tab list with
+ * `aria-orientation="vertical"` puts the rule and the bar on its inline-end edge.
+ *
+ * Each rule names the strip, the item or the current item of every component that wears the look.
+ * Loaded after the components that wear it, because it overrides their item layout.
+ */
+
+/* ── Strip ─────────────────────────────────────────────────────────────── */
+
+:where(
+	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"],
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul
+) {
+	--itx-underscore-rule-border-width: var(--itx-border-width);
+	/* The rule carries no state, so it needs no contrast floor. The bar does. */
+	--itx-underscore-rule-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	/* The bar's thickness: its block size, or its inline size on a vertical strip. */
+	--itx-underscore-bar-size: var(--itx-border-width-strong);
+	--itx-underscore-bar-background-color: transparent;
+	--itx-underscore-bar-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	/* 3:1 against the page, so the current item shows without its text color (WCAG 1.4.11). */
+	--itx-underscore-bar-background-color-current: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-underscore-transition-duration: var(--itx-transition-duration);
+	--itx-underscore-transition-timing-function: var(--itx-transition-timing-function);
+
+	display: flex;
+	/* Items scroll rather than wrap or spill when they overflow. */
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	scrollbar-width: thin;
+	border-block-end-width: var(--itx-underscore-rule-border-width);
+	border-block-end-style: solid;
+	border-block-end-color: var(--itx-underscore-rule-border-color);
+}
+
+/* ── Bar ───────────────────────────────────────────────────────────────── */
+
+:where(
+	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"],
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a
+) {
+	position: relative;
+}
+
+/* The bar, on the item's edge against the rule. */
+:where(
+	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"],
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a
+)::after {
+	content: "";
+	position: absolute;
+	inset-inline: 0;
+	inset-block-end: 0;
+	block-size: var(--itx-underscore-bar-size);
+	background-color: var(--itx-underscore-bar-background-color);
+	transition-property: background-color;
+	transition-duration: var(--itx-underscore-transition-duration);
+	transition-timing-function: var(--itx-underscore-transition-timing-function);
+}
+
+:where(
+	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled),
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:hover:not([aria-current="true"], :is(:target-current))
+)::after {
+	background-color: var(--itx-underscore-bar-background-color-hover, var(--itx-underscore-bar-background-color));
+}
+
+:where(
+	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"],
+	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:is([aria-current="true"], :target-current)
+)::after {
+	background-color: var(--itx-underscore-bar-background-color-current);
+}
+
+/* ── Vertical tab list ─────────────────────────────────────────────────── */
+
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"][aria-orientation="vertical"]) {
+	flex-direction: column;
+	overflow-x: visible;
+	border-block-end-width: 0;
+	border-inline-end-width: var(--itx-underscore-rule-border-width);
+	border-inline-end-style: solid;
+	border-inline-end-color: var(--itx-underscore-rule-border-color);
+}
+
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"][aria-orientation="vertical"] > [role="tab"])::after {
+	inset-block: 0;
+	inset-inline: auto 0;
+	block-size: auto;
+	inline-size: var(--itx-underscore-bar-size);
+}
+
+/* ── Forced colors ─────────────────────────────────────────────────────── */
+
+@media (forced-colors: active) {
+	:where(
+		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"],
+		nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a
+	)::after {
+		forced-color-adjust: none;
+	}
+
+	:where(
+		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"],
+		nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:is([aria-current="true"], :target-current)
+	)::after {
+		background-color: Highlight;
+	}
+
+	:where(
+		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled),
+		nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:hover:not([aria-current="true"], :is(:target-current))
+	)::after {
+		background-color: CanvasText;
+	}
+}

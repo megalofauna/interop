@@ -1,5 +1,5 @@
 :where(ul[interop-tree]) {
-	--itx-tree-font-size: var(--itx-font-size-label);
+	--itx-tree-font-size: var(--itx-font-size-caption);
 	--itx-tree-line-height: var(--itx-line-height-label);
 	--itx-tree-font-weight-current: 600;
 	/* 4.5:1 against the page (WCAG 1.4.3). */
@@ -9,14 +9,14 @@
 	--itx-tree-background-color-current: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
 
 	--itx-tree-row-min-block-size: var(--itx-space-8);
-	--itx-tree-row-padding-inline: var(--itx-space-2);
+	--itx-tree-row-padding-inline: var(--itx-space-4) var(--itx-space-4);
 	--itx-tree-row-border-inline-start-width: var(--itx-border-width-strong);
 	/* The current page's bar: 3:1 against the page (WCAG 1.4.11). */
 	--itx-tree-row-border-inline-start-color-current: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 
 	/* The rail sits under the middle of the disclosure marker. */
-	--itx-tree-rail-inset: var(--itx-space-3);
-	--itx-tree-indent: var(--itx-space-2);
+	--itx-tree-rail-inset: var(--itx-space-6);
+	--itx-tree-indent: var(--itx-space-0);
 	--itx-tree-rail-border-width: var(--itx-border-width);
 	--itx-tree-rail-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 

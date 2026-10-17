@@ -26,6 +26,10 @@
  * Open the branch that holds the current page. Give the <details> of one level the same `name` to
  * keep one branch open at a time.
  *
+ * A link to a section of this page is marked while that section is in view, the same as the current
+ * page. Inside `nav[interop-page-nav]` the tree is the vertical page nav, and bindTargetCurrent()
+ * adds `aria-current="true"` for screen readers.
+ *
  * `role="list"` keeps each list's count in Safari, which drops list semantics when markers are
  * removed.
  *
@@ -41,23 +45,25 @@
  * Tree is the name in Fluent, React Aria, Angular Aria, Angular Material and Web Awesome.
  */
 
+/* Links to sections of this page mark the one in view (:target-current). Other links are left alone. */
+:where(ul[interop-tree]) {
+	scroll-target-group: auto;
+}
+
 :where(ul[interop-tree], ul[interop-tree] ul) {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-/* A rail under each branch's marker shows which items it holds. */
+/* A rail under each branch's chevron shows which items it holds. */
 :where(ul[interop-tree] ul) {
 	margin-inline-start: var(--itx-tree-rail-inset);
 	padding-inline-start: var(--itx-tree-indent);
 	border-inline-start: var(--itx-tree-rail-border-width) solid var(--itx-tree-rail-border-color);
 }
 
-/*
- * A row: a link, or a branch's summary. It keeps its own display, so a summary stays a list item and
- * keeps the browser's disclosure marker, which points the right way in either writing direction.
- */
+/* A row: a link, or a branch's summary, which wears the chevron from styles/disclosure.css. */
 :where(ul[interop-tree] :is(li > a, details > summary)) {
 	box-sizing: border-box;
 	min-block-size: var(--itx-tree-row-min-block-size);
@@ -83,8 +89,11 @@
 	background-color: var(--itx-tree-background-color-hover);
 }
 
-/* The current page: a bar, heavier text and a fill, so it does not rely on color. */
-:where(ul[interop-tree] li > a[aria-current="page"]) {
+/*
+ * The current page, or the section of this page in view: a bar, heavier text and a fill, so it does
+ * not rely on color.
+ */
+:where(ul[interop-tree] li > a:is([aria-current="page"], [aria-current="true"], :target-current)) {
 	font-weight: var(--itx-tree-font-weight-current);
 	color: var(--itx-tree-color-current, var(--itx-tree-color));
 	background-color: var(--itx-tree-background-color-current);
@@ -97,7 +106,7 @@
 		border-inline-start-color: Canvas;
 	}
 
-	:where(ul[interop-tree] li > a[aria-current="page"]) {
+	:where(ul[interop-tree] li > a:is([aria-current="page"], [aria-current="true"], :target-current)) {
 		border-inline-start-color: Highlight;
 	}
 }

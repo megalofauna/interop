@@ -298,6 +298,18 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('page nav', () => {
+		it('accepts a named page nav whose list has role="list"', () => {
+			render('<nav interop-page-nav aria-label="On this page"><ul role="list"><li><a href="#a">A</a></li></ul></nav>');
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a page nav with no name, and a list without role="list"', () => {
+			render('<nav interop-page-nav><ul><li><a href="#a">A</a></li></ul></nav>');
+			expect(rules().sort()).toEqual(['list-role', 'page-nav-name']);
+		});
+	});
+
 	describe('tree', () => {
 		const tree = (summary: string, inner = ' role="list"') =>
 			`<ul interop-tree role="list"><li><details open><summary>${summary}</summary><ul${inner}><li><a href="/a">A</a></li></ul></details></li></ul>`;

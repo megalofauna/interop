@@ -11,10 +11,9 @@
  *     <section role="tabpanel" id="eng" hidden="until-found">…</section>
  *   </div>
  *
- * The tab list sits on a rule, and the selected tab carries a bar on it. The bar sits on the rule,
- * not over it, because the tab list scrolls when its tabs overflow and a scroll container clips its
- * children to its padding box. `aria-orientation="vertical"` on the tab list stands it beside the
- * panels, with the rule and the bar on its inline-end edge. `itx-size` on the wrapper sets the size.
+ * The tab list wears the underscore look from styles/underscore.css, shared with the page nav: a
+ * rule, and a bar on the selected tab. `aria-orientation="vertical"` on the tab list stands it beside
+ * the panels, with the rule and the bar on its inline-end edge. `itx-size` on the wrapper sets the size.
  * `interop-tabs="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
  * segments.
  *
@@ -28,19 +27,6 @@
  * Tabs is the ARIA pattern, and the name in Carbon, Material, Spectrum, Radix, React Aria, Ark,
  * Chakra, Mantine, MUI, Ant Design, PatternFly and GOV.UK.
  */
-
-/* ── Tab list ──────────────────────────────────────────────────────────── */
-
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"]) {
-	display: flex;
-	/* Tabs scroll rather than wrap or spill when they overflow. */
-	overflow-x: auto;
-	overscroll-behavior-inline: contain;
-	scrollbar-width: thin;
-	border-block-end-width: var(--itx-tabs-tablist-border-width);
-	border-block-end-style: solid;
-	border-block-end-color: var(--itx-tabs-tablist-border-color);
-}
 
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
@@ -71,35 +57,12 @@
 	transition-timing-function: var(--itx-tabs-transition-timing-function);
 }
 
-/* The bar, on the tab's edge against the rule. */
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"])::after {
-	content: "";
-	position: absolute;
-	inset-inline: 0;
-	inset-block-end: 0;
-	block-size: var(--itx-tabs-indicator-size);
-	background-color: var(--itx-tabs-indicator-background-color);
-	transition-property: background-color;
-	transition-duration: var(--itx-tabs-transition-duration);
-	transition-timing-function: var(--itx-tabs-transition-timing-function);
-}
-
 :where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
 	color: var(--itx-tabs-tab-color-hover, var(--itx-tabs-tab-color));
 }
 
-:where(
-	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)
-)::after {
-	background-color: var(--itx-tabs-indicator-background-color-hover, var(--itx-tabs-indicator-background-color));
-}
-
 :where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"]) {
 	color: var(--itx-tabs-tab-color-selected);
-}
-
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
-	background-color: var(--itx-tabs-indicator-background-color-selected);
 }
 
 :where([interop-tabs] > [role="tablist"] > [role="tab"]:disabled) {
@@ -127,22 +90,6 @@
 	column-gap: var(--itx-tabs-column-gap);
 }
 
-:where([interop-tabs] > [role="tablist"][aria-orientation="vertical"]) {
-	flex-direction: column;
-	overflow-x: visible;
-	border-block-end-width: 0;
-	border-inline-end-width: var(--itx-tabs-tablist-border-width);
-	border-inline-end-style: solid;
-	border-inline-end-color: var(--itx-tabs-tablist-border-color);
-}
-
-:where([interop-tabs] > [role="tablist"][aria-orientation="vertical"] > [role="tab"])::after {
-	inset-block: 0;
-	inset-inline: auto 0;
-	block-size: auto;
-	inline-size: var(--itx-tabs-indicator-size);
-}
-
 /* Every panel shares the one cell beside the tab list. Only the selected one shows. */
 :where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]) {
 	grid-column: 2;
@@ -151,22 +98,4 @@
 
 :where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
 	padding-block: 0;
-}
-
-/* ── Forced colors ─────────────────────────────────────────────────────── */
-
-@media (forced-colors: active) {
-	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"])::after {
-		forced-color-adjust: none;
-	}
-
-	:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"])::after {
-		background-color: Highlight;
-	}
-
-	:where(
-		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)
-	)::after {
-		background-color: CanvasText;
-	}
 }

@@ -24,12 +24,13 @@ look the same; they announce differently.
 
 ```
 projects/interop/tabs/
-  interop-tabs.structure.css   underline look, vertical, overflow, forced colors; names list at the top
+  interop-tabs.structure.css   tabs, panels, vertical layout; names list at the top
   interop-tabs.base.css        token values and size steps
   tabs.ts                      InteropTabs directive
   public-api.ts                exports InteropTabs
 projects/interop/src/bind-tabs.ts      the behavior, framework-free
 projects/interop/styles/segmented.css  the segmented look, shared with the radio group
+projects/interop/styles/underscore.css the rule and bar, shared with the page nav
 ```
 
 The demo page is `projects/demo/src/app/components/tabs/`.
@@ -74,7 +75,7 @@ rebinds when an input changes.
 
 | Variant | Look |
 |---|---|
-| default | The tab list sits on a rule; the selected tab carries a bar on it |
+| default | The underscore look from `styles/underscore.css`, shared with the page nav: the tab list sits on a rule; the selected tab carries a bar on it |
 | `interop-tabs="segmented"` | The segmented look from `styles/segmented.css`: frame, pill, dividers. Horizontal only |
 | `interop-tabs="segmented icon"` | Square segments; name each with visually hidden text |
 
@@ -97,17 +98,23 @@ text color.
 |---|---|
 | `--itx-tabs-tab-min-block-size`, `-tab-padding-inline` | `--itx-space-10`, `--itx-space-4` |
 | `--itx-tabs-tab-font-size`, `-tab-line-height` | the `p` role |
-| `--itx-tabs-tab-color[-hover\|-selected]` | neutral-700/300, 950/50, 950/50 |
+| `--itx-tabs-tab-color[-hover\|-selected]` | neutral-500/400 (4.73:1, 6.71:1: the content navigation rest color, shared with the page nav), 950/50, 950/50 |
 | `--itx-tabs-tab-cursor[-disabled]`, `-tab-opacity-disabled` | default, not-allowed, 0.5 |
 | `--itx-tabs-tab-border-radius` | the house radius; the nested radius when segmented |
-| `--itx-tabs-indicator-size` | 2px; 3px under `prefers-contrast: more`, so it stays thicker than the rule |
-| `--itx-tabs-indicator-background-color[-hover\|-selected]` | transparent, neutral-300/700, neutral-900/50 |
-| `--itx-tabs-tablist-border-width`, `-tablist-border-color` | 1px, neutral-300/700 |
 | `--itx-tabs-panel-padding-block`, `--itx-tabs-column-gap` | `--itx-space-4`, `--itx-space-6` |
 
-`--itx-tabs-indicator-size` is the bar's thickness: its block size, or its
+The rule and the bar are the underscore look's, set on the tab list:
+
+| Token | Default |
+|---|---|
+| `--itx-underscore-bar-size` | 2px; 3px under `prefers-contrast: more`, so it stays thicker than the rule |
+| `--itx-underscore-bar-background-color[-hover\|-current]` | transparent, neutral-300/700, neutral-900/50 |
+| `--itx-underscore-rule-border-width`, `-rule-border-color` | 1px, neutral-300/700 |
+
+`--itx-underscore-bar-size` is the bar's thickness: its block size, or its
 inline size when vertical. It names no single CSS property because the property
-changes with orientation.
+changes with orientation. `-current` is the selected tab here, and the current
+link in a page nav.
 
 Forced colors paint the selected bar `Highlight` and the hover bar `CanvasText`.
 

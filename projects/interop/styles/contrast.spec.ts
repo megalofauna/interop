@@ -266,9 +266,37 @@ describe('tabs', () => {
 				expect(contrast(tabs(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
 			}
 		});
-		// WCAG 1.4.11: the bar carries the selection.
-		it(`has a selected bar of 3:1 against the page in ${label}`, () => {
-			expect(contrast(tabs('indicator-background-color-selected', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+	}
+});
+
+describe('underscore', () => {
+	for (const [scheme, label] of SCHEMES) {
+		// WCAG 1.4.11: the bar carries the selected tab and the current link.
+		it(`has a current bar of 3:1 against the page in ${label}`, () => {
+			expect(contrast(token('--itx-underscore-bar-background-color-current', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});
+
+describe('page nav', () => {
+	const pageNav = (name: string, scheme: 0 | 1) => token(`--itx-page-nav-${name}`, scheme);
+	// The vertical page nav restates tree tokens for its own tree; the first declaration is the tree's.
+	const vertical = (name: string, scheme: 0 | 1) =>
+		resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(sheets['page-nav/interop-page-nav.base.css'])![1]), scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has vertical links of 4.5:1 against the page at rest and on hover in ${label}`, () => {
+			for (const name of ['--itx-tree-color', '--itx-tree-color-hover']) {
+				expect(contrast(vertical(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+	}
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has link text of 4.5:1 against the page at rest, on hover and current in ${label}`, () => {
+			for (const state of ['link-color', 'link-color-hover', 'link-color-current']) {
+				expect(contrast(pageNav(state, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
 		});
 	}
 });
