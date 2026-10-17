@@ -280,6 +280,17 @@ describe('underscore', () => {
 
 describe('page nav', () => {
 	const pageNav = (name: string, scheme: 0 | 1) => token(`--itx-page-nav-${name}`, scheme);
+	// The vertical page nav restates tree tokens for its own tree; the first declaration is the tree's.
+	const vertical = (name: string, scheme: 0 | 1) =>
+		resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(sheets['page-nav/interop-page-nav.base.css'])![1]), scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has vertical links of 4.5:1 against the page at rest and on hover in ${label}`, () => {
+			for (const name of ['--itx-tree-color', '--itx-tree-color-hover']) {
+				expect(contrast(vertical(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+	}
 
 	for (const [scheme, label] of SCHEMES) {
 		it(`has link text of 4.5:1 against the page at rest, on hover and current in ${label}`, () => {

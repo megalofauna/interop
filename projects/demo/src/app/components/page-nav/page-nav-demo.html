@@ -11,25 +11,6 @@
 	uses one.
 </p>
 
-<fieldset
-	interop-radio-group="segmented"
-	itx-size="sm"
-	(change)="look.set($any($event.target).value)"
->
-	<legend>Look of the vertical page nav</legend>
-	@for (option of looks; track option.value) {
-		<label
-			><input
-				type="radio"
-				name="look"
-				[value]="option.value"
-				[checked]="option.value === look()"
-			/>
-			{{ option.label }}</label
-		>
-	}
-</fieldset>
-
 <nav interop-page-nav aria-label="On this page">
 	<ul role="list">
 		@for (section of sections; track section.id) {
@@ -75,8 +56,9 @@
 			<p>
 				<code>itx-orientation="vertical"</code> for a narrow column beside the
 				content. The list is a tree, <code>ul interop-tree</code>, so sections
-				nest and the current one takes the tree's current look. It sticks at
-				the top of its column. A list taller than the window scrolls on its
+				nest. It is quieter than the site navigation: one rail along the list,
+				a bar over the rail at the current section, and dim links that darken
+				on hover. It sticks at the top of its column. A list taller than the window scrolls on its
 				own; add <code>interop-scroll-area</code> for its edge shadows.
 			</p>
 			<figure
@@ -84,48 +66,6 @@
 				language="html"
 				[code]="examples.vertical"
 			></figure>
-		</section>
-
-		<section id="compare">
-			<h2>Compare looks</h2>
-			<p>
-				Each list below follows this page as it scrolls. Site is the tree as the
-				site navigation wears it. The switch above sets the look of the list in
-				the column beside the content. Candidates are in
-				<code>projects/demo/src/page-nav-looks.css</code>.
-			</p>
-			<div class="compare">
-				@for (option of looks; track option.value) {
-					<div>
-						<p class="look-name">{{ option.label }}</p>
-						<nav
-							interop-page-nav
-							itx-orientation="vertical"
-							[attr.data-look]="option.value || null"
-							[attr.aria-label]="option.label + ' look'"
-						>
-							<ul interop-tree role="list">
-								@for (section of sections; track section.id) {
-									<li>
-										<a routerLink="." [fragment]="section.id">{{
-											section.label
-										}}</a>
-										@if (section.id === "horizontal") {
-											<ul role="list">
-												<li>
-													<a routerLink="." fragment="inset"
-														>Below a fixed header</a
-													>
-												</li>
-											</ul>
-										}
-									</li>
-								}
-							</ul>
-						</nav>
-					</div>
-				}
-			</div>
 		</section>
 
 		<section id="current">
@@ -203,12 +143,7 @@
 		</section>
 	</div>
 
-	<nav
-		interop-page-nav
-		itx-orientation="vertical"
-		aria-label="Sections"
-		[attr.data-look]="look() || null"
-	>
+	<nav interop-page-nav itx-orientation="vertical" aria-label="Sections">
 		<ul interop-tree interop-scroll-area role="list">
 			@for (section of sections; track section.id) {
 				<li>

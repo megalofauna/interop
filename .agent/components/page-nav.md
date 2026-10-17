@@ -62,6 +62,7 @@ Use `routerLink="." fragment="x"` and
 | Sticky | Both orientations. The bar always paints `Canvas`; `@container scroll-state(stuck: top)` adds a shadow once it sticks |
 | Under the bar | `:root:has(nav[interop-page-nav]…)` sets `scroll-padding-block-start` to the bar's height plus `--itx-space-4`, so a section starts below it |
 | Vertical | `align-self: start` so it can stick in its column; the list scrolls past `--itx-page-nav-max-block-size` |
+| Vertical look | Quieter than the site navigation. The page nav restates the tree's tokens for its own tree: 28px rows, no fills, no weight change, links at rest neutral-500/400 (4.73:1 light, 6.71:1 dark, the dimmest that keep 4.5:1) that darken to 950/50 on hover and when current. One rail runs along the whole list and the current link's 2px bar lies over it; nested sections are indented text (`--itx-page-nav-indent`). In forced colors the bar sits beside the rail, so the resting bars cannot cover it |
 | Forced colors | The bar's `Highlight` comes from the underscore look or the tree |
 
 `--itx-page-nav-inset-block-start`, `-link-min-block-size` and

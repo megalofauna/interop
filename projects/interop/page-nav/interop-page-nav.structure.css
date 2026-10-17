@@ -11,7 +11,8 @@
  *   </nav>
  *
  * Vertical, a list in a narrow column, usually beside the content. It is a tree, so sections can
- * nest:
+ * nest. It is quieter than the site navigation: one rail along the list, the current link's bar
+ * over it, dim links that darken on hover:
  *
  *   <nav interop-page-nav itx-orientation="vertical" aria-label="On this page">
  *     <ul interop-tree role="list">
@@ -116,4 +117,36 @@
 	max-block-size: var(--itx-page-nav-max-block-size);
 	overflow-y: auto;
 	overscroll-behavior-block: contain;
+}
+
+/* One rail along the whole list. Each link's bar lies over it. */
+:where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree]) {
+	border-inline-start: var(--itx-tree-rail-border-width) solid var(--itx-tree-rail-border-color);
+}
+
+:where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree] li > a) {
+	margin-inline-start: calc(-1 * var(--itx-tree-rail-border-width));
+	transition-property: color;
+}
+
+/* Nested sections are indented text, with no rail of their own. */
+:where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree] ul) {
+	margin-inline-start: 0;
+	padding-inline-start: 0;
+	border-inline-start-width: 0;
+}
+
+:where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree] ul li > a) {
+	padding-inline-start: calc(var(--itx-tree-row-padding-inline) + var(--itx-page-nav-indent));
+}
+
+:where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree] li > a:hover) {
+	color: var(--itx-tree-color-hover, var(--itx-tree-color));
+}
+
+/* Forced colors draw each link's resting bar in the page color, which would cover the rail. */
+@media (forced-colors: active) {
+	:where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree] li > a) {
+		margin-inline-start: 0;
+	}
 }
