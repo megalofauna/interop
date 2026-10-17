@@ -7,8 +7,9 @@
  * Its rules sit in the itx-reset cascade layer, so every unlayered style wins over them,
  * whatever the import order. That includes Interop's components and the page's own styles.
  *
- * `itx-font` gives any element a role's size, line height and weight. Headings and display read
- * their own weight; the other roles read --itx-font-weight:
+ * `itx-font` gives any element a role's size, line height and weight, and for headings, display and
+ * caption its color. Headings and display read their own weight; the other roles read
+ * --itx-font-weight. Body text takes --itx-color from the body:
  *
  *   <p itx-font="p-lg">
  *
@@ -26,6 +27,7 @@
 	:where(body) {
 		font-family: var(--itx-font-family);
 		font-weight: var(--itx-font-weight);
+		color: var(--itx-color);
 		font-size: var(--itx-font-size-p);
 		line-height: var(--itx-line-height-p);
 	}
@@ -59,31 +61,37 @@
 	:where([itx-font="display"]) {
 		font-size: var(--itx-font-size-display);
 		line-height: var(--itx-line-height-display);
+		color: var(--itx-color-display);
 		font-weight: var(--itx-font-weight-display);
 	}
 	:where(h1:not([itx-font]), [itx-font="h1"]) {
 		font-size: var(--itx-font-size-h1);
 		line-height: var(--itx-line-height-h1);
+		color: var(--itx-color-h1);
 		font-weight: var(--itx-font-weight-h1);
 	}
 	:where(h2:not([itx-font]), [itx-font="h2"]) {
 		font-size: var(--itx-font-size-h2);
 		line-height: var(--itx-line-height-h2);
+		color: var(--itx-color-h2);
 		font-weight: var(--itx-font-weight-h2);
 	}
 	:where(h3:not([itx-font]), [itx-font="h3"]) {
 		font-size: var(--itx-font-size-h3);
 		line-height: var(--itx-line-height-h3);
+		color: var(--itx-color-h3);
 		font-weight: var(--itx-font-weight-h3);
 	}
 	:where(h4:not([itx-font]), [itx-font="h4"]) {
 		font-size: var(--itx-font-size-h4);
 		line-height: var(--itx-line-height-h4);
+		color: var(--itx-color-h4);
 		font-weight: var(--itx-font-weight-h4);
 	}
 	:where(:is(h5, h6):not([itx-font]), [itx-font="h5"]) {
 		font-size: var(--itx-font-size-h5);
 		line-height: var(--itx-line-height-h5);
+		color: var(--itx-color-h5);
 		font-weight: var(--itx-font-weight-h5);
 	}
 	:where([itx-font="p-lg"]) {
@@ -105,5 +113,6 @@
 	:where(:is(figcaption, caption, small):not([itx-font]), [itx-font="caption"]) {
 		font-size: var(--itx-font-size-caption);
 		line-height: var(--itx-line-height-caption);
+		color: var(--itx-color-caption);
 	}
 }

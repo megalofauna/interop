@@ -16,7 +16,7 @@ export class FlowDemo {
 </article>
 `;
 	protected readonly tokens = `article {
-	--itx-flow-space: var(--itx-space-5);
+	--itx-flow-space: var(--itx-space-8);
 }
 `;
 }

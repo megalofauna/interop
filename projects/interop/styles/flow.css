@@ -12,14 +12,17 @@
  * above it and the last none below. The container's own padding or `gap` decides its edges.
  * Components set no outer margin; inside a component, its own `gap` spaces its parts.
  *
- *   blocks                                              16px
- *   a table, figure, code block or media, either side   32px
- *   an hr, either side                                  48px
- *   before / after h1 and h2                            48 / 16px
- *   before / after h3                                   32 / 12px
- *   before / after h4 to h6                             24 / 8px
- *   list items, and a nested list                       8px
- *   a figure's content and its caption                  8px
+ *   blocks                                              24px
+ *   a table, figure, code block or media, either side   40px
+ *   an hr, either side                                  64px
+ *   before / after h1 and h2                            64 / 20px
+ *   before / after h3                                   48 / 16px
+ *   before / after h4 to h6                             32 / 12px
+ *   list items, and a nested list                       12px
+ *   a figure's content and its caption                  12px
+ *
+ * Running text (paragraphs, lists, definition lists, quotes) reads at 16/28px, a looser line than
+ * the 16/24px controls use. A paragraph given another role with `itx-font` keeps that role's line.
  *
  * A heading binds to what follows it: the space after a heading wins over the space a table or
  * figure asks for above itself. Headings are trimmed to their cap height and baseline
@@ -35,17 +38,23 @@
  */
 
 :where([itx-flow]) {
-	--itx-flow-space: var(--itx-space-4);
-	--itx-flow-space-figure: var(--itx-space-8);
-	--itx-flow-space-hr: var(--itx-space-12);
-	--itx-flow-space-h2: var(--itx-space-12);
-	--itx-flow-space-h2-after: var(--itx-space-4);
-	--itx-flow-space-h3: var(--itx-space-8);
-	--itx-flow-space-h3-after: var(--itx-space-3);
-	--itx-flow-space-h4: var(--itx-space-6);
-	--itx-flow-space-h4-after: var(--itx-space-2);
-	--itx-flow-space-li: var(--itx-space-2);
-	--itx-flow-space-caption: var(--itx-space-2);
+	--itx-flow-line-height: 1.75rem;
+	--itx-flow-space: var(--itx-space-6);
+	--itx-flow-space-figure: var(--itx-space-10);
+	--itx-flow-space-hr: var(--itx-space-16);
+	--itx-flow-space-h2: var(--itx-space-16);
+	--itx-flow-space-h2-after: var(--itx-space-5);
+	--itx-flow-space-h3: var(--itx-space-12);
+	--itx-flow-space-h3-after: var(--itx-space-4);
+	--itx-flow-space-h4: var(--itx-space-8);
+	--itx-flow-space-h4-after: var(--itx-space-3);
+	--itx-flow-space-li: var(--itx-space-3);
+	--itx-flow-space-caption: var(--itx-space-3);
+}
+
+/* Running text reads on a looser line. On the 4px grid: 28px for 16px text. */
+:where([itx-flow] > :is(p, ul, ol, dl, blockquote):not([itx-font])) {
+	line-height: var(--itx-flow-line-height);
 }
 
 /* The browser's own block margins would add to these, and collapse unpredictably. */

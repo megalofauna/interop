@@ -331,6 +331,24 @@ describe('step indicator', () => {
 	}
 });
 
+describe('type roles', () => {
+	for (const [scheme, label] of SCHEMES) {
+		it(`keeps every role's text at 4.5:1 against the page in ${label}`, () => {
+			for (const role of ['', '-display', '-h1', '-h2', '-h3', '-h4', '-h5', '-caption']) {
+				expect(contrast(token(`--itx-color${role}`, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		// Color carries the hierarchy: headings stand out from body text, and body text from captions.
+		it(`ranks headings above body text above captions in ${label}`, () => {
+			const against = (name: string) => contrast(token(name, scheme), CANVAS[scheme]);
+			for (const role of ['-display', '-h1', '-h2', '-h3', '-h4', '-h5']) {
+				expect(against(`--itx-color${role}`)).toBeGreaterThan(against('--itx-color'));
+			}
+			expect(against('--itx-color')).toBeGreaterThan(against('--itx-color-caption'));
+		});
+	}
+});
+
 describe('tree', () => {
 	const tree = (name: string, scheme: 0 | 1) => token(`--itx-tree-${name}`, scheme);
 
