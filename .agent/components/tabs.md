@@ -98,7 +98,7 @@ text color.
 |---|---|
 | `--itx-tabs-tab-min-block-size`, `-tab-padding-inline` | `--itx-space-10`, `--itx-space-4` |
 | `--itx-tabs-tab-font-size`, `-tab-line-height` | the `p` role |
-| `--itx-tabs-tab-color[-hover\|-selected]` | neutral-700/300, 950/50, 950/50 |
+| `--itx-tabs-tab-color[-hover\|-selected]` | neutral-500/400 (4.73:1, 6.71:1: the content navigation rest color, shared with the page nav), 950/50, 950/50 |
 | `--itx-tabs-tab-cursor[-disabled]`, `-tab-opacity-disabled` | default, not-allowed, 0.5 |
 | `--itx-tabs-tab-border-radius` | the house radius; the nested radius when segmented |
 | `--itx-tabs-panel-padding-block`, `--itx-tabs-column-gap` | `--itx-space-4`, `--itx-space-6` |

@@ -4,8 +4,9 @@
 	/* The same type steps as a button. */
 	--itx-tabs-tab-font-size: var(--itx-font-size-p);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p);
-	/* 4.5:1 against the page (WCAG 1.4.3). */
-	--itx-tabs-tab-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	/* At rest, the dimmest steps that keep 4.5:1 against the page (WCAG 1.4.3): 4.73:1 light, 6.71:1 dark.
+	   Content navigation shares this rest color, so hover and the current item stand out. */
+	--itx-tabs-tab-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-tabs-tab-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-tabs-tab-color-selected: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-tabs-tab-cursor: default;

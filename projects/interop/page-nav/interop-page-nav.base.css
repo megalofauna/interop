@@ -20,8 +20,9 @@
 	--itx-page-nav-link-padding-inline: var(--itx-space-3);
 	--itx-page-nav-link-font-size: var(--itx-font-size-label);
 	--itx-page-nav-link-line-height: var(--itx-line-height-label);
-	/* 4.5:1 against the page (WCAG 1.4.3). */
-	--itx-page-nav-link-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	/* At rest, the dimmest steps that keep 4.5:1 against the page (WCAG 1.4.3): 4.73:1 light, 6.71:1 dark.
+	   Content navigation shares this rest color, so hover and the current item stand out. */
+	--itx-page-nav-link-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-page-nav-link-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-page-nav-link-color-current: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	/* The link paints no background; the radius shapes its focus ring. */
@@ -41,7 +42,7 @@
 :where(nav[interop-page-nav][itx-orientation="vertical"] > ul[interop-tree]) {
 	--itx-tree-row-min-block-size: var(--itx-space-7);
 	--itx-tree-row-padding-inline: var(--itx-space-3);
-	/* The dimmest steps that keep 4.5:1 against the page (WCAG 1.4.3): 4.73:1 light, 6.71:1 dark. */
+	/* The content navigation rest color, as on tabs and the horizontal bar. */
 	--itx-tree-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-tree-color-hover: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-tree-font-weight-current: var(--itx-font-weight);
