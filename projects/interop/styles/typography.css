@@ -21,29 +21,29 @@
 	--itx-line-height-h1: 2.5rem;
 	--itx-font-weight-h1: 400;
 
-	/* 22px, line 32px. */
-	--itx-font-size-h2: 1.375rem;
+	/* 24px, line 32px. */
+	--itx-font-size-h2: 1.5rem;
 	--itx-line-height-h2: 2rem;
 	--itx-font-weight-h2: 400;
 
-	/* 18px, line 28px. */
-	--itx-font-size-h3: 1.125rem;
+	/* 20px, line 28px. */
+	--itx-font-size-h3: 1.25rem;
 	--itx-line-height-h3: 1.75rem;
 	--itx-font-weight-h3: 400;
 
-	/* 16px, line 24px: body size, so its weight sets it apart. */
-	--itx-font-size-h4: 1rem;
-	--itx-line-height-h4: 1.5rem;
+	/* 18px, line 28px. */
+	--itx-font-size-h4: 1.125rem;
+	--itx-line-height-h4: 1.75rem;
 	--itx-font-weight-h4: 400;
 
 	/* 16px, line 24px: body size, so its weight sets it apart. */
-	--itx-font-size-h5: var(--itx-font-size-h4);
-	--itx-line-height-h5: var(--itx-line-height-h4);
+	--itx-font-size-h5: 1rem;
+	--itx-line-height-h5: 1.5rem;
 	--itx-font-weight-h5: 400;
 
 	/* 18px, line 28px. */
-	--itx-font-size-p-lg: var(--itx-font-size-h3);
-	--itx-line-height-p-lg: var(--itx-line-height-h3);
+	--itx-font-size-p-lg: var(--itx-font-size-h4);
+	--itx-line-height-p-lg: var(--itx-line-height-h4);
 
 	/* 16px, line 24px. */
 	--itx-font-size-p: 1rem;

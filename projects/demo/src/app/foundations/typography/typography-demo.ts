@@ -24,7 +24,6 @@ export class TypographyDemo {
 		"p-sm",
 		"label",
 		"caption",
-		"fine-print",
 	];
 	protected readonly measures = signal<string[]>([]);
 	private readonly samples = viewChildren<ElementRef<HTMLElement>>("sample");
