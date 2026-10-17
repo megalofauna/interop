@@ -14,8 +14,8 @@
 	--itx-font-family-mono: ui-monospace, monospace;
 	--itx-font-weight: 400;
 
-	/* Body text: 7.80:1 light, 11.74:1 dark. */
-	--itx-color: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	/* Body text: 7.80:1 light, 8.97:1 dark. */
+	--itx-color: light-dark(var(--itx-neutral-600), var(--itx-neutral-350));
 	/* Headings and display: 19.79:1 light, 16.67:1 dark. */
 	--itx-color-display: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	--itx-color-h1: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
