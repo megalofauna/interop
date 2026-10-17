@@ -63,7 +63,9 @@ Selector `svg[interop-icon]`.
 |---|---|
 | `name` | Draws the registered icon: a `<g>` with its fill and stroke, round caps and joins, and one `<path>` per path. Sets `viewBox` from the definition |
 | No `name` | Renders the SVG's own children and keeps its own `viewBox` |
-| `size` | Pixels. Fixes the inline and block size at that value through the size tokens. Without it the icon is 1em |
+| `size` | Pixels. Fixes the inline and block size at that value through the size tokens, over everything else |
+| `itx-size` | A step of the icon scale: `xs` 12, `sm` 16, `md` 20, `lg` 24, `xl` 32px (`--itx-icon-size-<step>` on `:root`) |
+| `--itx-icon-size` | Set on any ancestor, sizes every icon inside it. A button sets it to its own step. Without it, and without `itx-size` or `size`, an icon is 1em, the size of its text. That is the one size-step exception: no attribute is the text's size, not `md`, because an icon in a line of text should match the text |
 | `aria-label` or `aria-labelledby` | `role="img"`, no `aria-hidden`. A `MutationObserver` follows a label added or removed later |
 | No label | `aria-hidden="true"`, no role |
 
@@ -88,7 +90,7 @@ on the text line and keeps its size in a flex row.
 
 | Token | Default |
 |---|---|
-| `--itx-icon-inline-size`, `-block-size` | 1em, 1em |
+| `--itx-icon-inline-size`, `-block-size` | `var(--itx-icon-size, 1em)` |
 | `--itx-icon-vertical-align` | -0.125em |
 | `--itx-icon-color` | currentColor |
 | `--itx-icon-stroke-width` | 2 |
@@ -113,4 +115,4 @@ Not recorded: browser runs, screen reader output.
 ## Not built
 
 Icon sets besides Tabler, sprite sheets, filled Tabler icons in
-`icons.json`, a size scale tied to `itx-size`.
+`icons.json`.

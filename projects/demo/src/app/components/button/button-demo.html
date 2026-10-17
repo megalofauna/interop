@@ -18,10 +18,45 @@
 	<button interop-button type="button" itx-size="lg">
 		<svg interop-icon name="tabler-copy"></svg>Copy
 	</button>
-	<button interop-button type="button" [interopTooltip]="search">
+	<button interop-button="icon" type="button" [interopTooltip]="search">
 		<svg interop-icon name="tabler-search"></svg>
 	</button>
 	<span interop-tooltip="label" #search>Search</span>
+</p>
+<p>
+	An icon in a button is 16, 20 or 24px at the small, default and large sizes,
+	beside text or alone.
+</p>
+
+<h2>Icon buttons</h2>
+<p>
+	<code>interop-button="icon"</code> makes a button square at every size, with
+	the icon centered. Name it with <code>aria-label</code>, visually hidden text
+	or a label tooltip. The dev audit warns when a button shows only an icon and
+	is not marked.
+</p>
+<p>
+	<button interop-button="icon" type="button" itx-size="sm" aria-label="Search">
+		<svg interop-icon name="tabler-search"></svg>
+	</button>
+	<button interop-button="icon" type="button" aria-label="Search">
+		<svg interop-icon name="tabler-search"></svg>
+	</button>
+	<button interop-button="icon" type="button" itx-size="lg" aria-label="Search">
+		<svg interop-icon name="tabler-search"></svg>
+	</button>
+</p>
+<p>
+	An icon's own <code>itx-size</code> overrides the button's: here the default
+	button holds an xs and an lg icon.
+</p>
+<p>
+	<button interop-button="icon" type="button" aria-label="Search">
+		<svg interop-icon name="tabler-search" itx-size="xs"></svg>
+	</button>
+	<button interop-button="icon" type="button" aria-label="Search">
+		<svg interop-icon name="tabler-search" itx-size="lg"></svg>
+	</button>
 </p>
 
 <h2>Radius</h2>

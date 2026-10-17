@@ -48,6 +48,8 @@ A `<summary interop-button>` draws no disclosure marker.
 
 | Job | How |
 |---|---|
+| Icon button | `interop-button="icon"`: square at every size (`aspect-ratio: 1`, no inline padding), icon centered. The minimum height carries to the width, so the 44px touch floor keeps it square. CSS cannot tell an icon-only button from one with text (`:has()` does not see text nodes), so the author marks it |
+| Icon size | Every icon in a button is 16, 20 or 24px at `sm`, default and `lg`: the button sets `--itx-icon-size` from the icon scale. An icon's own `itx-size` or `size` wins |
 | Name | Visible text, or `aria-label` on an icon-only button. An icon beside text is hidden on its own (see [icon.md](icon.md)). A label tooltip can name an icon-only button (see [tooltip.md](tooltip.md)) |
 | Type | `type="button"` unless it submits. A button in a form with no type submits it |
 | Toggle | `aria-pressed="true"` or `"false"`. The label stays the same; the state is the attribute |
@@ -138,6 +140,7 @@ The focus ring's tokens are shared, in `styles/outline.css`:
 | Rule | Flags |
 |---|---|
 | `button-name` | A `button[interop-button]`, or any button holding an icon, with no accessible name |
+| `button-icon-square` | A `button` or `summary[interop-button]` whose drawn content is only an icon, without `interop-button="icon"` |
 | `button-type` | A `button[interop-button]` with no `type` inside a form |
 | `button-activation-guard` | An `[interop-button]` with `aria-disabled="true"` or `aria-busy="true"` while `guardActivation()` is not installed |
 | `button-pressed-value` | `aria-pressed` with a value other than `true`, `false` or `mixed` |

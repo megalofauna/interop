@@ -1,7 +1,42 @@
+:where(:root) {
+	/* The icon size scale. A button picks a step for its icons by its own size. */
+	--itx-icon-size-xs: var(--itx-space-3);
+	--itx-icon-size-sm: var(--itx-space-4);
+	--itx-icon-size-md: var(--itx-space-5);
+	--itx-icon-size-lg: var(--itx-space-6);
+	--itx-icon-size-xl: var(--itx-space-8);
+}
+
 :where(svg[interop-icon]) {
-	--itx-icon-inline-size: 1em;
-	--itx-icon-block-size: 1em;
+	/* --itx-icon-size, set on any ancestor, sizes every icon inside it. Without it an icon is its text's size. */
+	--itx-icon-inline-size: var(--itx-icon-size, 1em);
+	--itx-icon-block-size: var(--itx-icon-size, 1em);
 	--itx-icon-vertical-align: -0.125em;
 	--itx-icon-color: currentColor;
 	--itx-icon-stroke-width: 2;
+}
+
+:where(svg[interop-icon][itx-size="xs"]) {
+	--itx-icon-inline-size: var(--itx-icon-size-xs);
+	--itx-icon-block-size: var(--itx-icon-size-xs);
+}
+
+:where(svg[interop-icon][itx-size="sm"]) {
+	--itx-icon-inline-size: var(--itx-icon-size-sm);
+	--itx-icon-block-size: var(--itx-icon-size-sm);
+}
+
+:where(svg[interop-icon][itx-size="md"]) {
+	--itx-icon-inline-size: var(--itx-icon-size-md);
+	--itx-icon-block-size: var(--itx-icon-size-md);
+}
+
+:where(svg[interop-icon][itx-size="lg"]) {
+	--itx-icon-inline-size: var(--itx-icon-size-lg);
+	--itx-icon-block-size: var(--itx-icon-size-lg);
+}
+
+:where(svg[interop-icon][itx-size="xl"]) {
+	--itx-icon-inline-size: var(--itx-icon-size-xl);
+	--itx-icon-block-size: var(--itx-icon-size-xl);
 }

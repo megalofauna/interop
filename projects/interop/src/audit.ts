@@ -53,6 +53,17 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Give it visible text, or aria-label="…" if it shows only an icon.',
 					},
 	},
+	'button-icon-square': {
+		selector: ':is(button, summary)[interop-button]:not([interop-button~="icon"])',
+		check: (button) =>
+			button.querySelector('svg[interop-icon]') && !shownText(button).trim()
+				? {
+						problem: 'This button shows only an icon, but is not marked as an icon button.',
+						reason: 'Its padding is sized for text, so it is wider than it is tall.',
+						advice: 'Add interop-button="icon", which makes it square at every size.',
+					}
+				: null,
+	},
 	'button-activation-guard': {
 		selector: '[interop-button]:is([aria-disabled="true"], [aria-busy="true"])',
 		check: () =>
@@ -750,6 +761,14 @@ function tooltipsOf(element: Element, relation: 'aria-labelledby' | 'aria-descri
 /** The text assistive technology reads inside an element. */
 function spokenText(element: Element): string {
 	return Array.from(element.childNodes).map(visibleText).join('').trim();
+}
+
+/** The text drawn on screen: visually hidden text, hidden elements and icons are left out. */
+function shownText(node: Node): string {
+	if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? '';
+	if (!(node instanceof Element) || node.hasAttribute('hidden') || node.hasAttribute('itx-visually-hidden') || node instanceof SVGElement)
+		return '';
+	return Array.from(node.childNodes).map(shownText).join('');
 }
 
 function visibleText(node: Node): string {

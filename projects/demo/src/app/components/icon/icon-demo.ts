@@ -20,4 +20,5 @@ export class IconDemo {
 		"tabler-copy",
 		"tabler-search",
 	];
+	protected readonly steps = ["xs", "sm", "md", "lg", "xl"];
 }

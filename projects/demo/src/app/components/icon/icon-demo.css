@@ -13,3 +13,17 @@ p {
 .large {
 	font-size: 1.5rem;
 }
+
+.scale {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	gap: var(--itx-space-6);
+}
+
+.scale > span {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--itx-space-1);
+}
