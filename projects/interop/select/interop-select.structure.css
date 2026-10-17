@@ -166,7 +166,7 @@
 	:where(select[interop-select] optgroup) {
 		font-size: var(--itx-select-legend-font-size);
 		line-height: var(--itx-select-legend-line-height);
-		font-weight: var(--itx-font-weight-heading);
+		font-weight: var(--itx-font-weight-h5);
 	}
 
 	:where(select[interop-select] optgroup > option) {

@@ -11,7 +11,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { InteropDrawer } from "interop/popover";
 
 const STORAGE_KEY = "demo-color-scheme";
-const TYPE_SCALE_KEY = "demo-type-scale";
 
 @Component({
 	selector: "demo-root",
@@ -26,11 +25,6 @@ export class App {
 			(matchMedia("(prefers-color-scheme: dark)").matches
 				? "dark"
 				: "light")) === "dark",
-	);
-
-	/** A type scale candidate from type-scale.css; empty is the library's scale. */
-	protected readonly typeScale = signal(
-		localStorage.getItem(TYPE_SCALE_KEY) ?? "",
 	);
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
@@ -51,13 +45,6 @@ export class App {
 			const scheme = this.dark() ? "dark" : "light";
 			document.documentElement.style.colorScheme = scheme;
 			localStorage.setItem(STORAGE_KEY, scheme);
-		});
-
-		effect(() => {
-			const scale = this.typeScale();
-			if (scale) document.documentElement.dataset["typeScale"] = scale;
-			else delete document.documentElement.dataset["typeScale"];
-			localStorage.setItem(TYPE_SCALE_KEY, scale);
 		});
 	}
 }

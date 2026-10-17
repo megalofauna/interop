@@ -1,9 +1,7 @@
 import {
 	Component,
-	DestroyRef,
 	ElementRef,
 	afterNextRender,
-	inject,
 	signal,
 	viewChildren,
 } from "@angular/core";
@@ -28,33 +26,18 @@ export class TypographyDemo {
 		"caption",
 		"fine-print",
 	];
-	protected readonly scales = ["current", "pinned", "docs"];
 	protected readonly measures = signal<string[]>([]);
-	protected readonly viewport = signal(0);
 	private readonly samples = viewChildren<ElementRef<HTMLElement>>("sample");
 
 	constructor() {
 		const measure = () => {
-			this.viewport.set(window.innerWidth);
 			this.measures.set(
 				this.samples().map(({ nativeElement }) => {
 					const style = getComputedStyle(nativeElement);
-					return `${parseFloat(style.fontSize).toFixed(1)} / ${parseFloat(style.lineHeight).toFixed(1)}px`;
+					return `${parseFloat(style.fontSize)} / ${parseFloat(style.lineHeight)}px, weight ${style.fontWeight}`;
 				}),
 			);
 		};
-		// The header's type scale select changes the root's data-type-scale.
-		const scale = new MutationObserver(measure);
-		afterNextRender(() => {
-			measure();
-			window.addEventListener("resize", measure);
-			scale.observe(document.documentElement, {
-				attributeFilter: ["data-type-scale"],
-			});
-		});
-		inject(DestroyRef).onDestroy(() => {
-			window.removeEventListener("resize", measure);
-			scale.disconnect();
-		});
+		afterNextRender(measure);
 	}
 }
