@@ -133,6 +133,12 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "foundations/flow",
+		title: "Flow",
+		loadComponent: () =>
+			import("./foundations/flow/flow-demo").then((m) => m.FlowDemo),
+	},
+	{
 		path: "foundations/radius",
 		title: "Radius (comparison)",
 		loadComponent: () =>

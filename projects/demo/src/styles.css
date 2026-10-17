@@ -10,7 +10,8 @@
 /*
  * Vertical rhythm for the demo pages: 1rem between blocks, 2rem before a heading, 0.5rem after one.
  * Hidden elements are skipped: a hidden="until-found" tab panel keeps its box, so a margin on it
- * would leave a gap. The parts of a field, a fieldset and an error summary are left to their own gaps.
+ * would leave a gap. The parts of a field, a fieldset and an error summary are left to their own gaps,
+ * and an itx-flow container to the library's flow spacing.
  */
 :where(
 	main
@@ -32,17 +33,17 @@
 			table,
 			pre,
 			section
-		):not([hidden], :is([interop-field], [interop-error-summary], fieldset) > *)
+		):not([hidden], :is([interop-field], [interop-error-summary], fieldset) > *, [itx-flow] *)
 ) {
 	margin-block-start: var(--itx-space-4);
 }
 :where(
 	main
 		:is(h1, h2, h3, h4, h5, h6)
-		+ :not(:is([interop-field], [interop-error-summary], fieldset) > *)
+		+ :not(:is([interop-field], [interop-error-summary], fieldset) > *, [itx-flow] *)
 ) {
 	margin-block-start: var(--itx-space-2);
 }
-:where(main * + :is(h2, h3, h4, h5, h6)) {
+:where(main * + :is(h2, h3, h4, h5, h6):not([itx-flow] *)) {
 	margin-block-start: var(--itx-space-8);
 }
