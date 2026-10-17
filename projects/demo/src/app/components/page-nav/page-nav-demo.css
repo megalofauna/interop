@@ -34,3 +34,23 @@
 * + figure[interop-code-block] {
 	margin-block-start: var(--itx-space-3);
 }
+
+/* The look comparison: the lists sit in a row and do not stick. */
+.compare {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+	gap: var(--itx-space-6);
+	margin-block-start: var(--itx-space-4);
+}
+
+.compare nav {
+	position: static;
+}
+
+.look-name {
+	font-size: var(--itx-font-size-caption);
+	line-height: var(--itx-line-height-caption);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}

@@ -1,5 +1,7 @@
 /* Type scale candidates: remove with the file once a scale is chosen. */
 @import "./type-scale.css";
+/* Page nav look candidates: remove with the file once a look is chosen. */
+@import "./page-nav-looks.css";
 
 /*
  * The page's colors, stated: they are what the browser draws anyway, but a checker such as axe
