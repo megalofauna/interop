@@ -342,6 +342,21 @@ describe('inline code', () => {
 	}
 });
 
+describe('inline text', () => {
+	for (const [scheme, label] of SCHEMES) {
+		it(`has links of 4.5:1 against the page in ${label}`, () => {
+			expect(contrast(token('--itx-link-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+		});
+		it(`keeps body and heading text at 4.5:1 on a highlight and on a key in ${label}`, () => {
+			for (const fill of ['--itx-mark-background-color', '--itx-kbd-background-color']) {
+				for (const role of ['', '-h1', '-h2', '-h3', '-h4', '-h5']) {
+					expect(contrast(token(`--itx-color${role}`, scheme), token(fill, scheme))).toBeGreaterThanOrEqual(4.5);
+				}
+			}
+		});
+	}
+});
+
 describe('type roles', () => {
 	for (const [scheme, label] of SCHEMES) {
 		it(`keeps every role's text at 4.5:1 against the page in ${label}`, () => {

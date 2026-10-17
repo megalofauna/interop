@@ -43,18 +43,82 @@
 
 	/*
 	 * Inline code: a chip in the text around it. Code in a <pre> is a code block's and is left alone.
-	 * Monospace runs large beside proportional text, so it steps down to match. Padding is inline
-	 * only, so the chip does not push lines apart, and a chip that wraps keeps its edges at the break.
+	 * Monospace runs large beside proportional text, so it steps down to match. Block padding on an
+	 * inline element grows its background without pushing lines apart, and a chip that wraps keeps its
+	 * edges at the break.
 	 */
 	:where(:not(pre) > code) {
 		font-size: var(--itx-code-inline-font-size);
-		padding-inline: var(--itx-code-iline-padding-inline);
 		padding-block: var(--itx-code-inline-padding-block);
+		padding-inline: var(--itx-code-inline-padding-inline);
 		background-color: var(--itx-code-inline-background-color);
 		border: var(--itx-code-inline-border-width) solid var(--itx-code-inline-border-color);
 		border-radius: var(--itx-code-inline-border-radius);
 		corner-shape: var(--itx-corner-shape);
 		box-decoration-break: clone;
+	}
+
+	/* A key. A <kbd> holding others is a combination, e.g. Ctrl + C; only its keys are drawn. */
+	:where(kbd:not(:has(kbd))) {
+		font-size: var(--itx-kbd-font-size);
+		padding-block: var(--itx-kbd-padding-block);
+		padding-inline: var(--itx-kbd-padding-inline);
+		background-color: var(--itx-kbd-background-color);
+		border: var(--itx-kbd-border-width) solid var(--itx-kbd-border-color);
+		border-block-end-width: var(--itx-kbd-border-block-end-width);
+		border-radius: var(--itx-kbd-border-radius);
+		corner-shape: var(--itx-corner-shape);
+		white-space: nowrap;
+	}
+	:where(kbd:has(kbd)) {
+		white-space: nowrap;
+	}
+
+	/* A link: as bright as a heading, with a quiet underline that firms up on hover. */
+	:where(a:any-link) {
+		color: var(--itx-link-color);
+		text-decoration-line: underline;
+		text-decoration-color: var(--itx-link-text-decoration-color);
+		text-decoration-thickness: var(--itx-link-text-decoration-thickness);
+		text-underline-offset: var(--itx-text-underline-offset);
+	}
+	:where(a:any-link:hover) {
+		text-decoration-color: var(--itx-link-text-decoration-color-hover, var(--itx-link-text-decoration-color));
+		text-decoration-thickness: var(--itx-link-text-decoration-thickness-hover, var(--itx-link-text-decoration-thickness));
+	}
+
+	:where(mark) {
+		color: inherit;
+		background-color: var(--itx-mark-background-color);
+	}
+
+	:where(abbr[title]) {
+		text-decoration-line: underline;
+		text-decoration-style: dotted;
+		text-underline-offset: var(--itx-text-underline-offset);
+		cursor: help;
+	}
+
+	/* Smaller, and out of the line box, so a footnote mark does not push its line apart. */
+	:where(sub, sup) {
+		position: relative;
+		font-size: 0.75em;
+		line-height: 0;
+		vertical-align: baseline;
+	}
+	:where(sup) {
+		inset-block-start: -0.5em;
+	}
+	:where(sub) {
+		inset-block-end: -0.25em;
+	}
+
+	/* Forced colors replace the highlight with the page color; give it the system highlight. */
+	@media (forced-colors: active) {
+		:where(mark) {
+			color: MarkText;
+			background-color: Mark;
+		}
 	}
 
 	:where(img, picture, video, canvas) {

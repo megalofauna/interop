@@ -2,18 +2,31 @@
  * Syntax colors, painted by highlightCode() as ::highlight(itx-code-<role>). Each color is chosen
  * against the code block's background and measures at least 4.5:1 in light and dark.
  *
- * Inline code, the chip the reset draws around a <code> in running text, takes its tokens from here
- * too. Its text keeps the color of the text around it, so code in a heading reads as the heading.
+ * Inline code, the chip the reset draws around a <code> in running text, and keys, the keycaps it
+ * draws for <kbd>, take their tokens from here too. Their text keeps the color of the text around
+ * them, so code in a heading reads as the heading.
  */
 
 :root {
 	--itx-code-inline-font-size: 0.875em;
 	--itx-code-inline-padding-inline: var(--itx-space-1);
+	--itx-code-inline-padding-block: var(--itx-space-0_5);
 	--itx-code-inline-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-900));
 	--itx-code-inline-border-width: var(--itx-border-width);
 	--itx-code-inline-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
 	/* A small corner: half the house radius. */
 	--itx-code-inline-border-radius: calc(var(--itx-radius, var(--itx-radius-base)) / 2);
+
+	/* A key: the chip's shape, raised by a heavier bottom edge. */
+	--itx-kbd-font-size: 0.875em;
+	--itx-kbd-padding-inline: var(--itx-space-1_5);
+	--itx-kbd-padding-block: var(--itx-space-0_5);
+	--itx-kbd-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	--itx-kbd-border-width: var(--itx-border-width);
+	--itx-kbd-border-block-end-width: var(--itx-border-width-strong);
+	--itx-kbd-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
+	/* A small corner: half the house radius. */
+	--itx-kbd-border-radius: calc(var(--itx-radius, var(--itx-radius-base)) / 2);
 
 	--itx-code-color-keyword: light-dark(oklch(0.5 0.2 300), oklch(0.78 0.13 300));
 	--itx-code-color-string: light-dark(oklch(0.47 0.13 150), oklch(0.8 0.14 150));

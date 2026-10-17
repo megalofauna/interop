@@ -26,6 +26,18 @@
 	/* Captions: 4.73:1 light, 6.71:1 dark. */
 	--itx-color-caption: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 
+	/* Links read as bright as headings, over body text; the underline marks them, not the color. */
+	--itx-link-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	--itx-link-text-decoration-color: light-dark(var(--itx-neutral-400), var(--itx-neutral-500));
+	--itx-link-text-decoration-color-hover: currentColor;
+	--itx-link-text-decoration-thickness: 1px;
+	--itx-link-text-decoration-thickness-hover: 2px;
+	/* Underlines, for links and abbreviations, sit clear of the descenders. */
+	--itx-text-underline-offset: 0.2em;
+
+	/* A highlight that keeps body and heading text at 4.5:1 on it. */
+	--itx-mark-background-color: light-dark(oklch(0.94 0.08 95), oklch(0.38 0.07 95));
+
 	/* 40px, line 48px. */
 	--itx-font-size-display: 2.5rem;
 	--itx-line-height-display: 3rem;
