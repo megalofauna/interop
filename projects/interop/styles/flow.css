@@ -32,6 +32,12 @@
  * flow.css loads after every component: a component zeroes its own margin, and flow sets the margin
  * between blocks.
  *
+ * Put `itx-flow` on the element whose children are the blocks. Only direct children are spaced, and
+ * selectors follow the DOM, so an element in between hides them: around an Angular router outlet the
+ * children are the outlet and the routed component's host. Put it on the host instead, with
+ * `host: { "itx-flow": "" }` in the component. Content nested in a section or wrapper needs its own
+ * `itx-flow`, or move the section's id to its heading and let the blocks sit in one flow.
+ *
  * Only direct children are spaced. Lists without a `role` get item spacing; Interop's own lists
  * carry `role="list"` and keep their component layout. Every value is a token on the container,
  * so a page can retune it there.

@@ -14,6 +14,7 @@ type Topping = "cheese" | "olives" | "peppers";
 
 @Component({
 	selector: "demo-checkbox",
+	host: { "itx-flow": "" },
 	templateUrl: "./checkbox-demo.html",
 	styleUrl: "./checkbox-demo.css",
 })

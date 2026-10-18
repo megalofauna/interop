@@ -24,11 +24,6 @@
 	--itx-radio-group-dot-size: var(--itx-space-3);
 }
 
-* + fieldset,
-* + form {
-	margin-block-start: var(--itx-space-4);
-}
-
 /* The cards template stacks a card's direct children. What sits inside them is the page's to lay out. */
 .price,
 .summary {
@@ -64,8 +59,4 @@ td {
 	vertical-align: top;
 	border-block-end: 1px solid
 		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
-}
-
-figure[interop-code-block] {
-	margin-block-start: var(--itx-space-3);
 }

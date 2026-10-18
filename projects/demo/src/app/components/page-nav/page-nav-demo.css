@@ -31,6 +31,3 @@
 	}
 }
 
-* + figure[interop-code-block] {
-	margin-block-start: var(--itx-space-3);
-}

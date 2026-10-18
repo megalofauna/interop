@@ -5,6 +5,7 @@ import { InteropTooltip } from "interop/tooltip";
 
 @Component({
 	selector: "demo-button",
+	host: { "itx-flow": "" },
 	imports: [InteropIcon, InteropInvoker, InteropTooltip],
 	templateUrl: "./button-demo.html",
 	styleUrl: "./button-demo.css",

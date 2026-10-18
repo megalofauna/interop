@@ -5,6 +5,7 @@ import { examples } from "./tree-examples";
 
 @Component({
 	selector: "demo-tree",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock, RouterLink],
 	templateUrl: "./tree-demo.html",
 	styleUrl: "./tree-demo.css",

@@ -8,6 +8,7 @@ import { examples } from "./tags-examples";
 
 @Component({
 	selector: "demo-tags",
+	host: { "itx-flow": "" },
 	imports: [
 		InteropCodeBlock,
 		InteropForm,

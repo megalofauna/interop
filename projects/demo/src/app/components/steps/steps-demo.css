@@ -6,10 +6,6 @@
 	max-inline-size: 24rem;
 }
 
-* + ol[interop-steps] {
-	margin-block-start: var(--itx-space-4);
-}
-
 fieldset {
 	margin: var(--itx-space-4) 0 0;
 	padding: 0;

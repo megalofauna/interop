@@ -30,7 +30,11 @@ Interop components are semantically correct, accessible first, and performant by
   from `--itx-flow-*` tokens on the 4px grid. Headings have more space above
   than below and are trimmed to cap height and baseline (`text-box`). It loads
   last, because a component zeroes its own margin. Components never set outer
-  margin; inside a component, `gap` spaces its parts. Research:
+  margin; inside a component, `gap` spaces its parts. Put `itx-flow` on the
+  element that directly holds the blocks: in Angular, a page component's host
+  (`host: { "itx-flow": "" }`), never a wrapper around `<router-outlet>`. A
+  page's own CSS must not set margins between its top-level blocks: component
+  styles outrank flow's zero-specificity rules. Research:
   [prompts/FLOW-RESEARCH.md](../prompts/FLOW-RESEARCH.md).
 - **Helpers** in `projects/interop/src/` fill the gaps the platform leaves.
   They are framework-free and exported from `interop`. See Helpers.

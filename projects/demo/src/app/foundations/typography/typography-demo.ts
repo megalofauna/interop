@@ -8,6 +8,7 @@ import {
 
 @Component({
 	selector: "demo-typography",
+	host: { "itx-flow": "" },
 	templateUrl: "./typography-demo.html",
 	styleUrl: "./typography-demo.css",
 })

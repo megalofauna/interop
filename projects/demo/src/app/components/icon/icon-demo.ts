@@ -3,6 +3,7 @@ import { InteropIcon } from "interop/icon";
 
 @Component({
 	selector: "demo-icon",
+	host: { "itx-flow": "" },
 	imports: [InteropIcon],
 	templateUrl: "./icon-demo.html",
 	styleUrl: "./icon-demo.css",
