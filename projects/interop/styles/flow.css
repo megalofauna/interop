@@ -50,8 +50,8 @@
 	--itx-flow-space-figure: var(--itx-space-10);
 	/* A button sits closer to the text it acts on. */
 	--itx-flow-space-control: var(--itx-space-3);
-	--itx-flow-space-hr: var(--itx-space-16);
-	--itx-flow-space-h2: var(--itx-space-16);
+	--itx-flow-space-hr: var(--itx-space-12);
+	--itx-flow-space-h2: var(--itx-space-12);
 	--itx-flow-space-h2-after: var(--itx-space-5);
 	--itx-flow-space-h3: var(--itx-space-12);
 	--itx-flow-space-h3-after: var(--itx-space-4);
