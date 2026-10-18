@@ -14,6 +14,7 @@
  *
  *   blocks                                              24px
  *   a table, figure, code block or media, either side   40px
+ *   a button, after the block above it                12px
  *   an hr, either side                                  64px
  *   before / after h1 and h2                            64 / 20px
  *   before / after h3                                   48 / 16px
@@ -47,6 +48,8 @@
 	--itx-flow-line-height: 1.75rem;
 	--itx-flow-space: var(--itx-space-6);
 	--itx-flow-space-figure: var(--itx-space-10);
+	/* A button sits closer to the text it acts on. */
+	--itx-flow-space-control: var(--itx-space-3);
 	--itx-flow-space-hr: var(--itx-space-16);
 	--itx-flow-space-h2: var(--itx-space-16);
 	--itx-flow-space-h2-after: var(--itx-space-5);
@@ -79,6 +82,10 @@
 	[itx-flow] > :is(table, figure, pre, img, picture, video, iframe) + *
 ) {
 	margin-block-start: var(--itx-flow-space-figure);
+}
+
+:where([itx-flow] > * + :is(button, [interop-button])) {
+	margin-block-start: var(--itx-flow-space-control);
 }
 
 :where([itx-flow] > * + hr, [itx-flow] > hr + *) {

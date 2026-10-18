@@ -39,9 +39,3 @@ fieldset {
 	align-items: flex-end;
 	gap: var(--itx-space-2);
 }
-
-[interop-field] + figure,
-
-[interop-field] + [interop-field] {
-	margin-block-start: var(--itx-space-4);
-}
