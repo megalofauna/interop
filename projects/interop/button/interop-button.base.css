@@ -3,6 +3,8 @@
 	/* 1.5 × the block padding that the height leaves around one line. */
 	--itx-button-padding-inline: calc((var(--itx-button-min-block-size) - 1lh) * 0.75);
 	--itx-button-gap: var(--itx-space-2);
+	/* Every icon in the button: 16, 20 and 24px at sm, default and lg. An icon's own itx-size or size wins. */
+	--itx-icon-size: var(--itx-icon-size-md);
 	--itx-button-font-size: var(--itx-font-size-p);
 	--itx-button-line-height: 1;
 
@@ -48,9 +50,11 @@
 :where(:is(button, summary)[interop-button][itx-size="sm"]) {
 	--itx-button-min-block-size: var(--itx-space-8);
 	--itx-button-font-size: var(--itx-font-size-p-sm);
+	--itx-icon-size: var(--itx-icon-size-sm);
 }
 
 :where(:is(button, summary)[interop-button][itx-size="lg"]) {
 	--itx-button-min-block-size: var(--itx-space-14);
 	--itx-button-font-size: var(--itx-font-size-p-lg);
+	--itx-icon-size: var(--itx-icon-size-lg);
 }

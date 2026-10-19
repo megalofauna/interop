@@ -2,11 +2,7 @@
 	font-style: italic;
 }
 
-* + ul[interop-tags]:not([interop-field] > *),
-* + figure[interop-code-block] {
-	margin-block-start: var(--itx-space-3);
-}
-
+/* Inside a form, which flow does not reach. */
 [interop-field] + p {
 	margin-block-start: var(--itx-space-3);
 }

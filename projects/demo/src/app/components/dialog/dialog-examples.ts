@@ -16,7 +16,7 @@ export const examples = {
 	form: `<dialog id="rename" interop-dialog aria-labelledby="rename-title" (cancel)="guard($event)">
 	<header>
 		<h2 id="rename-title">Rename file</h2>
-		<button interop-button itx-size="sm" type="button" commandfor="rename" command="request-close">
+		<button interop-button="icon" itx-size="sm" type="button" commandfor="rename" command="request-close">
 			<span itx-visually-hidden>Close</span>
 			<svg interop-icon name="tabler-x"></svg>
 		</button>

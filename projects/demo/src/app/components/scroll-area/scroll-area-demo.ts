@@ -3,6 +3,7 @@ import { InteropScrollArea } from "interop/scroll-area";
 
 @Component({
 	selector: "demo-scroll-area",
+	host: { "itx-flow": "" },
 	imports: [InteropScrollArea],
 	templateUrl: "./scroll-area-demo.html",
 	styleUrl: "./scroll-area-demo.css",

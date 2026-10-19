@@ -109,6 +109,8 @@ import stylesUnderscore from '../styles/underscore.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesDisclosure from '../styles/disclosure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import stylesFlow from '../styles/flow.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import interopCss from '../interop.css' with { loader: 'text' };
 
 /** The stylesheets, in interop.css order; reset.css, which is opt-in, first. */
@@ -165,6 +167,7 @@ export const sheets: Record<string, string> = {
 	'styles/chips.css': stylesChips,
 	'styles/underscore.css': stylesUnderscore,
 	'styles/disclosure.css': stylesDisclosure,
+	'styles/flow.css': stylesFlow,
 };
 
 /** interop.css itself, for checking the list against it. */

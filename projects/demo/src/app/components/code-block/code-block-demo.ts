@@ -24,6 +24,7 @@ import badgeDemo from "../badge/badge-demo.html" with { loader: "text" };
 
 @Component({
 	selector: "demo-code-block",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock],
 	templateUrl: "./code-block-demo.html",
 	styleUrl: "./code-block-demo.css",

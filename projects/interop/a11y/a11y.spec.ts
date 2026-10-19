@@ -42,8 +42,8 @@ const reveal = (element: Element) => {
 		<main>
 			<button interop-button type="button">Save</button>
 			<button interop-button type="button" itx-size="sm"><svg interop-icon name="tabler-copy"></svg>Copy</button>
-			<button interop-button type="button" aria-label="Search"><svg interop-icon name="tabler-search"></svg></button>
-			<button interop-button type="button"><svg interop-icon name="tabler-check" aria-label="Done"></svg></button>
+			<button interop-button="icon" type="button" aria-label="Search"><svg interop-icon name="tabler-search"></svg></button>
+			<button interop-button="icon" type="button"><svg interop-icon name="tabler-check" aria-label="Done"></svg></button>
 			<button interop-button type="button" [attr.aria-pressed]="pressed()">Bold</button>
 			<button interop-button type="button" aria-busy="true">Saving</button>
 			<button interop-button type="button" disabled>Disabled</button>
@@ -60,7 +60,7 @@ const reveal = (element: Element) => {
 				Activity
 				<span interop-badge="dot" itx-badge-position="top-end">New activity</span>
 			</button>
-			<button interop-button type="button" [interopTooltip]="close"><svg interop-icon name="tabler-x"></svg></button>
+			<button interop-button="icon" type="button" [interopTooltip]="close"><svg interop-icon name="tabler-x"></svg></button>
 			<span interop-tooltip="label" #close>Close</span>
 			<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
 			<span interop-tooltip #draft>Saves without publishing</span>
@@ -82,7 +82,7 @@ const reveal = (element: Element) => {
 			</details>
 			<div interop-popover popover #menu>
 				<p>Popover content</p>
-				<button interop-button type="button" aria-label="Remove"><svg interop-icon name="tabler-x"></svg></button>
+				<button interop-button="icon" type="button" aria-label="Remove"><svg interop-icon name="tabler-x"></svg></button>
 			</div>
 			<h2 id="notes">Notes</h2>
 			<div interop-scroll-area aria-labelledby="notes">
@@ -136,7 +136,7 @@ const reveal = (element: Element) => {
 				<section role="tabpanel" id="p-nav" aria-labelledby="t-nav" tabindex="0"><p>Course plotted.</p></section>
 				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found">
 					<p>Reactor steady.</p>
-					<button interop-button type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
+					<button interop-button="icon" type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
 					<label interop-switch><input type="checkbox" role="switch" /> Auto-throttle</label>
 				</section>
 				<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
@@ -249,7 +249,7 @@ const reveal = (element: Element) => {
 			<dialog interop-dialog open aria-labelledby="rename-title">
 				<header>
 					<h2 id="rename-title">Rename file</h2>
-					<button interop-button itx-size="sm" type="button" command="request-close">
+					<button interop-button="icon" itx-size="sm" type="button" command="request-close">
 						<span itx-visually-hidden>Close</span><svg interop-icon name="tabler-x"></svg>
 					</button>
 				</header>

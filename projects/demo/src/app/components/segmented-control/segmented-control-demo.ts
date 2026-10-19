@@ -15,6 +15,7 @@ import { examples } from "./segmented-control-examples";
 
 @Component({
 	selector: "demo-segmented-control",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock, InteropIcon, InteropSegmentedFit],
 	templateUrl: "./segmented-control-demo.html",
 	styleUrl: "./segmented-control-demo.css",

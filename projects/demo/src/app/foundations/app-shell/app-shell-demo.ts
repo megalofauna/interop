@@ -5,6 +5,7 @@ import { examples } from "./app-shell-examples";
 
 @Component({
 	selector: "demo-app-shell",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock, InteropScrollArea],
 	templateUrl: "./app-shell-demo.html",
 	styleUrl: "./app-shell-demo.css",

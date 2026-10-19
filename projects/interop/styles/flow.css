@@ -1,0 +1,137 @@
+/*
+ * Flow: the vertical space between blocks of running content, such as an article or a docs page.
+ * Opt in with `itx-flow` on the container:
+ *
+ *   <article itx-flow>
+ *     <h2>Install</h2>
+ *     <p>…</p>
+ *     <figure>…</figure>
+ *   </article>
+ *
+ * Space goes above a block and only between siblings (`> * + *`), so the first child has none
+ * above it and the last none below. The container's own padding or `gap` decides its edges.
+ * Components set no outer margin; inside a component, its own `gap` spaces its parts.
+ *
+ *   blocks                                              24px
+ *   a table, figure, code block or media, either side   40px
+ *   a button, after the block above it                12px
+ *   an hr, either side                                  64px
+ *   before / after h1 and h2                            64 / 20px
+ *   before / after h3                                   48 / 16px
+ *   before / after h4 to h6                             32 / 12px
+ *   list items, and a nested list                       12px
+ *   a figure's content and its caption                  12px
+ *
+ * Running text (paragraphs, lists, definition lists, quotes) reads at 16/28px, a looser line than
+ * the 16/24px controls use. A paragraph given another role with `itx-font` keeps that role's line.
+ *
+ * A heading binds to what follows it: the space after a heading wins over the space a table or
+ * figure asks for above itself. Headings are trimmed to their cap height and baseline
+ * (`text-box`), so the space above and below them is measured from the letters, not from the
+ * line box's leading.
+ *
+ * flow.css loads after every component: a component zeroes its own margin, and flow sets the margin
+ * between blocks.
+ *
+ * Put `itx-flow` on the element whose children are the blocks. Only direct children are spaced, and
+ * selectors follow the DOM, so an element in between hides them: around an Angular router outlet the
+ * children are the outlet and the routed component's host. Put it on the host instead, with
+ * `host: { "itx-flow": "" }` in the component. Content nested in a section or wrapper needs its own
+ * `itx-flow`, or move the section's id to its heading and let the blocks sit in one flow.
+ *
+ * Only direct children are spaced. Lists without a `role` get item spacing; Interop's own lists
+ * carry `role="list"` and keep their component layout. Every value is a token on the container,
+ * so a page can retune it there.
+ */
+
+:where([itx-flow]) {
+	--itx-flow-line-height: 1.75rem;
+	--itx-flow-space: var(--itx-space-6);
+	--itx-flow-space-figure: var(--itx-space-10);
+	/* A button sits closer to the text it acts on. */
+	--itx-flow-space-control: var(--itx-space-3);
+	--itx-flow-space-hr: var(--itx-space-12);
+	--itx-flow-space-h2: var(--itx-space-12);
+	--itx-flow-space-h2-after: var(--itx-space-5);
+	--itx-flow-space-h3: var(--itx-space-12);
+	--itx-flow-space-h3-after: var(--itx-space-4);
+	--itx-flow-space-h4: var(--itx-space-8);
+	--itx-flow-space-h4-after: var(--itx-space-3);
+	--itx-flow-space-li: var(--itx-space-3);
+	--itx-flow-space-caption: var(--itx-space-3);
+}
+
+/* Running text reads on a looser line. On the 4px grid: 28px for 16px text. */
+:where([itx-flow] > :is(p, ul, ol, dl, blockquote):not([itx-font])) {
+	line-height: var(--itx-flow-line-height);
+}
+
+/* The browser's own block margins would add to these, and collapse unpredictably. */
+:where([itx-flow] > *) {
+	margin-block: 0;
+}
+
+/* Between blocks. A hidden block is skipped, so it does not leave a gap. */
+:where([itx-flow] > :not([hidden]) ~ :not([hidden])) {
+	margin-block-start: var(--itx-flow-space);
+}
+
+/* Tables, figures, code and media stand apart from the text around them. */
+:where(
+	[itx-flow] > * + :is(table, figure, pre, img, picture, video, iframe),
+	[itx-flow] > :is(table, figure, pre, img, picture, video, iframe) + *
+) {
+	margin-block-start: var(--itx-flow-space-figure);
+}
+
+:where([itx-flow] > * + :is(button, [interop-button])) {
+	margin-block-start: var(--itx-flow-space-control);
+}
+
+:where([itx-flow] > * + hr, [itx-flow] > hr + *) {
+	margin-block-start: var(--itx-flow-space-hr);
+}
+
+/* ── Headings: more space above than below, so each binds to what follows ── */
+
+:where([itx-flow] > :is(h1, h2, h3, h4, h5, h6)) {
+	text-box: trim-both cap alphabetic;
+}
+
+:where([itx-flow] > * + :is(h1, h2)) {
+	margin-block-start: var(--itx-flow-space-h2);
+}
+
+:where([itx-flow] > * + h3) {
+	margin-block-start: var(--itx-flow-space-h3);
+}
+
+:where([itx-flow] > * + :is(h4, h5, h6)) {
+	margin-block-start: var(--itx-flow-space-h4);
+}
+
+/* Last, so the space after a heading wins over what the next block asks for. */
+:where([itx-flow] > :is(h1, h2) + *) {
+	margin-block-start: var(--itx-flow-space-h2-after);
+}
+
+:where([itx-flow] > h3 + *) {
+	margin-block-start: var(--itx-flow-space-h3-after);
+}
+
+:where([itx-flow] > :is(h4, h5, h6) + *) {
+	margin-block-start: var(--itx-flow-space-h4-after);
+}
+
+/* ── Inside blocks ─────────────────────────────────────────────────────── */
+
+:where(
+	[itx-flow] > :is(ul, ol):not([role]) li + li,
+	[itx-flow] > :is(ul, ol):not([role]) li > :is(ul, ol)
+) {
+	margin-block-start: var(--itx-flow-space-li);
+}
+
+:where([itx-flow] > figure > * + figcaption) {
+	margin-block-start: var(--itx-flow-space-caption);
+}

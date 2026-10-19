@@ -13,15 +13,15 @@
 	The button needs no other.
 </p>
 <div class="row">
-	<button interop-button type="button" [interopTooltip]="copy">
+	<button interop-button="icon" type="button" [interopTooltip]="copy">
 		<svg interop-icon name="tabler-copy"></svg>
 	</button>
 	<span interop-tooltip="label" #copy>Copy</span>
-	<button interop-button type="button" [interopTooltip]="search">
+	<button interop-button="icon" type="button" [interopTooltip]="search">
 		<svg interop-icon name="tabler-search"></svg>
 	</button>
 	<span interop-tooltip="label" #search>Search</span>
-	<button interop-button type="button" [interopTooltip]="close">
+	<button interop-button="icon" type="button" [interopTooltip]="close">
 		<svg interop-icon name="tabler-x"></svg>
 	</button>
 	<span interop-tooltip="label" #close>Close</span>
@@ -41,7 +41,7 @@
 <h2>Near an edge</h2>
 <p>A tooltip moves below its trigger, or along it, to stay on screen.</p>
 <div class="row edge">
-	<button interop-button type="button" [interopTooltip]="edge">
+	<button interop-button="icon" type="button" [interopTooltip]="edge">
 		<svg interop-icon name="tabler-plus"></svg>
 	</button>
 	<span interop-tooltip="label" #edge
@@ -55,11 +55,11 @@
 	<button interop-button type="button" [popoverTarget]="menu">Options</button>
 	<div interop-popover popover #menu>
 		<div class="row">
-			<button interop-button type="button" [interopTooltip]="minus">
+			<button interop-button="icon" type="button" [interopTooltip]="minus">
 				<svg interop-icon name="tabler-minus"></svg>
 			</button>
 			<span interop-tooltip="label" #minus>Zoom out</span>
-			<button interop-button type="button" [interopTooltip]="plus">
+			<button interop-button="icon" type="button" [interopTooltip]="plus">
 				<svg interop-icon name="tabler-plus"></svg>
 			</button>
 			<span interop-tooltip="label" #plus>Zoom in</span>

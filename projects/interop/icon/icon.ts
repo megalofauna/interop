@@ -20,8 +20,12 @@ const attribute = (name: string) => inject(new HostAttributeToken(name), { optio
  *
  * ```html
  * <svg interop-icon name="tabler-check"></svg>
- * <svg interop-icon name="tabler-check" size="20" aria-label="Done"></svg>
+ * <svg interop-icon name="tabler-check" itx-size="lg" aria-label="Done"></svg>
  * ```
+ *
+ * Its size, strongest first: `size` in pixels; `itx-size`, a step of the icon scale (xs 12, sm 16,
+ * md 20, lg 24, xl 32px); `--itx-icon-size` set on an ancestor, as a button sets it; else 1em, the
+ * size of the text around it.
  *
  * Without `name`, the consumer's own SVG children render unchanged. An icon is hidden from
  * assistive technology unless the host has `aria-label` or `aria-labelledby`.
@@ -55,7 +59,7 @@ const attribute = (name: string) => inject(new HostAttributeToken(name), { optio
 export class InteropIcon {
 	/** A registered icon name, e.g. `tabler-check`. */
 	readonly name = input<string>();
-	/** Pixels. Fixes the icon at this size; without it the icon is 1em. */
+	/** Pixels. Fixes the icon at this size, over `itx-size` and `--itx-icon-size`. */
 	readonly size = input(undefined, { transform: numberAttribute });
 
 	private readonly ownViewBox = attribute('viewBox');

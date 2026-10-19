@@ -2,11 +2,6 @@
 	font-style: italic;
 }
 
-* + fieldset,
-* + form {
-	margin-block-start: var(--itx-space-4);
-}
-
 fieldset + fieldset {
 	margin-inline-start: var(--itx-space-4);
 }

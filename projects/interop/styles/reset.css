@@ -7,8 +7,9 @@
  * Its rules sit in the itx-reset cascade layer, so every unlayered style wins over them,
  * whatever the import order. That includes Interop's components and the page's own styles.
  *
- * `itx-font` gives any element a role's size, line height and weight. Headings and display read
- * their own weight; the other roles read --itx-font-weight:
+ * `itx-font` gives any element a role's size, line height and weight, and for headings, display and
+ * caption its color. Headings and display read their own weight; the other roles read
+ * --itx-font-weight. Body text takes --itx-color from the body:
  *
  *   <p itx-font="p-lg">
  *
@@ -26,6 +27,7 @@
 	:where(body) {
 		font-family: var(--itx-font-family);
 		font-weight: var(--itx-font-weight);
+		color: var(--itx-color);
 		font-size: var(--itx-font-size-p);
 		line-height: var(--itx-line-height-p);
 	}
@@ -37,6 +39,86 @@
 	/* A family list that does not end in the bare keyword monospace keeps code at the body size. */
 	:where(code, kbd, samp, pre) {
 		font-family: var(--itx-font-family-mono);
+	}
+
+	/*
+	 * Inline code: a chip in the text around it. Code in a <pre> is a code block's and is left alone.
+	 * Monospace runs large beside proportional text, so it steps down to match. Block padding on an
+	 * inline element grows its background without pushing lines apart, and a chip that wraps keeps its
+	 * edges at the break.
+	 */
+	:where(:not(pre) > code) {
+		font-size: var(--itx-code-inline-font-size);
+		padding-block: var(--itx-code-inline-padding-block);
+		padding-inline: var(--itx-code-inline-padding-inline);
+		background-color: var(--itx-code-inline-background-color);
+		border: var(--itx-code-inline-border-width) solid var(--itx-code-inline-border-color);
+		border-radius: var(--itx-code-inline-border-radius);
+		corner-shape: var(--itx-corner-shape);
+		box-decoration-break: clone;
+	}
+
+	/* A key. A <kbd> holding others is a combination, e.g. Ctrl + C; only its keys are drawn. */
+	:where(kbd:not(:has(kbd))) {
+		font-size: var(--itx-kbd-font-size);
+		padding-block: var(--itx-kbd-padding-block);
+		padding-inline: var(--itx-kbd-padding-inline);
+		background-color: var(--itx-kbd-background-color);
+		border: var(--itx-kbd-border-width) solid var(--itx-kbd-border-color);
+		border-block-end-width: var(--itx-kbd-border-block-end-width);
+		border-radius: var(--itx-kbd-border-radius);
+		corner-shape: var(--itx-corner-shape);
+		white-space: nowrap;
+	}
+	:where(kbd:has(kbd)) {
+		white-space: nowrap;
+	}
+
+	/* A link: as bright as a heading, with a quiet underline that firms up on hover. */
+	:where(a:any-link) {
+		color: var(--itx-link-color);
+		text-decoration-line: underline;
+		text-decoration-color: var(--itx-link-text-decoration-color);
+		text-decoration-thickness: var(--itx-link-text-decoration-thickness);
+		text-underline-offset: var(--itx-text-underline-offset);
+	}
+	:where(a:any-link:hover) {
+		text-decoration-color: var(--itx-link-text-decoration-color-hover, var(--itx-link-text-decoration-color));
+		text-decoration-thickness: var(--itx-link-text-decoration-thickness-hover, var(--itx-link-text-decoration-thickness));
+	}
+
+	:where(mark) {
+		color: inherit;
+		background-color: var(--itx-mark-background-color);
+	}
+
+	:where(abbr[title]) {
+		text-decoration-line: underline;
+		text-decoration-style: dotted;
+		text-underline-offset: var(--itx-text-underline-offset);
+		cursor: help;
+	}
+
+	/* Smaller, and out of the line box, so a footnote mark does not push its line apart. */
+	:where(sub, sup) {
+		position: relative;
+		font-size: 0.75em;
+		line-height: 0;
+		vertical-align: baseline;
+	}
+	:where(sup) {
+		inset-block-start: -0.5em;
+	}
+	:where(sub) {
+		inset-block-end: -0.25em;
+	}
+
+	/* Forced colors replace the highlight with the page color; give it the system highlight. */
+	@media (forced-colors: active) {
+		:where(mark) {
+			color: MarkText;
+			background-color: Mark;
+		}
 	}
 
 	:where(img, picture, video, canvas) {
@@ -59,31 +141,37 @@
 	:where([itx-font="display"]) {
 		font-size: var(--itx-font-size-display);
 		line-height: var(--itx-line-height-display);
+		color: var(--itx-color-display);
 		font-weight: var(--itx-font-weight-display);
 	}
 	:where(h1:not([itx-font]), [itx-font="h1"]) {
 		font-size: var(--itx-font-size-h1);
 		line-height: var(--itx-line-height-h1);
+		color: var(--itx-color-h1);
 		font-weight: var(--itx-font-weight-h1);
 	}
 	:where(h2:not([itx-font]), [itx-font="h2"]) {
 		font-size: var(--itx-font-size-h2);
 		line-height: var(--itx-line-height-h2);
+		color: var(--itx-color-h2);
 		font-weight: var(--itx-font-weight-h2);
 	}
 	:where(h3:not([itx-font]), [itx-font="h3"]) {
 		font-size: var(--itx-font-size-h3);
 		line-height: var(--itx-line-height-h3);
+		color: var(--itx-color-h3);
 		font-weight: var(--itx-font-weight-h3);
 	}
 	:where(h4:not([itx-font]), [itx-font="h4"]) {
 		font-size: var(--itx-font-size-h4);
 		line-height: var(--itx-line-height-h4);
+		color: var(--itx-color-h4);
 		font-weight: var(--itx-font-weight-h4);
 	}
 	:where(:is(h5, h6):not([itx-font]), [itx-font="h5"]) {
 		font-size: var(--itx-font-size-h5);
 		line-height: var(--itx-line-height-h5);
+		color: var(--itx-color-h5);
 		font-weight: var(--itx-font-weight-h5);
 	}
 	:where([itx-font="p-lg"]) {
@@ -105,5 +193,6 @@
 	:where(:is(figcaption, caption, small):not([itx-font]), [itx-font="caption"]) {
 		font-size: var(--itx-font-size-caption);
 		line-height: var(--itx-line-height-caption);
+		color: var(--itx-color-caption);
 	}
 }

@@ -4,6 +4,7 @@ import { InteropStepsForm } from "interop/steps";
 
 @Component({
 	selector: "demo-steps",
+	host: { "itx-flow": "" },
 	imports: [InteropStepsForm],
 	templateUrl: "./steps-demo.html",
 	styleUrl: "./steps-demo.css",

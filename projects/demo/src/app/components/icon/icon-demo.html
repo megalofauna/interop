@@ -16,7 +16,24 @@
 	></span>
 </p>
 
+<h2>Size scale</h2>
+<p>
+	<code>itx-size</code> picks a step: xs 12, sm 16, md 20, lg 24 and xl 32px.
+	Without it an icon is the size of its text. A button sets its icons to 16, 20
+	or 24px by its own size, and <code>--itx-icon-size</code> on any element sets
+	every icon inside it.
+</p>
+<p class="scale">
+	@for (step of steps; track step) {
+		<span>
+			<svg interop-icon name="tabler-check" [attr.itx-size]="step"></svg>
+			<code>{{ step }}</code>
+		</span>
+	}
+</p>
+
 <h2>Fixed size</h2>
+<p><code>size</code> in pixels fixes an icon over everything else.</p>
 <p class="column">
 	<small
 		>Small text <svg interop-icon name="tabler-check" size="24"></svg

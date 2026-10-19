@@ -3,6 +3,7 @@ import { InteropBadge, type BadgeLabel } from "interop/badge";
 
 @Component({
 	selector: "demo-badge",
+	host: { "itx-flow": "" },
 	imports: [InteropBadge],
 	templateUrl: "./badge-demo.html",
 	styleUrl: "./badge-demo.css",

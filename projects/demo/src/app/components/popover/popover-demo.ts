@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 
 @Component({
 	selector: "demo-popover",
+	host: { "itx-flow": "" },
 	templateUrl: "./popover-demo.html",
 	styleUrl: "./popover-demo.css",
 })

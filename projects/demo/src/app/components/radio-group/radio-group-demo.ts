@@ -6,6 +6,7 @@ import { examples } from "./radio-group-examples";
 
 @Component({
 	selector: "demo-radio-group",
+	host: { "itx-flow": "" },
 	imports: [FormsModule, InteropBadge, InteropCodeBlock],
 	templateUrl: "./radio-group-demo.html",
 	styleUrl: "./radio-group-demo.css",

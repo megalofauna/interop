@@ -1,0 +1,167 @@
+<label interop-switch class="toggle">
+	<input
+		type="checkbox"
+		role="switch"
+		[checked]="boxes()"
+		(change)="boxes.set($any($event.target).checked)"
+	/>
+	Show each block's box
+</label>
+
+<article itx-flow [class.boxes]="boxes()">
+	<h1>Flow</h1>
+	<p itx-font="p-lg">
+		Flow spaces the blocks of running content: an article, a docs page, a
+		changelog. It is one attribute on the container, and this page is written
+		with it.
+	</p>
+	<p>
+		Space goes above a block and only between siblings, so the first block has
+		none above it and the last has none below. The container's own padding
+		decides its edges.
+	</p>
+
+	<h2>Install</h2>
+	<p>
+		Flow ships in <code>interop.css</code>. Put <code>itx-flow</code> on the
+		element that holds the content.
+	</p>
+	<figure
+		interop-code-block
+		language="html"
+		caption="An article"
+		[code]="markup"
+	></figure>
+	<p>
+		Only direct children are spaced. A component inside the flow keeps its own
+		layout, and spaces its parts with <code>gap</code>.
+	</p>
+
+	<h3>What it needs</h3>
+	<ul>
+		<li>Interop's stylesheet, <code>interop.css</code>.</li>
+		<li>
+			The reset, if the page should also lose the browser's margins outside
+			flow containers.
+			<ul>
+				<li>Inside a flow container, the browser's margins are removed anyway.</li>
+				<li>Outside, they stay until the reset removes them.</li>
+			</ul>
+		</li>
+		<li>Nothing else: there is no script.</li>
+	</ul>
+
+	<h2>The spaces</h2>
+	<p>
+		Each space is a token on the container. Blocks sit 24px apart; tables,
+		figures and code stand further from the text around them. Running text
+		reads at 16/28px.
+	</p>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Between</th>
+				<th scope="col">Space</th>
+				<th scope="col">Token</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Blocks</td>
+				<td>24px</td>
+				<td><code>--itx-flow-space</code></td>
+			</tr>
+			<tr>
+				<td>A table, figure, code block or media</td>
+				<td>40px</td>
+				<td><code>--itx-flow-space-figure</code></td>
+			</tr>
+			<tr>
+				<td>An hr</td>
+				<td>64px</td>
+				<td><code>--itx-flow-space-hr</code></td>
+			</tr>
+			<tr>
+				<td>Before / after h2</td>
+				<td>64 / 20px</td>
+				<td><code>--itx-flow-space-h2[-after]</code></td>
+			</tr>
+			<tr>
+				<td>Before / after h3</td>
+				<td>48 / 16px</td>
+				<td><code>--itx-flow-space-h3[-after]</code></td>
+			</tr>
+			<tr>
+				<td>Before / after h4 to h6</td>
+				<td>32 / 12px</td>
+				<td><code>--itx-flow-space-h4[-after]</code></td>
+			</tr>
+			<tr>
+				<td>List items</td>
+				<td>12px</td>
+				<td><code>--itx-flow-space-li</code></td>
+			</tr>
+		</tbody>
+	</table>
+	<p>Retune a space on the container:</p>
+	<figure
+		interop-code-block
+		language="css"
+		caption="Looser blocks"
+		[code]="tokens"
+	></figure>
+
+	<h3>Headings</h3>
+	<p>
+		A heading has more space above it than below, so it reads as the start of
+		what follows. The space after a heading wins over the space a table or
+		figure asks for.
+	</p>
+
+	<h4>Trimmed to the letters</h4>
+	<p>
+		Headings are trimmed to their cap height and baseline with
+		<code>text-box</code>. The space around a heading is measured from its
+		letters, not from the leading of its line box.
+	</p>
+	<figure>
+		<img
+			src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 200'%3E%3Crect width='640' height='200' fill='%23888' fill-opacity='.15'/%3E%3Cline x1='40' y1='70' x2='600' y2='70' stroke='%23888' stroke-dasharray='6 6'/%3E%3Cline x1='40' y1='130' x2='600' y2='130' stroke='%23888' stroke-dasharray='6 6'/%3E%3Ctext x='48' y='130' font-family='system-ui' font-size='84' fill='%23888'%3EHxg%3C/text%3E%3Ctext x='260' y='64' font-family='system-ui' font-size='16' fill='%23888'%3Ecap height%3C/text%3E%3Ctext x='260' y='150' font-family='system-ui' font-size='16' fill='%23888'%3Ebaseline%3C/text%3E%3C/svg%3E"
+			alt="The letters Hxg between two dashed lines, one at the cap height and one at the baseline."
+			width="640"
+			height="200"
+		/>
+		<figcaption>The trimmed box runs from the cap height to the baseline.</figcaption>
+	</figure>
+
+	<h4>Lists</h4>
+	<p>
+		List items sit 12px apart. Lists with a <code>role</code> are left alone:
+		Interop's own lists carry <code>role="list"</code> and keep their layout.
+	</p>
+
+	<blockquote>
+		<p>
+			Margin describes a relationship between siblings, so style the context,
+			not the element.
+		</p>
+	</blockquote>
+
+	<details>
+		<summary>Why space only goes above</summary>
+		<p>
+			A margin below the last block would add to the container's padding. With
+			space only above and only between siblings, nothing trails, and margins
+			never collapse unexpectedly.
+		</p>
+	</details>
+
+	<hr />
+
+	<h2>Next steps</h2>
+	<ol>
+		<li>Put <code>itx-flow</code> on your article.</li>
+		<li>Turn on the boxes above to see each block's edges.</li>
+		<li>Retune a token if your content needs more air.</li>
+	</ol>
+</article>

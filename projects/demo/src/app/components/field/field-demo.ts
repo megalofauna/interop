@@ -11,6 +11,7 @@ import { examples } from "./field-examples";
 
 @Component({
 	selector: "demo-field",
+	host: { "itx-flow": "" },
 	imports: [
 		InteropCharacterCount,
 		InteropCodeBlock,

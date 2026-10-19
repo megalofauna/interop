@@ -24,7 +24,18 @@ Interop components are semantically correct, accessible first, and performant by
   - `public-api.ts`, empty for a CSS-only component.
 - **Shared looks** a template wears across components live in `styles/`:
   `segmented.css`, `cards.css`, `chips.css`, `underscore.css`, `disclosure.css`. `interop.css` imports
-  foundations, then components, then these.
+  foundations, then components, then these, then `flow.css`.
+- **Flow** (`styles/flow.css`) spaces running content inside an `itx-flow`
+  container: space above a block, only between direct siblings (`> * + *`),
+  from `--itx-flow-*` tokens on the 4px grid. Headings have more space above
+  than below and are trimmed to cap height and baseline (`text-box`). It loads
+  last, because a component zeroes its own margin. Components never set outer
+  margin; inside a component, `gap` spaces its parts. Put `itx-flow` on the
+  element that directly holds the blocks: in Angular, a page component's host
+  (`host: { "itx-flow": "" }`), never a wrapper around `<router-outlet>`. A
+  page's own CSS must not set margins between its top-level blocks: component
+  styles outrank flow's zero-specificity rules. Research:
+  [prompts/FLOW-RESEARCH.md](../prompts/FLOW-RESEARCH.md).
 - **Helpers** in `projects/interop/src/` fill the gaps the platform leaves.
   They are framework-free and exported from `interop`. See Helpers.
 - **Angular directives** are standalone, take signal `input()`s, bind their

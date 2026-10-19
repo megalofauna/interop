@@ -7,6 +7,7 @@ import { examples } from "./page-nav-examples";
 
 @Component({
 	selector: "demo-page-nav",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock, InteropPageNav, InteropScrollArea, RouterLink],
 	templateUrl: "./page-nav-demo.html",
 	styleUrl: "./page-nav-demo.css",

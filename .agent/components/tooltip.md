@@ -7,7 +7,7 @@ tooltip)`, or `[interopTooltip]` in Angular, makes it a `popover="hint"` with
 opens it.
 
 ```html
-<button interop-button type="button" [interopTooltip]="close">
+<button interop-button="icon" type="button" [interopTooltip]="close">
   <svg interop-icon name="tabler-x"></svg>
 </button>
 <span interop-tooltip="label" #close>Close</span>

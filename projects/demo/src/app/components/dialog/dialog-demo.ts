@@ -5,6 +5,7 @@ import { examples } from "./dialog-examples";
 
 @Component({
 	selector: "demo-dialog",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock, InteropIcon],
 	templateUrl: "./dialog-demo.html",
 	styleUrl: "./dialog-demo.css",

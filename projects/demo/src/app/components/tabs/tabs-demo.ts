@@ -6,6 +6,7 @@ import { InteropTabs } from "interop/tabs";
 
 @Component({
 	selector: "demo-tabs",
+	host: { "itx-flow": "" },
 	imports: [InteropBadge, InteropIcon, InteropTabs],
 	templateUrl: "./tabs-demo.html",
 	styleUrl: "./tabs-demo.css",

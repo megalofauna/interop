@@ -5,6 +5,7 @@ import { examples } from "./select-examples";
 
 @Component({
 	selector: "demo-select",
+	host: { "itx-flow": "" },
 	imports: [InteropCodeBlock, RouterLink],
 	templateUrl: "./select-demo.html",
 	styleUrl: "./select-demo.css",

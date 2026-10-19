@@ -1,0 +1,12 @@
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-5);
+	padding: var(--itx-space-6);
+	border: var(--itx-border-width) solid light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+}
+
+.row input[interop-input] {
+	inline-size: 12rem;
+}

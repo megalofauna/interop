@@ -9,28 +9,38 @@ const rules = (root: ParentNode = document) => auditInterop(root).map((issue) =>
 
 describe('auditInterop', () => {
 	it('flags a button with no accessible name', () => {
-		render('<button interop-button type="button"><svg interop-icon aria-hidden="true"></svg></button>');
+		render('<button interop-button="icon" type="button"><svg interop-icon aria-hidden="true"></svg></button>');
 		expect(rules()).toEqual(['button-name']);
 	});
 
 	it('accepts a name from text, aria-label, aria-labelledby, a labelled icon, or title', () => {
 		render(`
 			<button interop-button type="button">Save</button>
-			<button interop-button type="button" aria-label="Search"><svg interop-icon aria-hidden="true"></svg></button>
+			<button interop-button="icon" type="button" aria-label="Search"><svg interop-icon aria-hidden="true"></svg></button>
 			<span id="l">Close</span><button interop-button type="button" aria-labelledby="l"></button>
-			<button interop-button type="button"><svg interop-icon aria-label="Copy"></svg></button>
+			<button interop-button="icon" type="button"><svg interop-icon aria-label="Copy"></svg></button>
 			<button interop-button type="button" title="Delete"></button>
-			<button interop-button type="button"><svg interop-icon aria-hidden="true"></svg><span itx-visually-hidden>Edit</span></button>
+			<button interop-button="icon" type="button"><svg interop-icon aria-hidden="true"></svg><span itx-visually-hidden>Edit</span></button>
 		`);
 		expect(rules()).toEqual([]);
 	});
 
 	it('flags an unnamed summary button, and does not count hidden text as a name', () => {
 		render(`
-			<details><summary interop-button><svg interop-icon aria-hidden="true"></svg></summary></details>
-			<button interop-button type="button"><span hidden>Close</span><svg interop-icon aria-hidden="true"></svg></button>
+			<details><summary interop-button="icon"><svg interop-icon aria-hidden="true"></svg></summary></details>
+			<button interop-button="icon" type="button"><span hidden>Close</span><svg interop-icon aria-hidden="true"></svg></button>
 		`);
 		expect(rules()).toEqual(['button-name', 'button-name']);
+	});
+
+	it('flags a button that shows only an icon unless it is an icon button', () => {
+		render(`
+			<button interop-button type="button" aria-label="Search"><svg interop-icon></svg></button>
+			<button interop-button type="button"><span itx-visually-hidden>Close</span><svg interop-icon></svg></button>
+			<button interop-button="icon" type="button" aria-label="Search"><svg interop-icon></svg></button>
+			<button interop-button type="button"><svg interop-icon></svg>Copy</button>
+		`);
+		expect(rules()).toEqual(['button-icon-square', 'button-icon-square']);
 	});
 
 	it('flags an icon-only plain button too', () => {
@@ -168,7 +178,7 @@ describe('auditInterop', () => {
 		render(`
 			<button interop-button type="button" aria-labelledby="a">Delete</button><span interop-tooltip="label" id="a">Remove this item</span>
 			<button interop-button type="button" aria-labelledby="b">Delete</button><span interop-tooltip="label" id="b">Delete this item</span>
-			<button interop-button type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c">Copy code</span>
+			<button interop-button="icon" type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c">Copy code</span>
 		`);
 		expect(rules()).toEqual(['tooltip-label-in-name']);
 	});

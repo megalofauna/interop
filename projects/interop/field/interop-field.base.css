@@ -8,7 +8,7 @@
 	/* Base-select sizes a select to its chosen option, so a minimum keeps it from jumping as the choice changes. */
 	--itx-field-min-inline-size: 12rem;
 	/* A text field fills its container up to this. The `size` attribute sets an expected length instead. */
-	--itx-field-max-inline-size: 32rem;
+	--itx-field-max-inline-size: 24rem;
 	--itx-field-padding-inline: var(--itx-space-3);
 	--itx-field-font-size: var(--itx-font-size-p);
 	--itx-field-line-height: var(--itx-line-height-p);
@@ -16,8 +16,8 @@
 	--itx-field-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 	/* 4.5:1 against the field, so a placeholder can be read (WCAG 1.4.3). */
 	--itx-field-placeholder-color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
-	--itx-field-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
-	--itx-field-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-field-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-950));
+	--itx-field-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-900));
 	--itx-field-background-color-readonly: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
 	--itx-field-border-width: var(--itx-border-width);
 	/* An invalid field's border thickens, so its state is not color alone (WCAG 1.4.1). */
@@ -25,8 +25,8 @@
 	--itx-field-border-style: solid;
 	--itx-field-border-style-readonly: dashed;
 	/* 3:1 against the page, so the field's edge is visible (WCAG 1.4.11). */
-	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-field-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-600));
+	--itx-field-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
 	--itx-field-border-color-invalid: var(--itx-role-text-danger);
 	--itx-field-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-field-corner-shape: var(--itx-corner-shape);

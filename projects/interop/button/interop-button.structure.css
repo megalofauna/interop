@@ -36,6 +36,15 @@
 	border-color: var(--itx-button-border-color-hover);
 }
 
+/*
+ * An icon button, `interop-button="icon"`: square at every size, with the icon centered. The minimum
+ * height carries to the width through the aspect ratio, so the touch-target floor keeps it square.
+ */
+:where(:is(button, summary)[interop-button~="icon"]) {
+	aspect-ratio: 1;
+	padding-inline: 0;
+}
+
 /* A summary is a disclosure's button. It draws no marker; its open state reads as pressed. */
 :where(summary[interop-button]) {
 	list-style: none;

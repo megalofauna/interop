@@ -37,7 +37,7 @@
 
 :root {
 	/* 6px breaks the 4px grid on purpose: it is the value that looked right beside every component. */
-	--itx-radius-base: 6px;
+	--itx-radius-base: 4px;
 	--itx-radius-full: 9999px;
 }
 
@@ -64,10 +64,10 @@
 	--itx-radius: var(--itx-radius-base);
 }
 :where([itx-radius="lg"]) {
-	--itx-radius: calc(var(--itx-radius-base) * 1.5);
+	--itx-radius: calc(var(--itx-radius-base) * 2);
 }
 :where([itx-radius="xl"]) {
-	--itx-radius: calc(var(--itx-radius-base) * 2);
+	--itx-radius: calc(var(--itx-radius-base) * 3);
 }
 :where([itx-radius="full"]) {
 	--itx-radius: var(--itx-radius-full);

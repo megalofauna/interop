@@ -3,6 +3,8 @@
 	--itx-neutral-100: oklch(0.97 0 0);
 	--itx-neutral-200: oklch(0.922 0 0);
 	--itx-neutral-300: oklch(0.87 0 0);
+	/* Halfway between 300 and 400, the widest gap in the ramp: dark-mode body text, 8.97:1. */
+	--itx-neutral-350: oklch(0.789 0 0);
 	--itx-neutral-400: oklch(0.708 0 0);
 	--itx-neutral-500: oklch(0.556 0 0);
 	--itx-neutral-600: oklch(0.439 0 0);

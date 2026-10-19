@@ -39,7 +39,7 @@ let nextId = 0;
 		@if (canCopy) {
 			<!-- The caption joins the name, so each block's button says which code it copies. -->
 			<button
-				interop-button
+				interop-button="icon"
 				type="button"
 				itx-size="sm"
 				[interopTooltip]="copyLabel"

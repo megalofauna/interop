@@ -39,17 +39,3 @@ fieldset {
 	align-items: flex-end;
 	gap: var(--itx-space-2);
 }
-
-[interop-field] + figure,
-ul + [interop-error-summary],
-ul + form {
-	margin-block-start: var(--itx-space-4);
-}
-
-[interop-error-summary] + form {
-	margin-block-start: var(--itx-space-4);
-}
-
-[interop-field] + [interop-field] {
-	margin-block-start: var(--itx-space-4);
-}

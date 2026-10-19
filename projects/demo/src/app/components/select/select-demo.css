@@ -14,10 +14,6 @@ label {
 	gap: var(--itx-space-2);
 }
 
-select[interop-select] + figure {
-	margin-block-start: var(--itx-space-3);
-}
-
 select[interop-select] .hint {
 	font-size: var(--itx-font-size-p-sm);
 }

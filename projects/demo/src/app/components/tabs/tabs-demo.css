@@ -2,6 +2,3 @@
 	max-inline-size: 24rem;
 }
 
-* + [interop-tabs] {
-	margin-block-start: var(--itx-space-6);
-}
