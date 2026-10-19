@@ -11,6 +11,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { InteropDrawer } from "interop/popover";
 
 const STORAGE_KEY = "demo-color-scheme";
+const FOCUS_RING_KEY = "demo-focus-ring";
 
 @Component({
 	selector: "demo-root",
@@ -26,6 +27,17 @@ export class App {
 				? "dark"
 				: "light")) === "dark",
 	);
+
+	/** A focus ring variation from focus-rings.css, as a list of flags; empty is the library's ring. */
+	protected readonly focusRing = signal(localStorage.getItem(FOCUS_RING_KEY) ?? "");
+	protected readonly focusRings = [
+		{ value: "", label: "current" },
+		{ value: "previous", label: "previous" },
+		{ value: "dim", label: "dimmer neutral" },
+		{ value: "hug", label: "hugging" },
+		{ value: "halo", label: "halo" },
+		{ value: "still", label: "still" },
+	];
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 
@@ -45,6 +57,13 @@ export class App {
 			const scheme = this.dark() ? "dark" : "light";
 			document.documentElement.style.colorScheme = scheme;
 			localStorage.setItem(STORAGE_KEY, scheme);
+		});
+
+		effect(() => {
+			const ring = this.focusRing();
+			if (ring) document.documentElement.dataset["focusRing"] = ring;
+			else delete document.documentElement.dataset["focusRing"];
+			localStorage.setItem(FOCUS_RING_KEY, ring);
 		});
 	}
 }

@@ -139,6 +139,14 @@ export const routes: Routes = [
 			import("./foundations/flow/flow-demo").then((m) => m.FlowDemo),
 	},
 	{
+		path: "foundations/focus-ring",
+		title: "Focus ring (comparison)",
+		loadComponent: () =>
+			import("./foundations/focus-ring/focus-ring-demo").then(
+				(m) => m.FocusRingDemo,
+			),
+	},
+	{
 		path: "foundations/radius",
 		title: "Radius (comparison)",
 		loadComponent: () =>

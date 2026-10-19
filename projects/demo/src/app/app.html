@@ -11,6 +11,18 @@
 			Menu
 		</button>
 		<span class="title">Interop</span>
+		<label for="focus-ring" itx-visually-hidden>Focus ring</label>
+		<select
+			id="focus-ring"
+			interop-select
+			itx-size="sm"
+			[value]="focusRing()"
+			(change)="focusRing.set($any($event.target).value)"
+		>
+			@for (option of focusRings; track option.value) {
+				<option [value]="option.value">Focus: {{ option.label }}</option>
+			}
+		</select>
 		<button
 			interop-button
 			type="button"
@@ -42,6 +54,14 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Flow</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/foundations/focus-ring"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Focus ring (comparison)</a
 							>
 						</li>
 						<li>
