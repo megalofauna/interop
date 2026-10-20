@@ -260,6 +260,13 @@ describe('segmented control', () => {
 describe('toolbar channel', () => {
 	const channel = (scheme: 0 | 1) => token('--itx-toolbar-background-color', scheme);
 	const button = (name: string, scheme: 0 | 1) => token(`--itx-button-${name}`, scheme);
+	// The button tokens the channel sets on its buttons, read from that block: the shared map keeps only
+	// each token's first declaration, which is the button's own.
+	const block = /:where\(\[interop-toolbar~="channel"\]\) :where\(\[interop-button\]\) \{([^}]*)\}/.exec(
+		sheets['toolbar/interop-toolbar.base.css'],
+	)![1];
+	const channelButton = (name: string, scheme: 0 | 1) =>
+		resolve(oneLine(new RegExp(`--itx-button-${name}:\\s*([^;]+);`).exec(block)![1]), scheme);
 
 	for (const [scheme, label] of SCHEMES) {
 		// The channel's buttons have no fill at rest, so their text and icons sit on the channel (WCAG 1.4.3),
@@ -267,7 +274,8 @@ describe('toolbar channel', () => {
 		it(`has button text and the pressed edge of 4.5:1 against the channel in ${label}`, () => {
 			expect(contrast(button('color', scheme), channel(scheme))).toBeGreaterThanOrEqual(4.5);
 		});
-		it(`has button text of 4.5:1 against the pressed fill in ${label}`, () => {
+		it(`has button text of 4.5:1 against the pressed and held fills in ${label}`, () => {
+			expect(contrast(button('color', scheme), channelButton('background-color-pressed', scheme))).toBeGreaterThanOrEqual(4.5);
 			expect(contrast(button('color', scheme), button('background-color-active', scheme))).toBeGreaterThanOrEqual(4.5);
 		});
 	}

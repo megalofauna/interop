@@ -19,13 +19,15 @@
 }
 
 /*
- * A channel's buttons draw no fill or edge at rest, and show the edge on hover. Pressed keeps the
- * button's fill and doubled edge. The corner nests inside the channel's.
+ * A channel's buttons draw no fill or edge at rest, and show the edge on hover. Pressed raises the
+ * button on the segmented control's pill fill, and keeps the button's doubled edge in the text
+ * color, so it reads apart from hover's single dim edge. The corner nests inside the channel's.
  */
 :where([interop-toolbar~="channel"]) :where([interop-button]) {
 	--itx-button-background-color: transparent;
 	--itx-button-background-color-hover: transparent;
 	--itx-button-border-color: transparent;
 	--itx-button-border-color-hover: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-button-background-color-pressed: light-dark(var(--itx-neutral-50), var(--itx-neutral-700));
 	--itx-button-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-toolbar-padding));
 }

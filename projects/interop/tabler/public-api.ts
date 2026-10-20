@@ -22,3 +22,4 @@ export { TablerCode } from './code';
 export { TablerLink } from './link';
 export { TablerList } from './list';
 export { TablerListNumbers } from './list-numbers';
+export { TablerStrikethrough } from './strikethrough';
