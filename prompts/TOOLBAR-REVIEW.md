@@ -11,6 +11,9 @@ Build a toolbar only when a consumer has three or more controls acting on one
 object. When that happens, the markup is the platform's `focusgroup="toolbar"`,
 and a small fallback helper covers browsers without it.
 
+The toolbar is now built ahead of a consumer, with a Markdown comment box as
+its demo: see [.agent/components/toolbar.md](../.agent/components/toolbar.md).
+
 The work separates three things that Prime merged:
 
 | Thing | Markup | Keyboard |

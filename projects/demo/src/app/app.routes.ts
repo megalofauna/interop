@@ -113,6 +113,12 @@ export const routes: Routes = [
 			import("./components/tags/tags-demo").then((m) => m.TagsDemo),
 	},
 	{
+		path: "components/toolbar",
+		title: "Toolbar",
+		loadComponent: () =>
+			import("./components/toolbar/toolbar-demo").then((m) => m.ToolbarDemo),
+	},
+	{
 		path: "components/tooltip",
 		title: "Tooltip",
 		loadComponent: () =>
