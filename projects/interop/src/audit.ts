@@ -366,7 +366,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 	'table-overflow': {
 		selector: 'table[interop-table]',
 		check: (table) => {
-			const container = table.parentElement;
+			const container = blockAncestor(table);
 			return container && !table.closest('[interop-scroll-area]') && table.getBoundingClientRect().width > container.clientWidth + 1
 				? {
 						problem: 'This table is wider than its container.',
@@ -782,6 +782,13 @@ function accessibleName(element: Element): string {
 }
 
 /** The name from aria-labelledby or aria-label alone. */
+/** The nearest ancestor that lays out as a box, skipping inline and display: contents ones, which have no width. */
+function blockAncestor(element: Element): Element | null {
+	let ancestor = element.parentElement;
+	while (ancestor && ['inline', 'contents'].includes(getComputedStyle(ancestor).display)) ancestor = ancestor.parentElement;
+	return ancestor;
+}
+
 function ariaName(element: Element): string {
 	const labelledby = element.getAttribute('aria-labelledby');
 	if (labelledby) {

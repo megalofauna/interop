@@ -327,7 +327,7 @@ describe('auditInterop', () => {
 
 		it('flags a table wider than its container, unless it is in a scroll area', () => {
 			const table = `<table interop-table><caption>Crew</caption>${head}<tbody>${row('Ada')}</tbody></table>`;
-			render(`<div style="width: 100px">${table}</div><div interop-scroll-area>${table}</div>`);
+			render(`<div style="width: 100px"><span>${table}</span></div><div interop-scroll-area>${table}</div>`);
 			const wide = vi.spyOn(HTMLTableElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
 			const narrow = vi.spyOn(HTMLDivElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
 			expect(rules()).toEqual(['table-overflow']);

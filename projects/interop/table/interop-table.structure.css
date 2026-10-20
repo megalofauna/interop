@@ -44,6 +44,12 @@
 	color: var(--itx-table-color);
 }
 
+/* The table's own text size, unless the caption names a type role with itx-font. */
+:where(table[interop-table] > caption:not([itx-font])) {
+	font-size: var(--itx-table-font-size);
+	line-height: var(--itx-table-line-height);
+}
+
 :where(table[interop-table] > caption) {
 	caption-side: top;
 	padding-block-end: var(--itx-table-caption-padding-block-end);
