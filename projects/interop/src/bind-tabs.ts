@@ -1,3 +1,4 @@
+import { isRtl } from './direction';
 import { focusables } from './focusable';
 
 let ids = 0;
@@ -111,14 +112,6 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		const marked = selected();
 		const target = marked && !(marked as HTMLButtonElement).disabled ? marked : candidates[Math.min(lastIndex, candidates.length - 1)];
 		if (target) select(target, false);
-	};
-
-	const isRtl = (list: HTMLElement) => {
-		try {
-			return list.matches(':dir(rtl)');
-		} catch {
-			return list.closest('[dir]')?.getAttribute('dir') === 'rtl';
-		}
 	};
 
 	const onKeydown = (event: KeyboardEvent) => {

@@ -35,6 +35,7 @@ const exempt: Record<string, string> = {
 	'scroll-area/interop-scroll-area.structure.css': 'The edge shadows are a hint; the content scrolls the same without them.',
 	'tooltip/interop-tooltip.structure.css': 'Text and a border, which the browser maps.',
 	'styles/fieldset.css': 'Layout only.',
+	'toolbar/interop-toolbar.structure.css': 'Layout only; its buttons carry their own forced-colors rules.',
 	'tabs/interop-tabs.structure.css': 'Its bar is in styles/underscore.css and its segmented look in styles/segmented.css.',
 	'page-nav/interop-page-nav.structure.css': 'Its current bar is in styles/underscore.css or the tree; the stuck shadow is decoration.',
 };

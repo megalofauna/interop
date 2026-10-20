@@ -1,0 +1,6 @@
+:where([interop-toolbar]) {
+	/* Between the toolbar's direct items, and so between its groups. */
+	--itx-toolbar-gap: var(--itx-space-3);
+	/* Between the items of a group inside the toolbar. */
+	--itx-toolbar-group-gap: var(--itx-space-1);
+}

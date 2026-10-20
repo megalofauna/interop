@@ -8,5 +8,13 @@
 	"chevron-left",
 	"chevron-right",
 	"copy",
-	"search"
+	"search",
+	"heading",
+	"bold",
+	"italic",
+	"quote",
+	"code",
+	"link",
+	"list",
+	"list-numbers"
 ]

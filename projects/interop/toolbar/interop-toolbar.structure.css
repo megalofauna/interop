@@ -1,0 +1,48 @@
+/*
+ * Toolbar: three or more controls acting on one object, such as the formatting buttons of a
+ * comment box. The toolbar is one Tab stop, and the arrow keys move between its items. The
+ * consumer writes the markup; the browser's `focusgroup` attribute moves focus, and bindToolbar()
+ * from interop does it where the browser cannot.
+ *
+ *   <div interop-toolbar role="toolbar" focusgroup="toolbar" aria-label="Formatting">
+ *     <div role="group" aria-label="Text">
+ *       <button interop-button="icon" type="button" aria-label="Bold">…</button>
+ *       <button interop-button="icon" type="button" aria-label="Italic">…</button>
+ *     </div>
+ *     <div role="group" aria-label="Insert">…</div>
+ *   </div>
+ *
+ * `role="toolbar"` is written even though `focusgroup="toolbar"` implies it, for browsers without
+ * `focusgroup`. A named `role="group"` inside sets items apart with a wider gap, and screen readers
+ * announce its name as focus enters it. `focusgroup="toolbar block"` with
+ * `aria-orientation="vertical"` stacks the toolbar; the browser does not set the orientation from
+ * the token. Items wrap onto a new line when the toolbar is narrow.
+ *
+ * Also known as:
+ *   command bar     Fluent v8
+ *   action group    Spectrum (a toolbar unless it has single selection)
+ * A "button group" in GOV.UK, Carbon and Web Awesome is a layout or a named group, not a toolbar.
+ * Toolbar is the ARIA pattern, the HTML focusgroup token, and the name in Material, Fluent v9,
+ * Radix, Base UI, React Aria, Angular Aria and Apple HIG.
+ */
+
+:where([interop-toolbar]),
+:where([interop-toolbar] [role="group"]) {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+:where([interop-toolbar]) {
+	gap: var(--itx-toolbar-gap);
+}
+
+:where([interop-toolbar] [role="group"]) {
+	gap: var(--itx-toolbar-group-gap);
+}
+
+:where([interop-toolbar][aria-orientation="vertical"]),
+:where([interop-toolbar][aria-orientation="vertical"] [role="group"]) {
+	flex-direction: column;
+	align-items: stretch;
+}

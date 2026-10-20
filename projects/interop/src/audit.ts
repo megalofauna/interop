@@ -1,3 +1,5 @@
+import { OWNS_ARROW_KEYS } from './focusable';
+
 export interface AuditIssue {
 	readonly rule: string;
 	readonly element: Element;
@@ -337,6 +339,69 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Add aria-label="…" to the tab list, or aria-labelledby pointing at a heading.',
 					},
 	},
+	'toolbar-role': {
+		selector: '[interop-toolbar]:not([role="toolbar"])',
+		check: () => ({
+			problem: 'This toolbar has no role="toolbar".',
+			reason: 'focusgroup="toolbar" gives the role only in browsers that support focusgroup. Elsewhere it is announced as plain content.',
+			advice: 'Add role="toolbar".',
+		}),
+	},
+	'toolbar-focusgroup': {
+		selector: '[interop-toolbar]:not([focusgroup~="toolbar"])',
+		check: () => ({
+			problem: 'This toolbar has no focusgroup="toolbar".',
+			reason:
+				'Browsers with focusgroup move focus between the items only when it is set, and bindToolbar() steps aside for them. The toolbar is then one Tab stop per item.',
+			advice: 'Add focusgroup="toolbar".',
+		}),
+	},
+	'toolbar-name': {
+		selector: '[role="toolbar"], [interop-toolbar]',
+		check: (toolbar) =>
+			ariaName(toolbar)
+				? null
+				: {
+						problem: 'This toolbar has no name.',
+						reason:
+							'A screen reader announces "toolbar" with nothing to say what it acts on. With two toolbars on a page, ARIA requires a name.',
+						advice: 'Add aria-label="…", or aria-labelledby pointing at visible text.',
+					},
+	},
+	'toolbar-size': {
+		selector: '[interop-toolbar]',
+		check: (toolbar) =>
+			toolbar.querySelectorAll(INTERACTIVE).length < 3
+				? {
+						problem: 'This toolbar has fewer than three controls.',
+						reason: 'A toolbar hides all but one of its controls from the Tab key. With one or two, that costs more than it saves.',
+						advice: 'Remove role="toolbar", focusgroup and interop-toolbar, and leave the buttons as they are.',
+					}
+				: null,
+	},
+	'toolbar-orientation': {
+		selector: '[focusgroup~="toolbar"][focusgroup~="block"]:not([aria-orientation="vertical"])',
+		check: () => ({
+			problem: 'This vertical toolbar has no aria-orientation="vertical".',
+			reason: 'Up and Down move focus, but the toolbar is announced as horizontal, so a screen reader user presses Left and Right.',
+			advice: 'Add aria-orientation="vertical".',
+		}),
+	},
+	'toolbar-arrow-keys': {
+		selector: '[interop-toolbar]',
+		check: (toolbar) => {
+			const items = Array.from(toolbar.querySelectorAll(INTERACTIVE));
+			const owners = items.filter((item) => item.matches(OWNS_ARROW_KEYS));
+			return owners.length > 1 || (owners.length === 1 && owners[0] !== items.at(-1))
+				? {
+						problem: 'A control in this toolbar uses the arrow keys and is not its last item.',
+						reason:
+							'A text field moves its caret, and radios change their selection, with the same keys that move between toolbar items. Focus cannot leave it with the arrows.',
+						advice: 'Put one text field last, and replace radios with buttons using aria-pressed, or move them out of the toolbar.',
+					}
+				: null;
+		},
+	},
 	'tabs-empty': {
 		selector: TABLISTS,
 		check: (tablist) =>
@@ -353,7 +418,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		check: () => ({
 			problem: 'This element is inside a tab list but is not a tab.',
 			reason: 'A tab list may own only tabs. Anything else is skipped by the arrow keys, or announced as part of the tabs.',
-			advice: 'Move it out of the tab list. Put actions in a toolbar beside it.',
+			advice: 'Move it out of the tab list. Put actions beside it.',
 		}),
 	},
 	'tabs-panel': {
