@@ -257,6 +257,22 @@ describe('segmented control', () => {
 	}
 });
 
+describe('table', () => {
+	const table = (name: string, scheme: 0 | 1) => token(`--itx-table-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		// WCAG 1.4.3: cell, header and caption text on the page, and a group header on its band.
+		it(`has text of 4.5:1 against the page in ${label}`, () => {
+			for (const name of ['color', 'header-color', 'caption-color']) {
+				expect(contrast(table(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		it(`has group header text of 4.5:1 against its band in ${label}`, () => {
+			expect(contrast(table('group-color', scheme), table('group-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
 describe('tabs', () => {
 	const tabs = (name: string, scheme: 0 | 1) => token(`--itx-tabs-${name}`, scheme);
 
@@ -336,7 +352,9 @@ describe('inline code', () => {
 		// The chip keeps the text color around it: body text, and every heading.
 		it(`keeps body and heading text at 4.5:1 on the chip in ${label}`, () => {
 			for (const role of ['', '-h1', '-h2', '-h3', '-h4', '-h5']) {
-				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(
+					4.5,
+				);
 			}
 		});
 	}

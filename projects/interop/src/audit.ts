@@ -326,6 +326,56 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
+	'table-name': {
+		selector: 'table[interop-table]',
+		check: (table) =>
+			ariaName(table) || table.querySelector(':scope > caption')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This table has no name.',
+						reason: 'A screen reader lists tables by name, and announces this one with nothing to say what it holds.',
+						advice: 'Add a <caption> as the table’s first child, or aria-labelledby pointing at a heading.',
+					},
+	},
+	'table-headers': {
+		selector: 'table[interop-table]',
+		check: (table) =>
+			table.querySelector('th')
+				? null
+				: {
+						problem: 'This table has no header cells.',
+						reason:
+							'Without a <th>, a screen reader reads each cell without saying which column or row it belongs to, and Safari may treat the table as layout.',
+						advice: 'Make the header row <th scope="col">, and the cell that names each row <th scope="row">.',
+					},
+	},
+	'table-rowgroup': {
+		selector: 'table[interop-table] th[scope="rowgroup"]',
+		check: (header) => {
+			const row = header.parentElement;
+			const group = row?.parentElement;
+			return group?.matches('tbody') && group.firstElementChild === row && group.querySelectorAll('th[scope="rowgroup"]').length === 1
+				? null
+				: {
+						problem: 'This group header is not the first row of its own <tbody>.',
+						reason: 'A row group header labels every row in its <tbody>, so in a shared <tbody> it labels the rows of later groups too.',
+						advice: 'Give each group its own <tbody>, with the group header in its first row.',
+					};
+		},
+	},
+	'table-overflow': {
+		selector: 'table[interop-table]',
+		check: (table) => {
+			const container = table.parentElement;
+			return container && !table.closest('[interop-scroll-area]') && table.getBoundingClientRect().width > container.clientWidth + 1
+				? {
+						problem: 'This table is wider than its container.',
+						reason: 'The page scrolls sideways to show it, so every line of text on the page needs two directions to read (WCAG 1.4.10).',
+						advice: 'Wrap it in <div interop-scroll-area aria-labelledby="…"> named by its caption, or shorten what will not wrap.',
+					}
+				: null;
+		},
+	},
 	'tabs-name': {
 		selector: TABLISTS,
 		check: (tablist) =>
