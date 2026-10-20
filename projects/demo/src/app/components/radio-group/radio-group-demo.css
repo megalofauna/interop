@@ -47,16 +47,3 @@
 	font-size: var(--itx-font-size-caption);
 	line-height: var(--itx-line-height-caption);
 }
-
-table {
-	border-collapse: collapse;
-}
-
-th,
-td {
-	padding: var(--itx-space-2) var(--itx-space-3);
-	text-align: start;
-	vertical-align: top;
-	border-block-end: 1px solid
-		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
-}

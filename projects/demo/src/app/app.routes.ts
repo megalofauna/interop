@@ -101,6 +101,12 @@ export const routes: Routes = [
 			import("./components/switch/switch-demo").then((m) => m.SwitchDemo),
 	},
 	{
+		path: "components/table",
+		title: "Table",
+		loadComponent: () =>
+			import("./components/table/table-demo").then((m) => m.TableDemo),
+	},
+	{
 		path: "components/tabs",
 		title: "Tabs",
 		loadComponent: () =>
