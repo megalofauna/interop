@@ -23,6 +23,7 @@
 					interop-button="icon"
 					type="button"
 					[interopTooltip]="tip"
+					[attr.aria-pressed]="pressed(field, action)"
 					(click)="apply(field, action)"
 				>
 					<svg interop-icon [name]="action.icon"></svg>
@@ -57,8 +58,12 @@
 	></textarea>
 </div>
 <p>
-	Select some text and press a button. Focus returns to the comment with the new
-	text selected, and Ctrl+Z or Cmd+Z undoes the change.
+	Bold, Italic, Strikethrough and Code turn on and off. With nothing selected,
+	Bold starts bold text where you type; press it again at the end of the bold
+	text to carry on in plain text. Each shows as pressed while the cursor is in
+	its markers. Heading, Quote and the lists turn a line's prefix on and off.
+	Link is a command. Focus returns to the comment after each, and Ctrl+Z or
+	Cmd+Z undoes the change.
 </p>
 <figure
 	interop-code-block

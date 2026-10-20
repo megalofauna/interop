@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, signal } from "@angular/core";
 import { registerIcons } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
 import { InteropIcon } from "interop/icon";
@@ -12,16 +12,23 @@ import {
 	TablerList,
 	TablerListNumbers,
 	TablerQuote,
+	TablerStrikethrough,
 } from "interop/tabler";
 import { InteropToolbar } from "interop/toolbar";
 import { InteropTooltip } from "interop/tooltip";
-import { applyMarkdown, groups } from "./toolbar-actions";
+import {
+	applyMarkdown,
+	groups,
+	isPressed,
+	type MarkdownAction,
+} from "./toolbar-actions";
 import { examples } from "./toolbar-examples";
 
 registerIcons(
 	TablerHeading,
 	TablerBold,
 	TablerItalic,
+	TablerStrikethrough,
 	TablerQuote,
 	TablerCode,
 	TablerLink,
@@ -31,7 +38,15 @@ registerIcons(
 
 @Component({
 	selector: "demo-toolbar",
-	host: { "itx-flow": "" },
+	host: {
+		"itx-flow": "",
+		// The pressed state follows the cursor. selectionchange covers it where the browser fires it
+		// for a text area; the other events cover the rest.
+		"(document:selectionchange)": "changed()",
+		"(input)": "changed()",
+		"(keyup)": "changed()",
+		"(pointerup)": "changed()",
+	},
 	imports: [
 		NgTemplateOutlet,
 		InteropCodeBlock,
@@ -44,6 +59,25 @@ registerIcons(
 })
 export class ToolbarDemo {
 	protected readonly groups = groups;
-	protected readonly apply = applyMarkdown;
 	protected readonly examples = examples;
+	/** Bumped whenever a selection or a text may have changed, so the pressed states are read again. */
+	private readonly revision = signal(0);
+
+	protected changed(): void {
+		this.revision.update((n) => n + 1);
+	}
+
+	/** aria-pressed for a toggle, or null for a command, which has no pressed state. */
+	protected pressed(
+		field: HTMLTextAreaElement,
+		action: MarkdownAction,
+	): string | null {
+		this.revision();
+		return action.kind === "link" ? null : String(isPressed(field, action));
+	}
+
+	protected apply(field: HTMLTextAreaElement, action: MarkdownAction): void {
+		applyMarkdown(field, action);
+		this.changed();
+	}
 }

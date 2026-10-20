@@ -33,7 +33,10 @@ projects/interop/src/
   bind-toolbar.ts                 fallback roving focus
   direction.ts                    isRtl(), shared with bindTabs()
   focusable.ts                    OWNS_ARROW_KEYS, shared with the audit
-projects/demo/src/app/components/toolbar/   Markdown comment box: default, channel, a consumer look
+projects/demo/src/app/components/toolbar/   Markdown comment box: default, channel, a consumer look.
+  toolbar-actions.ts: Bold, Italic, Strikethrough and Code are toggles pressed while the cursor
+  is inside their markers on its line; Heading, Quote and the lists are toggles pressed while
+  every selected line has the prefix; Link is a command, with no aria-pressed
 ```
 
 ## Markup
@@ -78,6 +81,8 @@ Three levels, one set of hooks:
 - The attribute's values belong to Interop. A consumer names a look with a class.
 - `channel`: the segmented control's channel fill, buttons with no fill or edge
   until hovered, a 1px bar (a border on `::before`) between groups, nested corners.
+  Pressed raises the button on the segmented pill's fill and keeps the button's
+  doubled edge, so it reads apart from hover's single edge.
   Forced colors draw the transparent edges and the bars in the system text color.
   The contrast spec measures button text on the channel and on the pressed fill.
   A button setting for the bare-at-rest buttons waits in

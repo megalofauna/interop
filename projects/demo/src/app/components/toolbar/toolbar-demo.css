@@ -17,4 +17,14 @@
 	--itx-button-border-radius: var(--itx-radius-full);
 	--itx-button-background-color: transparent;
 	--itx-button-border-color: transparent;
+	/* Pressed inverts the circle: a fill far from the bar's, so it does not rest on color alone. */
+	--itx-button-color-pressed: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-900)
+	);
+	--itx-button-background-color-pressed: light-dark(
+		var(--itx-neutral-900),
+		var(--itx-neutral-50)
+	);
+	--itx-button-box-shadow-pressed: none;
 }

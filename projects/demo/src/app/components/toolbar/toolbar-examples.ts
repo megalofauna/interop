@@ -11,7 +11,7 @@ export const examples = {
 		@for (group of groups; track group.label) {
 			<div role="group" [attr.aria-label]="group.label">
 				@for (action of group.actions; track action.label) {
-					<button interop-button="icon" type="button" [interopTooltip]="tip" (click)="apply(comment, action)">
+					<button interop-button="icon" type="button" [interopTooltip]="tip" [attr.aria-pressed]="pressed(comment, action)" (click)="apply(comment, action)">
 						<svg interop-icon [name]="action.icon"></svg>
 					</button>
 					<span interop-tooltip="label" #tip>{{ action.label }}</span>
