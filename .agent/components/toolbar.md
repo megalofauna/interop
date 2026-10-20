@@ -33,7 +33,7 @@ projects/interop/src/
   bind-toolbar.ts                 fallback roving focus
   direction.ts                    isRtl(), shared with bindTabs()
   focusable.ts                    OWNS_ARROW_KEYS, shared with the audit
-projects/demo/src/app/components/toolbar/   Markdown comment box
+projects/demo/src/app/components/toolbar/   Markdown comment box: default, channel, a consumer look
 ```
 
 ## Markup
@@ -46,6 +46,42 @@ projects/demo/src/app/components/toolbar/   Markdown comment box
   toolbar also needs `aria-orientation="vertical"`, which the CSS reads to stack it.
 - Named `role="group"` elements inside cluster related buttons. The arrows cross
   them. Screen readers announce the group name on entry.
+
+## Size
+
+`itx-size` on the toolbar sizes every button in it. The button's own `sm` and
+`lg` rules match a button inside a sized toolbar and skip its own `itx-size`
+there (`:not([interop-toolbar][itx-size] *)`), so the values have one home in
+`interop-button.base.css`. The `toolbar-button-size` audit rule names the
+ignored attribute. A toolbar without `itx-size` leaves each button its own.
+
+This is a rule, not a default: the toolbar wins. A density scope, where a
+container sets a default its children may override, is a separate design in
+`.agent/todo/control-sizing-api.md`.
+
+## Looks
+
+Three levels, one set of hooks:
+
+| Level | Tool | Example |
+|---|---|---|
+| Pick | A word in the attribute | `interop-toolbar="channel"` |
+| Tune | Tokens | `--itx-toolbar-*` on the toolbar, `--itx-button-*` on its buttons |
+| Own | The consumer's CSS with a class | `.floating-toolbar [interop-button] { … }` |
+
+- A shipped look uses only the hooks a consumer has: `[interop-toolbar]`,
+  `> [role="group"]`, `[interop-button]` inside, ARIA states. If a look needs
+  something else, the hook is missing.
+- Button tokens are set on the buttons (`:where([interop-toolbar~="…"])
+  :where([interop-button])`). A button declares its own tokens, so setting them
+  on the toolbar does not reach it. No `--itx-toolbar-button-*` aliases.
+- The attribute's values belong to Interop. A consumer names a look with a class.
+- `channel`: the segmented control's channel fill, buttons with no fill or edge
+  until hovered, a 1px bar (a border on `::before`) between groups, nested corners.
+  Forced colors draw the transparent edges and the bars in the system text color.
+  The contrast spec measures button text on the channel and on the pressed fill.
+  A button setting for the bare-at-rest buttons waits in
+  `.agent/todo/button-bare-at-rest.md`.
 
 ## Behavior
 
@@ -72,6 +108,7 @@ both leave.
 | `toolbar-focusgroup` | `[interop-toolbar]` without `focusgroup="toolbar"`; Chromium would get no arrow keys, since the helper steps aside |
 | `toolbar-name` | Any toolbar with no accessible name |
 | `toolbar-size` | Fewer than three controls |
+| `toolbar-button-size` | A button's own `itx-size` inside a toolbar that sets one |
 | `toolbar-orientation` | `focusgroup` with `block` and no `aria-orientation="vertical"` |
 | `toolbar-arrow-keys` | More than one arrow-key control, or one that is not last |
 

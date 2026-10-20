@@ -15,6 +15,24 @@
 	as buttons, where Tab reaches each one.
 </p>
 
+<ng-template #formatting let-field>
+	@for (group of groups; track group.label) {
+		<div role="group" [attr.aria-label]="group.label">
+			@for (action of group.actions; track action.label) {
+				<button
+					interop-button="icon"
+					type="button"
+					[interopTooltip]="tip"
+					(click)="apply(field, action)"
+				>
+					<svg interop-icon [name]="action.icon"></svg>
+				</button>
+				<span interop-tooltip="label" #tip>{{ action.label }}</span>
+			}
+		</div>
+	}
+</ng-template>
+
 <h2>A comment box</h2>
 <div interop-field>
 	<label for="comment">Comment</label>
@@ -24,29 +42,17 @@
 		focusgroup="toolbar"
 		aria-label="Formatting"
 		aria-controls="comment"
+		itx-size="sm"
 	>
-		@for (group of groups; track group.label) {
-			<div role="group" [attr.aria-label]="group.label">
-				@for (action of group.actions; track action.label) {
-					<button
-						interop-button="icon"
-						type="button"
-						itx-size="sm"
-						[interopTooltip]="tip"
-						(click)="apply(comment, action)"
-					>
-						<svg interop-icon [name]="action.icon"></svg>
-					</button>
-					<span interop-tooltip="label" #tip>{{ action.label }}</span>
-				}
-			</div>
-		}
+		<ng-container
+			*ngTemplateOutlet="formatting; context: { $implicit: comment }"
+		/>
 	</div>
 	<textarea
 		interop-input
 		id="comment"
 		name="comment"
-		rows="6"
+		rows="4"
 		#comment
 	></textarea>
 </div>
@@ -119,3 +125,136 @@
 	<code>aria-orientation="vertical"</code>. The browser does not announce the
 	orientation from the token.
 </p>
+
+<h2>Make it yours</h2>
+<p>
+	A toolbar's look is plain CSS, at three levels. Pick a look Interop ships with
+	a word in the attribute. Tune any look with tokens. Or write your own with a
+	class. Every Interop rule has zero specificity, so a single class wins over
+	it, with no <code>!important</code> and no layers.
+</p>
+<p>
+	<code>itx-size</code> on the toolbar sizes every button in it. A button's own
+	<code>itx-size</code> inside it is ignored, and the console says so.
+</p>
+
+<h3>Channel</h3>
+<p>
+	<code>interop-toolbar="channel"</code> sets the buttons in a filled channel,
+	the segmented control's. They show no fill or edge until hovered, and a bar
+	separates the groups. Pressed, disabled, focus and forced colors are handled.
+</p>
+<div interop-field>
+	<label for="comment-channel">Comment</label>
+	<div
+		interop-toolbar="channel"
+		role="toolbar"
+		focusgroup="toolbar"
+		aria-label="Formatting"
+		aria-controls="comment-channel"
+		itx-size="sm"
+	>
+		<ng-container
+			*ngTemplateOutlet="formatting; context: { $implicit: comment_channel }"
+		/>
+	</div>
+	<textarea
+		interop-input
+		id="comment-channel"
+		name="comment-channel"
+		rows="4"
+		#comment_channel
+	></textarea>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="The attribute is the only change"
+	[code]="examples.channel"
+></figure>
+
+<h3>A look of your own</h3>
+<p>
+	A class on the toolbar, and CSS on the same hooks Interop's own looks use: the
+	toolbar, its groups, and the buttons in it. Set
+	<code>--itx-toolbar-*</code> on the toolbar and <code>--itx-button-*</code> on
+	the buttons. A button declares its own tokens, so setting
+	<code>--itx-button-*</code> on the toolbar does not reach it.
+</p>
+<div interop-field>
+	<label for="comment-floating">Comment</label>
+	<div
+		interop-toolbar
+		class="floating-toolbar"
+		role="toolbar"
+		focusgroup="toolbar"
+		aria-label="Formatting"
+		aria-controls="comment-floating"
+		itx-size="sm"
+	>
+		<ng-container
+			*ngTemplateOutlet="formatting; context: { $implicit: comment_floating }"
+		/>
+	</div>
+	<textarea
+		interop-input
+		id="comment-floating"
+		name="comment-floating"
+		rows="4"
+		#comment_floating
+	></textarea>
+</div>
+<figure
+	interop-code-block
+	language="css"
+	caption="Your stylesheet"
+	[code]="examples.floating"
+></figure>
+<p>
+	Keep the attribute's values for Interop's looks, and name yours with a class,
+	so a look Interop adds later cannot collide with it.
+</p>
+
+<h3>What a look must keep</h3>
+<p>
+	Interop's looks are tested for these. A look of your own has to keep them
+	itself.
+</p>
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Keep</th>
+			<th scope="col">Why</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>The focus ring</td>
+			<td>The toolbar is one Tab stop. The ring shows which button has it.</td>
+		</tr>
+		<tr>
+			<td>A pressed state that is more than color</td>
+			<td>
+				A toggle such as Bold must read as on without color vision (WCAG 1.4.1).
+				The button doubles its edge.
+			</td>
+		</tr>
+		<tr>
+			<td>Text and icons at 4.5:1 against what is behind them</td>
+			<td>
+				A button with no fill sits on the toolbar's background (WCAG 1.4.3).
+			</td>
+		</tr>
+		<tr>
+			<td>Buttons at least 24px square</td>
+			<td>Pointer targets (WCAG 2.5.8). <code>itx-size="sm"</code> is 32px.</td>
+		</tr>
+		<tr>
+			<td>Group names</td>
+			<td>
+				Bars and gaps group the buttons visually. The names group them for
+				screen readers.
+			</td>
+		</tr>
+	</tbody>
+</table>

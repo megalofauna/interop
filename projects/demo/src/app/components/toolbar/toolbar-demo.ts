@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component } from "@angular/core";
 import { registerIcons } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
@@ -31,8 +32,15 @@ registerIcons(
 @Component({
 	selector: "demo-toolbar",
 	host: { "itx-flow": "" },
-	imports: [InteropCodeBlock, InteropIcon, InteropToolbar, InteropTooltip],
+	imports: [
+		NgTemplateOutlet,
+		InteropCodeBlock,
+		InteropIcon,
+		InteropToolbar,
+		InteropTooltip,
+	],
 	templateUrl: "./toolbar-demo.html",
+	styleUrl: "./toolbar-demo.css",
 })
 export class ToolbarDemo {
 	protected readonly groups = groups;

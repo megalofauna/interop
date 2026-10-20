@@ -1,0 +1,17 @@
+/* A floating toolbar: a raised bar with a shadow, and round buttons that fill on hover. */
+.floating-toolbar {
+	--itx-toolbar-gap: var(--itx-space-2);
+	inline-size: fit-content;
+	padding: var(--itx-space-1) var(--itx-space-3);
+	border-radius: var(--itx-radius-full);
+	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	box-shadow:
+		0 1px 3px oklch(0 0 0 / 0.12),
+		0 8px 24px oklch(0 0 0 / 0.12);
+}
+
+.floating-toolbar [interop-button] {
+	--itx-button-border-radius: var(--itx-radius-full);
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: transparent;
+}
