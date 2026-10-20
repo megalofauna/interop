@@ -323,6 +323,20 @@ describe('auditInterop', () => {
 			expect(rules()).toEqual(['toolbar-size']);
 		});
 
+		it('flags a button whose itx-size the toolbar overrides', () => {
+			render(toolbar('role="toolbar" focusgroup="toolbar" aria-label="Formatting" itx-size="sm"', three));
+			expect(rules()).toEqual([]);
+			render(
+				toolbar(
+					'role="toolbar" focusgroup="toolbar" aria-label="Formatting" itx-size="sm"',
+					three + '<button interop-button type="button" itx-size="lg">Link</button>',
+				),
+			);
+			expect(rules()).toEqual(['toolbar-button-size']);
+			render(toolbar(undefined, three + '<button interop-button type="button" itx-size="lg">Link</button>'));
+			expect(rules()).toEqual([]);
+		});
+
 		it('flags a vertical toolbar without aria-orientation', () => {
 			render(toolbar('role="toolbar" focusgroup="toolbar block" aria-label="Tools"'));
 			expect(rules()).toEqual(['toolbar-orientation']);

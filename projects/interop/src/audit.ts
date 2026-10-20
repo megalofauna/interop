@@ -379,6 +379,14 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null,
 	},
+	'toolbar-button-size': {
+		selector: '[interop-toolbar][itx-size] [interop-button][itx-size]',
+		check: (button) => ({
+			problem: `This button's itx-size="${button.getAttribute('itx-size')}" is ignored.`,
+			reason: `Its toolbar sets itx-size="${button.closest('[interop-toolbar]')!.getAttribute('itx-size')}" for every button in it, so the buttons stay one size.`,
+			advice: 'Remove itx-size from the button, or change it on the toolbar.',
+		}),
+	},
 	'toolbar-orientation': {
 		selector: '[focusgroup~="toolbar"][focusgroup~="block"]:not([aria-orientation="vertical"])',
 		check: () => ({

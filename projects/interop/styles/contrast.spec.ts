@@ -257,6 +257,22 @@ describe('segmented control', () => {
 	}
 });
 
+describe('toolbar channel', () => {
+	const channel = (scheme: 0 | 1) => token('--itx-toolbar-background-color', scheme);
+	const button = (name: string, scheme: 0 | 1) => token(`--itx-button-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		// The channel's buttons have no fill at rest, so their text and icons sit on the channel (WCAG 1.4.3),
+		// and a pressed button's edge, which takes the text color, does too (WCAG 1.4.11).
+		it(`has button text and the pressed edge of 4.5:1 against the channel in ${label}`, () => {
+			expect(contrast(button('color', scheme), channel(scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		it(`has button text of 4.5:1 against the pressed fill in ${label}`, () => {
+			expect(contrast(button('color', scheme), button('background-color-active', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
 describe('tabs', () => {
 	const tabs = (name: string, scheme: 0 | 1) => token(`--itx-tabs-${name}`, scheme);
 
@@ -336,7 +352,9 @@ describe('inline code', () => {
 		// The chip keeps the text color around it: body text, and every heading.
 		it(`keeps body and heading text at 4.5:1 on the chip in ${label}`, () => {
 			for (const role of ['', '-h1', '-h2', '-h3', '-h4', '-h5']) {
-				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(
+					4.5,
+				);
 			}
 		});
 	}
