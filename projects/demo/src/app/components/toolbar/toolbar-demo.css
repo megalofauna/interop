@@ -1,8 +1,11 @@
-/* A floating toolbar: a raised bar with a shadow, and round buttons that fill on hover. */
+/*
+ * A floating toolbar: a raised pill with a shadow, and round buttons that fill on hover. The padding
+ * is the same on every side, so the end buttons' circles sit concentric with the pill's ends.
+ */
 .floating-toolbar {
 	--itx-toolbar-gap: var(--itx-space-2);
 	inline-size: fit-content;
-	padding: var(--itx-space-1) var(--itx-space-3);
+	padding: var(--itx-space-1);
 	border-radius: var(--itx-radius-full);
 	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
 	box-shadow:
