@@ -153,13 +153,14 @@
 
 	/*
 	 * Rows: the check in the first column, everything else in the second, so an option with several
-	 * elements stacks them beside the check. Text wraps, so a long option stays readable in a narrow
-	 * window (WCAG 1.4.10).
+	 * elements stacks them beside the check. The check sits on the baseline of the label's first line,
+	 * whichever font draws the glyph. Text wraps, so a long option stays readable in a narrow window
+	 * (WCAG 1.4.10).
 	 */
 	:where(select[interop-select] option) {
 		display: grid;
 		grid-template-columns: auto 1fr;
-		align-items: start;
+		align-items: first baseline;
 		box-sizing: border-box;
 		min-block-size: var(--itx-select-option-min-block-size);
 		padding-block: calc((var(--itx-select-option-min-block-size) - 1lh) / 2);
