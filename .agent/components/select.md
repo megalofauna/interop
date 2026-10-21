@@ -1,11 +1,8 @@
 # Select — Mental Model Card
 
-A select is a native `<select interop-select>` drawn by the field's rules, with
-a button's look: the button's fill, edge and states (pressed in while held or
-`:open`), and the chevron inside. Like a button it is found by its text and
-chevron, so its edge is not held to 3:1. Its list is a raised surface lighter
-than the button; a hovered option sinks to the button's fill, and the chosen
-one sinks further, with an edge 3:1 against the list. The browser
+A select is a native `<select interop-select>` drawn by the field's rules, in
+the segmented control's look: the box is the segmented frame (channel fill, an
+edge 3:1 against the page), and the chosen option in the list is the pill. The browser
 opens it, handles the keyboard and typeahead, submits its value and opens the
 system picker on phones. CSS only. Research:
 [prompts/SELECT-RESEARCH.md](../../prompts/SELECT-RESEARCH.md).
@@ -37,7 +34,7 @@ The demo page is `projects/demo/src/app/components/select/`.
 | Closed field | Border, radius, size steps, padding | The same |
 | Chevron | A triangle of two gradients in `currentColor`, 0.625 of the icon size wide, flipped in right-to-left: a background image cannot take the text color | `::picker-icon`: the disclosure's chevron (Tabler `chevron-down`) as a mask over `currentColor`, turning to point up while `:open` |
 | Chevron in forced colors | Gradients are removed, so `appearance: auto` brings back the browser's arrow | The icon opts out with `forced-color-adjust: none` and keeps the text color |
-| Chosen option | Drawn by the browser | Sunk below the hover fill, with an inset edge 3:1 against the list |
+| Chosen option | Drawn by the browser | The segmented pill: a raised fill and an inset edge 3:1 against the list |
 | List of options | Drawn by the browser or the OS | `::picker(select)` with the popover's tokens; options with the check, wrapping text, hover and focus fill, group headings, `<hr>` lines |
 | `size` > 1, `multiple` | Native rows | House rows, as many as `size` (4 without one), from `attr(size type(<integer>))` |
 
@@ -51,10 +48,7 @@ The box's look is the field's tokens, declared on the select in
 `interop-select.base.css`, so they change the select and not text fields:
 `--itx-field-background-color[-hover]`, `--itx-field-border-color[-hover]`,
 `--itx-field-border-width`, `--itx-field-border-radius`, `--itx-field-color`,
-`--itx-field-min-inline-size`, plus the select's held and open fill,
-`--itx-select-background-color-active`, and the list's fill,
-`--itx-popover-background-color`. The box's values copy the button's
-(`button/interop-button.base.css`). The width cap is the select's own,
+`--itx-field-min-inline-size`. The width cap is the select's own,
 `--itx-select-max-inline-size` (100%). Because the select declares them on
 itself, a wrapper's values do not reach it: target the select. No
 `--itx-select-*` aliases for the box. The contrast spec measures the select's

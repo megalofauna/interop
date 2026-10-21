@@ -456,27 +456,23 @@ describe('select', () => {
 	const own = (name: string, scheme: 0 | 1) => resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(block)![1]), scheme);
 
 	for (const [scheme, label] of SCHEMES) {
-		// The box is a button, found by its text and chevron, so like the button its edge has no 3:1 test.
-		it(`has text of 4.5:1 on the box at rest, hovered, and held down or open in ${label}`, () => {
-			for (const background of [
-				'--itx-field-background-color',
-				'--itx-field-background-color-hover',
-				'--itx-select-background-color-active',
-			])
+		it(`has text of 4.5:1 on the box, hovered or not, in ${label}`, () => {
+			for (const background of ['--itx-field-background-color', '--itx-field-background-color-hover'])
 				expect(contrast(own('--itx-field-color', scheme), own(background, scheme))).toBeGreaterThanOrEqual(4.5);
 		});
-		it(`has option text of 4.5:1 on the list, a hovered and a chosen option in ${label}`, () => {
-			for (const name of [
-				'--itx-popover-background-color',
-				'--itx-select-option-background-color-hover',
-				'--itx-select-option-background-color-checked',
-			])
-				expect(contrast(token('--itx-popover-color', scheme), own(name, scheme))).toBeGreaterThanOrEqual(4.5);
+		// WCAG 1.4.11: the box's edge against the page, at rest and hovered.
+		it(`has an edge of 3:1 against the page in ${label}`, () => {
+			for (const name of ['--itx-field-border-color', '--itx-field-border-color-hover'])
+				expect(contrast(own(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
-		// WCAG 1.4.11: the chosen option's edge carries the choice, against the list.
+		it(`has option text of 4.5:1 on a hovered and a chosen option in ${label}`, () => {
+			for (const name of ['--itx-select-option-background-color-hover', '--itx-select-option-background-color-checked'])
+				expect(contrast(token('--itx-popover-color', scheme), token(name, scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the pill's edge carries the choice, against the list.
 		it(`has a chosen option edge of 3:1 against the list in ${label}`, () => {
 			expect(
-				contrast(own('--itx-select-option-border-color-checked', scheme), own('--itx-popover-background-color', scheme)),
+				contrast(token('--itx-select-option-border-color-checked', scheme), token('--itx-popover-background-color', scheme)),
 			).toBeGreaterThanOrEqual(3);
 		});
 	}

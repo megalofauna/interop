@@ -1,7 +1,6 @@
 /*
- * The closed select is a button: the button's fill, edge and states, with the chevron inside. Its
- * list is a raised surface, lighter than the button, where a hovered option sinks to the button's
- * fill and the chosen one sinks further, with an edge.
+ * The select is a close relative of the segmented control: its box is the segmented frame, a filled
+ * channel with an edge, and the chosen option in the list is the segmented pill.
  *
  * The box is drawn by the field's rules, so its look is the field's tokens, set here on the select.
  * Set them on a select to change it without changing text fields:
@@ -14,20 +13,12 @@
  * A select declares them on itself, so setting them on a wrapper does not reach it: target the select.
  */
 :where(select[interop-select]) {
-	/*
-	 * The button's values, from button/interop-button.base.css. Like a button, the select is found by
-	 * its text and its chevron, so its edge is not held to 3:1 against the page.
-	 */
-	--itx-field-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-field-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
-	--itx-field-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-	--itx-field-border-color-hover: var(--itx-field-border-color);
-	--itx-field-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
-	/* Held down, or open: the button's active fill. */
-	--itx-select-background-color-active: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
-
-	/* The list, raised: lighter than the button. It is a popover, so it is the popover's token. */
-	--itx-popover-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-700));
+	/* The segmented control's channel and frame. The edge is 3:1 against the page (WCAG 1.4.11). */
+	--itx-field-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	--itx-field-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-field-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	--itx-field-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 
 	/* Its widest. It never grows past its container. */
 	--itx-select-max-inline-size: 100%;
@@ -44,12 +35,11 @@
 	--itx-select-list-padding: var(--itx-space-1);
 	--itx-select-option-min-block-size: var(--itx-space-8);
 	--itx-select-option-padding-inline: var(--itx-space-2);
-	/* A hovered option sinks to the button's fill. */
-	--itx-select-option-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
-	/* The chosen option sinks a step further, with an edge 3:1 against the list. A recess casts no shadow. */
-	--itx-select-option-background-color-checked: light-dark(var(--itx-neutral-300), var(--itx-neutral-900));
+	--itx-select-option-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+	/* The chosen option is the segmented pill: a raised fill, and an edge 3:1 against the list. */
+	--itx-select-option-background-color-checked: light-dark(var(--itx-neutral-100), var(--itx-neutral-700));
 	--itx-select-option-border-color-checked: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-select-option-box-shadow-checked: 0 0 transparent;
+	--itx-select-option-box-shadow-checked: 0 1px 2px oklch(0 0 0 / 0.15);
 	/* Nested inside the list's padding. */
 	--itx-select-option-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-select-list-padding));
 	--itx-select-legend-font-size: var(--itx-font-size-p-sm);

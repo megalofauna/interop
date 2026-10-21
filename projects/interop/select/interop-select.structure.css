@@ -33,11 +33,6 @@
 	cursor: var(--itx-select-cursor);
 }
 
-/* Held down: the button's active fill. */
-:where(select[interop-select]:active:not(:disabled, [multiple], [size]:not([size="1"]))) {
-	background-color: var(--itx-select-background-color-active);
-}
-
 /* A select that shows its options in the page is a box of rows. */
 :where(select[interop-select]:is([multiple], [size]:not([size="1"]))) {
 	padding: var(--itx-select-list-padding);
@@ -110,11 +105,6 @@
 		transition-property: opacity;
 		transition-duration: var(--itx-popover-transition-duration);
 		transition-timing-function: var(--itx-popover-transition-timing-function);
-	}
-
-	/* Open, it stays pressed in. */
-	:where(select[interop-select]:open) {
-		background-color: var(--itx-select-background-color-active);
 	}
 
 	/* It fades in and disappears at once, like every popover. */
