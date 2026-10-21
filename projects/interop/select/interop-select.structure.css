@@ -133,6 +133,8 @@
 		mask-position: center;
 		mask-repeat: no-repeat;
 		forced-color-adjust: none;
+		/* The glyph is centered in its frame, so a half turn mirrors it in place. */
+		transform-origin: center;
 		transition-property: rotate;
 		transition-duration: var(--itx-select-icon-transition-duration);
 		transition-timing-function: var(--itx-select-icon-transition-timing-function);

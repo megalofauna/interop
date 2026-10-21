@@ -11,6 +11,19 @@
  *   --itx-field-color                     --itx-field-min-inline-size
  *
  * A select declares them on itself, so setting them on a wrapper does not reach it: target the select.
+ *
+ * The list is a popover, so its surface is the popover's tokens, which a select also declares on
+ * itself. Its options are the select's own:
+ *
+ *   --itx-popover-background-color       --itx-popover-color
+ *   --itx-popover-border-color           --itx-popover-box-shadow
+ *   --itx-select-option-background-color-hover
+ *   --itx-select-option-background-color-checked
+ *   --itx-select-option-border-color-checked
+ *   --itx-select-option-box-shadow-checked
+ *
+ * A raised list over a recessed box, for instance, is a lighter list fill with darker hover and chosen
+ * fills. Keep option text 4.5:1 against every fill it sits on.
  */
 :where(select[interop-select]) {
 	/* The segmented control's channel and frame. The edge is 3:1 against the page (WCAG 1.4.11). */
