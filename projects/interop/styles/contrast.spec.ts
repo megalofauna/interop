@@ -449,6 +449,20 @@ describe('field', () => {
 	}
 });
 
+describe('popover', () => {
+	// The fill is translucent, so what the text sits on depends on what is behind it. Measured over the
+	// two extremes, white and black; the blur averages what is behind and stays between them.
+	const opacity = declarations.get('--itx-popover-background-opacity')!;
+	const fill = (scheme: 0 | 1) => token('--itx-popover-background-color', scheme).replace(/\)$/, ` / ${opacity})`);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has text of 4.5:1 on its fill over white and over black in ${label}`, () => {
+			for (const behind of ['oklch(1 0 0)', 'oklch(0 0 0)'])
+				expect(contrast(token('--itx-popover-color', scheme), over(fill(scheme), behind))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
 describe('select', () => {
 	// The field tokens the select sets on itself, read from its block: the shared map keeps only each
 	// token's first declaration, which is the field's.

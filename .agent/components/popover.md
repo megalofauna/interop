@@ -67,6 +67,14 @@ A drawer can also show in the page as a sidebar at wide sizes: see
 | `--itx-popover-max-inline-size` | 32rem |
 | `--itx-popover-padding-block`, `-padding-inline` | `--itx-space-2`, `--itx-space-3` |
 | `--itx-popover-color`, `-background-color` | neutral-900/50, neutral-50/800 |
+| `--itx-popover-background-opacity` | 0.8: the fill is mixed toward transparent in the structure, so the color token stays opaque |
+| `--itx-popover-backdrop-filter` | `blur(4px)` |
+
+The popover is translucent and blurs what is behind it; the select's list reads
+the same tokens. Under `prefers-reduced-transparency` and in forced colors it is
+opaque and unblurred: forced colors keep a background's alpha, so a see-through
+Canvas would show the page through it. The contrast spec measures its text on
+the fill composited over white and over black, the two extremes behind it.
 | `--itx-popover-border-width`, `-border-style`, `-border-color` | 1px, solid, neutral-500 |
 | `--itx-popover-border-radius`, `-corner-shape` | the house radius and corner shape |
 | `--itx-popover-box-shadow` | a soft shadow |

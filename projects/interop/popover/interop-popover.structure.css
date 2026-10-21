@@ -15,7 +15,12 @@
 	padding-block: var(--itx-popover-padding-block);
 	padding-inline: var(--itx-popover-padding-inline);
 	color: var(--itx-popover-color);
-	background-color: var(--itx-popover-background-color);
+	background-color: color-mix(
+		in oklch,
+		var(--itx-popover-background-color) calc(var(--itx-popover-background-opacity) * 100%),
+		transparent
+	);
+	backdrop-filter: var(--itx-popover-backdrop-filter);
 	border-width: var(--itx-popover-border-width);
 	border-style: var(--itx-popover-border-style);
 	border-color: var(--itx-popover-border-color);

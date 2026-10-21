@@ -16,8 +16,15 @@
 	--itx-popover-padding-inline: var(--itx-space-3);
 
 	--itx-popover-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	/*
+	 * The fill is drawn at --itx-popover-background-opacity, with what is behind it blurred, so the page
+	 * shows through without competing with the text. Set the color opaque; the opacity is applied to it.
+	 */
 	--itx-popover-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	--itx-popover-background-opacity: 0.8;
+	--itx-popover-backdrop-filter: blur(4px);
 	--itx-popover-border-width: var(--itx-border-width);
+	--itx-popover-border-width: 0;
 	--itx-popover-border-style: solid;
 	/* 3:1 against the page in both schemes, so the popover's edge is visible (WCAG 1.4.11). */
 	--itx-popover-border-color: var(--itx-neutral-500);
@@ -27,6 +34,17 @@
 
 	--itx-popover-transition-duration: var(--itx-transition-duration);
 	--itx-popover-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+/*
+ * Opaque and unblurred when the user asks for less transparency, and in forced colors, which keep a
+ * background's alpha and would let the page show through the system's Canvas.
+ */
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+	:where([interop-popover], select[interop-select]) {
+		--itx-popover-background-opacity: 1;
+		--itx-popover-backdrop-filter: none;
+	}
 }
 
 :where([interop-popover~="drawer"]) {
