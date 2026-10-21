@@ -13,8 +13,9 @@
  * A select declares them on itself, so setting them on a wrapper does not reach it: target the select.
  *
  * The list is a popover, so its surface is the popover's tokens, which a select also declares on
- * itself. Its options are the select's own:
+ * itself. Its width and its options are the select's own:
  *
+ *   --itx-select-list-inline-size        --itx-select-list-min-inline-size
  *   --itx-popover-background-color       --itx-popover-color
  *   --itx-popover-border-color           --itx-popover-box-shadow
  *   --itx-select-option-background-color-hover
@@ -46,6 +47,12 @@
 
 	/* The list, in the picker and in a select that shows its options in the page. */
 	--itx-select-list-padding: var(--itx-space-1);
+	/*
+	 * The picker is as wide as the select, and text in it wraps. Content that cannot wrap, such as an
+	 * image or a nowrap label, widens it up to the popover's maximum. A length here sets a fixed default.
+	 */
+	--itx-select-list-inline-size: anchor-size(self-inline);
+	--itx-select-list-min-inline-size: min-content;
 	--itx-select-option-min-block-size: var(--itx-space-8);
 	--itx-select-option-padding-inline: var(--itx-space-2);
 	--itx-select-option-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));

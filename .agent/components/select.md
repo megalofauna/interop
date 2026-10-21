@@ -49,7 +49,11 @@ The box's look is the field's tokens, declared on the select in
 `--itx-field-background-color[-hover]`, `--itx-field-border-color[-hover]`,
 `--itx-field-border-width`, `--itx-field-border-radius`, `--itx-field-color`,
 `--itx-field-min-inline-size`. The width cap is the select's own,
-`--itx-select-max-inline-size` (100%). Because the select declares them on
+`--itx-select-max-inline-size` (100%). The picker is as wide as the select
+(`--itx-select-list-inline-size: anchor-size(self-inline)`), and its text wraps;
+content that cannot wrap widens it up to the popover's maximum
+(`--itx-select-list-min-inline-size: min-content`). Measured in Chrome 155: a
+192px select gives a 192px list, and a `nowrap` option widens it to 311px. Because the select declares them on
 itself, a wrapper's values do not reach it: target the select. No
 `--itx-select-*` aliases for the box. The contrast spec measures the select's
 own block, since the shared map keeps only the field's first declarations.

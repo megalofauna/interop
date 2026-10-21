@@ -90,6 +90,8 @@
 	:where(select[interop-select])::picker(select) {
 		appearance: base-select;
 		box-sizing: border-box;
+		inline-size: var(--itx-select-list-inline-size);
+		min-inline-size: var(--itx-select-list-min-inline-size);
 		max-inline-size: min(var(--itx-popover-max-inline-size), 100vw - 2 * var(--itx-space-2));
 		margin-block: var(--itx-popover-margin-block);
 		padding: var(--itx-select-list-padding);
