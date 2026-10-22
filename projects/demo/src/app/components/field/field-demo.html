@@ -342,56 +342,58 @@
 </div>
 
 <h2 id="which-attributes">Which attributes</h2>
-<table interop-table aria-labelledby="which-attributes">
-	<thead>
-		<tr>
-			<th scope="col">Asking for</th>
-			<th scope="col">Attributes</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Email address</td>
-			<td><code>type="email" autocomplete="email" spellcheck="false"</code></td>
-		</tr>
-		<tr>
-			<td>Phone number</td>
-			<td><code>type="tel" autocomplete="tel"</code></td>
-		</tr>
-		<tr>
-			<td>Web address</td>
-			<td><code>type="url" autocomplete="url"</code></td>
-		</tr>
-		<tr>
-			<td>A whole number, a reference</td>
-			<td>
-				<code>inputmode="numeric" spellcheck="false"</code>, not
-				<code>type="number"</code>
-			</td>
-		</tr>
-		<tr>
-			<td>An amount</td>
-			<td><code>inputmode="decimal"</code></td>
-		</tr>
-		<tr>
-			<td>Search</td>
-			<td><code>type="search"</code></td>
-		</tr>
-		<tr>
-			<td>Password</td>
-			<td>
-				<code>type="password" autocomplete="current-password"</code>, or
-				<code>new-password</code>
-			</td>
-		</tr>
-		<tr>
-			<td>A code sent by text message</td>
-			<td>
-				<code>autocomplete="one-time-code" inputmode="numeric"</code>, one field
-			</td>
-		</tr>
-	</tbody>
-</table>
+<div interop-scroll-area aria-labelledby="which-attributes">
+	<table interop-table aria-labelledby="which-attributes">
+		<thead>
+			<tr>
+				<th scope="col">Asking for</th>
+				<th scope="col">Attributes</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Email address</td>
+				<td><code>type="email" autocomplete="email" spellcheck="false"</code></td>
+			</tr>
+			<tr>
+				<td>Phone number</td>
+				<td><code>type="tel" autocomplete="tel"</code></td>
+			</tr>
+			<tr>
+				<td>Web address</td>
+				<td><code>type="url" autocomplete="url"</code></td>
+			</tr>
+			<tr>
+				<td>A whole number, a reference</td>
+				<td>
+					<code>inputmode="numeric" spellcheck="false"</code>, not
+					<code>type="number"</code>
+				</td>
+			</tr>
+			<tr>
+				<td>An amount</td>
+				<td><code>inputmode="decimal"</code></td>
+			</tr>
+			<tr>
+				<td>Search</td>
+				<td><code>type="search"</code></td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td>
+					<code>type="password" autocomplete="current-password"</code>, or
+					<code>new-password</code>
+				</td>
+			</tr>
+			<tr>
+				<td>A code sent by text message</td>
+				<td>
+					<code>autocomplete="one-time-code" inputmode="numeric"</code>, one field
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 <p>
 	Mark the fields that are optional with "(optional)" in their label, rather
 	than the required ones with an asterisk.
