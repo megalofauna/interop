@@ -53,7 +53,14 @@ The box's look is the field's tokens, declared on the select in
 (`--itx-select-list-inline-size: anchor-size(self-inline)`), and its text wraps;
 content that cannot wrap widens it up to the popover's maximum
 (`--itx-select-list-min-inline-size: min-content`). Measured in Chrome 155: a
-192px select gives a 192px list, and a `nowrap` option widens it to 311px. Because the select declares them on
+192px select gives a 192px list, and a `nowrap` option widens it to 311px.
+
+Every option has a border (`--itx-select-option-border-width`, `-style`,
+`-color`, `-color-hover`), clear at rest so options keep one size; its padding
+subtracts the border, so options stay at the size step's height (32px at md).
+Hover shows it one step from the hover fill; the chosen option recolors it with
+`--itx-select-option-border-color-checked`. In forced colors a clear border is
+drawn in the text color, so unchosen options take `Canvas` instead. Because the select declares them on
 itself, a wrapper's values do not reach it: target the select. No
 `--itx-select-*` aliases for the box. The contrast spec measures the select's
 own block, since the shared map keeps only the field's first declarations.

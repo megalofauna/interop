@@ -163,14 +163,18 @@
 		align-items: first baseline;
 		box-sizing: border-box;
 		min-block-size: var(--itx-select-option-min-block-size);
-		padding-block: calc((var(--itx-select-option-min-block-size) - 1lh) / 2);
+		/* The space one line and the border leave inside the minimum height, so a border adds no size. */
+		padding-block: calc((var(--itx-select-option-min-block-size) - 1lh) / 2 - var(--itx-select-option-border-width));
 		padding-inline: var(--itx-select-option-padding-inline);
 		column-gap: var(--itx-select-gap);
 		white-space: normal;
 		color: inherit;
 		border-radius: var(--itx-select-option-border-radius);
+		border-width: var(--itx-select-option-border-width);
+		border-style: var(--itx-select-option-border-style);
+		border-color: var(--itx-select-option-border-color);
 		corner-shape: var(--itx-field-corner-shape);
-		transition-property: background-color;
+		transition-property: background-color, border-color;
 		transition-duration: var(--itx-field-transition-duration);
 		transition-timing-function: var(--itx-field-transition-timing-function);
 	}
@@ -181,14 +185,14 @@
 
 	:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {
 		background-color: var(--itx-select-option-background-color-hover);
+		border-color: var(--itx-select-option-border-color-hover);
 	}
 
-	/* The chosen option is the segmented pill. Its edge is an inset shadow, so it adds no size. */
+	/* The chosen option is the segmented pill: its own border takes the edge color, so it adds no size. */
 	:where(select[interop-select] option:checked) {
 		background-color: var(--itx-select-option-background-color-checked);
-		box-shadow:
-			inset 0 0 0 var(--itx-field-border-width) var(--itx-select-option-border-color-checked),
-			var(--itx-select-option-box-shadow-checked);
+		border-color: var(--itx-select-option-border-color-checked);
+		box-shadow: var(--itx-select-option-box-shadow-checked);
 	}
 
 	:where(select[interop-select] option:disabled) {
@@ -223,10 +227,19 @@
 
 	/* Forced colors remove the hover fill, so the option under the pointer or the keyboard shows in Highlight. */
 	@media (forced-colors: active) {
+		/*
+		 * Forced colors draw a transparent border in the text color, which would box every option. A
+		 * system color is kept, so the border takes the list's Canvas. The chosen option keeps its edge.
+		 */
+		:where(select[interop-select] option:not(:checked)) {
+			border-color: Canvas;
+		}
+
 		:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {
 			forced-color-adjust: none;
 			color: HighlightText;
 			background-color: Highlight;
+			border-color: Highlight;
 		}
 	}
 }
