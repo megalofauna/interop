@@ -1,5 +1,10 @@
 # Toast — Mental Model Card
 
+> **Under review: Prime's toast is being retired and rebuilt small. See
+> [prompts/TOAST-REVIEW.md](../../prompts/TOAST-REVIEW.md).** This card
+> describes the deprecated code. Its CSS section is out of date: the token
+> count and the radius are wrong, and there is no `.interop-toast-viewport__live-region` class.
+
 > `src/lib/components/interop-toast/` — one component you place, one service you
 > call. Visual language borrowed from IBM Carbon's Notification (toast variant,
 > low-contrast treatment) — see [`.agent/workflows/carbon-borrow.md`](../workflows/carbon-borrow.md).
