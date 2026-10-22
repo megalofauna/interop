@@ -1,6 +1,8 @@
 # Select — Mental Model Card
 
-A select is a native `<select interop-select>` with a field's look. The browser
+A select is a native `<select interop-select>` drawn by the field's rules, in
+the segmented control's look: the box is the segmented frame (channel fill, an
+edge 3:1 against the page), and the chosen option in the list is the pill. The browser
 opens it, handles the keyboard and typeahead, submits its value and opens the
 system picker on phones. CSS only. Research:
 [prompts/SELECT-RESEARCH.md](../../prompts/SELECT-RESEARCH.md).
@@ -18,7 +20,7 @@ system picker on phones. CSS only. Research:
 
 ```
 projects/interop/select/
-  interop-select.structure.css   the field, the classic arrow, base-select parts; names list at the top
+  interop-select.structure.css   the field, the classic chevron, base-select parts; names list at the top
   interop-select.base.css        token values and size steps
   public-api.ts                  empty: CSS only
 ```
@@ -30,14 +32,38 @@ The demo page is `projects/demo/src/app/components/select/`.
 | | Classic: Firefox, Safari before 27 | Base-select: Chrome 135, Safari 27 |
 |---|---|---|
 | Closed field | Border, radius, size steps, padding | The same |
-| Arrow | Two gradient triangles in `currentColor` on the field's background, flipped in right-to-left | `::picker-icon`, a clip-path triangle |
-| Arrow in forced colors | Gradients are removed, so `appearance: auto` brings back the browser's arrow | The icon opts out with `forced-color-adjust: none` and keeps the text color |
+| Chevron | A triangle of two gradients in `currentColor`, 0.625 of the icon size wide, flipped in right-to-left: a background image cannot take the text color | `::picker-icon`: the disclosure's chevron (Tabler `chevron-down`) as a mask over `currentColor`, turning to point up while `:open` |
+| Chevron in forced colors | Gradients are removed, so `appearance: auto` brings back the browser's arrow | The icon opts out with `forced-color-adjust: none` and keeps the text color |
+| Chosen option | Drawn by the browser | The segmented pill: a raised fill and an inset edge 3:1 against the list |
 | List of options | Drawn by the browser or the OS | `::picker(select)` with the popover's tokens; options with the check, wrapping text, hover and focus fill, group headings, `<hr>` lines |
 | `size` > 1, `multiple` | Native rows | House rows, as many as `size` (4 without one), from `attr(size type(<integer>))` |
 
 Rules for base-select parts sit inside `@supports (appearance: base-select)`,
 each in its own rule. A browser drops a whole rule when one of its selectors
 uses a pseudo-element it does not know.
+
+## Levers
+
+The box's look is the field's tokens, declared on the select in
+`interop-select.base.css`, so they change the select and not text fields:
+`--itx-field-background-color[-hover]`, `--itx-field-border-color[-hover]`,
+`--itx-field-border-width`, `--itx-field-border-radius`, `--itx-field-color`,
+`--itx-field-min-inline-size`. The width cap is the select's own,
+`--itx-select-max-inline-size` (100%). The picker is as wide as the select
+(`--itx-select-list-inline-size: anchor-size(self-inline)`), and its text wraps;
+content that cannot wrap widens it up to the popover's maximum
+(`--itx-select-list-min-inline-size: min-content`). Measured in Chrome 155: a
+192px select gives a 192px list, and a `nowrap` option widens it to 311px.
+
+Every option has a border (`--itx-select-option-border-width`, `-style`,
+`-color`, `-color-hover`), clear at rest so options keep one size; its padding
+subtracts the border, so options stay at the size step's height (32px at md).
+Hover shows it one step from the hover fill; the chosen option recolors it with
+`--itx-select-option-border-color-checked`. In forced colors a clear border is
+drawn in the text color, so unchosen options take `Canvas` instead. Because the select declares them on
+itself, a wrapper's values do not reach it: target the select. No
+`--itx-select-*` aliases for the box. The contrast spec measures the select's
+own block, since the shared map keeps only the field's first declarations.
 
 ## Rules
 

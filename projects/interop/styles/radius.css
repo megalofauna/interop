@@ -12,23 +12,23 @@
  *
  * --itx-radius-base is the house radius. A theme changes it for the whole page on :root:
  *
- *   :root { --itx-radius-base: 8px; }
+ *   :root { --itx-radius-base: 6px; }
  *
  * `itx-radius` picks a step for one component:
  *
  *   <button interop-button itx-radius="lg">
  *
  *   none   0
- *   sm     half the house radius        3px at the default
- *   md     the house radius             6px   (also `base`, and no attribute)
- *   lg     one and a half times it      9px
- *   xl     twice it                     12px
+ *   sm     half the house radius        4px at the default
+ *   md     the house radius             8px   (also `base`, and no attribute)
+ *   lg     one and a half times it      12px
+ *   xl     twice it                     16px
  *   full   a pill or circle
  *
  * The steps are multiples of the house radius, so a theme that changes it moves the whole scale.
  * They are worked out on the element that carries the attribute, so a section that sets its own
- * house radius gets a matching scale. At 6px they fall on a 3px scale, off the 4px layout grid:
- * a corner positions nothing, so nothing has to line up with it.
+ * house radius gets a matching scale. At 8px they fall on the 4px layout grid. A theme's radius
+ * need not: a corner positions nothing, so nothing has to line up with it.
  *
  * The attribute sets --itx-radius on the element that carries it. --itx-radius does not inherit
  * and has no initial value, so the attribute reaches only that element, and without it the
@@ -36,8 +36,8 @@
  */
 
 :root {
-	/* 6px breaks the 4px grid on purpose: it is the value that looked right beside every component. */
-	--itx-radius-base: 4px;
+	/* On the 4px grid, so the whole scale is too. */
+	--itx-radius-base: 8px;
 	--itx-radius-full: 9999px;
 }
 

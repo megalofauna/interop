@@ -1,15 +1,74 @@
-/* The box's values are the field's, in field/interop-field.base.css. These are the select's own. */
+/*
+ * The select is a close relative of the segmented control: its box is the segmented frame, a filled
+ * channel with an edge, and the chosen option in the list is the segmented pill.
+ *
+ * The box is drawn by the field's rules, so its look is the field's tokens, set here on the select.
+ * Set them on a select to change it without changing text fields:
+ *
+ *   --itx-field-background-color          --itx-field-background-color-hover
+ *   --itx-field-border-color              --itx-field-border-color-hover
+ *   --itx-field-border-width              --itx-field-border-radius
+ *   --itx-field-color                     --itx-field-min-inline-size
+ *
+ * A select declares them on itself, so setting them on a wrapper does not reach it: target the select.
+ *
+ * The list is a popover, so its surface is the popover's tokens, which a select also declares on
+ * itself. Its width and its options are the select's own:
+ *
+ *   --itx-select-list-inline-size        --itx-select-list-min-inline-size
+ *   --itx-popover-background-color       --itx-popover-color
+ *   --itx-popover-background-opacity     --itx-popover-backdrop-filter
+ *   --itx-popover-border-color           --itx-popover-box-shadow
+ *   --itx-select-option-background-color-hover
+ *   --itx-select-option-border-width     --itx-select-option-border-style
+ *   --itx-select-option-border-color     --itx-select-option-border-color-hover
+ *   --itx-select-option-background-color-checked
+ *   --itx-select-option-border-color-checked
+ *   --itx-select-option-box-shadow-checked
+ *
+ * A raised list over a recessed box, for instance, is a lighter list fill with darker hover and chosen
+ * fills. Keep option text 4.5:1 against every fill it sits on.
+ */
 :where(select[interop-select]) {
+	/* The segmented control's channel and frame. The edge is 3:1 against the page (WCAG 1.4.11). */
+	--itx-field-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	--itx-field-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-field-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	--itx-field-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+
+	/* Its widest. It never grows past its container. */
+	--itx-select-max-inline-size: 100%;
 	--itx-select-gap: var(--itx-space-2);
-	/* The width of the arrow; its height is half that. */
-	--itx-select-icon-size: 0.625rem;
+	/* The chevron, the disclosure's: one line of text tall. */
+	--itx-select-icon-size: 1em;
+	/* Tabler's chevron-down. Only the mask's shape counts, so its stroke color does not matter. */
+	--itx-select-icon-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E");
+	--itx-select-icon-transition-duration: var(--itx-transition-duration);
+	--itx-select-icon-transition-timing-function: var(--itx-transition-timing-function);
 	--itx-select-cursor: default;
 
 	/* The list, in the picker and in a select that shows its options in the page. */
 	--itx-select-list-padding: var(--itx-space-1);
+	/*
+	 * The picker is as wide as the select, and text in it wraps. Content that cannot wrap, such as an
+	 * image or a nowrap label, widens it up to the popover's maximum. A length here sets a fixed default.
+	 */
+	--itx-select-list-inline-size: anchor-size(self-inline);
+	--itx-select-list-min-inline-size: min-content;
 	--itx-select-option-min-block-size: var(--itx-space-8);
 	--itx-select-option-padding-inline: var(--itx-space-2);
 	--itx-select-option-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+	/* Clear at rest, so every option keeps one size when its edge shows on hover or when chosen. */
+	--itx-select-option-border-width: var(--itx-border-width);
+	--itx-select-option-border-style: solid;
+	--itx-select-option-border-color: transparent;
+	/* One step from the hover fill: darker in light, lighter in dark. */
+	--itx-select-option-border-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
+	/* The chosen option is the segmented pill: a raised fill, and an edge 3:1 against the list. */
+	--itx-select-option-background-color-checked: light-dark(var(--itx-neutral-100), var(--itx-neutral-700));
+	--itx-select-option-border-color-checked: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-select-option-box-shadow-checked: 0 1px 2px oklch(0 0 0 / 0.15);
 	/* Nested inside the list's padding. */
 	--itx-select-option-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-select-list-padding));
 	--itx-select-legend-font-size: var(--itx-font-size-p-sm);

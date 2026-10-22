@@ -336,7 +336,9 @@ describe('inline code', () => {
 		// The chip keeps the text color around it: body text, and every heading.
 		it(`keeps body and heading text at 4.5:1 on the chip in ${label}`, () => {
 			for (const role of ['', '-h1', '-h2', '-h3', '-h4', '-h5']) {
-				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+				expect(contrast(token(`--itx-color${role}`, scheme), token('--itx-code-inline-background-color', scheme))).toBeGreaterThanOrEqual(
+					4.5,
+				);
 			}
 		});
 	}
@@ -447,12 +449,45 @@ describe('field', () => {
 	}
 });
 
-describe('select', () => {
+describe('popover', () => {
+	// The fill is translucent, so what the text sits on depends on what is behind it. Measured over the
+	// two extremes, white and black; the blur averages what is behind and stays between them.
+	const opacity = declarations.get('--itx-popover-background-opacity')!;
+	const fill = (scheme: 0 | 1) => token('--itx-popover-background-color', scheme).replace(/\)$/, ` / ${opacity})`);
+
 	for (const [scheme, label] of SCHEMES) {
-		it(`has option text of 4.5:1 on a hovered or focused option in ${label}`, () => {
+		it(`has text of 4.5:1 on its fill over white and over black in ${label}`, () => {
+			for (const behind of ['oklch(1 0 0)', 'oklch(0 0 0)'])
+				expect(contrast(token('--itx-popover-color', scheme), over(fill(scheme), behind))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
+describe('select', () => {
+	// The field tokens the select sets on itself, read from its block: the shared map keeps only each
+	// token's first declaration, which is the field's.
+	const block = /:where\(select\[interop-select\]\) \{([^}]*)\}/.exec(sheets['select/interop-select.base.css'])![1];
+	const own = (name: string, scheme: 0 | 1) => resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(block)![1]), scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has text of 4.5:1 on the box, hovered or not, in ${label}`, () => {
+			for (const background of ['--itx-field-background-color', '--itx-field-background-color-hover'])
+				expect(contrast(own('--itx-field-color', scheme), own(background, scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the box's edge against the page, at rest and hovered.
+		it(`has an edge of 3:1 against the page in ${label}`, () => {
+			for (const name of ['--itx-field-border-color', '--itx-field-border-color-hover'])
+				expect(contrast(own(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+		it(`has option text of 4.5:1 on a hovered and a chosen option in ${label}`, () => {
+			for (const name of ['--itx-select-option-background-color-hover', '--itx-select-option-background-color-checked'])
+				expect(contrast(token('--itx-popover-color', scheme), token(name, scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the pill's edge carries the choice, against the list.
+		it(`has a chosen option edge of 3:1 against the list in ${label}`, () => {
 			expect(
-				contrast(token('--itx-popover-color', scheme), token('--itx-select-option-background-color-hover', scheme)),
-			).toBeGreaterThanOrEqual(4.5);
+				contrast(token('--itx-select-option-border-color-checked', scheme), token('--itx-popover-background-color', scheme)),
+			).toBeGreaterThanOrEqual(3);
 		});
 	}
 });

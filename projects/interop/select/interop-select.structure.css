@@ -29,7 +29,7 @@
 /* The box, its states and its size steps are the field's, in field/interop-field.structure.css. */
 :where(select[interop-select]) {
 	min-inline-size: min(var(--itx-field-min-inline-size), 100%);
-	max-inline-size: 100%;
+	max-inline-size: var(--itx-select-max-inline-size);
 	cursor: var(--itx-select-cursor);
 }
 
@@ -39,26 +39,28 @@
 }
 
 /*
- * The classic select. The arrow is two triangles drawn with gradients in the text color, so it follows
- * the color scheme. Forced colors remove gradients, so there the browser's own arrow comes back.
+ * The classic select, in browsers without base-select. A background image cannot take the text color,
+ * so the chevron is a triangle drawn with two gradients in the text color, 0.625 of the icon size wide.
+ * Forced colors remove gradients, so there the browser's own arrow comes back.
  */
 @supports not (appearance: base-select) {
 	:where(select[interop-select]:not([multiple], [size]:not([size="1"]))) {
+		--itx-select-triangle-size: calc(var(--itx-select-icon-size) * 0.625);
 		appearance: none;
-		padding-inline-end: calc(var(--itx-field-padding-inline) + var(--itx-select-icon-size) + var(--itx-select-gap));
+		padding-inline-end: calc(var(--itx-field-padding-inline) + var(--itx-select-triangle-size) + var(--itx-select-gap));
 		background-image:
 			linear-gradient(to top right, transparent 50%, currentColor 50%), linear-gradient(to top left, transparent 50%, currentColor 50%);
-		background-size: calc(var(--itx-select-icon-size) / 2) calc(var(--itx-select-icon-size) / 2);
+		background-size: calc(var(--itx-select-triangle-size) / 2) calc(var(--itx-select-triangle-size) / 2);
 		background-repeat: no-repeat;
 		background-position:
-			right calc(var(--itx-field-padding-inline) + var(--itx-select-icon-size) / 2) center,
+			right calc(var(--itx-field-padding-inline) + var(--itx-select-triangle-size) / 2) center,
 			right var(--itx-field-padding-inline) center;
 	}
 
 	:where(select[interop-select]:not([multiple], [size]:not([size="1"])):dir(rtl)) {
 		background-position:
 			left var(--itx-field-padding-inline) center,
-			left calc(var(--itx-field-padding-inline) + var(--itx-select-icon-size) / 2) center;
+			left calc(var(--itx-field-padding-inline) + var(--itx-select-triangle-size) / 2) center;
 	}
 
 	@media (forced-colors: active) {
@@ -88,11 +90,18 @@
 	:where(select[interop-select])::picker(select) {
 		appearance: base-select;
 		box-sizing: border-box;
+		inline-size: var(--itx-select-list-inline-size);
+		min-inline-size: var(--itx-select-list-min-inline-size);
 		max-inline-size: min(var(--itx-popover-max-inline-size), 100vw - 2 * var(--itx-space-2));
 		margin-block: var(--itx-popover-margin-block);
 		padding: var(--itx-select-list-padding);
 		color: var(--itx-popover-color);
-		background-color: var(--itx-popover-background-color);
+		background-color: color-mix(
+			in oklch,
+			var(--itx-popover-background-color) calc(var(--itx-popover-background-opacity) * 100%),
+			transparent
+		);
+		backdrop-filter: var(--itx-popover-backdrop-filter);
 		border-width: var(--itx-popover-border-width);
 		border-style: var(--itx-popover-border-style);
 		border-color: var(--itx-popover-border-color);
@@ -116,35 +125,56 @@
 		}
 	}
 
-	/* A triangle in the text color. It opts out of forced colors so it keeps that color there. */
+	/*
+	 * The disclosure's chevron, a mask over the text color, so it follows hover. It turns to point up
+	 * while the list is open; reduced motion stops the turn. It opts out of forced colors so it keeps
+	 * the text color there.
+	 */
 	:where(select[interop-select])::picker-icon {
 		content: "";
 		inline-size: var(--itx-select-icon-size);
-		block-size: calc(var(--itx-select-icon-size) / 2);
+		block-size: var(--itx-select-icon-size);
 		background-color: currentColor;
-		clip-path: polygon(0 0, 100% 0, 50% 100%);
+		mask-image: var(--itx-select-icon-mask-image);
+		mask-size: var(--itx-select-icon-size);
+		mask-position: center;
+		mask-repeat: no-repeat;
 		forced-color-adjust: none;
+		/* The glyph is centered in its frame, so a half turn mirrors it in place. */
+		transform-origin: center;
+		transition-property: rotate;
+		transition-duration: var(--itx-select-icon-transition-duration);
+		transition-timing-function: var(--itx-select-icon-transition-timing-function);
+	}
+
+	:where(select[interop-select]:open)::picker-icon {
+		rotate: 180deg;
 	}
 
 	/*
 	 * Rows: the check in the first column, everything else in the second, so an option with several
-	 * elements stacks them beside the check. Text wraps, so a long option stays readable in a narrow
-	 * window (WCAG 1.4.10).
+	 * elements stacks them beside the check. The check sits on the baseline of the label's first line,
+	 * whichever font draws the glyph. Text wraps, so a long option stays readable in a narrow window
+	 * (WCAG 1.4.10).
 	 */
 	:where(select[interop-select] option) {
 		display: grid;
 		grid-template-columns: auto 1fr;
-		align-items: start;
+		align-items: first baseline;
 		box-sizing: border-box;
 		min-block-size: var(--itx-select-option-min-block-size);
-		padding-block: calc((var(--itx-select-option-min-block-size) - 1lh) / 2);
+		/* The space one line and the border leave inside the minimum height, so a border adds no size. */
+		padding-block: calc((var(--itx-select-option-min-block-size) - 1lh) / 2 - var(--itx-select-option-border-width));
 		padding-inline: var(--itx-select-option-padding-inline);
 		column-gap: var(--itx-select-gap);
 		white-space: normal;
 		color: inherit;
 		border-radius: var(--itx-select-option-border-radius);
+		border-width: var(--itx-select-option-border-width);
+		border-style: var(--itx-select-option-border-style);
+		border-color: var(--itx-select-option-border-color);
 		corner-shape: var(--itx-field-corner-shape);
-		transition-property: background-color;
+		transition-property: background-color, border-color;
 		transition-duration: var(--itx-field-transition-duration);
 		transition-timing-function: var(--itx-field-transition-timing-function);
 	}
@@ -155,6 +185,14 @@
 
 	:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {
 		background-color: var(--itx-select-option-background-color-hover);
+		border-color: var(--itx-select-option-border-color-hover);
+	}
+
+	/* The chosen option is the segmented pill: its own border takes the edge color, so it adds no size. */
+	:where(select[interop-select] option:checked) {
+		background-color: var(--itx-select-option-background-color-checked);
+		border-color: var(--itx-select-option-border-color-checked);
+		box-shadow: var(--itx-select-option-box-shadow-checked);
 	}
 
 	:where(select[interop-select] option:disabled) {
@@ -189,10 +227,19 @@
 
 	/* Forced colors remove the hover fill, so the option under the pointer or the keyboard shows in Highlight. */
 	@media (forced-colors: active) {
+		/*
+		 * Forced colors draw a transparent border in the text color, which would box every option. A
+		 * system color is kept, so the border takes the list's Canvas. The chosen option keeps its edge.
+		 */
+		:where(select[interop-select] option:not(:checked)) {
+			border-color: Canvas;
+		}
+
 		:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {
 			forced-color-adjust: none;
 			color: HighlightText;
 			background-color: Highlight;
+			border-color: Highlight;
 		}
 	}
 }
