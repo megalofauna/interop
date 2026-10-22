@@ -85,6 +85,11 @@ A popover is the platform's `popover` attribute with `interop-popover` styles. A
 - State is never color alone: a shape, a border width, an icon or text goes
   with it, and forced colors map it to system colors.
 - Nothing appears or disappears on hover alone.
+- In forced colors the browser draws every border in a system color, a
+  transparent one too. A control with no edge at rest, such as a toolbar
+  channel's button, gets one there for free. Where a clear border would box
+  every item of a list, such as a select's options, the forced-colors block
+  sets it to `Canvas`.
 
 ## Attribute naming convention
 
@@ -131,6 +136,8 @@ CSS selectors follow the same split:
 - Lengths come from `--itx-space-*`. Text sizes come from the typography
   roles (`--itx-font-size-<role>` with its `--itx-line-height-<role>`). No raw
   `rem` values for either.
+- A container's `itx-size` is a rule, not a default: a toolbar's sets every
+  button in it, and the dev audit warns about a button's own `itx-size` there.
 - A component ships only the steps it needs. Leave a step out when it would
   break a minimum, such as the 24px target size of WCAG 2.5.8.
 
