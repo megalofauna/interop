@@ -89,6 +89,12 @@ export const routes: Routes = [
 			import("./components/select/select-demo").then((m) => m.SelectDemo),
 	},
 	{
+		path: "components/slider",
+		title: "Slider",
+		loadComponent: () =>
+			import("./components/slider/slider-demo").then((m) => m.SliderDemo),
+	},
+	{
 		path: "components/steps",
 		title: "Steps",
 		loadComponent: () =>

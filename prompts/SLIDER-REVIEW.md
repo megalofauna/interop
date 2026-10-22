@@ -32,6 +32,9 @@ TS and 976 of CSS.
 <input type="range" interop-slider id="volume" min="0" max="100" value="40">
 ```
 
+The slider is built as decided: see
+[.agent/components/slider.md](../.agent/components/slider.md).
+
 | Prime use | Really | Interop |
 |---|---|---|
 | Basic, Brightness, Disabled | One approximate value | `input[interop-slider]` |

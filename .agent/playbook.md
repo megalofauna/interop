@@ -242,6 +242,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
 | `bindSegmentedFit` | Stacking a segmented control when its row does not fit | Nothing proposed: CSS cannot measure whether content fits. Optional: `itx-orientation` and the page's own threshold need no script |
 | `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
+| `bindSlider`, `paintSlider` | A fill that follows the value; value text from a formatter | `::slider-fill` with `appearance: base` (CSS Forms; no browser ships it) |
 | `bindSteps` | Steps of one form, and their validation | Nothing proposed |
 | `bindTags`, `bindTagInput` | Focus after a removal, announcements, adding by Enter | Nothing proposed |
 | `bindSelectAll` | A select-all checkbox | Nothing proposed |
