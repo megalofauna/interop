@@ -78,7 +78,12 @@ export function toast(message: string, options: ToastOptions = {}): HTMLElement 
 		action.addEventListener('click', () => run());
 		item.append(action);
 	}
-	const close = element('button', { ...dismiss, 'interop-button': 'icon', 'itx-size': 'sm', 'aria-label': options.dismissLabel ?? 'Dismiss' });
+	const close = element('button', {
+		...dismiss,
+		'interop-button': 'icon',
+		'itx-size': 'sm',
+		'aria-label': options.dismissLabel ?? 'Dismiss',
+	});
 	const x = drawIcon('tabler-x');
 	close.append(x ?? '×');
 	item.append(close);
@@ -102,7 +107,8 @@ export function toast(message: string, options: ToastOptions = {}): HTMLElement 
  *   hidden.
  * - When a toast that held focus goes, focus moves to the toast now in its place, else the one
  *   before it, else back to where it was before it entered the region.
- * - The region shows while it has toasts and hides when the last one goes.
+ * - The region shows while it has toasts and hides when the last one goes. A region inside a
+ *   dialog empties when the dialog closes.
  *
  * Removing a toast element by any means does the same. Returns a function that removes the behavior.
  */
@@ -200,6 +206,8 @@ export function bindToasts(region: HTMLElement): () => void {
 	region.addEventListener('pointerenter', syncSoon, { signal });
 	region.addEventListener('pointerleave', syncSoon, { signal });
 	document.addEventListener('visibilitychange', sync, { signal });
+	// A dialog's toasts are about its work, and would show again the next time it opens.
+	region.closest('dialog')?.addEventListener('close', () => region.replaceChildren(), { signal });
 	observer.observe(region, { childList: true });
 	for (const item of toasts()) start(item);
 	sync();
@@ -219,7 +227,11 @@ function findRegion(): HTMLElement | null {
 	return document.querySelector<HTMLElement>(`${REGION}:not(dialog ${REGION})`);
 }
 
-function element<K extends keyof HTMLElementTagNameMap>(tag: K, attributes: Record<string, string>, text?: string): HTMLElementTagNameMap[K] {
+function element<K extends keyof HTMLElementTagNameMap>(
+	tag: K,
+	attributes: Record<string, string>,
+	text?: string,
+): HTMLElementTagNameMap[K] {
 	const node = document.createElement(tag);
 	for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value);
 	if (text !== undefined) node.textContent = text;

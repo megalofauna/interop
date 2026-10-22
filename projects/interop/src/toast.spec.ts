@@ -4,7 +4,9 @@ import { bindToasts, toast } from './toast';
 /** MutationObserver callbacks run as microtasks. */
 const settle = () => Promise.resolve();
 const command = (source: Element, name = '--dismiss') =>
-	document.getElementById(source.getAttribute('commandfor')!)!.dispatchEvent(Object.assign(new Event('command'), { command: name, source }));
+	document
+		.getElementById(source.getAttribute('commandfor')!)!
+		.dispatchEvent(Object.assign(new Event('command'), { command: name, source }));
 
 describe('toast', () => {
 	let region: HTMLElement;
@@ -149,6 +151,19 @@ describe('toast', () => {
 		second.remove();
 		await settle();
 		expect(document.activeElement).toBe(trigger);
+	});
+
+	it('empties a region inside a dialog when the dialog closes', () => {
+		const dialog = document.createElement('dialog');
+		const inner = region.cloneNode() as HTMLElement;
+		inner.togglePopover = () => true;
+		dialog.append(inner);
+		document.body.append(dialog);
+		const stop = bindToasts(inner);
+		toast('Course saved', { region: inner });
+		dialog.dispatchEvent(new Event('close'));
+		expect(inner.children.length).toBe(0);
+		stop();
 	});
 
 	it('leaves focus alone when a toast that did not hold it goes', async () => {
