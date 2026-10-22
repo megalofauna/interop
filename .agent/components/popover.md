@@ -67,8 +67,8 @@ A drawer can also show in the page as a sidebar at wide sizes: see
 | `--itx-popover-max-inline-size` | 32rem |
 | `--itx-popover-padding-block`, `-padding-inline` | `--itx-space-2`, `--itx-space-3` |
 | `--itx-popover-color`, `-background-color` | neutral-900/50, neutral-50/800 |
-| `--itx-popover-background-opacity` | 0.8: the fill is mixed toward transparent in the structure, so the color token stays opaque |
-| `--itx-popover-backdrop-filter` | `blur(4px)` |
+| `--itx-popover-background-opacity` | 0.75: the fill is mixed toward transparent in the structure, so the color token stays opaque |
+| `--itx-popover-backdrop-filter` | `blur(5px)` |
 
 The popover is translucent and blurs what is behind it; the select's list reads
 the same tokens. Under `prefers-reduced-transparency` and in forced colors it is

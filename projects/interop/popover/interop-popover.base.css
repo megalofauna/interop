@@ -21,8 +21,8 @@
 	 * shows through without competing with the text. Set the color opaque; the opacity is applied to it.
 	 */
 	--itx-popover-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
-	--itx-popover-background-opacity: 0.8;
-	--itx-popover-backdrop-filter: blur(4px);
+	--itx-popover-background-opacity: 0.75;
+	--itx-popover-backdrop-filter: blur(5px);
 	--itx-popover-border-width: var(--itx-border-width);
 	--itx-popover-border-style: solid;
 	/* 3:1 against the page in both schemes, so the popover's edge is visible (WCAG 1.4.11). */
