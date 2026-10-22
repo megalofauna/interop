@@ -131,7 +131,11 @@ added the legend. `11900a51` merged three sheets into one global pair.
 5. **A token set on an ancestor is ignored.** The theme declares every
    `--itx-slider-*` token on the input itself, so a consumer has to set
    `--itx-slider-length` on the input and the legend.
-6. **CSS-only use collapses the thumb.** The tokens exist only under
+6. **Readouts lose their slider.** On first render every
+   `<output interop-slider-value>` warns that no slider has its id, because it
+   looks the slider up before the slider registers. Seen on Prime's demo page in
+   Chrome 155.
+7. **CSS-only use collapses the thumb.** The tokens exist only under
    `[interop-root]`, so `--_target` is undefined without it.
 
 **Test coverage.** One spec, 11 cases, on marks and the legend. Nothing tests
@@ -289,6 +293,6 @@ Dropped:
 - Screen reader speech: `aria-valuetext` on a native range in NVDA, JAWS,
   VoiceOver and TalkBack, and the double announcement from `<output>`.
 - Firefox and Safari: the track click, vertical, and the scroll-driven fill.
-- Prime end to end. The deprecated demo is not in `angular.json`. Bug 3 is read
-  from the code.
+- Bug 3 (both thumbs at the maximum) is read from the code. Prime's demo runs
+  again (`npm run demo:prime`, port 1338), but the probe has no drag.
 - The contrast of Prime's track and of its focus state.

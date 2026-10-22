@@ -7,23 +7,23 @@
 		"types": [],
 		"baseUrl": "../../",
 		"paths": {
-			"interop": ["projects/interop/src/public-api"],
+			"interop": ["projects/interop_deprecated/src/public-api"],
 			"interop/highlighters/shiki": [
-				"projects/interop/highlighters/shiki/src/public-api.ts"
+				"projects/interop_deprecated/highlighters/shiki/src/public-api.ts"
 			],
-			"interop/*": ["projects/interop/src/*"]
+			"interop/*": ["projects/interop_deprecated/src/*"]
 		}
 	},
 	"include": [
 		"src/**/*.ts",
-		"../../projects/interop/src/lib/**/*.ts",
-		"../../projects/interop/src/types/**/*.ts",
-		"../../projects/interop/highlighters/**/*.ts"
+		"../../projects/interop_deprecated/src/lib/**/*.ts",
+		"../../projects/interop_deprecated/src/types/**/*.ts",
+		"../../projects/interop_deprecated/highlighters/**/*.ts"
 	],
 	"exclude": [
 		"src/**/*.spec.ts",
-		"../../projects/interop/src/**/*.spec.ts",
-		"../../projects/interop/src/examples/**/*"
+		"../../projects/interop_deprecated/src/**/*.spec.ts",
+		"../../projects/interop_deprecated/src/examples/**/*"
 	],
 	"angularCompilerOptions": {
 		"compilationMode": "full"
