@@ -211,22 +211,16 @@ export function applyMarkdown(
 		return;
 	}
 	const [open, close] = pair;
-	const content: [number, number] = [open + marker.length, close];
-	if (start === end && content[0] === content[1]) {
-		// An empty pair: remove it.
-		replace(field, open, close + marker.length, "", [open, open]);
-	} else if (start === end && start === close) {
+	if (start === end && start === close && open + marker.length < close) {
 		// At the end of the marked text: step past the closing marker and keep typing plain.
 		field.focus();
 		field.setSelectionRange(close + marker.length, close + marker.length);
-	} else if (start === content[0] && end === content[1]) {
-		// Exactly the marked text: unwrap it.
-		replace(field, open, close + marker.length, value.slice(...content), [
-			open,
-			open + end - start,
-		]);
-	} else {
-		// Elsewhere inside the marked text, splitting the pair would surprise more than it helps.
-		field.focus();
+		return;
 	}
+	// Anywhere else inside the pair: unwrap it, so a pressed button always turns the style off.
+	const inner = open + marker.length;
+	replace(field, open, close + marker.length, value.slice(inner, close), [
+		start - marker.length,
+		end - marker.length,
+	]);
 }

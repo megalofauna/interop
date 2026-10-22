@@ -66,11 +66,15 @@ describe("Markdown toolbar actions", () => {
 		expect(read()).toBe("Hi [there]");
 	});
 
-	it("leaves the middle of marked text alone", () => {
-		write("**ab|cd**");
+	it("unwraps the whole pair from the middle of marked text", () => {
+		write("Hi **ab|cd** there");
 		expect(pressed("Bold")).toBe(true);
 		press("Bold");
-		expect(read()).toBe("**ab|cd**");
+		expect(read()).toBe("Hi ab|cd there");
+		expect(pressed("Bold")).toBe(false);
+		write("**a[bc]d**");
+		press("Bold");
+		expect(read()).toBe("a[bc]d");
 	});
 
 	it("reads each marker on its own: bold is not italic", () => {
