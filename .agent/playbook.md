@@ -245,6 +245,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindSteps` | Steps of one form, and their validation | Nothing proposed |
 | `bindTags`, `bindTagInput` | Focus after a removal, announcements, adding by Enter | Nothing proposed |
 | `bindSelectAll` | A select-all checkbox | Nothing proposed |
+| `bindToasts`, `toast` | Timers that pause, dismissal, focus after a removal, and a region in the open modal | Nothing proposed. `popover`, `command` and `ariaNotify()` do the rest |
 | `bindTargetCurrent` | `aria-current` for the section in view; choosing it without `:target-current`; keeping the current link in view in an overflowing bar | Chrome exposing `:target-current` as `aria-current` (ARIA WG, 2026-01-29) and Firefox and Safari shipping `scroll-target-group`. Nothing proposed for the reveal |
 | `bindPendingAction`, `guardActivation` | A busy button that ignores repeat clicks | Nothing proposed |
 | `scopeSelectAll` | Ctrl+A inside a code block | Nothing proposed |

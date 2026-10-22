@@ -119,6 +119,12 @@ export const routes: Routes = [
 			import("./components/tags/tags-demo").then((m) => m.TagsDemo),
 	},
 	{
+		path: "components/toast",
+		title: "Toast",
+		loadComponent: () =>
+			import("./components/toast/toast-demo").then((m) => m.ToastDemo),
+	},
+	{
 		path: "components/toolbar",
 		title: "Toolbar",
 		loadComponent: () =>

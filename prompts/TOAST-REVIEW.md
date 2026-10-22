@@ -28,6 +28,9 @@ The rebuild needs about 120 lines of TS and 100 of CSS. Prime has 1,223 and
 toast('Crate jettisoned', { tone: 'success', action: { label: 'Undo', … } });
 ```
 
+The toast is built as decided: see
+[.agent/components/toast.md](../.agent/components/toast.md).
+
 | Prime use | Really | Interop |
 |---|---|---|
 | "Docking approved" (success or info, with description) | A status message | `toast()`, or inline text near the trigger plus `announce()` |
