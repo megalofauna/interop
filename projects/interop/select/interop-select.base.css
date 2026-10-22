@@ -2,8 +2,8 @@
  * The select is a close relative of the segmented control: its box is the segmented frame, a filled
  * channel with an edge, and the chosen option in the list is the segmented pill.
  *
- * The box is drawn by the field's rules, so its look is the field's tokens, set here on the select.
- * Set them on a select to change it without changing text fields:
+ * The box is drawn by the field's rules, so it is the text field's box and its look is the field's
+ * tokens. Set them on a select to change it without changing text fields:
  *
  *   --itx-field-background-color          --itx-field-background-color-hover
  *   --itx-field-border-color              --itx-field-border-color-hover
@@ -30,13 +30,6 @@
  * fills. Keep option text 4.5:1 against every fill it sits on.
  */
 :where(select[interop-select]) {
-	/* The segmented control's channel and frame. The edge is 3:1 against the page (WCAG 1.4.11). */
-	--itx-field-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
-	--itx-field-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-field-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
-	--itx-field-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
-
 	/* Its widest. It never grows past its container. */
 	--itx-select-max-inline-size: 100%;
 	--itx-select-gap: var(--itx-space-2);

@@ -472,12 +472,14 @@ describe('tags', () => {
 
 describe('field', () => {
 	const field = (name: string, scheme: 0 | 1) => token(`--itx-field-${name}`, scheme);
+	// A read-only field has no fill, so its text sits on the page.
+	const fill = (name: string, scheme: 0 | 1) => (field(name, scheme) === 'transparent' ? CANVAS[scheme] : field(name, scheme));
 
 	for (const [scheme, label] of SCHEMES) {
 		it(`has text and placeholder of 4.5:1 on the field, hovered or not, in ${label}`, () => {
 			for (const background of ['background-color', 'background-color-hover', 'background-color-readonly']) {
 				for (const text of ['color', 'placeholder-color'])
-					expect(contrast(field(text, scheme), field(background, scheme))).toBeGreaterThanOrEqual(4.5);
+					expect(contrast(field(text, scheme), fill(background, scheme))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
 		// WCAG 1.4.11: the field's edge against the page, at rest, hovered and invalid.
@@ -511,19 +513,7 @@ describe('popover', () => {
 });
 
 describe('select', () => {
-	// The field tokens the select sets on itself.
-	const own = restated('select/interop-select.base.css', ':where(select[interop-select])');
-
 	for (const [scheme, label] of SCHEMES) {
-		it(`has text of 4.5:1 on the box, hovered or not, in ${label}`, () => {
-			for (const background of ['--itx-field-background-color', '--itx-field-background-color-hover'])
-				expect(contrast(own('--itx-field-color', scheme), own(background, scheme))).toBeGreaterThanOrEqual(4.5);
-		});
-		// WCAG 1.4.11: the box's edge against the page, at rest and hovered.
-		it(`has an edge of 3:1 against the page in ${label}`, () => {
-			for (const name of ['--itx-field-border-color', '--itx-field-border-color-hover'])
-				expect(contrast(own(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-		});
 		it(`has option text of 4.5:1 on a hovered and a chosen option in ${label}`, () => {
 			for (const name of ['--itx-select-option-background-color-hover', '--itx-select-option-background-color-checked'])
 				expect(contrast(token('--itx-popover-color', scheme), token(name, scheme))).toBeGreaterThanOrEqual(4.5);

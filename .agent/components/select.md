@@ -1,7 +1,7 @@
 # Select — Mental Model Card
 
-A select is a native `<select interop-select>` drawn by the field's rules, in
-the segmented control's look: the box is the segmented frame (channel fill, an
+A select is a native `<select interop-select>` drawn by the field's rules,
+so it shares the text field's box, which is the segmented control's look: the box is the segmented frame (channel fill, an
 edge 3:1 against the page), and the chosen option in the list is the pill. The browser
 opens it, handles the keyboard and typeahead, submits its value and opens the
 system picker on phones. CSS only. Research:
