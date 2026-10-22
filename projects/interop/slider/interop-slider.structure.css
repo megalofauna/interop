@@ -34,6 +34,8 @@
 	padding: 0;
 	vertical-align: middle;
 	cursor: var(--itx-slider-cursor);
+	/* Chrome fills a vertical range in the dark scheme. Only the two layers below draw. */
+	background-color: transparent;
 	/*
 	 * Front to back: the fill, then the track. The fill ends under the thumb's center, which travels
 	 * the length less one thumb, so it starts half a thumb in.
