@@ -52,16 +52,18 @@ and no asterisk.
 ## Box
 
 Shared by select, text inputs and textareas: one look, one set of
-`--itx-field-*` tokens. Heights are the button's: 32, 40, 56px.
+`--itx-field-*` tokens. The look is the segmented control's frame: a filled
+channel (neutral-200/800) with an edge 3:1 against the page (neutral-500/400).
+Heights are the button's: 32, 40, 56px.
 
 | State | Look |
 |---|---|
 | Hover | Fill and border one step stronger |
 | Focus | The shared focus ring |
 | Invalid | 2px border in `--itx-role-text-danger`; `aria-invalid="true"`, or `:user-invalid` where `bindValidation()` is not used |
-| Read-only | Dashed border, a fill; still focusable and submitted |
+| Read-only | Dashed border and no fill, so it does not look like a place to type; still focusable and submitted |
 | Disabled | 50% opacity |
-| Placeholder | 4.5:1 against the field |
+| Placeholder | 4.5:1 against the fill at rest and hovered |
 | Textarea | `field-sizing: content` from three lines; resizes vertically |
 
 ## bindValidation(form, { summary, messages })
