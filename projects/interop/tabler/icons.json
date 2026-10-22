@@ -17,5 +17,9 @@
 	"link",
 	"list",
 	"list-numbers",
-	"strikethrough"
+	"strikethrough",
+	"circle-check",
+	"info-circle",
+	"alert-triangle",
+	"alert-circle"
 ]

@@ -9,6 +9,7 @@ import {
 	bindValidation,
 	guardActivation,
 	registerIcons,
+	toast,
 } from 'interop';
 import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
@@ -19,9 +20,9 @@ import { InteropStepsForm } from 'interop/steps';
 import { InteropTabs } from 'interop/tabs';
 import { InteropToolbar } from 'interop/toolbar';
 import { InteropTooltip } from 'interop/tooltip';
-import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
+import { TablerAlertCircle, TablerCheck, TablerCircleCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
-registerIcons(TablerCheck, TablerCopy, TablerSearch, TablerX);
+registerIcons(TablerAlertCircle, TablerCheck, TablerCircleCheck, TablerCopy, TablerSearch, TablerX);
 
 // jsdom computes no colors, so styles/contrast.spec.ts checks contrast from the declared values instead.
 const OPTIONS: axe.RunOptions = { rules: { 'color-contrast': { enabled: false } } };
@@ -449,6 +450,17 @@ describe('accessibility (axe-core)', () => {
 		const buttons = Array.from(element.querySelectorAll('button'), (button) => button.tabIndex);
 		expect(buttons).toEqual([0, -1, -1, -1]);
 		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations in toasts as toast() writes them', async () => {
+		document.body.innerHTML = '<main><h1>Inbox</h1><section interop-toasts popover="manual" aria-label="Notifications"></section></main>';
+		const region = document.querySelector<HTMLElement>('[interop-toasts]')!;
+		region.togglePopover = () => true;
+		toast('Message sent');
+		toast('Crate jettisoned', { color: 'success', description: 'Bay 4 is empty', action: { label: 'Undo', run: () => {} } });
+		toast('Upload failed', { color: 'danger' });
+		reveal(document.body);
+		expect(await violations(document.body)).toEqual([]);
 	});
 
 	it('finds no violations in a multi-step form as bindSteps leaves it, with every step shown', async () => {

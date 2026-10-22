@@ -1,0 +1,149 @@
+<h1>Toast</h1>
+<p class="aka">Also known as snackbar, toast notification, notification.</p>
+<p>
+	A toast is a short message about something the user just did, shown in a
+	corner of the window: "Message sent", "Link copied". It moves no focus.
+	<code>toast()</code> writes it into the page's toast region and speaks it with
+	<code>ariaNotify()</code>, so screen reader users hear it where they are.
+</p>
+<p>
+	A toast is easy to miss: it sits away from the work, and a screen magnifier
+	may not show that corner. Show the result in the page where you can: a saved
+	form says so next to its button, and an error goes next to its cause. Use a
+	toast when there is nowhere in the page to say it.
+</p>
+
+<h2>The region</h2>
+<p>
+	Put one region in the app shell. It is a manual popover, so it sits in the top
+	layer over every other popover, and it is a landmark named Notifications,
+	which screen readers list. It shows while it holds toasts and hides when the
+	last one goes. <code>InteropToasts</code> binds it in Angular; elsewhere call
+	<code>bindToasts(region)</code>.
+</p>
+<figure
+	interop-code-block
+	language="html"
+	caption="App shell"
+	[code]="examples.region"
+></figure>
+
+<h2>Show a toast</h2>
+<p>
+	A toast stays until the user dismisses it with its button, or with Escape
+	while focus is in it. When a toast that held focus goes, focus moves to the
+	next toast, or back to where it was before.
+</p>
+<button interop-button type="button" (click)="send()">Send message</button>
+<figure
+	interop-code-block
+	language="ts"
+	caption="Component"
+	[code]="examples.show"
+></figure>
+
+<h2>Status</h2>
+<p>
+	<code>color</code> sets an icon and the color of the start edge, so the status
+	shows in a shape as well as a color. A danger toast is announced at high
+	priority, which interrupts the screen reader; keep it for something the user
+	must hear now.
+</p>
+<div class="buttons">
+	@for (item of colors; track item.color) {
+		<button
+			interop-button
+			type="button"
+			(click)="show(item.color, item.message)"
+		>
+			{{ item.message }}
+		</button>
+	}
+</div>
+<figure
+	interop-code-block
+	language="ts"
+	caption="Component"
+	[code]="examples.colors"
+></figure>
+
+<h2>An action</h2>
+<p>
+	A toast can hold one button, such as Undo. Pressing it runs the action and
+	dismisses the toast. Offer the same thing in the page as well: a toast is easy
+	to miss, and a keyboard user has to find it. Here each jettisoned crate can
+	also come back from the list.
+</p>
+<ul>
+	@for (crate of crates(); track crate) {
+		<li>
+			{{ crate }}
+			<button
+				interop-button
+				itx-size="sm"
+				type="button"
+				(click)="jettison(crate)"
+			>
+				Jettison <span itx-visually-hidden>{{ crate }}</span>
+			</button>
+		</li>
+	} @empty {
+		<li>The hold is empty.</li>
+	}
+</ul>
+<figure
+	interop-code-block
+	language="ts"
+	caption="Component"
+	[code]="examples.action"
+></figure>
+
+<h2>A timeout</h2>
+<p>
+	With <code>timeout</code>, a toast leaves by itself, after at least 5 seconds.
+	The time stops while the pointer is over the region, while focus is in it, and
+	while the page is hidden. Use it only for a message that does not matter if it
+	is missed. A danger toast and a toast with an action ignore it.
+</p>
+<button interop-button type="button" (click)="copy()">Copy link</button>
+<figure
+	interop-code-block
+	language="ts"
+	caption="Component"
+	[code]="examples.timeout"
+></figure>
+
+<h2>Inside a modal dialog</h2>
+<p>
+	A modal dialog makes the rest of the page inert. A toast in the page's region
+	still shows over the dialog, but nothing in it can be clicked or focused. So a
+	dialog that raises toasts holds its own region, and <code>toast()</code>
+	uses it while the dialog has focus.
+</p>
+<button interop-button type="button" commandfor="course" command="show-modal">
+	Plot a course…
+</button>
+<dialog id="course" interop-dialog aria-labelledby="course-title">
+	<header>
+		<h2 id="course-title">Plot a course</h2>
+		<button
+			interop-button="icon"
+			itx-size="sm"
+			type="button"
+			commandfor="course"
+			command="request-close"
+		>
+			<span itx-visually-hidden>Close</span>
+			<svg interop-icon name="tabler-x"></svg>
+		</button>
+	</header>
+	<p>Save the course, and the toast shows in this dialog's own region.</p>
+	<button interop-button type="button" (click)="save()">Save course</button>
+	<section interop-toasts popover="manual" aria-label="Notifications"></section>
+</dialog>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.dialog"
+></figure>

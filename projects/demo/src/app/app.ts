@@ -9,13 +9,20 @@ import {
 } from "@angular/core";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { InteropDrawer } from "interop/popover";
+import { InteropToasts } from "interop/toast";
 
 const STORAGE_KEY = "demo-color-scheme";
 const FOCUS_RING_KEY = "demo-focus-ring";
 
 @Component({
 	selector: "demo-root",
-	imports: [RouterOutlet, RouterLink, RouterLinkActive, InteropDrawer],
+	imports: [
+		RouterOutlet,
+		RouterLink,
+		RouterLinkActive,
+		InteropDrawer,
+		InteropToasts,
+	],
 	templateUrl: "./app.html",
 	styleUrl: "./app.css",
 })
@@ -29,7 +36,9 @@ export class App {
 	);
 
 	/** A focus ring variation from focus-rings.css, as a list of flags; empty is the library's ring. */
-	protected readonly focusRing = signal(localStorage.getItem(FOCUS_RING_KEY) ?? "");
+	protected readonly focusRing = signal(
+		localStorage.getItem(FOCUS_RING_KEY) ?? "",
+	);
 	protected readonly focusRings = [
 		{ value: "", label: "current" },
 		{ value: "previous", label: "previous" },

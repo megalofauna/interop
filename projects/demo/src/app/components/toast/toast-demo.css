@@ -1,0 +1,9 @@
+.aka {
+	font-style: italic;
+}
+
+.buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-2);
+}

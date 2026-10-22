@@ -233,6 +233,14 @@
 						</li>
 						<li>
 							<a
+								routerLink="/components/toast"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Toast</a
+							>
+						</li>
+						<li>
+							<a
 								routerLink="/components/toolbar"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
@@ -264,6 +272,8 @@
 	<main>
 		<router-outlet />
 	</main>
+
+	<section interop-toasts popover="manual" aria-label="Notifications"></section>
 
 	<footer>Interop demo</footer>
 </div>

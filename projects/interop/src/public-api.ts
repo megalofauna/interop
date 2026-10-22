@@ -26,6 +26,7 @@ export {
 	type ValidityKey,
 } from './bind-validation';
 export { guardActivation } from './guard-activation';
+export { bindToasts, toast, type ToastColor, type ToastOptions } from './toast';
 export { scopeSelectAll } from './scope-select-all';
 export { splitLines } from './split-lines';
 export { getIcon, registerIcons, type IconDefinition, type IconPath } from './icon-registry';
