@@ -474,6 +474,36 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('toast', () => {
+		const item = (attributes = '', buttons = '<button type="button" aria-label="Dismiss"></button>') =>
+			`<div interop-toast ${attributes}><div><p>Saved</p></div>${buttons}</div>`;
+
+		it('accepts a named manual region with a timed toast and a persistent one', () => {
+			render(`<section interop-toasts popover="manual" aria-label="Notifications">${item('data-timeout="6000"')}${item('itx-color="danger"')}</section>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a region with no name, and one that is not a manual popover', () => {
+			render('<section interop-toasts popover="manual"></section><section interop-toasts popover aria-label="A"></section><div interop-toasts aria-label="B"></div>');
+			expect(rules()).toEqual(['toasts-name', 'toasts-popover', 'toasts-popover']);
+		});
+
+		it('flags more than three toasts', () => {
+			render(`<section interop-toasts popover="manual" aria-label="Notifications">${item().repeat(4)}</section>`);
+			expect(rules()).toEqual(['toasts-stack']);
+		});
+
+		it('flags a timeout on a danger toast and on a toast with an action', () => {
+			render(`
+				<section interop-toasts popover="manual" aria-label="Notifications">
+					${item('itx-color="danger" data-timeout="6000"')}
+					${item('data-timeout="6000"', '<button type="button">Undo</button><button type="button" aria-label="Dismiss"></button>')}
+				</section>
+			`);
+			expect(rules()).toEqual(['toast-timeout-ignored', 'toast-timeout-ignored']);
+		});
+	});
+
 	describe('field', () => {
 		it('accepts a labeled field with a hint that exists', () => {
 			render(`

@@ -1,0 +1,91 @@
+/*
+ * Toast. Also known as snackbar (Material), toast notification (Carbon), notification.
+ *
+ * The region is a `popover="manual"`, so the toasts sit in the top layer, over every other popover.
+ * It is placed at the block-end, inline-end corner of the window, and holds its toasts in a column,
+ * newest last. Each toast is an icon, its text, an optional action and a dismiss button.
+ *
+ * Nothing in a toast is a live region: toast() speaks the message with announce().
+ */
+:where([interop-toasts]) {
+	inset: auto;
+	inset-block-end: var(--itx-toasts-inset);
+	inset-inline-end: var(--itx-toasts-inset);
+	margin: 0;
+	box-sizing: border-box;
+	inline-size: min(var(--itx-toast-inline-size), 100vw - 2 * var(--itx-toasts-inset));
+	/* The column scrolls when it is taller than the window, so no toast is out of reach (WCAG 1.4.10). */
+	max-block-size: calc(100dvh - 2 * var(--itx-toasts-inset));
+	overflow-y: auto;
+	padding: 0;
+	color: inherit;
+	background: none;
+	border-width: 0px;
+}
+
+/* Only while open: a display here would show the closed popover. */
+:where([interop-toasts]:popover-open) {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-toasts-gap);
+}
+
+:where([interop-toast]) {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-toast-gap);
+	box-sizing: border-box;
+	padding-block: var(--itx-toast-padding-block);
+	padding-inline: var(--itx-toast-padding-inline);
+	font-size: var(--itx-toast-font-size);
+	line-height: var(--itx-toast-line-height);
+	overflow-wrap: anywhere;
+	color: var(--itx-toast-color);
+	background-color: var(--itx-toast-background-color);
+	border-width: var(--itx-toast-border-width);
+	border-style: solid;
+	border-color: var(--itx-toast-border-color);
+	/* The status edge: a border, so it flips sides in right-to-left text. */
+	border-inline-start-width: var(--itx-toast-accent-border-width);
+	border-inline-start-color: var(--itx-toast-accent-color);
+	border-radius: var(--itx-toast-border-radius);
+	corner-shape: var(--itx-toast-corner-shape);
+	box-shadow: var(--itx-toast-box-shadow);
+	transition-property: opacity, translate;
+	transition-duration: var(--itx-toast-transition-duration);
+	transition-timing-function: var(--itx-toast-transition-timing-function);
+
+	/* The text takes the room; the buttons keep their size. */
+	& > div {
+		flex: 1;
+		/* Centers one line of text on the 32px buttons. */
+		padding-block: calc((var(--itx-space-8) - 1lh) / 2);
+	}
+
+	& > div > p {
+		margin: 0;
+	}
+
+	& > div > p:first-child {
+		font-weight: var(--itx-toast-message-font-weight);
+	}
+}
+
+/* The icon shows the status in its shape as well as its color (WCAG 1.4.1). */
+:where([interop-toast] > svg[interop-icon]) {
+	--itx-icon-color: var(--itx-toast-accent-color);
+	--itx-icon-inline-size: var(--itx-toast-icon-size);
+	--itx-icon-block-size: var(--itx-toast-icon-size);
+	margin-block: calc((var(--itx-space-8) - var(--itx-toast-icon-size)) / 2);
+}
+
+/*
+ * It slides in and disappears at once. A fade out keeps a dismissed toast rendered, and focus has
+ * already moved on from it.
+ */
+@starting-style {
+	:where([interop-toast]) {
+		opacity: 0;
+		translate: 0 var(--itx-space-2);
+	}
+}

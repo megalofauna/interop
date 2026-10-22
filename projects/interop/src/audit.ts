@@ -671,6 +671,62 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Point aria-describedby at the message: <p id="message">…</p>.',
 		}),
 	},
+	'toasts-name': {
+		selector: '[interop-toasts]',
+		check: (region) =>
+			ariaName(region)
+				? null
+				: {
+						problem: 'This toast region has no name.',
+						reason: 'Screen reader users find toasts through the landmarks list, by the region’s name. Without one it is not a landmark.',
+						advice: 'Add aria-label="Notifications".',
+					},
+	},
+	'toasts-popover': {
+		selector: '[interop-toasts]:not([popover="manual"])',
+		check: (region) => ({
+			problem: region.hasAttribute('popover') ? 'This toast region is a popover that closes by itself.' : 'This toast region is not a popover.',
+			reason: region.hasAttribute('popover')
+				? 'An auto popover closes on any click or Escape elsewhere, taking every toast with it.'
+				: 'Without the top layer, an open popover or a select’s picker covers the toasts.',
+			advice: 'Add popover="manual".',
+		}),
+	},
+	'toasts-stack': {
+		selector: '[interop-toasts]',
+		check: (region) =>
+			region.querySelectorAll(':scope > [interop-toast]').length > 3
+				? {
+						problem: 'This toast region holds more than three toasts.',
+						reason: 'A stack this tall covers the page, and each toast is easier to miss. Toasts stay until dismissed, so they add up.',
+						advice: 'Show one toast for a group of changes ("3 files deleted"), or show the result in the page instead.',
+					}
+				: null,
+	},
+	'toast-timeout-ignored': {
+		selector: '[interop-toast][data-timeout]',
+		check: (item) =>
+			item.matches('[itx-color="danger"]') || item.querySelectorAll('button').length > 1
+				? {
+						problem: `This toast ${item.matches('[itx-color="danger"]') ? 'is danger' : 'has an action'}, so its timeout is ignored.`,
+						reason: 'An error or an action that disappears on a timer can be gone before the user reads it or reaches it (WCAG 2.2.1).',
+						advice: 'Leave out timeout. The toast stays until the user dismisses it.',
+					}
+				: null,
+	},
+	'toast-under-modal': {
+		selector: '[interop-toast]',
+		check: (item) => {
+			const modal = Array.from(item.ownerDocument.querySelectorAll('dialog[open]')).find((dialog) => matchesSafely(dialog, ':modal'));
+			return modal && !modal.contains(item)
+				? {
+						problem: 'This toast is outside the open modal dialog.',
+						reason: 'A modal dialog makes the rest of the page inert. The toast shows over it, but nothing in it can be clicked or focused.',
+						advice: 'Put a <section interop-toasts popover="manual" aria-label="Notifications"> inside the dialog. toast() uses it while the dialog is open.',
+					}
+				: null;
+		},
+	},
 	'field-label': {
 		selector: ':is(input, textarea)[interop-input], select[interop-select]',
 		check: (control) =>
@@ -910,4 +966,13 @@ function visibleText(node: Node): string {
 	const label = node.getAttribute('aria-label') ?? (node instanceof HTMLImageElement ? node.alt : null);
 	if (label) return ` ${label} `;
 	return Array.from(node.childNodes).map(visibleText).join('');
+}
+
+/** Whether an element matches a selector this browser may not support, such as :modal in jsdom. */
+function matchesSafely(element: Element, selector: string): boolean {
+	try {
+		return element.matches(selector);
+	} catch {
+		return false;
+	}
 }

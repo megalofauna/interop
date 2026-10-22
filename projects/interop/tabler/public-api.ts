@@ -23,3 +23,7 @@ export { TablerLink } from './link';
 export { TablerList } from './list';
 export { TablerListNumbers } from './list-numbers';
 export { TablerStrikethrough } from './strikethrough';
+export { TablerCircleCheck } from './circle-check';
+export { TablerInfoCircle } from './info-circle';
+export { TablerAlertTriangle } from './alert-triangle';
+export { TablerAlertCircle } from './alert-circle';

@@ -1,0 +1,47 @@
+:where([interop-toasts]) {
+	/* The distance from the window's edges. */
+	--itx-toasts-inset: var(--itx-space-4);
+	--itx-toasts-gap: var(--itx-space-2);
+	--itx-toast-inline-size: 22rem;
+}
+
+:where([interop-toast]) {
+	--itx-toast-gap: var(--itx-space-3);
+	--itx-toast-padding-block: var(--itx-space-2);
+	--itx-toast-padding-inline: var(--itx-space-4) var(--itx-space-2);
+	--itx-toast-font-size: var(--itx-font-size-p-sm);
+	--itx-toast-line-height: var(--itx-line-height-p-sm);
+	--itx-toast-message-font-weight: 600;
+	--itx-toast-icon-size: var(--itx-icon-size-md);
+
+	--itx-toast-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-toast-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	--itx-toast-border-width: var(--itx-border-width);
+	/* 3:1 against the page in both schemes, so the toast's edge is visible (WCAG 1.4.11). */
+	--itx-toast-border-color: var(--itx-neutral-500);
+	--itx-toast-accent-border-width: var(--itx-border-width-strong);
+	/* The status edge and icon: 3:1 against the toast and the page in both schemes. */
+	--itx-toast-accent-color: var(--itx-neutral-500);
+	--itx-toast-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-toast-corner-shape: var(--itx-corner-shape);
+	--itx-toast-box-shadow: 0 var(--itx-space-1) var(--itx-space-4) oklch(0 0 0 / 0.15);
+
+	--itx-toast-transition-duration: var(--itx-transition-duration-slower);
+	--itx-toast-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+:where([interop-toast][itx-color="success"]) {
+	--itx-toast-accent-color: light-dark(oklch(0.527 0.154 150.069), oklch(0.792 0.209 151.711));
+}
+
+:where([interop-toast][itx-color="info"]) {
+	--itx-toast-accent-color: light-dark(oklch(0.488 0.243 264.376), oklch(0.707 0.165 254.624));
+}
+
+:where([interop-toast][itx-color="warning"]) {
+	--itx-toast-accent-color: light-dark(oklch(0.555 0.163 48.998), oklch(0.828 0.189 84.429));
+}
+
+:where([interop-toast][itx-color="danger"]) {
+	--itx-toast-accent-color: var(--itx-role-text-danger);
+}

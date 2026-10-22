@@ -543,3 +543,31 @@ describe('dialog', () => {
 		});
 	}
 });
+
+describe('toast', () => {
+	// Each itx-color block sets the status edge and icon; the first declaration is the neutral one.
+	const accents = [...sheets['toast/interop-toast.base.css'].matchAll(/itx-color="(\w+)"\]\) \{\s*--itx-toast-accent-color:\s*([^;]+);/g)];
+
+	it('has a status color for every itx-color', () => {
+		expect(accents.map(([, color]) => color)).toEqual(['success', 'info', 'warning', 'danger']);
+	});
+
+	for (const [scheme, label] of SCHEMES) {
+		const background = () => token('--itx-toast-background-color', scheme);
+
+		it(`has text of 4.5:1 on the toast in ${label}`, () => {
+			expect(contrast(token('--itx-toast-color', scheme), background())).toBeGreaterThanOrEqual(4.5);
+		});
+
+		it(`has an edge of 3:1 against the page in ${label}`, () => {
+			expect(contrast(token('--itx-toast-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+
+		it(`has status edges and icons of 3:1 against the toast and the page in ${label}`, () => {
+			for (const value of [token('--itx-toast-accent-color', scheme), ...accents.map(([, , value]) => resolve(oneLine(value), scheme))]) {
+				expect(contrast(value, background())).toBeGreaterThanOrEqual(3);
+				expect(contrast(value, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			}
+		});
+	}
+});
