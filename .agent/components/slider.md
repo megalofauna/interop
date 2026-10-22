@@ -1,5 +1,11 @@
 # InteropSlider — Mental Model Card
 
+> **Under review: Prime's slider is being retired and rebuilt as CSS on the
+> native input plus `bindSlider()`. See
+> [prompts/SLIDER-REVIEW.md](../../prompts/SLIDER-REVIEW.md).** This card
+> describes the deprecated code. Its demo path, theme token names and focus
+> color are out of date.
+
 ## Files
 
 ```
