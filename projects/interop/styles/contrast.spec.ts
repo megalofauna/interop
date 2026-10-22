@@ -257,6 +257,22 @@ describe('segmented control', () => {
 	}
 });
 
+describe('table', () => {
+	const table = (name: string, scheme: 0 | 1) => token(`--itx-table-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		// WCAG 1.4.3: cell, header and caption text on the page, and a group header on its band.
+		it(`has text of 4.5:1 against the page in ${label}`, () => {
+			for (const name of ['color', 'header-color', 'caption-color']) {
+				expect(contrast(table(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		it(`has group header text of 4.5:1 against its band in ${label}`, () => {
+			expect(contrast(table('group-color', scheme), table('group-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
 describe('toolbar channel', () => {
 	const channel = (scheme: 0 | 1) => token('--itx-toolbar-background-color', scheme);
 	const button = (name: string, scheme: 0 | 1) => token(`--itx-button-${name}`, scheme);

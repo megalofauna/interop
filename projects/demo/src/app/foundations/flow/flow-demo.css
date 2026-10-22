@@ -12,23 +12,10 @@ article img {
 	block-size: auto;
 }
 
-/* Interop has no table component yet; enough to read the rows. */
-article table {
-	border-collapse: collapse;
-	inline-size: 100%;
-	font-size: var(--itx-font-size-p-sm);
-	line-height: var(--itx-line-height-p-sm);
-}
-
-article :is(th, td) {
-	padding: var(--itx-space-2) var(--itx-space-3);
-	text-align: start;
-	border-block-end: var(--itx-border-width) solid light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-}
-
 article blockquote {
 	padding-inline-start: var(--itx-space-4);
-	border-inline-start: var(--itx-border-width-strong) solid light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	border-inline-start: var(--itx-border-width-strong) solid
+		light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 }
 
 article figcaption {
@@ -38,7 +25,8 @@ article figcaption {
 
 article hr {
 	border: 0;
-	border-block-start: var(--itx-border-width) solid light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	border-block-start: var(--itx-border-width) solid
+		light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 }
 
 /* Each flowed block's box, to see the spaces between them. */

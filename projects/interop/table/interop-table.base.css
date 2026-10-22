@@ -1,0 +1,42 @@
+:where(table[interop-table]) {
+	/* The row height is the line height plus the padding above and below: 40px at the default size. */
+	--itx-table-cell-padding-block: var(--itx-space-2);
+	--itx-table-cell-padding-inline: var(--itx-space-3);
+	--itx-table-font-size: var(--itx-font-size-p);
+	--itx-table-line-height: var(--itx-line-height-p);
+	--itx-table-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+
+	--itx-table-header-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	--itx-table-header-font-weight: 600;
+
+	/* The rules between rows guide the eye along a row; the grouping is in the markup, so they are decoration. */
+	--itx-table-border-width: var(--itx-border-width);
+	--itx-table-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	/* Under the column headers. */
+	--itx-table-header-border-width: var(--itx-border-width-strong);
+	--itx-table-header-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+
+	/* A row group's header row. */
+	--itx-table-group-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-900));
+	--itx-table-group-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+
+	--itx-table-caption-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
+	--itx-table-caption-font-weight: 600;
+	--itx-table-caption-padding-block-end: var(--itx-space-2);
+}
+
+/* 32px rows. */
+:where(table[interop-table][itx-size="sm"]) {
+	--itx-table-cell-padding-block: var(--itx-space-1_5);
+	--itx-table-cell-padding-inline: var(--itx-space-2);
+	--itx-table-font-size: var(--itx-font-size-p-sm);
+	--itx-table-line-height: var(--itx-line-height-p-sm);
+}
+
+/* 56px rows. */
+:where(table[interop-table][itx-size="lg"]) {
+	--itx-table-cell-padding-block: var(--itx-space-3_5);
+	--itx-table-cell-padding-inline: var(--itx-space-4);
+	--itx-table-font-size: var(--itx-font-size-p-lg);
+	--itx-table-line-height: var(--itx-line-height-p-lg);
+}

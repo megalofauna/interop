@@ -293,6 +293,49 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('table', () => {
+		const head = '<thead><tr><th scope="col">Name</th><th scope="col">Role</th></tr></thead>';
+		const row = (name: string) => `<tr><th scope="row">${name}</th><td>Pilot</td></tr>`;
+
+		it('accepts a captioned table with headers and one tbody per group', () => {
+			render(`<table interop-table><caption>Crew</caption>${head}
+				<tbody><tr><th scope="rowgroup" colspan="2">Bridge</th></tr>${row('Ada')}</tbody>
+				<tbody><tr><th scope="rowgroup" colspan="2">Engine</th></tr>${row('Bo')}</tbody>
+			</table>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('accepts a name from aria-labelledby', () => {
+			render(`<h2 id="h">Crew</h2><table interop-table aria-labelledby="h">${head}<tbody>${row('Ada')}</tbody></table>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a table with no name, and one with no header cells', () => {
+			render(`<table interop-table>${head}<tbody>${row('Ada')}</tbody></table>`);
+			expect(rules()).toEqual(['table-name']);
+			render('<table interop-table><caption>Crew</caption><tr><td>Ada</td></tr></table>');
+			expect(rules()).toEqual(['table-headers']);
+		});
+
+		it('flags group headers sharing one tbody', () => {
+			render(`<table interop-table><caption>Crew</caption>${head}<tbody>
+				<tr><th scope="rowgroup" colspan="2">Bridge</th></tr>${row('Ada')}
+				<tr><th scope="rowgroup" colspan="2">Engine</th></tr>${row('Bo')}
+			</tbody></table>`);
+			expect(rules()).toEqual(['table-rowgroup', 'table-rowgroup']);
+		});
+
+		it('flags a table wider than its container, unless it is in a scroll area', () => {
+			const table = `<table interop-table><caption>Crew</caption>${head}<tbody>${row('Ada')}</tbody></table>`;
+			render(`<div style="width: 100px"><span>${table}</span></div><div interop-scroll-area>${table}</div>`);
+			const wide = vi.spyOn(HTMLTableElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
+			const narrow = vi.spyOn(HTMLDivElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
+			expect(rules()).toEqual(['table-overflow']);
+			wide.mockRestore();
+			narrow.mockRestore();
+		});
+	});
+
 	describe('toolbar', () => {
 		const button = (name: string) => `<button interop-button type="button">${name}</button>`;
 		const three = button('Bold') + button('Italic') + button('Code');

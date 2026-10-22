@@ -462,6 +462,32 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(element)).toEqual([]);
 	});
 
+	it('finds no violations in tables: grouped row headers, and a numeric table in a scroll area', async () => {
+		document.body.innerHTML = `
+			<main>
+				<table interop-table>
+					<caption>Button inputs</caption>
+					<thead><tr><th scope="col">Name</th><th scope="col">Description</th></tr></thead>
+					<tbody>
+						<tr><th scope="rowgroup" colspan="2">Look</th></tr>
+						<tr><th scope="row"><code>itx-size</code></th><td>sm, md or lg.</td></tr>
+					</tbody>
+					<tbody>
+						<tr><th scope="rowgroup" colspan="2">Behavior</th></tr>
+						<tr><th scope="row"><code>type</code></th><td>Always set it.</td></tr>
+					</tbody>
+				</table>
+				<div interop-scroll-area role="group" aria-labelledby="cargo-caption">
+					<table interop-table itx-size="sm">
+						<caption id="cargo-caption">Cargo</caption>
+						<thead><tr><th scope="col">Item</th><th scope="col" itx-numeric>Mass (kg)</th></tr></thead>
+						<tbody><tr><th scope="row">Water</th><td itx-numeric>1,200</td></tr></tbody>
+					</table>
+				</div>
+			</main>`;
+		expect(await violations(document.body)).toEqual([]);
+	});
+
 	it('finds no violations in forms as the field helpers leave them, after a failed submit', async () => {
 		document.body.innerHTML = `
 			<main>
