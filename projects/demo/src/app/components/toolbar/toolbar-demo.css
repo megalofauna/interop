@@ -1,0 +1,30 @@
+/*
+ * A floating toolbar: a raised pill with a shadow, and round buttons that fill on hover. The padding
+ * is the same on every side, so the end buttons' circles sit concentric with the pill's ends.
+ */
+.floating-toolbar {
+	--itx-toolbar-gap: var(--itx-space-2);
+	inline-size: fit-content;
+	padding: var(--itx-space-1);
+	border-radius: var(--itx-radius-full);
+	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+	box-shadow:
+		0 1px 3px oklch(0 0 0 / 0.12),
+		0 8px 24px oklch(0 0 0 / 0.12);
+}
+
+.floating-toolbar [interop-button] {
+	--itx-button-border-radius: var(--itx-radius-full);
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: transparent;
+	/* Pressed inverts the circle: a fill far from the bar's, so it does not rest on color alone. */
+	--itx-button-color-pressed: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-900)
+	);
+	--itx-button-background-color-pressed: light-dark(
+		var(--itx-neutral-900),
+		var(--itx-neutral-50)
+	);
+	--itx-button-box-shadow-pressed: none;
+}

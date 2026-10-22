@@ -17,6 +17,7 @@ import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
 import { InteropStepsForm } from 'interop/steps';
 import { InteropTabs } from 'interop/tabs';
+import { InteropToolbar } from 'interop/toolbar';
 import { InteropTooltip } from 'interop/tooltip';
 import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
@@ -343,6 +344,28 @@ class Components {
 })
 class BoundTabs {}
 
+// A comment box: a formatting toolbar in named groups, acting on the text area after it.
+@Component({
+	imports: [InteropToolbar],
+	template: `
+		<div>
+			<div interop-toolbar role="toolbar" focusgroup="toolbar" aria-label="Formatting" aria-controls="bound-comment">
+				<div role="group" aria-label="Text">
+					<button interop-button="icon" type="button" aria-label="Bold"><svg aria-hidden="true"></svg></button>
+					<button interop-button="icon" type="button" aria-label="Italic"><svg aria-hidden="true"></svg></button>
+				</div>
+				<div role="group" aria-label="Insert">
+					<button interop-button="icon" type="button" aria-label="Code"><svg aria-hidden="true"></svg></button>
+					<button interop-button="icon" type="button" aria-label="Link" aria-disabled="true"><svg aria-hidden="true"></svg></button>
+				</div>
+			</div>
+			<label for="bound-comment">Comment</label>
+			<textarea id="bound-comment"></textarea>
+		</div>
+	`,
+})
+class BoundToolbar {}
+
 @Component({
 	imports: [InteropStepsForm],
 	template: `
@@ -415,6 +438,16 @@ describe('accessibility (axe-core)', () => {
 		expect(panel.getAttribute('hidden')).toBe('until-found');
 		expect(await violations(element)).toEqual([]);
 		reveal(element);
+		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations in a toolbar as bindToolbar leaves it', async () => {
+		const fixture = TestBed.createComponent(BoundToolbar);
+		fixture.detectChanges();
+		TestBed.tick();
+		const element = fixture.nativeElement as HTMLElement;
+		const buttons = Array.from(element.querySelectorAll('button'), (button) => button.tabIndex);
+		expect(buttons).toEqual([0, -1, -1, -1]);
 		expect(await violations(element)).toEqual([]);
 	});
 

@@ -1,0 +1,33 @@
+:where([interop-toolbar]) {
+	/* Between the toolbar's direct items, and so between its groups. */
+	--itx-toolbar-gap: var(--itx-space-3);
+	/* Between the items of a group inside the toolbar. */
+	--itx-toolbar-group-gap: var(--itx-space-1);
+}
+
+/* Channel: the buttons sit in a filled channel, the segmented control's, with a bar between groups. */
+:where([interop-toolbar~="channel"]) {
+	--itx-toolbar-gap: var(--itx-space-1);
+	--itx-toolbar-group-gap: var(--itx-space-0_5);
+	--itx-toolbar-padding: var(--itx-space-0_5);
+	--itx-toolbar-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-toolbar-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
+	/* Decoration: the group names carry the grouping to screen readers. */
+	--itx-toolbar-divider-width: 1px;
+	--itx-toolbar-divider-inset-block: var(--itx-space-1_5);
+	--itx-toolbar-divider-color: light-dark(var(--itx-neutral-400), var(--itx-neutral-600));
+}
+
+/*
+ * A channel's buttons draw no fill or edge at rest, and show the edge on hover. Pressed raises the
+ * button on the segmented control's pill fill, and keeps the button's doubled edge in the text
+ * color, so it reads apart from hover's single dim edge. The corner nests inside the channel's.
+ */
+:where([interop-toolbar~="channel"]) :where([interop-button]) {
+	--itx-button-background-color: transparent;
+	--itx-button-background-color-hover: transparent;
+	--itx-button-border-color: transparent;
+	--itx-button-border-color-hover: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-button-background-color-pressed: light-dark(var(--itx-neutral-50), var(--itx-neutral-700));
+	--itx-button-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-toolbar-padding));
+}
