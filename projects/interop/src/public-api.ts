@@ -16,6 +16,7 @@ export { bindSteps, type StepsChangeDetail, type StepsOptions } from './bind-ste
 export { bindTabs, type TabsChangeDetail, type TabsOptions } from './bind-tabs';
 export { bindTargetCurrent } from './bind-target-current';
 export { bindTagInput, bindTags, type TagAddDetail, type TagInputOptions, type TagsOptions } from './bind-tags';
+export { bindToolbar } from './bind-toolbar';
 export { bindTooltip } from './bind-tooltip';
 export {
 	bindValidation,

@@ -47,13 +47,18 @@
 	--itx-button-spinner-animation-duration: var(--itx-animation-duration-spin);
 }
 
-:where(:is(button, summary)[interop-button][itx-size="sm"]) {
+/*
+ * A toolbar's itx-size sets the size of every button in it, and a button's own itx-size there is
+ * ignored: the audit's toolbar-button-size rule says so. Inside a toolbar without itx-size, a button
+ * keeps its own.
+ */
+:where(:is(button, summary)[interop-button]:is([itx-size="sm"]:not([interop-toolbar][itx-size] *), [interop-toolbar][itx-size="sm"] *)) {
 	--itx-button-min-block-size: var(--itx-space-8);
 	--itx-button-font-size: var(--itx-font-size-p-sm);
 	--itx-icon-size: var(--itx-icon-size-sm);
 }
 
-:where(:is(button, summary)[interop-button][itx-size="lg"]) {
+:where(:is(button, summary)[interop-button]:is([itx-size="lg"]:not([interop-toolbar][itx-size] *), [interop-toolbar][itx-size="lg"] *)) {
 	--itx-button-min-block-size: var(--itx-space-14);
 	--itx-button-font-size: var(--itx-font-size-p-lg);
 	--itx-icon-size: var(--itx-icon-size-lg);

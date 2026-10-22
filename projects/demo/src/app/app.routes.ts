@@ -101,6 +101,12 @@ export const routes: Routes = [
 			import("./components/switch/switch-demo").then((m) => m.SwitchDemo),
 	},
 	{
+		path: "components/table",
+		title: "Table",
+		loadComponent: () =>
+			import("./components/table/table-demo").then((m) => m.TableDemo),
+	},
+	{
 		path: "components/tabs",
 		title: "Tabs",
 		loadComponent: () =>
@@ -111,6 +117,12 @@ export const routes: Routes = [
 		title: "Tags",
 		loadComponent: () =>
 			import("./components/tags/tags-demo").then((m) => m.TagsDemo),
+	},
+	{
+		path: "components/toolbar",
+		title: "Toolbar",
+		loadComponent: () =>
+			import("./components/toolbar/toolbar-demo").then((m) => m.ToolbarDemo),
 	},
 	{
 		path: "components/tooltip",

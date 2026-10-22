@@ -1,0 +1,267 @@
+<h1>Table</h1>
+<p class="aka"><em>Also known as data table, table view.</em></p>
+<p>
+	A table holds data in rows and columns. It is the native
+	<code>&lt;table&gt;</code> with <code>interop-table</code>, and you write it:
+	a <code>&lt;caption&gt;</code> to name it,
+	<code>&lt;th scope="col"&gt;</code> for column headers, and
+	<code>&lt;th scope="row"&gt;</code> for the cell that names each row. Interop
+	styles it. There is no script.
+</p>
+<p>
+	The table fills its container and its cells wrap. A table too wide for its
+	container goes in a scroll area; the console says when one needs it.
+</p>
+
+<h2>A reference table</h2>
+<p>
+	Row headers name each row, so a screen reader says which attribute a
+	description belongs to. Rows in groups take one <code>&lt;tbody&gt;</code> per
+	group, its first row a <code>&lt;th scope="rowgroup"&gt;</code>: a group
+	header labels every row in its <code>&lt;tbody&gt;</code>.
+</p>
+<table interop-table>
+	<caption>
+		Button attributes
+	</caption>
+	<thead>
+		<tr>
+			<th scope="col">Attribute</th>
+			<th scope="col">Does</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="rowgroup" colspan="2">Look</th>
+		</tr>
+		<tr>
+			<th scope="row"><code>interop-button</code></th>
+			<td>
+				Styles a native button. <code>icon</code> makes it square, for a button
+				that shows only an icon.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><code>itx-size</code></th>
+			<td>sm, md or lg: 32, 40 or 56px tall.</td>
+		</tr>
+	</tbody>
+	<tbody>
+		<tr>
+			<th scope="rowgroup" colspan="2">Behavior</th>
+		</tr>
+		<tr>
+			<th scope="row"><code>type</code></th>
+			<td>
+				Always set it. A button in a form without a type submits the form.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"><code>aria-pressed</code></th>
+			<td>Makes it a toggle that stays on or off.</td>
+		</tr>
+	</tbody>
+</table>
+<figure
+	interop-code-block
+	language="html"
+	caption="HTML"
+	[code]="examples.reference"
+></figure>
+
+<h2>A data table</h2>
+<p>
+	<code>itx-numeric</code> on a cell aligns it to the end with figures of equal
+	width, so digits line up down a column. A <code>&lt;col&gt;</code> cannot set
+	alignment, so each cell carries it. This table is wider than a phone, so it
+	sits in a scroll area named by its caption, which the keyboard can reach while
+	it overflows.
+</p>
+<div interop-scroll-area aria-labelledby="cargo-caption">
+	<table interop-table>
+		<caption id="cargo-caption">
+			Cargo manifest
+		</caption>
+		<thead>
+			<tr>
+				<th scope="col">Item</th>
+				<th scope="col">Category</th>
+				<th scope="col">Deck</th>
+				<th scope="col" itx-numeric>Mass (kg)</th>
+				<th scope="col" itx-numeric>Volume (m³)</th>
+				<th scope="col" itx-numeric>Value (credits)</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (row of cargo; track row.item) {
+				<tr>
+					<th scope="row">{{ row.item }}</th>
+					<td>{{ row.category }}</td>
+					<td>{{ row.deck }}</td>
+					<td itx-numeric>{{ row.mass }}</td>
+					<td itx-numeric>{{ row.volume }}</td>
+					<td itx-numeric>{{ row.value }}</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.data"
+></figure>
+
+<h2>Empty</h2>
+<p>
+	Keep the caption and the headers, and say why there are no rows in one cell
+	spanning the columns.
+</p>
+<div interop-scroll-area aria-labelledby="empty-caption">
+	<table interop-table>
+		<caption id="empty-caption">
+			Cargo on deck A
+		</caption>
+		<thead>
+			<tr>
+				<th scope="col">Item</th>
+				<th scope="col">Category</th>
+				<th scope="col">Deck</th>
+				<th scope="col" itx-numeric>Mass (kg)</th>
+				<th scope="col" itx-numeric>Volume (m³)</th>
+				<th scope="col" itx-numeric>Value (credits)</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="6">No cargo on this deck.</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="HTML"
+	[code]="examples.empty"
+></figure>
+
+<h2>Sizes</h2>
+@for (size of ["sm", "md", "lg"]; track size) {
+	<table interop-table [attr.itx-size]="size">
+		<caption>
+			Size
+			{{
+				size
+			}}
+		</caption>
+		<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Role</th>
+				<th scope="col" itx-numeric>Hours</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (member of crew.slice(0, 2); track member.name) {
+				<tr>
+					<th scope="row">{{ member.name }}</th>
+					<td>{{ member.role }}</td>
+					<td itx-numeric>{{ member.hours }}</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+<h2>A narrow layout of your own</h2>
+<p>
+	Interop's table stays a table at every width. To change how it looks when
+	narrow, write the layout yourself on a wrapper with a container query. This
+	one stacks each row into a card below 30rem. Drag the frame's corner to see
+	it.
+</p>
+<p>
+	Rows take their height from the line height and the cell padding, so turning
+	them into blocks undoes nothing. Table semantics survive
+	<code>display: block</code> and <code>grid</code> on table parts in current
+	browsers, so a screen reader still reads a table with headers.
+</p>
+<div class="frame">
+	<div class="crew">
+		<table interop-table>
+			<caption>
+				Crew
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Role</th>
+					<th scope="col">Station</th>
+					<th scope="col" itx-numeric>Hours</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (member of crew; track member.name) {
+					<tr>
+						<th scope="row" data-label="Name">{{ member.name }}</th>
+						<td data-label="Role">{{ member.role }}</td>
+						<td data-label="Station">{{ member.station }}</td>
+						<td data-label="Hours" itx-numeric>{{ member.hours }}</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.stackedHtml"
+></figure>
+<figure
+	interop-code-block
+	language="css"
+	caption="Your stylesheet"
+	[code]="examples.stackedCss"
+></figure>
+
+<h3 id="narrow-contract">What a narrow layout must keep</h3>
+<table interop-table aria-labelledby="narrow-contract">
+	<thead>
+		<tr>
+			<th scope="col">Keep</th>
+			<th scope="col">Why</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">The caption and every header cell</th>
+			<td>
+				Hide the header row from view, not from the page: screen readers still
+				announce each cell's column from it.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">No <code>display: contents</code> on table parts</th>
+			<td>It removes their table roles in every browser.</td>
+		</tr>
+		<tr>
+			<th scope="row">Labels that match the headers</th>
+			<td>
+				<code>data-label</code> repeats the header for the eye. Keep it out of
+				the spoken text with <code>/ ""</code>, since the header is announced
+				already.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">The data a row compares</th>
+			<td>
+				Stacking loses side-by-side comparison. For data read down a column, a
+				scroll area keeps it.
+			</td>
+		</tr>
+	</tbody>
+</table>

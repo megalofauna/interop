@@ -22,15 +22,9 @@
 	max-block-size: 16rem;
 }
 
-table {
-	border-collapse: collapse;
-}
-
 th,
 td {
-	padding: var(--itx-space-1) var(--itx-space-3);
 	white-space: nowrap;
-	text-align: start;
 }
 
 .chip {

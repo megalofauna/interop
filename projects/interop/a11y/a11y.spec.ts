@@ -17,6 +17,7 @@ import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
 import { InteropStepsForm } from 'interop/steps';
 import { InteropTabs } from 'interop/tabs';
+import { InteropToolbar } from 'interop/toolbar';
 import { InteropTooltip } from 'interop/tooltip';
 import { TablerCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
 
@@ -343,6 +344,28 @@ class Components {
 })
 class BoundTabs {}
 
+// A comment box: a formatting toolbar in named groups, acting on the text area after it.
+@Component({
+	imports: [InteropToolbar],
+	template: `
+		<div>
+			<div interop-toolbar role="toolbar" focusgroup="toolbar" aria-label="Formatting" aria-controls="bound-comment">
+				<div role="group" aria-label="Text">
+					<button interop-button="icon" type="button" aria-label="Bold"><svg aria-hidden="true"></svg></button>
+					<button interop-button="icon" type="button" aria-label="Italic"><svg aria-hidden="true"></svg></button>
+				</div>
+				<div role="group" aria-label="Insert">
+					<button interop-button="icon" type="button" aria-label="Code"><svg aria-hidden="true"></svg></button>
+					<button interop-button="icon" type="button" aria-label="Link" aria-disabled="true"><svg aria-hidden="true"></svg></button>
+				</div>
+			</div>
+			<label for="bound-comment">Comment</label>
+			<textarea id="bound-comment"></textarea>
+		</div>
+	`,
+})
+class BoundToolbar {}
+
 @Component({
 	imports: [InteropStepsForm],
 	template: `
@@ -418,6 +441,16 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(element)).toEqual([]);
 	});
 
+	it('finds no violations in a toolbar as bindToolbar leaves it', async () => {
+		const fixture = TestBed.createComponent(BoundToolbar);
+		fixture.detectChanges();
+		TestBed.tick();
+		const element = fixture.nativeElement as HTMLElement;
+		const buttons = Array.from(element.querySelectorAll('button'), (button) => button.tabIndex);
+		expect(buttons).toEqual([0, -1, -1, -1]);
+		expect(await violations(element)).toEqual([]);
+	});
+
 	it('finds no violations in a multi-step form as bindSteps leaves it, with every step shown', async () => {
 		const fixture = TestBed.createComponent(BoundSteps);
 		fixture.detectChanges();
@@ -427,6 +460,32 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(element)).toEqual([]);
 		element.querySelectorAll('fieldset[hidden]').forEach((step) => step.removeAttribute('hidden'));
 		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations in tables: grouped row headers, and a numeric table in a scroll area', async () => {
+		document.body.innerHTML = `
+			<main>
+				<table interop-table>
+					<caption>Button inputs</caption>
+					<thead><tr><th scope="col">Name</th><th scope="col">Description</th></tr></thead>
+					<tbody>
+						<tr><th scope="rowgroup" colspan="2">Look</th></tr>
+						<tr><th scope="row"><code>itx-size</code></th><td>sm, md or lg.</td></tr>
+					</tbody>
+					<tbody>
+						<tr><th scope="rowgroup" colspan="2">Behavior</th></tr>
+						<tr><th scope="row"><code>type</code></th><td>Always set it.</td></tr>
+					</tbody>
+				</table>
+				<div interop-scroll-area role="group" aria-labelledby="cargo-caption">
+					<table interop-table itx-size="sm">
+						<caption id="cargo-caption">Cargo</caption>
+						<thead><tr><th scope="col">Item</th><th scope="col" itx-numeric>Mass (kg)</th></tr></thead>
+						<tbody><tr><th scope="row">Water</th><td itx-numeric>1,200</td></tr></tbody>
+					</table>
+				</div>
+			</main>`;
+		expect(await violations(document.body)).toEqual([]);
 	});
 
 	it('finds no violations in forms as the field helpers leave them, after a failed submit', async () => {

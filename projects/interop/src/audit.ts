@@ -1,3 +1,5 @@
+import { OWNS_ARROW_KEYS } from './focusable';
+
 export interface AuditIssue {
 	readonly rule: string;
 	readonly element: Element;
@@ -326,6 +328,56 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: null;
 		},
 	},
+	'table-name': {
+		selector: 'table[interop-table]',
+		check: (table) =>
+			ariaName(table) || table.querySelector(':scope > caption')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This table has no name.',
+						reason: 'A screen reader lists tables by name, and announces this one with nothing to say what it holds.',
+						advice: 'Add a <caption> as the table’s first child, or aria-labelledby pointing at a heading.',
+					},
+	},
+	'table-headers': {
+		selector: 'table[interop-table]',
+		check: (table) =>
+			table.querySelector('th')
+				? null
+				: {
+						problem: 'This table has no header cells.',
+						reason:
+							'Without a <th>, a screen reader reads each cell without saying which column or row it belongs to, and Safari may treat the table as layout.',
+						advice: 'Make the header row <th scope="col">, and the cell that names each row <th scope="row">.',
+					},
+	},
+	'table-rowgroup': {
+		selector: 'table[interop-table] th[scope="rowgroup"]',
+		check: (header) => {
+			const row = header.parentElement;
+			const group = row?.parentElement;
+			return group?.matches('tbody') && group.firstElementChild === row && group.querySelectorAll('th[scope="rowgroup"]').length === 1
+				? null
+				: {
+						problem: 'This group header is not the first row of its own <tbody>.',
+						reason: 'A row group header labels every row in its <tbody>, so in a shared <tbody> it labels the rows of later groups too.',
+						advice: 'Give each group its own <tbody>, with the group header in its first row.',
+					};
+		},
+	},
+	'table-overflow': {
+		selector: 'table[interop-table]',
+		check: (table) => {
+			const container = blockAncestor(table);
+			return container && !table.closest('[interop-scroll-area]') && table.getBoundingClientRect().width > container.clientWidth + 1
+				? {
+						problem: 'This table is wider than its container.',
+						reason: 'The page scrolls sideways to show it, so every line of text on the page needs two directions to read (WCAG 1.4.10).',
+						advice: 'Wrap it in <div interop-scroll-area aria-labelledby="…"> named by its caption, or shorten what will not wrap.',
+					}
+				: null;
+		},
+	},
 	'tabs-name': {
 		selector: TABLISTS,
 		check: (tablist) =>
@@ -336,6 +388,77 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						reason: 'A screen reader announces "tab list" with nothing to say what the tabs are for.',
 						advice: 'Add aria-label="…" to the tab list, or aria-labelledby pointing at a heading.',
 					},
+	},
+	'toolbar-role': {
+		selector: '[interop-toolbar]:not([role="toolbar"])',
+		check: () => ({
+			problem: 'This toolbar has no role="toolbar".',
+			reason: 'focusgroup="toolbar" gives the role only in browsers that support focusgroup. Elsewhere it is announced as plain content.',
+			advice: 'Add role="toolbar".',
+		}),
+	},
+	'toolbar-focusgroup': {
+		selector: '[interop-toolbar]:not([focusgroup~="toolbar"])',
+		check: () => ({
+			problem: 'This toolbar has no focusgroup="toolbar".',
+			reason:
+				'Browsers with focusgroup move focus between the items only when it is set, and bindToolbar() steps aside for them. The toolbar is then one Tab stop per item.',
+			advice: 'Add focusgroup="toolbar".',
+		}),
+	},
+	'toolbar-name': {
+		selector: '[role="toolbar"], [interop-toolbar]',
+		check: (toolbar) =>
+			ariaName(toolbar)
+				? null
+				: {
+						problem: 'This toolbar has no name.',
+						reason:
+							'A screen reader announces "toolbar" with nothing to say what it acts on. With two toolbars on a page, ARIA requires a name.',
+						advice: 'Add aria-label="…", or aria-labelledby pointing at visible text.',
+					},
+	},
+	'toolbar-size': {
+		selector: '[interop-toolbar]',
+		check: (toolbar) =>
+			toolbar.querySelectorAll(INTERACTIVE).length < 3
+				? {
+						problem: 'This toolbar has fewer than three controls.',
+						reason: 'A toolbar hides all but one of its controls from the Tab key. With one or two, that costs more than it saves.',
+						advice: 'Remove role="toolbar", focusgroup and interop-toolbar, and leave the buttons as they are.',
+					}
+				: null,
+	},
+	'toolbar-button-size': {
+		selector: '[interop-toolbar][itx-size] [interop-button][itx-size]',
+		check: (button) => ({
+			problem: `This button's itx-size="${button.getAttribute('itx-size')}" is ignored.`,
+			reason: `Its toolbar sets itx-size="${button.closest('[interop-toolbar]')!.getAttribute('itx-size')}" for every button in it, so the buttons stay one size.`,
+			advice: 'Remove itx-size from the button, or change it on the toolbar.',
+		}),
+	},
+	'toolbar-orientation': {
+		selector: '[focusgroup~="toolbar"][focusgroup~="block"]:not([aria-orientation="vertical"])',
+		check: () => ({
+			problem: 'This vertical toolbar has no aria-orientation="vertical".',
+			reason: 'Up and Down move focus, but the toolbar is announced as horizontal, so a screen reader user presses Left and Right.',
+			advice: 'Add aria-orientation="vertical".',
+		}),
+	},
+	'toolbar-arrow-keys': {
+		selector: '[interop-toolbar]',
+		check: (toolbar) => {
+			const items = Array.from(toolbar.querySelectorAll(INTERACTIVE));
+			const owners = items.filter((item) => item.matches(OWNS_ARROW_KEYS));
+			return owners.length > 1 || (owners.length === 1 && owners[0] !== items.at(-1))
+				? {
+						problem: 'A control in this toolbar uses the arrow keys and is not its last item.',
+						reason:
+							'A text field moves its caret, and radios change their selection, with the same keys that move between toolbar items. Focus cannot leave it with the arrows.',
+						advice: 'Put one text field last, and replace radios with buttons using aria-pressed, or move them out of the toolbar.',
+					}
+				: null;
+		},
 	},
 	'tabs-empty': {
 		selector: TABLISTS,
@@ -353,7 +476,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		check: () => ({
 			problem: 'This element is inside a tab list but is not a tab.',
 			reason: 'A tab list may own only tabs. Anything else is skipped by the arrow keys, or announced as part of the tabs.',
-			advice: 'Move it out of the tab list. Put actions in a toolbar beside it.',
+			advice: 'Move it out of the tab list. Put actions beside it.',
 		}),
 	},
 	'tabs-panel': {
@@ -732,6 +855,13 @@ function accessibleName(element: Element): string {
 }
 
 /** The name from aria-labelledby or aria-label alone. */
+/** The nearest ancestor that lays out as a box, skipping inline and display: contents ones, which have no width. */
+function blockAncestor(element: Element): Element | null {
+	let ancestor = element.parentElement;
+	while (ancestor && ['inline', 'contents'].includes(getComputedStyle(ancestor).display)) ancestor = ancestor.parentElement;
+	return ancestor;
+}
+
 function ariaName(element: Element): string {
 	const labelledby = element.getAttribute('aria-labelledby');
 	if (labelledby) {

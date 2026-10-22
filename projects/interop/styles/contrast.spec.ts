@@ -137,6 +137,19 @@ const SCHEMES = [
 ] as const;
 const token = (name: string, scheme: 0 | 1) => resolve(declarations.get(name)!, scheme);
 
+/**
+ * A reader for the tokens one rule restates for another component, such as the select setting the
+ * field's tokens on itself. The shared map keeps only each token's first declaration, which is the
+ * other component's. With no selector, it reads the sheet's first declaration of each token.
+ */
+function restated(sheet: string, selector?: string) {
+	const css = sheets[sheet];
+	const start = selector === undefined ? 0 : css.indexOf(`${selector} {`);
+	if (start < 0) throw new Error(`No rule ${selector} in ${sheet}`);
+	const block = selector === undefined ? css : css.slice(start, css.indexOf('}', start));
+	return (name: string, scheme: 0 | 1) => resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(block)![1]), scheme);
+}
+
 describe('button text', () => {
 	// WCAG 1.4.3. Disabled buttons are exempt, and pressed shares the active fill.
 	for (const state of ['', '-hover', '-active', '-focus-visible', '-pressed']) {
@@ -257,6 +270,41 @@ describe('segmented control', () => {
 	}
 });
 
+describe('table', () => {
+	const table = (name: string, scheme: 0 | 1) => token(`--itx-table-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		// WCAG 1.4.3: cell, header and caption text on the page, and a group header on its band.
+		it(`has text of 4.5:1 against the page in ${label}`, () => {
+			for (const name of ['color', 'header-color', 'caption-color']) {
+				expect(contrast(table(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+		it(`has group header text of 4.5:1 against its band in ${label}`, () => {
+			expect(contrast(table('group-color', scheme), table('group-background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
+describe('toolbar channel', () => {
+	const channel = (scheme: 0 | 1) => token('--itx-toolbar-background-color', scheme);
+	const button = (name: string, scheme: 0 | 1) => token(`--itx-button-${name}`, scheme);
+	// The button tokens the channel sets on its buttons.
+	const channelButton = restated('toolbar/interop-toolbar.base.css', ':where([interop-toolbar~="channel"]) :where([interop-button])');
+
+	for (const [scheme, label] of SCHEMES) {
+		// The channel's buttons have no fill at rest, so their text and icons sit on the channel (WCAG 1.4.3),
+		// and a pressed button's edge, which takes the text color, does too (WCAG 1.4.11).
+		it(`has button text and the pressed edge of 4.5:1 against the channel in ${label}`, () => {
+			expect(contrast(button('color', scheme), channel(scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+		it(`has button text of 4.5:1 against the pressed and held fills in ${label}`, () => {
+			expect(contrast(button('color', scheme), channelButton('--itx-button-background-color-pressed', scheme))).toBeGreaterThanOrEqual(4.5);
+			expect(contrast(button('color', scheme), button('background-color-active', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
 describe('tabs', () => {
 	const tabs = (name: string, scheme: 0 | 1) => token(`--itx-tabs-${name}`, scheme);
 
@@ -280,9 +328,8 @@ describe('underscore', () => {
 
 describe('page nav', () => {
 	const pageNav = (name: string, scheme: 0 | 1) => token(`--itx-page-nav-${name}`, scheme);
-	// The vertical page nav restates tree tokens for its own tree; the first declaration is the tree's.
-	const vertical = (name: string, scheme: 0 | 1) =>
-		resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(sheets['page-nav/interop-page-nav.base.css'])![1]), scheme);
+	// The vertical page nav restates tree tokens for its own tree.
+	const vertical = restated('page-nav/interop-page-nav.base.css');
 
 	for (const [scheme, label] of SCHEMES) {
 		it(`has vertical links of 4.5:1 against the page at rest and on hover in ${label}`, () => {
@@ -464,10 +511,8 @@ describe('popover', () => {
 });
 
 describe('select', () => {
-	// The field tokens the select sets on itself, read from its block: the shared map keeps only each
-	// token's first declaration, which is the field's.
-	const block = /:where\(select\[interop-select\]\) \{([^}]*)\}/.exec(sheets['select/interop-select.base.css'])![1];
-	const own = (name: string, scheme: 0 | 1) => resolve(oneLine(new RegExp(`${name}:\\s*([^;]+);`).exec(block)![1]), scheme);
+	// The field tokens the select sets on itself.
+	const own = restated('select/interop-select.base.css', ':where(select[interop-select])');
 
 	for (const [scheme, label] of SCHEMES) {
 		it(`has text of 4.5:1 on the box, hovered or not, in ${label}`, () => {

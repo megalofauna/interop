@@ -71,6 +71,14 @@ import tabsInteropTabsBase from '../tabs/interop-tabs.base.css' with { loader: '
 // @ts-expect-error The text loader turns the file into a string.
 import tabsInteropTabsStructure from '../tabs/interop-tabs.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import tableInteropTableBase from '../table/interop-table.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import tableInteropTableStructure from '../table/interop-table.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import toolbarInteropToolbarBase from '../toolbar/interop-toolbar.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import toolbarInteropToolbarStructure from '../toolbar/interop-toolbar.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stepsInteropStepsBase from '../steps/interop-steps.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stepsInteropStepsStructure from '../steps/interop-steps.structure.css' with { loader: 'text' };
@@ -148,6 +156,10 @@ export const sheets: Record<string, string> = {
 	'checkbox/interop-checkbox.structure.css': checkboxInteropCheckboxStructure,
 	'tabs/interop-tabs.base.css': tabsInteropTabsBase,
 	'tabs/interop-tabs.structure.css': tabsInteropTabsStructure,
+	'table/interop-table.base.css': tableInteropTableBase,
+	'table/interop-table.structure.css': tableInteropTableStructure,
+	'toolbar/interop-toolbar.base.css': toolbarInteropToolbarBase,
+	'toolbar/interop-toolbar.structure.css': toolbarInteropToolbarStructure,
 	'steps/interop-steps.base.css': stepsInteropStepsBase,
 	'steps/interop-steps.structure.css': stepsInteropStepsStructure,
 	'tags/interop-tags.base.css': tagsInteropTagsBase,

@@ -23,3 +23,11 @@ export function isFocusable(element: Element): boolean {
 export function focusables(root: ParentNode): HTMLElement[] {
 	return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((element) => isFocusable(element));
 }
+
+/** Controls that use the arrow keys themselves: text fields, selects, radios, sliders and editable regions. */
+export const OWNS_ARROW_KEYS = [
+	'textarea',
+	'select',
+	'[contenteditable]:not([contenteditable="false"])',
+	'input:not([type="button"], [type="submit"], [type="reset"], [type="image"], [type="checkbox"], [type="color"], [type="file"])',
+].join(', ');

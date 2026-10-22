@@ -41,23 +41,25 @@
 	<ul>
 		<li>Interop's stylesheet, <code>interop.css</code>.</li>
 		<li>
-			The reset, if the page should also lose the browser's margins outside
-			flow containers.
+			The reset, if the page should also lose the browser's margins outside flow
+			containers.
 			<ul>
-				<li>Inside a flow container, the browser's margins are removed anyway.</li>
+				<li>
+					Inside a flow container, the browser's margins are removed anyway.
+				</li>
 				<li>Outside, they stay until the reset removes them.</li>
 			</ul>
 		</li>
 		<li>Nothing else: there is no script.</li>
 	</ul>
 
-	<h2>The spaces</h2>
+	<h2 id="spaces">The spaces</h2>
 	<p>
 		Each space is a token on the container. Blocks sit 24px apart; tables,
-		figures and code stand further from the text around them. Running text
-		reads at 16/28px.
+		figures and code stand further from the text around them. Running text reads
+		at 16/28px.
 	</p>
-	<table>
+	<table interop-table itx-size="sm" aria-labelledby="spaces">
 		<thead>
 			<tr>
 				<th scope="col">Between</th>
@@ -131,7 +133,9 @@
 			width="640"
 			height="200"
 		/>
-		<figcaption>The trimmed box runs from the cap height to the baseline.</figcaption>
+		<figcaption>
+			The trimmed box runs from the cap height to the baseline.
+		</figcaption>
 	</figure>
 
 	<h4>Lists</h4>

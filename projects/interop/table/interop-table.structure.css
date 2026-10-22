@@ -1,0 +1,86 @@
+/*
+ * Table: data in rows and columns, on the native element. The consumer writes the table, and
+ * Interop styles it:
+ *
+ *   <table interop-table>
+ *     <caption>Crew</caption>
+ *     <thead>
+ *       <tr><th scope="col">Name</th><th scope="col">Role</th><th scope="col" itx-numeric>Hours</th></tr>
+ *     </thead>
+ *     <tbody>
+ *       <tr><th scope="row">Ada</th><td>Pilot</td><td itx-numeric>1,204</td></tr>
+ *     </tbody>
+ *   </table>
+ *
+ * The caption names the table. `th scope="row"` makes a row header, such as the name column of a
+ * reference table. Rows in groups go one `<tbody>` per group, with a `th scope="rowgroup"` spanning
+ * its first row. `itx-numeric` on a cell aligns it to the end with figures of equal width; a `<col>`
+ * cannot set alignment, so the cell carries it. `itx-size` sets the size: sm, md (default) or lg.
+ *
+ * The table fills its container, and its cells wrap. It does not scroll: a table too wide for its
+ * container goes in a scroll area, named by the caption:
+ *
+ *   <div interop-scroll-area aria-labelledby="crew-caption">
+ *     <table interop-table><caption id="crew-caption">Crew</caption>…</table>
+ *   </div>
+ *
+ * Rows have no height of their own; the line height and the cell padding make it. So a narrow
+ * layout of your own can turn rows and cells into blocks without undoing a height. Table semantics
+ * survive `display: block` and `grid` on table parts in current browsers; `display: contents` drops
+ * them. Every rule is zero-specificity, so a single class wins.
+ *
+ * Also known as:
+ *   data table      Carbon, Material 2, USWDS
+ *   table view      Spectrum, Apple
+ * Table is the HTML element, and the name in GOV.UK, USWDS, Radix Themes, Web Awesome, Angular CDK and
+ * React Aria. A data grid (Fluent, MUI X), with arrow keys between cells, is a different component.
+ */
+
+:where(table[interop-table]) {
+	inline-size: 100%;
+	border-collapse: collapse;
+	font-size: var(--itx-table-font-size);
+	line-height: var(--itx-table-line-height);
+	color: var(--itx-table-color);
+}
+
+/* The table's own text size, unless the caption names a type role with itx-font. */
+:where(table[interop-table] > caption:not([itx-font])) {
+	font-size: var(--itx-table-font-size);
+	line-height: var(--itx-table-line-height);
+}
+
+:where(table[interop-table] > caption) {
+	caption-side: top;
+	padding-block-end: var(--itx-table-caption-padding-block-end);
+	text-align: start;
+	font-weight: var(--itx-table-caption-font-weight);
+	color: var(--itx-table-caption-color);
+}
+
+:where(table[interop-table]) :where(th, td) {
+	padding: var(--itx-table-cell-padding-block) var(--itx-table-cell-padding-inline);
+	text-align: start;
+	vertical-align: baseline;
+	border-block-end: var(--itx-table-border-width) solid var(--itx-table-border-color);
+}
+
+:where(table[interop-table]) :where(th) {
+	font-weight: var(--itx-table-header-font-weight);
+	color: var(--itx-table-header-color);
+}
+
+:where(table[interop-table] > thead > tr:last-child > th) {
+	vertical-align: bottom;
+	border-block-end: var(--itx-table-header-border-width) solid var(--itx-table-header-border-color);
+}
+
+:where(table[interop-table]) :where(th[scope="rowgroup"]) {
+	background-color: var(--itx-table-group-background-color);
+	color: var(--itx-table-group-color);
+}
+
+:where(table[interop-table]) :where(th, td)[itx-numeric] {
+	text-align: end;
+	font-variant-numeric: tabular-nums;
+}

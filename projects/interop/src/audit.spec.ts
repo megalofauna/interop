@@ -293,6 +293,111 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('table', () => {
+		const head = '<thead><tr><th scope="col">Name</th><th scope="col">Role</th></tr></thead>';
+		const row = (name: string) => `<tr><th scope="row">${name}</th><td>Pilot</td></tr>`;
+
+		it('accepts a captioned table with headers and one tbody per group', () => {
+			render(`<table interop-table><caption>Crew</caption>${head}
+				<tbody><tr><th scope="rowgroup" colspan="2">Bridge</th></tr>${row('Ada')}</tbody>
+				<tbody><tr><th scope="rowgroup" colspan="2">Engine</th></tr>${row('Bo')}</tbody>
+			</table>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('accepts a name from aria-labelledby', () => {
+			render(`<h2 id="h">Crew</h2><table interop-table aria-labelledby="h">${head}<tbody>${row('Ada')}</tbody></table>`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a table with no name, and one with no header cells', () => {
+			render(`<table interop-table>${head}<tbody>${row('Ada')}</tbody></table>`);
+			expect(rules()).toEqual(['table-name']);
+			render('<table interop-table><caption>Crew</caption><tr><td>Ada</td></tr></table>');
+			expect(rules()).toEqual(['table-headers']);
+		});
+
+		it('flags group headers sharing one tbody', () => {
+			render(`<table interop-table><caption>Crew</caption>${head}<tbody>
+				<tr><th scope="rowgroup" colspan="2">Bridge</th></tr>${row('Ada')}
+				<tr><th scope="rowgroup" colspan="2">Engine</th></tr>${row('Bo')}
+			</tbody></table>`);
+			expect(rules()).toEqual(['table-rowgroup', 'table-rowgroup']);
+		});
+
+		it('flags a table wider than its container, unless it is in a scroll area', () => {
+			const table = `<table interop-table><caption>Crew</caption>${head}<tbody>${row('Ada')}</tbody></table>`;
+			render(`<div style="width: 100px"><span>${table}</span></div><div interop-scroll-area>${table}</div>`);
+			const wide = vi.spyOn(HTMLTableElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
+			const narrow = vi.spyOn(HTMLDivElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
+			expect(rules()).toEqual(['table-overflow']);
+			wide.mockRestore();
+			narrow.mockRestore();
+		});
+	});
+
+	describe('toolbar', () => {
+		const button = (name: string) => `<button interop-button type="button">${name}</button>`;
+		const three = button('Bold') + button('Italic') + button('Code');
+		const toolbar = (attributes = 'role="toolbar" focusgroup="toolbar" aria-label="Formatting"', items = three) =>
+			`<div interop-toolbar ${attributes}>${items}</div>`;
+
+		it('accepts a toolbar written as the helper expects', () => {
+			render(toolbar());
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a missing role, focusgroup or name', () => {
+			render(toolbar('focusgroup="toolbar" aria-label="Formatting"'));
+			expect(rules()).toEqual(['toolbar-role']);
+			render(toolbar('role="toolbar" aria-label="Formatting"'));
+			expect(rules()).toEqual(['toolbar-focusgroup']);
+			render(toolbar('role="toolbar" focusgroup="toolbar"'));
+			expect(rules()).toEqual(['toolbar-name']);
+		});
+
+		it('flags an unnamed role="toolbar" without the attribute', () => {
+			render(`<div role="toolbar">${three}</div>`);
+			expect(rules()).toEqual(['toolbar-name']);
+		});
+
+		it('flags a toolbar of fewer than three controls', () => {
+			render(toolbar(undefined, button('Bold') + button('Italic')));
+			expect(rules()).toEqual(['toolbar-size']);
+		});
+
+		it('flags a button whose itx-size the toolbar overrides', () => {
+			render(toolbar('role="toolbar" focusgroup="toolbar" aria-label="Formatting" itx-size="sm"', three));
+			expect(rules()).toEqual([]);
+			render(
+				toolbar(
+					'role="toolbar" focusgroup="toolbar" aria-label="Formatting" itx-size="sm"',
+					three + '<button interop-button type="button" itx-size="lg">Link</button>',
+				),
+			);
+			expect(rules()).toEqual(['toolbar-button-size']);
+			render(toolbar(undefined, three + '<button interop-button type="button" itx-size="lg">Link</button>'));
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a vertical toolbar without aria-orientation', () => {
+			render(toolbar('role="toolbar" focusgroup="toolbar block" aria-label="Tools"'));
+			expect(rules()).toEqual(['toolbar-orientation']);
+			render(toolbar('role="toolbar" focusgroup="toolbar block" aria-orientation="vertical" aria-label="Tools"'));
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a text field before the last item, and radios, but not one text field last', () => {
+			const field = '<input aria-label="Find">';
+			render(toolbar(undefined, three + field));
+			expect(rules()).toEqual([]);
+			render(toolbar(undefined, field + three));
+			expect(rules()).toEqual(['toolbar-arrow-keys']);
+			render(toolbar(undefined, three + '<input type="radio" name="a" aria-label="A"><input type="radio" name="a" aria-label="B">'));
+			expect(rules()).toEqual(['toolbar-arrow-keys']);
+		});
+	});
+
 	describe('tags', () => {
 		it('accepts remove buttons named for their tag', () => {
 			render(`<ul interop-tags role="list" aria-label="Tags">

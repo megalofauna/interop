@@ -66,7 +66,7 @@
 	/* One step from the hover fill: darker in light, lighter in dark. */
 	--itx-select-option-border-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
 	/* The chosen option is the segmented pill: a raised fill, and an edge 3:1 against the list. */
-	--itx-select-option-background-color-checked: light-dark(var(--itx-neutral-100), var(--itx-neutral-700));
+	--itx-select-option-background-color-checked: light-dark(var(--itx-neutral-50), var(--itx-neutral-700));
 	--itx-select-option-border-color-checked: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--itx-select-option-box-shadow-checked: 0 1px 2px oklch(0 0 0 / 0.15);
 	/* Nested inside the list's padding. */

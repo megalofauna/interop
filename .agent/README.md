@@ -26,14 +26,18 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 | Dialog | [components/dialog.md](components/dialog.md) |
 | Field: text input, textarea, hint, error, validation, password, count | [components/field.md](components/field.md) |
 | Icon | [components/icon.md](components/icon.md) |
+| Page nav | [components/page-nav.md](components/page-nav.md) |
 | Popover, drawer | [components/popover.md](components/popover.md) |
 | App shell recipe | [components/app-shell.md](components/app-shell.md) |
 | Scroll area | [components/scroll-area.md](components/scroll-area.md) |
 | Select | [components/select.md](components/select.md) |
 | Steps: indicator, multi-step form | [components/steps.md](components/steps.md) |
+| Table | [components/table.md](components/table.md) |
 | Tabs | [components/tabs.md](components/tabs.md) |
 | Tags, tag input | [components/tags.md](components/tags.md) |
+| Toolbar | [components/toolbar.md](components/toolbar.md) |
 | Tooltip | [components/tooltip.md](components/tooltip.md) |
+| Tree | [components/tree.md](components/tree.md) |
 
 ### Retired Prime components, and why they are not rebuilt
 
@@ -45,8 +49,7 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 
 [indicator.md](components/indicator.md), [list.md](components/list.md),
 [resizable.md](components/resizable.md), [slider.md](components/slider.md),
-[table.md](components/table.md), [toast.md](components/toast.md),
-[tree.md](components/tree.md), and the `composites/` and `services/` cards.
+[toast.md](components/toast.md), and the `composites/` and `services/` cards.
 They describe Prime's code. `composites/code-block.md`, `highlighter.md` and
 `imports.md` describe Prime's code block, highlighter and icon paths; the
 current ones are in [components/code-block.md](components/code-block.md) and

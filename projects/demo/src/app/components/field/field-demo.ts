@@ -7,6 +7,7 @@ import {
 	InteropForm,
 	InteropPasswordToggle,
 } from "interop/field";
+import { InteropScrollArea } from "interop/scroll-area";
 import { examples } from "./field-examples";
 
 @Component({
@@ -18,6 +19,7 @@ import { examples } from "./field-examples";
 		InteropCustomValidity,
 		InteropForm,
 		InteropPasswordToggle,
+		InteropScrollArea,
 	],
 	templateUrl: "./field-demo.html",
 	styleUrl: "./field-demo.css",

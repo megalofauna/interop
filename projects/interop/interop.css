@@ -30,6 +30,10 @@
 @import "./checkbox/interop-checkbox.structure.css";
 @import "./tabs/interop-tabs.base.css";
 @import "./tabs/interop-tabs.structure.css";
+@import "./table/interop-table.base.css";
+@import "./table/interop-table.structure.css";
+@import "./toolbar/interop-toolbar.base.css";
+@import "./toolbar/interop-toolbar.structure.css";
 @import "./steps/interop-steps.base.css";
 @import "./steps/interop-steps.structure.css";
 @import "./tags/interop-tags.base.css";
