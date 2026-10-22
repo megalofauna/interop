@@ -13,6 +13,7 @@ const required = [
 	'field/interop-field.structure.css',
 	'radio-group/interop-radio-group.structure.css',
 	'select/interop-select.structure.css',
+	'slider/interop-slider.structure.css',
 	'steps/interop-steps.structure.css',
 	'switch/interop-switch.structure.css',
 	'tags/interop-tags.structure.css',

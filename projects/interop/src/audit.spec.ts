@@ -474,6 +474,36 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('slider', () => {
+		it('accepts a labeled slider and a named one, with a step that divides the range', () => {
+			render(`
+				<label for="v">Volume</label><input type="range" interop-slider id="v" min="0" max="100" step="5" value="40">
+				<input type="range" interop-slider aria-label="Zoom" step="any">
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a slider with no name', () => {
+			render('<input type="range" interop-slider>');
+			expect(rules()).toEqual(['slider-name']);
+		});
+
+		it('flags min not below max, a step that is not positive, a value outside the range, and a step that does not divide it', () => {
+			render(`
+				<input type="range" interop-slider aria-label="A" min="10" max="10">
+				<input type="range" interop-slider aria-label="B" step="0">
+				<input type="range" interop-slider aria-label="C" value="150">
+				<input type="range" interop-slider aria-label="D" max="10" step="3">
+			`);
+			const problems = auditInterop(document).map((issue) => issue.problem);
+			expect(rules()).toEqual(['slider-range', 'slider-range', 'slider-range', 'slider-range']);
+			expect(problems[0]).toContain('not below');
+			expect(problems[1]).toContain('not a positive');
+			expect(problems[2]).toContain('outside');
+			expect(problems[3]).toContain('does not divide');
+		});
+	});
+
 	describe('toast', () => {
 		const item = (attributes = '', buttons = '<button type="button" aria-label="Dismiss"></button>') =>
 			`<div interop-toast ${attributes}><div><p>Saved</p></div>${buttons}</div>`;

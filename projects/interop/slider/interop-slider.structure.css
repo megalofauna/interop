@@ -1,0 +1,133 @@
+/*
+ * Slider: one value from a range, on the native `<input type="range">`.
+ *
+ *   <label for="volume">Volume</label>
+ *   <input type="range" interop-slider id="volume" min="0" max="100" value="40">
+ *
+ * The browser keeps the keyboard, the pointer, a click on the track, form submission and RTL. The
+ * input draws its own track and fill as two background layers, so nothing wraps it. bindSlider()
+ * sets --itx-slider-value from the value; without it the track draws unfilled.
+ *
+ * The thumb's box is the 24px target. A transparent border insets the drawn circle inside it.
+ *
+ * Also known as:
+ *   range             HTML (the input type), USWDS (range slider)
+ *   range slider      Carbon and Spectrum, for two thumbs; Interop shows two number inputs instead
+ * Slider is the ARIA role, and the name in Apple HIG, Material, Fluent, Carbon, Spectrum, React
+ * Aria, Radix, Base UI, Ark, Angular Material and Web Awesome.
+ */
+
+/* From 0 at min to 1 at max. bindSlider() sets it on the input. */
+@property --itx-slider-value {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+
+:where(input[type="range"][interop-slider]) {
+	appearance: none;
+	box-sizing: border-box;
+	inline-size: var(--itx-slider-inline-size);
+	max-inline-size: var(--itx-slider-max-inline-size);
+	block-size: var(--itx-slider-target-size);
+	margin: 0;
+	padding: 0;
+	vertical-align: middle;
+	cursor: var(--itx-slider-cursor);
+	/*
+	 * Front to back: the fill, then the track. The fill ends under the thumb's center, which travels
+	 * the length less one thumb, so it starts half a thumb in.
+	 */
+	background-image:
+		linear-gradient(var(--itx-slider-fill-color), var(--itx-slider-fill-color)),
+		linear-gradient(var(--itx-slider-track-color), var(--itx-slider-track-color));
+	background-size:
+		calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value))
+			var(--itx-slider-track-thickness),
+		100% var(--itx-slider-track-thickness);
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+:where(input[type="range"][interop-slider]:dir(rtl)) {
+	background-position: right center;
+}
+
+:where(input[type="range"][interop-slider]:disabled) {
+	opacity: var(--itx-slider-opacity-disabled);
+	cursor: var(--itx-slider-cursor-disabled);
+}
+
+/* The track parts draw nothing; WebKit centers the thumb on the track's box, so it fills the input. */
+:where(input[type="range"][interop-slider])::-webkit-slider-runnable-track {
+	block-size: 100%;
+	background: none;
+}
+
+:where(input[type="range"][interop-slider])::-moz-range-track {
+	block-size: 100%;
+	background: none;
+}
+
+/* Firefox fills without script. The fill layer above draws the same extent when bindSlider() runs. */
+:where(input[type="range"][interop-slider])::-moz-range-progress {
+	block-size: var(--itx-slider-track-thickness);
+	background-color: var(--itx-slider-fill-color);
+}
+
+/* Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the whole rule. */
+:where(input[type="range"][interop-slider])::-webkit-slider-thumb {
+	appearance: none;
+	box-sizing: border-box;
+	inline-size: var(--itx-slider-target-size);
+	block-size: var(--itx-slider-target-size);
+	background-color: var(--itx-slider-thumb-color);
+	background-clip: content-box;
+	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
+	border-radius: var(--itx-radius-full);
+}
+
+:where(input[type="range"][interop-slider])::-moz-range-thumb {
+	box-sizing: border-box;
+	inline-size: var(--itx-slider-target-size);
+	block-size: var(--itx-slider-target-size);
+	background-color: var(--itx-slider-thumb-color);
+	background-clip: content-box;
+	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
+	border-radius: var(--itx-radius-full);
+}
+
+/*
+ * Vertical, minimum at the bottom. The writing mode turns the input's inline axis upright, so the
+ * keyboard and the accessibility tree follow; `direction: rtl` puts the minimum at the end. The
+ * background layers are physical, so they swap axes here.
+ */
+:where(input[type="range"][interop-slider][itx-orientation="vertical"]) {
+	writing-mode: vertical-lr;
+	direction: rtl;
+	inline-size: var(--itx-slider-vertical-inline-size);
+	background-size:
+		var(--itx-slider-track-thickness)
+			calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value)),
+		var(--itx-slider-track-thickness) 100%;
+	background-position: center bottom;
+}
+
+/*
+ * Forced colors drop background images, which would take the track and the fill. These keep them,
+ * in system colors: the track and thumb in the text color, the fill in Highlight.
+ */
+@media (forced-colors: active) {
+	:where(input[type="range"][interop-slider]) {
+		forced-color-adjust: none;
+		--itx-slider-track-color: CanvasText;
+		--itx-slider-fill-color: Highlight;
+		--itx-slider-thumb-color: CanvasText;
+	}
+
+	:where(input[type="range"][interop-slider]:disabled) {
+		--itx-slider-track-color: GrayText;
+		--itx-slider-fill-color: GrayText;
+		--itx-slider-thumb-color: GrayText;
+	}
+}

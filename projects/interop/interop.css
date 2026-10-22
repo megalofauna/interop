@@ -22,6 +22,8 @@
 @import "./popover/interop-popover.structure.css";
 @import "./tooltip/interop-tooltip.base.css";
 @import "./tooltip/interop-tooltip.structure.css";
+@import "./slider/interop-slider.base.css";
+@import "./slider/interop-slider.structure.css";
 @import "./switch/interop-switch.base.css";
 @import "./switch/interop-switch.structure.css";
 @import "./radio-group/interop-radio-group.base.css";

@@ -5,6 +5,7 @@ import {
 	bindCharacterCount,
 	bindPasswordToggle,
 	bindSelectAll,
+	bindSlider,
 	bindTagInput,
 	bindValidation,
 	guardActivation,
@@ -450,6 +451,19 @@ describe('accessibility (axe-core)', () => {
 		const buttons = Array.from(element.querySelectorAll('button'), (button) => button.tabIndex);
 		expect(buttons).toEqual([0, -1, -1, -1]);
 		expect(await violations(element)).toEqual([]);
+	});
+
+	it('finds no violations in sliders as bindSlider leaves them', async () => {
+		document.body.innerHTML = `
+			<main>
+				<label for="volume">Volume</label>
+				<input type="range" interop-slider id="volume" min="0" max="100" value="40">
+				<label for="budget">Budget</label>
+				<input type="range" interop-slider id="budget" min="0" max="500" step="10" value="200"><span id="shown"></span>
+				<input type="range" interop-slider itx-orientation="vertical" aria-label="Temperature" disabled>
+			</main>`;
+		bindSlider(document.querySelector<HTMLInputElement>('#budget')!, { format: (value) => `$${value}`, readout: document.getElementById('shown') });
+		expect(await violations(document.body)).toEqual([]);
 	});
 
 	it('finds no violations in toasts as toast() writes them', async () => {

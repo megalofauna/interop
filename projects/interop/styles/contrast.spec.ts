@@ -571,3 +571,14 @@ describe('toast', () => {
 		});
 	}
 });
+
+describe('slider', () => {
+	for (const [scheme, label] of SCHEMES) {
+		// WCAG 1.4.11: the track shows the length of the scale, and the thumb and fill show the value.
+		it(`has a track, a fill and a thumb of 3:1 against the page in ${label}`, () => {
+			for (const name of ['--itx-slider-track-color', '--itx-slider-fill-color', '--itx-slider-thumb-color']) {
+				expect(contrast(token(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			}
+		});
+	}
+});

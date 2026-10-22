@@ -12,6 +12,7 @@ export { bindRadioHomeEnd } from './bind-radio-home-end';
 export { bindScrollArea } from './bind-scroll-area';
 export { bindSegmentedFit } from './bind-segmented-fit';
 export { bindSelectAll } from './bind-select-all';
+export { bindSlider, paintSlider, type SliderOptions } from './bind-slider';
 export { bindSteps, type StepsChangeDetail, type StepsOptions } from './bind-steps';
 export { bindTabs, type TabsChangeDetail, type TabsOptions } from './bind-tabs';
 export { bindTargetCurrent } from './bind-target-current';
