@@ -146,24 +146,24 @@ them, and `styles/radius.spec.ts` fails on a corner that follows none.
 | Small | half the house radius, capped where it would change the shape | tooltip; checkbox box, capped at a quarter of its size |
 | Nested | outer radius less the gap, never below `0px` | an inset pill or panel |
 
-The house radius is `--itx-radius-base`, 6px, with squircle corners
+The house radius is `--itx-radius-base`, 8px, with squircle corners
 (`--itx-corner-shape`). A theme sets `--itx-radius-base` on `:root` to change it
 everywhere. Never write a radius literal or a fixed step in a component.
 
 `itx-radius` picks a step on one element. Each step is a multiple of the house
 radius, worked out on that element, so the whole scale moves with the theme:
 
-| `itx-radius` | Multiple | At 6px |
+| `itx-radius` | Multiple | At 8px |
 |---|---|---|
 | `none` | 0 | 0 |
-| `sm` | ½ | 3px |
-| `md`, `base`, no attribute | 1 | 6px |
-| `lg` | 1½ | 9px |
-| `xl` | 2 | 12px |
+| `sm` | ½ | 4px |
+| `md`, `base`, no attribute | 1 | 8px |
+| `lg` | 1½ | 12px |
+| `xl` | 2 | 16px |
 | `full` | pill or circle, round corners | — |
 
-The 3px steps sit off the 4px layout grid on purpose. A corner positions
-nothing, so nothing has to line up with it.
+At 8px every step sits on the 4px layout grid. A theme's base may not, and
+need not: a corner positions nothing, so nothing has to line up with it.
 
 ## Style guards
 
@@ -231,6 +231,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 | `bindPasswordToggle` | Showing a password | Nothing proposed; Open UI has no command for it |
 | `bindCharacterCount` | A count that does not block typing, announced on a pause | Nothing proposed |
 | `bindValidation` | Error messages in the page, at the right time, wired to the field; an error summary | Nothing proposed. The browser checks the constraints; only its message bubbles are replaced |
+| `bindToolbar` | One Tab stop and arrow keys in a toolbar, where `focusgroup` is missing | `focusgroup` in Firefox and Safari; it binds nothing where the attribute works |
 | `bindScrollArea` | A scroller the keyboard can reach | Safari doing it, as Chrome and Firefox do |
 | `bindSegmentedFit` | Stacking a segmented control when its row does not fit | Nothing proposed: CSS cannot measure whether content fits. Optional: `itx-orientation` and the page's own threshold need no script |
 | `bindDrawer` | Focus into a popover on opening; closing when focus leaves | Nothing proposed |
