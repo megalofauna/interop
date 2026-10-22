@@ -120,6 +120,10 @@ both leave.
 ## Tests
 
 - `src/bind-toolbar.spec.ts`: the fallback in jsdom, which has no `focusgroup`.
+- Chrome 155, native and with `--disable-blink-features=Focusgroup`, on the
+  demo's comment box: arrows, Home and End, stopping at the ends, Tab out and
+  Shift+Tab back to the last button give the same focus in both.
+- Not yet tested: Firefox and Safari, and any screen reader.
 - `src/audit.spec.ts`: each rule.
 - `a11y/a11y.spec.ts`: axe on a bound toolbar with groups and an `aria-disabled` item.
 - `styles/forced-colors.spec.ts`: exempt, layout only.
