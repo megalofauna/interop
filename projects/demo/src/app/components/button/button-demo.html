@@ -161,7 +161,10 @@
 	most people press only the larger half.
 </p>
 <div role="group" interop-group="attached" aria-label="Save">
-	<button interop-button type="button" (click)="saveAs('Saved')">Save</button>
+	<button interop-button type="button" (click)="saveAs('Saved')">
+		<svg interop-icon name="tabler-device-floppy"></svg>
+		Save
+	</button>
 	<button
 		interop-button="icon"
 		type="button"
@@ -171,27 +174,28 @@
 	>
 		<svg interop-icon name="tabler-chevron-down"></svg>
 	</button>
+	<div interop-popover popover id="save-more" class="choices">
+		<button
+			interop-button
+			type="button"
+			command="hide-popover"
+			commandfor="save-more"
+			(click)="saveAs('Saved as a draft')"
+		>
+			Save as draft
+		</button>
+		<button
+			interop-button
+			type="button"
+			command="hide-popover"
+			commandfor="save-more"
+			(click)="saveAs('Saved and closed')"
+		>
+			Save and close
+		</button>
+	</div>
 </div>
-<div interop-popover popover id="save-more" class="choices">
-	<button
-		interop-button
-		type="button"
-		command="hide-popover"
-		commandfor="save-more"
-		(click)="saveAs('Saved as a draft')"
-	>
-		Save as draft
-	</button>
-	<button
-		interop-button
-		type="button"
-		command="hide-popover"
-		commandfor="save-more"
-		(click)="saveAs('Saved and closed')"
-	>
-		Save and close
-	</button>
-</div>
+
 <p class="prose">Result: {{ splitResult() || "(none)" }}</p>
 <figure
 	interop-code-block
