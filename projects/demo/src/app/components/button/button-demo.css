@@ -9,7 +9,11 @@ p:not(.prose, .aka) {
 	font-style: italic;
 }
 
-/* The choices, one per row, as wide as the widest. */
+/* The choices, one per row, as wide as the widest, with the same space on every side. */
+.choices {
+	--itx-popover-padding-inline: var(--itx-popover-padding-block);
+}
+
 .choices:popover-open {
 	display: flex;
 	flex-direction: column;
