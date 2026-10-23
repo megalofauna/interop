@@ -62,3 +62,26 @@
 :where([interop-group~="attached"] > [interop-button]:focus-visible) {
 	z-index: 2;
 }
+
+/*
+ * A split button's choices: a popover written inside the attached group, opened by one of its
+ * buttons. While it is open, that button and the popover read as one shape. They share a fill and
+ * an edge color, the popover's inline-end lines up with the button's, they touch, and the corners
+ * where they meet are square. Inside the group, the popover is part of the group's name.
+ */
+:where([interop-group~="attached"] > [popover]) {
+	--itx-popover-position-area: block-end span-inline-start;
+	--itx-popover-margin-block: 0px;
+	--itx-popover-background-color: var(--itx-group-open-background-color);
+	--itx-popover-background-opacity: 1;
+	--itx-popover-backdrop-filter: none;
+	--itx-popover-border-color: var(--itx-group-open-border-color);
+	border-start-end-radius: 0px;
+}
+
+:where([interop-group~="attached"]:has(> [popover]:popover-open) > [interop-button]:is([commandfor], [popovertarget])) {
+	--itx-button-background-color: var(--itx-group-open-background-color);
+	--itx-button-border-color: var(--itx-group-open-border-color);
+	z-index: 1;
+	border-end-end-radius: 0px;
+}

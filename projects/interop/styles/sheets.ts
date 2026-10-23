@@ -31,10 +31,6 @@ import buttonInteropButtonBase from '../button/interop-button.base.css' with { l
 // @ts-expect-error The text loader turns the file into a string.
 import buttonInteropButtonStructure from '../button/interop-button.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
-import groupInteropGroupBase from '../group/interop-group.base.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
-import groupInteropGroupStructure from '../group/interop-group.structure.css' with { loader: 'text' };
-// @ts-expect-error The text loader turns the file into a string.
 import iconInteropIconBase from '../icon/interop-icon.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import iconInteropIconStructure from '../icon/interop-icon.structure.css' with { loader: 'text' };
@@ -54,6 +50,10 @@ import codeBlockInteropCodeBlockStructure from '../code-block/interop-code-block
 import popoverInteropPopoverBase from '../popover/interop-popover.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import popoverInteropPopoverStructure from '../popover/interop-popover.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import groupInteropGroupBase from '../group/interop-group.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import groupInteropGroupStructure from '../group/interop-group.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import tooltipInteropTooltipBase from '../tooltip/interop-tooltip.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
@@ -148,8 +148,6 @@ export const sheets: Record<string, string> = {
 	'styles/fieldset.css': stylesFieldset,
 	'button/interop-button.base.css': buttonInteropButtonBase,
 	'button/interop-button.structure.css': buttonInteropButtonStructure,
-	'group/interop-group.base.css': groupInteropGroupBase,
-	'group/interop-group.structure.css': groupInteropGroupStructure,
 	'icon/interop-icon.base.css': iconInteropIconBase,
 	'icon/interop-icon.structure.css': iconInteropIconStructure,
 	'badge/interop-badge.base.css': badgeInteropBadgeBase,
@@ -160,6 +158,8 @@ export const sheets: Record<string, string> = {
 	'code-block/interop-code-block.structure.css': codeBlockInteropCodeBlockStructure,
 	'popover/interop-popover.base.css': popoverInteropPopoverBase,
 	'popover/interop-popover.structure.css': popoverInteropPopoverStructure,
+	'group/interop-group.base.css': groupInteropGroupBase,
+	'group/interop-group.structure.css': groupInteropGroupStructure,
 	'tooltip/interop-tooltip.base.css': tooltipInteropTooltipBase,
 	'tooltip/interop-tooltip.structure.css': tooltipInteropTooltipStructure,
 	'slider/interop-slider.base.css': sliderInteropSliderBase,

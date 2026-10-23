@@ -10,8 +10,6 @@
 @import "./styles/fieldset.css";
 @import "./button/interop-button.base.css";
 @import "./button/interop-button.structure.css";
-@import "./group/interop-group.base.css";
-@import "./group/interop-group.structure.css";
 @import "./icon/interop-icon.base.css";
 @import "./icon/interop-icon.structure.css";
 @import "./badge/interop-badge.base.css";
@@ -22,6 +20,9 @@
 @import "./code-block/interop-code-block.structure.css";
 @import "./popover/interop-popover.base.css";
 @import "./popover/interop-popover.structure.css";
+/* After popover, because an attached group sets its popover's tokens. */
+@import "./group/interop-group.base.css";
+@import "./group/interop-group.structure.css";
 @import "./tooltip/interop-tooltip.base.css";
 @import "./tooltip/interop-tooltip.structure.css";
 @import "./slider/interop-slider.base.css";

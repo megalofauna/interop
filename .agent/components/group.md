@@ -38,8 +38,8 @@ The attribute form, decided 2026-10-23: no custom element.
   <button interop-button type="button">Save</button>
   <button interop-button="icon" type="button" command="toggle-popover" commandfor="save-more"
           aria-label="More save options"><svg interop-icon name="tabler-chevron-down"></svg></button>
+  <div interop-popover popover id="save-more">…buttons with command="hide-popover"…</div>
 </div>
-<div interop-popover popover id="save-more">…buttons with command="hide-popover"…</div>
 ```
 
 ## Attached
@@ -53,8 +53,24 @@ The attribute form, decided 2026-10-23: no custom element.
 
 ## Split button
 
-An attached group of an action and the button that opens its other choices,
-plus a popover. No script:
+An attached group of an action, the button that opens its other choices, and
+the popover of choices, written inside the group. No script:
+
+- The popover sits inside the group so CSS can see it open:
+  `:has(> [popover]:popover-open)`. CSS cannot follow `commandfor` to a sibling.
+- While it is open, the trigger keeps the button's hover fill and takes the
+  popover's edge color, and its end-end corner is square. The popover takes the
+  same fill, opaque with no blur, has no gap from the trigger, lines up its
+  inline-end with the trigger's (`block-end span-inline-start`), and squares its
+  start-end corner. One token pair holds the open look:
+  `--itx-group-open-background-color` (the button's hover fill) and
+  `--itx-group-open-border-color` (`neutral-500`, 3:1).
+- Where it does not fit, the popover flips to the other side. Its squared corner
+  then sits away from the trigger. An anchored container query
+  (`@container anchored(fallback: flip-inline)`, Chrome 155) sees the flip, but it
+  styles only the popover's contents, not its own corners.
+- The popover's top edge runs under the trigger, so a line separates them.
+- The group CSS loads after the popover CSS, because it sets the popover's tokens.
 
 - `command="toggle-popover"` opens and closes the list.
 - Chrome 155 exposes `expanded` on the trigger from the popover's state, with no
