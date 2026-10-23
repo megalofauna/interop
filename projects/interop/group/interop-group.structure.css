@@ -1,0 +1,64 @@
+/*
+ * Group: controls that belong together, with one name.
+ *
+ *   <div role="group" interop-group aria-label="Formatting">…buttons…</div>
+ *   <fieldset interop-group><legend>Quantity</legend>…</fieldset>
+ *
+ * It lays its controls out in a row that wraps, and gives them a shared name, which a screen reader
+ * says when focus enters. It adds no keys: every control stays a Tab stop. For one Tab stop and
+ * arrow keys, use a toolbar.
+ *
+ * `interop-group="attached"` joins its buttons into one shape: shared edges, square where they
+ * meet. A split button is an attached group of an action and the button that opens its other
+ * choices.
+ *
+ * Also known as:
+ *   button group      Bootstrap, Primer, Carbon (layout), Web Awesome
+ *   split button      Fluent, Material, Atlassian, Bootstrap (an attached action and menu button)
+ *   combo button      Carbon (the same)
+ * Group is the ARIA role. A fieldset gives the same grouping to a form question.
+ */
+
+:where(div[interop-group]) {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-group-gap);
+}
+
+/* A fieldset takes the shared fieldset layout, in a row. */
+:where(fieldset[interop-group]) {
+	--itx-fieldset-flex-direction: row;
+	--itx-fieldset-row-gap: var(--itx-group-gap);
+	--itx-fieldset-column-gap: var(--itx-group-gap);
+}
+
+:where(div[interop-group~="attached"]) {
+	gap: 0;
+}
+
+:where(fieldset[interop-group~="attached"]) {
+	--itx-fieldset-row-gap: 0px;
+	--itx-fieldset-column-gap: 0px;
+}
+
+/* Neighbors overlap by one border, so the edge between them is one line. */
+:where([interop-group~="attached"] > [interop-button] + [interop-button]) {
+	margin-inline-start: calc(-1 * var(--itx-button-border-width));
+	border-start-start-radius: 0px;
+	border-end-start-radius: 0px;
+}
+
+:where([interop-group~="attached"] > [interop-button]:has(+ [interop-button])) {
+	border-start-end-radius: 0px;
+	border-end-end-radius: 0px;
+}
+
+/* The button that changes its edge, or shows the focus ring, comes in front of its neighbor. */
+:where([interop-group~="attached"] > [interop-button]:is(:hover, [aria-pressed="true"])) {
+	z-index: 1;
+}
+
+:where([interop-group~="attached"] > [interop-button]:focus-visible) {
+	z-index: 2;
+}

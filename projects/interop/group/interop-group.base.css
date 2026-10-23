@@ -1,0 +1,3 @@
+:where([interop-group]) {
+	--itx-group-gap: var(--itx-space-2);
+}

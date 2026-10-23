@@ -474,6 +474,36 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('group', () => {
+		it('accepts a named group, a fieldset with a legend, and an attached split button', () => {
+			render(`
+				<div role="group" interop-group aria-label="Formatting"><button type="button">Bold</button></div>
+				<fieldset interop-group><legend>Quantity</legend><button type="button">Decrease quantity</button></fieldset>
+				<div role="group" interop-group="attached" aria-label="Save">
+					<button type="button">Save</button><button type="button" aria-label="More save options"></button>
+				</div>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a group with no role, and a group or fieldset with no name', () => {
+			render('<div interop-group aria-label="A"></div><div role="group" interop-group></div><fieldset interop-group></fieldset>');
+			expect(rules()).toEqual(['group-role', 'group-label', 'group-label']);
+		});
+
+		it('flags an attached button with a generic name or its neighbor’s name', () => {
+			render(`
+				<div role="group" interop-group="attached" aria-label="Save">
+					<button type="button">Save</button><button type="button" aria-label="Toggle dropdown"></button>
+				</div>
+				<div role="group" interop-group="attached" aria-label="Export">
+					<button type="button">Export</button><button type="button" aria-labelledby="e"></button><span id="e" hidden>Export</span>
+				</div>
+			`);
+			expect(rules()).toEqual(['group-attached-name', 'group-attached-name', 'group-attached-name']);
+		});
+	});
+
 	describe('slider', () => {
 		it('accepts a labeled slider and a named one, with a step that divides the range', () => {
 			render(`

@@ -289,6 +289,42 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Add a <legend> as the fieldset’s first child, e.g. <legend>Shipping</legend>.',
 					},
 	},
+	'group-role': {
+		selector: 'div[interop-group]:not([role="group"])',
+		check: () => ({
+			problem: 'This group has no role="group".',
+			reason: 'Without the role, a screen reader does not say the group’s name, and its controls are announced one by one with nothing that joins them.',
+			advice: 'Add role="group" and a name: <div role="group" interop-group aria-label="…">. For one Tab stop and arrow keys, use a toolbar.',
+		}),
+	},
+	'group-label': {
+		selector: ':is(div[interop-group][role="group"], fieldset[interop-group])',
+		check: (group) =>
+			ariaName(group) || group.querySelector(':scope > legend')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This group has no name.',
+						reason: 'A screen reader says "group" with nothing to say what the controls are for.',
+						advice: group.matches('fieldset') ? 'Add a <legend> as its first child.' : 'Add aria-label="…", or aria-labelledby pointing at a heading.',
+					},
+	},
+	'group-attached-name': {
+		selector: '[interop-group~="attached"] > button',
+		check: (button) => {
+			const name = squash(accessibleName(button));
+			const others = Array.from(button.parentElement!.children)
+				.filter((sibling) => sibling !== button && sibling.matches('button'))
+				.map((sibling) => squash(accessibleName(sibling)));
+			const generic = /^(open|toggle|toggle dropdown|dropdown|menu|open menu|more|more options|options|show more|expand)$/.test(name);
+			return name && (generic || others.includes(name))
+				? {
+						problem: generic ? `This button is named "${name}", which does not say what it is for.` : 'This button has the same name as the button it is attached to.',
+						reason: 'A screen reader announces two buttons that look like one. Each needs a name that says what it does and how it relates to the other.',
+						advice: 'Name it for its action, e.g. "More save options" beside "Save".',
+					}
+				: null;
+		},
+	},
 	'radio-group-shared-name': {
 		selector: 'fieldset[interop-radio-group]',
 		check: (fieldset) => {
