@@ -41,6 +41,12 @@ export const routes: Routes = [
 			import("./components/field/field-demo").then((m) => m.FieldDemo),
 	},
 	{
+		path: "components/group",
+		title: "Group",
+		loadComponent: () =>
+			import("./components/group/group-demo").then((m) => m.GroupDemo),
+	},
+	{
 		path: "components/icon",
 		title: "Icon",
 		loadComponent: () =>

@@ -1,6 +1,17 @@
-p {
+p:not(.prose, .aka) {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: var(--itx-space-2);
+}
+
+.aka {
+	font-style: italic;
+}
+
+/* The choices, one per row, as wide as the widest. */
+.choices:popover-open {
+	display: flex;
+	flex-direction: column;
+	gap: var(--itx-space-1);
 }
