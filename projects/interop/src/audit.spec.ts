@@ -472,6 +472,23 @@ describe('auditInterop', () => {
 			render('<dialog interop-dialog role="alertdialog" aria-label="Session ending"></dialog>');
 			expect(rules()).toEqual(['dialog-alert-description']);
 		});
+
+		it('accepts a palette with a labeled search field', () => {
+			render(`
+				<dialog interop-dialog="palette" aria-label="Go to page">
+					<search><label for="q">Go to page</label><input id="q" type="search"></search>
+				</dialog>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a palette with no search field, or an unlabeled one', () => {
+			render(`
+				<dialog interop-dialog="palette" aria-label="A"><input type="search" aria-label="Query"></dialog>
+				<dialog interop-dialog="palette" aria-label="B"><search><input type="search"></search></dialog>
+			`);
+			expect(rules()).toEqual(['dialog-palette-field', 'dialog-palette-field']);
+		});
 	});
 
 	describe('group', () => {

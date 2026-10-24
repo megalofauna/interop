@@ -1,8 +1,8 @@
 # Go to page (command palette) — Mental Model Card
 
 A search field over a list of links, in a modal dialog, opened by a button and
-a keyboard shortcut. Native parts plus two helpers: `bindFilter()` and
-`bindShortcut()`. Research:
+a keyboard shortcut. Native parts, the `interop-dialog="palette"` look, and two
+helpers: `bindFilter()` and `bindShortcut()`. Research:
 [prompts/COMMAND-PALETTE-REVIEW.md](../../prompts/COMMAND-PALETTE-REVIEW.md).
 
 ## Files
@@ -14,8 +14,8 @@ projects/interop/filter/filter.ts       InteropFilter, input[interopFilter]
 projects/interop/shortcut/shortcut.ts   InteropShortcut, button[interopShortcut]
 ```
 
-No CSS of its own: the dialog, field, input and tree styles do it. The demo is
-the dialog page's `#go-to-page` section and the Search button in the site
+The look is `interop-dialog="palette"` in `projects/interop/dialog/`. The demo is
+the dialog page's `#command-palette` section and the Search button in the site
 header (`projects/demo/src/app/app.html`).
 
 ## Markup
@@ -24,22 +24,41 @@ header (`projects/demo/src/app/app.html`).
 <button interop-button type="button" commandfor="go-to" command="show-modal" interopShortcut="mod+k">
   Search <kbd></kbd>
 </button>
-<dialog id="go-to" class="go-to" interop-dialog closedby="any" aria-labelledby="go-to-label">
+<dialog id="go-to" interop-dialog="palette" closedby="any" aria-labelledby="go-to-label">
   <search interop-field>
     <label id="go-to-label" for="go-to-query">Go to page</label>
     <input interop-input id="go-to-query" type="search" autofocus autocomplete="off" spellcheck="false"
            [interopFilter]="pages" [filterEmpty]="noPages">
   </search>
   <nav aria-label="Pages">
-    <ul #pages interop-tree role="list" (click)="goTo.close()">…<li><a href="…">Button</a></li>…</ul>
+    <ul #pages role="list" (click)="goTo.close()">…<li><a href="…">Button</a></li>…</ul>
   </nav>
   <p #noPages hidden>No pages match.</p>
+  <footer>
+    <span><kbd>↓</kbd> <kbd>↑</kbd> Move</span> <span><kbd>Enter</kbd> Open</span>
+    <span><kbd>Esc</kbd> Clear, then close</span>
+  </footer>
 </dialog>
 ```
 
-The page places the dialog near the top (`place-self: start center`), so the
-field stays put while the list shortens. In a single-page app a link does not
-unload the page, so a click in the list closes the dialog.
+In a single-page app a link does not unload the page, so a click in the list
+closes the dialog.
+
+## The palette look
+
+`interop-dialog="palette"`, CSS only:
+
+- Near the top of the window (`--itx-dialog-margin-block-start`, 10dvh), not
+  centered, so the field stays put while the list shortens. 40rem wide.
+- The dialog does not scroll. `> search` stays at the top, `> nav` scrolls, and
+  `> footer` stays at the bottom. Each section pads itself; rules divide them.
+- The field is as wide as the palette.
+- Results are `> nav li > a` or `button`: rows 40px tall and as wide as the list,
+  a hover fill, corners nested inside the dialog's, the ring inset (in
+  `outline.css`). A link and a button look the same.
+- With no match, the empty list is not drawn and `> p` takes its place.
+- `> footer` holds key hints in caption size, 4.5:1. They are hidden on a touch
+  screen with no mouse (`hover: none` and `pointer: coarse`).
 
 ## Behavior
 
@@ -81,6 +100,14 @@ unload the page, so a click in the list closes the dialog.
   Ctrl+K while their own UI has focus.
 - Use a modifier. A single-character shortcut needs an off switch (WCAG 2.1.4).
 
+## Patterns in the demo
+
+The demo lists patterns, names people look for that are built from another
+component, in its nav and in Go to page: Split button (button page) and Command
+palette (dialog page). Each carries a `Pattern` badge in one magenta
+(`.pattern` in `app.css`), so the badge reads as "a way to use something
+else". The badge is part of the link's name, and typing "pattern" lists them all.
+
 ## Growing into a command palette
 
 What stays, and where each step goes, when results become actions:
@@ -96,11 +123,19 @@ What stays, and where each step goes, when results become actions:
 - **Async results:** the page renders the list and `bindFilter()` gets a
   `match` that always passes, so it shows the empty message and the count only.
 
+## Dev audit rules
+
+| Rule | Flags |
+|---|---|
+| `dialog-palette-field` | A palette with no `> search` holding a search field, or a field with no label |
+
 ## Tests
 
 - `src/bind-filter.spec.ts`: matching, accents, `match`, empty message, the
   count once and only on change, arrows, skipping hidden items, clear on close,
   unbinding.
+- `src/audit.spec.ts`: `dialog-palette-field`.
+- `styles/contrast.spec.ts`: the key hints.
 - `src/bind-shortcut.spec.ts`: Ctrl and ⌘, Mac Ctrl+K left alone, exact
   modifiers, Alt by physical key, held keys, composing, handled keys, disabled
   and inert, the attribute and hint, unbinding.

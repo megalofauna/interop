@@ -13,6 +13,7 @@ import {
 	RouterLinkActive,
 	RouterOutlet,
 } from "@angular/router";
+import { InteropBadge } from "interop/badge";
 import { InteropFilter } from "interop/filter";
 import { InteropDrawer } from "interop/popover";
 import { InteropShortcut } from "interop/shortcut";
@@ -27,6 +28,7 @@ const FOCUS_RING_KEY = "demo-focus-ring";
 		RouterOutlet,
 		RouterLink,
 		RouterLinkActive,
+		InteropBadge,
 		InteropDrawer,
 		InteropFilter,
 		InteropShortcut,
@@ -57,11 +59,32 @@ export class App {
 		{ value: "still", label: "still" },
 	];
 
-	/** Every page with a title, for the Go to page search. */
-	protected readonly pageLinks = inject(Router)
-		.config.filter((route) => typeof route.title === "string")
-		.map((route) => ({ path: route.path ?? "", title: route.title as string }))
-		.sort((a, b) => a.title.localeCompare(b.title));
+	/**
+	 * Every page with a title, for the Go to page search, and the patterns: a name people look for
+	 * that is built from another component, shown as an example on that component's page.
+	 */
+	protected readonly pageLinks: {
+		title: string;
+		path: string;
+		fragment?: string;
+	}[] = [
+		...inject(Router)
+			.config.filter((route) => typeof route.title === "string")
+			.map((route) => ({
+				path: route.path ?? "",
+				title: route.title as string,
+			})),
+		{
+			title: "Command palette",
+			path: "components/dialog",
+			fragment: "command-palette",
+		},
+		{
+			title: "Split button",
+			path: "components/button",
+			fragment: "split-button",
+		},
+	].sort((a, b) => a.title.localeCompare(b.title));
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 

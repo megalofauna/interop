@@ -47,8 +47,7 @@
 	<dialog
 		#goTo
 		id="go-to"
-		class="go-to"
-		interop-dialog
+		interop-dialog="palette"
 		closedby="any"
 		aria-labelledby="go-to-label"
 	>
@@ -66,15 +65,25 @@
 			/>
 		</search>
 		<nav aria-label="Pages">
-			<ul #pages interop-tree role="list" (click)="goTo.close()">
-				@for (page of pageLinks; track page.path) {
+			<ul #pages role="list" (click)="goTo.close()">
+				@for (page of pageLinks; track page.title) {
 					<li>
-						<a [routerLink]="'/' + page.path">{{ page.title }}</a>
+						<a [routerLink]="'/' + page.path" [fragment]="page.fragment"
+							>{{ page.title }}
+							@if (page.fragment) {
+								<span interop-badge itx-size="sm" class="pattern">Pattern</span>
+							}
+						</a>
 					</li>
 				}
 			</ul>
 		</nav>
 		<p #noPages hidden>No pages match.</p>
+		<footer>
+			<span><kbd>↓</kbd> <kbd>↑</kbd> Move</span>
+			<span><kbd>Enter</kbd> Open</span>
+			<span><kbd>Esc</kbd> Clear, then close</span>
+		</footer>
 	</dialog>
 
 	<nav #nav id="site-nav" interop-popover="drawer" popover aria-label="Pages">
@@ -160,6 +169,14 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Code block</a
+							>
+						</li>
+						<li>
+							<a routerLink="/components/dialog" fragment="command-palette"
+								>Command palette
+								<span interop-badge itx-size="sm" class="pattern"
+									>Pattern</span
+								></a
 							>
 						</li>
 						<li>
@@ -252,7 +269,10 @@
 						</li>
 						<li>
 							<a routerLink="/components/button" fragment="split-button"
-								>Split button</a
+								>Split button
+								<span interop-badge itx-size="sm" class="pattern"
+									>Pattern</span
+								></a
 							>
 						</li>
 						<li>

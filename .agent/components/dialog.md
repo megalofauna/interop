@@ -105,7 +105,8 @@ Not tested: Safari, Firefox, iOS scroll lock, screen reader output.
 A non-modal dialog (use a popover), a modal side sheet, a `closedby`
 polyfill, exit motion, a close button inserted by Interop.
 
-## Go to page
+## Palette
 
-A search field over a list of links in a dialog, the pattern called a command
-palette: see [command-palette.md](command-palette.md).
+`interop-dialog="palette"`: a search field over a list of results with key
+hints, near the top of the window, where only the list scrolls. The pattern
+called a command palette: see [command-palette.md](command-palette.md).

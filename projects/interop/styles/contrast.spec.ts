@@ -541,6 +541,9 @@ describe('dialog', () => {
 			const edges = [contrast(dialog('border-color', scheme), dimmed), contrast(dialog('background-color', scheme), dimmed)];
 			expect(Math.max(...edges)).toBeGreaterThanOrEqual(3);
 		});
+		it(`has palette key hints of 4.5:1 on the dialog in ${label}`, () => {
+			expect(contrast(dialog('footer-color', scheme), dialog('background-color', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
 	}
 });
 

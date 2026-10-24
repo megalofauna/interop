@@ -256,14 +256,16 @@
 </dialog>
 <figure interop-code-block language="ts" [code]="examples.fromCode"></figure>
 
-<h2 id="go-to-page">Go to page</h2>
-<p class="aka">Also known as command palette, quick open, ⌘K search.</p>
+<h2 id="command-palette">Command palette</h2>
+<p class="aka">Also known as go to page, quick open, ⌘K search.</p>
 <p>
-	A search field over a list of links, in a dialog. Typing hides the links that
-	do not match, and the count is announced when typing pauses. Arrow Down moves
-	to the first link and Enter follows it. The first Escape clears the field and
-	the second closes the dialog. Each result is a link, so it opens in a new tab
-	and works with any screen reader, on a phone too.
+	<code>interop-dialog="palette"</code> is a search field over a list of links,
+	in a dialog near the top of the window. Only the list scrolls, and the key
+	hints sit below it. Typing hides the links that do not match, and the count is
+	announced when typing pauses. Arrow Down moves to the first link and Enter
+	follows it. The first Escape clears the field and the second closes the
+	dialog. Each result is a link, so it opens in a new tab and works with any
+	screen reader, on a phone too.
 </p>
 <p>
 	<code>InteropShortcut</code> gives the button a key, and the key clicks the
@@ -282,8 +284,7 @@
 <dialog
 	#findPage
 	id="find-page"
-	class="go-to"
-	interop-dialog
+	interop-dialog="palette"
 	closedby="any"
 	aria-labelledby="find-page-label"
 >
@@ -301,7 +302,7 @@
 		/>
 	</search>
 	<nav aria-label="Pages">
-		<ul #findPageList interop-tree role="list" (click)="findPage.close()">
+		<ul #findPageList role="list" (click)="findPage.close()">
 			@for (page of pages; track page.path) {
 				<li>
 					<a [routerLink]="page.path">{{ page.title }}</a>
@@ -310,5 +311,10 @@
 		</ul>
 	</nav>
 	<p #findPageNone hidden>No pages match.</p>
+	<footer>
+		<span><kbd>↓</kbd> <kbd>↑</kbd> Move</span>
+		<span><kbd>Enter</kbd> Open</span>
+		<span><kbd>Esc</kbd> Clear, then close</span>
+	</footer>
 </dialog>
 <figure interop-code-block language="html" [code]="examples.goTo"></figure>

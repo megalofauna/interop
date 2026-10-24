@@ -20,12 +20,29 @@
  * input open. `closedby="any"` also closes it on a click outside; `closedby="none"` leaves only its
  * buttons. A button in <form method="dialog"> closes it and its `value` becomes the dialog's returnValue.
  *
+ * `interop-dialog="palette"` is a search field over a list of results, with key hints below: "go to
+ * page", or a command palette. It sits near the top of the window, so the field stays put while the
+ * list shortens, and only the list scrolls. The results are links or buttons; bindFilter() filters
+ * them and bindShortcut() gives the opening button a key.
+ *
+ *   <dialog id="go-to" interop-dialog="palette" closedby="any" aria-labelledby="go-to-label">
+ *     <search interop-field>
+ *       <label id="go-to-label" for="go-to-query">Go to page</label>
+ *       <input interop-input id="go-to-query" type="search" autofocus>
+ *     </search>
+ *     <nav aria-label="Pages"><ul role="list"><li><a href="/button">Button</a></li>…</ul></nav>
+ *     <p hidden>No pages match.</p>
+ *     <footer><span><kbd>↓</kbd> <kbd>↑</kbd> Move</span> <span><kbd>Enter</kbd> Open</span> …</footer>
+ *   </dialog>
+ *
  * Also known as:
  *   modal, modal dialog         Carbon, USWDS; HTML's showModal() and :modal
  *   alert dialog                ARIA alertdialog, for an urgent message that needs a response
  *   sheet                       Apple, Material
  *   panel, flyout               Fluent (WinUI)
  *   lightbox, overlay           informal
+ *   command palette, quick open the palette: VS Code, GitHub, cmdk; React Aria and Base UI call
+ *                               its field and list an autocomplete
  * Dialog is the HTML element and the ARIA role, and the name in Fluent, Spectrum, Radix, Base UI,
  * Angular CDK and Web Awesome.
  */
@@ -127,4 +144,84 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--itx-dialog-gap);
+}
+
+/* The palette. The dialog does not scroll; its list does, between the field and the key hints. */
+:where(dialog[interop-dialog~="palette"]) {
+	place-self: start center;
+	margin-block-start: var(--itx-dialog-margin-block-start);
+	max-block-size: calc(100dvh - var(--itx-dialog-margin-block-start) - var(--itx-dialog-inset));
+	overflow: hidden;
+}
+
+:where(dialog[interop-dialog~="palette"] > :is(search, nav, p, footer)) {
+	margin: 0;
+	padding-block: var(--itx-dialog-section-padding-block);
+	padding-inline: var(--itx-dialog-section-padding-inline);
+}
+
+:where(dialog[interop-dialog~="palette"] > nav) {
+	flex: 1 1 auto;
+	min-block-size: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding-block: var(--itx-space-1);
+	padding-inline: var(--itx-dialog-list-padding-inline);
+	border-block-start: var(--itx-border-width) solid var(--itx-dialog-section-border-color);
+}
+
+/* The list is empty of matches: the message replaces it, and the empty list draws nothing. */
+:where(dialog[interop-dialog~="palette"] > nav:not(:has(li:not([hidden])))) {
+	display: none;
+}
+
+:where(dialog[interop-dialog~="palette"] > p) {
+	border-block-start: var(--itx-border-width) solid var(--itx-dialog-section-border-color);
+}
+
+:where(dialog[interop-dialog~="palette"] > nav ul) {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* A row as wide as the list, at least 40px tall. A link and a button look the same. */
+:where(dialog[interop-dialog~="palette"] > nav li > :is(a, button)) {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: var(--itx-space-2);
+	inline-size: 100%;
+	min-block-size: var(--itx-dialog-result-min-block-size);
+	padding-block: var(--itx-space-1);
+	padding-inline: var(--itx-dialog-result-padding-inline);
+	font: inherit;
+	color: inherit;
+	text-align: start;
+	text-decoration: none;
+	background-color: transparent;
+	border: 0;
+	border-radius: var(--itx-dialog-result-border-radius);
+	cursor: pointer;
+}
+
+:where(dialog[interop-dialog~="palette"] > nav li > :is(a, button):hover) {
+	background-color: var(--itx-dialog-result-background-color-hover);
+}
+
+/* The key hints: for keyboard users, so a touch screen without a mouse does not show them. */
+:where(dialog[interop-dialog~="palette"] > footer) {
+	justify-content: flex-start;
+	gap: var(--itx-space-4);
+	padding-block: var(--itx-space-3);
+	font-size: var(--itx-font-size-caption);
+	line-height: var(--itx-line-height-caption);
+	color: var(--itx-dialog-footer-color);
+	border-block-start: var(--itx-border-width) solid var(--itx-dialog-section-border-color);
+}
+
+@media (hover: none) and (pointer: coarse) {
+	:where(dialog[interop-dialog~="palette"] > footer) {
+		display: none;
+	}
 }
