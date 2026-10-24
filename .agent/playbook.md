@@ -57,6 +57,25 @@ Interop components are semantically correct, accessible first, and performant by
 - **Invokers first.** Before writing a click handler, ask whether
   `command`/`commandfor`, built-in or a custom `--command`, does the job.
 
+## Components, assemblies and patterns
+
+Three kinds, by who decides what is inside:
+
+| Kind | What it is | Examples |
+|---|---|---|
+| Component | An identity attribute on a native element. Its inside is the element's own anatomy, or content the author chooses | button, select, dialog, tabs, toolbar, group |
+| Assembly | An identity attribute of its own, built from other Interop components that Interop chooses | code block (button, scroll area, tooltip, highlight), page nav (tree, the underscore look) |
+| Pattern | No identity of its own: a recipe of existing components, shown as an example on the page of the component it is built from | split button (group), command palette (dialog), segmented control (radio group) |
+
+An assembly may import components; a component never imports an assembly.
+"Composite" is not used: ARIA's composite role is a widget that manages focus
+among its children, which is a different line.
+
+In the demo, a pattern's nav entry and Go to page entry carry a `Pattern`
+badge (`itx-color="info"`), because the link names something the page it opens
+is not titled. Its section on that page is `section.pattern`, marked in the same
+blue. Components and assemblies carry no badge.
+
 ## DOM writes during animation/drag
 
 Never trigger Angular change detection inside a drag or animation loop. Write directly to `element.style` in pointer event handlers, batched via `requestAnimationFrame`. Emit Angular outputs only at end-of-drag (`pointerup` / `keydown` settle).
