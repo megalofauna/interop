@@ -1,3 +1,10 @@
 .aka {
 	font-style: italic;
 }
+
+/* Go to page: near the top, so the field stays put while the list shortens under it. */
+.go-to {
+	place-self: start center;
+	margin-block-start: 10dvh;
+	max-block-size: calc(80dvh - var(--itx-dialog-inset));
+}

@@ -104,3 +104,8 @@ Not tested: Safari, Firefox, iOS scroll lock, screen reader output.
 
 A non-modal dialog (use a popover), a modal side sheet, a `closedby`
 polyfill, exit motion, a close button inserted by Interop.
+
+## Go to page
+
+A search field over a list of links in a dialog, the pattern called a command
+palette: see [command-palette.md](command-palette.md).

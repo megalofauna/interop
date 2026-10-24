@@ -11,6 +11,16 @@
 			Menu
 		</button>
 		<span class="title">Interop</span>
+		<button
+			interop-button
+			type="button"
+			itx-size="sm"
+			command="show-modal"
+			commandfor="go-to"
+			interopShortcut="mod+k"
+		>
+			Search <kbd></kbd>
+		</button>
 		<label for="focus-ring" itx-visually-hidden>Focus ring</label>
 		<select
 			id="focus-ring"
@@ -33,6 +43,39 @@
 			Dark mode
 		</button>
 	</header>
+
+	<dialog
+		#goTo
+		id="go-to"
+		class="go-to"
+		interop-dialog
+		closedby="any"
+		aria-labelledby="go-to-label"
+	>
+		<search interop-field>
+			<label id="go-to-label" for="go-to-query">Go to page</label>
+			<input
+				interop-input
+				id="go-to-query"
+				type="search"
+				autofocus
+				autocomplete="off"
+				spellcheck="false"
+				[interopFilter]="pages"
+				[filterEmpty]="noPages"
+			/>
+		</search>
+		<nav aria-label="Pages">
+			<ul #pages interop-tree role="list" (click)="goTo.close()">
+				@for (page of pageLinks; track page.path) {
+					<li>
+						<a [routerLink]="'/' + page.path">{{ page.title }}</a>
+					</li>
+				}
+			</ul>
+		</nav>
+		<p #noPages hidden>No pages match.</p>
+	</dialog>
 
 	<nav #nav id="site-nav" interop-popover="drawer" popover aria-label="Pages">
 		<ul interop-tree role="list">

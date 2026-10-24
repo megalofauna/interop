@@ -7,8 +7,15 @@ import {
 	signal,
 	viewChild,
 } from "@angular/core";
-import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import {
+	Router,
+	RouterLink,
+	RouterLinkActive,
+	RouterOutlet,
+} from "@angular/router";
+import { InteropFilter } from "interop/filter";
 import { InteropDrawer } from "interop/popover";
+import { InteropShortcut } from "interop/shortcut";
 import { InteropToasts } from "interop/toast";
 
 const STORAGE_KEY = "demo-color-scheme";
@@ -21,6 +28,8 @@ const FOCUS_RING_KEY = "demo-focus-ring";
 		RouterLink,
 		RouterLinkActive,
 		InteropDrawer,
+		InteropFilter,
+		InteropShortcut,
 		InteropToasts,
 	],
 	templateUrl: "./app.html",
@@ -47,6 +56,12 @@ export class App {
 		{ value: "halo", label: "halo" },
 		{ value: "still", label: "still" },
 	];
+
+	/** Every page with a title, for the Go to page search. */
+	protected readonly pageLinks = inject(Router)
+		.config.filter((route) => typeof route.title === "string")
+		.map((route) => ({ path: route.path ?? "", title: route.title as string }))
+		.sort((a, b) => a.title.localeCompare(b.title));
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 

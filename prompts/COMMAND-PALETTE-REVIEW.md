@@ -45,6 +45,9 @@ The rebuild needs about 60 lines of TS and 60 of CSS. Prime has 417 lines of TS
 </dialog>
 ```
 
+Built as decided: see
+[.agent/components/command-palette.md](../.agent/components/command-palette.md).
+
 A palette of actions, where Enter runs something that is not a link, waits for
 the filtering combobox that [listbox.md](../.agent/components/listbox.md)
 reserves. It is not built now: there is no consumer, and its keyboard depends on

@@ -1,18 +1,30 @@
 import { Component, ElementRef, signal, viewChild } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { InteropCodeBlock } from "interop/code-block";
+import { InteropFilter } from "interop/filter";
 import { InteropIcon } from "interop/icon";
 import { examples } from "./dialog-examples";
 
 @Component({
 	selector: "demo-dialog",
 	host: { "itx-flow": "" },
-	imports: [InteropCodeBlock, InteropIcon],
+	imports: [InteropCodeBlock, InteropFilter, InteropIcon, RouterLink],
 	templateUrl: "./dialog-demo.html",
 	styleUrl: "./dialog-demo.css",
 })
 export class DialogDemo {
 	protected readonly examples = examples;
 	protected readonly result = signal("");
+	protected readonly pages = [
+		{ path: "/components/button", title: "Button" },
+		{ path: "/components/dialog", title: "Dialog" },
+		{ path: "/components/field", title: "Field" },
+		{ path: "/components/select", title: "Select" },
+		{ path: "/components/slider", title: "Slider" },
+		{ path: "/components/toast", title: "Toast" },
+		{ path: "/components/toolbar", title: "Toolbar" },
+		{ path: "/components/tooltip", title: "Tooltip" },
+	];
 	protected readonly dirty = signal(false);
 	protected readonly warning = signal(false);
 	protected readonly saved =

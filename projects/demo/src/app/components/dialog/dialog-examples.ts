@@ -65,4 +65,32 @@ readonly saved = viewChild.required<ElementRef<HTMLDialogElement>>("saved");
 // After the work is done, from code: no button opened it.
 this.saved().nativeElement.showModal();
 `,
+	goTo: `<button interop-button type="button" commandfor="go-to" command="show-modal" interopShortcut="mod+k">
+	Search <kbd></kbd>
+</button>
+
+<dialog #goTo id="go-to" class="go-to" interop-dialog closedby="any" aria-labelledby="go-to-label">
+	<search interop-field>
+		<label id="go-to-label" for="go-to-query">Go to page</label>
+		<input interop-input id="go-to-query" type="search" autofocus autocomplete="off" spellcheck="false"
+			[interopFilter]="pages" [filterEmpty]="noPages" />
+	</search>
+	<nav aria-label="Pages">
+		<!-- A link in a single-page app navigates without a page load, so close the dialog. -->
+		<ul #pages interop-tree role="list" (click)="goTo.close()">
+			@for (page of pageLinks; track page.path) {
+				<li><a [routerLink]="page.path">{{ page.title }}</a></li>
+			}
+		</ul>
+	</nav>
+	<p #noPages hidden>No pages match.</p>
+</dialog>
+
+/* Near the top, so the field stays put while the list shortens under it. */
+.go-to {
+	place-self: start center;
+	margin-block-start: 10dvh;
+	max-block-size: calc(80dvh - var(--itx-dialog-inset));
+}
+`,
 };

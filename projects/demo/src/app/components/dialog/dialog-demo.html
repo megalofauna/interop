@@ -255,3 +255,60 @@
 	</form>
 </dialog>
 <figure interop-code-block language="ts" [code]="examples.fromCode"></figure>
+
+<h2 id="go-to-page">Go to page</h2>
+<p class="aka">Also known as command palette, quick open, ⌘K search.</p>
+<p>
+	A search field over a list of links, in a dialog. Typing hides the links that
+	do not match, and the count is announced when typing pauses. Arrow Down moves
+	to the first link and Enter follows it. The first Escape clears the field and
+	the second closes the dialog. Each result is a link, so it opens in a new tab
+	and works with any screen reader, on a phone too.
+</p>
+<p>
+	<code>InteropShortcut</code> gives the button a key, and the key clicks the
+	button. It writes the platform's key into the empty
+	<code>&lt;kbd&gt;</code> and sets <code>aria-keyshortcuts</code>. The Search
+	button at the top of this site is this example with ⌘K or Ctrl K.
+</p>
+<button
+	interop-button
+	type="button"
+	commandfor="find-page"
+	command="show-modal"
+>
+	Go to page…
+</button>
+<dialog
+	#findPage
+	id="find-page"
+	class="go-to"
+	interop-dialog
+	closedby="any"
+	aria-labelledby="find-page-label"
+>
+	<search interop-field>
+		<label id="find-page-label" for="find-page-query">Go to page</label>
+		<input
+			interop-input
+			id="find-page-query"
+			type="search"
+			autofocus
+			autocomplete="off"
+			spellcheck="false"
+			[interopFilter]="findPageList"
+			[filterEmpty]="findPageNone"
+		/>
+	</search>
+	<nav aria-label="Pages">
+		<ul #findPageList interop-tree role="list" (click)="findPage.close()">
+			@for (page of pages; track page.path) {
+				<li>
+					<a [routerLink]="page.path">{{ page.title }}</a>
+				</li>
+			}
+		</ul>
+	</nav>
+	<p #findPageNone hidden>No pages match.</p>
+</dialog>
+<figure interop-code-block language="html" [code]="examples.goTo"></figure>
