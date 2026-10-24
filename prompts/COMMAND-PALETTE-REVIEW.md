@@ -192,7 +192,7 @@ No spec file exists, so none of this is tested, including the reset-on-open fix.
 | Accessibility tree, native version | `dialog "Go to" modal=true` > `searchbox "Search pages"` > `list` > `link "Alpha"`… |
 | Accessibility tree, a combobox input | `combobox hasPopup=listbox expanded=true controls=lb` |
 | `ariaNotify` | Present on `Element.prototype` |
-| `focusgroup="toolbar block wrap"` on a `<ul>` of links | Arrow Down and Up move real focus, skip a `hidden` item, wrap; Tab leaves the list and Shift+Tab returns to the last link. The list stays `list`. No `focusgroup` IDL property |
+| `focusgroup="toolbar block wrap"` on a `<ul>` of links | Arrow Down and Up move real focus, skip a `hidden` item, wrap; Tab leaves the list and Shift+Tab returns to the last link. The list stays `list`. `'focusGroup' in HTMLElement.prototype` is true |
 | `CSS.highlights` | Present, for marking the matched text |
 | `appearance: base-select` | Supported. It does not filter |
 | Prime demo, ⌘K then Enter | Navigates from `/components/button` to `/components` |
