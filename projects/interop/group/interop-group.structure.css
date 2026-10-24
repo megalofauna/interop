@@ -76,7 +76,23 @@
 	--itx-popover-background-opacity: 1;
 	--itx-popover-backdrop-filter: none;
 	--itx-popover-border-color: var(--itx-group-open-border-color);
+	--itx-popover-padding-inline: var(--itx-popover-padding-block);
 	border-start-end-radius: 0px;
+}
+
+/*
+ * The choices are flat: no fill or edge until the pointer is over one, so the open control reads as
+ * one shape. They stack, as wide as the widest, with text at the start. Their corners nest inside
+ * the popover's padding.
+ */
+:where([interop-group~="attached"] > [popover] > [interop-button]) {
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: transparent;
+	--itx-button-background-color-hover: var(--itx-button-background-color-active);
+	--itx-button-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-popover-padding-block));
+	display: flex;
+	inline-size: 100%;
+	justify-content: flex-start;
 }
 
 :where([interop-group~="attached"]:has(> [popover]:popover-open) > [interop-button]:is([commandfor], [popovertarget])) {

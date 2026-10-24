@@ -582,3 +582,18 @@ describe('slider', () => {
 		});
 	}
 });
+
+describe('split button choices', () => {
+	for (const [scheme, label] of SCHEMES) {
+		// The choices are flat on the open fill, and take the button's active fill under the pointer.
+		it(`has choice text of 4.5:1 on the open fill and on the hover fill in ${label}`, () => {
+			for (const fill of ['--itx-group-open-background-color', '--itx-button-background-color-active']) {
+				expect(contrast(token('--itx-button-color', scheme), token(fill, scheme))).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+
+		it(`has an open edge of 3:1 against the page in ${label}`, () => {
+			expect(contrast(token('--itx-group-open-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+	}
+});

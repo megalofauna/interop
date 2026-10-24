@@ -70,6 +70,11 @@ the popover of choices, written inside the group. No script:
   (`@container anchored(fallback: flip-inline)`, Chrome 155) sees the flip, but it
   styles only the popover's contents, not its own corners.
 - The popover's top edge runs under the trigger, so a line separates them.
+- The choices are flat: no fill or edge until the pointer is over one, which
+  takes the button's active fill. They stack as wide as the widest, text at the
+  start, with corners nested inside the popover's padding, which is equal on
+  every side. Forced colors draw their transparent borders, so they still read
+  as buttons there.
 - The group CSS loads after the popover CSS, because it sets the popover's tokens.
 
 - `command="toggle-popover"` opens and closes the list.
