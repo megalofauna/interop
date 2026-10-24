@@ -104,9 +104,16 @@ closes the dialog.
 
 The demo lists patterns, names people look for that are built from another
 component, in its nav and in Go to page: Split button (button page) and Command
-palette (dialog page). Each carries a `Pattern` badge in one magenta
-(`.pattern` in `app.css`), so the badge reads as "a way to use something
-else". The badge is part of the link's name, and typing "pattern" lists them all.
+palette (dialog page). Each link carries a `Pattern` badge in the info blue
+(`itx-color="info"`). The badge is part of the link's name, and typing
+"pattern" lists them all.
+
+The pattern's own section on its component's page is a
+`<section id="…" class="pattern" itx-flow>` with the same badge on its heading,
+a faint info-blue tint and a 45% info-blue edge (`styles.css`). It is marked
+all the time, not only on arrival: the router changes the URL with
+`pushState()`, which never sets `:target`, and a direct load looks for the
+fragment before Angular renders it (both checked in Chrome 155).
 
 ## Growing into a command palette
 

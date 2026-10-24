@@ -71,7 +71,9 @@
 						<a [routerLink]="'/' + page.path" [fragment]="page.fragment"
 							>{{ page.title }}
 							@if (page.fragment) {
-								<span interop-badge itx-size="sm" class="pattern">Pattern</span>
+								<span interop-badge itx-size="sm" itx-color="info"
+									>Pattern</span
+								>
 							}
 						</a>
 					</li>
@@ -174,7 +176,7 @@
 						<li>
 							<a routerLink="/components/dialog" fragment="command-palette"
 								>Command palette
-								<span interop-badge itx-size="sm" class="pattern"
+								<span interop-badge itx-size="sm" itx-color="info"
 									>Pattern</span
 								></a
 							>
@@ -270,7 +272,7 @@
 						<li>
 							<a routerLink="/components/button" fragment="split-button"
 								>Split button
-								<span interop-badge itx-size="sm" class="pattern"
+								<span interop-badge itx-size="sm" itx-color="info"
 									>Pattern</span
 								></a
 							>

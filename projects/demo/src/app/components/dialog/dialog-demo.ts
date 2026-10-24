@@ -1,5 +1,6 @@
 import { Component, ElementRef, signal, viewChild } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
 import { InteropFilter } from "interop/filter";
 import { InteropIcon } from "interop/icon";
@@ -8,7 +9,13 @@ import { examples } from "./dialog-examples";
 @Component({
 	selector: "demo-dialog",
 	host: { "itx-flow": "" },
-	imports: [InteropCodeBlock, InteropFilter, InteropIcon, RouterLink],
+	imports: [
+		InteropBadge,
+		InteropCodeBlock,
+		InteropFilter,
+		InteropIcon,
+		RouterLink,
+	],
 	templateUrl: "./dialog-demo.html",
 	styleUrl: "./dialog-demo.css",
 })

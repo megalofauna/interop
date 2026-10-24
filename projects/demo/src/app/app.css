@@ -94,14 +94,3 @@ footer {
 		padding: var(--itx-space-8);
 	}
 }
-
-/*
- * A pattern: a name people look for, built from another component. One color everywhere, so the
- * badge reads as "this is a way to use something else".
- */
-.pattern {
-	--itx-badge-background-color: light-dark(
-		oklch(0.5 0.2 330),
-		oklch(0.8 0.12 330)
-	);
-}
