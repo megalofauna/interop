@@ -29,7 +29,7 @@ export class ButtonDemo {
 		aria-label="More save options">
 		<svg interop-icon name="tabler-chevron-down"></svg>
 	</button>
-	<div interop-popover popover id="save-more" class="choices">
+	<div interop-popover popover id="save-more">
 		<button interop-button type="button" command="hide-popover" commandfor="save-more"
 			(click)="saveDraft()">Save as draft</button>
 		<button interop-button type="button" command="hide-popover" commandfor="save-more"
