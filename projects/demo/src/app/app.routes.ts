@@ -83,6 +83,8 @@ export const routes: Routes = [
 	{
 		path: "components/segmented-control",
 		title: "Segmented control",
+		// A pattern: a radio group template with its own page. Go to page badges it.
+		data: { pattern: true },
 		loadComponent: () =>
 			import("./components/segmented-control/segmented-control-demo").then(
 				(m) => m.SegmentedControlDemo,

@@ -8,6 +8,7 @@ import {
 	viewChild,
 } from "@angular/core";
 import { bindRadioHomeEnd } from "interop";
+import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
 import { InteropIcon } from "interop/icon";
 import { InteropSegmentedFit } from "interop/radio-group";
@@ -16,7 +17,7 @@ import { examples } from "./segmented-control-examples";
 @Component({
 	selector: "demo-segmented-control",
 	host: { "itx-flow": "" },
-	imports: [InteropCodeBlock, InteropIcon, InteropSegmentedFit],
+	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropSegmentedFit],
 	templateUrl: "./segmented-control-demo.html",
 	styleUrl: "./segmented-control-demo.css",
 })

@@ -67,22 +67,38 @@ export class App {
 		title: string;
 		path: string;
 		fragment?: string;
+		pattern?: boolean;
 	}[] = [
 		...inject(Router)
 			.config.filter((route) => typeof route.title === "string")
 			.map((route) => ({
 				path: route.path ?? "",
 				title: route.title as string,
+				pattern: route.data?.["pattern"] === true,
 			})),
+		{
+			title: "Chips",
+			path: "components/checkbox",
+			fragment: "chips",
+			pattern: true,
+		},
 		{
 			title: "Command palette",
 			path: "components/dialog",
 			fragment: "command-palette",
+			pattern: true,
+		},
+		{
+			title: "Radio cards",
+			path: "components/radio-group",
+			fragment: "cards",
+			pattern: true,
 		},
 		{
 			title: "Split button",
 			path: "components/button",
 			fragment: "split-button",
+			pattern: true,
 		},
 	].sort((a, b) => a.title.localeCompare(b.title));
 

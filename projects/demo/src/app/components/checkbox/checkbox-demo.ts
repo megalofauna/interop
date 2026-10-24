@@ -9,12 +9,14 @@ import {
 	viewChild,
 } from "@angular/core";
 import { bindSelectAll } from "interop";
+import { InteropBadge } from "interop/badge";
 
 type Topping = "cheese" | "olives" | "peppers";
 
 @Component({
 	selector: "demo-checkbox",
 	host: { "itx-flow": "" },
+	imports: [InteropBadge],
 	templateUrl: "./checkbox-demo.html",
 	styleUrl: "./checkbox-demo.css",
 })

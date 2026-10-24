@@ -65,7 +65,7 @@ Three kinds, by who decides what is inside:
 |---|---|---|
 | Component | An identity attribute on a native element. Its inside is the element's own anatomy, or content the author chooses | button, select, dialog, tabs, toolbar, group |
 | Assembly | An identity attribute of its own, built from other Interop components that Interop chooses | code block (button, scroll area, tooltip, highlight), page nav (tree, the underscore look) |
-| Pattern | No identity of its own: a recipe of existing components, shown as an example on the page of the component it is built from | split button (group), command palette (dialog), segmented control (radio group) |
+| Pattern | No identity of its own: a recipe of existing components, or a template of one, shown on the page of the component it is built from | split button (group), command palette (dialog), segmented control, radio cards and chips (radio group), checkbox cards and chips (checkbox) |
 
 An assembly may import components; a component never imports an assembly.
 "Composite" is not used: ARIA's composite role is a widget that manages focus
@@ -74,7 +74,11 @@ among its children, which is a different line.
 In the demo, a pattern's nav entry and Go to page entry carry a `Pattern`
 badge (`itx-color="info"`), because the link names something the page it opens
 is not titled. Its section on that page is `section.pattern`, marked in the same
-blue. Components and assemblies carry no badge.
+blue, with the badge on its heading; a pattern with its own page (segmented
+control) has the badge on its `h1` and `data: { pattern: true }` on its route.
+Every pattern section is marked, but only the names people search for get a nav
+entry: Chips (checkbox page), Command palette, Radio cards, Segmented control,
+Split button. Components and assemblies carry no badge.
 
 ## DOM writes during animation/drag
 
