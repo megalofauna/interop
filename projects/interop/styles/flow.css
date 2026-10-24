@@ -66,13 +66,17 @@
 	line-height: var(--itx-flow-line-height);
 }
 
-/* The browser's own block margins would add to these, and collapse unpredictably. */
-:where([itx-flow] > *) {
+/*
+ * The browser's own block margins would add to these, and collapse unpredictably. Popovers and
+ * dialogs are left alone: they show in the top layer, where their margin places them against their
+ * anchor or centers them.
+ */
+:where([itx-flow] > :not([popover], dialog)) {
 	margin-block: 0;
 }
 
 /* Between blocks. A hidden block is skipped, so it does not leave a gap. */
-:where([itx-flow] > :not([hidden]) ~ :not([hidden])) {
+:where([itx-flow] > :not([hidden]) ~ :not([hidden], [popover], dialog)) {
 	margin-block-start: var(--itx-flow-space);
 }
 

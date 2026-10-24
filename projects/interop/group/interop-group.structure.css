@@ -1,0 +1,102 @@
+/*
+ * Group: controls that belong together, with one name.
+ *
+ *   <div role="group" interop-group aria-label="Formatting">…buttons…</div>
+ *   <fieldset interop-group><legend>Quantity</legend>…</fieldset>
+ *
+ * It lays its controls out in a row that wraps, and gives them a shared name, which a screen reader
+ * says when focus enters. It adds no keys: every control stays a Tab stop. For one Tab stop and
+ * arrow keys, use a toolbar.
+ *
+ * `interop-group="attached"` joins its buttons into one shape: shared edges, square where they
+ * meet. A split button is an attached group of an action and the button that opens its other
+ * choices.
+ *
+ * Also known as:
+ *   button group      Bootstrap, Primer, Carbon (layout), Web Awesome
+ *   split button      Fluent, Material, Atlassian, Bootstrap (an attached action and menu button)
+ *   combo button      Carbon (the same)
+ * Group is the ARIA role. A fieldset gives the same grouping to a form question.
+ */
+
+:where(div[interop-group]) {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-group-gap);
+}
+
+/* A fieldset takes the shared fieldset layout, in a row. */
+:where(fieldset[interop-group]) {
+	--itx-fieldset-flex-direction: row;
+	--itx-fieldset-row-gap: var(--itx-group-gap);
+	--itx-fieldset-column-gap: var(--itx-group-gap);
+}
+
+:where(div[interop-group~="attached"]) {
+	gap: 0;
+}
+
+:where(fieldset[interop-group~="attached"]) {
+	--itx-fieldset-row-gap: 0px;
+	--itx-fieldset-column-gap: 0px;
+}
+
+/* Neighbors overlap by one border, so the edge between them is one line. */
+:where([interop-group~="attached"] > [interop-button] + [interop-button]) {
+	margin-inline-start: calc(-1 * var(--itx-button-border-width));
+	border-start-start-radius: 0px;
+	border-end-start-radius: 0px;
+}
+
+:where([interop-group~="attached"] > [interop-button]:has(+ [interop-button])) {
+	border-start-end-radius: 0px;
+	border-end-end-radius: 0px;
+}
+
+/* The button that changes its edge, or shows the focus ring, comes in front of its neighbor. */
+:where([interop-group~="attached"] > [interop-button]:is(:hover, [aria-pressed="true"])) {
+	z-index: 1;
+}
+
+:where([interop-group~="attached"] > [interop-button]:focus-visible) {
+	z-index: 2;
+}
+
+/*
+ * A split button's choices: a popover written inside the attached group, opened by one of its
+ * buttons. While it is open, that button and the popover read as one shape. They share a fill and
+ * an edge color, the popover's inline-end lines up with the button's, they touch, and the corners
+ * where they meet are square. Inside the group, the popover is part of the group's name.
+ */
+:where([interop-group~="attached"] > [popover]) {
+	--itx-popover-position-area: block-end span-inline-start;
+	--itx-popover-margin-block: 0px;
+	/* The popover's own opacity and blur stay, and so does their opaque fallback. */
+	--itx-popover-background-color: var(--itx-group-open-background-color);
+	--itx-popover-border-color: var(--itx-group-open-border-color);
+	--itx-popover-padding-inline: var(--itx-popover-padding-block);
+	border-start-end-radius: 0px;
+}
+
+/*
+ * The choices are flat: no fill or edge until the pointer is over one, so the open control reads as
+ * one shape. They stack, as wide as the widest, with text at the start. Their corners nest inside
+ * the popover's padding.
+ */
+:where([interop-group~="attached"] > [popover] > [interop-button]) {
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: transparent;
+	--itx-button-background-color-hover: var(--itx-button-background-color-active);
+	--itx-button-border-radius: max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-popover-padding-block));
+	display: flex;
+	inline-size: 100%;
+	justify-content: flex-start;
+}
+
+:where([interop-group~="attached"]:has(> [popover]:popover-open) > [interop-button]:is([commandfor], [popovertarget])) {
+	--itx-button-background-color: var(--itx-group-open-background-color);
+	--itx-button-border-color: var(--itx-group-open-border-color);
+	z-index: 1;
+	border-end-end-radius: 0px;
+}

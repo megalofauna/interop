@@ -98,6 +98,100 @@
 					"builder": "@angular/build:unit-test"
 				}
 			}
+		},
+		"demo_deprecated": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss",
+					"skipTests": true
+				},
+				"@schematics/angular:class": {
+					"skipTests": true
+				},
+				"@schematics/angular:directive": {
+					"skipTests": true
+				},
+				"@schematics/angular:guard": {
+					"skipTests": true
+				},
+				"@schematics/angular:interceptor": {
+					"skipTests": true
+				},
+				"@schematics/angular:pipe": {
+					"skipTests": true
+				},
+				"@schematics/angular:resolver": {
+					"skipTests": true
+				},
+				"@schematics/angular:service": {
+					"skipTests": true
+				}
+			},
+			"root": "projects/demo_deprecated",
+			"sourceRoot": "projects/demo_deprecated/src",
+			"prefix": "dtx",
+			"architect": {
+				"build": {
+					"builder": "@angular/build:application",
+					"options": {
+						"browser": "projects/demo_deprecated/src/main.ts",
+						"tsConfig": "projects/demo_deprecated/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "projects/demo_deprecated/public"
+							}
+						],
+						"styles": ["projects/demo_deprecated/src/styles.scss"],
+						"stylePreprocessorOptions": {
+							"includePaths": [
+								"projects/interop_deprecated/src",
+								"projects/demo_deprecated/src"
+							]
+						}
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "1.25MB",
+									"maximumError": "1.75MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "8kB",
+									"maximumError": "16kB"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular/build:dev-server",
+					"options": {
+						"port": 1338
+					},
+					"configurations": {
+						"production": {
+							"buildTarget": "demo_deprecated:build:production"
+						},
+						"development": {
+							"buildTarget": "demo_deprecated:build:development"
+						}
+					},
+					"defaultConfiguration": "development"
+				}
+			}
 		}
 	},
 	"cli": {

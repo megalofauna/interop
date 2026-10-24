@@ -1,7 +1,7 @@
 @use "./app/styles/demo-page";
 @use "./app/styles/directory";
 
-@import "../../../projects/interop/src/lib/styles/themes/protocol.css";
+@import "../../../projects/interop_deprecated/src/lib/styles/themes/protocol.css";
 
 /*
  * The globals file, imported the way its own header tells consumers to: after
@@ -14,7 +14,7 @@
  * own; what it buys is that the demo now proves the documented path works, and
  * that editing a knob here moves the whole product the way the docs promise.
  */
-@import "../../../projects/interop/src/lib/styles/interop.globals.css";
+@import "../../../projects/interop_deprecated/src/lib/styles/interop.globals.css";
 
 /* ── Scrollbars ──────────────────────────────────────────────────────────────
  *

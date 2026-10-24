@@ -51,9 +51,17 @@ import popoverInteropPopoverBase from '../popover/interop-popover.base.css' with
 // @ts-expect-error The text loader turns the file into a string.
 import popoverInteropPopoverStructure from '../popover/interop-popover.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import groupInteropGroupBase from '../group/interop-group.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import groupInteropGroupStructure from '../group/interop-group.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tooltipInteropTooltipBase from '../tooltip/interop-tooltip.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import tooltipInteropTooltipStructure from '../tooltip/interop-tooltip.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import sliderInteropSliderBase from '../slider/interop-slider.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import sliderInteropSliderStructure from '../slider/interop-slider.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import switchInteropSwitchBase from '../switch/interop-switch.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
@@ -150,8 +158,12 @@ export const sheets: Record<string, string> = {
 	'code-block/interop-code-block.structure.css': codeBlockInteropCodeBlockStructure,
 	'popover/interop-popover.base.css': popoverInteropPopoverBase,
 	'popover/interop-popover.structure.css': popoverInteropPopoverStructure,
+	'group/interop-group.base.css': groupInteropGroupBase,
+	'group/interop-group.structure.css': groupInteropGroupStructure,
 	'tooltip/interop-tooltip.base.css': tooltipInteropTooltipBase,
 	'tooltip/interop-tooltip.structure.css': tooltipInteropTooltipStructure,
+	'slider/interop-slider.base.css': sliderInteropSliderBase,
+	'slider/interop-slider.structure.css': sliderInteropSliderStructure,
 	'switch/interop-switch.base.css': switchInteropSwitchBase,
 	'switch/interop-switch.structure.css': switchInteropSwitchStructure,
 	'radio-group/interop-radio-group.base.css': radioGroupInteropRadioGroupBase,

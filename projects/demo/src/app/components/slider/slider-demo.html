@@ -1,0 +1,166 @@
+<h1>Slider</h1>
+<p class="aka">Also known as range, range input, range slider.</p>
+<p>
+	A slider sets one value from a range when the range matters more than the
+	exact number: volume, brightness, zoom. It is the native
+	<code>&lt;input type="range"&gt;</code>. The browser gives it the arrow keys,
+	Page Up and Page Down, Home and End, dragging, a click anywhere on the track,
+	form submission and right-to-left. Interop draws the track, the fill and the
+	thumb, and the house focus ring.
+</p>
+<p>
+	For an exact number, use a text field: a slider is hard to set to one value.
+	For a few named choices, use a radio group, which shows every option.
+</p>
+
+<h2>One value</h2>
+<p>
+	Label it like any field. The thumb's box is 24 pixels, the smallest target
+	WCAG allows, and the drawn circle sits inside it.
+</p>
+<div interop-field>
+	<label for="volume">Volume</label>
+	<input type="range" interop-slider id="volume" min="0" max="100" value="40" />
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.basic"
+></figure>
+
+<h2>A value with a unit</h2>
+<p>
+	<code>format</code> turns the number into words for screen readers, as
+	<code>aria-valuetext</code>: "$200", not "200". Use it only when the number
+	alone misleads. <code>readout</code> shows the same words beside the slider,
+	hidden from screen readers because the slider already says its value.
+</p>
+<div interop-field>
+	<label for="budget">Budget</label>
+	<div class="scale">
+		<input
+			type="range"
+			interop-slider
+			id="budget"
+			min="0"
+			max="500"
+			step="10"
+			value="200"
+			[format]="dollars"
+			[readout]="shown"
+		/>
+		<span #shown></span>
+	</div>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.format"
+></figure>
+
+<h2>Vertical</h2>
+<p>
+	<code>itx-orientation="vertical"</code> stands it upright, with the minimum at
+	the bottom. Arrow Up raises the value, and screen readers hear a vertical
+	slider.
+</p>
+<div interop-field>
+	<label for="temperature">Temperature</label>
+	<div class="scale">
+		<input
+			type="range"
+			interop-slider
+			itx-orientation="vertical"
+			id="temperature"
+			min="10"
+			max="30"
+			value="21"
+			[format]="degrees"
+			[readout]="degreesShown"
+		/>
+		<span #degreesShown></span>
+	</div>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.vertical"
+></figure>
+
+<h2>Disabled</h2>
+<div interop-field>
+	<label for="balance">Balance</label>
+	<input type="range" interop-slider id="balance" value="50" disabled />
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.disabled"
+></figure>
+
+<h2>In a form</h2>
+<p>
+	The slider submits its value under its <code>name</code>. Reset puts the thumb
+	and the fill back.
+</p>
+<form (submit)="submit($event)">
+	<div interop-field>
+		<label for="brightness">Brightness</label>
+		<input
+			type="range"
+			interop-slider
+			id="brightness"
+			name="brightness"
+			min="0"
+			max="100"
+			value="70"
+		/>
+	</div>
+	<p class="buttons">
+		<button interop-button type="submit">Save</button>
+		<button interop-button type="reset">Reset</button>
+	</p>
+	@if (submitted(); as text) {
+		<p>Submitted: {{ text }}</p>
+	}
+</form>
+
+<h2>Two values</h2>
+<p>
+	A minimum and a maximum are two text fields in a fieldset, not a slider with
+	two thumbs. People set exact numbers in fields faster and more reliably, and
+	each field has its own label.
+</p>
+<fieldset class="pair">
+	<legend>Price, in dollars</legend>
+	<div interop-field>
+		<label for="price-min">Minimum</label>
+		<input
+			interop-input
+			id="price-min"
+			name="price-min"
+			inputmode="numeric"
+			size="6"
+		/>
+	</div>
+	<div interop-field>
+		<label for="price-max">Maximum</label>
+		<input
+			interop-input
+			id="price-max"
+			name="price-max"
+			inputmode="numeric"
+			size="6"
+		/>
+	</div>
+</fieldset>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.pair"
+></figure>

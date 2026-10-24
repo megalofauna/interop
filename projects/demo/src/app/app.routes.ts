@@ -41,6 +41,12 @@ export const routes: Routes = [
 			import("./components/field/field-demo").then((m) => m.FieldDemo),
 	},
 	{
+		path: "components/group",
+		title: "Group",
+		loadComponent: () =>
+			import("./components/group/group-demo").then((m) => m.GroupDemo),
+	},
+	{
 		path: "components/icon",
 		title: "Icon",
 		loadComponent: () =>
@@ -87,6 +93,12 @@ export const routes: Routes = [
 		title: "Select",
 		loadComponent: () =>
 			import("./components/select/select-demo").then((m) => m.SelectDemo),
+	},
+	{
+		path: "components/slider",
+		title: "Slider",
+		loadComponent: () =>
+			import("./components/slider/slider-demo").then((m) => m.SliderDemo),
 	},
 	{
 		path: "components/steps",

@@ -474,6 +474,66 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('group', () => {
+		it('accepts a named group, a fieldset with a legend, and an attached split button', () => {
+			render(`
+				<div role="group" interop-group aria-label="Formatting"><button type="button">Bold</button></div>
+				<fieldset interop-group><legend>Quantity</legend><button type="button">Decrease quantity</button></fieldset>
+				<div role="group" interop-group="attached" aria-label="Save">
+					<button type="button">Save</button><button type="button" aria-label="More save options"></button>
+				</div>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a group with no role, and a group or fieldset with no name', () => {
+			render('<div interop-group aria-label="A"></div><div role="group" interop-group></div><fieldset interop-group></fieldset>');
+			expect(rules()).toEqual(['group-role', 'group-label', 'group-label']);
+		});
+
+		it('flags an attached button with a generic name or its neighbor’s name', () => {
+			render(`
+				<div role="group" interop-group="attached" aria-label="Save">
+					<button type="button">Save</button><button type="button" aria-label="Toggle dropdown"></button>
+				</div>
+				<div role="group" interop-group="attached" aria-label="Export">
+					<button type="button">Export</button><button type="button" aria-labelledby="e"></button><span id="e" hidden>Export</span>
+				</div>
+			`);
+			expect(rules()).toEqual(['group-attached-name', 'group-attached-name', 'group-attached-name']);
+		});
+	});
+
+	describe('slider', () => {
+		it('accepts a labeled slider and a named one, with a step that divides the range', () => {
+			render(`
+				<label for="v">Volume</label><input type="range" interop-slider id="v" min="0" max="100" step="5" value="40">
+				<input type="range" interop-slider aria-label="Zoom" step="any">
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a slider with no name', () => {
+			render('<input type="range" interop-slider>');
+			expect(rules()).toEqual(['slider-name']);
+		});
+
+		it('flags min not below max, a step that is not positive, a value outside the range, and a step that does not divide it', () => {
+			render(`
+				<input type="range" interop-slider aria-label="A" min="10" max="10">
+				<input type="range" interop-slider aria-label="B" step="0">
+				<input type="range" interop-slider aria-label="C" value="150">
+				<input type="range" interop-slider aria-label="D" max="10" step="3">
+			`);
+			const problems = auditInterop(document).map((issue) => issue.problem);
+			expect(rules()).toEqual(['slider-range', 'slider-range', 'slider-range', 'slider-range']);
+			expect(problems[0]).toContain('not below');
+			expect(problems[1]).toContain('not a positive');
+			expect(problems[2]).toContain('outside');
+			expect(problems[3]).toContain('does not divide');
+		});
+	});
+
 	describe('toast', () => {
 		const item = (attributes = '', buttons = '<button type="button" aria-label="Dismiss"></button>') =>
 			`<div interop-toast ${attributes}><div><p>Saved</p></div>${buttons}</div>`;

@@ -1,0 +1,76 @@
+<h1>Group</h1>
+<p class="aka">Also known as button group.</p>
+<p>
+	A group holds controls that belong together and gives them one name, which a
+	screen reader says when focus enters. It lays them out in a row that wraps. It
+	adds no keys: each control is still a Tab stop. For one Tab stop and arrow
+	keys, use a <a routerLink="/components/toolbar">toolbar</a>. For one choice
+	from several, use a segmented radio group.
+</p>
+
+<h2>A named group</h2>
+<p>
+	<code>role="group"</code> and a name. Leave the group out when the buttons'
+	own names already say what they are for.
+</p>
+<div role="group" interop-group aria-label="Export">
+	<button interop-button type="button">PDF</button>
+	<button interop-button type="button">CSV</button>
+	<button interop-button type="button">Print</button>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.named"
+></figure>
+
+<h2>A fieldset</h2>
+<p>The same layout around a form question, named by its legend.</p>
+<fieldset interop-group>
+	<legend>Notifications</legend>
+	<button interop-button type="button">Mute for an hour</button>
+	<button interop-button type="button">Mute until tomorrow</button>
+</fieldset>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.fieldset"
+></figure>
+
+<h2>Attached</h2>
+<p>
+	<code>interop-group="attached"</code> joins the buttons into one shape. They
+	stay separate buttons, each with its own Tab stop and focus ring, so name each
+	one for what it does. A
+	<a routerLink="/components/button" fragment="split-button">split button</a>
+	is an attached group.
+</p>
+<div class="row">
+	<div role="group" interop-group="attached" aria-label="Zoom">
+		<button
+			interop-button="icon"
+			type="button"
+			aria-label="Zoom out"
+			(click)="zoomBy(-10)"
+		>
+			<svg interop-icon name="tabler-minus"></svg>
+		</button>
+		<button
+			interop-button="icon"
+			type="button"
+			aria-label="Zoom in"
+			(click)="zoomBy(10)"
+		>
+			<svg interop-icon name="tabler-plus"></svg>
+		</button>
+	</div>
+	<span>{{ zoom() }}%</span>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.attached"
+></figure>

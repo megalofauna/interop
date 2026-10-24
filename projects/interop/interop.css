@@ -20,8 +20,13 @@
 @import "./code-block/interop-code-block.structure.css";
 @import "./popover/interop-popover.base.css";
 @import "./popover/interop-popover.structure.css";
+/* After popover, because an attached group sets its popover's tokens. */
+@import "./group/interop-group.base.css";
+@import "./group/interop-group.structure.css";
 @import "./tooltip/interop-tooltip.base.css";
 @import "./tooltip/interop-tooltip.structure.css";
+@import "./slider/interop-slider.base.css";
+@import "./slider/interop-slider.structure.css";
 @import "./switch/interop-switch.base.css";
 @import "./switch/interop-switch.structure.css";
 @import "./radio-group/interop-radio-group.base.css";

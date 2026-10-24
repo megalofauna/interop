@@ -28,6 +28,7 @@
 		"serve": "ng serve demo",
 		"start": "ng serve demo",
 		"demo": "ng serve demo --open",
+		"demo:prime": "ng serve demo_deprecated",
 		"protocol": "ng serve protocol --open",
 		"lint:tokens": "node scripts/check-private-tokens.mjs projects/interop && node scripts/check-keywords.mjs projects/interop && node scripts/check-undefined-tokens.mjs projects/interop projects/demo/src",
 		"format": "prettier --write .",

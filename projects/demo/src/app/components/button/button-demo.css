@@ -1,6 +1,10 @@
-p {
+p:not(.prose, .aka) {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: var(--itx-space-2);
+}
+
+.aka {
+	font-style: italic;
 }

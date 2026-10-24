@@ -154,7 +154,7 @@ export function bindToasts(region: HTMLElement): () => void {
 	};
 
 	const onFocusout = (event: FocusEvent) => {
-		// Focus left for somewhere real; a removal moves it to nowhere and fires no focusout.
+		// Focus left for somewhere real. A removal's focusout has no relatedTarget.
 		if (event.relatedTarget) focusedToast = null;
 		if (event.relatedTarget && !region.contains(event.relatedTarget as Node)) returnTo = null;
 		syncSoon();

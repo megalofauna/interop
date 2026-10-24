@@ -1,0 +1,9 @@
+.aka {
+	font-style: italic;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-space-3);
+}

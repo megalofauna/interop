@@ -71,9 +71,10 @@ toast('Link copied', { timeout: 6000 });
   removes it and stops the event, so a dialog around the region stays open.
 - **Focus.** When a toast that held focus goes, focus moves to the first control
   of the toast now in its place, else the one before it, else to where focus was
-  before it entered the region. The handoff runs from a MutationObserver,
-  because Chrome fires no `focusout` when a focused element is removed. Any
-  removal is handled: a command, Escape, a timer, or the app's own `remove()`.
+  before it entered the region. The handoff runs from a MutationObserver, which
+  sees every removal: a command, Escape, a timer, or the app's own `remove()`.
+  The `focusout` a removal fires has no `relatedTarget`, so the binding
+  remembers which toast held focus.
 - **The region** shows (`togglePopover(true)`) when `toast()` adds to it and hides
   when the last toast goes. Hidden, it is not a landmark. A region inside a
   dialog empties when the dialog closes.
@@ -157,7 +158,7 @@ an action and the Dismiss button left about 120px of text at 288.
 Prime's `InteropToastService` and `InteropToastViewport` made each toast a
 `role="status"` inserted already full, which most screen readers skip, and
 left two pre-rendered live regions empty. A focused dismissal dropped focus to
-`<body>` and froze every timer. Toasts with actions timed out, and a global
+`<body>`. Toasts with actions timed out, and a global
 Alt+T hotkey swallowed typing. Do not reintroduce the handle and its Subjects,
 `observe()`/`promise()`, swipe, the hotkey, the injected config, or named
 positions.

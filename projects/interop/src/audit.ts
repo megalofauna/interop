@@ -289,6 +289,42 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Add a <legend> as the fieldset’s first child, e.g. <legend>Shipping</legend>.',
 					},
 	},
+	'group-role': {
+		selector: 'div[interop-group]:not([role="group"])',
+		check: () => ({
+			problem: 'This group has no role="group".',
+			reason: 'Without the role, a screen reader does not say the group’s name, and its controls are announced one by one with nothing that joins them.',
+			advice: 'Add role="group" and a name: <div role="group" interop-group aria-label="…">. For one Tab stop and arrow keys, use a toolbar.',
+		}),
+	},
+	'group-label': {
+		selector: ':is(div[interop-group][role="group"], fieldset[interop-group])',
+		check: (group) =>
+			ariaName(group) || group.querySelector(':scope > legend')?.textContent?.trim()
+				? null
+				: {
+						problem: 'This group has no name.',
+						reason: 'A screen reader says "group" with nothing to say what the controls are for.',
+						advice: group.matches('fieldset') ? 'Add a <legend> as its first child.' : 'Add aria-label="…", or aria-labelledby pointing at a heading.',
+					},
+	},
+	'group-attached-name': {
+		selector: '[interop-group~="attached"] > button',
+		check: (button) => {
+			const name = squash(accessibleName(button));
+			const others = Array.from(button.parentElement!.children)
+				.filter((sibling) => sibling !== button && sibling.matches('button'))
+				.map((sibling) => squash(accessibleName(sibling)));
+			const generic = /^(open|toggle|toggle dropdown|dropdown|menu|open menu|more|more options|options|show more|expand)$/.test(name);
+			return name && (generic || others.includes(name))
+				? {
+						problem: generic ? `This button is named "${name}", which does not say what it is for.` : 'This button has the same name as the button it is attached to.',
+						reason: 'A screen reader announces two buttons that look like one. Each needs a name that says what it does and how it relates to the other.',
+						advice: 'Name it for its action, e.g. "More save options" beside "Save".',
+					}
+				: null;
+		},
+	},
 	'radio-group-shared-name': {
 		selector: 'fieldset[interop-radio-group]',
 		check: (fieldset) => {
@@ -671,6 +707,48 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Point aria-describedby at the message: <p id="message">…</p>.',
 		}),
 	},
+	'slider-name': {
+		selector: 'input[type="range"][interop-slider]',
+		check: (slider) =>
+			(slider as HTMLInputElement).labels?.length || ariaName(slider)
+				? null
+				: {
+						problem: 'This slider has no name.',
+						reason: 'A screen reader announces it as "slider" and a number, with nothing to say what the number is.',
+						advice: 'Add <label for="…"> with the slider’s id, or aria-label="…".',
+					},
+	},
+	'slider-range': {
+		selector: 'input[type="range"][interop-slider]',
+		check: (slider) => {
+			const { min, max, step, value } = rangeOf(slider as HTMLInputElement);
+			if (!(max > min))
+				return {
+					problem: `This slider’s min (${min}) is not below its max (${max}).`,
+					reason: 'The browser cannot move the thumb, so the slider holds one value.',
+					advice: 'Set min below max.',
+				};
+			if (step !== null && !(step > 0))
+				return {
+					problem: `This slider’s step (${step}) is not a positive number.`,
+					reason: 'The browser ignores it and steps by 1.',
+					advice: 'Set a positive step, or step="any".',
+				};
+			if (value !== null && (value < min || value > max))
+				return {
+					problem: `This slider’s value (${value}) is outside ${min}–${max}.`,
+					reason: 'The browser moves it to the nearest end, so the page and the slider disagree about the value.',
+					advice: 'Keep the value between min and max.',
+				};
+			if (step && Math.abs((max - min) / step - Math.round((max - min) / step)) > 1e-9)
+				return {
+					problem: `This slider’s step (${step}) does not divide ${min}–${max}.`,
+					reason: 'The thumb cannot reach max: the last step falls short of it.',
+					advice: 'Choose a step that divides max − min, or change max.',
+				};
+			return null;
+		},
+	},
 	'toasts-name': {
 		selector: '[interop-toasts]',
 		check: (region) =>
@@ -975,4 +1053,13 @@ function matchesSafely(element: Element, selector: string): boolean {
 	} catch {
 		return false;
 	}
+}
+
+/** A range input's numbers as written: min and max default to 0 and 100; step and value are null when absent. */
+function rangeOf(input: HTMLInputElement): { min: number; max: number; step: number | null; value: number | null } {
+	const number = (name: string) => {
+		const attribute = input.getAttribute(name);
+		return attribute === null || attribute === 'any' ? null : Number(attribute);
+	};
+	return { min: number('min') ?? 0, max: number('max') ?? 100, step: number('step'), value: number('value') };
 }

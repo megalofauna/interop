@@ -33,6 +33,9 @@ including §0 Names, and [.agent/playbook.md](../playbook.md).
   review in `prompts/` (check names case-insensitively: the file system
   ignores case).
 - List Prime's files: `find projects/interop_deprecated -ipath "*<name>*" -not -path "*/iconsets/*"`.
+- Prime's demo runs on port 1338: `npm run demo:prime`, then
+  `http://localhost:1338/components/<name>`. Drive a reported bug there
+  before calling it verified.
 - Note which Interop pieces might already cover it: `ls projects/interop projects/interop/src`.
 
 ### 2. Two agents in parallel, in the background

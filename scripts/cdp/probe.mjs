@@ -16,6 +16,9 @@
 //     --port <n>         Chrome's debugging port, default 9333
 //
 // Programmatic focus does not set :focus-visible. Use --keys to test focus styles.
+// The page has no focus until a real key or click reaches it. Before that, focus() moves
+// activeElement but fires no focus, blur, focusin or focusout events. Press a key before
+// testing focus events.
 import { writeFileSync } from "node:fs";
 
 const [url, ...rest] = process.argv.slice(2);

@@ -1,0 +1,18 @@
+:where(input[type="range"][interop-slider]) {
+	--itx-slider-inline-size: 100%;
+	--itx-slider-max-inline-size: 24rem;
+	--itx-slider-vertical-inline-size: 10rem;
+	/* The thumb's box, and the input's height: 24px (WCAG 2.5.8). */
+	--itx-slider-target-size: var(--itx-space-6);
+	--itx-slider-thumb-size: var(--itx-space-4);
+	--itx-slider-track-thickness: var(--itx-space-1);
+
+	/* 3:1 against the page in both schemes, so the length of the scale is visible (WCAG 1.4.11). */
+	--itx-slider-track-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-slider-fill-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-slider-thumb-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+
+	--itx-slider-cursor: default;
+	--itx-slider-cursor-disabled: not-allowed;
+	--itx-slider-opacity-disabled: 0.5;
+}

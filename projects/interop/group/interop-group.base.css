@@ -1,0 +1,9 @@
+:where([interop-group]) {
+	--itx-group-gap: var(--itx-space-2);
+}
+
+:where([interop-group~="attached"]) {
+	/* An open split button and its choices: the button's hover fill, and the popover's 3:1 edge. */
+	--itx-group-open-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+	--itx-group-open-border-color: var(--itx-neutral-500);
+}

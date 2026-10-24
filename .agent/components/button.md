@@ -135,6 +135,13 @@ The focus ring's tokens are shared, in `styles/outline.css`:
 `--itx-outline-width` 2px, `-style` solid, `-color` neutral-950/300
 (`Highlight` in forced colors), `-offset` 2px.
 
+## Split button
+
+Two buttons in `div[role="group"][interop-group="attached"]`, the second opening
+a popover with `command="toggle-popover"`. Not a component: see
+[group.md](group.md#split-button). The demo shows it at
+`/components/button#split-button`, and the site nav links there.
+
 ## Dev audit rules
 
 | Rule | Flags |

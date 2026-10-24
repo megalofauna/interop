@@ -1,5 +1,5 @@
 /*
- * The layout for a fieldset of controls. Radio groups and checkbox groups share it.
+ * The layout for a fieldset of controls. Radio groups, checkbox groups and groups share it.
  *
  *   <fieldset interop-radio-group>
  *     <legend>Shipping</legend>
@@ -11,7 +11,7 @@
  * Set --itx-fieldset-flex-direction to row to lay the options out in a line.
  */
 
-:where(fieldset:is([interop-radio-group], [interop-checkbox-group])) {
+:where(fieldset:is([interop-radio-group], [interop-checkbox-group], [interop-group])) {
 	--itx-fieldset-flex-direction: column;
 	--itx-fieldset-row-gap: var(--itx-space-0);
 	--itx-fieldset-column-gap: var(--itx-space-6);
@@ -33,7 +33,7 @@
 }
 
 /* The legend sits above the flex items, not among them. Padding spaces it because some engines ignore its margin. */
-:where(fieldset:is([interop-radio-group], [interop-checkbox-group]) > legend) {
+:where(fieldset:is([interop-radio-group], [interop-checkbox-group], [interop-group]) > legend) {
 	padding: 0;
 	padding-block-end: var(--itx-fieldset-legend-padding-block-end);
 	font-size: var(--itx-fieldset-legend-font-size);

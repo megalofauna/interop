@@ -44,7 +44,7 @@ only in its demo and in comments.
 
 | Question | Decision |
 |---|---|
-| Does Prime's toast do what it claims? | No. The demo says "each toast is its own live region", but each item is inserted already full, so most status toasts are likely not announced. Five config keys, `afterOpened()` and `altText` do nothing. Pause gets stuck after any focused dismissal. See §1 |
+| Does Prime's toast do what it claims? | No. The demo says "each toast is its own live region", but each item is inserted already full, so most status toasts are likely not announced. Five config keys, `afterOpened()` and `altText` do nothing. A focused dismissal drops focus to `<body>`. See §1 |
 | Is it the thing its name says? | No spec defines a toast. Against ARIA live regions, the APG Alert pattern and WCAG it misses 4.1.3, 2.2.1, 2.4.3, 1.4.1, 2.4.11 and forced colors |
 | What is each use, really? | A status message, an undo action, an error and a pending state. See the table above |
 | What does the platform do now? | Chrome 155 ships `ariaNotify`, `popover`, `command`, `@starting-style` and `overlay`. A popover outside an open modal dialog is inert. See §3 |
@@ -112,7 +112,7 @@ nothing writes to them.
 | # | Issue | WCAG | Severity |
 |---|---|---|---|
 | 1 | Each item is inserted with its `role="status"` and text already in place. Most screen readers announce changes inside an existing region, not new regions. Success and info toasts are likely silent; the two pre-rendered regions are never written | 4.1.3 | High |
-| 2 | Dismissing a focused toast (close, action, Escape) drops focus to `<body>`. Chrome 155 fires no `focusout` on removal, so the viewport's focus restore never runs | 2.4.3 | High |
+| 2 | Dismissing a focused toast (close, action, Escape) drops focus to `<body>`. The viewport restores focus only when its hotkey brought focus in. Seen on Prime's demo in Chrome 155 | 2.4.3 | High |
 | 3 | Toasts with an action still time out after 6 s (`resolveDuration` ignores `action`). The only control is developer config | 2.2.1 | High |
 | 4 | `aria-atomic="true"` on an item that contains buttons, so "Undo" and "Close notification" are read as part of the message | 1.3.1 | Medium |
 | 5 | Every item has `tabindex="0"`: a focusable `status` with an empty name, one extra Tab stop per toast | 2.4.3, 4.1.2 | Medium |
@@ -123,40 +123,35 @@ nothing writes to them.
 
 ### Bugs
 
-1. **Pause gets stuck.** A toast is dismissed while focused. Chrome fires no
-   `focusout`, so `hasFocus` stays `true`. Every remaining toast is paused until
-   focus enters and leaves the viewport again (`interop-toast-viewport.ts:177-193`).
-   Verified in Chrome 155 with a plain removal test. The Prime demo no longer
-   builds, so this was not run end to end.
-2. **The hotkey blocks typing.** The hotkey handler calls `preventDefault()`
+1. **The hotkey blocks typing.** The hotkey handler calls `preventDefault()`
    before it checks for toasts (`:202-204`). Option+T stops typing "†" on every
    page on macOS. It matches `event.code`, so the key is in a different place on
    Dvorak.
-3. **The hotkey restore overrides Tab.** A user enters with the hotkey and Tabs
+2. **The hotkey restore overrides Tab.** A user enters with the hotkey and Tabs
    out. `focusout` moves focus back to the stored element (`:188-192`) and
    ignores the Tab.
-4. **The focus ring is always on.** The item's rest rule sets `outline`, not
+3. **The focus ring is always on.** The item's rest rule sets `outline`, not
    `:focus-visible` (`toast.css:86-89`), and `--itx-focus-style: solid` is set
    globally. Every toast draws a 2px ring at all times.
-5. **The wide width never applies.** The 99rem breakpoint rebinds
+4. **The wide width never applies.** The 99rem breakpoint rebinds
    `--itx-toast-width` on `[interop-root]` (theme `:121-125`). The viewport
    declares its own value (theme `:43`), and that one wins. The 352px width
    never happens.
-6. **Selecting text dismisses.** Swipe listens on the whole item in every
+5. **Selecting text dismisses.** Swipe listens on the whole item in every
    direction. Dragging 50px to select an error's text dismisses it.
-7. **A refused swipe leaves the toast where it was dropped.** For a
+6. **A refused swipe leaves the toast where it was dropped.** For a
    `cancelBehavior: 'prevent'` loading toast, the service refuses the dismissal,
    but the item never clears `--_swipe-x/y`. There is also no `pointercancel`
    handler.
-8. **`update()` restarts the timer.** The timer effect re-runs on every `toast()`
+7. **`update()` restarts the timer.** The timer effect re-runs on every `toast()`
    change (`interop-toast-item.ts:140-169`).
-9. **`observe()` has no `complete` handler** (`service.ts:129-156`).
+8. **`observe()` has no `complete` handler** (`service.ts:129-156`).
    - A source that completes without emitting leaves a loading toast forever.
    - After the first `next`, `'unsubscribe'` no longer cancels.
-10. **Overflow mounts a toast again.** `slice(-max)` pushes a persistent error
+9. **Overflow mounts a toast again.** `slice(-max)` pushes a persistent error
     out of view. When it returns, it is a new item with a fresh timer, and it may
     be announced again.
-11. **Two viewports.** Both render every toast. Either one unregistering sets the
+10. **Two viewports.** Both render every toast. Either one unregistering sets the
     service's `_viewportRegistered` to `false`.
 
 **Test coverage.** No `*toast*.spec.ts` exists in `projects/`. Coverage is zero.
@@ -228,7 +223,7 @@ proposal exists (https://github.com/jackbsteinberg/std-toast).
 | Custom `command="--dismiss"` aimed at the region | The `command` event fires on the region with `event.source` = the button. With real Enter presses, the listener removed the toast and moved focus to the next toast, then back to the saved element. On the last toast it hid the region |
 | `popover="manual"` outside an open modal `<dialog>` | It paints above the dialog and is **inert**. `elementFromPoint` returns the dialog, a real click does nothing, `focus()` is refused and the accessibility tree is empty |
 | `popover="manual"` inside the open modal `<dialog>` | Interactive: hit-tested, focusable, exposed as `region "Notifications"` |
-| Removing a focused element | No `focusout` fires. `activeElement` becomes `<body>` |
+| Removing a focused element | In a page that has focus, `focusout` fires with no `relatedTarget`. `activeElement` becomes `<body>` |
 | A `status` with `aria-atomic` that contains a close button | The accessibility tree has the button inside the atomic region. `status` has an empty name |
 | `popover="hint"`, `@starting-style`, `transition-behavior: allow-discrete`, `overlay`, anchor positioning | All present |
 
@@ -287,7 +282,7 @@ Support in other browsers (sources, not checked here):
 5. **The background in `prompts/TOAST-RESEARCH.md`.** Its advice on live regions
    was right. `ariaNotify()` makes that advice unnecessary.
 6. **Lessons:**
-   - removal fires no `focusout`, so focus handoff happens before removal;
+   - a removal's `focusout` has no `relatedTarget`, so the handoff has to remember which toast held focus;
    - a hotkey must not `preventDefault()` unless it acts;
    - a gesture on the whole item steals text selection.
 
@@ -332,8 +327,8 @@ Dropped:
 - Real screen reader output: NVDA, JAWS, VoiceOver for `ariaNotify` and for
   Prime's inserted `role="status"` items. Headless Chrome shows the accessibility
   tree, not speech.
-- Prime end to end. The deprecated demo is no longer in `angular.json`. Bugs 1–3
-  are read from source and backed by the Chrome removal test.
+- Bugs 1 and 2 are read from source. Prime's demo runs again
+  (`npm run demo:prime`, port 1338); miss 2 was driven there.
 - Whether a live region outside an open modal still announces. `ariaNotify` from
   an element inside the dialog avoids the question.
 - Fluent's toast details, Byrne-Haber's article (paywalled), and whether React
