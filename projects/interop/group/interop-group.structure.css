@@ -72,9 +72,8 @@
 :where([interop-group~="attached"] > [popover]) {
 	--itx-popover-position-area: block-end span-inline-start;
 	--itx-popover-margin-block: 0px;
+	/* The popover's own opacity and blur stay, and so does their opaque fallback. */
 	--itx-popover-background-color: var(--itx-group-open-background-color);
-	--itx-popover-background-opacity: 1;
-	--itx-popover-backdrop-filter: none;
 	--itx-popover-border-color: var(--itx-group-open-border-color);
 	--itx-popover-padding-inline: var(--itx-popover-padding-block);
 	border-start-end-radius: 0px;

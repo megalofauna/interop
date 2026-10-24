@@ -60,7 +60,8 @@ the popover of choices, written inside the group. No script:
   `:has(> [popover]:popover-open)`. CSS cannot follow `commandfor` to a sibling.
 - While it is open, the trigger keeps the button's hover fill and takes the
   popover's edge color, and its end-end corner is square. The popover takes the
-  same fill, opaque with no blur, has no gap from the trigger, lines up its
+  same fill, frosted like every popover (75% with a 5px blur, opaque when the
+  user asks for less transparency and in forced colors), has no gap from the trigger, lines up its
   inline-end with the trigger's (`block-end span-inline-start`), and squares its
   start-end corner. One token pair holds the open look:
   `--itx-group-open-background-color` (the button's hover fill) and
