@@ -150,7 +150,11 @@
 :where(dialog[interop-dialog~="palette"]) {
 	place-self: start center;
 	margin-block-start: var(--itx-dialog-margin-block-start);
-	max-block-size: calc(100dvh - var(--itx-dialog-margin-block-start) - var(--itx-dialog-inset));
+	/* At most its own height, and never past the window's bottom edge. */
+	max-block-size: min(
+		var(--itx-dialog-max-block-size),
+		100dvh - var(--itx-dialog-margin-block-start) - var(--itx-dialog-inset)
+	);
 	overflow: hidden;
 }
 

@@ -29,6 +29,8 @@
 	--itx-dialog-padding-inline: 0px;
 	--itx-dialog-gap: 0px;
 	--itx-dialog-margin-block-start: 5dvh;
+	/* About eight results, the field and the key hints; the list scrolls past that. */
+	--itx-dialog-max-block-size: 32rem;
 	--itx-dialog-section-padding-block: var(--itx-space-2);
 	--itx-dialog-section-padding-inline: var(--itx-space-2);
 	--itx-dialog-section-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));

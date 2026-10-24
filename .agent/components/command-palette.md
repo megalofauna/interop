@@ -48,8 +48,10 @@ closes the dialog.
 
 `interop-dialog="palette"`, CSS only:
 
-- Near the top of the window (`--itx-dialog-margin-block-start`, 10dvh), not
-  centered, so the field stays put while the list shortens. 40rem wide.
+- Near the top of the window (`--itx-dialog-margin-block-start`, 5dvh), not
+  centered, so the field stays put while the list shortens. 32rem wide, and at
+  most 32rem tall (`--itx-dialog-max-block-size`) or the window less its
+  margins, whichever is less.
 - The dialog does not scroll. `> search` stays at the top, `> nav` scrolls, and
   `> footer` stays at the bottom. Each section pads itself; rules divide them.
 - The field is as wide as the palette. The palette's corner is the house
