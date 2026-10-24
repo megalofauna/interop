@@ -84,32 +84,27 @@
 	border-start-start-radius: 0px;
 	border-end-start-radius: 0px;
 	/*
-	 * Closed, it waits off screen where it starts, as a popover waits at the opacity it fades in from.
-	 * With no translate when closed, every close changes it, and Safari then skips the slide on the
-	 * next open.
+	 * It slides in with an animation, not a transition from @starting-style: Safari 27.2 slid it only
+	 * on the first open after it had been shown in the page, and an animation restarts on every open.
 	 */
-	translate: -100% 0;
-	transition-property: opacity, translate;
+	--itx-popover-drawer-translate-from: -100%;
+	transition-property: none;
 }
 
 :where([interop-popover~="drawer"]:dir(rtl)) {
-	translate: 100% 0;
+	--itx-popover-drawer-translate-from: 100%;
 }
 
 :where([interop-popover~="drawer"]:popover-open) {
-	translate: 0;
+	animation: itx-popover-drawer-in var(--itx-popover-transition-duration) var(--itx-popover-transition-timing-function);
 }
 
 :where([interop-popover~="drawer"])::backdrop {
 	background-color: var(--itx-popover-backdrop-color);
 }
 
-@starting-style {
-	:where([interop-popover~="drawer"]:popover-open) {
-		translate: -100% 0;
-	}
-
-	:where([interop-popover~="drawer"]:popover-open:dir(rtl)) {
-		translate: 100% 0;
+@keyframes itx-popover-drawer-in {
+	from {
+		translate: var(--itx-popover-drawer-translate-from) 0;
 	}
 }

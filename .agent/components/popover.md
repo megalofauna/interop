@@ -37,10 +37,13 @@ projects/interop/src/bind-drawer.ts   bindDrawer(), framework-free
 `interop-popover="drawer"` is a full-height panel at the inline start of the
 window, over the page, with a `::backdrop`. It slides in, and disappears at
 once. Its corners against the window edge are square; the others take the house
-radius. Closed, it waits at `translate: -100%` (100% in RTL), the same place
-`@starting-style` slides it from: Safari slid it only on the first open while
-the closed state had no translate. A page that shows the closed drawer as a
-sidebar resets `translate: none`, as the app shell recipe does.
+radius. It slides in with a keyframe animation, `itx-popover-drawer-in`, from
+`--itx-popover-drawer-translate-from` (-100%, or 100% in RTL), at the popover's
+duration, so reduced motion stops it. Not a transition from `@starting-style`:
+Safari 27.2 slid it only on the first open after the drawer had been shown in
+the page (on load, or as the wide sidebar), and an animation restarts on every
+open. Small test pages with the same `@starting-style` slide did not reproduce
+it, so the trigger is not known.
 
 ```html
 <button interop-button type="button" commandfor="site-nav" command="toggle-popover">Menu</button>
