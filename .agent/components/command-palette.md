@@ -52,9 +52,10 @@ closes the dialog.
   centered, so the field stays put while the list shortens. 40rem wide.
 - The dialog does not scroll. `> search` stays at the top, `> nav` scrolls, and
   `> footer` stays at the bottom. Each section pads itself; rules divide them.
-- The field is as wide as the palette.
+- The field is as wide as the palette. The palette's corner is the house
+  radius plus the field's inset and its border, so the two are concentric.
 - Results are `> nav li > a` or `button`: rows 40px tall and as wide as the list,
-  a hover fill, corners nested inside the dialog's, the ring inset (in
+  a hover fill, the house radius, the ring inset (in
   `outline.css`). A link and a button look the same.
 - With no match, the empty list is not drawn and `> p` takes its place.
 - `> footer` holds key hints in caption size, 4.5:1. They are hidden on a touch

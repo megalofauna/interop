@@ -240,12 +240,13 @@
 		border-width: var(--itx-segmented-frame-border-width);
 		border-style: solid;
 		border-color: var(--itx-segmented-frame-border-color);
-		border-radius: var(--itx-radius, var(--itx-radius-base));
+		/* An enclosing corner: the pill keeps the house radius, and the frame adds its padding and border. */
+		border-radius: var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-segmented-frame-padding) + var(--itx-segmented-frame-border-width)));
 		corner-shape: var(--itx-corner-shape);
 		background-color: var(--itx-segmented-frame-background-color);
 	}
 
-	/* The pill, on the selected segment. A nested corner: the frame's radius less the gap. */
+	/* The pill, on the selected segment, with the house radius. */
 	:where(
 		fieldset[interop-radio-group~="segmented"]:has(> label > input:checked),
 		[interop-tabs~="segmented"] > [role="tablist"]:has(> [role="tab"][aria-selected="true"])
@@ -261,10 +262,7 @@
 		background-color: var(--itx-segmented-pill-background-color);
 		border: var(--itx-segmented-pill-border-width) solid var(--itx-segmented-pill-border-color);
 		box-shadow: var(--itx-segmented-pill-box-shadow);
-		border-radius: max(
-			0px,
-			var(--itx-radius, var(--itx-radius-base)) - var(--itx-segmented-frame-padding) - var(--itx-segmented-frame-border-width)
-		);
+		border-radius: var(--itx-radius, var(--itx-radius-base));
 		corner-shape: var(--itx-corner-shape);
 		/* Chromium slides the pill to a new segment. Firefox and Safari move it without the slide. */
 		transition-property: top, bottom, left, right;

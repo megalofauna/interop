@@ -80,7 +80,7 @@ Three levels, one set of hooks:
   on the toolbar does not reach it. No `--itx-toolbar-button-*` aliases.
 - The attribute's values belong to Interop. A consumer names a look with a class.
 - `channel`: the segmented control's channel fill, buttons with no fill or edge
-  until hovered, a 1px bar (a border on `::before`) between groups, nested corners.
+  until hovered, a 1px bar (a border on `::before`) between groups, buttons at the house radius in a channel whose corner adds its padding.
   Pressed raises the button on the segmented pill's fill and keeps the button's
   doubled edge, so it reads apart from hover's single edge.
   Forced colors draw the transparent edges and the bars in the system text color.

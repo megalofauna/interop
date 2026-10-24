@@ -143,15 +143,17 @@ CSS selectors follow the same split:
 
 ## Corner radius
 
-Every component corner follows one of four rules. `styles/radius.css` states
+Every component corner follows one of four rules. A control keeps the house
+radius inside a container; the container's corner grows to stay concentric,
+never the control's shrinks. `styles/radius.css` states
 them, and `styles/radius.spec.ts` fails on a corner that follows none.
 
 | Rule | Value | Used by |
 |---|---|---|
 | Round by shape | `var(--itx-radius-full)` | badge, switch track and thumb, radio circle and dot, spinner |
-| House | `var(--itx-radius, var(--itx-radius-base))` | button, popover, code block, any container |
+| House | `var(--itx-radius, var(--itx-radius-base))` | every control, wherever it sits; popover, dialog, any container |
 | Small | half the house radius, capped where it would change the shape | tooltip; checkbox box, capped at a quarter of its size |
-| Nested | outer radius less the gap, never below `0px` | an inset pill or panel |
+| Enclosing | the house radius plus the gap to the controls inside (padding and border), `0` when the house radius is `0`: `var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + gap))` | a container whose controls sit close to its corners: segmented frame, toolbar channel, select picker, split button choices, code block, palette. Not a dialog |
 
 The house radius is `--itx-radius-base`, 8px, with squircle corners
 (`--itx-corner-shape`). A theme sets `--itx-radius-base` on `:root` to change it

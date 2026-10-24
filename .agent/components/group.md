@@ -73,8 +73,8 @@ the popover of choices, written inside the group. No script:
 - The popover's top edge runs under the trigger, so a line separates them.
 - The choices are flat: no fill or edge until the pointer is over one, which
   takes the button's active fill. They stack as wide as the widest, text at the
-  start, with corners nested inside the popover's padding, which is equal on
-  every side. Forced colors draw their transparent borders, so they still read
+  start, at the house radius. The popover's padding is equal on every side, and
+  its corner is the house radius plus that padding and its border. Forced colors draw their transparent borders, so they still read
   as buttons there.
 - The group CSS loads after the popover CSS, because it sets the popover's tokens.
 

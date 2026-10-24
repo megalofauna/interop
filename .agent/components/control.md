@@ -379,7 +379,7 @@ rule frames both orientations. Segmented tabs are horizontal.
 | Focus ring | Inside the segment. On the pill it takes the checked text color, which contrasts with the pill |
 | Fallback | Without anchor positioning, each segment draws its own border and the checked one paints the pill color |
 | Icons | `interop-radio-group="segmented icon"` makes square segments. Name each with visually hidden text in the label |
-| Radius | The frame takes the house radius; the pill and the focus ring take the nested radius, the frame's less its padding and border |
+| Radius | The pill and the focus ring take the house radius; the frame takes the enclosing radius, the house radius plus its padding and border |
 
 Anchor names are found only inside the fieldset, because the fieldset is the
 positioned containing block, so several controls on one page do not collide.

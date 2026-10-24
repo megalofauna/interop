@@ -101,7 +101,8 @@ The heights are the button's, so a select and a button line up.
 | `--itx-select-list-padding` | `--itx-space-1` |
 | `--itx-select-option-min-block-size`, `-option-padding-inline` | `--itx-space-8`, `--itx-space-2` |
 | `--itx-select-option-background-color-hover` | neutral-200/700 |
-| `--itx-select-option-border-radius` | nested: the house radius less the list padding |
+| `--itx-select-option-border-radius` | the house radius |
+| `--itx-select-picker-border-radius` | enclosing: the house radius plus the list padding and border |
 | `--itx-select-legend-font-size`, `-legend-line-height` | the `p-sm` role |
 | `--itx-select-separator-color` | neutral-300/700 |
 

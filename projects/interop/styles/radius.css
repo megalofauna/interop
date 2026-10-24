@@ -3,12 +3,18 @@
  *
  *   Round by shape     a badge, switch, radio, dot, thumb or spinner is var(--itx-radius-full),
  *                      whatever the house radius
- *   House              a container reads var(--itx-radius, var(--itx-radius-base))
+ *   House              a control or container reads var(--itx-radius, var(--itx-radius-base)).
+ *                      A control keeps it wherever it sits
  *   Small              a corner on a small element takes half the house radius, capped where
  *                      it would change the element's shape: a checkbox box stops at a quarter
  *                      of its size, so it never reads as a radio
- *   Nested             a corner inset inside another takes the outer radius less the gap,
- *                      never below 0px
+ *   Enclosing          a container whose controls sit close to its corners takes the house
+ *                      radius plus the distance from its outer edge to theirs, its padding and
+ *                      border, so the corners are concentric. 0 when the house radius is 0:
+ *                      var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + gap))
+ *                      Used by the segmented frame, a toolbar channel, a select's picker, a
+ *                      split button's choices, a code block and the palette dialog. Not by a
+ *                      dialog, whose 24px padding would make it 32px for no visible gain
  *
  * --itx-radius-base is the house radius. A theme changes it for the whole page on :root:
  *
