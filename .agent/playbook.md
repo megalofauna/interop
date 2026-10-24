@@ -186,8 +186,8 @@ radius, worked out on that element, so the whole scale moves with the theme:
 | `none` | 0 | 0 |
 | `sm` | ½ | 4px |
 | `md`, `base`, no attribute | 1 | 8px |
-| `lg` | 1½ | 12px |
-| `xl` | 2 | 16px |
+| `lg` | 2 | 16px |
+| `xl` | 3 | 24px |
 | `full` | pill or circle, round corners | — |
 
 At 8px every step sits on the 4px layout grid. A theme's base may not, and

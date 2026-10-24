@@ -27,8 +27,8 @@
  *   none   0
  *   sm     half the house radius        4px at the default
  *   md     the house radius             8px   (also `base`, and no attribute)
- *   lg     one and a half times it      12px
- *   xl     twice it                     16px
+ *   lg     twice it                     16px
+ *   xl     three times it               24px
  *   full   a pill or circle
  *
  * The steps are multiples of the house radius, so a theme that changes it moves the whole scale.
