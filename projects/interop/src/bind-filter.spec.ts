@@ -135,6 +135,29 @@ describe('bindFilter', () => {
 		expect(press(input, 'ArrowDown').defaultPrevented).toBe(false);
 	});
 
+	it('clears the field on Escape, and shows every item', () => {
+		const { input, type, shown, press } = setup();
+		type('bu');
+		const event = press(input, 'Escape');
+		expect(event.defaultPrevented).toBe(true);
+		expect(input.value).toBe('');
+		expect(shown()).toHaveLength(4);
+	});
+
+	it('asks its open dialog to close on Escape in the empty field', () => {
+		const { dialog, input, press } = setup();
+		dialog.setAttribute('open', '');
+		const requestClose = vi.fn();
+		Object.assign(dialog, { requestClose });
+		expect(press(input, 'Escape').defaultPrevented).toBe(true);
+		expect(requestClose).toHaveBeenCalledTimes(1);
+	});
+
+	it('leaves Escape alone in an empty field outside an open dialog', () => {
+		const { input, press } = setup();
+		expect(press(input, 'Escape').defaultPrevented).toBe(false);
+	});
+
 	it('clears the field when its dialog closes', () => {
 		const { dialog, input, type, shown } = setup();
 		type('bu');

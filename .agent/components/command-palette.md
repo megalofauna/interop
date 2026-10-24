@@ -68,7 +68,7 @@ closes the dialog.
 | ⌘K / Ctrl+K | `bindShortcut()` clicks the button |
 | Focus the field | `autofocus` |
 | Page behind inert, Escape closes, focus returns (also after the shortcut) | The browser |
-| First Escape clears the field | The browser, for `type="search"` (Chrome 155) |
+| Escape clears the field, then closes the dialog | `bindFilter()`: browsers disagree. Chrome clears, then closes; Safari 27.2 clears and never closes, because WebKit's search field takes every Escape; Playwright's WebKit closes at once. The helper clears the text itself, and in the empty field calls the dialog's `requestClose()`, so `cancel` fires once |
 | Hide what does not match | `bindFilter()`: `hidden` on the list's children; text match ignoring case and accents, or `match` |
 | No match | `bindFilter()` shows `empty` |
 | Count | `bindFilter()`: `announce()` from the field after a 500 ms pause, only when the count changed; `empty`'s text at zero |
@@ -147,9 +147,10 @@ What stays, and where each step goes, when results become actions:
   - `ariaNotify` is called from the field with "7 results", "1 result" and
     "No pages match."
   - Forced colors and 400px wide hold; the page checks pass.
-- Not yet tested: speech output, Firefox and Safari (including Escape in a
-  search field, and `closedby`, which Safari lacks: a click outside does not
-  close it there).
+- Playwright WebKit (1.64), on the demo: Escape clears, then closes.
+- Not yet tested: speech output, Firefox, and Safari itself (the Escape fix is
+  checked in Playwright's WebKit only; `closedby`, which Safari lacks: a click
+  outside does not close it there).
 
 ## Prime
 

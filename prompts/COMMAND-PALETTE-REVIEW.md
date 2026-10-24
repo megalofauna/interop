@@ -20,7 +20,8 @@ parts plus two small helpers:
   opened it.
 - The field is `<input type="search">` inside `<search>`, with a `<label>`. In
   Chrome 155 the first Escape clears the field and the second closes the dialog,
-  with no script.
+  with no script. Safari 27.2 clears and never closes, so `bindFilter()` handles
+  Escape in its field (found after the build).
 - The results are `<nav><ul>` of `<a href>`. Each result is a real link: Tab,
   Enter, open in a new tab, copy link, and swipe on a phone all work.
 - `bindFilter(input, list)` hides the items that do not match, shows an empty
@@ -232,7 +233,7 @@ Other browsers, from sources:
 | Open from the header button | Yes, `command="show-modal"` |
 | Close on Escape or the backdrop | Native with `closedby="any"` |
 | Close from a button | Yes, `command="request-close"` |
-| Two-stage Escape | Native in a search field in Chrome. No script |
+| Two-stage Escape | Native in a search field in Chrome only. Safari never closes, so `bindFilter()` handles it |
 | Go to a result | A link. Native |
 | Close after following a link in an SPA | Script: close on navigation, or the link's click |
 | ⌘K / Ctrl+K | No. There is no keyboard invoker. `bindHotkey()` clicks the invoker button, so the open path stays one |
@@ -270,6 +271,8 @@ aside slot, the 35 tokens, the fill-only active cue, index tracking, the
    case-insensitive substring, with an optional `match(item, query)` for anything
    smarter. No fuzzy ranking.
 5. **Escape?** Recommendation: the browser's: clear, then close. No script.
+   (Wrong for Safari, which never closes from a search field: the helper now
+   does clear, then close, everywhere.)
 6. **`bindHotkey()` in the library?** Recommendation: yes, small, and it only
    clicks a button. It skips while composing, and the button names the key with
    `aria-keyshortcuts` and a visible `<kbd>` that reads ⌘K or Ctrl K per platform.

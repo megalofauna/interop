@@ -36,6 +36,8 @@ const defaultMessage = (count: number) => (count === 0 ? 'No results' : `${count
  * - Arrow Down in the field moves focus to the first item shown, and Arrow Up and Down move between
  *   items. Arrow Up from the first item goes back to the field. Focus stays real: each item keeps
  *   its own role, and Tab, Enter and a phone's swipe work as on any list of links or buttons.
+ * - Escape clears the field. In an open `<dialog>`, Escape in the empty field closes it, through
+ *   `requestClose()`, so its `cancel` event fires as usual.
  * - In a `<dialog>`, closing it clears the field, so the next open starts fresh.
  *
  * Returns a function that removes the behavior and shows every item.
@@ -84,8 +86,23 @@ export function bindFilter(input: HTMLInputElement, list: HTMLElement, options: 
 	input.addEventListener(
 		'keydown',
 		(event) => {
-			if (event.key !== 'ArrowDown' || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.isComposing) return;
-			if (shown().length) move(event, -1, 1);
+			if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.isComposing || event.defaultPrevented) return;
+			if (event.key === 'ArrowDown' && shown().length) move(event, -1, 1);
+			if (event.key !== 'Escape') return;
+			// Browsers disagree about Escape in a search field in a dialog: Chrome clears the text and
+			// then closes, Safari clears it and never closes. One rule for all of them.
+			const dialog = input.closest('dialog');
+			if (input.value) {
+				event.preventDefault();
+				input.value = '';
+				input.dispatchEvent(new Event('input', { bubbles: true }));
+			} else if (dialog?.open) {
+				event.preventDefault();
+				// requestClose() fires `cancel`, so a page that keeps the dialog open still can.
+				const closing = dialog as HTMLDialogElement & { requestClose?: () => void };
+				if (closing.requestClose) closing.requestClose();
+				else dialog.close();
+			}
 		},
 		{ signal },
 	);
