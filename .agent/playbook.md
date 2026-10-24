@@ -57,6 +57,29 @@ Interop components are semantically correct, accessible first, and performant by
 - **Invokers first.** Before writing a click handler, ask whether
   `command`/`commandfor`, built-in or a custom `--command`, does the job.
 
+## Components, assemblies and patterns
+
+Three kinds, by who decides what is inside:
+
+| Kind | What it is | Examples |
+|---|---|---|
+| Component | An identity attribute on a native element. Its inside is the element's own anatomy, or content the author chooses | button, select, dialog, tabs, toolbar, group |
+| Assembly | An identity attribute of its own, built from other Interop components that Interop chooses | code block (button, scroll area, tooltip, highlight), page nav (tree, the underscore look) |
+| Pattern | No identity of its own: a recipe of existing components, or a template of one, shown on the page of the component it is built from | split button (group), command palette (dialog), segmented control, radio cards and chips (radio group), checkbox cards and chips (checkbox) |
+
+An assembly may import components; a component never imports an assembly.
+"Composite" is not used: ARIA's composite role is a widget that manages focus
+among its children, which is a different line.
+
+In the demo, a pattern's nav entry and Go to page entry carry a `Pattern`
+badge (`itx-color="info"`), because the link names something the page it opens
+is not titled. Its section on that page is `section.pattern`, marked in the same
+blue, with the badge on its heading; a pattern with its own page (segmented
+control) has the badge on its `h1` and `data: { pattern: true }` on its route.
+Every pattern section is marked, but only the names people search for get a nav
+entry: Chips (checkbox page), Command palette, Radio cards, Segmented control,
+Split button. Components and assemblies carry no badge.
+
 ## DOM writes during animation/drag
 
 Never trigger Angular change detection inside a drag or animation loop. Write directly to `element.style` in pointer event handlers, batched via `requestAnimationFrame`. Emit Angular outputs only at end-of-drag (`pointerup` / `keydown` settle).
@@ -143,15 +166,17 @@ CSS selectors follow the same split:
 
 ## Corner radius
 
-Every component corner follows one of four rules. `styles/radius.css` states
+Every component corner follows one of four rules. A control keeps the house
+radius inside a container; the container's corner grows to stay concentric,
+never the control's shrinks. `styles/radius.css` states
 them, and `styles/radius.spec.ts` fails on a corner that follows none.
 
 | Rule | Value | Used by |
 |---|---|---|
 | Round by shape | `var(--itx-radius-full)` | badge, switch track and thumb, radio circle and dot, spinner |
-| House | `var(--itx-radius, var(--itx-radius-base))` | button, popover, code block, any container |
+| House | `var(--itx-radius, var(--itx-radius-base))` | every control, wherever it sits; popover, dialog, any container |
 | Small | half the house radius, capped where it would change the shape | tooltip; checkbox box, capped at a quarter of its size |
-| Nested | outer radius less the gap, never below `0px` | an inset pill or panel |
+| Enclosing | the house radius plus the gap to the controls inside (padding and border), `0` when the house radius is `0`: `var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + gap))` | a container whose controls sit close to its corners: segmented frame, toolbar channel, select picker, split button choices, code block, palette. Not a dialog |
 
 The house radius is `--itx-radius-base`, 8px, with squircle corners
 (`--itx-corner-shape`). A theme sets `--itx-radius-base` on `:root` to change it
@@ -165,8 +190,8 @@ radius, worked out on that element, so the whole scale moves with the theme:
 | `none` | 0 | 0 |
 | `sm` | ½ | 4px |
 | `md`, `base`, no attribute | 1 | 8px |
-| `lg` | 1½ | 12px |
-| `xl` | 2 | 16px |
+| `lg` | 2 | 16px |
+| `xl` | 3 | 24px |
 | `full` | pill or circle, round corners | — |
 
 At 8px every step sits on the 4px layout grid. A theme's base may not, and

@@ -129,66 +129,74 @@
 	same checked mark, focus ring and disabled state, and the same audit rules.
 </p>
 
-<h3>Cards</h3>
-<p>
-	Each option is a card. The input names the option with
-	<code>aria-labelledby</code> pointing at its title and describes it with
-	<code>aria-describedby</code>, so a screen reader reads "Pro, radio button, 2
-	of 3" and then the details, not the whole card on every arrow press.
-</p>
-<fieldset interop-radio-group="cards">
-	<legend>Plan</legend>
-	@for (plan of plans; track plan.id) {
-		<label>
-			<input
-				type="radio"
-				name="plan"
-				[value]="plan.id"
-				[checked]="plan.id === 'pro'"
-				[attr.aria-labelledby]="'plan-' + plan.id"
-				[attr.aria-describedby]="'plan-' + plan.id + '-details'"
-			/>
-			<strong [id]="'plan-' + plan.id">{{ plan.name }}</strong>
-			<span [id]="'plan-' + plan.id + '-details'">
-				<span class="price">{{ plan.price }}</span>
-				<span class="summary">{{ plan.summary }}</span>
-				@if (plan.popular) {
-					<span interop-badge itx-color="info">Most popular</span>
-				}
-			</span>
-		</label>
-	}
-</fieldset>
+<section id="cards" class="pattern" itx-flow>
+	<h3>
+		Cards <span interop-badge itx-size="sm" itx-color="info">Pattern</span>
+	</h3>
+	<p>
+		Each option is a card. The input names the option with
+		<code>aria-labelledby</code> pointing at its title and describes it with
+		<code>aria-describedby</code>, so a screen reader reads "Pro, radio button,
+		2 of 3" and then the details, not the whole card on every arrow press.
+	</p>
+	<fieldset interop-radio-group="cards">
+		<legend>Plan</legend>
+		@for (plan of plans; track plan.id) {
+			<label>
+				<input
+					type="radio"
+					name="plan"
+					[value]="plan.id"
+					[checked]="plan.id === 'pro'"
+					[attr.aria-labelledby]="'plan-' + plan.id"
+					[attr.aria-describedby]="'plan-' + plan.id + '-details'"
+				/>
+				<strong [id]="'plan-' + plan.id">{{ plan.name }}</strong>
+				<span [id]="'plan-' + plan.id + '-details'">
+					<span class="price">{{ plan.price }}</span>
+					<span class="summary">{{ plan.summary }}</span>
+					@if (plan.popular) {
+						<span interop-badge itx-color="info">Most popular</span>
+					}
+				</span>
+			</label>
+		}
+	</fieldset>
 
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.cards"
-></figure>
-<figure interop-code-block language="css" [code]="examples.cardsCss"></figure>
+	<figure
+		interop-code-block
+		language="html"
+		caption="Angular template"
+		[code]="examples.cards"
+	></figure>
+	<figure interop-code-block language="css" [code]="examples.cardsCss"></figure>
+</section>
 
-<h3>Chips</h3>
-<p>
-	<code>interop-radio-group="chips"</code> draws each option as a pill that
-	sizes to its text and wraps. Use it for many short options. For a short row of
-	equal options, use the segmented control.
-</p>
-<fieldset interop-radio-group="chips">
-	<legend>Shirt size</legend>
-	@for (size of sizes; track size) {
-		<label
-			><input
-				type="radio"
-				name="shirt"
-				[value]="size"
-				[checked]="size === 'M'"
-			/>
-			{{ size }}</label
-		>
-	}
-</fieldset>
-<figure interop-code-block language="html" [code]="examples.chips"></figure>
+<section id="radio-chips" class="pattern" itx-flow>
+	<h3>
+		Chips <span interop-badge itx-size="sm" itx-color="info">Pattern</span>
+	</h3>
+	<p>
+		<code>interop-radio-group="chips"</code> draws each option as a pill that
+		sizes to its text and wraps. Use it for many short options. For a short row
+		of equal options, use the segmented control.
+	</p>
+	<fieldset interop-radio-group="chips">
+		<legend>Shirt size</legend>
+		@for (size of sizes; track size) {
+			<label
+				><input
+					type="radio"
+					name="shirt"
+					[value]="size"
+					[checked]="size === 'M'"
+				/>
+				{{ size }}</label
+			>
+		}
+	</fieldset>
+	<figure interop-code-block language="html" [code]="examples.chips"></figure>
+</section>
 
 <h3>Your own template</h3>
 <p>

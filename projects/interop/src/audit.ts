@@ -707,6 +707,21 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Point aria-describedby at the message: <p id="message">…</p>.',
 		}),
 	},
+	'dialog-palette-field': {
+		selector: 'dialog[interop-dialog~="palette"]',
+		check: (dialog) => {
+			const field = dialog.querySelector<HTMLInputElement>(':scope > search input[type="search"]');
+			return field && (field.labels?.length || ariaName(field))
+				? null
+				: {
+						problem: field ? 'This palette’s search field has no label.' : 'This palette has no search field.',
+						reason:
+							'A palette is a search field over its results. The field takes focus when it opens, so its label is the first thing a screen reader says after the dialog’s name.',
+						advice:
+							'Put a labeled search field first: <search><label for="query">Go to page</label><input id="query" type="search" autofocus></search>.',
+					};
+		},
+	},
 	'slider-name': {
 		selector: 'input[type="range"][interop-slider]',
 		check: (slider) =>

@@ -7,8 +7,16 @@ import {
 	signal,
 	viewChild,
 } from "@angular/core";
-import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import {
+	Router,
+	RouterLink,
+	RouterLinkActive,
+	RouterOutlet,
+} from "@angular/router";
+import { InteropBadge } from "interop/badge";
+import { InteropFilter } from "interop/filter";
 import { InteropDrawer } from "interop/popover";
+import { InteropShortcut } from "interop/shortcut";
 import { InteropToasts } from "interop/toast";
 
 const STORAGE_KEY = "demo-color-scheme";
@@ -20,7 +28,10 @@ const FOCUS_RING_KEY = "demo-focus-ring";
 		RouterOutlet,
 		RouterLink,
 		RouterLinkActive,
+		InteropBadge,
 		InteropDrawer,
+		InteropFilter,
+		InteropShortcut,
 		InteropToasts,
 	],
 	templateUrl: "./app.html",
@@ -47,6 +58,49 @@ export class App {
 		{ value: "halo", label: "halo" },
 		{ value: "still", label: "still" },
 	];
+
+	/**
+	 * Every page with a title, for the Go to page search, and the patterns: a name people look for
+	 * that is built from another component, shown as an example on that component's page.
+	 */
+	protected readonly pageLinks: {
+		title: string;
+		path: string;
+		fragment?: string;
+		pattern?: boolean;
+	}[] = [
+		...inject(Router)
+			.config.filter((route) => typeof route.title === "string")
+			.map((route) => ({
+				path: route.path ?? "",
+				title: route.title as string,
+				pattern: route.data?.["pattern"] === true,
+			})),
+		{
+			title: "Chips",
+			path: "components/checkbox",
+			fragment: "chips",
+			pattern: true,
+		},
+		{
+			title: "Command palette",
+			path: "components/dialog",
+			fragment: "command-palette",
+			pattern: true,
+		},
+		{
+			title: "Radio cards",
+			path: "components/radio-group",
+			fragment: "cards",
+			pattern: true,
+		},
+		{
+			title: "Split button",
+			path: "components/button",
+			fragment: "split-button",
+			pattern: true,
+		},
+	].sort((a, b) => a.title.localeCompare(b.title));
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 

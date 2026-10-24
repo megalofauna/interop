@@ -1,14 +1,14 @@
 import { oneLine } from './css-text';
 import { sheets } from './sheets';
 
-// The four corner rules in styles/radius.css. Every component radius reads one of them, so a theme's
+// The four corner rules in styles/radius.css. A control keeps the house radius inside a container; the container grows. Every component radius reads one of them, so a theme's
 // --itx-radius-base reaches every corner that is not round by shape.
 const HOUSE = 'var(--itx-radius, var(--itx-radius-base))';
 const RULES = [
 	(value: string) => value === 'var(--itx-radius-full)',
 	(value: string) => value === HOUSE,
 	(value: string) => value.includes(`${HOUSE} / 2`),
-	(value: string) => value.startsWith('max(0px,') && value.includes('--itx-radius'),
+	(value: string) => value.startsWith('var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) +'),
 ];
 
 // Every stylesheet that declares a corner. radius.css defines the scale the rules read, so it is left out.
@@ -22,7 +22,8 @@ const follows = (value: string) => readsToken(value) || RULES.some((rule) => rul
 
 describe('corner radius', () => {
 	it('rejects a corner that follows no rule', () => {
-		expect(['var(--itx-radius-base)', '50%', '4px', 'var(--itx-radius)'].filter(follows)).toEqual([]);
+		const shrinking = 'max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-toolbar-padding))';
+		expect(['var(--itx-radius-base)', '50%', '4px', 'var(--itx-radius)', shrinking].filter(follows)).toEqual([]);
 	});
 
 	for (const [file, css] of Object.entries(files)) {

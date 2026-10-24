@@ -1,5 +1,6 @@
 import { Component, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
 import { InteropIcon } from "interop/icon";
 import { InteropInvoker } from "interop/invoker";
@@ -9,6 +10,7 @@ import { InteropTooltip } from "interop/tooltip";
 	selector: "demo-button",
 	host: { "itx-flow": "" },
 	imports: [
+		InteropBadge,
 		InteropCodeBlock,
 		InteropIcon,
 		InteropInvoker,
