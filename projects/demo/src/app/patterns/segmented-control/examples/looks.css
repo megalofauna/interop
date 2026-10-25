@@ -1,21 +1,3 @@
-.aka {
-	font-style: italic;
-}
-
-fieldset + fieldset {
-	margin-inline-start: var(--itx-space-4);
-}
-
-.compare {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--itx-space-6);
-}
-
-.compare > fieldset {
-	margin: 0;
-}
-
 /* The inverted look, as token values: the page as the channel, a dark pill with no edge. */
 .inverted {
 	--itx-segmented-frame-background-color: transparent;
