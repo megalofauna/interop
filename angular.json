@@ -55,7 +55,8 @@
 							"projects/demo/src/styles.css"
 						],
 						"loader": {
-							".html": "text"
+							".html": "text",
+							".css": "text"
 						}
 					},
 					"configurations": {

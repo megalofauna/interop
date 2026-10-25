@@ -1,0 +1,19 @@
+<form>
+	<fieldset interop-checkbox-group>
+		<legend>Columns</legend>
+		<label interop-checkbox
+			><input type="checkbox" id="all-columns" /> All columns</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="column" value="name" checked /> Name</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="column" value="email" /> Email</label
+		>
+		<label interop-checkbox>
+			<input type="checkbox" name="column" value="id" checked disabled /> ID
+			(always shown)
+		</label>
+	</fieldset>
+	<button interop-button type="reset">Reset</button>
+</form>

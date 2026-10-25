@@ -14,3 +14,7 @@
 	align-items: flex-start;
 	gap: var(--itx-space-4);
 }
+
+:host([narrow]) .live {
+	max-inline-size: 20rem;
+}
