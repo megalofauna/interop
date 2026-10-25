@@ -26,7 +26,16 @@ written by hand.
   container itself.
 - One column narrow; from 48rem, a 16rem navigation column beside the main
   column. A container query's size cannot come from a custom property, so 48rem
-  is written once, in the query.
+  is written once, in the query, which sets `--shell-nav` on the grid to
+  `drawer` or `sidebar`. Everything else that changes at that width reads
+  `--shell-nav`: CSS through `@container style(--shell-nav: drawer)`, script
+  through `getComputedStyle()` in a ResizeObserver. Neither `@custom-media` nor
+  a variable in the query works (Chrome 155, WebKit 27.2).
+- While the navigation is a drawer, the demo's header is Menu, the title and an
+  icon-only Search (its name stays "Search"), and the Theme control moves to the
+  foot of the drawer: two copies with different radio names, one shown at a
+  time, kept in step by `bindColorScheme()`. A browser without style queries
+  keeps the wide header. The ⌘K hint is hidden on a touch screen with no mouse.
 - `main` gets `min-inline-size: 0`, so wide content cannot widen the grid.
 - The content is at most 80rem wide, centered. The gutter is
   `max(0px, (100cqi - 80rem) / 2)`: container units, so it follows the app's

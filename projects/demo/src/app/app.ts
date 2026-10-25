@@ -14,6 +14,7 @@ import {
 import { InteropBadge } from "interop/badge";
 import { InteropColorScheme } from "interop/color-scheme";
 import { InteropFilter } from "interop/filter";
+import { InteropIcon } from "interop/icon";
 import { InteropDrawer } from "interop/popover";
 import { InteropShortcut } from "interop/shortcut";
 import { InteropToasts } from "interop/toast";
@@ -28,6 +29,7 @@ import { InteropToasts } from "interop/toast";
 		InteropColorScheme,
 		InteropDrawer,
 		InteropFilter,
+		InteropIcon,
 		InteropShortcut,
 		InteropToasts,
 	],
@@ -48,15 +50,21 @@ export class App {
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 
 	constructor() {
-		// An open drawer stays in the top layer. Once the sidebar shows in the page, close it.
-		const wide = matchMedia("(width >= 48rem)");
-		const close = () =>
-			wide.matches &&
-			this.nav().nativeElement.matches(":popover-open") &&
-			this.nav().nativeElement.hidePopover();
-		wide.addEventListener("change", close);
-		inject(DestroyRef).onDestroy(() =>
-			wide.removeEventListener("change", close),
-		);
+		// An open drawer stays in the top layer. Once the sidebar shows in the page, close it. The
+		// shell's container query decides, and says so in --shell-nav (app.css).
+		const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+		const resized = new ResizeObserver(() => {
+			const shell = host.querySelector(".shell");
+			const nav = this.nav().nativeElement;
+			if (
+				shell &&
+				getComputedStyle(shell).getPropertyValue("--shell-nav").trim() ===
+					"sidebar" &&
+				nav.matches(":popover-open")
+			)
+				nav.hidePopover();
+		});
+		resized.observe(host);
+		inject(DestroyRef).onDestroy(() => resized.disconnect());
 	}
 }

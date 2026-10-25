@@ -15,18 +15,27 @@
 			interop-button
 			type="button"
 			itx-size="sm"
+			class="search"
 			command="show-modal"
 			commandfor="go-to"
 			interopShortcut="mod+k"
 		>
-			Search <kbd></kbd>
+			<svg interop-icon name="tabler-search"></svg>
+			<span class="search-label">Search</span>
+			<kbd></kbd>
 		</button>
-		<fieldset interop-radio-group="segmented" itx-size="sm" interopColorScheme>
-			<legend itx-visually-hidden>Theme</legend>
-			<label><input type="radio" name="theme" value="light" /> Light</label>
-			<label><input type="radio" name="theme" value="dark" /> Dark</label>
-			<label><input type="radio" name="theme" value="system" /> System</label>
-		</fieldset>
+		<div class="theme">
+			<fieldset
+				interop-radio-group="segmented"
+				itx-size="sm"
+				interopColorScheme
+			>
+				<legend itx-visually-hidden>Theme</legend>
+				<label><input type="radio" name="theme" value="light" /> Light</label>
+				<label><input type="radio" name="theme" value="dark" /> Dark</label>
+				<label><input type="radio" name="theme" value="system" /> System</label>
+			</fieldset>
+		</div>
 	</header>
 
 	<dialog
@@ -346,6 +355,25 @@
 				</details>
 			</li>
 		</ul>
+		<!-- The header's Theme control, in the drawer while the navigation is one. -->
+		<div class="theme">
+			<fieldset
+				interop-radio-group="segmented"
+				itx-size="sm"
+				interopColorScheme
+			>
+				<legend>Theme</legend>
+				<label
+					><input type="radio" name="menu-theme" value="light" /> Light</label
+				>
+				<label
+					><input type="radio" name="menu-theme" value="dark" /> Dark</label
+				>
+				<label
+					><input type="radio" name="menu-theme" value="system" /> System</label
+				>
+			</fieldset>
+		</div>
 	</nav>
 
 	<main>
