@@ -270,8 +270,9 @@ consumer's own classes win, and `label:has(> input:checked)`,
 | — | The group's `<legend>` |
 
 The behavior, the drawn mark, the focus ring, the disabled state and the audit
-rules stay the group's whatever the template. The radio group demo page shows
-cards and a five-line template of the page's own.
+rules stay the group's whatever the template. Cards, chips and the segmented
+control are pattern pages (`/patterns/<name>`); the radio group page shows a
+five-line template of the page's own.
 
 ## Chips
 
@@ -344,7 +345,7 @@ or add-ons.
 segments in a filled channel, with a raised pill on the checked one; the pill's
 edge, 3:1 against the channel, carries the selection. It is the same radio
 group: one value, one tab stop, arrow keys, form participation, and the same
-dev audit rules. It has its own demo page. Use it to choose a value or a view of
+dev audit rules. Its demo is a pattern page, `/patterns/segmented-control`. Use it to choose a value or a view of
 the same content; tabs switch between different sections.
 
 The segments stack in a column, each as wide as the widest, with dividers

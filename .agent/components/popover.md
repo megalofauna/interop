@@ -45,6 +45,13 @@ the page (on load, or as the wide sidebar), and an animation restarts on every
 open. Small test pages with the same `@starting-style` slide did not reproduce
 it, so the trigger is not known.
 
+It slides out only inside `@supports (overlay: auto)` (Chrome and Edge): there
+the closed state is off screen, and `display` and `overlay` transition with
+`allow-discrete`, so it stays in the top layer with its backdrop until the
+slide ends. Safari 27.2 and Firefox have no `overlay`, so it closes at once
+there; without it the drawer would drop below the page mid-slide. Nothing takes
+its name from inside a drawer, so the exit costs no control its name.
+
 ```html
 <button interop-button type="button" commandfor="site-nav" command="toggle-popover">Menu</button>
 <nav id="site-nav" interop-popover="drawer" popover aria-label="Pages">…</nav>

@@ -21,18 +21,6 @@
 		>
 			Search <kbd></kbd>
 		</button>
-		<label for="focus-ring" itx-visually-hidden>Focus ring</label>
-		<select
-			id="focus-ring"
-			interop-select
-			itx-size="sm"
-			[value]="focusRing()"
-			(change)="focusRing.set($any($event.target).value)"
-		>
-			@for (option of focusRings; track option.value) {
-				<option [value]="option.value">Focus: {{ option.label }}</option>
-			}
-		</select>
 		<button
 			interop-button
 			type="button"
@@ -49,14 +37,15 @@
 		id="go-to"
 		interop-dialog="palette"
 		closedby="any"
-		aria-labelledby="go-to-label"
+		aria-label="Go to page"
 	>
 		<search interop-field>
-			<label id="go-to-label" for="go-to-query">Go to page</label>
 			<input
 				interop-input
 				id="go-to-query"
 				type="search"
+				aria-label="Go to page"
+				placeholder="Go to page"
 				autofocus
 				autocomplete="off"
 				spellcheck="false"
@@ -66,9 +55,9 @@
 		</search>
 		<nav aria-label="Pages">
 			<ul #pages role="list" (click)="goTo.close()">
-				@for (page of pageLinks; track page.title) {
+				@for (page of pageLinks; track page.path) {
 					<li>
-						<a [routerLink]="'/' + page.path" [fragment]="page.fragment"
+						<a [routerLink]="'/' + page.path"
 							>{{ page.title }}
 							@if (page.pattern) {
 								<span interop-badge itx-size="sm" itx-color="info"
@@ -96,34 +85,10 @@
 					<ul role="list">
 						<li>
 							<a
-								routerLink="/foundations/app-shell"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>App shell</a
-							>
-						</li>
-						<li>
-							<a
 								routerLink="/foundations/flow"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Flow</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/foundations/focus-ring"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Focus ring (comparison)</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/foundations/radius"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Radius (comparison)</a
 							>
 						</li>
 						<li>
@@ -166,27 +131,11 @@
 							>
 						</li>
 						<li>
-							<a routerLink="/components/checkbox" fragment="chips"
-								>Chips
-								<span interop-badge itx-size="sm" itx-color="info"
-									>Pattern</span
-								></a
-							>
-						</li>
-						<li>
 							<a
 								routerLink="/components/code-block"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Code block</a
-							>
-						</li>
-						<li>
-							<a routerLink="/components/dialog" fragment="command-palette"
-								>Command palette
-								<span interop-badge itx-size="sm" itx-color="info"
-									>Pattern</span
-								></a
 							>
 						</li>
 						<li>
@@ -238,14 +187,6 @@
 							>
 						</li>
 						<li>
-							<a routerLink="/components/radio-group" fragment="cards"
-								>Radio cards
-								<span interop-badge itx-size="sm" itx-color="info"
-									>Pattern</span
-								></a
-							>
-						</li>
-						<li>
 							<a
 								routerLink="/components/radio-group"
 								routerLinkActive="active"
@@ -263,17 +204,6 @@
 						</li>
 						<li>
 							<a
-								routerLink="/components/segmented-control"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Segmented control
-								<span interop-badge itx-size="sm" itx-color="info"
-									>Pattern</span
-								></a
-							>
-						</li>
-						<li>
-							<a
 								routerLink="/components/select"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
@@ -286,14 +216,6 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Slider</a
-							>
-						</li>
-						<li>
-							<a routerLink="/components/button" fragment="split-button"
-								>Split button
-								<span interop-badge itx-size="sm" itx-color="info"
-									>Pattern</span
-								></a
 							>
 						</li>
 						<li>
@@ -366,6 +288,53 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Tree</a
+							>
+						</li>
+					</ul>
+				</details>
+			</li>
+			<li>
+				<details open>
+					<summary>Patterns</summary>
+					<ul role="list">
+						<li>
+							<a
+								routerLink="/patterns/cards"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Cards</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/patterns/chips"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Chips</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/patterns/command-palette"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Command palette</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/patterns/segmented-control"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Segmented control</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/patterns/split-button"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Split button</a
 							>
 						</li>
 					</ul>

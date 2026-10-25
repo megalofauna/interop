@@ -20,7 +20,7 @@ projects/interop/styles/fieldset.css   the shared fieldset layout, which fieldse
 ```
 
 The demo page is `projects/demo/src/app/components/group/`. The split button is
-on the button page, `#split-button`, with its own entry in the site nav.
+a pattern page, `projects/demo/src/app/patterns/split-button/`.
 
 ## Markup
 
@@ -119,7 +119,6 @@ Accessibility rules:
 - `styles/forced-colors.spec.ts`: exempt, layout only; the buttons keep their own
   borders.
 - Chrome 155:
-  - The Split button nav link lands on `#split-button`.
   - Tab, Enter, Tab, Enter: the chevron opens the list, focus enters it, the
     choice runs, the list closes, and focus is back on the chevron.
   - The chevron's ring draws whole, in front of Save.

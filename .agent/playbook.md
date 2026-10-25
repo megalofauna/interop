@@ -65,20 +65,20 @@ Three kinds, by who decides what is inside:
 |---|---|---|
 | Component | An identity attribute on a native element. Its inside is the element's own anatomy, or content the author chooses | button, select, dialog, tabs, toolbar, group |
 | Assembly | An identity attribute of its own, built from other Interop components that Interop chooses | code block (button, scroll area, tooltip, highlight), page nav (tree, the underscore look) |
-| Pattern | No identity of its own: a recipe of existing components, or a template of one, shown on the page of the component it is built from | split button (group), command palette (dialog), segmented control, radio cards and chips (radio group), checkbox cards and chips (checkbox) |
+| Pattern | No identity of its own: a recipe of existing components, or a template of one | split button (button, group, popover), command palette (dialog, field), segmented control (radio group), cards and chips (radio group and checkbox group) |
 
 An assembly may import components; a component never imports an assembly.
 "Composite" is not used: ARIA's composite role is a widget that manages focus
 among its children, which is a different line.
 
-In the demo, a pattern's nav entry and Go to page entry carry a `Pattern`
-badge (`itx-color="info"`), because the link names something the page it opens
-is not titled. Its section on that page is `section.pattern`, marked in the same
-blue, with the badge on its heading; a pattern with its own page (segmented
-control) has the badge on its `h1` and `data: { pattern: true }` on its route.
-Every pattern section is marked, but only the names people search for get a nav
-entry: Chips (checkbox page), Command palette, Radio cards, Segmented control,
-Split button. Components and assemblies carry no badge.
+In the demo, every pattern has its own page at `/patterns/<name>`
+(`projects/demo/src/app/patterns/<name>/`), listed in the nav's Patterns group
+beside Foundations and Components. The page's `h1` carries a `Pattern` badge
+(`itx-color="info"`), and its first paragraph (`.built-from`) links to what it
+is built from. The base component's page links back to its patterns. The route
+has `data: { pattern: true }`, which badges it in Go to page, whose list is
+flat. Components and assemblies carry no badge. One template on two components
+(cards, chips) is one pattern page with a section for each.
 
 ## DOM writes during animation/drag
 

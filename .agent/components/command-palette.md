@@ -15,8 +15,9 @@ projects/interop/shortcut/shortcut.ts   InteropShortcut, button[interopShortcut]
 ```
 
 The look is `interop-dialog="palette"` in `projects/interop/dialog/`. The demo is
-the dialog page's `#command-palette` section and the Search button in the site
-header (`projects/demo/src/app/app.html`).
+the pattern page `projects/demo/src/app/patterns/command-palette/`
+(`/patterns/command-palette`) and the Search button in the site header
+(`projects/demo/src/app/app.html`).
 
 ## Markup
 
@@ -24,10 +25,10 @@ header (`projects/demo/src/app/app.html`).
 <button interop-button type="button" commandfor="go-to" command="show-modal" interopShortcut="mod+k">
   Search <kbd></kbd>
 </button>
-<dialog id="go-to" interop-dialog="palette" closedby="any" aria-labelledby="go-to-label">
+<dialog id="go-to" interop-dialog="palette" closedby="any" aria-label="Go to page">
   <search interop-field>
-    <label id="go-to-label" for="go-to-query">Go to page</label>
-    <input interop-input id="go-to-query" type="search" autofocus autocomplete="off" spellcheck="false"
+    <input interop-input id="go-to-query" type="search" aria-label="Go to page" placeholder="Go to page"
+           autofocus autocomplete="off" spellcheck="false"
            [interopFilter]="pages" [filterEmpty]="noPages">
   </search>
   <nav aria-label="Pages">
@@ -98,25 +99,20 @@ closes the dialog.
 - The results are links, or buttons for actions. No combobox, no
   `aria-activedescendant`: focus is real, so every screen reader and a phone's
   swipe reach each result.
-- Label the field visibly. The dialog takes the same label.
+- No visible label: `aria-label="Go to page"` names both the dialog and the
+  field, and `placeholder="Go to page"` shows it until the user types. A
+  placeholder alone is not a name; the `dialog-palette-field` audit rule wants
+  `aria-label` or a `<label>`.
 - Keep the visible button. The shortcut is a second way in: browsers take
   Ctrl+K while their own UI has focus.
 - Use a modifier. A single-character shortcut needs an off switch (WCAG 2.1.4).
 
 ## Patterns in the demo
 
-The demo lists patterns, names people look for that are built from another
-component, in its nav and in Go to page: Split button (button page) and Command
-palette (dialog page). Each link carries a `Pattern` badge in the info blue
-(`itx-color="info"`). The badge is part of the link's name, and typing
-"pattern" lists them all.
-
-The pattern's own section on its component's page is a
-`<section id="…" class="pattern" itx-flow>` with the same badge on its heading,
-a faint info-blue tint and a 45% info-blue edge (`styles.css`). It is marked
-all the time, not only on arrival: the router changes the URL with
-`pushState()`, which never sets `:target`, and a direct load looks for the
-fragment before Angular renders it (both checked in Chrome 155).
+The command palette is a pattern: see "Components, assemblies and patterns" in
+the playbook. Go to page lists every route; a route with `data: { pattern: true }`
+shows a `Pattern` badge, which is part of the link's name, and typing "pattern"
+lists them all.
 
 ## Growing into a command palette
 

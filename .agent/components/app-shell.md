@@ -3,8 +3,8 @@
 An app's primary navigation: a sidebar when its container is wide enough, and
 behind a Menu button when it is not. It is a recipe, not a component: a grid and
 a container query over platform elements and existing Interop pieces. The demo
-app uses it, and `projects/demo/src/app/foundations/app-shell/` shows both
-modes with code.
+app's own shell (`projects/demo/src/app/app.html` and `app.css`) is the example,
+in the drawer mode.
 
 ## Two modes, one wide layout
 
