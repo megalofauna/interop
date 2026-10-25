@@ -1,0 +1,25 @@
+<button interop-button type="button" commandfor="timeout" command="show-modal">
+	Show the session warning
+</button>
+
+<dialog
+	id="timeout"
+	interop-dialog
+	role="alertdialog"
+	closedby="none"
+	aria-labelledby="timeout-title"
+	aria-describedby="timeout-message"
+>
+	<h2 id="timeout-title">Your session is about to end</h2>
+	<p id="timeout-message">
+		You will be signed out in 2 minutes. Unsaved work will be lost.
+	</p>
+	<form method="dialog">
+		<footer>
+			<button interop-button type="submit" value="sign-out">Sign out</button>
+			<button interop-button type="submit" value="stay" autofocus>
+				Stay signed in
+			</button>
+		</footer>
+	</form>
+</dialog>
