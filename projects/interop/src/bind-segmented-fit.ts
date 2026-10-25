@@ -27,9 +27,12 @@ export function bindSegmentedFit(group: HTMLElement): () => void {
 	};
 
 	const check = () => {
-		// Measure the row itself: horizontal, then stack it only if it runs past the space.
+		// Measure the row itself: horizontal, then stack it only if it runs past the space. A page that
+		// caps the group's width (max-inline-size: 100%) keeps its box inside the container while the
+		// segments overflow it, so the content's width counts too.
 		group.removeAttribute('data-stacked');
-		if (group.getBoundingClientRect().width > available() + 0.5) group.setAttribute('data-stacked', '');
+		const width = Math.max(group.getBoundingClientRect().width, group.scrollWidth);
+		if (width > available() + 0.5) group.setAttribute('data-stacked', '');
 	};
 	// Reading sizes inside an observer callback can resize the page again in the same frame, so the check waits for the next one.
 	const later = () => {

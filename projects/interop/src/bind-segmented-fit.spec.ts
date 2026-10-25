@@ -25,6 +25,16 @@ describe('bindSegmentedFit', () => {
 		expect(setup(300, 320).hasAttribute('data-stacked')).toBe(false);
 	});
 
+	it('stacks a row whose box is capped at the container but whose segments overflow it', () => {
+		document.body.innerHTML = `<div><fieldset interop-radio-group="segmented"><legend>Month</legend><label><input type="radio" name="m"> Jan</label></fieldset></div>`;
+		const group = document.querySelector('fieldset')!;
+		Object.defineProperty(group.parentElement, 'clientWidth', { get: () => 320 });
+		Object.defineProperty(group, 'scrollWidth', { get: () => 400 });
+		group.getBoundingClientRect = () => ({ width: 320 }) as DOMRect;
+		unbind = bindSegmentedFit(group);
+		expect(group.hasAttribute('data-stacked')).toBe(true);
+	});
+
 	it('removes data-stacked when unbound', () => {
 		const group = setup(400, 320);
 		unbind!();
