@@ -18,47 +18,28 @@
 	Label it like any field. The thumb's box is 24 pixels, the smallest target
 	WCAG allows, and the drawn circle sits inside it.
 </p>
-<div interop-field>
-	<label for="volume">Volume</label>
-	<input type="range" interop-slider id="volume" min="0" max="100" value="40" />
-</div>
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.basic"
-></figure>
+<demo-example
+	[html]="examples.basic"
+	[bind]="bind"
+	[ts]="basicTs"
+	layout="stack"
+/>
 
 <h2>A value with a unit</h2>
 <p>
-	<code>format</code> turns the number into words for screen readers, as
-	<code>aria-valuetext</code>: "$200", not "200". Use it only when the number
-	alone misleads. <code>readout</code> shows the same words beside the slider,
-	hidden from screen readers because the slider already says its value.
+	<code>format</code>, an option of <code>bindSlider()</code>, turns the number
+	into words for screen readers, as <code>aria-valuetext</code>: "$200", not
+	"200". Use it only when the number alone misleads. <code>readout</code> shows
+	the same words beside the slider, hidden from screen readers because the
+	slider already says its value.
 </p>
-<div interop-field>
-	<label for="budget">Budget</label>
-	<div class="scale">
-		<input
-			type="range"
-			interop-slider
-			id="budget"
-			min="0"
-			max="500"
-			step="10"
-			value="200"
-			[format]="dollars"
-			[readout]="shown"
-		/>
-		<span #shown></span>
-	</div>
-</div>
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.format"
-></figure>
+<demo-example
+	[html]="examples.unit"
+	[css]="examples.scaleCss"
+	[bind]="bindBudget"
+	[ts]="unitTs"
+	layout="stack"
+/>
 
 <h2>Vertical</h2>
 <p>
@@ -66,68 +47,25 @@
 	the bottom. Arrow Up raises the value, and screen readers hear a vertical
 	slider.
 </p>
-<div interop-field>
-	<label for="temperature">Temperature</label>
-	<div class="scale">
-		<input
-			type="range"
-			interop-slider
-			itx-orientation="vertical"
-			id="temperature"
-			min="10"
-			max="30"
-			value="21"
-			[format]="degrees"
-			[readout]="degreesShown"
-		/>
-		<span #degreesShown></span>
-	</div>
-</div>
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.vertical"
-></figure>
+<demo-example
+	[html]="examples.vertical"
+	[css]="examples.scaleCss"
+	[bind]="bindTemperature"
+	layout="stack"
+/>
 
 <h2>Disabled</h2>
-<div interop-field>
-	<label for="balance">Balance</label>
-	<input type="range" interop-slider id="balance" value="50" disabled />
-</div>
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.disabled"
-></figure>
+<demo-example [html]="examples.disabled" [bind]="bind" layout="stack" />
 
 <h2>In a form</h2>
 <p>
 	The slider submits its value under its <code>name</code>. Reset puts the thumb
 	and the fill back.
 </p>
-<form (submit)="submit($event)">
-	<div interop-field>
-		<label for="brightness">Brightness</label>
-		<input
-			type="range"
-			interop-slider
-			id="brightness"
-			name="brightness"
-			min="0"
-			max="100"
-			value="70"
-		/>
-	</div>
-	<p class="buttons">
-		<button interop-button type="submit">Save</button>
-		<button interop-button type="reset">Reset</button>
-	</p>
-	@if (submitted(); as text) {
-		<p>Submitted: {{ text }}</p>
-	}
-</form>
+<demo-example [html]="examples.form" [bind]="bindForm" layout="stack" />
+@if (submitted(); as text) {
+	<p>Submitted: {{ text }}</p>
+}
 
 <h2>Two values</h2>
 <p>
@@ -135,32 +73,4 @@
 	two thumbs. People set exact numbers in fields faster and more reliably, and
 	each field has its own label.
 </p>
-<fieldset class="pair">
-	<legend>Price, in dollars</legend>
-	<div interop-field>
-		<label for="price-min">Minimum</label>
-		<input
-			interop-input
-			id="price-min"
-			name="price-min"
-			inputmode="numeric"
-			size="6"
-		/>
-	</div>
-	<div interop-field>
-		<label for="price-max">Maximum</label>
-		<input
-			interop-input
-			id="price-max"
-			name="price-max"
-			inputmode="numeric"
-			size="6"
-		/>
-	</div>
-</fieldset>
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.pair"
-></figure>
+<demo-example [html]="examples.pair" [css]="examples.pairCss" />
