@@ -76,6 +76,8 @@
 	--itx-segmented-transition-timing-function: var(--itx-transition-timing-function);
 
 	position: relative;
+	/* Each control's frame and pill find its own segments, not those of another on the page. */
+	anchor-scope: --itx-segmented-first, --itx-segmented-last, --itx-segmented-selected;
 	display: inline-grid;
 	grid-auto-flow: column;
 	/* Every segment as wide as the widest, with no gap between them. */

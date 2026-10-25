@@ -6,12 +6,15 @@
 /*
  * The app shell. Narrow, the navigation is a drawer behind the Menu button. From a 48rem container
  * up it is a sidebar in the page, and the button goes. A container query's size cannot come from a
- * custom property, so 48rem is written here, once.
+ * custom property, so 48rem is written here, once, and the query sets --shell-nav to drawer or
+ * sidebar. Everything else that changes with it reads --shell-nav: the header below, through a
+ * style query, and the drawer-closing code in app.ts.
  *
  * The content is at most 80rem wide and centered. The gutter is what is left of the container's
  * width (100cqi) either side of it, so the header and footer rules still run edge to edge.
  */
 .shell {
+	--shell-nav: drawer;
 	--shell-max-inline-size: 80rem;
 	--shell-gutter: max(0px, (100cqi - var(--shell-max-inline-size)) / 2);
 	display: grid;
@@ -56,7 +59,10 @@
 
 @container shell (inline-size >= 48rem) {
 	.shell {
-		grid-template-columns: var(--shell-gutter) 16rem minmax(0, 1fr) var(--shell-gutter);
+		--shell-nav: sidebar;
+		grid-template-columns: var(--shell-gutter) 16rem minmax(0, 1fr) var(
+				--shell-gutter
+			);
 		grid-template-areas:
 			"header header header header"
 			". nav main ."
@@ -92,5 +98,51 @@
 
 	.shell > main {
 		padding: var(--itx-space-8);
+	}
+}
+
+/*
+ * The Theme control sits in the header, and in the drawer while the navigation is one, where the
+ * header has no room for it. A browser without style queries keeps it in the header.
+ */
+nav .theme {
+	display: none;
+}
+
+/* A key hint is for a keyboard; a touch screen with no mouse has none. */
+@media (hover: none) and (pointer: coarse) {
+	.search kbd {
+		display: none;
+	}
+}
+
+@container style(--shell-nav: drawer) {
+	header .theme {
+		display: none;
+	}
+
+	nav .theme {
+		display: block;
+		margin-block-start: var(--itx-space-6);
+	}
+
+	/* Search is its icon alone, square, and keeps its name. */
+	.search {
+		aspect-ratio: 1;
+		padding-inline: 0;
+	}
+
+	.search-label {
+		position: absolute;
+		inline-size: 1px;
+		block-size: 1px;
+		margin: -1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	.search kbd {
+		display: none;
 	}
 }

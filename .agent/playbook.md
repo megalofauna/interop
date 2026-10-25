@@ -65,7 +65,7 @@ Three kinds, by who decides what is inside:
 |---|---|---|
 | Component | An identity attribute on a native element. Its inside is the element's own anatomy, or content the author chooses | button, select, dialog, tabs, toolbar, group |
 | Assembly | An identity attribute of its own, built from other Interop components that Interop chooses | code block (button, scroll area, tooltip, highlight), page nav (tree, the underscore look) |
-| Pattern | No identity of its own: a recipe of existing components, or a template of one | split button (button, group, popover), command palette (dialog, field), segmented control (radio group), cards and chips (radio group and checkbox group) |
+| Pattern | No identity of its own: a recipe of existing components, or a template of one | split button (button, group, popover), command palette (dialog, field), segmented control (radio group), cards and chips (radio group and checkbox group), theme switcher (segmented control) |
 
 An assembly may import components; a component never imports an assembly.
 "Composite" is not used: ARIA's composite role is a widget that manages focus

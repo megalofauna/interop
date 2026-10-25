@@ -17,8 +17,8 @@
 	--itx-field-color: light-dark(var(--itx-neutral-950), var(--itx-neutral-50));
 	/* 4.5:1 against the field's fills, so a placeholder can be read (WCAG 1.4.3). */
 	--itx-field-placeholder-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
-	--itx-field-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
-	--itx-field-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+	--itx-field-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-950));
+	--itx-field-background-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-800));
 	/* No fill: a read-only value sits on the page, so it does not look like a place to type. */
 	--itx-field-background-color-readonly: transparent;
 	--itx-field-border-width: var(--itx-border-width);

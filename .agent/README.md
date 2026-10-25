@@ -38,6 +38,7 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 | Toolbar | [components/toolbar.md](components/toolbar.md) |
 | Tooltip | [components/tooltip.md](components/tooltip.md) |
 | Tree | [components/tree.md](components/tree.md) |
+| Theme switcher (pattern) | [components/theme-switcher.md](components/theme-switcher.md) |
 
 ### Retired Prime components, and why they are not rebuilt
 
