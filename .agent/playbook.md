@@ -96,6 +96,15 @@ Every live example on a demo page has its code under it, from one source:
   between `<!-- example: name -->` and `<!-- /example -->`, and
   `region(template, "name")` reads that region from the template, imported as
   text, for a code block captioned "Angular template".
+- Page styles do not reach an inserted example: Angular scopes them to the
+  page's own template. An example that needs CSS has its own file,
+  `<example>.css`, passed as `[css]`; it is inserted with the markup and shown
+  as its own block. Its class names must be unique on the page, and a width it
+  sets is `min(<width>, 100%)`.
+- A helper call the reader needs goes in `[ts]`. `each(selector, bind)` binds a
+  helper to every match in an example. `layout` is `row`, `stack` or `end`;
+  `narrow` caps the example at 20rem; `resizable` puts it in a frame the reader
+  can drag narrower, for a container query.
 - One block per thing to learn. Sections that only change an attribute share
   one compact block that lists the values.
 - Repeated items are written out, two or three of them, not a `@for` over data.
