@@ -1,0 +1,307 @@
+/*
+ * Track lab: candidate looks for the slider and the progress bar, side by side. Not shipped. The
+ * dials on the page set data attributes on .track-lab; everything below reads them.
+ *
+ * Both components draw one track at one thickness per size step. The slider adds a thumb.
+ */
+
+/* ── Size steps: the dial ─────────────────────────────────────────────────── */
+/* track: the bar's thickness. thumb: the drawn circle. target: the thumb's box and the slider's height. */
+.track-lab :is([lab-slider], [lab-progress]) {
+	--lab-track: var(--itx-space-1_5);
+	--lab-thumb: var(--itx-space-5);
+	--lab-target: var(--itx-space-8);
+}
+
+.track-lab :is([lab-slider], [lab-progress])[itx-size="sm"] {
+	--lab-track: var(--itx-space-1);
+	--lab-thumb: var(--itx-space-4);
+	--lab-target: var(--itx-space-6);
+}
+
+.track-lab :is([lab-slider], [lab-progress])[itx-size="lg"] {
+	--lab-track: var(--itx-space-2);
+	--lab-thumb: var(--itx-space-7);
+	--lab-target: var(--itx-space-10);
+}
+
+/* ── Looks: what the dials switch ─────────────────────────────────────────── */
+.track-lab {
+	--lab-fill: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--lab-radius: 0;
+
+	/* Flat: today's slider. A mid-gray bar at 3:1 against the page. */
+	--lab-track-background: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--lab-track-edge: transparent;
+	--lab-track-edge-width: 0px;
+	--lab-track-shade: 0 0 transparent;
+
+	/* Solid: today's thumb, in the fill color. */
+	--lab-thumb-background: var(--lab-fill);
+	--lab-thumb-edge: 0 0 0 0 transparent;
+	--lab-thumb-lift: none;
+	--lab-thumb-press: none;
+}
+
+.track-lab[data-ends="round"] {
+	--lab-radius: var(--itx-radius-full);
+}
+
+/* Channel: the switch's off track. A recess darker than the page, with a 1px edge at 3:1. */
+.track-lab:is([data-track="channel"], [data-track="shaded"]) {
+	--lab-track-background: light-dark(var(--itx-neutral-100), var(--itx-neutral-950));
+	--lab-track-edge: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--lab-track-edge-width: var(--itx-space-px);
+}
+
+/* Shaded: the channel plus a 1px shadow along its top inner edge. */
+.track-lab[data-track="shaded"] {
+	--lab-track-shade: inset 0 1px 2px light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
+}
+
+/* Ring: a page-colored center inside a 2px ring in the fill color. */
+.track-lab[data-thumb="ring"] {
+	--lab-thumb-background: light-dark(white, var(--itx-neutral-950));
+	--lab-thumb-edge: inset 0 0 0 2px var(--lab-fill);
+}
+
+/* Knob: a light disc with a 1px edge, darker than the fill in dark mode so it stays apart from it. */
+.track-lab[data-thumb="knob"] {
+	--lab-thumb-background: light-dark(white, var(--itx-neutral-200));
+	--lab-thumb-edge: inset 0 0 0 1px light-dark(var(--itx-neutral-500), var(--itx-neutral-950));
+}
+
+/* Lift: one soft shadow under the drawn circle. drop-shadow follows the circle; box-shadow would draw around the 24px box. */
+.track-lab[data-lift="on"] {
+	--lab-thumb-lift: drop-shadow(0 1px 2px light-dark(oklch(0 0 0 / 0.3), oklch(0 0 0 / 0.8)));
+}
+
+.track-lab[data-press="grow"] {
+	--lab-thumb-press: scale(1.15);
+}
+
+/* ── Slider ───────────────────────────────────────────────────────────────── */
+/* The visible track is the runnable track itself, so it can take a radius, an edge and a shade. */
+.track-lab input[lab-slider] {
+	appearance: none;
+	box-sizing: border-box;
+	display: block;
+	inline-size: 100%;
+	max-inline-size: 24rem;
+	block-size: var(--lab-target);
+	margin: 0;
+	background: transparent;
+	/* bindSlider() sets --itx-slider-value on the input; it is registered not to inherit, so the track reads this copy. */
+	--lab-value: var(--itx-slider-value, 0);
+}
+
+.track-lab input[lab-slider]::-webkit-slider-runnable-track {
+	box-sizing: border-box;
+	block-size: var(--lab-track);
+	border: var(--lab-track-edge-width) solid var(--lab-track-edge);
+	border-radius: var(--lab-radius);
+	/* The fill covers the edge where it reaches, as the switch's on track does. */
+	background:
+		linear-gradient(var(--lab-fill), var(--lab-fill)) left / calc(var(--lab-target) / 2 + (100% - var(--lab-target)) * var(--lab-value)) 100% no-repeat border-box,
+		var(--lab-track-background) padding-box;
+	box-shadow: var(--lab-track-shade);
+}
+
+.track-lab input[lab-slider]:dir(rtl)::-webkit-slider-runnable-track {
+	background-position: right;
+}
+
+.track-lab input[lab-slider]::-webkit-slider-thumb {
+	appearance: none;
+	box-sizing: border-box;
+	inline-size: var(--lab-target);
+	block-size: var(--lab-target);
+	/* Centers the target on a track thinner than it. */
+	margin-block-start: calc((var(--lab-track) - var(--lab-target)) / 2 - var(--lab-track-edge-width));
+	border: calc((var(--lab-target) - var(--lab-thumb)) / 2) solid transparent;
+	border-radius: var(--itx-radius-full);
+	background: var(--lab-thumb-background) padding-box;
+	box-shadow: var(--lab-thumb-edge);
+	filter: var(--lab-thumb-lift);
+	transition: transform var(--itx-transition-duration) var(--itx-transition-timing-function);
+}
+
+.track-lab input[lab-slider]:active::-webkit-slider-thumb {
+	transform: var(--lab-thumb-press);
+}
+
+.track-lab input[lab-slider]::-moz-range-track {
+	box-sizing: border-box;
+	block-size: var(--lab-track);
+	border: var(--lab-track-edge-width) solid var(--lab-track-edge);
+	border-radius: var(--lab-radius);
+	background: var(--lab-track-background) padding-box;
+	box-shadow: var(--lab-track-shade);
+}
+
+.track-lab input[lab-slider]::-moz-range-progress {
+	block-size: var(--lab-track);
+	border-radius: var(--lab-radius);
+	background: var(--lab-fill);
+}
+
+.track-lab input[lab-slider]::-moz-range-thumb {
+	box-sizing: border-box;
+	inline-size: var(--lab-target);
+	block-size: var(--lab-target);
+	border: calc((var(--lab-target) - var(--lab-thumb)) / 2) solid transparent;
+	border-radius: var(--itx-radius-full);
+	background: var(--lab-thumb-background) padding-box;
+	box-shadow: var(--lab-thumb-edge);
+	filter: var(--lab-thumb-lift);
+	transition: transform var(--itx-transition-duration) var(--itx-transition-timing-function);
+}
+
+.track-lab input[lab-slider]:active::-moz-range-thumb {
+	transform: var(--lab-thumb-press);
+}
+
+.track-lab input[lab-slider]:disabled {
+	opacity: 0.5;
+}
+
+/* ── Progress ─────────────────────────────────────────────────────────────── */
+/* The element is the track. Its fill is a child, so it covers the edge and the shade where it reaches. */
+@property --lab-sweep {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+
+@keyframes lab-sweep {
+	to {
+		--lab-sweep: 130;
+	}
+}
+
+.track-lab progress[lab-progress] {
+	appearance: none;
+	box-sizing: border-box;
+	display: block;
+	inline-size: 100%;
+	max-inline-size: 24rem;
+	block-size: var(--lab-track);
+	border: 0;
+	border-radius: var(--lab-radius);
+	overflow: hidden;
+	background-color: var(--lab-track-background);
+	box-shadow: inset 0 0 0 var(--lab-track-edge-width) var(--lab-track-edge), var(--lab-track-shade);
+}
+
+.track-lab progress[lab-progress]::-webkit-progress-bar {
+	background: transparent;
+	border-radius: inherit;
+}
+
+.track-lab progress[lab-progress]::-webkit-progress-value {
+	background: var(--lab-fill);
+	border-radius: inherit;
+	transition: inline-size var(--itx-transition-duration-slower) var(--itx-transition-timing-function);
+}
+
+.track-lab progress[lab-progress]::-moz-progress-bar {
+	background: var(--lab-fill);
+	border-radius: inherit;
+}
+
+/* Firefox draws an indeterminate bar across the whole track, which would cover the band below. */
+.track-lab progress[lab-progress]:indeterminate::-moz-progress-bar {
+	background: transparent;
+}
+
+/* A band 30% long crosses the track. Its stops move along the inline axis, so RTL needs nothing. */
+.track-lab progress[lab-progress]:indeterminate {
+	background-image: linear-gradient(
+		to right,
+		transparent 0 calc((var(--lab-sweep) - 30) * 1%),
+		var(--lab-fill) 0 calc(var(--lab-sweep) * 1%),
+		transparent 0
+	);
+	animation: lab-sweep 1s linear infinite;
+}
+
+.track-lab progress[lab-progress]:indeterminate:dir(rtl) {
+	background-image: linear-gradient(
+		to left,
+		transparent 0 calc((var(--lab-sweep) - 30) * 1%),
+		var(--lab-fill) 0 calc(var(--lab-sweep) * 1%),
+		transparent 0
+	);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.track-lab progress[lab-progress]:indeterminate {
+		animation: none;
+		--lab-sweep: 65;
+	}
+}
+
+/* ── Forced colors ────────────────────────────────────────────────────────── */
+@media (forced-colors: active) {
+	.track-lab :is(input[lab-slider], progress[lab-progress]) {
+		forced-color-adjust: none;
+		--lab-fill: Highlight;
+		--lab-track-background: Canvas;
+		--lab-track-edge: CanvasText;
+		--lab-track-edge-width: var(--itx-space-px);
+		--lab-track-shade: 0 0 transparent;
+		--lab-thumb-background: CanvasText;
+		--lab-thumb-edge: 0 0 0 0 transparent;
+		--lab-thumb-lift: none;
+	}
+}
+
+/* ── The page ─────────────────────────────────────────────────────────────── */
+.track-lab .dials {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-4);
+}
+
+.track-lab .schemes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+	gap: var(--itx-space-4);
+}
+
+.track-lab .scheme {
+	padding: var(--itx-space-6);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: Canvas;
+	color: CanvasText;
+}
+
+.track-lab .scheme.light {
+	color-scheme: light;
+}
+
+.track-lab .scheme.dark {
+	color-scheme: dark;
+}
+
+.track-lab .panel {
+	margin-block-start: var(--itx-space-6);
+	padding: var(--itx-space-6);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+}
+
+.track-lab .step {
+	display: grid;
+	gap: var(--itx-space-3);
+	margin-block-start: var(--itx-space-4);
+}
+
+.track-lab .step:first-child {
+	margin-block-start: 0;
+}
+
+.track-lab .step-name {
+	font-size: var(--itx-font-size-caption);
+	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}

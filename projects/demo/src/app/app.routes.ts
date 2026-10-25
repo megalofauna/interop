@@ -202,6 +202,12 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "lab/track",
+		title: "Track lab",
+		loadComponent: () =>
+			import("./lab/track/track-lab").then((m) => m.TrackLab),
+	},
+	{
 		path: "foundations/flow",
 		title: "Flow",
 		loadComponent: () =>
