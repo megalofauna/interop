@@ -1,29 +1,13 @@
-p {
+.gallery {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
-	gap: var(--itx-space-3);
+	gap: var(--itx-space-4);
 }
 
-.column {
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.large {
-	font-size: 1.5rem;
-}
-
-.scale {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: end;
-	gap: var(--itx-space-6);
-}
-
-.scale > span {
+.gallery > span {
 	display: inline-flex;
 	flex-direction: column;
 	align-items: center;
 	gap: var(--itx-space-1);
+	min-inline-size: 7rem;
 }
