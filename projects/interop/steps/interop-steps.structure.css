@@ -175,3 +175,23 @@
 		background-color: CanvasText;
 	}
 }
+
+/*
+ * A step of a multi-step form: a fieldset whose legend holds the step's heading. The form draws no
+ * box around it; the heading says where a step starts. Its display is left alone, so `hidden`
+ * still hides the steps that are not current.
+ */
+:where(form[interop-steps-form] > fieldset) {
+	min-inline-size: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+:where(form[interop-steps-form] > fieldset > legend) {
+	padding: 0;
+}
+
+:where(form[interop-steps-form] > fieldset > legend > :is(h1, h2, h3, h4, h5, h6)) {
+	margin: 0;
+}
