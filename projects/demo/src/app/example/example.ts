@@ -34,6 +34,7 @@ import { InteropCodeBlock } from "interop/code-block";
 		"itx-flow": "",
 		"[attr.layout]": "layout()",
 		"[attr.narrow]": "narrow() ? '' : null",
+		"[attr.resizable]": "resizable() ? '' : null",
 	},
 	template: `
 		<div class="live" #live></div>
@@ -74,6 +75,8 @@ export class DemoExample {
 	readonly layout = input<"row" | "stack" | "end">("row");
 	/** At most 20rem wide, to show how the example wraps. */
 	readonly narrow = input(false, { transform: booleanAttribute });
+	/** The live example in a box the reader can drag narrower, for a container query. */
+	readonly resizable = input(false, { transform: booleanAttribute });
 
 	private readonly live = viewChild.required<ElementRef<HTMLElement>>("live");
 
