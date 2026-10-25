@@ -1,6 +1,3 @@
-/* Focus ring candidates: remove with the file once a ring is chosen. */
-@import "./focus-rings.css";
-
 /*
  * The page's colors, stated, because a checker such as axe cannot read the canvas and assumes white,
  * so in dark mode it would measure text against white. Light is the browser's canvas; dark is

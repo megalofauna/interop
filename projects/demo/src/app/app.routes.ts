@@ -193,32 +193,10 @@ export const routes: Routes = [
 			),
 	},
 	{
-		path: "foundations/app-shell",
-		title: "App shell",
-		loadComponent: () =>
-			import("./foundations/app-shell/app-shell-demo").then(
-				(m) => m.AppShellDemo,
-			),
-	},
-	{
 		path: "foundations/flow",
 		title: "Flow",
 		loadComponent: () =>
 			import("./foundations/flow/flow-demo").then((m) => m.FlowDemo),
-	},
-	{
-		path: "foundations/focus-ring",
-		title: "Focus ring (comparison)",
-		loadComponent: () =>
-			import("./foundations/focus-ring/focus-ring-demo").then(
-				(m) => m.FocusRingDemo,
-			),
-	},
-	{
-		path: "foundations/radius",
-		title: "Radius (comparison)",
-		loadComponent: () =>
-			import("./foundations/radius/radius-demo").then((m) => m.RadiusDemo),
 	},
 	{
 		path: "foundations/typography",
