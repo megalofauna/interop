@@ -11,84 +11,35 @@
 </p>
 
 <h2>On and off</h2>
-<div class="stack">
-	<label interop-switch
-		><input type="checkbox" role="switch" /> Notifications</label
-	>
-	<label interop-switch
-		><input type="checkbox" role="switch" checked /> Dark mode</label
-	>
-</div>
+<demo-example [html]="examples.onOff" layout="stack" />
 
 <h2>Long label</h2>
 <p>
 	The switch is centered on the first line of text, and the text wraps beside
 	it. Links and other inline elements wrap with the text.
 </p>
-<div class="stack narrow">
-	<label interop-switch>
-		<input type="checkbox" role="switch" />
-		Send me a weekly summary of activity in every project I belong to, including
-		archived ones
-	</label>
-	<label interop-switch>
-		<input type="checkbox" role="switch" />
-		Share usage data as described in the
-		<a href="https://example.com/privacy">privacy policy</a>
-	</label>
-</div>
+<demo-example [html]="examples.longLabel" layout="stack" narrow />
 
 <h2>Disabled</h2>
-<div class="stack">
-	<label interop-switch
-		><input type="checkbox" role="switch" disabled /> Off and disabled</label
-	>
-	<label interop-switch
-		><input type="checkbox" role="switch" checked disabled /> On and
-		disabled</label
-	>
-</div>
-
-<h2>In a disabled fieldset</h2>
 <p>
-	The fieldset disables its inputs, and the switches show it with no binding.
+	A disabled fieldset disables its switches, and they show it with no binding. A
+	group of switches is a checkbox group: each is its own yes or no.
 </p>
-<fieldset disabled>
-	<legend>Sync</legend>
-	<div class="stack">
-		<label interop-switch
-			><input type="checkbox" role="switch" checked /> Contacts</label
-		>
-		<label interop-switch
-			><input type="checkbox" role="switch" /> Calendar</label
-		>
-	</div>
-</fieldset>
+<demo-example [html]="examples.disabled" layout="stack" />
 
 <h2>In a form</h2>
 <p>
 	Change the switches, then reset the form. The switches return to their initial
 	state.
 </p>
-<form>
-	<div class="stack">
-		<label interop-switch
-			><input type="checkbox" role="switch" name="email" checked /> Email</label
-		>
-		<label interop-switch
-			><input type="checkbox" role="switch" name="sms" /> Text messages</label
-		>
-	</div>
-	<div class="row">
-		<button interop-button type="reset">Reset</button>
-	</div>
-</form>
+<demo-example [html]="examples.form" layout="stack" />
 
 <h2>Bound to a signal</h2>
 <p>
 	Bind <code>[checked]</code> and listen to <code>(change)</code> on the input.
 </p>
 <div class="stack">
+	<!-- example: signal -->
 	<label interop-switch>
 		<input
 			type="checkbox"
@@ -98,37 +49,29 @@
 		/>
 		Wi-Fi
 	</label>
+	<!-- /example -->
 	<p>Wi-Fi is {{ wifi() ? "on" : "off" }}.</p>
 </div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="signalCode"
+></figure>
 
 <h2>Right to left</h2>
-<div class="stack" dir="rtl" lang="ar">
-	<label interop-switch
-		><input type="checkbox" role="switch" checked /> الإشعارات</label
-	>
-</div>
+<demo-example [html]="examples.rtl" />
 
 <h2>Sizes</h2>
 <p>
 	The default size has no attribute. <code>itx-size="lg"</code> on the label
 	makes the switch larger.
 </p>
-<div class="stack">
-	<label interop-switch
-		><input type="checkbox" role="switch" checked /> Default</label
-	>
-	<label interop-switch itx-size="lg"
-		><input type="checkbox" role="switch" checked /> Large</label
-	>
-</div>
+<demo-example [html]="examples.sizes" layout="stack" />
 
 <h2>Custom tokens</h2>
 <p>
 	Set <code>--itx-switch-*</code> properties on the label, or on a class that
 	matches it.
 </p>
-<div class="stack">
-	<label interop-switch class="long"
-		><input type="checkbox" role="switch" checked /> Longer track</label
-	>
-</div>
+<demo-example [html]="examples.longTrack" [css]="examples.longTrackCss" />
