@@ -1,0 +1,16 @@
+:host {
+	display: block;
+}
+
+.live {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-2);
+}
+
+:host([layout="stack"]) .live {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--itx-space-4);
+}
