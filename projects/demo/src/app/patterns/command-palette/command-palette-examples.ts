@@ -4,10 +4,10 @@ export const examples = {
 	Search <kbd></kbd>
 </button>
 
-<dialog #goTo id="go-to" interop-dialog="palette" closedby="any" aria-labelledby="go-to-label">
+<dialog #goTo id="go-to" interop-dialog="palette" closedby="any" aria-label="Go to page">
 	<search interop-field>
-		<label id="go-to-label" for="go-to-query">Go to page</label>
-		<input interop-input id="go-to-query" type="search" autofocus autocomplete="off" spellcheck="false"
+		<input interop-input id="go-to-query" type="search" aria-label="Go to page" placeholder="Go to page"
+			autofocus autocomplete="off" spellcheck="false"
 			[interopFilter]="pages" [filterEmpty]="noPages" />
 	</search>
 	<nav aria-label="Pages">

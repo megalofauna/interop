@@ -718,7 +718,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						reason:
 							'A palette is a search field over its results. The field takes focus when it opens, so its label is the first thing a screen reader says after the dialog’s name.',
 						advice:
-							'Put a labeled search field first: <search><label for="query">Go to page</label><input id="query" type="search" autofocus></search>.',
+							'Put a named search field first: <search><input type="search" aria-label="Go to page" placeholder="Go to page" autofocus></search>, or give it a <label>.',
 					};
 		},
 	},

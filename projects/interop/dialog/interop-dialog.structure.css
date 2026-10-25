@@ -25,11 +25,13 @@
  * list shortens, and only the list scrolls. The results are links or buttons; bindFilter() filters
  * them and bindShortcut() gives the opening button a key.
  *
- *   <dialog id="go-to" interop-dialog="palette" closedby="any" aria-labelledby="go-to-label">
+ *   <dialog id="go-to" interop-dialog="palette" closedby="any" aria-label="Go to page">
  *     <search interop-field>
- *       <label id="go-to-label" for="go-to-query">Go to page</label>
- *       <input interop-input id="go-to-query" type="search" autofocus>
+ *       <input interop-input type="search" aria-label="Go to page" placeholder="Go to page" autofocus>
  *     </search>
+ *
+ * The field has no visible label: the dialog says what it is for, and the placeholder repeats it
+ * until the user types. aria-label names the field and the dialog, since a placeholder is not a name.
  *     <nav aria-label="Pages"><ul role="list"><li><a href="/button">Button</a></li>…</ul></nav>
  *     <p hidden>No pages match.</p>
  *     <footer><span><kbd>↓</kbd> <kbd>↑</kbd> Move</span> <span><kbd>Enter</kbd> Open</span> …</footer>
