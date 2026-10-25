@@ -1,0 +1,28 @@
+:where(progress[interop-progress]) {
+	--itx-progress-inline-size: 100%;
+	/* The slider's track at the same step. */
+	--itx-progress-track-block-size: var(--itx-space-1_5);
+
+	/* The slider's recess and fill. The edge is 3:1 against the page (WCAG 1.4.11). */
+	--itx-progress-track-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-950));
+	--itx-progress-track-border-width: var(--itx-border-width);
+	--itx-progress-track-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-progress-track-border-radius: var(--itx-radius-full);
+	--itx-progress-track-box-shadow: inset 0 1px 2px light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
+	--itx-progress-fill-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+
+	/* Indeterminate: a band this many percent of the track long crosses it once per duration. */
+	--itx-progress-band-length: 30;
+	--itx-progress-animation-duration: var(--itx-animation-duration-sweep);
+
+	--itx-progress-transition-duration: var(--itx-transition-duration-slower);
+	--itx-progress-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+:where(progress[interop-progress][itx-size="sm"]) {
+	--itx-progress-track-block-size: var(--itx-space-1);
+}
+
+:where(progress[interop-progress][itx-size="lg"]) {
+	--itx-progress-track-block-size: var(--itx-space-2);
+}

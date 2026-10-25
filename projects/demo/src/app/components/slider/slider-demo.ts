@@ -1,4 +1,5 @@
 import { Component, signal } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { bindSlider } from "interop";
 import { each } from "../../example/bind-each";
 import { DemoExample } from "../../example/example";
@@ -8,19 +9,21 @@ import form from "./examples/form.html";
 import pairCss from "./examples/pair.css";
 import pair from "./examples/pair.html";
 import scaleCss from "./examples/scale.css";
+import sizes from "./examples/sizes.html";
 import unit from "./examples/unit.html";
 import vertical from "./examples/vertical.html";
 
 @Component({
 	selector: "demo-slider",
 	host: { "itx-flow": "" },
-	imports: [DemoExample],
+	imports: [DemoExample, RouterLink],
 	templateUrl: "./slider-demo.html",
 	styleUrl: "./slider-demo.css",
 })
 export class SliderDemo {
 	protected readonly examples = {
 		basic,
+		sizes,
 		unit,
 		scaleCss,
 		vertical,

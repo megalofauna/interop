@@ -28,9 +28,11 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 | Icon | [components/icon.md](components/icon.md) |
 | Page nav | [components/page-nav.md](components/page-nav.md) |
 | Popover, drawer | [components/popover.md](components/popover.md) |
+| Progress | [components/progress.md](components/progress.md) |
 | App shell recipe | [components/app-shell.md](components/app-shell.md) |
 | Scroll area | [components/scroll-area.md](components/scroll-area.md) |
 | Select | [components/select.md](components/select.md) |
+| Slider | [components/slider.md](components/slider.md) |
 | Steps: indicator, multi-step form | [components/steps.md](components/steps.md) |
 | Table | [components/table.md](components/table.md) |
 | Tabs | [components/tabs.md](components/tabs.md) |
@@ -49,7 +51,7 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 ### Prime components not yet reviewed
 
 [indicator.md](components/indicator.md), [list.md](components/list.md),
-[resizable.md](components/resizable.md), [slider.md](components/slider.md),
+[resizable.md](components/resizable.md),
 [toast.md](components/toast.md), and the `composites/` and `services/` cards.
 They describe Prime's code. `composites/code-block.md`, `highlighter.md` and
 `imports.md` describe Prime's code block, highlighter and icon paths; the

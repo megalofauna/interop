@@ -5,10 +5,13 @@
  *   <input type="range" interop-slider id="volume" min="0" max="100" value="40">
  *
  * The browser keeps the keyboard, the pointer, a click on the track, form submission and RTL. The
- * input draws its own track and fill as two background layers, so nothing wraps it. bindSlider()
- * sets --itx-slider-value from the value; without it the track draws unfilled.
+ * track is the input's own track part: a recess with an edge and a shade along its top. The thumb is
+ * a light disc with an edge and a shadow under it, and it grows while it is held. bindSlider() sets
+ * --itx-slider-value from the value; without it the track draws unfilled in Chrome and Safari.
  *
- * The thumb's box is the 24px target. A transparent border insets the drawn circle inside it.
+ * The progress bar draws the same track at every size step.
+ *
+ * The thumb's box is the target. A transparent border insets the drawn circle inside it.
  *
  * Also known as:
  *   range             HTML (the input type), USWDS (range slider)
@@ -17,10 +20,10 @@
  * Aria, Radix, Base UI, Ark, Angular Material and Web Awesome.
  */
 
-/* From 0 at min to 1 at max. bindSlider() sets it on the input. */
+/* From 0 at min to 1 at max. bindSlider() sets it on the input; the track part inherits it. */
 @property --itx-slider-value {
 	syntax: "<number>";
-	inherits: false;
+	inherits: true;
 	initial-value: 0;
 }
 
@@ -34,25 +37,8 @@
 	padding: 0;
 	vertical-align: middle;
 	cursor: var(--itx-slider-cursor);
-	/* Chrome fills a vertical range in the dark scheme. Only the two layers below draw. */
+	/* Chrome fills a vertical range in the dark scheme. Only the track part draws. */
 	background-color: transparent;
-	/*
-	 * Front to back: the fill, then the track. The fill ends under the thumb's center, which travels
-	 * the length less one thumb, so it starts half a thumb in.
-	 */
-	background-image:
-		linear-gradient(var(--itx-slider-fill-color), var(--itx-slider-fill-color)),
-		linear-gradient(var(--itx-slider-track-color), var(--itx-slider-track-color));
-	background-size:
-		calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value))
-			var(--itx-slider-track-thickness),
-		100% var(--itx-slider-track-thickness);
-	background-position: left center;
-	background-repeat: no-repeat;
-}
-
-:where(input[type="range"][interop-slider]:dir(rtl)) {
-	background-position: right center;
 }
 
 :where(input[type="range"][interop-slider]:disabled) {
@@ -60,76 +46,129 @@
 	cursor: var(--itx-slider-cursor-disabled);
 }
 
-/* The track parts draw nothing; WebKit centers the thumb on the track's box, so it fills the input. */
+/*
+ * The track. Front to back: the fill, then the recess. The fill is drawn to the border's outer edge,
+ * so it covers the edge where it reaches. It ends under the thumb's center, which travels the length
+ * less one thumb, so it starts half a thumb in.
+ */
 :where(input[type="range"][interop-slider])::-webkit-slider-runnable-track {
-	block-size: 100%;
-	background: none;
+	box-sizing: border-box;
+	block-size: var(--itx-slider-track-block-size);
+	border: var(--itx-slider-track-border-width) solid var(--itx-slider-track-border-color);
+	border-radius: var(--itx-slider-track-border-radius);
+	background:
+		linear-gradient(var(--itx-slider-fill-background-color), var(--itx-slider-fill-background-color)) left /
+			calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value)) 100% no-repeat
+			border-box,
+		var(--itx-slider-track-background-color) padding-box;
+	box-shadow: var(--itx-slider-track-box-shadow);
 }
 
+:where(input[type="range"][interop-slider]:dir(rtl))::-webkit-slider-runnable-track {
+	background-position: right;
+}
+
+/* Firefox draws the fill itself, without script. */
 :where(input[type="range"][interop-slider])::-moz-range-track {
-	block-size: 100%;
-	background: none;
+	box-sizing: border-box;
+	block-size: var(--itx-slider-track-block-size);
+	border: var(--itx-slider-track-border-width) solid var(--itx-slider-track-border-color);
+	border-radius: var(--itx-slider-track-border-radius);
+	background-color: var(--itx-slider-track-background-color);
+	box-shadow: var(--itx-slider-track-box-shadow);
 }
 
-/* Firefox fills without script. The fill layer above draws the same extent when bindSlider() runs. */
 :where(input[type="range"][interop-slider])::-moz-range-progress {
-	block-size: var(--itx-slider-track-thickness);
-	background-color: var(--itx-slider-fill-color);
+	block-size: var(--itx-slider-track-block-size);
+	border-radius: var(--itx-slider-track-border-radius);
+	background-color: var(--itx-slider-fill-background-color);
 }
 
-/* Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the whole rule. */
+/*
+ * The thumb. Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the
+ * whole rule. Its border is drawn as an inset shadow, because the real border is the transparent inset. The lift is a
+ * drop-shadow, which follows the drawn circle; a box-shadow would draw around the whole target.
+ */
 :where(input[type="range"][interop-slider])::-webkit-slider-thumb {
 	appearance: none;
 	box-sizing: border-box;
 	inline-size: var(--itx-slider-target-size);
 	block-size: var(--itx-slider-target-size);
-	background-color: var(--itx-slider-thumb-color);
-	background-clip: content-box;
+	/* Centers the target on a track thinner than it. */
+	margin-block-start: calc(
+		(var(--itx-slider-track-block-size) - var(--itx-slider-target-size)) / 2 - var(--itx-slider-track-border-width)
+	);
 	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
 	border-radius: var(--itx-radius-full);
+	background: var(--itx-slider-thumb-background-color) padding-box;
+	box-shadow: inset 0 0 0 var(--itx-slider-thumb-border-width) var(--itx-slider-thumb-border-color);
+	filter: var(--itx-slider-thumb-filter);
+	transition: transform var(--itx-slider-transition-duration) var(--itx-slider-transition-timing-function);
+}
+
+:where(input[type="range"][interop-slider]:active)::-webkit-slider-thumb {
+	transform: var(--itx-slider-thumb-transform-active);
 }
 
 :where(input[type="range"][interop-slider])::-moz-range-thumb {
 	box-sizing: border-box;
 	inline-size: var(--itx-slider-target-size);
 	block-size: var(--itx-slider-target-size);
-	background-color: var(--itx-slider-thumb-color);
-	background-clip: content-box;
 	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
 	border-radius: var(--itx-radius-full);
+	background: var(--itx-slider-thumb-background-color) padding-box;
+	box-shadow: inset 0 0 0 var(--itx-slider-thumb-border-width) var(--itx-slider-thumb-border-color);
+	filter: var(--itx-slider-thumb-filter);
+	transition: transform var(--itx-slider-transition-duration) var(--itx-slider-transition-timing-function);
+}
+
+:where(input[type="range"][interop-slider]:active)::-moz-range-thumb {
+	transform: var(--itx-slider-thumb-transform-active);
+}
+
+:where(input[type="range"][interop-slider]:disabled)::-webkit-slider-thumb {
+	transform: none;
+}
+
+:where(input[type="range"][interop-slider]:disabled)::-moz-range-thumb {
+	transform: none;
 }
 
 /*
  * Vertical, minimum at the bottom. The writing mode turns the input's inline axis upright, so the
  * keyboard and the accessibility tree follow; `direction: rtl` puts the minimum at the end. The
- * background layers are physical, so they swap axes here.
+ * track's logical sizes turn with it; the fill layer is physical, so it swaps axes here.
  */
 :where(input[type="range"][interop-slider][itx-orientation="vertical"]) {
 	writing-mode: vertical-lr;
 	direction: rtl;
 	inline-size: var(--itx-slider-vertical-inline-size);
-	background-size:
-		var(--itx-slider-track-thickness)
-			calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value)),
-		var(--itx-slider-track-thickness) 100%;
-	background-position: center bottom;
+}
+
+:where(input[type="range"][interop-slider][itx-orientation="vertical"])::-webkit-slider-runnable-track {
+	background-position: bottom;
+	background-size: 100% calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value));
 }
 
 /*
- * Forced colors drop background images, which would take the track and the fill. These keep them,
- * in system colors: the track and thumb in the text color, the fill in Highlight.
+ * Forced colors drop shadows, filters and author colors. These keep the track, fill and thumb in
+ * system colors: the track's edge and the thumb in the text color, the fill in Highlight.
  */
 @media (forced-colors: active) {
 	:where(input[type="range"][interop-slider]) {
 		forced-color-adjust: none;
-		--itx-slider-track-color: CanvasText;
-		--itx-slider-fill-color: Highlight;
-		--itx-slider-thumb-color: CanvasText;
+		--itx-slider-track-background-color: Canvas;
+		--itx-slider-track-border-color: CanvasText;
+		--itx-slider-track-box-shadow: none;
+		--itx-slider-fill-background-color: Highlight;
+		--itx-slider-thumb-background-color: CanvasText;
+		--itx-slider-thumb-border-color: CanvasText;
+		--itx-slider-thumb-filter: none;
 	}
 
 	:where(input[type="range"][interop-slider]:disabled) {
-		--itx-slider-track-color: GrayText;
-		--itx-slider-fill-color: GrayText;
-		--itx-slider-thumb-color: GrayText;
+		--itx-slider-track-border-color: GrayText;
+		--itx-slider-fill-background-color: GrayText;
+		--itx-slider-thumb-background-color: GrayText;
 	}
 }

@@ -11,6 +11,7 @@ const required = [
 	'button/interop-button.structure.css',
 	'checkbox/interop-checkbox.structure.css',
 	'field/interop-field.structure.css',
+	'progress/interop-progress.structure.css',
 	'radio-group/interop-radio-group.structure.css',
 	'select/interop-select.structure.css',
 	'slider/interop-slider.structure.css',

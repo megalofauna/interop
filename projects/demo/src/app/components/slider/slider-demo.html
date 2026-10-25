@@ -6,7 +6,8 @@
 	<code>&lt;input type="range"&gt;</code>. The browser gives it the arrow keys,
 	Page Up and Page Down, Home and End, dragging, a click anywhere on the track,
 	form submission and right-to-left. Interop draws the track, the fill and the
-	thumb, and the house focus ring.
+	thumb, and the house focus ring. The
+	<a routerLink="/components/progress">progress bar</a> draws the same track.
 </p>
 <p>
 	For an exact number, use a text field: a slider is hard to set to one value.
@@ -15,8 +16,8 @@
 
 <h2>One value</h2>
 <p>
-	Label it like any field. The thumb's box is 24 pixels, the smallest target
-	WCAG allows, and the drawn circle sits inside it.
+	Label it like any field. The drawn circle sits inside a larger box, which is
+	the target for the pointer.
 </p>
 <demo-example
 	[html]="examples.basic"
@@ -24,6 +25,15 @@
 	[ts]="basicTs"
 	layout="stack"
 />
+
+<h2>Sizes</h2>
+<p>
+	<code>itx-size</code> is <code>sm</code>, <code>lg</code> or nothing for the
+	default. The slider is 24, 32 and 40px tall, its thumb 16, 20 and 28px, and
+	its track 4, 6 and 8px thick. The small size keeps the 24px target WCAG asks
+	for.
+</p>
+<demo-example [html]="examples.sizes" [bind]="bind" layout="stack" />
 
 <h2>A value with a unit</h2>
 <p>

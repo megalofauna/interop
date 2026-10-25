@@ -1,0 +1,60 @@
+<h1>Progress</h1>
+<p class="aka">Also known as progress bar, progress indicator, loading bar.</p>
+<p>
+	A progress bar shows how far a task has got: an upload, a sync, an export. It
+	is the native <code>&lt;progress&gt;</code>. The browser draws the fill from
+	<code>value</code> and <code>max</code> and tells screen readers the
+	percentage. Interop draws the same track as the
+	<a routerLink="/components/slider">slider</a>, at the same sizes. It needs no
+	script.
+</p>
+<p>
+	For a measurement in a range, such as storage used or battery level, use
+	<code>&lt;meter&gt;</code>. For the steps of a form, use
+	<a routerLink="/components/steps">steps</a>. For a wait of a second or two,
+	use a button's busy state.
+</p>
+
+<h2>How far a task has got</h2>
+<p>
+	Name it with a <code>&lt;label&gt;</code>, like a field:
+	<code>&lt;progress&gt;</code> is a labelable element.
+</p>
+<demo-example [html]="examples.basic" layout="stack" />
+
+<h2>Sizes</h2>
+<p>
+	<code>itx-size</code> is <code>sm</code>, <code>lg</code> or nothing for the
+	default: 4, 6 and 8px thick, the slider's track at each size.
+</p>
+<demo-example [html]="examples.sizes" layout="stack" />
+
+<h2>Words for the value</h2>
+<p>
+	Screen readers say a percentage. When a count says more, add
+	<code>aria-valuetext</code>: "3 of 7 files", not "43%". Any
+	<code>max</code> works; there is no need to scale to 100.
+</p>
+<demo-example [html]="examples.count" layout="stack" />
+
+<h2>Amount unknown</h2>
+<p>
+	Leave <code>value</code> out and a band crosses the track. Removing the
+	attribute is the only way back to this state. While a region waits for the
+	result, give it <code>aria-busy="true"</code> and point its
+	<code>aria-describedby</code> at the bar. Clear both when it loads.
+</p>
+<demo-example [html]="examples.unknown" layout="stack" />
+
+<h2>Saying it is done</h2>
+<p>
+	A bar that moves is silent in most screen readers. Say the milestones once,
+	with <code>announce()</code>, and show them as text: done, failed. Never every
+	step.
+</p>
+<demo-example
+	[html]="examples.done"
+	[bind]="bindDone"
+	[ts]="doneTs"
+	layout="stack"
+/>

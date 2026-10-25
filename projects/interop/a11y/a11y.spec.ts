@@ -466,6 +466,18 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(document.body)).toEqual([]);
 	});
 
+	it('finds no violations in progress bars, determinate, indeterminate and sized', async () => {
+		document.body.innerHTML = `
+			<main>
+				<label for="upload">Uploading report.pdf</label>
+				<progress interop-progress id="upload" value="42" max="100"></progress>
+				<label>Syncing <progress interop-progress itx-size="sm" value="3" max="7" aria-valuetext="3 of 7 files"></progress></label>
+				<progress interop-progress itx-size="lg" id="connecting" aria-label="Connecting to the relay"></progress>
+				<section aria-label="Messages" aria-busy="true" aria-describedby="connecting"></section>
+			</main>`;
+		expect(await violations(document.body)).toEqual([]);
+	});
+
 	it('finds no violations in toasts as toast() writes them', async () => {
 		document.body.innerHTML = '<main><h1>Inbox</h1><section interop-toasts popover="manual" aria-label="Notifications"></section></main>';
 		const region = document.querySelector<HTMLElement>('[interop-toasts]')!;

@@ -764,6 +764,30 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			return null;
 		},
 	},
+	'progress-name': {
+		selector: 'progress[interop-progress]',
+		check: (progress) =>
+			(progress as HTMLProgressElement).labels?.length || ariaName(progress)
+				? null
+				: {
+						problem: 'This progress bar has no name.',
+						reason: 'A screen reader announces it as "progress bar" and a percentage, with nothing to say what is in progress.',
+						advice: 'Add <label for="…"> with the progress bar’s id, or aria-label="…".',
+					},
+	},
+	'progress-aria': {
+		selector: 'progress[interop-progress]',
+		check: (progress) => {
+			const set = ['role', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax'].filter((name) => progress.hasAttribute(name));
+			return set.length
+				? {
+						problem: `This progress bar sets ${set.join(', ')}.`,
+						reason: 'A <progress> already has the progressbar role and takes its range from value and max. ARIA values override them, so the bar and its announcement can disagree.',
+						advice: 'Remove them. Set value and max, leave value out while the amount is unknown, and use aria-valuetext for words such as "3 of 7 files".',
+					}
+				: null;
+		},
+	},
 	'toasts-name': {
 		selector: '[interop-toasts]',
 		check: (region) =>

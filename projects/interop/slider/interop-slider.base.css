@@ -2,17 +2,42 @@
 	--itx-slider-inline-size: 100%;
 	--itx-slider-max-inline-size: 24rem;
 	--itx-slider-vertical-inline-size: 10rem;
-	/* The thumb's box, and the input's height: 24px (WCAG 2.5.8). */
-	--itx-slider-target-size: var(--itx-space-6);
-	--itx-slider-thumb-size: var(--itx-space-4);
-	--itx-slider-track-thickness: var(--itx-space-1);
+	/* The thumb's box, and the input's height (WCAG 2.5.8). */
+	--itx-slider-target-size: var(--itx-space-8);
+	--itx-slider-thumb-size: var(--itx-space-5);
+	/* The progress bar's thickness at the same step. */
+	--itx-slider-track-block-size: var(--itx-space-1_5);
 
-	/* 3:1 against the page in both schemes, so the length of the scale is visible (WCAG 1.4.11). */
-	--itx-slider-track-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-slider-fill-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
-	--itx-slider-thumb-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	/* A recess darker than the page. Its edge is 3:1 against the page (WCAG 1.4.11). */
+	--itx-slider-track-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-950));
+	--itx-slider-track-border-width: var(--itx-border-width);
+	--itx-slider-track-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-slider-track-border-radius: var(--itx-radius-full);
+	--itx-slider-track-box-shadow: inset 0 1px 2px light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
+	--itx-slider-fill-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 
+	/* A light disc. Its edge is dark in the dark scheme, so it stays apart from the light fill. */
+	--itx-slider-thumb-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-200));
+	--itx-slider-thumb-border-width: var(--itx-border-width);
+	--itx-slider-thumb-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-950));
+	--itx-slider-thumb-filter: drop-shadow(0 1px 2px light-dark(oklch(0 0 0 / 0.3), oklch(0 0 0 / 0.8)));
+	--itx-slider-thumb-transform-active: scale(1.15);
+
+	--itx-slider-transition-duration: var(--itx-transition-duration);
+	--itx-slider-transition-timing-function: var(--itx-transition-timing-function);
 	--itx-slider-cursor: default;
 	--itx-slider-cursor-disabled: not-allowed;
 	--itx-slider-opacity-disabled: 0.5;
+}
+
+:where(input[type="range"][interop-slider][itx-size="sm"]) {
+	--itx-slider-target-size: var(--itx-space-6);
+	--itx-slider-thumb-size: var(--itx-space-4);
+	--itx-slider-track-block-size: var(--itx-space-1);
+}
+
+:where(input[type="range"][interop-slider][itx-size="lg"]) {
+	--itx-slider-target-size: var(--itx-space-10);
+	--itx-slider-thumb-size: var(--itx-space-7);
+	--itx-slider-track-block-size: var(--itx-space-2);
 }
