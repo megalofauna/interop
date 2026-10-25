@@ -1,0 +1,39 @@
+<div interop-tabs="segmented">
+	<div role="tablist" aria-label="Report">
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-summary"
+			aria-selected="true"
+		>
+			Summary
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-details"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Details
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-history"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			History
+		</button>
+	</div>
+	<section role="tabpanel" id="seg-summary">
+		<p>Revenue up 4 percent on last quarter.</p>
+	</section>
+	<section role="tabpanel" id="seg-details" hidden="until-found">
+		<p>Revenue by region and product line.</p>
+	</section>
+	<section role="tabpanel" id="seg-history" hidden="until-found">
+		<p>Every quarter since launch.</p>
+	</section>
+</div>

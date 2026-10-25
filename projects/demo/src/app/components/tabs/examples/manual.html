@@ -1,0 +1,32 @@
+<div interop-tabs id="reports">
+	<div role="tablist" aria-label="Reports">
+		<button type="button" role="tab" aria-controls="daily" aria-selected="true">
+			Daily
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="weekly"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Weekly
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="yearly"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Yearly
+		</button>
+	</div>
+	<section role="tabpanel" id="daily"><p>Daily report.</p></section>
+	<section role="tabpanel" id="weekly" hidden="until-found">
+		<p>Weekly report.</p>
+	</section>
+	<section role="tabpanel" id="yearly" hidden="until-found">
+		<p>Yearly report.</p>
+	</section>
+</div>

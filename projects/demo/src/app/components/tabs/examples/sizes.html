@@ -1,0 +1,50 @@
+<div interop-tabs itx-size="sm">
+	<div role="tablist" aria-label="Small">
+		<button
+			type="button"
+			role="tab"
+			aria-controls="sm-overview"
+			aria-selected="true"
+		>
+			Overview
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="sm-settings"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Settings
+		</button>
+	</div>
+	<section role="tabpanel" id="sm-overview"><p>Small tabs.</p></section>
+	<section role="tabpanel" id="sm-settings" hidden="until-found">
+		<p>Small settings.</p>
+	</section>
+</div>
+<div interop-tabs itx-size="lg">
+	<div role="tablist" aria-label="Large">
+		<button
+			type="button"
+			role="tab"
+			aria-controls="lg-overview"
+			aria-selected="true"
+		>
+			Overview
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="lg-settings"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Settings
+		</button>
+	</div>
+	<section role="tabpanel" id="lg-overview"><p>Large tabs.</p></section>
+	<section role="tabpanel" id="lg-settings" hidden="until-found">
+		<p>Large settings.</p>
+	</section>
+</div>

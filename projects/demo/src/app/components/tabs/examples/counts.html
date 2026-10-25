@@ -1,0 +1,25 @@
+<div interop-tabs>
+	<div role="tablist" aria-label="Mail">
+		<button type="button" role="tab" aria-controls="inbox" aria-selected="true">
+			<svg interop-icon name="tabler-check"></svg>
+			Inbox
+			<span interop-badge>
+				<span aria-hidden="true">3</span>
+				<span itx-visually-hidden>3 unread messages</span>
+			</span>
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="sent"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Sent
+		</button>
+	</div>
+	<section role="tabpanel" id="inbox"><p>Three unread messages.</p></section>
+	<section role="tabpanel" id="sent" hidden="until-found">
+		<p>Nothing sent today.</p>
+	</section>
+</div>

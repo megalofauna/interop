@@ -1,0 +1,34 @@
+<div interop-tabs>
+	<div role="tablist" aria-label="Station systems">
+		<button type="button" role="tab" aria-controls="nav" aria-selected="true">
+			Navigation
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="eng"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Engineering
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="life"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Life support
+		</button>
+	</div>
+	<section role="tabpanel" id="nav">
+		<p>Course plotted. Next waypoint in 42 minutes.</p>
+	</section>
+	<section role="tabpanel" id="eng" hidden="until-found">
+		<p>Reactor output steady at 98 percent.</p>
+	</section>
+	<section role="tabpanel" id="life" hidden="until-found">
+		<p>Oxygen and pressure nominal in every module.</p>
+	</section>
+</div>

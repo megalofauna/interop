@@ -1,0 +1,39 @@
+<div interop-tabs>
+	<div role="tablist" aria-label="Account" aria-orientation="vertical">
+		<button
+			type="button"
+			role="tab"
+			aria-controls="profile"
+			aria-selected="true"
+		>
+			Profile
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="security"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Security
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="billing"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Billing
+		</button>
+	</div>
+	<section role="tabpanel" id="profile">
+		<p>Name, photo and contact details.</p>
+	</section>
+	<section role="tabpanel" id="security" hidden="until-found">
+		<p>Password and two-step sign-in.</p>
+	</section>
+	<section role="tabpanel" id="billing" hidden="until-found">
+		<p>Plan and invoices.</p>
+	</section>
+</div>

@@ -1,6 +1,7 @@
 import {
 	Component,
 	ElementRef,
+	ViewEncapsulation,
 	afterRenderEffect,
 	booleanAttribute,
 	input,
@@ -60,6 +61,7 @@ import { InteropCodeBlock } from "interop/code-block";
 		}
 	`,
 	styleUrl: "./example.css",
+	encapsulation: ViewEncapsulation.None,
 })
 export class DemoExample {
 	readonly html = input.required<string>();
