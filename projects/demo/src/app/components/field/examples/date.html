@@ -1,0 +1,49 @@
+<form id="birthday" itx-flow>
+	<fieldset class="date" aria-describedby="dob-hint">
+		<legend>Date of birth</legend>
+		<p interop-hint id="dob-hint">For example, 27 3 2007</p>
+		<p interop-error hidden></p>
+		<div>
+			<div interop-field>
+				<label for="dob-day">Day</label>
+				<input
+					interop-input
+					id="dob-day"
+					name="dob-day"
+					inputmode="numeric"
+					autocomplete="bday-day"
+					pattern="[0-9]{1,2}"
+					size="2"
+					required
+				/>
+			</div>
+			<div interop-field>
+				<label for="dob-month">Month</label>
+				<input
+					interop-input
+					id="dob-month"
+					name="dob-month"
+					inputmode="numeric"
+					autocomplete="bday-month"
+					pattern="[0-9]{1,2}"
+					size="2"
+					required
+				/>
+			</div>
+			<div interop-field>
+				<label for="dob-year">Year</label>
+				<input
+					interop-input
+					id="dob-year"
+					name="dob-year"
+					inputmode="numeric"
+					autocomplete="bday-year"
+					pattern="[0-9]{4}"
+					size="4"
+					required
+				/>
+			</div>
+		</div>
+	</fieldset>
+	<button interop-button type="submit">Continue</button>
+</form>
