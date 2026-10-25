@@ -15,30 +15,8 @@
 	rely on color. <code>itx-size</code> on the fieldset makes them smaller or
 	larger.
 </p>
-@for (size of chipSizes; track size.value) {
-	<fieldset interop-checkbox-group="chips" [attr.itx-size]="size.value">
-		<legend>Topics ({{ size.label }})</legend>
-		<label interop-checkbox
-			><input type="checkbox" name="topic" value="design" checked />
-			Design</label
-		>
-		<label interop-checkbox
-			><input type="checkbox" name="topic" value="code" /> Code</label
-		>
-		<label interop-checkbox
-			><input type="checkbox" name="topic" value="research" checked />
-			Research</label
-		>
-		<label interop-checkbox
-			><input type="checkbox" name="topic" value="ops" disabled />
-			Operations</label
-		>
-		<label interop-checkbox
-			><input type="checkbox" name="topic" value="inclusive" /> Inclusive design
-			research and usability testing with assistive technology</label
-		>
-	</fieldset>
-}
+<demo-example [html]="examples.filter" layout="stack" />
+<demo-example [html]="examples.sizes" layout="stack" />
 
 <h2>One choice</h2>
 <p>
@@ -46,18 +24,4 @@
 	sizes to its text and wraps. Use it for many short options. For a short row of
 	equal options, use the segmented control.
 </p>
-<fieldset interop-radio-group="chips">
-	<legend>Shirt size</legend>
-	@for (size of sizes; track size) {
-		<label
-			><input
-				type="radio"
-				name="shirt"
-				[value]="size"
-				[checked]="size === 'M'"
-			/>
-			{{ size }}</label
-		>
-	}
-</fieldset>
-<figure interop-code-block language="html" [code]="examples.chips"></figure>
+<demo-example [html]="examples.choice" layout="stack" />

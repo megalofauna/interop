@@ -1,4 +1,4 @@
-/* The cards template stacks a card's direct children. What sits inside them is the page's to lay out. */
+/* The cards template stacks a card's direct children. Lay out what is inside them yourself. */
 .price,
 .summary {
 	display: block;
