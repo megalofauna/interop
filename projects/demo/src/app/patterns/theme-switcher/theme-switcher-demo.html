@@ -1,0 +1,67 @@
+<h1>Theme switcher <span interop-badge itx-color="info">Pattern</span></h1>
+<p class="aka">Also known as theme toggle, dark mode toggle, appearance.</p>
+<p class="built-from">
+	A pattern, built from a
+	<a routerLink="/patterns/segmented-control">segmented control</a>, with
+	<code>bindColorScheme()</code>.
+</p>
+<p>
+	Three options: Light, Dark and System. System is the default: the page follows
+	the operating system until the user chooses. A two-state toggle has no way
+	back to System, so one press stops the page following the system for good. The
+	group's name is "Theme" whatever is chosen, and changing it needs no
+	announcement: a screen reader says the radio button it lands on.
+</p>
+
+<h2>A theme switcher</h2>
+<p>
+	It is the same control as the one in this site's header, and the two stay in
+	step.
+</p>
+<fieldset interop-radio-group="segmented" itx-size="sm" interopColorScheme>
+	<legend itx-visually-hidden>Theme</legend>
+	<label><input type="radio" name="page-theme" value="light" /> Light</label>
+	<label><input type="radio" name="page-theme" value="dark" /> Dark</label>
+	<label><input type="radio" name="page-theme" value="system" /> System</label>
+</fieldset>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.html"
+></figure>
+<figure interop-code-block language="ts" [code]="examples.ts"></figure>
+
+<h2>How the page changes</h2>
+<p>
+	Every Interop color is a <code>light-dark()</code> pair, and
+	<code>interop.css</code> declares both schemes on the root, so System costs no
+	script. <code>bindColorScheme()</code> sets
+	<code>itx-color-scheme="light"</code> or <code>"dark"</code> on the root and
+	remembers it in local storage; System removes both. It follows a change made
+	by another switcher or in another tab.
+</p>
+<figure interop-code-block language="css" [code]="examples.css"></figure>
+<p>
+	Colors of your own follow the switcher only through
+	<code>light-dark()</code>. A <code>prefers-color-scheme</code> media query
+	reads the system and ignores the switcher.
+</p>
+
+<h2>No flash on load</h2>
+<p>
+	The helper runs after the page renders, so a page reloaded in the scheme the
+	user chose would first paint in the system's. Put this in the
+	<code>&lt;head&gt;</code>, before the stylesheets. The meta tag lets the
+	browser paint its own canvas in the right scheme before any CSS loads.
+</p>
+<figure interop-code-block language="html" [code]="examples.head"></figure>
+
+<h2>Two states</h2>
+<p>
+	If a design insists on two states, use a button with
+	<code>aria-pressed</code> and a name that does not change. Not a switch role,
+	which screen readers report unevenly, and not a sun or moon icon alone, which
+	can mean the current theme or the next one.
+</p>
+<figure interop-code-block language="html" [code]="examples.toggle"></figure>

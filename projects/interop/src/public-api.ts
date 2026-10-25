@@ -5,6 +5,7 @@
 export { announce, type AnnounceOptions } from './announce';
 export { auditInterop, watchInterop, watchInteropInDevMode, type AuditIssue } from './audit';
 export { bindCharacterCount, type CharacterCountOptions } from './bind-character-count';
+export { bindColorScheme } from './bind-color-scheme';
 export { bindDrawer } from './bind-drawer';
 export { bindFilter, type FilterOptions } from './bind-filter';
 export { bindPasswordToggle } from './bind-password-toggle';

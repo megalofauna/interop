@@ -2,9 +2,7 @@ import {
 	Component,
 	DestroyRef,
 	ElementRef,
-	effect,
 	inject,
-	signal,
 	viewChild,
 } from "@angular/core";
 import {
@@ -14,12 +12,11 @@ import {
 	RouterOutlet,
 } from "@angular/router";
 import { InteropBadge } from "interop/badge";
+import { InteropColorScheme } from "interop/color-scheme";
 import { InteropFilter } from "interop/filter";
 import { InteropDrawer } from "interop/popover";
 import { InteropShortcut } from "interop/shortcut";
 import { InteropToasts } from "interop/toast";
-
-const STORAGE_KEY = "demo-color-scheme";
 
 @Component({
 	selector: "demo-root",
@@ -28,6 +25,7 @@ const STORAGE_KEY = "demo-color-scheme";
 		RouterLink,
 		RouterLinkActive,
 		InteropBadge,
+		InteropColorScheme,
 		InteropDrawer,
 		InteropFilter,
 		InteropShortcut,
@@ -37,14 +35,6 @@ const STORAGE_KEY = "demo-color-scheme";
 	styleUrl: "./app.css",
 })
 export class App {
-	/** Starts from the last choice, then the system setting. */
-	protected readonly dark = signal(
-		(localStorage.getItem(STORAGE_KEY) ??
-			(matchMedia("(prefers-color-scheme: dark)").matches
-				? "dark"
-				: "light")) === "dark",
-	);
-
 	/** Every page with a title, for the Go to page search. A pattern's route marks it with `data.pattern`. */
 	protected readonly pageLinks = inject(Router)
 		.config.filter((route) => typeof route.title === "string")
@@ -68,11 +58,5 @@ export class App {
 		inject(DestroyRef).onDestroy(() =>
 			wide.removeEventListener("change", close),
 		);
-
-		effect(() => {
-			const scheme = this.dark() ? "dark" : "light";
-			document.documentElement.style.colorScheme = scheme;
-			localStorage.setItem(STORAGE_KEY, scheme);
-		});
 	}
 }

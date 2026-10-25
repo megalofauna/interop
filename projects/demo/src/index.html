@@ -5,6 +5,15 @@
 		<title>Demo</title>
 		<base href="/" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light dark" />
+		<!-- The remembered theme, before the first paint. bindColorScheme() keeps it. -->
+		<script>
+			try {
+				var s = localStorage.getItem("itx-color-scheme");
+				if (s === "light" || s === "dark")
+					document.documentElement.setAttribute("itx-color-scheme", s);
+			} catch (e) {}
+		</script>
 		<link rel="icon" type="image/x-icon" href="favicon.ico" />
 	</head>
 	<body>

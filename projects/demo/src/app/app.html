@@ -21,15 +21,12 @@
 		>
 			Search <kbd></kbd>
 		</button>
-		<button
-			interop-button
-			type="button"
-			itx-size="sm"
-			[attr.aria-pressed]="dark()"
-			(click)="dark.set(!dark())"
-		>
-			Dark mode
-		</button>
+		<fieldset interop-radio-group="segmented" itx-size="sm" interopColorScheme>
+			<legend itx-visually-hidden>Theme</legend>
+			<label><input type="radio" name="theme" value="light" /> Light</label>
+			<label><input type="radio" name="theme" value="dark" /> Dark</label>
+			<label><input type="radio" name="theme" value="system" /> System</label>
+		</fieldset>
 	</header>
 
 	<dialog
@@ -335,6 +332,14 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Split button</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/patterns/theme-switcher"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Theme switcher</a
 							>
 						</li>
 					</ul>

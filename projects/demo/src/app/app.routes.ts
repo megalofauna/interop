@@ -193,6 +193,15 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "patterns/theme-switcher",
+		title: "Theme switcher",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/theme-switcher/theme-switcher-demo").then(
+				(m) => m.ThemeSwitcherDemo,
+			),
+	},
+	{
 		path: "foundations/flow",
 		title: "Flow",
 		loadComponent: () =>

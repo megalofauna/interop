@@ -1,3 +1,20 @@
+/*
+ * The page's color scheme. Every Interop color is a light-dark() pair, so with both schemes declared
+ * the page follows the system. `itx-color-scheme` on the root picks one; bindColorScheme() sets it and
+ * remembers it. A page that never declared a scheme would resolve every pair to its light value.
+ */
+:where(:root) {
+	color-scheme: light dark;
+}
+
+:where(:root[itx-color-scheme="light"]) {
+	color-scheme: light;
+}
+
+:where(:root[itx-color-scheme="dark"]) {
+	color-scheme: dark;
+}
+
 :root {
 	--itx-neutral-50: oklch(0.985 0 0);
 	--itx-neutral-100: oklch(0.97 0 0);
