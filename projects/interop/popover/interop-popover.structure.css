@@ -62,7 +62,7 @@
 
 /*
  * A drawer: `interop-popover="drawer"` is a full-height panel at the inline start of the window, over
- * the page, with a backdrop. It slides in and, like every popover here, disappears at once. bindDrawer()
+ * the page, with a backdrop. It slides in, and slides out where the browser supports `overlay`. bindDrawer()
  * closes it when focus leaves it, so focus never lands on the page hidden behind it (WCAG 2.4.11).
  * A drawer can also show in the page's flow at wide sizes; see the app shell recipe.
  */
@@ -106,5 +106,23 @@
 @keyframes itx-popover-drawer-in {
 	from {
 		translate: var(--itx-popover-drawer-translate-from) 0;
+	}
+}
+
+/*
+ * It slides out too where the browser can keep a closing popover in the top layer, with its
+ * backdrop, until the slide ends (`overlay`). Elsewhere it closes at once: without `overlay` it would
+ * drop below the page and lose its backdrop mid-slide. Nothing takes its name from inside a drawer,
+ * so staying rendered while it slides costs no control its name.
+ */
+@supports (overlay: auto) {
+	:where([interop-popover~="drawer"]) {
+		translate: var(--itx-popover-drawer-translate-from) 0;
+		transition-property: translate, display, overlay;
+		transition-behavior: allow-discrete;
+	}
+
+	:where([interop-popover~="drawer"]:popover-open) {
+		translate: 0;
 	}
 }
