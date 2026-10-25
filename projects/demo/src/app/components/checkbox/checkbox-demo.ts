@@ -8,15 +8,15 @@ import {
 	signal,
 	viewChild,
 } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { bindSelectAll } from "interop";
-import { InteropBadge } from "interop/badge";
 
 type Topping = "cheese" | "olives" | "peppers";
 
 @Component({
 	selector: "demo-checkbox",
 	host: { "itx-flow": "" },
-	imports: [InteropBadge],
+	imports: [RouterLink],
 	templateUrl: "./checkbox-demo.html",
 	styleUrl: "./checkbox-demo.css",
 })
@@ -33,11 +33,6 @@ export class CheckboxDemo {
 		() => Object.values(this.toppings()).some(Boolean) && !this.all(),
 	);
 	protected readonly submitted = signal<string | null>(null);
-	protected readonly chipSizes = [
-		{ value: "sm", label: "small" },
-		{ value: null, label: "default" },
-		{ value: "lg", label: "large" },
-	];
 
 	private readonly helperParent =
 		viewChild.required<ElementRef<HTMLInputElement>>("helperParent");

@@ -1,0 +1,63 @@
+<h1>Chips <span interop-badge itx-color="info">Pattern</span></h1>
+<p class="aka">Also known as filter chips, choice chips, pills.</p>
+<p class="built-from">
+	A pattern: a template of the
+	<a routerLink="/components/checkbox">checkbox group</a> and the
+	<a routerLink="/components/radio-group">radio group</a>. A chip is a checkbox
+	or a radio button in its label, drawn as a pill. A value the user removes is a
+	<a routerLink="/components/tags">tag</a>, not a chip.
+</p>
+
+<h2>Several choices</h2>
+<p>
+	<code>interop-checkbox-group="chips"</code> draws each option as a pill:
+	filter chips. A checked chip fills and shows a check, so the state does not
+	rely on color. <code>itx-size</code> on the fieldset makes them smaller or
+	larger.
+</p>
+@for (size of chipSizes; track size.value) {
+	<fieldset interop-checkbox-group="chips" [attr.itx-size]="size.value">
+		<legend>Topics ({{ size.label }})</legend>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="design" checked />
+			Design</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="code" /> Code</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="research" checked />
+			Research</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="ops" disabled />
+			Operations</label
+		>
+		<label interop-checkbox
+			><input type="checkbox" name="topic" value="inclusive" /> Inclusive design
+			research and usability testing with assistive technology</label
+		>
+	</fieldset>
+}
+
+<h2>One choice</h2>
+<p>
+	<code>interop-radio-group="chips"</code> draws each option as a pill that
+	sizes to its text and wraps. Use it for many short options. For a short row of
+	equal options, use the segmented control.
+</p>
+<fieldset interop-radio-group="chips">
+	<legend>Shirt size</legend>
+	@for (size of sizes; track size) {
+		<label
+			><input
+				type="radio"
+				name="shirt"
+				[value]="size"
+				[checked]="size === 'M'"
+			/>
+			{{ size }}</label
+		>
+	}
+</fieldset>
+<figure interop-code-block language="html" [code]="examples.chips"></figure>

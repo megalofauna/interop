@@ -1,0 +1,68 @@
+<h1>Split button <span interop-badge itx-color="info">Pattern</span></h1>
+<p class="aka">Also known as combo button, button with menu.</p>
+<p class="built-from">
+	A pattern, built from a <a routerLink="/components/button">button</a>, an
+	attached <a routerLink="/components/group">group</a> and a
+	<a routerLink="/components/popover">popover</a>.
+</p>
+<p class="prose">
+	A split button is an action and, joined to it, a button that opens other
+	choices for the same action. It is two buttons in an attached
+	<a routerLink="/components/group">group</a>, and a popover. The browser opens
+	and closes the popover, says whether it is open, and returns focus to the
+	button on Escape. It needs no script.
+</p>
+<p class="prose">
+	Each half is a Tab stop with its own focus ring. Name the second button for
+	what it offers, such as "More save options". A screen reader hears two
+	buttons, so "Open menu", or a copy of the first button's name, says nothing
+	about how they relate. The dev audit warns about both.
+</p>
+<p class="prose">
+	Use one when one action is clearly the usual choice. Otherwise, show the
+	choices as separate buttons, or put them all behind one button: in testing,
+	most people press only the larger half.
+</p>
+<div role="group" interop-group="attached" aria-label="Save">
+	<button interop-button type="button" (click)="saveAs('Saved')">
+		<svg interop-icon name="tabler-device-floppy"></svg>
+		Save
+	</button>
+	<button
+		interop-button="icon"
+		type="button"
+		command="toggle-popover"
+		commandfor="save-more"
+		aria-label="More save options"
+	>
+		<svg interop-icon name="tabler-chevron-down"></svg>
+	</button>
+	<div interop-popover popover id="save-more">
+		<button
+			interop-button
+			type="button"
+			command="hide-popover"
+			commandfor="save-more"
+			(click)="saveAs('Saved as a draft')"
+		>
+			Save as draft
+		</button>
+		<button
+			interop-button
+			type="button"
+			command="hide-popover"
+			commandfor="save-more"
+			(click)="saveAs('Saved and closed')"
+		>
+			Save and close
+		</button>
+	</div>
+</div>
+
+<p class="prose">Result: {{ splitResult() || "(none)" }}</p>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="splitExample"
+></figure>

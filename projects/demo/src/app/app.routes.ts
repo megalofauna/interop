@@ -82,13 +82,8 @@ export const routes: Routes = [
 	},
 	{
 		path: "components/segmented-control",
-		title: "Segmented control",
-		// A pattern: a radio group template with its own page. Go to page badges it.
-		data: { pattern: true },
-		loadComponent: () =>
-			import("./components/segmented-control/segmented-control-demo").then(
-				(m) => m.SegmentedControlDemo,
-			),
+		pathMatch: "full",
+		redirectTo: "patterns/segmented-control",
 	},
 	{
 		path: "components/select",
@@ -155,6 +150,47 @@ export const routes: Routes = [
 		title: "Tree",
 		loadComponent: () =>
 			import("./components/tree/tree-demo").then((m) => m.TreeDemo),
+	},
+	{
+		path: "patterns/cards",
+		title: "Cards",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/cards/cards-demo").then((m) => m.CardsDemo),
+	},
+	{
+		path: "patterns/chips",
+		title: "Chips",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/chips/chips-demo").then((m) => m.ChipsDemo),
+	},
+	{
+		path: "patterns/command-palette",
+		title: "Command palette",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/command-palette/command-palette-demo").then(
+				(m) => m.CommandPaletteDemo,
+			),
+	},
+	{
+		path: "patterns/segmented-control",
+		title: "Segmented control",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/segmented-control/segmented-control-demo").then(
+				(m) => m.SegmentedControlDemo,
+			),
+	},
+	{
+		path: "patterns/split-button",
+		title: "Split button",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/split-button/split-button-demo").then(
+				(m) => m.SplitButtonDemo,
+			),
 	},
 	{
 		path: "foundations/app-shell",

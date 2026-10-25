@@ -1,0 +1,67 @@
+<h1>Command palette <span interop-badge itx-color="info">Pattern</span></h1>
+<p class="aka">Also known as go to page, quick open, ⌘K search.</p>
+<p class="built-from">
+	A pattern, built from a <a routerLink="/components/dialog">dialog</a> and a
+	<a routerLink="/components/field">field</a>, with
+	<code>bindFilter()</code> and <code>bindShortcut()</code>.
+</p>
+<p>
+	<code>interop-dialog="palette"</code> is a search field over a list of links,
+	in a dialog near the top of the window. Only the list scrolls, and the key
+	hints sit below it. Typing hides the links that do not match, and the count is
+	announced when typing pauses. Arrow Down moves to the first link and Enter
+	follows it. The first Escape clears the field and the second closes the
+	dialog. Each result is a link, so it opens in a new tab and works with any
+	screen reader, on a phone too.
+</p>
+<p>
+	<code>InteropShortcut</code> gives the button a key, and the key clicks the
+	button. It writes the platform's key into the empty
+	<code>&lt;kbd&gt;</code> and sets <code>aria-keyshortcuts</code>. The Search
+	button at the top of this site is this example with ⌘K or Ctrl K.
+</p>
+<button
+	interop-button
+	type="button"
+	commandfor="find-page"
+	command="show-modal"
+>
+	Go to page…
+</button>
+<dialog
+	#findPage
+	id="find-page"
+	interop-dialog="palette"
+	closedby="any"
+	aria-labelledby="find-page-label"
+>
+	<search interop-field>
+		<!--<label id="find-page-label" for="find-page-query">Go to page</label>-->
+		<input
+			interop-input
+			id="find-page-query"
+			type="search"
+			autofocus
+			autocomplete="off"
+			spellcheck="false"
+			[interopFilter]="findPageList"
+			[filterEmpty]="findPageNone"
+		/>
+	</search>
+	<nav aria-label="Pages">
+		<ul #findPageList role="list" (click)="findPage.close()">
+			@for (page of pages; track page.path) {
+				<li>
+					<a [routerLink]="page.path">{{ page.title }}</a>
+				</li>
+			}
+		</ul>
+	</nav>
+	<p #findPageNone hidden>No pages match.</p>
+	<footer>
+		<span><kbd>↓</kbd> <kbd>↑</kbd> Move</span>
+		<span><kbd>Enter</kbd> Open</span>
+		<span><kbd>Esc</kbd> Clear, then close</span>
+	</footer>
+</dialog>
+<figure interop-code-block language="html" [code]="examples.goTo"></figure>

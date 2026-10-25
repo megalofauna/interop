@@ -10,17 +10,3 @@
 	color: CanvasText;
 	background-color: light-dark(Canvas, var(--itx-neutral-900));
 }
-
-/*
- * A pattern: a name people look for, built from another component, shown on that component's page.
- * Its section carries the info blue of the Pattern badge in the nav and in Go to page, so a Pattern
- * link lands on a section marked the same way.
- */
-section.pattern {
-	padding: var(--itx-space-6);
-	background-color: color-mix(in oklch, var(--itx-role-background-info) 5%, transparent);
-	border: var(--itx-border-width) solid color-mix(in oklch, var(--itx-role-background-info) 45%, transparent);
-	border-radius: var(--itx-radius-base);
-	/* Room above its edge when a link scrolls to it. */
-	scroll-margin-block-start: var(--itx-space-4);
-}

@@ -59,48 +59,15 @@ export class App {
 		{ value: "still", label: "still" },
 	];
 
-	/**
-	 * Every page with a title, for the Go to page search, and the patterns: a name people look for
-	 * that is built from another component, shown as an example on that component's page.
-	 */
-	protected readonly pageLinks: {
-		title: string;
-		path: string;
-		fragment?: string;
-		pattern?: boolean;
-	}[] = [
-		...inject(Router)
-			.config.filter((route) => typeof route.title === "string")
-			.map((route) => ({
-				path: route.path ?? "",
-				title: route.title as string,
-				pattern: route.data?.["pattern"] === true,
-			})),
-		{
-			title: "Chips",
-			path: "components/checkbox",
-			fragment: "chips",
-			pattern: true,
-		},
-		{
-			title: "Command palette",
-			path: "components/dialog",
-			fragment: "command-palette",
-			pattern: true,
-		},
-		{
-			title: "Radio cards",
-			path: "components/radio-group",
-			fragment: "cards",
-			pattern: true,
-		},
-		{
-			title: "Split button",
-			path: "components/button",
-			fragment: "split-button",
-			pattern: true,
-		},
-	].sort((a, b) => a.title.localeCompare(b.title));
+	/** Every page with a title, for the Go to page search. A pattern's route marks it with `data.pattern`. */
+	protected readonly pageLinks = inject(Router)
+		.config.filter((route) => typeof route.title === "string")
+		.map((route) => ({
+			path: route.path ?? "",
+			title: route.title as string,
+			pattern: route.data?.["pattern"] === true,
+		}))
+		.sort((a, b) => a.title.localeCompare(b.title));
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 

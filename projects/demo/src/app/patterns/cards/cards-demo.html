@@ -1,0 +1,95 @@
+<h1>Cards <span interop-badge itx-color="info">Pattern</span></h1>
+<p class="aka">Also known as selectable cards, card selection, tile picker.</p>
+<p class="built-from">
+	A pattern: a template of the
+	<a routerLink="/components/radio-group">radio group</a> and the
+	<a routerLink="/components/checkbox">checkbox group</a>. Under it each group
+	is the same group, with the same keys, checked mark, focus ring, disabled
+	state and audit rules.
+</p>
+
+<h2>One choice</h2>
+<p>
+	Each option is a card. The input names the option with
+	<code>aria-labelledby</code> pointing at its title and describes it with
+	<code>aria-describedby</code>, so a screen reader reads "Pro, radio button, 2
+	of 3" and then the details, not the whole card on every arrow press.
+</p>
+<fieldset interop-radio-group="cards">
+	<legend>Plan</legend>
+	@for (plan of plans; track plan.id) {
+		<label>
+			<input
+				type="radio"
+				name="plan"
+				[value]="plan.id"
+				[checked]="plan.id === 'pro'"
+				[attr.aria-labelledby]="'plan-' + plan.id"
+				[attr.aria-describedby]="'plan-' + plan.id + '-details'"
+			/>
+			<strong [id]="'plan-' + plan.id">{{ plan.name }}</strong>
+			<span [id]="'plan-' + plan.id + '-details'">
+				<span class="price">{{ plan.price }}</span>
+				<span class="summary">{{ plan.summary }}</span>
+				@if (plan.popular) {
+					<span interop-badge itx-color="info">Most popular</span>
+				}
+			</span>
+		</label>
+	}
+</fieldset>
+
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="examples.cards"
+></figure>
+<figure interop-code-block language="css" [code]="examples.cardsCss"></figure>
+
+<h2>Several choices</h2>
+<p>
+	<code>interop-checkbox-group="cards"</code> is the same card template as the
+	radio group's, for choosing several options. See
+	<a routerLink="/components/radio-group" fragment="template-contract"
+		>what any template can and cannot do</a
+	>.
+</p>
+<fieldset interop-checkbox-group="cards">
+	<legend>Add-ons</legend>
+	<label interop-checkbox>
+		<input
+			type="checkbox"
+			name="addon"
+			value="backup"
+			checked
+			aria-labelledby="addon-backup"
+			aria-describedby="addon-backup-details"
+		/>
+		<strong id="addon-backup">Backups</strong>
+		<span id="addon-backup-details">$5 a month. Hourly, kept for a week.</span>
+	</label>
+	<label interop-checkbox>
+		<input
+			type="checkbox"
+			name="addon"
+			value="domain"
+			aria-labelledby="addon-domain"
+			aria-describedby="addon-domain-details"
+		/>
+		<strong id="addon-domain">Custom domain</strong>
+		<span id="addon-domain-details">$2 a month. Your own address.</span>
+	</label>
+	<label interop-checkbox>
+		<input
+			type="checkbox"
+			name="addon"
+			value="sso"
+			disabled
+			aria-labelledby="addon-sso"
+			aria-describedby="addon-sso-details"
+		/>
+		<strong id="addon-sso">Single sign-on</strong>
+		<span id="addon-sso-details">Team plan only.</span>
+	</label>
+</fieldset>
