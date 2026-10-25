@@ -1,0 +1,29 @@
+<div interop-tabs="segmented icon" itx-size="sm">
+	<div role="tablist" aria-label="Layout">
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-list"
+			aria-selected="true"
+		>
+			<svg interop-icon name="tabler-minus"></svg>
+			<span itx-visually-hidden>List</span>
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="seg-grid"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			<svg interop-icon name="tabler-plus"></svg>
+			<span itx-visually-hidden>Grid</span>
+		</button>
+	</div>
+	<section role="tabpanel" id="seg-list">
+		<p>A small segmented tab list with icons.</p>
+	</section>
+	<section role="tabpanel" id="seg-grid" hidden="until-found">
+		<p>The second section.</p>
+	</section>
+</div>

@@ -1,0 +1,8 @@
+/* The hint stacks under the name in the list, and the closed select shows only the name. */
+select[interop-select] .hint {
+	font-size: var(--itx-font-size-p-sm);
+}
+
+selectedcontent .hint {
+	display: none;
+}

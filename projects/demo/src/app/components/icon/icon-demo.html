@@ -1,62 +1,55 @@
 <h1>Icon</h1>
-
-<h2>Registered icons</h2>
 <p>
+	An icon is an <code>&lt;svg interop-icon&gt;</code> named after a registered
+	icon. In Angular the <code>InteropIcon</code> component draws it; elsewhere,
+	<code>drawIcons(root)</code> from <code>interop</code> draws every icon in
+	<code>root</code>. Register the icons once, with <code>registerIcons()</code>.
+</p>
+
+<h2>Named icons</h2>
+<demo-example [html]="examples.named" [ts]="namedTs" />
+<p>Interop ships these Tabler icons. Register your own the same way.</p>
+<p class="gallery">
 	@for (name of names; track name) {
-		<svg interop-icon [name]="name"></svg>
-	}
-</p>
-
-<h2>Sized by the text around it</h2>
-<p class="column">
-	<small>Small text <svg interop-icon name="tabler-check"></svg></small>
-	<span>Body text <svg interop-icon name="tabler-check"></svg></span>
-	<span class="large"
-		>Large text <svg interop-icon name="tabler-check"></svg
-	></span>
-</p>
-
-<h2>Size scale</h2>
-<p>
-	<code>itx-size</code> picks a step: xs 12, sm 16, md 20, lg 24 and xl 32px.
-	Without it an icon is the size of its text. A button sets its icons to 16, 20
-	or 24px by its own size, and <code>--itx-icon-size</code> on any element sets
-	every icon inside it.
-</p>
-<p class="scale">
-	@for (step of steps; track step) {
 		<span>
-			<svg interop-icon name="tabler-check" [attr.itx-size]="step"></svg>
-			<code>{{ step }}</code>
+			<svg interop-icon [name]="name"></svg>
+			<code>{{ name }}</code>
 		</span>
 	}
 </p>
 
+<h2>Sized by the text around it</h2>
+<p>Without a size, an icon is as tall as the text around it.</p>
+<demo-example
+	[html]="examples.textSize"
+	[css]="examples.textSizeCss"
+	layout="stack"
+/>
+
+<h2>Size scale</h2>
+<p>
+	<code>itx-size</code> picks a step: xs 12, sm 16, md 20, lg 24 and xl 32px. A
+	button sets its icons to 16, 20 or 24px by its own size, and
+	<code>--itx-icon-size</code> on any element sets every icon inside it.
+</p>
+<demo-example [html]="examples.scale" />
+
 <h2>Fixed size</h2>
 <p><code>size</code> in pixels fixes an icon over everything else.</p>
-<p class="column">
-	<small
-		>Small text <svg interop-icon name="tabler-check" size="24"></svg
-	></small>
-	<span class="large"
-		>Large text <svg interop-icon name="tabler-check" size="24"></svg
-	></span>
-</p>
+<demo-example
+	[html]="examples.fixed"
+	[css]="examples.textSizeCss"
+	layout="stack"
+/>
 
 <h2>Labeled</h2>
 <p>
-	<svg interop-icon name="tabler-check" size="24" aria-label="Done"></svg>
+	An icon is hidden from assistive technology unless it has
+	<code>aria-label</code> or <code>aria-labelledby</code>, which make it an
+	image.
 </p>
+<demo-example [html]="examples.labeled" />
 
 <h2>Your own SVG</h2>
-<p>
-	<svg
-		interop-icon
-		viewBox="0 0 24 24"
-		size="24"
-		fill="none"
-		stroke="currentColor"
-	>
-		<path d="M12 3l9 18H3z" />
-	</svg>
-</p>
+<p>Without <code>name</code>, an icon draws its own children.</p>
+<demo-example [html]="examples.own" />

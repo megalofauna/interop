@@ -21,35 +21,8 @@
 	<code>returnValue</code>. Escape leaves it empty. Focus starts on the least
 	destructive button.
 </p>
-<button interop-button type="button" commandfor="delete" command="show-modal">
-	Delete file…
-</button>
+<demo-example [html]="examples.confirm" [bind]="bindConfirm" />
 <p>Result: {{ result() || "(none)" }}</p>
-<dialog
-	id="delete"
-	interop-dialog
-	aria-labelledby="delete-title"
-	(close)="
-		result.set($any($event.target).returnValue || 'closed without a choice')
-	"
->
-	<h2 id="delete-title">Delete "notes.txt"?</h2>
-	<p>The file moves to the trash for 30 days.</p>
-	<form method="dialog">
-		<footer>
-			<button interop-button type="submit" value="cancel" autofocus>
-				Cancel
-			</button>
-			<button interop-button type="submit" value="delete">Delete</button>
-		</footer>
-	</form>
-</dialog>
-<figure
-	interop-code-block
-	language="html"
-	caption="Angular template"
-	[code]="examples.confirm"
-></figure>
 
 <h2>A close button</h2>
 <p>
@@ -61,6 +34,7 @@
 	click on the close button is refused every time. Put <code>autofocus</code> on
 	the first field, or the close button takes focus on opening.
 </p>
+<!-- example: rename -->
 <button
 	interop-button
 	type="button"
@@ -113,13 +87,19 @@
 		</footer>
 	</form>
 </dialog>
+<!-- /example -->
 <figure
 	interop-code-block
 	language="html"
 	caption="Angular template"
-	[code]="examples.form"
+	[code]="renameCode"
 ></figure>
-<figure interop-code-block language="ts" [code]="examples.formTs"></figure>
+<figure
+	interop-code-block
+	language="ts"
+	caption="TS"
+	[code]="examples.formTs"
+></figure>
 
 <h2>Close on a click outside</h2>
 <p>
@@ -127,45 +107,7 @@
 	it where nothing is lost: never for a form or an alert. Safari does not
 	support it yet, and there the dialog closes with Escape and its buttons.
 </p>
-<button
-	interop-button
-	type="button"
-	commandfor="shortcuts"
-	command="show-modal"
->
-	Keyboard shortcuts
-</button>
-<dialog
-	id="shortcuts"
-	interop-dialog
-	closedby="any"
-	aria-labelledby="shortcuts-title"
->
-	<header>
-		<h2 id="shortcuts-title">Keyboard shortcuts</h2>
-		<button
-			interop-button="icon"
-			itx-size="sm"
-			type="button"
-			commandfor="shortcuts"
-			command="close"
-		>
-			<span itx-visually-hidden>Close</span>
-			<svg interop-icon name="tabler-x"></svg>
-		</button>
-	</header>
-	<dl>
-		<dt><kbd>/</kbd></dt>
-		<dd>Search</dd>
-		<dt><kbd>?</kbd></dt>
-		<dd>Show this list</dd>
-	</dl>
-</dialog>
-<figure
-	interop-code-block
-	language="html"
-	[code]="examples.lightDismiss"
-></figure>
+<demo-example [html]="examples.lightDismiss" />
 
 <h2>Alert dialog</h2>
 <p>
@@ -174,31 +116,7 @@
 	message, so it is read with the title. <code>closedby="none"</code> turns off
 	Escape and clicks outside, so only a button closes it.
 </p>
-<button interop-button type="button" commandfor="timeout" command="show-modal">
-	Show the session warning
-</button>
-<dialog
-	id="timeout"
-	interop-dialog
-	role="alertdialog"
-	closedby="none"
-	aria-labelledby="timeout-title"
-	aria-describedby="timeout-message"
->
-	<h2 id="timeout-title">Your session is about to end</h2>
-	<p id="timeout-message">
-		You will be signed out in 2 minutes. Unsaved work will be lost.
-	</p>
-	<form method="dialog">
-		<footer>
-			<button interop-button type="submit" value="sign-out">Sign out</button>
-			<button interop-button type="submit" value="stay" autofocus>
-				Stay signed in
-			</button>
-		</footer>
-	</form>
-</dialog>
-<figure interop-code-block language="html" [code]="examples.alert"></figure>
+<demo-example [html]="examples.alert" />
 
 <h2>Long content</h2>
 <p>
@@ -208,42 +126,14 @@
 	a screen reader starts at the beginning and the arrow keys scroll. Chrome
 	ignores <code>autofocus</code> on the dialog itself.
 </p>
-<button interop-button type="button" commandfor="terms" command="show-modal">
-	Read the terms
-</button>
-<dialog id="terms" interop-dialog aria-labelledby="terms-title">
-	<header>
-		<h2 id="terms-title" tabindex="-1" autofocus>Terms of service</h2>
-		<button
-			interop-button="icon"
-			itx-size="sm"
-			type="button"
-			commandfor="terms"
-			command="close"
-		>
-			<span itx-visually-hidden>Close</span>
-			<svg interop-icon name="tabler-x"></svg>
-		</button>
-	</header>
-	@for (n of [1, 2, 3, 4, 5, 6, 7, 8]; track n) {
-		<p>
-			Section {{ n }}. These terms govern your use of the service. They describe
-			what you may do, what we will do, and what happens when either of us does
-			not. Read them before you continue.
-		</p>
-	}
-	<form method="dialog">
-		<footer>
-			<button interop-button type="submit" value="accept">Accept</button>
-		</footer>
-	</form>
-</dialog>
+<demo-example [html]="examples.long" />
 
 <h2>Opened from code</h2>
 <p>
 	When no button opens the dialog, such as after a task finishes, call
 	<code>showModal()</code>. Focus then returns to whatever had it before.
 </p>
+<!-- example: from-code -->
 <button interop-button type="button" (click)="export()">
 	Export (opens a dialog when done)
 </button>
@@ -254,7 +144,19 @@
 		<footer><button interop-button type="submit" autofocus>OK</button></footer>
 	</form>
 </dialog>
-<figure interop-code-block language="ts" [code]="examples.fromCode"></figure>
+<!-- /example -->
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="fromCodeCode"
+></figure>
+<figure
+	interop-code-block
+	language="ts"
+	caption="TS"
+	[code]="examples.fromCode"
+></figure>
 
 <h2>Patterns</h2>
 <p>

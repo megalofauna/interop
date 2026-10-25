@@ -1,0 +1,14 @@
+/* Minimum and maximum in a row, under the legend. */
+.pair {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-4);
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+.pair > legend {
+	padding: 0;
+	margin-block-end: var(--itx-space-1);
+}

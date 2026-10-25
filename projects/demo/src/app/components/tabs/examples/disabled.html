@@ -1,0 +1,26 @@
+<div interop-tabs>
+	<div role="tablist" aria-label="Release">
+		<button type="button" role="tab" aria-controls="draft" aria-selected="true">
+			Draft
+		</button>
+		<button type="button" role="tab" aria-controls="review" disabled>
+			Review
+		</button>
+		<button
+			type="button"
+			role="tab"
+			aria-controls="live"
+			aria-selected="false"
+			tabindex="-1"
+		>
+			Live
+		</button>
+	</div>
+	<section role="tabpanel" id="draft">
+		<p>The arrow keys skip the disabled tab.</p>
+	</section>
+	<section role="tabpanel" id="review" hidden="until-found">
+		<p>Review.</p>
+	</section>
+	<section role="tabpanel" id="live" hidden="until-found"><p>Live.</p></section>
+</div>

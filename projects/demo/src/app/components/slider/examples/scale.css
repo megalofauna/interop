@@ -1,0 +1,12 @@
+/* The slider and its readout in one line, as wide as the field. */
+.scale {
+	align-self: stretch;
+	display: flex;
+	align-items: center;
+	gap: var(--itx-space-3);
+}
+
+.scale > span {
+	min-inline-size: 4ch;
+	font-variant-numeric: tabular-nums;
+}

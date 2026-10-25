@@ -1,59 +1,30 @@
 import { Component } from "@angular/core";
-import { InteropCodeBlock } from "interop/code-block";
-import { InteropScrollArea } from "interop/scroll-area";
-import { examples } from "./table-examples";
+import { bindScrollArea } from "interop";
+import { each } from "../../example/bind-each";
+import { DemoExample } from "../../example/example";
+import data from "./examples/data.html";
+import empty from "./examples/empty.html";
+import reference from "./examples/reference.html";
+import sizes from "./examples/sizes.html";
+import stackedCss from "./examples/stacked.css";
+import stacked from "./examples/stacked.html";
 
 @Component({
 	selector: "demo-table",
 	host: { "itx-flow": "" },
-	imports: [InteropCodeBlock, InteropScrollArea],
+	imports: [DemoExample],
 	templateUrl: "./table-demo.html",
-	styleUrls: ["./table-demo.css", "./table-stacked.css"],
 })
 export class TableDemo {
-	protected readonly examples = examples;
-	protected readonly crew = [
-		{ name: "Ada Okafor", role: "Pilot", station: "Bridge", hours: "1,204" },
-		{
-			name: "Bo Lindqvist",
-			role: "Engineer",
-			station: "Engine room",
-			hours: "986",
-		},
-		{ name: "Chen Wei", role: "Medic", station: "Med bay", hours: "1,532" },
-	];
-	protected readonly cargo = [
-		{
-			item: "Water",
-			category: "Life support",
-			deck: "C",
-			mass: "12,000",
-			volume: "12.0",
-			value: "3,600",
-		},
-		{
-			item: "Oxygen canisters",
-			category: "Life support",
-			deck: "C",
-			mass: "2,450",
-			volume: "8.4",
-			value: "18,900",
-		},
-		{
-			item: "Hull plating",
-			category: "Spares",
-			deck: "D",
-			mass: "6,780",
-			volume: "4.1",
-			value: "54,200",
-		},
-		{
-			item: "Seed vault",
-			category: "Science",
-			deck: "B",
-			mass: "310",
-			volume: "1.2",
-			value: "220,000",
-		},
-	];
+	protected readonly examples = {
+		reference,
+		data,
+		empty,
+		sizes,
+		stacked,
+		stackedCss,
+	};
+	protected readonly bind = each("[interop-scroll-area]", (area) =>
+		bindScrollArea(area),
+	);
 }

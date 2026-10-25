@@ -19,21 +19,7 @@
 </p>
 
 <h2>A field</h2>
-<div interop-field>
-	<label for="email">Email address</label>
-	<p interop-hint id="email-hint">We send the receipt here</p>
-	<p interop-error hidden></p>
-	<input
-		interop-input
-		id="email"
-		type="email"
-		name="email"
-		autocomplete="email"
-		spellcheck="false"
-		aria-describedby="email-hint"
-	/>
-</div>
-<figure interop-code-block language="html" [code]="examples.basic"></figure>
+<demo-example [html]="examples.basic" layout="stack" />
 
 <h2>Validation</h2>
 <p>
@@ -55,13 +41,11 @@
 		to its field.
 	</li>
 </ul>
+<!-- example: validation -->
 <div #summary interop-error-summary hidden>
 	<h2>There is a problem</h2>
 	<ul></ul>
 </div>
-@if (sent()) {
-	<p role="status">Sent. Thank you.</p>
-}
 <form
 	interop-form
 	[summary]="summary"
@@ -112,13 +96,22 @@
 		<button interop-button type="reset" (click)="sent.set(false)">Clear</button>
 	</div>
 </form>
+<!-- /example -->
+@if (sent()) {
+	<p role="status">Sent. Thank you.</p>
+}
 <figure
 	interop-code-block
 	language="html"
 	caption="Angular template"
-	[code]="examples.form"
+	[code]="validationCode"
 ></figure>
-<figure interop-code-block language="ts" [code]="examples.formTs"></figure>
+<figure
+	interop-code-block
+	language="ts"
+	caption="TS"
+	[code]="examples.formTs"
+></figure>
 
 <h2>A message from elsewhere</h2>
 <p>
@@ -127,6 +120,7 @@
 	<code>[interopCustomValidity]</code> does that from an Angular value, and the
 	error follows it. Type "admin", then move on.
 </p>
+<!-- example: custom -->
 <form interop-form (submit)="$event.preventDefault()">
 	<div interop-field>
 		<label for="username">Username</label>
@@ -145,7 +139,13 @@
 		/>
 	</div>
 </form>
-<figure interop-code-block language="html" [code]="examples.custom"></figure>
+<!-- /example -->
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="customCode"
+></figure>
 
 <h2>Units</h2>
 <p>
@@ -153,34 +153,11 @@
 	hide the unit from screen readers: the input does not announce it.
 	<code>size</code> sets the field's width to the expected length.
 </p>
-<div interop-field>
-	<label for="cost">Cost, in pounds</label>
-	<div>
-		<span interop-unit aria-hidden="true">£</span
-		><input interop-input id="cost" name="cost" inputmode="decimal" size="10" />
-	</div>
-</div>
-<div interop-field>
-	<label for="weight">Weight, in kilograms</label>
-	<div>
-		<input
-			interop-input
-			id="weight"
-			name="weight"
-			inputmode="decimal"
-			size="6"
-		/><span interop-unit aria-hidden="true">kg</span>
-	</div>
-</div>
-<figure interop-code-block language="html" [code]="examples.units"></figure>
+<demo-example [html]="examples.units" layout="stack" />
 
 <h2>Multiline</h2>
 <p>A textarea starts at three lines and grows with its text.</p>
-<div interop-field>
-	<label for="notes">Delivery notes (optional)</label>
-	<textarea interop-input id="notes" name="notes"></textarea>
-</div>
-<figure interop-code-block language="html" [code]="examples.textarea"></figure>
+<demo-example [html]="examples.textarea" layout="stack" />
 
 <h2>Password</h2>
 <p>
@@ -191,34 +168,12 @@
 	<code>hidden</code> until script runs, and the password is hidden again when
 	the form is submitted, so the browser does not save it as plain text.
 </p>
-<form (submit)="$event.preventDefault()">
-	<div interop-field>
-		<label for="password">Password</label>
-		<div>
-			<input
-				interop-input
-				interop-password-toggle
-				id="password"
-				type="password"
-				name="password"
-				autocomplete="current-password"
-				autocapitalize="off"
-				spellcheck="false"
-			/>
-			<button
-				interop-button
-				type="button"
-				commandfor="password"
-				command="--toggle-password"
-				aria-pressed="false"
-				hidden
-			>
-				Show password
-			</button>
-		</div>
-	</div>
-</form>
-<figure interop-code-block language="html" [code]="examples.password"></figure>
+<demo-example
+	[html]="examples.password"
+	[bind]="bindPassword"
+	[ts]="passwordTs"
+	layout="stack"
+/>
 
 <h2>Character count</h2>
 <p>
@@ -226,6 +181,7 @@
 	hears it once typing pauses. Going over the limit is allowed: the count says
 	by how much, and the field is invalid until it is shortened.
 </p>
+<!-- example: count -->
 <form interop-form (submit)="$event.preventDefault()">
 	<div interop-field>
 		<label for="summary-text">Summary</label>
@@ -244,78 +200,33 @@
 	</div>
 	<div class="row"><button interop-button type="submit">Save</button></div>
 </form>
-<figure interop-code-block language="html" [code]="examples.count"></figure>
+<!-- /example -->
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="countCode"
+></figure>
 
 <h2>A date people know</h2>
 <p>
 	Three text fields, not a date picker: people know their date of birth and type
 	it faster than they find it in a calendar. One error speaks for all three.
 </p>
-<form interop-form (submit)="$event.preventDefault()">
-	<fieldset class="date" aria-describedby="dob-hint">
-		<legend>Date of birth</legend>
-		<p interop-hint id="dob-hint">For example, 27 3 2007</p>
-		<p interop-error hidden></p>
-		<div>
-			<div interop-field>
-				<label for="dob-day">Day</label>
-				<input
-					interop-input
-					id="dob-day"
-					name="dob-day"
-					inputmode="numeric"
-					autocomplete="bday-day"
-					pattern="[0-9]{1,2}"
-					size="2"
-					required
-				/>
-			</div>
-			<div interop-field>
-				<label for="dob-month">Month</label>
-				<input
-					interop-input
-					id="dob-month"
-					name="dob-month"
-					inputmode="numeric"
-					autocomplete="bday-month"
-					pattern="[0-9]{1,2}"
-					size="2"
-					required
-				/>
-			</div>
-			<div interop-field>
-				<label for="dob-year">Year</label>
-				<input
-					interop-input
-					id="dob-year"
-					name="dob-year"
-					inputmode="numeric"
-					autocomplete="bday-year"
-					pattern="[0-9]{4}"
-					size="4"
-					required
-				/>
-			</div>
-		</div>
-	</fieldset>
-	<div class="row"><button interop-button type="submit">Continue</button></div>
-</form>
-<figure interop-code-block language="html" [code]="examples.date"></figure>
+<demo-example
+	[html]="examples.date"
+	[css]="examples.dateCss"
+	[bind]="bindDate"
+	[ts]="dateTs"
+	layout="stack"
+/>
 
 <h2>Sizes</h2>
 <p>
 	<code>itx-size</code> on the field sizes the control and its units. The
 	heights match the button's.
 </p>
-<div class="stack">
-	@for (size of sizes; track size.label) {
-		<div interop-field [attr.itx-size]="size.value">
-			<label [attr.for]="'size-' + size.label">{{ size.label }}</label>
-			<input interop-input [id]="'size-' + size.label" />
-		</div>
-	}
-</div>
-<figure interop-code-block language="html" [code]="examples.sizes"></figure>
+<demo-example [html]="examples.sizes" layout="stack" />
 
 <h2>Read-only and disabled</h2>
 <p>
@@ -323,23 +234,7 @@
 	submits. A disabled one can do none of these, so prefer read-only for a value
 	the user should see.
 </p>
-<div class="stack">
-	<div interop-field>
-		<label for="reference">Reference</label>
-		<input
-			interop-input
-			id="reference"
-			name="reference"
-			value="AB-1234"
-			readonly
-			size="10"
-		/>
-	</div>
-	<div interop-field>
-		<label for="disabled">Disabled</label>
-		<input interop-input id="disabled" value="Not available" disabled />
-	</div>
-</div>
+<demo-example [html]="examples.readOnly" layout="stack" />
 
 <h2 id="which-attributes">Which attributes</h2>
 <div interop-scroll-area aria-labelledby="which-attributes">
@@ -353,7 +248,9 @@
 		<tbody>
 			<tr>
 				<td>Email address</td>
-				<td><code>type="email" autocomplete="email" spellcheck="false"</code></td>
+				<td>
+					<code>type="email" autocomplete="email" spellcheck="false"</code>
+				</td>
 			</tr>
 			<tr>
 				<td>Phone number</td>
@@ -388,7 +285,8 @@
 			<tr>
 				<td>A code sent by text message</td>
 				<td>
-					<code>autocomplete="one-time-code" inputmode="numeric"</code>, one field
+					<code>autocomplete="one-time-code" inputmode="numeric"</code>, one
+					field
 				</td>
 			</tr>
 		</tbody>

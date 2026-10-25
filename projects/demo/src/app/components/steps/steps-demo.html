@@ -13,21 +13,7 @@
 </p>
 
 <h2>Step indicator</h2>
-<ol interop-steps role="list" aria-label="Application progress">
-	<li>
-		<a href="#multi-step-form">Your details</a>
-		<span itx-visually-hidden>completed</span>
-	</li>
-	<li>
-		<a href="#multi-step-form">Address</a>
-		<span itx-visually-hidden>completed</span>
-	</li>
-	<li aria-current="step">
-		Documents <span itx-visually-hidden>current</span>
-	</li>
-	<li>Payment <span itx-visually-hidden>not completed</span></li>
-	<li>Sign <span itx-visually-hidden>not completed</span></li>
-</ol>
+<demo-example [html]="examples.indicator" layout="stack" />
 <p>
 	Every step before the current one is drawn as completed, with no attribute of
 	its own. A completed step may link back to review it. A future step is never a
@@ -36,16 +22,7 @@
 </p>
 
 <h2>The first and the last step</h2>
-<ol interop-steps role="list" aria-label="Checkout progress, first step">
-	<li aria-current="step">Basket <span itx-visually-hidden>current</span></li>
-	<li>Delivery <span itx-visually-hidden>not completed</span></li>
-	<li>Payment <span itx-visually-hidden>not completed</span></li>
-</ol>
-<ol interop-steps role="list" aria-label="Checkout progress, last step">
-	<li>Basket <span itx-visually-hidden>completed</span></li>
-	<li>Delivery <span itx-visually-hidden>completed</span></li>
-	<li aria-current="step">Payment <span itx-visually-hidden>current</span></li>
-</ol>
+<demo-example [html]="examples.ends" layout="stack" />
 
 <h2>In a narrow space</h2>
 <p>
@@ -53,26 +30,10 @@
 	it for screen readers. A completed step's link covers its number, so it can
 	still be focused and tapped.
 </p>
-<div class="narrow">
-	<ol interop-steps role="list" aria-label="Narrow progress">
-		<li>
-			<a href="#multi-step-form">Basket</a>
-			<span itx-visually-hidden>completed</span>
-		</li>
-		<li aria-current="step">
-			Delivery <span itx-visually-hidden>current</span>
-		</li>
-		<li>Payment <span itx-visually-hidden>not completed</span></li>
-		<li>Review <span itx-visually-hidden>not completed</span></li>
-	</ol>
-</div>
+<demo-example [html]="examples.narrow" layout="stack" narrow />
 
 <h2>Right to left</h2>
-<ol interop-steps role="list" aria-label="التقدم" dir="rtl" lang="ar">
-	<li>التفاصيل <span itx-visually-hidden>مكتمل</span></li>
-	<li aria-current="step">العنوان <span itx-visually-hidden>الحالية</span></li>
-	<li>الدفع <span itx-visually-hidden>غير مكتمل</span></li>
-</ol>
+<demo-example [html]="examples.rtl" layout="stack" />
 
 <h2 id="multi-step-form">A multi-step form</h2>
 <p>
@@ -84,95 +45,12 @@
 	means Next. After a step change, focus moves to the step's heading. Without
 	script, every step shows, as one long form.
 </p>
-<form
-	id="apply"
-	interop-steps-form
-	[history]="true"
-	(interop-steps-change)="changed($event)"
-	(submit)="submit($event)"
->
-	<ol interop-steps role="list" aria-label="Application progress">
-		<li>Your details <span itx-visually-hidden data-step-status></span></li>
-		<li>Address <span itx-visually-hidden data-step-status></span></li>
-		<li>
-			Check your answers <span itx-visually-hidden data-step-status></span>
-		</li>
-	</ol>
-	<fieldset id="details">
-		<legend><h3>Your details (step 1 of 3)</h3></legend>
-		<p>
-			<label
-				>Full name <input name="name" required autocomplete="name"
-			/></label>
-		</p>
-		<p>
-			<label
-				>Email <input name="email" type="email" required autocomplete="email"
-			/></label>
-		</p>
-		<p>
-			<button interop-button type="button" command="--next" commandfor="apply">
-				Next
-			</button>
-		</p>
-	</fieldset>
-	<fieldset id="address" hidden>
-		<legend><h3>Address (step 2 of 3)</h3></legend>
-		<p>
-			<label
-				>Street <input name="street" required autocomplete="street-address"
-			/></label>
-		</p>
-		<p>
-			<label
-				>Postcode <input name="postcode" required autocomplete="postal-code"
-			/></label>
-		</p>
-		<p>
-			<button interop-button type="button" command="--back" commandfor="apply">
-				Back
-			</button>
-			<button interop-button type="button" command="--next" commandfor="apply">
-				Next
-			</button>
-		</p>
-	</fieldset>
-	<fieldset id="review" hidden>
-		<legend><h3>Check your answers (step 3 of 3)</h3></legend>
-		<p>
-			Your details
-			<button
-				interop-button
-				type="button"
-				itx-size="sm"
-				command="--show-step"
-				value="details"
-				commandfor="apply"
-			>
-				Change
-			</button>
-		</p>
-		<p>
-			Address
-			<button
-				interop-button
-				type="button"
-				itx-size="sm"
-				command="--show-step"
-				value="address"
-				commandfor="apply"
-			>
-				Change
-			</button>
-		</p>
-		<p>
-			<button interop-button type="button" command="--back" commandfor="apply">
-				Back
-			</button>
-			<button interop-button type="submit">Send application</button>
-		</p>
-	</fieldset>
-</form>
+<demo-example
+	[html]="examples.form"
+	[bind]="bindForm"
+	[ts]="formTs"
+	layout="stack"
+/>
 <p>Current step: {{ step() }}.</p>
 @if (sent(); as values) {
 	<p>Sent: {{ values }}</p>

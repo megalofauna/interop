@@ -1,0 +1,35 @@
+<button
+	interop-button
+	type="button"
+	commandfor="shortcuts"
+	command="show-modal"
+>
+	Keyboard shortcuts
+</button>
+
+<dialog
+	id="shortcuts"
+	interop-dialog
+	closedby="any"
+	aria-labelledby="shortcuts-title"
+>
+	<header>
+		<h2 id="shortcuts-title">Keyboard shortcuts</h2>
+		<button
+			interop-button="icon"
+			itx-size="sm"
+			type="button"
+			commandfor="shortcuts"
+			command="close"
+		>
+			<span itx-visually-hidden>Close</span>
+			<svg interop-icon name="tabler-x"></svg>
+		</button>
+	</header>
+	<dl>
+		<dt><kbd>/</kbd></dt>
+		<dd>Search</dd>
+		<dt><kbd>?</kbd></dt>
+		<dd>Show this list</dd>
+	</dl>
+</dialog>

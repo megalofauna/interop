@@ -1,0 +1,16 @@
+<button interop-button type="button" commandfor="delete" command="show-modal">
+	Delete file…
+</button>
+
+<dialog id="delete" interop-dialog aria-labelledby="delete-title">
+	<h2 id="delete-title">Delete "notes.txt"?</h2>
+	<p>The file moves to the trash for 30 days.</p>
+	<form method="dialog">
+		<footer>
+			<button interop-button type="submit" value="cancel" autofocus>
+				Cancel
+			</button>
+			<button interop-button type="submit" value="delete">Delete</button>
+		</footer>
+	</form>
+</dialog>

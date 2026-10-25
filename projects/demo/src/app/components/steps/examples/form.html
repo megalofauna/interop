@@ -1,0 +1,107 @@
+<form id="apply" interop-steps-form>
+	<ol interop-steps role="list" aria-label="Application progress">
+		<li>Your details <span itx-visually-hidden data-step-status></span></li>
+		<li>Address <span itx-visually-hidden data-step-status></span></li>
+		<li>
+			Check your answers <span itx-visually-hidden data-step-status></span>
+		</li>
+	</ol>
+
+	<fieldset id="details" itx-flow>
+		<legend><h3>Your details (step 1 of 3)</h3></legend>
+		<div interop-field>
+			<label for="apply-name">Full name</label>
+			<input
+				interop-input
+				id="apply-name"
+				name="name"
+				required
+				autocomplete="name"
+			/>
+		</div>
+		<div interop-field>
+			<label for="apply-email">Email</label>
+			<input
+				interop-input
+				id="apply-email"
+				name="email"
+				type="email"
+				required
+				autocomplete="email"
+			/>
+		</div>
+		<p>
+			<button interop-button type="button" command="--next" commandfor="apply">
+				Next
+			</button>
+		</p>
+	</fieldset>
+
+	<fieldset id="address" itx-flow hidden>
+		<legend><h3>Address (step 2 of 3)</h3></legend>
+		<div interop-field>
+			<label for="apply-street">Street</label>
+			<input
+				interop-input
+				id="apply-street"
+				name="street"
+				required
+				autocomplete="street-address"
+			/>
+		</div>
+		<div interop-field>
+			<label for="apply-postcode">Postcode</label>
+			<input
+				interop-input
+				id="apply-postcode"
+				name="postcode"
+				required
+				autocomplete="postal-code"
+			/>
+		</div>
+		<p>
+			<button interop-button type="button" command="--back" commandfor="apply">
+				Back
+			</button>
+			<button interop-button type="button" command="--next" commandfor="apply">
+				Next
+			</button>
+		</p>
+	</fieldset>
+
+	<fieldset id="review" itx-flow hidden>
+		<legend><h3>Check your answers (step 3 of 3)</h3></legend>
+		<p>
+			Your details
+			<button
+				interop-button
+				itx-size="sm"
+				type="button"
+				command="--show-step"
+				value="details"
+				commandfor="apply"
+			>
+				Change
+			</button>
+		</p>
+		<p>
+			Address
+			<button
+				interop-button
+				itx-size="sm"
+				type="button"
+				command="--show-step"
+				value="address"
+				commandfor="apply"
+			>
+				Change
+			</button>
+		</p>
+		<p>
+			<button interop-button type="button" command="--back" commandfor="apply">
+				Back
+			</button>
+			<button interop-button type="submit">Send application</button>
+		</p>
+	</fieldset>
+</form>

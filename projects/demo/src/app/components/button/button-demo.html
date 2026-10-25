@@ -2,85 +2,54 @@
 
 <h2>Sizes</h2>
 <p>
-	<button interop-button itx-size="sm">Small</button>
-	<button interop-button>Medium</button>
-	<button interop-button itx-size="lg">Large</button>
+	<code>itx-size</code> is <code>sm</code>, <code>lg</code> or nothing for the
+	default: 32, 40 and 56px tall.
 </p>
+<demo-example [html]="examples.sizes" />
 
 <h2>With an icon</h2>
 <p>
-	<button interop-button type="button" itx-size="sm">
-		<svg interop-icon name="tabler-copy"></svg>Copy
-	</button>
-	<button interop-button type="button">
-		<svg interop-icon name="tabler-copy"></svg>Copy
-	</button>
-	<button interop-button type="button" itx-size="lg">
-		<svg interop-icon name="tabler-copy"></svg>Copy
-	</button>
-	<button interop-button="icon" type="button" [interopTooltip]="search">
-		<svg interop-icon name="tabler-search"></svg>
-	</button>
-	<span interop-tooltip="label" #search>Search</span>
+	An icon in a button is 16, 20 or 24px at the small, default and large sizes.
 </p>
-<p>
-	An icon in a button is 16, 20 or 24px at the small, default and large sizes,
-	beside text or alone.
-</p>
+<demo-example [html]="examples.withIcon" />
 
 <h2>Icon buttons</h2>
 <p>
 	<code>interop-button="icon"</code> makes a button square at every size, with
 	the icon centered. Name it with <code>aria-label</code>, visually hidden text
-	or a label tooltip. The dev audit warns when a button shows only an icon and
-	is not marked.
+	or a <a routerLink="/components/tooltip">label tooltip</a>. The dev audit
+	warns when a button shows only an icon and has no name.
 </p>
-<p>
-	<button interop-button="icon" type="button" itx-size="sm" aria-label="Search">
-		<svg interop-icon name="tabler-search"></svg>
-	</button>
-	<button interop-button="icon" type="button" aria-label="Search">
-		<svg interop-icon name="tabler-search"></svg>
-	</button>
-	<button interop-button="icon" type="button" itx-size="lg" aria-label="Search">
-		<svg interop-icon name="tabler-search"></svg>
-	</button>
-</p>
+<demo-example [html]="examples.iconButtons" />
 <p>
 	An icon's own <code>itx-size</code> overrides the button's: here the default
 	button holds an xs and an lg icon.
 </p>
-<p>
-	<button interop-button="icon" type="button" aria-label="Search">
-		<svg interop-icon name="tabler-search" itx-size="xs"></svg>
-	</button>
-	<button interop-button="icon" type="button" aria-label="Search">
-		<svg interop-icon name="tabler-search" itx-size="lg"></svg>
-	</button>
-</p>
+<demo-example [html]="examples.iconSize" />
 
 <h2>Radius</h2>
 <p>
-	Each step is a multiple of the house radius, 6px by default. No attribute is
-	the house radius.
+	Each step is a multiple of the house radius, 8px by default: none, half, once,
+	twice and three times, or a pill. No attribute is the house radius.
 </p>
-<p>
-	<button interop-button itx-radius="none">None</button>
-	<button interop-button itx-radius="sm">Small</button>
-	<button interop-button>Medium</button>
-	<button interop-button itx-radius="lg">Large</button>
-	<button interop-button itx-radius="xl">Extra large</button>
-	<button interop-button itx-radius="full">Full</button>
-</p>
+<demo-example [html]="examples.radius" />
 
 <h2>Disabled</h2>
 <p>
-	<button interop-button disabled>Disabled</button>
-	<button interop-button aria-disabled="true">aria-disabled</button>
+	<code>disabled</code> takes the button out of the Tab order.
+	<code>aria-disabled="true"</code> keeps it focusable, so a screen reader user
+	can still find it and hear why it is unavailable, and
+	<code>guardActivation()</code>, started once by the app, cancels its clicks.
 </p>
+<demo-example [html]="examples.disabled" />
 
 <h2>Pressed</h2>
 <p>
+	A button that stays on, such as Bold, sets <code>aria-pressed</code>. Its name
+	does not change with its state.
+</p>
+<div class="row">
+	<!-- example: pressed -->
 	<button
 		interop-button
 		type="button"
@@ -89,10 +58,22 @@
 	>
 		Bold
 	</button>
-</p>
+	<!-- /example -->
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="pressed"
+></figure>
 
 <h2>Busy</h2>
 <p>
+	While its work runs, a button sets <code>aria-busy="true"</code> and shows a
+	spinner. Press Busy to switch it.
+</p>
+<div class="row">
+	<!-- example: busy -->
 	<button
 		interop-button
 		type="button"
@@ -100,6 +81,7 @@
 	>
 		Save changes
 	</button>
+	<!-- /example -->
 	<button
 		interop-button
 		type="button"
@@ -108,40 +90,42 @@
 	>
 		Busy
 	</button>
-</p>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="busyCode"
+></figure>
 
 <h2>Pending action</h2>
 <p>
-	<button interop-button type="button" [pendingAction]="save">Save</button>
-	<span>Saved {{ saved() }} times</span>
+	<code>[pendingAction]</code> takes a function that returns a promise. The
+	button is busy until it settles, and ignores presses meanwhile.
+	<code>bindPendingAction()</code> does the same without Angular.
 </p>
+<div class="row">
+	<!-- example: pending -->
+	<button interop-button type="button" [pendingAction]="save">Save</button>
+	<!-- /example -->
+	<span>Saved {{ saved() }} times</span>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="pending"
+></figure>
 
 <h2>Invokers</h2>
 <p>
-	<button
-		interop-button
-		type="button"
-		command="show-modal"
-		[commandFor]="confirm"
-	>
-		Delete…
-	</button>
-	<button interop-button type="button" [popoverTarget]="menu">Options</button>
+	<code>command</code> and <code>commandfor</code> open a dialog, and
+	<code>popovertarget</code> a popover, with no script.
 </p>
-
-<dialog #confirm interop-dialog aria-labelledby="confirm-title">
-	<h2 id="confirm-title">Delete this item?</h2>
-	<footer>
-		<button interop-button type="button" command="close" [commandFor]="confirm">
-			Cancel
-		</button>
-	</footer>
-</dialog>
-
-<div popover #menu>Options go here.</div>
+<demo-example [html]="examples.invokers" />
 
 <h2>Patterns</h2>
-<p class="prose">
+<p>
 	Built from buttons: the
 	<a routerLink="/patterns/split-button">split button</a>.
 </p>

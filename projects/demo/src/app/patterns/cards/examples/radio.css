@@ -1,0 +1,15 @@
+/* The cards template stacks a card's direct children. Lay out what is inside them yourself. */
+.price,
+.summary {
+	display: block;
+}
+
+.price {
+	margin-block: var(--itx-space-1);
+	font-size: var(--itx-font-size-h5);
+	line-height: var(--itx-line-height-h5);
+}
+
+.summary + [interop-badge] {
+	margin-block-start: var(--itx-space-2);
+}

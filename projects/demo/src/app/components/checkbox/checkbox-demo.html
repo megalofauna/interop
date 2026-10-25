@@ -10,62 +10,27 @@
 </p>
 
 <h2>On its own</h2>
-<div class="stack">
-	<label interop-checkbox
-		><input type="checkbox" name="news" /> Email me product news</label
-	>
-	<label interop-checkbox
-		><input type="checkbox" name="saved" checked /> Remember this device</label
-	>
-</div>
+<demo-example [html]="examples.onItsOwn" layout="stack" />
 
 <h2>Long label</h2>
 <p>
 	The box is centered on the first line of text, and the text wraps beside it.
 	Links wrap with the text.
 </p>
-<div class="stack narrow">
-	<label interop-checkbox>
-		<input type="checkbox" name="terms" />
-		I have read and accept the
-		<a href="https://example.com/terms">terms of service</a> and the
-		<a href="https://example.com/privacy">privacy policy</a>
-	</label>
-</div>
+<demo-example [html]="examples.longLabel" layout="stack" narrow />
 
 <h2>Disabled</h2>
-<div class="stack">
-	<label interop-checkbox
-		><input type="checkbox" disabled /> Unchecked and disabled</label
-	>
-	<label interop-checkbox
-		><input type="checkbox" checked disabled /> Checked and disabled</label
-	>
-</div>
+<p>
+	A disabled fieldset disables every box in it, and its legend dims with them.
+</p>
+<demo-example [html]="examples.disabled" layout="stack" />
 
 <h2>A group</h2>
 <p>
 	A group is a <code>fieldset interop-checkbox-group</code> named by its legend.
 	Boxes that share a <code>name</code> submit every checked value.
 </p>
-<fieldset interop-checkbox-group>
-	<legend>Notify me about</legend>
-	<label interop-checkbox
-		><input type="checkbox" name="notify" value="replies" checked />
-		Replies</label
-	>
-	<label interop-checkbox
-		><input type="checkbox" name="notify" value="mentions" /> Mentions</label
-	>
-	<label interop-checkbox
-		><input type="checkbox" name="notify" value="digest" /> Weekly digest</label
-	>
-</fieldset>
-<fieldset interop-checkbox-group disabled>
-	<legend>Sync (a disabled fieldset)</legend>
-	<label interop-checkbox><input type="checkbox" checked /> Contacts</label>
-	<label interop-checkbox><input type="checkbox" /> Calendar</label>
-</fieldset>
+<demo-example [html]="examples.group" layout="stack" />
 
 <h2>Templates</h2>
 <p>
@@ -81,6 +46,7 @@
 	<code>[indeterminate]</code> on the input. Here the select-all box reads the
 	same signal as the toppings.
 </p>
+<!-- example: toppings -->
 <fieldset interop-checkbox-group>
 	<legend>Toppings</legend>
 	<label interop-checkbox>
@@ -125,6 +91,13 @@
 		</label>
 	</div>
 </fieldset>
+<!-- /example -->
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="toppingsCode"
+></figure>
 
 <h2>Select all, with bindSelectAll()</h2>
 <p>
@@ -133,30 +106,12 @@
 	fires <code>change</code> on each box it changes, and follows a form reset.
 	Give the select-all box no <code>name</code>, so it does not submit.
 </p>
-<form>
-	<fieldset interop-checkbox-group>
-		<legend>Columns</legend>
-		<label interop-checkbox
-			><input #helperParent type="checkbox" /> All columns</label
-		>
-		<div class="stack nested">
-			<label interop-checkbox
-				><input type="checkbox" name="column" value="name" checked />
-				Name</label
-			>
-			<label interop-checkbox
-				><input type="checkbox" name="column" value="email" /> Email</label
-			>
-			<label interop-checkbox
-				><input type="checkbox" name="column" value="id" checked disabled /> ID
-				(always shown)</label
-			>
-		</div>
-	</fieldset>
-	<div class="row">
-		<button interop-button type="reset">Reset</button>
-	</div>
-</form>
+<demo-example
+	[html]="examples.selectAll"
+	[bind]="bindColumns"
+	[ts]="selectAllTs"
+	layout="stack"
+/>
 
 <h2>Choose at least one</h2>
 <p>
@@ -165,6 +120,7 @@
 	<code>setCustomValidity()</code> on the first box whenever the group changes.
 	The browser then blocks submit and shows the message.
 </p>
+<!-- example: at-least-one -->
 <form (submit)="submit($event)" (reset)="afterReset()">
 	<fieldset
 		#atLeastOne
@@ -192,23 +148,29 @@
 		<p>Submitted: {{ days }}.</p>
 	}
 </form>
+<!-- /example -->
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="atLeastOneCode"
+></figure>
+<figure
+	interop-code-block
+	language="ts"
+	caption="TS"
+	[code]="atLeastOneTs"
+></figure>
 
 <h2>Right to left</h2>
-<div class="stack" dir="rtl" lang="ar">
-	<label interop-checkbox><input type="checkbox" checked /> تذكرني</label>
-</div>
+<demo-example [html]="examples.rtl" />
 
 <h2>Sizes</h2>
 <p>
 	The default size has no attribute. <code>itx-size="lg"</code> on the label
 	makes the checkbox larger.
 </p>
-<div class="stack">
-	<label interop-checkbox><input type="checkbox" checked /> Default</label>
-	<label interop-checkbox itx-size="lg"
-		><input type="checkbox" checked /> Large</label
-	>
-</div>
+<demo-example [html]="examples.sizes" layout="stack" />
 
 <h2>Custom tokens</h2>
 <p>
@@ -216,8 +178,4 @@
 	matches it. The mark is a mask, so
 	<code>--itx-checkbox-mark-mask-image</code> swaps its shape.
 </p>
-<div class="stack">
-	<label interop-checkbox class="heavy"
-		><input type="checkbox" checked /> Heavier check</label
-	>
-</div>
+<demo-example [html]="examples.heavy" [css]="examples.heavyCss" />

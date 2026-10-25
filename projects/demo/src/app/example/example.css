@@ -1,0 +1,45 @@
+/* Not scoped by Angular, so it reaches the inserted markup; every rule starts at demo-example. */
+demo-example {
+	display: block;
+}
+
+demo-example .live {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-2);
+}
+
+/*
+ * Never wider than the page, so an example that scrolls, such as a long tab list, can. With no
+ * specificity, so an example's own CSS sets a narrower width.
+ */
+:where(demo-example .live > *) {
+	max-inline-size: 100%;
+}
+
+demo-example[layout="stack"] .live {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--itx-space-4);
+}
+
+demo-example[layout="end"] .live {
+	justify-content: flex-end;
+}
+
+demo-example[narrow] .live {
+	max-inline-size: 20rem;
+}
+
+/* A box to resize, standing in for the narrow container a phone gives the example. */
+demo-example[resizable] .live {
+	display: block;
+	inline-size: 40rem;
+	min-inline-size: 16rem;
+	max-inline-size: 100%;
+	resize: inline;
+	overflow: auto;
+	padding: var(--itx-space-3);
+	border: 1px dashed light-dark(var(--itx-neutral-400), var(--itx-neutral-600));
+}

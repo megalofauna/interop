@@ -1,0 +1,16 @@
+<button interop-button type="button" popovertarget="details">Details</button>
+<div interop-popover popover id="details">
+	<p>Popovers sit in the top layer, above everything else on the page.</p>
+</div>
+
+<button
+	interop-button
+	type="button"
+	command="toggle-popover"
+	commandfor="command"
+>
+	With a command
+</button>
+<div interop-popover popover id="command">
+	<p>Opened with <code>command="toggle-popover"</code>.</p>
+</div>

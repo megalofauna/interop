@@ -33,4 +33,5 @@ export { guardActivation } from './guard-activation';
 export { bindToasts, toast, type ToastColor, type ToastOptions } from './toast';
 export { scopeSelectAll } from './scope-select-all';
 export { splitLines } from './split-lines';
+export { drawIcons } from './draw-icons';
 export { getIcon, registerIcons, type IconDefinition, type IconPath } from './icon-registry';

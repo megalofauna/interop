@@ -1,0 +1,26 @@
+<button
+	interop-button
+	type="button"
+	command="show-modal"
+	commandfor="delete-item"
+>
+	Delete…
+</button>
+<button interop-button type="button" popovertarget="item-options">
+	Options
+</button>
+
+<dialog id="delete-item" interop-dialog aria-labelledby="delete-item-title">
+	<h2 id="delete-item-title">Delete this item?</h2>
+	<footer>
+		<button
+			interop-button
+			type="button"
+			command="close"
+			commandfor="delete-item"
+		>
+			Cancel
+		</button>
+	</footer>
+</dialog>
+<div id="item-options" interop-popover popover>Options go here.</div>

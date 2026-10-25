@@ -1,0 +1,5 @@
+/* Each select beside a button of the same size. */
+.select-row {
+	display: flex;
+	gap: var(--itx-space-2);
+}

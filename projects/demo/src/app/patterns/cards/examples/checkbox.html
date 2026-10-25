@@ -1,0 +1,38 @@
+<fieldset interop-checkbox-group="cards">
+	<legend>Add-ons</legend>
+	<label interop-checkbox>
+		<input
+			type="checkbox"
+			name="addon"
+			value="backup"
+			checked
+			aria-labelledby="addon-backup"
+			aria-describedby="addon-backup-details"
+		/>
+		<strong id="addon-backup">Backups</strong>
+		<span id="addon-backup-details">$5 a month. Hourly, kept for a week.</span>
+	</label>
+	<label interop-checkbox>
+		<input
+			type="checkbox"
+			name="addon"
+			value="domain"
+			aria-labelledby="addon-domain"
+			aria-describedby="addon-domain-details"
+		/>
+		<strong id="addon-domain">Custom domain</strong>
+		<span id="addon-domain-details">$2 a month. Your own address.</span>
+	</label>
+	<label interop-checkbox>
+		<input
+			type="checkbox"
+			name="addon"
+			value="sso"
+			disabled
+			aria-labelledby="addon-sso"
+			aria-describedby="addon-sso-details"
+		/>
+		<strong id="addon-sso">Single sign-on</strong>
+		<span id="addon-sso-details">Team plan only.</span>
+	</label>
+</fieldset>

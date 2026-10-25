@@ -1,0 +1,19 @@
+/* The inverted look, as token values: the page as the channel, a dark pill with no edge. */
+.inverted {
+	--itx-segmented-frame-background-color: transparent;
+	--itx-segmented-pill-background-color: light-dark(
+		var(--itx-neutral-900),
+		var(--itx-neutral-50)
+	);
+	--itx-segmented-pill-border-width: 0px;
+	--itx-segmented-pill-border-color: transparent;
+	--itx-segmented-pill-box-shadow: none;
+	--itx-segmented-segment-color-selected: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-900)
+	);
+	--itx-segmented-divider-color: light-dark(
+		var(--itx-neutral-300),
+		var(--itx-neutral-700)
+	);
+}
