@@ -5,24 +5,19 @@
 	itx-color accepts named role colors <LINK /> as well as arbitrary CSS color
 	values.
 </p>
-<p>
-	<span interop-badge>Draft</span>
-	<span interop-badge itx-color="info">Beta</span>
-	<span interop-badge itx-color="success">Operational</span>
-	<span interop-badge itx-color="warning">Degraded</span>
-	<span interop-badge itx-color="danger">Outage</span>
-	<span interop-badge itx-color="oklch(0.85 0.12 200)">Custom color</span>
-</p>
+<demo-example [html]="examples.text" />
 
 <h2 itx-font="h5">Sizes</h2>
-<p>
-	<span interop-badge itx-size="sm">Small</span>
-	<span interop-badge>Medium</span>
-	<span interop-badge itx-size="lg">Large</span>
-</p>
+<demo-example [html]="examples.sizes" />
 
 <h2 itx-font="h5">As an announced count</h2>
 <p>
+	<code>[count]</code> shows the number and <code>[label]</code> says what it
+	counts. <code>announce</code> speaks each change; give it to one badge per
+	count.
+</p>
+<div class="row">
+	<!-- example: count -->
 	<button interop-button type="button">
 		Inbox
 		<span
@@ -56,6 +51,7 @@
 			[label]="messages"
 		></span>
 	</button>
+	<!-- /example -->
 	<button interop-button type="button" (click)="unread.set(unread() + 1)">
 		Add one
 	</button>
@@ -63,10 +59,21 @@
 		Make it 120
 	</button>
 	<button interop-button type="button" (click)="unread.set(0)">Clear</button>
-</p>
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="countCode"
+></figure>
 
 <h2 itx-font="h5">As a status dot</h2>
 <p>
+	A dot shows no text. Its text is still spoken, so the button reads "Activity,
+	New activity".
+</p>
+<div class="row">
+	<!-- example: dot -->
 	<button interop-button type="button">
 		Activity
 		<span
@@ -93,30 +100,35 @@
 			>New activity</span
 		>
 	</button>
-</p>
+	<!-- /example -->
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="dotCode"
+></figure>
 
 <h2 itx-font="h5">Positions</h2>
-<p class="positions">
-	@for (
-		position of ["top-start", "top-end", "bottom-start", "bottom-end"];
-		track position
-	) {
-		<button interop-button type="button">
-			{{ position }}
-			<span
-				interop-badge
-				[attr.itx-badge-position]="position"
-				itx-color="danger"
-				itx-size="sm"
-				[count]="1"
-				label="alert"
-			></span>
-		</button>
-	}
+<p>
+	<code>itx-badge-position</code> places a badge on a corner of its parent, half
+	outside it. The corners are logical, so they follow right to left.
 </p>
-<p class="positions" dir="rtl">
+<div class="row positions">
+	<!-- example: positions -->
 	<button interop-button type="button">
-		Right to left
+		top-start
+		<span
+			interop-badge
+			itx-badge-position="top-start"
+			itx-color="danger"
+			itx-size="sm"
+			[count]="1"
+			label="alert"
+		></span>
+	</button>
+	<button interop-button type="button">
+		top-end
 		<span
 			interop-badge
 			itx-badge-position="top-end"
@@ -126,4 +138,46 @@
 			label="alert"
 		></span>
 	</button>
-</p>
+	<button interop-button type="button">
+		bottom-start
+		<span
+			interop-badge
+			itx-badge-position="bottom-start"
+			itx-color="danger"
+			itx-size="sm"
+			[count]="1"
+			label="alert"
+		></span>
+	</button>
+	<button interop-button type="button">
+		bottom-end
+		<span
+			interop-badge
+			itx-badge-position="bottom-end"
+			itx-color="danger"
+			itx-size="sm"
+			[count]="1"
+			label="alert"
+		></span>
+	</button>
+	<span dir="rtl">
+		<button interop-button type="button">
+			Right to left
+			<span
+				interop-badge
+				itx-badge-position="top-end"
+				itx-color="danger"
+				itx-size="sm"
+				[count]="1"
+				label="alert"
+			></span>
+		</button>
+	</span>
+	<!-- /example -->
+</div>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="positionsCode"
+></figure>
