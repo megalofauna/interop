@@ -1,0 +1,10 @@
+/* One row that scrolls sideways. */
+.strip {
+	display: flex;
+	gap: var(--itx-space-2);
+	max-inline-size: min(24rem, 100%);
+}
+
+.strip > * {
+	flex: none;
+}

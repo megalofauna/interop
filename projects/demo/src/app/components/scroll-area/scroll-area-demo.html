@@ -6,60 +6,47 @@
 	area takes focus itself, so the keyboard can scroll it.
 </p>
 <p>
+	<code>bindScrollArea(area)</code> from <code>interop</code> manages that
+	focus; in Angular, <code>InteropScrollArea</code> matches
+	<code>[interop-scroll-area]</code>. Give the area a size to scroll at: the
+	examples' CSS does.
+</p>
+<p>
 	Firefox does not support scroll-driven animations yet, so it shows no shadows.
 	Everything else works there.
 </p>
 
-<h2 id="release-notes">Text</h2>
+<h2>Text</h2>
 <p>
-	Named by the heading above with <code>aria-labelledby</code>, so it is a group
-	with that name.
+	Named by its heading with <code>aria-labelledby</code>, so it is a group with
+	that name.
 </p>
-<div interop-scroll-area class="tall" aria-labelledby="release-notes" itx-flow>
-	@for (line of lines; track line) {
-		<p>
-			Release note {{ line }}. A line of text that is long enough to wrap at
-			narrow widths.
-		</p>
-	}
-</div>
+<demo-example
+	[html]="examples.text"
+	[css]="examples.textCss"
+	[bind]="bind"
+	[ts]="ts"
+	layout="stack"
+/>
 
 <h2>Controls</h2>
 <p>
 	The buttons take focus, so the area does not. Tabbing to a button scrolls it
 	into view.
 </p>
-<div interop-scroll-area class="strip">
-	@for (column of columns; track column) {
-		<button interop-button type="button">Filter {{ column }}</button>
-	}
-</div>
+<demo-example
+	[html]="examples.controls"
+	[css]="examples.stripCss"
+	[bind]="bind"
+/>
 
-<h2 id="wide-table">Both directions</h2>
-<div interop-scroll-area class="table" aria-labelledby="wide-table">
-	<table interop-table itx-size="sm" aria-labelledby="wide-table">
-		<thead>
-			<tr>
-				@for (column of columns; track column) {
-					<th scope="col">Column {{ column }}</th>
-				}
-			</tr>
-		</thead>
-		<tbody>
-			@for (line of lines; track line) {
-				<tr>
-					@for (column of columns; track column) {
-						<td>{{ line }}.{{ column }}</td>
-					}
-				</tr>
-			}
-		</tbody>
-	</table>
-</div>
+<h2>Both directions</h2>
+<demo-example
+	[html]="examples.table"
+	[css]="examples.tableCss"
+	[bind]="bind"
+	layout="stack"
+/>
 
 <h2>Right to left</h2>
-<div interop-scroll-area class="strip" dir="rtl" lang="ar">
-	@for (column of columns; track column) {
-		<span class="chip">عنصر {{ column }}</span>
-	}
-</div>
+<demo-example [html]="examples.rtl" [css]="examples.stripCss" [bind]="bind" />

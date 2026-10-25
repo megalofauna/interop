@@ -10,8 +10,11 @@ demo-example .live {
 	gap: var(--itx-space-2);
 }
 
-/* Never wider than the page, so an example that scrolls, such as a long tab list, can. */
-demo-example .live > * {
+/*
+ * Never wider than the page, so an example that scrolls, such as a long tab list, can. With no
+ * specificity, so an example's own CSS sets a narrower width.
+ */
+:where(demo-example .live > *) {
 	max-inline-size: 100%;
 }
 

@@ -1,0 +1,8 @@
+.table-frame {
+	max-inline-size: min(24rem, 100%);
+	max-block-size: 12rem;
+}
+
+.table-frame :is(th, td) {
+	white-space: nowrap;
+}
