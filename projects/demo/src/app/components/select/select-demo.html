@@ -16,18 +16,7 @@
 </p>
 
 <h2>One choice</h2>
-<label for="fruit">Fruit</label>
-<select id="fruit" interop-select name="fruit">
-	<option value="">Choose a fruit</option>
-	<option>Apple</option>
-	<option>Banana</option>
-	<option>Cherry</option>
-	<option>
-		A fruit with a name long enough to wrap onto a second line in a narrow
-		window
-	</option>
-</select>
-<figure interop-code-block language="html" [code]="examples.basic"></figure>
+<demo-example [html]="examples.basic" layout="stack" />
 
 <h2>Groups and separators</h2>
 <p>
@@ -35,19 +24,7 @@
 	screen readers announce the name. An <code>&lt;hr&gt;</code> draws a line
 	between options. A disabled option is shown, and cannot be chosen.
 </p>
-<label for="city">City</label>
-<select id="city" interop-select>
-	<optgroup label="Europe">
-		<option>Lisbon</option>
-		<option>Oslo</option>
-	</optgroup>
-	<hr />
-	<optgroup label="Asia">
-		<option>Seoul</option>
-		<option disabled>Kyoto (sold out)</option>
-	</optgroup>
-</select>
-<figure interop-code-block language="html" [code]="examples.groups"></figure>
+<demo-example [html]="examples.groups" layout="stack" />
 
 <h2>Options with more than a name</h2>
 <p>
@@ -57,46 +34,20 @@
 	browsers keep only the text, and screen readers read it. Avoid
 	<code>id</code>s inside an option, since the copy repeats them.
 </p>
-<label for="shipping">Delivery</label>
-<select id="shipping" interop-select>
-	<button><selectedcontent></selectedcontent></button>
-	<option value="standard">
-		<span>Standard</span>
-		<span class="hint">3 to 5 working days, free</span>
-	</option>
-	<option value="express">
-		<span>Express</span>
-		<span class="hint">Next working day, $12</span>
-	</option>
-</select>
-<figure interop-code-block language="html" [code]="examples.rich"></figure>
-<figure interop-code-block language="css" [code]="examples.richCss"></figure>
+<demo-example [html]="examples.rich" [css]="examples.richCss" layout="stack" />
 
 <h2>Sizes</h2>
 <p>
 	The heights match the button's, so a select and a button line up in a row.
 </p>
-@for (size of sizes; track size.label) {
-	<div class="row">
-		<select
-			interop-select
-			[attr.itx-size]="size.value"
-			[attr.aria-label]="size.label + ' select'"
-		>
-			<option>{{ size.label }}</option>
-		</select>
-		<button interop-button type="button" [attr.itx-size]="size.value">
-			Apply
-		</button>
-	</div>
-}
-<figure interop-code-block language="html" [code]="examples.sizes"></figure>
+<demo-example
+	[html]="examples.sizes"
+	[css]="examples.sizesCss"
+	layout="stack"
+/>
 
 <h2>Disabled</h2>
-<label for="region">Region</label>
-<select id="region" interop-select disabled>
-	<option>Europe</option>
-</select>
+<demo-example [html]="examples.disabled" layout="stack" />
 
 <h2>Options in the page</h2>
 <p>
@@ -105,17 +56,7 @@
 	<a routerLink="/components/radio-group">radio group</a> shows every option
 	without scrolling.
 </p>
-<label for="team">Team</label>
-<select id="team" interop-select size="5">
-	<option>Design</option>
-	<option selected>Engineering</option>
-	<option>Marketing</option>
-	<option>Operations</option>
-	<option>Research</option>
-	<option>Sales</option>
-	<option>Support</option>
-</select>
-<figure interop-code-block language="html" [code]="examples.inPage"></figure>
+<demo-example [html]="examples.inPage" layout="stack" />
 
 <h2>Several choices</h2>
 <p>
@@ -124,34 +65,32 @@
 	task success, against 100% for a single select (Higley, 2019). Use a
 	<a routerLink="/components/checkbox">checkbox group</a> instead.
 </p>
-<label for="toppings">Toppings</label>
-<select
-	id="toppings"
-	interop-select
-	multiple
-	itx-audit-ignore="select-multiple"
->
-	<option>Basil</option>
-	<option selected>Mushrooms</option>
-	<option>Olives</option>
-	<option>Peppers</option>
-</select>
+<demo-example [html]="examples.multiple" layout="stack" />
 
 <h2>Bound to a signal</h2>
 <p>
 	Bind <code>[value]</code> and listen to <code>(change)</code>, or use Angular
 	forms: they work with a native select.
 </p>
-<label for="theme">Theme</label>
-<select
-	id="theme"
-	interop-select
-	[value]="theme()"
-	(change)="theme.set($any($event.target).value)"
->
-	<option value="system">Match the system</option>
-	<option value="light">Light</option>
-	<option value="dark">Dark</option>
-</select>
+<!-- example: bound -->
+<div interop-field>
+	<label for="theme">Theme</label>
+	<select
+		id="theme"
+		interop-select
+		[value]="theme()"
+		(change)="theme.set($any($event.target).value)"
+	>
+		<option value="system">Match the system</option>
+		<option value="light">Light</option>
+		<option value="dark">Dark</option>
+	</select>
+</div>
+<!-- /example -->
 <p>Theme: {{ theme() }}</p>
-<figure interop-code-block language="html" [code]="examples.bound"></figure>
+<figure
+	interop-code-block
+	language="html"
+	caption="Angular template"
+	[code]="boundCode"
+></figure>
