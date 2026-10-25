@@ -42,6 +42,13 @@ describe('drawIcons', () => {
 		expect(svg.style.getPropertyValue('--itx-icon-block-size')).toBe('16px');
 	});
 
+	it('sizes and hides an icon that draws its own children', () => {
+		const svg = draw('<svg interop-icon viewBox="0 0 24 24" size="24"><path d="M12 3l9 18H3z"></path></svg>');
+		expect(svg.querySelector('path')!.getAttribute('d')).toBe('M12 3l9 18H3z');
+		expect(svg.style.getPropertyValue('--itx-icon-inline-size')).toBe('24px');
+		expect(svg.getAttribute('aria-hidden')).toBe('true');
+	});
+
 	it('replaces what was drawn before, so it can run again', () => {
 		const svg = draw('<svg interop-icon name="test-check"></svg>');
 		drawIcons(document.body);
