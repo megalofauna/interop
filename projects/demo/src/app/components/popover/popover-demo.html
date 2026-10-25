@@ -7,23 +7,11 @@
 </p>
 
 <h2>Opened by a button</h2>
-<div class="row">
-	<button interop-button type="button" popovertarget="details">Details</button>
-	<div interop-popover popover id="details">
-		<p>Popovers sit in the top layer, above everything else on the page.</p>
-	</div>
-	<button
-		interop-button
-		type="button"
-		command="toggle-popover"
-		commandfor="command"
-	>
-		With a command
-	</button>
-	<div interop-popover popover id="command">
-		<p>Opened with <code>command="toggle-popover"</code>.</p>
-	</div>
-</div>
+<p>
+	<code>popovertarget</code> or <code>command="toggle-popover"</code> with
+	<code>commandfor</code>.
+</p>
+<demo-example [html]="examples.opened" />
 
 <h2>Placement</h2>
 <p>
@@ -31,32 +19,11 @@
 	<code>position-area</code> value. A popover to the side moves its gap to
 	<code>--itx-popover-margin-inline</code>.
 </p>
-<div class="row">
-	<button interop-button type="button" popovertarget="end">To the side</button>
-	<div
-		interop-popover
-		popover
-		id="end"
-		style="
-			--itx-popover-position-area: inline-end span-block-end;
-			--itx-popover-margin-block: 0px;
-			--itx-popover-margin-inline: var(--itx-space-1);
-		"
-	>
-		<p>Beside the button, starting at its top.</p>
-	</div>
-</div>
+<demo-example [html]="examples.placement" [css]="examples.placementCss" />
 
 <h2>Near an edge</h2>
 <p>A popover flips to the other side of its button when it does not fit.</p>
-<div class="row edge">
-	<button interop-button type="button" popovertarget="edge">
-		Near the end
-	</button>
-	<div interop-popover popover id="edge">
-		<p>This popover would overflow the window, so it opens toward the start.</p>
-	</div>
-</div>
+<demo-example [html]="examples.edge" layout="end" />
 
 <h2>Long content</h2>
 <p>
@@ -64,21 +31,4 @@
 	<code>tabindex="-1"</code> and <code>autofocus</code> move focus into it when
 	it opens, so the keyboard can scroll it. Escape returns focus to the button.
 </p>
-<div class="row">
-	<button interop-button type="button" popovertarget="long">
-		Release notes
-	</button>
-	<div
-		interop-popover
-		popover
-		id="long"
-		tabindex="-1"
-		autofocus
-		role="dialog"
-		aria-label="Release notes"
-	>
-		@for (line of lines; track line) {
-			<p>Release note {{ line }}.</p>
-		}
-	</div>
-</div>
+<demo-example [html]="examples.long" />

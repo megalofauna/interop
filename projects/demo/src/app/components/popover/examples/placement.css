@@ -1,0 +1,5 @@
+.beside {
+	--itx-popover-position-area: inline-end span-block-end;
+	--itx-popover-margin-block: 0px;
+	--itx-popover-margin-inline: var(--itx-space-1);
+}

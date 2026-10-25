@@ -21,6 +21,10 @@ demo-example[layout="stack"] .live {
 	gap: var(--itx-space-4);
 }
 
+demo-example[layout="end"] .live {
+	justify-content: flex-end;
+}
+
 demo-example[narrow] .live {
 	max-inline-size: 20rem;
 }

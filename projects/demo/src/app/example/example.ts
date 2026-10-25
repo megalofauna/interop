@@ -70,8 +70,8 @@ export class DemoExample {
 	readonly ts = input<string>();
 	/** Binds behavior to the inserted markup. Returns the function that removes it. */
 	readonly bind = input<(root: HTMLElement) => (() => void) | void>();
-	/** `row`: the example's elements side by side, wrapping. `stack`: one under another. */
-	readonly layout = input<"row" | "stack">("row");
+	/** `row`: side by side, wrapping. `stack`: one under another. `end`: a row at the inline end. */
+	readonly layout = input<"row" | "stack" | "end">("row");
 	/** At most 20rem wide, to show how the example wraps. */
 	readonly narrow = input(false, { transform: booleanAttribute });
 
