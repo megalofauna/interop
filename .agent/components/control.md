@@ -378,6 +378,7 @@ rule frames both orientations. Segmented tabs are horizontal.
 | Pill | `fieldset::after`, anchored to the checked segment. In Chromium it slides when the selection changes, with the shared transition tokens. Firefox and Safari move it without the slide: they do not transition an inset when its anchor changes |
 | Divider | `label::before` between two unchecked segments |
 | Focus ring | Inside the segment. On the pill it takes the checked text color, which contrasts with the pill |
+| Anchor scope | The control sets `anchor-scope` on its three anchor names, so with several segmented controls or tab lists on a page each frame and pill find their own segments. Without it Safari drew the drawer's Theme control's frame and pill elsewhere on the page |
 | Fallback | Without anchor positioning, each segment draws its own border and the checked one paints the pill color |
 | Icons | `interop-radio-group="segmented icon"` makes square segments. Name each with visually hidden text in the label |
 | Radius | The pill and the focus ring take the house radius; the frame takes the enclosing radius, the house radius plus its padding and border |
