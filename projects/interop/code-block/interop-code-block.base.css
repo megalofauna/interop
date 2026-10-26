@@ -5,7 +5,10 @@
 	--itx-code-block-border-style: solid;
 	--itx-code-block-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
 	/* An enclosing corner: the copy button keeps the house radius, and the block adds its inset and border. */
-	--itx-code-block-border-radius: var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-code-block-gap) + var(--itx-code-block-border-width)));
+	--itx-code-block-border-radius: var(
+		--itx-radius,
+		min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-code-block-gap) + var(--itx-code-block-border-width))
+	);
 	--itx-code-block-corner-shape: var(--itx-corner-shape);
 	--itx-code-block-padding-block: var(--itx-space-3);
 	--itx-code-block-padding-inline: var(--itx-space-4);

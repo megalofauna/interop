@@ -595,7 +595,11 @@ describe('slider and progress', () => {
 		it(`has a thumb of 3:1 against the page, the track and the fill in ${label}`, () => {
 			const face = token('--itx-slider-thumb-background-color', scheme);
 			const edge = token('--itx-slider-thumb-border-color', scheme);
-			const surfaces = [CANVAS[scheme], token('--itx-slider-track-background-color', scheme), token('--itx-slider-fill-background-color', scheme)];
+			const surfaces = [
+				CANVAS[scheme],
+				token('--itx-slider-track-background-color', scheme),
+				token('--itx-slider-fill-background-color', scheme),
+			];
 			expect(surfaces.filter((surface) => Math.max(contrast(face, surface), contrast(edge, surface)) < 3)).toEqual([]);
 		});
 	}

@@ -31,7 +31,10 @@
 	--lab-radius: 0;
 
 	/* Flat: today's slider. A mid-gray bar at 3:1 against the page. */
-	--lab-track-background: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--lab-track-background: light-dark(
+		var(--itx-neutral-500),
+		var(--itx-neutral-400)
+	);
 	--lab-track-edge: transparent;
 	--lab-track-edge-width: 0px;
 	--lab-track-shade: 0 0 transparent;
@@ -49,14 +52,18 @@
 
 /* Channel: the switch's off track. A recess darker than the page, with a 1px edge at 3:1. */
 .track-lab:is([data-track="channel"], [data-track="shaded"]) {
-	--lab-track-background: light-dark(var(--itx-neutral-100), var(--itx-neutral-950));
+	--lab-track-background: light-dark(
+		var(--itx-neutral-100),
+		var(--itx-neutral-950)
+	);
 	--lab-track-edge: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
 	--lab-track-edge-width: var(--itx-space-px);
 }
 
 /* Shaded: the channel plus a 1px shadow along its top inner edge. */
 .track-lab[data-track="shaded"] {
-	--lab-track-shade: inset 0 1px 2px light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
+	--lab-track-shade: inset 0 1px 2px
+		light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
 }
 
 /* Ring: a page-colored center inside a 2px ring in the fill color. */
@@ -68,12 +75,15 @@
 /* Knob: a light disc with a 1px edge, darker than the fill in dark mode so it stays apart from it. */
 .track-lab[data-thumb="knob"] {
 	--lab-thumb-background: light-dark(white, var(--itx-neutral-200));
-	--lab-thumb-edge: inset 0 0 0 1px light-dark(var(--itx-neutral-500), var(--itx-neutral-950));
+	--lab-thumb-edge: inset 0 0 0 1px
+		light-dark(var(--itx-neutral-500), var(--itx-neutral-950));
 }
 
 /* Lift: one soft shadow under the drawn circle. drop-shadow follows the circle; box-shadow would draw around the 24px box. */
 .track-lab[data-lift="on"] {
-	--lab-thumb-lift: drop-shadow(0 1px 2px light-dark(oklch(0 0 0 / 0.3), oklch(0 0 0 / 0.8)));
+	--lab-thumb-lift: drop-shadow(
+		0 1px 2px light-dark(oklch(0 0 0 / 0.3), oklch(0 0 0 / 0.8))
+	);
 }
 
 .track-lab[data-press="grow"] {
@@ -102,7 +112,11 @@
 	border-radius: var(--lab-radius);
 	/* The fill covers the edge where it reaches, as the switch's on track does. */
 	background:
-		linear-gradient(var(--lab-fill), var(--lab-fill)) left / calc(var(--lab-target) / 2 + (100% - var(--lab-target)) * var(--lab-value)) 100% no-repeat border-box,
+		linear-gradient(var(--lab-fill), var(--lab-fill)) left /
+			calc(
+				var(--lab-target) / 2 + (100% - var(--lab-target)) * var(--lab-value)
+			)
+			100% no-repeat border-box,
 		var(--lab-track-background) padding-box;
 	box-shadow: var(--lab-track-shade);
 }
@@ -117,13 +131,16 @@
 	inline-size: var(--lab-target);
 	block-size: var(--lab-target);
 	/* Centers the target on a track thinner than it. */
-	margin-block-start: calc((var(--lab-track) - var(--lab-target)) / 2 - var(--lab-track-edge-width));
+	margin-block-start: calc(
+		(var(--lab-track) - var(--lab-target)) / 2 - var(--lab-track-edge-width)
+	);
 	border: calc((var(--lab-target) - var(--lab-thumb)) / 2) solid transparent;
 	border-radius: var(--itx-radius-full);
 	background: var(--lab-thumb-background) padding-box;
 	box-shadow: var(--lab-thumb-edge);
 	filter: var(--lab-thumb-lift);
-	transition: transform var(--itx-transition-duration) var(--itx-transition-timing-function);
+	transition: transform var(--itx-transition-duration)
+		var(--itx-transition-timing-function);
 }
 
 .track-lab input[lab-slider]:active::-webkit-slider-thumb {
@@ -154,7 +171,8 @@
 	background: var(--lab-thumb-background) padding-box;
 	box-shadow: var(--lab-thumb-edge);
 	filter: var(--lab-thumb-lift);
-	transition: transform var(--itx-transition-duration) var(--itx-transition-timing-function);
+	transition: transform var(--itx-transition-duration)
+		var(--itx-transition-timing-function);
 }
 
 .track-lab input[lab-slider]:active::-moz-range-thumb {
@@ -190,7 +208,9 @@
 	border-radius: var(--lab-radius);
 	overflow: hidden;
 	background-color: var(--lab-track-background);
-	box-shadow: inset 0 0 0 var(--lab-track-edge-width) var(--lab-track-edge), var(--lab-track-shade);
+	box-shadow:
+		inset 0 0 0 var(--lab-track-edge-width) var(--lab-track-edge),
+		var(--lab-track-shade);
 }
 
 .track-lab progress[lab-progress]::-webkit-progress-bar {
@@ -201,7 +221,8 @@
 .track-lab progress[lab-progress]::-webkit-progress-value {
 	background: var(--lab-fill);
 	border-radius: inherit;
-	transition: inline-size var(--itx-transition-duration-slower) var(--itx-transition-timing-function);
+	transition: inline-size var(--itx-transition-duration-slower)
+		var(--itx-transition-timing-function);
 }
 
 .track-lab progress[lab-progress]::-moz-progress-bar {

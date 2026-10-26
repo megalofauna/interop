@@ -11,15 +11,15 @@
 	--itx-radio-group-circle-border-width: var(--itx-border-width);
 	--itx-radio-group-circle-border-style: solid;
 	/* Unchecked: the border carries the 3:1 edge against the page (WCAG 1.4.11). */
-	--itx-radio-group-circle-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-radio-group-circle-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	--itx-radio-group-circle-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-500));
+	--itx-radio-group-circle-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-200));
 	--itx-radio-group-circle-border-color-invalid: var(--itx-role-text-danger);
 	--itx-radio-group-circle-border-width-invalid: var(--itx-border-width-strong);
 	/* Checked: the fill carries the edge, so the border lets it show through. */
 	--itx-radio-group-circle-border-color-checked: transparent;
-	--itx-radio-group-circle-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-radio-group-circle-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-950));
 	--itx-radio-group-circle-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-radio-group-circle-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-radio-group-circle-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-200));
 	--itx-radio-group-circle-background-color-checked-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-200));
 
 	--itx-radio-group-dot-size: var(--itx-space-2);

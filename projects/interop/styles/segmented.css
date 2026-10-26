@@ -243,7 +243,13 @@
 		border-style: solid;
 		border-color: var(--itx-segmented-frame-border-color);
 		/* An enclosing corner: the pill keeps the house radius, and the frame adds its padding and border. */
-		border-radius: var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-segmented-frame-padding) + var(--itx-segmented-frame-border-width)));
+		border-radius: var(
+			--itx-radius,
+			min(
+				var(--itx-radius-base) * 9999,
+				var(--itx-radius-base) + var(--itx-segmented-frame-padding) + var(--itx-segmented-frame-border-width)
+			)
+		);
 		corner-shape: var(--itx-corner-shape);
 		background-color: var(--itx-segmented-frame-background-color);
 	}

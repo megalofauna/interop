@@ -1,10 +1,25 @@
-import { Component, ElementRef, ViewEncapsulation, afterNextRender, inject, signal } from "@angular/core";
+import {
+	Component,
+	ElementRef,
+	ViewEncapsulation,
+	afterNextRender,
+	inject,
+	signal,
+} from "@angular/core";
 import { bindSlider } from "interop";
 
 /** Candidate looks for the slider and the progress bar. Not in the nav. */
 @Component({
 	selector: "demo-track-lab",
-	host: { "itx-flow": "", class: "track-lab", "[attr.data-track]": "track()", "[attr.data-thumb]": "thumb()", "[attr.data-lift]": "lift()", "[attr.data-ends]": "ends()", "[attr.data-press]": "press()" },
+	host: {
+		"itx-flow": "",
+		class: "track-lab",
+		"[attr.data-track]": "track()",
+		"[attr.data-thumb]": "thumb()",
+		"[attr.data-lift]": "lift()",
+		"[attr.data-ends]": "ends()",
+		"[attr.data-press]": "press()",
+	},
 	templateUrl: "./track-lab.html",
 	styleUrl: "./track-lab.css",
 	encapsulation: ViewEncapsulation.None,
@@ -24,11 +39,17 @@ export class TrackLab {
 	constructor() {
 		const host = inject(ElementRef<HTMLElement>).nativeElement as HTMLElement;
 		afterNextRender(() => {
-			for (const input of host.querySelectorAll<HTMLInputElement>("input[lab-slider]")) bindSlider(input);
+			for (const input of host.querySelectorAll<HTMLInputElement>(
+				"input[lab-slider]",
+			))
+				bindSlider(input);
 		});
 	}
 
-	protected set(dial: "track" | "thumb" | "lift" | "ends" | "press", event: Event) {
+	protected set(
+		dial: "track" | "thumb" | "lift" | "ends" | "press",
+		event: Event,
+	) {
 		this[dial].set((event.target as HTMLInputElement).value);
 	}
 

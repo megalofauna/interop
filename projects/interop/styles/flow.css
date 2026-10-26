@@ -129,10 +129,7 @@
 
 /* ── Inside blocks ─────────────────────────────────────────────────────── */
 
-:where(
-	[itx-flow] > :is(ul, ol):not([role]) li + li,
-	[itx-flow] > :is(ul, ol):not([role]) li > :is(ul, ol)
-) {
+:where([itx-flow] > :is(ul, ol):not([role]) li + li, [itx-flow] > :is(ul, ol):not([role]) li > :is(ul, ol)) {
 	margin-block-start: var(--itx-flow-space-li);
 }
 

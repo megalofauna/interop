@@ -462,7 +462,10 @@ describe('accessibility (axe-core)', () => {
 				<input type="range" interop-slider id="budget" min="0" max="500" step="10" value="200"><span id="shown"></span>
 				<input type="range" interop-slider itx-orientation="vertical" aria-label="Temperature" disabled>
 			</main>`;
-		bindSlider(document.querySelector<HTMLInputElement>('#budget')!, { format: (value) => `$${value}`, readout: document.getElementById('shown') });
+		bindSlider(document.querySelector<HTMLInputElement>('#budget')!, {
+			format: (value) => `$${value}`,
+			readout: document.getElementById('shown'),
+		});
 		expect(await violations(document.body)).toEqual([]);
 	});
 

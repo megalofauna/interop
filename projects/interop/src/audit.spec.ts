@@ -583,12 +583,16 @@ describe('auditInterop', () => {
 			`<div interop-toast ${attributes}><div><p>Saved</p></div>${buttons}</div>`;
 
 		it('accepts a named manual region with a timed toast and a persistent one', () => {
-			render(`<section interop-toasts popover="manual" aria-label="Notifications">${item('data-timeout="6000"')}${item('itx-color="danger"')}</section>`);
+			render(
+				`<section interop-toasts popover="manual" aria-label="Notifications">${item('data-timeout="6000"')}${item('itx-color="danger"')}</section>`,
+			);
 			expect(rules()).toEqual([]);
 		});
 
 		it('flags a region with no name, and one that is not a manual popover', () => {
-			render('<section interop-toasts popover="manual"></section><section interop-toasts popover aria-label="A"></section><div interop-toasts aria-label="B"></div>');
+			render(
+				'<section interop-toasts popover="manual"></section><section interop-toasts popover aria-label="A"></section><div interop-toasts aria-label="B"></div>',
+			);
 			expect(rules()).toEqual(['toasts-name', 'toasts-popover', 'toasts-popover']);
 		});
 

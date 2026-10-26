@@ -18,7 +18,9 @@
 .layout > nav {
 	display: none;
 	inset-block-start: var(--itx-page-nav-scroll-padding-block-start);
-	--itx-page-nav-max-block-size: calc(100dvh - var(--itx-page-nav-scroll-padding-block-start) - var(--itx-space-8));
+	--itx-page-nav-max-block-size: calc(
+		100dvh - var(--itx-page-nav-scroll-padding-block-start) - var(--itx-space-8)
+	);
 }
 
 @container (inline-size >= 48rem) {
@@ -30,4 +32,3 @@
 		display: block;
 	}
 }
-

@@ -11,18 +11,18 @@
 	--itx-checkbox-box-border-width: var(--itx-border-width);
 	--itx-checkbox-box-border-style: solid;
 	/* A small corner: half the house radius, and never more than a quarter of the box, so it never reads as a radio. */
-	--itx-checkbox-box-border-radius: min(var(--itx-radius, var(--itx-radius-base)) / 2, var(--itx-checkbox-box-size) / 4);
+	--itx-checkbox-box-border-radius: min(var(--itx-radius, var(--itx-radius-base)) * 0.75);
 	--itx-checkbox-box-corner-shape: var(--itx-corner-shape);
 	/* Unchecked: the border carries the 3:1 edge against the page (WCAG 1.4.11). */
-	--itx-checkbox-box-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
-	--itx-checkbox-box-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-300));
+	--itx-checkbox-box-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-500));
+	--itx-checkbox-box-border-color-hover: light-dark(var(--itx-neutral-600), var(--itx-neutral-200));
 	--itx-checkbox-box-border-color-invalid: var(--itx-role-text-danger);
 	--itx-checkbox-box-border-width-invalid: var(--itx-border-width-strong);
 	/* Checked: the fill carries the edge, so the border lets it show through. */
 	--itx-checkbox-box-border-color-checked: transparent;
-	--itx-checkbox-box-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-checkbox-box-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-950));
 	--itx-checkbox-box-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-checkbox-box-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-checkbox-box-background-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-200));
 	--itx-checkbox-box-background-color-checked-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-200));
 
 	/* Only the mask's shape counts, so its stroke color does not matter. */

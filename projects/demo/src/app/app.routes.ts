@@ -68,9 +68,7 @@ export const routes: Routes = [
 		path: "components/progress",
 		title: "Progress",
 		loadComponent: () =>
-			import("./components/progress/progress-demo").then(
-				(m) => m.ProgressDemo,
-			),
+			import("./components/progress/progress-demo").then((m) => m.ProgressDemo),
 	},
 	{
 		path: "components/radio-group",

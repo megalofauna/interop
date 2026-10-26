@@ -58,8 +58,7 @@
 	border-radius: var(--itx-slider-track-border-radius);
 	background:
 		linear-gradient(var(--itx-slider-fill-background-color), var(--itx-slider-fill-background-color)) left /
-			calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value)) 100% no-repeat
-			border-box,
+			calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value)) 100% no-repeat border-box,
 		var(--itx-slider-track-background-color) padding-box;
 	box-shadow: var(--itx-slider-track-box-shadow);
 }
@@ -95,9 +94,7 @@
 	inline-size: var(--itx-slider-target-size);
 	block-size: var(--itx-slider-target-size);
 	/* Centers the target on a track thinner than it. */
-	margin-block-start: calc(
-		(var(--itx-slider-track-block-size) - var(--itx-slider-target-size)) / 2 - var(--itx-slider-track-border-width)
-	);
+	margin-block-start: calc((var(--itx-slider-track-block-size) - var(--itx-slider-target-size)) / 2 - var(--itx-slider-track-border-width));
 	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
 	border-radius: var(--itx-radius-full);
 	background: var(--itx-slider-thumb-background-color) padding-box;

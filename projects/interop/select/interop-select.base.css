@@ -65,7 +65,10 @@
 	/* Nested inside the list's padding. */
 	--itx-select-option-border-radius: var(--itx-radius, var(--itx-radius-base));
 	/* An enclosing corner: the options keep the house radius, and the picker adds its padding and border. */
-	--itx-select-picker-border-radius: var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-select-list-padding) + var(--itx-popover-border-width)));
+	--itx-select-picker-border-radius: var(
+		--itx-radius,
+		min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-select-list-padding) + var(--itx-popover-border-width))
+	);
 	--itx-select-legend-font-size: var(--itx-font-size-p-sm);
 	--itx-select-legend-line-height: var(--itx-line-height-p-sm);
 	--itx-select-separator-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));

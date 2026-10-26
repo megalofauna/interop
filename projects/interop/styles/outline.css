@@ -17,10 +17,7 @@
 	--itx-outline-offset: 2px;
 }
 
-:where(
-	:focus-visible,
-	fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label:has(> input:focus-visible)
-) {
+:where(:focus-visible, fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label:has(> input:focus-visible)) {
 	outline-width: var(--itx-outline-width);
 	outline-style: var(--itx-outline-style);
 	outline-color: var(--itx-outline-color);
