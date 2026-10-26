@@ -27,7 +27,7 @@
 	--itx-field-border-style: solid;
 	--itx-field-border-style-readonly: dashed;
 	/* 3:1 against the page in both schemes, so the field's edge is visible (WCAG 1.4.11). */
-	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-500));
 	--itx-field-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
 	--itx-field-border-color-invalid: var(--itx-role-text-danger);
 	--itx-field-border-radius: var(--itx-radius, var(--itx-radius-base));

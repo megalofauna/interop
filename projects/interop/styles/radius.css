@@ -5,9 +5,8 @@
  *                      whatever the house radius
  *   House              a control or container reads var(--itx-radius, var(--itx-radius-base)).
  *                      A control keeps it wherever it sits
- *   Small              a corner on a small element takes half the house radius, capped where
- *                      it would change the element's shape: a checkbox box stops at a quarter
- *                      of its size, so it never reads as a radio
+ *   Small              a corner on a small element takes a fraction of the house radius: half
+ *                      for a tooltip, three quarters for a checkbox box
  *   Enclosing          a container whose controls sit close to its corners takes the house
  *                      radius plus the distance from its outer edge to theirs, its padding and
  *                      border, so the corners are concentric. 0 when the house radius is 0:
