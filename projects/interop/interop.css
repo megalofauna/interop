@@ -27,6 +27,8 @@
 @import "./tooltip/interop-tooltip.structure.css";
 @import "./slider/interop-slider.base.css";
 @import "./slider/interop-slider.structure.css";
+@import "./progress/interop-progress.base.css";
+@import "./progress/interop-progress.structure.css";
 @import "./switch/interop-switch.base.css";
 @import "./switch/interop-switch.structure.css";
 @import "./radio-group/interop-radio-group.base.css";

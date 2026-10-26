@@ -35,7 +35,10 @@
 	--itx-dialog-section-padding-inline: var(--itx-space-2);
 	--itx-dialog-section-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
 	/* An enclosing corner: the field keeps the house radius, and the palette adds its inset and border. */
-	--itx-dialog-border-radius: var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-dialog-section-padding-inline) + var(--itx-dialog-border-width)));
+	--itx-dialog-border-radius: var(
+		--itx-radius,
+		min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + var(--itx-dialog-section-padding-inline) + var(--itx-dialog-border-width))
+	);
 	--itx-dialog-list-padding-inline: var(--itx-space-1);
 	--itx-dialog-result-min-block-size: var(--itx-space-10);
 	--itx-dialog-result-padding-inline: var(--itx-space-3);

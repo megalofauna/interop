@@ -16,12 +16,7 @@
 	with <code>ariaNotify()</code>, so the page needs no live region.
 </p>
 <h3 #heading>Applied filters</h3>
-<ul
-	interop-tags
-	role="list"
-	aria-label="Applied filters"
-	[fallback]="heading"
->
+<ul interop-tags role="list" aria-label="Applied filters" [fallback]="heading">
 	@for (filter of filters(); track filter) {
 		<li>
 			{{ filter }}

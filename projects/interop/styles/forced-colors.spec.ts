@@ -11,6 +11,7 @@ const required = [
 	'button/interop-button.structure.css',
 	'checkbox/interop-checkbox.structure.css',
 	'field/interop-field.structure.css',
+	'progress/interop-progress.structure.css',
 	'radio-group/interop-radio-group.structure.css',
 	'select/interop-select.structure.css',
 	'slider/interop-slider.structure.css',
@@ -37,10 +38,13 @@ const exempt: Record<string, string> = {
 	'scroll-area/interop-scroll-area.structure.css': 'The edge shadows are a hint; the content scrolls the same without them.',
 	'tooltip/interop-tooltip.structure.css': 'Text and a border, which the browser maps.',
 	'styles/fieldset.css': 'Layout only.',
-	'table/interop-table.structure.css': 'Text and borders, which the browser maps. The group band becomes Canvas; its header text still marks the group.',
-	'toolbar/interop-toolbar.structure.css': 'The channel fill becomes Canvas and its bars are borders, which the browser maps. Its buttons carry their own rules.',
+	'table/interop-table.structure.css':
+		'Text and borders, which the browser maps. The group band becomes Canvas; its header text still marks the group.',
+	'toolbar/interop-toolbar.structure.css':
+		'The channel fill becomes Canvas and its bars are borders, which the browser maps. Its buttons carry their own rules.',
 	'tabs/interop-tabs.structure.css': 'Its bar is in styles/underscore.css and its segmented look in styles/segmented.css.',
-	'toast/interop-toast.structure.css': 'Its edges are borders, which the browser maps. The status edge takes the text color there; the icon still shows the status.',
+	'toast/interop-toast.structure.css':
+		'Its edges are borders, which the browser maps. The status edge takes the text color there; the icon still shows the status.',
 	'page-nav/interop-page-nav.structure.css': 'Its current bar is in styles/underscore.css or the tree; the stuck shadow is decoration.',
 };
 
@@ -64,7 +68,15 @@ describe('forced colors', () => {
 		const components = Object.keys(sheets).filter(
 			(path) =>
 				path.endsWith('.structure.css') ||
-				['styles/cards.css', 'styles/chips.css', 'styles/segmented.css', 'styles/underscore.css', 'styles/disclosure.css', 'styles/outline.css', 'styles/fieldset.css'].includes(path),
+				[
+					'styles/cards.css',
+					'styles/chips.css',
+					'styles/segmented.css',
+					'styles/underscore.css',
+					'styles/disclosure.css',
+					'styles/outline.css',
+					'styles/fieldset.css',
+				].includes(path),
 		);
 		expect(components.filter((path) => !required.includes(path) && !(path in exempt))).toEqual([]);
 	});

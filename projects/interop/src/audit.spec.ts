@@ -551,17 +551,48 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('progress', () => {
+		it('accepts a labeled bar, a wrapped one, a named one and an indeterminate one with value text', () => {
+			render(`
+				<label for="u">Uploading</label><progress interop-progress id="u" value="40" max="100"></progress>
+				<label>Syncing <progress interop-progress value="3" max="7"></progress></label>
+				<progress interop-progress aria-label="Connecting" aria-valuetext="Waiting for the relay"></progress>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a bar with no name', () => {
+			render('<progress interop-progress value="40" max="100"></progress>');
+			expect(rules()).toEqual(['progress-name']);
+		});
+
+		it('flags a role and ARIA values that restate or override the native range', () => {
+			render(`
+				<progress interop-progress aria-label="A" role="progressbar"></progress>
+				<progress interop-progress aria-label="B" value="29" max="100" aria-valuenow="3" aria-valuemin="1" aria-valuemax="7"></progress>
+			`);
+			const problems = auditInterop(document).map((issue) => issue.problem);
+			expect(rules()).toEqual(['progress-aria', 'progress-aria']);
+			expect(problems[0]).toContain('role');
+			expect(problems[1]).toContain('aria-valuenow, aria-valuemin, aria-valuemax');
+		});
+	});
+
 	describe('toast', () => {
 		const item = (attributes = '', buttons = '<button type="button" aria-label="Dismiss"></button>') =>
 			`<div interop-toast ${attributes}><div><p>Saved</p></div>${buttons}</div>`;
 
 		it('accepts a named manual region with a timed toast and a persistent one', () => {
-			render(`<section interop-toasts popover="manual" aria-label="Notifications">${item('data-timeout="6000"')}${item('itx-color="danger"')}</section>`);
+			render(
+				`<section interop-toasts popover="manual" aria-label="Notifications">${item('data-timeout="6000"')}${item('itx-color="danger"')}</section>`,
+			);
 			expect(rules()).toEqual([]);
 		});
 
 		it('flags a region with no name, and one that is not a manual popover', () => {
-			render('<section interop-toasts popover="manual"></section><section interop-toasts popover aria-label="A"></section><div interop-toasts aria-label="B"></div>');
+			render(
+				'<section interop-toasts popover="manual"></section><section interop-toasts popover aria-label="A"></section><div interop-toasts aria-label="B"></div>',
+			);
 			expect(rules()).toEqual(['toasts-name', 'toasts-popover', 'toasts-popover']);
 		});
 

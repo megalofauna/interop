@@ -293,8 +293,10 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		selector: 'div[interop-group]:not([role="group"])',
 		check: () => ({
 			problem: 'This group has no role="group".',
-			reason: 'Without the role, a screen reader does not say the group’s name, and its controls are announced one by one with nothing that joins them.',
-			advice: 'Add role="group" and a name: <div role="group" interop-group aria-label="…">. For one Tab stop and arrow keys, use a toolbar.',
+			reason:
+				'Without the role, a screen reader does not say the group’s name, and its controls are announced one by one with nothing that joins them.',
+			advice:
+				'Add role="group" and a name: <div role="group" interop-group aria-label="…">. For one Tab stop and arrow keys, use a toolbar.',
 		}),
 	},
 	'group-label': {
@@ -305,7 +307,9 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 				: {
 						problem: 'This group has no name.',
 						reason: 'A screen reader says "group" with nothing to say what the controls are for.',
-						advice: group.matches('fieldset') ? 'Add a <legend> as its first child.' : 'Add aria-label="…", or aria-labelledby pointing at a heading.',
+						advice: group.matches('fieldset')
+							? 'Add a <legend> as its first child.'
+							: 'Add aria-label="…", or aria-labelledby pointing at a heading.',
 					},
 	},
 	'group-attached-name': {
@@ -318,8 +322,11 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			const generic = /^(open|toggle|toggle dropdown|dropdown|menu|open menu|more|more options|options|show more|expand)$/.test(name);
 			return name && (generic || others.includes(name))
 				? {
-						problem: generic ? `This button is named "${name}", which does not say what it is for.` : 'This button has the same name as the button it is attached to.',
-						reason: 'A screen reader announces two buttons that look like one. Each needs a name that says what it does and how it relates to the other.',
+						problem: generic
+							? `This button is named "${name}", which does not say what it is for.`
+							: 'This button has the same name as the button it is attached to.',
+						reason:
+							'A screen reader announces two buttons that look like one. Each needs a name that says what it does and how it relates to the other.',
 						advice: 'Name it for its action, e.g. "More save options" beside "Save".',
 					}
 				: null;
@@ -764,6 +771,32 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			return null;
 		},
 	},
+	'progress-name': {
+		selector: 'progress[interop-progress]',
+		check: (progress) =>
+			(progress as HTMLProgressElement).labels?.length || ariaName(progress)
+				? null
+				: {
+						problem: 'This progress bar has no name.',
+						reason: 'A screen reader announces it as "progress bar" and a percentage, with nothing to say what is in progress.',
+						advice: 'Add <label for="…"> with the progress bar’s id, or aria-label="…".',
+					},
+	},
+	'progress-aria': {
+		selector: 'progress[interop-progress]',
+		check: (progress) => {
+			const set = ['role', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax'].filter((name) => progress.hasAttribute(name));
+			return set.length
+				? {
+						problem: `This progress bar sets ${set.join(', ')}.`,
+						reason:
+							'A <progress> already has the progressbar role and takes its range from value and max. ARIA values override them, so the bar and its announcement can disagree.',
+						advice:
+							'Remove them. Set value and max, leave value out while the amount is unknown, and use aria-valuetext for words such as "3 of 7 files".',
+					}
+				: null;
+		},
+	},
 	'toasts-name': {
 		selector: '[interop-toasts]',
 		check: (region) =>
@@ -778,7 +811,9 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 	'toasts-popover': {
 		selector: '[interop-toasts]:not([popover="manual"])',
 		check: (region) => ({
-			problem: region.hasAttribute('popover') ? 'This toast region is a popover that closes by itself.' : 'This toast region is not a popover.',
+			problem: region.hasAttribute('popover')
+				? 'This toast region is a popover that closes by itself.'
+				: 'This toast region is not a popover.',
 			reason: region.hasAttribute('popover')
 				? 'An auto popover closes on any click or Escape elsewhere, taking every toast with it.'
 				: 'Without the top layer, an open popover or a select’s picker covers the toasts.',
@@ -814,8 +849,10 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			return modal && !modal.contains(item)
 				? {
 						problem: 'This toast is outside the open modal dialog.',
-						reason: 'A modal dialog makes the rest of the page inert. The toast shows over it, but nothing in it can be clicked or focused.',
-						advice: 'Put a <section interop-toasts popover="manual" aria-label="Notifications"> inside the dialog. toast() uses it while the dialog is open.',
+						reason:
+							'A modal dialog makes the rest of the page inert. The toast shows over it, but nothing in it can be clicked or focused.',
+						advice:
+							'Put a <section interop-toasts popover="manual" aria-label="Notifications"> inside the dialog. toast() uses it while the dialog is open.',
 					}
 				: null;
 		},

@@ -63,6 +63,10 @@ import sliderInteropSliderBase from '../slider/interop-slider.base.css' with { l
 // @ts-expect-error The text loader turns the file into a string.
 import sliderInteropSliderStructure from '../slider/interop-slider.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import progressInteropProgressBase from '../progress/interop-progress.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import progressInteropProgressStructure from '../progress/interop-progress.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import switchInteropSwitchBase from '../switch/interop-switch.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import switchInteropSwitchStructure from '../switch/interop-switch.structure.css' with { loader: 'text' };
@@ -164,6 +168,8 @@ export const sheets: Record<string, string> = {
 	'tooltip/interop-tooltip.structure.css': tooltipInteropTooltipStructure,
 	'slider/interop-slider.base.css': sliderInteropSliderBase,
 	'slider/interop-slider.structure.css': sliderInteropSliderStructure,
+	'progress/interop-progress.base.css': progressInteropProgressBase,
+	'progress/interop-progress.structure.css': progressInteropProgressStructure,
 	'switch/interop-switch.base.css': switchInteropSwitchBase,
 	'switch/interop-switch.structure.css': switchInteropSwitchStructure,
 	'radio-group/interop-radio-group.base.css': radioGroupInteropRadioGroupBase,

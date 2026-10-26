@@ -1,0 +1,104 @@
+/*
+ * Progress: how far a task has got, on the native `<progress>`.
+ *
+ *   <label for="upload">Uploading report.pdf</label>
+ *   <progress interop-progress id="upload" value="42" max="100"></progress>
+ *
+ * The browser draws the fill from `value` and `max`, exposes the progressbar role with its range, and
+ * matches :indeterminate when there is no `value`. Nothing here needs script. The element is the
+ * track, the slider's recess at the same size step; its fill part covers the edge and the shade
+ * where it reaches.
+ *
+ * Indeterminate draws a band that crosses the track. Its gradient stops move, so one keyframe serves
+ * both directions.
+ *
+ * Also known as:
+ *   progress bar          Carbon, Fluent, Spectrum, React Aria, Web Awesome, Angular Material
+ *   progress indicator    Apple HIG and Material, for bars and spinners; Carbon's is a step tracker
+ *   loading bar
+ * Progress is the HTML element, and the name in Radix, Base UI and Ark. Progressbar is the ARIA role.
+ * A measurement in a range, such as storage used, is a <meter>.
+ */
+
+/* The leading edge of the indeterminate band, in percent of the track. */
+@property --itx-progress-sweep {
+	syntax: "<number>";
+	inherits: false;
+	initial-value: 0;
+}
+
+@keyframes itx-progress-sweep {
+	to {
+		--itx-progress-sweep: calc(100 + var(--itx-progress-band-length));
+	}
+}
+
+:where(progress[interop-progress]) {
+	appearance: none;
+	box-sizing: border-box;
+	display: block;
+	inline-size: var(--itx-progress-inline-size);
+	block-size: var(--itx-progress-track-block-size);
+	margin: 0;
+	border: 0;
+	border-radius: var(--itx-progress-track-border-radius);
+	overflow: hidden;
+	background-color: var(--itx-progress-track-background-color);
+	/* The edge is a shadow, not a border, so the fill part inside can cover it. */
+	box-shadow:
+		inset 0 0 0 var(--itx-progress-track-border-width) var(--itx-progress-track-border-color),
+		var(--itx-progress-track-box-shadow);
+}
+
+/* Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the whole rule. */
+:where(progress[interop-progress])::-webkit-progress-bar {
+	border-radius: var(--itx-progress-track-border-radius);
+	background-color: transparent;
+}
+
+:where(progress[interop-progress])::-webkit-progress-value {
+	border-radius: var(--itx-progress-track-border-radius);
+	background-color: var(--itx-progress-fill-background-color);
+	transition: inline-size var(--itx-progress-transition-duration) var(--itx-progress-transition-timing-function);
+}
+
+:where(progress[interop-progress])::-moz-progress-bar {
+	border-radius: var(--itx-progress-track-border-radius);
+	background-color: var(--itx-progress-fill-background-color);
+}
+
+:where(progress[interop-progress]:indeterminate) {
+	background-image: linear-gradient(
+		to right,
+		transparent 0 calc((var(--itx-progress-sweep) - var(--itx-progress-band-length)) * 1%),
+		var(--itx-progress-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
+		transparent 0
+	);
+	/* Linear, because an easing on a loop makes it pulse. Reduced motion slows it in styles/transition.css. */
+	animation: itx-progress-sweep var(--itx-progress-animation-duration) linear infinite;
+}
+
+:where(progress[interop-progress]:indeterminate:dir(rtl)) {
+	background-image: linear-gradient(
+		to left,
+		transparent 0 calc((var(--itx-progress-sweep) - var(--itx-progress-band-length)) * 1%),
+		var(--itx-progress-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
+		transparent 0
+	);
+}
+
+/* Firefox draws an indeterminate fill across the whole track, which would cover the band. */
+:where(progress[interop-progress]:indeterminate)::-moz-progress-bar {
+	background-color: transparent;
+}
+
+/* Forced colors drop gradients and shadows. These keep the edge, the fill and the band in system colors. */
+@media (forced-colors: active) {
+	:where(progress[interop-progress]) {
+		forced-color-adjust: none;
+		--itx-progress-track-background-color: Canvas;
+		--itx-progress-track-border-color: CanvasText;
+		--itx-progress-track-box-shadow: 0 0 transparent;
+		--itx-progress-fill-background-color: Highlight;
+	}
+}

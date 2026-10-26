@@ -1,14 +1,13 @@
 <h1>Page nav</h1>
 <p class="aka">
-	Also known as table of contents, on this page, in-page navigation,
-	scroll-spy, anchor navigation.
+	Also known as table of contents, on this page, in-page navigation, scroll-spy,
+	anchor navigation.
 </p>
 <p>
-	A page nav links to the sections of the page and marks the one in view. It
-	is a <code>&lt;nav interop-page-nav&gt;</code> of plain links. The links
-	scroll to their sections with no script, and the browser decides which
-	section is current. This page shows both orientations at once; a real page
-	uses one.
+	A page nav links to the sections of the page and marks the one in view. It is
+	a <code>&lt;nav interop-page-nav&gt;</code> of plain links. The links scroll
+	to their sections with no script, and the browser decides which section is
+	current. This page shows both orientations at once; a real page uses one.
 </p>
 
 <nav interop-page-nav aria-label="On this page">
@@ -25,10 +24,10 @@
 	<div class="content" itx-flow>
 		<h2 id="horizontal">Horizontal</h2>
 		<p>
-			The default. A bar of links on a rule, with a bar under the current
-			link: the underscore look tabs wear. It sticks to the top of the page as
-			the page scrolls, and casts a shadow once it sticks. A bar wider than
-			its space scrolls sideways and keeps the current link in view.
+			The default. A bar of links on a rule, with a bar under the current link:
+			the underscore look tabs wear. It sticks to the top of the page as the
+			page scrolls, and casts a shadow once it sticks. A bar wider than its
+			space scrolls sideways and keeps the current link in view.
 		</p>
 		<figure
 			interop-code-block
@@ -37,24 +36,21 @@
 		></figure>
 		<h3 id="inset">Below a fixed header</h3>
 		<p>
-			Set <code>--itx-page-nav-inset-block-start</code> on
-			<code>:root</code>. The bar sticks that far down, and a section
-			scrolled to starts below the bar.
+			Set <code>--itx-page-nav-inset-block-start</code> on <code>:root</code>.
+			The bar sticks that far down, and a section scrolled to starts below the
+			bar.
 		</p>
-		<figure
-			interop-code-block
-			language="css"
-			[code]="examples.inset"
-		></figure>
+		<figure interop-code-block language="css" [code]="examples.inset"></figure>
 
 		<h2 id="vertical">Vertical</h2>
 		<p>
 			<code>itx-orientation="vertical"</code> for a narrow column beside the
 			content. The list is a tree, <code>ul interop-tree</code>, so sections
-			nest. It is quieter than the site navigation: one rail along the list,
-			a bar over the rail at the current section, and dim links that darken
-			on hover. It sticks at the top of its column. A list taller than the window scrolls on its
-			own; add <code>interop-scroll-area</code> for its edge shadows.
+			nest. It is quieter than the site navigation: one rail along the list, a
+			bar over the rail at the current section, and dim links that darken on
+			hover. It sticks at the top of its column. A list taller than the window
+			scrolls on its own; add <code>interop-scroll-area</code> for its edge
+			shadows.
 		</p>
 		<figure
 			interop-code-block
@@ -65,65 +61,55 @@
 		<h2 id="current">The current section</h2>
 		<p>
 			The list has <code>scroll-target-group: auto</code>, so each link to a
-			section of this page is a scroll marker. The browser marks the link to
-			the section in view with <code>:target-current</code>. A section is
-			current from the moment its start reaches the top of the window, and
-			the last one becomes current when the page reaches its end, however
-			short it is.
+			section of this page is a scroll marker. The browser marks the link to the
+			section in view with <code>:target-current</code>. A section is current
+			from the moment its start reaches the top of the window, and the last one
+			becomes current when the page reaches its end, however short it is.
 		</p>
 		<p>
-			Links to other pages are left alone, so a site navigation tree can
-			hold the current page's sections as well.
+			Links to other pages are left alone, so a site navigation tree can hold
+			the current page's sections as well.
 		</p>
 
 		<h2 id="screen-readers">Screen readers</h2>
 		<p>
 			The browser does not yet tell screen readers which link is current.
 			<code>bindTargetCurrent()</code> gives that link
-			<code>aria-current="true"</code>, read from
-			<code>:target-current</code>, so the highlight and what is announced
-			agree. Nothing is announced while the page scrolls; the state is read
-			when the user reaches the link.
+			<code>aria-current="true"</code>, read from <code>:target-current</code>,
+			so the highlight and what is announced agree. Nothing is announced while
+			the page scrolls; the state is read when the user reaches the link.
 		</p>
-		<figure
-			interop-code-block
-			language="ts"
-			[code]="examples.helper"
-		></figure>
+		<figure interop-code-block language="ts" [code]="examples.helper"></figure>
 
 		<h2 id="other-browsers">Other browsers</h2>
 		<p>
 			Firefox and Safari have no <code>:target-current</code>. There
-			<code>bindTargetCurrent()</code> chooses the current link itself: the
-			last one whose section starts in the top half of the window, or the
-			last one at the end of the page. The CSS draws
-			<code>aria-current="true"</code> the same as
-			<code>:target-current</code>.
+			<code>bindTargetCurrent()</code> chooses the current link itself: the last
+			one whose section starts in the top half of the window, or the last one at
+			the end of the page. The CSS draws <code>aria-current="true"</code> the
+			same as <code>:target-current</code>.
 		</p>
 
 		<h2 id="angular">In Angular</h2>
 		<p>
 			<code>InteropPageNav</code> binds the helper. With
-			<code>&lt;base href="/"&gt;</code>, a bare <code>href="#install"</code>
-			points at the site root, so give the links <code>routerLink</code> and
-			a <code>fragment</code>, and let the router scroll to anchors.
+			<code>&lt;base href="/"&gt;</code>, a bare
+			<code>href="#install"</code> points at the site root, so give the links
+			<code>routerLink</code> and a <code>fragment</code>, and let the router
+			scroll to anchors.
 		</p>
 		<figure
 			interop-code-block
 			language="html"
 			[code]="examples.angular"
 		></figure>
-		<figure
-			interop-code-block
-			language="ts"
-			[code]="examples.router"
-		></figure>
+		<figure interop-code-block language="ts" [code]="examples.router"></figure>
 
 		<h2 id="when-not">When not to use it</h2>
 		<p>
-			A page nav shows every section and reports position. To show one
-			section and hide the others, use tabs. To move between pages, use the
-			site navigation. A page with two or three short sections needs neither.
+			A page nav shows every section and reports position. To show one section
+			and hide the others, use tabs. To move between pages, use the site
+			navigation. A page with two or three short sections needs neither.
 		</p>
 	</div>
 

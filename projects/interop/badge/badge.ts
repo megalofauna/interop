@@ -1,4 +1,16 @@
-import { Component, ElementRef, HostAttributeToken, LOCALE_ID, booleanAttribute, computed, effect, inject, input, numberAttribute, untracked } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	HostAttributeToken,
+	LOCALE_ID,
+	booleanAttribute,
+	computed,
+	effect,
+	inject,
+	input,
+	numberAttribute,
+	untracked,
+} from '@angular/core';
 import { announce } from 'interop';
 
 /** What a count counts, by plural form: `{ one: 'unread message', other: 'unread messages' }`. */

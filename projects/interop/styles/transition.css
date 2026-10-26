@@ -1,7 +1,7 @@
 /*
  * Motion, and the system's reduced-motion preference in one place. Every transition reads a duration
- * here, so reduced motion stops all of them; a busy spinner keeps turning, slower, so it still says
- * that something is happening.
+ * here, so reduced motion stops all of them; a busy spinner keeps turning and an indeterminate progress
+ * band keeps crossing, both slower, so they still say that something is happening.
  */
 
 :root {
@@ -10,6 +10,7 @@
 	--itx-transition-duration-slower: 250ms;
 	--itx-transition-timing-function: cubic-bezier(0.2, 0, 0.38, 0.9);
 	--itx-animation-duration-spin: 0.75s;
+	--itx-animation-duration-sweep: 1s;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -18,5 +19,6 @@
 		--itx-transition-duration: 0ms;
 		--itx-transition-duration-slower: 0ms;
 		--itx-animation-duration-spin: 1.5s;
+		--itx-animation-duration-sweep: 2s;
 	}
 }

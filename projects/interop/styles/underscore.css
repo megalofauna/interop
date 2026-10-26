@@ -26,10 +26,7 @@
 
 /* ── Strip ─────────────────────────────────────────────────────────────── */
 
-:where(
-	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"],
-	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul
-) {
+:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"], nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul) {
 	--itx-underscore-rule-border-width: var(--itx-border-width);
 	/* The rule carries no state, so it needs no contrast floor. The bar does. */
 	--itx-underscore-rule-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));

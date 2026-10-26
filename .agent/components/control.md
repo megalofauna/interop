@@ -164,7 +164,7 @@ own family.
 | `--itx-checkbox-font-size`, `-line-height` | the `label` role |
 | `--itx-checkbox-cursor[-disabled]`, `-opacity-disabled` | default, not-allowed, 0.5 |
 | `--itx-checkbox-box-size`, `-box-border-width`, `-box-border-style` | `--itx-space-5`, 1px, solid |
-| `--itx-checkbox-box-border-radius`, `-box-corner-shape` | half the house radius, at most a quarter of the box; the house corner shape |
+| `--itx-checkbox-box-border-radius`, `-box-corner-shape` | three quarters of the house radius; the house corner shape |
 | `--itx-checkbox-box-border-color[-hover\|-checked]` | neutral-500/400, 600/300, transparent |
 | `--itx-checkbox-box-background-color[-hover\|-checked\|-checked-hover]` | neutral-50/900, 100/800, 900/50, 700/200 |
 | `--itx-checkbox-mark-mask-image[-indeterminate]` | an SVG check, an SVG dash |

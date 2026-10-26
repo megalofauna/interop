@@ -12,8 +12,8 @@ fieldset. There is no two-thumb slider.
 
 ```
 projects/interop/slider/
-  interop-slider.structure.css   layers, thumb, vertical, forced colors; names list at the top
-  interop-slider.base.css        token values
+  interop-slider.structure.css   track, fill, thumb, vertical, forced colors; names list at the top
+  interop-slider.base.css        token values and size steps
   slider.ts                      InteropSlider directive
   public-api.ts
 projects/interop/src/bind-slider.ts   bindSlider(), paintSlider(), framework-free
@@ -60,22 +60,45 @@ In Angular, `InteropSlider` binds it, with `[format]` and `[readout]` inputs.
 
 ## Look
 
-- The input is 24px tall, and up to 24rem wide (10rem tall when vertical).
-- It draws the track and fill as two background layers: front to back, the fill,
-  then the track, 4px thick. The fill ends under the thumb's center:
-  `target / 2 + (100% - target) * value`. A plain percentage drifts up to 12px.
-- The layers are physical, so `:dir(rtl)` moves them right, and the vertical
-  rule swaps their axes and anchors them at the bottom.
-- The thumb's box is the 24px target. A transparent border with
-  `background-clip: content-box` draws a 16px circle inside it.
-- Track `neutral-500`/`400`, fill and thumb in the text color. All three are 3:1
-  against the page in both schemes; `styles/contrast.spec.ts` measures them.
+The track and thumb were chosen in the track lab (`/lab/track`), which stays in
+the demo for comparing looks. The [progress bar](progress.md) draws the same
+track at every size step; `styles/contrast.spec.ts` fails if their track tokens
+differ.
+
+| `itx-size` | Input height (target) | Thumb | Track |
+|---|---|---|---|
+| `sm` | 24px | 16px | 4px |
+| none, `md` | 32px | 20px | 6px |
+| `lg` | 40px | 28px | 8px |
+
+- The input is up to 24rem wide (10rem tall when vertical).
+- **Track.** The input's own track part: a recess (`neutral-100`/`950`) with a
+  1px edge (`neutral-500`/`400`, 3:1 against the page), round ends, and an inset
+  shade along its top (`0 1px 2px`). The edge reads `--itx-border-width`, so
+  `prefers-contrast` thickens it.
+- **Fill.** A background layer on the track part, in the text color, drawn to
+  the border's outer edge so it covers the edge where it reaches. It ends under
+  the thumb's center: `target / 2 + (100% - target) * value`. A plain percentage
+  drifts by half a thumb. `:dir(rtl)` anchors it right; vertical anchors it at
+  the bottom and swaps its axes. `--itx-slider-value` is registered with
+  `inherits: true`, because the track part reads it from the input.
+- **Thumb.** The thumb's box is the target. A transparent border insets a light
+  disc (`neutral-50`/`200`) inside it. Its 1px edge (`neutral-500`/`950`) is an
+  inset shadow, because the real border is the inset; in dark it is darker than
+  the fill, so the disc stays apart from it. The lift is
+  `filter: drop-shadow(0 1px 2px …)`, which follows the disc; a `box-shadow`
+  would draw around the whole target. `margin-block-start` centers the target on
+  the track in Chrome and WebKit; Firefox centers it itself.
+- **Press.** While held (`:active`), the thumb scales to 1.15 over the shared
+  transition duration, which reduced motion sets to 0. Not while disabled.
+- Contrast, measured in `styles/contrast.spec.ts`: track edge and fill 3:1
+  against the page, fill 3:1 against the recess, and the thumb's face or edge
+  3:1 against the page, the recess and the fill.
 - Focus is the house ring from `outline.css`, around the input's box.
 - The input sets `background-color: transparent`, because Chrome fills a vertical
   range in the dark scheme.
-- Forced colors keep the layers (`forced-color-adjust: none`) in system colors:
-  track and thumb `CanvasText`, fill `Highlight`, `GrayText` when disabled.
-- One size: a smaller step would put the target under 24px (WCAG 2.5.8).
+- Forced colors (`forced-color-adjust: none`): recess `Canvas`, edge and thumb
+  `CanvasText`, fill `Highlight`, no shade, no lift; `GrayText` when disabled.
 
 Vendor pseudo-elements never share a selector list: one unknown pseudo-element
 drops the whole rule. The pseudo-element goes outside `:where()`.
@@ -102,8 +125,16 @@ drops the whole rule. The pseudo-element goes outside `:where()`.
   - RTL: Arrow Right lowers the value, and the fill starts at the right.
   - The readout is `aria-hidden`.
   - Dark, forced colors and 320px all hold, and the page checks pass.
+  - After the track-lab restyle: a click on the track, Arrow Right, End and Home
+    move the value and the fill; the ring shows after a key; vertical draws the
+    fill from the bottom with the thumb centered on the track.
+- Playwright WebKit 27.2 (not Safari): the three sizes, track, fill and thumb draw
+  as in Chrome.
+- Firefox: the user checked the track lab in Firefox; the library slider itself
+  is not yet checked there.
 - Not yet tested: speech output, including whether `aria-valuetext` on a native
-  range is read (the DevTools protocol does not show it), and Firefox and Safari.
+  range is read (the DevTools protocol does not show it); `:active` on touch in
+  iOS Safari, which may need a touch listener for the press to show.
 
 ## Not built
 
@@ -112,10 +143,9 @@ drops the whole rule. The pseudo-element goes outside `:where()`.
 - − and + buttons. When asked for, they are a custom `--step-up` / `--step-down`
   command aimed at the input; a `command` listener with `stepUp()` worked in
   Chrome 155.
-- Size steps.
 - The standard `::slider-track`, `::slider-fill`, `::slider-thumb` and
   `appearance: base`, which no browser ships. They would replace the vendor rules
-  and the background layers.
+  and the fill layer.
 
 ## Prime
 

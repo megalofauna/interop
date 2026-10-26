@@ -65,6 +65,12 @@ export const routes: Routes = [
 			import("./components/popover/popover-demo").then((m) => m.PopoverDemo),
 	},
 	{
+		path: "components/progress",
+		title: "Progress",
+		loadComponent: () =>
+			import("./components/progress/progress-demo").then((m) => m.ProgressDemo),
+	},
+	{
 		path: "components/radio-group",
 		title: "Radio group",
 		loadComponent: () =>
@@ -200,6 +206,12 @@ export const routes: Routes = [
 			import("./patterns/theme-switcher/theme-switcher-demo").then(
 				(m) => m.ThemeSwitcherDemo,
 			),
+	},
+	{
+		path: "lab/track",
+		title: "Track lab",
+		loadComponent: () =>
+			import("./lab/track/track-lab").then((m) => m.TrackLab),
 	},
 	{
 		path: "foundations/flow",

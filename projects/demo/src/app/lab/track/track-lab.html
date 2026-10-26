@@ -1,0 +1,182 @@
+<h1>Track lab</h1>
+<p>
+	Candidate looks for the slider and the progress bar. One track per size step,
+	shared by both.
+</p>
+
+<div class="dials">
+	<fieldset interop-radio-group="segmented" (change)="set('track', $event)">
+		<legend>Track</legend>
+		<label
+			><input
+				type="radio"
+				name="track"
+				value="flat"
+				[checked]="track() === 'flat'"
+			/>
+			Flat</label
+		>
+		<label
+			><input
+				type="radio"
+				name="track"
+				value="channel"
+				[checked]="track() === 'channel'"
+			/>
+			Channel</label
+		>
+		<label
+			><input
+				type="radio"
+				name="track"
+				value="shaded"
+				[checked]="track() === 'shaded'"
+			/>
+			Shaded</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('thumb', $event)">
+		<legend>Thumb</legend>
+		<label
+			><input
+				type="radio"
+				name="thumb"
+				value="solid"
+				[checked]="thumb() === 'solid'"
+			/>
+			Solid</label
+		>
+		<label
+			><input
+				type="radio"
+				name="thumb"
+				value="ring"
+				[checked]="thumb() === 'ring'"
+			/>
+			Ring</label
+		>
+		<label
+			><input
+				type="radio"
+				name="thumb"
+				value="knob"
+				[checked]="thumb() === 'knob'"
+			/>
+			Knob</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('lift', $event)">
+		<legend>Lift</legend>
+		<label
+			><input
+				type="radio"
+				name="lift"
+				value="off"
+				[checked]="lift() === 'off'"
+			/>
+			Off</label
+		>
+		<label
+			><input type="radio" name="lift" value="on" [checked]="lift() === 'on'" />
+			On</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('ends', $event)">
+		<legend>Ends</legend>
+		<label
+			><input
+				type="radio"
+				name="ends"
+				value="square"
+				[checked]="ends() === 'square'"
+			/>
+			Square</label
+		>
+		<label
+			><input
+				type="radio"
+				name="ends"
+				value="round"
+				[checked]="ends() === 'round'"
+			/>
+			Round</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('press', $event)">
+		<legend>Press</legend>
+		<label
+			><input
+				type="radio"
+				name="press"
+				value="off"
+				[checked]="press() === 'off'"
+			/>
+			Off</label
+		>
+		<label
+			><input
+				type="radio"
+				name="press"
+				value="grow"
+				[checked]="press() === 'grow'"
+			/>
+			Grow</label
+		>
+	</fieldset>
+	<button type="button" interop-button (click)="step()">Progress +20</button>
+</div>
+
+<div class="schemes">
+	@for (scheme of schemes; track scheme) {
+		<section
+			class="scheme"
+			[class]="scheme"
+			[attr.aria-label]="scheme + ' scheme'"
+		>
+			@for (surface of surfaces; track surface) {
+				<div [class.panel]="surface === 'Panel'">
+					@for (size of sizes; track size) {
+						<div class="step">
+							<span class="step-name">{{ surface }} · {{ size }}</span>
+							<input
+								type="range"
+								lab-slider
+								[attr.itx-size]="size"
+								value="40"
+								[attr.aria-label]="
+									'Volume ' + size + ' ' + scheme + ' ' + surface
+								"
+							/>
+							<progress
+								lab-progress
+								[attr.itx-size]="size"
+								[value]="progress()"
+								max="100"
+								[attr.aria-label]="
+									'Upload ' + size + ' ' + scheme + ' ' + surface
+								"
+							></progress>
+							<progress
+								lab-progress
+								[attr.itx-size]="size"
+								[attr.aria-label]="
+									'Connecting ' + size + ' ' + scheme + ' ' + surface
+								"
+							></progress>
+						</div>
+					}
+					<div class="step">
+						<span class="step-name">{{ surface }} · disabled</span>
+						<input
+							type="range"
+							lab-slider
+							value="60"
+							disabled
+							[attr.aria-label]="'Disabled ' + scheme + ' ' + surface"
+						/>
+					</div>
+				</div>
+			}
+		</section>
+	}
+</div>

@@ -7,7 +7,8 @@ const HOUSE = 'var(--itx-radius, var(--itx-radius-base))';
 const RULES = [
 	(value: string) => value === 'var(--itx-radius-full)',
 	(value: string) => value === HOUSE,
-	(value: string) => value.includes(`${HOUSE} / 2`),
+	// Small: a fraction of the house radius, such as half or three quarters.
+	(value: string) => value.includes(`${HOUSE} / 2`) || new RegExp(`${HOUSE.replace(/[()]/g, '\\$&')} \\* 0?\\.\\d+`).test(value),
 	(value: string) => value.startsWith('var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) +'),
 ];
 
@@ -23,7 +24,8 @@ const follows = (value: string) => readsToken(value) || RULES.some((rule) => rul
 describe('corner radius', () => {
 	it('rejects a corner that follows no rule', () => {
 		const shrinking = 'max(0px, var(--itx-radius, var(--itx-radius-base)) - var(--itx-toolbar-padding))';
-		expect(['var(--itx-radius-base)', '50%', '4px', 'var(--itx-radius)', shrinking].filter(follows)).toEqual([]);
+		const growing = 'calc(var(--itx-radius, var(--itx-radius-base)) * 1.5)';
+		expect(['var(--itx-radius-base)', '50%', '4px', 'var(--itx-radius)', shrinking, growing].filter(follows)).toEqual([]);
 	});
 
 	for (const [file, css] of Object.entries(files)) {

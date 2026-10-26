@@ -2,8 +2,7 @@
 function sectionLinks(list: HTMLElement): HTMLAnchorElement[] {
 	const here = list.ownerDocument.location;
 	return Array.from(list.querySelectorAll<HTMLAnchorElement>('a[href*="#"]')).filter(
-		(link) =>
-			link.hash.length > 1 && link.origin === here.origin && link.pathname === here.pathname && link.search === here.search,
+		(link) => link.hash.length > 1 && link.origin === here.origin && link.pathname === here.pathname && link.search === here.search,
 	);
 }
 
