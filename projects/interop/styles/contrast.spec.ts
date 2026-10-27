@@ -547,31 +547,57 @@ describe('dialog', () => {
 	}
 });
 
-describe('toast', () => {
-	// Each itx-color block sets the status edge and icon; the first declaration is the neutral one.
-	const accents = [...sheets['toast/interop-toast.base.css'].matchAll(/itx-color="(\w+)"\]\) \{\s*--itx-toast-accent-color:\s*([^;]+);/g)];
+for (const component of ['toast', 'callout']) {
+	describe(component, () => {
+		const name = (part: string) => `--itx-${component}-${part}`;
+		// Each itx-color block sets the status edge and icon; the first declaration is the neutral one.
+		const accents = [
+			...sheets[`${component}/interop-${component}.base.css`].matchAll(
+				new RegExp(`itx-color="(\\w+)"\\]\\) \\{\\s*${name('accent-color')}:\\s*([^;]+);`, 'g'),
+			),
+		];
 
-	it('has a status color for every itx-color', () => {
-		expect(accents.map(([, color]) => color)).toEqual(['success', 'info', 'warning', 'danger']);
+		it('has a status color for every itx-color', () => {
+			expect(accents.map(([, color]) => color)).toEqual(['success', 'info', 'warning', 'danger']);
+		});
+
+		for (const [scheme, label] of SCHEMES) {
+			const background = () => token(name('background-color'), scheme);
+
+			it(`has text of 4.5:1 on the ${component} in ${label}`, () => {
+				expect(contrast(token(name('color'), scheme), background())).toBeGreaterThanOrEqual(4.5);
+			});
+
+			it(`has an edge of 3:1 against the page in ${label}`, () => {
+				expect(contrast(token(name('border-color'), scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			});
+
+			it(`has status edges and icons of 3:1 against the ${component} and the page in ${label}`, () => {
+				for (const value of [token(name('accent-color'), scheme), ...accents.map(([, , value]) => resolve(oneLine(value), scheme))]) {
+					expect(contrast(value, background())).toBeGreaterThanOrEqual(3);
+					expect(contrast(value, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+				}
+			});
+		}
 	});
+}
 
-	for (const [scheme, label] of SCHEMES) {
-		const background = () => token('--itx-toast-background-color', scheme);
-
-		it(`has text of 4.5:1 on the toast in ${label}`, () => {
-			expect(contrast(token('--itx-toast-color', scheme), background())).toBeGreaterThanOrEqual(4.5);
-		});
-
-		it(`has an edge of 3:1 against the page in ${label}`, () => {
-			expect(contrast(token('--itx-toast-border-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-		});
-
-		it(`has status edges and icons of 3:1 against the toast and the page in ${label}`, () => {
-			for (const value of [token('--itx-toast-accent-color', scheme), ...accents.map(([, , value]) => resolve(oneLine(value), scheme))]) {
-				expect(contrast(value, background())).toBeGreaterThanOrEqual(3);
-				expect(contrast(value, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-			}
-		});
+// A callout and a toast of one status look the same: the same panel, edge and status colors.
+it("draws the callout in the toast's colors", () => {
+	const declared = (component: string, part: string) =>
+		[...sheets[`${component}/interop-${component}.base.css`].matchAll(new RegExp(`--itx-${component}-${part}:\\s*([^;]+);`, 'g'))].map(
+			([, value]) => oneLine(value),
+		);
+	for (const part of [
+		'color',
+		'background-color',
+		'border-width',
+		'border-color',
+		'accent-border-width',
+		'accent-color',
+		'border-radius',
+	]) {
+		expect(declared('callout', part)).toEqual(declared('toast', part));
 	}
 });
 

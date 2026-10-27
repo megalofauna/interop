@@ -123,6 +123,10 @@ import toastInteropToastBase from '../toast/interop-toast.base.css' with { loade
 // @ts-expect-error The text loader turns the file into a string.
 import toastInteropToastStructure from '../toast/interop-toast.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import calloutInteropCalloutBase from '../callout/interop-callout.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import calloutInteropCalloutStructure from '../callout/interop-callout.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesSegmented from '../styles/segmented.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesCards from '../styles/cards.css' with { loader: 'text' };
@@ -198,6 +202,8 @@ export const sheets: Record<string, string> = {
 	'page-nav/interop-page-nav.structure.css': pageNavInteropPageNavStructure,
 	'toast/interop-toast.base.css': toastInteropToastBase,
 	'toast/interop-toast.structure.css': toastInteropToastStructure,
+	'callout/interop-callout.base.css': calloutInteropCalloutBase,
+	'callout/interop-callout.structure.css': calloutInteropCalloutStructure,
 	'styles/segmented.css': stylesSegmented,
 	'styles/cards.css': stylesCards,
 	'styles/chips.css': stylesChips,

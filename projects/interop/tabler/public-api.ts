@@ -27,4 +27,5 @@ export { TablerCircleCheck } from './circle-check';
 export { TablerInfoCircle } from './info-circle';
 export { TablerAlertTriangle } from './alert-triangle';
 export { TablerAlertCircle } from './alert-circle';
+export { TablerNote } from './note';
 export { TablerDeviceFloppy } from './device-floppy';

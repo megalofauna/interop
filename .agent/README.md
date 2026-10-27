@@ -21,6 +21,7 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 |---|---|
 | Badge | [components/badge.md](components/badge.md) |
 | Button, invoker, pending action | [components/button.md](components/button.md) |
+| Callout | [components/callout.md](components/callout.md) |
 | Checkbox, radio group, switch, segmented, cards, chips | [components/control.md](components/control.md) |
 | Code block | [components/code-block.md](components/code-block.md) |
 | Dialog | [components/dialog.md](components/dialog.md) |

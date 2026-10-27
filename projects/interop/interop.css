@@ -57,6 +57,8 @@
 @import "./page-nav/interop-page-nav.structure.css";
 @import "./toast/interop-toast.base.css";
 @import "./toast/interop-toast.structure.css";
+@import "./callout/interop-callout.base.css";
+@import "./callout/interop-callout.structure.css";
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";
