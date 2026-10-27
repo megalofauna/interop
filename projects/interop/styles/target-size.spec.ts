@@ -47,7 +47,7 @@ describe('target size', () => {
 		['select option', selectCss, '--itx-select-option-min-block-size'],
 		['tree row', treeCss, '--itx-tree-row-min-block-size'],
 		['page nav link', pageNavCss, '--itx-page-nav-link-min-block-size'],
-		['slider thumb', sliderCss, '--itx-slider-target-size'],
+		['slider', sliderCss, '--itx-slider-target-size'],
 	] as const;
 
 	for (const [label, css, name] of targets) {

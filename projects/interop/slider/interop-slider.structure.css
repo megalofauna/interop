@@ -11,7 +11,8 @@
  *
  * The progress bar draws the same track at every size step.
  *
- * The thumb's box is the target. A transparent border insets the drawn circle inside it.
+ * The thumb is the drawn circle, so it meets both ends of the track. The pointer target is the whole
+ * input: a press anywhere on it moves the thumb there and drags it.
  *
  * Also known as:
  *   range             HTML (the input type), USWDS (range slider)
@@ -49,7 +50,7 @@
 /*
  * The track. Front to back: the fill, then the recess. The fill is drawn to the border's outer edge,
  * so it covers the edge where it reaches. It ends under the thumb's center, which travels the length
- * less one thumb, so it starts half a thumb in.
+ * less one thumb.
  */
 :where(input[type="range"][interop-slider])::-webkit-slider-runnable-track {
 	box-sizing: border-box;
@@ -58,7 +59,7 @@
 	border-radius: var(--itx-slider-track-border-radius);
 	background:
 		linear-gradient(var(--itx-slider-fill-background-color), var(--itx-slider-fill-background-color)) left /
-			calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value)) 100% no-repeat border-box,
+			calc(var(--itx-slider-thumb-size) / 2 + (100% - var(--itx-slider-thumb-size)) * var(--itx-slider-value)) 100% no-repeat border-box,
 		var(--itx-slider-track-background-color) padding-box;
 	box-shadow: var(--itx-slider-track-box-shadow);
 }
@@ -85,20 +86,18 @@
 
 /*
  * The thumb. Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the
- * whole rule. Its border is drawn as an inset shadow, because the real border is the transparent inset. The lift is a
- * drop-shadow, which follows the drawn circle; a box-shadow would draw around the whole target.
+ * whole rule.
  */
 :where(input[type="range"][interop-slider])::-webkit-slider-thumb {
 	appearance: none;
 	box-sizing: border-box;
-	inline-size: var(--itx-slider-target-size);
-	block-size: var(--itx-slider-target-size);
-	/* Centers the target on a track thinner than it. */
-	margin-block-start: calc((var(--itx-slider-track-block-size) - var(--itx-slider-target-size)) / 2 - var(--itx-slider-track-border-width));
-	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
+	inline-size: var(--itx-slider-thumb-size);
+	block-size: var(--itx-slider-thumb-size);
+	/* Chrome and Safari align the thumb to the track's content box. This centers it on the track. */
+	margin-block-start: calc((var(--itx-slider-track-block-size) - var(--itx-slider-thumb-size)) / 2 - var(--itx-slider-track-border-width));
+	border: var(--itx-slider-thumb-border-width) solid var(--itx-slider-thumb-border-color);
 	border-radius: var(--itx-radius-full);
-	background: var(--itx-slider-thumb-background-color) padding-box;
-	box-shadow: inset 0 0 0 var(--itx-slider-thumb-border-width) var(--itx-slider-thumb-border-color);
+	background-color: var(--itx-slider-thumb-background-color);
 	filter: var(--itx-slider-thumb-filter);
 	transition: transform var(--itx-slider-transition-duration) var(--itx-slider-transition-timing-function);
 }
@@ -109,12 +108,11 @@
 
 :where(input[type="range"][interop-slider])::-moz-range-thumb {
 	box-sizing: border-box;
-	inline-size: var(--itx-slider-target-size);
-	block-size: var(--itx-slider-target-size);
-	border: calc((var(--itx-slider-target-size) - var(--itx-slider-thumb-size)) / 2) solid transparent;
+	inline-size: var(--itx-slider-thumb-size);
+	block-size: var(--itx-slider-thumb-size);
+	border: var(--itx-slider-thumb-border-width) solid var(--itx-slider-thumb-border-color);
 	border-radius: var(--itx-radius-full);
-	background: var(--itx-slider-thumb-background-color) padding-box;
-	box-shadow: inset 0 0 0 var(--itx-slider-thumb-border-width) var(--itx-slider-thumb-border-color);
+	background-color: var(--itx-slider-thumb-background-color);
 	filter: var(--itx-slider-thumb-filter);
 	transition: transform var(--itx-slider-transition-duration) var(--itx-slider-transition-timing-function);
 }
@@ -144,7 +142,7 @@
 
 :where(input[type="range"][interop-slider][itx-orientation="vertical"])::-webkit-slider-runnable-track {
 	background-position: bottom;
-	background-size: 100% calc(var(--itx-slider-target-size) / 2 + (100% - var(--itx-slider-target-size)) * var(--itx-slider-value));
+	background-size: 100% calc(var(--itx-slider-thumb-size) / 2 + (100% - var(--itx-slider-thumb-size)) * var(--itx-slider-value));
 }
 
 /*
