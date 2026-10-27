@@ -62,9 +62,11 @@
 
 /*
  * A count is solid: the status color fills it, with black or white text, whichever reads better.
- * A badge with a `count` marks itself; in plain HTML, write interop-badge="count".
+ * It takes the light scheme's status color in both schemes, dark enough that white text reads on
+ * every role. A badge with a `count` marks itself; in plain HTML, write interop-badge="count".
  */
 :where([interop-badge~="count"], [interop-badge][data-count]) {
+	color-scheme: light;
 	--itx-badge-border-width: 0px;
 	--itx-badge-background-color: var(--itx-badge-accent-color);
 	--itx-badge-color: contrast-color(var(--itx-badge-accent-color));

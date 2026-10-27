@@ -207,19 +207,21 @@ describe('badge', () => {
 		expect(accents.slice(1)).toEqual(toast.map(([, value]) => oneLine(value)));
 	});
 
+	// A count is solid, in the light scheme's status color in both schemes. contrast-color() picks
+	// the better of black and white; every role's fill takes white, at 4.5:1 or more.
+	it('has white count text of 4.5:1 on every solid status color', () => {
+		for (const value of accents) {
+			const fill = resolve(value, 0);
+			expect(contrast('oklch(1 0 0)', fill)).toBeGreaterThan(contrast('oklch(0 0 0)', fill));
+			expect(contrast('oklch(1 0 0)', fill)).toBeGreaterThanOrEqual(4.5);
+		}
+	});
+
 	for (const [scheme, label] of SCHEMES) {
 		it(`has text of 4.5:1 on its tint over the page in ${label}`, () => {
 			for (const value of accents) {
 				const accent = resolve(value, scheme);
 				expect(contrast(deep(accent, resolve(text, scheme)), over(tint(accent), CANVAS[scheme]))).toBeGreaterThanOrEqual(4.5);
-			}
-		});
-
-		// A count is solid: contrast-color() picks black or white text, whichever contrasts more.
-		it(`has count text of 4.5:1 on the solid status color in ${label}`, () => {
-			for (const value of accents) {
-				const fill = resolve(value, scheme);
-				expect(Math.max(contrast('oklch(0 0 0)', fill), contrast('oklch(1 0 0)', fill))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
 

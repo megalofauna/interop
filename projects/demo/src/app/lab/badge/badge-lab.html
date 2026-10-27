@@ -5,7 +5,7 @@
 </p>
 
 <div class="dials">
-	<fieldset interop-radio-group="segmented" (change)="set('fill', $event)">
+	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('fill', $event)">
 		<legend>Fill</legend>
 		<label
 			><input
@@ -28,6 +28,7 @@
 	</fieldset>
 	<fieldset
 		interop-radio-group="segmented"
+		itx-size="sm"
 		(change)="set('tint', $event)"
 		[disabled]="fill() === 'solid'"
 	>
@@ -47,6 +48,7 @@
 	</fieldset>
 	<fieldset
 		interop-radio-group="segmented"
+		itx-size="sm"
 		(change)="set('text', $event)"
 		[disabled]="fill() === 'solid'"
 	>
@@ -79,7 +81,7 @@
 			Status</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" (change)="set('type', $event)">
+	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('type', $event)">
 		<legend>Type</legend>
 		<label
 			><input
@@ -100,7 +102,7 @@
 			Smaller</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" (change)="set('pad', $event)">
+	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('pad', $event)">
 		<legend>Padding</legend>
 		<label
 			><input
@@ -130,7 +132,7 @@
 			Roomier</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" (change)="set('height', $event)">
+	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('height', $event)">
 		<legend>Height</legend>
 		<label
 			><input
@@ -151,7 +153,7 @@
 			Taller</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" (change)="set('weight', $event)">
+	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('weight', $event)">
 		<legend>Weight</legend>
 		<label
 			><input
