@@ -85,10 +85,16 @@ describe('InteropBadge', () => {
 		expect(spoken('status-dot')).toBe('New activity');
 	});
 
+	it('marks a count, so the stylesheet draws it solid, and leaves text unmarked', () => {
+		const { get } = setup();
+		expect(get('count').hasAttribute('data-count')).toBe(true);
+		expect(get('status').hasAttribute('data-count')).toBe(false);
+	});
+
 	it('leaves a role color to the CSS and applies any other color directly', () => {
 		const { get } = setup();
-		expect(get('role').style.getPropertyValue('--itx-badge-background-color')).toBe('');
-		expect(get('custom').style.getPropertyValue('--itx-badge-background-color')).toBe('rebeccapurple');
+		expect(get('role').style.getPropertyValue('--itx-badge-accent-color')).toBe('');
+		expect(get('custom').style.getPropertyValue('--itx-badge-accent-color')).toBe('rebeccapurple');
 	});
 
 	it('works as an attribute on any element, with a plain label', () => {

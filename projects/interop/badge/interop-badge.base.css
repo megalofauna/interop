@@ -1,6 +1,7 @@
 /* Each size states its own values, including the dot's, so the dot variant is one rule at every size. */
 :where([interop-badge]) {
-	--itx-badge-font-size: var(--itx-font-size-label);
+	/* A step smaller than the text around it, so the text sits inside the badge with room to spare. */
+	--itx-badge-font-size: var(--itx-font-size-caption);
 	--itx-badge-font-weight: 400;
 	--itx-badge-line-height: 1;
 	--itx-badge-block-size: var(--itx-space-5);
@@ -9,51 +10,67 @@
 	/* The widest padding that keeps one digit a circle: one digit (1ch with tabular-nums) fills the height. */
 	--itx-badge-padding-inline: calc((var(--itx-badge-block-size) - 1ch) / 2);
 	--itx-badge-dot-size: var(--itx-space-3);
-	--itx-badge-border-width: 0px;
-	--itx-badge-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-600));
+	/*
+	 * The status color, the toast's and the callout's edge: 3:1 against the page in both schemes. It is
+	 * the border and the dot. The background is a see-through tint of it, and the text is it mixed
+	 * halfway with the text color.
+	 */
+	--itx-badge-accent-color: var(--itx-neutral-500);
+	--itx-badge-border-width: var(--itx-border-width);
+	--itx-badge-border-color: var(--itx-badge-accent-color);
 	--itx-badge-border-radius: var(--itx-radius-full);
-	--itx-badge-background-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
-	/* Black or white, whichever reads better on the background. */
-	--itx-badge-color: contrast-color(var(--itx-badge-background-color));
+	--itx-badge-background-color: color-mix(in oklch, var(--itx-badge-accent-color) 12%, transparent);
+	--itx-badge-color: color-mix(in oklch, var(--itx-badge-accent-color), light-dark(var(--itx-neutral-900), var(--itx-neutral-50)));
 	/* Half the badge's own height, so a placed badge, dot or not, centres on its corner. */
 	--itx-badge-inset: calc(var(--itx-badge-block-size) / -2);
 }
 
 :where([interop-badge][itx-size="sm"]) {
-	--itx-badge-font-size: var(--itx-font-size-caption);
 	--itx-badge-block-size: var(--itx-space-4);
 	--itx-badge-dot-size: var(--itx-space-2);
 }
 
 :where([interop-badge][itx-size="lg"]) {
-	--itx-badge-font-size: var(--itx-font-size-p);
+	--itx-badge-font-size: var(--itx-font-size-label);
 	--itx-badge-block-size: var(--itx-space-6);
 	--itx-badge-dot-size: var(--itx-space-4);
 }
 
+/* A dot is the status color itself: a tint that small would not show. */
 :where([interop-badge~="dot"]) {
 	--itx-badge-block-size: var(--itx-badge-dot-size);
 	--itx-badge-padding-inline: var(--itx-space-0);
 	--itx-badge-border-width: 0px;
-}
-
-:where([interop-badge][itx-color="danger"]) {
-	--itx-badge-background-color: var(--itx-role-background-danger);
-}
-
-:where([interop-badge][itx-color="warning"]) {
-	--itx-badge-background-color: var(--itx-role-background-warning);
+	--itx-badge-background-color: var(--itx-badge-accent-color);
 }
 
 :where([interop-badge][itx-color="success"]) {
-	--itx-badge-background-color: var(--itx-role-background-success);
+	--itx-badge-accent-color: light-dark(oklch(0.527 0.154 150.069), oklch(0.792 0.209 151.711));
 }
 
 :where([interop-badge][itx-color="info"]) {
-	--itx-badge-background-color: var(--itx-role-background-info);
+	--itx-badge-accent-color: light-dark(oklch(0.488 0.243 264.376), oklch(0.707 0.165 254.624));
 }
 
-/* Forced colors drop the background, so a border keeps the badge, and the dot, visible. Forced colors also set its color. */
+:where([interop-badge][itx-color="warning"]) {
+	--itx-badge-accent-color: light-dark(oklch(0.555 0.163 48.998), oklch(0.828 0.189 84.429));
+}
+
+:where([interop-badge][itx-color="danger"]) {
+	--itx-badge-accent-color: var(--itx-role-text-danger);
+}
+
+/*
+ * A count is solid: the status color fills it, with black or white text, whichever reads better.
+ * A badge with a `count` marks itself; in plain HTML, write interop-badge="count".
+ */
+:where([interop-badge~="count"], [interop-badge][data-count]) {
+	--itx-badge-border-width: 0px;
+	--itx-badge-background-color: var(--itx-badge-accent-color);
+	--itx-badge-color: contrast-color(var(--itx-badge-accent-color));
+}
+
+/* Forced colors drop the background, so a border keeps a dot and a count visible. Forced colors also set its color. */
 @media (forced-colors: active) {
 	:where([interop-badge]) {
 		--itx-badge-border-width: var(--itx-border-width);

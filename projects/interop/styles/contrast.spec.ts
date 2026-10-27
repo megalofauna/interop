@@ -181,20 +181,51 @@ describe('tooltip text', () => {
 	}
 });
 
-describe('badge text', () => {
-	// The text is contrast-color() of the background, which picks black or white, whichever contrasts more.
-	const backgrounds = [
-		'--itx-badge-background-color',
-		...[...declarations.keys()].filter((name) => name.startsWith('--itx-role-background-')),
+describe('badge', () => {
+	// The badge mixes everything from its status color: a 12% see-through tint behind the text, and
+	// the text halfway between the status color and the text color. Mixed in oklch, as the browser does.
+	const parts = (color: string) => /^oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)$/.exec(color)!.slice(1).map(Number) as [number, number, number];
+	const tint = (accent: string) => {
+		const [l, c, h] = parts(accent);
+		return `oklch(${l} ${c} ${h} / 0.12)`;
+	};
+	// A neutral has no hue, so the mix takes the status color's.
+	const deep = (accent: string, text: string) => {
+		const [l, c, h] = parts(accent);
+		const [tl, tc] = parts(text);
+		return `oklch(${(l + tl) / 2} ${(c + tc) / 2} ${h})`;
+	};
+	const css = sheets['badge/interop-badge.base.css'];
+	const accents = [
+		'var(--itx-neutral-500)',
+		...[...css.matchAll(/itx-color="\w+"\]\) \{\s*--itx-badge-accent-color:\s*([^;]+);/g)].map(([, value]) => oneLine(value)),
 	];
-	const best = (background: string) => Math.max(contrast('oklch(0 0 0)', background), contrast('oklch(1 0 0)', background));
+	const text = 'light-dark(var(--itx-neutral-900), var(--itx-neutral-50))';
 
-	for (const background of backgrounds) {
-		for (const [scheme, label] of SCHEMES) {
-			it(`reaches 4.5:1 on ${background} in ${label}`, () => {
-				expect(best(token(background, scheme))).toBeGreaterThanOrEqual(4.5);
-			});
-		}
+	it("has a status color for every itx-color, the toast's", () => {
+		const toast = [...sheets['toast/interop-toast.base.css'].matchAll(/itx-color="\w+"\]\) \{\s*--itx-toast-accent-color:\s*([^;]+);/g)];
+		expect(accents.slice(1)).toEqual(toast.map(([, value]) => oneLine(value)));
+	});
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has text of 4.5:1 on its tint over the page in ${label}`, () => {
+			for (const value of accents) {
+				const accent = resolve(value, scheme);
+				expect(contrast(deep(accent, resolve(text, scheme)), over(tint(accent), CANVAS[scheme]))).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+
+		// A count is solid: contrast-color() picks black or white text, whichever contrasts more.
+		it(`has count text of 4.5:1 on the solid status color in ${label}`, () => {
+			for (const value of accents) {
+				const fill = resolve(value, scheme);
+				expect(Math.max(contrast('oklch(0 0 0)', fill), contrast('oklch(1 0 0)', fill))).toBeGreaterThanOrEqual(4.5);
+			}
+		});
+
+		it(`has a border and a dot of 3:1 against the page in ${label}`, () => {
+			for (const value of accents) expect(contrast(resolve(value, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
 	}
 });
 
