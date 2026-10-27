@@ -45,7 +45,9 @@ const ROLES = new Set(['danger', 'warning', 'success', 'info']);
 	`,
 	host: {
 		'[attr.hidden]': 'counting() && count()! <= 0 ? "" : ownHidden',
-		'[style.--itx-badge-background-color]': 'customColor()',
+		'[style.--itx-badge-accent-color]': 'customColor()',
+		// A count is drawn solid; the stylesheet reads this.
+		'[attr.data-count]': 'counting() ? "" : null',
 	},
 })
 export class InteropBadge {
@@ -55,7 +57,10 @@ export class InteropBadge {
 	readonly label = input<BadgeLabel>();
 	/** Announces each change of a count above zero, with `announce()`. Off by default. */
 	readonly announce = input(false, { transform: booleanAttribute });
-	/** A role, `danger` `warning` `success` `info`, or any CSS color. */
+	/**
+	 * A role, `danger` `warning` `success` `info`, or any CSS color. The color is the border, a tint behind
+	 * the text, and the text's hue; keep a custom one 3:1 against the page.
+	 */
 	readonly color = input<string>(undefined, { alias: 'itx-color' });
 
 	private readonly locale = inject(LOCALE_ID);

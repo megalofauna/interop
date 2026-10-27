@@ -1,0 +1,245 @@
+/*
+ * Badge lab: candidate looks for the badge. Not shipped. The dials set data attributes on .badge-lab;
+ * everything below reads them. `lab-badge` stands in for `interop-badge` so the library's own rules
+ * do not apply.
+ */
+
+/* ── Size steps ──────────────────────────────────────────────────────────── */
+.badge-lab [lab-badge] {
+	--h: var(--itx-space-5);
+	--fs: var(--itx-font-size-label);
+}
+
+.badge-lab [lab-badge][itx-size="sm"] {
+	--h: var(--itx-space-4);
+	--fs: var(--itx-font-size-caption);
+}
+
+.badge-lab [lab-badge][itx-size="lg"] {
+	--h: var(--itx-space-6);
+	--fs: var(--itx-font-size-p);
+}
+
+/* Type: one step smaller at each size. */
+.badge-lab[data-type="smaller"] [lab-badge] {
+	--fs: var(--itx-font-size-caption);
+}
+
+.badge-lab[data-type="smaller"] [lab-badge][itx-size="sm"] {
+	--fs: 0.6875rem;
+}
+
+.badge-lab[data-type="smaller"] [lab-badge][itx-size="lg"] {
+	--fs: var(--itx-font-size-label);
+}
+
+/* Height: one 4px step taller at each size. */
+.badge-lab[data-height="taller"] [lab-badge] {
+	--h: var(--itx-space-6);
+}
+
+.badge-lab[data-height="taller"] [lab-badge][itx-size="sm"] {
+	--h: var(--itx-space-5);
+}
+
+.badge-lab[data-height="taller"] [lab-badge][itx-size="lg"] {
+	--h: var(--itx-space-7);
+}
+
+/* ── Looks ───────────────────────────────────────────────────────────────── */
+/* Every value is declared on the badge, so it reads that badge's own height and status color. */
+.badge-lab [lab-badge] {
+	/* Circle: today's padding, which makes one digit a circle. */
+	--pad: calc((var(--h) - 1ch) / 2);
+	--weight: 400;
+	--tint: 12%;
+	/* The status color: the toast's and the callout's edge, 3:1 against the page. */
+	--role: var(--itx-neutral-500);
+	/* Solid: today's fill. */
+	--solid: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+}
+
+.badge-lab[data-pad="roomy"] [lab-badge] {
+	--pad: calc(var(--h) * 0.4);
+}
+
+.badge-lab[data-pad="roomier"] [lab-badge] {
+	--pad: calc(var(--h) * 0.5);
+}
+
+.badge-lab[data-weight="500"] [lab-badge] {
+	--weight: 500;
+}
+
+.badge-lab[data-weight="600"] [lab-badge] {
+	--weight: 600;
+}
+
+.badge-lab[data-tint="8"] [lab-badge] {
+	--tint: 8%;
+}
+
+.badge-lab[data-tint="18"] [lab-badge] {
+	--tint: 18%;
+}
+
+.badge-lab [lab-badge][itx-color="info"] {
+	--role: light-dark(oklch(0.488 0.243 264.376), oklch(0.707 0.165 254.624));
+	--solid: var(--itx-role-background-info);
+}
+
+.badge-lab [lab-badge][itx-color="success"] {
+	--role: light-dark(oklch(0.527 0.154 150.069), oklch(0.792 0.209 151.711));
+	--solid: var(--itx-role-background-success);
+}
+
+.badge-lab [lab-badge][itx-color="warning"] {
+	--role: light-dark(oklch(0.555 0.163 48.998), oklch(0.828 0.189 84.429));
+	--solid: var(--itx-role-background-warning);
+}
+
+.badge-lab [lab-badge][itx-color="danger"] {
+	--role: var(--itx-role-text-danger);
+	--solid: var(--itx-role-background-danger);
+}
+
+/* Solid, today's look: the fill, and black or white text, whichever reads better on it. */
+.badge-lab [lab-badge] {
+	--background: var(--solid);
+	--color: contrast-color(var(--solid));
+	--border-width: 0px;
+	--border-color: transparent;
+}
+
+/* Tinted: a status-colored border, and the status color mixed into a see-through background. */
+.badge-lab[data-fill="tinted"] [lab-badge] {
+	--background: color-mix(in oklch, var(--role) var(--tint), transparent);
+	--border-width: var(--itx-border-width);
+	--border-color: var(--role);
+	--color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+}
+
+/* Text in the status color, or the status color pulled halfway to the text color. */
+.badge-lab[data-fill="tinted"][data-text="role"] [lab-badge] {
+	--color: var(--role);
+}
+
+.badge-lab[data-fill="tinted"][data-text="deep"] [lab-badge] {
+	--color: color-mix(
+		in oklch,
+		var(--role),
+		light-dark(var(--itx-neutral-900), var(--itx-neutral-50))
+	);
+}
+
+.badge-lab [lab-badge] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	block-size: var(--h);
+	min-inline-size: var(--h);
+	padding-inline: calc(var(--pad) - var(--border-width));
+	font-size: var(--fs);
+	font-weight: var(--weight);
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+	vertical-align: middle;
+	color: var(--color);
+	background-color: var(--background);
+	border: var(--border-width) solid var(--border-color);
+	border-radius: var(--itx-radius-full);
+}
+
+@media (forced-colors: active) {
+	.badge-lab [lab-badge] {
+		--border-width: var(--itx-border-width);
+	}
+}
+
+/* ── The page ────────────────────────────────────────────────────────────── */
+.badge-lab .dials {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-4);
+}
+
+.badge-lab .schemes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+	gap: var(--itx-space-4);
+}
+
+.badge-lab .scheme {
+	display: grid;
+	gap: var(--itx-space-5);
+	padding: var(--itx-space-6);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: Canvas;
+	color: CanvasText;
+}
+
+.badge-lab .scheme.light {
+	color-scheme: light;
+}
+
+.badge-lab .scheme.dark {
+	color-scheme: dark;
+}
+
+.badge-lab .panel {
+	display: grid;
+	gap: var(--itx-space-5);
+	padding: var(--itx-space-5);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-800));
+}
+
+.badge-lab .row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-2);
+}
+
+.badge-lab .heading {
+	display: flex;
+	align-items: center;
+	gap: var(--itx-space-3);
+	margin: 0;
+	font-size: var(--itx-font-size-h2);
+	line-height: var(--itx-line-height-h2);
+}
+
+.badge-lab .prose {
+	margin: 0;
+}
+
+.badge-lab .tab {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-space-2);
+	font-size: var(--itx-font-size-label);
+}
+
+.badge-lab .step-name {
+	font-size: var(--itx-font-size-caption);
+	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}
+
+.badge-lab table {
+	border-collapse: collapse;
+	font-size: var(--itx-font-size-caption);
+	font-variant-numeric: tabular-nums;
+}
+
+.badge-lab :is(th, td) {
+	padding: var(--itx-space-1) var(--itx-space-2);
+	text-align: start;
+}
+
+.badge-lab .fail {
+	color: var(--itx-role-text-danger);
+	font-weight: 600;
+}

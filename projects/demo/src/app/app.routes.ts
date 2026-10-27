@@ -214,7 +214,13 @@ export const routes: Routes = [
 			),
 	},
 	{
-		path: "lab/track",
+		path: "labs/badge",
+		title: "Badge lab",
+		loadComponent: () =>
+			import("./lab/badge/badge-lab").then((m) => m.BadgeLab),
+	},
+	{
+		path: "labs/track",
 		title: "Track lab",
 		loadComponent: () =>
 			import("./lab/track/track-lab").then((m) => m.TrackLab),

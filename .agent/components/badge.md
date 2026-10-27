@@ -54,11 +54,37 @@ projects/interop/badge/
 | Attribute | Does |
 |---|---|
 | `interop-badge="dot"` | A dot. Its content is spoken, not shown |
+| `interop-badge="count"` | A count in plain HTML: drawn solid. A badge with `[count]` sets `data-count` and is drawn solid without it |
 | `itx-badge-position` | `top-start`, `top-end`, `bottom-start`, `bottom-end`: placed on that corner of its parent, half outside it |
 | `itx-size` | `sm`, default, `lg` |
 
 Numbers use the page locale and equal-width digits, so a changing count keeps its
-width. Forced colors give it a border, so it keeps its shape.
+width.
+
+## Look
+
+Chosen in the badge lab (`/labs/badge`), which stays in the demo.
+
+- Every color comes from one status color, `--itx-badge-accent-color`: the
+  toast's and callout's status edge (`neutral-500` with no `itx-color`), 3:1
+  against the page. A custom `itx-color` sets it.
+- **Text** (the default): a 1px border in the status color, a 12% see-through
+  tint of it behind the text, and text mixed halfway between the status color
+  and the text color. Text measures 4.5:1 or more on the tint over the page.
+- **Count** (`[count]`, or `interop-badge="count"`): solid, with white text.
+  It sets `color-scheme: light`, so its status color is the light scheme's in
+  both schemes: 4.73–6.82:1 with white on every role, where the dark scheme's
+  lighter colors would need black. The text is `contrast-color()`, so a pale
+  custom color still gets black. A filled count is what readers expect of an
+  unread number.
+- **Dot**: the status color, solid.
+- Type is a step smaller than the text around it: caption (12px) at sm and md,
+  label (14px) at lg. Heights 16, 20, 24px. Inline padding keeps one digit a
+  circle. Weight 400.
+- Forced colors keep a border on every badge, so a dot and a count keep their
+  shape.
+- `styles/contrast.spec.ts` measures the tinted text, the solid count text and
+  the border against the page, and checks the status colors are the toast's.
 
 ## Dev audit rules
 
@@ -70,5 +96,4 @@ width. Forced colors give it a border, so it keeps its shape.
 
 ## Not built
 
-A remove button in a badge, a badge link, an outline look for categories (add
-`interop-badge="outline"` when someone needs it).
+A remove button in a badge, and a badge link.
