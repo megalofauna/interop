@@ -16,6 +16,7 @@
  * itself. Its width and its options are the select's own:
  *
  *   --itx-select-list-inline-size        --itx-select-list-min-inline-size
+ *   --itx-select-list-overhang           --itx-select-option-divider-color
  *   --itx-popover-background-color       --itx-popover-color
  *   --itx-popover-background-opacity     --itx-popover-backdrop-filter
  *   --itx-popover-border-color           --itx-popover-box-shadow
@@ -44,11 +45,12 @@
 	/* The list, in the picker and in a select that shows its options in the page. */
 	--itx-select-list-padding: var(--itx-space-1);
 	/*
-	 * The picker is as wide as the select, and text in it wraps. Content that cannot wrap, such as an
-	 * image or a nowrap label, widens it up to the popover's maximum. A length here sets a fixed default.
+	 * The picker is at least as wide as the select, and grows with its options by up to the overhang
+	 * past the select's end. Beyond that its text wraps. The select itself keeps its width.
 	 */
-	--itx-select-list-inline-size: anchor-size(self-inline);
-	--itx-select-list-min-inline-size: min-content;
+	--itx-select-list-inline-size: max-content;
+	--itx-select-list-min-inline-size: anchor-size(self-inline);
+	--itx-select-list-overhang: var(--itx-space-24);
 	--itx-select-option-min-block-size: var(--itx-space-8);
 	--itx-select-option-padding-inline: var(--itx-space-2);
 	--itx-select-option-background-color-hover: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
@@ -56,6 +58,9 @@
 	--itx-select-option-border-width: var(--itx-border-width);
 	--itx-select-option-border-style: solid;
 	--itx-select-option-border-color: transparent;
+	/* A faint line between options. It hides beside a hovered or chosen option, whose own edge shows. */
+	--itx-select-option-divider-block-size: var(--itx-border-width);
+	--itx-select-option-divider-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
 	/* One step from the hover fill: darker in light, lighter in dark. */
 	--itx-select-option-border-color-hover: light-dark(var(--itx-neutral-300), var(--itx-neutral-600));
 	/* The chosen option is the segmented pill: a raised fill, and an edge 3:1 against the list. */
