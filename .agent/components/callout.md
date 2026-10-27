@@ -63,7 +63,7 @@ color tokens differ.
 
 - A bordered panel (`neutral-50`/`800`, edge `neutral-500`, 3:1 against the
   page) with the house radius. The status edge is `border-inline-start` at the
-  strong border width in the status color, so it flips in RTL, keeps its shape
+  accent border width (4px, 6px with `prefers-contrast: more`) in the status color, so it flips in RTL, keeps its shape
   at the radius, and survives forced colors.
 - The icon (`--itx-icon-size-md`) sits on the first line in the status color,
   3:1 against the panel and the page.
