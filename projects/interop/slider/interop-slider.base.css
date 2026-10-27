@@ -2,7 +2,7 @@
 	--itx-slider-inline-size: 100%;
 	--itx-slider-max-inline-size: 24rem;
 	--itx-slider-vertical-inline-size: 10rem;
-	/* The thumb's box, and the input's height (WCAG 2.5.8). */
+	/* The input's height. A press anywhere on the input moves the thumb, so this is the target (WCAG 2.5.8). */
 	--itx-slider-target-size: var(--itx-space-8);
 	--itx-slider-thumb-size: var(--itx-space-5);
 	/* The progress bar's thickness at the same step. */

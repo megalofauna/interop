@@ -78,17 +78,21 @@ differ.
   `prefers-contrast` thickens it.
 - **Fill.** A background layer on the track part, in the text color, drawn to
   the border's outer edge so it covers the edge where it reaches. It ends under
-  the thumb's center: `target / 2 + (100% - target) * value`. A plain percentage
+  the thumb's center: `thumb / 2 + (100% - thumb) * value`. A plain percentage
   drifts by half a thumb. `:dir(rtl)` anchors it right; vertical anchors it at
   the bottom and swaps its axes. `--itx-slider-value` is registered with
   `inherits: true`, because the track part reads it from the input.
-- **Thumb.** The thumb's box is the target. A transparent border insets a light
-  disc (`neutral-50`/`200`) inside it. Its 1px edge (`neutral-500`/`950`) is an
-  inset shadow, because the real border is the inset; in dark it is darker than
-  the fill, so the disc stays apart from it. The lift is
-  `filter: drop-shadow(0 1px 2px …)`, which follows the disc; a `box-shadow`
-  would draw around the whole target. `margin-block-start` centers the target on
-  the track in Chrome and WebKit; Firefox centers it itself.
+- **Thumb.** The thumb's box is the drawn disc (`neutral-50`/`200`), so it
+  meets both ends of the track. Its 1px edge (`neutral-500`/`950`) is a border;
+  in dark it is darker than the fill, so the disc stays apart from it. The lift
+  is `filter: drop-shadow(0 1px 2px …)`. `margin-block-start` centers it on the
+  track in Chrome and WebKit; Firefox centers it itself.
+- **Target.** The whole input, 24, 32 or 40px tall (WCAG 2.5.8). A press
+  anywhere on it moves the thumb there and drags it: in Chrome 155 a press 2px
+  below the input's top edge, 14px off the track, set the value. Do not inset
+  the disc in a larger thumb box to make a target: the browser moves the box
+  end to end, so the disc stops short of each end by the inset (6px at the
+  default size, in Chrome and WebKit).
 - **Press.** While held (`:active`), the thumb scales to 1.15 over the shared
   transition duration, which reduced motion sets to 0. Not while disabled.
 - Contrast, measured in `styles/contrast.spec.ts`: track edge and fill 3:1
