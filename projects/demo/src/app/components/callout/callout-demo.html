@@ -1,0 +1,112 @@
+<h1>Callout</h1>
+<p class="aka">
+	Also known as admonition, inline alert, message bar, inset text.
+</p>
+<p>
+	A callout sets a short note apart from the text around it: a warning before a
+	destructive step, a tip, a fact the reader should not miss. It is always in
+	the page and says nothing when it appears. It is a
+	<code>&lt;div role="note"&gt;</code> that you write, so the heading level and
+	the wording are yours. It needs no script.
+</p>
+<p>
+	Use it sparingly and next to what it qualifies. Readers learn to skip boxes
+	that are everywhere: GitHub suggests
+	<a
+		href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts"
+		>one or two per article, never back to back</a
+	>, and
+	<a href="https://design-system.service.gov.uk/components/inset-text/"
+		>GOV.UK found that some users do not notice inset text</a
+	>.
+</p>
+
+<h2>A warning</h2>
+<p>
+	The icon, the word in small print and the edge color each show the status.
+	Color alone would not reach a screen reader, or anyone who cannot tell the
+	colors apart.
+</p>
+<demo-example [html]="examples.basic" layout="stack" />
+
+<h2>Statuses</h2>
+<p>
+	<code>itx-color</code> is <code>info</code>, <code>success</code>,
+	<code>warning</code> or <code>danger</code>, the same values as the
+	<a routerLink="/components/toast">toast</a> and the badge, in the same colors.
+	Without it, the callout is a neutral note. Each status has its Tabler icon;
+	leave the icon out of a neutral note if it adds nothing.
+</p>
+<demo-example [html]="examples.statuses" layout="stack" />
+
+<h2>Saying the status</h2>
+<p>
+	Write the status word in the callout. Show it in small print with
+	<code>&lt;small&gt;</code>, or hide it with <code>itx-visually-hidden</code>,
+	the way
+	<a href="https://design-system.service.gov.uk/components/warning-text/"
+		>GOV.UK's warning text</a
+	>
+	does.
+</p>
+<div interop-callout role="note">
+	<svg interop-icon name="tabler-note"></svg>
+	<div>
+		<small>Visible or hidden?</small>
+		<p>
+			<strong>Visible:</strong> every reader sees the word, including people who
+			cannot tell the colors apart and people using forced colors, where every
+			edge turns one color.
+		</p>
+		<p>
+			<strong>Hidden:</strong> a screen reader still hears it, but sighted
+			readers rely on the icon. Keep the icon; the dev audit warns when a
+			callout has neither a visible word nor an icon.
+		</p>
+	</div>
+</div>
+<demo-example [html]="examples.hidden" layout="stack" />
+
+<h2>A title</h2>
+<p>
+	Use a heading when the callout is a part of the page a reader might jump to,
+	at the level that fits the outline: a callout cannot know it. Point
+	<code>aria-labelledby</code> at the heading to name the note; some screen
+	readers announce a note only when it has a name.
+</p>
+<demo-example [html]="examples.title" layout="stack" />
+
+<h2>A plain note</h2>
+<p>A note with no status needs no icon and no status word.</p>
+<demo-example [html]="examples.plain" layout="stack" />
+
+<h2>Why there is no close button</h2>
+<p>
+	A callout explains something about the content beside it, so it stays as long
+	as that content does.
+	<a href="https://carbondesignsystem.com/components/notification/usage/"
+		>Carbon's callout</a
+	>
+	cannot be dismissed for the same reason, and
+	<a href="https://design-system.service.gov.uk/components/notification-banner/"
+		>GOV.UK</a
+	>
+	has not found that dismissing banners helps. A close button also moves focus:
+	once the box is gone, the button that had focus is gone with it. A message
+	that the reader should acknowledge and clear is a
+	<a routerLink="/components/toast">toast</a>.
+</p>
+
+<h2>Not for messages that appear</h2>
+<p>
+	A callout never takes <code>role="alert"</code> or <code>role="status"</code>.
+	<a href="https://www.w3.org/WAI/ARIA/apg/patterns/alert/"
+		>Screen readers do not announce an alert that is in the page when it
+		loads</a
+	>, and one that a route inserts interrupts the reader on every visit. To say
+	that something happened, use a <a routerLink="/components/toast">toast</a> or
+	<code>announce()</code>. Research:
+	<a href="https://adrianroselli.com/2024/02/aria-note.html"
+		>Adrian Roselli on the note role</a
+	>.
+</p>

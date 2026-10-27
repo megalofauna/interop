@@ -1,0 +1,72 @@
+/*
+ * Callout: a short note set apart from the running text, always visible. A static `role="note"`,
+ * never a live region: a message that appears after an action is a toast or announce().
+ *
+ *   <div interop-callout role="note" itx-color="warning">
+ *     <svg interop-icon name="tabler-alert-triangle"></svg>
+ *     <div>
+ *       <small>Warning</small>
+ *       <p>Deleting a project deletes its runs.</p>
+ *     </div>
+ *   </div>
+ *
+ * The status reaches every reader three ways: the icon's shape, a status word (visible in small
+ * print, or in `itx-visually-hidden` text), and the color of the edge and icon. No itx-color is a
+ * neutral note. The look is the toast's, without its shadow.
+ *
+ * Also known as:
+ *   admonition        Docusaurus, MkDocs
+ *   inline alert      Spectrum; alert in USWDS and GitHub Markdown
+ *   message bar       Fluent
+ *   inset text        GOV.UK, for a neutral note; warning text for a warning
+ * Callout is the name in Carbon, Radix Themes and Web Awesome. Note is the ARIA role.
+ */
+:where([interop-callout]) {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--itx-callout-gap);
+	box-sizing: border-box;
+	padding-block: var(--itx-callout-padding-block);
+	padding-inline: var(--itx-callout-padding-inline);
+	font-size: var(--itx-callout-font-size);
+	line-height: var(--itx-callout-line-height);
+	/* A long URL wraps instead of widening the page (WCAG 1.4.10). */
+	overflow-wrap: anywhere;
+	color: var(--itx-callout-color);
+	background-color: var(--itx-callout-background-color);
+	border-width: var(--itx-callout-border-width);
+	border-style: solid;
+	border-color: var(--itx-callout-border-color);
+	/* The status edge: a border, so it flips sides in right-to-left text and stays in forced colors. */
+	border-inline-start-width: var(--itx-callout-accent-border-width);
+	border-inline-start-color: var(--itx-callout-accent-color);
+	border-radius: var(--itx-callout-border-radius);
+	corner-shape: var(--itx-callout-corner-shape);
+
+	& > div {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-callout-content-gap);
+		min-inline-size: 0;
+	}
+
+	& > div > * {
+		margin: 0;
+	}
+
+	& > div > small {
+		font-size: var(--itx-callout-label-font-size);
+		line-height: var(--itx-callout-label-line-height);
+		font-weight: var(--itx-callout-label-font-weight);
+	}
+}
+
+/* The icon shows the status in its shape as well as its color (WCAG 1.4.1). It sits on the first line. */
+:where([interop-callout] > svg[interop-icon]) {
+	--itx-icon-color: var(--itx-callout-accent-color);
+	--itx-icon-inline-size: var(--itx-callout-icon-size);
+	--itx-icon-block-size: var(--itx-callout-icon-size);
+	flex: none;
+	margin-block: calc((1lh - var(--itx-callout-icon-size)) / 2);
+}

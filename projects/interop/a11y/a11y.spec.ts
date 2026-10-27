@@ -8,6 +8,7 @@ import {
 	bindSlider,
 	bindTagInput,
 	bindValidation,
+	drawIcons,
 	guardActivation,
 	registerIcons,
 	toast,
@@ -21,9 +22,18 @@ import { InteropStepsForm } from 'interop/steps';
 import { InteropTabs } from 'interop/tabs';
 import { InteropToolbar } from 'interop/toolbar';
 import { InteropTooltip } from 'interop/tooltip';
-import { TablerAlertCircle, TablerCheck, TablerCircleCheck, TablerCopy, TablerSearch, TablerX } from 'interop/tabler';
+import {
+	TablerAlertCircle,
+	TablerAlertTriangle,
+	TablerCheck,
+	TablerCircleCheck,
+	TablerCopy,
+	TablerInfoCircle,
+	TablerSearch,
+	TablerX,
+} from 'interop/tabler';
 
-registerIcons(TablerAlertCircle, TablerCheck, TablerCircleCheck, TablerCopy, TablerSearch, TablerX);
+registerIcons(TablerAlertCircle, TablerAlertTriangle, TablerCheck, TablerCircleCheck, TablerCopy, TablerInfoCircle, TablerSearch, TablerX);
 
 // jsdom computes no colors, so styles/contrast.spec.ts checks contrast from the declared values instead.
 const OPTIONS: axe.RunOptions = { rules: { 'color-contrast': { enabled: false } } };
@@ -478,6 +488,28 @@ describe('accessibility (axe-core)', () => {
 				<progress interop-progress itx-size="lg" id="connecting" aria-label="Connecting to the relay"></progress>
 				<section aria-label="Messages" aria-busy="true" aria-describedby="connecting"></section>
 			</main>`;
+		expect(await violations(document.body)).toEqual([]);
+	});
+
+	it('finds no violations in callouts, with a visible status word, a hidden one, a title and none', async () => {
+		document.body.innerHTML = `
+			<main>
+				<h1>Projects</h1>
+				<div interop-callout role="note" itx-color="warning">
+					<svg interop-icon name="tabler-alert-triangle"></svg>
+					<div><small>Warning</small><p>Deleting a project deletes its runs.</p></div>
+				</div>
+				<div interop-callout role="note" itx-color="danger">
+					<svg interop-icon name="tabler-alert-circle"></svg>
+					<div><p><span itx-visually-hidden>Danger: </span>Runs cannot be restored.</p></div>
+				</div>
+				<div interop-callout role="note" itx-color="info" aria-labelledby="before">
+					<svg interop-icon name="tabler-info-circle"></svg>
+					<div><h2 id="before">Before you start</h2><p>Back up the archive.</p></div>
+				</div>
+				<div interop-callout role="note"><div><p>Sizes follow the house radius.</p></div></div>
+			</main>`;
+		drawIcons(document.body);
 		expect(await violations(document.body)).toEqual([]);
 	});
 

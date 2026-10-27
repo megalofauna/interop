@@ -19,7 +19,7 @@
 	--itx-toast-border-width: var(--itx-border-width);
 	/* 3:1 against the page in both schemes, so the toast's edge is visible (WCAG 1.4.11). */
 	--itx-toast-border-color: var(--itx-neutral-500);
-	--itx-toast-accent-border-width: var(--itx-border-width-strong);
+	--itx-toast-accent-border-width: var(--itx-border-width-accent);
 	/* The status edge and icon: 3:1 against the toast and the page in both schemes. */
 	--itx-toast-accent-color: var(--itx-neutral-500);
 	--itx-toast-border-radius: var(--itx-radius, var(--itx-radius-base));

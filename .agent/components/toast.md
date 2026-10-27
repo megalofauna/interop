@@ -92,7 +92,8 @@ toast('Link copied', { timeout: 6000 });
   (16px) from the edges. Toasts stack in a column, newest last. The column is
   `min(22rem, 100vw - 32px)` wide and scrolls when it is taller than the window.
 - A toast has a 1px `neutral-500` edge (3:1 against the page) and a shadow. Its
-  inline-start edge is `--itx-border-width-strong` (2px) in the status color. It
+  inline-start edge is `--itx-border-width-accent` (4px, 6px with `prefers-contrast: more`)
+  in the status color, shared with the callout. It
   flips sides in RTL. The house radius applies.
 - `itx-color` sets the status edge and a Tabler icon: `circle-check`,
   `info-circle`, `alert-triangle`, `alert-circle`. The icon shows the status in
@@ -104,8 +105,8 @@ toast('Link copied', { timeout: 6000 });
 - Forced colors map the borders. The status edge takes the text color there,
   and the icon still shows the status.
 
-Carbon's 3px edge became 2px, because every border width reads a shared token
-for the contrast preference. Carbon's 288px width became 352px (22rem), because
+Carbon's 3px edge became 4px: at 2px it was lost on the light panel. It reads
+a shared token, so the contrast preference reaches it. Carbon's 288px width became 352px (22rem), because
 an action and the Dismiss button left about 120px of text at 288.
 
 ## Dev audit rules

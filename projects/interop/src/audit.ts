@@ -27,6 +27,9 @@ const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabinde
 const CONTROL_LABELS = 'label:is([interop-switch], [interop-checkbox]), fieldset[interop-radio-group] label:has(> input[type="radio"])';
 const GROUPS = 'fieldset:is([interop-radio-group], [interop-checkbox-group])';
 const TABLISTS = '[interop-tabs] > [role="tablist"]';
+/** Elements that can carry a callout's status word: a visible label, a title, or hidden text. */
+const CALLOUT_STATUS =
+	':scope > div > :is(small, h1, h2, h3, h4, h5, h6), :scope > div > p:first-child > strong:first-child, [itx-visually-hidden]';
 const CARDS = 'fieldset:is([interop-radio-group~="cards"], [interop-checkbox-group~="cards"]) > label';
 /** Elements a label may not hold: it allows phrasing content only. */
 const BLOCK =
@@ -855,6 +858,49 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 							'Put a <section interop-toasts popover="manual" aria-label="Notifications"> inside the dialog. toast() uses it while the dialog is open.',
 					}
 				: null;
+		},
+	},
+	'callout-role': {
+		selector: '[interop-callout]',
+		check: (callout) => {
+			const role = callout.getAttribute('role');
+			if (role === 'note') return null;
+			if (role === 'alert' || role === 'status')
+				return {
+					problem: `This callout is role="${role}", a live region.`,
+					reason:
+						'A live region is announced when it appears, so a callout that a router or @if inserts interrupts the reader on every visit. One present at load is not announced at all.',
+					advice: 'Use role="note". For a message that appears after an action, use toast() or announce().',
+				};
+			return {
+				problem: 'This callout has no role="note".',
+				reason: 'Screen readers that support the note role cannot tell where the callout starts and ends.',
+				advice: 'Add role="note".',
+			};
+		},
+	},
+	'callout-status': {
+		selector: '[interop-callout][itx-color]',
+		check: (callout) =>
+			callout.querySelector(CALLOUT_STATUS)
+				? null
+				: {
+						problem: 'This callout shows its status by color and icon alone.',
+						reason: 'A screen reader reads the text with no word for the status, so "Warning" and "Tip" sound the same.',
+						advice: 'Start it with the status word: <small>Warning</small> in small print, or <span itx-visually-hidden>Warning: </span>.',
+					},
+	},
+	'callout-icon': {
+		selector: '[interop-callout][itx-color]',
+		check: (callout) => {
+			const words = Array.from(callout.querySelectorAll(CALLOUT_STATUS));
+			if (!words.length || words.some((word) => !word.matches('[itx-visually-hidden]'))) return null;
+			if (callout.querySelector(':scope > svg[interop-icon]')) return null;
+			return {
+				problem: 'This callout’s status word is hidden, and it has no icon.',
+				reason: 'A sighted reader sees the status only as the edge color, and in forced colors not at all.',
+				advice: 'Keep the status icon, or show the word in small print with <small>.',
+			};
 		},
 	},
 	'field-label': {

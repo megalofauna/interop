@@ -43,6 +43,8 @@ const exempt: Record<string, string> = {
 	'toolbar/interop-toolbar.structure.css':
 		'The channel fill becomes Canvas and its bars are borders, which the browser maps. Its buttons carry their own rules.',
 	'tabs/interop-tabs.structure.css': 'Its bar is in styles/underscore.css and its segmented look in styles/segmented.css.',
+	'callout/interop-callout.structure.css':
+		'Its edges are borders, which the browser maps. The status edge takes the text color there; the icon and the status word still show the status.',
 	'toast/interop-toast.structure.css':
 		'Its edges are borders, which the browser maps. The status edge takes the text color there; the icon still shows the status.',
 	'page-nav/interop-page-nav.structure.css': 'Its current bar is in styles/underscore.css or the tree; the stuck shadow is decoration.',

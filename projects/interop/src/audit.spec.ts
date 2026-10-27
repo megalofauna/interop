@@ -578,6 +578,44 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('callout', () => {
+		const icon = '<svg interop-icon name="tabler-alert-triangle"></svg>';
+
+		it('accepts a visible status word, a hidden one with an icon, a title, a bold lead and a neutral note', () => {
+			render(`
+				<div interop-callout role="note" itx-color="warning">${icon}<div><small>Warning</small><p>Deleting a project deletes its runs.</p></div></div>
+				<div interop-callout role="note" itx-color="warning">${icon}<div><p><span itx-visually-hidden>Warning: </span>Deleting a project deletes its runs.</p></div></div>
+				<div interop-callout role="note" itx-color="info"><div><h3>Before you start</h3><p>Back up the archive.</p></div></div>
+				<div interop-callout role="note" itx-color="success"><div><p><strong>Done:</strong> the archive is exported.</p></div></div>
+				<div interop-callout role="note"><div><p>Sizes follow the house radius.</p></div></div>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a live role and a missing one', () => {
+			render(`
+				<div interop-callout role="alert"><div><p>A</p></div></div>
+				<div interop-callout><div><p>B</p></div></div>
+			`);
+			const problems = auditInterop(document).map((issue) => issue.problem);
+			expect(rules()).toEqual(['callout-role', 'callout-role']);
+			expect(problems[0]).toContain('live region');
+			expect(problems[1]).toContain('no role="note"');
+		});
+
+		it('flags a status shown by color alone', () => {
+			render(`<div interop-callout role="note" itx-color="danger">${icon}<div><p>Deleting a project deletes its runs.</p></div></div>`);
+			expect(rules()).toEqual(['callout-status']);
+		});
+
+		it('flags a hidden status word with no icon', () => {
+			render(
+				'<div interop-callout role="note" itx-color="danger"><div><p><span itx-visually-hidden>Danger: </span>Deleting a project deletes its runs.</p></div></div>',
+			);
+			expect(rules()).toEqual(['callout-icon']);
+		});
+	});
+
 	describe('toast', () => {
 		const item = (attributes = '', buttons = '<button type="button" aria-label="Dismiss"></button>') =>
 			`<div interop-toast ${attributes}><div><p>Saved</p></div>${buttons}</div>`;

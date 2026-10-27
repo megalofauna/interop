@@ -49,11 +49,20 @@ The box's look is the field's tokens, declared on the select in
 `--itx-field-background-color[-hover]`, `--itx-field-border-color[-hover]`,
 `--itx-field-border-width`, `--itx-field-border-radius`, `--itx-field-color`,
 `--itx-field-min-inline-size`. The width cap is the select's own,
-`--itx-select-max-inline-size` (100%). The picker is as wide as the select
-(`--itx-select-list-inline-size: anchor-size(self-inline)`), and its text wraps;
-content that cannot wrap widens it up to the popover's maximum
-(`--itx-select-list-min-inline-size: min-content`). Measured in Chrome 155: a
-192px select gives a 192px list, and a `nowrap` option widens it to 311px.
+`--itx-select-max-inline-size` (100%). The picker is at least as wide as the select
+(`--itx-select-list-min-inline-size: anchor-size(self-inline)`) and grows with
+its options (`--itx-select-list-inline-size: max-content`) by up to
+`--itx-select-list-overhang` (6rem) past the select's end; beyond that its text
+wraps. The select keeps its own width. Measured in Chrome 155 and Playwright
+WebKit 27.2: a 200px select with short options gives a 200px list, and one with
+a long option gives a 296px list with the option on two lines. Content that
+cannot wrap, such as a `nowrap` label, is cut at the cap. `calc-size()` could
+let it widen further, but WebKit does not support it.
+
+A faint line divides the options (`--itx-select-option-divider-color`,
+`neutral-200`/`700`, 1px): a background image along the top of each option
+after the first, as wide as its text. It hides beside a hovered or chosen
+option, whose own edge shows. Forced colors drop it.
 
 Every option has a border (`--itx-select-option-border-width`, `-style`,
 `-color`, `-color-hover`), clear at rest so options keep one size; its padding

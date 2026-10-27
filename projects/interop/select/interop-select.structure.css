@@ -92,7 +92,11 @@
 		box-sizing: border-box;
 		inline-size: var(--itx-select-list-inline-size);
 		min-inline-size: var(--itx-select-list-min-inline-size);
-		max-inline-size: min(var(--itx-popover-max-inline-size), 100vw - 2 * var(--itx-space-2));
+		max-inline-size: min(
+			anchor-size(self-inline) + var(--itx-select-list-overhang),
+			var(--itx-popover-max-inline-size),
+			100vw - 2 * var(--itx-space-2)
+		);
 		margin-block: var(--itx-popover-margin-block);
 		padding: var(--itx-select-list-padding);
 		color: var(--itx-popover-color);
@@ -181,6 +185,22 @@
 
 	:where(select[interop-select] option > *) {
 		grid-column: 2;
+	}
+
+	/* The divider: a line along the top of each option after the first, as wide as its text. */
+	:where(select[interop-select] option + option) {
+		background-image: linear-gradient(var(--itx-select-option-divider-color), var(--itx-select-option-divider-color));
+		background-size: calc(100% - 2 * var(--itx-select-option-padding-inline)) var(--itx-select-option-divider-block-size);
+		background-position: top center;
+		background-repeat: no-repeat;
+		background-origin: border-box;
+	}
+
+	:where(
+		select[interop-select] option:is(:hover, :focus-visible, :checked),
+		select[interop-select] option:is(:hover, :focus-visible, :checked) + option
+	) {
+		background-image: none;
 	}
 
 	:where(select[interop-select] option:is(:hover, :focus-visible):not(:disabled)) {

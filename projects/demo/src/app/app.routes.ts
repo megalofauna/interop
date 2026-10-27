@@ -15,6 +15,12 @@ export const routes: Routes = [
 			import("./components/button/button-demo").then((m) => m.ButtonDemo),
 	},
 	{
+		path: "components/callout",
+		title: "Callout",
+		loadComponent: () =>
+			import("./components/callout/callout-demo").then((m) => m.CalloutDemo),
+	},
+	{
 		path: "components/checkbox",
 		title: "Checkbox",
 		loadComponent: () =>
