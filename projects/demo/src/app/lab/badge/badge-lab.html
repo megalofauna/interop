@@ -1,0 +1,264 @@
+<h1>Badge lab</h1>
+<p>
+	Candidate looks for the badge, in a heading, in running text and beside a
+	label, at every size. The table measures each status on the page.
+</p>
+
+<div class="dials">
+	<fieldset interop-radio-group="segmented" (change)="set('fill', $event)">
+		<legend>Fill</legend>
+		<label
+			><input
+				type="radio"
+				name="fill"
+				value="solid"
+				[checked]="fill() === 'solid'"
+			/>
+			Solid</label
+		>
+		<label
+			><input
+				type="radio"
+				name="fill"
+				value="tinted"
+				[checked]="fill() === 'tinted'"
+			/>
+			Tinted</label
+		>
+	</fieldset>
+	<fieldset
+		interop-radio-group="segmented"
+		(change)="set('tint', $event)"
+		[disabled]="fill() === 'solid'"
+	>
+		<legend>Tint</legend>
+		<label
+			><input type="radio" name="tint" value="8" [checked]="tint() === '8'" />
+			8%</label
+		>
+		<label
+			><input type="radio" name="tint" value="12" [checked]="tint() === '12'" />
+			12%</label
+		>
+		<label
+			><input type="radio" name="tint" value="18" [checked]="tint() === '18'" />
+			18%</label
+		>
+	</fieldset>
+	<fieldset
+		interop-radio-group="segmented"
+		(change)="set('text', $event)"
+		[disabled]="fill() === 'solid'"
+	>
+		<legend>Text</legend>
+		<label
+			><input
+				type="radio"
+				name="text"
+				value="neutral"
+				[checked]="text() === 'neutral'"
+			/>
+			Neutral</label
+		>
+		<label
+			><input
+				type="radio"
+				name="text"
+				value="deep"
+				[checked]="text() === 'deep'"
+			/>
+			Deep</label
+		>
+		<label
+			><input
+				type="radio"
+				name="text"
+				value="role"
+				[checked]="text() === 'role'"
+			/>
+			Status</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('type', $event)">
+		<legend>Type</legend>
+		<label
+			><input
+				type="radio"
+				name="type"
+				value="current"
+				[checked]="type() === 'current'"
+			/>
+			Current</label
+		>
+		<label
+			><input
+				type="radio"
+				name="type"
+				value="smaller"
+				[checked]="type() === 'smaller'"
+			/>
+			Smaller</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('pad', $event)">
+		<legend>Padding</legend>
+		<label
+			><input
+				type="radio"
+				name="pad"
+				value="circle"
+				[checked]="pad() === 'circle'"
+			/>
+			Circle</label
+		>
+		<label
+			><input
+				type="radio"
+				name="pad"
+				value="roomy"
+				[checked]="pad() === 'roomy'"
+			/>
+			Roomy</label
+		>
+		<label
+			><input
+				type="radio"
+				name="pad"
+				value="roomier"
+				[checked]="pad() === 'roomier'"
+			/>
+			Roomier</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('height', $event)">
+		<legend>Height</legend>
+		<label
+			><input
+				type="radio"
+				name="height"
+				value="current"
+				[checked]="height() === 'current'"
+			/>
+			Current</label
+		>
+		<label
+			><input
+				type="radio"
+				name="height"
+				value="taller"
+				[checked]="height() === 'taller'"
+			/>
+			Taller</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('weight', $event)">
+		<legend>Weight</legend>
+		<label
+			><input
+				type="radio"
+				name="weight"
+				value="400"
+				[checked]="weight() === '400'"
+			/>
+			400</label
+		>
+		<label
+			><input
+				type="radio"
+				name="weight"
+				value="500"
+				[checked]="weight() === '500'"
+			/>
+			500</label
+		>
+		<label
+			><input
+				type="radio"
+				name="weight"
+				value="600"
+				[checked]="weight() === '600'"
+			/>
+			600</label
+		>
+	</fieldset>
+</div>
+
+<div class="schemes">
+	@for (scheme of schemes; track scheme) {
+		<section
+			class="scheme"
+			[class]="scheme"
+			[attr.aria-label]="scheme + ' scheme'"
+		>
+			@for (surface of surfaces; track surface) {
+				<div [class.panel]="surface === 'Panel'">
+					<span class="step-name">{{ surface }}</span>
+					<p class="heading" role="presentation">
+						Cards <span lab-badge itx-color="info">Pattern</span>
+					</p>
+					<p class="prose">
+						The export runs nightly
+						<span lab-badge itx-size="sm" itx-color="success">On</span> and
+						keeps 90 days of history
+						<span lab-badge itx-size="sm">Default</span>.
+					</p>
+					<div class="row">
+						<span class="tab">Inbox <span lab-badge>3</span></span>
+						<span class="tab"
+							>Mentions <span lab-badge itx-color="danger">12</span></span
+						>
+						<span class="tab">Archive <span lab-badge>99+</span></span>
+					</div>
+					@for (size of sizes; track size) {
+						<span class="step-name">{{ size }}</span>
+						<div class="row">
+							@for (status of statuses; track status) {
+								<span
+									lab-badge
+									[attr.itx-size]="size"
+									[attr.itx-color]="status || null"
+									[attr.data-measure]="
+										surface === 'Page' && size === 'md' ? '' : null
+									"
+									>{{ words[status] }}</span
+								>
+							}
+							<span lab-badge [attr.itx-size]="size" itx-color="danger">1</span>
+							<span lab-badge [attr.itx-size]="size" itx-color="info">42</span>
+						</div>
+					}
+				</div>
+			}
+		</section>
+	}
+</div>
+
+<h2>Contrast, md badges on the page</h2>
+<p>
+	Text against the badge needs 4.5:1. A border, where there is one, needs 3:1
+	against the page.
+</p>
+<table>
+	<thead>
+		<tr>
+			<th>Scheme</th>
+			<th>Status</th>
+			<th>Text</th>
+			<th>Border</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (reading of readings(); track $index) {
+			<tr>
+				<td>{{ reading.scheme }}</td>
+				<td>{{ reading.status }}</td>
+				<td [class.fail]="reading.text < 4.5">
+					{{ ratio(reading.text, 4.5) }}
+				</td>
+				<td [class.fail]="reading.border !== null && reading.border < 3">
+					{{ ratio(reading.border, 3) }}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
