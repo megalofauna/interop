@@ -6,7 +6,7 @@
  */
 
 /* ── Size steps: the dial ─────────────────────────────────────────────────── */
-/* track: the bar's thickness. thumb: the drawn circle. target: the thumb's box and the slider's height. */
+/* track: the bar's thickness. thumb: the drawn circle and its box. target: the slider's height, the pointer target. */
 .track-lab :is([lab-slider], [lab-progress]) {
 	--lab-track: var(--itx-space-1_5);
 	--lab-thumb: var(--itx-space-5);
@@ -114,7 +114,7 @@
 	background:
 		linear-gradient(var(--lab-fill), var(--lab-fill)) left /
 			calc(
-				var(--lab-target) / 2 + (100% - var(--lab-target)) * var(--lab-value)
+				var(--lab-thumb) / 2 + (100% - var(--lab-thumb)) * var(--lab-value)
 			)
 			100% no-repeat border-box,
 		var(--lab-track-background) padding-box;
@@ -128,15 +128,15 @@
 .track-lab input[lab-slider]::-webkit-slider-thumb {
 	appearance: none;
 	box-sizing: border-box;
-	inline-size: var(--lab-target);
-	block-size: var(--lab-target);
-	/* Centers the target on a track thinner than it. */
+	inline-size: var(--lab-thumb);
+	block-size: var(--lab-thumb);
+	/* Centers the thumb on a track thinner than it. */
 	margin-block-start: calc(
-		(var(--lab-track) - var(--lab-target)) / 2 - var(--lab-track-edge-width)
+		(var(--lab-track) - var(--lab-thumb)) / 2 - var(--lab-track-edge-width)
 	);
-	border: calc((var(--lab-target) - var(--lab-thumb)) / 2) solid transparent;
+	border: 0;
 	border-radius: var(--itx-radius-full);
-	background: var(--lab-thumb-background) padding-box;
+	background: var(--lab-thumb-background);
 	box-shadow: var(--lab-thumb-edge);
 	filter: var(--lab-thumb-lift);
 	transition: transform var(--itx-transition-duration)
@@ -164,11 +164,11 @@
 
 .track-lab input[lab-slider]::-moz-range-thumb {
 	box-sizing: border-box;
-	inline-size: var(--lab-target);
-	block-size: var(--lab-target);
-	border: calc((var(--lab-target) - var(--lab-thumb)) / 2) solid transparent;
+	inline-size: var(--lab-thumb);
+	block-size: var(--lab-thumb);
+	border: 0;
 	border-radius: var(--itx-radius-full);
-	background: var(--lab-thumb-background) padding-box;
+	background: var(--lab-thumb-background);
 	box-shadow: var(--lab-thumb-edge);
 	filter: var(--lab-thumb-lift);
 	transition: transform var(--itx-transition-duration)
