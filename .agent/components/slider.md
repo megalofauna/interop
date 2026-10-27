@@ -60,7 +60,7 @@ In Angular, `InteropSlider` binds it, with `[format]` and `[readout]` inputs.
 
 ## Look
 
-The track and thumb were chosen in the track lab (`/lab/track`), which stays in
+The track and thumb were chosen in the track lab (`/labs/track`), which stays in
 the demo for comparing looks. The [progress bar](progress.md) draws the same
 track at every size step; `styles/contrast.spec.ts` fails if their track tokens
 differ.

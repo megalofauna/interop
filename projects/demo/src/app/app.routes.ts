@@ -220,7 +220,7 @@ export const routes: Routes = [
 			import("./lab/badge/badge-lab").then((m) => m.BadgeLab),
 	},
 	{
-		path: "lab/track",
+		path: "labs/track",
 		title: "Track lab",
 		loadComponent: () =>
 			import("./lab/track/track-lab").then((m) => m.TrackLab),
