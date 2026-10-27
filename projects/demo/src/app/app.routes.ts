@@ -214,6 +214,12 @@ export const routes: Routes = [
 			),
 	},
 	{
+		path: "labs/button",
+		title: "Button lab",
+		loadComponent: () =>
+			import("./lab/button/button-lab").then((m) => m.ButtonLab),
+	},
+	{
 		path: "labs/badge",
 		title: "Badge lab",
 		loadComponent: () =>
