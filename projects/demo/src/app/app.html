@@ -70,6 +70,9 @@
 									>Pattern</span
 								>
 							}
+							@if (page.lab) {
+								<span interop-badge itx-size="sm">Lab</span>
+							}
 						</a>
 					</li>
 				}
@@ -365,6 +368,37 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Theme switcher</a
+							>
+						</li>
+					</ul>
+				</details>
+			</li>
+			<li>
+				<details open>
+					<summary>Labs</summary>
+					<ul role="list">
+						<li>
+							<a
+								routerLink="/labs/badge"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Badge</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/labs/button"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Button</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/labs/track"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Track</a
 							>
 						</li>
 					</ul>

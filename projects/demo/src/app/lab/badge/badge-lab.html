@@ -1,11 +1,15 @@
-<h1>Badge lab</h1>
+<h1>Badge <span interop-badge>Lab</span></h1>
 <p>
 	Candidate looks for the badge, in a heading, in running text and beside a
 	label, at every size. The table measures each status on the page.
 </p>
 
 <div class="dials">
-	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('fill', $event)">
+	<fieldset
+		interop-radio-group="segmented"
+		itx-size="sm"
+		(change)="set('fill', $event)"
+	>
 		<legend>Fill</legend>
 		<label
 			><input
@@ -81,7 +85,11 @@
 			Status</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('type', $event)">
+	<fieldset
+		interop-radio-group="segmented"
+		itx-size="sm"
+		(change)="set('type', $event)"
+	>
 		<legend>Type</legend>
 		<label
 			><input
@@ -102,7 +110,11 @@
 			Smaller</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('pad', $event)">
+	<fieldset
+		interop-radio-group="segmented"
+		itx-size="sm"
+		(change)="set('pad', $event)"
+	>
 		<legend>Padding</legend>
 		<label
 			><input
@@ -132,7 +144,11 @@
 			Roomier</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('height', $event)">
+	<fieldset
+		interop-radio-group="segmented"
+		itx-size="sm"
+		(change)="set('height', $event)"
+	>
 		<legend>Height</legend>
 		<label
 			><input
@@ -153,7 +169,11 @@
 			Taller</label
 		>
 	</fieldset>
-	<fieldset interop-radio-group="segmented" itx-size="sm" (change)="set('weight', $event)">
+	<fieldset
+		interop-radio-group="segmented"
+		itx-size="sm"
+		(change)="set('weight', $event)"
+	>
 		<legend>Weight</legend>
 		<label
 			><input

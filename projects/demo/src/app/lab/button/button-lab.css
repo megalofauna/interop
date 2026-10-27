@@ -266,7 +266,7 @@
 	gap: var(--itx-space-3);
 }
 
-.button-lab .frame > h3 {
+.button-lab .frame > h2 {
 	margin: 0;
 	font-size: var(--itx-font-size-h5);
 	line-height: var(--itx-line-height-h5);

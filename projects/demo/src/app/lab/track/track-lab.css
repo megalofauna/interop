@@ -113,9 +113,7 @@
 	/* The fill covers the edge where it reaches, as the switch's on track does. */
 	background:
 		linear-gradient(var(--lab-fill), var(--lab-fill)) left /
-			calc(
-				var(--lab-thumb) / 2 + (100% - var(--lab-thumb)) * var(--lab-value)
-			)
+			calc(var(--lab-thumb) / 2 + (100% - var(--lab-thumb)) * var(--lab-value))
 			100% no-repeat border-box,
 		var(--lab-track-background) padding-box;
 	box-shadow: var(--lab-track-shade);

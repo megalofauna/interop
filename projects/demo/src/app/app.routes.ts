@@ -216,18 +216,21 @@ export const routes: Routes = [
 	{
 		path: "labs/button",
 		title: "Button lab",
+		data: { lab: true },
 		loadComponent: () =>
 			import("./lab/button/button-lab").then((m) => m.ButtonLab),
 	},
 	{
 		path: "labs/badge",
 		title: "Badge lab",
+		data: { lab: true },
 		loadComponent: () =>
 			import("./lab/badge/badge-lab").then((m) => m.BadgeLab),
 	},
 	{
 		path: "labs/track",
 		title: "Track lab",
+		data: { lab: true },
 		loadComponent: () =>
 			import("./lab/track/track-lab").then((m) => m.TrackLab),
 	},

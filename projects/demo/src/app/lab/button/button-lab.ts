@@ -31,7 +31,7 @@ interface Reading {
 	edge: number | null;
 }
 
-/** Variants of button[interop-button], from its own tokens. Not in the nav. */
+/** Variants of button[interop-button], from its own tokens. Listed under Labs in the nav. */
 @Component({
 	selector: "demo-button-lab",
 	host: { "itx-flow": "", class: "button-lab" },

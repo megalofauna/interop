@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { bindSlider } from "interop";
 
-/** Candidate looks for the slider and the progress bar. Not in the nav. */
+/** Candidate looks for the slider and the progress bar. Listed under Labs in the nav. */
 @Component({
 	selector: "demo-track-lab",
 	host: {

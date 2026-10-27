@@ -1,4 +1,4 @@
-<h1>Button lab</h1>
+<h1>Button <span interop-badge>Lab</span></h1>
 <p>
 	Variants of <code>button[interop-button]</code>, each a set of overrides of
 	the button's own tokens, in the house's vocabulary: the badge's tint, the
@@ -17,7 +17,7 @@
 			<span class="probe" aria-hidden="true"></span>
 			@for (frame of frames; track frame.title) {
 				<div class="frame">
-					<h3>{{ frame.title }}</h3>
+					<h2>{{ frame.title }}</h2>
 					<span class="name">{{ frame.lede }}</span>
 					@for (variant of frame.variants; track variant.id) {
 						<div class="variant">
@@ -85,7 +85,7 @@
 			}
 
 			<div class="frame">
-				<h3>In use</h3>
+				<h2>In use</h2>
 				<span class="name">A dialog's footer: tertiary and primary</span>
 				<div class="row">
 					<button type="button" interop-button lab-variant="tertiary">
