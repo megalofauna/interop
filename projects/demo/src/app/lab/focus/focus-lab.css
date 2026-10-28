@@ -70,7 +70,7 @@
 }
 
 /* Dims: the border steps down to a faint line while the ring shows. An invalid field keeps its red. */
-.focus-lab[data-ring="dim"]
+.focus-lab:is([data-ring="dim"], [data-ring="dim-red"])
 	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
 		.lab-focus,
 		:focus-visible
@@ -82,10 +82,25 @@
 	--itx-field-border-color-hover: var(--itx-field-border-color);
 }
 
-.focus-lab:is([data-ring="dim"], [data-ring="fuse-dim"]) [interop-button] {
+.focus-lab:is([data-ring="dim"], [data-ring="dim-red"], [data-ring="fuse-dim"])
+	[interop-button] {
 	--itx-button-border-color-focus-visible: light-dark(
 		var(--itx-neutral-300),
 		var(--itx-neutral-700)
+	);
+}
+
+/* Dim + red: on an invalid field the ring takes the danger color, and the red border dims under it. */
+.focus-lab[data-ring="dim-red"]
+	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
+		.lab-focus,
+		:focus-visible
+	):is([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {
+	--itx-outline-color: var(--itx-role-text-danger);
+	--itx-field-border-color-invalid: color-mix(
+		in oklch,
+		var(--itx-role-text-danger) 40%,
+		transparent
 	);
 }
 

@@ -71,6 +71,12 @@ export class FocusLab {
 			css: `${FIELDS} {\n\t--itx-field-border-color: light-dark(var(--itx-neutral-350), var(--itx-neutral-600));\n\t--itx-field-border-color-hover: var(--itx-field-border-color);\n}\n\n/* In interop-button.base.css: the token exists. */\n--itx-button-border-color-focus-visible: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));`,
 		},
 		{
+			id: "dim-red",
+			name: "Dim + red",
+			note: "Dim, and on an invalid field the ring turns red while the red border dims under it, as the grey one does.",
+			css: `/* Dim's field rule and button token, and: */\n${FIELDS}:where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {\n\t--itx-outline-color: var(--itx-role-text-danger);\n\t--itx-field-border-color-invalid: color-mix(in oklch, var(--itx-role-text-danger) 40%, transparent);\n}`,
+		},
+		{
 			id: "hug",
 			name: "Hug",
 			note: "No gap: the ring sits against the border, outside it, so the two read as one thick edge.",
