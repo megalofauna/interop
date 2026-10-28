@@ -3,6 +3,7 @@ import { RouterLink } from "@angular/router";
 import { bindRadioHomeEnd, bindSegmentedFit } from "interop";
 import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
+import { each } from "../../example/bind-each";
 import { DemoExample } from "../../example/example";
 import basic from "./examples/basic.html";
 import disabled from "./examples/disabled.html";
@@ -38,6 +39,12 @@ export class SegmentedControlDemo {
 		rtl,
 	};
 	protected readonly view = signal("grid");
+
+	/** Stacks each segmented control in an example when its row does not fit. */
+	protected readonly fit = each<HTMLElement>(
+		'fieldset[interop-radio-group~="segmented"]',
+		(group) => bindSegmentedFit(group),
+	);
 
 	protected readonly bindView = (root: HTMLElement) => {
 		const changed = (event: Event) =>

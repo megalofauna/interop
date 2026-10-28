@@ -60,17 +60,17 @@
 	an on switch, is a set of token values: 17.9:1 against the page in light,
 	16.7:1 in dark.
 </p>
-<demo-example [html]="examples.looks" [css]="examples.looksCss" />
+<demo-example [html]="examples.looks" [css]="examples.looksCss" [bind]="fit" />
 
 <h2>Sizes</h2>
-<demo-example [html]="examples.sizes" />
+<demo-example [html]="examples.sizes" [bind]="fit" />
 
 <h2>Icons</h2>
 <p>
 	Add <code>icon</code> to the attribute for square segments. Name each one with
 	visually hidden text in its label.
 </p>
-<demo-example [html]="examples.icons" />
+<demo-example [html]="examples.icons" [bind]="fit" />
 
 <h2>Home and End</h2>
 <p>
@@ -81,10 +81,10 @@
 <demo-example [html]="examples.homeEnd" [bind]="bindMonth" [ts]="homeEndTs" />
 
 <h2>Disabled</h2>
-<demo-example [html]="examples.disabled" />
+<demo-example [html]="examples.disabled" [bind]="fit" />
 
 <h2>Nothing chosen yet</h2>
-<demo-example [html]="examples.nothing" />
+<demo-example [html]="examples.nothing" [bind]="fit" />
 
 <h2>Right to left</h2>
-<demo-example [html]="examples.rtl" />
+<demo-example [html]="examples.rtl" [bind]="fit" />

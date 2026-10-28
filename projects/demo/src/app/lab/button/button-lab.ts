@@ -6,6 +6,7 @@ import {
 	inject,
 	signal,
 } from "@angular/core";
+import { bindScrollArea } from "interop";
 import { InteropIcon } from "interop/icon";
 
 interface Variant {
@@ -160,9 +161,10 @@ export class ButtonLab {
 
 	constructor() {
 		const host = inject(ElementRef<HTMLElement>).nativeElement as HTMLElement;
-		afterNextRender(() =>
-			requestAnimationFrame(() => this.readings.set(measure(host))),
-		);
+		afterNextRender(() => {
+			bindScrollArea(host.querySelector<HTMLElement>("[interop-scroll-area]")!);
+			requestAnimationFrame(() => this.readings.set(measure(host)));
+		});
 	}
 
 	protected toggle(event: Event) {
