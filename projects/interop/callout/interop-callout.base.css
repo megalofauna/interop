@@ -4,7 +4,7 @@
 	/* The status bar sits 8px in from the start edge. */
 	--itx-callout-padding-inline: var(--itx-space-2) var(--itx-space-4);
 	/* Between the status word, a title and the paragraphs. */
-	--itx-callout-content-gap: var(--itx-space-1);
+	--itx-callout-content-gap: var(--itx-space-2);
 	--itx-callout-font-size: var(--itx-font-size-p);
 	--itx-callout-line-height: var(--itx-line-height-p);
 	/* The visible status word, in small print. */
