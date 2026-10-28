@@ -5,7 +5,7 @@
  *   bindSegmentedFit(fieldset);
  *
  * - It measures the row, not a guess: a long or translated label stacks the control exactly when the
- *   row would run past its container (WCAG 1.4.10).
+ *   row would run past its container (WCAG 1.4.10). It measures again when a web font loads.
  * - Stacked, the group gets `data-stacked`, which sets --itx-segmented-orientation: vertical; the
  *   stylesheet does the rest. It checks again when the container's width or a label changes.
  * - It is optional. Without it, `itx-orientation="vertical"` stacks the control always, and a page
@@ -44,12 +44,15 @@ export function bindSegmentedFit(group: HTMLElement): () => void {
 	resizes?.observe(container);
 	const mutations = new MutationObserver(later);
 	mutations.observe(group, { subtree: true, childList: true, characterData: true });
+	// A web font that arrives after the first check widens the labels without resizing the container.
+	document.fonts?.addEventListener('loadingdone', later);
 	check();
 
 	return () => {
 		cancelAnimationFrame(frame);
 		resizes?.disconnect();
 		mutations.disconnect();
+		document.fonts?.removeEventListener('loadingdone', later);
 		group.removeAttribute('data-stacked');
 	};
 }
