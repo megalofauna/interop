@@ -26,8 +26,8 @@
   # The two drifting apart is not cosmetic: npm 10 and npm 11 disagree about
   # optional peer dependencies of platform-specific packages. A lock file
   # written by npm 11 omits @emnapi/core and @emnapi/runtime, which npm 10's
-  # `npm ci` then reports as missing and refuses to install. Node 24 ships
-  # npm 11, the same major as local work, so the lock file means the same in both.
+  # `npm ci` then reports as missing and refuses to install. package.json lists
+  # both as dev dependencies, so every npm writes them into the lock file.
   NODE_VERSION = "24"
 
   # Netlify auto-installs the `@netlify/angular-runtime` plugin when it

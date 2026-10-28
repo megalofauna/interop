@@ -49,6 +49,8 @@
 		"@angular/platform-browser-dynamic": "^21.2.20",
 		"@angular/router": "^21.2.20",
 		"@djot/djot": "^0.3.2",
+		"@emnapi/core": "^1.11.3",
+		"@emnapi/runtime": "^1.11.3",
 		"@floating-ui/dom": "^1.6.0",
 		"@material-symbols/svg-400": "^0.45.10",
 		"@tabler/icons": "^3.49.0",
