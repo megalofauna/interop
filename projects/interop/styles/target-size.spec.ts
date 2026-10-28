@@ -15,6 +15,7 @@ const fieldCss = sheets['field/interop-field.base.css'];
 const treeCss = sheets['tree/interop-tree.base.css'];
 const pageNavCss = sheets['page-nav/interop-page-nav.base.css'];
 const sliderCss = sheets['slider/interop-slider.base.css'];
+const disclosureCss = sheets['disclosure/interop-disclosure.base.css'];
 
 // jsdom has no layout, so axe cannot measure targets. This reads every size step's declared height instead.
 // A control's input sits inside its label, so the label is the target.
@@ -48,6 +49,7 @@ describe('target size', () => {
 		['tree row', treeCss, '--itx-tree-row-min-block-size'],
 		['page nav link', pageNavCss, '--itx-page-nav-link-min-block-size'],
 		['slider', sliderCss, '--itx-slider-target-size'],
+		['disclosure summary', disclosureCss, '--itx-disclosure-summary-min-block-size'],
 	] as const;
 
 	for (const [label, css, name] of targets) {

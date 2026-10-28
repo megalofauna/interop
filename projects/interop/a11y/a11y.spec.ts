@@ -491,6 +491,24 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(document.body)).toEqual([]);
 	});
 
+	it('finds no violations in disclosures, alone, open, and stacked as an accordion', async () => {
+		document.body.innerHTML = `
+			<main>
+				<h1>Help</h1>
+				<details interop-disclosure>
+					<summary>Why can I set bounds in two places?</summary>
+					<p>A minimum and a maximum can come from the element or the tokens.</p>
+				</details>
+				<details interop-disclosure open><summary>What does open mean?</summary><p>It starts open.</p></details>
+				<section aria-labelledby="faq">
+					<h2 id="faq">Shipping questions</h2>
+					<details interop-disclosure="row" name="faq"><summary><h3>When does it ship?</h3></summary><p>Tuesday.</p></details>
+					<details interop-disclosure="row" name="faq"><summary><h3>Where does it ship?</h3></summary><p>Anywhere.</p></details>
+				</section>
+			</main>`;
+		expect(await violations(document.body)).toEqual([]);
+	});
+
 	it('finds no violations in callouts, with a visible status word, a hidden one, a title and none', async () => {
 		document.body.innerHTML = `
 			<main>

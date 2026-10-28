@@ -1,0 +1,56 @@
+<h1>Disclosure</h1>
+<p class="aka">
+	Also known as details, expansion panel, collapsible, accordion item.
+</p>
+<p>
+	A disclosure shows and hides the content after its summary. It is the native
+	<code>&lt;details&gt;</code>. The browser opens it with a click, Enter or
+	Space, tells screen readers whether it is expanded, and opens it when
+	find-in-page matches text inside. Interop draws the chevron and the spacing,
+	and eases the height open where the browser can. It needs no script.
+</p>
+<p>
+	Use one for content only some readers need. Content most readers need belongs
+	on the page:
+	<a href="https://design-system.service.gov.uk/components/details/"
+		>GOV.UK found that some people never open it</a
+	>. Several in a row are an <a routerLink="/patterns/accordion">accordion</a>.
+</p>
+
+<h2>A note to look into</h2>
+<p>
+	Word the summary as the reader's question, or as what it shows. Write it as
+	text: a link or a button inside a summary is a control inside a control, and
+	the dev audit warns.
+</p>
+<demo-example [html]="examples.basic" layout="stack" />
+
+<h2>Open at first</h2>
+<p>
+	<code>open</code> starts it open. In Angular, bind <code>[open]</code> and
+	listen for <code>(toggle)</code>.
+</p>
+<demo-example [html]="examples.open" layout="stack" />
+
+<h2>A row</h2>
+<p>
+	<code>interop-disclosure="row"</code> is a full-width row with a hover fill
+	and a hairline above and below. Rows stack into an
+	<a routerLink="/patterns/accordion">accordion</a>.
+</p>
+<demo-example [html]="examples.row" layout="stack" />
+
+<h2>What it does not do</h2>
+<p>
+	It has no disabled state: a summary that cannot open is text, so write it as
+	text. Do not give the summary a role:
+	<a href="https://www.scottohara.me/blog/2022/09/12/details-summary.html"
+		>Scott O'Hara found</a
+	>
+	that Safari on macOS then drops its expanded state. Do not use it for a menu,
+	tabs or a dialog;
+	<a
+		href="https://adrianroselli.com/2019/04/details-summary-are-not-insert-control-here.html"
+		>Adrian Roselli explains why</a
+	>. A closed disclosure is left out when the page prints.
+</p>

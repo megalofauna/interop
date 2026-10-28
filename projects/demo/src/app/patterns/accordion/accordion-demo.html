@@ -1,0 +1,40 @@
+<h1>Accordion <span interop-badge itx-color="info">Pattern</span></h1>
+<p class="aka">Also known as expansion panels, collapsible sections.</p>
+<p class="built-from">
+	A pattern, built from <a routerLink="/components/disclosure">disclosures</a>
+	in the row look.
+</p>
+<p class="prose">
+	An accordion is a stack of disclosures under a heading, each opening its own
+	section. Give them one <code>name</code> and the browser keeps one open at a
+	time: opening a section closes the one before. Without a <code>name</code>,
+	any number stay open. It needs no script.
+</p>
+<p class="prose">
+	Use one where readers need only some sections, such as answers to separate
+	questions. When they need most of the content, a long page with headings is
+	easier to read and search:
+	<a href="https://design-system.service.gov.uk/components/accordion/"
+		>GOV.UK uses accordions only where research shows they help</a
+	>, and
+	<a href="https://www.nngroup.com/articles/accordions-on-desktop/"
+		>Nielsen Norman Group found they add work on desktop</a
+	>.
+</p>
+
+<h2>One open at a time</h2>
+<p class="prose">
+	Each summary holds a heading, so readers can move between sections by heading.
+	Screen reader support for a heading inside a summary is partial:
+	<a href="https://a11ysupport.io/tests/tech__html__details-summary"
+		>some read it as the summary's text only</a
+	>. The section's heading above the stack names the group, since a shared
+	<code>name</code> adds none.
+</p>
+<demo-example [html]="examples.oneOpen" layout="stack" />
+
+<h2>Any number open</h2>
+<p class="prose">
+	Leave <code>name</code> out when readers compare sections, such as settings.
+</p>
+<demo-example [html]="examples.manyOpen" layout="stack" />

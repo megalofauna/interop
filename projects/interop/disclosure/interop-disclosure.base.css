@@ -1,0 +1,25 @@
+:where(details[interop-disclosure]) {
+	/* WCAG 2.5.8: the summary is the pointer target. */
+	--itx-disclosure-summary-min-block-size: var(--itx-space-6);
+	--itx-disclosure-summary-padding-inline: var(--itx-space-0);
+	--itx-disclosure-summary-background-color-hover: transparent;
+	/* The content starts under the summary's text, past the chevron. */
+	--itx-disclosure-content-padding-block: var(--itx-space-2) var(--itx-space-0);
+	--itx-disclosure-content-padding-inline: calc(1em + var(--itx-space-1_5)) var(--itx-space-0);
+	--itx-disclosure-content-gap: var(--itx-space-3);
+	--itx-disclosure-border-width: 0px;
+	--itx-disclosure-border-color: transparent;
+	--itx-disclosure-transition-duration: var(--itx-transition-duration);
+	--itx-disclosure-transition-timing-function: var(--itx-transition-timing-function);
+}
+
+/* The row: a full-width summary with a hover fill, and a hairline above and below. */
+:where(details[interop-disclosure~="row"]) {
+	--itx-disclosure-summary-min-block-size: var(--itx-space-10);
+	--itx-disclosure-summary-padding-inline: var(--itx-space-3);
+	--itx-disclosure-summary-background-color-hover: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	--itx-disclosure-content-padding-block: var(--itx-space-2) var(--itx-space-4);
+	--itx-disclosure-content-padding-inline: calc(var(--itx-space-3) + 1em + var(--itx-space-1_5)) var(--itx-space-3);
+	--itx-disclosure-border-width: var(--itx-border-width);
+	--itx-disclosure-border-color: light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+}

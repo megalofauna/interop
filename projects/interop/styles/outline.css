@@ -31,14 +31,15 @@
 	}
 }
 
-/* A tab, a segment, an option, a tree row, a page nav link or a palette result sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
+/* A tab, a segment, an option, a tree row, a page nav link, a palette result or a disclosure row sits in a gapless row, so its ring is inside it and does not overlap its neighbors. */
 :where(
 	[interop-tabs] > [role="tablist"] > [role="tab"],
 	fieldset[interop-radio-group~="segmented"] > label > input[type="radio"],
 	select[interop-select] option,
 	ul[interop-tree] :is(li > a[href], details > summary),
 	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a[href],
-	dialog[interop-dialog~="palette"] > nav li > :is(a, button)
+	dialog[interop-dialog~="palette"] > nav li > :is(a, button),
+	details[interop-disclosure~="row"] > summary
 ) {
 	--itx-outline-offset: calc(var(--itx-outline-width) * -1);
 }
