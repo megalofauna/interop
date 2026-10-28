@@ -33,10 +33,10 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Use the Node version the deploy uses
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           # Reads .nvmrc, so this can never drift from local or from
           # netlify.toml's NODE_VERSION without someone noticing.
@@ -56,10 +56,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # The specs run in jsdom; the browser checks are the Pages step.
       - name: Test
-        run: npm test -- --watch=false --browsers=ChromeHeadless
-        env:
-          CHROME_BIN: /usr/bin/google-chrome
+        run: npm test -- --watch=false
+
+      - name: Test demo
+        run: npm run test:demo -- --watch=false
 
       - name: Build library
         run: npm run build:lib
