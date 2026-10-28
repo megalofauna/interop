@@ -4,19 +4,16 @@
  *
  *   --itx-border-width          an edge: a field, a card, a popover, a track
  *   --itx-border-width-strong   a state shown by a thicker border: invalid, a checked card, an error summary
- *   --itx-border-width-accent   a status edge: the inline-start edge of a callout or a toast
  */
 
 :root {
 	--itx-border-width: 1px;
 	--itx-border-width-strong: 2px;
-	--itx-border-width-accent: 4px;
 }
 
 @media (prefers-contrast: more) {
 	:root {
 		--itx-border-width: 2px;
 		--itx-border-width-strong: 3px;
-		--itx-border-width-accent: 6px;
 	}
 }

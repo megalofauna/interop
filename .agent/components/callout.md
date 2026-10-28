@@ -12,7 +12,7 @@ reader may skip, use `<details>`. For content tangential to the page, `<aside>`.
 
 ```
 projects/interop/callout/
-  interop-callout.structure.css   panel, status edge, icon, small print; names list at the top
+  interop-callout.structure.css   panel, status bar, icon, small print; names list at the top
   interop-callout.base.css        token values and status colors
   public-api.ts                   empty: CSS only
 ```
@@ -62,16 +62,18 @@ The toast's panel, without its shadow; `styles/contrast.spec.ts` fails if their
 color tokens differ.
 
 - A bordered panel (`neutral-50`/`800`, edge `neutral-500`, 3:1 against the
-  page) with the house radius. The status edge is `border-inline-start` at the
-  accent border width (4px, 6px with `prefers-contrast: more`) in the status color, so it flips in RTL, keeps its shape
-  at the radius, and survives forced colors.
+  page) with the house radius. The status bar is a `::before`, the first flex item: 2px wide
+  (`--itx-border-width-strong`, 3px with `prefers-contrast: more`), round-ended,
+  in the status color, 8px in from the start edge and stretched to the content,
+  so it follows the writing direction.
 - The icon (`--itx-icon-size-md`) sits on the first line in the status color,
   3:1 against the panel and the page.
 - Text in the body size. `<small>` is the caption size at weight 600.
 - Children of the content `div` lose their margins and are spaced by a 4px gap.
 - `overflow-wrap: anywhere`, so a long URL wraps at 320px.
-- Forced colors: no block. The edges are borders the browser maps to one
-  color; the icon and the status word still tell the statuses apart.
+- Forced colors: the bar takes `CanvasText` (`forced-color-adjust: none`);
+  the borders map to one color, and the icon and the status word still tell
+  the statuses apart.
 
 ## Dev audit rules
 
@@ -86,7 +88,7 @@ color tokens differ.
 - `src/audit.spec.ts`: each rule, and the accepted forms.
 - `a11y/a11y.spec.ts`: axe on visible, hidden, titled and neutral callouts.
 - `styles/contrast.spec.ts`: text 4.5:1 on the panel, edge 3:1 against the
-  page, status edges and icons 3:1 against the panel and the page, and the
+  page, status bars and icons 3:1 against the panel and the page, and the
   toast's colors.
 - Chrome 155, on the demo: `note "Before you export"` from `aria-labelledby`
   with the heading kept in the outline; forced colors keep the icons and words;

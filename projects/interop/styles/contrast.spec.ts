@@ -626,15 +626,7 @@ it("draws the callout in the toast's colors", () => {
 		[...sheets[`${component}/interop-${component}.base.css`].matchAll(new RegExp(`--itx-${component}-${part}:\\s*([^;]+);`, 'g'))].map(
 			([, value]) => oneLine(value),
 		);
-	for (const part of [
-		'color',
-		'background-color',
-		'border-width',
-		'border-color',
-		'accent-border-width',
-		'accent-color',
-		'border-radius',
-	]) {
+	for (const part of ['color', 'background-color', 'border-width', 'border-color', 'accent-inline-size', 'accent-color', 'border-radius']) {
 		expect(declared('callout', part)).toEqual(declared('toast', part));
 	}
 });
