@@ -228,6 +228,13 @@ export const routes: Routes = [
 			import("./lab/badge/badge-lab").then((m) => m.BadgeLab),
 	},
 	{
+		path: "labs/focus",
+		title: "Focus lab",
+		data: { lab: true },
+		loadComponent: () =>
+			import("./lab/focus/focus-lab").then((m) => m.FocusLab),
+	},
+	{
 		path: "labs/track",
 		title: "Track lab",
 		data: { lab: true },

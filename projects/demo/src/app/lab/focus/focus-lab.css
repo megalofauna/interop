@@ -1,0 +1,125 @@
+/*
+ * Focus lab: how a field's border and the focus ring meet. Not shipped. Each option applies to the
+ * fields and buttons on the stage, both to the ones drawn focused (.lab-focus) and to real keyboard
+ * focus. The CSS each option would add to the library is printed on the page.
+ */
+
+/* Drawn focused: the same ring outline.css draws on :focus-visible. */
+.focus-lab .lab-focus {
+	outline: var(--itx-outline-width) var(--itx-outline-style)
+		var(--itx-outline-color);
+	outline-offset: var(--itx-outline-offset);
+}
+
+/* Covers: the ring sits on the border, so the border is under it. */
+.focus-lab[data-ring="cover"]
+	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
+		.lab-focus,
+		:focus-visible
+	) {
+	--itx-outline-offset: calc(-1 * var(--itx-field-border-width));
+}
+
+.focus-lab[data-ring="cover"] [interop-button]:is(.lab-focus, :focus-visible) {
+	--itx-outline-offset: calc(-1 * var(--itx-button-border-width));
+}
+
+/* Hides: the border goes clear while the ring shows. An invalid field keeps its red. */
+.focus-lab[data-ring="hide"]
+	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
+		.lab-focus,
+		:focus-visible
+	) {
+	--itx-field-border-color: transparent;
+	--itx-field-border-color-hover: transparent;
+}
+
+.focus-lab[data-ring="hide"] [interop-button] {
+	--itx-button-border-color-focus-visible: transparent;
+}
+
+/* Dims: the border fades to a third while the ring shows. An invalid field keeps its red. */
+.focus-lab[data-ring="dim"]
+	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
+		.lab-focus,
+		:focus-visible
+	) {
+	--itx-field-border-color: light-dark(
+		var(--itx-neutral-300),
+		var(--itx-neutral-700)
+	);
+	--itx-field-border-color-hover: var(--itx-field-border-color);
+}
+
+.focus-lab[data-ring="dim"] [interop-button] {
+	--itx-button-border-color-focus-visible: light-dark(
+		var(--itx-neutral-200),
+		var(--itx-neutral-800)
+	);
+}
+
+/* Hugs: no gap; the ring sits against the border, outside it. */
+.focus-lab[data-ring="hug"]
+	:is(
+		select[interop-select],
+		:is(input, textarea)[interop-input],
+		[interop-button]
+	):is(.lab-focus, :focus-visible) {
+	--itx-outline-offset: 0px;
+}
+
+/* The drawn-focused button shows its focus-visible colors too. */
+.focus-lab [interop-button].lab-focus {
+	border-color: var(--itx-button-border-color-focus-visible);
+}
+
+/* ── The page ────────────────────────────────────────────────────────────── */
+.focus-lab .dials {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-4);
+}
+
+.focus-lab .stage {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+	gap: var(--itx-space-8);
+	padding: var(--itx-space-8);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: Canvas;
+	color: CanvasText;
+}
+
+.focus-lab .stage[data-scheme="light"] {
+	color-scheme: light;
+}
+
+.focus-lab .stage[data-scheme="dark"] {
+	color-scheme: dark;
+}
+
+.focus-lab form {
+	display: grid;
+	align-content: start;
+	gap: var(--itx-space-5);
+}
+
+.focus-lab form > h2 {
+	margin: 0;
+	font-size: var(--itx-font-size-h5);
+	line-height: var(--itx-line-height-h5);
+}
+
+.focus-lab .actions {
+	display: flex;
+	gap: var(--itx-space-2);
+}
+
+.focus-lab pre {
+	margin: 0;
+	padding: var(--itx-space-4);
+	overflow-x: auto;
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
+	font-size: var(--itx-font-size-p-sm);
+}

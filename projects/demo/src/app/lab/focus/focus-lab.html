@@ -1,0 +1,146 @@
+<h1>Focus <span interop-badge>Lab</span></h1>
+<p>
+	How a field's border and the focus ring meet. The left form draws every
+	control focused at once; the right form is live, so Tab through it. Text
+	fields show the ring on any focus, a click included.
+</p>
+
+<div class="dials">
+	<fieldset interop-radio-group="segmented" (change)="set('scheme', $event)">
+		<legend>Scheme</legend>
+		<label
+			><input
+				type="radio"
+				name="scheme"
+				value="light"
+				[checked]="scheme() === 'light'"
+			/>
+			Light</label
+		>
+		<label
+			><input
+				type="radio"
+				name="scheme"
+				value="dark"
+				[checked]="scheme() === 'dark'"
+			/>
+			Dark</label
+		>
+	</fieldset>
+	<fieldset interop-radio-group="segmented" (change)="set('ring', $event)">
+		<legend>Border and ring</legend>
+		@for (option of options; track option.id) {
+			<label
+				><input
+					type="radio"
+					name="ring"
+					[value]="option.id"
+					[checked]="ring() === option.id"
+				/>
+				{{ option.name }}</label
+			>
+		}
+	</fieldset>
+</div>
+<p>{{ chosen().note }}</p>
+
+<div class="stage" [attr.data-scheme]="scheme()">
+	<form aria-labelledby="drawn-title" (submit)="$event.preventDefault()">
+		<h2 id="drawn-title">Drawn focused</h2>
+		<div interop-field>
+			<label for="drawn-name">Name</label>
+			<input
+				interop-input
+				id="drawn-name"
+				class="lab-focus"
+				autocomplete="name"
+				value="Ada Lovelace"
+			/>
+		</div>
+		<div interop-field>
+			<label for="drawn-email">Email address</label>
+			<p interop-error id="drawn-email-error">
+				Enter an email address with an @
+			</p>
+			<input
+				interop-input
+				id="drawn-email"
+				class="lab-focus"
+				type="email"
+				autocomplete="email"
+				value="ada.example.com"
+				aria-invalid="true"
+				aria-describedby="drawn-email-error"
+			/>
+		</div>
+		<div interop-field>
+			<label for="drawn-plan">Plan</label>
+			<select interop-select id="drawn-plan" class="lab-focus">
+				<option>Starter</option>
+				<option>Team</option>
+			</select>
+		</div>
+		<div interop-field>
+			<label for="drawn-notes">Notes</label>
+			<textarea interop-input id="drawn-notes" class="lab-focus">
+Ships Tuesday.</textarea>
+		</div>
+		<label interop-checkbox
+			><input type="checkbox" class="lab-focus" checked /> Send me
+			updates</label
+		>
+		<div class="actions">
+			<button type="button" interop-button class="lab-focus">Cancel</button>
+			<button type="submit" interop-button>Save</button>
+		</div>
+	</form>
+
+	<form aria-labelledby="live-title" (submit)="$event.preventDefault()">
+		<h2 id="live-title">Live</h2>
+		<div interop-field>
+			<label for="live-name">Name</label>
+			<input
+				interop-input
+				id="live-name"
+				autocomplete="name"
+				value="Ada Lovelace"
+			/>
+		</div>
+		<div interop-field>
+			<label for="live-email">Email address</label>
+			<p interop-error id="live-email-error">
+				Enter an email address with an @
+			</p>
+			<input
+				interop-input
+				id="live-email"
+				type="email"
+				autocomplete="email"
+				value="ada.example.com"
+				aria-invalid="true"
+				aria-describedby="live-email-error"
+			/>
+		</div>
+		<div interop-field>
+			<label for="live-plan">Plan</label>
+			<select interop-select id="live-plan">
+				<option>Starter</option>
+				<option>Team</option>
+			</select>
+		</div>
+		<div interop-field>
+			<label for="live-notes">Notes</label>
+			<textarea interop-input id="live-notes">Ships Tuesday.</textarea>
+		</div>
+		<label interop-checkbox
+			><input type="checkbox" checked /> Send me updates</label
+		>
+		<div class="actions">
+			<button type="button" interop-button>Cancel</button>
+			<button type="submit" interop-button>Save</button>
+		</div>
+	</form>
+</div>
+
+<h2>What it adds to the library</h2>
+<pre><code>{{ chosen().css }}</code></pre>
