@@ -1,0 +1,80 @@
+/*
+ * Disclosure: a summary that shows and hides the content after it, on the native <details>.
+ *
+ *   <details interop-disclosure>
+ *     <summary>Why can I set bounds in two places?</summary>
+ *     <p>…</p>
+ *   </details>
+ *
+ * The browser gives it Enter and Space, the expanded state, find-in-page (a match opens a closed
+ * one), and one-open-at-a-time for disclosures that share a `name`. The chevron is the shared
+ * disclosure look (styles/disclosure.css). Where the browser can animate to `auto`, the content's
+ * height eases open and shut; elsewhere it opens at once. `interop-disclosure="row"` is a full-width
+ * row with a hover fill and a hairline above and below, which the accordion pattern stacks.
+ *
+ * Also known as:
+ *   details           HTML, GOV.UK, Web Awesome
+ *   expansion panel   Material 2, Angular Material
+ *   collapsible       Radix, Base UI, Ark
+ *   accordion item    an accordion is several, in Carbon, Fluent, USWDS, GOV.UK and APG
+ * Disclosure is the name in ARIA APG, Apple HIG, Spectrum and React Aria.
+ */
+:where(details[interop-disclosure]) {
+	/* Lets the content's height animate to and from `auto`, where supported. */
+	interpolate-size: allow-keywords;
+	border-block: var(--itx-disclosure-border-width) solid var(--itx-disclosure-border-color);
+}
+
+/* Stacked rows share one hairline. */
+:where(details[interop-disclosure~="row"] + details[interop-disclosure~="row"]) {
+	border-block-start-width: 0px;
+}
+
+:where(details[interop-disclosure] > summary) {
+	box-sizing: border-box;
+	min-block-size: var(--itx-disclosure-summary-min-block-size);
+	/* The space one line leaves inside the minimum height, so the first line is centered in the row. */
+	padding-block: max(0px, (var(--itx-disclosure-summary-min-block-size) - 1lh) / 2);
+	padding-inline: var(--itx-disclosure-summary-padding-inline);
+	cursor: default;
+	transition-property: background-color;
+	transition-duration: var(--itx-disclosure-transition-duration);
+	transition-timing-function: var(--itx-disclosure-transition-timing-function);
+}
+
+/* A heading in the summary keeps its level for screen readers, and sits in the row like its text. */
+:where(details[interop-disclosure] > summary > :is(h1, h2, h3, h4, h5, h6)) {
+	margin: 0;
+}
+
+@media (any-hover: hover) {
+	:where(details[interop-disclosure] > summary:hover) {
+		background-color: var(--itx-disclosure-summary-background-color-hover);
+	}
+}
+
+/* The content. Closed, it has no height; open, it eases to its own. */
+:where(details[interop-disclosure])::details-content {
+	block-size: 0;
+	overflow: clip;
+	padding-block: var(--itx-space-0);
+	padding-inline: var(--itx-disclosure-content-padding-inline);
+	transition-property: block-size, padding-block, content-visibility;
+	transition-duration: var(--itx-disclosure-transition-duration);
+	transition-timing-function: var(--itx-disclosure-transition-timing-function);
+	transition-behavior: allow-discrete;
+}
+
+:where(details[interop-disclosure][open])::details-content {
+	block-size: auto;
+	padding-block: var(--itx-disclosure-content-padding-block);
+}
+
+/* Its blocks are spaced by the disclosure's gap; the content's padding holds the space around them. */
+:where(details[interop-disclosure] > :not(summary)) {
+	margin-block: 0;
+}
+
+:where(details[interop-disclosure] > :not(summary) + :not(summary)) {
+	margin-block-start: var(--itx-disclosure-content-gap);
+}

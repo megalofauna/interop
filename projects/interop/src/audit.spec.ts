@@ -578,6 +578,25 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('disclosure', () => {
+		it('accepts a summary as text, one with a heading, and a row', () => {
+			render(`
+				<details interop-disclosure><summary>Why can I set bounds in two places?</summary><p>Because…</p></details>
+				<details interop-disclosure="row" name="faq"><summary><h3>Shipping</h3></summary><p>…</p></details>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a missing summary, a role on the summary, and a control inside it', () => {
+			render(`
+				<details interop-disclosure><p>No summary</p></details>
+				<details interop-disclosure><summary role="button">Role</summary><p>…</p></details>
+				<details interop-disclosure><summary>Read <a href="/guide">the guide</a></summary><p>…</p></details>
+			`);
+			expect(rules()).toEqual(['disclosure-summary', 'disclosure-summary-role', 'disclosure-summary-control']);
+		});
+	});
+
 	describe('callout', () => {
 		const icon = '<svg interop-icon name="tabler-alert-triangle"></svg>';
 

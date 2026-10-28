@@ -41,6 +41,14 @@ export const routes: Routes = [
 			import("./components/dialog/dialog-demo").then((m) => m.DialogDemo),
 	},
 	{
+		path: "components/disclosure",
+		title: "Disclosure",
+		loadComponent: () =>
+			import("./components/disclosure/disclosure-demo").then(
+				(m) => m.DisclosureDemo,
+			),
+	},
+	{
 		path: "components/field",
 		title: "Field",
 		loadComponent: () =>
@@ -162,6 +170,15 @@ export const routes: Routes = [
 		title: "Tree",
 		loadComponent: () =>
 			import("./components/tree/tree-demo").then((m) => m.TreeDemo),
+	},
+	{
+		path: "patterns/accordion",
+		title: "Accordion",
+		data: { pattern: true },
+		loadComponent: () =>
+			import("./patterns/accordion/accordion-demo").then(
+				(m) => m.AccordionDemo,
+			),
 	},
 	{
 		path: "patterns/cards",

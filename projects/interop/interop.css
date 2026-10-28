@@ -1,3 +1,4 @@
+@import "./fonts/inter.css";
 @import "./styles/space.css";
 @import "./styles/typography.css";
 @import "./styles/code.css";
@@ -59,6 +60,8 @@
 @import "./toast/interop-toast.structure.css";
 @import "./callout/interop-callout.base.css";
 @import "./callout/interop-callout.structure.css";
+@import "./disclosure/interop-disclosure.base.css";
+@import "./disclosure/interop-disclosure.structure.css";
 /* After the components that wear these looks, because they override their item layout. */
 @import "./styles/segmented.css";
 @import "./styles/cards.css";

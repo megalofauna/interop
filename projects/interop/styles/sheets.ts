@@ -5,6 +5,8 @@
  */
 
 // @ts-expect-error The text loader turns the file into a string.
+import fontsInter from '../fonts/inter.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesReset from '../styles/reset.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesSpace from '../styles/space.css' with { loader: 'text' };
@@ -127,6 +129,10 @@ import calloutInteropCalloutBase from '../callout/interop-callout.base.css' with
 // @ts-expect-error The text loader turns the file into a string.
 import calloutInteropCalloutStructure from '../callout/interop-callout.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import disclosureInteropDisclosureBase from '../disclosure/interop-disclosure.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import disclosureInteropDisclosureStructure from '../disclosure/interop-disclosure.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesSegmented from '../styles/segmented.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesCards from '../styles/cards.css' with { loader: 'text' };
@@ -143,6 +149,7 @@ import interopCss from '../interop.css' with { loader: 'text' };
 
 /** The stylesheets, in interop.css order; reset.css, which is opt-in, first. */
 export const sheets: Record<string, string> = {
+	'fonts/inter.css': fontsInter,
 	'styles/reset.css': stylesReset,
 	'styles/space.css': stylesSpace,
 	'styles/typography.css': stylesTypography,
@@ -204,6 +211,8 @@ export const sheets: Record<string, string> = {
 	'toast/interop-toast.structure.css': toastInteropToastStructure,
 	'callout/interop-callout.base.css': calloutInteropCalloutBase,
 	'callout/interop-callout.structure.css': calloutInteropCalloutStructure,
+	'disclosure/interop-disclosure.base.css': disclosureInteropDisclosureBase,
+	'disclosure/interop-disclosure.structure.css': disclosureInteropDisclosureStructure,
 	'styles/segmented.css': stylesSegmented,
 	'styles/cards.css': stylesCards,
 	'styles/chips.css': stylesChips,

@@ -23,12 +23,12 @@
   # local dev. The CI image installs this version before `command` runs.
   #
   # KEEP IN SYNC WITH .nvmrc, which pins the same version for local work.
-  # The two drifting apart is not cosmetic: Node 22 ships npm 10 and Node 25
-  # ships npm 11, and the two disagree about optional peer dependencies of
-  # platform-specific packages. A lock file written by npm 11 omits
-  # @emnapi/core and @emnapi/runtime, which npm 10's `npm ci` then reports as
-  # missing and refuses to install — a red deploy from a green local build.
-  NODE_VERSION = "22"
+  # The two drifting apart is not cosmetic: npm 10 and npm 11 disagree about
+  # optional peer dependencies of platform-specific packages. A lock file
+  # written by npm 11 omits @emnapi/core and @emnapi/runtime, which npm 10's
+  # `npm ci` then reports as missing and refuses to install. package.json lists
+  # both as dev dependencies, so every npm writes them into the lock file.
+  NODE_VERSION = "24"
 
   # Netlify auto-installs the `@netlify/angular-runtime` plugin when it
   # detects Angular. With multiple projects in angular.json (interop,

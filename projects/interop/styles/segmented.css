@@ -224,6 +224,17 @@
 	}
 }
 
+/*
+ * A segmented tab list scrolls when its tabs overflow, as the underlined one does. A radio group
+ * stacks instead (bindSegmentedFit()); tabs keep one row, because a stacked tab list is a vertical one.
+ */
+:where([interop-tabs~="segmented"] > [role="tablist"]) {
+	max-inline-size: 100%;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+	scrollbar-width: thin;
+}
+
 /* ── Frame and pill ────────────────────────────────────────────────────── */
 
 @supports (anchor-name: --a) {

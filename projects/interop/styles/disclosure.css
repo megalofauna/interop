@@ -18,7 +18,7 @@
  * that wear it, because it overrides their summary's display.
  */
 
-:where(ul[interop-tree] details > summary) {
+:where(:is(ul[interop-tree] details, details[interop-disclosure]) > summary) {
 	--itx-disclosure-marker-size: 1em;
 	--itx-disclosure-marker-gap: var(--itx-space-1_5);
 	/* Tabler's chevron-right. Only the mask's shape counts, so its stroke color does not matter. */
@@ -33,12 +33,12 @@
 	list-style: none;
 }
 
-:where(ul[interop-tree] details > summary)::-webkit-details-marker {
+:where(:is(ul[interop-tree] details, details[interop-disclosure]) > summary)::-webkit-details-marker {
 	display: none;
 }
 
 /* One line tall, so the chevron sits in the middle of the first line. */
-:where(ul[interop-tree] details > summary)::before {
+:where(:is(ul[interop-tree] details, details[interop-disclosure]) > summary)::before {
 	content: "";
 	flex: none;
 	inline-size: var(--itx-disclosure-marker-size);
@@ -53,22 +53,22 @@
 	transition-timing-function: var(--itx-disclosure-transition-timing-function);
 }
 
-:where(ul[interop-tree] details[open] > summary)::before {
+:where(:is(ul[interop-tree] details, details[interop-disclosure])[open] > summary)::before {
 	rotate: 90deg;
 }
 
 /* Mirrored, it points left when closed, and turns the other way to point down. */
-:where(ul[interop-tree] details > summary:dir(rtl))::before {
+:where(:is(ul[interop-tree] details, details[interop-disclosure]) > summary:dir(rtl))::before {
 	scale: -1 1;
 }
 
-:where(ul[interop-tree] details[open] > summary:dir(rtl))::before {
+:where(:is(ul[interop-tree] details, details[interop-disclosure])[open] > summary:dir(rtl))::before {
 	rotate: -90deg;
 }
 
 /* Forced colors would paint the fill the page color, so it takes the system text color. */
 @media (forced-colors: active) {
-	:where(ul[interop-tree] details > summary)::before {
+	:where(:is(ul[interop-tree] details, details[interop-disclosure]) > summary)::before {
 		forced-color-adjust: none;
 		background-color: CanvasText;
 	}

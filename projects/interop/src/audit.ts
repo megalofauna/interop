@@ -659,6 +659,38 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: null,
 	},
+	'disclosure-summary': {
+		selector: 'details[interop-disclosure]',
+		check: (details) =>
+			details.firstElementChild?.matches('summary')
+				? null
+				: {
+						problem: 'This disclosure has no <summary> as its first child.',
+						reason: 'The browser supplies a summary that says "Details", so every disclosure without one reads the same.',
+						advice: 'Start the <details> with <summary>, worded as what it shows: <summary>Why can I set bounds in two places?</summary>.',
+					},
+	},
+	'disclosure-summary-role': {
+		selector: 'details[interop-disclosure] > summary[role]',
+		check: () => ({
+			problem: 'This disclosure’s summary has a role.',
+			reason:
+				'The summary is already the control that opens it. A role replaces that: Safari on macOS then drops its expanded state and any heading inside it.',
+			advice: 'Remove the role from the <summary>.',
+		}),
+	},
+	'disclosure-summary-control': {
+		selector: 'details[interop-disclosure] > summary',
+		check: (summary) =>
+			summary.querySelector('a[href], button, input, select, textarea, [tabindex]')
+				? {
+						problem: 'This disclosure’s summary holds a link or a control.',
+						reason:
+							'The summary is the control that opens the disclosure. A link or button inside it is a control inside a control: screen readers announce one of them, and a click does both.',
+						advice: 'Write the summary as text, and put the link or control in the content.',
+					}
+				: null,
+	},
 	'page-nav-name': {
 		selector: 'nav[interop-page-nav]',
 		check: (nav) =>

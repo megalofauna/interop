@@ -200,29 +200,31 @@
 	is one, is measured against the page; 3:1 is needed only where the edge is
 	what shows the button (outline, tertiary on hover).
 </p>
-<table>
-	<thead>
-		<tr>
-			<th>Scheme</th>
-			<th>Variant</th>
-			<th>Text at rest</th>
-			<th>Text on hover</th>
-			<th>Edge</th>
-		</tr>
-	</thead>
-	<tbody>
-		@for (reading of readings(); track $index) {
+<div interop-scroll-area aria-label="Contrast">
+	<table>
+		<thead>
 			<tr>
-				<td>{{ reading.scheme }}</td>
-				<td>{{ reading.variant }}</td>
-				<td [class.fail]="reading.rest < 4.5">
-					{{ ratio(reading.rest, 4.5) }}
-				</td>
-				<td [class.fail]="reading.hover < 4.5">
-					{{ ratio(reading.hover, 4.5) }}
-				</td>
-				<td>{{ ratio(reading.edge, 0) }}</td>
+				<th>Scheme</th>
+				<th>Variant</th>
+				<th>Text at rest</th>
+				<th>Text on hover</th>
+				<th>Edge</th>
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@for (reading of readings(); track $index) {
+				<tr>
+					<td>{{ reading.scheme }}</td>
+					<td>{{ reading.variant }}</td>
+					<td [class.fail]="reading.rest < 4.5">
+						{{ ratio(reading.rest, 4.5) }}
+					</td>
+					<td [class.fail]="reading.hover < 4.5">
+						{{ ratio(reading.hover, 4.5) }}
+					</td>
+					<td>{{ ratio(reading.edge, 0) }}</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

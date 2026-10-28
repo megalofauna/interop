@@ -25,6 +25,7 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 | Checkbox, radio group, switch, segmented, cards, chips | [components/control.md](components/control.md) |
 | Code block | [components/code-block.md](components/code-block.md) |
 | Dialog | [components/dialog.md](components/dialog.md) |
+| Disclosure, accordion pattern | [components/disclosure.md](components/disclosure.md) |
 | Field: text input, textarea, hint, error, validation, password, count | [components/field.md](components/field.md) |
 | Icon | [components/icon.md](components/icon.md) |
 | Page nav | [components/page-nav.md](components/page-nav.md) |
