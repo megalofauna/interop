@@ -24,6 +24,37 @@
 	--itx-outline-offset: calc(-1 * var(--itx-button-border-width));
 }
 
+/*
+ * Fuses: the border takes the ring's color and the ring sits on it, so the two read as one edge. An
+ * invalid field's ring takes the danger color and sits against its border, so the red edge thickens.
+ */
+.focus-lab[data-ring="fuse"]
+	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
+		.lab-focus,
+		:focus-visible
+	) {
+	--itx-field-border-color: var(--itx-outline-color);
+	--itx-field-border-color-hover: var(--itx-outline-color);
+	--itx-outline-offset: calc(-1 * var(--itx-field-border-width));
+}
+
+.focus-lab[data-ring="fuse"]
+	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
+		.lab-focus,
+		:focus-visible
+	):is([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {
+	--itx-outline-color: var(--itx-field-border-color-invalid);
+	--itx-outline-offset: 0px;
+}
+
+.focus-lab[data-ring="fuse"] [interop-button] {
+	--itx-button-border-color-focus-visible: var(--itx-outline-color);
+}
+
+.focus-lab[data-ring="fuse"] [interop-button]:is(.lab-focus, :focus-visible) {
+	--itx-outline-offset: calc(-1 * var(--itx-button-border-width));
+}
+
 /* Hides: the border goes clear while the ring shows. An invalid field keeps its red. */
 .focus-lab[data-ring="hide"]
 	:is(select[interop-select], :is(input, textarea)[interop-input]):is(

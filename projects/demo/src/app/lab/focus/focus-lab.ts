@@ -47,6 +47,12 @@ export class FocusLab {
 			css: `${FIELDS} {\n\t--itx-outline-offset: calc(-1 * var(--itx-field-border-width));\n}\n\n:where([interop-button]:focus-visible) {\n\t--itx-outline-offset: calc(-1 * var(--itx-button-border-width));\n}`,
 		},
 		{
+			id: "fuse",
+			name: "Fuse",
+			note: "The border takes the ring's color and the ring sits on it: one edge. On an invalid field the ring turns red and sits against the red border, so the red edge doubles in width.",
+			css: `${FIELDS} {\n\t--itx-field-border-color: var(--itx-outline-color);\n\t--itx-field-border-color-hover: var(--itx-outline-color);\n\t--itx-outline-offset: calc(-1 * var(--itx-field-border-width));\n}\n\n${FIELDS}:where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {\n\t--itx-outline-color: var(--itx-field-border-color-invalid);\n\t--itx-outline-offset: 0px;\n}\n\n:where([interop-button]:focus-visible) {\n\t--itx-outline-offset: calc(-1 * var(--itx-button-border-width));\n}\n\n/* In interop-button.base.css: the token exists. */\n--itx-button-border-color-focus-visible: var(--itx-outline-color);`,
+		},
+		{
 			id: "hide",
 			name: "Hide",
 			note: "The border goes clear while the ring shows; the ring floats 2px out. An invalid field keeps its red.",
