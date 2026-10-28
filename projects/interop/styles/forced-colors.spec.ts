@@ -9,6 +9,7 @@ import { sheets } from './sheets';
 const required = [
 	'badge/interop-badge.base.css',
 	'button/interop-button.structure.css',
+	'callout/interop-callout.structure.css',
 	'checkbox/interop-checkbox.structure.css',
 	'field/interop-field.structure.css',
 	'progress/interop-progress.structure.css',
@@ -18,6 +19,7 @@ const required = [
 	'steps/interop-steps.structure.css',
 	'switch/interop-switch.structure.css',
 	'tags/interop-tags.structure.css',
+	'toast/interop-toast.structure.css',
 	'tree/interop-tree.structure.css',
 	'styles/cards.css',
 	'styles/chips.css',
@@ -45,10 +47,6 @@ const exempt: Record<string, string> = {
 	'tabs/interop-tabs.structure.css': 'Its bar is in styles/underscore.css and its segmented look in styles/segmented.css.',
 	'disclosure/interop-disclosure.structure.css':
 		'Its chevron is in styles/disclosure.css; its rows are text and borders, which the browser maps.',
-	'callout/interop-callout.structure.css':
-		'Its edges are borders, which the browser maps. The status edge takes the text color there; the icon and the status word still show the status.',
-	'toast/interop-toast.structure.css':
-		'Its edges are borders, which the browser maps. The status edge takes the text color there; the icon still shows the status.',
 	'page-nav/interop-page-nav.structure.css': 'Its current bar is in styles/underscore.css or the tree; the stuck shadow is decoration.',
 };
 

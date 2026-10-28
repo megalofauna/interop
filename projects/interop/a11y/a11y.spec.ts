@@ -514,16 +514,13 @@ describe('accessibility (axe-core)', () => {
 			<main>
 				<h1>Projects</h1>
 				<div interop-callout role="note" itx-color="warning">
-					<svg interop-icon name="tabler-alert-triangle"></svg>
-					<div><small>Warning</small><p>Deleting a project deletes its runs.</p></div>
+					<div><small><svg interop-icon name="tabler-alert-triangle"></svg> Warning</small><p>Deleting a project deletes its runs.</p></div>
 				</div>
 				<div interop-callout role="note" itx-color="danger">
-					<svg interop-icon name="tabler-alert-circle"></svg>
-					<div><p><span itx-visually-hidden>Danger: </span>Runs cannot be restored.</p></div>
+					<div><small><svg interop-icon name="tabler-alert-circle"></svg><span itx-visually-hidden>Danger:</span></small><p>Runs cannot be restored.</p></div>
 				</div>
 				<div interop-callout role="note" itx-color="info" aria-labelledby="before">
-					<svg interop-icon name="tabler-info-circle"></svg>
-					<div><h2 id="before">Before you start</h2><p>Back up the archive.</p></div>
+					<div><small><svg interop-icon name="tabler-info-circle"></svg> Info</small><h2 id="before">Before you start</h2><p>Back up the archive.</p></div>
 				</div>
 				<div interop-callout role="note"><div><p>Sizes follow the house radius.</p></div></div>
 			</main>`;

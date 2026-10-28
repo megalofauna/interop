@@ -199,7 +199,7 @@
 .button-lab [lab-variant~="edged"] {
 	--lab-edge: var(--lab-text);
 	/* LAB-ONLY: --itx-button-border-inline-start-width, -color */
-	border-inline-start-width: var(--itx-border-width-accent);
+	border-inline-start-width: calc(2 * var(--itx-border-width-strong));
 	border-inline-start-color: var(--lab-edge);
 }
 

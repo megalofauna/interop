@@ -1,16 +1,19 @@
 :where([interop-callout]) {
-	--itx-callout-gap: var(--itx-space-3);
+	--itx-callout-gap: var(--itx-space-4);
 	--itx-callout-padding-block: var(--itx-space-3);
-	--itx-callout-padding-inline: var(--itx-space-4);
+	/* The status bar sits 8px in from the start edge. */
+	--itx-callout-padding-inline: var(--itx-space-2) var(--itx-space-4);
 	/* Between the status word, a title and the paragraphs. */
-	--itx-callout-content-gap: var(--itx-space-1);
+	--itx-callout-content-gap: var(--itx-space-2);
 	--itx-callout-font-size: var(--itx-font-size-p);
 	--itx-callout-line-height: var(--itx-line-height-p);
 	/* The visible status word, in small print. */
 	--itx-callout-label-font-size: var(--itx-font-size-caption);
-	--itx-callout-label-line-height: var(--itx-line-height-caption);
+	--itx-callout-label-line-height: var(--itx-line-height-p);
 	--itx-callout-label-font-weight: 600;
-	--itx-callout-icon-size: var(--itx-icon-size-md);
+	/* Between the status icon and the status word. */
+	--itx-callout-label-gap: var(--itx-space-1_5);
+	--itx-callout-icon-size: var(--itx-icon-size-sm);
 
 	/* The toast's panel, edge and status colors, so a callout and a toast of one status match. */
 	--itx-callout-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
@@ -18,8 +21,9 @@
 	--itx-callout-border-width: var(--itx-border-width);
 	/* 3:1 against the page in both schemes, so the callout's edge is visible (WCAG 1.4.11). */
 	--itx-callout-border-color: var(--itx-neutral-500);
-	--itx-callout-accent-border-width: var(--itx-border-width-accent);
-	/* The status edge and icon: 3:1 against the callout and the page in both schemes. */
+	/* The status bar's width: twice the strong border width, so the contrast preference thickens it. */
+	--itx-callout-accent-inline-size: calc(2 * var(--itx-border-width-strong));
+	/* The status bar and icon: 3:1 against the callout and the page in both schemes. */
 	--itx-callout-accent-color: var(--itx-neutral-500);
 	--itx-callout-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-callout-corner-shape: var(--itx-corner-shape);

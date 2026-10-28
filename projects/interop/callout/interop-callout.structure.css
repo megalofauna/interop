@@ -3,16 +3,15 @@
  * never a live region: a message that appears after an action is a toast or announce().
  *
  *   <div interop-callout role="note" itx-color="warning">
- *     <svg interop-icon name="tabler-alert-triangle"></svg>
  *     <div>
- *       <small>Warning</small>
+ *       <small><svg interop-icon name="tabler-alert-triangle"></svg> Warning</small>
  *       <p>Deleting a project deletes its runs.</p>
  *     </div>
  *   </div>
  *
  * The status reaches every reader three ways: the icon's shape, a status word (visible in small
  * print, or in `itx-visually-hidden` text), and the color of the edge and icon. No itx-color is a
- * neutral note. The look is the toast's, without its shadow.
+ * neutral note. The look is the toast's, without its shadow: a rounded status bar inside the start edge.
  *
  * Also known as:
  *   admonition        Docusaurus, MkDocs
@@ -37,9 +36,6 @@
 	border-width: var(--itx-callout-border-width);
 	border-style: solid;
 	border-color: var(--itx-callout-border-color);
-	/* The status edge: a border, so it flips sides in right-to-left text and stays in forced colors. */
-	border-inline-start-width: var(--itx-callout-accent-border-width);
-	border-inline-start-color: var(--itx-callout-accent-color);
 	border-radius: var(--itx-callout-border-radius);
 	corner-shape: var(--itx-callout-corner-shape);
 
@@ -55,18 +51,42 @@
 		margin: 0;
 	}
 
+	/* The label: the status icon, then the status word, in small print. */
 	& > div > small {
+		display: flex;
+		align-items: center;
+		gap: var(--itx-callout-label-gap);
 		font-size: var(--itx-callout-label-font-size);
 		line-height: var(--itx-callout-label-line-height);
 		font-weight: var(--itx-callout-label-font-weight);
 	}
 }
 
-/* The icon shows the status in its shape as well as its color (WCAG 1.4.1). It sits on the first line. */
-:where([interop-callout] > svg[interop-icon]) {
+/*
+ * The status bar: a rounded bar in the status color, the callout's first flex item, so it follows the
+ * writing direction and stretches to the callout's content.
+ */
+:where([interop-callout])::before {
+	content: "";
+	flex: none;
+	align-self: stretch;
+	inline-size: var(--itx-callout-accent-inline-size);
+	border-radius: var(--itx-radius-full);
+	background-color: var(--itx-callout-accent-color);
+}
+
+/* Forced colors repaint backgrounds, which would take the bar; it keeps the text color there. */
+@media (forced-colors: active) {
+	:where([interop-callout])::before {
+		forced-color-adjust: none;
+		background-color: CanvasText;
+	}
+}
+
+/* The icon shows the status in its shape as well as its color (WCAG 1.4.1). It leads the label. */
+:where([interop-callout] > div > small > svg[interop-icon]) {
 	--itx-icon-color: var(--itx-callout-accent-color);
 	--itx-icon-inline-size: var(--itx-callout-icon-size);
 	--itx-icon-block-size: var(--itx-callout-icon-size);
 	flex: none;
-	margin-block: calc((1lh - var(--itx-callout-icon-size)) / 2);
 }

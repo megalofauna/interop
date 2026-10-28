@@ -8,7 +8,8 @@
 :where([interop-toast]) {
 	--itx-toast-gap: var(--itx-space-3);
 	--itx-toast-padding-block: var(--itx-space-2);
-	--itx-toast-padding-inline: var(--itx-space-4) var(--itx-space-2);
+	/* The status bar sits 8px in from the start edge. */
+	--itx-toast-padding-inline: var(--itx-space-2);
 	--itx-toast-font-size: var(--itx-font-size-p-sm);
 	--itx-toast-line-height: var(--itx-line-height-p-sm);
 	--itx-toast-message-font-weight: 600;
@@ -19,8 +20,9 @@
 	--itx-toast-border-width: var(--itx-border-width);
 	/* 3:1 against the page in both schemes, so the toast's edge is visible (WCAG 1.4.11). */
 	--itx-toast-border-color: var(--itx-neutral-500);
-	--itx-toast-accent-border-width: var(--itx-border-width-accent);
-	/* The status edge and icon: 3:1 against the toast and the page in both schemes. */
+	/* The status bar's width: twice the strong border width, so the contrast preference thickens it. */
+	--itx-toast-accent-inline-size: calc(2 * var(--itx-border-width-strong));
+	/* The status bar and icon: 3:1 against the toast and the page in both schemes. */
 	--itx-toast-accent-color: var(--itx-neutral-500);
 	--itx-toast-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-toast-corner-shape: var(--itx-corner-shape);

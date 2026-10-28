@@ -602,8 +602,8 @@ describe('auditInterop', () => {
 
 		it('accepts a visible status word, a hidden one with an icon, a title, a bold lead and a neutral note', () => {
 			render(`
-				<div interop-callout role="note" itx-color="warning">${icon}<div><small>Warning</small><p>Deleting a project deletes its runs.</p></div></div>
-				<div interop-callout role="note" itx-color="warning">${icon}<div><p><span itx-visually-hidden>Warning: </span>Deleting a project deletes its runs.</p></div></div>
+				<div interop-callout role="note" itx-color="warning"><div><small>${icon} Warning</small><p>Deleting a project deletes its runs.</p></div></div>
+				<div interop-callout role="note" itx-color="warning"><div><small>${icon}<span itx-visually-hidden>Warning:</span></small><p>Deleting a project deletes its runs.</p></div></div>
 				<div interop-callout role="note" itx-color="info"><div><h3>Before you start</h3><p>Back up the archive.</p></div></div>
 				<div interop-callout role="note" itx-color="success"><div><p><strong>Done:</strong> the archive is exported.</p></div></div>
 				<div interop-callout role="note"><div><p>Sizes follow the house radius.</p></div></div>
@@ -623,13 +623,15 @@ describe('auditInterop', () => {
 		});
 
 		it('flags a status shown by color alone', () => {
-			render(`<div interop-callout role="note" itx-color="danger">${icon}<div><p>Deleting a project deletes its runs.</p></div></div>`);
+			render(
+				`<div interop-callout role="note" itx-color="danger"><div><small>${icon}</small><p>Deleting a project deletes its runs.</p></div></div>`,
+			);
 			expect(rules()).toEqual(['callout-status']);
 		});
 
 		it('flags a hidden status word with no icon', () => {
 			render(
-				'<div interop-callout role="note" itx-color="danger"><div><p><span itx-visually-hidden>Danger: </span>Deleting a project deletes its runs.</p></div></div>',
+				'<div interop-callout role="note" itx-color="danger"><div><small><span itx-visually-hidden>Danger:</span></small><p>Deleting a project deletes its runs.</p></div></div>',
 			);
 			expect(rules()).toEqual(['callout-icon']);
 		});

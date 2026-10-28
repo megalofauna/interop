@@ -13,7 +13,7 @@ error message. A toast is for a message with nowhere in the page to go.
 ```
 projects/interop/toast/
   interop-toast.structure.css   the region, the toast, the icon; names list at the top
-  interop-toast.base.css        token values and the four itx-color edges
+  interop-toast.base.css        token values and the four itx-color status colors
   toast.ts                      InteropToasts directive
   public-api.ts
 projects/interop/src/toast.ts   toast(), bindToasts(), framework-free
@@ -91,22 +91,22 @@ toast('Link copied', { timeout: 6000 });
 - The region is fixed at the block-end, inline-end corner, `--itx-toasts-inset`
   (16px) from the edges. Toasts stack in a column, newest last. The column is
   `min(22rem, 100vw - 32px)` wide and scrolls when it is taller than the window.
-- A toast has a 1px `neutral-500` edge (3:1 against the page) and a shadow. Its
-  inline-start edge is `--itx-border-width-accent` (4px, 6px with `prefers-contrast: more`)
-  in the status color, shared with the callout. It
-  flips sides in RTL. The house radius applies.
-- `itx-color` sets the status edge and a Tabler icon: `circle-check`,
+- A toast has a 1px `neutral-500` edge (3:1 against the page) and a shadow,
+  with the house radius. The status bar is a `::before`, the first flex item: 4px wide
+  (twice `--itx-border-width-strong`, 6px with `prefers-contrast: more`), round-ended,
+  in the status color, 8px in from the start edge and stretched to the content,
+  so it follows the writing direction. The callout draws the same bar.
+- `itx-color` sets the status bar and a Tabler icon: `circle-check`,
   `info-circle`, `alert-triangle`, `alert-circle`. The icon shows the status in
   its shape, so it is never color alone. Each status color is 3:1 against the
   toast and the page in both schemes; `styles/contrast.spec.ts` measures them.
 - The message is weight 600 and the description 400, both 14/20px.
 - A toast slides in over `--itx-transition-duration-slower` and disappears at
   once. Reduced motion zeroes the slide.
-- Forced colors map the borders. The status edge takes the text color there,
-  and the icon still shows the status.
+- Forced colors map the borders, and the bar takes `CanvasText`
+  (`forced-color-adjust: none`); the icon still shows the status.
 
-Carbon's 3px edge became 4px: at 2px it was lost on the light panel. It reads
-a shared token, so the contrast preference reaches it. Carbon's 288px width became 352px (22rem), because
+Carbon's 3px start edge became a 2px bar inside the panel. Carbon's 288px width became 352px (22rem), because
 an action and the Dismiss button left about 120px of text at 288.
 
 ## Dev audit rules
