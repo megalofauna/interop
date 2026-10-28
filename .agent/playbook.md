@@ -80,6 +80,15 @@ has `data: { pattern: true }`, which badges it in Go to page, whose list is
 flat. Components and assemblies carry no badge. One template on two components
 (cards, chips) is one pattern page with a section for each.
 
+A lab compares candidate looks before one goes into the library: dials for each
+open choice, every candidate in real contexts, in both schemes, often with a
+contrast table measured in the browser. Each is a page at `/labs/<name>`
+(`projects/demo/src/app/lab/<name>/`), listed in the nav's Labs group after
+Patterns. Its `h1` carries a neutral `Lab` badge, and its route has
+`data: { lab: true }`, which badges it in Go to page. A lab stands in its own
+attribute (`lab-badge`) or overrides the component's tokens, so it never changes
+the library. A lab stays after its choice ships, for comparing the next one.
+
 ## Demo examples
 
 Every live example on a demo page has its code under it, from one source:

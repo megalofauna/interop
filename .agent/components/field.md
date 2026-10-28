@@ -59,7 +59,7 @@ Heights are the button's: 32, 40, 56px.
 | State | Look |
 |---|---|
 | Hover | Fill and border one step stronger |
-| Focus | The shared focus ring |
+| Focus | The shared focus ring, with the border dimmed under it (`neutral-350`/`600`) so the field shows one strong edge. An invalid field's ring is its danger color (set in `styles/outline.css`, Highlight in forced colors) and its red border dims to 40%. Tokens: `--itx-field-border-color-focus-visible`, `-invalid-focus-visible` |
 | Invalid | 2px border in `--itx-role-text-danger`; `aria-invalid="true"`, or `:user-invalid` where `bindValidation()` is not used |
 | Read-only | Dashed border and no fill, so it does not look like a place to type; still focusable and submitted |
 | Disabled | 50% opacity |

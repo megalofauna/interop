@@ -237,6 +237,11 @@ describe('focus ring', () => {
 		it(`reaches 3:1 against the page in ${label}`, () => {
 			expect(contrast(token('--itx-outline-color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 		});
+
+		// An invalid field's ring takes its danger color (styles/outline.css).
+		it(`reaches 3:1 against the page on an invalid field in ${label}`, () => {
+			expect(contrast(token('--itx-field-border-color-invalid', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
 	}
 });
 

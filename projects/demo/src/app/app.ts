@@ -37,13 +37,14 @@ import { InteropToasts } from "interop/toast";
 	styleUrl: "./app.css",
 })
 export class App {
-	/** Every page with a title, for the Go to page search. A pattern's route marks it with `data.pattern`. */
+	/** Every page with a title, for the Go to page search. A pattern's route marks it with `data.pattern`, a lab's with `data.lab`. */
 	protected readonly pageLinks = inject(Router)
 		.config.filter((route) => typeof route.title === "string")
 		.map((route) => ({
 			path: route.path ?? "",
 			title: route.title as string,
 			pattern: route.data?.["pattern"] === true,
+			lab: route.data?.["lab"] === true,
 		}))
 		.sort((a, b) => a.title.localeCompare(b.title));
 

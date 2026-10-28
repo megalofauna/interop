@@ -1,0 +1,348 @@
+/*
+ * Button lab: variants of button[interop-button], each a set of overrides of the button's own
+ * tokens. Not shipped. A rule marked LAB-ONLY sets a property the button does not tokenize yet; the
+ * page names the token it would need.
+ */
+
+.button-lab {
+	/* The toast's, callout's and badge's status colors. */
+	--lab-success: light-dark(
+		oklch(0.527 0.154 150.069),
+		oklch(0.792 0.209 151.711)
+	);
+	--lab-danger: var(--itx-role-text-danger);
+	--lab-text: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	/* The danger count's fill: the light scheme's red in both schemes, white text 6.4:1. */
+	--lab-danger-solid: oklch(0.505 0.213 27.518);
+}
+
+/* ── Emphasis ────────────────────────────────────────────────────────────── */
+
+/* Primary: the text color as the fill, the page color as the text. The count badge's idea. */
+.button-lab [lab-variant~="primary"] {
+	--itx-button-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	--itx-button-background-color: light-dark(
+		var(--itx-neutral-900),
+		var(--itx-neutral-50)
+	);
+	--itx-button-background-color-hover: light-dark(
+		var(--itx-neutral-700),
+		var(--itx-neutral-200)
+	);
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-600),
+		var(--itx-neutral-300)
+	);
+	--itx-button-border-color: var(--itx-button-background-color);
+	--itx-button-border-color-hover: var(--itx-button-background-color-hover);
+	--itx-button-border-color-active: var(--itx-button-background-color-active);
+	--itx-button-border-color-pressed: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-900)
+	);
+	--itx-button-box-shadow-pressed: inset 0 0 0 calc(2 * var(--itx-border-width))
+		var(--itx-button-border-color-pressed);
+}
+
+/* Tertiary: no fill and no edge until the pointer is on it. */
+.button-lab [lab-variant~="tertiary"] {
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: transparent;
+	--itx-button-background-color-hover: light-dark(
+		var(--itx-neutral-100),
+		var(--itx-neutral-800)
+	);
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-200),
+		var(--itx-neutral-700)
+	);
+}
+
+/* Outline: the edge alone, 3:1 against the page, so it reads as a control with no fill. */
+.button-lab [lab-variant~="outline"] {
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: light-dark(
+		var(--itx-neutral-500),
+		var(--itx-neutral-400)
+	);
+	--itx-button-border-color-hover: var(--lab-text);
+	--itx-button-background-color-hover: transparent;
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-100),
+		var(--itx-neutral-800)
+	);
+}
+
+/* ── Intent: the badge's tint ────────────────────────────────────────────── */
+
+/* Plus and minus: a status edge, a 12% tint, and text halfway to the status color. Hover deepens the tint. */
+.button-lab [lab-variant~="plus"] {
+	--lab-status: var(--lab-success);
+}
+
+.button-lab [lab-variant~="minus"] {
+	--lab-status: var(--lab-danger);
+}
+
+.button-lab :is([lab-variant~="plus"], [lab-variant~="minus"]) {
+	--itx-button-color: color-mix(in oklch, var(--lab-status), var(--lab-text));
+	--itx-button-background-color: color-mix(
+		in oklch,
+		var(--lab-status) 12%,
+		transparent
+	);
+	--itx-button-background-color-hover: color-mix(
+		in oklch,
+		var(--lab-status) 20%,
+		transparent
+	);
+	--itx-button-background-color-active: color-mix(
+		in oklch,
+		var(--lab-status) 28%,
+		transparent
+	);
+	--itx-button-border-color: var(--lab-status);
+	--itx-button-border-color-pressed: var(--itx-button-color);
+}
+
+/* Minus, solid: the confirming step of a destructive action. White on the danger count's red. */
+.button-lab [lab-variant~="minus-solid"] {
+	--itx-button-color: white;
+	--itx-button-background-color: var(--lab-danger-solid);
+	--itx-button-background-color-hover: oklch(0.45 0.19 27.518);
+	--itx-button-background-color-active: oklch(0.4 0.17 27.518);
+	--itx-button-border-color: var(--itx-button-background-color);
+	--itx-button-border-color-hover: var(--itx-button-background-color-hover);
+	--itx-button-border-color-active: var(--itx-button-background-color-active);
+}
+
+/* ── Material: the house's surfaces ──────────────────────────────────────── */
+
+/* Raised: the slider's knob. A light face, an edge, a lift that settles when pressed. */
+.button-lab [lab-variant~="raised"] {
+	--itx-button-background-color: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-700)
+	);
+	--itx-button-background-color-hover: light-dark(
+		white,
+		var(--itx-neutral-600)
+	);
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-100),
+		var(--itx-neutral-800)
+	);
+	--itx-button-border-color: light-dark(
+		var(--itx-neutral-300),
+		var(--itx-neutral-600)
+	);
+	--itx-button-transition-property:
+		border, background-color, color, box-shadow, translate;
+	/* LAB-ONLY: --itx-button-box-shadow, -box-shadow-active, -translate-active */
+	box-shadow: 0 1px 2px light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
+}
+
+.button-lab [lab-variant~="raised"]:active:not(:disabled) {
+	box-shadow: none;
+	translate: 0 1px;
+}
+
+/* Recessed: the slider's track. A well darker than the page, with a shade along its top. */
+.button-lab [lab-variant~="recessed"] {
+	--itx-button-background-color: light-dark(
+		var(--itx-neutral-100),
+		var(--itx-neutral-950)
+	);
+	--itx-button-background-color-hover: light-dark(
+		var(--itx-neutral-200),
+		var(--itx-neutral-900)
+	);
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-300),
+		black
+	);
+	--itx-button-border-color: light-dark(
+		var(--itx-neutral-300),
+		var(--itx-neutral-700)
+	);
+	/* LAB-ONLY: --itx-button-box-shadow */
+	box-shadow: inset 0 1px 2px
+		light-dark(oklch(0 0 0 / 0.15), oklch(0 0 0 / 0.6));
+}
+
+/* Frosted: the popover's glass. A see-through fill with the backdrop blurred, for buttons over pictures. */
+.button-lab [lab-variant~="frosted"] {
+	--itx-button-background-color: color-mix(
+		in oklch,
+		light-dark(var(--itx-neutral-50), var(--itx-neutral-800)) 65%,
+		transparent
+	);
+	--itx-button-background-color-hover: color-mix(
+		in oklch,
+		light-dark(var(--itx-neutral-50), var(--itx-neutral-800)) 85%,
+		transparent
+	);
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-50),
+		var(--itx-neutral-800)
+	);
+	--itx-button-border-color: color-mix(
+		in oklch,
+		var(--lab-text) 20%,
+		transparent
+	);
+	/* LAB-ONLY: --itx-button-backdrop-filter */
+	backdrop-filter: blur(5px);
+}
+
+/* Edged: the callout's status edge. A thick start edge in the text color, or a status color. */
+.button-lab [lab-variant~="edged"] {
+	--lab-edge: var(--lab-text);
+	/* LAB-ONLY: --itx-button-border-inline-start-width, -color */
+	border-inline-start-width: var(--itx-border-width-accent);
+	border-inline-start-color: var(--lab-edge);
+}
+
+.button-lab [lab-variant~="edged"][lab-variant~="go"] {
+	--lab-edge: var(--lab-success);
+}
+
+/* ── Crossings ───────────────────────────────────────────────────────────── */
+
+/* Pill: any variant at the round-by-shape radius. */
+.button-lab [lab-variant~="pill"] {
+	--itx-button-border-radius: var(--itx-radius-full);
+}
+
+/* Raised primary: the lift under the dark fill, so the primary reads as the one to press. */
+.button-lab [lab-variant~="raised"][lab-variant~="primary"] {
+	--itx-button-background-color: light-dark(
+		var(--itx-neutral-900),
+		var(--itx-neutral-50)
+	);
+	--itx-button-background-color-hover: light-dark(
+		var(--itx-neutral-700),
+		var(--itx-neutral-200)
+	);
+	--itx-button-background-color-active: light-dark(
+		var(--itx-neutral-600),
+		var(--itx-neutral-300)
+	);
+}
+
+/* Quiet frosted: no glass until the pointer is on it. */
+.button-lab [lab-variant~="frosted"][lab-variant~="tertiary"] {
+	--itx-button-background-color: transparent;
+	--itx-button-border-color: transparent;
+}
+
+/* ── The page ────────────────────────────────────────────────────────────── */
+.button-lab .schemes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
+	gap: var(--itx-space-4);
+}
+
+.button-lab .scheme {
+	display: grid;
+	align-content: start;
+	gap: var(--itx-space-6);
+	padding: var(--itx-space-6);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background-color: Canvas;
+	color: CanvasText;
+}
+
+.button-lab .scheme.light {
+	color-scheme: light;
+}
+
+.button-lab .scheme.dark {
+	color-scheme: dark;
+}
+
+.button-lab .frame {
+	display: grid;
+	gap: var(--itx-space-3);
+}
+
+.button-lab .frame > h2 {
+	margin: 0;
+	font-size: var(--itx-font-size-h5);
+	line-height: var(--itx-line-height-h5);
+}
+
+.button-lab .variant {
+	display: grid;
+	gap: var(--itx-space-1);
+}
+
+.button-lab .row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--itx-space-2);
+}
+
+.button-lab .name {
+	font-size: var(--itx-font-size-caption);
+	line-height: var(--itx-line-height-caption);
+	color: light-dark(var(--itx-neutral-600), var(--itx-neutral-400));
+}
+
+.button-lab .needs {
+	font-family: var(--itx-font-family-mono, ui-monospace, monospace);
+}
+
+/* A busy picture for the glass to blur. */
+.button-lab .picture {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	gap: var(--itx-space-2);
+	min-block-size: var(--itx-space-32);
+	padding: var(--itx-space-4);
+	border-radius: var(--itx-radius, var(--itx-radius-base));
+	background:
+		repeating-linear-gradient(
+			45deg,
+			oklch(0.75 0.12 250 / 0.6) 0 6px,
+			transparent 6px 14px
+		),
+		linear-gradient(135deg, oklch(0.7 0.15 30), oklch(0.6 0.15 300));
+}
+
+.button-lab .stepper {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--itx-space-2);
+	font-variant-numeric: tabular-nums;
+}
+
+.button-lab .stepper output {
+	min-inline-size: 3ch;
+	text-align: center;
+}
+
+.button-lab .probe {
+	position: absolute;
+	inline-size: 0;
+	block-size: 0;
+	overflow: hidden;
+}
+
+.button-lab table {
+	border-collapse: collapse;
+	font-size: var(--itx-font-size-caption);
+	font-variant-numeric: tabular-nums;
+}
+
+.button-lab :is(th, td) {
+	padding: var(--itx-space-1) var(--itx-space-2);
+	text-align: start;
+}
+
+.button-lab .fail {
+	color: var(--itx-role-text-danger);
+	font-weight: 600;
+}

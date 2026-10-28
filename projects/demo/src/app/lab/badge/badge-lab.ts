@@ -16,7 +16,7 @@ interface Reading {
 	border: number | null;
 }
 
-/** Candidate looks for the badge. Not in the nav. */
+/** Candidate looks for the badge. Listed under Labs in the nav. */
 @Component({
 	selector: "demo-badge-lab",
 	host: {

@@ -76,6 +76,21 @@
 	border-color: var(--itx-field-border-color-invalid);
 }
 
+/*
+ * Focused: the ring is the edge that matters, so the border dims under it. An invalid field's ring
+ * turns red in styles/outline.css, and its red border dims too.
+ */
+:where(select[interop-select], :is(input, textarea)[interop-input]):where(:focus-visible) {
+	border-color: var(--itx-field-border-color-focus-visible, var(--itx-field-border-color));
+}
+
+:where(select[interop-select], :is(input, textarea)[interop-input]):where(:focus-visible):where(
+		[aria-invalid="true"],
+		:user-invalid:not([aria-invalid="false"])
+	) {
+	border-color: var(--itx-field-border-color-invalid-focus-visible, var(--itx-field-border-color-invalid));
+}
+
 /* Text fields fill their container, up to a maximum. The `size` attribute asks for an expected length. */
 :where(:is(input, textarea)[interop-input]) {
 	inline-size: 100%;

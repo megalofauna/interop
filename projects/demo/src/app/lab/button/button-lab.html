@@ -1,0 +1,228 @@
+<h1>Button <span interop-badge>Lab</span></h1>
+<p>
+	Variants of <code>button[interop-button]</code>, each a set of overrides of
+	the button's own tokens, in the house's vocabulary: the badge's tint, the
+	count's solid, the slider's knob and track, the popover's glass, the callout's
+	edge. A variant marked "needs" uses a property the button does not tokenize
+	yet. Hover, press and Tab through them; the third button in each row toggles.
+</p>
+
+<div class="schemes">
+	@for (scheme of schemes; track scheme) {
+		<section
+			class="scheme"
+			[class]="scheme"
+			[attr.aria-label]="scheme + ' scheme'"
+		>
+			<span class="probe" aria-hidden="true"></span>
+			@for (frame of frames; track frame.title) {
+				<div class="frame">
+					<h2>{{ frame.title }}</h2>
+					<span class="name">{{ frame.lede }}</span>
+					@for (variant of frame.variants; track variant.id) {
+						<div class="variant">
+							<span class="name">
+								<strong>{{ variant.name }}</strong> · {{ variant.note }}
+								@if (variant.needs.length) {
+									· needs
+									<span class="needs">{{ variant.needs.join(", ") }}</span>
+								}
+							</span>
+							<div class="row">
+								<button
+									type="button"
+									interop-button
+									[attr.lab-variant]="variant.id"
+									[attr.data-measure]="variant.name"
+								>
+									Save
+								</button>
+								<button
+									type="button"
+									interop-button
+									[attr.lab-variant]="variant.id"
+								>
+									<svg interop-icon name="tabler-plus"></svg>
+									Add item
+								</button>
+								<button
+									type="button"
+									interop-button
+									[attr.lab-variant]="variant.id"
+									aria-pressed="true"
+									(click)="toggle($event)"
+								>
+									Pinned
+								</button>
+								<button
+									type="button"
+									interop-button="icon"
+									[attr.lab-variant]="variant.id"
+									aria-label="Copy"
+								>
+									<svg interop-icon name="tabler-copy"></svg>
+								</button>
+								<button
+									type="button"
+									interop-button
+									[attr.lab-variant]="variant.id"
+									itx-size="sm"
+								>
+									Small
+								</button>
+								<button
+									type="button"
+									interop-button
+									[attr.lab-variant]="variant.id"
+									disabled
+								>
+									Disabled
+								</button>
+							</div>
+						</div>
+					}
+				</div>
+			}
+
+			<div class="frame">
+				<h2>In use</h2>
+				<span class="name">A dialog's footer: tertiary and primary</span>
+				<div class="row">
+					<button type="button" interop-button lab-variant="tertiary">
+						Cancel
+					</button>
+					<button type="button" interop-button lab-variant="primary">
+						Save changes
+					</button>
+				</div>
+				<span class="name">A destructive step: outline, then minus solid</span>
+				<div class="row">
+					<button type="button" interop-button lab-variant="outline">
+						Keep project
+					</button>
+					<button type="button" interop-button lab-variant="minus-solid">
+						<svg interop-icon name="tabler-x"></svg>
+						Delete project
+					</button>
+				</div>
+				<span class="name">Action plus and action minus: a stepper</span>
+				<div class="stepper">
+					<button
+						type="button"
+						interop-button="icon"
+						lab-variant="minus pill"
+						aria-label="Remove one"
+						(click)="step(-1)"
+					>
+						<svg interop-icon name="tabler-minus"></svg>
+					</button>
+					<output aria-live="off">{{ count() }}</output>
+					<button
+						type="button"
+						interop-button="icon"
+						lab-variant="plus pill"
+						aria-label="Add one"
+						(click)="step(1)"
+					>
+						<svg interop-icon name="tabler-plus"></svg>
+					</button>
+				</div>
+				<span class="name">A formatting bar: tertiary icons, one pressed</span>
+				<div class="row" role="group" aria-label="Formatting">
+					<button
+						type="button"
+						interop-button="icon"
+						lab-variant="tertiary"
+						aria-label="Bold"
+						aria-pressed="true"
+						(click)="toggle($event)"
+					>
+						<svg interop-icon name="tabler-bold"></svg>
+					</button>
+					<button
+						type="button"
+						interop-button="icon"
+						lab-variant="tertiary"
+						aria-label="Italic"
+						aria-pressed="false"
+						(click)="toggle($event)"
+					>
+						<svg interop-icon name="tabler-italic"></svg>
+					</button>
+					<button
+						type="button"
+						interop-button="icon"
+						lab-variant="tertiary"
+						aria-label="Link"
+						aria-pressed="false"
+						(click)="toggle($event)"
+					>
+						<svg interop-icon name="tabler-link"></svg>
+					</button>
+				</div>
+				<span class="name">Over a picture: frosted, and quiet frosted</span>
+				<div class="picture">
+					<button type="button" interop-button lab-variant="frosted">
+						Replace image
+					</button>
+					<button type="button" interop-button lab-variant="frosted tertiary">
+						Crop
+					</button>
+					<button
+						type="button"
+						interop-button="icon"
+						lab-variant="frosted pill"
+						aria-label="Remove image"
+					>
+						<svg interop-icon name="tabler-x"></svg>
+					</button>
+				</div>
+				<span class="name">A raised primary beside raised and recessed</span>
+				<div class="row">
+					<button type="button" interop-button lab-variant="recessed">
+						Draft
+					</button>
+					<button type="button" interop-button lab-variant="raised">
+						Preview
+					</button>
+					<button type="button" interop-button lab-variant="raised primary">
+						Publish
+					</button>
+				</div>
+			</div>
+		</section>
+	}
+</div>
+
+<h2>Contrast</h2>
+<p>
+	Text against the fill needs 4.5:1, at rest and on hover. An edge, where there
+	is one, is measured against the page; 3:1 is needed only where the edge is
+	what shows the button (outline, tertiary on hover).
+</p>
+<table>
+	<thead>
+		<tr>
+			<th>Scheme</th>
+			<th>Variant</th>
+			<th>Text at rest</th>
+			<th>Text on hover</th>
+			<th>Edge</th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (reading of readings(); track $index) {
+			<tr>
+				<td>{{ reading.scheme }}</td>
+				<td>{{ reading.variant }}</td>
+				<td [class.fail]="reading.rest < 4.5">
+					{{ ratio(reading.rest, 4.5) }}
+				</td>
+				<td [class.fail]="reading.hover < 4.5">
+					{{ ratio(reading.hover, 4.5) }}
+				</td>
+				<td>{{ ratio(reading.edge, 0) }}</td>
+			</tr>
+		}
+	</tbody>
+</table>
