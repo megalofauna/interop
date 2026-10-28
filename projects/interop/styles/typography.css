@@ -10,6 +10,7 @@
  */
 
 :root {
+	/* Inter is self-hosted in fonts/inter.css, so every page draws the same text. */
 	--itx-font-family: "Inter", system-ui, sans-serif;
 	--itx-font-family-mono: ui-monospace, monospace;
 	--itx-font-weight: 400;
