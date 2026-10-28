@@ -53,6 +53,12 @@ export class FocusLab {
 			css: `${FIELDS} {\n\t--itx-field-border-color: var(--itx-outline-color);\n\t--itx-field-border-color-hover: var(--itx-outline-color);\n\t--itx-outline-offset: calc(-1 * var(--itx-field-border-width));\n}\n\n${FIELDS}:where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {\n\t--itx-outline-color: var(--itx-field-border-color-invalid);\n\t--itx-outline-offset: 0px;\n}\n\n:where([interop-button]:focus-visible) {\n\t--itx-outline-offset: calc(-1 * var(--itx-button-border-width));\n}\n\n/* In interop-button.base.css: the token exists. */\n--itx-button-border-color-focus-visible: var(--itx-outline-color);`,
 		},
 		{
+			id: "fuse-dim",
+			name: "Fuse + Dim",
+			note: "Fields fuse: one edge, blue, or red when invalid. Buttons dim: their faint border steps down under the ring.",
+			css: `/* Fuse's two field rules, and Dim's button token. */\n${FIELDS} {\n\t--itx-field-border-color: var(--itx-outline-color);\n\t--itx-field-border-color-hover: var(--itx-outline-color);\n\t--itx-outline-offset: calc(-1 * var(--itx-field-border-width));\n}\n\n${FIELDS}:where([aria-invalid="true"], :user-invalid:not([aria-invalid="false"])) {\n\t--itx-outline-color: var(--itx-field-border-color-invalid);\n\t--itx-outline-offset: 0px;\n}\n\n/* In interop-button.base.css: the token exists. */\n--itx-button-border-color-focus-visible: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));`,
+		},
+		{
 			id: "hide",
 			name: "Hide",
 			note: "The border goes clear while the ring shows; the ring floats 2px out. An invalid field keeps its red.",
@@ -62,7 +68,7 @@ export class FocusLab {
 			id: "dim",
 			name: "Dim",
 			note: "The border steps down to a faint line while the ring shows. An invalid field keeps its red.",
-			css: `${FIELDS} {\n\t--itx-field-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));\n\t--itx-field-border-color-hover: var(--itx-field-border-color);\n}\n\n/* In interop-button.base.css: the token exists. */\n--itx-button-border-color-focus-visible: light-dark(var(--itx-neutral-200), var(--itx-neutral-800));`,
+			css: `${FIELDS} {\n\t--itx-field-border-color: light-dark(var(--itx-neutral-350), var(--itx-neutral-600));\n\t--itx-field-border-color-hover: var(--itx-field-border-color);\n}\n\n/* In interop-button.base.css: the token exists. */\n--itx-button-border-color-focus-visible: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));`,
 		},
 		{
 			id: "hug",

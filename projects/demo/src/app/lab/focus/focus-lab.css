@@ -28,7 +28,7 @@
  * Fuses: the border takes the ring's color and the ring sits on it, so the two read as one edge. An
  * invalid field's ring takes the danger color and sits against its border, so the red edge thickens.
  */
-.focus-lab[data-ring="fuse"]
+.focus-lab:is([data-ring="fuse"], [data-ring="fuse-dim"])
 	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
 		.lab-focus,
 		:focus-visible
@@ -38,7 +38,7 @@
 	--itx-outline-offset: calc(-1 * var(--itx-field-border-width));
 }
 
-.focus-lab[data-ring="fuse"]
+.focus-lab:is([data-ring="fuse"], [data-ring="fuse-dim"])
 	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
 		.lab-focus,
 		:focus-visible
@@ -69,23 +69,23 @@
 	--itx-button-border-color-focus-visible: transparent;
 }
 
-/* Dims: the border fades to a third while the ring shows. An invalid field keeps its red. */
+/* Dims: the border steps down to a faint line while the ring shows. An invalid field keeps its red. */
 .focus-lab[data-ring="dim"]
 	:is(select[interop-select], :is(input, textarea)[interop-input]):is(
 		.lab-focus,
 		:focus-visible
 	) {
 	--itx-field-border-color: light-dark(
-		var(--itx-neutral-300),
-		var(--itx-neutral-700)
+		var(--itx-neutral-350),
+		var(--itx-neutral-600)
 	);
 	--itx-field-border-color-hover: var(--itx-field-border-color);
 }
 
-.focus-lab[data-ring="dim"] [interop-button] {
+.focus-lab:is([data-ring="dim"], [data-ring="fuse-dim"]) [interop-button] {
 	--itx-button-border-color-focus-visible: light-dark(
-		var(--itx-neutral-200),
-		var(--itx-neutral-800)
+		var(--itx-neutral-300),
+		var(--itx-neutral-700)
 	);
 }
 
