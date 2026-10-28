@@ -56,11 +56,26 @@
 }
 
 /*
+ * An invalid field's ring takes the field's danger color, so focus does not paint over the error in
+ * blue. The field dims its red border under the ring, as it dims its grey one.
+ */
+:where(select[interop-select], :is(input, textarea)[interop-input]):where(
+	[aria-invalid="true"],
+	:user-invalid:not([aria-invalid="false"])
+) {
+	--itx-outline-color: var(--itx-field-border-color-invalid);
+}
+
+/*
  * Forced colors: every ring is Highlight, the system's focus color. On the pill, which is Highlight
  * there, the ring is HighlightText, so it shows against it.
  */
 @media (forced-colors: active) {
-	:root {
+	:root,
+	:where(select[interop-select], :is(input, textarea)[interop-input]):where(
+		[aria-invalid="true"],
+		:user-invalid:not([aria-invalid="false"])
+	) {
 		--itx-outline-color: Highlight;
 	}
 

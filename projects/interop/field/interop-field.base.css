@@ -30,6 +30,9 @@
 	--itx-field-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-500));
 	--itx-field-border-color-hover: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
 	--itx-field-border-color-invalid: var(--itx-role-text-danger);
+	/* While the focus ring shows, the border steps back under it: grey to a fainter grey, red to 40% red. */
+	--itx-field-border-color-focus-visible: light-dark(var(--itx-neutral-350), var(--itx-neutral-600));
+	--itx-field-border-color-invalid-focus-visible: color-mix(in oklch, var(--itx-field-border-color-invalid) 40%, transparent);
 	--itx-field-border-radius: var(--itx-radius, var(--itx-radius-base));
 	--itx-field-corner-shape: var(--itx-corner-shape);
 
