@@ -1,5 +1,5 @@
 :where([interop-callout]) {
-	--itx-callout-gap: var(--itx-space-3);
+	--itx-callout-gap: var(--itx-space-2);
 	--itx-callout-padding-block: var(--itx-space-3);
 	/* The status bar sits 8px in from the start edge. */
 	--itx-callout-padding-inline: var(--itx-space-2) var(--itx-space-4);
@@ -9,9 +9,11 @@
 	--itx-callout-line-height: var(--itx-line-height-p);
 	/* The visible status word, in small print. */
 	--itx-callout-label-font-size: var(--itx-font-size-caption);
-	--itx-callout-label-line-height: var(--itx-line-height-caption);
+	--itx-callout-label-line-height: var(--itx-line-height-p);
 	--itx-callout-label-font-weight: 600;
-	--itx-callout-icon-size: var(--itx-icon-size-md);
+	/* Between the status icon and the status word. */
+	--itx-callout-label-gap: var(--itx-space-1_5);
+	--itx-callout-icon-size: var(--itx-icon-size-sm);
 
 	/* The toast's panel, edge and status colors, so a callout and a toast of one status match. */
 	--itx-callout-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));

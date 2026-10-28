@@ -914,20 +914,22 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 	'callout-status': {
 		selector: '[interop-callout][itx-color]',
 		check: (callout) =>
-			callout.querySelector(CALLOUT_STATUS)
+			Array.from(callout.querySelectorAll(CALLOUT_STATUS)).some((word) => spokenText(word))
 				? null
 				: {
 						problem: 'This callout shows its status by color and icon alone.',
 						reason: 'A screen reader reads the text with no word for the status, so "Warning" and "Tip" sound the same.',
-						advice: 'Start it with the status word: <small>Warning</small> in small print, or <span itx-visually-hidden>Warning: </span>.',
+						advice:
+							'Write the status word in its label: <small><svg interop-icon …></svg> Warning</small>, or hide it there with <span itx-visually-hidden>Warning:</span>.',
 					},
 	},
 	'callout-icon': {
 		selector: '[interop-callout][itx-color]',
 		check: (callout) => {
 			const words = Array.from(callout.querySelectorAll(CALLOUT_STATUS));
-			if (!words.length || words.some((word) => !word.matches('[itx-visually-hidden]'))) return null;
-			if (callout.querySelector(':scope > svg[interop-icon]')) return null;
+			// Only a word that is read but not shown needs the icon: callout-status covers no word at all.
+			if (!words.some((word) => spokenText(word)) || words.some((word) => shownText(word).trim())) return null;
+			if (callout.querySelector(':scope > div > small > svg[interop-icon]')) return null;
 			return {
 				problem: 'This callout’s status word is hidden, and it has no icon.',
 				reason: 'A sighted reader sees the status only as the edge color, and in forced colors not at all.',

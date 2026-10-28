@@ -3,9 +3,8 @@
  * never a live region: a message that appears after an action is a toast or announce().
  *
  *   <div interop-callout role="note" itx-color="warning">
- *     <svg interop-icon name="tabler-alert-triangle"></svg>
  *     <div>
- *       <small>Warning</small>
+ *       <small><svg interop-icon name="tabler-alert-triangle"></svg> Warning</small>
  *       <p>Deleting a project deletes its runs.</p>
  *     </div>
  *   </div>
@@ -52,7 +51,11 @@
 		margin: 0;
 	}
 
+	/* The label: the status icon, then the status word, in small print. */
 	& > div > small {
+		display: flex;
+		align-items: center;
+		gap: var(--itx-callout-label-gap);
 		font-size: var(--itx-callout-label-font-size);
 		line-height: var(--itx-callout-label-line-height);
 		font-weight: var(--itx-callout-label-font-weight);
@@ -80,11 +83,10 @@
 	}
 }
 
-/* The icon shows the status in its shape as well as its color (WCAG 1.4.1). It sits on the first line. */
-:where([interop-callout] > svg[interop-icon]) {
+/* The icon shows the status in its shape as well as its color (WCAG 1.4.1). It leads the label. */
+:where([interop-callout] > div > small > svg[interop-icon]) {
 	--itx-icon-color: var(--itx-callout-accent-color);
 	--itx-icon-inline-size: var(--itx-callout-icon-size);
 	--itx-icon-block-size: var(--itx-callout-icon-size);
 	flex: none;
-	margin-block: calc((1lh - var(--itx-callout-icon-size)) / 2);
 }
