@@ -92,8 +92,8 @@ toast('Link copied', { timeout: 6000 });
   (16px) from the edges. Toasts stack in a column, newest last. The column is
   `min(22rem, 100vw - 32px)` wide and scrolls when it is taller than the window.
 - A toast has a 1px `neutral-500` edge (3:1 against the page) and a shadow,
-  with the house radius. The status bar is a `::before`, the first flex item: 2px wide
-  (`--itx-border-width-strong`, 3px with `prefers-contrast: more`), round-ended,
+  with the house radius. The status bar is a `::before`, the first flex item: 4px wide
+  (twice `--itx-border-width-strong`, 6px with `prefers-contrast: more`), round-ended,
   in the status color, 8px in from the start edge and stretched to the content,
   so it follows the writing direction. The callout draws the same bar.
 - `itx-color` sets the status bar and a Tabler icon: `circle-check`,

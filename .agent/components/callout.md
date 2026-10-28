@@ -62,8 +62,8 @@ The toast's panel, without its shadow; `styles/contrast.spec.ts` fails if their
 color tokens differ.
 
 - A bordered panel (`neutral-50`/`800`, edge `neutral-500`, 3:1 against the
-  page) with the house radius. The status bar is a `::before`, the first flex item: 2px wide
-  (`--itx-border-width-strong`, 3px with `prefers-contrast: more`), round-ended,
+  page) with the house radius. The status bar is a `::before`, the first flex item: 4px wide
+  (twice `--itx-border-width-strong`, 6px with `prefers-contrast: more`), round-ended,
   in the status color, 8px in from the start edge and stretched to the content,
   so it follows the writing direction.
 - The label (`<small>`) is a row: the icon (`--itx-icon-size-sm`) in the status

@@ -1,5 +1,5 @@
 :where([interop-callout]) {
-	--itx-callout-gap: var(--itx-space-2);
+	--itx-callout-gap: var(--itx-space-4);
 	--itx-callout-padding-block: var(--itx-space-3);
 	/* The status bar sits 8px in from the start edge. */
 	--itx-callout-padding-inline: var(--itx-space-2) var(--itx-space-4);
@@ -21,8 +21,8 @@
 	--itx-callout-border-width: var(--itx-border-width);
 	/* 3:1 against the page in both schemes, so the callout's edge is visible (WCAG 1.4.11). */
 	--itx-callout-border-color: var(--itx-neutral-500);
-	/* The status bar's width: the strong border width, so the contrast preference thickens it. */
-	--itx-callout-accent-inline-size: var(--itx-border-width-strong);
+	/* The status bar's width: twice the strong border width, so the contrast preference thickens it. */
+	--itx-callout-accent-inline-size: calc(2 * var(--itx-border-width-strong));
 	/* The status bar and icon: 3:1 against the callout and the page in both schemes. */
 	--itx-callout-accent-color: var(--itx-neutral-500);
 	--itx-callout-border-radius: var(--itx-radius, var(--itx-radius-base));
