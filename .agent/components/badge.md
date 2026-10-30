@@ -69,8 +69,10 @@ Chosen in the badge lab (`/labs/badge`), which stays in the demo.
   toast's and callout's status edge (`neutral-500` with no `itx-color`), 3:1
   against the page. A custom `itx-color` sets it.
 - **Text** (the default): a 1px border in the status color, a 12% see-through
-  tint of it behind the text, and text mixed halfway between the status color
-  and the text color. Text measures 4.5:1 or more on the tint over the page.
+  tint of it behind the text, and text in the status color pulled 30% toward
+  the text color. Pure status-colored text fails 4.5:1 on neutral, success and
+  warning; 30% is the least pull that passes every status in both schemes,
+  page and panel (lowest 4.71:1, neutral on the dark panel).
 - **Count** (`[count]`, or `interop-badge="count"`): solid, with white text.
   It sets `color-scheme: light`, so its status color is the light scheme's in
   both schemes: 4.73–6.82:1 with white on every role, where the dark scheme's
@@ -78,9 +80,10 @@ Chosen in the badge lab (`/labs/badge`), which stays in the demo.
   custom color still gets black. A filled count is what readers expect of an
   unread number.
 - **Dot**: the status color, solid.
-- Type is a step smaller than the text around it: caption (12px) at sm and md,
-  label (14px) at lg. Heights 16, 20, 24px. Inline padding keeps one digit a
-  circle. Weight 400.
+- Type: caption (12px) at sm, label (14px) at md, p (16px) at lg. Heights 20,
+  24, 28px. Text badges pad 40% of the height. A count pads so one digit
+  fills the height: a single digit is a circle, and more digits grow a pill.
+  Weight 400.
 - Forced colors keep a border on every badge, so a dot and a count keep their
   shape.
 - `styles/contrast.spec.ts` measures the tinted text, the solid count text and

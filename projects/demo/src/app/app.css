@@ -12,9 +12,12 @@
  *
  * The content is at most 80rem wide and centered. The gutter is what is left of the container's
  * width (100cqi) either side of it, so the header and footer rules still run edge to edge.
+ *
+ * The header is a fixed 4rem tall and stays at the top of the viewport; the sidebar sticks below it.
  */
 .shell {
 	--shell-nav: drawer;
+	--shell-header-block-size: 4rem;
 	--shell-max-inline-size: 80rem;
 	--shell-gutter: max(0px, (100cqi - var(--shell-max-inline-size)) / 2);
 	display: grid;
@@ -29,12 +32,16 @@
 
 .shell > header {
 	grid-area: header;
+	position: sticky;
+	inset-block-start: 0;
+	z-index: 1;
 	display: flex;
-	flex-wrap: wrap;
 	align-items: center;
 	gap: var(--itx-space-3);
-	padding: var(--itx-space-4);
+	box-sizing: border-box;
+	block-size: var(--shell-header-block-size);
 	padding-inline: calc(var(--shell-gutter) + var(--itx-space-4));
+	background-color: light-dark(Canvas, var(--itx-neutral-900));
 	border-block-end: 1px solid
 		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
@@ -47,6 +54,10 @@
 	grid-area: main;
 	min-inline-size: 0;
 	padding: var(--itx-space-4);
+
+	h1 {
+		margin-top: var(--itx-space-12);
+	}
 }
 
 .shell > footer {
@@ -73,14 +84,21 @@
 		display: none;
 	}
 
-	/* The same popover, shown in the page: a closed popover is only hidden by the browser's display: none. */
+	/*
+	 * The same popover, shown in the page: a closed popover is only hidden by the browser's display: none.
+	 * It sticks below the header and scrolls on its own when the list is taller than the viewport.
+	 */
 	nav[popover] {
 		grid-area: nav;
 		display: block;
-		position: static;
+		position: sticky;
+		inset-block-start: var(--shell-header-block-size);
+		align-self: start;
 		inline-size: auto;
-		block-size: auto;
-		overflow: visible;
+		/* The viewport's height, so its edge rule runs to the bottom of the screen. */
+		block-size: calc(100dvh - var(--shell-header-block-size));
+		overflow-y: auto;
+		overscroll-behavior: contain;
 		opacity: 1;
 		translate: none;
 		color: inherit;

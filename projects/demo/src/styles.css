@@ -6,4 +6,6 @@
 :where(:root) {
 	color: CanvasText;
 	background-color: light-dark(Canvas, var(--itx-neutral-900));
+	/* A jump to an anchor lands below the shell's sticky 4rem header. */
+	scroll-padding-block-start: 4rem;
 }

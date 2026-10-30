@@ -119,9 +119,17 @@
 	--color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
 }
 
-/* Text in the status color, or the status color pulled halfway to the text color. */
+/* Text in the status color, or the status color pulled 30% or halfway to the text color. */
 .badge-lab[data-fill="tinted"][data-text="role"] [lab-badge] {
 	--color: var(--role);
+}
+
+.badge-lab[data-fill="tinted"][data-text="readable"] [lab-badge] {
+	--color: color-mix(
+		in oklch,
+		var(--role) 70%,
+		light-dark(var(--itx-neutral-900), var(--itx-neutral-50))
+	);
 }
 
 .badge-lab[data-fill="tinted"][data-text="deep"] [lab-badge] {
