@@ -183,17 +183,17 @@ describe('tooltip text', () => {
 
 describe('badge', () => {
 	// The badge mixes everything from its status color: a 12% see-through tint behind the text, and
-	// the text halfway between the status color and the text color. Mixed in oklch, as the browser does.
+	// the text the status color pulled 30% toward the text color. Mixed in oklch, as the browser does.
 	const parts = (color: string) => /^oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)$/.exec(color)!.slice(1).map(Number) as [number, number, number];
 	const tint = (accent: string) => {
 		const [l, c, h] = parts(accent);
 		return `oklch(${l} ${c} ${h} / 0.12)`;
 	};
 	// A neutral has no hue, so the mix takes the status color's.
-	const deep = (accent: string, text: string) => {
+	const pulled = (accent: string, text: string) => {
 		const [l, c, h] = parts(accent);
 		const [tl, tc] = parts(text);
-		return `oklch(${(l + tl) / 2} ${(c + tc) / 2} ${h})`;
+		return `oklch(${l * 0.7 + tl * 0.3} ${c * 0.7 + tc * 0.3} ${h})`;
 	};
 	const css = sheets['badge/interop-badge.base.css'];
 	const accents = [
@@ -221,7 +221,7 @@ describe('badge', () => {
 		it(`has text of 4.5:1 on its tint over the page in ${label}`, () => {
 			for (const value of accents) {
 				const accent = resolve(value, scheme);
-				expect(contrast(deep(accent, resolve(text, scheme)), over(tint(accent), CANVAS[scheme]))).toBeGreaterThanOrEqual(4.5);
+				expect(contrast(pulled(accent, resolve(text, scheme)), over(tint(accent), CANVAS[scheme]))).toBeGreaterThanOrEqual(4.5);
 			}
 		});
 

@@ -1,38 +1,37 @@
 /* Each size states its own values, including the dot's, so the dot variant is one rule at every size. */
 :where([interop-badge]) {
-	/* A step smaller than the text around it, so the text sits inside the badge with room to spare. */
-	--itx-badge-font-size: var(--itx-font-size-caption);
+	--itx-badge-font-size: var(--itx-font-size-label);
 	--itx-badge-font-weight: 400;
 	--itx-badge-line-height: 1;
-	--itx-badge-block-size: var(--itx-space-5);
+	--itx-badge-block-size: var(--itx-space-6);
 	/* As wide as it is tall at least, so a single character is a circle. */
 	--itx-badge-min-inline-size: var(--itx-badge-block-size);
-	/* The widest padding that keeps one digit a circle: one digit (1ch with tabular-nums) fills the height. */
-	--itx-badge-padding-inline: calc((var(--itx-badge-block-size) - 1ch) / 2);
+	--itx-badge-padding-inline: calc(var(--itx-badge-block-size) * 0.4);
 	--itx-badge-dot-size: var(--itx-space-3);
 	/*
 	 * The status color, the toast's and the callout's edge: 3:1 against the page in both schemes. It is
-	 * the border and the dot. The background is a see-through tint of it, and the text is it mixed
-	 * halfway with the text color.
+	 * the border and the dot. The background is a see-through tint of it, and the text is it pulled
+	 * 30% toward the text color: the least that reads 4.5:1 on the tint for every status, in both schemes.
 	 */
 	--itx-badge-accent-color: var(--itx-neutral-500);
 	--itx-badge-border-width: var(--itx-border-width);
 	--itx-badge-border-color: var(--itx-badge-accent-color);
 	--itx-badge-border-radius: var(--itx-radius-full);
 	--itx-badge-background-color: color-mix(in oklch, var(--itx-badge-accent-color) 12%, transparent);
-	--itx-badge-color: color-mix(in oklch, var(--itx-badge-accent-color), light-dark(var(--itx-neutral-900), var(--itx-neutral-50)));
+	--itx-badge-color: color-mix(in oklch, var(--itx-badge-accent-color) 70%, light-dark(var(--itx-neutral-900), var(--itx-neutral-50)));
 	/* Half the badge's own height, so a placed badge, dot or not, centres on its corner. */
 	--itx-badge-inset: calc(var(--itx-badge-block-size) / -2);
 }
 
 :where([interop-badge][itx-size="sm"]) {
-	--itx-badge-block-size: var(--itx-space-4);
+	--itx-badge-font-size: var(--itx-font-size-caption);
+	--itx-badge-block-size: var(--itx-space-5);
 	--itx-badge-dot-size: var(--itx-space-2);
 }
 
 :where([interop-badge][itx-size="lg"]) {
-	--itx-badge-font-size: var(--itx-font-size-label);
-	--itx-badge-block-size: var(--itx-space-6);
+	--itx-badge-font-size: var(--itx-font-size-p);
+	--itx-badge-block-size: var(--itx-space-7);
 	--itx-badge-dot-size: var(--itx-space-4);
 }
 
@@ -70,6 +69,8 @@
 	--itx-badge-border-width: 0px;
 	--itx-badge-background-color: var(--itx-badge-accent-color);
 	--itx-badge-color: contrast-color(var(--itx-badge-accent-color));
+	/* One digit (1ch with tabular-nums) fills the height, so it is a circle; more digits grow a pill. */
+	--itx-badge-padding-inline: calc((var(--itx-badge-block-size) - 1ch) / 2);
 }
 
 /* Forced colors drop the background, so a border keeps a dot and a count visible. Forced colors also set its color. */

@@ -37,11 +37,11 @@ interface Reading {
 export class BadgeLab {
 	protected readonly fill = signal("tinted");
 	protected readonly tint = signal("12");
-	protected readonly text = signal("neutral");
+	protected readonly text = signal("readable");
 	protected readonly type = signal("current");
 	protected readonly pad = signal("roomy");
-	protected readonly height = signal("current");
-	protected readonly weight = signal("500");
+	protected readonly height = signal("taller");
+	protected readonly weight = signal("400");
 
 	protected readonly schemes = ["light", "dark"];
 	protected readonly surfaces = ["Page", "Panel"];
