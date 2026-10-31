@@ -1,11 +1,13 @@
-# Protocol plan: critical review and response
+# Protocol plan: critical reviews and responses
+
+## First review
 
 2026-10-31. A reviewer with no prior context read the first draft of `.agent/todo/protocol.md`,
 the binders and the directives, and measured in headless Chromium. Its verdict: not approvable as
 drafted. Every finding was accepted. The revised plan in `.agent/todo/protocol.md` carries the
 answers; this record keeps the evidence and the reasoning.
 
-## Measurements
+### Measurements
 
 | What | Result |
 |---|---|
@@ -21,7 +23,7 @@ answers; this record keeps the evidence and the reasoning.
 
 Matching and observing are cheap. The contract was the problem.
 
-## Findings and answers
+### Findings and answers
 
 | # | Severity | Finding | Answer |
 |---|---|---|---|
@@ -46,9 +48,72 @@ Matching and observing are cheap. The contract was the problem.
 Zone.js: `provideInterop()` starts the observer outside Angular's zone so binding work does not run
 change detection. A plain `startInterop()` in a zone.js app's `main.ts` should do the same.
 
-## The rule that changed
+### The rule that changed
 
 The first draft said a pack has no templates. Finding 3 showed that breaks server rendering and
 hydration. The rule now: **a pack renders only markup that core defines, from core's pure
 functions.** Rendering markup core defines is convenience, not behavior. Approved by the user
 2026-10-31.
+
+## Second review
+
+2026-10-31. A second reviewer with no prior context read the second draft and this record, tested in
+Chromium and WebKit with Playwright, and prototyped the loader. Verdict: not approvable. Three
+answers to the first review failed in code, and the draft contradicted itself on phase order. Every
+finding was accepted. The third draft carries the answers. The common cause: core was asked to do
+framework jobs, catching every value write and rendering into hosts a framework also renders.
+
+### Measurements
+
+| What | Result |
+|---|---|
+| Instance `value` wrapper, setter calls | `.value =` only. `valueAsNumber`, `stepUp()`, `form.reset()`, `defaultValue`, the value attribute, a `max` clamp and `setRangeText()` all bypass it |
+| Angular 21 signal forms, range and number fields | written with `valueAsNumber` (`@angular/forms` `signals.mjs:751`) |
+| Wrapper with React | Interop first: React skips its value tracking. React first: React's setter is replaced |
+| All binders + `toast` + `announce` + `drawIcons` | 12,082 B gzip |
+| Loader prototype, with waiting list, sweep, filter, update and `configure()` | 1,400 B; 1,763 B with both document guards |
+| Clearing 2000 rows (22k nodes) | 5.5 ms querying each removed subtree; 0.3 ms sweeping a Set by `isConnected` |
+| Record order, insert then set attribute | `childList` before `attributes`, in one callback |
+| Guard and an `aria-busy` section | a link inside is not followed and a button's handler does not run |
+| `attributeFilter: ['interopTooltip']` | no records for the parsed attribute `interoptooltip` |
+
+### Answers from the first review that did not hold
+
+| First # | What failed | Answer |
+|---|---|---|
+| 1 | The `value` wrapper sees only `.value =`, misses Angular's `valueAsNumber` path, and breaks React's value tracking | Dropped. Behaviors listen to `input`, `change` and `reset`; code that writes a value calls `refresh(element)`; the Angular pack calls it on value changes (D9) |
+| 3 | A pack component and a core behavior render the same host: `drawIcons` replaces Angular's nodes; the badge would announce twice or announce from the pack; "already rendered" never repaints stale server markup | One owner per host (D7). The pack's component owns its host, calls core for behavior, and marks the host so the loader skips it |
+| 15 | Today's binders are already 12.1 kB, over the 12 kB budget; the guards push the loader past 1.5 kB | Budgets from measurements: loader 1.5 kB, guards 0.5 kB separately, registry 13 kB; rechecked when phase 0 starts |
+| 12 | A WeakMap cannot be iterated, so `stopInterop()` cannot find its bindings | A Set of bound elements, swept by `isConnected` |
+| 7 | An element inserted with its `id` set produces no attribute record | Each batch looks up the waiting IDs while the list is not empty |
+| 10 | The guard cancels clicks inside any `aria-busy` ancestor, including the demo's progress example | Fixed in `3e37b085`: `aria-busy` stops a click only on the control that carries it |
+| 4 | A record carries no author, so "ignore the behavior's own writes" cannot work | A behavior's outputs are never its inputs; the filter needs no author |
+| 11 | Phase 2 required every binder registered while phase 3 registers them one by one; the demo would install the guard twice | The registry starts empty with a shrinking "not yet migrated" list; the demo's own guard call goes when the loader starts |
+
+### New findings
+
+| # | Severity | Finding | Answer |
+|---|---|---|---|
+| 1 | Blocker | No rule for a batch that inserts an element and then sets its attributes, so it binds and then rebinds | Removals, then additions, then attributes; attribute records ignored for elements bound in the same batch; configuration plus state is one rebind. Angular's write order is measured in phase 2 |
+| 2 | Major | "One MutationObserver" is false: nine binders create their own, scroll area adds a ResizeObserver, every tooltip and shortcut adds a document listener, and a rebind recreates them all | Counts per behavior and a 500-tooltip benchmark in the browser runner. Tooltip and shortcut move to one shared listener each |
+| 3 | Major | Icon drawing would exist four times; an SVG string cannot go through Angular's sanitizer | `iconParts(name)` returns data; every drawer uses it; no `innerHTML` |
+| 4 | Major | The icon plan dropped `aria-label` and `aria-labelledby` tracking | Both are state attributes |
+| 5 | Major | The code block's caption, copy button, tooltip and line numbers had no owner on a plain page | The markup is the template; an `interop-copy` behavior copies; the code-block behavior adds colors and line numbers |
+| 6 | Major | No harness for what jsdom cannot test | A Playwright runner for Chromium and WebKit in phase 2; Firefox after a download is approved |
+| 7 | Minor | `attributeFilter` is case-sensitive; five attributes are camelCase | Lowercase names; the five are renamed. The tooltip trigger gets no attribute at all: the behavior is on `[interop-tooltip]` and finds triggers through `aria-labelledby` and `aria-describedby` (D10) |
+| 8 | Minor | 19 classes call a binder; the bundle is 12.1 kB | Corrected |
+| 9 | Minor | Shadow roots, duplicate and never-appearing IDs unspecified | Document scope; duplicates resolve as `getElementById` does; waiting entries drop with their element; a dev warning for IDs that never appear |
+
+### Rules that changed
+
+Both approved by the user 2026-10-31:
+
+- **Behavior lives only in core; a pack may call core.** A pack relaying a framework's value change
+  to `refresh()`, or a pack component calling core's announce helper, is the protocol at work.
+- **The tooltip trigger carries no Interop attribute.** The ARIA reference it needs for
+  accessibility is the connection. `interestfor` is the native successor once every engine ships it.
+
+### Bugs it found in the current code
+
+The two fixed in `3e37b085`: the guard blocked clicks inside `aria-busy` regions, and
+`guardActivation()` pulled the dev audit into production bundles (11,782 B to 348 B).
