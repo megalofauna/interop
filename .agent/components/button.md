@@ -62,11 +62,19 @@ A `<summary interop-button>` draws no disclosure marker.
 ### guardActivation(root = document)
 
 Call once when the app starts. A capturing click listener on `root` cancels
-every click on, or inside, an element with `aria-disabled="true"` or
-`aria-busy="true"`: `preventDefault()` and `stopImmediatePropagation()`. That
-stops the button's handlers, its form submit and its invoker command, which
-native `disabled` does by itself. Returns a function that removes the guard.
-The dev audit counts installed guards.
+every click on, or inside, an element with `aria-disabled="true"`, and every
+click on, or inside, an activatable element with `aria-busy="true"`: a native
+control, a link, an element with `tabindex`, a widget role (`button`,
+`checkbox`, `switch`, `option`, `menuitem` and the like) or a custom element.
+It calls `preventDefault()` and `stopImmediatePropagation()`, which stops the
+handlers, the form submit and the invoker command. `aria-busy` on a region
+(`<section>`, a list, a group) marks content that is updating, so the controls
+inside it still work, and a busy `<form>` still submits: `bindPendingAction()`
+marks the submit button busy, which blocks a second submit. The guard sees
+clicks only. A `keydown` handler on a `role="button"` element runs regardless,
+so it checks the attributes itself. Returns a function that removes the guard. The dev audit reads the count of installed
+guards from `activationGuardCount()`; the guard does not import the audit, so
+the audit stays out of production bundles.
 
 ### bindPendingAction(button, action)
 

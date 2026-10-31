@@ -36,6 +36,49 @@ describe('guardActivation', () => {
 		expect(clicks).toBe(0);
 	});
 
+	it('cancels a click inside an aria-disabled container', () => {
+		const group = document.createElement('div');
+		group.setAttribute('role', 'group');
+		group.setAttribute('aria-disabled', 'true');
+		document.body.append(group);
+		group.append(button());
+		group.querySelector('button')!.click();
+		expect(clicks).toBe(0);
+	});
+
+	it('leaves the controls inside an aria-busy region alone', () => {
+		const region = document.createElement('section');
+		region.setAttribute('aria-busy', 'true');
+		region.innerHTML = '<a href="#next">Next</a>';
+		document.body.append(region);
+		region.append(button());
+		region.querySelector('button')!.click();
+		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+		region.querySelector('a')!.dispatchEvent(event);
+		expect(clicks).toBe(1);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
+	it('cancels a click on a busy widget role, link or custom element', () => {
+		const targets = [
+			'<span role="checkbox" aria-checked="false"></span>',
+			'<span role="switch" aria-checked="false"></span>',
+			'<span role="option"></span>',
+			'<a>Next</a>',
+			'<x-picker></x-picker>',
+		];
+		for (const markup of targets) {
+			const holder = document.createElement('div');
+			holder.innerHTML = markup;
+			const element = holder.firstElementChild!;
+			element.setAttribute('aria-busy', 'true');
+			element.addEventListener('click', () => clicks++);
+			document.body.append(holder);
+			element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+		}
+		expect(clicks).toBe(0);
+	});
+
 	it('leaves an available button alone', () => {
 		button().click();
 		button({ 'aria-disabled': 'false' }).click();
