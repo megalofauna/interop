@@ -2,9 +2,9 @@
 
 ## First review
 
-2026-10-31. A reviewer with no prior context read the first draft of `.agent/todo/protocol.md`,
+2026-10-31. A reviewer with no prior context read the first draft of the plan,
 the binders and the directives, and measured in headless Chromium. Its verdict: not approvable as
-drafted. Every finding was accepted. The revised plan in `.agent/todo/protocol.md` carries the
+drafted. Every finding was accepted. The revised plan carried the
 answers; this record keeps the evidence and the reasoning.
 
 ### Measurements
@@ -60,7 +60,7 @@ functions.** Rendering markup core defines is convenience, not behavior. Approve
 2026-10-31. A second reviewer with no prior context read the second draft and this record, tested in
 Chromium and WebKit with Playwright, and prototyped the loader. Verdict: not approvable. Three
 answers to the first review failed in code, and the draft contradicted itself on phase order. Every
-finding was accepted. The third draft carries the answers. The common cause: core was asked to do
+finding was accepted. The third draft carried the answers. The common cause: core was asked to do
 framework jobs, catching every value write and rendering into hosts a framework also renders.
 
 ### Measurements
@@ -117,3 +117,12 @@ Both approved by the user 2026-10-31:
 
 The two fixed in `3e37b085`: the guard blocked clicks inside `aria-busy` regions, and
 `guardActivation()` pulled the dev audit into production bundles (11,782 B to 348 B).
+
+## Outcome
+
+A third review found more problems of the same kind: owner markers, waiting lists, batch ordering
+and hydration timing all came from a page-wide observer competing with the framework for the same
+DOM. That observer and registry reimplemented the custom elements registry. The plan was dropped
+and deleted. Components with behavior become light-DOM custom elements, where the import defines
+the element and the browser handles discovery and lifecycle, or delegated document listeners. The
+binders stay as their internals. The measurements above still apply.
