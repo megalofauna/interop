@@ -1,4 +1,4 @@
-:where([interop-tabs]) {
+:where(interop-tablist) {
 	--itx-tabs-tab-min-block-size: var(--itx-space-10);
 	--itx-tabs-tab-padding-inline: var(--itx-space-4);
 	/* The same type steps as a button. */
@@ -15,28 +15,34 @@
 	/* The tab paints no background; the radius shapes its focus ring. */
 	--itx-tabs-tab-border-radius: var(--itx-radius, var(--itx-radius-base));
 
-	--itx-tabs-panel-padding-block: var(--itx-space-4);
-	--itx-tabs-column-gap: var(--itx-space-6);
-
 	--itx-tabs-transition-duration: var(--itx-transition-duration);
 	--itx-tabs-transition-timing-function: var(--itx-transition-timing-function);
 }
 
-:where([interop-tabs][itx-size="sm"]) {
+:where(interop-tablist[itx-size="sm"]) {
 	--itx-tabs-tab-min-block-size: var(--itx-space-8);
 	--itx-tabs-tab-padding-inline: var(--itx-space-3);
 	--itx-tabs-tab-font-size: var(--itx-font-size-p-sm);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p-sm);
 }
 
-:where([interop-tabs][itx-size="lg"]) {
+:where(interop-tablist[itx-size="lg"]) {
 	--itx-tabs-tab-min-block-size: var(--itx-space-14);
 	--itx-tabs-tab-padding-inline: var(--itx-space-5);
 	--itx-tabs-tab-font-size: var(--itx-font-size-p-lg);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p-lg);
 }
 
-:where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
+:where(interop-tablist[itx-variant~="segmented"] > [role="tab"]) {
 	/* The pill's corner, the house radius, so the focus ring matches it. */
 	--itx-tabs-tab-border-radius: var(--itx-radius, var(--itx-radius-base));
+}
+
+/* The panels and the vertical layout sit outside the tab list, so their values are set where they apply. */
+:where(interop-tablist ~ [role="tabpanel"]) {
+	--itx-tabs-panel-padding-block: var(--itx-space-4);
+}
+
+:where(:has(> interop-tablist[aria-orientation="vertical"])) {
+	--itx-tabs-column-gap: var(--itx-space-6);
 }

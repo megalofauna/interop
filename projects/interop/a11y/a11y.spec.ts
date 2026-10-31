@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
 import {
@@ -19,7 +19,7 @@ import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
 import { InteropStepsForm } from 'interop/steps';
-import { InteropTabs } from 'interop/tabs';
+import 'interop/tabs';
 import { InteropToolbar } from 'interop/toolbar';
 import { InteropTooltip } from 'interop/tooltip';
 import {
@@ -51,6 +51,7 @@ const reveal = (element: Element) => {
 
 @Component({
 	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea, InteropTooltip],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	template: `
 		<main>
 			<button interop-button type="button">Save</button>
@@ -136,44 +137,38 @@ const reveal = (element: Element) => {
 					><span itx-visually-hidden>End</span></label
 				>
 			</fieldset>
-			<div interop-tabs>
-				<div role="tablist" aria-label="Station systems">
-					<button type="button" role="tab" id="t-nav" aria-controls="p-nav" aria-selected="true">Navigation</button>
-					<button type="button" role="tab" id="t-eng" aria-controls="p-eng" aria-selected="false" tabindex="-1">
-						Engineering <span interop-badge [count]="3" [label]="unread"></span>
-					</button>
-					<button type="button" role="tab" id="t-life" aria-controls="p-life" aria-selected="false" tabindex="-1" disabled>
-						Life support
-					</button>
-				</div>
-				<section role="tabpanel" id="p-nav" aria-labelledby="t-nav" tabindex="0"><p>Course plotted.</p></section>
-				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found">
-					<p>Reactor steady.</p>
-					<button interop-button="icon" type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
-					<label interop-switch><input type="checkbox" role="switch" /> Auto-throttle</label>
-				</section>
-				<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
-			</div>
-			<div interop-tabs="segmented icon">
-				<div role="tablist" aria-label="Layout">
-					<button type="button" role="tab" id="t-list" aria-controls="p-list" aria-selected="true">
-						<svg interop-icon name="tabler-check"></svg><span itx-visually-hidden>List</span>
-					</button>
-					<button type="button" role="tab" id="t-grid" aria-controls="p-grid" aria-selected="false" tabindex="-1">
-						<svg interop-icon name="tabler-x"></svg><span itx-visually-hidden>Grid</span>
-					</button>
-				</div>
-				<section role="tabpanel" id="p-list" aria-labelledby="t-list" tabindex="0"><p>List.</p></section>
-				<section role="tabpanel" id="p-grid" aria-labelledby="t-grid" hidden="until-found"><p>Grid.</p></section>
-			</div>
-			<div interop-tabs itx-size="sm">
-				<div role="tablist" aria-label="Account" aria-orientation="vertical">
-					<button type="button" role="tab" id="t-profile" aria-controls="p-profile" aria-selected="true">Profile</button>
-					<button type="button" role="tab" id="t-billing" aria-controls="p-billing" aria-selected="false" tabindex="-1">Billing</button>
-				</div>
-				<section role="tabpanel" id="p-profile" aria-labelledby="t-profile"><a href="/profile">Edit profile</a></section>
-				<section role="tabpanel" id="p-billing" aria-labelledby="t-billing" hidden="until-found"><a href="/billing">Invoices</a></section>
-			</div>
+			<interop-tablist aria-label="Station systems">
+				<button type="button" role="tab" id="t-nav" aria-controls="p-nav" aria-selected="true">Navigation</button>
+				<button type="button" role="tab" id="t-eng" aria-controls="p-eng" aria-selected="false" tabindex="-1">
+					Engineering <span interop-badge [count]="3" [label]="unread"></span>
+				</button>
+				<button type="button" role="tab" id="t-life" aria-controls="p-life" aria-selected="false" tabindex="-1" disabled>
+					Life support
+				</button>
+			</interop-tablist>
+			<section role="tabpanel" id="p-nav" aria-labelledby="t-nav" tabindex="0"><p>Course plotted.</p></section>
+			<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found">
+				<p>Reactor steady.</p>
+				<button interop-button="icon" type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
+				<label interop-switch><input type="checkbox" role="switch" /> Auto-throttle</label>
+			</section>
+			<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
+			<interop-tablist itx-variant="segmented icon" aria-label="Layout">
+				<button type="button" role="tab" id="t-list" aria-controls="p-list" aria-selected="true">
+					<svg interop-icon name="tabler-check"></svg><span itx-visually-hidden>List</span>
+				</button>
+				<button type="button" role="tab" id="t-grid" aria-controls="p-grid" aria-selected="false" tabindex="-1">
+					<svg interop-icon name="tabler-x"></svg><span itx-visually-hidden>Grid</span>
+				</button>
+			</interop-tablist>
+			<section role="tabpanel" id="p-list" aria-labelledby="t-list" tabindex="0"><p>List.</p></section>
+			<section role="tabpanel" id="p-grid" aria-labelledby="t-grid" hidden="until-found"><p>Grid.</p></section>
+			<interop-tablist itx-size="sm" aria-label="Account" aria-orientation="vertical">
+				<button type="button" role="tab" id="t-profile" aria-controls="p-profile" aria-selected="true">Profile</button>
+				<button type="button" role="tab" id="t-billing" aria-controls="p-billing" aria-selected="false" tabindex="-1">Billing</button>
+			</interop-tablist>
+			<section role="tabpanel" id="p-profile" aria-labelledby="t-profile"><a href="/profile">Edit profile</a></section>
+			<section role="tabpanel" id="p-billing" aria-labelledby="t-billing" hidden="until-found"><a href="/billing">Invoices</a></section>
 			<fieldset interop-radio-group="cards">
 				<legend>Plan</legend>
 				<label>
@@ -340,17 +335,15 @@ class Components {
 
 // Only what a consumer must write: the helper fills in ids, aria-labelledby, tabindex and hidden.
 @Component({
-	imports: [InteropTabs],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	template: `
 		<div>
-			<div interop-tabs>
-				<div role="tablist" aria-label="Bound">
-					<button type="button" role="tab" aria-controls="bound-a" aria-selected="true">First</button>
-					<button type="button" role="tab" aria-controls="bound-b">Second</button>
-				</div>
-				<section role="tabpanel" id="bound-a"><p>First panel.</p></section>
-				<section role="tabpanel" id="bound-b"><a href="/second">Second panel</a></section>
-			</div>
+			<interop-tablist aria-label="Bound">
+				<button type="button" role="tab" aria-controls="bound-a" aria-selected="true">First</button>
+				<button type="button" role="tab" aria-controls="bound-b">Second</button>
+			</interop-tablist>
+			<section role="tabpanel" id="bound-a"><p>First panel.</p></section>
+			<section role="tabpanel" id="bound-b"><a href="/second">Second panel</a></section>
 		</div>
 	`,
 })
@@ -440,10 +433,12 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(document.body)).toContainEqual(expect.stringMatching(/^button-name:/));
 	});
 
-	it('finds no violations in tabs as bindTabs leaves them, from the minimal markup', async () => {
+	it('finds no violations in tabs as <interop-tabs> leaves them, from the minimal markup', async () => {
 		const fixture = TestBed.createComponent(BoundTabs);
 		fixture.detectChanges();
 		TestBed.tick();
+		// Angular inserts <interop-tabs> before its children; the element takes them in a microtask later.
+		await Promise.resolve();
 		const element = fixture.nativeElement as HTMLElement;
 		const panel = element.querySelector('#bound-b')!;
 		expect(panel.getAttribute('aria-labelledby')).toBe(element.querySelector('[aria-controls="bound-b"]')!.id);

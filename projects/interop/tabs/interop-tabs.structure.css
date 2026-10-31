@@ -1,20 +1,18 @@
 /*
- * Tabs: one of several panels shown at a time, chosen from a tab list. The consumer writes the
- * markup; bindTabs() from interop adds the behavior.
+ * Tabs: one of several panels shown at a time, chosen from a tab list. <interop-tablist> is the tab
+ * list; importing interop/tabs defines it, which adds the behavior. The panels follow it.
  *
- *   <div interop-tabs>
- *     <div role="tablist" aria-label="Station systems">
- *       <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
- *       <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
- *     </div>
- *     <section role="tabpanel" id="nav">…</section>
- *     <section role="tabpanel" id="eng" hidden="until-found">…</section>
- *   </div>
+ *   <interop-tablist aria-label="Station systems">
+ *     <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
+ *     <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
+ *   </interop-tablist>
+ *   <section role="tabpanel" id="nav">…</section>
+ *   <section role="tabpanel" id="eng" hidden="until-found">…</section>
  *
  * The tab list wears the underscore look from styles/underscore.css, shared with the page nav: a
  * rule, and a bar on the selected tab. `aria-orientation="vertical"` on the tab list stands it beside
- * the panels, with the rule and the bar on its inline-end edge. `itx-size` on the wrapper sets the size.
- * `interop-tabs="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
+ * the panels, with the rule and the bar on its inline-end edge. `itx-size` on the tab list sets the size.
+ * `itx-variant="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
  * segments.
  *
  * A hidden="until-found" panel keeps its box, so only the shown panel gets padding.
@@ -30,7 +28,15 @@
 
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"]) {
+/*
+ * The underscore look's horizontal tab list sits on a rule as wide as its container, in a flex or
+ * grid column too. The segmented look keeps the width of its segments.
+ */
+:where(interop-tablist:not([aria-orientation="vertical"], [itx-variant~="segmented"])) {
+	align-self: stretch;
+}
+
+:where(interop-tablist > [role="tab"]) {
 	appearance: none;
 	position: relative;
 	flex-shrink: 0;
@@ -57,33 +63,44 @@
 	transition-timing-function: var(--itx-tabs-transition-timing-function);
 }
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
+:where(interop-tablist:not([itx-variant~="segmented"]) > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
 	color: var(--itx-tabs-tab-color-hover, var(--itx-tabs-tab-color));
 }
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"]) {
+:where(interop-tablist:not([itx-variant~="segmented"]) > [role="tab"][aria-selected="true"]) {
 	color: var(--itx-tabs-tab-color-selected);
 }
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"]:disabled) {
+:where(interop-tablist > [role="tab"]:disabled) {
 	opacity: var(--itx-tabs-tab-opacity-disabled);
 	cursor: var(--itx-tabs-tab-cursor-disabled);
 }
 
 /*
- * Segmented: `interop-tabs="segmented"` wears the look in styles/segmented.css, shared with the
+ * Segmented: `itx-variant="segmented"` wears the look in styles/segmented.css, shared with the
  * segmented radio group. Its focus ring on the pill is in styles/outline.css.
  */
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
 
-:where([interop-tabs] > [role="tabpanel"]:not([hidden])) {
+/*
+ * A hidden="until-found" panel keeps an empty box so find-in-page can reach it. In a flex or grid
+ * parent with a gap, each such box would add a gap; out of the layout, it adds nothing. Selecting
+ * its tab removes `hidden`, which puts it back.
+ */
+:where([role="tabpanel"][hidden="until-found"]) {
+	position: absolute;
+}
+
+/* The panels follow the tab list, as siblings. Placed elsewhere, they take the page's own spacing. */
+:where(interop-tablist ~ [role="tabpanel"]:not([hidden])) {
 	padding-block: var(--itx-tabs-panel-padding-block);
 }
 
 /* ── Vertical ──────────────────────────────────────────────────────────── */
 
-:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"])) {
+/* The parent of a vertical tab list sets it beside its panels. */
+:where(:has(> interop-tablist[aria-orientation="vertical"])) {
 	display: grid;
 	grid-template-columns: auto 1fr;
 	align-items: start;
@@ -91,11 +108,11 @@
 }
 
 /* Every panel shares the one cell beside the tab list. Only the selected one shows. */
-:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]) {
+:where(interop-tablist[aria-orientation="vertical"] ~ [role="tabpanel"]) {
 	grid-column: 2;
 	grid-row: 1;
 }
 
-:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
+:where(interop-tablist[aria-orientation="vertical"] ~ [role="tabpanel"]:not([hidden])) {
 	padding-block: 0;
 }

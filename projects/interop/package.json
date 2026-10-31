@@ -10,7 +10,9 @@
 		"tslib": "^2.3.0"
 	},
 	"sideEffects": [
-		"*.css"
+		"*.css",
+		"./tabs/**",
+		"./fesm2022/interop-tabs.mjs"
 	],
 	"exports": {
 		"./*.css": "./*.css"

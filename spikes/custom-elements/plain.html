@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Spike: interop/tabs on a plain page</title>
+		<link rel="stylesheet" href="dist/interop.css" />
+		<script type="module" src="dist/tabs.js"></script>
+		<style>
+			body {
+				font-family: system-ui, sans-serif;
+				max-inline-size: 48rem;
+				margin: 2rem auto;
+				padding-inline: 1rem;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>interop/tabs on a plain page</h1>
+
+		<h2>Parsed markup</h2>
+		<interop-tablist id="parsed" aria-label="Station systems">
+			<button type="button" role="tab" aria-controls="nav" aria-selected="true">
+				Navigation
+			</button>
+			<button type="button" role="tab" aria-controls="eng">Engineering</button>
+			<button type="button" role="tab" aria-controls="life">
+				Life support
+			</button>
+		</interop-tablist>
+		<section role="tabpanel" id="nav"><p>Course plotted.</p></section>
+		<section role="tabpanel" id="eng" hidden="until-found">
+			<p>Reactor output steady.</p>
+		</section>
+		<section role="tabpanel" id="life" hidden="until-found">
+			<p>Oxygen nominal.</p>
+		</section>
+
+		<h2>Inserted with innerHTML</h2>
+		<div id="later"></div>
+
+		<h2>In the page before its tabs</h2>
+		<div id="built"></div>
+
+		<script type="module">
+			document.querySelector("#later").innerHTML = `
+				<interop-tablist id="inserted" itx-variant="segmented" aria-label="Report">
+					<button type="button" role="tab" aria-controls="daily">Daily</button>
+					<button type="button" role="tab" aria-controls="weekly">Weekly</button>
+				</interop-tablist>
+				<section role="tabpanel" id="daily"><p>Daily report.</p></section>
+				<section role="tabpanel" id="weekly"><p>Weekly report.</p></section>`;
+
+			// The tab list is in the page before it has tabs, as when a parser or a framework inserts
+			// the host first.
+			const built = document.querySelector("#built");
+			const list = document.createElement("interop-tablist");
+			list.id = "built-tabs";
+			list.setAttribute("aria-label", "Built");
+			built.append(list);
+			for (const name of ["one", "two"]) {
+				const tab = document.createElement("button");
+				tab.type = "button";
+				tab.setAttribute("role", "tab");
+				tab.setAttribute("aria-controls", `built-${name}`);
+				tab.textContent = name;
+				list.append(tab);
+				const panel = document.createElement("section");
+				panel.setAttribute("role", "tabpanel");
+				panel.id = `built-${name}`;
+				panel.textContent = `Panel ${name}`;
+				built.append(panel);
+			}
+		</script>
+	</body>
+</html>

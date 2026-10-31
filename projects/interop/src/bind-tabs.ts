@@ -16,8 +16,9 @@ export interface TabsChangeDetail {
 }
 
 /**
- * Adds tab behavior to markup the consumer writes: a `[role=tablist]` of `[role=tab]` buttons in
- * `root`, each pointing at its `[role=tabpanel]` with `aria-controls`.
+ * Adds tab behavior to markup the consumer writes: a `[role=tablist]` of `[role=tab]` buttons, each
+ * pointing at its `[role=tabpanel]` with `aria-controls`. `root` is the tab list, or holds it. The
+ * panels can sit anywhere in the document.
  *
  * - Exactly one tab is selected: the one marked `aria-selected="true"`, or the first enabled tab.
  *   It holds the tab list's only tab stop. Every other panel is `hidden="until-found"`, so
@@ -45,7 +46,8 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	let current: HTMLElement | null = null;
 	let lastIndex = 0;
 
-	const tablist = () => root.querySelector<HTMLElement>('[role="tablist"]');
+	/** The root is the tab list, or holds it. */
+	const tablist = () => (root.matches('[role="tablist"]') ? root : root.querySelector<HTMLElement>('[role="tablist"]'));
 	const tabs = () => {
 		const list = tablist();
 		if (!list) return [];
@@ -162,7 +164,8 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		for (const tab of tabs()) tab.tabIndex = tab === marked ? 0 : -1;
 	};
 
-	// Find-in-page fires beforematch on a hidden="until-found" panel before revealing it.
+	// Find-in-page fires beforematch on a hidden="until-found" panel before revealing it. It bubbles,
+	// and the panels may sit outside the root, so the document hears it.
 	const onBeforematch = (event: Event) => {
 		const tab = tabs().find((candidate) => panelOf(candidate) === event.target);
 		if (tab) select(tab, false);
@@ -180,7 +183,7 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	root.addEventListener('keydown', onKeydown, { signal });
 	root.addEventListener('click', onClick, { signal });
 	root.addEventListener('focusout', onFocusout, { signal });
-	root.addEventListener('beforematch', onBeforematch, { signal });
+	document.addEventListener('beforematch', onBeforematch, { signal });
 	if (hash) document.defaultView?.addEventListener('hashchange', onHashchange, { signal });
 
 	reconcile();

@@ -2,18 +2,18 @@
 <p class="aka"><em>Also known as tab list, tab group, tab strip, pivot.</em></p>
 <p>
 	Tabs show one of several sections at a time. You write the tab list and the
-	panels, and each tab names its panel with <code>aria-controls</code>.
-	<code>bindTabs(root)</code> from <code>interop</code> adds the keyboard,
-	selection and panel hiding. In Angular the same markup binds itself: the
-	<code>InteropTabs</code> directive from <code>interop/tabs</code> matches
-	<code>[interop-tabs]</code>. To choose a value or a view of the same content,
-	use a <a routerLink="/patterns/segmented-control">segmented control</a>.
+	panels, and each tab names its panel with <code>aria-controls</code>. The tab
+	list is <code>&lt;interop-tablist&gt;</code>, and the panels follow it. Import
+	<code>interop/tabs</code> once: the import defines the element, which adds the
+	keyboard, selection and panel hiding wherever the markup appears, in any
+	framework or none. To choose a value or a view of the same content, use a
+	<a routerLink="/patterns/segmented-control">segmented control</a>.
 </p>
 
 <h2>Tabs</h2>
 <demo-example
 	[html]="examples.tabs"
-	[bind]="bindMain"
+	[bind]="follow"
 	[ts]="mainTs"
 	layout="stack"
 />
@@ -22,51 +22,74 @@
 	<code>hidden="until-found"</code>: search the page for "reactor".
 </p>
 
+<h2>In a framework's template</h2>
+<p>
+	Angular renders these tabs from a list. Adding or removing a tab needs no
+	extra call: the tab list reconciles its own tabs, and a removed selected tab
+	passes the selection to a neighbor. The template leaves
+	<code>aria-selected</code> and <code>hidden</code> to the element. Angular
+	needs <code>CUSTOM_ELEMENTS_SCHEMA</code> in the component that uses the
+	element.
+</p>
+<interop-tablist #logTabs aria-label="Logs">
+	@for (log of logs(); track log.id) {
+		<button type="button" role="tab" [attr.aria-controls]="log.id">
+			{{ log.name }}
+		</button>
+	}
+</interop-tablist>
+@for (log of logs(); track log.id) {
+	<section role="tabpanel" [id]="log.id">
+		<p>{{ log.text }}</p>
+	</section>
+}
+<p>
+	<button interop-button type="button" (click)="addLog()">Add a log</button>
+	<button interop-button type="button" (click)="removeSelected(logTabs)">
+		Remove the selected log
+	</button>
+</p>
+
 <h2>Sizes</h2>
 <p><code>itx-size</code> is <code>sm</code>, <code>lg</code> or nothing.</p>
-<demo-example [html]="examples.sizes" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.sizes" layout="stack" />
 
 <h2>Segmented</h2>
 <p>
-	<code>interop-tabs="segmented"</code> gives tabs the segmented control's look.
+	<code>itx-variant="segmented"</code> gives tabs the segmented control's look.
 	They are still tabs: each one shows a different section. To choose a value or
 	a view of the same content, use the segmented control itself.
 </p>
-<demo-example [html]="examples.segmented" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.segmented" layout="stack" />
 <p>
 	With <code>icon</code>, each tab is square and holds an icon; its name is
 	visually hidden text.
 </p>
-<demo-example [html]="examples.segmentedIcons" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.segmentedIcons" layout="stack" />
 
 <h2>Icons and counts</h2>
 <p>
 	You own the buttons, so icons, badges and tooltips work as anywhere else. A
 	count shows the number and speaks what it counts.
 </p>
-<demo-example [html]="examples.counts" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.counts" layout="stack" />
 
 <h2>A disabled tab</h2>
-<demo-example [html]="examples.disabled" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.disabled" layout="stack" />
 
 <h2>Manual activation</h2>
 <p>
-	With <code>activation: "manual"</code>, the arrow keys move focus and Enter or
-	Space selects. In Angular, <code>activation="manual"</code> on the element.
+	With <code>itx-activation="manual"</code>, the arrow keys move focus and Enter
+	or Space selects.
 </p>
-<demo-example
-	[html]="examples.manual"
-	[bind]="bindManual"
-	[ts]="manualTs"
-	layout="stack"
-/>
+<demo-example [html]="examples.manual" layout="stack" />
 
 <h2>Many tabs</h2>
 <p>When the tabs overflow, the tab list scrolls.</p>
-<demo-example [html]="examples.many" [bind]="bind" layout="stack" narrow />
+<demo-example [html]="examples.many" layout="stack" narrow />
 
 <h2>Vertical</h2>
-<demo-example [html]="examples.vertical" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.vertical" layout="stack" />
 
 <h2>Right to left</h2>
-<demo-example [html]="examples.rtl" [bind]="bind" layout="stack" />
+<demo-example [html]="examples.rtl" layout="stack" />

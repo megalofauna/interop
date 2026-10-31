@@ -12,7 +12,6 @@ export interface AuditIssue {
 	readonly advice: string;
 }
 
-
 type Rule = (element: Element) => Omit<AuditIssue, 'rule' | 'element'> | null;
 
 const BUTTONS = ':is(button, summary)[interop-button], button:has(svg[interop-icon])';
@@ -21,7 +20,7 @@ const LIVE = '[role="status"], [aria-live]';
 const INTERACTIVE = 'a[href], button, input, select, textarea, details, [tabindex], [contenteditable]';
 const CONTROL_LABELS = 'label:is([interop-switch], [interop-checkbox]), fieldset[interop-radio-group] label:has(> input[type="radio"])';
 const GROUPS = 'fieldset:is([interop-radio-group], [interop-checkbox-group])';
-const TABLISTS = '[interop-tabs] > [role="tablist"]';
+const TABLISTS = 'interop-tablist';
 /** Elements that can carry a callout's status word: a visible label, a title, or hidden text. */
 const CALLOUT_STATUS =
 	':scope > div > :is(small, h1, h2, h3, h4, h5, h6), :scope > div > p:first-child > strong:first-child, [itx-visually-hidden]';
