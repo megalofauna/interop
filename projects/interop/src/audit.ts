@@ -1,4 +1,5 @@
 import { OWNS_ARROW_KEYS } from './focusable';
+import { activationGuardCount } from './guard-activation';
 
 export interface AuditIssue {
 	readonly rule: string;
@@ -11,12 +12,6 @@ export interface AuditIssue {
 	readonly advice: string;
 }
 
-let activationGuards = 0;
-
-/** Called by guardActivation() as it installs and removes itself. */
-export function noteActivationGuard(change: 1 | -1): void {
-	activationGuards += change;
-}
 
 type Rule = (element: Element) => Omit<AuditIssue, 'rule' | 'element'> | null;
 
@@ -72,7 +67,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 	'button-activation-guard': {
 		selector: '[interop-button]:is([aria-disabled="true"], [aria-busy="true"])',
 		check: () =>
-			activationGuards > 0
+			activationGuardCount() > 0
 				? null
 				: {
 						problem: 'This button is aria-disabled or aria-busy, but guardActivation() is not installed.',

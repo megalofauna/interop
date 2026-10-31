@@ -36,6 +36,28 @@ describe('guardActivation', () => {
 		expect(clicks).toBe(0);
 	});
 
+	it('cancels a click inside an aria-disabled container', () => {
+		const group = document.createElement('div');
+		group.setAttribute('aria-disabled', 'true');
+		document.body.append(group);
+		group.append(button());
+		group.querySelector('button')!.click();
+		expect(clicks).toBe(0);
+	});
+
+	it('leaves the controls inside an aria-busy region alone', () => {
+		const region = document.createElement('section');
+		region.setAttribute('aria-busy', 'true');
+		region.innerHTML = '<a href="#next">Next</a>';
+		document.body.append(region);
+		region.append(button());
+		region.querySelector('button')!.click();
+		const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+		region.querySelector('a')!.dispatchEvent(event);
+		expect(clicks).toBe(1);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
 	it('leaves an available button alone', () => {
 		button().click();
 		button({ 'aria-disabled': 'false' }).click();
