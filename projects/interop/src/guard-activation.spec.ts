@@ -38,6 +38,7 @@ describe('guardActivation', () => {
 
 	it('cancels a click inside an aria-disabled container', () => {
 		const group = document.createElement('div');
+		group.setAttribute('role', 'group');
 		group.setAttribute('aria-disabled', 'true');
 		document.body.append(group);
 		group.append(button());
@@ -56,6 +57,26 @@ describe('guardActivation', () => {
 		region.querySelector('a')!.dispatchEvent(event);
 		expect(clicks).toBe(1);
 		expect(event.defaultPrevented).toBe(false);
+	});
+
+	it('cancels a click on a busy widget role, link or custom element', () => {
+		const targets = [
+			'<span role="checkbox" aria-checked="false"></span>',
+			'<span role="switch" aria-checked="false"></span>',
+			'<span role="option"></span>',
+			'<a>Next</a>',
+			'<x-picker></x-picker>',
+		];
+		for (const markup of targets) {
+			const holder = document.createElement('div');
+			holder.innerHTML = markup;
+			const element = holder.firstElementChild!;
+			element.setAttribute('aria-busy', 'true');
+			element.addEventListener('click', () => clicks++);
+			document.body.append(holder);
+			element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+		}
+		expect(clicks).toBe(0);
 	});
 
 	it('leaves an available button alone', () => {
