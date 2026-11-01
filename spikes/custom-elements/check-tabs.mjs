@@ -1,12 +1,9 @@
 // Checks <interop-tabs> layout in Chromium and WebKit with panels that have a border, padding and
 // background: height, paint, clicks, find-in-page reveal (through a text fragment) and vertical tabs.
-// Playwright is not a repo dependency; point PLAYWRIGHT at a node_modules folder that has it:
-//   node spikes/custom-elements/build.mjs   (serves the spike on port 8137)
-//   PLAYWRIGHT=/path/to/node_modules node spikes/custom-elements/check-tabs.mjs
-import { createRequire } from "node:module";
-
-const require = createRequire(`${process.env.PLAYWRIGHT ?? "./node_modules"}/`);
-const { chromium, webkit } = require("playwright");
+// Serve the spike first, then run this:
+//   node spikes/custom-elements/build.mjs
+//   node spikes/custom-elements/check-tabs.mjs
+import { chromium, webkit } from "playwright";
 
 const setup = () => {
 	const style = document.createElement("style");
