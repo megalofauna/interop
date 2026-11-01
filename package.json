@@ -24,7 +24,7 @@
 		"build:content:watch": "tsx tools/djot-build.ts --watch projects/demo/src",
 		"test": "ng test interop",
 		"test:pages": "node scripts/cdp/check-pages.mjs",
-		"test:browser": "node spikes/custom-elements/run-checks.mjs",
+		"test:browser": "node scripts/browser/run-checks.mjs",
 		"publish:npm": "npm publish dist/interop/",
 		"serve": "ng serve demo",
 		"start": "ng serve demo",

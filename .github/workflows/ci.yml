@@ -56,7 +56,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # The specs run in jsdom; the browser checks are the Pages step.
+      # The specs run in jsdom; the browser checks are the Pages and Browsers steps.
       - name: Test
         run: npm test -- --watch=false
 
@@ -76,3 +76,12 @@ jobs:
         run: npm run test:pages
         env:
           CHROME_BIN: /usr/bin/google-chrome
+
+      # Components in Chromium and WebKit, through Playwright: layout, paint, clicks, the Tab order,
+      # find-in-page, a shadow root, and server rendering followed by hydration. Playwright brings its
+      # own browsers; `npm ci` does not install them.
+      - name: Install browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Browsers
+        run: npm run test:browser

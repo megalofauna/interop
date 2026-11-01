@@ -190,7 +190,7 @@ The structure file pads only the shown panel for the same reason.
 
 Tabs are the first component built as a custom element (branch
 `itx-custom-elements-00`), checked in Chromium in the Angular demo, a plain HTML
-page and React 19 (`spikes/custom-elements/`). The entry is about 1.8 kB gzip,
+page and React 19 (`scripts/browser/`). The entry is about 1.8 kB gzip,
 about 215 B over `bindTabs` alone. A version where the element was the tab list
 itself, with the panels as siblings, was dropped after review: hidden panels
 added gaps in flex and grid parents, the fix painted them over the tabs, late
@@ -203,7 +203,7 @@ pair.
 with decorated panels, find-in-page through a text fragment, the Tab order with
 panels the author made tab stops, an animation on panels, tabs inside a shadow
 root, and server rendering with `@angular/platform-server` followed by hydration, with no
-mismatch and the tabs working afterwards (`spikes/custom-elements/`).
+mismatch and the tabs working afterwards (`scripts/browser/`).
 
 Panels overlap in the shared area only once the element is defined. Before
 that, and without JavaScript, they stack: a panel the author left visible, or
