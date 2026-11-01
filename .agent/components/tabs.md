@@ -58,20 +58,35 @@ never inside it.
 
 | Concern | Behavior |
 |---|---|
-| Selection | Exactly one tab selected: the one marked, or the first enabled. It holds the tab list's only tab stop |
+| Selection | Exactly one tab selected: on bind, the one the markup marked, or the first enabled. After that the helper holds the selection itself. It holds the tab list's only tab stop |
 | Panels | The selected panel shows. The others are `hidden="until-found"`; find-in-page fires `beforematch`, which selects the panel's tab |
 | Keys | Arrows by `aria-orientation` and writing direction, wrapping; Home and End; disabled tabs skipped; keys with a modifier left alone |
 | Activation | `automatic` (default) selects on arrow. `manual` moves focus; the button's click on Enter or Space selects |
 | Focus | State is written before focus moves. Leaving the tab list returns its tab stop to the selected tab |
 | Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. Panels are found by `id` in the document or shadow root that holds the tabs. The shown panel gets `tabindex="0"` when nothing in it is focusable, marked `data-tabs-reachable` so a later binding, after a move or a changed attribute, can remove it. A hidden panel is never a tab stop: a consumer's `tabindex` on it waits in `data-tabs-tabindex` and comes back when the panel shows. Attributes are written only when their value changes |
 | Change | `interop-tabs-change` on the tab list, detail `{ tab, panel }`, when the selection changes. Not on bind |
-| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A tab inserted already marked `aria-selected="true"` takes the selection, as streamed or rendered markup chose it; a tab already in place carries only what the helper wrote, so its attribute is not read as a choice. A change only inside a panel's content rechecks whether the shown panel needs to be a tab stop, at most once a frame, because that check reads layout. Measured with five content changes to a 2,000-row panel: 14.3 ms bound against 14.2 ms unbound (Chromium), 13.0 against 12.0 (WebKit) |
+| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A tab inserted already marked `aria-selected="true"` takes the selection, as streamed or rendered markup chose it; a tab already in place carries only what the helper wrote, so its attribute is not read as a choice. A change inside the shown panel's content rechecks whether that panel needs to be a tab stop, at most once a frame, and only when the helper owns its `tabindex`; the check reads layout, and looks at the first focusable candidate before collecting the rest. Changes inside hidden panels, and inside a tab's own content, do nothing. Measured: content changes cost the same bound as unbound, within a quarter of a millisecond a frame, in Chromium and WebKit |
 | Hash | With `hash: true`, the tab whose panel matches the URL fragment is selected on bind and on `hashchange`. It never writes the URL |
 
 The helper only sets attributes. It never inserts or moves nodes, so a
-framework's renderer, control flow and hydration keep the DOM. Do not bind
-`aria-selected` or `hidden` yourself as well; follow the selection through the
-event.
+framework's renderer, control flow and hydration keep the DOM.
+
+### What the helper owns and what it follows
+
+| | Attributes | Who writes them |
+|---|---|---|
+| Inputs, which the helper watches | Tabs and panels added or removed; a tab's `disabled`, `aria-controls` and `id`; a panel's `id`. The markup's `aria-selected` and `hidden` as first written: on bind, and on a tab inserted already marked selected | The author or framework |
+| Outputs, which the helper owns | `aria-selected` and `tabindex` on tabs; `hidden` and `tabindex` on panels | The helper. A later write by anyone else is written back from the helper's state, so a framework binding to them is undone rather than obeyed. An author's `tabindex` written onto a hidden panel is parked again |
+| Choosing from code | `select(tab)` on the element, or on the binding `bindTabs()` returns; the element also takes a panel id | Code that changes the selection. It fires `interop-tabs-change` |
+
+The state is the selected tab and the tab holding the tab stop, which under
+manual activation follows focus; every output is derived from those two and
+written only when it differs. Disabling the selected tab moves the selection to
+a neighbor; changing a tab's `aria-controls` follows it to the new panel.
+
+Follow the selection through the event, and change it with `select()`. A
+framework template writes `hidden` on panels for the first render; the helper
+then owns it.
 
 The element binds in `connectedCallback` and unbinds in `disconnectedCallback`,
 so markup parsed, rendered by a framework or set with `innerHTML` binds itself,
@@ -190,8 +205,8 @@ The structure file pads only the shown panel for the same reason.
 
 Tabs are the first component built as a custom element (branch
 `itx-custom-elements-00`), checked in Chromium in the Angular demo, a plain HTML
-page and React 19 (`scripts/browser/`). The entry is about 1.8 kB gzip,
-about 215 B over `bindTabs` alone. A version where the element was the tab list
+page and React 19 (`scripts/browser/`). The entry is 6.3 kB minified, 2.6 kB
+gzip, everything it pulls from `interop` included. A version where the element was the tab list
 itself, with the panels as siblings, was dropped after review: hidden panels
 added gaps in flex and grid parents, the fix painted them over the tabs, late
 panels went unobserved, the markup had no tab list role before upgrade, and an
@@ -199,15 +214,23 @@ author's own role disabled it. The wrapper has none of those problems; a tab
 list and its panels need a role-less parent because ARIA has no role for the
 pair.
 
-`npm run test:browser` checks, in Chromium and WebKit: layout, paint and clicks
-with decorated panels, find-in-page through a text fragment, the Tab order with
-panels the author made tab stops, an animation on panels, tabs inside a shadow
-root, and server rendering with `@angular/platform-server` followed by hydration, with no
+`npm run test:browser` checks, in Chromium and WebKit and in CI: layout, paint
+and clicks with decorated panels, no layout shift at the upgrade with decorated
+panels, find-in-page through a text fragment, the Tab order with panels the
+author made tab stops, an animation and an opacity transition on panels, a
+`[hidden] { display: none !important }` reset, print, tabs inside a shadow root,
+React 19 rendering, adding and removing tabs, and server rendering with `@angular/platform-server` followed by hydration, with no
 mismatch and the tabs working afterwards (`scripts/browser/`).
 
 In print every panel shows, stacked in order: paper has no tabs to choose
-with. The element prints as a block, and hidden panels show their content with
-the shown panel's spacing.
+with. The element prints as a block, every panel takes the same spacing, and
+the author's own panel styles apply. Printed panels carry no tab name.
+
+On screen a hidden panel's box is emptied (padding, border, margin, minimum
+height) and made transparent, without transitions, all `!important`, so neither
+author styles nor a transition can show it or shift the layout. One rule with
+real specificity, not `:where()`, gives hidden panels back their display under a
+`[hidden] { display: none !important }` reset, which Bootstrap ships.
 
 Panels overlap in the shared area only once the element is defined. Before
 that, and without JavaScript, they stack: a panel the author left visible, or

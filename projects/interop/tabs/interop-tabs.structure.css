@@ -108,31 +108,33 @@
 }
 
 /*
- * A hidden="until-found" panel hides its content but still draws its own border, padding and
- * background. Transparent and passed through by the pointer, it shows nothing and takes no click.
- * Find-in-page still reaches it; revealing it removes `hidden`, and with it these two. They are
- * `!important` because a hidden panel stays hidden: an author's opacity or an animation on panels
- * would otherwise paint it over the shown one.
+ * A hidden="until-found" panel hides its content but still draws its own box: border, padding,
+ * background. On screen its box is emptied and made transparent, and the pointer passes through, so
+ * it shows nothing, takes no space before the element upgrades, and takes no click. Find-in-page
+ * still reaches it; revealing it removes `hidden`, and with it these rules. They are `!important`
+ * because a hidden panel stays hidden: an author's styles, an animation or a transition on panels
+ * would otherwise paint it over the shown one, and a transition outranks every declaration but its
+ * own property being turned off.
  */
-:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
-	opacity: 0 !important;
-	pointer-events: none !important;
+@media not print {
+	:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+		min-block-size: 0 !important;
+		margin-block: 0 !important;
+		padding-block: 0 !important;
+		border-block-width: 0 !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transition-property: none !important;
+	}
 }
 
 /*
- * Paper has no tabs to choose with, so every panel prints, stacked in order. A hidden panel shows its
- * content and takes the shown panel's spacing.
+ * A reset such as `[hidden] { display: none !important }`, which Bootstrap ships, would turn a
+ * hidden="until-found" panel into display: none, out of reach of find-in-page and print. This one
+ * rule carries real specificity, not `:where()`, to give the panel back its own display.
  */
-@media print {
-	:where(interop-tabs) {
-		display: block;
-	}
-
-	:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
-		content-visibility: visible;
-		padding-block: var(--itx-tabs-panel-padding-block);
-		opacity: 1 !important;
-	}
+interop-tabs > [role="tabpanel"][hidden="until-found"] {
+	display: revert !important;
 }
 
 /* ── Vertical ──────────────────────────────────────────────────────────── */
@@ -147,4 +149,24 @@
 
 :where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
 	padding-block: 0;
+}
+
+/* ── Print ─────────────────────────────────────────────────────────────── */
+
+/*
+ * Paper has no tabs to choose with, so every panel prints, stacked in order, each with the same
+ * spacing and the author's own styles.
+ */
+@media print {
+	:where(interop-tabs) {
+		display: block;
+	}
+
+	:where(interop-tabs > [role="tabpanel"]) {
+		padding-block: var(--itx-tabs-panel-padding-block);
+	}
+
+	:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+		content-visibility: visible;
+	}
 }

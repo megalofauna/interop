@@ -52,6 +52,32 @@ const measure = () => {
 /** @param {import("playwright").Page} page @param {string} base */
 export async function checkTabs(page, base) {
 	const failures = [];
+
+	// Decorated panels take the same height before the element upgrades as after: no layout shift.
+	const decorate = () => {
+		const style = document.createElement("style");
+		style.textContent =
+			"#parsed > [role=tabpanel] { border: 2px solid red; padding: 12px; margin-block: 8px; }";
+		document.head.append(style);
+	};
+	const height = () =>
+		Math.round(
+			document.querySelector("#parsed").getBoundingClientRect().height,
+		);
+	await page.route("**/dist/tabs.js", (route) => route.abort());
+	await page.goto(`${base}/plain.html`);
+	await page.evaluate(decorate);
+	const before = await page.evaluate(height);
+	await page.unroute("**/dist/tabs.js");
+	await page.goto(`${base}/plain.html`);
+	await page.waitForFunction(() => customElements.get("interop-tabs"));
+	await page.evaluate(decorate);
+	const after = await page.evaluate(height);
+	if (before !== after)
+		failures.push(
+			`decorated panels: ${before}px before the upgrade, ${after}px after`,
+		);
+
 	await page.goto(`${base}/plain.html`);
 	await page.waitForFunction(() => customElements.get("interop-tabs"));
 	await page.evaluate(setup);
@@ -140,6 +166,35 @@ export async function checkTabs(page, base) {
 	await page.emulateMedia({ media: "screen" });
 	if (!printed.visible || !printed.stacked)
 		failures.push(`print: ${JSON.stringify(printed)}`);
+
+	// An opacity transition on panels does not show a hidden panel while it runs.
+	await page.evaluate(() => {
+		const style = document.createElement("style");
+		style.textContent = "#parsed > [role=tabpanel] { transition: opacity 3s; }";
+		document.head.append(style);
+		document.querySelector("#parsed [aria-controls=nav]").click();
+		document.querySelector("#parsed [aria-controls=eng]").click();
+	});
+	await page.waitForTimeout(200);
+	const fading = await page.evaluate(
+		() => getComputedStyle(document.querySelector("#nav")).opacity,
+	);
+	if (fading !== "0")
+		failures.push(
+			`a hidden panel under an opacity transition has opacity ${fading}`,
+		);
+
+	// A [hidden] { display: none !important } reset does not take hidden panels away from print.
+	await page.evaluate(() => {
+		const style = document.createElement("style");
+		style.textContent = "[hidden] { display: none !important; }";
+		document.head.append(style);
+	});
+	const resetDisplay = await page.evaluate(
+		() => getComputedStyle(document.querySelector("#nav")).display,
+	);
+	if (resetDisplay === "none")
+		failures.push("a [hidden] reset turns hidden panels into display: none");
 
 	// Inside a shadow root, panels are found in the shadow root, not the document.
 	const shadow = await page.evaluate(() => {

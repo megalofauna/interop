@@ -1,5 +1,5 @@
 import { OWNS_ARROW_KEYS } from './focusable';
-import { tabsShowedPanels } from './bind-tabs';
+import { recordTabsForAudit, tabsShowedPanels } from './bind-tabs';
 import { activationGuardCount } from './guard-activation';
 
 export interface AuditIssue {
@@ -1066,6 +1066,8 @@ let stopWatching: (() => void) | null = null;
 export function watchInterop(root: Document = document): () => void {
 	if (stopWatching) return stopWatching;
 	if (typeof MutationObserver === 'undefined' || auditOff(root)) return () => {};
+	// Tabs that bind from now on note what their markup first showed, for the tabs-panel-hidden rule.
+	recordTabsForAudit();
 
 	console.info(
 		'Interop is checking this page for accessibility problems while the app runs in development mode. ' +

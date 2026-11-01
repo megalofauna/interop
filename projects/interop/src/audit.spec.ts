@@ -1,5 +1,5 @@
 import { auditInterop, watchInterop } from './audit';
-import { bindTabs } from './bind-tabs';
+import { bindTabs, recordTabsForAudit } from './bind-tabs';
 import { guardActivation } from './guard-activation';
 
 const render = (html: string) => {
@@ -299,9 +299,21 @@ describe('auditInterop', () => {
 		});
 
 		it('flags panels the markup left without hidden, after the tabs have bound and hidden them', () => {
+			recordTabsForAudit();
 			render(tabs({ ...good, panels: panel('a', false) + panel('b', false) }));
 			const unbind = bindTabs(document.querySelector('interop-tabs')!);
 			expect(document.querySelector('#p-b')!.getAttribute('hidden')).toBe('until-found');
+			expect(rules()).toEqual(['tabs-panel-hidden']);
+			unbind();
+		});
+
+		it('flags panels left without hidden when the tabs appear after binding, as in a framework render', async () => {
+			recordTabsForAudit();
+			render('<interop-tabs></interop-tabs>');
+			const root = document.querySelector<HTMLElement>('interop-tabs')!;
+			const unbind = bindTabs(root);
+			root.innerHTML = `<div role="tablist" aria-label="Sections">${good.tabs}</div>${panel('a', false) + panel('b', false)}`;
+			await Promise.resolve();
 			expect(rules()).toEqual(['tabs-panel-hidden']);
 			unbind();
 		});

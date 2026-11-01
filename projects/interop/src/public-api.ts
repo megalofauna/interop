@@ -17,7 +17,7 @@ export { bindSelectAll } from './bind-select-all';
 export { bindShortcut } from './bind-shortcut';
 export { bindSlider, paintSlider, type SliderOptions } from './bind-slider';
 export { bindSteps, type StepsChangeDetail, type StepsOptions } from './bind-steps';
-export { bindTabs, type TabsChangeDetail, type TabsOptions } from './bind-tabs';
+export { bindTabs, type TabsBinding, type TabsChangeDetail, type TabsOptions } from './bind-tabs';
 export { bindTargetCurrent } from './bind-target-current';
 export { bindTagInput, bindTags, type TagAddDetail, type TagInputOptions, type TagsOptions } from './bind-tags';
 export { bindToolbar } from './bind-toolbar';

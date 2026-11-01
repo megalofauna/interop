@@ -22,12 +22,28 @@ const PARKED = 'data-tabs-tabindex';
 /** What makes a change to the DOM a change to the tabs, as opposed to a panel's content. */
 const PARTS = '[role="tablist"], [role="tab"], [role="tabpanel"]';
 
-/** Roots whose markup showed more than one panel when they bound. The dev audit reads it. */
+/**
+ * Whether the dev audit is running. Only then does the helper note, once per element, whether the
+ * markup it first saw left more than one panel showing. Production pays nothing for it.
+ */
+let recording = false;
+const examined = new WeakSet<Element>();
 const showedPanels = new WeakSet<Element>();
 
-/** Whether `root`'s markup showed more than one panel when it bound: the author left a panel without `hidden`. */
+/** Called by the dev audit as it starts, so tabs that bind afterwards note their markup for it. */
+export function recordTabsForAudit(): void {
+	recording = true;
+}
+
+/** Whether `root`'s markup, when its tabs first appeared, left more than one panel without `hidden`. */
 export function tabsShowedPanels(root: Element): boolean {
 	return showedPanels.has(root);
+}
+
+/** A binding: call it to remove the behavior; `select` chooses a tab from code. */
+export interface TabsBinding {
+	(): void;
+	select(tab: HTMLElement): void;
 }
 
 /**
@@ -51,11 +67,17 @@ export function tabsShowedPanels(root: Element): boolean {
  *
  * Returns a function that removes the behavior.
  */
-export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => void {
+export function bindTabs(root: HTMLElement, options: TabsOptions = {}): TabsBinding {
 	const { activation = 'automatic', hash = false } = options;
 	const document = root.ownerDocument;
-	/** The selected tab as of the last change, which may since have been removed. */
+	/**
+	 * The helper's state. Every output attribute is derived from it: `aria-selected` and the tabs'
+	 * `tabindex`, and each panel's `hidden` and `tabindex`. `current` is the selected tab, which may
+	 * since have been removed; `stop` is the tab holding the tab list's one tab stop, which under
+	 * manual activation follows focus.
+	 */
 	let current: HTMLElement | null = null;
+	let stop: HTMLElement | null = null;
 	let lastIndex = 0;
 
 	const tablist = () => root.querySelector<HTMLElement>(':scope > [role="tablist"]');
@@ -75,19 +97,20 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		const id = tab.getAttribute('aria-controls');
 		return id ? byId(id) : null;
 	};
-	const selected = () => tabs().find((tab) => tab.getAttribute('aria-selected') === 'true');
+	/** The tab the markup marked selected. Read only before the helper has a selection of its own. */
+	const marked = () => tabs().find((tab) => tab.getAttribute('aria-selected') === 'true');
 
 	/**
 	 * Only the shown panel can be a tab stop. A hidden="until-found" panel keeps its box, so it stays
 	 * focusable, and a tabindex on it would be a stop with nothing visible.
 	 */
 	const setReachable = (panel: HTMLElement, shown: boolean) => {
-		// A tabindex written here is marked, so a later binding tells it from the consumer's. A consumer's
-		// waits in PARKED while the panel is hidden and comes back when it shows.
-		const own = panel.hasAttribute(REACHABLE);
+		// A tabindex the helper writes is marked, so a later binding tells it from the consumer's. A
+		// consumer's tabindex waits in PARKED while its panel is hidden, and comes back when it shows;
+		// one written onto a hidden panel later is parked too, replacing the old value.
+		const own = panel.hasAttribute(REACHABLE) && panel.getAttribute('tabindex') === '0';
 		if (!shown) {
-			if (panel.hasAttribute('tabindex') && !own && !panel.hasAttribute(PARKED))
-				panel.setAttribute(PARKED, panel.getAttribute('tabindex')!);
+			if (panel.hasAttribute('tabindex') && !own) panel.setAttribute(PARKED, panel.getAttribute('tabindex')!);
 			panel.removeAttribute('tabindex');
 			panel.removeAttribute(REACHABLE);
 			return;
@@ -96,35 +119,43 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		if (parked !== null) {
 			panel.setAttribute('tabindex', parked);
 			panel.removeAttribute(PARKED);
+			panel.removeAttribute(REACHABLE);
 			return;
 		}
-		if (panel.hasAttribute('tabindex') && !own) return;
+		if (panel.hasAttribute('tabindex') && !own) {
+			panel.removeAttribute(REACHABLE);
+			return;
+		}
 		if (!hasFocusable(panel)) {
 			if (panel.getAttribute('tabindex') !== '0') panel.tabIndex = 0;
-			if (!own) panel.setAttribute(REACHABLE, '');
+			if (!panel.hasAttribute(REACHABLE)) panel.setAttribute(REACHABLE, '');
 		} else {
 			panel.removeAttribute('tabindex');
 			panel.removeAttribute(REACHABLE);
 		}
 	};
 
-	const select = (target: HTMLElement, focus: boolean, announce = true) => {
-		const previous = current;
-		const all = tabs();
-		// State first, focus second, so the tab is announced as selected when it takes focus.
-		for (const tab of all) {
-			// Each attribute is written only when it changes.
-			const isTarget = tab === target;
-			if (tab.getAttribute('aria-selected') !== String(isTarget)) tab.setAttribute('aria-selected', String(isTarget));
-			if (tab.tabIndex !== (isTarget ? 0 : -1)) tab.tabIndex = isTarget ? 0 : -1;
+	/** Writes every output from the state, each attribute only when it differs. */
+	const apply = () => {
+		for (const tab of tabs()) {
+			const isCurrent = tab === current;
+			if (tab.getAttribute('aria-selected') !== String(isCurrent)) tab.setAttribute('aria-selected', String(isCurrent));
+			const index = tab === stop ? 0 : -1;
+			if (tab.getAttribute('tabindex') !== String(index)) tab.tabIndex = index;
 			const panel = panelOf(tab);
 			if (!panel) continue;
-			if (isTarget) panel.removeAttribute('hidden');
+			if (isCurrent) panel.removeAttribute('hidden');
 			else if (panel.getAttribute('hidden') !== 'until-found') panel.setAttribute('hidden', 'until-found');
-			setReachable(panel, isTarget);
+			setReachable(panel, isCurrent);
 		}
-		lastIndex = all.indexOf(target);
-		current = target;
+	};
+
+	const select = (target: HTMLElement, focus: boolean, announce = true) => {
+		const previous = current;
+		current = stop = target;
+		// State first, focus second, so the tab is announced as selected when it takes focus.
+		apply();
+		lastIndex = tabs().indexOf(target);
 		if (focus) target.focus();
 		if (announce && previous && previous !== target) {
 			const detail: TabsChangeDetail = { tab: target, panel: panelOf(target) };
@@ -148,15 +179,24 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	 * else the one marked, else the one at the last selected position.
 	 */
 	const reconcile = (preferred?: HTMLElement) => {
-		for (const tab of tabs()) {
+		const all = tabs();
+		if (recording && all.length && !examined.has(root)) {
+			// The first time the tabs appear, before the helper writes anything: what the markup chose.
+			examined.add(root);
+			if (all.filter((tab) => panelOf(tab)?.hasAttribute('hidden') === false).length > 1) showedPanels.add(root);
+		}
+		for (const tab of all) {
 			tab.id ||= `itx-tab-${++ids}`;
 			const panel = panelOf(tab);
 			if (panel && !panel.hasAttribute('aria-labelledby')) panel.setAttribute('aria-labelledby', tab.id);
 		}
 		const candidates = enabled();
-		const marked = preferred && candidates.includes(preferred) ? preferred : selected();
-		const target = marked && !(marked as HTMLButtonElement).disabled ? marked : candidates[Math.min(lastIndex, candidates.length - 1)];
+		// An inserted tab marked selected; else the selection the helper holds; else, before it holds
+		// one, the tab the markup marked; else the enabled tab nearest the last selected position.
+		const choice = preferred ?? (current && all.includes(current) ? current : current ? undefined : marked());
+		const target = choice && candidates.includes(choice) ? choice : candidates[Math.min(lastIndex, candidates.length - 1)];
 		if (target) select(target, false);
+		else apply();
 	};
 
 	const onKeydown = (event: KeyboardEvent) => {
@@ -189,7 +229,8 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 			select(target, true);
 			return;
 		}
-		for (const tab of tabs()) tab.tabIndex = tab === target ? 0 : -1;
+		stop = target;
+		apply();
 		target.focus();
 	};
 
@@ -203,8 +244,8 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	const onFocusout = (event: FocusEvent) => {
 		const list = tablist();
 		if (!list || list.contains(event.relatedTarget as Node | null)) return;
-		const marked = selected();
-		for (const tab of tabs()) tab.tabIndex = tab === marked ? 0 : -1;
+		stop = current;
+		apply();
 	};
 
 	// Find-in-page fires beforematch on a hidden="until-found" panel before revealing it.
@@ -218,45 +259,71 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		if (tab) select(tab, false);
 	};
 
-	// A tab or panel added or removed, or a change inside the tab list, reconciles at once. A change
-	// only inside a panel's content can change one thing, whether the shown panel needs to be a tab
-	// stop, and that is checked at most once a frame: checking reads layout.
+	// What the observer sees, and what each change does:
+	// - a tab, tab list or panel added or removed, or a tab's `disabled`, `aria-controls` or `id`, or a
+	//   panel's `id`, changed: the tabs reconcile at once;
+	// - an output written by someone else, `aria-selected` or `tabindex` on a tab, `hidden` or
+	//   `tabindex` on a panel: the state is written back;
+	// - anything inside the shown panel's content: whether that panel needs to be a tab stop is
+	//   rechecked, at most once a frame, because the check reads layout. Changes inside hidden panels
+	//   and inside a tab's own content do nothing.
 	const view = document.defaultView;
 	let frame = 0;
 	const recheckShown = () => {
 		if (frame || !view) return;
 		frame = view.requestAnimationFrame(() => {
 			frame = 0;
-			const tab = selected();
-			const panel = tab && panelOf(tab);
-			if (panel) setReachable(panel, true);
+			const panel = current && panelOf(current);
+			if (panel && !panel.hasAttribute('hidden')) setReachable(panel, true);
 		});
 	};
 	const isPart = (node: Node) => node instanceof Element && (node.matches(PARTS) || node.querySelector(PARTS) !== null);
 	const onMutation = (records: MutationRecord[]) => {
 		const list = tablist();
-		const structural = records.some(
-			(record) =>
-				(list && list.contains(record.target)) ||
-				Array.from(record.addedNodes).some(isPart) ||
-				Array.from(record.removedNodes).some(isPart),
-		);
-		if (!structural) {
-			recheckShown();
-			return;
+		const all = tabs();
+		const panels = new Set(all.map(panelOf).filter((panel) => panel !== null));
+		const shown = current && panelOf(current);
+		let structural = false;
+		let rewrite = false;
+		let recheck = false;
+		for (const record of records) {
+			const target = record.target as Element;
+			if (record.type === 'childList') {
+				if (target === list || Array.from(record.addedNodes).some(isPart) || Array.from(record.removedNodes).some(isPart))
+					structural = true;
+				else if (shown?.contains(target)) recheck = true;
+			} else if (all.includes(target as HTMLElement)) {
+				if (record.attributeName === 'aria-selected' || record.attributeName === 'tabindex') rewrite = true;
+				else structural = true;
+			} else if (panels.has(target as HTMLElement)) {
+				if (record.attributeName === 'id') structural = true;
+				else rewrite = true;
+			} else if (target === list) {
+				structural = true;
+			} else if (shown?.contains(target)) {
+				recheck = true;
+			}
 		}
-		// A tab inserted already marked selected takes the selection: the markup that added it chose it.
-		// A tab already in place says only what the helper wrote, so its attribute is not read as a choice.
-		const added = records
-			.flatMap((record) => Array.from(record.addedNodes))
-			.flatMap((node) => (node instanceof Element ? [node, ...Array.from(node.querySelectorAll('[role="tab"]'))] : []))
-			.filter((element) => element.matches('[role="tab"][aria-selected="true"]'))
-			.at(-1) as HTMLElement | undefined;
-		reconcile(added);
+		if (structural) {
+			// A tab inserted already marked selected takes the selection: the markup that added it chose it.
+			// A tab already in place carries what the helper wrote, so its attribute is not read as a choice.
+			const added = records
+				.flatMap((record) => Array.from(record.addedNodes))
+				.flatMap((node) => (node instanceof Element ? [node, ...Array.from(node.querySelectorAll('[role="tab"]'))] : []))
+				.filter((element) => element.matches('[role="tab"][aria-selected="true"]'))
+				.at(-1) as HTMLElement | undefined;
+			reconcile(added);
+		} else if (rewrite) apply();
+		else if (recheck) recheckShown();
 	};
 
 	const observer = new MutationObserver(onMutation);
-	observer.observe(root, { childList: true, subtree: true });
+	observer.observe(root, {
+		childList: true,
+		subtree: true,
+		attributes: true,
+		attributeFilter: ['aria-selected', 'tabindex', 'hidden', 'disabled', 'aria-controls', 'id'],
+	});
 	const listening = new AbortController();
 	const { signal } = listening;
 	root.addEventListener('keydown', onKeydown, { signal });
@@ -265,16 +332,27 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	root.addEventListener('beforematch', onBeforematch, { signal });
 	if (hash) document.defaultView?.addEventListener('hashchange', onHashchange, { signal });
 
-	if (tabs().filter((tab) => panelOf(tab)?.hasAttribute('hidden') === false).length > 1) showedPanels.add(root);
-	else showedPanels.delete(root);
 	reconcile();
 	const initial = hash ? fromHash() : undefined;
 	if (initial) select(initial, false, false);
 	observer.takeRecords();
 
-	return () => {
+	const unbind = () => {
 		observer.disconnect();
 		listening.abort();
 		if (frame) view?.cancelAnimationFrame(frame);
+		// A consumer's tabindex waiting on a hidden panel goes back where it was.
+		for (const panel of tabs().map(panelOf)) {
+			const parked = panel?.getAttribute(PARKED);
+			if (panel && parked != null) {
+				panel.setAttribute('tabindex', parked);
+				panel.removeAttribute(PARKED);
+			}
+		}
 	};
+	return Object.assign(unbind, {
+		select: (tab: HTMLElement) => {
+			if (tabs().includes(tab) && !(tab as HTMLButtonElement).disabled) select(tab, false);
+		},
+	});
 }
