@@ -63,7 +63,7 @@ never inside it.
 | Keys | Arrows by `aria-orientation` and writing direction, wrapping; Home and End; disabled tabs skipped; keys with a modifier left alone |
 | Activation | `automatic` (default) selects on arrow. `manual` moves focus; the button's click on Enter or Space selects |
 | Focus | State is written before focus moves. Leaving the tab list returns its tab stop to the selected tab |
-| Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. The shown panel gets `tabindex="0"` when nothing in it is focusable; hidden panels never do. A consumer's `tabindex` is left alone |
+| Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. The shown panel gets `tabindex="0"` when nothing in it is focusable; hidden panels never do. The helper marks a `tabindex` it set with `data-tabs-reachable`, so a later binding, after a move or a changed attribute, removes it from a panel that is hidden by then. A consumer's `tabindex` has no mark and is left alone |
 | Change | `interop-tabs-change` on the tab list, detail `{ tab, panel }`, when the selection changes. Not on bind |
 | Removal | A `MutationObserver` reconciles when tabs or panels are added or removed. A removed selected tab passes the selection to a neighbor |
 | Hash | With `hash: true`, the tab whose panel matches the URL fragment is selected on bind and on `hashchange`. It never writes the URL |
@@ -76,7 +76,8 @@ event.
 The element binds in `connectedCallback` and unbinds in `disconnectedCallback`,
 so markup parsed, rendered by a framework or set with `innerHTML` binds itself,
 and a removed element leaves nothing behind. A changed `itx-activation` or
-`itx-hash` rebinds. A framework that inserts the element before its children
+`itx-hash` rebinds. A `moveBefore()` move keeps the binding
+(`connectedMoveCallback`); other moves disconnect and connect, which rebinds. A framework that inserts the element before its children
 gets them bound one microtask later, through the helper's own observer, before
 the next paint. Angular needs `CUSTOM_ELEMENTS_SCHEMA` in a component that uses
 the element. Importing `interop/tabs` is a side effect, so `package.json` lists
@@ -197,6 +198,10 @@ panels went unobserved, the markup had no tab list role before upgrade, and an
 author's own role disabled it. The wrapper has none of those problems; a tab
 list and its panels need a role-less parent because ARIA has no role for the
 pair.
+
+Checked by hand in Safari (2026-10-31): find-in-page on a hidden panel's text,
+a text-fragment link, the arrow keys and the layout, on the plain page and in the
+Angular demo. All pass.
 
 ## Why the strip is not generated
 

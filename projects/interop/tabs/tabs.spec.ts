@@ -77,4 +77,37 @@ describe('<interop-tabs>', () => {
 		expect(tab('b').getAttribute('aria-selected')).toBe('true');
 		expect(panel('a').getAttribute('hidden')).toBe('until-found');
 	});
+
+	it('leaves no tab stop on a hidden panel after a rebind', () => {
+		document.body.innerHTML = `<interop-tabs>
+			<div role="tablist" aria-label="Sections">
+				<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
+				<button type="button" role="tab" aria-controls="b">B</button>
+			</div>
+			<section role="tabpanel" id="a">Text only</section>
+			<section role="tabpanel" id="b">Text only</section>
+		</interop-tabs>`;
+		const tabs = document.querySelector('interop-tabs')!;
+		const panel = (key: string) => document.getElementById(key)!;
+		expect(panel('a').tabIndex).toBe(0);
+		tabs.setAttribute('itx-activation', 'manual');
+		tabs.querySelector<HTMLElement>('[aria-controls="b"]')!.click();
+		expect(panel('b').tabIndex).toBe(0);
+		expect([panel('a').getAttribute('hidden'), panel('a').hasAttribute('tabindex')]).toEqual(['until-found', false]);
+	});
+
+	it("keeps the consumer's tabindex on a panel", () => {
+		document.body.innerHTML = `<interop-tabs>
+			<div role="tablist" aria-label="Sections">
+				<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
+				<button type="button" role="tab" aria-controls="b">B</button>
+			</div>
+			<section role="tabpanel" id="a" tabindex="-1">Text only</section>
+			<section role="tabpanel" id="b">Text only</section>
+		</interop-tabs>`;
+		const tabs = document.querySelector('interop-tabs')!;
+		tabs.setAttribute('itx-activation', 'manual');
+		tabs.querySelector<HTMLElement>('[aria-controls="b"]')!.click();
+		expect(document.getElementById('a')!.getAttribute('tabindex')).toBe('-1');
+	});
 });

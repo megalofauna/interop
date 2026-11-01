@@ -15,6 +15,9 @@ export interface TabsChangeDetail {
 	panel: HTMLElement | null;
 }
 
+/** Marks a panel whose tabindex the helper set, as opposed to the consumer. */
+const REACHABLE = 'data-tabs-reachable';
+
 /**
  * Adds tab behavior to markup the consumer writes: a `[role=tablist]` of `[role=tab]` buttons in
  * `root`, each pointing at its `[role=tabpanel]` with `aria-controls`.
@@ -39,8 +42,6 @@ export interface TabsChangeDetail {
 export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => void {
 	const { activation = 'automatic', hash = false } = options;
 	const document = root.ownerDocument;
-	/** Panels given a tabindex here, as opposed to by the consumer. */
-	const reachable = new Set<HTMLElement>();
 	/** The selected tab as of the last change, which may since have been removed. */
 	let current: HTMLElement | null = null;
 	let lastIndex = 0;
@@ -63,13 +64,14 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	 * focusable, and a tabindex on it would be a stop with nothing visible.
 	 */
 	const setReachable = (panel: HTMLElement, shown: boolean) => {
-		if (panel.hasAttribute('tabindex') && !reachable.has(panel)) return;
+		// A tabindex written here is marked on the panel, so a later binding tells it from the consumer's.
+		if (panel.hasAttribute('tabindex') && !panel.hasAttribute(REACHABLE)) return;
 		if (shown && !focusables(panel).length) {
 			panel.tabIndex = 0;
-			reachable.add(panel);
+			panel.setAttribute(REACHABLE, '');
 		} else {
 			panel.removeAttribute('tabindex');
-			reachable.delete(panel);
+			panel.removeAttribute(REACHABLE);
 		}
 	};
 

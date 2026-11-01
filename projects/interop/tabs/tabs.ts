@@ -36,6 +36,9 @@ export class InteropTabsElement extends Element {
 		this.#bind();
 	}
 
+	/** `moveBefore()` keeps the element bound where the browser supports it. Elsewhere a move disconnects and connects. */
+	connectedMoveCallback(): void {}
+
 	disconnectedCallback(): void {
 		this.#unbind?.();
 		this.#unbind = null;
