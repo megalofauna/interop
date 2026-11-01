@@ -1,9 +1,6 @@
 // Checks <interop-tabs> layout in Chromium and WebKit with panels that have a border, padding and
 // background: height, paint, clicks, find-in-page reveal (through a text fragment) and vertical tabs.
-// Serve the spike first, then run this:
-//   node spikes/custom-elements/build.mjs
-//   node spikes/custom-elements/check-tabs.mjs
-import { chromium, webkit } from "playwright";
+// Returns a list of failures; empty means it passed. Run through run-checks.mjs.
 
 const setup = () => {
 	const style = document.createElement("style");
@@ -52,50 +49,49 @@ const measure = () => {
 	};
 };
 
-for (const [name, type] of [
-	["Chromium", chromium],
-	["WebKit", webkit],
-]) {
-	const browser = await type.launch();
-	const page = await browser.newPage({
-		viewport: { width: 1000, height: 900 },
-	});
-	await page.goto("http://localhost:8137/plain.html");
+/** @param {import("playwright").Page} page @param {string} base */
+export async function checkTabs(page, base) {
+	const failures = [];
+	await page.goto(`${base}/plain.html`);
 	await page.waitForFunction(() => customElements.get("interop-tabs"));
 	await page.evaluate(setup);
 	await page.waitForTimeout(200);
 	const layout = await page.evaluate(measure);
-	await page.mouse.click(
-		...(await page.evaluate(() => {
-			const r = document
-				.querySelectorAll("#parsed [role=tab]")[2]
-				.getBoundingClientRect();
-			return [r.left + 5, r.top + 5];
-		})),
-	);
+	const expected = {
+		heightIsTabsPlusPanel: true,
+		hiddenOpacity: "0,0",
+		clickOnPanelHits: "nav",
+		clickOnTabHits: "Navigation",
+		verticalPanelBesideTabs: 24,
+		verticalSameTop: true,
+	};
+	for (const [key, value] of Object.entries(expected)) {
+		if (layout[key] !== value)
+			failures.push(`${key}: ${layout[key]}, expected ${value}`);
+	}
+
+	const third = await page.evaluate(() => {
+		const r = document
+			.querySelectorAll("#parsed [role=tab]")[2]
+			.getBoundingClientRect();
+		return [r.left + 5, r.top + 5];
+	});
+	await page.mouse.click(...third);
 	const clicked = await page.evaluate(
 		() =>
-			document
-				.querySelector("#parsed [aria-selected=true]")
-				.textContent.trim() +
-			" / life opacity " +
-			getComputedStyle(document.querySelector("#life")).opacity,
+			`${document.querySelector("#parsed [aria-selected=true]").textContent.trim()} ${getComputedStyle(document.querySelector("#life")).opacity}`,
 	);
-	await page.goto("http://localhost:8137/plain.html#:~:text=Reactor%20output");
+	if (clicked !== "Life support 1")
+		failures.push(`click on the third tab: ${clicked}`);
+
+	await page.goto(`${base}/plain.html#:~:text=Reactor%20output`);
 	await page.waitForTimeout(1200);
-	const found = await page.evaluate(() => ({
-		selected: document
-			.querySelector("#parsed [aria-selected=true]")
-			.textContent.trim(),
-		engHidden: document.querySelector("#eng").getAttribute("hidden"),
-	}));
-	console.log(
-		name,
-		JSON.stringify(
-			{ ...layout, realClickOnThirdTab: clicked, textFragment: found },
-			null,
-			1,
-		),
+	const found = await page.evaluate(
+		() =>
+			`${document.querySelector("#parsed [aria-selected=true]").textContent.trim()} ${document.querySelector("#eng").getAttribute("hidden")}`,
 	);
-	await browser.close();
+	if (found !== "Engineering null")
+		failures.push(`text fragment into a hidden panel: ${found}`);
+
+	return failures;
 }

@@ -199,6 +199,16 @@ author's own role disabled it. The wrapper has none of those problems; a tab
 list and its panels need a role-less parent because ARIA has no role for the
 pair.
 
+`npm run test:browser` checks, in Chromium and WebKit: layout, paint and clicks
+with decorated panels, find-in-page through a text fragment, and server
+rendering with `@angular/platform-server` followed by hydration, with no
+mismatch and the tabs working afterwards (`spikes/custom-elements/`).
+
+Server-rendered tabs from a `@for` template show every panel until the element
+upgrades in the browser, because the template cannot write `hidden="until-found"`
+on all but the selected panel without binding `hidden`. Static markup that
+writes it shows only the selected panel from the start.
+
 Checked by hand in Safari (2026-10-31): find-in-page on a hidden panel's text,
 a text-fragment link, the arrow keys and the layout, on the plain page and in the
 Angular demo. All pass.
