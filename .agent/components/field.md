@@ -248,3 +248,14 @@ A search clear button: Chrome and Safari have their own, and one for Firefox
 alone would only empty the field. Number steppers, a combobox. Invalid looks
 for the segmented, chips and cards templates: they show the group's message
 only.
+
+An `<interop-field>` element in place of `div[interop-field]`. A field is a
+role-less group of parts, like tabs, and a `<div>` has no semantics to lose,
+so it could be one. It isn't, because behavior is opted into by naming it:
+`<interop-password>` and `<interop-character-count>` each wrap only what they
+touch and cost a plain field nothing. A field element would have to detect
+each behavior from its children: either every field carries the password
+listeners, or the toggle becomes a document-wide delegated listener, and
+`itx-limit` moves onto the field. What it would save is one wrapper on
+counted fields. The label's `for` and the hint's `aria-describedby` stay in
+the markup either way, since they must work before script runs.
