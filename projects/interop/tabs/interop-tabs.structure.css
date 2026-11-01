@@ -94,8 +94,12 @@
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
 
-/* Every panel takes the one panels area. Overlapping, the hidden panels add no height. */
-:where(interop-tabs > [role="tabpanel"]) {
+/*
+ * Once the element is defined, every panel takes the one panels area: overlapping, the hidden
+ * panels add no height. Before that, and without JavaScript, panels stack, so a panel the author
+ * did not hide, or one find-in-page reveals, reads in turn rather than over another.
+ */
+:where(interop-tabs:defined > [role="tabpanel"]) {
 	grid-area: panels;
 }
 
@@ -104,23 +108,15 @@
 }
 
 /*
- * Before the element is defined, as with server-rendered markup waiting for its script, panels the
- * author did not hide would all show, overlapping in the panels area. When no panel carries
- * `hidden`, only the first shows: the one selected by default, so the element's upgrade moves
- * nothing. Markup that writes `hidden` itself is left as written.
- */
-:where(interop-tabs:not(:defined):not(:has(> [role="tabpanel"][hidden])) > [role="tabpanel"] ~ [role="tabpanel"]) {
-	display: none;
-}
-
-/*
  * A hidden="until-found" panel hides its content but still draws its own border, padding and
  * background. Transparent and passed through by the pointer, it shows nothing and takes no click.
- * Find-in-page still reaches it; revealing it removes `hidden`, and with it these two.
+ * Find-in-page still reaches it; revealing it removes `hidden`, and with it these two. They are
+ * `!important` because a hidden panel stays hidden: an author's opacity or an animation on panels
+ * would otherwise paint it over the shown one.
  */
 :where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
-	opacity: 0;
-	pointer-events: none;
+	opacity: 0 !important;
+	pointer-events: none !important;
 }
 
 /* ── Vertical ──────────────────────────────────────────────────────────── */

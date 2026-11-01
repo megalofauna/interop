@@ -93,5 +93,47 @@ export async function checkTabs(page, base) {
 	if (found !== "Engineering null")
 		failures.push(`text fragment into a hidden panel: ${found}`);
 
+	// Panels the author made tab stops: Tab from the selected tab reaches the shown panel, then leaves.
+	// An animation on panels does not bring a hidden one back.
+	await page.evaluate(() => {
+		const style = document.createElement("style");
+		style.textContent =
+			"@keyframes fade { from { opacity: 0.2 } to { opacity: 1 } } #stops > [role=tabpanel] { animation: fade 1s both; background: #333; }";
+		document.head.append(style);
+		document.body.insertAdjacentHTML(
+			"beforeend",
+			`<interop-tabs id="stops"><div role="tablist" aria-label="Stops"><button type="button" role="tab" aria-controls="t0" aria-selected="true">Zero</button><button type="button" role="tab" aria-controls="t1">One</button><button type="button" role="tab" aria-controls="t2">Two</button></div><section role="tabpanel" id="t0" tabindex="0">Zero</section><section role="tabpanel" id="t1" tabindex="0" hidden="until-found">One</section><section role="tabpanel" id="t2" tabindex="0" hidden="until-found">Two</section></interop-tabs><button type="button" id="after-stops">After</button>`,
+		);
+	});
+	await page.waitForFunction(
+		() => document.querySelector("#stops [role=tab]")?.id,
+	);
+	await page.focus("#stops [aria-selected=true]");
+	const order = [];
+	for (let i = 0; i < 2; i++) {
+		await page.keyboard.press("Tab");
+		order.push(await page.evaluate(() => document.activeElement.id));
+	}
+	if (order.join(" ") !== "t0 after-stops")
+		failures.push(`Tab order with panel tab stops: ${order.join(" ")}`);
+	const animated = await page.evaluate(
+		() => getComputedStyle(document.querySelector("#t1")).opacity,
+	);
+	if (animated !== "0")
+		failures.push(`a hidden panel under an animation has opacity ${animated}`);
+
+	// Inside a shadow root, panels are found in the shadow root, not the document.
+	const shadow = await page.evaluate(() => {
+		const host = document.createElement("div");
+		document.body.append(host);
+		const root = host.attachShadow({ mode: "open" });
+		root.innerHTML = `<interop-tabs><div role="tablist" aria-label="Shadow"><button type="button" role="tab" aria-controls="s1">One</button><button type="button" role="tab" aria-controls="s2">Two</button></div><section role="tabpanel" id="s1">One</section><section role="tabpanel" id="s2">Two</section></interop-tabs>`;
+		return [...root.querySelectorAll("[role=tabpanel]")]
+			.map((panel) => panel.getAttribute("hidden"))
+			.join(",");
+	});
+	if (shadow !== ",until-found")
+		failures.push(`inside a shadow root, panels hidden: ${shadow}`);
+
 	return failures;
 }

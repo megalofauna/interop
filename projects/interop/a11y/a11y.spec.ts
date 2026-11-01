@@ -339,7 +339,8 @@ class Components {
 	readonly example = 'const a = 1;\n\nconst b = 2;\n';
 }
 
-// Only what a consumer must write: the helper fills in ids, aria-labelledby, tabindex and hidden.
+// Only what a consumer must write: hidden on every panel but the selected one. The helper fills in ids,
+// aria-labelledby and tabindex.
 @Component({
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	template: `
@@ -350,7 +351,7 @@ class Components {
 					<button type="button" role="tab" aria-controls="bound-b">Second</button>
 				</div>
 				<section role="tabpanel" id="bound-a"><p>First panel.</p></section>
-				<section role="tabpanel" id="bound-b"><a href="/second">Second panel</a></section>
+				<section role="tabpanel" id="bound-b" hidden="until-found"><a href="/second">Second panel</a></section>
 			</interop-tabs>
 		</div>
 	`,

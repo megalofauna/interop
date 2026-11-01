@@ -96,18 +96,65 @@ describe('<interop-tabs>', () => {
 		expect([panel('a').getAttribute('hidden'), panel('a').hasAttribute('tabindex')]).toEqual(['until-found', false]);
 	});
 
-	it("keeps the consumer's tabindex on a panel", () => {
+	it("sets a consumer's panel tabindex aside while the panel is hidden, and puts it back when shown", () => {
 		document.body.innerHTML = `<interop-tabs>
 			<div role="tablist" aria-label="Sections">
 				<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
 				<button type="button" role="tab" aria-controls="b">B</button>
 			</div>
-			<section role="tabpanel" id="a" tabindex="-1">Text only</section>
-			<section role="tabpanel" id="b">Text only</section>
+			<section role="tabpanel" id="a" tabindex="0">Text only</section>
+			<section role="tabpanel" id="b" tabindex="0">Text only</section>
 		</interop-tabs>`;
 		const tabs = document.querySelector('interop-tabs')!;
+		const tab = (key: string) => tabs.querySelector<HTMLElement>(`[aria-controls="${key}"]`)!;
+		const panel = (key: string) => document.getElementById(key)!;
+		expect([panel('a').getAttribute('tabindex'), panel('b').hasAttribute('tabindex')]).toEqual(['0', false]);
+		tab('b').click();
+		expect([panel('a').hasAttribute('tabindex'), panel('b').getAttribute('tabindex')]).toEqual([false, '0']);
 		tabs.setAttribute('itx-activation', 'manual');
-		tabs.querySelector<HTMLElement>('[aria-controls="b"]')!.click();
-		expect(document.getElementById('a')!.getAttribute('tabindex')).toBe('-1');
+		tab('a').click();
+		expect([panel('a').getAttribute('tabindex'), panel('b').hasAttribute('tabindex')]).toEqual(['0', false]);
+		expect(panel('b').hasAttribute('data-tabs-reachable')).toBe(false);
+	});
+
+	it('ignores a malformed URL fragment under itx-hash, and binds once', () => {
+		const url = location.href;
+		history.replaceState(null, '', '#%E0%A4%A');
+		const { tabs, tab } = make('itx-hash');
+		const changes: string[] = [];
+		tabs.addEventListener('interop-tabs-change', () => changes.push('change'));
+		tabs.remove();
+		document.body.append(tabs);
+		tab('b').click();
+		expect(changes).toEqual(['change']);
+		history.replaceState(null, '', url);
+	});
+
+	it('binds its own tab list, not one nested in a panel', () => {
+		document.body.innerHTML = `<interop-tabs>
+			<section role="tabpanel" id="o1">
+				<interop-tabs>
+					<div role="tablist" aria-label="Inner"><button type="button" role="tab" aria-controls="i1">I</button></div>
+					<section role="tabpanel" id="i1">Inner</section>
+				</interop-tabs>
+			</section>
+			<section role="tabpanel" id="o2">Outer two</section>
+			<div role="tablist" aria-label="Outer">
+				<button type="button" role="tab" aria-controls="o1">O1</button>
+				<button type="button" role="tab" aria-controls="o2">O2</button>
+			</div>
+		</interop-tabs>`;
+		expect(document.getElementById('o2')!.getAttribute('hidden')).toBe('until-found');
+		expect(document.querySelector<HTMLElement>('[aria-controls="o1"]')!.tabIndex).toBe(0);
+	});
+
+	it('drops the shown panel from the tab order once its content gains something focusable', async () => {
+		const { panel } = make();
+		panel('a').textContent = 'Text only';
+		await new Promise((resolve) => requestAnimationFrame(resolve));
+		expect(panel('a').tabIndex).toBe(0);
+		panel('a').innerHTML = '<a href="#next">A link</a>';
+		await new Promise((resolve) => requestAnimationFrame(resolve));
+		expect(panel('a').hasAttribute('tabindex')).toBe(false);
 	});
 });

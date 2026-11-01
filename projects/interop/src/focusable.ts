@@ -19,6 +19,12 @@ export function isFocusable(element: Element): boolean {
 	return element.matches(FOCUSABLE) && !element.closest('[inert]') && (element as HTMLElement).checkVisibility?.() !== false;
 }
 
+/** Whether anything in `root` is reachable by the keyboard. Stops at the first, so it checks as few as it can. */
+export function hasFocusable(root: ParentNode): boolean {
+	for (const element of root.querySelectorAll(FOCUSABLE)) if (isFocusable(element)) return true;
+	return false;
+}
+
 /** The elements in `root` the keyboard can reach, in document order. */
 export function focusables(root: ParentNode): HTMLElement[] {
 	return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((element) => isFocusable(element));

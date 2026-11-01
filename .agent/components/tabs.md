@@ -47,7 +47,7 @@ The demo page is `projects/demo/src/app/components/tabs/`.
 | Wrapper | `<interop-tabs>`, holding the tab list and the panels. It has no role: ARIA has none for a tab list and its panels together, and the markup inside carries every role, so it reads right before the element upgrades. `itx-size`, `itx-variant`, `itx-activation` and `itx-hash` go here |
 | Tab list | `[role="tablist"]`, a direct child of the wrapper, named with `aria-label` or `aria-labelledby`. It owns only tabs |
 | Tab | `button[role="tab"]`, a direct child of the tab list, with `aria-controls` naming its panel. Mark the selected one `aria-selected="true"` |
-| Panel | `[role="tabpanel"]` with an `id`, a direct child of the wrapper. Write `hidden="until-found"` on every panel but the selected one, so the page renders right before the helper runs |
+| Panel | `[role="tabpanel"]` with an `id`, a direct child of the wrapper. **Required:** write `hidden="until-found"` on every panel but the selected one, so the page renders right before the element runs. In a framework's loop, bind it from the first index (`[attr.hidden]="first ? null : 'until-found'"` in Angular); the framework writes it again only when the first item changes. The dev audit flags markup that left a panel without it, even after the tabs have bound |
 
 Tabs pair with panels through `aria-controls` only, never by order, so control
 flow cannot misalign them. The consumer owns the buttons: icons, badges and
@@ -63,9 +63,9 @@ never inside it.
 | Keys | Arrows by `aria-orientation` and writing direction, wrapping; Home and End; disabled tabs skipped; keys with a modifier left alone |
 | Activation | `automatic` (default) selects on arrow. `manual` moves focus; the button's click on Enter or Space selects |
 | Focus | State is written before focus moves. Leaving the tab list returns its tab stop to the selected tab |
-| Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. The shown panel gets `tabindex="0"` when nothing in it is focusable; hidden panels never do. The helper marks a `tabindex` it set with `data-tabs-reachable`, so a later binding, after a move or a changed attribute, removes it from a panel that is hidden by then. A consumer's `tabindex` has no mark and is left alone |
+| Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. Panels are found by `id` in the document or shadow root that holds the tabs. The shown panel gets `tabindex="0"` when nothing in it is focusable, marked `data-tabs-reachable` so a later binding, after a move or a changed attribute, can remove it. A hidden panel is never a tab stop: a consumer's `tabindex` on it waits in `data-tabs-tabindex` and comes back when the panel shows. Attributes are written only when their value changes |
 | Change | `interop-tabs-change` on the tab list, detail `{ tab, panel }`, when the selection changes. Not on bind |
-| Removal | A `MutationObserver` reconciles when tabs or panels are added or removed. A removed selected tab passes the selection to a neighbor |
+| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A change only inside a panel's content rechecks whether the shown panel needs to be a tab stop, at most once a frame, because that check reads layout. Measured with five content changes to a 2,000-row panel: 14.3 ms bound against 14.2 ms unbound (Chromium), 13.0 against 12.0 (WebKit) |
 | Hash | With `hash: true`, the tab whose panel matches the URL fragment is selected on bind and on `hashchange`. It never writes the URL |
 
 The helper only sets attributes. It never inserts or moves nodes, so a
@@ -162,7 +162,7 @@ The structure file pads only the shown panel for the same reason.
 | `tabs-children` | Something other than a tab inside the tab list |
 | `tabs-panel` | A tab whose `aria-controls` names no tab panel |
 | `tabs-selected` | A tab list without exactly one selected tab |
-| `tabs-panel-hidden` | The panel of an unselected tab is not hidden |
+| `tabs-panel-hidden` | More than one panel showed before the tabs bound: the markup left a panel without `hidden`. The helper records this when it binds, so the rule fires after binding too |
 
 ## Tests
 
@@ -200,19 +200,23 @@ list and its panels need a role-less parent because ARIA has no role for the
 pair.
 
 `npm run test:browser` checks, in Chromium and WebKit: layout, paint and clicks
-with decorated panels, find-in-page through a text fragment, and server
-rendering with `@angular/platform-server` followed by hydration, with no
+with decorated panels, find-in-page through a text fragment, the Tab order with
+panels the author made tab stops, an animation on panels, tabs inside a shadow
+root, and server rendering with `@angular/platform-server` followed by hydration, with no
 mismatch and the tabs working afterwards (`spikes/custom-elements/`).
 
-Until the element is defined, as with server-rendered markup waiting for its
-script, tabs whose panels carry no `hidden` show only the first panel, the one
-selected by default (`:not(:defined)` in the structure file). A `@for` template
-cannot write `hidden="until-found"` on all but one panel without binding
-`hidden`, so without the rule every panel would show, overlapping in the panels
-area, until the upgrade. The height before and after the upgrade is the same.
-Markup that writes `hidden` itself is left as written. Without JavaScript the
-other panels stay hidden; the rule trades that case for no jank in the common
-one.
+Panels overlap in the shared area only once the element is defined. Before
+that, and without JavaScript, they stack: a panel the author left visible, or
+one find-in-page reveals, reads in turn rather than over another. The author's
+`hidden="until-found"` is what makes the page right before the script runs; with
+it, the height before and after the upgrade is the same. Hidden panels' opacity
+and pointer events are `!important`, so an author's opacity or an animation on
+panels cannot paint a hidden one over the shown one.
+
+The tab list is the wrapper's direct child (`:scope > [role="tablist"]`), so a
+tab list nested inside a panel belongs to its own tabs. The dev audit accepts
+`presentation` and `none` elements between a tab list and its tabs, as ARIA
+does.
 
 Checked by hand in Safari (2026-10-31): find-in-page on a hidden panel's text,
 a text-fragment link, the arrow keys and the layout, on the plain page and in the

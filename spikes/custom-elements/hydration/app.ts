@@ -16,8 +16,12 @@ import "interop/tabs";
 					</button>
 				}
 			</div>
-			@for (log of logs(); track log.id) {
-				<section role="tabpanel" [id]="log.id">
+			@for (log of logs(); track log.id; let first = $first) {
+				<section
+					role="tabpanel"
+					[id]="log.id"
+					[attr.hidden]="first ? null : 'until-found'"
+				>
 					<p>{{ log.text }}</p>
 				</section>
 			}

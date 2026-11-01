@@ -1,5 +1,5 @@
 import { isRtl } from './direction';
-import { focusables } from './focusable';
+import { hasFocusable } from './focusable';
 
 let ids = 0;
 
@@ -17,6 +17,18 @@ export interface TabsChangeDetail {
 
 /** Marks a panel whose tabindex the helper set, as opposed to the consumer. */
 const REACHABLE = 'data-tabs-reachable';
+/** Holds a consumer's tabindex while its panel is hidden, so a hidden panel is never a tab stop. */
+const PARKED = 'data-tabs-tabindex';
+/** What makes a change to the DOM a change to the tabs, as opposed to a panel's content. */
+const PARTS = '[role="tablist"], [role="tab"], [role="tabpanel"]';
+
+/** Roots whose markup showed more than one panel when they bound. The dev audit reads it. */
+const showedPanels = new WeakSet<Element>();
+
+/** Whether `root`'s markup showed more than one panel when it bound: the author left a panel without `hidden`. */
+export function tabsShowedPanels(root: Element): boolean {
+	return showedPanels.has(root);
+}
 
 /**
  * Adds tab behavior to markup the consumer writes: a `[role=tablist]` of `[role=tab]` buttons in
@@ -46,16 +58,22 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	let current: HTMLElement | null = null;
 	let lastIndex = 0;
 
-	const tablist = () => root.querySelector<HTMLElement>('[role="tablist"]');
+	const tablist = () => root.querySelector<HTMLElement>(':scope > [role="tablist"]');
 	const tabs = () => {
 		const list = tablist();
 		if (!list) return [];
 		return Array.from(list.querySelectorAll<HTMLElement>('[role="tab"]')).filter((tab) => tab.closest('[role="tablist"]') === list);
 	};
 	const enabled = () => tabs().filter((tab) => !(tab as HTMLButtonElement).disabled);
+	/** By id, in the document or shadow root that holds the tabs, so tabs work inside a shadow root too. */
+	const byId = (id: string): HTMLElement | null => {
+		const scope = root.getRootNode() as ParentNode & Partial<NonElementParentNode>;
+		if (typeof scope.getElementById === 'function') return scope.getElementById(id) as HTMLElement | null;
+		return Array.from(scope.querySelectorAll<HTMLElement>('[id]')).find((element) => element.id === id) ?? null;
+	};
 	const panelOf = (tab: HTMLElement) => {
 		const id = tab.getAttribute('aria-controls');
-		return id ? document.getElementById(id) : null;
+		return id ? byId(id) : null;
 	};
 	const selected = () => tabs().find((tab) => tab.getAttribute('aria-selected') === 'true');
 
@@ -64,11 +82,26 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	 * focusable, and a tabindex on it would be a stop with nothing visible.
 	 */
 	const setReachable = (panel: HTMLElement, shown: boolean) => {
-		// A tabindex written here is marked on the panel, so a later binding tells it from the consumer's.
-		if (panel.hasAttribute('tabindex') && !panel.hasAttribute(REACHABLE)) return;
-		if (shown && !focusables(panel).length) {
-			panel.tabIndex = 0;
-			panel.setAttribute(REACHABLE, '');
+		// A tabindex written here is marked, so a later binding tells it from the consumer's. A consumer's
+		// waits in PARKED while the panel is hidden and comes back when it shows.
+		const own = panel.hasAttribute(REACHABLE);
+		if (!shown) {
+			if (panel.hasAttribute('tabindex') && !own && !panel.hasAttribute(PARKED))
+				panel.setAttribute(PARKED, panel.getAttribute('tabindex')!);
+			panel.removeAttribute('tabindex');
+			panel.removeAttribute(REACHABLE);
+			return;
+		}
+		const parked = panel.getAttribute(PARKED);
+		if (parked !== null) {
+			panel.setAttribute('tabindex', parked);
+			panel.removeAttribute(PARKED);
+			return;
+		}
+		if (panel.hasAttribute('tabindex') && !own) return;
+		if (!hasFocusable(panel)) {
+			if (panel.getAttribute('tabindex') !== '0') panel.tabIndex = 0;
+			if (!own) panel.setAttribute(REACHABLE, '');
 		} else {
 			panel.removeAttribute('tabindex');
 			panel.removeAttribute(REACHABLE);
@@ -80,13 +113,14 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		const all = tabs();
 		// State first, focus second, so the tab is announced as selected when it takes focus.
 		for (const tab of all) {
+			// Each attribute is written only when it changes.
 			const isTarget = tab === target;
-			tab.setAttribute('aria-selected', String(isTarget));
-			tab.tabIndex = isTarget ? 0 : -1;
+			if (tab.getAttribute('aria-selected') !== String(isTarget)) tab.setAttribute('aria-selected', String(isTarget));
+			if (tab.tabIndex !== (isTarget ? 0 : -1)) tab.tabIndex = isTarget ? 0 : -1;
 			const panel = panelOf(tab);
 			if (!panel) continue;
 			if (isTarget) panel.removeAttribute('hidden');
-			else panel.setAttribute('hidden', 'until-found');
+			else if (panel.getAttribute('hidden') !== 'until-found') panel.setAttribute('hidden', 'until-found');
 			setReachable(panel, isTarget);
 		}
 		lastIndex = all.indexOf(target);
@@ -99,7 +133,13 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	};
 
 	const fromHash = () => {
-		const id = decodeURIComponent(document.defaultView?.location.hash.slice(1) ?? '');
+		let id = '';
+		try {
+			id = decodeURIComponent(document.defaultView?.location.hash.slice(1) ?? '');
+		} catch {
+			// A malformed fragment, such as a lone %, names no panel.
+			return undefined;
+		}
 		return id ? enabled().find((tab) => tab.getAttribute('aria-controls') === id) : undefined;
 	};
 
@@ -175,7 +215,34 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		if (tab) select(tab, false);
 	};
 
-	const observer = new MutationObserver(reconcile);
+	// A tab or panel added or removed, or a change inside the tab list, reconciles at once. A change
+	// only inside a panel's content can change one thing, whether the shown panel needs to be a tab
+	// stop, and that is checked at most once a frame: checking reads layout.
+	const view = document.defaultView;
+	let frame = 0;
+	const recheckShown = () => {
+		if (frame || !view) return;
+		frame = view.requestAnimationFrame(() => {
+			frame = 0;
+			const tab = selected();
+			const panel = tab && panelOf(tab);
+			if (panel) setReachable(panel, true);
+		});
+	};
+	const isPart = (node: Node) => node instanceof Element && (node.matches(PARTS) || node.querySelector(PARTS) !== null);
+	const onMutation = (records: MutationRecord[]) => {
+		const list = tablist();
+		const structural = records.some(
+			(record) =>
+				(list && list.contains(record.target)) ||
+				Array.from(record.addedNodes).some(isPart) ||
+				Array.from(record.removedNodes).some(isPart),
+		);
+		if (structural) reconcile();
+		else recheckShown();
+	};
+
+	const observer = new MutationObserver(onMutation);
 	observer.observe(root, { childList: true, subtree: true });
 	const listening = new AbortController();
 	const { signal } = listening;
@@ -185,6 +252,8 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	root.addEventListener('beforematch', onBeforematch, { signal });
 	if (hash) document.defaultView?.addEventListener('hashchange', onHashchange, { signal });
 
+	if (tabs().filter((tab) => panelOf(tab)?.hasAttribute('hidden') === false).length > 1) showedPanels.add(root);
+	else showedPanels.delete(root);
 	reconcile();
 	const initial = hash ? fromHash() : undefined;
 	if (initial) select(initial, false, false);
@@ -193,5 +262,6 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 	return () => {
 		observer.disconnect();
 		listening.abort();
+		if (frame) view?.cancelAnimationFrame(frame);
 	};
 }
