@@ -1,22 +1,24 @@
 # Tabs — Mental Model Card
 
-Tabs show one of several sections at a time. The consumer writes the markup.
-`<interop-tablist>` is the tab list; importing `interop/tabs` defines it, and
-the element calls `bindTabs()` on itself. CSS draws it. It works the same in
-any framework or none. Research: [prompts/TABS-RESEARCH.md](../../prompts/TABS-RESEARCH.md),
+Tabs show one of several sections at a time. The consumer writes the markup
+inside `<interop-tabs>`; importing `interop/tabs` defines the element, which
+calls `bindTabs()` on itself. CSS draws it. It works the same in any framework
+or none. Research: [prompts/TABS-RESEARCH.md](../../prompts/TABS-RESEARCH.md),
 [prompts/TABS-SEGMENTED-RELATIONSHIP.md](../../prompts/TABS-SEGMENTED-RELATIONSHIP.md).
 
 ```html
-<interop-tablist aria-label="Station systems">
-  <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
-  <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
-</interop-tablist>
-<section role="tabpanel" id="nav">…</section>
-<section role="tabpanel" id="eng" hidden="until-found">…</section>
+<interop-tabs>
+  <div role="tablist" aria-label="Station systems">
+    <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
+    <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
+  </div>
+  <section role="tabpanel" id="nav">…</section>
+  <section role="tabpanel" id="eng" hidden="until-found">…</section>
+</interop-tabs>
 ```
 
 ```ts
-import "interop/tabs"; // once, anywhere: defines <interop-tablist>
+import "interop/tabs"; // once, anywhere: defines <interop-tabs>
 ```
 
 Use tabs to show a different section. To choose a value or a view of the same
@@ -29,8 +31,8 @@ look the same; they announce differently.
 projects/interop/tabs/
   interop-tabs.structure.css   tabs, panels, vertical layout; names list at the top
   interop-tabs.base.css        token values and size steps
-  tabs.ts                      InteropTablistElement, defined as <interop-tablist> on import
-  public-api.ts                exports InteropTablistElement
+  tabs.ts                      InteropTabsElement, defined as <interop-tabs> on import
+  public-api.ts                exports InteropTabsElement
 projects/interop/src/bind-tabs.ts      the behavior, framework-free
 projects/interop/styles/segmented.css  the segmented look, shared with the radio group
 projects/interop/styles/underscore.css the rule and bar, shared with the page nav
@@ -42,9 +44,10 @@ The demo page is `projects/demo/src/app/components/tabs/`.
 
 | Element | Requirement |
 |---|---|
-| Tab list | `<interop-tablist>`, named with `aria-label` or `aria-labelledby`. It takes `role="tablist"` unless it has one, and owns only tabs. `itx-size`, `itx-variant`, `itx-activation`, `itx-hash` and `aria-orientation` go here |
+| Wrapper | `<interop-tabs>`, holding the tab list and the panels. It has no role: ARIA has none for a tab list and its panels together, and the markup inside carries every role, so it reads right before the element upgrades. `itx-size`, `itx-variant`, `itx-activation` and `itx-hash` go here |
+| Tab list | `[role="tablist"]`, a direct child of the wrapper, named with `aria-label` or `aria-labelledby`. It owns only tabs |
 | Tab | `button[role="tab"]`, a direct child of the tab list, with `aria-controls` naming its panel. Mark the selected one `aria-selected="true"` |
-| Panel | `[role="tabpanel"]` with an `id`, anywhere in the document; the look expects it to follow the tab list as a sibling. Write `hidden="until-found"` on every panel but the selected one, so the page renders right before the element runs |
+| Panel | `[role="tabpanel"]` with an `id`, a direct child of the wrapper. Write `hidden="until-found"` on every panel but the selected one, so the page renders right before the helper runs |
 
 Tabs pair with panels through `aria-controls` only, never by order, so control
 flow cannot misalign them. The consumer owns the buttons: icons, badges and
@@ -71,19 +74,13 @@ framework's renderer, control flow and hydration keep the DOM. Do not bind
 event.
 
 The element binds in `connectedCallback` and unbinds in `disconnectedCallback`,
-so markup parsed, inserted by a framework or set with `innerHTML` all binds
-itself, and a removed tab list leaves nothing behind. A changed `itx-activation` or
-`itx-hash` attribute rebinds. A framework that inserts the element before its tabs
+so markup parsed, rendered by a framework or set with `innerHTML` binds itself,
+and a removed element leaves nothing behind. A changed `itx-activation` or
+`itx-hash` rebinds. A framework that inserts the element before its children
 gets them bound one microtask later, through the helper's own observer, before
 the next paint. Angular needs `CUSTOM_ELEMENTS_SCHEMA` in a component that uses
 the element. Importing `interop/tabs` is a side effect, so `package.json` lists
 the entry under `sideEffects`; without it a bundler drops the import.
-
-The panels can sit outside the tab list, so `beforematch` is heard on the
-document. A `hidden="until-found"` panel keeps an empty box for find-in-page,
-and in a flex or grid parent with a `gap` each one would add a gap, so hidden
-panels are `position: absolute`: out of the layout, still findable. A panel added later on its own, without a tab, is not seen until the
-tab list next changes.
 
 ## Look
 
@@ -94,10 +91,7 @@ tab list next changes.
 | `itx-variant="segmented icon"` | Square segments; name each with visually hidden text |
 
 `aria-orientation="vertical"` on the tab list stands it beside the panels with
-the rule and bar on its inline-end edge: the tab list's parent becomes a two-column
-grid, and the panels share the cell beside it. CSS reads the ARIA attribute
-directly. A horizontal tab list stretches across a flex or grid column, so its
-rule spans the container.
+the rule and bar on its inline-end edge. CSS reads the ARIA attribute directly.
 
 The tab list scrolls when its tabs overflow. A scroll container clips its
 children to its padding box, so the bar sits on the rule rather than over it.
@@ -164,12 +158,12 @@ The structure file pads only the shown panel for the same reason.
 - `src/bind-tabs.spec.ts`: keyboard, activation, the tab stop, panels,
   find-in-page, removal, the hash, and that a tab is selected before it takes
   focus, so it is announced as selected.
-- `tabs/tabs.spec.ts`: the element on plain DOM: upgrade of inserted HTML, the
-  role, find-in-page with panels outside it, manual activation and its rebind,
-  tabs added after connection, unbinding on removal.
+- `tabs/tabs.spec.ts`: the element on plain DOM: upgrade of inserted HTML, no
+  role of its own, find-in-page, manual activation and its rebind, children
+  added after connection, unbinding on removal.
 - `a11y/a11y.spec.ts`: axe on written markup, inside unselected panels (a
   second pass reveals them, since jsdom hides `hidden="until-found"`), and on
-  the minimal markup after `<interop-tablist>` binds it.
+  the minimal markup after `<interop-tabs>` binds it.
 - `styles/contrast.spec.ts` (text 4.5:1, selected bar 3:1),
   `target-size.spec.ts`, `radius.spec.ts`, `forced-colors.spec.ts`,
   `motion.spec.ts`, and `src/audit.spec.ts`.
@@ -184,11 +178,15 @@ The structure file pads only the shown panel for the same reason.
 ## Spike record
 
 Tabs are the first component built as a custom element (branch
-`itx-custom-elements-00`). Verified in Chromium 2026-10-31: the Angular demo
-(inserted examples and a `@for` template), a plain HTML page (parsed, set with
-`innerHTML`, connected before its tabs) and React 19
-(`spikes/custom-elements/`). The entry is 1,821 B gzip, 209 B over `bindTabs`
-alone.
+`itx-custom-elements-00`), checked in Chromium in the Angular demo, a plain HTML
+page and React 19 (`spikes/custom-elements/`). The entry is about 1.8 kB gzip,
+about 215 B over `bindTabs` alone. A version where the element was the tab list
+itself, with the panels as siblings, was dropped after review: hidden panels
+added gaps in flex and grid parents, the fix painted them over the tabs, late
+panels went unobserved, the markup had no tab list role before upgrade, and an
+author's own role disabled it. The wrapper has none of those problems; a tab
+list and its panels need a role-less parent because ARIA has no role for the
+pair.
 
 ## Why the strip is not generated
 

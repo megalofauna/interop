@@ -160,21 +160,21 @@ Two namespaces, plus the platform's own attributes. Never mix their roles.
 
 | Prefix | Role | Examples |
 |---|---|---|
-| `interop-*` | **Identity**: what the element is. An attribute on a native element, or the tag of an Interop custom element | `interop-button`, `interop-dialog`, `<interop-tablist>` |
+| `interop-*` | **Identity**: what the element is. An attribute on a native element, or the tag of an Interop custom element | `interop-button`, `interop-dialog`, `<interop-tabs>` |
 | `itx-*` | **Configuration**: every attribute Interop defines to configure a component, whether the axis is shared across components or belongs to one | `itx-size="md"`, `itx-color="danger"`, `itx-variant="segmented"`, `itx-activation="manual"` |
 | none | **HTML and ARIA**: the platform's attributes, which Interop reads but never renames | `aria-label`, `aria-orientation`, `hidden`, `commandfor` |
 
 Rules:
 - `interop-*` answers **what is this element**. Never use it to configure appearance.
 - `itx-*` answers **how Interop is configured for it**. A shared axis keeps one name everywhere: `itx-size` means the same on a button, a segmented control and a tab list. Anything Interop invents carries the prefix, so it never collides with an attribute HTML adds later, and the markup shows which attributes are Interop's and which are the platform's.
-- **Variant** on an attribute component is a value on the identity attribute: `interop-button="primary"`, targeted with `[interop-button~="primary"]`. `interop-button` with no value is the default. A custom element has no identity attribute to hold it, so its variant is `itx-variant`: `<interop-tablist itx-variant="segmented">`.
+- **Variant** on an attribute component is a value on the identity attribute: `interop-button="primary"`, targeted with `[interop-button~="primary"]`. `interop-button` with no value is the default. A custom element has no identity attribute to hold it, so its variant is `itx-variant`: `<interop-tabs itx-variant="segmented">`.
 - `data-*` remains correct for **component-internal state** (`data-has-selection`, `data-thumb-role`), never consumer-facing.
 
 Well-formed examples:
 ```html
 <!-- identity        configuration -->
 <span interop-badge="dot" itx-size="sm" itx-color="info">New activity</span>
-<interop-tablist itx-variant="segmented" itx-size="sm" aria-label="Report">…</interop-tablist>
+<interop-tabs itx-variant="segmented" itx-size="sm">…</interop-tabs>
 ```
 
 CSS selectors follow the same split:

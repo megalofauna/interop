@@ -60,26 +60,30 @@
 					"div",
 					null,
 					h(
-						"interop-tablist",
-						{ ref: tabs, "itx-activation": "manual", "aria-label": "Logs" },
-						logs.map((log) =>
-							h(
-								"button",
-								{
-									key: log.id,
-									type: "button",
-									role: "tab",
-									"aria-controls": log.id,
-								},
-								log.name,
+						"interop-tabs",
+						{ ref: tabs, "itx-activation": "manual" },
+						h(
+							"div",
+							{ role: "tablist", "aria-label": "Logs" },
+							logs.map((log) =>
+								h(
+									"button",
+									{
+										key: log.id,
+										type: "button",
+										role: "tab",
+										"aria-controls": log.id,
+									},
+									log.name,
+								),
 							),
 						),
-					),
-					logs.map((log) =>
-						h(
-							"section",
-							{ key: log.id, role: "tabpanel", id: log.id },
-							h("p", null, `${log.name} entry.`),
+						logs.map((log) =>
+							h(
+								"section",
+								{ key: log.id, role: "tabpanel", id: log.id },
+								h("p", null, `${log.name} entry.`),
+							),
 						),
 					),
 					h("p", null, `Last change: ${last || "none"}`),

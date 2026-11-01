@@ -250,7 +250,7 @@ describe('auditInterop', () => {
 
 	describe('tabs', () => {
 		const tabs = ({ name = 'aria-label="Sections"', tabs: tabMarkup = '', panels = '' } = {}) =>
-			`<interop-tablist ${name}>${tabMarkup}</interop-tablist>${panels}`;
+			`<interop-tabs><div role="tablist" ${name}>${tabMarkup}</div>${panels}</interop-tabs>`;
 		const tab = (key: string, selected: boolean) =>
 			`<button type="button" role="tab" aria-controls="p-${key}" aria-selected="${selected}">${key}</button>`;
 		const panel = (key: string, hidden: boolean) =>

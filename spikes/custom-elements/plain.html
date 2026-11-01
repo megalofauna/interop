@@ -18,45 +18,58 @@
 		<h1>interop/tabs on a plain page</h1>
 
 		<h2>Parsed markup</h2>
-		<interop-tablist id="parsed" aria-label="Station systems">
-			<button type="button" role="tab" aria-controls="nav" aria-selected="true">
-				Navigation
-			</button>
-			<button type="button" role="tab" aria-controls="eng">Engineering</button>
-			<button type="button" role="tab" aria-controls="life">
-				Life support
-			</button>
-		</interop-tablist>
-		<section role="tabpanel" id="nav"><p>Course plotted.</p></section>
-		<section role="tabpanel" id="eng" hidden="until-found">
-			<p>Reactor output steady.</p>
-		</section>
-		<section role="tabpanel" id="life" hidden="until-found">
-			<p>Oxygen nominal.</p>
-		</section>
+		<interop-tabs id="parsed">
+			<div role="tablist" aria-label="Station systems">
+				<button
+					type="button"
+					role="tab"
+					aria-controls="nav"
+					aria-selected="true"
+				>
+					Navigation
+				</button>
+				<button type="button" role="tab" aria-controls="eng">
+					Engineering
+				</button>
+				<button type="button" role="tab" aria-controls="life">
+					Life support
+				</button>
+			</div>
+			<section role="tabpanel" id="nav"><p>Course plotted.</p></section>
+			<section role="tabpanel" id="eng" hidden="until-found">
+				<p>Reactor output steady.</p>
+			</section>
+			<section role="tabpanel" id="life" hidden="until-found">
+				<p>Oxygen nominal.</p>
+			</section>
+		</interop-tabs>
 
 		<h2>Inserted with innerHTML</h2>
 		<div id="later"></div>
 
-		<h2>In the page before its tabs</h2>
+		<h2>In the page before its children</h2>
 		<div id="built"></div>
 
 		<script type="module">
 			document.querySelector("#later").innerHTML = `
-				<interop-tablist id="inserted" itx-variant="segmented" aria-label="Report">
-					<button type="button" role="tab" aria-controls="daily">Daily</button>
-					<button type="button" role="tab" aria-controls="weekly">Weekly</button>
-				</interop-tablist>
-				<section role="tabpanel" id="daily"><p>Daily report.</p></section>
-				<section role="tabpanel" id="weekly"><p>Weekly report.</p></section>`;
+				<interop-tabs id="inserted" itx-variant="segmented">
+					<div role="tablist" aria-label="Report">
+						<button type="button" role="tab" aria-controls="daily">Daily</button>
+						<button type="button" role="tab" aria-controls="weekly">Weekly</button>
+					</div>
+					<section role="tabpanel" id="daily"><p>Daily report.</p></section>
+					<section role="tabpanel" id="weekly"><p>Weekly report.</p></section>
+				</interop-tabs>`;
 
-			// The tab list is in the page before it has tabs, as when a parser or a framework inserts
-			// the host first.
-			const built = document.querySelector("#built");
-			const list = document.createElement("interop-tablist");
-			list.id = "built-tabs";
+			// The element is in the page before it has children, as when a parser or a framework
+			// inserts the host first.
+			const tabs = document.createElement("interop-tabs");
+			tabs.id = "built-tabs";
+			document.querySelector("#built").append(tabs);
+			const list = document.createElement("div");
+			list.setAttribute("role", "tablist");
 			list.setAttribute("aria-label", "Built");
-			built.append(list);
+			tabs.append(list);
 			for (const name of ["one", "two"]) {
 				const tab = document.createElement("button");
 				tab.type = "button";
@@ -68,7 +81,7 @@
 				panel.setAttribute("role", "tabpanel");
 				panel.id = `built-${name}`;
 				panel.textContent = `Panel ${name}`;
-				built.append(panel);
+				tabs.append(panel);
 			}
 		</script>
 	</body>

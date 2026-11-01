@@ -65,7 +65,7 @@ export class TabsDemo {
 		return () => root.removeEventListener("interop-tabs-change", changed);
 	};
 
-	protected readonly mainTs = `// Once, anywhere: defines <interop-tablist>.
+	protected readonly mainTs = `// Once, anywhere: defines <interop-tabs>.
 import "interop/tabs";
 
 // Fires on the tab list when a different tab is selected.

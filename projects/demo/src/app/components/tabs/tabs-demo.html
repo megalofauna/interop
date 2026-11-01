@@ -2,8 +2,8 @@
 <p class="aka"><em>Also known as tab list, tab group, tab strip, pivot.</em></p>
 <p>
 	Tabs show one of several sections at a time. You write the tab list and the
-	panels, and each tab names its panel with <code>aria-controls</code>. The tab
-	list is <code>&lt;interop-tablist&gt;</code>, and the panels follow it. Import
+	panels, and each tab names its panel with <code>aria-controls</code>. Wrap
+	them in <code>&lt;interop-tabs&gt;</code> and import
 	<code>interop/tabs</code> once: the import defines the element, which adds the
 	keyboard, selection and panel hiding wherever the markup appears, in any
 	framework or none. To choose a value or a view of the same content, use a
@@ -25,24 +25,26 @@
 <h2>In a framework's template</h2>
 <p>
 	Angular renders these tabs from a list. Adding or removing a tab needs no
-	extra call: the tab list reconciles its own tabs, and a removed selected tab
-	passes the selection to a neighbor. The template leaves
+	extra call: the element reconciles its own children, and a removed selected
+	tab passes the selection to a neighbor. The template leaves
 	<code>aria-selected</code> and <code>hidden</code> to the element. Angular
 	needs <code>CUSTOM_ELEMENTS_SCHEMA</code> in the component that uses the
 	element.
 </p>
-<interop-tablist #logTabs aria-label="Logs">
+<interop-tabs #logTabs>
+	<div role="tablist" aria-label="Logs">
+		@for (log of logs(); track log.id) {
+			<button type="button" role="tab" [attr.aria-controls]="log.id">
+				{{ log.name }}
+			</button>
+		}
+	</div>
 	@for (log of logs(); track log.id) {
-		<button type="button" role="tab" [attr.aria-controls]="log.id">
-			{{ log.name }}
-		</button>
+		<section role="tabpanel" [id]="log.id">
+			<p>{{ log.text }}</p>
+		</section>
 	}
-</interop-tablist>
-@for (log of logs(); track log.id) {
-	<section role="tabpanel" [id]="log.id">
-		<p>{{ log.text }}</p>
-	</section>
-}
+</interop-tabs>
 <p>
 	<button interop-button type="button" (click)="addLog()">Add a log</button>
 	<button interop-button type="button" (click)="removeSelected(logTabs)">
