@@ -267,6 +267,11 @@ describe('auditInterop', () => {
 			expect(rules()).toEqual(['tabs-name']);
 		});
 
+		it('checks a tab list outside <interop-tabs> too', () => {
+			render(`<div><div role="tablist">${good.tabs}</div>${good.panels}</div>`);
+			expect(rules()).toEqual(['tabs-name']);
+		});
+
 		it('flags a tab list with no tabs', () => {
 			render(tabs({ tabs: '', panels: '' }));
 			expect(rules()).toEqual(['tabs-empty']);
