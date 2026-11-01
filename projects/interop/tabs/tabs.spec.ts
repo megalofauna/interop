@@ -1,3 +1,4 @@
+import { bindTabs } from 'interop';
 import { InteropTabsElement } from './tabs';
 
 const markup = `
@@ -221,43 +222,119 @@ describe('<interop-tabs>', () => {
 			const { tab, panel, settle } = setup();
 			tab('a').setAttribute('aria-controls', 'd');
 			await settle();
-			expect([panel('d').hasAttribute('hidden'), panel('a').hasAttribute('hidden')]).toEqual([false, false]);
+			expect([panel('d').hasAttribute('hidden'), panel('a').getAttribute('hidden')]).toEqual([false, 'until-found']);
 			expect(tab('d').getAttribute('aria-selected')).toBe('true');
 		});
 
-		it('hides again a panel someone else shows, and ignores aria-selected written onto a tab in place', async () => {
-			const { tab, panel, settle } = setup();
-			panel('c').removeAttribute('hidden');
+		it('keeps its own selection when someone else writes aria-selected onto a tab in place', async () => {
+			const { tab, settle } = setup();
 			tab('c').setAttribute('aria-selected', 'true');
 			await settle();
-			expect([panel('c').getAttribute('hidden'), tab('c').getAttribute('aria-selected'), tab('a').getAttribute('aria-selected')]).toEqual([
-				'until-found',
-				'false',
-				'true',
-			]);
+			tab('a').focus();
+			tab('a').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+			expect([tab('b').getAttribute('aria-selected'), tab('c').getAttribute('aria-selected')]).toEqual(['true', 'false']);
 		});
 
-		it('keeps the manual tab stop on the focused tab when outputs are rewritten', async () => {
+		it('keeps the manual tab stop on the focused tab across a structural change', async () => {
 			const { tabs, tab, settle } = setup();
 			tabs.setAttribute('itx-activation', 'manual');
 			tab('a').focus();
 			tab('a').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
-			tab('a').setAttribute('tabindex', '0');
+			(tab('c') as HTMLButtonElement).disabled = true;
 			await settle();
 			expect([tab('a').tabIndex, tab('b').tabIndex, tab('a').getAttribute('aria-selected')]).toEqual([-1, 0, 'true']);
 		});
 
-		it('parks a tabindex written onto a hidden panel, and gives it back on unbind', async () => {
-			const { tabs, panel, settle } = setup();
-			panel('b').setAttribute('tabindex', '0');
-			await settle();
-			expect([panel('b').hasAttribute('tabindex'), panel('b').getAttribute('data-tabs-tabindex')]).toEqual([false, '0']);
-			panel('b').setAttribute('tabindex', '-1');
-			await settle();
-			expect(panel('b').getAttribute('data-tabs-tabindex')).toBe('-1');
-			const b = panel('b');
+		it("parks a consumer's tabindex when its panel is hidden, keeps it parked on unbind, and drops its own", () => {
+			document.body.innerHTML = `<interop-tabs>
+				<div role="tablist" aria-label="Sections">
+					<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
+					<button type="button" role="tab" aria-controls="b">B</button>
+				</div>
+				<section role="tabpanel" id="a" tabindex="0">Text only</section>
+				<section role="tabpanel" id="b" hidden="until-found">Text only</section>
+			</interop-tabs>`;
+			const tabs = document.querySelector('interop-tabs')!;
+			const a = document.getElementById('a')!;
+			const b = document.getElementById('b')!;
+			tabs.select('b');
+			expect([a.hasAttribute('tabindex'), a.getAttribute('data-tabs-tabindex'), b.getAttribute('tabindex')]).toEqual([false, '0', '0']);
 			tabs.remove();
-			expect([b.getAttribute('tabindex'), b.hasAttribute('data-tabs-tabindex')]).toEqual(['-1', false]);
+			expect([a.hasAttribute('tabindex'), a.getAttribute('data-tabs-tabindex'), b.hasAttribute('tabindex')]).toEqual([false, '0', false]);
+		});
+
+		it('shows a panel two tabs share for whichever is selected, without a loop', () => {
+			document.body.innerHTML = `<interop-tabs>
+				<div role="tablist" aria-label="Sections">
+					<button type="button" role="tab" aria-controls="one" aria-selected="true">A</button>
+					<button type="button" role="tab" aria-controls="one">B</button>
+				</div>
+				<section role="tabpanel" id="one">Shared</section>
+			</interop-tabs>`;
+			const panel = document.getElementById('one')!;
+			expect(panel.hasAttribute('hidden')).toBe(false);
+			document.querySelectorAll<HTMLElement>('[role="tab"]')[1].click();
+			expect(panel.hasAttribute('hidden')).toBe(false);
+		});
+
+		it('skips a hidden tab like a disabled one', async () => {
+			const { tab, settle } = setup();
+			tab('b').hidden = true;
+			await settle();
+			tab('a').focus();
+			tab('a').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+			expect(tab('c').getAttribute('aria-selected')).toBe('true');
+		});
+
+		it('passes the selection to the next available tab, counting positions among all tabs', async () => {
+			document.body.innerHTML = `<interop-tabs>
+				<div role="tablist" aria-label="Sections">
+					<button type="button" role="tab" aria-controls="x" disabled>X</button>
+					<button type="button" role="tab" aria-controls="y" disabled>Y</button>
+					<button type="button" role="tab" aria-controls="a">A</button>
+					<button type="button" role="tab" aria-controls="b" aria-selected="true">B</button>
+					<button type="button" role="tab" aria-controls="c">C</button>
+					<button type="button" role="tab" aria-controls="d">D</button>
+				</div>
+				${['x', 'y', 'a', 'b', 'c', 'd'].map((key) => `<section role="tabpanel" id="${key}" hidden="until-found">${key}</section>`).join('')}
+			</interop-tabs>`;
+			const tab = (key: string) => document.querySelector<HTMLElement>(`[aria-controls="${key}"]`)!;
+			(tab('b') as HTMLButtonElement).disabled = true;
+			await Promise.resolve().then(() => Promise.resolve());
+			expect(tab('c').getAttribute('aria-selected')).toBe('true');
+		});
+
+		it('keeps the selection when a selected tab of another tab list is inserted into a panel', async () => {
+			const { tab, panel, settle } = setup();
+			panel('a').innerHTML =
+				'<interop-tabs><div role="tablist" aria-label="Inner"><button type="button" role="tab" aria-controls="i" aria-selected="true">I</button></div><section role="tabpanel" id="i">I</section></interop-tabs>';
+			await settle();
+			expect([tab('a').getAttribute('aria-selected'), panel('a').hasAttribute('hidden')]).toEqual(['true', false]);
+		});
+
+		it("keeps a panel's name pointing at its tab when the tab's id changes", async () => {
+			const { tab, panel, settle } = setup();
+			tab('a').id = 'renamed';
+			await settle();
+			expect(panel('a').getAttribute('aria-labelledby')).toBe('renamed');
+		});
+
+		it('applies the URL fragment on the first bind only, not when an attribute rebinds it', () => {
+			const url = location.href;
+			history.replaceState(null, '', '#c');
+			document.body.innerHTML = `<interop-tabs itx-hash>${three}</interop-tabs>`;
+			const tabs = document.querySelector('interop-tabs')!;
+			const tab = (key: string) => tabs.querySelector<HTMLElement>(`[aria-controls="${key}"]`)!;
+			expect(tab('c').getAttribute('aria-selected')).toBe('true');
+			tab('a').click();
+			tabs.setAttribute('itx-activation', 'manual');
+			expect(tab('a').getAttribute('aria-selected')).toBe('true');
+			history.replaceState(null, '', url);
+		});
+
+		it('returns the same binding when bound twice', () => {
+			const { tabs } = setup();
+			expect(bindTabs(tabs)).toBe(bindTabs(tabs));
 		});
 
 		it('selects from code with select(), by the tab or by its panel id, and reports it', () => {

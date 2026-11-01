@@ -37,6 +37,11 @@ export class TabsDemo {
 	protected readonly last = signal("nav");
 
 	/** Tabs rendered by Angular's own template, to show the element in a framework's control flow. */
+	/**
+	 * The panel shown at first. Its value never changes, so Angular writes each panel's `hidden` once,
+	 * for the first render, and the element owns it after that.
+	 */
+	protected readonly shownFirst = "log-1";
 	protected readonly logs = signal([
 		{ id: "log-1", name: "Log 1", text: "Docking clamps released." },
 		{ id: "log-2", name: "Log 2", text: "Course corrected by 0.4 degrees." },

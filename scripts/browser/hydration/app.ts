@@ -16,11 +16,11 @@ import "interop/tabs";
 					</button>
 				}
 			</div>
-			@for (log of logs(); track log.id; let first = $first) {
+			@for (log of logs(); track log.id) {
 				<section
 					role="tabpanel"
 					[id]="log.id"
-					[attr.hidden]="first ? null : 'until-found'"
+					[attr.hidden]="log.id === shownFirst ? null : 'until-found'"
 				>
 					<p>{{ log.text }}</p>
 				</section>
@@ -30,6 +30,8 @@ import "interop/tabs";
 	`,
 })
 export class App {
+	/** The panel shown at first; it never changes, so Angular writes `hidden` once. */
+	protected readonly shownFirst = "log-1";
 	protected readonly logs = signal([
 		{ id: "log-1", name: "Log 1", text: "Docking clamps released." },
 		{ id: "log-2", name: "Log 2", text: "Course corrected." },

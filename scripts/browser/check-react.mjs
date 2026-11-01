@@ -67,5 +67,25 @@ export async function checkReact(page, base) {
 			`${document.activeElement.textContent} ${document.activeElement.getAttribute("aria-selected")}`,
 	);
 	if (manual !== "Log 1 false") failures.push(`manual activation: ${manual}`);
+
+	// React changes an input: it disables the selected tab, so the selection passes to a neighbor.
+	await page.click("#disable");
+	await page.waitForFunction(
+		() => document.querySelector("interop-tabs [aria-controls=log-2]").disabled,
+	);
+	await expect(
+		"after React disables the selected tab",
+		"Log 1*:shown Log 2:until-found",
+	);
+
+	// React inserts a tab already marked selected: it takes the selection.
+	await page.click("#add-selected");
+	await page.waitForFunction(
+		() => document.querySelectorAll("interop-tabs [role=tab]").length === 3,
+	);
+	await expect(
+		"after React inserts a selected tab",
+		"Log 1:until-found Log 2:until-found Log 3*:shown",
+	);
 	return failures;
 }

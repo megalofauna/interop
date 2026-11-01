@@ -75,22 +75,35 @@ framework's renderer, control flow and hydration keep the DOM.
 
 | | Attributes | Who writes them |
 |---|---|---|
-| Inputs, which the helper watches | Tabs and panels added or removed; a tab's `disabled`, `aria-controls` and `id`; a panel's `id`. The markup's `aria-selected` and `hidden` as first written: on bind, and on a tab inserted already marked selected | The author or framework |
-| Outputs, which the helper owns | `aria-selected` and `tabindex` on tabs; `hidden` and `tabindex` on panels | The helper. A later write by anyone else is written back from the helper's state, so a framework binding to them is undone rather than obeyed. An author's `tabindex` written onto a hidden panel is parked again |
+| Inputs, which the helper watches | Tabs and panels added or removed; a tab's `disabled`, `hidden`, `aria-controls` and `id`; a panel's `id`. The markup's `aria-selected` and `hidden` as first written: on bind, and on a tab inserted already marked selected | The author or framework |
+| Outputs, which the helper owns | `aria-selected` and `tabindex` on tabs; `hidden` and `tabindex` on panels | The helper, from its state. It does not watch them: a write by anyone else is out of contract, and the dev audit reports the result (`tabs-selected`, `tabs-panel-hidden`). Watching them to write them back would let two writers fight forever |
 | Choosing from code | `select(tab)` on the element, or on the binding `bindTabs()` returns; the element also takes a panel id | Code that changes the selection. It fires `interop-tabs-change` |
 
 The state is the selected tab and the tab holding the tab stop, which under
-manual activation follows focus; every output is derived from those two and
-written only when it differs. Disabling the selected tab moves the selection to
-a neighbor; changing a tab's `aria-controls` follows it to the new panel.
+manual activation follows focus, and a structural change leaves it there. Every
+output is derived from those two and written only when it differs, and each
+panel is decided once per pass, so two tabs sharing a panel cannot undo each
+other (sharing is still out of contract; the audit flags it as
+`tabs-panel-shared`). A disabled or hidden tab cannot be chosen: when the
+selected tab becomes one, or is removed, the selection passes to the next
+available tab after it, else the one before. Changing a tab's `aria-controls`
+shows the new panel and hides the old one; any panel no tab controls any more
+is hidden again. A panel's `aria-labelledby` written by the helper is marked
+`data-tabs-labelledby` and follows its tab's `id`. With `itx-hash`, the fragment
+chooses on the element's first bind only.
 
 Follow the selection through the event, and change it with `select()`. A
-framework template writes `hidden` on panels for the first render; the helper
-then owns it.
+framework template writes `hidden` on panels from a value that does not change
+after the first render (the panel shown at first), so it writes it once and the
+helper owns it after that. A template that binds from the first index rewrites
+`hidden` when the first item is removed. `bindTabs()` called again on a bound
+root returns the same binding.
 
 The element binds in `connectedCallback` and unbinds in `disconnectedCallback`,
-so markup parsed, rendered by a framework or set with `innerHTML` binds itself,
-and a removed element leaves nothing behind. A changed `itx-activation` or
+so markup parsed, rendered by a framework or set with `innerHTML` binds itself.
+On unbind the listeners and observer go, and so does the helper's own panel
+`tabindex`; the selection, ids, `aria-labelledby` and a consumer's `tabindex`
+parked on a hidden panel stay, so a later binding picks them up. A changed `itx-activation` or
 `itx-hash` rebinds. A `moveBefore()` move keeps the binding
 (`connectedMoveCallback`); other moves disconnect and connect, which rebinds. A framework that inserts the element before its children
 gets them bound one microtask later, through the helper's own observer, before

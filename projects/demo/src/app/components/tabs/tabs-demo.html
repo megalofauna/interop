@@ -27,9 +27,10 @@
 	Angular renders these tabs from a list. Adding or removing a tab needs no
 	extra call: the element reconciles its own children, and a removed selected
 	tab passes the selection to a neighbor. The template writes
-	<code>hidden="until-found"</code> on every panel but the first, so the page
-	renders right before the element runs, and leaves
-	<code>aria-selected</code> to the element. Angular needs
+	<code>hidden="until-found"</code> on every panel but the one shown at first,
+	from a value that never changes, so Angular writes it once and the element
+	owns it after that. The element also owns <code>aria-selected</code>; change
+	the selection with <code>select()</code>. Angular needs
 	<code>CUSTOM_ELEMENTS_SCHEMA</code> in the component that uses the element.
 </p>
 <interop-tabs #logTabs>
@@ -40,11 +41,11 @@
 			</button>
 		}
 	</div>
-	@for (log of logs(); track log.id; let first = $first) {
+	@for (log of logs(); track log.id) {
 		<section
 			role="tabpanel"
 			[id]="log.id"
-			[attr.hidden]="first ? null : 'until-found'"
+			[attr.hidden]="log.id === shownFirst ? null : 'until-found'"
 		>
 			<p>{{ log.text }}</p>
 		</section>

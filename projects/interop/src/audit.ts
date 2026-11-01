@@ -1,5 +1,5 @@
 import { OWNS_ARROW_KEYS } from './focusable';
-import { recordTabsForAudit, tabsShowedPanels } from './bind-tabs';
+import { tabsShowedPanels } from './bind-tabs';
 import { activationGuardCount } from './guard-activation';
 
 export interface AuditIssue {
@@ -554,6 +554,22 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Mark one tab aria-selected="true" in the markup, and call bindTabs() to keep it so.',
 					},
 	},
+	'tabs-panel-shared': {
+		selector: TABLISTS,
+		check: (tablist) => {
+			const controls = tabsIn(tablist)
+				.map((tab) => tab.getAttribute('aria-controls'))
+				.filter(Boolean);
+			return new Set(controls).size < controls.length
+				? {
+						problem: 'Two tabs in this tab list control the same panel.',
+						reason:
+							'Each tab shows its own panel. A shared one shows for whichever tab is selected, and the other tab names nothing of its own.',
+						advice: 'Give every tab its own panel with its own id.',
+					}
+				: null;
+		},
+	},
 	'tabs-panel-hidden': {
 		selector: TABLISTS,
 		check: (tablist) => {
@@ -1066,8 +1082,6 @@ let stopWatching: (() => void) | null = null;
 export function watchInterop(root: Document = document): () => void {
 	if (stopWatching) return stopWatching;
 	if (typeof MutationObserver === 'undefined' || auditOff(root)) return () => {};
-	// Tabs that bind from now on note what their markup first showed, for the tabs-panel-hidden rule.
-	recordTabsForAudit();
 
 	console.info(
 		'Interop is checking this page for accessibility problems while the app runs in development mode. ' +
