@@ -5,10 +5,7 @@ import {
 	type ValidationOptions,
 } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
-import {
-	InteropCustomValidity,
-	InteropForm,
-} from "interop/field";
+import { InteropCustomValidity } from "interop/field";
 import { InteropScrollArea } from "interop/scroll-area";
 import { DemoExample } from "../../example/example";
 import { region } from "../../example/region";
@@ -30,7 +27,6 @@ import { examples as ts } from "./field-examples";
 		DemoExample,
 		InteropCodeBlock,
 		InteropCustomValidity,
-		InteropForm,
 		InteropScrollArea,
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -74,7 +70,7 @@ bindValidation(document.querySelector("#birthday"));
 	};
 
 	protected send(event: SubmitEvent): void {
-		// bindValidation() stops an invalid form before this runs.
+		// <interop-validation> stops an invalid form before this runs.
 		event.preventDefault();
 		this.sent.set(true);
 	}

@@ -247,6 +247,11 @@ interop-password:not(:defined) > [command="--toggle-password"] {
 	border-end-end-radius: 0px;
 }
 
+/* <interop-validation> holds the summary and the form. Its children need their own itx-flow. */
+:where(interop-validation) {
+	display: block;
+}
+
 /* <interop-character-count> has no box: the control and its count stack in the field. */
 :where(interop-character-count) {
 	display: contents;

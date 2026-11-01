@@ -1018,6 +1018,21 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Move the link out of the hint, before the field.',
 		}),
 	},
+	'validation-parts': {
+		selector: 'interop-validation:not(:has(> form)), [interop-error-summary]:not(interop-validation > *)',
+		check: (element) =>
+			element.localName === 'interop-validation'
+				? {
+						problem: 'This <interop-validation> has no form as a direct child.',
+						reason: 'It checks the form that is its own child; one nested deeper, or none, is not checked.',
+						advice: 'Put the <form> directly inside <interop-validation>.',
+					}
+				: {
+						problem: 'This error summary is not a direct child of <interop-validation>.',
+						reason: 'The summary is filled from the form beside it in the element; anywhere else it stays empty.',
+						advice: 'Put the summary directly inside <interop-validation>, before the form.',
+					},
+	},
 	'error-summary-list': {
 		selector: '[interop-error-summary]:not(:has(ul))',
 		check: () => ({

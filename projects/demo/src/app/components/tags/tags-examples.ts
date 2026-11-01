@@ -12,31 +12,33 @@ export const examples = {
 	}
 </ul>
 `,
-	input: `<form interop-form (submit)="submit($event)">
-	<div interop-field>
-		<label for="tag-entry">Skills</label>
-		<p interop-hint id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one</p>
-		<p interop-error hidden></p>
-		<ul #skillList interop-tags role="list" aria-label="Skills" [fallback]="entry">
-			@for (skill of skills(); track skill) {
-				<li>
-					{{ skill }}
-					<button type="button" (click)="removeSkill(skill)">
-						<span itx-visually-hidden>Remove {{ skill }}</span>
-						<svg interop-icon name="tabler-x"></svg>
-					</button>
-					<input type="hidden" name="skills" [value]="skill">
-				</li>
-			}
-		</ul>
-		<input #entry interop-input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint"
-			interop-tag-input [tags]="skillList" tagsRequired="Add at least one skill."
-			[rejected]="alreadyAdded"
-			(interop-tags-add)="addSkill($event)">
-		<datalist id="skill-options">…</datalist>
-	</div>
-	<button interop-button type="submit">Save</button>
-</form>
+	input: `<interop-validation>
+	<form (submit)="submit($event)">
+		<div interop-field>
+			<label for="tag-entry">Skills</label>
+			<p interop-hint id="tag-hint">Press Enter to add a skill. Backspace in the empty field moves to the last one</p>
+			<p interop-error hidden></p>
+			<ul #skillList interop-tags role="list" aria-label="Skills" [fallback]="entry">
+				@for (skill of skills(); track skill) {
+					<li>
+						{{ skill }}
+						<button type="button" (click)="removeSkill(skill)">
+							<span itx-visually-hidden>Remove {{ skill }}</span>
+							<svg interop-icon name="tabler-x"></svg>
+						</button>
+						<input type="hidden" name="skills" [value]="skill">
+					</li>
+				}
+			</ul>
+			<input #entry interop-input id="tag-entry" type="text" list="skill-options" aria-describedby="tag-hint"
+				interop-tag-input [tags]="skillList" tagsRequired="Add at least one skill."
+				[rejected]="alreadyAdded"
+				(interop-tags-add)="addSkill($event)">
+			<datalist id="skill-options">…</datalist>
+		</div>
+		<button interop-button type="submit">Save</button>
+	</form>
+</interop-validation>
 `,
 	inputTs: `readonly skills = signal(["Angular", "CSS"]);
 readonly alreadyAdded = (value: string) => \`\${value} is already added.\`;

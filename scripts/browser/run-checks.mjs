@@ -6,12 +6,14 @@ import { checkHydration } from "./check-hydration.mjs";
 import { checkPassword } from "./check-password.mjs";
 import { checkReact } from "./check-react.mjs";
 import { checkTabs } from "./check-tabs.mjs";
+import { checkValidation } from "./check-validation.mjs";
 import { serve } from "./serve.mjs";
 
 const checks = {
 	tabs: checkTabs,
 	password: checkPassword,
 	"character count": checkCharacterCount,
+	validation: checkValidation,
 	hydration: checkHydration,
 	react: checkReact,
 };

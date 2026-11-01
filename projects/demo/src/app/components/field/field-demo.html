@@ -14,8 +14,9 @@
 <p>
 	The hint and the error sit above the control, where autocomplete lists and
 	on-screen keyboards cannot cover them. The hint is wired with
-	<code>aria-describedby</code>; <code>bindValidation()</code> fills the error,
-	shows it, and adds it to <code>aria-describedby</code> while it shows.
+	<code>aria-describedby</code>; <code>&lt;interop-validation&gt;</code> fills
+	the error, shows it, and adds it to <code>aria-describedby</code> while it
+	shows.
 </p>
 
 <h2>A field</h2>
@@ -23,9 +24,9 @@
 
 <h2>Validation</h2>
 <p>
-	<code>interop-form</code> calls <code>bindValidation()</code>. The browser
-	checks the constraints; Interop decides when to show the result, and says it
-	in the page. Try it:
+	Put the form, and its error summary, in
+	<code>&lt;interop-validation&gt;</code>. The browser checks the constraints;
+	Interop decides when to show the result, and says it in the page. Try it:
 </p>
 <ul>
 	<li>
@@ -42,60 +43,60 @@
 	</li>
 </ul>
 <!-- example: validation -->
-<div #summary interop-error-summary hidden>
-	<h2>There is a problem</h2>
-	<ul></ul>
-</div>
-<form
-	interop-form
-	[summary]="summary"
-	[messages]="messages"
-	(submit)="send($event)"
->
-	<div interop-field>
-		<label for="name">Full name</label>
-		<p interop-error hidden></p>
-		<input interop-input id="name" name="name" autocomplete="name" required />
+<interop-validation itx-flow [messages]="messages">
+	<div interop-error-summary hidden>
+		<h2>There is a problem</h2>
+		<ul></ul>
 	</div>
-	<div interop-field>
-		<label for="contact-email">Email address</label>
-		<p interop-error hidden></p>
-		<input
-			interop-input
-			id="contact-email"
-			type="email"
-			name="email"
-			autocomplete="email"
-			spellcheck="false"
-			required
-		/>
-	</div>
-	<fieldset interop-radio-group>
-		<legend>How should we contact you?</legend>
-		<p interop-error hidden></p>
-		<label
-			><input type="radio" name="contact" value="email" required /> Email</label
-		>
-		<label><input type="radio" name="contact" value="phone" /> Phone</label>
-	</fieldset>
-	<div interop-field>
-		<label for="message">Message</label>
-		<p interop-hint id="message-hint">At least 20 characters</p>
-		<p interop-error hidden></p>
-		<textarea
-			interop-input
-			id="message"
-			name="message"
-			minlength="20"
-			required
-			aria-describedby="message-hint"
-		></textarea>
-	</div>
-	<div class="row">
-		<button interop-button type="submit">Send</button>
-		<button interop-button type="reset" (click)="sent.set(false)">Clear</button>
-	</div>
-</form>
+	<form (submit)="send($event)">
+		<div interop-field>
+			<label for="name">Full name</label>
+			<p interop-error hidden></p>
+			<input interop-input id="name" name="name" autocomplete="name" required />
+		</div>
+		<div interop-field>
+			<label for="contact-email">Email address</label>
+			<p interop-error hidden></p>
+			<input
+				interop-input
+				id="contact-email"
+				type="email"
+				name="email"
+				autocomplete="email"
+				spellcheck="false"
+				required
+			/>
+		</div>
+		<fieldset interop-radio-group>
+			<legend>How should we contact you?</legend>
+			<p interop-error hidden></p>
+			<label
+				><input type="radio" name="contact" value="email" required />
+				Email</label
+			>
+			<label><input type="radio" name="contact" value="phone" /> Phone</label>
+		</fieldset>
+		<div interop-field>
+			<label for="message">Message</label>
+			<p interop-hint id="message-hint">At least 20 characters</p>
+			<p interop-error hidden></p>
+			<textarea
+				interop-input
+				id="message"
+				name="message"
+				minlength="20"
+				required
+				aria-describedby="message-hint"
+			></textarea>
+		</div>
+		<div class="row">
+			<button interop-button type="submit">Send</button>
+			<button interop-button type="reset" (click)="sent.set(false)">
+				Clear
+			</button>
+		</div>
+	</form>
+</interop-validation>
 <!-- /example -->
 @if (sent()) {
 	<p role="status">Sent. Thank you.</p>
@@ -121,24 +122,26 @@
 	error follows it. Type "admin", then move on.
 </p>
 <!-- example: custom -->
-<form interop-form (submit)="$event.preventDefault()">
-	<div interop-field>
-		<label for="username">Username</label>
-		<p interop-error hidden></p>
-		<input
-			interop-input
-			id="username"
-			name="username"
-			autocomplete="username"
-			spellcheck="false"
-			required
-			(input)="username.set($any($event.target).value)"
-			[interopCustomValidity]="
-				username() === 'admin' ? 'That username is taken. Choose another' : ''
-			"
-		/>
-	</div>
-</form>
+<interop-validation>
+	<form (submit)="$event.preventDefault()">
+		<div interop-field>
+			<label for="username">Username</label>
+			<p interop-error hidden></p>
+			<input
+				interop-input
+				id="username"
+				name="username"
+				autocomplete="username"
+				spellcheck="false"
+				required
+				(input)="username.set($any($event.target).value)"
+				[interopCustomValidity]="
+					username() === 'admin' ? 'That username is taken. Choose another' : ''
+				"
+			/>
+		</div>
+	</form>
+</interop-validation>
 <!-- /example -->
 <figure
 	interop-code-block
@@ -166,14 +169,10 @@
 	The button is an invoker: <code>command="--toggle-password"</code> aimed at
 	the input. It keeps its label and reports its state with
 	<code>aria-pressed</code>. It shows only once the element is defined, so it
-	never appears where script does not run, and the password is hidden again
-	when the form is submitted, so the browser does not save it as plain text.
+	never appears where script does not run, and the password is hidden again when
+	the form is submitted, so the browser does not save it as plain text.
 </p>
-<demo-example
-	[html]="examples.password"
-	[ts]="passwordTs"
-	layout="stack"
-/>
+<demo-example [html]="examples.password" [ts]="passwordTs" layout="stack" />
 
 <h2>Character count</h2>
 <p>
@@ -182,23 +181,25 @@
 	by how much, and the field is invalid until it is shortened.
 </p>
 <!-- example: count -->
-<form interop-form (submit)="$event.preventDefault()">
-	<div interop-field>
-		<label for="summary-text">Summary</label>
-		<p interop-hint id="summary-hint">You can enter up to 100 characters</p>
-		<p interop-error hidden></p>
-		<interop-character-count itx-limit="100">
-			<textarea
-				interop-input
-				id="summary-text"
-				name="summary"
-				aria-describedby="summary-hint"
-			></textarea>
-			<p interop-count></p>
-		</interop-character-count>
-	</div>
-	<div class="row"><button interop-button type="submit">Save</button></div>
-</form>
+<interop-validation>
+	<form (submit)="$event.preventDefault()">
+		<div interop-field>
+			<label for="summary-text">Summary</label>
+			<p interop-hint id="summary-hint">You can enter up to 100 characters</p>
+			<p interop-error hidden></p>
+			<interop-character-count itx-limit="100">
+				<textarea
+					interop-input
+					id="summary-text"
+					name="summary"
+					aria-describedby="summary-hint"
+				></textarea>
+				<p interop-count></p>
+			</interop-character-count>
+		</div>
+		<div class="row"><button interop-button type="submit">Save</button></div>
+	</form>
+</interop-validation>
 <!-- /example -->
 <figure
 	interop-code-block

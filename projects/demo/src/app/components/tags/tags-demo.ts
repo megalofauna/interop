@@ -1,7 +1,7 @@
-import { Component, signal } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from "@angular/core";
 import { type TagAddDetail } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
-import { InteropForm } from "interop/field";
+import "interop/field";
 import { InteropIcon } from "interop/icon";
 import { InteropTagInput, InteropTags } from "interop/tags";
 import { examples } from "./tags-examples";
@@ -9,13 +9,8 @@ import { examples } from "./tags-examples";
 @Component({
 	selector: "demo-tags",
 	host: { "itx-flow": "" },
-	imports: [
-		InteropCodeBlock,
-		InteropForm,
-		InteropIcon,
-		InteropTagInput,
-		InteropTags,
-	],
+	imports: [InteropCodeBlock, InteropIcon, InteropTagInput, InteropTags],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	templateUrl: "./tags-demo.html",
 	styleUrl: "./tags-demo.css",
 })

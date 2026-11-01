@@ -3,7 +3,7 @@
 A field is a label, an optional hint, an optional error and a native control,
 in that order. The control is `<input interop-input>`, `<textarea
 interop-input>` or `select[interop-select]`, so its own attributes do the work.
-CSS, plus `bindValidation()` for errors. Research:
+CSS, plus `<interop-validation>` for errors. Research:
 [prompts/FIELD-REVIEW.md](../../prompts/FIELD-REVIEW.md).
 
 ```html
@@ -24,7 +24,8 @@ projects/interop/field/
   interop-field.base.css        token values and size steps
   password.ts                   <interop-password>, defined on import
   character-count.ts            <interop-character-count>, defined on import
-  field.ts                      InteropForm, InteropCustomValidity
+  validation.ts                 <interop-validation>, defined on import
+  field.ts                      InteropCustomValidity
   public-api.ts
 projects/interop/src/bind-validation.ts        bindValidation(), defaultValidationMessages
 projects/interop/src/bind-password-toggle.ts   bindPasswordToggle()
@@ -47,7 +48,7 @@ The demo page is `projects/demo/src/app/components/field/`.
 | A button beside the input | In the same `<div>`, a gap away. "Show password" goes in `<interop-password>`, which is the row |
 | `[interop-count]` | Below the control, both inside `<interop-character-count>`, which fills it. Hint-colored; error-colored and bold with `data-over` |
 | Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby`. Invalid radios and checkboxes get a 2px danger border |
-| `[interop-error-summary]` | A heading and an empty `<ul>`, `hidden`. Filled and focused on a failed submit |
+| `[interop-error-summary]` | A heading and an empty `<ul>`, `hidden`, a direct child of `<interop-validation>`. Filled and focused on a failed submit |
 
 Optional fields say "(optional)" in their label; required ones have `required`
 and no asterisk.
@@ -69,7 +70,25 @@ Heights are the button's: 32, 40, 56px.
 | Placeholder | 4.5:1 against the fill at rest and hovered |
 | Textarea | `field-sizing: content` from three lines; resizes vertically |
 
-## bindValidation(form, { summary, messages })
+## Validation
+
+`<interop-validation>`, defined by importing `interop/field`, holds the error
+summary and the `<form>`, both direct children, and calls
+`bindValidation(form, { summary, messages })` once the form is in place (and
+again if a framework replaces it, through `bindChildren()`). It is a block with
+no role; its children need their own `itx-flow`.
+
+```html
+<interop-validation>
+  <div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
+  <h1>Your details</h1>
+  <form action="/details" method="post">…</form>
+</interop-validation>
+```
+
+The page heading can go inside too, so the summary sits above it, as GOV.UK
+places it. Without script the form keeps the browser's own validation: the
+element adds `novalidate`, and removing it takes `novalidate` away again.
 
 The browser checks the constraints (`required`, `type`, `minlength`, `pattern`,
 `setCustomValidity()`); this decides when and how errors show.
@@ -96,8 +115,14 @@ name@example.com". A label that is a question gets "Enter an answer" or
 function receives the control and its label, so one field can have its own
 wording.
 
-Angular: `form[interop-form]` binds it (inputs `summary`, `messages`).
-`[interopCustomValidity]` sets a control's custom validity from a message and
+`messages` is a property (Angular `[messages]`, React 19 a prop); one set
+before the element upgrades is taken.
+
+Known: the error shown on leaving a changed field moves what is below it. A
+click on Submit straight from that field lands where the button was, and is
+lost; the second click submits. Not yet decided.
+
+Angular: `[interopCustomValidity]` sets a control's custom validity from a message and
 fires `interop-validity-change`; use it for server checks and Angular-only
 validators. No value accessor: native attributes drive Angular's validators and
 the browser alike.
@@ -182,6 +207,7 @@ which stops typing and cuts pasted text short without saying so.
 | `field-number` | `type="number"` (advisory: use `inputmode`) |
 | `field-autocomplete` | `type="email"` or `"tel"` with no `autocomplete` |
 | `field-hint-link` | A link inside a hint |
+| `validation-parts` | An `<interop-validation>` with no `<form>` child, or an error summary that is not its direct child |
 | `error-summary-list` | An error summary with no `<ul>` |
 | `character-count-limit` | An `<interop-character-count>` with no `itx-limit`, or a counted control with `maxlength` |
 | `password-toggle` | A "Show password" button that is `hidden`, or not inside `<interop-password>` |
@@ -191,14 +217,17 @@ which stops typing and cuts pasted text short without saying so.
 Style guards: contrast (text, placeholder, hint, error, borders at rest, hover
 and invalid), target size, radius, motion. axe on a field with a shown error,
 units, a read-only textarea and a summary. `bindValidation()` has 12 specs, `bindPasswordToggle()` 6, `<interop-password>` 2,
-`bindCharacterCount()` 5, `<interop-character-count>` 8, `bindChildren()` 5.
+`bindCharacterCount()` 5, `<interop-character-count>` 8, `bindChildren()` 5, `<interop-validation>` 5.
 
 `npm run test:browser` clicks `<interop-password>`'s real invoker in Chromium
 and WebKit: the button hidden while the script is blocked, beside the input once
 defined, the toggle, and the password hidden on submit and reset. The element is
 558 B gzip. It types into `<interop-character-count>` there too: the count hidden
 while the script is blocked, the control as wide as a plain field's, over and
-back under the limit. That element is 1.3 kB gzip, with `announce()`.
+back under the limit. That element is 1.3 kB gzip, with `announce()`. A failed submit there, in
+`<interop-validation>`: the browser's own validation while the script is
+blocked, then no bubble, the summary filled and focused, its link moving to
+the field, and the password left shown. That element is 2.3 kB gzip.
 
 In Chrome 155 with real keys: no error on leaving an empty field; the format
 error on leaving a changed field, clearing as it is fixed; a failed submit

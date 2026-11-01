@@ -7,7 +7,7 @@ readonly messages: ValidationOptions["messages"] = {
 };
 
 send(event: SubmitEvent): void {
-	// bindValidation() stops an invalid form before this runs.
+	// <interop-validation> stops an invalid form before this runs.
 	event.preventDefault();
 	this.sent.set(true);
 }

@@ -5,7 +5,6 @@ import {
 	bindSelectAll,
 	bindSlider,
 	bindTagInput,
-	bindValidation,
 	drawIcons,
 	guardActivation,
 	registerIcons,
@@ -582,52 +581,54 @@ describe('accessibility (axe-core)', () => {
 	it('finds no violations in forms as the field helpers leave them, after a failed submit', async () => {
 		document.body.innerHTML = `
 			<main>
-				<div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
-				<form>
-					<div interop-field>
-						<label for="h-email">Email address</label>
-						<p interop-hint id="h-email-hint">For the receipt</p>
-						<p interop-error hidden></p>
-						<input interop-input id="h-email" type="email" name="email" autocomplete="email" required aria-describedby="h-email-hint" />
-					</div>
-					<fieldset interop-radio-group>
-						<legend>Delivery</legend>
-						<p interop-error hidden></p>
-						<label><input type="radio" name="delivery" value="post" required /> Post</label>
-						<label><input type="radio" name="delivery" value="collect" /> Collect</label>
-					</fieldset>
-					<div interop-field>
-						<label for="h-summary">Summary</label>
-						<p interop-error hidden></p>
-						<interop-character-count itx-limit="5">
-							<textarea interop-input id="h-summary" name="summary"></textarea>
-							<p interop-count></p>
-						</interop-character-count>
-					</div>
-					<div interop-field>
-						<label for="h-password">Password</label>
-						<interop-password>
-							<input interop-input id="h-password" type="password" name="password" autocomplete="current-password" />
-							<button interop-button type="button" commandfor="h-password" command="--toggle-password" aria-pressed="false">Show password</button>
-						</interop-password>
-					</div>
-					<div interop-field>
-						<label for="h-tag">Skills</label>
-						<p interop-error hidden></p>
-						<ul interop-tags role="list" aria-label="Skills">
-							<li>CSS <button type="button"><span itx-visually-hidden>Remove CSS</span></button></li>
-							<li>HTML <button type="button"><span itx-visually-hidden>Remove HTML</span></button></li>
-						</ul>
-						<input interop-input id="h-tag" type="text" />
-					</div>
-					<fieldset interop-checkbox-group>
-						<legend>Notifications</legend>
-						<label interop-checkbox><input type="checkbox" id="h-all" /> All</label>
-						<label interop-checkbox><input type="checkbox" name="n" value="email" checked /> Email</label>
-						<label interop-checkbox><input type="checkbox" name="n" value="sms" /> Text</label>
-					</fieldset>
-					<button interop-button type="submit">Send</button>
-				</form>
+				<interop-validation>
+					<div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
+					<form>
+						<div interop-field>
+							<label for="h-email">Email address</label>
+							<p interop-hint id="h-email-hint">For the receipt</p>
+							<p interop-error hidden></p>
+							<input interop-input id="h-email" type="email" name="email" autocomplete="email" required aria-describedby="h-email-hint" />
+						</div>
+						<fieldset interop-radio-group>
+							<legend>Delivery</legend>
+							<p interop-error hidden></p>
+							<label><input type="radio" name="delivery" value="post" required /> Post</label>
+							<label><input type="radio" name="delivery" value="collect" /> Collect</label>
+						</fieldset>
+						<div interop-field>
+							<label for="h-summary">Summary</label>
+							<p interop-error hidden></p>
+							<interop-character-count itx-limit="5">
+								<textarea interop-input id="h-summary" name="summary"></textarea>
+								<p interop-count></p>
+							</interop-character-count>
+						</div>
+						<div interop-field>
+							<label for="h-password">Password</label>
+							<interop-password>
+								<input interop-input id="h-password" type="password" name="password" autocomplete="current-password" />
+								<button interop-button type="button" commandfor="h-password" command="--toggle-password" aria-pressed="false">Show password</button>
+							</interop-password>
+						</div>
+						<div interop-field>
+							<label for="h-tag">Skills</label>
+							<p interop-error hidden></p>
+							<ul interop-tags role="list" aria-label="Skills">
+								<li>CSS <button type="button"><span itx-visually-hidden>Remove CSS</span></button></li>
+								<li>HTML <button type="button"><span itx-visually-hidden>Remove HTML</span></button></li>
+							</ul>
+							<input interop-input id="h-tag" type="text" />
+						</div>
+						<fieldset interop-checkbox-group>
+							<legend>Notifications</legend>
+							<label interop-checkbox><input type="checkbox" id="h-all" /> All</label>
+							<label interop-checkbox><input type="checkbox" name="n" value="email" checked /> Email</label>
+							<label interop-checkbox><input type="checkbox" name="n" value="sms" /> Text</label>
+						</fieldset>
+						<button interop-button type="submit">Send</button>
+					</form>
+				</interop-validation>
 			</main>`;
 		const $ = <T extends Element>(selector: string) => document.querySelector<T>(selector)!;
 		const form = $<HTMLFormElement>('form');
@@ -635,7 +636,6 @@ describe('accessibility (axe-core)', () => {
 		const textarea = $<HTMLTextAreaElement>('#h-summary');
 		const password = $<HTMLInputElement>('#h-password');
 		const unbind = [
-			bindValidation(form, { summary }),
 			bindTagInput($<HTMLInputElement>('#h-tag'), {
 				list: $<HTMLElement>('ul[interop-tags]'),
 				required: 'Add a skill',
