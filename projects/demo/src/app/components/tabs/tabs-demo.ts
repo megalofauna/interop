@@ -1,7 +1,7 @@
-import { Component, signal } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { bindTabs, type TabsChangeDetail } from "interop";
-import { each } from "../../example/bind-each";
+import type { TabsChangeDetail } from "interop";
+import "interop/tabs";
 import { DemoExample } from "../../example/example";
 import counts from "./examples/counts.html";
 import disabled from "./examples/disabled.html";
@@ -18,6 +18,7 @@ import vertical from "./examples/vertical.html";
 	selector: "demo-tabs",
 	host: { "itx-flow": "" },
 	imports: [DemoExample, RouterLink],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	templateUrl: "./tabs-demo.html",
 })
 export class TabsDemo {
@@ -35,31 +36,39 @@ export class TabsDemo {
 	};
 	protected readonly last = signal("nav");
 
-	protected readonly bind = each("[interop-tabs]", (root) => bindTabs(root));
-	protected readonly bindManual = each("[interop-tabs]", (root) =>
-		bindTabs(root, { activation: "manual" }),
-	);
-	protected readonly bindMain = (root: HTMLElement) => {
-		const unbind = this.bind(root);
+	/** Tabs rendered by Angular's own template, to show the element in a framework's control flow. */
+	protected readonly logs = signal([
+		{ id: "log-1", name: "Log 1", text: "Docking clamps released." },
+		{ id: "log-2", name: "Log 2", text: "Course corrected by 0.4 degrees." },
+	]);
+	private nextLog = 3;
+	protected addLog(): void {
+		const n = this.nextLog++;
+		this.logs.update((logs) => [
+			...logs,
+			{ id: `log-${n}`, name: `Log ${n}`, text: `Entry ${n} recorded.` },
+		]);
+	}
+	protected removeSelected(root: HTMLElement): void {
+		const tab = root.querySelector('[role="tab"][aria-selected="true"]');
+		const id = tab?.getAttribute("aria-controls");
+		this.logs.update((logs) => logs.filter((log) => log.id !== id));
+	}
+
+	/** Follows the selection of the first example; the element binds itself. */
+	protected readonly follow = (root: HTMLElement) => {
 		const changed = (event: Event) =>
 			this.last.set(
 				(event as CustomEvent<TabsChangeDetail>).detail.panel?.id ?? "",
 			);
 		root.addEventListener("interop-tabs-change", changed);
-		return () => {
-			unbind();
-			root.removeEventListener("interop-tabs-change", changed);
-		};
+		return () => root.removeEventListener("interop-tabs-change", changed);
 	};
 
-	protected readonly mainTs = `import { bindTabs } from "interop";
+	protected readonly mainTs = `// Once, anywhere: defines <interop-tabs>.
+import "interop/tabs";
 
-const tabs = document.querySelector("[interop-tabs]");
-// Returns a function that removes the behavior.
-bindTabs(tabs);
 // Fires on the tab list when a different tab is selected.
-tabs.addEventListener("interop-tabs-change", (event) => console.log(event.detail.panel.id));
-`;
-	protected readonly manualTs = `bindTabs(document.querySelector("#reports"), { activation: "manual" });
+document.addEventListener("interop-tabs-change", (event) => console.log(event.detail.panel.id));
 `;
 }

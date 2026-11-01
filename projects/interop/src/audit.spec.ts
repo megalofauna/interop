@@ -250,7 +250,7 @@ describe('auditInterop', () => {
 
 	describe('tabs', () => {
 		const tabs = ({ name = 'aria-label="Sections"', tabs: tabMarkup = '', panels = '' } = {}) =>
-			`<div interop-tabs><div role="tablist" ${name}>${tabMarkup}</div>${panels}</div>`;
+			`<interop-tabs><div role="tablist" ${name}>${tabMarkup}</div>${panels}</interop-tabs>`;
 		const tab = (key: string, selected: boolean) =>
 			`<button type="button" role="tab" aria-controls="p-${key}" aria-selected="${selected}">${key}</button>`;
 		const panel = (key: string, hidden: boolean) =>
@@ -264,6 +264,11 @@ describe('auditInterop', () => {
 
 		it('flags a tab list with no name', () => {
 			render(tabs({ ...good, name: '' }));
+			expect(rules()).toEqual(['tabs-name']);
+		});
+
+		it('checks a tab list outside <interop-tabs> too', () => {
+			render(`<div><div role="tablist">${good.tabs}</div>${good.panels}</div>`);
 			expect(rules()).toEqual(['tabs-name']);
 		});
 

@@ -1,23 +1,24 @@
 /*
  * Tabs: one of several panels shown at a time, chosen from a tab list. The consumer writes the
- * markup; bindTabs() from interop adds the behavior.
+ * markup inside <interop-tabs>; importing interop/tabs defines the element, which adds the behavior.
  *
- *   <div interop-tabs>
+ *   <interop-tabs>
  *     <div role="tablist" aria-label="Station systems">
  *       <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
  *       <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
  *     </div>
  *     <section role="tabpanel" id="nav">…</section>
  *     <section role="tabpanel" id="eng" hidden="until-found">…</section>
- *   </div>
+ *   </interop-tabs>
  *
  * The tab list wears the underscore look from styles/underscore.css, shared with the page nav: a
  * rule, and a bar on the selected tab. `aria-orientation="vertical"` on the tab list stands it beside
- * the panels, with the rule and the bar on its inline-end edge. `itx-size` on the wrapper sets the size.
- * `interop-tabs="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
+ * the panels, with the rule and the bar on its inline-end edge. `itx-size` on the element sets the size.
+ * `itx-variant="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
  * segments.
  *
- * A hidden="until-found" panel keeps its box, so only the shown panel gets padding.
+ * The element is a grid of two areas, the tab list and the panels. Every panel sits in the one
+ * panels area, so the panels overlap and only the shown one sets the height.
  *
  * Also known as:
  *   tab list        Fluent v9
@@ -30,7 +31,23 @@
 
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"]) {
+/* The tab list above the panels. `minmax(0, 1fr)` keeps a wide panel from widening the grid. */
+:where(interop-tabs) {
+	display: grid;
+	grid-template-areas: "tabs" "panels";
+	grid-template-columns: minmax(0, 1fr);
+}
+
+:where(interop-tabs > [role="tablist"]) {
+	grid-area: tabs;
+}
+
+/* A grid item stretches across its column; the segmented look keeps the width of its segments. */
+:where(interop-tabs[itx-variant~="segmented"] > [role="tablist"]) {
+	justify-self: start;
+}
+
+:where(interop-tabs > [role="tablist"] > [role="tab"]) {
 	appearance: none;
 	position: relative;
 	flex-shrink: 0;
@@ -57,45 +74,65 @@
 	transition-timing-function: var(--itx-tabs-transition-timing-function);
 }
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
+:where(interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled)) {
 	color: var(--itx-tabs-tab-color-hover, var(--itx-tabs-tab-color));
 }
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"]) {
+:where(interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"]) {
 	color: var(--itx-tabs-tab-color-selected);
 }
 
-:where([interop-tabs] > [role="tablist"] > [role="tab"]:disabled) {
+:where(interop-tabs > [role="tablist"] > [role="tab"]:disabled) {
 	opacity: var(--itx-tabs-tab-opacity-disabled);
 	cursor: var(--itx-tabs-tab-cursor-disabled);
 }
 
 /*
- * Segmented: `interop-tabs="segmented"` wears the look in styles/segmented.css, shared with the
+ * Segmented: `itx-variant="segmented"` wears the look in styles/segmented.css, shared with the
  * segmented radio group. Its focus ring on the pill is in styles/outline.css.
  */
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
 
-:where([interop-tabs] > [role="tabpanel"]:not([hidden])) {
+/* Every panel takes the one panels area. Overlapping, the hidden panels add no height. */
+:where(interop-tabs > [role="tabpanel"]) {
+	grid-area: panels;
+}
+
+:where(interop-tabs > [role="tabpanel"]:not([hidden])) {
 	padding-block: var(--itx-tabs-panel-padding-block);
+}
+
+/*
+ * Before the element is defined, as with server-rendered markup waiting for its script, panels the
+ * author did not hide would all show, overlapping in the panels area. When no panel carries
+ * `hidden`, only the first shows: the one selected by default, so the element's upgrade moves
+ * nothing. Markup that writes `hidden` itself is left as written.
+ */
+:where(interop-tabs:not(:defined):not(:has(> [role="tabpanel"][hidden])) > [role="tabpanel"] ~ [role="tabpanel"]) {
+	display: none;
+}
+
+/*
+ * A hidden="until-found" panel hides its content but still draws its own border, padding and
+ * background. Transparent and passed through by the pointer, it shows nothing and takes no click.
+ * Find-in-page still reaches it; revealing it removes `hidden`, and with it these two.
+ */
+:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+	opacity: 0;
+	pointer-events: none;
 }
 
 /* ── Vertical ──────────────────────────────────────────────────────────── */
 
-:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"])) {
-	display: grid;
-	grid-template-columns: auto 1fr;
+/* The same two areas, side by side. */
+:where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"])) {
+	grid-template-areas: "tabs panels";
+	grid-template-columns: auto minmax(0, 1fr);
 	align-items: start;
 	column-gap: var(--itx-tabs-column-gap);
 }
 
-/* Every panel shares the one cell beside the tab list. Only the selected one shows. */
-:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]) {
-	grid-column: 2;
-	grid-row: 1;
-}
-
-:where([interop-tabs]:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
+:where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
 	padding-block: 0;
 }

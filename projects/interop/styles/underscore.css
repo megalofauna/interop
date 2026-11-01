@@ -2,7 +2,7 @@
  * The underscore look: a strip of items on a rule, with a bar on the current item. Tabs and the
  * horizontal page nav wear it:
  *
- *   <div interop-tabs>
+ *   <interop-tabs>
  *     <div role="tablist" aria-label="Station systems">
  *       <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
  *       …
@@ -26,7 +26,7 @@
 
 /* ── Strip ─────────────────────────────────────────────────────────────── */
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"], nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul) {
+:where(interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"], nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul) {
 	--itx-underscore-rule-border-width: var(--itx-border-width);
 	/* The rule carries no state, so it needs no contrast floor. The bar does. */
 	--itx-underscore-rule-border-color: light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
@@ -52,7 +52,7 @@
 /* ── Bar ───────────────────────────────────────────────────────────────── */
 
 :where(
-	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"],
+	interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"],
 	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a
 ) {
 	position: relative;
@@ -60,7 +60,7 @@
 
 /* The bar, on the item's edge against the rule. */
 :where(
-	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"],
+	interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"],
 	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a
 )::after {
 	content: "";
@@ -75,14 +75,14 @@
 }
 
 :where(
-	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled),
+	interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled),
 	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:hover:not([aria-current="true"], :is(:target-current))
 )::after {
 	background-color: var(--itx-underscore-bar-background-color-hover, var(--itx-underscore-bar-background-color));
 }
 
 :where(
-	[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"],
+	interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"],
 	nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:is([aria-current="true"], :target-current)
 )::after {
 	background-color: var(--itx-underscore-bar-background-color-current);
@@ -90,7 +90,7 @@
 
 /* ── Vertical tab list ─────────────────────────────────────────────────── */
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"][aria-orientation="vertical"]) {
+:where(interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"][aria-orientation="vertical"]) {
 	flex-direction: column;
 	overflow-x: visible;
 	border-block-end-width: 0;
@@ -99,7 +99,7 @@
 	border-inline-end-color: var(--itx-underscore-rule-border-color);
 }
 
-:where([interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"][aria-orientation="vertical"] > [role="tab"])::after {
+:where(interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"][aria-orientation="vertical"] > [role="tab"])::after {
 	inset-block: 0;
 	inset-inline: auto 0;
 	block-size: auto;
@@ -110,21 +110,21 @@
 
 @media (forced-colors: active) {
 	:where(
-		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"],
+		interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"],
 		nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a
 	)::after {
 		forced-color-adjust: none;
 	}
 
 	:where(
-		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"],
+		interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"][aria-selected="true"],
 		nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:is([aria-current="true"], :target-current)
 	)::after {
 		background-color: Highlight;
 	}
 
 	:where(
-		[interop-tabs]:not([interop-tabs~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled),
+		interop-tabs:not([itx-variant~="segmented"]) > [role="tablist"] > [role="tab"]:hover:not([aria-selected="true"], :disabled),
 		nav[interop-page-nav]:not([itx-orientation="vertical"]) > ul > li > a:hover:not([aria-current="true"], :is(:target-current))
 	)::after {
 		background-color: CanvasText;

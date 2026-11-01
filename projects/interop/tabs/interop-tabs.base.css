@@ -1,4 +1,4 @@
-:where([interop-tabs]) {
+:where(interop-tabs) {
 	--itx-tabs-tab-min-block-size: var(--itx-space-10);
 	--itx-tabs-tab-padding-inline: var(--itx-space-4);
 	/* The same type steps as a button. */
@@ -22,21 +22,21 @@
 	--itx-tabs-transition-timing-function: var(--itx-transition-timing-function);
 }
 
-:where([interop-tabs][itx-size="sm"]) {
+:where(interop-tabs[itx-size="sm"]) {
 	--itx-tabs-tab-min-block-size: var(--itx-space-8);
 	--itx-tabs-tab-padding-inline: var(--itx-space-3);
 	--itx-tabs-tab-font-size: var(--itx-font-size-p-sm);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p-sm);
 }
 
-:where([interop-tabs][itx-size="lg"]) {
+:where(interop-tabs[itx-size="lg"]) {
 	--itx-tabs-tab-min-block-size: var(--itx-space-14);
 	--itx-tabs-tab-padding-inline: var(--itx-space-5);
 	--itx-tabs-tab-font-size: var(--itx-font-size-p-lg);
 	--itx-tabs-tab-line-height: var(--itx-line-height-p-lg);
 }
 
-:where([interop-tabs~="segmented"] > [role="tablist"] > [role="tab"]) {
+:where(interop-tabs[itx-variant~="segmented"] > [role="tablist"] > [role="tab"]) {
 	/* The pill's corner, the house radius, so the focus ring matches it. */
 	--itx-tabs-tab-border-radius: var(--itx-radius, var(--itx-radius-base));
 }

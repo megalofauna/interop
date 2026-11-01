@@ -1,7 +1,8 @@
 /*
  * Public API Surface of interop/tabs
  *
- * The directive. The styles load from interop.css, and bindTabs() is exported from interop.
+ * Importing it defines <interop-tabs>. The styles load from interop.css, and bindTabs() is exported
+ * from interop.
  */
 
-export { InteropTabs } from './tabs';
+export { InteropTabsElement } from './tabs';
