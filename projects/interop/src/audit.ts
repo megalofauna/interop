@@ -1,4 +1,5 @@
 import { OWNS_ARROW_KEYS } from './focusable';
+import { tabsShowedPanels } from './bind-tabs';
 import { activationGuardCount } from './guard-activation';
 
 export interface AuditIssue {
@@ -33,7 +34,16 @@ const BLOCK =
 const LABELABLE = 'button, input, meter, output, progress, select, textarea';
 
 /** The tabs a tab list owns. */
-const tabsIn = (tablist: Element) => Array.from(tablist.children).filter((child) => child.getAttribute('role') === 'tab');
+/** Elements ARIA allows between a tab list and its tabs, such as a list item in a <ul role="tablist">. */
+const NEUTRAL = ':is([role="presentation"], [role="none"])';
+const tabsIn = (tablist: Element) =>
+	Array.from(tablist.children).flatMap((child) =>
+		child.matches(NEUTRAL)
+			? Array.from(child.children).filter((inner) => inner.getAttribute('role') === 'tab')
+			: child.getAttribute('role') === 'tab'
+				? [child]
+				: [],
+	);
 /** The panel a tab controls, if it is a tab panel. */
 const panelOf = (tab: Element) => {
 	const id = tab.getAttribute('aria-controls');
@@ -513,7 +523,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					},
 	},
 	'tabs-children': {
-		selector: `${TABLISTS} > :not([role="tab"])`,
+		selector: `${TABLISTS} > :not([role="tab"], [role="presentation"], [role="none"])`,
 		check: () => ({
 			problem: 'This element is inside a tab list but is not a tab.',
 			reason: 'A tab list may own only tabs. Anything else is skipped by the arrow keys, or announced as part of the tabs.',
@@ -521,7 +531,7 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 		}),
 	},
 	'tabs-panel': {
-		selector: `${TABLISTS} > [role="tab"]`,
+		selector: `${TABLISTS} > [role="tab"], ${TABLISTS} > ${NEUTRAL} > [role="tab"]`,
 		check: (tab) =>
 			panelOf(tab)
 				? null
@@ -544,15 +554,35 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Mark one tab aria-selected="true" in the markup, and call bindTabs() to keep it so.',
 					},
 	},
-	'tabs-panel-hidden': {
-		selector: `${TABLISTS} > [role="tab"]:not([aria-selected="true"])`,
-		check: (tab) => {
-			const panel = panelOf(tab);
-			return panel && !panel.hasAttribute('hidden')
+	'tabs-panel-shared': {
+		selector: TABLISTS,
+		check: (tablist) => {
+			const controls = tabsIn(tablist)
+				.map((tab) => tab.getAttribute('aria-controls'))
+				.filter(Boolean);
+			return new Set(controls).size < controls.length
 				? {
-						problem: 'The panel of an unselected tab is not hidden.',
-						reason: 'Every panel shows at once until the tabs bind, and screen readers read panels that are not selected.',
-						advice: 'Write hidden="until-found" on every panel but the selected one, so the page renders right before bindTabs() runs.',
+						problem: 'Two tabs in this tab list control the same panel.',
+						reason:
+							'Each tab shows its own panel. A shared one shows for whichever tab is selected, and the other tab names nothing of its own.',
+						advice: 'Give every tab its own panel with its own id.',
+					}
+				: null;
+		},
+	},
+	'tabs-panel-hidden': {
+		selector: TABLISTS,
+		check: (tablist) => {
+			const root = tablist.parentElement;
+			const showing = tabsIn(tablist).filter(
+				(tab) => tab.getAttribute('aria-selected') !== 'true' && panelOf(tab)?.hasAttribute('hidden') === false,
+			);
+			return showing.length || (root && tabsShowedPanels(root))
+				? {
+						problem: 'More than one panel of these tabs showed before they bound.',
+						reason:
+							'Every panel without hidden shows, overlapping or stacked, until the script runs, so the page jumps when it does. Screen readers read panels that are not selected.',
+						advice: 'Write hidden="until-found" on every panel but the selected one.',
 					}
 				: null;
 		},

@@ -94,8 +94,12 @@
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
 
-/* Every panel takes the one panels area. Overlapping, the hidden panels add no height. */
-:where(interop-tabs > [role="tabpanel"]) {
+/*
+ * Once the element is defined, every panel takes the one panels area: overlapping, the hidden
+ * panels add no height. Before that, and without JavaScript, panels stack, so a panel the author
+ * did not hide, or one find-in-page reveals, reads in turn rather than over another.
+ */
+:where(interop-tabs:defined > [role="tabpanel"]) {
 	grid-area: panels;
 }
 
@@ -104,23 +108,33 @@
 }
 
 /*
- * Before the element is defined, as with server-rendered markup waiting for its script, panels the
- * author did not hide would all show, overlapping in the panels area. When no panel carries
- * `hidden`, only the first shows: the one selected by default, so the element's upgrade moves
- * nothing. Markup that writes `hidden` itself is left as written.
+ * A hidden="until-found" panel hides its content but still draws its own box: border, padding,
+ * background. On screen its box is emptied and made transparent, and the pointer passes through, so
+ * it shows nothing, takes no space before the element upgrades, and takes no click. Find-in-page
+ * still reaches it; revealing it removes `hidden`, and with it these rules. They are `!important`
+ * because a hidden panel stays hidden: an author's styles, an animation or a transition on panels
+ * would otherwise paint it over the shown one, and a transition outranks every declaration but its
+ * own property being turned off.
  */
-:where(interop-tabs:not(:defined):not(:has(> [role="tabpanel"][hidden])) > [role="tabpanel"] ~ [role="tabpanel"]) {
-	display: none;
+@media not print {
+	:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+		min-block-size: 0 !important;
+		margin-block: 0 !important;
+		padding-block: 0 !important;
+		border-block-width: 0 !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transition-property: none !important;
+	}
 }
 
 /*
- * A hidden="until-found" panel hides its content but still draws its own border, padding and
- * background. Transparent and passed through by the pointer, it shows nothing and takes no click.
- * Find-in-page still reaches it; revealing it removes `hidden`, and with it these two.
+ * A reset such as `[hidden] { display: none !important }`, which Bootstrap ships, would turn a
+ * hidden="until-found" panel into display: none, out of reach of find-in-page and print. This one
+ * rule carries real specificity, not `:where()`, to give the panel back its own display.
  */
-:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
-	opacity: 0;
-	pointer-events: none;
+interop-tabs > [role="tabpanel"][hidden="until-found"] {
+	display: revert !important;
 }
 
 /* ── Vertical ──────────────────────────────────────────────────────────── */
@@ -135,4 +149,24 @@
 
 :where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {
 	padding-block: 0;
+}
+
+/* ── Print ─────────────────────────────────────────────────────────────── */
+
+/*
+ * Paper has no tabs to choose with, so every panel prints, stacked in order, each with the same
+ * spacing and the author's own styles.
+ */
+@media print {
+	:where(interop-tabs) {
+		display: block;
+	}
+
+	:where(interop-tabs > [role="tabpanel"]) {
+		padding-block: var(--itx-tabs-panel-padding-block);
+	}
+
+	:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+		content-visibility: visible;
+	}
 }

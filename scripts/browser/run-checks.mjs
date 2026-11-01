@@ -2,10 +2,15 @@
 // on any failure: npm run test:browser
 import { chromium, webkit } from "playwright";
 import { checkHydration } from "./check-hydration.mjs";
+import { checkReact } from "./check-react.mjs";
 import { checkTabs } from "./check-tabs.mjs";
 import { serve } from "./serve.mjs";
 
-const checks = { tabs: checkTabs, hydration: checkHydration };
+const checks = {
+	tabs: checkTabs,
+	hydration: checkHydration,
+	react: checkReact,
+};
 const { url, stop } = await serve();
 let failed = 0;
 try {

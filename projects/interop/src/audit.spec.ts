@@ -1,4 +1,5 @@
 import { auditInterop, watchInterop } from './audit';
+import { bindTabs } from './bind-tabs';
 import { guardActivation } from './guard-activation';
 
 const render = (html: string) => {
@@ -295,6 +296,36 @@ describe('auditInterop', () => {
 		it('flags the shown panel of an unselected tab', () => {
 			render(tabs({ ...good, panels: panel('a', false) + panel('b', false) }));
 			expect(rules()).toEqual(['tabs-panel-hidden']);
+		});
+
+		it('flags panels the markup left without hidden, after the tabs have bound and hidden them', () => {
+			render(tabs({ ...good, panels: panel('a', false) + panel('b', false) }));
+			const unbind = bindTabs(document.querySelector('interop-tabs')!);
+			expect(document.querySelector('#p-b')!.getAttribute('hidden')).toBe('until-found');
+			expect(rules()).toEqual(['tabs-panel-hidden']);
+			unbind();
+		});
+
+		it('flags panels left without hidden when the tabs appear after binding, as in a framework render', async () => {
+			render('<interop-tabs></interop-tabs>');
+			const root = document.querySelector<HTMLElement>('interop-tabs')!;
+			const unbind = bindTabs(root);
+			root.innerHTML = `<div role="tablist" aria-label="Sections">${good.tabs}</div>${panel('a', false) + panel('b', false)}`;
+			await Promise.resolve();
+			expect(rules()).toEqual(['tabs-panel-hidden']);
+			unbind();
+		});
+
+		it('flags two tabs that control the same panel', () => {
+			render(tabs({ ...good, tabs: tab('a', true) + tab('a', false), panels: panel('a', false) }));
+			expect(rules()).toContain('tabs-panel-shared');
+		});
+
+		it('accepts tabs wrapped in elements with role="presentation"', () => {
+			render(
+				`<ul role="tablist" aria-label="Sections"><li role="presentation">${tab('a', true)}</li><li role="presentation">${tab('b', false)}</li></ul>${good.panels}`,
+			);
+			expect(rules()).toEqual([]);
 		});
 	});
 
