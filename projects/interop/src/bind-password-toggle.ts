@@ -1,48 +1,59 @@
 /**
- * Lets the user see the password they type. A button aimed at the input with the custom command
- * `--toggle-password` shows or hides it:
+ * Lets the user see the password they type. A button inside `root`, aimed at the input with the
+ * custom command `--toggle-password`, shows or hides it. `<interop-password>` calls this:
  *
- *   <input interop-input id="password" type="password" autocomplete="current-password">
- *   <button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false" hidden>
- *     Show password
- *   </button>
+ *   <interop-password>
+ *     <input interop-input id="password" type="password" autocomplete="current-password">
+ *     <button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false">
+ *       Show password
+ *     </button>
+ *   </interop-password>
  *
  * - The button keeps its label and reports its state with `aria-pressed`, so a screen reader says
- *   "Show password, toggle button, pressed". It is `hidden` in the markup, so it never shows where
- *   script does not run, and this unhides it.
- * - Submitting or resetting the form hides the password again, so the browser does not offer to
- *   save it as plain text.
+ *   "Show password, toggle button, pressed".
+ * - Submitting or resetting the form hides the password again, so the browser does not save it as
+ *   plain text.
+ * - It finds the input and its buttons when the command arrives, so they can render after `root`.
  *
  * Returns a function that removes the behavior and hides the password.
  */
-export function bindPasswordToggle(input: HTMLInputElement): () => void {
-	const buttons = () =>
-		Array.from(input.ownerDocument.querySelectorAll<HTMLButtonElement>('button[command="--toggle-password"][commandfor]')).filter(
+export function bindPasswordToggle(root: HTMLElement): () => void {
+	const buttonsFor = (input: HTMLInputElement) =>
+		Array.from(root.querySelectorAll<HTMLButtonElement>('button[command="--toggle-password"]')).filter(
 			(button) => input.id && button.getAttribute('commandfor') === input.id,
 		);
 
-	const show = (visible: boolean, source?: Element | null) => {
+	const show = (input: HTMLInputElement, visible: boolean) => {
 		input.type = visible ? 'text' : 'password';
-		for (const button of new Set([...buttons(), ...(source ? [source] : [])])) button.setAttribute('aria-pressed', String(visible));
+		for (const button of buttonsFor(input)) button.setAttribute('aria-pressed', String(visible));
+	};
+
+	/** Hides every password shown here, or only those in `form`. */
+	const hide = (form?: EventTarget | null) => {
+		for (const input of root.querySelectorAll('input')) {
+			if (form && input.form !== form) continue;
+			if (buttonsFor(input).some((button) => button.getAttribute('aria-pressed') === 'true')) show(input, false);
+		}
 	};
 
 	const onCommand = (event: Event) => {
-		const { command, source } = event as Event & { command: string; source: Element | null };
-		if (command === '--toggle-password') show(input.type === 'password', source);
+		const input = event.target;
+		if ((event as Event & { command?: string }).command === '--toggle-password' && input instanceof HTMLInputElement)
+			show(input, input.type === 'password');
 	};
 
 	const listening = new AbortController();
 	const { signal } = listening;
-	input.addEventListener('command', onCommand, { signal });
-	input.form?.addEventListener('submit', () => show(false), { capture: true, signal });
-	input.form?.addEventListener('reset', () => show(false), { signal });
-	for (const button of buttons()) {
-		button.setAttribute('aria-pressed', 'false');
-		button.hidden = false;
-	}
+	// The command event does not bubble; capture sees it on its way to the input.
+	root.addEventListener('command', onCommand, { capture: true, signal });
+	// Bubbling, so a submit that bindValidation() stops leaves the password shown while the user fixes
+	// the errors. The root node rather than the form, which may render after `root`.
+	const tree = root.getRootNode();
+	tree.addEventListener('submit', (event) => hide(event.target), { signal });
+	tree.addEventListener('reset', (event) => hide(event.target), { signal });
 
 	return () => {
 		listening.abort();
-		show(false);
+		hide();
 	};
 }

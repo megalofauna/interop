@@ -1026,6 +1026,21 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Add an empty <ul> after the heading.',
 		}),
 	},
+	'password-toggle': {
+		selector: '[command="--toggle-password"]:is([hidden], :not(interop-password > *))',
+		check: (button) =>
+			button.hasAttribute('hidden')
+				? {
+						problem: 'This "Show password" button is hidden.',
+						reason: 'It shows once <interop-password> is defined; nothing removes hidden, so it never appears.',
+						advice: 'Remove hidden. The element keeps the button out of sight until script runs.',
+					}
+				: {
+						problem: 'This "Show password" button is not inside <interop-password>.',
+						reason: 'The --toggle-password command only works on an input and button inside the element.',
+						advice: 'Put the input and the button in <interop-password>, in place of the <div> around them.',
+					},
+	},
 	'select-option-text': {
 		selector: 'select[interop-select] option',
 		check: (option) =>

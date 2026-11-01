@@ -162,15 +162,15 @@
 <h2>Password</h2>
 <p>
 	A button beside the field shows the password, so people can check what they
-	typed. It is an invoker:
-	<code>command="--toggle-password"</code> aimed at the input. It keeps its
-	label and reports its state with <code>aria-pressed</code>. It is
-	<code>hidden</code> until script runs, and the password is hidden again when
-	the form is submitted, so the browser does not save it as plain text.
+	typed. Put the input and the button in <code>&lt;interop-password&gt;</code>.
+	The button is an invoker: <code>command="--toggle-password"</code> aimed at
+	the input. It keeps its label and reports its state with
+	<code>aria-pressed</code>. It shows only once the element is defined, so it
+	never appears where script does not run, and the password is hidden again
+	when the form is submitted, so the browser does not save it as plain text.
 </p>
 <demo-example
 	[html]="examples.password"
-	[bind]="bindPassword"
 	[ts]="passwordTs"
 	layout="stack"
 />

@@ -173,10 +173,10 @@
 }
 
 /*
- * A text field and what sits beside it, in a row: units joined to the box, or a button such as
+ * A text field and what sits beside it, in a row: units joined to the box, or <interop-password>'s
  * "Show password" a gap away.
  */
-:where([interop-field] > div:has(> [interop-input])) {
+:where([interop-field] > :is(div, interop-password):has(> [interop-input])) {
 	display: flex;
 	align-items: flex-start;
 	gap: var(--itx-field-gap);
@@ -188,18 +188,23 @@
 	gap: 0;
 }
 
-:where([interop-field] > div > [interop-input]) {
+:where([interop-field] > :is(div, interop-password) > [interop-input]) {
 	flex: 1;
 	min-inline-size: 0;
 	max-inline-size: none;
 }
 
-:where([interop-field] > div > [interop-input][size]) {
+:where([interop-field] > :is(div, interop-password) > [interop-input][size]) {
 	flex: none;
 }
 
-:where([interop-field] > div > button) {
+:where([interop-field] > :is(div, interop-password) > button) {
 	flex: none;
+}
+
+/* The button needs script, so it shows once the element is defined. Real specificity, over a button's display. */
+interop-password:not(:defined) > [command="--toggle-password"] {
+	display: none;
 }
 
 :where([interop-unit]) {

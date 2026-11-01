@@ -1,5 +1,5 @@
 import { Directive, ElementRef, afterRenderEffect, effect, inject, input } from '@angular/core';
-import { bindCharacterCount, bindPasswordToggle, bindValidation, type CharacterCountOptions, type ValidationOptions } from 'interop';
+import { bindCharacterCount, bindValidation, type CharacterCountOptions, type ValidationOptions } from 'interop';
 
 /**
  * Calls `bindValidation()` on the form, after it renders in the browser, and unbinds when it is
@@ -51,26 +51,6 @@ export class InteropCustomValidity {
 			this.control.setCustomValidity(this.interopCustomValidity() ?? '');
 			this.control.dispatchEvent(new Event('interop-validity-change', { bubbles: true }));
 		});
-	}
-}
-
-/**
- * Calls `bindPasswordToggle()` on the input. Aim a button at it with `commandfor` and
- * `command="--toggle-password"`, `aria-pressed="false"` and `hidden`.
- *
- * ```html
- * <input interop-input interop-password-toggle id="password" type="password" autocomplete="current-password">
- * <button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false" hidden>Show password</button>
- * ```
- */
-@Directive({
-	selector: 'input[interop-password-toggle]',
-})
-export class InteropPasswordToggle {
-	private readonly input = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
-
-	constructor() {
-		afterRenderEffect((onCleanup) => onCleanup(bindPasswordToggle(this.input)));
 	}
 }
 

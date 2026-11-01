@@ -22,7 +22,8 @@ CSS, plus `bindValidation()` for errors. Research:
 projects/interop/field/
   interop-field.structure.css   the box, states, layout, hint, error, units, summary; names list at the top
   interop-field.base.css        token values and size steps
-  field.ts                      InteropForm, InteropCustomValidity, InteropPasswordToggle, InteropCharacterCount
+  password.ts                   <interop-password>, defined on import
+  field.ts                      InteropForm, InteropCustomValidity, InteropCharacterCount
   public-api.ts
 projects/interop/src/bind-validation.ts        bindValidation(), defaultValidationMessages
 projects/interop/src/bind-password-toggle.ts   bindPasswordToggle()
@@ -41,7 +42,7 @@ The demo page is `projects/demo/src/app/components/field/`.
 | `[interop-error]` | Above the control, below the hint, `hidden` and empty in the markup. `bindValidation()` fills it and adds it to `aria-describedby` while it shows. Its icon reads "Error:", from `--itx-error-content` (translate it on `:root:lang(…)`) |
 | The control | `input`, `textarea` or `select[interop-select]` with `interop-input` or `interop-select`. Fills its container up to `--itx-field-max-inline-size`; `size` asks for an expected length |
 | `[interop-unit]` | Beside the input, in a `<div>` inside the field. `aria-hidden="true"`, with the unit in the label |
-| A button beside the input | In the same `<div>`, a gap away: "Show password" |
+| A button beside the input | In the same `<div>`, a gap away. "Show password" goes in `<interop-password>`, which is the row |
 | `[interop-count]` | Below the control, filled by `bindCharacterCount()`. Hint-colored; error-colored and bold with `data-over` |
 | Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby`. Invalid radios and checkboxes get a 2px danger border |
 | `[interop-error-summary]` | A heading and an empty `<ul>`, `hidden`. Filled and focused on a failed submit |
@@ -101,27 +102,34 @@ the browser alike.
 
 ## Password
 
-`bindPasswordToggle(input)`, or `input[interop-password-toggle]` in Angular. A
-button aimed at the input with `commandfor` and `command="--toggle-password"`
-shows or hides the password: a custom invoker command, so no click handler.
+`<interop-password>`, defined by importing `interop/field`, holds the input and
+a button aimed at it with `commandfor` and `command="--toggle-password"`. The
+button shows or hides the password: a custom invoker command, so no click
+handler. The element calls `bindPasswordToggle(root)`.
 
 ```html
-<div>
-  <input interop-input interop-password-toggle id="password" type="password" autocomplete="current-password"
+<interop-password>
+  <input interop-input id="password" type="password" autocomplete="current-password"
     autocapitalize="off" spellcheck="false">
-  <button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false" hidden>
+  <button interop-button type="button" commandfor="password" command="--toggle-password" aria-pressed="false">
     Show password
   </button>
-</div>
+</interop-password>
 ```
 
+- The element is the row in place of the `<div>`, and has no role.
 - The label stays "Show password", and `aria-pressed` says whether it is
   showing: "Show password, toggle button, pressed". One way, not both, so the
   label and the state cannot disagree.
-- The button is `hidden` in the markup and unhidden by the helper, so it never
-  shows where script does not run.
+- The button is hidden by CSS until the element is defined
+  (`interop-password:not(:defined)`), so it never shows where script does not
+  run. Don't write `hidden` on it: nothing removes it.
 - Submit and reset hide the password again, so the browser does not save it as
-  plain text.
+  plain text. The listener bubbles, so a submit `bindValidation()` stops leaves
+  it shown while the user fixes the errors.
+- Nothing is set up when the element connects: the input and buttons are found
+  when the command arrives, so a framework can render them after the element.
+- The element owns the input's `type` and the button's `aria-pressed`.
 
 ## Character count
 
@@ -154,13 +162,19 @@ attribute).
 | `field-autocomplete` | `type="email"` or `"tel"` with no `autocomplete` |
 | `field-hint-link` | A link inside a hint |
 | `error-summary-list` | An error summary with no `<ul>` |
+| `password-toggle` | A "Show password" button that is `hidden`, or not inside `<interop-password>` |
 
 ## Tested
 
 Style guards: contrast (text, placeholder, hint, error, borders at rest, hover
 and invalid), target size, radius, motion. axe on a field with a shown error,
-units, a read-only textarea and a summary. `bindValidation()` has 12 specs, `bindPasswordToggle()` 3,
+units, a read-only textarea and a summary. `bindValidation()` has 12 specs, `bindPasswordToggle()` 6, `<interop-password>` 2,
 `bindCharacterCount()` 5.
+
+`npm run test:browser` clicks `<interop-password>`'s real invoker in Chromium
+and WebKit: the button hidden while the script is blocked, beside the input once
+defined, the toggle, and the password hidden on submit and reset. The element is
+558 B gzip.
 
 In Chrome 155 with real keys: no error on leaving an empty field; the format
 error on leaving a changed field, clearing as it is fixed; a failed submit

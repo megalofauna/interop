@@ -1,6 +1,5 @@
 import { Component, signal } from "@angular/core";
 import {
-	bindPasswordToggle,
 	bindValidation,
 	defaultValidationMessages,
 	type ValidationOptions,
@@ -10,7 +9,6 @@ import {
 	InteropCharacterCount,
 	InteropCustomValidity,
 	InteropForm,
-	InteropPasswordToggle,
 } from "interop/field";
 import { InteropScrollArea } from "interop/scroll-area";
 import { DemoExample } from "../../example/example";
@@ -35,7 +33,6 @@ import { examples as ts } from "./field-examples";
 		InteropCodeBlock,
 		InteropCustomValidity,
 		InteropForm,
-		InteropPasswordToggle,
 		InteropScrollArea,
 	],
 	templateUrl: "./field-demo.html",
@@ -57,12 +54,8 @@ export class FieldDemo {
 	protected readonly customCode = region(template, "custom");
 	protected readonly countCode = region(template, "count");
 
-	protected readonly bindPassword = (root: HTMLElement) =>
-		bindPasswordToggle(root.querySelector<HTMLInputElement>("#password")!);
-	protected readonly passwordTs = `import { bindPasswordToggle } from "interop";
-
-// Shows the button, and runs its --toggle-password command. Returns a function that removes it.
-bindPasswordToggle(document.querySelector("#password"));
+	protected readonly passwordTs = `// Once, anywhere: defines <interop-password>.
+import "interop/field";
 `;
 	protected readonly bindDate = (root: HTMLElement) =>
 		bindValidation(root.querySelector<HTMLFormElement>("#birthday")!);

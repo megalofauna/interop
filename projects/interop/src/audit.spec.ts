@@ -737,6 +737,32 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('password', () => {
+		it('accepts the button inside <interop-password>', () => {
+			render(`
+				<interop-password>
+					<input id="p" type="password" aria-label="Password">
+					<button type="button" commandfor="p" command="--toggle-password" aria-pressed="false">Show password</button>
+				</interop-password>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a hidden button, and one outside the element', () => {
+			render(`
+				<interop-password>
+					<input id="p" type="password" aria-label="Password">
+					<button type="button" commandfor="p" command="--toggle-password" aria-pressed="false" hidden>Show password</button>
+				</interop-password>
+				<div>
+					<input id="q" type="password" aria-label="Password">
+					<button type="button" commandfor="q" command="--toggle-password" aria-pressed="false">Show password</button>
+				</div>
+			`);
+			expect(rules()).toEqual(['password-toggle', 'password-toggle']);
+		});
+	});
+
 	describe('select', () => {
 		it('accepts options with text, a label, or visually hidden text', () => {
 			render(`

@@ -2,12 +2,14 @@
 // on any failure: npm run test:browser
 import { chromium, webkit } from "playwright";
 import { checkHydration } from "./check-hydration.mjs";
+import { checkPassword } from "./check-password.mjs";
 import { checkReact } from "./check-react.mjs";
 import { checkTabs } from "./check-tabs.mjs";
 import { serve } from "./serve.mjs";
 
 const checks = {
 	tabs: checkTabs,
+	password: checkPassword,
 	hydration: checkHydration,
 	react: checkReact,
 };

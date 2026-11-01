@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
 import {
 	bindCharacterCount,
-	bindPasswordToggle,
 	bindSelectAll,
 	bindSlider,
 	bindTagInput,
@@ -15,6 +14,7 @@ import {
 } from 'interop';
 import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
+import 'interop/field';
 import { InteropIcon } from 'interop/icon';
 import { InteropInvoker } from 'interop/invoker';
 import { InteropScrollArea } from 'interop/scroll-area';
@@ -605,10 +605,10 @@ describe('accessibility (axe-core)', () => {
 					</div>
 					<div interop-field>
 						<label for="h-password">Password</label>
-						<div>
+						<interop-password>
 							<input interop-input id="h-password" type="password" name="password" autocomplete="current-password" />
-							<button interop-button type="button" commandfor="h-password" command="--toggle-password" aria-pressed="false" hidden>Show password</button>
-						</div>
+							<button interop-button type="button" commandfor="h-password" command="--toggle-password" aria-pressed="false">Show password</button>
+						</interop-password>
 					</div>
 					<div interop-field>
 						<label for="h-tag">Skills</label>
@@ -639,7 +639,6 @@ describe('accessibility (axe-core)', () => {
 				limit: 5,
 				count: textarea.nextElementSibling as HTMLElement,
 			}),
-			bindPasswordToggle(password),
 			bindTagInput($<HTMLInputElement>('#h-tag'), {
 				list: $<HTMLElement>('ul[interop-tags]'),
 				required: 'Add a skill',
