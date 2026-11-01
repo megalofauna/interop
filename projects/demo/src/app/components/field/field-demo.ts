@@ -1,11 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from "@angular/core";
-import {
-	bindValidation,
-	defaultValidationMessages,
-	type ValidationOptions,
-} from "interop";
+import { defaultValidationMessages, type ValidationOptions } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
-import { InteropCustomValidity } from "interop/field";
+import "interop/field";
 import { InteropScrollArea } from "interop/scroll-area";
 import { DemoExample } from "../../example/example";
 import { region } from "../../example/region";
@@ -23,12 +19,7 @@ import { examples as ts } from "./field-examples";
 @Component({
 	selector: "demo-field",
 	host: { "itx-flow": "" },
-	imports: [
-		DemoExample,
-		InteropCodeBlock,
-		InteropCustomValidity,
-		InteropScrollArea,
-	],
+	imports: [DemoExample, InteropCodeBlock, InteropScrollArea],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	templateUrl: "./field-demo.html",
 	styleUrl: "./field-demo.css",
@@ -52,15 +43,10 @@ export class FieldDemo {
 	protected readonly passwordTs = `// Once, anywhere: defines <interop-password>.
 import "interop/field";
 `;
-	protected readonly bindDate = (root: HTMLElement) =>
-		bindValidation(root.querySelector<HTMLFormElement>("#birthday")!);
-	protected readonly dateTs = `import { bindValidation } from "interop";
-
-// Checks the form, shows one error for the three fields, and stops an invalid submit.
-bindValidation(document.querySelector("#birthday"));
+	protected readonly dateTs = `// Once, anywhere: defines <interop-validation>.
+import "interop/field";
 `;
 	protected readonly sent = signal(false);
-	protected readonly username = signal("");
 	/** A message per field where the default cannot say it well, such as a question. */
 	protected readonly messages: ValidationOptions["messages"] = {
 		valueMissing: (control, label) =>
@@ -68,6 +54,14 @@ bindValidation(document.querySelector("#birthday"));
 				? "Select how you want us to contact you"
 				: defaultValidationMessages.valueMissing(control, label),
 	};
+
+	/** A rule the browser cannot check. Set in the input listener, the error follows it. */
+	protected checkUsername(event: Event): void {
+		const control = event.target as HTMLInputElement;
+		control.setCustomValidity(
+			control.value === "admin" ? "That username is taken. Choose another" : "",
+		);
+	}
 
 	protected send(event: SubmitEvent): void {
 		// <interop-validation> stops an invalid form before this runs.

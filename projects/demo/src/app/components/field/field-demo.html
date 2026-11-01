@@ -116,10 +116,12 @@
 
 <h2>A message from elsewhere</h2>
 <p>
-	For a rule the browser cannot check, such as a username already taken, set the
-	control's custom validity.
-	<code>[interopCustomValidity]</code> does that from an Angular value, and the
-	error follows it. Type "admin", then move on.
+	For a rule the browser cannot check, such as a username already taken, call
+	the control's <code>setCustomValidity()</code> in its
+	<code>input</code> listener, and the error follows it. For a result that comes
+	later, such as a server's answer, also fire
+	<code>interop-validity-change</code> on the control. Type "admin", then move
+	on.
 </p>
 <!-- example: custom -->
 <interop-validation>
@@ -134,10 +136,7 @@
 				autocomplete="username"
 				spellcheck="false"
 				required
-				(input)="username.set($any($event.target).value)"
-				[interopCustomValidity]="
-					username() === 'admin' ? 'That username is taken. Choose another' : ''
-				"
+				(input)="checkUsername($event)"
 			/>
 		</div>
 	</form>
@@ -148,6 +147,12 @@
 	language="html"
 	caption="Angular template"
 	[code]="customCode"
+></figure>
+<figure
+	interop-code-block
+	language="ts"
+	caption="TS"
+	[code]="examples.customTs"
 ></figure>
 
 <h2>Units</h2>
@@ -216,7 +221,6 @@
 <demo-example
 	[html]="examples.date"
 	[css]="examples.dateCss"
-	[bind]="bindDate"
 	[ts]="dateTs"
 	layout="stack"
 />

@@ -25,7 +25,6 @@ projects/interop/field/
   password.ts                   <interop-password>, defined on import
   character-count.ts            <interop-character-count>, defined on import
   validation.ts                 <interop-validation>, defined on import
-  field.ts                      InteropCustomValidity
   public-api.ts
 projects/interop/src/bind-validation.ts        bindValidation(), defaultValidationMessages
 projects/interop/src/bind-password-toggle.ts   bindPasswordToggle()
@@ -122,10 +121,21 @@ Known: the error shown on leaving a changed field moves what is below it. A
 click on Submit straight from that field lands where the button was, and is
 lost; the second click submits. Not yet decided.
 
-Angular: `[interopCustomValidity]` sets a control's custom validity from a message and
-fires `interop-validity-change`; use it for server checks and Angular-only
-validators. No value accessor: native attributes drive Angular's validators and
-the browser alike.
+A rule the browser cannot check (a username taken, an Angular-only validator)
+is the control's own `setCustomValidity()`. Called in the control's `input`
+listener, the error follows it with nothing more: that listener runs before
+the form's. A result that comes later, such as a server's answer, also fires
+`interop-validity-change` on the control (bubbling), so its error updates:
+
+```js
+control.setCustomValidity(message);
+control.dispatchEvent(new Event("interop-validity-change", { bubbles: true }));
+```
+
+No directive or attribute for it; an `itx-custom-validity` attribute may come
+later. No value accessor: native attributes
+drive Angular's validators and the browser alike. `interop/field` has no
+Angular in it.
 
 ## Password
 
