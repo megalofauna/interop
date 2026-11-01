@@ -10,6 +10,29 @@ export async function checkHydration(page, base) {
 	);
 	page.on("pageerror", (error) => messages.push(`pageerror: ${error.message}`));
 
+	// Before the script runs: only the first panel shows, at the height the element keeps.
+	const measure = () =>
+		page.evaluate(() => ({
+			shown: [...document.querySelectorAll("[role=tabpanel]")]
+				.filter(
+					(panel) =>
+						getComputedStyle(panel).display !== "none" && !panel.hidden,
+				)
+				.map((panel) => panel.id)
+				.join(","),
+			height: Math.round(
+				document.querySelector("interop-tabs").getBoundingClientRect().height,
+			),
+		}));
+	await page.route("**/hydration-client.js", (route) => route.abort());
+	await page.goto(`${base}/dist/hydration.html`);
+	const before = await measure();
+	await page.unroute("**/hydration-client.js");
+	// The blocked script logs a failed load; only the real load's messages count.
+	messages.length = 0;
+	if (before.shown !== "log-1")
+		failures.push(`before the script runs, panels shown: ${before.shown}`);
+
 	await page.goto(`${base}/dist/hydration.html`);
 	await page.waitForFunction(() =>
 		document.querySelector("interop-tabs [role=tab][tabindex]"),
@@ -31,6 +54,12 @@ export async function checkHydration(page, base) {
 					return `${tab.textContent.trim()}${tab.getAttribute("aria-selected") === "true" ? "*" : ""}:${panel?.hidden === false ? "shown" : panel?.getAttribute("hidden")}`;
 				})
 				.join(" "),
+		);
+
+	const after = await measure();
+	if (after.height !== before.height)
+		failures.push(
+			`height ${before.height} before the script, ${after.height} after`,
 		);
 
 	const bound = await state();

@@ -204,10 +204,15 @@ with decorated panels, find-in-page through a text fragment, and server
 rendering with `@angular/platform-server` followed by hydration, with no
 mismatch and the tabs working afterwards (`spikes/custom-elements/`).
 
-Server-rendered tabs from a `@for` template show every panel until the element
-upgrades in the browser, because the template cannot write `hidden="until-found"`
-on all but the selected panel without binding `hidden`. Static markup that
-writes it shows only the selected panel from the start.
+Until the element is defined, as with server-rendered markup waiting for its
+script, tabs whose panels carry no `hidden` show only the first panel, the one
+selected by default (`:not(:defined)` in the structure file). A `@for` template
+cannot write `hidden="until-found"` on all but one panel without binding
+`hidden`, so without the rule every panel would show, overlapping in the panels
+area, until the upgrade. The height before and after the upgrade is the same.
+Markup that writes `hidden` itself is left as written. Without JavaScript the
+other panels stay hidden; the rule trades that case for no jank in the common
+one.
 
 Checked by hand in Safari (2026-10-31): find-in-page on a hidden panel's text,
 a text-fragment link, the arrow keys and the layout, on the plain page and in the
