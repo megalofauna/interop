@@ -1,6 +1,7 @@
 // Builds and serves the spike, runs every browser check in Chromium and WebKit, and exits non-zero
 // on any failure: npm run test:browser
 import { chromium, webkit } from "playwright";
+import { checkCharacterCount } from "./check-character-count.mjs";
 import { checkHydration } from "./check-hydration.mjs";
 import { checkPassword } from "./check-password.mjs";
 import { checkReact } from "./check-react.mjs";
@@ -10,6 +11,7 @@ import { serve } from "./serve.mjs";
 const checks = {
 	tabs: checkTabs,
 	password: checkPassword,
+	"character count": checkCharacterCount,
 	hydration: checkHydration,
 	react: checkReact,
 };

@@ -23,7 +23,7 @@ export async function checkPassword(page, base) {
 	};
 
 	await page.route("**/dist/password.js", (route) => route.abort());
-	await page.goto(`${base}/password.html`);
+	await page.goto(`${base}/field.html`);
 	expect(
 		"without script, button shown",
 		(await page.evaluate(state)).buttonShown,
@@ -31,7 +31,7 @@ export async function checkPassword(page, base) {
 	);
 	await page.unroute("**/dist/password.js");
 
-	await page.goto(`${base}/password.html`);
+	await page.goto(`${base}/field.html`);
 	await page.waitForFunction(() => customElements.get("interop-password"));
 	let now = await page.evaluate(state);
 	expect("with script, button shown", now.buttonShown, true);

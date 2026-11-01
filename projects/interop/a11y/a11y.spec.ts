@@ -2,7 +2,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
 import {
-	bindCharacterCount,
 	bindSelectAll,
 	bindSlider,
 	bindTagInput,
@@ -600,8 +599,10 @@ describe('accessibility (axe-core)', () => {
 					<div interop-field>
 						<label for="h-summary">Summary</label>
 						<p interop-error hidden></p>
-						<textarea interop-input id="h-summary" name="summary"></textarea>
-						<p interop-count></p>
+						<interop-character-count itx-limit="5">
+							<textarea interop-input id="h-summary" name="summary"></textarea>
+							<p interop-count></p>
+						</interop-character-count>
 					</div>
 					<div interop-field>
 						<label for="h-password">Password</label>
@@ -635,10 +636,6 @@ describe('accessibility (axe-core)', () => {
 		const password = $<HTMLInputElement>('#h-password');
 		const unbind = [
 			bindValidation(form, { summary }),
-			bindCharacterCount(textarea, {
-				limit: 5,
-				count: textarea.nextElementSibling as HTMLElement,
-			}),
 			bindTagInput($<HTMLInputElement>('#h-tag'), {
 				list: $<HTMLElement>('ul[interop-tags]'),
 				required: 'Add a skill',

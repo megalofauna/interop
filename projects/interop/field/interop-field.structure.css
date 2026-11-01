@@ -247,6 +247,20 @@ interop-password:not(:defined) > [command="--toggle-password"] {
 	border-end-end-radius: 0px;
 }
 
+/* <interop-character-count> has no box: the control and its count stack in the field. */
+:where(interop-character-count) {
+	display: contents;
+}
+
+:where([interop-field] > interop-character-count > *) {
+	margin: 0;
+}
+
+/* The count needs script, so it shows once the element is defined. */
+interop-character-count:not(:defined) > [interop-count] {
+	display: none;
+}
+
 /* A character count, below its field: how many are left, or how many too many. */
 :where([interop-count]) {
 	margin: 0;

@@ -1,6 +1,6 @@
 // Builds the spike's bundles and pages into dist/ and serves this folder.
 //
-// - dist/tabs.js and dist/interop.css, for the plain HTML page; dist/password.js, the password page;
+// - dist/tabs.js and dist/interop.css, for the plain HTML page; dist/password.js and dist/character-count.js, the field page;
 //   dist/react.js, the React page.
 // - dist/hydration.html: the hydration app rendered on the server by @angular/platform-server, with
 //   dist/hydration-client.js to hydrate it in the browser.
@@ -29,6 +29,7 @@ export async function build() {
 		entryPoints: {
 			tabs: `${root}projects/interop/tabs/public-api.ts`,
 			password: `${root}projects/interop/field/password.ts`,
+			"character-count": `${root}projects/interop/field/character-count.ts`,
 			interop: `${root}projects/interop/interop.css`,
 			"hydration-client": `${here}hydration/client.ts`,
 			react: `${here}react/app.js`,

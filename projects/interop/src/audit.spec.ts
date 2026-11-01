@@ -737,6 +737,21 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('character count', () => {
+		it('accepts a count with a limit', () => {
+			render('<interop-character-count itx-limit="5"><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>');
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a count with no limit, and a counted field with maxlength', () => {
+			render(`
+				<interop-character-count><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>
+				<interop-character-count itx-limit="5"><textarea aria-label="Bio" maxlength="5"></textarea><p interop-count></p></interop-character-count>
+			`);
+			expect(rules()).toEqual(['character-count-limit', 'character-count-limit']);
+		});
+	});
+
 	describe('password', () => {
 		it('accepts the button inside <interop-password>', () => {
 			render(`

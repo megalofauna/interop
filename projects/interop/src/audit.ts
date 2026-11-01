@@ -1026,6 +1026,21 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Add an empty <ul> after the heading.',
 		}),
 	},
+	'character-count-limit': {
+		selector: 'interop-character-count:not([itx-limit]), interop-character-count > [maxlength]',
+		check: (element) =>
+			element.localName === 'interop-character-count'
+				? {
+						problem: 'This character count has no itx-limit.',
+						reason: 'Without a limit there is nothing to count against, so the count stays empty.',
+						advice: 'Add itx-limit with the most characters the field takes, e.g. itx-limit="200".',
+					}
+				: {
+						problem: 'This counted field has maxlength.',
+						reason: 'maxlength stops typing at the limit and cuts pasted text short without saying so; the count lets people go over and shows by how much.',
+						advice: 'Remove maxlength and keep itx-limit on <interop-character-count>.',
+					},
+	},
 	'password-toggle': {
 		selector: '[command="--toggle-password"]:is([hidden], :not(interop-password > *))',
 		check: (button) =>

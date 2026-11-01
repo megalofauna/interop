@@ -1,5 +1,5 @@
 import { Directive, ElementRef, afterRenderEffect, effect, inject, input } from '@angular/core';
-import { bindCharacterCount, bindValidation, type CharacterCountOptions, type ValidationOptions } from 'interop';
+import { bindValidation, type ValidationOptions } from 'interop';
 
 /**
  * Calls `bindValidation()` on the form, after it renders in the browser, and unbinds when it is
@@ -50,44 +50,6 @@ export class InteropCustomValidity {
 		effect(() => {
 			this.control.setCustomValidity(this.interopCustomValidity() ?? '');
 			this.control.dispatchEvent(new Event('interop-validity-change', { bubbles: true }));
-		});
-	}
-}
-
-/**
- * Calls `bindCharacterCount()` on the field. The input is `characterLimit`, not `maxlength`, which
- * would stop the user typing.
- *
- * ```html
- * <textarea interop-input interop-character-count [characterLimit]="200" [count]="count"></textarea>
- * <p #count interop-count></p>
- * ```
- */
-@Directive({
-	selector: 'textarea[interop-character-count], input[interop-character-count]',
-})
-export class InteropCharacterCount {
-	private readonly control = inject<ElementRef<HTMLTextAreaElement | HTMLInputElement>>(ElementRef).nativeElement;
-
-	readonly characterLimit = input.required<number>();
-	readonly count = input<HTMLElement | null>(null);
-	readonly status = input<HTMLElement | null>(null);
-	readonly threshold = input(0);
-	readonly message = input<CharacterCountOptions['message']>(undefined);
-	readonly tooLong = input<CharacterCountOptions['tooLong']>(undefined);
-
-	constructor() {
-		afterRenderEffect((onCleanup) => {
-			onCleanup(
-				bindCharacterCount(this.control, {
-					limit: this.characterLimit(),
-					count: this.count(),
-					status: this.status(),
-					threshold: this.threshold(),
-					message: this.message(),
-					tooLong: this.tooLong(),
-				}),
-			);
 		});
 	}
 }

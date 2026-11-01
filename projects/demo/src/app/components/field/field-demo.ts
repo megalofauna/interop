@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from "@angular/core";
 import {
 	bindValidation,
 	defaultValidationMessages,
@@ -6,7 +6,6 @@ import {
 } from "interop";
 import { InteropCodeBlock } from "interop/code-block";
 import {
-	InteropCharacterCount,
 	InteropCustomValidity,
 	InteropForm,
 } from "interop/field";
@@ -29,12 +28,12 @@ import { examples as ts } from "./field-examples";
 	host: { "itx-flow": "" },
 	imports: [
 		DemoExample,
-		InteropCharacterCount,
 		InteropCodeBlock,
 		InteropCustomValidity,
 		InteropForm,
 		InteropScrollArea,
 	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	templateUrl: "./field-demo.html",
 	styleUrl: "./field-demo.css",
 })

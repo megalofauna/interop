@@ -23,11 +23,13 @@ projects/interop/field/
   interop-field.structure.css   the box, states, layout, hint, error, units, summary; names list at the top
   interop-field.base.css        token values and size steps
   password.ts                   <interop-password>, defined on import
-  field.ts                      InteropForm, InteropCustomValidity, InteropCharacterCount
+  character-count.ts            <interop-character-count>, defined on import
+  field.ts                      InteropForm, InteropCustomValidity
   public-api.ts
 projects/interop/src/bind-validation.ts        bindValidation(), defaultValidationMessages
 projects/interop/src/bind-password-toggle.ts   bindPasswordToggle()
 projects/interop/src/bind-character-count.ts   bindCharacterCount()
+projects/interop/src/bind-children.ts          bindChildren(): binds once an element's children are in place
 ```
 
 The demo page is `projects/demo/src/app/components/field/`.
@@ -43,7 +45,7 @@ The demo page is `projects/demo/src/app/components/field/`.
 | The control | `input`, `textarea` or `select[interop-select]` with `interop-input` or `interop-select`. Fills its container up to `--itx-field-max-inline-size`; `size` asks for an expected length |
 | `[interop-unit]` | Beside the input, in a `<div>` inside the field. `aria-hidden="true"`, with the unit in the label |
 | A button beside the input | In the same `<div>`, a gap away. "Show password" goes in `<interop-password>`, which is the row |
-| `[interop-count]` | Below the control, filled by `bindCharacterCount()`. Hint-colored; error-colored and bold with `data-over` |
+| `[interop-count]` | Below the control, both inside `<interop-character-count>`, which fills it. Hint-colored; error-colored and bold with `data-over` |
 | Fieldset | A radio group, or a date as three fields, takes the hint and error after its legend; both go in the fieldset's `aria-describedby`. Invalid radios and checkboxes get a 2px danger border |
 | `[interop-error-summary]` | A heading and an empty `<ul>`, `hidden`. Filled and focused on a failed submit |
 
@@ -133,24 +135,43 @@ handler. The element calls `bindPasswordToggle(root)`.
 
 ## Character count
 
-`bindCharacterCount(control, { limit, count, status, threshold, message,
-tooLong })`, or `[interop-character-count]` with `[characterLimit]` in Angular
-(not `maxlength`, which stops typing, and not `max`, the input's own
-attribute).
+`<interop-character-count itx-limit="200">`, defined by importing
+`interop/field`, holds the control and its `[interop-count]`. Not `maxlength`,
+which stops typing and cuts pasted text short without saying so.
 
-- The user can type past the limit. `count` says how many are left or how many
+```html
+<interop-character-count itx-limit="200" itx-threshold="0.75">
+  <textarea interop-input id="summary" name="summary" aria-describedby="summary-hint"></textarea>
+  <p interop-count></p>
+</interop-character-count>
+```
+
+- The element is `display: contents`, with no role: the control and the count
+  stack in the field as if it were not there.
+- The user can type past the limit. The count says how many are left or how many
   too many, on every keystroke, and is `aria-hidden`.
 - The same text is announced with `announce()` once typing pauses for one
-  second, so a screen reader is not interrupted on every key. `status`, a
-  visually hidden `role="status"`, is only for browsers without
-  `ariaNotify()`.
+  second, so a screen reader is not interrupted on every key. A visually hidden
+  `role="status"` child is only for browsers without `ariaNotify()`.
 - Over the limit the control's custom validity says "<label> must be <limit>
   characters or fewer", and `interop-validity-change` tells `bindValidation()`.
+  A prefilled value already over is invalid from the start.
 - Characters are counted as people see them: an emoji or an accented letter is
   one (`Intl.Segmenter`).
-- Put the limit in the hint: "You can enter up to 200 characters".
-- `threshold` hides the count until that share of the limit is used, and keeps
-  `status` quiet until then too.
+- Put the limit in the hint: "You can enter up to 200 characters". The count is
+  hidden until the element is defined, so without script the hint is all there
+  is, and the server checks the length.
+- `itx-threshold` hides the count until that share of the limit is used, and
+  keeps the announcement quiet until then too.
+- `message` and `tooLong` are properties, for translations. One set before the
+  element is defined is taken when it upgrades.
+- It binds through `bindChildren()`: once the control is a direct child, and
+  again if a framework replaces it. Angular inserts the element before its
+  children.
+- Not handled: a value set by code (`control.value = ""`, Angular's
+  `setValue()`) fires no event, so the count waits for the next keystroke. The
+  control's custom validity is shared with any `setCustomValidity()` the app
+  calls.
 
 ## Dev audit rules
 
@@ -162,6 +183,7 @@ attribute).
 | `field-autocomplete` | `type="email"` or `"tel"` with no `autocomplete` |
 | `field-hint-link` | A link inside a hint |
 | `error-summary-list` | An error summary with no `<ul>` |
+| `character-count-limit` | An `<interop-character-count>` with no `itx-limit`, or a counted control with `maxlength` |
 | `password-toggle` | A "Show password" button that is `hidden`, or not inside `<interop-password>` |
 
 ## Tested
@@ -169,12 +191,14 @@ attribute).
 Style guards: contrast (text, placeholder, hint, error, borders at rest, hover
 and invalid), target size, radius, motion. axe on a field with a shown error,
 units, a read-only textarea and a summary. `bindValidation()` has 12 specs, `bindPasswordToggle()` 6, `<interop-password>` 2,
-`bindCharacterCount()` 5.
+`bindCharacterCount()` 5, `<interop-character-count>` 8, `bindChildren()` 5.
 
 `npm run test:browser` clicks `<interop-password>`'s real invoker in Chromium
 and WebKit: the button hidden while the script is blocked, beside the input once
 defined, the toggle, and the password hidden on submit and reset. The element is
-558 B gzip.
+558 B gzip. It types into `<interop-character-count>` there too: the count hidden
+while the script is blocked, the control as wide as a plain field's, over and
+back under the limit. That element is 1.3 kB gzip, with `announce()`.
 
 In Chrome 155 with real keys: no error on leaving an empty field; the format
 error on leaving a changed field, clearing as it is fixed; a failed submit
