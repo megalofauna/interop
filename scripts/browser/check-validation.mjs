@@ -1,5 +1,5 @@
 // Checks <interop-validation> in Chromium and WebKit with real input: the browser's own validation
-// while the script is blocked, then a failed submit in the page: no bubble, the summary filled and
+// while the script is blocked, then a failed submit in the page, clicked straight from the field: no bubble, the summary filled and
 // focused, its link moving to the field, and the password left shown while the user fixes the
 // error. Returns a list of failures; empty means it passed. Run through run-checks.mjs.
 
@@ -47,9 +47,7 @@ export async function checkValidation(page, base) {
 
 	await page.locator('[command="--toggle-password"]').click();
 	await page.locator("#summary").pressSequentially("Twelve chars");
-	// Leaving the field shows its error, which moves the button down; a click straight from the field
-	// would land on the old place and be lost. Leave first, as a keyboard user does.
-	await page.locator("#summary").press("Tab");
+	// Straight from the field: leaving it shows no error, so the button stays put under the click.
 	await page.locator('[type="submit"]').click();
 	let now = await page.evaluate(state);
 	expect("after a failed submit, summary shown", now.summaryShown, true);

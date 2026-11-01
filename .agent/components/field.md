@@ -95,8 +95,7 @@ The browser checks the constraints (`required`, `type`, `minlength`, `pattern`,
 | When | What shows |
 |---|---|
 | Untouched | Nothing. Every control is `aria-invalid="false"`, which also stops `setCustomValidity()` announcing an untouched field invalid |
-| Leaving a changed field with a wrong format | Its error |
-| Leaving an empty required field | Nothing until submit |
+| Leaving a field, changed or not | Nothing until submit. An error shown then would move what is below it, and a click on Submit straight from the field would miss the button |
 | Typing in a field whose error shows | The error updates, and clears when fixed |
 | Submit with errors | Every error; submit is stopped before other listeners; focus to the summary, else the first invalid field |
 | `reportValidity()` (`bindSteps`, `bindTagInput`) | The same message in the page, no bubble |
@@ -116,10 +115,6 @@ wording.
 
 `messages` is a property (Angular `[messages]`, React 19 a prop); one set
 before the element upgrades is taken.
-
-Known: the error shown on leaving a changed field moves what is below it. A
-click on Submit straight from that field lands where the button was, and is
-lost; the second click submits. Not yet decided.
 
 A rule the browser cannot check (a username taken, an Angular-only validator)
 is the control's own `setCustomValidity()`. Called in the control's `input`
@@ -235,12 +230,11 @@ defined, the toggle, and the password hidden on submit and reset. The element is
 558 B gzip. It types into `<interop-character-count>` there too: the count hidden
 while the script is blocked, the control as wide as a plain field's, over and
 back under the limit. That element is 1.3 kB gzip, with `announce()`. A failed submit there, in
-`<interop-validation>`: the browser's own validation while the script is
+`<interop-validation>`, clicked straight from the field: the browser's own validation while the script is
 blocked, then no bubble, the summary filled and focused, its link moving to
 the field, and the password left shown. That element is 2.3 kB gzip.
 
-In Chrome 155 with real keys: no error on leaving an empty field; the format
-error on leaving a changed field, clearing as it is fixed; a failed submit
+In Chrome 155 with real keys: no error on leaving a field; a failed submit
 filling and focusing the summary, each link moving to its field; a date's
 shared error flagging only the field reached; the required tag input; forced
 colors; the password toggle's state in the accessibility tree; the count going

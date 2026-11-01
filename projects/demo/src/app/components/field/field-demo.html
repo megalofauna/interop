@@ -29,19 +29,22 @@
 	Interop decides when to show the result, and says it in the page. Try it:
 </p>
 <ul>
+	<li>Fill in fields, or leave them, and move on: nothing shows yet.</li>
 	<li>
-		Leave a field empty and move on: nothing yet. An empty required field waits
-		for submit.
+		Submit with errors: each field shows its error, and the summary lists them
+		and takes focus. Each link moves to its field.
 	</li>
 	<li>
-		Type "abc" in the email field and move on: the format error shows at once.
-	</li>
-	<li>Fix it: the error clears as you type.</li>
-	<li>
-		Submit with errors: the summary lists them and takes focus. Each link moves
-		to its field.
+		Fix a field: its error updates as you type, and clears when it is right.
 	</li>
 </ul>
+<p>
+	Errors wait for submit, as
+	<a href="https://design-system.service.gov.uk/patterns/validation/"
+		>GOV.UK advises</a
+	>. One shown as you leave a field would move everything below it, and a click
+	on Submit straight from that field would miss the button.
+</p>
 <!-- example: validation -->
 <interop-validation itx-flow [messages]="messages">
 	<div interop-error-summary hidden>

@@ -51,11 +51,13 @@ describe('bindValidation', () => {
 		expect(errorOf(email).hidden).toBe(true);
 	});
 
-	it('shows a format error when the user leaves a field they changed, and clears it as they fix it', () => {
-		const { email, errorOf, type, leave } = setup();
+	it('shows no error when the user leaves a field, so nothing below it moves; after submit it follows the typing', () => {
+		const { email, errorOf, type, leave, submit } = setup();
 		type('abc');
-		expect(errorOf(email).hidden).toBe(true);
 		leave();
+		expect(errorOf(email).hidden).toBe(true);
+		expect(email.getAttribute('aria-invalid')).toBe('false');
+		submit();
 		expect(errorOf(email).textContent).toBe('Enter an email address like name@example.com');
 		expect(email.getAttribute('aria-invalid')).toBe('true');
 		expect(email.getAttribute('aria-describedby')).toBe(`email-hint ${errorOf(email).id}`);
@@ -140,7 +142,7 @@ describe('bindValidation', () => {
 		expect(email.hasAttribute('aria-invalid')).toBe(false);
 	});
 
-	it('shares one error across a fieldset of fields, and flags only the fields the user reached', () => {
+	it('shares one error across a fieldset of fields, showing the first failing one', () => {
 		document.body.innerHTML = `
 			<form id="d">
 				<fieldset>
@@ -155,13 +157,15 @@ describe('bindValidation', () => {
 		const month = document.getElementById('month') as HTMLInputElement;
 		const error = document.querySelector<HTMLElement>('[interop-error]')!;
 		day.value = 'x';
-		day.dispatchEvent(new Event('change', { bubbles: true }));
+		document.getElementById('d')!.dispatchEvent(new SubmitEvent('submit', { cancelable: true }));
 		expect(error.textContent).toBe('Enter day in the right format');
 		expect(day.getAttribute('aria-invalid')).toBe('true');
-		expect(month.getAttribute('aria-invalid')).toBe('false');
-		expect(document.querySelector('fieldset')!.getAttribute('aria-describedby')).toBe(error.id);
-		document.getElementById('d')!.dispatchEvent(new SubmitEvent('submit', { cancelable: true }));
 		expect(month.getAttribute('aria-invalid')).toBe('true');
+		expect(document.querySelector('fieldset')!.getAttribute('aria-describedby')).toBe(error.id);
+		day.value = '27';
+		day.dispatchEvent(new Event('input', { bubbles: true }));
+		expect(error.textContent).toBe('Enter month');
+		expect(day.getAttribute('aria-invalid')).toBe('false');
 	});
 });
 
