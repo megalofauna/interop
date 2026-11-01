@@ -157,4 +157,32 @@ describe('<interop-tabs>', () => {
 		await new Promise((resolve) => requestAnimationFrame(resolve));
 		expect(panel('a').hasAttribute('tabindex')).toBe(false);
 	});
+
+	it('gives the selection to a tab inserted already marked selected', async () => {
+		const { tabs, tab, panel } = make();
+		const changes: string[] = [];
+		tabs.addEventListener('interop-tabs-change', (event) => changes.push((event as CustomEvent).detail.panel.id));
+		tabs.insertAdjacentHTML('beforeend', '<section role="tabpanel" id="c">C</section>');
+		tabs
+			.querySelector('[role="tablist"]')!
+			.insertAdjacentHTML('beforeend', '<button type="button" role="tab" aria-controls="c" aria-selected="true">C</button>');
+		await Promise.resolve();
+		expect(tab('c').getAttribute('aria-selected')).toBe('true');
+		expect([tab('a').getAttribute('aria-selected'), panel('a').getAttribute('hidden'), panel('c').hasAttribute('hidden')]).toEqual([
+			'false',
+			'until-found',
+			false,
+		]);
+		expect(changes).toEqual(['c']);
+	});
+
+	it('keeps the selection when an unselected tab is inserted', async () => {
+		const { tabs, tab } = make();
+		tabs.insertAdjacentHTML('beforeend', '<section role="tabpanel" id="c" hidden="until-found">C</section>');
+		tabs
+			.querySelector('[role="tablist"]')!
+			.insertAdjacentHTML('beforeend', '<button type="button" role="tab" aria-controls="c">C</button>');
+		await Promise.resolve();
+		expect(tab('a').getAttribute('aria-selected')).toBe('true');
+	});
 });

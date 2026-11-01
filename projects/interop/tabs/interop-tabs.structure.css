@@ -119,6 +119,22 @@
 	pointer-events: none !important;
 }
 
+/*
+ * Paper has no tabs to choose with, so every panel prints, stacked in order. A hidden panel shows its
+ * content and takes the shown panel's spacing.
+ */
+@media print {
+	:where(interop-tabs) {
+		display: block;
+	}
+
+	:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+		content-visibility: visible;
+		padding-block: var(--itx-tabs-panel-padding-block);
+		opacity: 1 !important;
+	}
+}
+
 /* ── Vertical ──────────────────────────────────────────────────────────── */
 
 /* The same two areas, side by side. */

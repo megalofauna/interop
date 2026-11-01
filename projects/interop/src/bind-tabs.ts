@@ -143,15 +143,18 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 		return id ? enabled().find((tab) => tab.getAttribute('aria-controls') === id) : undefined;
 	};
 
-	/** Wires every tab and panel, and keeps exactly one tab selected. */
-	const reconcile = () => {
+	/**
+	 * Wires every tab and panel, and keeps exactly one tab selected: `preferred` if given and enabled,
+	 * else the one marked, else the one at the last selected position.
+	 */
+	const reconcile = (preferred?: HTMLElement) => {
 		for (const tab of tabs()) {
 			tab.id ||= `itx-tab-${++ids}`;
 			const panel = panelOf(tab);
 			if (panel && !panel.hasAttribute('aria-labelledby')) panel.setAttribute('aria-labelledby', tab.id);
 		}
 		const candidates = enabled();
-		const marked = selected();
+		const marked = preferred && candidates.includes(preferred) ? preferred : selected();
 		const target = marked && !(marked as HTMLButtonElement).disabled ? marked : candidates[Math.min(lastIndex, candidates.length - 1)];
 		if (target) select(target, false);
 	};
@@ -238,8 +241,18 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): () => vo
 				Array.from(record.addedNodes).some(isPart) ||
 				Array.from(record.removedNodes).some(isPart),
 		);
-		if (structural) reconcile();
-		else recheckShown();
+		if (!structural) {
+			recheckShown();
+			return;
+		}
+		// A tab inserted already marked selected takes the selection: the markup that added it chose it.
+		// A tab already in place says only what the helper wrote, so its attribute is not read as a choice.
+		const added = records
+			.flatMap((record) => Array.from(record.addedNodes))
+			.flatMap((node) => (node instanceof Element ? [node, ...Array.from(node.querySelectorAll('[role="tab"]'))] : []))
+			.filter((element) => element.matches('[role="tab"][aria-selected="true"]'))
+			.at(-1) as HTMLElement | undefined;
+		reconcile(added);
 	};
 
 	const observer = new MutationObserver(onMutation);

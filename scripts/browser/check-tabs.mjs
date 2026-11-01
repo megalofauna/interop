@@ -122,6 +122,25 @@ export async function checkTabs(page, base) {
 	if (animated !== "0")
 		failures.push(`a hidden panel under an animation has opacity ${animated}`);
 
+	// In print, every panel of the decorated tabs shows, stacked in order.
+	await page.emulateMedia({ media: "print" });
+	const printed = await page.evaluate(() => {
+		const panels = [...document.querySelectorAll("#parsed > [role=tabpanel]")];
+		const boxes = panels.map((panel) => panel.getBoundingClientRect());
+		return {
+			visible: panels.every(
+				(panel, i) =>
+					getComputedStyle(panel).opacity === "1" && boxes[i].height > 30,
+			),
+			stacked: boxes.every(
+				(box, i) => i === 0 || box.top >= boxes[i - 1].bottom - 1,
+			),
+		};
+	});
+	await page.emulateMedia({ media: "screen" });
+	if (!printed.visible || !printed.stacked)
+		failures.push(`print: ${JSON.stringify(printed)}`);
+
 	// Inside a shadow root, panels are found in the shadow root, not the document.
 	const shadow = await page.evaluate(() => {
 		const host = document.createElement("div");

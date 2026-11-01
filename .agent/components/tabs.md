@@ -65,7 +65,7 @@ never inside it.
 | Focus | State is written before focus moves. Leaving the tab list returns its tab stop to the selected tab |
 | Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. Panels are found by `id` in the document or shadow root that holds the tabs. The shown panel gets `tabindex="0"` when nothing in it is focusable, marked `data-tabs-reachable` so a later binding, after a move or a changed attribute, can remove it. A hidden panel is never a tab stop: a consumer's `tabindex` on it waits in `data-tabs-tabindex` and comes back when the panel shows. Attributes are written only when their value changes |
 | Change | `interop-tabs-change` on the tab list, detail `{ tab, panel }`, when the selection changes. Not on bind |
-| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A change only inside a panel's content rechecks whether the shown panel needs to be a tab stop, at most once a frame, because that check reads layout. Measured with five content changes to a 2,000-row panel: 14.3 ms bound against 14.2 ms unbound (Chromium), 13.0 against 12.0 (WebKit) |
+| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A tab inserted already marked `aria-selected="true"` takes the selection, as streamed or rendered markup chose it; a tab already in place carries only what the helper wrote, so its attribute is not read as a choice. A change only inside a panel's content rechecks whether the shown panel needs to be a tab stop, at most once a frame, because that check reads layout. Measured with five content changes to a 2,000-row panel: 14.3 ms bound against 14.2 ms unbound (Chromium), 13.0 against 12.0 (WebKit) |
 | Hash | With `hash: true`, the tab whose panel matches the URL fragment is selected on bind and on `hashchange`. It never writes the URL |
 
 The helper only sets attributes. It never inserts or moves nodes, so a
@@ -204,6 +204,10 @@ with decorated panels, find-in-page through a text fragment, the Tab order with
 panels the author made tab stops, an animation on panels, tabs inside a shadow
 root, and server rendering with `@angular/platform-server` followed by hydration, with no
 mismatch and the tabs working afterwards (`scripts/browser/`).
+
+In print every panel shows, stacked in order: paper has no tabs to choose
+with. The element prints as a block, and hidden panels show their content with
+the shown panel's spacing.
 
 Panels overlap in the shared area only once the element is defined. Before
 that, and without JavaScript, they stack: a panel the author left visible, or
