@@ -17,7 +17,8 @@
  * `itx-variant="segmented"` swaps the rule and bar for the segmented look; add `icon` for square
  * segments.
  *
- * A hidden="until-found" panel keeps its box, so only the shown panel gets padding.
+ * The element is a grid of two areas, the tab list and the panels. Every panel sits in the one
+ * panels area, so the panels overlap and only the shown one sets the height.
  *
  * Also known as:
  *   tab list        Fluent v9
@@ -30,9 +31,20 @@
 
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
-/* An element the browser does not know is inline; tabs are a block. */
+/* The tab list above the panels. `minmax(0, 1fr)` keeps a wide panel from widening the grid. */
 :where(interop-tabs) {
-	display: block;
+	display: grid;
+	grid-template-areas: "tabs" "panels";
+	grid-template-columns: minmax(0, 1fr);
+}
+
+:where(interop-tabs > [role="tablist"]) {
+	grid-area: tabs;
+}
+
+/* A grid item stretches across its column; the segmented look keeps the width of its segments. */
+:where(interop-tabs[itx-variant~="segmented"] > [role="tablist"]) {
+	justify-self: start;
 }
 
 :where(interop-tabs > [role="tablist"] > [role="tab"]) {
@@ -82,23 +94,33 @@
 
 /* ── Panels ────────────────────────────────────────────────────────────── */
 
+/* Every panel takes the one panels area. Overlapping, the hidden panels add no height. */
+:where(interop-tabs > [role="tabpanel"]) {
+	grid-area: panels;
+}
+
 :where(interop-tabs > [role="tabpanel"]:not([hidden])) {
 	padding-block: var(--itx-tabs-panel-padding-block);
 }
 
-/* ── Vertical ──────────────────────────────────────────────────────────── */
-
-:where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"])) {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	align-items: start;
-	column-gap: var(--itx-tabs-column-gap);
+/*
+ * A hidden="until-found" panel hides its content but still draws its own border, padding and
+ * background. Transparent and passed through by the pointer, it shows nothing and takes no click.
+ * Find-in-page still reaches it; revealing it removes `hidden`, and with it these two.
+ */
+:where(interop-tabs > [role="tabpanel"][hidden="until-found"]) {
+	opacity: 0;
+	pointer-events: none;
 }
 
-/* Every panel shares the one cell beside the tab list. Only the selected one shows. */
-:where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]) {
-	grid-column: 2;
-	grid-row: 1;
+/* ── Vertical ──────────────────────────────────────────────────────────── */
+
+/* The same two areas, side by side. */
+:where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"])) {
+	grid-template-areas: "tabs panels";
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: start;
+	column-gap: var(--itx-tabs-column-gap);
 }
 
 :where(interop-tabs:has(> [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"]:not([hidden])) {

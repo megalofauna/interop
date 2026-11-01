@@ -90,8 +90,13 @@ the entry under `sideEffects`; without it a bundler drops the import.
 | `itx-variant="segmented"` | The segmented look from `styles/segmented.css`: frame, pill, dividers. Horizontal only |
 | `itx-variant="segmented icon"` | Square segments; name each with visually hidden text |
 
-`aria-orientation="vertical"` on the tab list stands it beside the panels with
-the rule and bar on its inline-end edge. CSS reads the ARIA attribute directly.
+The element is a grid of two named areas, `tabs` and `panels`, stacked; every
+panel sits in the one `panels` area, so the panels overlap and only the shown
+one sets the height. `aria-orientation="vertical"` on the tab list puts the two
+areas side by side, with the rule and bar on the tab list's inline-end edge.
+CSS reads the ARIA attribute directly. A segmented tab list keeps the width of
+its segments (`justify-self: start`); the underscore tab list spans the
+element.
 
 The tab list scrolls when its tabs overflow. A scroll container clips its
 children to its padding box, so the bar sits on the rule rather than over it.
@@ -132,8 +137,13 @@ Forced colors paint the selected bar `Highlight` and the hover bar `CanvasText`.
 ## A hidden panel keeps its box
 
 `hidden="until-found"` hides with `content-visibility: hidden`, not
-`display: none`, so find-in-page can reach the content. The panel keeps a box
-of zero height, and that box keeps its margins and stays focusable:
+`display: none`, so find-in-page can reach the content. The panel keeps a box:
+its content is skipped, but its own border, padding and background still draw,
+and it stays focusable. In the shared `panels` area a hidden panel takes no
+height, and `opacity: 0` with `pointer-events: none` hides its box and passes
+clicks through; find-in-page still reaches it, and revealing it removes
+`hidden` and both rules with it. Checked in Chromium and Playwright WebKit with
+panels given a border, padding and background. Outside the element:
 
 - A page's flow-spacing rule (`* + *` margins) gives every hidden panel a
   margin, which stacks into a gap. Skip `[hidden]` in such rules.
