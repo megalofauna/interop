@@ -97,7 +97,7 @@ describe('<interop-tabs>', () => {
 		expect([panel('a').getAttribute('hidden'), panel('a').hasAttribute('tabindex')]).toEqual(['until-found', false]);
 	});
 
-	it("sets a consumer's panel tabindex aside while the panel is hidden, and puts it back when shown", () => {
+	it('owns panel tabindex: the shown panel is a tab stop and hidden panels are not, whatever the markup wrote', () => {
 		document.body.innerHTML = `<interop-tabs>
 			<div role="tablist" aria-label="Sections">
 				<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
@@ -115,7 +115,6 @@ describe('<interop-tabs>', () => {
 		tabs.setAttribute('itx-activation', 'manual');
 		tab('a').click();
 		expect([panel('a').getAttribute('tabindex'), panel('b').hasAttribute('tabindex')]).toEqual(['0', false]);
-		expect(panel('b').hasAttribute('data-tabs-reachable')).toBe(false);
 	});
 
 	it('ignores a malformed URL fragment under itx-hash, and binds once', () => {
@@ -147,16 +146,6 @@ describe('<interop-tabs>', () => {
 		</interop-tabs>`;
 		expect(document.getElementById('o2')!.getAttribute('hidden')).toBe('until-found');
 		expect(document.querySelector<HTMLElement>('[aria-controls="o1"]')!.tabIndex).toBe(0);
-	});
-
-	it('drops the shown panel from the tab order once its content gains something focusable', async () => {
-		const { panel } = make();
-		panel('a').textContent = 'Text only';
-		await new Promise((resolve) => requestAnimationFrame(resolve));
-		expect(panel('a').tabIndex).toBe(0);
-		panel('a').innerHTML = '<a href="#next">A link</a>';
-		await new Promise((resolve) => requestAnimationFrame(resolve));
-		expect(panel('a').hasAttribute('tabindex')).toBe(false);
 	});
 
 	it('gives the selection to a tab inserted already marked selected', async () => {
@@ -245,24 +234,6 @@ describe('<interop-tabs>', () => {
 			expect([tab('a').tabIndex, tab('b').tabIndex, tab('a').getAttribute('aria-selected')]).toEqual([-1, 0, 'true']);
 		});
 
-		it("parks a consumer's tabindex when its panel is hidden, keeps it parked on unbind, and drops its own", () => {
-			document.body.innerHTML = `<interop-tabs>
-				<div role="tablist" aria-label="Sections">
-					<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
-					<button type="button" role="tab" aria-controls="b">B</button>
-				</div>
-				<section role="tabpanel" id="a" tabindex="0">Text only</section>
-				<section role="tabpanel" id="b" hidden="until-found">Text only</section>
-			</interop-tabs>`;
-			const tabs = document.querySelector('interop-tabs')!;
-			const a = document.getElementById('a')!;
-			const b = document.getElementById('b')!;
-			tabs.select('b');
-			expect([a.hasAttribute('tabindex'), a.getAttribute('data-tabs-tabindex'), b.getAttribute('tabindex')]).toEqual([false, '0', '0']);
-			tabs.remove();
-			expect([a.hasAttribute('tabindex'), a.getAttribute('data-tabs-tabindex'), b.hasAttribute('tabindex')]).toEqual([false, '0', false]);
-		});
-
 		it('shows a panel two tabs share for whichever is selected, without a loop', () => {
 			document.body.innerHTML = `<interop-tabs>
 				<div role="tablist" aria-label="Sections">
@@ -312,11 +283,20 @@ describe('<interop-tabs>', () => {
 			expect([tab('a').getAttribute('aria-selected'), panel('a').hasAttribute('hidden')]).toEqual(['true', false]);
 		});
 
-		it("keeps a panel's name pointing at its tab when the tab's id changes", async () => {
-			const { tab, panel, settle } = setup();
-			tab('a').id = 'renamed';
-			await settle();
-			expect(panel('a').getAttribute('aria-labelledby')).toBe('renamed');
+		it("fills in a missing aria-labelledby once, and leaves an author's alone", () => {
+			document.body.innerHTML = `<interop-tabs>
+				<div role="tablist" aria-label="Sections">
+					<button type="button" role="tab" aria-controls="a" aria-selected="true">A</button>
+					<button type="button" role="tab" aria-controls="b">B</button>
+				</div>
+				<section role="tabpanel" id="a">A</section>
+				<section role="tabpanel" id="b" aria-labelledby="heading" hidden="until-found">B</section>
+			</interop-tabs><h2 id="heading">B</h2>`;
+			const tab = document.querySelector<HTMLElement>('[aria-controls="a"]')!;
+			expect([
+				document.getElementById('a')!.getAttribute('aria-labelledby'),
+				document.getElementById('b')!.getAttribute('aria-labelledby'),
+			]).toEqual([tab.id, 'heading']);
 		});
 
 		it('applies the URL fragment on the first bind only, not when an attribute rebinds it', () => {

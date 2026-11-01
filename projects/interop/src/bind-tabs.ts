@@ -1,5 +1,4 @@
 import { isRtl } from './direction';
-import { hasFocusable } from './focusable';
 
 let ids = 0;
 
@@ -21,12 +20,6 @@ export interface TabsBinding {
 	select(tab: HTMLElement): void;
 }
 
-/** Marks a panel tabindex the helper set, as opposed to the consumer's. */
-const REACHABLE = 'data-tabs-reachable';
-/** Holds a consumer's tabindex while its panel is hidden, so a hidden panel is never a tab stop. */
-const PARKED = 'data-tabs-tabindex';
-/** Marks an `aria-labelledby` the helper wrote, so it follows its tab's `id`. */
-const LABELLED = 'data-tabs-labelledby';
 /** What makes a change to the DOM a change to the tabs, as opposed to a panel's content. */
 const PARTS = '[role="tablist"], [role="tab"], [role="tabpanel"]';
 
@@ -58,15 +51,16 @@ export function tabsShowedPanels(root: Element): boolean {
  *   the button's own click on Enter or Space selects. Leaving the tab list returns its tab stop to
  *   the selected tab.
  * - A tab without an `id` gets one, and its panel gets `aria-labelledby` if it has none. The shown
- *   panel gets `tabindex="0"` when nothing in it is focusable, so the keyboard can reach its
- *   content. Hidden panels never do.
+ *   panel is a tab stop, `tabindex="0"`, so the keyboard can reach its content; hidden panels never
+ *   are.
  * - Selecting a different tab fires `interop-tabs-change` on the tab list, with the tab and the
  *   panel as its detail. If the selected tab is removed or becomes unavailable, a neighbor is
  *   selected.
  *
  * The helper owns `aria-selected` and `tabindex` on tabs, and `hidden` and `tabindex` on panels: it
  * writes them and never reads them back, except the markup's `aria-selected` on bind and on a tab
- * inserted already marked selected. Calling it again on a bound root returns the same binding.
+ * inserted already marked selected. It does not follow a panel's content. Calling it again on a
+ * bound root returns the same binding.
  *
  * Returns a function that removes the behavior, with `select(tab)` to choose a tab from code.
  */
@@ -117,37 +111,6 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): TabsBind
 	};
 
 	/**
-	 * Only the shown panel can be a tab stop. A hidden="until-found" panel keeps its box, so it stays
-	 * focusable, and a tabindex on it would be a stop with nothing visible.
-	 */
-	const setReachable = (panel: HTMLElement, shown: boolean) => {
-		// A tabindex the helper writes is marked, so a later binding tells it from the consumer's. A
-		// consumer's tabindex waits in PARKED while its panel is hidden and comes back when it shows.
-		const own = panel.hasAttribute(REACHABLE);
-		if (!shown) {
-			if (panel.hasAttribute('tabindex') && !own) panel.setAttribute(PARKED, panel.getAttribute('tabindex')!);
-			panel.removeAttribute('tabindex');
-			panel.removeAttribute(REACHABLE);
-			return;
-		}
-		const parked = panel.getAttribute(PARKED);
-		if (parked !== null) {
-			panel.setAttribute('tabindex', parked);
-			panel.removeAttribute(PARKED);
-			panel.removeAttribute(REACHABLE);
-			return;
-		}
-		if (panel.hasAttribute('tabindex') && !own) return;
-		if (!hasFocusable(panel)) {
-			if (panel.getAttribute('tabindex') !== '0') panel.tabIndex = 0;
-			if (!own) panel.setAttribute(REACHABLE, '');
-		} else {
-			panel.removeAttribute('tabindex');
-			panel.removeAttribute(REACHABLE);
-		}
-	};
-
-	/**
 	 * Writes every output from the state, each attribute only when it differs. Each panel is decided
 	 * once, shown if it is the selected tab's and hidden otherwise, so two tabs that share a panel
 	 * cannot undo each other, and a panel no tab controls any more is hidden again.
@@ -164,12 +127,13 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): TabsBind
 			if (panel) mapped.add(panel);
 		}
 		for (const panel of new Set([...mapped, ...written])) {
+			// The shown panel is a tab stop, so the keyboard reaches its content; a hidden one never is.
 			if (panel === shown) {
 				panel.removeAttribute('hidden');
-				setReachable(panel, true);
+				if (panel.getAttribute('tabindex') !== '0') panel.setAttribute('tabindex', '0');
 			} else {
 				if (panel.getAttribute('hidden') !== 'until-found') panel.setAttribute('hidden', 'until-found');
-				setReachable(panel, false);
+				panel.removeAttribute('tabindex');
 			}
 		}
 		written = mapped;
@@ -216,10 +180,7 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): TabsBind
 		for (const tab of all) {
 			tab.id ||= `itx-tab-${++ids}`;
 			const panel = panelOf(tab);
-			if (panel && (!panel.hasAttribute('aria-labelledby') || panel.hasAttribute(LABELLED))) {
-				if (panel.getAttribute('aria-labelledby') !== tab.id) panel.setAttribute('aria-labelledby', tab.id);
-				panel.setAttribute(LABELLED, '');
-			}
+			if (panel && !panel.hasAttribute('aria-labelledby')) panel.setAttribute('aria-labelledby', tab.id);
 		}
 		const first = marked();
 		const choice =
@@ -300,61 +261,39 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): TabsBind
 		if (tab) select(tab, false);
 	};
 
-	// The observer watches the helper's inputs, never its outputs:
-	// - a tab, tab list or panel added or removed, a tab's `disabled`, `hidden`, `aria-controls` or
-	//   `id`, or a panel's `id`, changed: the tabs reconcile at once;
-	// - a change inside the shown panel's content: whether that panel needs to be a tab stop is
-	//   rechecked, at most once a frame and only when the helper owns its tabindex, because the check
-	//   reads layout. Changes inside hidden panels and inside a tab's own content do nothing.
-	// The outputs, `aria-selected`, `tabindex` and a panel's `hidden`, are not watched: the helper
-	// writes them from its state, and a write by anyone else is out of contract (the dev audit
-	// reports it) rather than fought, which could never end.
-	const view = document.defaultView;
-	let frame = 0;
-	const recheckShown = () => {
-		if (frame || !view) return;
-		frame = view.requestAnimationFrame(() => {
-			frame = 0;
-			const panel = current && panelOf(current);
-			if (panel && !panel.hasAttribute('hidden') && (!panel.hasAttribute('tabindex') || panel.hasAttribute(REACHABLE))) {
-				setReachable(panel, true);
-			}
-		});
-	};
+	// The observer watches the helper's inputs, never its outputs: a tab, tab list or panel added or
+	// removed, a tab's `disabled`, `hidden`, `aria-controls` or `id`, or a panel's `id`, changed. Then
+	// the tabs reconcile. A panel's content is not watched. The outputs, `aria-selected`, `tabindex`
+	// and a panel's `hidden`, are written from the helper's state and never read back: a write by
+	// anyone else is out of contract (the dev audit reports it) rather than fought, which could never end.
 	const isPart = (node: Node) => node instanceof Element && (node.matches(PARTS) || node.querySelector(PARTS) !== null);
 	const onMutation = (records: MutationRecord[]) => {
 		const list = tablist();
 		const all = tabs();
 		const panels = new Set([...all.map(panelOf).filter((panel) => panel !== null), ...written]);
-		const shown = current && panelOf(current);
 		let structural = false;
-		let recheck = false;
 		for (const record of records) {
 			const target = record.target as HTMLElement;
 			if (record.type === 'childList') {
 				if (target === list || Array.from(record.addedNodes).some(isPart) || Array.from(record.removedNodes).some(isPart))
 					structural = true;
-				else if (shown?.contains(target)) recheck = true;
 			} else if (all.includes(target) || target === list) {
 				structural = true;
-			} else if (panels.has(target)) {
+			} else if (panels.has(target) && record.attributeName === 'id') {
 				// A panel's own `hidden` is the helper's output; only its `id` is an input.
-				if (record.attributeName === 'id') structural = true;
-			} else if (shown?.contains(target)) {
-				recheck = true;
+				structural = true;
 			}
 		}
-		if (structural) {
-			// A tab of this list inserted already marked selected takes the selection: the markup that
-			// added it chose it. A tab already in place carries what the helper wrote, so its attribute is
-			// not read as a choice.
-			const added = records
-				.flatMap((record) => Array.from(record.addedNodes))
-				.flatMap((node) => (node instanceof Element ? [node, ...Array.from(node.querySelectorAll('[role="tab"]'))] : []))
-				.filter((element) => all.includes(element as HTMLElement) && element.getAttribute('aria-selected') === 'true')
-				.at(-1) as HTMLElement | undefined;
-			reconcile(added);
-		} else if (recheck) recheckShown();
+		if (!structural) return;
+		// A tab of this list inserted already marked selected takes the selection: the markup that added
+		// it chose it. A tab already in place carries what the helper wrote, so its attribute is not read
+		// as a choice.
+		const added = records
+			.flatMap((record) => Array.from(record.addedNodes))
+			.flatMap((node) => (node instanceof Element ? [node, ...Array.from(node.querySelectorAll('[role="tab"]'))] : []))
+			.filter((element) => all.includes(element as HTMLElement) && element.getAttribute('aria-selected') === 'true')
+			.at(-1) as HTMLElement | undefined;
+		reconcile(added);
 	};
 
 	const observer = new MutationObserver(onMutation);
@@ -384,16 +323,7 @@ export function bindTabs(root: HTMLElement, options: TabsOptions = {}): TabsBind
 	const unbind = () => {
 		observer.disconnect();
 		listening.abort();
-		if (frame) view?.cancelAnimationFrame(frame);
 		bindings.delete(root);
-		// The helper's own panel tabindex goes; a consumer's tabindex parked on a hidden panel stays parked,
-		// so no hidden panel becomes a tab stop, and a later binding gives it back when the panel shows.
-		for (const panel of written) {
-			if (panel.hasAttribute(REACHABLE)) {
-				panel.removeAttribute('tabindex');
-				panel.removeAttribute(REACHABLE);
-			}
-		}
 	};
 	const binding: TabsBinding = Object.assign(unbind, {
 		select: (tab: HTMLElement) => {

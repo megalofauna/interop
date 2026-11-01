@@ -63,9 +63,9 @@ never inside it.
 | Keys | Arrows by `aria-orientation` and writing direction, wrapping; Home and End; disabled tabs skipped; keys with a modifier left alone |
 | Activation | `automatic` (default) selects on arrow. `manual` moves focus; the button's click on Enter or Space selects |
 | Focus | State is written before focus moves. Leaving the tab list returns its tab stop to the selected tab |
-| Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. Panels are found by `id` in the document or shadow root that holds the tabs. The shown panel gets `tabindex="0"` when nothing in it is focusable, marked `data-tabs-reachable` so a later binding, after a move or a changed attribute, can remove it. A hidden panel is never a tab stop: a consumer's `tabindex` on it waits in `data-tabs-tabindex` and comes back when the panel shows. Attributes are written only when their value changes |
+| Wiring | Fills in a missing tab `id` and panel `aria-labelledby`. Panels are found by `id` in the document or shadow root that holds the tabs. The shown panel is always a tab stop, `tabindex="0"`, so the keyboard reaches its content whatever it holds; a hidden panel never is. Panel `tabindex` is the helper's: a value in the markup is replaced. That costs one extra Tab stop on a panel that already holds a link or button, which the ARIA tabs pattern allows, and spares following the panel's content. A missing `aria-labelledby` is filled in once; one the author wrote is left alone. Attributes are written only when their value changes |
 | Change | `interop-tabs-change` on the tab list, detail `{ tab, panel }`, when the selection changes. Not on bind |
-| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A tab inserted already marked `aria-selected="true"` takes the selection, as streamed or rendered markup chose it; a tab already in place carries only what the helper wrote, so its attribute is not read as a choice. A change inside the shown panel's content rechecks whether that panel needs to be a tab stop, at most once a frame, and only when the helper owns its `tabindex`; the check reads layout, and looks at the first focusable candidate before collecting the rest. Changes inside hidden panels, and inside a tab's own content, do nothing. Measured: content changes cost the same bound as unbound, within a quarter of a millisecond a frame, in Chromium and WebKit |
+| Removal | A `MutationObserver` reconciles at once when a tab, tab list or panel is added or removed, or the tab list changes. A removed selected tab passes the selection to a neighbor. A tab inserted already marked `aria-selected="true"` takes the selection, as streamed or rendered markup chose it; a tab already in place carries only what the helper wrote, so its attribute is not read as a choice. A panel's content is not watched: changes inside a panel, or inside a tab's own content, do nothing |
 | Hash | With `hash: true`, the tab whose panel matches the URL fragment is selected on bind and on `hashchange`. It never writes the URL |
 
 The helper only sets attributes. It never inserts or moves nodes, so a
@@ -88,8 +88,7 @@ other (sharing is still out of contract; the audit flags it as
 selected tab becomes one, or is removed, the selection passes to the next
 available tab after it, else the one before. Changing a tab's `aria-controls`
 shows the new panel and hides the old one; any panel no tab controls any more
-is hidden again. A panel's `aria-labelledby` written by the helper is marked
-`data-tabs-labelledby` and follows its tab's `id`. With `itx-hash`, the fragment
+is hidden again. With `itx-hash`, the fragment
 chooses on the element's first bind only.
 
 Follow the selection through the event, and change it with `select()`. A
@@ -101,9 +100,9 @@ root returns the same binding.
 
 The element binds in `connectedCallback` and unbinds in `disconnectedCallback`,
 so markup parsed, rendered by a framework or set with `innerHTML` binds itself.
-On unbind the listeners and observer go, and so does the helper's own panel
-`tabindex`; the selection, ids, `aria-labelledby` and a consumer's `tabindex`
-parked on a hidden panel stay, so a later binding picks them up. A changed `itx-activation` or
+On unbind the listeners and observer go; the attributes stay as the last pass
+wrote them, so the page reads the same, and a later binding picks up the
+selection from them. A changed `itx-activation` or
 `itx-hash` rebinds. A `moveBefore()` move keeps the binding
 (`connectedMoveCallback`); other moves disconnect and connect, which rebinds. A framework that inserts the element before its children
 gets them bound one microtask later, through the helper's own observer, before
@@ -218,7 +217,7 @@ The structure file pads only the shown panel for the same reason.
 
 Tabs are the first component built as a custom element (branch
 `itx-custom-elements-00`), checked in Chromium in the Angular demo, a plain HTML
-page and React 19 (`scripts/browser/`). The entry is 6.3 kB minified, 2.6 kB
+page and React 19 (`scripts/browser/`). The entry is 5.1 kB minified, 2.2 kB
 gzip, everything it pulls from `interop` included. A version where the element was the tab list
 itself, with the panels as siblings, was dropped after review: hidden panels
 added gaps in flex and grid parents, the fix painted them over the tabs, late
