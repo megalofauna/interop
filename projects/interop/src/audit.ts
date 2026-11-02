@@ -1018,6 +1018,21 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			advice: 'Move the link out of the hint, before the field.',
 		}),
 	},
+	'validation-parts': {
+		selector: 'interop-validation:not(:has(> form)), [interop-error-summary]:not(interop-validation > *)',
+		check: (element) =>
+			element.localName === 'interop-validation'
+				? {
+						problem: 'This <interop-validation> has no form as a direct child.',
+						reason: 'It checks the form that is its own child; one nested deeper, or none, is not checked.',
+						advice: 'Put the <form> directly inside <interop-validation>.',
+					}
+				: {
+						problem: 'This error summary is not a direct child of <interop-validation>.',
+						reason: 'The summary is filled from the form beside it in the element; anywhere else it stays empty.',
+						advice: 'Put the summary directly inside <interop-validation>, before the form.',
+					},
+	},
 	'error-summary-list': {
 		selector: '[interop-error-summary]:not(:has(ul))',
 		check: () => ({
@@ -1025,6 +1040,36 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 			reason: 'bindValidation() fills the summary’s <ul> with a link to each error; without one, the summary shows only its heading.',
 			advice: 'Add an empty <ul> after the heading.',
 		}),
+	},
+	'character-count-limit': {
+		selector: 'interop-character-count:not([itx-limit]), interop-character-count > [maxlength]',
+		check: (element) =>
+			element.localName === 'interop-character-count'
+				? {
+						problem: 'This character count has no itx-limit.',
+						reason: 'Without a limit there is nothing to count against, so the count stays empty.',
+						advice: 'Add itx-limit with the most characters the field takes, e.g. itx-limit="200".',
+					}
+				: {
+						problem: 'This counted field has maxlength.',
+						reason: 'maxlength stops typing at the limit and cuts pasted text short without saying so; the count lets people go over and shows by how much.',
+						advice: 'Remove maxlength and keep itx-limit on <interop-character-count>.',
+					},
+	},
+	'password-toggle': {
+		selector: '[command="--toggle-password"]:is([hidden], :not(interop-password > *))',
+		check: (button) =>
+			button.hasAttribute('hidden')
+				? {
+						problem: 'This "Show password" button is hidden.',
+						reason: 'It shows once <interop-password> is defined; nothing removes hidden, so it never appears.',
+						advice: 'Remove hidden. The element keeps the button out of sight until script runs.',
+					}
+				: {
+						problem: 'This "Show password" button is not inside <interop-password>.',
+						reason: 'The --toggle-password command only works on an input and button inside the element.',
+						advice: 'Put the input and the button in <interop-password>, in place of the <div> around them.',
+					},
 	},
 	'select-option-text': {
 		selector: 'select[interop-select] option',

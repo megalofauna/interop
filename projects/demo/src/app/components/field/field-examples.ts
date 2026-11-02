@@ -7,9 +7,19 @@ readonly messages: ValidationOptions["messages"] = {
 };
 
 send(event: SubmitEvent): void {
-	// bindValidation() stops an invalid form before this runs.
+	// <interop-validation> stops an invalid form before this runs.
 	event.preventDefault();
 	this.sent.set(true);
 }
+`,
+	customTs: `checkUsername(event: Event): void {
+	const control = event.target as HTMLInputElement;
+	// In the input listener, the error follows at once.
+	control.setCustomValidity(control.value === "admin" ? "That username is taken. Choose another" : "");
+}
+
+// A result that comes later, such as a server's answer: set it, then tell the field.
+control.setCustomValidity(message);
+control.dispatchEvent(new Event("interop-validity-change", { bubbles: true }));
 `,
 };

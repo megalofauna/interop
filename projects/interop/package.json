@@ -11,7 +11,9 @@
 	},
 	"sideEffects": [
 		"*.css",
+		"./field/**",
 		"./tabs/**",
+		"./fesm2022/interop-field.mjs",
 		"./fesm2022/interop-tabs.mjs"
 	],
 	"exports": {

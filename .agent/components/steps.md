@@ -112,7 +112,7 @@ indicator is outside the form) and `history`, binds in `afterRenderEffect`, and
 rebinds when an input changes. With `FormsModule` imported, add
 `ngNativeValidate`: Angular otherwise adds `novalidate`, which turns off the
 validation the steps rely on. With `bindValidation()` on the same form
-(`interop-form`), Next and the hidden-field rescue show its in-page messages
+(`<interop-validation>` around it), Next and the hidden-field rescue show its in-page messages
 instead of the browser's bubbles; tested together in a spec.
 
 Tested in Chrome: invoker commands, Next gating, focus on the legend, history

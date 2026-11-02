@@ -716,7 +716,7 @@ describe('auditInterop', () => {
 					<input interop-input id="email" type="email" autocomplete="email" aria-describedby="email-hint">
 				</div>
 				<textarea interop-input aria-label="Notes"></textarea>
-				<div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
+				<interop-validation><div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div><form></form></interop-validation>
 			`);
 			expect(rules()).toEqual([]);
 		});
@@ -731,9 +731,58 @@ describe('auditInterop', () => {
 				<label for="n">N</label><input interop-input id="n" type="number">
 				<label for="e">E</label><input interop-input id="e" type="email">
 				<p interop-hint>See <a href="/help">help</a></p>
-				<div interop-error-summary><h2>There is a problem</h2></div>
+				<interop-validation><div interop-error-summary><h2>There is a problem</h2></div><form></form></interop-validation>
 			`);
 			expect(rules().sort()).toEqual(['error-summary-list', 'field-autocomplete', 'field-hint-link', 'field-number']);
+		});
+
+		it('flags an <interop-validation> without a form child, and a summary outside one', () => {
+			render(`
+				<interop-validation><div><form></form></div></interop-validation>
+				<div interop-error-summary hidden><h2>There is a problem</h2><ul></ul></div>
+			`);
+			expect(rules()).toEqual(['validation-parts', 'validation-parts']);
+		});
+	});
+
+	describe('character count', () => {
+		it('accepts a count with a limit', () => {
+			render('<interop-character-count itx-limit="5"><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>');
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a count with no limit, and a counted field with maxlength', () => {
+			render(`
+				<interop-character-count><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>
+				<interop-character-count itx-limit="5"><textarea aria-label="Bio" maxlength="5"></textarea><p interop-count></p></interop-character-count>
+			`);
+			expect(rules()).toEqual(['character-count-limit', 'character-count-limit']);
+		});
+	});
+
+	describe('password', () => {
+		it('accepts the button inside <interop-password>', () => {
+			render(`
+				<interop-password>
+					<input id="p" type="password" aria-label="Password">
+					<button type="button" commandfor="p" command="--toggle-password" aria-pressed="false">Show password</button>
+				</interop-password>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a hidden button, and one outside the element', () => {
+			render(`
+				<interop-password>
+					<input id="p" type="password" aria-label="Password">
+					<button type="button" commandfor="p" command="--toggle-password" aria-pressed="false" hidden>Show password</button>
+				</interop-password>
+				<div>
+					<input id="q" type="password" aria-label="Password">
+					<button type="button" commandfor="q" command="--toggle-password" aria-pressed="false">Show password</button>
+				</div>
+			`);
+			expect(rules()).toEqual(['password-toggle', 'password-toggle']);
 		});
 	});
 

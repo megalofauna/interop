@@ -323,6 +323,6 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 
 - Don't add fallbacks or validation for scenarios that can't happen inside the library
 - Don't write comments that describe WHAT code does — only WHY it does something non-obvious
-- Don't wrap a native control in a custom element: its attributes stop reaching it
+- Don't render a native control inside a custom element, or put it in a shadow root: the author's attributes, labels and form stop reaching it. A light-DOM element around a control the author wrote (`<interop-password>`) is fine
 - Don't use `scrollIntoView()` for scroll-snap viewports (see above)
 - Don't trigger Angular CD in pointer/animation loops

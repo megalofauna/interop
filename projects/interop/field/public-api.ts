@@ -1,7 +1,10 @@
 /*
  * Public API Surface of interop/field
  *
- * The directives. The field look loads from interop.css; bindValidation() is exported from interop.
+ * Importing it defines <interop-validation>, <interop-password> and <interop-character-count>. The
+ * field look loads from interop.css.
  */
 
-export { InteropCharacterCount, InteropCustomValidity, InteropForm, InteropPasswordToggle } from './field';
+export { InteropCharacterCountElement } from './character-count';
+export { InteropPasswordElement } from './password';
+export { InteropValidationElement } from './validation';

@@ -84,9 +84,9 @@ const isControl = (element: unknown): element is Control =>
  *   (the fieldset's, for a group), and each failing control is `aria-invalid="true"`. Otherwise
  *   controls are `aria-invalid="false"`, which also stops `setCustomValidity()` marking an untouched
  *   field invalid.
- * - When: on submit; or when the user leaves a field they changed and its format is wrong. An empty
- *   required field waits for submit. Once shown, the error updates as the user types and clears when
- *   the value is fixed.
+ * - When: on submit, or `reportValidity()`. Not when the user leaves a field: the error would move
+ *   what is below it, and a click on Submit straight from that field would land where the button was.
+ *   Once shown, the error updates as the user types and clears when the value is fixed.
  * - A failed submit is stopped, other submit listeners included. With `summary`, its `<ul>` lists each
  *   error as a link to its field and it takes focus; a link moves focus to the field and scrolls its
  *   label into view. Without it, focus moves to the first invalid field.
@@ -106,7 +106,6 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 	const active = new Set<Control>();
 	/** Controls given aria-invalid here, so unbinding can remove it. */
 	const marked = new Set<Control>();
-	let submitted = false;
 
 	const controls = () => Array.from(form.elements).filter((element): element is Control => isControl(element) && element.willValidate);
 	/** Where a control's error is: the nearest field or fieldset with an `[interop-error]`. */
@@ -179,14 +178,6 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 		update(event.target);
 	};
 
-	const onChange = (event: Event) => {
-		const control = event.target;
-		if (!isControl(control) || !control.willValidate) return;
-		// Leaving a changed field: a wrong format shows now; an empty required field waits for submit.
-		if (!control.validity.valid && !(control.validity.valueMissing && !submitted)) activate(control);
-		if (groupOf(control).some((member) => active.has(member))) update(control);
-	};
-
 	const onInput = (event: Event) => {
 		if (isControl(event.target) && groupOf(event.target).some((member) => active.has(member))) update(event.target);
 	};
@@ -217,7 +208,6 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 	};
 
 	const onSubmit = (event: SubmitEvent) => {
-		submitted = true;
 		const errors: { control: Control; message: string }[] = [];
 		const seen = new Set<Control>();
 		for (const control of controls()) {
@@ -255,7 +245,6 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 	// The reset event fires before the form resets, so clear the errors after it.
 	const onReset = () =>
 		setTimeout(() => {
-			submitted = false;
 			const shown = Array.from(active);
 			active.clear();
 			for (const control of shown) {
@@ -282,7 +271,6 @@ export function bindValidation(form: HTMLFormElement, options: ValidationOptions
 	// Capture, so a failed submit stops before any other submit listener on the form.
 	form.addEventListener('submit', onSubmit, { capture: true, signal });
 	form.addEventListener('invalid', onInvalid, { capture: true, signal });
-	form.addEventListener('change', onChange, { signal });
 	form.addEventListener('input', onInput, { signal });
 	form.addEventListener('reset', onReset, { signal });
 	form.addEventListener('interop-validity-change', onValidityChange, { signal });

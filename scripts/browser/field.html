@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Field elements on a plain page</title>
+		<link rel="stylesheet" href="dist/interop.css" />
+		<script type="module" src="dist/password.js"></script>
+		<script type="module" src="dist/character-count.js"></script>
+		<script type="module" src="dist/validation.js"></script>
+	</head>
+	<body>
+		<h1>Field elements on a plain page</h1>
+		<interop-validation>
+			<div interop-error-summary hidden>
+				<h2>There is a problem</h2>
+				<ul></ul>
+			</div>
+			<form id="sign-in">
+				<div interop-field>
+					<label for="password">Password</label>
+					<interop-password>
+						<input
+							interop-input
+							id="password"
+							type="password"
+							name="password"
+							autocomplete="current-password"
+						/>
+						<button
+							interop-button
+							type="button"
+							commandfor="password"
+							command="--toggle-password"
+							aria-pressed="false"
+						>
+							Show password
+						</button>
+					</interop-password>
+				</div>
+				<div interop-field id="summary-field">
+					<label for="summary">Summary</label>
+					<p interop-hint>You can enter up to 10 characters</p>
+					<p interop-error hidden></p>
+					<interop-character-count itx-limit="10">
+						<textarea interop-input id="summary" name="summary"></textarea>
+						<p interop-count></p>
+					</interop-character-count>
+				</div>
+				<div interop-field>
+					<label for="plain">Notes, not counted</label>
+					<textarea interop-input id="plain" name="notes"></textarea>
+				</div>
+				<button interop-button type="submit">Sign in</button>
+				<button interop-button type="reset">Reset</button>
+			</form>
+		</interop-validation>
+		<script>
+			// The page stays put, so the check can read the state after a submit.
+			document
+				.querySelector("#sign-in")
+				.addEventListener("submit", (event) => event.preventDefault());
+		</script>
+	</body>
+</html>
