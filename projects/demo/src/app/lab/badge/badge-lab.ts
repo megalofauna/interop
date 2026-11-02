@@ -6,6 +6,7 @@ import {
 	inject,
 	signal,
 } from "@angular/core";
+import { InteropSegmentedFit } from "interop/radio-group";
 
 type Dial = "fill" | "tint" | "text" | "type" | "pad" | "height" | "weight";
 
@@ -30,6 +31,7 @@ interface Reading {
 		"[attr.data-height]": "height()",
 		"[attr.data-weight]": "weight()",
 	},
+	imports: [InteropSegmentedFit],
 	templateUrl: "./badge-lab.html",
 	styleUrl: "./badge-lab.css",
 	encapsulation: ViewEncapsulation.None,
