@@ -3,6 +3,7 @@
 import { chromium, webkit } from "playwright";
 import { checkCharacterCount } from "./check-character-count.mjs";
 import { checkHydration } from "./check-hydration.mjs";
+import { checkList } from "./check-list.mjs";
 import { checkPassword } from "./check-password.mjs";
 import { checkReact } from "./check-react.mjs";
 import { checkTabs } from "./check-tabs.mjs";
@@ -14,6 +15,7 @@ const checks = {
 	password: checkPassword,
 	"character count": checkCharacterCount,
 	validation: checkValidation,
+	list: checkList,
 	hydration: checkHydration,
 	react: checkReact,
 };
