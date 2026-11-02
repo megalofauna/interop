@@ -6,6 +6,7 @@ import {
 	inject,
 	signal,
 } from "@angular/core";
+import { InteropSegmentedFit } from "interop/radio-group";
 import { bindSlider } from "interop";
 
 /** Candidate looks for the slider and the progress bar. Listed under Labs in the nav. */
@@ -20,6 +21,7 @@ import { bindSlider } from "interop";
 		"[attr.data-ends]": "ends()",
 		"[attr.data-press]": "press()",
 	},
+	imports: [InteropSegmentedFit],
 	templateUrl: "./track-lab.html",
 	styleUrl: "./track-lab.css",
 	encapsulation: ViewEncapsulation.None,
