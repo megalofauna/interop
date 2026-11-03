@@ -67,6 +67,12 @@ export const routes: Routes = [
 			import("./components/icon/icon-demo").then((m) => m.IconDemo),
 	},
 	{
+		path: "components/list",
+		title: "List",
+		loadComponent: () =>
+			import("./components/list/list-demo").then((m) => m.ListDemo),
+	},
+	{
 		path: "components/page-nav",
 		title: "Page nav",
 		loadComponent: () =>

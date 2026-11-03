@@ -745,9 +745,30 @@ describe('auditInterop', () => {
 		});
 	});
 
+	describe('list', () => {
+		it('accepts a numbered list with role="list", and a bare one', () => {
+			render(`
+				<ol interop-list="outlined" role="list"><li>One</li></ol>
+				<ol interop-list="filled" role="list"><li>One</li></ol>
+				<ol interop-list><li>One</li></ol>
+			`);
+			expect(rules()).toEqual([]);
+		});
+
+		it('flags a numbered list without role="list", and numbers on a ul', () => {
+			render(`
+				<ol interop-list="filled"><li>One</li></ol>
+				<ul interop-list="outlined" role="list"><li>One</li></ul>
+			`);
+			expect(rules().sort()).toEqual(['list-numbers-on-ul', 'list-role']);
+		});
+	});
+
 	describe('character count', () => {
 		it('accepts a count with a limit', () => {
-			render('<interop-character-count itx-limit="5"><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>');
+			render(
+				'<interop-character-count itx-limit="5"><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>',
+			);
 			expect(rules()).toEqual([]);
 		});
 

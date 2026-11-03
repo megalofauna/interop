@@ -1,0 +1,49 @@
+<h1>List</h1>
+<p class="aka">Also known as numbered list, ordered list, process list.</p>
+<p>
+	A numbered list draws each number in a circle: outlined, or filled with the
+	number reversed out. It is a native <code>&lt;ol&gt;</code> with
+	<code>interop-list="outlined"</code> or <code>interop-list="filled"</code>,
+	and needs no script. The circles match the
+	<a routerLink="/components/steps">step indicator</a>'s.
+</p>
+<p>
+	Number a list only when the order matters, as
+	<a href="https://design-system.service.gov.uk/styles/lists/">GOV.UK</a>
+	advises: steps to follow, a ranking. For a task someone is part way through,
+	use the step indicator instead. USWDS calls this look a
+	<a href="https://designsystem.digital.gov/components/process-list"
+		>process list</a
+	>, for high-level steps.
+</p>
+
+<h2>Outlined</h2>
+<demo-example [html]="examples.outlined" layout="stack" />
+
+<h2>Filled</h2>
+<demo-example [html]="examples.filled" layout="stack" />
+
+<h2>Your numbering holds</h2>
+<p>
+	<code>start</code>, <code>reversed</code> and <code>&lt;li value&gt;</code>
+	give the same numbers the browser would. One digit is a circle; two grow a
+	pill.
+</p>
+<demo-example [html]="examples.numbering" layout="stack" />
+
+<h2>role="list"</h2>
+<p>
+	Drawing the numbers hides the browser's, and Safari then stops announcing the
+	list or how many items it has, on purpose: most lists without markers are
+	layout. <code>role="list"</code> puts it back. See
+	<a href="https://www.scottohara.me/blog/2019/01/12/lists-and-safari.html"
+		>Scott O'Hara on lists in Safari</a
+	>. The development audit flags a numbered list without it.
+</p>
+
+<h2>Bare</h2>
+<p>
+	<code>interop-list</code> with no value draws nothing: the browser's numbers
+	stay, and the list needs no role.
+</p>
+<demo-example [html]="examples.bare" layout="stack" />

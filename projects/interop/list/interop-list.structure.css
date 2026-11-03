@@ -1,0 +1,100 @@
+/*
+ * List: an ordered list with its numbers drawn in circles, outlined or filled.
+ *
+ *   <ol interop-list="outlined" role="list">
+ *     <li>Check the cargo manifest</li>
+ *     <li>Seal the hold</li>
+ *   </ol>
+ *
+ * interop-list="outlined" draws each number in a ring; interop-list="filled" reverses it out of a
+ * disc. ol[interop-list] alone draws nothing: the browser's numbers stay. Hiding the browser's
+ * numbers makes Safari drop the list from screen readers, so a drawn list carries role="list".
+ *
+ * The numbers are the list's own: start, reversed and <li value> hold, as they do in the browser's
+ * numbers. One digit is a circle; more grow a pill, as a badge's count does.
+ *
+ * Also known as:
+ *   numbered list, ordered list    HTML, GOV.UK, Carbon, USWDS
+ *   process list                   USWDS, VA: the numbers in circles, for high-level steps
+ * A step indicator (ol[interop-steps]) shows where someone is in a task; this numbers content.
+ */
+
+/* The item's line height, carried to its number, which is set smaller. */
+@property --itx-list-line-height {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+:where(ol[interop-list~="outlined"], ol[interop-list~="filled"]) {
+	/*
+	 * Room for one digit, before the text, the same in every list so lists align. A wider number ends
+	 * at the same place and grows toward the start, as the browser's own "10." hangs past "9.".
+	 */
+	padding-inline-start: calc(var(--itx-list-marker-size) + var(--itx-list-marker-gap));
+	list-style: none;
+}
+
+/* The li stays a list item: its list-item counter is the number the browser would show. */
+:where(ol:is([interop-list~="outlined"], [interop-list~="filled"]) > li) {
+	--itx-list-line-height: 1lh;
+	position: relative;
+	/* A line shorter than the number grows to it, so the number never reaches the line above. */
+	padding-block: max(0px, (var(--itx-list-marker-size) - 1lh) / 2);
+}
+
+:where(ol:is([interop-list~="outlined"], [interop-list~="filled"]) > li + li) {
+	margin-block-start: var(--itx-list-gap);
+}
+
+/* The number, centered on the item's first line, its end a gap before the text. */
+:where(ol:is([interop-list~="outlined"], [interop-list~="filled"]) > li)::before {
+	content: counter(list-item);
+	position: absolute;
+	inset-inline-end: calc(100% + var(--itx-list-marker-gap));
+	inset-block-start: max(0px, (var(--itx-list-line-height) - var(--itx-list-marker-size)) / 2);
+	display: grid;
+	place-content: center;
+	box-sizing: border-box;
+	min-inline-size: var(--itx-list-marker-size);
+	block-size: var(--itx-list-marker-size);
+	/* One digit (1ch with tabular-nums) and the border fill the height, so it is a circle; more digits grow a pill. */
+	padding-inline: calc((var(--itx-list-marker-size) - 1ch) / 2 - var(--itx-list-marker-border-width));
+	font-size: var(--itx-list-marker-font-size);
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+	white-space: nowrap;
+	color: var(--itx-list-marker-color);
+	background-color: var(--itx-list-marker-background-color);
+	border-width: var(--itx-list-marker-border-width);
+	border-style: solid;
+	border-color: var(--itx-list-marker-border-color);
+	border-radius: var(--itx-radius-full);
+}
+
+/* Filled: the number reversed out of a disc. */
+:where(ol[interop-list~="filled"] > li)::before {
+	color: var(--itx-list-marker-color-filled);
+	background-color: var(--itx-list-marker-background-color-filled);
+	border-color: var(--itx-list-marker-background-color-filled);
+}
+
+/*
+ * Chrome's list-item counter ignores reversed and <li value>; its own numbers do not. These set the
+ * counter as the browser's numbers count. Browsers that already count right reach the same numbers.
+ */
+:where(ol[reversed]:is([interop-list~="outlined"], [interop-list~="filled"]) > li) {
+	counter-increment: list-item -1;
+}
+
+:where(ol[reversed]:is([interop-list~="outlined"], [interop-list~="filled"]) > li:first-child) {
+	counter-set: list-item sibling-count();
+}
+
+:where(ol[reversed][start]:is([interop-list~="outlined"], [interop-list~="filled"]) > li:first-child) {
+	counter-set: list-item attr(start type(<integer>));
+}
+
+:where(ol:is([interop-list~="outlined"], [interop-list~="filled"]) > li[value]) {
+	counter-set: list-item attr(value type(<integer>));
+}

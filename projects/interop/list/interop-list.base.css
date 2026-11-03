@@ -1,0 +1,19 @@
+/*
+ * List: the values. The numbers are the step indicator's: the same size, numeral, ring and disc,
+ * so a numbered list and a step indicator on one page match.
+ */
+
+:where(ol[interop-list]) {
+	--itx-list-gap: var(--itx-space-3);
+	--itx-list-marker-gap: var(--itx-space-3);
+	--itx-list-marker-size: var(--itx-space-6);
+	--itx-list-marker-font-size: var(--itx-font-size-caption);
+	--itx-list-marker-border-width: var(--itx-border-width);
+	/* Outlined: a ring of 3:1 against the page (WCAG 1.4.11), and a number of 4.5:1 (WCAG 1.4.3). */
+	--itx-list-marker-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-400));
+	--itx-list-marker-background-color: transparent;
+	--itx-list-marker-color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
+	/* Filled: a disc of 3:1 against the page, and its number reversed out of it at 4.5:1. */
+	--itx-list-marker-background-color-filled: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	--itx-list-marker-color-filled: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+}
