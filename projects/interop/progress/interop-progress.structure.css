@@ -15,6 +15,7 @@
  * interop-progress="ring" draws the same element as a ring: the fill sweeps clockwise from the top,
  * value / max of a turn, read with typed attr(); a script setting .value writes the attribute, so the
  * ring follows. Indeterminate, an arc turns. Without a value the ring is a spinner, the same element.
+ * Without typed attr() a determinate ring draws as a small bar: see the @supports block below.
  *
  *   <progress interop-progress="ring" value="42" max="100" aria-label="Uploading report.pdf"></progress>
  *
@@ -155,6 +156,28 @@
 :where(progress[interop-progress~="ring"]:indeterminate) {
 	--itx-progress-ring-fill: var(--itx-progress-ring-arc);
 	animation: itx-progress-ring-turn var(--itx-progress-ring-animation-duration) linear infinite;
+}
+
+/*
+ * Safari 27.2 has no typed attr(), so CSS there cannot read value. A determinate ring stays a bar, in the
+ * ring's slot, whose fill the browser draws from value. A spinner reads no value, so it stays a ring.
+ * Delete this block when Safari ships typed attr(); the ring then needs nothing else.
+ */
+@supports not (inline-size: attr(x type(<length>))) {
+	:where(progress[interop-progress~="ring"]:not(:indeterminate)) {
+		block-size: var(--itx-track-block-size);
+		box-shadow: inset 0 0 0 var(--itx-track-border-width) var(--itx-track-border-color);
+		background-image: none;
+		mask-image: none;
+	}
+
+	:where(progress[interop-progress~="ring"]:not(:indeterminate))::-webkit-progress-value {
+		background-color: var(--itx-track-fill-background-color);
+	}
+
+	:where(progress[interop-progress~="ring"]:not(:indeterminate))::-moz-progress-bar {
+		background-color: var(--itx-track-fill-background-color);
+	}
 }
 
 /* Forced colors drop gradients. This keeps the fill, the band and the ring, in the system colors of styles/track.css. */

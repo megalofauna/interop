@@ -103,8 +103,15 @@ progress and the [slider](slider.md), so the two cannot differ.
   slows from 0.75s to 1.5s. Clockwise in RTL too.
 - Forced colors: the bar's block covers it (track `Canvas`, edges
   `CanvasText`, fill `Highlight`).
-- Typed `attr()`: Chrome 156, WebKit 27.2, and the user's Firefox and Safari
-  (2026-11-02).
+- **Safari.** Real Safari 27.2 has no typed `attr()`: `CSS.supports` is false,
+  and CSS there cannot read `value`. An `@supports not` block keeps a
+  determinate ring as a bar in the ring's slot, ring-wide and track-thick, with
+  the browser's own fill, so the value stays right. A spinner reads no value and
+  stays a ring. Delete the block when Safari ships typed `attr()`.
+- Playwright's WebKit is ahead of Safari: it also reports 27.2, but supports
+  typed `attr()`. The browser check serves the sheet with the block's condition
+  forced on, to test the fallback in both engines. Safari itself is checked by
+  hand. Chrome and Firefox draw the ring (the user, 2026-11-03).
 
 ## Dev audit rules
 

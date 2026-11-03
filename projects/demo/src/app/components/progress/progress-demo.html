@@ -57,6 +57,13 @@
 	script setting <code>.value</code> moves it. A ring is as tall as a button at
 	the same size, so it can sit beside one.
 </p>
+<p>
+	The ring reads <code>value</code> with typed
+	<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/attr"
+		><code>attr()</code></a
+	>, which Safari does not support yet. There it draws as a small bar with the
+	same value, and becomes a ring by itself once Safari does.
+</p>
 <demo-example [html]="examples.ring" [css]="examples.ringCss" layout="stack" />
 
 <h2>Spinner</h2>

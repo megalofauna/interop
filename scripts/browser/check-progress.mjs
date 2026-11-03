@@ -1,6 +1,6 @@
 // Checks progress[interop-progress="ring"] in Chromium and WebKit: the fill angle read from value and
-// max with typed attr(), a value set from script, the spinner, the sizes, forced colors, and that the
-// bar is unchanged. Reduced motion makes a new value land at once. Returns a list of failures; empty
+// max with typed attr(), a value set from script, the spinner, the sizes, forced colors, that the
+// bar is unchanged, and the fallback for browsers without typed attr(). Reduced motion makes a new value land at once. Returns a list of failures; empty
 // means it passed. Run through run-checks.mjs.
 
 const read = () => {
