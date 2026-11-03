@@ -107,8 +107,14 @@ The [slider](slider.md)'s track, at the same size steps;
 
 - `<meter>`. It brings `low`, `high` and `optimum` and the browser's green,
   yellow and red, which is a color decision of its own. Review it separately.
-- A ring or a circular spinner. A ring needs typed `attr()` to read `value`,
-  which Safari does not ship.
+- A ring or a circular spinner. Possible on the native `<progress>` with CSS
+  alone: a `conic-gradient` swept to `attr(value type(<number>)) /
+  attr(max type(<number>))` of a turn, masked to a ring; `:indeterminate`
+  spins an arc. Prototyped 2026-11-02 and identical in Chrome 156, WebKit
+  27.2, and the user's Firefox and Safari; script setting `.value` updates it,
+  since the property writes the attribute. Forced colors drop the gradient, so
+  it needs `forced-color-adjust: none` with `CanvasText` on `GrayText`.
+  Not built yet; open: reduced motion for the spin, and text inside the ring.
 - Vertical (see Look).
 - `appearance: base` with `::slider-track` and `::slider-fill`, which no
   browser ships.
