@@ -747,7 +747,9 @@ describe('auditInterop', () => {
 
 	describe('character count', () => {
 		it('accepts a count with a limit', () => {
-			render('<interop-character-count itx-limit="5"><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>');
+			render(
+				'<interop-character-count itx-limit="5"><textarea aria-label="Notes"></textarea><p interop-count></p></interop-character-count>',
+			);
 			expect(rules()).toEqual([]);
 		});
 

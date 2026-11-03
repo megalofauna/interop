@@ -1052,7 +1052,8 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 					}
 				: {
 						problem: 'This counted field has maxlength.',
-						reason: 'maxlength stops typing at the limit and cuts pasted text short without saying so; the count lets people go over and shows by how much.',
+						reason:
+							'maxlength stops typing at the limit and cuts pasted text short without saying so; the count lets people go over and shows by how much.',
 						advice: 'Remove maxlength and keep itx-limit on <interop-character-count>.',
 					},
 	},

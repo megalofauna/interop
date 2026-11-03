@@ -1,15 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
-import {
-	bindSelectAll,
-	bindSlider,
-	bindTagInput,
-	drawIcons,
-	guardActivation,
-	registerIcons,
-	toast,
-} from 'interop';
+import { bindSelectAll, bindSlider, bindTagInput, drawIcons, guardActivation, registerIcons, toast } from 'interop';
 import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
 import 'interop/field';
