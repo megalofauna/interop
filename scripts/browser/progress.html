@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Progress rings on a plain page</title>
+		<link rel="stylesheet" href="dist/interop.css" />
+		<style>
+			body {
+				margin: 2rem;
+			}
+			.row {
+				display: flex;
+				gap: 1.5rem;
+				align-items: center;
+				margin-block-end: 1.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="row">
+			<progress
+				id="quarter"
+				interop-progress="ring"
+				value="25"
+				max="100"
+				aria-label="A quarter"
+			></progress>
+			<progress
+				id="fraction"
+				interop-progress="ring"
+				value="0.66"
+				aria-label="Two thirds"
+			></progress>
+			<progress
+				id="full"
+				interop-progress="ring"
+				value="7"
+				max="7"
+				aria-label="Done"
+			></progress>
+			<progress
+				id="spinner"
+				interop-progress="ring"
+				aria-label="Loading"
+			></progress>
+			<progress
+				id="scripted"
+				interop-progress="ring"
+				value="10"
+				max="100"
+				aria-label="Set from script"
+			></progress>
+		</div>
+		<div class="row">
+			<progress
+				id="sm"
+				interop-progress="ring"
+				itx-size="sm"
+				value="50"
+				max="100"
+				aria-label="Small"
+			></progress>
+			<progress
+				id="md"
+				interop-progress="ring"
+				value="50"
+				max="100"
+				aria-label="Medium"
+			></progress>
+			<progress
+				id="lg"
+				interop-progress="ring"
+				itx-size="lg"
+				value="50"
+				max="100"
+				aria-label="Large"
+			></progress>
+			<button interop-button type="button" itx-size="lg">A large button</button>
+		</div>
+		<progress
+			id="bar"
+			interop-progress
+			value="40"
+			max="100"
+			aria-label="A bar"
+		></progress>
+	</body>
+</html>

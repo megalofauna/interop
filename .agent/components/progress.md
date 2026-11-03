@@ -1,7 +1,7 @@
 # Progress — Mental Model Card
 
 A progress bar shows how far a task has got: an upload, a sync, an export. It is
-the native `<progress>`, styled. It needs no script. Research:
+the native `<progress>`, styled, as a bar or a ring. It needs no script. Research:
 [prompts/PROGRESS-REVIEW.md](../../prompts/PROGRESS-REVIEW.md).
 
 For a measurement in a range (storage used, battery), use `<meter>`. For the
@@ -77,6 +77,34 @@ The [slider](slider.md)'s track, at the same size steps;
   Chrome 155 and WebKit the fill part follows `writing-mode: vertical-lr`, and
   `direction: rtl` fills it from the bottom.
 
+## Ring
+
+`progress[interop-progress="ring"]`: the same element drawn as a ring, CSS only.
+
+```html
+<progress interop-progress="ring" value="42" max="100" aria-label="Uploading report.pdf"></progress>
+<progress interop-progress="ring" itx-size="sm" aria-label="Loading"></progress>
+```
+
+- The bar bent round, from the bar's own tokens: the recess, a 1px edge on
+  its outer and inner circles, and the fill over both where it reaches. The
+  same contrast pairs as the bar, so the bar's guard covers it. No inset shade.
+- Thickness is the track's (4, 6, 8px); the diameter a button's height at the
+  same size (32, 40, 56px), so a ring sits beside a button.
+- The fill is `--itx-progress-ring-fill`, `attr(value type(<number>), 0) /
+  attr(max type(<number>), 1)` of a turn, swept clockwise from the top by a
+  `conic-gradient`; a `radial-gradient` mask cuts the disc to a ring. A script
+  setting `.value` writes the attribute, so the ring follows. The angle is a
+  registered `<angle>`, so a new value eases round over the bar's transition.
+- The browser's fill parts are transparent: they would draw a bar inside.
+- **Indeterminate** (no `value`) is a spinner: an arc of 0.3 turn turns with
+  `--itx-animation-duration-spin`, the busy spinner's, which reduced motion
+  slows from 0.75s to 1.5s. Clockwise in RTL too.
+- Forced colors: the bar's block covers it (recess `Canvas`, edges
+  `CanvasText`, fill `Highlight`).
+- Typed `attr()`: Chrome 156, WebKit 27.2, and the user's Firefox and Safari
+  (2026-11-02).
+
 ## Dev audit rules
 
 | Rule | Flags |
@@ -88,8 +116,13 @@ The [slider](slider.md)'s track, at the same size steps;
 
 - `src/audit.spec.ts`: each rule, and a labeled, wrapped, named and
   indeterminate bar that pass.
-- `a11y/a11y.spec.ts`: axe on determinate, indeterminate and sized bars, with a
-  busy region.
+- `a11y/a11y.spec.ts`: axe on determinate, indeterminate and sized bars and
+  rings, with a busy region.
+- `npm run test:browser` (`scripts/browser/check-progress.mjs`), Chromium and
+  WebKit: the ring's angle for 25 of 100, 0.66 of 1 and 7 of 7, a value set
+  from script, the spinner and its reduced-motion duration, the sizes against
+  a large button, forced colors, and the bar unchanged. Ignoring `max` fails
+  it.
 - `styles/contrast.spec.ts` (and the shared track), `forced-colors.spec.ts`,
   `motion.spec.ts`, `preferences.spec.ts`, `radius.spec.ts`.
 - Chrome 155, on the demo: names from the labels, `valuemax=7` for a count, no
@@ -107,14 +140,8 @@ The [slider](slider.md)'s track, at the same size steps;
 
 - `<meter>`. It brings `low`, `high` and `optimum` and the browser's green,
   yellow and red, which is a color decision of its own. Review it separately.
-- A ring or a circular spinner. Possible on the native `<progress>` with CSS
-  alone: a `conic-gradient` swept to `attr(value type(<number>)) /
-  attr(max type(<number>))` of a turn, masked to a ring; `:indeterminate`
-  spins an arc. Prototyped 2026-11-02 and identical in Chrome 156, WebKit
-  27.2, and the user's Firefox and Safari; script setting `.value` updates it,
-  since the property writes the attribute. Forced colors drop the gradient, so
-  it needs `forced-color-adjust: none` with `CanvasText` on `GrayText`.
-  Not built yet; open: reduced motion for the spin, and text inside the ring.
+- Text inside the ring (a percentage). Untested on `<progress>`; it would
+  likely need a wrapper, the first thing the ring would add to the element.
 - Vertical (see Look).
 - `appearance: base` with `::slider-track` and `::slider-fill`, which no
   browser ships.

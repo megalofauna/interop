@@ -473,11 +473,13 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(document.body)).toEqual([]);
 	});
 
-	it('finds no violations in progress bars, determinate, indeterminate and sized', async () => {
+	it('finds no violations in progress bars and rings, determinate, indeterminate and sized', async () => {
 		document.body.innerHTML = `
 			<main>
 				<label for="upload">Uploading report.pdf</label>
 				<progress interop-progress id="upload" value="42" max="100"></progress>
+				<progress interop-progress="ring" value="0.6" aria-label="Exporting"></progress>
+				<progress interop-progress="ring" itx-size="sm" aria-label="Loading"></progress>
 				<label>Syncing <progress interop-progress itx-size="sm" value="3" max="7" aria-valuetext="3 of 7 files"></progress></label>
 				<progress interop-progress itx-size="lg" id="connecting" aria-label="Connecting to the relay"></progress>
 				<section aria-label="Messages" aria-busy="true" aria-describedby="connecting"></section>

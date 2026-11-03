@@ -1,5 +1,8 @@
 <h1>Progress</h1>
-<p class="aka">Also known as progress bar, progress indicator, loading bar.</p>
+<p class="aka">
+	Also known as progress bar, progress indicator, loading bar, progress ring,
+	circular progress, spinner.
+</p>
 <p>
 	A progress bar shows how far a task has got: an upload, a sync, an export. It
 	is the native <code>&lt;progress&gt;</code>. The browser draws the fill from
@@ -45,6 +48,24 @@
 	<code>aria-describedby</code> at the bar. Clear both when it loads.
 </p>
 <demo-example [html]="examples.unknown" layout="stack" />
+
+<h2>Ring</h2>
+<p>
+	<code>interop-progress="ring"</code> draws the same element as a ring: the
+	bar's recess, edge and fill, bent round, sweeping clockwise from the top. It
+	is still a <code>&lt;progress&gt;</code>, so screen readers hear the same
+	thing, and a script setting <code>.value</code> moves it. A ring is as tall as
+	a button at the same size, so it can sit beside one.
+</p>
+<demo-example [html]="examples.ring" [css]="examples.ringCss" layout="stack" />
+
+<h2>Spinner</h2>
+<p>
+	A ring with no <code>value</code> is a spinner: an arc turns, more slowly when
+	the system asks for reduced motion. Label it with what is loading, and give
+	the region that waits <code>aria-busy</code>, as for the bar.
+</p>
+<demo-example [html]="examples.spinner" layout="stack" />
 
 <h2>Saying it is done</h2>
 <p>

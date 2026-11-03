@@ -17,12 +17,19 @@
 
 	--itx-progress-transition-duration: var(--itx-transition-duration-slower);
 	--itx-progress-transition-timing-function: var(--itx-transition-timing-function);
+
+	/* Ring: a button's height across, the track's thickness; indeterminate, an arc this much of a turn. */
+	--itx-progress-ring-size: var(--itx-space-10);
+	--itx-progress-ring-arc: 0.3turn;
+	--itx-progress-ring-animation-duration: var(--itx-animation-duration-spin);
 }
 
 :where(progress[interop-progress][itx-size="sm"]) {
 	--itx-progress-track-block-size: var(--itx-space-1);
+	--itx-progress-ring-size: var(--itx-space-8);
 }
 
 :where(progress[interop-progress][itx-size="lg"]) {
 	--itx-progress-track-block-size: var(--itx-space-2);
+	--itx-progress-ring-size: var(--itx-space-14);
 }

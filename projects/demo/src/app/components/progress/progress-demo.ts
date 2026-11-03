@@ -5,7 +5,10 @@ import { DemoExample } from "../../example/example";
 import basic from "./examples/basic.html";
 import count from "./examples/count.html";
 import done from "./examples/done.html";
+import ringCss from "./examples/ring.css";
+import ring from "./examples/ring.html";
 import sizes from "./examples/sizes.html";
+import spinner from "./examples/spinner.html";
 import unknown from "./examples/unknown.html";
 
 @Component({
@@ -16,7 +19,16 @@ import unknown from "./examples/unknown.html";
 	styleUrl: "./progress-demo.css",
 })
 export class ProgressDemo {
-	protected readonly examples = { basic, sizes, count, unknown, done };
+	protected readonly examples = {
+		basic,
+		sizes,
+		count,
+		unknown,
+		ring,
+		ringCss,
+		spinner,
+		done,
+	};
 
 	/** Fills the bar over two seconds, then says it is done. */
 	protected readonly bindDone = (root: HTMLElement) => {
