@@ -29,6 +29,8 @@ import stylesVisuallyHidden from '../styles/visually-hidden.css' with { loader: 
 // @ts-expect-error The text loader turns the file into a string.
 import stylesFieldset from '../styles/fieldset.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import stylesTrack from '../styles/track.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import buttonInteropButtonBase from '../button/interop-button.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import buttonInteropButtonStructure from '../button/interop-button.structure.css' with { loader: 'text' };
@@ -161,6 +163,7 @@ export const sheets: Record<string, string> = {
 	'styles/outline.css': stylesOutline,
 	'styles/visually-hidden.css': stylesVisuallyHidden,
 	'styles/fieldset.css': stylesFieldset,
+	'styles/track.css': stylesTrack,
 	'button/interop-button.base.css': buttonInteropButtonBase,
 	'button/interop-button.structure.css': buttonInteropButtonStructure,
 	'icon/interop-icon.base.css': iconInteropIconBase,

@@ -27,6 +27,7 @@ const required = [
 	'styles/segmented.css',
 	'styles/underscore.css',
 	'styles/disclosure.css',
+	'styles/track.css',
 ];
 
 /** Every other component and shared stylesheet, and why it needs no block. */

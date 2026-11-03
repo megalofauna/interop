@@ -5,16 +5,6 @@
 	/* The input's height. A press anywhere on the input moves the thumb, so this is the target (WCAG 2.5.8). */
 	--itx-slider-target-size: var(--itx-space-8);
 	--itx-slider-thumb-size: var(--itx-space-5);
-	/* The progress bar's thickness at the same step. */
-	--itx-slider-track-block-size: var(--itx-space-1_5);
-
-	/* A recess darker than the page. Its edge is 3:1 against the page (WCAG 1.4.11). */
-	--itx-slider-track-background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-800));
-	--itx-slider-track-border-width: var(--itx-border-width);
-	--itx-slider-track-border-color: light-dark(var(--itx-neutral-500), var(--itx-neutral-500));
-	--itx-slider-track-border-radius: var(--itx-radius-full);
-	--itx-slider-track-box-shadow: inset 0 1px 2px light-dark(oklch(0 0 0 / 0.2), oklch(0 0 0 / 0.6));
-	--itx-slider-fill-background-color: light-dark(var(--itx-neutral-900), var(--itx-neutral-200));
 
 	/* A light disc. Its edge is dark in the dark scheme, so it stays apart from the light fill. */
 	--itx-slider-thumb-background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-200));
@@ -33,11 +23,9 @@
 :where(input[type="range"][interop-slider][itx-size="sm"]) {
 	--itx-slider-target-size: var(--itx-space-6);
 	--itx-slider-thumb-size: var(--itx-space-4);
-	--itx-slider-track-block-size: var(--itx-space-1);
 }
 
 :where(input[type="range"][interop-slider][itx-size="lg"]) {
 	--itx-slider-target-size: var(--itx-space-10);
 	--itx-slider-thumb-size: var(--itx-space-7);
-	--itx-slider-track-block-size: var(--itx-space-2);
 }

@@ -631,46 +631,28 @@ it("draws the callout in the toast's colors", () => {
 	}
 });
 
-describe('slider and progress', () => {
+describe('track', () => {
 	for (const [scheme, label] of SCHEMES) {
-		for (const component of ['slider', 'progress']) {
-			const color = (name: string) => token(`--itx-${component}-${name}`, scheme);
+		const track = token('--itx-track-background-color', scheme);
+		const fill = token('--itx-track-fill-background-color', scheme);
 
-			// WCAG 1.4.11: the track shows the length of the scale (the slider's by its edge, progress's by
-			// its fill), and the fill shows the value.
-			it(`has a ${component} track and fill of 3:1 against the page in ${label}`, () => {
-				const track = component === 'progress' ? 'track-background-color' : 'track-border-color';
-				expect(contrast(color(track), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-				expect(contrast(color('fill-background-color'), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
-			});
+		// WCAG 1.4.11: the track shows the length of the scale, and the fill shows the value.
+		it(`has a track and fill of 3:1 against the page in ${label}`, () => {
+			expect(contrast(track, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			expect(contrast(fill, CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
 
-			it(`has a ${component} fill of 3:1 against its track in ${label}`, () => {
-				expect(contrast(color('fill-background-color'), color('track-background-color'))).toBeGreaterThanOrEqual(3);
-			});
-		}
+		it(`has a fill of 3:1 against the track in ${label}`, () => {
+			expect(contrast(fill, track)).toBeGreaterThanOrEqual(3);
+		});
 
 		// The thumb meets the page, the track and the fill. Its face or its edge carries 3:1 against each.
-		it(`has a thumb of 3:1 against the page, the track and the fill in ${label}`, () => {
+		it(`has a slider thumb of 3:1 against the page, the track and the fill in ${label}`, () => {
 			const face = token('--itx-slider-thumb-background-color', scheme);
 			const edge = token('--itx-slider-thumb-border-color', scheme);
-			const surfaces = [
-				CANVAS[scheme],
-				token('--itx-slider-track-background-color', scheme),
-				token('--itx-slider-fill-background-color', scheme),
-			];
-			expect(surfaces.filter((surface) => Math.max(contrast(face, surface), contrast(edge, surface)) < 3)).toEqual([]);
+			expect([CANVAS[scheme], track, fill].filter((surface) => Math.max(contrast(face, surface), contrast(edge, surface)) < 3)).toEqual([]);
 		});
 	}
-
-	// The two draw one track: the same thickness at every size step, the same colors, edge and shade.
-	// Progress fills its track instead of edging it; the size, shape, shade and fill stay the slider's.
-	it('draws the progress track the same as the slider track', () => {
-		const declared = (path: string, name: string) =>
-			[...sheets[path].matchAll(new RegExp(`--itx-[a-z]+-${name}:\\s*([^;]+);`, 'g'))].map(([, value]) => oneLine(value));
-		for (const name of ['track-block-size', 'track-border-radius', 'track-box-shadow', 'fill-background-color']) {
-			expect(declared('progress/interop-progress.base.css', name)).toEqual(declared('slider/interop-slider.base.css', name));
-		}
-	});
 });
 
 describe('split button choices', () => {

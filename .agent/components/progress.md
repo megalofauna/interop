@@ -44,9 +44,8 @@ The demo page is `projects/demo/src/app/components/progress/`.
 
 ## Look
 
-The [slider](slider.md)'s track size, shape, shade and fill, at the same size
-steps; `styles/contrast.spec.ts` fails if those differ. Progress fills its
-track where the slider edges its recess (2026-11-03); the slider may follow.
+The track's tokens, `--itx-track-*`, are in `styles/track.css`, read directly by
+progress and the [slider](slider.md), so the two cannot differ.
 
 | `itx-size` | Thickness |
 |---|---|
@@ -54,15 +53,11 @@ track where the slider edges its recess (2026-11-03); the slider may follow.
 | none, `md` | 6px |
 | `lg` | 8px |
 
-- The element is the track: a solid fill with round ends and an inset shade
-  along its top, no edge. The fill is `neutral-500` in both schemes: the
-  darkest gray 3:1 against the page that keeps the fill 3:1 against it (light
-  4.73 and 3.79, dark 3.68 and 3.76). It is the only neutral step that does
-  both in both schemes; `neutral-600` drops the fill to 2.30 in light. A thin
-  edge broke up at some screen resolutions, so the fill shows the track's
-  length instead.
+- The element is the track: solid `neutral-500`, round ends, no edge, no shade.
+  3:1 against the page: 4.73 light, 3.68 dark. A thin edge broke up at some
+  screen resolutions, so the fill shows the track's length instead.
 - The fill is the browser's own part (`::-webkit-progress-value`,
-  `::-moz-progress-bar`) in the text color, so the browser sizes it from `value`
+  `::-moz-progress-bar`), `neutral-800`/`50`, so the browser sizes it from `value`
   and `max`. It eases to a new value over the slower shared transition.
 - **Indeterminate.** A band 30% of the track long crosses it, drawn as a
   gradient whose stop positions move with a registered `--itx-progress-sweep`.
@@ -74,10 +69,10 @@ track where the slider edges its recess (2026-11-03); the slider may follow.
   spinner, so it still says that something is happening.
 - Forced colors (`forced-color-adjust: none`): track `Canvas`, a 1px
   `CanvasText` edge (the edge width is 0 otherwise), fill and band
-  `Highlight`, no shade. Without it the browser drops the gradient and the
+  `Highlight`. Without it the browser drops the gradient and the
   shadows, and the bar disappears.
 - Contrast, measured: track and fill 3:1 against the page, fill 3:1 against
-  the track.
+  the track (3.19 light, 4.53 dark).
 - No vertical bar. Add `itx-orientation="vertical"` when a use appears: in
   Chrome 155 and WebKit the fill part follows `writing-mode: vertical-lr`, and
   `direction: rtl` fills it from the bottom.
@@ -93,7 +88,7 @@ track where the slider edges its recess (2026-11-03); the slider may follow.
 
 - The bar bent round, from the bar's own tokens: the filled track and the
   fill over it. The same contrast pairs as the bar, so the bar's guard covers
-  it. No inset shade. In forced colors the edge draws on its outer and inner
+  it. In forced colors the edge draws on its outer and inner
   circles.
 - Thickness is the track's (4, 6, 8px); the diameter a button's height at the
   same size (32, 40, 56px), so a ring sits beside a button.

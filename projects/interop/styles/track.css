@@ -1,0 +1,34 @@
+/*
+ * The track that a progress bar, a progress ring and a slider share. Each reads these directly. To
+ * restyle one of them, set a token on it: input[interop-slider] { --itx-track-block-size: 2px; }.
+ *
+ * The track is a solid fill with no edge. It is 3:1 against the page, and the fill is 3:1 against both
+ * (WCAG 1.4.11), so the length of the scale and the value both show.
+ */
+
+:where(progress[interop-progress], input[type="range"][interop-slider]) {
+	--itx-track-block-size: var(--itx-space-1_5);
+	--itx-track-background-color: var(--itx-neutral-500);
+	--itx-track-border-width: 0px;
+	--itx-track-border-color: transparent;
+	--itx-track-border-radius: var(--itx-radius-full);
+	--itx-track-fill-background-color: light-dark(var(--itx-neutral-800), var(--itx-neutral-50));
+}
+
+:where(progress[interop-progress], input[type="range"][interop-slider])[itx-size="sm"] {
+	--itx-track-block-size: var(--itx-space-1);
+}
+
+:where(progress[interop-progress], input[type="range"][interop-slider])[itx-size="lg"] {
+	--itx-track-block-size: var(--itx-space-2);
+}
+
+/* The track takes the page's color here, so a 1px edge shows its length. */
+@media (forced-colors: active) {
+	:where(progress[interop-progress], input[type="range"][interop-slider]) {
+		--itx-track-background-color: Canvas;
+		--itx-track-border-width: var(--itx-border-width);
+		--itx-track-border-color: CanvasText;
+		--itx-track-fill-background-color: Highlight;
+	}
+}

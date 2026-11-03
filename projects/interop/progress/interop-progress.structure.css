@@ -57,40 +57,38 @@
 	box-sizing: border-box;
 	display: block;
 	inline-size: var(--itx-progress-inline-size);
-	block-size: var(--itx-progress-track-block-size);
+	block-size: var(--itx-track-block-size);
 	margin: 0;
 	border: 0;
-	border-radius: var(--itx-progress-track-border-radius);
+	border-radius: var(--itx-track-border-radius);
 	overflow: hidden;
-	background-color: var(--itx-progress-track-background-color);
+	background-color: var(--itx-track-background-color);
 	/* The edge, drawn only in forced colors, is a shadow, not a border, so the fill part inside can cover it. */
-	box-shadow:
-		inset 0 0 0 var(--itx-progress-track-border-width) var(--itx-progress-track-border-color),
-		var(--itx-progress-track-box-shadow);
+	box-shadow: inset 0 0 0 var(--itx-track-border-width) var(--itx-track-border-color);
 }
 
 /* Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the whole rule. */
 :where(progress[interop-progress])::-webkit-progress-bar {
-	border-radius: var(--itx-progress-track-border-radius);
+	border-radius: var(--itx-track-border-radius);
 	background-color: transparent;
 }
 
 :where(progress[interop-progress])::-webkit-progress-value {
-	border-radius: var(--itx-progress-track-border-radius);
-	background-color: var(--itx-progress-fill-background-color);
+	border-radius: var(--itx-track-border-radius);
+	background-color: var(--itx-track-fill-background-color);
 	transition: inline-size var(--itx-progress-transition-duration) var(--itx-progress-transition-timing-function);
 }
 
 :where(progress[interop-progress])::-moz-progress-bar {
-	border-radius: var(--itx-progress-track-border-radius);
-	background-color: var(--itx-progress-fill-background-color);
+	border-radius: var(--itx-track-border-radius);
+	background-color: var(--itx-track-fill-background-color);
 }
 
 :where(progress[interop-progress]:indeterminate) {
 	background-image: linear-gradient(
 		to right,
 		transparent 0 calc((var(--itx-progress-sweep) - var(--itx-progress-band-length)) * 1%),
-		var(--itx-progress-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
+		var(--itx-track-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
 		transparent 0
 	);
 	/* Linear, because an easing on a loop makes it pulse. Reduced motion slows it in styles/transition.css. */
@@ -101,7 +99,7 @@
 	background-image: linear-gradient(
 		to left,
 		transparent 0 calc((var(--itx-progress-sweep) - var(--itx-progress-band-length)) * 1%),
-		var(--itx-progress-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
+		var(--itx-track-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
 		transparent 0
 	);
 }
@@ -125,21 +123,21 @@
 	block-size: var(--itx-progress-ring-size);
 	border-radius: var(--itx-radius-full);
 	box-shadow: none;
-	background-color: var(--itx-progress-track-background-color);
+	background-color: var(--itx-track-background-color);
 	background-image:
-		conic-gradient(var(--itx-progress-fill-background-color) var(--itx-progress-ring-fill), transparent 0),
+		conic-gradient(var(--itx-track-fill-background-color) var(--itx-progress-ring-fill), transparent 0),
 		radial-gradient(
 			farthest-side,
-			transparent calc(100% - var(--itx-progress-track-block-size)),
-			var(--itx-progress-track-border-color) 0 calc(100% - var(--itx-progress-track-block-size) + var(--itx-progress-track-border-width)),
-			transparent 0 calc(100% - var(--itx-progress-track-border-width)),
-			var(--itx-progress-track-border-color) 0
+			transparent calc(100% - var(--itx-track-block-size)),
+			var(--itx-track-border-color) 0 calc(100% - var(--itx-track-block-size) + var(--itx-track-border-width)),
+			transparent 0 calc(100% - var(--itx-track-border-width)),
+			var(--itx-track-border-color) 0
 		);
 	/* Cuts the disc to a ring the track's thickness wide, with half a pixel to smooth its edge. */
 	mask-image: radial-gradient(
 		farthest-side,
-		transparent calc(100% - var(--itx-progress-track-block-size) - 0.5px),
-		#000 calc(100% - var(--itx-progress-track-block-size))
+		transparent calc(100% - var(--itx-track-block-size) - 0.5px),
+		#000 calc(100% - var(--itx-track-block-size))
 	);
 	transition: --itx-progress-ring-fill var(--itx-progress-transition-duration) var(--itx-progress-transition-timing-function);
 }
@@ -159,15 +157,9 @@
 	animation: itx-progress-ring-turn var(--itx-progress-ring-animation-duration) linear infinite;
 }
 
-/* Forced colors drop gradients and shadows. These keep the edge, the fill, the band and the ring in system colors. */
+/* Forced colors drop gradients. This keeps the fill, the band and the ring, in the system colors of styles/track.css. */
 @media (forced-colors: active) {
 	:where(progress[interop-progress]) {
 		forced-color-adjust: none;
-		/* The track is the page's color here, so an edge shows its length. */
-		--itx-progress-track-background-color: Canvas;
-		--itx-progress-track-border-width: var(--itx-border-width);
-		--itx-progress-track-border-color: CanvasText;
-		--itx-progress-track-box-shadow: 0 0 transparent;
-		--itx-progress-fill-background-color: Highlight;
 	}
 }
