@@ -44,8 +44,9 @@ The demo page is `projects/demo/src/app/components/progress/`.
 
 ## Look
 
-The [slider](slider.md)'s track, at the same size steps;
-`styles/contrast.spec.ts` fails if their track tokens differ.
+The [slider](slider.md)'s track size, shape, shade and fill, at the same size
+steps; `styles/contrast.spec.ts` fails if those differ. Progress fills its
+track where the slider edges its recess (2026-11-03); the slider may follow.
 
 | `itx-size` | Thickness |
 |---|---|
@@ -53,10 +54,13 @@ The [slider](slider.md)'s track, at the same size steps;
 | none, `md` | 6px |
 | `lg` | 8px |
 
-- The element is the track: a recess (`neutral-100`/`950`) with round ends, an
-  inset 1px edge (`neutral-500`/`400`, 3:1 against the page) and an inset shade
-  along its top. The edge is a `box-shadow` so the fill part, a child, covers it
-  where it reaches.
+- The element is the track: a solid fill with round ends and an inset shade
+  along its top, no edge. The fill is `neutral-500` in both schemes: the
+  darkest gray 3:1 against the page that keeps the fill 3:1 against it (light
+  4.73 and 3.79, dark 3.68 and 3.76). It is the only neutral step that does
+  both in both schemes; `neutral-600` drops the fill to 2.30 in light. A thin
+  edge broke up at some screen resolutions, so the fill shows the track's
+  length instead.
 - The fill is the browser's own part (`::-webkit-progress-value`,
   `::-moz-progress-bar`) in the text color, so the browser sizes it from `value`
   and `max`. It eases to a new value over the slower shared transition.
@@ -68,11 +72,12 @@ The [slider](slider.md)'s track, at the same size steps;
 - **Reduced motion** slows the band from 1s to 2s per crossing
   (`--itx-animation-duration-sweep` in `styles/transition.css`), like the busy
   spinner, so it still says that something is happening.
-- Forced colors (`forced-color-adjust: none`): recess `Canvas`, edge
-  `CanvasText`, fill and band `Highlight`, no shade. Without it the browser drops
-  the gradient and the shadows, and the bar disappears.
-- Contrast, measured: edge and fill 3:1 against the page, fill 3:1 against the
-  recess.
+- Forced colors (`forced-color-adjust: none`): track `Canvas`, a 1px
+  `CanvasText` edge (the edge width is 0 otherwise), fill and band
+  `Highlight`, no shade. Without it the browser drops the gradient and the
+  shadows, and the bar disappears.
+- Contrast, measured: track and fill 3:1 against the page, fill 3:1 against
+  the track.
 - No vertical bar. Add `itx-orientation="vertical"` when a use appears: in
   Chrome 155 and WebKit the fill part follows `writing-mode: vertical-lr`, and
   `direction: rtl` fills it from the bottom.
@@ -86,9 +91,10 @@ The [slider](slider.md)'s track, at the same size steps;
 <progress interop-progress="ring" itx-size="sm" aria-label="Loading"></progress>
 ```
 
-- The bar bent round, from the bar's own tokens: the recess, a 1px edge on
-  its outer and inner circles, and the fill over both where it reaches. The
-  same contrast pairs as the bar, so the bar's guard covers it. No inset shade.
+- The bar bent round, from the bar's own tokens: the filled track and the
+  fill over it. The same contrast pairs as the bar, so the bar's guard covers
+  it. No inset shade. In forced colors the edge draws on its outer and inner
+  circles.
 - Thickness is the track's (4, 6, 8px); the diameter a button's height at the
   same size (32, 40, 56px), so a ring sits beside a button.
 - The fill is `--itx-progress-ring-fill`, `attr(value type(<number>), 0) /
@@ -100,7 +106,7 @@ The [slider](slider.md)'s track, at the same size steps;
 - **Indeterminate** (no `value`) is a spinner: an arc of 0.3 turn turns with
   `--itx-animation-duration-spin`, the busy spinner's, which reduced motion
   slows from 0.75s to 1.5s. Clockwise in RTL too.
-- Forced colors: the bar's block covers it (recess `Canvas`, edges
+- Forced colors: the bar's block covers it (track `Canvas`, edges
   `CanvasText`, fill `Highlight`).
 - Typed `attr()`: Chrome 156, WebKit 27.2, and the user's Firefox and Safari
   (2026-11-02).

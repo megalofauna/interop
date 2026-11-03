@@ -63,7 +63,7 @@
 	border-radius: var(--itx-progress-track-border-radius);
 	overflow: hidden;
 	background-color: var(--itx-progress-track-background-color);
-	/* The edge is a shadow, not a border, so the fill part inside can cover it. */
+	/* The edge, drawn only in forced colors, is a shadow, not a border, so the fill part inside can cover it. */
 	box-shadow:
 		inset 0 0 0 var(--itx-progress-track-border-width) var(--itx-progress-track-border-color),
 		var(--itx-progress-track-box-shadow);
@@ -114,8 +114,8 @@
 /* ── Ring ───────────────────────────────────────────────────────────────── */
 
 /*
- * The bar bent round: the recess, an edge on its outer and inner circles, and the fill over both
- * where it reaches. The same tokens, so the same contrast as the bar.
+ * The bar bent round: the track, and the fill over it where it reaches. The same tokens, so the same
+ * contrast as the bar. In forced colors the track's edge draws on its outer and inner circles.
  */
 :where(progress[interop-progress~="ring"]) {
 	--itx-progress-ring-fill: calc(attr(value type(<number>), 0) / attr(max type(<number>), 1) * 1turn);
@@ -163,7 +163,9 @@
 @media (forced-colors: active) {
 	:where(progress[interop-progress]) {
 		forced-color-adjust: none;
+		/* The track is the page's color here, so an edge shows its length. */
 		--itx-progress-track-background-color: Canvas;
+		--itx-progress-track-border-width: var(--itx-border-width);
 		--itx-progress-track-border-color: CanvasText;
 		--itx-progress-track-box-shadow: 0 0 transparent;
 		--itx-progress-fill-background-color: Highlight;

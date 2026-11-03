@@ -636,9 +636,11 @@ describe('slider and progress', () => {
 		for (const component of ['slider', 'progress']) {
 			const color = (name: string) => token(`--itx-${component}-${name}`, scheme);
 
-			// WCAG 1.4.11: the track's edge shows the length of the scale, and the fill shows the value.
-			it(`has a ${component} track edge and fill of 3:1 against the page in ${label}`, () => {
-				expect(contrast(color('track-border-color'), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+			// WCAG 1.4.11: the track shows the length of the scale (the slider's by its edge, progress's by
+			// its fill), and the fill shows the value.
+			it(`has a ${component} track and fill of 3:1 against the page in ${label}`, () => {
+				const track = component === 'progress' ? 'track-background-color' : 'track-border-color';
+				expect(contrast(color(track), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 				expect(contrast(color('fill-background-color'), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
 			});
 
@@ -661,18 +663,11 @@ describe('slider and progress', () => {
 	}
 
 	// The two draw one track: the same thickness at every size step, the same colors, edge and shade.
+	// Progress fills its track instead of edging it; the size, shape, shade and fill stay the slider's.
 	it('draws the progress track the same as the slider track', () => {
 		const declared = (path: string, name: string) =>
 			[...sheets[path].matchAll(new RegExp(`--itx-[a-z]+-${name}:\\s*([^;]+);`, 'g'))].map(([, value]) => oneLine(value));
-		for (const name of [
-			'track-block-size',
-			'track-background-color',
-			'track-border-width',
-			'track-border-color',
-			'track-border-radius',
-			'track-box-shadow',
-			'fill-background-color',
-		]) {
+		for (const name of ['track-block-size', 'track-border-radius', 'track-box-shadow', 'fill-background-color']) {
 			expect(declared('progress/interop-progress.base.css', name)).toEqual(declared('slider/interop-slider.base.css', name));
 		}
 	});
