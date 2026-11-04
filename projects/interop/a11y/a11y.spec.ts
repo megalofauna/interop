@@ -1,15 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
-import {
-	bindSelectAll,
-	bindSlider,
-	bindTagInput,
-	drawIcons,
-	guardActivation,
-	registerIcons,
-	toast,
-} from 'interop';
+import { bindSelectAll, bindSlider, bindTagInput, drawIcons, guardActivation, registerIcons, toast } from 'interop';
 import { InteropBadge } from 'interop/badge';
 import { InteropCodeBlock } from 'interop/code-block';
 import 'interop/field';
@@ -527,6 +519,21 @@ describe('accessibility (axe-core)', () => {
 				<div interop-callout role="note"><div><p>Sizes follow the house radius.</p></div></div>
 			</main>`;
 		drawIcons(document.body);
+		expect(await violations(document.body)).toEqual([]);
+	});
+
+	it('finds no violations in numbered lists: outlined, filled, renumbered, nested and bare', async () => {
+		document.body.innerHTML = `
+			<main>
+				<h1>Departure</h1>
+				<ol interop-list="outlined" role="list"><li>Check the manifest</li><li>Seal the hold</li></ol>
+				<ol interop-list="filled" role="list" reversed start="10"><li>Ten</li><li>Nine</li></ol>
+				<ol interop-list="outlined" role="list">
+					<li>One<ol interop-list="filled" role="list"><li>One A</li></ol></li>
+					<li value="10">Ten</li>
+				</ol>
+				<ol interop-list><li>Plain</li></ol>
+			</main>`;
 		expect(await violations(document.body)).toEqual([]);
 	});
 

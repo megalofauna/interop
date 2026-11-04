@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Numbered lists on a plain page</title>
+		<link rel="stylesheet" href="dist/interop.css" />
+		<style>
+			body {
+				max-inline-size: 40rem;
+				margin: 2rem auto;
+				padding-inline: 1rem;
+			}
+			.cols {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
+			}
+		</style>
+	</head>
+	<body itx-flow>
+		<h1>Numbered lists</h1>
+		<div class="cols">
+			<ol id="outlined" interop-list="outlined" role="list">
+				<li>Check the cargo manifest</li>
+				<li>Seal the hold</li>
+				<li>Request clearance</li>
+			</ol>
+			<ol id="filled" interop-list="filled" role="list">
+				<li>Check the cargo manifest</li>
+				<li>Seal the hold</li>
+				<li>Request clearance</li>
+			</ol>
+			<ol id="bare" interop-list>
+				<li>Check the cargo manifest</li>
+				<li>Seal the hold</li>
+			</ol>
+			<ol id="start" interop-list="outlined" role="list" start="3">
+				<li>a</li>
+				<li>b</li>
+				<li>c</li>
+			</ol>
+			<ol id="reversed" interop-list="outlined" role="list" reversed>
+				<li>a</li>
+				<li>b</li>
+				<li>c</li>
+			</ol>
+			<ol
+				id="reversed-start"
+				interop-list="filled"
+				role="list"
+				reversed
+				start="10"
+			>
+				<li>a</li>
+				<li>b</li>
+				<li>c</li>
+			</ol>
+			<ol id="value" interop-list="outlined" role="list">
+				<li>a</li>
+				<li value="10">b</li>
+				<li>c</li>
+			</ol>
+			<ol id="reversed-value" interop-list="filled" role="list" reversed>
+				<li>a</li>
+				<li value="7">b</li>
+				<li>c</li>
+			</ol>
+			<ol id="nested" interop-list="outlined" role="list">
+				<li>
+					a
+					<ol interop-list="filled" role="list">
+						<li>x</li>
+						<li>y</li>
+					</ol>
+				</li>
+				<li>b</li>
+			</ol>
+		</div>
+		<ol id="ten" interop-list="filled" role="list">
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+			<li>6</li>
+			<li>7</li>
+			<li>8</li>
+			<li>9</li>
+			<li>
+				Ten, with text long enough to wrap onto a second line so the number
+				stays on the first line of the item
+			</li>
+		</ol>
+		<ol id="rtl" interop-list="outlined" role="list" dir="rtl" lang="ar">
+			<li>أولاً</li>
+			<li>ثانياً</li>
+		</ol>
+	</body>
+</html>

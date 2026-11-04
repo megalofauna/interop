@@ -97,6 +97,10 @@ import stepsInteropStepsBase from '../steps/interop-steps.base.css' with { loade
 // @ts-expect-error The text loader turns the file into a string.
 import stepsInteropStepsStructure from '../steps/interop-steps.structure.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import listInteropListBase from '../list/interop-list.base.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import listInteropListStructure from '../list/interop-list.structure.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import tagsInteropTagsBase from '../tags/interop-tags.base.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import tagsInteropTagsStructure from '../tags/interop-tags.structure.css' with { loader: 'text' };
@@ -195,6 +199,8 @@ export const sheets: Record<string, string> = {
 	'toolbar/interop-toolbar.structure.css': toolbarInteropToolbarStructure,
 	'steps/interop-steps.base.css': stepsInteropStepsBase,
 	'steps/interop-steps.structure.css': stepsInteropStepsStructure,
+	'list/interop-list.base.css': listInteropListBase,
+	'list/interop-list.structure.css': listInteropListStructure,
 	'tags/interop-tags.base.css': tagsInteropTagsBase,
 	'tags/interop-tags.structure.css': tagsInteropTagsStructure,
 	'field/interop-field.base.css': fieldInteropFieldBase,

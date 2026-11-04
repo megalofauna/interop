@@ -87,12 +87,11 @@ export class InteropCharacterCountElement extends Element {
 		const threshold = Number(this.getAttribute('itx-threshold') ?? 0) || 0;
 		this.#unbind = bindChildren(
 			this,
-			() =>
-				[
-					this.querySelector<HTMLTextAreaElement | HTMLInputElement>(':scope > :is(textarea, input)'),
-					this.querySelector<HTMLElement>(':scope > [interop-count]'),
-					this.querySelector<HTMLElement>(':scope > [role="status"]'),
-				],
+			() => [
+				this.querySelector<HTMLTextAreaElement | HTMLInputElement>(':scope > :is(textarea, input)'),
+				this.querySelector<HTMLElement>(':scope > [interop-count]'),
+				this.querySelector<HTMLElement>(':scope > [role="status"]'),
+			],
 			(control, count, status) =>
 				control &&
 				limit > 0 &&

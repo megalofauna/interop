@@ -58,10 +58,7 @@ export class InteropValidationElement extends Element {
 	#bind(): void {
 		this.#unbind = bindChildren(
 			this,
-			() => [
-				this.querySelector<HTMLFormElement>(':scope > form'),
-				this.querySelector<HTMLElement>(':scope > [interop-error-summary]'),
-			],
+			() => [this.querySelector<HTMLFormElement>(':scope > form'), this.querySelector<HTMLElement>(':scope > [interop-error-summary]')],
 			(form, summary) => form && bindValidation(form, { summary, messages: this.#messages }),
 		);
 	}
