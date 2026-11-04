@@ -1,0 +1,196 @@
+/*
+ * Table lab: candidate text sizes and row heights. Not shipped. The dials set data attributes on
+ * .table-lab and on each table; everything below reads them and reassigns the library's table tokens.
+ * Today's table is 16px text, a 40px row, derived padding and the rule added.
+ */
+
+/* The cell's own line height as a length. Registered so it resolves on the cell, because a button in the cell has a different line height. */
+@property --lab-cell-line {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
+/* ── Row height ───────────────────────────────────────────────────────────── */
+.table-lab [data-row="28"] {
+	--lab-row: var(--itx-space-7);
+}
+.table-lab [data-row="32"] {
+	--lab-row: var(--itx-space-8);
+}
+.table-lab [data-row="36"] {
+	--lab-row: var(--itx-space-9);
+}
+.table-lab [data-row="40"] {
+	--lab-row: var(--itx-space-10);
+}
+.table-lab [data-row="44"] {
+	--lab-row: var(--itx-space-11);
+}
+.table-lab [data-row="48"] {
+	--lab-row: var(--itx-space-12);
+}
+.table-lab [data-row="56"] {
+	--lab-row: var(--itx-space-14);
+}
+
+/* ── Text ─────────────────────────────────────────────────────────────────── */
+.table-lab table[data-text="14"] {
+	--itx-table-font-size: var(--itx-font-size-p-sm);
+	--itx-table-line-height: var(--itx-line-height-p-sm);
+}
+.table-lab table[data-text="16"] {
+	--itx-table-font-size: var(--itx-font-size-p);
+	--itx-table-line-height: var(--itx-line-height-p);
+}
+
+/* ── The 1px rule: on top of the row height, or inside it ─────────────────── */
+.table-lab {
+	--lab-rule: 0px;
+}
+.table-lab[data-rule="included"] {
+	--lab-rule: var(--itx-border-width);
+}
+
+/* ── Derived padding: the row height minus one line, split above and below ── */
+.table-lab table[data-row] {
+	--itx-table-cell-padding-block: max(
+		var(--itx-space-0_5),
+		calc((var(--lab-row) - 1lh - var(--lab-rule)) / 2)
+	);
+}
+
+/* ── Explicit height: a table cell's height acts as a minimum ─────────────── */
+.table-lab:is([data-method="height-0"], [data-method="height-4"])
+	table[data-row]
+	:is(th, td) {
+	box-sizing: border-box;
+	block-size: calc(var(--lab-row) - var(--lab-rule));
+	vertical-align: middle;
+}
+.table-lab[data-method="height-0"] table[data-row] {
+	--itx-table-cell-padding-block: 0;
+}
+.table-lab[data-method="height-4"] table[data-row] {
+	--itx-table-cell-padding-block: var(--itx-space-1);
+}
+
+/* ── A checkbox with no text: the cell's text size, and a baseline ─────────── */
+.table-lab table[data-row] :is(th, td) [interop-checkbox] {
+	--itx-checkbox-font-size: var(--itx-table-font-size);
+	--itx-checkbox-line-height: var(--itx-table-line-height);
+}
+
+/* An empty label's baseline is its bottom edge, which puts the box above the text beside it. A zero-width character gives it a text baseline, and the empty alt text keeps it out of the accessible name. */
+.table-lab table[data-row] :is(th, td) [interop-checkbox]::after {
+	content: "\200b" / "";
+}
+
+/* Header cells align to the bottom, which leaves a 40px label's box above the other headers. */
+.table-lab table[data-row] thead tr:has([interop-checkbox]) > th {
+	vertical-align: baseline;
+}
+
+/* ── A control in a cell: its margin box is one line tall ─────────────────── */
+.table-lab table[data-row] :is(th, td) {
+	--lab-cell-line: 1lh;
+}
+.table-lab[data-control="line"] table[data-row] :is(th, td) [interop-button] {
+	margin-block: calc(
+		(var(--lab-cell-line) - var(--itx-button-min-block-size)) / 2
+	);
+	/* On the baseline, a button with a different text size from the cell makes the line 1px taller. */
+	vertical-align: top;
+}
+.table-lab[data-control="line"] table[data-row] :is(th, td) [interop-checkbox] {
+	--itx-checkbox-min-block-size: var(--lab-cell-line);
+}
+
+/* The library's coarse-pointer rule, applied at any pointer. The margin above reads the token, as a shipped rule would. */
+.table-lab[data-touch="on"] table[data-row] :is(th, td) [interop-button] {
+	min-block-size: max(var(--itx-button-min-block-size), 2.75rem);
+}
+
+/* ── Page furniture ───────────────────────────────────────────────────────── */
+.table-lab {
+	display: block;
+}
+
+.table-lab .dials {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-4);
+}
+
+.table-lab .readout [data-flag] {
+	font-weight: 700;
+	color: var(--itx-role-text-danger);
+}
+
+.table-lab .matrix {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-rows: repeat(3, auto);
+	grid-auto-flow: column;
+	gap: var(--itx-space-8);
+	align-items: start;
+}
+
+@media (width < 60rem) {
+	.table-lab .matrix {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: none;
+		grid-auto-flow: row;
+	}
+}
+
+/* Names, regions and durations stay on one line, so a plain row in the readout is one line tall. */
+.table-lab table[data-row] tbody th[scope="row"],
+.table-lab [data-nowrap] {
+	white-space: nowrap;
+}
+
+.table-lab .actions {
+	display: inline-flex;
+	gap: var(--itx-space-1);
+	align-items: center;
+}
+
+.table-lab[data-control="line"] .actions {
+	vertical-align: top;
+}
+
+.table-lab .schemes {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: var(--itx-space-4);
+}
+
+.table-lab .scheme {
+	padding: var(--itx-space-4);
+	background-color: Canvas;
+	color: CanvasText;
+}
+.table-lab .scheme[data-scheme="light"] {
+	color-scheme: light;
+}
+.table-lab .scheme[data-scheme="dark"] {
+	color-scheme: dark;
+}
+
+.table-lab .aligned {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	column-gap: var(--itx-space-4);
+	align-items: start;
+	max-inline-size: 32rem;
+}
+
+.table-lab .aligned-buttons {
+	display: flex;
+	flex-direction: column;
+}
+
+.table-lab .aligned-buttons [interop-button] {
+	--itx-button-min-block-size: var(--lab-row);
+}
