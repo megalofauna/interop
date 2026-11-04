@@ -52,7 +52,7 @@
 	inherits: false;
 }
 
-/* Read with `corner-shape: var(--itx-corner-shape)`. `full` is round; every other radius is a squircle. */
+/* Read with `corner-shape: var(--itx-corner-shape)`. `initial` leaves every corner round; set it here to change them all. */
 @property --itx-corner-shape {
 	syntax: "*";
 	inherits: false;

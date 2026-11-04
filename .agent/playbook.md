@@ -220,8 +220,8 @@ them, and `styles/radius.spec.ts` fails on a corner that follows none.
 | Small | a fraction of the house radius | tooltip (half); checkbox box (three quarters) |
 | Enclosing | the house radius plus the gap to the controls inside (padding and border), `0` when the house radius is `0`: `var(--itx-radius, min(var(--itx-radius-base) * 9999, var(--itx-radius-base) + gap))` | a container whose controls sit close to its corners: segmented frame, toolbar channel, select picker, split button choices, code block, palette. Not a dialog |
 
-The house radius is `--itx-radius-base`, 8px, with squircle corners
-(`--itx-corner-shape`). A theme sets `--itx-radius-base` on `:root` to change it
+The house radius is `--itx-radius-base`, 4px, with round corners
+(`--itx-corner-shape` is `initial` for now). A theme sets `--itx-radius-base` on `:root` to change it
 everywhere. Never write a radius literal or a fixed step in a component.
 
 `itx-radius` picks a step on one element. Each step is a multiple of the house
