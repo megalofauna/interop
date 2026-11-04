@@ -2,7 +2,10 @@ import { Component } from "@angular/core";
 import { bindScrollArea } from "interop";
 import { each } from "../../example/bind-each";
 import { DemoExample } from "../../example/example";
+import controls from "./examples/controls.html";
 import data from "./examples/data.html";
+import densityCss from "./examples/density.css";
+import density from "./examples/density.html";
 import empty from "./examples/empty.html";
 import reference from "./examples/reference.html";
 import sizes from "./examples/sizes.html";
@@ -21,10 +24,35 @@ export class TableDemo {
 		data,
 		empty,
 		sizes,
+		density,
+		densityCss,
+		controls,
 		stacked,
 		stackedCss,
 	};
 	protected readonly bind = each("[interop-scroll-area]", (area) =>
 		bindScrollArea(area),
 	);
+	protected readonly bindDensity = (root: HTMLElement) => {
+		const unbindAreas = this.bind(root);
+		const group = root.querySelector<HTMLFieldSetElement>("#density")!;
+		const table = root.querySelector<HTMLTableElement>("#density-table")!;
+		const setDensity = (event: Event) =>
+			table.setAttribute(
+				"itx-density",
+				(event.target as HTMLInputElement).value,
+			);
+		group.addEventListener("change", setDensity);
+		return () => {
+			unbindAreas();
+			group.removeEventListener("change", setDensity);
+		};
+	};
+
+	protected readonly densityTs = `const table = document.querySelector("#density-table");
+
+document.querySelector("#density").addEventListener("change", (event) => {
+	table.setAttribute("itx-density", event.target.value);
+});
+`;
 }

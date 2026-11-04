@@ -1,9 +1,9 @@
 <h1>Table <span interop-badge>Lab</span></h1>
 <p>
 	Text size and row height as separate choices, on real content. The page opens
-	on today's default table: 16px text and 40px rows. The six tables in the first
-	section keep their own text and height; the sections after them follow the
-	Text and Row height dials.
+	on what ships. The six tables in the first section keep their own text and
+	height, with an <code>xs</code> button in compact rows and <code>sm</code> in
+	the others. The sections after them follow the dials.
 </p>
 
 <div class="dials">
@@ -70,7 +70,7 @@
 
 <h2>Every text size at every density</h2>
 <p>
-	The same table six times: 14px on the left, 16px on the right, tight to
+	The same table six times: 14px on the left, 16px on the right, compact to
 	spacious from top to bottom. The two sizes use the 14/20 and 16/24 type roles.
 	Each size has its own three heights: 28, 36 and 44px at 14px, and 32, 40 and
 	48px at 16px.
@@ -128,7 +128,7 @@
 								<button
 									interop-button
 									type="button"
-									[attr.itx-size]="state().button"
+									[attr.itx-size]="density.label === 'compact' ? 'xs' : 'sm'"
 								>
 									Logs
 								</button>

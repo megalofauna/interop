@@ -41,10 +41,63 @@
 
 <h2>Sizes</h2>
 <p>
-	<code>itx-size</code> on the table: <code>sm</code>, <code>lg</code> or
-	nothing.
+	<code>itx-size</code> on the table sets the text and the row height with it:
+	<code>sm</code> for 14px text and 36px rows, or nothing for 16px text and 40px
+	rows.
 </p>
 <demo-example [html]="examples.sizes" [bind]="bind" layout="stack" />
+
+<h2>Density</h2>
+<p>
+	<code>itx-density</code> sets the row height for the size. A row of one line
+	lands on the height, and a cell whose text wraps keeps the same padding.
+</p>
+<demo-example
+	[html]="examples.density"
+	[css]="examples.densityCss"
+	[bind]="bindDensity"
+	[ts]="densityTs"
+	layout="stack"
+/>
+<div interop-scroll-area aria-labelledby="density-heights">
+	<table interop-table itx-size="sm">
+		<caption id="density-heights">
+			Row heights in px
+		</caption>
+		<thead>
+			<tr>
+				<th scope="col">Size</th>
+				<th scope="col" itx-numeric><code>compact</code></th>
+				<th scope="col" itx-numeric><code>regular</code> (default)</th>
+				<th scope="col" itx-numeric><code>spacious</code></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th scope="row"><code>sm</code></th>
+				<td itx-numeric>28</td>
+				<td itx-numeric>36</td>
+				<td itx-numeric>44</td>
+			</tr>
+			<tr>
+				<th scope="row">Default</th>
+				<td itx-numeric>32</td>
+				<td itx-numeric>40</td>
+				<td itx-numeric>48</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<h2>Controls in a cell</h2>
+<p>
+	A button, badge or checkbox in a cell takes up one line, so its row stays the
+	same height as a row of text. A button needs a row taller than itself:
+	<code>xs</code> at 28 and 32px, <code>sm</code> at 36, 40 and 44px, and
+	<code>md</code> at 48px. On a touch screen a button is at least 44px tall, and
+	its row grows to fit.
+</p>
+<demo-example [html]="examples.controls" [bind]="bind" layout="stack" />
 
 <h2>A narrow layout of your own</h2>
 <p>

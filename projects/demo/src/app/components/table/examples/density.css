@@ -1,0 +1,12 @@
+/* The radio group comes first, so it wraps above the table when the two do not fit side by side. */
+.density-demo {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--itx-space-6);
+	align-items: start;
+}
+
+.density-demo > [interop-scroll-area] {
+	flex: 1 1 20rem;
+	min-inline-size: 0;
+}

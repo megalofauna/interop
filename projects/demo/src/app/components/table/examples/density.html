@@ -1,0 +1,44 @@
+<div class="density-demo">
+	<fieldset interop-radio-group id="density">
+		<legend>Density</legend>
+		<label><input type="radio" name="density" value="compact" /> Compact</label>
+		<label
+			><input type="radio" name="density" value="regular" checked />
+			Regular</label
+		>
+		<label
+			><input type="radio" name="density" value="spacious" /> Spacious</label
+		>
+	</fieldset>
+	<div interop-scroll-area aria-labelledby="density-caption">
+		<table interop-table id="density-table">
+			<caption id="density-caption">
+				Crew
+			</caption>
+			<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Role</th>
+					<th scope="col" itx-numeric>Hours</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">Ada Okafor</th>
+					<td>Pilot</td>
+					<td itx-numeric>1,204</td>
+				</tr>
+				<tr>
+					<th scope="row">Bo Lindqvist</th>
+					<td>Engineer, and the ship's second medic on long-range flights</td>
+					<td itx-numeric>986</td>
+				</tr>
+				<tr>
+					<th scope="row">Chen Wu</th>
+					<td>Navigator</td>
+					<td itx-numeric>1,530</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

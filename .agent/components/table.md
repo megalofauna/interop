@@ -38,7 +38,8 @@ projects/demo/src/app/components/table/
   sharing one `<tbody>` mislabel each other.
 - `itx-numeric` on a `<th>` or `<td>`: end-aligned, tabular figures. A `<col>`
   cannot set `text-align`, so the cell carries it.
-- `itx-size` on the table: sm, md (default), lg.
+- `itx-size` on the table: sm (14px text) or md (16px text, default).
+- `itx-density` on the table: compact, regular (default) or spacious.
 - Empty: keep the caption and headers; one row, one cell with `colspan`, saying why.
 
 ## Layout
@@ -49,8 +50,20 @@ projects/demo/src/app/components/table/
   named `group` only while it overflows.
 - An `overflow-x` scroller stops a sticky header sticking to the page, so a
   scroll area and a page-sticky header are exclusive.
-- Rows have no height. Line height plus cell padding make 32, 40 and 56px (plus
-  the 1px rule), so a consumer's narrow layout can make rows and cells blocks.
+- Rows have no height. `--itx-table-row-block-size` sets the padding:
+  `(row height − line height − rule) / 2`, so a row of one line lands on the
+  height, rule included, and a consumer's narrow layout can make rows and cells
+  blocks.
+
+| | compact | regular | spacious |
+|---|---|---|---|
+| `sm`, 14px text | 28 | 36 | 44 |
+| default, 16px text | 32 | 40 | 48 |
+
+- A button, badge or checkbox in a cell takes up one line, so it does not make
+  its row taller. A button needs a row taller than itself: `xs` at 28 and 32,
+  `sm` at 36, 40 and 44, `md` at 48. At the 44px touch floor a button's row grows.
+  Candidates and measurements: `/labs/table`.
 - Table semantics survive `display: block` and `grid` on table parts (checked in
   Chrome 155; Firefox and Safari 17 per Roselli). `display: contents` drops them.
 - A `<table>` cannot be a size container; a container query needs a wrapper.

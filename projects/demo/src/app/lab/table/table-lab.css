@@ -1,15 +1,9 @@
 /*
  * Table lab: candidate text sizes and row heights. Not shipped. The dials set data attributes on
  * .table-lab and on each table; everything below reads them and reassigns the library's table tokens.
- * Today's table is 16px text, a 40px row, derived padding and the rule added.
+ * The opening settings match what ships: derived padding, the rule inside the height, and controls
+ * that take up one line.
  */
-
-/* The cell's own line height as a length. Registered so it resolves on the cell, because a button in the cell has a different line height. */
-@property --lab-cell-line {
-	syntax: "<length>";
-	inherits: true;
-	initial-value: 0px;
-}
 
 /* ── Row height ───────────────────────────────────────────────────────────── */
 .table-lab [data-row="28"] {
@@ -75,38 +69,26 @@
 	--itx-table-cell-padding-block: var(--itx-space-1);
 }
 
-/* ── A checkbox with no text: the cell's text size, and a baseline ─────────── */
-.table-lab table[data-row] :is(th, td) [interop-checkbox] {
-	--itx-checkbox-font-size: var(--itx-table-font-size);
-	--itx-checkbox-line-height: var(--itx-table-line-height);
+/* ── Row grows: undoes the library's rule that a control in a cell takes up one line ── */
+.table-lab[data-control="grow"] table[data-row] :is(th, td) [interop-button],
+.table-lab[data-control="grow"] table[data-row] :is(th, td) [interop-badge] {
+	margin-block: 0;
+	vertical-align: baseline;
 }
-
-/* An empty label's baseline is its bottom edge, which puts the box above the text beside it. A zero-width character gives it a text baseline, and the empty alt text keeps it out of the accessible name. */
-.table-lab table[data-row] :is(th, td) [interop-checkbox]::after {
-	content: "\200b" / "";
+.table-lab[data-control="grow"] table[data-row] :is(th, td) [interop-checkbox] {
+	--itx-checkbox-min-block-size: var(--itx-space-10);
 }
 
 /* Header cells align to the bottom, which leaves a 40px label's box above the other headers. */
-.table-lab table[data-row] thead tr:has([interop-checkbox]) > th {
+.table-lab[data-control="grow"]
+	table[data-row]
+	thead
+	tr:has([interop-checkbox])
+	> th {
 	vertical-align: baseline;
 }
 
-/* ── A control in a cell: its margin box is one line tall ─────────────────── */
-.table-lab table[data-row] :is(th, td) {
-	--lab-cell-line: 1lh;
-}
-.table-lab[data-control="line"] table[data-row] :is(th, td) [interop-button] {
-	margin-block: calc(
-		(var(--lab-cell-line) - var(--itx-button-min-block-size)) / 2
-	);
-	/* On the baseline, a button with a different text size from the cell makes the line 1px taller. */
-	vertical-align: top;
-}
-.table-lab[data-control="line"] table[data-row] :is(th, td) [interop-checkbox] {
-	--itx-checkbox-min-block-size: var(--lab-cell-line);
-}
-
-/* The library's coarse-pointer rule, applied at any pointer. The margin above reads the token, as a shipped rule would. */
+/* The library's coarse-pointer rule, applied at any pointer. The library's margin reads the token, so the row grows. */
 .table-lab[data-touch="on"] table[data-row] :is(th, td) [interop-button] {
 	min-block-size: max(var(--itx-button-min-block-size), 2.75rem);
 }
@@ -157,6 +139,7 @@
 }
 
 .table-lab[data-control="line"] .actions {
+	display: inline-flex;
 	vertical-align: top;
 }
 

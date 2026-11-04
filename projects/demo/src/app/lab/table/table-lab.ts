@@ -42,14 +42,14 @@ interface Measurement {
 	encapsulation: ViewEncapsulation.None,
 })
 export class TableLab {
-	/** The opening values reproduce today's default table. */
+	/** The opening values match what ships. */
 	protected readonly state = signal<Record<DialKey, string>>({
 		text: "16",
 		row: "40",
 		method: "derived",
-		rule: "added",
+		rule: "included",
 		button: "sm",
-		control: "grow",
+		control: "line",
 		touch: "off",
 	});
 
@@ -100,6 +100,7 @@ export class TableLab {
 			key: "button",
 			legend: "Button in a cell",
 			options: [
+				{ value: "xs", label: "xs" },
 				{ value: "sm", label: "sm" },
 				{ value: "md", label: "md" },
 			],
@@ -126,16 +127,16 @@ export class TableLab {
 		{
 			text: "14",
 			rows: [
-				{ value: "28", label: "tight" },
-				{ value: "36", label: "comfortable" },
+				{ value: "28", label: "compact" },
+				{ value: "36", label: "regular" },
 				{ value: "44", label: "spacious" },
 			],
 		},
 		{
 			text: "16",
 			rows: [
-				{ value: "32", label: "tight" },
-				{ value: "40", label: "comfortable" },
+				{ value: "32", label: "compact" },
+				{ value: "40", label: "regular" },
 				{ value: "48", label: "spacious" },
 			],
 		},
@@ -207,7 +208,7 @@ export class TableLab {
 		},
 		{
 			name: "itx-density",
-			values: "tight, comfortable, spacious",
+			values: "compact, regular, spacious",
 			description:
 				"Sets the row height: 32, 40 or 48px at 16px text, and 28, 36 or 44px at 14px text. Cell padding comes from the row height and the line height, so a cell whose text wraps keeps the same padding above and below it.",
 		},
