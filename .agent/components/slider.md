@@ -12,7 +12,7 @@ fieldset. There is no two-thumb slider.
 
 ```
 projects/interop/slider/
-  interop-slider.structure.css   track, fill, thumb, vertical, forced colors; names list at the top
+  interop-slider.structure.css   track part, fill, thumb, vertical, forced colors; names list at the top
   interop-slider.base.css        token values and size steps
   slider.ts                      InteropSlider directive
   public-api.ts
@@ -60,10 +60,10 @@ In Angular, `InteropSlider` binds it, with `[format]` and `[readout]` inputs.
 
 ## Look
 
-The track and thumb were chosen in the track lab (`/labs/track`), which stays in
-the demo for comparing looks. The [progress bar](progress.md) draws the same
-track at every size step; `styles/contrast.spec.ts` fails if their track tokens
-differ.
+The thumb was chosen in the track lab (`/labs/track`), which stays in the demo
+for comparing looks. The track's tokens, `--itx-track-*`, are in
+`styles/track.css`, read directly by the slider and the
+[progress bar](progress.md), so the two cannot differ.
 
 | `itx-size` | Input height (target) | Thumb | Track |
 |---|---|---|---|
@@ -72,12 +72,10 @@ differ.
 | `lg` | 40px | 28px | 8px |
 
 - The input is up to 24rem wide (10rem tall when vertical).
-- **Track.** The input's own track part: a recess (`neutral-100`/`950`) with a
-  1px edge (`neutral-500`/`400`, 3:1 against the page), round ends, and an inset
-  shade along its top (`0 1px 2px`). The edge reads `--itx-border-width`, so
-  `prefers-contrast` thickens it.
-- **Fill.** A background layer on the track part, in the text color, drawn to
-  the border's outer edge so it covers the edge where it reaches. It ends under
+- **Track.** The input's own track part: a solid `neutral-500` with round ends,
+  no edge and no shade. It is 3:1 against the page in both schemes.
+- **Fill.** A background layer on the track part (`neutral-800`/`50`), drawn to
+  the border's outer edge so it covers the forced-colors edge. It ends under
   the thumb's center: `thumb / 2 + (100% - thumb) * value`. A plain percentage
   drifts by half a thumb. `:dir(rtl)` anchors it right; vertical anchors it at
   the bottom and swaps its axes. `--itx-slider-value` is registered with
@@ -95,14 +93,15 @@ differ.
   default size, in Chrome and WebKit).
 - **Press.** While held (`:active`), the thumb scales to 1.15 over the shared
   transition duration, which reduced motion sets to 0. Not while disabled.
-- Contrast, measured in `styles/contrast.spec.ts`: track edge and fill 3:1
-  against the page, fill 3:1 against the recess, and the thumb's face or edge
-  3:1 against the page, the recess and the fill.
+- Contrast, measured in `styles/contrast.spec.ts`: track and fill 3:1 against
+  the page, fill 3:1 against the track, and the thumb's face or edge 3:1 against
+  the page, the track and the fill.
 - Focus is the house ring from `outline.css`, around the input's box.
 - The input sets `background-color: transparent`, because Chrome fills a vertical
   range in the dark scheme.
-- Forced colors (`forced-color-adjust: none`): recess `Canvas`, edge and thumb
-  `CanvasText`, fill `Highlight`, no shade, no lift; `GrayText` when disabled.
+- Forced colors (`forced-color-adjust: none`): track `Canvas` with a 1px
+  `CanvasText` edge, thumb `CanvasText`, fill `Highlight`, no lift; `GrayText`
+  when disabled.
 
 Vendor pseudo-elements never share a selector list: one unknown pseudo-element
 drops the whole rule. The pseudo-element goes outside `:where()`.

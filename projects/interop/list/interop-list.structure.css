@@ -81,20 +81,24 @@
 
 /*
  * Chrome's list-item counter ignores reversed and <li value>; its own numbers do not. These set the
- * counter as the browser's numbers count. Browsers that already count right reach the same numbers.
+ * counter as the browser's numbers count. They go together: Safari 27.2 counts right by itself but has
+ * no typed attr(), and would otherwise drop only the rules that read it and keep the rest, so that
+ * reversed start="10" gave 3, 2, 1.
  */
-:where(ol[reversed]:is([interop-list~="outlined"], [interop-list~="filled"]) > li) {
-	counter-increment: list-item -1;
-}
+@supports (inline-size: attr(x type(<length>))) {
+	:where(ol[reversed]:is([interop-list~="outlined"], [interop-list~="filled"]) > li) {
+		counter-increment: list-item -1;
+	}
 
-:where(ol[reversed]:is([interop-list~="outlined"], [interop-list~="filled"]) > li:first-child) {
-	counter-set: list-item sibling-count();
-}
+	:where(ol[reversed]:is([interop-list~="outlined"], [interop-list~="filled"]) > li:first-child) {
+		counter-set: list-item sibling-count();
+	}
 
-:where(ol[reversed][start]:is([interop-list~="outlined"], [interop-list~="filled"]) > li:first-child) {
-	counter-set: list-item attr(start type(<integer>));
-}
+	:where(ol[reversed][start]:is([interop-list~="outlined"], [interop-list~="filled"]) > li:first-child) {
+		counter-set: list-item attr(start type(<integer>));
+	}
 
-:where(ol:is([interop-list~="outlined"], [interop-list~="filled"]) > li[value]) {
-	counter-set: list-item attr(value type(<integer>));
+	:where(ol:is([interop-list~="outlined"], [interop-list~="filled"]) > li[value]) {
+		counter-set: list-item attr(value type(<integer>));
+	}
 }

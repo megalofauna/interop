@@ -1,7 +1,7 @@
 # Progress — Mental Model Card
 
 A progress bar shows how far a task has got: an upload, a sync, an export. It is
-the native `<progress>`, styled. It needs no script. Research:
+the native `<progress>`, styled, as a bar or a ring. It needs no script. Research:
 [prompts/PROGRESS-REVIEW.md](../../prompts/PROGRESS-REVIEW.md).
 
 For a measurement in a range (storage used, battery), use `<meter>`. For the
@@ -44,8 +44,8 @@ The demo page is `projects/demo/src/app/components/progress/`.
 
 ## Look
 
-The [slider](slider.md)'s track, at the same size steps;
-`styles/contrast.spec.ts` fails if their track tokens differ.
+The track's tokens, `--itx-track-*`, are in `styles/track.css`, read directly by
+progress and the [slider](slider.md), so the two cannot differ.
 
 | `itx-size` | Thickness |
 |---|---|
@@ -53,12 +53,11 @@ The [slider](slider.md)'s track, at the same size steps;
 | none, `md` | 6px |
 | `lg` | 8px |
 
-- The element is the track: a recess (`neutral-100`/`950`) with round ends, an
-  inset 1px edge (`neutral-500`/`400`, 3:1 against the page) and an inset shade
-  along its top. The edge is a `box-shadow` so the fill part, a child, covers it
-  where it reaches.
+- The element is the track: solid `neutral-500`, round ends, no edge, no shade.
+  3:1 against the page: 4.73 light, 3.68 dark. A thin edge broke up at some
+  screen resolutions, so the fill shows the track's length instead.
 - The fill is the browser's own part (`::-webkit-progress-value`,
-  `::-moz-progress-bar`) in the text color, so the browser sizes it from `value`
+  `::-moz-progress-bar`), `neutral-800`/`50`, so the browser sizes it from `value`
   and `max`. It eases to a new value over the slower shared transition.
 - **Indeterminate.** A band 30% of the track long crosses it, drawn as a
   gradient whose stop positions move with a registered `--itx-progress-sweep`.
@@ -68,14 +67,51 @@ The [slider](slider.md)'s track, at the same size steps;
 - **Reduced motion** slows the band from 1s to 2s per crossing
   (`--itx-animation-duration-sweep` in `styles/transition.css`), like the busy
   spinner, so it still says that something is happening.
-- Forced colors (`forced-color-adjust: none`): recess `Canvas`, edge
-  `CanvasText`, fill and band `Highlight`, no shade. Without it the browser drops
-  the gradient and the shadows, and the bar disappears.
-- Contrast, measured: edge and fill 3:1 against the page, fill 3:1 against the
-  recess.
+- Forced colors (`forced-color-adjust: none`): track `Canvas`, a 1px
+  `CanvasText` edge (the edge width is 0 otherwise), fill and band
+  `Highlight`. Without it the browser drops the gradient and the
+  shadows, and the bar disappears.
+- Contrast, measured: track and fill 3:1 against the page, fill 3:1 against
+  the track (3.19 light, 4.53 dark).
 - No vertical bar. Add `itx-orientation="vertical"` when a use appears: in
   Chrome 155 and WebKit the fill part follows `writing-mode: vertical-lr`, and
   `direction: rtl` fills it from the bottom.
+
+## Ring
+
+`progress[interop-progress="ring"]`: the same element drawn as a ring, CSS only.
+
+```html
+<progress interop-progress="ring" value="42" max="100" aria-label="Uploading report.pdf"></progress>
+<progress interop-progress="ring" itx-size="sm" aria-label="Loading"></progress>
+```
+
+- The bar bent round, from the bar's own tokens: the filled track and the
+  fill over it. The same contrast pairs as the bar, so the bar's guard covers
+  it. In forced colors the edge draws on its outer and inner
+  circles.
+- Thickness is the track's (4, 6, 8px); the diameter a button's height at the
+  same size (32, 40, 56px), so a ring sits beside a button.
+- The fill is `--itx-progress-ring-fill`, `attr(value type(<number>), 0) /
+  attr(max type(<number>), 1)` of a turn, swept clockwise from the top by a
+  `conic-gradient`; a `radial-gradient` mask cuts the disc to a ring. A script
+  setting `.value` writes the attribute, so the ring follows. The angle is a
+  registered `<angle>`, so a new value eases round over the bar's transition.
+- The browser's fill parts are transparent: they would draw a bar inside.
+- **Indeterminate** (no `value`) is a spinner: an arc of 0.3 turn turns with
+  `--itx-animation-duration-spin`, the busy spinner's, which reduced motion
+  slows from 0.75s to 1.5s. Clockwise in RTL too.
+- Forced colors: the bar's block covers it (track `Canvas`, edges
+  `CanvasText`, fill `Highlight`).
+- **Safari.** Real Safari 27.2 has no typed `attr()`: `CSS.supports` is false,
+  and CSS there cannot read `value`. An `@supports not` block keeps a
+  determinate ring as a bar in the ring's slot, ring-wide and track-thick, with
+  the browser's own fill, so the value stays right. A spinner reads no value and
+  stays a ring. Delete the block when Safari ships typed `attr()`.
+- Playwright's WebKit is ahead of Safari: it also reports 27.2, but supports
+  typed `attr()`. The browser check serves the sheet with the block's condition
+  forced on, to test the fallback in both engines. Safari itself is checked by
+  hand. Chrome and Firefox draw the ring (the user, 2026-11-03).
 
 ## Dev audit rules
 
@@ -88,8 +124,13 @@ The [slider](slider.md)'s track, at the same size steps;
 
 - `src/audit.spec.ts`: each rule, and a labeled, wrapped, named and
   indeterminate bar that pass.
-- `a11y/a11y.spec.ts`: axe on determinate, indeterminate and sized bars, with a
-  busy region.
+- `a11y/a11y.spec.ts`: axe on determinate, indeterminate and sized bars and
+  rings, with a busy region.
+- `npm run test:browser` (`scripts/browser/check-progress.mjs`), Chromium and
+  WebKit: the ring's angle for 25 of 100, 0.66 of 1 and 7 of 7, a value set
+  from script, the spinner and its reduced-motion duration, the sizes against
+  a large button, forced colors, and the bar unchanged. Ignoring `max` fails
+  it.
 - `styles/contrast.spec.ts` (and the shared track), `forced-colors.spec.ts`,
   `motion.spec.ts`, `preferences.spec.ts`, `radius.spec.ts`.
 - Chrome 155, on the demo: names from the labels, `valuemax=7` for a count, no
@@ -107,14 +148,8 @@ The [slider](slider.md)'s track, at the same size steps;
 
 - `<meter>`. It brings `low`, `high` and `optimum` and the browser's green,
   yellow and red, which is a color decision of its own. Review it separately.
-- A ring or a circular spinner. Possible on the native `<progress>` with CSS
-  alone: a `conic-gradient` swept to `attr(value type(<number>)) /
-  attr(max type(<number>))` of a turn, masked to a ring; `:indeterminate`
-  spins an arc. Prototyped 2026-11-02 and identical in Chrome 156, WebKit
-  27.2, and the user's Firefox and Safari; script setting `.value` updates it,
-  since the property writes the attribute. Forced colors drop the gradient, so
-  it needs `forced-color-adjust: none` with `CanvasText` on `GrayText`.
-  Not built yet; open: reduced motion for the spin, and text inside the ring.
+- Text inside the ring (a percentage). Untested on `<progress>`; it would
+  likely need a wrapper, the first thing the ring would add to the element.
 - Vertical (see Look).
 - `appearance: base` with `::slider-track` and `::slider-fill`, which no
   browser ships.

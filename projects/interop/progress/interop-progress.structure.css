@@ -12,6 +12,13 @@
  * Indeterminate draws a band that crosses the track. Its gradient stops move, so one keyframe serves
  * both directions.
  *
+ * interop-progress="ring" draws the same element as a ring: the fill sweeps clockwise from the top,
+ * value / max of a turn, read with typed attr(); a script setting .value writes the attribute, so the
+ * ring follows. Indeterminate, an arc turns. Without a value the ring is a spinner, the same element.
+ * Without typed attr() a determinate ring draws as a small bar: see the @supports block below.
+ *
+ *   <progress interop-progress="ring" value="42" max="100" aria-label="Uploading report.pdf"></progress>
+ *
  * Also known as:
  *   progress bar          Carbon, Fluent, Spectrum, React Aria, Web Awesome, Angular Material
  *   progress indicator    Apple HIG and Material, for bars and spinners; Carbon's is a step tracker
@@ -27,6 +34,19 @@
 	initial-value: 0;
 }
 
+/* The ring's fill, as an angle, so a new value eases round instead of jumping. */
+@property --itx-progress-ring-fill {
+	syntax: "<angle>";
+	inherits: false;
+	initial-value: 0turn;
+}
+
+@keyframes itx-progress-ring-turn {
+	to {
+		rotate: 1turn;
+	}
+}
+
 @keyframes itx-progress-sweep {
 	to {
 		--itx-progress-sweep: calc(100 + var(--itx-progress-band-length));
@@ -38,40 +58,38 @@
 	box-sizing: border-box;
 	display: block;
 	inline-size: var(--itx-progress-inline-size);
-	block-size: var(--itx-progress-track-block-size);
+	block-size: var(--itx-track-block-size);
 	margin: 0;
 	border: 0;
-	border-radius: var(--itx-progress-track-border-radius);
+	border-radius: var(--itx-track-border-radius);
 	overflow: hidden;
-	background-color: var(--itx-progress-track-background-color);
-	/* The edge is a shadow, not a border, so the fill part inside can cover it. */
-	box-shadow:
-		inset 0 0 0 var(--itx-progress-track-border-width) var(--itx-progress-track-border-color),
-		var(--itx-progress-track-box-shadow);
+	background-color: var(--itx-track-background-color);
+	/* The edge, drawn only in forced colors, is a shadow, not a border, so the fill part inside can cover it. */
+	box-shadow: inset 0 0 0 var(--itx-track-border-width) var(--itx-track-border-color);
 }
 
 /* Vendor pseudo-elements never share a selector list: one unknown pseudo-element drops the whole rule. */
 :where(progress[interop-progress])::-webkit-progress-bar {
-	border-radius: var(--itx-progress-track-border-radius);
+	border-radius: var(--itx-track-border-radius);
 	background-color: transparent;
 }
 
 :where(progress[interop-progress])::-webkit-progress-value {
-	border-radius: var(--itx-progress-track-border-radius);
-	background-color: var(--itx-progress-fill-background-color);
+	border-radius: var(--itx-track-border-radius);
+	background-color: var(--itx-track-fill-background-color);
 	transition: inline-size var(--itx-progress-transition-duration) var(--itx-progress-transition-timing-function);
 }
 
 :where(progress[interop-progress])::-moz-progress-bar {
-	border-radius: var(--itx-progress-track-border-radius);
-	background-color: var(--itx-progress-fill-background-color);
+	border-radius: var(--itx-track-border-radius);
+	background-color: var(--itx-track-fill-background-color);
 }
 
 :where(progress[interop-progress]:indeterminate) {
 	background-image: linear-gradient(
 		to right,
 		transparent 0 calc((var(--itx-progress-sweep) - var(--itx-progress-band-length)) * 1%),
-		var(--itx-progress-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
+		var(--itx-track-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
 		transparent 0
 	);
 	/* Linear, because an easing on a loop makes it pulse. Reduced motion slows it in styles/transition.css. */
@@ -82,7 +100,7 @@
 	background-image: linear-gradient(
 		to left,
 		transparent 0 calc((var(--itx-progress-sweep) - var(--itx-progress-band-length)) * 1%),
-		var(--itx-progress-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
+		var(--itx-track-fill-background-color) 0 calc(var(--itx-progress-sweep) * 1%),
 		transparent 0
 	);
 }
@@ -92,13 +110,79 @@
 	background-color: transparent;
 }
 
-/* Forced colors drop gradients and shadows. These keep the edge, the fill and the band in system colors. */
+/* ── Ring ───────────────────────────────────────────────────────────────── */
+
+/*
+ * The bar bent round: the track, and the fill over it where it reaches. The same tokens, so the same
+ * contrast as the bar. In forced colors the track's edge draws on its outer and inner circles.
+ */
+:where(progress[interop-progress~="ring"]) {
+	--itx-progress-ring-fill: calc(attr(value type(<number>), 0) / attr(max type(<number>), 1) * 1turn);
+	display: inline-block;
+	vertical-align: middle;
+	inline-size: var(--itx-progress-ring-size);
+	block-size: var(--itx-progress-ring-size);
+	border-radius: var(--itx-radius-full);
+	box-shadow: none;
+	background-color: var(--itx-track-background-color);
+	background-image:
+		conic-gradient(var(--itx-track-fill-background-color) var(--itx-progress-ring-fill), transparent 0),
+		radial-gradient(
+			farthest-side,
+			transparent calc(100% - var(--itx-track-block-size)),
+			var(--itx-track-border-color) 0 calc(100% - var(--itx-track-block-size) + var(--itx-track-border-width)),
+			transparent 0 calc(100% - var(--itx-track-border-width)),
+			var(--itx-track-border-color) 0
+		);
+	/* Cuts the disc to a ring the track's thickness wide, with half a pixel to smooth its edge. */
+	mask-image: radial-gradient(
+		farthest-side,
+		transparent calc(100% - var(--itx-track-block-size) - 0.5px),
+		#000 calc(100% - var(--itx-track-block-size))
+	);
+	transition: --itx-progress-ring-fill var(--itx-progress-transition-duration) var(--itx-progress-transition-timing-function);
+}
+
+/* The browser's own fill would draw a bar inside the ring. */
+:where(progress[interop-progress~="ring"])::-webkit-progress-value {
+	background-color: transparent;
+}
+
+:where(progress[interop-progress~="ring"])::-moz-progress-bar {
+	background-color: transparent;
+}
+
+/* Indeterminate: an arc turns, clockwise in either direction. Reduced motion slows it, as the busy spinner. */
+:where(progress[interop-progress~="ring"]:indeterminate) {
+	--itx-progress-ring-fill: var(--itx-progress-ring-arc);
+	animation: itx-progress-ring-turn var(--itx-progress-ring-animation-duration) linear infinite;
+}
+
+/*
+ * Safari 27.2 has no typed attr(), so CSS there cannot read value. A determinate ring stays a bar, in the
+ * ring's slot, whose fill the browser draws from value. A spinner reads no value, so it stays a ring.
+ * Delete this block when Safari ships typed attr(); the ring then needs nothing else.
+ */
+@supports not (inline-size: attr(x type(<length>))) {
+	:where(progress[interop-progress~="ring"]:not(:indeterminate)) {
+		block-size: var(--itx-track-block-size);
+		box-shadow: inset 0 0 0 var(--itx-track-border-width) var(--itx-track-border-color);
+		background-image: none;
+		mask-image: none;
+	}
+
+	:where(progress[interop-progress~="ring"]:not(:indeterminate))::-webkit-progress-value {
+		background-color: var(--itx-track-fill-background-color);
+	}
+
+	:where(progress[interop-progress~="ring"]:not(:indeterminate))::-moz-progress-bar {
+		background-color: var(--itx-track-fill-background-color);
+	}
+}
+
+/* Forced colors drop gradients. This keeps the fill, the band and the ring, in the system colors of styles/track.css. */
 @media (forced-colors: active) {
 	:where(progress[interop-progress]) {
 		forced-color-adjust: none;
-		--itx-progress-track-background-color: Canvas;
-		--itx-progress-track-border-color: CanvasText;
-		--itx-progress-track-box-shadow: 0 0 transparent;
-		--itx-progress-fill-background-color: Highlight;
 	}
 }

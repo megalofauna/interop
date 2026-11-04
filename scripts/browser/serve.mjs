@@ -1,6 +1,6 @@
 // Builds the spike's bundles and pages into dist/ and serves this folder.
 //
-// - dist/tabs.js and dist/interop.css, for the plain HTML page; dist/password.js, dist/character-count.js and
+// - dist/interop.css, for the CSS-only pages (list, progress); dist/tabs.js for the plain HTML page; dist/password.js, dist/character-count.js and
 //   dist/validation.js, the field page;
 //   dist/react.js, the React page.
 // - dist/hydration.html: the hydration app rendered on the server by @angular/platform-server, with

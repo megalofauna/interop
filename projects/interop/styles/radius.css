@@ -42,7 +42,7 @@
 
 :root {
 	/* On the 4px grid, so the whole scale is too. */
-	--itx-radius-base: 8px;
+	--itx-radius-base: 4px;
 	--itx-radius-full: 9999px;
 }
 
@@ -52,11 +52,11 @@
 	inherits: false;
 }
 
-/* Read with `corner-shape: var(--itx-corner-shape)`. `full` is round; every other radius is a squircle. */
+/* Read with `corner-shape: var(--itx-corner-shape)`. `initial` leaves every corner round; set it here to change them all. */
 @property --itx-corner-shape {
 	syntax: "*";
 	inherits: false;
-	initial-value: squircle;
+	initial-value: initial;
 }
 
 :where([itx-radius="none"]) {

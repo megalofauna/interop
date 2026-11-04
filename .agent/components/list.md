@@ -45,8 +45,9 @@ They draw on `<ol>` only.
   `counter-increment: list-item -1` on a reversed list's items,
   `counter-set: list-item sibling-count()` on its first, `attr(start
   type(<integer>))` when it has a start, and `attr(value type(<integer>))` on
-  an item with a value. WebKit counts right already and reaches the same
-  numbers.
+  an item with a value. They sit in `@supports` for typed `attr()`:
+  Safari 27.2 counts right by itself but lacks it, and would otherwise drop only
+  the rules that read it, giving 3, 2, 1 for `reversed start="10"`.
 - One digit is a circle, more grow a pill: the badge's rule, `padding-inline:
   (size − 1ch) / 2 − border`, with `tabular-nums`.
 - Every drawn list has the same start padding (one circle and a gap), so
@@ -101,7 +102,9 @@ circle for one digit, a pill for two, the number centered on the first line,
 one text start and one number end across every list, and RTL. Removing the four counter rules fails the
 Chromium numbers.
 
-Not tested: Firefox, stable Safari, VoiceOver.
+Not tested: VoiceOver. Firefox and Safari are checked by hand; Playwright's
+WebKit supports typed `attr()` and Safari 27.2 does not, so it does not stand in
+for Safari here.
 
 ## Not built
 
