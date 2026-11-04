@@ -1,0 +1,49 @@
+<div interop-scroll-area aria-labelledby="controls-caption">
+	<table interop-table itx-size="sm" itx-density="compact">
+		<caption id="controls-caption">
+			Deployments
+		</caption>
+		<thead>
+			<tr>
+				<th scope="col">
+					<label interop-checkbox>
+						<input type="checkbox" aria-label="Select all" />
+					</label>
+				</th>
+				<th scope="col">Service</th>
+				<th scope="col">Status</th>
+				<th scope="col">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<label interop-checkbox>
+						<input type="checkbox" aria-label="Select api-gateway" />
+					</label>
+				</td>
+				<th scope="row">api-gateway</th>
+				<td>
+					<span interop-badge itx-size="sm" itx-color="success">Live</span>
+				</td>
+				<td>
+					<button interop-button itx-size="xs" type="button">Logs</button>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label interop-checkbox>
+						<input type="checkbox" aria-label="Select billing-worker" />
+					</label>
+				</td>
+				<th scope="row">billing-worker</th>
+				<td>
+					<span interop-badge itx-size="sm" itx-color="danger">Failed</span>
+				</td>
+				<td>
+					<button interop-button itx-size="xs" type="button">Logs</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

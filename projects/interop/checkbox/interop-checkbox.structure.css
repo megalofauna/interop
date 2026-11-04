@@ -37,6 +37,11 @@
 	cursor: var(--itx-checkbox-cursor-disabled);
 }
 
+/* A label with no text would sit on its bottom edge, above the text beside it. A zero-width character gives it a text baseline, and the empty alt text keeps it out of the name. */
+:where(label[interop-checkbox])::after {
+	content: "\200b" / "";
+}
+
 /* The box. Firefox draws the ::before only because this sets `appearance: none`. */
 :where(label[interop-checkbox] > input[type="checkbox"]) {
 	appearance: none;

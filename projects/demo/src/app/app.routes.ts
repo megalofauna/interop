@@ -258,6 +258,13 @@ export const routes: Routes = [
 			import("./lab/track/track-lab").then((m) => m.TrackLab),
 	},
 	{
+		path: "labs/table",
+		title: "Table lab",
+		data: { lab: true },
+		loadComponent: () =>
+			import("./lab/table/table-lab").then((m) => m.TableLab),
+	},
+	{
 		path: "foundations/flow",
 		title: "Flow",
 		loadComponent: () =>

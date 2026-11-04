@@ -15,7 +15,9 @@
  * The caption names the table. `th scope="row"` makes a row header, such as the name column of a
  * reference table. Rows in groups go one `<tbody>` per group, with a `th scope="rowgroup"` spanning
  * its first row. `itx-numeric` on a cell aligns it to the end with figures of equal width; a `<col>`
- * cannot set alignment, so the cell carries it. `itx-size` sets the size: sm, md (default) or lg.
+ * cannot set alignment, so the cell carries it. `itx-size` sets the text and the row height with it:
+ * sm or md (default). `itx-density` sets the row height for that size: compact, regular (default)
+ * or spacious.
  *
  * The table fills its container, and its cells wrap. It does not scroll: a table too wide for its
  * container goes in a scroll area, named by the caption:
@@ -24,8 +26,9 @@
  *     <table interop-table><caption id="crew-caption">Crew</caption>…</table>
  *   </div>
  *
- * Rows have no height of their own; the line height and the cell padding make it. So a narrow
- * layout of your own can turn rows and cells into blocks without undoing a height. Table semantics
+ * Rows have no height of their own; the padding comes from --itx-table-row-block-size, which sets
+ * the height of a row of one line. So a narrow layout of your own can turn rows and cells into blocks
+ * without undoing a height. Table semantics
  * survive `display: block` and `grid` on table parts in current browsers; `display: contents` drops
  * them. Every rule is zero-specificity, so a single class wins.
  *
@@ -83,4 +86,31 @@
 :where(table[interop-table]) :where(th, td)[itx-numeric] {
 	text-align: end;
 	font-variant-numeric: tabular-nums;
+}
+
+/*
+ * A button, badge or checkbox in a cell takes up one line, so it does not make its row taller, and it
+ * stays on the first line beside the cell's text. A button needs a row taller than itself:
+ *
+ *   row height    largest button
+ *   28, 32        xs
+ *   36, 40, 44    sm
+ *   48            md
+ *
+ * A button at the 44px touch floor is taller than its token, so on a coarse pointer its row grows.
+ */
+:where(table[interop-table]) :where(th, td) :where(:is(button, summary)[interop-button]) {
+	margin-block: calc((var(--itx-table-line-height) - var(--itx-button-min-block-size)) / 2);
+	vertical-align: top;
+}
+
+:where(table[interop-table]) :where(th, td) :where([interop-badge]) {
+	margin-block: calc((var(--itx-table-line-height) - var(--itx-badge-block-size)) / 2);
+	vertical-align: top;
+}
+
+:where(table[interop-table]) :where(th, td) :where(label[interop-checkbox]) {
+	--itx-checkbox-min-block-size: var(--itx-table-line-height);
+	--itx-checkbox-font-size: var(--itx-table-font-size);
+	--itx-checkbox-line-height: var(--itx-table-line-height);
 }

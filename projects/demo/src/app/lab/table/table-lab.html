@@ -1,0 +1,341 @@
+<h1>Table <span interop-badge>Lab</span></h1>
+<p>
+	Text size and row height as separate choices, on real content. The page opens
+	on what ships. The six tables in the first section keep their own text and
+	height, with an <code>xs</code> button in compact rows and <code>sm</code> in
+	the others. The sections after them follow the dials.
+</p>
+
+<div class="dials">
+	@for (dial of dials; track dial.key) {
+		<fieldset
+			interop-radio-group="segmented"
+			interop-segmented-fit
+			(change)="set(dial.key, $event)"
+		>
+			<legend>{{ dial.legend }}</legend>
+			@for (option of dial.options; track option.value) {
+				<label>
+					<input
+						type="radio"
+						[name]="dial.key"
+						[value]="option.value"
+						[checked]="state()[dial.key] === option.value"
+					/>
+					{{ option.label }}
+				</label>
+			}
+		</fieldset>
+	}
+</div>
+
+<h2>Measured</h2>
+<p>
+	Row heights in px, read from the page. A row with controls is flagged when it
+	is taller than a plain row in the same table.
+</p>
+<div interop-scroll-area aria-labelledby="readout-caption">
+	<table interop-table itx-size="sm" class="readout">
+		<caption id="readout-caption">
+			Rendered row heights
+		</caption>
+		<thead>
+			<tr>
+				<th scope="col">Table</th>
+				<th scope="col" itx-numeric>Target</th>
+				<th scope="col" itx-numeric>Header</th>
+				<th scope="col" itx-numeric>Plain</th>
+				<th scope="col" itx-numeric>Plain − target</th>
+				<th scope="col" itx-numeric>Wrapped</th>
+				<th scope="col" itx-numeric>With controls</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (row of measurements(); track row.table) {
+				<tr>
+					<th scope="row">{{ row.table }}</th>
+					<td itx-numeric>{{ row.target }}</td>
+					<td itx-numeric>{{ row.header ?? "–" }}</td>
+					<td itx-numeric>{{ row.plain ?? "–" }}</td>
+					<td itx-numeric>{{ row.plainOff ?? "–" }}</td>
+					<td itx-numeric>{{ row.wrapped ?? "–" }}</td>
+					<td itx-numeric [attr.data-flag]="row.controlOff ? '' : null">
+						{{ row.control ?? "–" }}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<h2>Every text size at every density</h2>
+<p>
+	The same table six times: 14px on the left, 16px on the right, compact to
+	spacious from top to bottom. The two sizes use the 14/20 and 16/24 type roles.
+	Each size has its own three heights: 28, 36 and 44px at 14px, and 32, 40 and
+	48px at 16px.
+</p>
+<div class="matrix">
+	@for (size of matrix; track size.text) {
+		@for (density of size.rows; track density.label) {
+			<div
+				class="matrix-cell"
+				interop-scroll-area
+				[attr.aria-labelledby]="'matrix-' + size.text + '-' + density.value"
+			>
+				<table
+					interop-table
+					[attr.data-text]="size.text"
+					[attr.data-row]="density.value"
+					[attr.data-measure]="size.text + 'px, ' + density.label"
+				>
+					<caption [id]="'matrix-' + size.text + '-' + density.value">
+						{{
+							size.text
+						}}px text,
+						{{
+							density.label
+						}}
+						({{
+							density.value
+						}}px)
+					</caption>
+					<thead>
+						<tr data-kind="header">
+							<th scope="col">Service</th>
+							<th scope="col">Change</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-kind="wrapped">
+							<th scope="row">billing-worker</th>
+							<td>
+								Retry failed invoice webhooks with exponential backoff, and stop
+								charging twice when the provider times out
+							</td>
+							<td>Failed</td>
+						</tr>
+						<tr data-kind="plain">
+							<th scope="row">api-gateway</th>
+							<td>Raise the limit</td>
+							<td>Live</td>
+						</tr>
+						<tr data-kind="control">
+							<th scope="row">search-indexer</th>
+							<td>Rebuild the index</td>
+							<td>
+								<button
+									interop-button
+									type="button"
+									[attr.itx-size]="density.label === 'compact' ? 'xs' : 'sm'"
+								>
+									Logs
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		}
+	}
+</div>
+
+<h2>Row actions, statuses and selection</h2>
+<p>
+	A data table in both schemes. The second row's change wraps, and the fourth
+	row has no buttons, so it is the plain row in the readout. Every row keeps its
+	checkbox. Row heights here include the checkbox, a 40px label by default.
+</p>
+<div class="schemes">
+	@for (scheme of schemes; track scheme) {
+		<section
+			class="scheme"
+			[attr.data-scheme]="scheme"
+			[attr.aria-label]="scheme + ' scheme'"
+		>
+			<div interop-scroll-area [attr.aria-labelledby]="'deployments-' + scheme">
+				<table
+					interop-table
+					[attr.data-text]="state().text"
+					[attr.data-row]="state().row"
+					[attr.data-measure]="'Deployments, ' + scheme"
+				>
+					<caption [id]="'deployments-' + scheme">
+						Deployments
+					</caption>
+					<thead>
+						<tr data-kind="header">
+							<th scope="col">
+								<label interop-checkbox
+									><input type="checkbox" aria-label="Select all"
+								/></label>
+							</th>
+							<th scope="col">Service</th>
+							<th scope="col">Change</th>
+							<th scope="col">Status</th>
+							<th scope="col">Region</th>
+							<th scope="col" itx-numeric>Duration</th>
+							<th scope="col" itx-numeric>Requests</th>
+							<th scope="col">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for (row of deployments; track row.service; let i = $index) {
+							<tr
+								[attr.data-kind]="
+									i === 1 ? 'wrapped' : i === 3 ? 'plain' : 'control'
+								"
+							>
+								<td>
+									<label interop-checkbox
+										><input
+											type="checkbox"
+											[attr.aria-label]="'Select ' + row.service"
+									/></label>
+								</td>
+								<th scope="row">{{ row.service }}</th>
+								<td>{{ row.change }}</td>
+								<td>
+									<span
+										interop-badge
+										[attr.itx-color]="row.color"
+										[attr.itx-size]="state().text === '14' ? 'sm' : null"
+										>{{ row.status }}</span
+									>
+								</td>
+								<td data-nowrap>{{ row.region }}</td>
+								<td itx-numeric data-nowrap>{{ row.duration }}</td>
+								<td itx-numeric>{{ row.requests }}</td>
+								<td>
+									@if (i !== 3) {
+										<div class="actions">
+											<button
+												interop-button
+												type="button"
+												[attr.itx-size]="state().button"
+											>
+												Logs
+											</button>
+											<button
+												interop-button
+												type="button"
+												[attr.itx-size]="state().button"
+											>
+												Retry
+											</button>
+										</div>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	}
+</div>
+
+<h2>Wrapped reference text</h2>
+<p>
+	Most cells wrap here, so this table shows the vertical alignment across a row.
+	Compare the three height methods: the first line of each cell should stay on
+	one baseline.
+</p>
+<div interop-scroll-area aria-labelledby="reference-caption">
+	<table
+		interop-table
+		[attr.data-text]="state().text"
+		[attr.data-row]="state().row"
+		data-measure="Reference"
+	>
+		<caption id="reference-caption">
+			Table attributes
+		</caption>
+		<thead>
+			<tr data-kind="header">
+				<th scope="col">Attribute</th>
+				<th scope="col">Values</th>
+				<th scope="col">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (row of attributes; track row.name; let i = $index) {
+				<tr [attr.data-kind]="i === 2 ? 'other' : 'wrapped'">
+					<th scope="row">
+						<code>{{ row.name }}</code>
+					</th>
+					<td>{{ row.values }}</td>
+					<td>{{ row.description }}</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<h2>Numbers in groups</h2>
+<p>A long numeric table with row groups and no controls.</p>
+<div interop-scroll-area aria-labelledby="budget-caption">
+	<table
+		interop-table
+		[attr.data-text]="state().text"
+		[attr.data-row]="state().row"
+		data-measure="Budget"
+	>
+		<caption id="budget-caption">
+			Annual budget, in USD
+		</caption>
+		<thead>
+			<tr data-kind="header">
+				<th scope="col">Line</th>
+				<th scope="col" itx-numeric>Budget</th>
+				<th scope="col" itx-numeric>Actual</th>
+				<th scope="col" itx-numeric>Used</th>
+			</tr>
+		</thead>
+		@for (group of budget; track group.group) {
+			<tbody>
+				<tr>
+					<th scope="rowgroup" colspan="4">{{ group.group }}</th>
+				</tr>
+				@for (row of group.rows; track row[0]) {
+					<tr data-kind="plain">
+						<th scope="row">{{ row[0] }}</th>
+						<td itx-numeric>{{ row[1] }}</td>
+						<td itx-numeric>{{ row[2] }}</td>
+						<td itx-numeric>{{ row[3] }}</td>
+					</tr>
+				}
+			</tbody>
+		}
+	</table>
+</div>
+
+<h2>Beside buttons</h2>
+<p>
+	Four rows next to four buttons of the same height. With derived padding and
+	the rule added, each row is 1px taller than its button, and the gap builds
+	down the column. With the rule included, they stay in line.
+</p>
+<div class="aligned" [attr.data-row]="state().row">
+	<table
+		interop-table
+		aria-label="Services"
+		[attr.data-text]="state().text"
+		[attr.data-row]="state().row"
+	>
+		<tbody>
+			@for (name of aligned; track name) {
+				<tr>
+					<th scope="row">{{ name }}</th>
+					<td>us-east-1</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div class="aligned-buttons">
+		@for (name of aligned; track name) {
+			<button interop-button type="button">Open</button>
+		}
+	</div>
+</div>

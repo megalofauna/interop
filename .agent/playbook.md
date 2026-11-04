@@ -198,6 +198,8 @@ CSS selectors follow the same split:
 - Every control's `lg` step is 56px (`--itx-space-14`), so controls line up in
   a row at every size: 32, 40, 56. Tags, chips and badges keep their own
   smaller pill scale.
+- The button adds an `xs` step, 24px, for table rows of 28 and 32px. A table's
+  rows have their own heights (see `components/table.md`).
 - Lengths come from `--itx-space-*`. Text sizes come from the typography
   roles (`--itx-font-size-<role>` with its `--itx-line-height-<role>`). No raw
   `rem` values for either.
