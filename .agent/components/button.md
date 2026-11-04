@@ -49,14 +49,14 @@ A `<summary interop-button>` draws no disclosure marker.
 | Job | How |
 |---|---|
 | Icon button | `interop-button="icon"`: square at every size (`aspect-ratio: 1`, no inline padding), icon centered. The minimum height carries to the width, so the 44px touch floor keeps it square. CSS cannot tell an icon-only button from one with text (`:has()` does not see text nodes), so the author marks it |
-| Icon size | Every icon in a button is 16, 20 or 24px at `sm`, default and `lg`: the button sets `--itx-icon-size` from the icon scale. An icon's own `itx-size` or `size` wins |
+| Icon size | Every icon in a button is 16, 16, 20 or 24px at `xs`, `sm`, default and `lg`: the button sets `--itx-icon-size` from the icon scale. An icon's own `itx-size` or `size` wins |
 | Name | Visible text, or `aria-label` on an icon-only button. An icon beside text is hidden on its own (see [icon.md](icon.md)). A label tooltip can name an icon-only button (see [tooltip.md](tooltip.md)) |
 | Type | `type="button"` unless it submits. A button in a form with no type submits it |
 | Toggle | `aria-pressed="true"` or `"false"`. The label stays the same; the state is the attribute |
 | Unavailable but focusable | `aria-disabled="true"`. The button stays in the tab order and still receives clicks, so `guardActivation()` must be installed |
 | Open a dialog or popover | Invoker commands: `commandfor` and `command`, or `popovertarget`. No script |
 | Async action | `bindPendingAction()`, or `[pendingAction]` in Angular |
-| Size | `itx-size="sm"` or `"lg"`; no attribute is the default |
+| Size | `itx-size="xs"`, `"sm"` or `"lg"`; no attribute is the default |
 | Radius | `itx-radius="none"`, `sm`, `md`, `lg`, `xl` or `full`. `full` also switches the corner shape to round |
 
 ### guardActivation(root = document)
@@ -106,20 +106,22 @@ button[pendingAction]`.
 
 | Size | Min height | Text | Inline padding |
 |---|---|---|---|
+| `xs` | 24px | `caption`, 12px | 9px |
 | `sm` | 32px | `p-sm`, 14px | 13.5px |
 | default | 40px | `p`, 16px | 18px |
 | `lg` | 56px | `p-lg`, 18–20px | 27–28.5px |
 
 Inline padding is `(min height − 1lh) × 0.75`, with a line height of 1: one
 and a half times the block space that the height leaves around one line. On a
-coarse pointer every size is at least 44px tall.
+coarse pointer every size is at least 44px tall. `xs` is for table rows of 28
+and 32px, and sits at the 24px minimum of WCAG 2.5.8.
 
 | Token | Default |
 |---|---|
-| `--itx-button-min-block-size` | `--itx-space-10` (40px); `sm` `--itx-space-8`, `lg` `--itx-space-14` |
+| `--itx-button-min-block-size` | `--itx-space-10` (40px); `xs` `--itx-space-6`, `sm` `--itx-space-8`, `lg` `--itx-space-14` |
 | `--itx-button-padding-inline` | `calc((var(--itx-button-min-block-size) - 1lh) * 0.75)` |
 | `--itx-button-gap` | `--itx-space-2` |
-| `--itx-button-font-size`, `-line-height` | `--itx-font-size-p`, 1; `sm` `p-sm`, `lg` `p-lg` |
+| `--itx-button-font-size`, `-line-height` | `--itx-font-size-p`, 1; `xs` `caption`, `sm` `p-sm`, `lg` `p-lg` |
 | `--itx-button-color` | neutral-900/50 |
 | `--itx-button-color-hover`, `-active`, `-focus-visible`, `-pressed` | `--itx-button-color` |
 | `--itx-button-background-color` | neutral-100/800 |

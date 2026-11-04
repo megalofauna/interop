@@ -3,7 +3,7 @@
 	/* 1.5 × the block padding that the height leaves around one line. */
 	--itx-button-padding-inline: calc((var(--itx-button-min-block-size) - 1lh) * 0.75);
 	--itx-button-gap: var(--itx-space-2);
-	/* Every icon in the button: 16, 20 and 24px at sm, default and lg. An icon's own itx-size or size wins. */
+	/* Every icon in the button: 16, 16, 20 and 24px at xs, sm, default and lg. An icon's own itx-size or size wins. */
 	--itx-icon-size: var(--itx-icon-size-md);
 	--itx-button-font-size: var(--itx-font-size-p);
 	--itx-button-line-height: 1;
@@ -52,6 +52,12 @@
  * ignored: the audit's toolbar-button-size rule says so. Inside a toolbar without itx-size, a button
  * keeps its own.
  */
+:where(:is(button, summary)[interop-button]:is([itx-size="xs"]:not([interop-toolbar][itx-size] *), [interop-toolbar][itx-size="xs"] *)) {
+	--itx-button-min-block-size: var(--itx-space-6);
+	--itx-button-font-size: var(--itx-font-size-caption);
+	--itx-icon-size: var(--itx-icon-size-sm);
+}
+
 :where(:is(button, summary)[interop-button]:is([itx-size="sm"]:not([interop-toolbar][itx-size] *), [interop-toolbar][itx-size="sm"] *)) {
 	--itx-button-min-block-size: var(--itx-space-8);
 	--itx-button-font-size: var(--itx-font-size-p-sm);
