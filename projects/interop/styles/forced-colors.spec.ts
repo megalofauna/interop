@@ -41,6 +41,7 @@ const exempt: Record<string, string> = {
 	'scroll-area/interop-scroll-area.structure.css': 'The edge shadows are a hint; the content scrolls the same without them.',
 	'tooltip/interop-tooltip.structure.css': 'Text and a border, which the browser maps.',
 	'styles/fieldset.css': 'Layout only.',
+	'list/interop-list.structure.css': 'Its numbers are text and borders, which the browser maps; a filled disc becomes a ring.',
 	'table/interop-table.structure.css':
 		'Text and borders, which the browser maps. The group band becomes Canvas; its header text still marks the group.',
 	'toolbar/interop-toolbar.structure.css':

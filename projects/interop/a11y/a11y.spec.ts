@@ -524,6 +524,21 @@ describe('accessibility (axe-core)', () => {
 		expect(await violations(document.body)).toEqual([]);
 	});
 
+	it('finds no violations in numbered lists: outlined, filled, renumbered, nested and bare', async () => {
+		document.body.innerHTML = `
+			<main>
+				<h1>Departure</h1>
+				<ol interop-list="outlined" role="list"><li>Check the manifest</li><li>Seal the hold</li></ol>
+				<ol interop-list="filled" role="list" reversed start="10"><li>Ten</li><li>Nine</li></ol>
+				<ol interop-list="outlined" role="list">
+					<li>One<ol interop-list="filled" role="list"><li>One A</li></ol></li>
+					<li value="10">Ten</li>
+				</ol>
+				<ol interop-list><li>Plain</li></ol>
+			</main>`;
+		expect(await violations(document.body)).toEqual([]);
+	});
+
 	it('finds no violations in toasts as toast() writes them', async () => {
 		document.body.innerHTML = '<main><h1>Inbox</h1><section interop-toasts popover="manual" aria-label="Notifications"></section></main>';
 		const region = document.querySelector<HTMLElement>('[interop-toasts]')!;

@@ -729,9 +729,9 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 	},
 	'list-role': {
 		selector:
-			':is(ul[interop-tags], ol[interop-steps], ul[interop-tree], ul[interop-tree] ul, nav[interop-page-nav] > ul):not([role="list"])',
+			':is(ul[interop-tags], ol[interop-steps], ul[interop-tree], ul[interop-tree] ul, nav[interop-page-nav] > ul, ol:is([interop-list~="outlined"], [interop-list~="filled"])):not([role="list"])',
 		check: (list) => ({
-			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : list.closest('ul[interop-tree]') ? 'tree list' : list.parentElement?.matches('nav[interop-page-nav]') ? 'page nav list' : 'tag list'} has no role="list".`,
+			problem: `This ${list.hasAttribute('interop-steps') ? 'step indicator' : list.hasAttribute('interop-list') ? 'numbered list' : list.closest('ul[interop-tree]') ? 'tree list' : list.parentElement?.matches('nav[interop-page-nav]') ? 'page nav list' : 'tag list'} has no role="list".`,
 			reason:
 				'Safari drops a list’s semantics when its markers are removed, so VoiceOver does not say how many items there are, or which step of how many this is.',
 			advice: `Add role="list" to the <${list.tagName.toLowerCase()}>.`,
@@ -1071,6 +1071,14 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						reason: 'The --toggle-password command only works on an input and button inside the element.',
 						advice: 'Put the input and the button in <interop-password>, in place of the <div> around them.',
 					},
+	},
+	'list-numbers-on-ul': {
+		selector: 'ul:is([interop-list~="outlined"], [interop-list~="filled"])',
+		check: () => ({
+			problem: 'This <ul> asks for drawn numbers.',
+			reason: 'Numbers say the order matters, which only an <ol> tells screen readers; the drawn numbers apply to <ol> alone.',
+			advice: 'Use <ol> if the order matters; otherwise remove the outlined or filled value.',
+		}),
 	},
 	'select-option-text': {
 		selector: 'select[interop-select] option',

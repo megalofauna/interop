@@ -416,6 +416,24 @@ describe('step indicator', () => {
 	}
 });
 
+describe('numbered list', () => {
+	const list = (name: string, scheme: 0 | 1) => token(`--itx-list-marker-${name}`, scheme);
+
+	for (const [scheme, label] of SCHEMES) {
+		it(`has an outlined number of 4.5:1 against the page in ${label}`, () => {
+			expect(contrast(list('color', scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(4.5);
+		});
+		// WCAG 1.4.11: the ring and the disc are the number's shape.
+		it(`has a ring and a disc of 3:1 against the page in ${label}`, () => {
+			for (const name of ['border-color', 'background-color-filled'])
+				expect(contrast(list(name, scheme), CANVAS[scheme])).toBeGreaterThanOrEqual(3);
+		});
+		it(`has a filled number of 4.5:1 on its disc in ${label}`, () => {
+			expect(contrast(list('color-filled', scheme), list('background-color-filled', scheme))).toBeGreaterThanOrEqual(4.5);
+		});
+	}
+});
+
 describe('inline code', () => {
 	for (const [scheme, label] of SCHEMES) {
 		// The chip keeps the text color around it: body text, and every heading.
