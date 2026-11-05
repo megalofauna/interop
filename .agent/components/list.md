@@ -6,8 +6,8 @@ also retires Prime's `InteropList` (an Angular collection renderer).
 
 ```html
 <ol interop-list="outlined" role="list">
-  <li>Check the cargo manifest</li>
-  <li>Seal the hold</li>
+  <li>Check the order</li>
+  <li>Seal the box</li>
 </ol>
 ```
 

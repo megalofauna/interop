@@ -8,12 +8,12 @@ or none. Research: [prompts/TABS-RESEARCH.md](../../prompts/TABS-RESEARCH.md),
 
 ```html
 <interop-tabs>
-  <div role="tablist" aria-label="Station systems">
-    <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
-    <button type="button" role="tab" aria-controls="eng" aria-selected="false" tabindex="-1">Engineering</button>
+  <div role="tablist" aria-label="Project sections">
+    <button type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
+    <button type="button" role="tab" aria-controls="activity" aria-selected="false" tabindex="-1">Activity</button>
   </div>
-  <section role="tabpanel" id="nav">…</section>
-  <section role="tabpanel" id="eng" hidden="until-found">…</section>
+  <section role="tabpanel" id="overview">…</section>
+  <section role="tabpanel" id="activity" hidden="until-found">…</section>
 </interop-tabs>
 ```
 
@@ -264,8 +264,7 @@ Angular demo. All pass.
 ## Why the strip is not generated
 
 Prime's `<interop-tabs>` generated its tab strip from `<interop-tab-panel>`
-children (deprecated source:
-`projects/interop_deprecated/src/lib/components/interop-tabs/`). A generated
+children. A generated
 strip cannot carry the consumer's attributes, tooltips or badges, needs
 regenerating when control flow changes the panels, and is missing from server
 output. Its `ariaLabel` input also named the host `<section>`, making every tab

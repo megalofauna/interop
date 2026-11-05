@@ -19,28 +19,28 @@
 
 		<h2>Parsed markup</h2>
 		<interop-tabs id="parsed">
-			<div role="tablist" aria-label="Station systems">
+			<div role="tablist" aria-label="Project sections">
 				<button
 					type="button"
 					role="tab"
-					aria-controls="nav"
+					aria-controls="overview"
 					aria-selected="true"
 				>
-					Navigation
+					Overview
 				</button>
-				<button type="button" role="tab" aria-controls="eng">
-					Engineering
+				<button type="button" role="tab" aria-controls="activity">
+					Activity
 				</button>
-				<button type="button" role="tab" aria-controls="life">
-					Life support
-				</button>
+				<button type="button" role="tab" aria-controls="files">Files</button>
 			</div>
-			<section role="tabpanel" id="nav"><p>Course plotted.</p></section>
-			<section role="tabpanel" id="eng" hidden="until-found">
-				<p>Reactor output steady.</p>
+			<section role="tabpanel" id="overview">
+				<p>Three tasks are due.</p>
 			</section>
-			<section role="tabpanel" id="life" hidden="until-found">
-				<p>Oxygen nominal.</p>
+			<section role="tabpanel" id="activity" hidden="until-found">
+				<p>Two people commented.</p>
+			</section>
+			<section role="tabpanel" id="files" hidden="until-found">
+				<p>Twelve files are shared.</p>
 			</section>
 		</interop-tabs>
 

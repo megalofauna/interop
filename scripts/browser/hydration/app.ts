@@ -33,8 +33,8 @@ export class App {
 	/** The panel shown at first; it never changes, so Angular writes `hidden` once. */
 	protected readonly shownFirst = "log-1";
 	protected readonly logs = signal([
-		{ id: "log-1", name: "Log 1", text: "Docking clamps released." },
-		{ id: "log-2", name: "Log 2", text: "Course corrected." },
+		{ id: "log-1", name: "Log 1", text: "Server restarted." },
+		{ id: "log-2", name: "Log 2", text: "Backup finished." },
 	]);
 
 	protected add(): void {

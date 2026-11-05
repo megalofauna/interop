@@ -12,9 +12,6 @@
 npm-debug.log
 yarn-error.log
 
-# Agent notes
-/ignore_for_now
-
 # Claude Code local settings and stray agent scratch
 .claude/
 

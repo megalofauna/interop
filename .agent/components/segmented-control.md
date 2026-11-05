@@ -2,10 +2,7 @@
 
 Replaced by the segmented variant of the radio group,
 `fieldset[interop-radio-group="segmented"]`. See [control.md](control.md).
-The deprecated source is in
-`projects/interop_deprecated/src/lib/components/interop-segmented-control/`,
-with CSS in `styles/components/segment.css` and
-`styles/themes/protocol/components/segmented-control.css`. Full review:
+Full review:
 [prompts/SEGMENTED-CONTROL-RESEARCH.md](../../prompts/SEGMENTED-CONTROL-RESEARCH.md).
 
 ## What it was

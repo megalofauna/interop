@@ -5,15 +5,16 @@ Primary working dir: `/Users/christophersalmon/repos/interop`
 
 ## Where to look
 
-The canonical library is `projects/interop`. Prime, the deprecated library, is
-`projects/interop_deprecated`; cards whose paths start `src/lib/` describe Prime.
+The canonical library is `projects/interop`. Prime, the previous library, is in
+git at `3b22a5b7`, under `projects/interop_deprecated` and
+`projects/demo_deprecated`. Cards whose paths start `src/lib/`, and the reviews
+in `prompts/`, describe it.
 
 | Topic | File |
 |---|---|
 | How the library is built: architecture, names, sizes, corners, guards, helpers | [playbook.md](playbook.md) |
 | Stylesheets: the two files, selectors, tokens | [css-strategy.md](css-strategy.md) |
 | Prose: comments, docs, commit messages | [writing.md](writing.md) |
-| Reviewing a Prime component before rebuilding it | [workflows/prime-review.md](workflows/prime-review.md) |
 
 ### Components
 
@@ -50,15 +51,13 @@ The canonical library is `projects/interop`. Prime, the deprecated library, is
 [segmented-control.md](components/segmented-control.md),
 [stepper.md](components/stepper.md), [visimorph.md](components/visimorph.md).
 
-### Prime components not yet reviewed
+### Cards that still describe Prime
 
-[indicator.md](components/indicator.md), [list.md](components/list.md),
-[resizable.md](components/resizable.md),
-[toast.md](components/toast.md), and the `composites/` and `services/` cards.
-They describe Prime's code. `composites/code-block.md`, `highlighter.md` and
-`imports.md` describe Prime's code block, highlighter and icon paths; the
-current ones are in [components/code-block.md](components/code-block.md) and
-[components/icon.md](components/icon.md).
+[list.md](components/list.md) and [toast.md](components/toast.md) have not been
+reviewed against the current code. `highlighter.md`, `imports.md` and
+`typography.md` describe Prime's highlighter, icon paths and type system; the
+current code block and icons are in [components/code-block.md](components/code-block.md)
+and [components/icon.md](components/icon.md).
 
 ## Key paths
 

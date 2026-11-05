@@ -7,12 +7,12 @@ their own `@for`, and Interop styles it. Research:
 
 ```html
 <table interop-table>
-  <caption>Crew</caption>
+  <caption>Team</caption>
   <thead>
     <tr><th scope="col">Name</th><th scope="col">Role</th><th scope="col" itx-numeric>Hours</th></tr>
   </thead>
   <tbody>
-    <tr><th scope="row">Ada</th><td>Pilot</td><td itx-numeric>1,204</td></tr>
+    <tr><th scope="row">Ada</th><td>Designer</td><td itx-numeric>1,204</td></tr>
   </tbody>
 </table>
 ```

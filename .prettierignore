@@ -12,10 +12,8 @@ dist/
 # Research and review documents, written for humans to diff, like .agent/.
 prompts/
 
-# The deprecated library and the exploration project: kept for reference, not edited.
-projects/interop_deprecated/
+# The exploration project: kept for reference, not edited.
 projects/interop_exploration/
-projects/demo_deprecated/
 
 # npm owns this file's format; prettier and npm would fight over it on every install.
 package-lock.json

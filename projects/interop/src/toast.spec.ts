@@ -74,7 +74,7 @@ describe('toast', () => {
 
 	it('runs the action, then dismisses the toast', () => {
 		const run = vi.fn();
-		const item = toast('Crate jettisoned', { action: { label: 'Undo', run } });
+		const item = toast('File deleted', { action: { label: 'Undo', run } });
 		const undo = item.querySelector('button')!;
 		expect(undo.textContent).toBe('Undo');
 		undo.click();

@@ -34,7 +34,7 @@ export class TabsDemo {
 		vertical,
 		rtl,
 	};
-	protected readonly last = signal("nav");
+	protected readonly last = signal("overview");
 
 	/** Tabs rendered by Angular's own template, to show the element in a framework's control flow. */
 	/**
@@ -43,8 +43,8 @@ export class TabsDemo {
 	 */
 	protected readonly shownFirst = "log-1";
 	protected readonly logs = signal([
-		{ id: "log-1", name: "Log 1", text: "Docking clamps released." },
-		{ id: "log-2", name: "Log 2", text: "Course corrected by 0.4 degrees." },
+		{ id: "log-1", name: "Log 1", text: "Server restarted." },
+		{ id: "log-2", name: "Log 2", text: "Backup finished in 4 minutes." },
 	]);
 	private nextLog = 3;
 	protected addLog(): void {

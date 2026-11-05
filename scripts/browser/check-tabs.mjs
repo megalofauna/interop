@@ -26,7 +26,7 @@ const setup = () => {
 const measure = () => {
 	const h = document.querySelector("#parsed");
 	const list = h.querySelector("[role=tablist]").getBoundingClientRect();
-	const nav = document.querySelector("#nav").getBoundingClientRect();
+	const overview = document.querySelector("#overview").getBoundingClientRect();
 	const tab = h.querySelector("[role=tab]").getBoundingClientRect();
 	const hidden = [...h.querySelectorAll("[role=tabpanel][hidden]")];
 	const v = document.querySelector("#v");
@@ -35,10 +35,10 @@ const measure = () => {
 	return {
 		heightIsTabsPlusPanel:
 			Math.round(h.getBoundingClientRect().height) ===
-			Math.round(list.height + nav.height),
+			Math.round(list.height + overview.height),
 		hiddenOpacity: hidden.map((p) => getComputedStyle(p).opacity).join(","),
 		clickOnPanelHits: document
-			.elementFromPoint(nav.left + 4, nav.top + 4)
+			.elementFromPoint(overview.left + 4, overview.top + 4)
 			.closest("[role=tabpanel]")?.id,
 		clickOnTabHits: document
 			.elementFromPoint(tab.left + 4, tab.top + 4)
@@ -86,8 +86,8 @@ export async function checkTabs(page, base) {
 	const expected = {
 		heightIsTabsPlusPanel: true,
 		hiddenOpacity: "0,0",
-		clickOnPanelHits: "nav",
-		clickOnTabHits: "Navigation",
+		clickOnPanelHits: "overview",
+		clickOnTabHits: "Overview",
 		verticalPanelBesideTabs: 24,
 		verticalSameTop: true,
 	};
@@ -105,18 +105,18 @@ export async function checkTabs(page, base) {
 	await page.mouse.click(...third);
 	const clicked = await page.evaluate(
 		() =>
-			`${document.querySelector("#parsed [aria-selected=true]").textContent.trim()} ${getComputedStyle(document.querySelector("#life")).opacity}`,
+			`${document.querySelector("#parsed [aria-selected=true]").textContent.trim()} ${getComputedStyle(document.querySelector("#files")).opacity}`,
 	);
-	if (clicked !== "Life support 1")
+	if (clicked !== "Files 1")
 		failures.push(`click on the third tab: ${clicked}`);
 
-	await page.goto(`${base}/plain.html#:~:text=Reactor%20output`);
+	await page.goto(`${base}/plain.html#:~:text=Two%20people`);
 	await page.waitForTimeout(1200);
 	const found = await page.evaluate(
 		() =>
-			`${document.querySelector("#parsed [aria-selected=true]").textContent.trim()} ${document.querySelector("#eng").getAttribute("hidden")}`,
+			`${document.querySelector("#parsed [aria-selected=true]").textContent.trim()} ${document.querySelector("#activity").getAttribute("hidden")}`,
 	);
-	if (found !== "Engineering null")
+	if (found !== "Activity null")
 		failures.push(`text fragment into a hidden panel: ${found}`);
 
 	// Panels the author made tab stops: Tab from the selected tab reaches the shown panel, then leaves.
@@ -172,12 +172,12 @@ export async function checkTabs(page, base) {
 		const style = document.createElement("style");
 		style.textContent = "#parsed > [role=tabpanel] { transition: opacity 3s; }";
 		document.head.append(style);
-		document.querySelector("#parsed [aria-controls=nav]").click();
-		document.querySelector("#parsed [aria-controls=eng]").click();
+		document.querySelector("#parsed [aria-controls=overview]").click();
+		document.querySelector("#parsed [aria-controls=activity]").click();
 	});
 	await page.waitForTimeout(200);
 	const fading = await page.evaluate(
-		() => getComputedStyle(document.querySelector("#nav")).opacity,
+		() => getComputedStyle(document.querySelector("#overview")).opacity,
 	);
 	if (fading !== "0")
 		failures.push(
@@ -191,7 +191,7 @@ export async function checkTabs(page, base) {
 		document.head.append(style);
 	});
 	const resetDisplay = await page.evaluate(
-		() => getComputedStyle(document.querySelector("#nav")).display,
+		() => getComputedStyle(document.querySelector("#overview")).display,
 	);
 	if (resetDisplay === "none")
 		failures.push("a [hidden] reset turns hidden panels into display: none");

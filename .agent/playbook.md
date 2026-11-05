@@ -1,8 +1,7 @@
 # Interop — Playbook
 
-How the canonical library, `projects/interop`, is built. Prime, the deprecated
-library in `projects/interop_deprecated`, followed other rules; its cards say
-so in their file paths (`src/lib/…`).
+How the canonical library, `projects/interop`, is built. Prime, the previous
+library, followed other rules; its cards say so in their file paths (`src/lib/…`).
 
 ## Spirit
 
