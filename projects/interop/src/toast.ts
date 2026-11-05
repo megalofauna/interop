@@ -44,7 +44,7 @@ let regions = 0;
  * Shows a toast: a short message about something the user just did, which moves no focus.
  *
  *   toast('Message sent');
- *   toast('Crate jettisoned', { color: 'success', action: { label: 'Undo', run: restore } });
+ *   toast('File deleted', { color: 'success', action: { label: 'Undo', run: restore } });
  *
  * The toast goes into the `[interop-toasts]` region, which bindToasts() looks after. The message is
  * announced with `announce()`, at high priority for `danger`. Returns the toast element; remove it

@@ -5,16 +5,16 @@ export const examples = {
 `,
 	show: `import { toast } from 'interop';
 
-toast('Message sent', { description: 'To the harbor master' });
+toast('Message sent', { description: 'To the support team' });
 `,
-	colors: `toast('Docking approved', { color: 'success' });
-toast('Bay 4 opens at 14:00', { color: 'info' });
-toast('Fuel below 20%', { color: 'warning' });
-toast('Hull breach in bay 2', { color: 'danger' });
+	colors: `toast('Payment received', { color: 'success' });
+toast('Maintenance starts at 14:00', { color: 'info' });
+toast('Storage is 80% full', { color: 'warning' });
+toast('Payment failed', { color: 'danger' });
 `,
-	action: `toast(\`\${crate} jettisoned\`, {
+	action: `toast(\`\${file} deleted\`, {
 	color: 'success',
-	action: { label: 'Undo', run: () => this.restore(crate, index) },
+	action: { label: 'Undo', run: () => this.restore(file, index) },
 });
 `,
 	timeout: `toast('Link copied', { timeout: 6000 });

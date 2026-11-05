@@ -2,17 +2,17 @@
  * Stacked: below 30rem of container, each row becomes a card, one cell per line, labeled from the
  * cell's data-label. The container is the wrapper: a table cannot be a size container.
  */
-.crew {
+.team {
 	container-type: inline-size;
 }
 
 @container (width < 30rem) {
-	.crew :is(table, tbody, tr, th, td) {
+	.team :is(table, tbody, tr, th, td) {
 		display: block;
 	}
 
 	/* Hidden from view, not from screen readers: they still announce each cell's column header. */
-	.crew thead {
+	.team thead {
 		position: absolute;
 		inline-size: 1px;
 		block-size: 1px;
@@ -21,13 +21,13 @@
 		white-space: nowrap;
 	}
 
-	.crew tr {
+	.team tr {
 		padding-block: var(--itx-space-2);
 		border-block-end: var(--itx-border-width) solid
 			light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 	}
 
-	.crew :is(th, td) {
+	.team :is(th, td) {
 		display: grid;
 		grid-template-columns: 6rem 1fr;
 		gap: var(--itx-space-3);
@@ -37,7 +37,7 @@
 	}
 
 	/* The label is for the eye; `/ ""` keeps it out of what a screen reader says. */
-	.crew :is(th, td)::before {
+	.team :is(th, td)::before {
 		content: attr(data-label) / "";
 		font-weight: 600;
 	}

@@ -3,8 +3,8 @@
  * horizontal page nav wear it:
  *
  *   <interop-tabs>
- *     <div role="tablist" aria-label="Station systems">
- *       <button type="button" role="tab" aria-controls="nav" aria-selected="true">Navigation</button>
+ *     <div role="tablist" aria-label="Project sections">
+ *       <button type="button" role="tab" aria-controls="overview" aria-selected="true">Overview</button>
  *       …
  *
  *   <nav interop-page-nav aria-label="On this page">

@@ -14,20 +14,16 @@ import { examples } from "./toast-examples";
 })
 export class ToastDemo {
 	protected readonly examples = examples;
-	protected readonly crates = signal([
-		"Fuel cells",
-		"Medical supplies",
-		"Spare parts",
-	]);
+	protected readonly files = signal(["report.pdf", "invoice.pdf", "notes.txt"]);
 	protected readonly colors: { color: ToastColor; message: string }[] = [
-		{ color: "success", message: "Docking approved" },
-		{ color: "info", message: "Bay 4 opens at 14:00" },
-		{ color: "warning", message: "Fuel below 20%" },
-		{ color: "danger", message: "Hull breach in bay 2" },
+		{ color: "success", message: "Payment received" },
+		{ color: "info", message: "Maintenance starts at 14:00" },
+		{ color: "warning", message: "Storage is 80% full" },
+		{ color: "danger", message: "Payment failed" },
 	];
 
 	protected send(): void {
-		toast("Message sent", { description: "To the harbor master" });
+		toast("Message sent", { description: "To the support team" });
 	}
 
 	protected show(color: ToastColor, message: string): void {
@@ -38,18 +34,18 @@ export class ToastDemo {
 		toast("Link copied", { timeout: 6000 });
 	}
 
-	protected jettison(crate: string): void {
-		const index = this.crates().indexOf(crate);
-		this.crates.update((crates) => crates.filter((c) => c !== crate));
-		toast(`${crate} jettisoned`, {
+	protected remove(file: string): void {
+		const index = this.files().indexOf(file);
+		this.files.update((files) => files.filter((c) => c !== file));
+		toast(`${file} deleted`, {
 			color: "success",
-			action: { label: "Undo", run: () => this.restore(crate, index) },
+			action: { label: "Undo", run: () => this.restore(file, index) },
 		});
 	}
 
-	protected restore(crate: string, index: number): void {
-		this.crates.update((crates) =>
-			crates.includes(crate) ? crates : crates.toSpliced(index, 0, crate),
+	protected restore(file: string, index: number): void {
+		this.files.update((files) =>
+			files.includes(file) ? files : files.toSpliced(index, 0, file),
 		);
 	}
 

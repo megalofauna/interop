@@ -71,24 +71,19 @@
 <p>
 	A toast can hold one button, such as Undo. Pressing it runs the action and
 	dismisses the toast. Offer the same thing in the page as well: a toast is easy
-	to miss, and a keyboard user has to find it. Here each jettisoned crate can
-	also come back from the list.
+	to miss, and a keyboard user has to find it. Here each deleted file can also
+	come back from the list.
 </p>
 <ul>
-	@for (crate of crates(); track crate) {
+	@for (file of files(); track file) {
 		<li>
-			{{ crate }}
-			<button
-				interop-button
-				itx-size="sm"
-				type="button"
-				(click)="jettison(crate)"
-			>
-				Jettison <span itx-visually-hidden>{{ crate }}</span>
+			{{ file }}
+			<button interop-button itx-size="sm" type="button" (click)="remove(file)">
+				Delete <span itx-visually-hidden>{{ file }}</span>
 			</button>
 		</li>
 	} @empty {
-		<li>The hold is empty.</li>
+		<li>No files left.</li>
 	}
 </ul>
 <figure

@@ -128,22 +128,22 @@ const reveal = (element: Element) => {
 				>
 			</fieldset>
 			<interop-tabs>
-				<div role="tablist" aria-label="Station systems">
-					<button type="button" role="tab" id="t-nav" aria-controls="p-nav" aria-selected="true">Navigation</button>
-					<button type="button" role="tab" id="t-eng" aria-controls="p-eng" aria-selected="false" tabindex="-1">
-						Engineering <span interop-badge [count]="3" [label]="unread"></span>
+				<div role="tablist" aria-label="Account settings">
+					<button type="button" role="tab" id="t-profile" aria-controls="p-profile" aria-selected="true">Profile</button>
+					<button type="button" role="tab" id="t-notifications" aria-controls="p-notifications" aria-selected="false" tabindex="-1">
+						Notifications <span interop-badge [count]="3" [label]="unread"></span>
 					</button>
-					<button type="button" role="tab" id="t-life" aria-controls="p-life" aria-selected="false" tabindex="-1" disabled>
-						Life support
+					<button type="button" role="tab" id="t-billing" aria-controls="p-billing" aria-selected="false" tabindex="-1" disabled>
+						Billing
 					</button>
 				</div>
-				<section role="tabpanel" id="p-nav" aria-labelledby="t-nav" tabindex="0"><p>Course plotted.</p></section>
-				<section role="tabpanel" id="p-eng" aria-labelledby="t-eng" hidden="until-found">
-					<p>Reactor steady.</p>
+				<section role="tabpanel" id="p-profile" aria-labelledby="t-profile" tabindex="0"><p>Your name and photo.</p></section>
+				<section role="tabpanel" id="p-notifications" aria-labelledby="t-notifications" hidden="until-found">
+					<p>Summaries go out every Monday.</p>
 					<button interop-button="icon" type="button" aria-label="Refresh"><svg interop-icon name="tabler-search"></svg></button>
-					<label interop-switch><input type="checkbox" role="switch" /> Auto-throttle</label>
+					<label interop-switch><input type="checkbox" role="switch" /> Email summaries</label>
 				</section>
-				<section role="tabpanel" id="p-life" aria-labelledby="t-life" hidden="until-found"><p>Nominal.</p></section>
+				<section role="tabpanel" id="p-billing" aria-labelledby="t-billing" hidden="until-found"><p>Your plan renews monthly.</p></section>
 			</interop-tabs>
 			<interop-tabs itx-variant="segmented icon">
 				<div role="tablist" aria-label="Layout">
@@ -528,7 +528,7 @@ describe('accessibility (axe-core)', () => {
 		document.body.innerHTML = `
 			<main>
 				<h1>Departure</h1>
-				<ol interop-list="outlined" role="list"><li>Check the manifest</li><li>Seal the hold</li></ol>
+				<ol interop-list="outlined" role="list"><li>Check the order</li><li>Seal the box</li></ol>
 				<ol interop-list="filled" role="list" reversed start="10"><li>Ten</li><li>Nine</li></ol>
 				<ol interop-list="outlined" role="list">
 					<li>One<ol interop-list="filled" role="list"><li>One A</li></ol></li>
@@ -544,7 +544,7 @@ describe('accessibility (axe-core)', () => {
 		const region = document.querySelector<HTMLElement>('[interop-toasts]')!;
 		region.togglePopover = () => true;
 		toast('Message sent');
-		toast('Crate jettisoned', { color: 'success', description: 'Bay 4 is empty', action: { label: 'Undo', run: () => {} } });
+		toast('File deleted', { color: 'success', description: 'The folder is empty', action: { label: 'Undo', run: () => {} } });
 		toast('Upload failed', { color: 'danger' });
 		reveal(document.body);
 		expect(await violations(document.body)).toEqual([]);
@@ -576,11 +576,11 @@ describe('accessibility (axe-core)', () => {
 						<tr><th scope="row"><code>type</code></th><td>Always set it.</td></tr>
 					</tbody>
 				</table>
-				<div interop-scroll-area role="group" aria-labelledby="cargo-caption">
+				<div interop-scroll-area role="group" aria-labelledby="inventory-caption">
 					<table interop-table itx-size="sm">
-						<caption id="cargo-caption">Cargo</caption>
-						<thead><tr><th scope="col">Item</th><th scope="col" itx-numeric>Mass (kg)</th></tr></thead>
-						<tbody><tr><th scope="row">Water</th><td itx-numeric>1,200</td></tr></tbody>
+						<caption id="inventory-caption">Inventory</caption>
+						<thead><tr><th scope="col">Item</th><th scope="col" itx-numeric>Units</th></tr></thead>
+						<tbody><tr><th scope="row">Monitors</th><td itx-numeric>1,200</td></tr></tbody>
 					</table>
 				</div>
 			</main>`;

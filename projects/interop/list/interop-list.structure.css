@@ -2,8 +2,8 @@
  * List: an ordered list with its numbers drawn in circles, outlined or filled.
  *
  *   <ol interop-list="outlined" role="list">
- *     <li>Check the cargo manifest</li>
- *     <li>Seal the hold</li>
+ *     <li>Check the order</li>
+ *     <li>Seal the box</li>
  *   </ol>
  *
  * interop-list="outlined" draws each number in a ring; interop-list="filled" reverses it out of a

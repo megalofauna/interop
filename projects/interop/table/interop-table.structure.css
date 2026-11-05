@@ -3,12 +3,12 @@
  * Interop styles it:
  *
  *   <table interop-table>
- *     <caption>Crew</caption>
+ *     <caption>Team</caption>
  *     <thead>
  *       <tr><th scope="col">Name</th><th scope="col">Role</th><th scope="col" itx-numeric>Hours</th></tr>
  *     </thead>
  *     <tbody>
- *       <tr><th scope="row">Ada</th><td>Pilot</td><td itx-numeric>1,204</td></tr>
+ *       <tr><th scope="row">Ada</th><td>Designer</td><td itx-numeric>1,204</td></tr>
  *     </tbody>
  *   </table>
  *
@@ -22,8 +22,8 @@
  * The table fills its container, and its cells wrap. It does not scroll: a table too wide for its
  * container goes in a scroll area, named by the caption:
  *
- *   <div interop-scroll-area aria-labelledby="crew-caption">
- *     <table interop-table><caption id="crew-caption">Crew</caption>…</table>
+ *   <div interop-scroll-area aria-labelledby="team-caption">
+ *     <table interop-table><caption id="team-caption">Team</caption>…</table>
  *   </div>
  *
  * Rows have no height of their own; the padding comes from --itx-table-row-block-size, which sets

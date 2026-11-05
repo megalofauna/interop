@@ -35,16 +35,16 @@ The author writes the region once, in the app shell after the main content:
 ```html
 <div interop-toast itx-color="success" data-timeout="6000">
   <svg interop-icon aria-hidden="true">…</svg>
-  <div><p>Crate jettisoned</p><p>Bay 4 is empty</p></div>
+  <div><p>File deleted</p><p>The folder is empty</p></div>
   <button interop-button itx-size="sm" type="button" command="--dismiss" commandfor="interop-toasts-1">Undo</button>
   <button interop-button="icon" itx-size="sm" type="button" command="--dismiss" commandfor="interop-toasts-1" aria-label="Dismiss">…</button>
 </div>
 ```
 
 ```ts
-toast('Message sent', { description: 'To the harbor master' });
-toast('Hull breach in bay 2', { color: 'danger' });
-toast('Crate jettisoned', { color: 'success', action: { label: 'Undo', run: restore } });
+toast('Message sent', { description: 'To the support team' });
+toast('Payment failed', { color: 'danger' });
+toast('File deleted', { color: 'success', action: { label: 'Undo', run: restore } });
 toast('Link copied', { timeout: 6000 });
 ```
 
@@ -149,7 +149,7 @@ an action and the Dismiss button left about 120px of text at 288.
 - Undo for any dismissal, clear-all, and a history of dismissed toasts. The
   unmerged branch `origin/ITX-7-toast-chi` holds a Prime version of clear-all
   with undo.
-- Coalescing repeated messages ("Docking failed ×3"). The `toasts-stack` rule
+- Coalescing repeated messages ("Sync failed ×3"). The `toasts-stack` rule
   flags the flood instead.
 - An exit animation. A fade keeps a dismissed toast rendered after focus has
   moved on.
