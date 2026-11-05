@@ -1,9 +1,7 @@
 # InteropChip — Retired
 
 Replaced by native elements with a pill look. Research:
-[prompts/CHIPS-REVIEW.md](../../prompts/CHIPS-REVIEW.md). The deprecated source
-is in `projects/interop_deprecated/src/lib/components/interop-chip/`, with CSS
-in `styles/components/chip.css` and `styles/themes/protocol/components/chip.css`.
+[prompts/CHIPS-REVIEW.md](../../prompts/CHIPS-REVIEW.md).
 
 | Prime | Now |
 |---|---|

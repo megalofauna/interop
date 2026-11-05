@@ -88,7 +88,6 @@ Not tested: screen reader output, Safari and Firefox.
 
 ## Prime
 
-Prime's `InteropTree` (four directives, 1,000 lines) is retired. Its source is
-in `projects/interop_deprecated/src/lib/components/interop-tree/`. Its select
+Prime's `InteropTree` (four directives, 1,000 lines) is retired. Its select
 tier had no consumer. Its navigate tier put `aria-expanded` on `<li>`, drew a
 focus ring on every item at rest, and lost the current page in forced colors.

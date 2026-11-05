@@ -264,8 +264,7 @@ Angular demo. All pass.
 ## Why the strip is not generated
 
 Prime's `<interop-tabs>` generated its tab strip from `<interop-tab-panel>`
-children (deprecated source:
-`projects/interop_deprecated/src/lib/components/interop-tabs/`). A generated
+children. A generated
 strip cannot carry the consumer's attributes, tooltips or badges, needs
 regenerating when control flow changes the panels, and is missing from server
 output. Its `ariaLabel` input also named the host `<section>`, making every tab

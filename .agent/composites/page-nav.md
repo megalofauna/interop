@@ -1,10 +1,7 @@
 # PageNav — Retired
 
 Not rebuilt as a composite. Research:
-[prompts/PAGE-NAV-REVIEW.md](../../prompts/PAGE-NAV-REVIEW.md). The deprecated
-source is in `projects/interop_deprecated/src/lib/composites/page-nav/`, with
-CSS in `styles/composites/page-nav.css` and
-`styles/themes/protocol/composites/page-nav.css`.
+[prompts/PAGE-NAV-REVIEW.md](../../prompts/PAGE-NAV-REVIEW.md).
 
 | Prime use | Now |
 |---|---|

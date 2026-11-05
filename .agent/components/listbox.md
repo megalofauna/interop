@@ -1,10 +1,7 @@
 # InteropListbox — Retired
 
 Not rebuilt. Research:
-[prompts/LISTBOX-REVIEW.md](../../prompts/LISTBOX-REVIEW.md). The deprecated
-source is in `projects/interop_deprecated/src/lib/components/interop-listbox/`,
-with CSS in `styles/components/listbox.css` and
-`styles/themes/protocol/components/listbox.css`.
+[prompts/LISTBOX-REVIEW.md](../../prompts/LISTBOX-REVIEW.md).
 
 | Prime use | Now |
 |---|---|

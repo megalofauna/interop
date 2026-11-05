@@ -2,9 +2,6 @@
 
 Replaced by the step indicator `ol[interop-steps]` and the multi-step form with
 `bindSteps()`: see [steps.md](steps.md). Research: [prompts/STEPPER-REVIEW.md](../../prompts/STEPPER-REVIEW.md).
-The deprecated source is in
-`projects/interop_deprecated/src/lib/components/interop-stepper/`, with CSS in
-`styles/components/stepper.css` and `styles/themes/protocol/components/stepper.css`.
 
 ## What it was
 

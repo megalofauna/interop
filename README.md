@@ -51,4 +51,4 @@ Outside Angular, call `watchInterop()` in development instead.
 | `npm run test:pages`   | Checks every demo page: axe, reflow, focus ring, forced colors |
 | `npm run lint`         | Formatting, CSS and token checks                               |
 
-The package is `projects/interop`, one folder per component. The demo is `projects/demo`. `projects/interop_deprecated` and `projects/demo_deprecated` hold the previous library.
+The package is `projects/interop`, one folder per component. The demo is `projects/demo`.

@@ -1,9 +1,6 @@
 # InteropVisimorph — Retired
 
-Replaced by [control.md](control.md). The deprecated source is in
-`projects/interop_deprecated/src/lib/components/interop-visimorph/`, with CSS
-in `styles/components/visimorph/` and `styles/themes/protocol/components/visimorph/`.
-Full review: [prompts/VISIMORPH-RESEARCH.md](../../prompts/VISIMORPH-RESEARCH.md).
+Replaced by [control.md](control.md). Full review: [prompts/VISIMORPH-RESEARCH.md](../../prompts/VISIMORPH-RESEARCH.md).
 
 ## What it was
 
