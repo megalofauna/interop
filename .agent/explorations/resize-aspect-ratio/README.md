@@ -88,7 +88,6 @@ readouts.
 
 ## Related
 
-- [resizable mental model card](../../components/resizable.md)
 - Specs consulted: CSS 2.2 §10.4 (min/max resolution), css-sizing-4
   (aspect-ratio effects, min/max transfer, automatic content minimum,
   `box-sizing` dependence, degenerate ratios)

@@ -51,15 +51,13 @@ in `prompts/`, describe it.
 [segmented-control.md](components/segmented-control.md),
 [stepper.md](components/stepper.md), [visimorph.md](components/visimorph.md).
 
-### Prime components not yet reviewed
+### Cards that still describe Prime
 
-[indicator.md](components/indicator.md), [list.md](components/list.md),
-[resizable.md](components/resizable.md),
-[toast.md](components/toast.md), and the `composites/` and `services/` cards.
-They describe Prime's code. `composites/code-block.md`, `highlighter.md` and
-`imports.md` describe Prime's code block, highlighter and icon paths; the
-current ones are in [components/code-block.md](components/code-block.md) and
-[components/icon.md](components/icon.md).
+[list.md](components/list.md) and [toast.md](components/toast.md) have not been
+reviewed against the current code. `highlighter.md`, `imports.md` and
+`typography.md` describe Prime's highlighter, icon paths and type system; the
+current code block and icons are in [components/code-block.md](components/code-block.md)
+and [components/icon.md](components/icon.md).
 
 ## Key paths
 
