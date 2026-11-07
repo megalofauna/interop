@@ -29,3 +29,5 @@ export { TablerAlertTriangle } from './alert-triangle';
 export { TablerAlertCircle } from './alert-circle';
 export { TablerNote } from './note';
 export { TablerDeviceFloppy } from './device-floppy';
+export { TablerLayoutGrid } from './layout-grid';
+export { TablerListDetails } from './list-details';

@@ -9,7 +9,6 @@ import oneOpen from "./examples/one-open.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, RouterLink],
 	templateUrl: "./accordion-demo.html",
-	styleUrl: "../patterns.css",
 })
 export class AccordionDemo {
 	protected readonly examples = { oneOpen, manyOpen };

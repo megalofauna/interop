@@ -1,7 +1,6 @@
 import { Component, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { bindRadioHomeEnd, bindSegmentedFit } from "interop";
-import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
 import { each } from "../../example/bind-each";
 import { DemoExample } from "../../example/example";
@@ -20,9 +19,8 @@ import { examples as snippets } from "./segmented-control-examples";
 @Component({
 	selector: "demo-segmented-control",
 	host: { "itx-flow": "" },
-	imports: [DemoExample, InteropBadge, InteropCodeBlock, RouterLink],
+	imports: [DemoExample, InteropCodeBlock, RouterLink],
 	templateUrl: "./segmented-control-demo.html",
-	styleUrl: "../patterns.css",
 })
 export class SegmentedControlDemo {
 	protected readonly examples = {

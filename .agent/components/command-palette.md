@@ -15,8 +15,8 @@ projects/interop/shortcut/shortcut.ts   InteropShortcut, button[interopShortcut]
 ```
 
 The look is `interop-dialog="palette"` in `projects/interop/dialog/`. The demo is
-the pattern page `projects/demo/src/app/patterns/command-palette/`
-(`/patterns/command-palette`) and the Search button in the site header
+the page `projects/demo/src/app/components/command-palette/`
+(`/components/command-palette`) and the Search button in the site header
 (`projects/demo/src/app/app.html`).
 
 ## Markup
@@ -107,12 +107,11 @@ closes the dialog.
   Ctrl+K while their own UI has focus.
 - Use a modifier. A single-character shortcut needs an off switch (WCAG 2.1.4).
 
-## Patterns in the demo
+## Go to page
 
-The command palette is a pattern: see "Components, assemblies and patterns" in
-the playbook. Go to page lists every route; a route with `data: { pattern: true }`
-shows a `Pattern` badge, which is part of the link's name, and typing "pattern"
-lists them all.
+Go to page lists every route with a title, as one flat list. A lab's route has
+`data: { lab: true }`, which shows a `Lab` badge; the badge is part of the
+link's name, so typing "lab" lists them all.
 
 ## Growing into a command palette
 

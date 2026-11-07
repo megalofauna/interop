@@ -9,3 +9,8 @@
 	/* A jump to an anchor lands below the shell's sticky 4rem header. */
 	scroll-padding-block-start: 4rem;
 }
+
+/* The "Also known as" line under a page's heading. */
+.aka {
+	font-style: italic;
+}

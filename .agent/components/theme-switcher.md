@@ -1,8 +1,8 @@
 # Theme switcher — Mental Model Card
 
 A pattern: Light, Dark and System as a segmented radio group, with
-`bindColorScheme()`. The demo page is `projects/demo/src/app/patterns/theme-switcher/`
-(`/patterns/theme-switcher`), and the site header uses it.
+`bindColorScheme()`. The demo page is `projects/demo/src/app/components/theme-switcher/`
+(`/components/theme-switcher`), and the site header uses it.
 
 ## Files
 

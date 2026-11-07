@@ -1,15 +1,13 @@
 import { Component, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
 import { InteropIcon } from "interop/icon";
 
 @Component({
 	selector: "demo-split-button",
 	host: { "itx-flow": "" },
-	imports: [InteropBadge, InteropCodeBlock, InteropIcon, RouterLink],
+	imports: [InteropCodeBlock, InteropIcon, RouterLink],
 	templateUrl: "./split-button-demo.html",
-	styleUrl: "../patterns.css",
 })
 export class SplitButtonDemo {
 	protected readonly splitResult = signal("");

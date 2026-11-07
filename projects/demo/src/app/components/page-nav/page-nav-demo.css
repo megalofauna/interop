@@ -3,10 +3,6 @@
 	container-type: inline-size;
 }
 
-.aka {
-	font-style: italic;
-}
-
 /* The content, with the vertical page nav in a column beside it when there is room. */
 .layout {
 	display: grid;

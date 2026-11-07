@@ -18,7 +18,6 @@ import vertical from "./examples/vertical.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, RouterLink],
 	templateUrl: "./slider-demo.html",
-	styleUrl: "./slider-demo.css",
 })
 export class SliderDemo {
 	protected readonly examples = {

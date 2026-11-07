@@ -149,8 +149,8 @@ The focus ring's tokens are shared, in `styles/outline.css`:
 
 Two buttons in `div[role="group"][interop-group="attached"]`, the second opening
 a popover with `command="toggle-popover"`. Not a component: see
-[group.md](group.md#split-button). The demo shows it on its pattern page,
-`/patterns/split-button`, and the button page links there.
+[group.md](group.md#split-button). The demo shows it on its own page,
+`/components/split-button`, and the button page links there.
 
 ## Dev audit rules
 

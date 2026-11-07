@@ -19,8 +19,8 @@ projects/interop/group/
 projects/interop/styles/fieldset.css   the shared fieldset layout, which fieldset[interop-group] takes in a row
 ```
 
-The demo page is `projects/demo/src/app/components/group/`. The split button is
-a pattern page, `projects/demo/src/app/patterns/split-button/`.
+The demo page is `projects/demo/src/app/components/group/`. The split button has
+its own page, `projects/demo/src/app/components/split-button/`.
 
 ## Markup
 

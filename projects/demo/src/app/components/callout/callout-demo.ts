@@ -13,7 +13,6 @@ import title from "./examples/title.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, InteropIcon, RouterLink],
 	templateUrl: "./callout-demo.html",
-	styleUrl: "./callout-demo.css",
 })
 export class CalloutDemo {
 	protected readonly examples = { basic, statuses, hidden, title, plain };

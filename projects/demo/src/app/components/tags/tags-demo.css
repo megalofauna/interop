@@ -1,7 +1,3 @@
-.aka {
-	font-style: italic;
-}
-
 /* Inside a form, which flow does not reach. */
 [interop-field] + p {
 	margin-block-start: var(--itx-space-3);
