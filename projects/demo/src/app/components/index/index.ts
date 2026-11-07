@@ -8,7 +8,8 @@ import {
 import { RouterLink } from "@angular/router";
 import { bindTooltip } from "interop";
 import { InteropIcon } from "interop/icon";
-import { catalog } from "../catalog";
+import { catalog, usedBy, type CatalogEntry } from "../catalog";
+import { bindView } from "./bind-view";
 
 @Component({
 	selector: "demo-components",
@@ -30,10 +31,27 @@ export class ComponentsIndex {
 					host.querySelector<HTMLElement>(`#tip-${view}`)!,
 				),
 			);
+			unbinds.push(
+				bindView(
+					host.querySelector<HTMLFieldSetElement>("fieldset")!,
+					host.querySelector<HTMLElement>("ul[data-view]")!,
+				),
+			);
 			destroyRef.onDestroy(() => unbinds.forEach((unbind) => unbind()));
 		});
 	}
 
-	/** Every component page, from the catalog, in its order. */
-	protected readonly components = catalog;
+	/** Every component page, from the catalog, in its order, with the pages built from it. */
+	protected readonly components = catalog.map((entry: CatalogEntry) => ({
+		...entry,
+		usedBy: usedBy(entry.slug),
+	}));
+
+	private readonly titles = new Map<string, string>(
+		catalog.map((entry) => [entry.slug, entry.title]),
+	);
+
+	protected title(slug: string): string {
+		return this.titles.get(slug) ?? slug;
+	}
 }
