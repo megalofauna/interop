@@ -63,7 +63,12 @@ The demo pages are `components/disclosure/` and `patterns/accordion/`.
   long label wraps and the chevron stays on its first line.
 - `::details-content` eases its height from 0 to `auto` (`interpolate-size`) and
   back (`content-visibility` with `allow-discrete`), on the shared duration.
-  Chrome 129+ animates; Safari and Firefox open and close at once.
+  Only where `interpolate-size` is supported: elsewhere nothing eases and the
+  content opens and closes at once, because easing the padding alone left the
+  height to snap after it (Playwright WebKit 27.2).
+- Closed content adds no width. A disclosure fills a block container. In a
+  shrink-to-fit parent, such as a popover or a flex item that does not stretch,
+  it grows when it opens, so give that parent a width.
 - Children of the content lose their margins and are spaced by a 12px gap.
 
 ## Dev audit rules

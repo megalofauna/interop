@@ -24,6 +24,11 @@ demo-example[layout="stack"] .live {
 	gap: var(--itx-space-4);
 }
 
+/* Block-level examples fill the width, as they do in a page. Closed content adds no width, so a shrink-wrapped disclosure would grow when it opens. */
+demo-example[layout="stack"] .live > :is(details, section) {
+	align-self: stretch;
+}
+
 demo-example[layout="end"] .live {
 	justify-content: flex-end;
 }
