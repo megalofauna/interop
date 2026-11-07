@@ -31,6 +31,8 @@ const routes = [
 	).matchAll(/path: "([^"]*)"/g),
 ]
 	.map(([, path]) => path)
+	// A path with a parameter, such as the redirect patterns/:name, is not a page.
+	.filter((path) => !path.includes(":"))
 	.filter((path) => !option("only") || path === option("only"));
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

@@ -10,7 +10,6 @@ import row from "./examples/row.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, RouterLink],
 	templateUrl: "./disclosure-demo.html",
-	styleUrl: "./disclosure-demo.css",
 })
 export class DisclosureDemo {
 	protected readonly examples = { basic, open, row };

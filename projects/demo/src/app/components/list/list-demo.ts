@@ -11,7 +11,6 @@ import outlined from "./examples/outlined.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, RouterLink],
 	templateUrl: "./list-demo.html",
-	styleUrl: "./list-demo.css",
 })
 export class ListDemo {
 	protected readonly examples = { outlined, filled, numbering, bare };

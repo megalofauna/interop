@@ -12,7 +12,6 @@ import rtl from "./examples/rtl.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample],
 	templateUrl: "./steps-demo.html",
-	styleUrl: "./steps-demo.css",
 })
 export class StepsDemo {
 	protected readonly examples = { indicator, ends, narrow, rtl, form };

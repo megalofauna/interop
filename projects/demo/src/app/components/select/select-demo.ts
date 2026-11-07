@@ -19,7 +19,6 @@ import template from "./select-demo.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, InteropCodeBlock, RouterLink],
 	templateUrl: "./select-demo.html",
-	styleUrl: "./select-demo.css",
 })
 export class SelectDemo {
 	protected readonly examples = {

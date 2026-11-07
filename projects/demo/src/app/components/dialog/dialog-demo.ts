@@ -16,7 +16,6 @@ import long from "./examples/long.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, InteropCodeBlock, InteropIcon, RouterLink],
 	templateUrl: "./dialog-demo.html",
-	styleUrl: "./dialog-demo.css",
 })
 export class DialogDemo {
 	protected readonly examples = { ...ts, confirm, lightDismiss, alert, long };

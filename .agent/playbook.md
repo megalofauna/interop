@@ -70,20 +70,20 @@ An assembly may import components; a component never imports an assembly.
 "Composite" is not used: ARIA's composite role is a widget that manages focus
 among its children, which is a different line.
 
-In the demo, every pattern has its own page at `/patterns/<name>`
-(`projects/demo/src/app/patterns/<name>/`), listed in the nav's Patterns group
-beside Foundations and Components. The page's `h1` carries a `Pattern` badge
-(`itx-color="info"`), and its first paragraph (`.built-from`) links to what it
-is built from. The base component's page links back to its patterns. The route
-has `data: { pattern: true }`, which badges it in Go to page, whose list is
-flat. Components and assemblies carry no badge. One template on two components
-(cards, chips) is one pattern page with a section for each.
+The three kinds are the library's vocabulary, for deciding what gets an
+identity attribute. The demo does not show them: components, assemblies and
+patterns are one flat list of pages at `/components/<name>`
+(`projects/demo/src/app/components/<name>/`), in the nav's Components group,
+with no badge. A page built from other components says so in its first
+paragraph (`.built-from`), with links, and those components' pages link back.
+Old `/patterns/<name>` URLs redirect to `/components/<name>`. One template on
+two components (cards, chips) is one page with a section for each.
 
 A lab compares candidate looks before one goes into the library: dials for each
 open choice, every candidate in real contexts, in both schemes, often with a
 contrast table measured in the browser. Each is a page at `/labs/<name>`
 (`projects/demo/src/app/lab/<name>/`), listed in the nav's Labs group after
-Patterns. Its `h1` carries a neutral `Lab` badge, and its route has
+Components. Its `h1` carries a neutral `Lab` badge, and its route has
 `data: { lab: true }`, which badges it in Go to page. A lab stands in its own
 attribute (`lab-badge`) or overrides the component's tokens, so it never changes
 the library. A lab stays after its choice ships, for comparing the next one.

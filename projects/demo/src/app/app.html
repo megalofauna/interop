@@ -65,11 +65,6 @@
 					<li>
 						<a [routerLink]="'/' + page.path"
 							>{{ page.title }}
-							@if (page.pattern) {
-								<span interop-badge itx-size="sm" itx-color="info"
-									>Pattern</span
-								>
-							}
 							@if (page.lab) {
 								<span interop-badge itx-size="sm">Lab</span>
 							}
@@ -124,7 +119,14 @@
 								>All components</a
 							>
 						</li>
-
+						<li>
+							<a
+								routerLink="/components/accordion"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Accordion</a
+							>
+						</li>
 						<li>
 							<a
 								routerLink="/components/badge"
@@ -151,6 +153,14 @@
 						</li>
 						<li>
 							<a
+								routerLink="/components/cards"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Cards</a
+							>
+						</li>
+						<li>
+							<a
 								routerLink="/components/checkbox"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
@@ -159,10 +169,26 @@
 						</li>
 						<li>
 							<a
+								routerLink="/components/chips"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Chips</a
+							>
+						</li>
+						<li>
+							<a
 								routerLink="/components/code-block"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Code block</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/components/command-palette"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Command palette</a
 							>
 						</li>
 						<li>
@@ -255,6 +281,14 @@
 						</li>
 						<li>
 							<a
+								routerLink="/components/segmented-control"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Segmented control</a
+							>
+						</li>
+						<li>
+							<a
 								routerLink="/components/select"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
@@ -267,6 +301,14 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Slider</a
+							>
+						</li>
+						<li>
+							<a
+								routerLink="/components/split-button"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Split button</a
 							>
 						</li>
 						<li>
@@ -311,6 +353,14 @@
 						</li>
 						<li>
 							<a
+								routerLink="/components/theme-switcher"
+								routerLinkActive="active"
+								ariaCurrentWhenActive="page"
+								>Theme switcher</a
+							>
+						</li>
+						<li>
+							<a
 								routerLink="/components/toast"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
@@ -339,69 +389,6 @@
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
 								>Tree</a
-							>
-						</li>
-					</ul>
-				</details>
-			</li>
-			<li>
-				<details open>
-					<summary>Patterns</summary>
-					<ul role="list">
-						<li>
-							<a
-								routerLink="/patterns/accordion"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Accordion</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/patterns/cards"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Cards</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/patterns/chips"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Chips</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/patterns/command-palette"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Command palette</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/patterns/segmented-control"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Segmented control</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/patterns/split-button"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Split button</a
-							>
-						</li>
-						<li>
-							<a
-								routerLink="/patterns/theme-switcher"
-								routerLinkActive="active"
-								ariaCurrentWhenActive="page"
-								>Theme switcher</a
 							>
 						</li>
 					</ul>

@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { InteropBadge } from "interop/badge";
 import { InteropCodeBlock } from "interop/code-block";
 import { InteropFilter } from "interop/filter";
 import { examples } from "./command-palette-examples";
@@ -8,9 +7,8 @@ import { examples } from "./command-palette-examples";
 @Component({
 	selector: "demo-command-palette",
 	host: { "itx-flow": "" },
-	imports: [InteropBadge, InteropCodeBlock, InteropFilter, RouterLink],
+	imports: [InteropCodeBlock, InteropFilter, RouterLink],
 	templateUrl: "./command-palette-demo.html",
-	styleUrl: "../patterns.css",
 })
 export class CommandPaletteDemo {
 	protected readonly examples = examples;

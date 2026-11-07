@@ -16,7 +16,6 @@ import unknown from "./examples/unknown.html";
 	host: { "itx-flow": "" },
 	imports: [DemoExample, RouterLink],
 	templateUrl: "./progress-demo.html",
-	styleUrl: "./progress-demo.css",
 })
 export class ProgressDemo {
 	protected readonly examples = {

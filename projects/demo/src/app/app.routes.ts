@@ -113,11 +113,6 @@ export const routes: Routes = [
 			),
 	},
 	{
-		path: "components/segmented-control",
-		pathMatch: "full",
-		redirectTo: "patterns/segmented-control",
-	},
-	{
 		path: "components/select",
 		title: "Select",
 		loadComponent: () =>
@@ -184,61 +179,54 @@ export const routes: Routes = [
 			import("./components/tree/tree-demo").then((m) => m.TreeDemo),
 	},
 	{
-		path: "patterns/accordion",
+		path: "components/accordion",
 		title: "Accordion",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/accordion/accordion-demo").then(
+			import("./components/accordion/accordion-demo").then(
 				(m) => m.AccordionDemo,
 			),
 	},
 	{
-		path: "patterns/cards",
+		path: "components/cards",
 		title: "Cards",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/cards/cards-demo").then((m) => m.CardsDemo),
+			import("./components/cards/cards-demo").then((m) => m.CardsDemo),
 	},
 	{
-		path: "patterns/chips",
+		path: "components/chips",
 		title: "Chips",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/chips/chips-demo").then((m) => m.ChipsDemo),
+			import("./components/chips/chips-demo").then((m) => m.ChipsDemo),
 	},
 	{
-		path: "patterns/command-palette",
+		path: "components/command-palette",
 		title: "Command palette",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/command-palette/command-palette-demo").then(
+			import("./components/command-palette/command-palette-demo").then(
 				(m) => m.CommandPaletteDemo,
 			),
 	},
 	{
-		path: "patterns/segmented-control",
+		path: "components/segmented-control",
 		title: "Segmented control",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/segmented-control/segmented-control-demo").then(
+			import("./components/segmented-control/segmented-control-demo").then(
 				(m) => m.SegmentedControlDemo,
 			),
 	},
 	{
-		path: "patterns/split-button",
+		path: "components/split-button",
 		title: "Split button",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/split-button/split-button-demo").then(
+			import("./components/split-button/split-button-demo").then(
 				(m) => m.SplitButtonDemo,
 			),
 	},
 	{
-		path: "patterns/theme-switcher",
+		path: "components/theme-switcher",
 		title: "Theme switcher",
-		data: { pattern: true },
 		loadComponent: () =>
-			import("./patterns/theme-switcher/theme-switcher-demo").then(
+			import("./components/theme-switcher/theme-switcher-demo").then(
 				(m) => m.ThemeSwitcherDemo,
 			),
 	},
@@ -270,6 +258,8 @@ export const routes: Routes = [
 		loadComponent: () =>
 			import("./lab/table/table-lab").then((m) => m.TableLab),
 	},
+	// Old /patterns/ links land on the same page under /components/.
+	{ path: "patterns/:name", redirectTo: "components/:name" },
 	{
 		path: "foundations/flow",
 		title: "Flow",
