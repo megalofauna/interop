@@ -59,10 +59,16 @@
 	overflow: clip;
 	padding-block: var(--itx-space-0);
 	padding-inline: var(--itx-disclosure-content-padding-inline);
-	transition-property: block-size, padding-block, content-visibility;
-	transition-duration: var(--itx-disclosure-transition-duration);
-	transition-timing-function: var(--itx-disclosure-transition-timing-function);
-	transition-behavior: allow-discrete;
+}
+
+/* Without interpolate-size the height cannot ease to `auto`, so nothing eases and the content opens at once. */
+@supports (interpolate-size: allow-keywords) {
+	:where(details[interop-disclosure])::details-content {
+		transition-property: block-size, padding-block, content-visibility;
+		transition-duration: var(--itx-disclosure-transition-duration);
+		transition-timing-function: var(--itx-disclosure-transition-timing-function);
+		transition-behavior: allow-discrete;
+	}
 }
 
 :where(details[interop-disclosure][open])::details-content {
