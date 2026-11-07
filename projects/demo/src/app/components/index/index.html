@@ -26,9 +26,11 @@
 	<span interop-tooltip="label" id="tip-grid">Grid</span>
 	<span interop-tooltip="label" id="tip-details">Details</span>
 	<ul itx-view="list">
-		@for (component of components; track component.path) {
+		@for (component of components; track component.slug) {
 			<li>
-				<a [routerLink]="component.path">{{ component.title }}</a>
+				<a [routerLink]="'/components/' + component.slug">{{
+					component.title
+				}}</a>
 			</li>
 		}
 	</ul>

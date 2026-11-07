@@ -5,9 +5,10 @@ import {
 	afterNextRender,
 	inject,
 } from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { RouterLink } from "@angular/router";
 import { bindTooltip } from "interop";
 import { InteropIcon } from "interop/icon";
+import { catalog } from "../catalog";
 
 @Component({
 	selector: "demo-components",
@@ -33,13 +34,6 @@ export class ComponentsIndex {
 		});
 	}
 
-	/** Every component page, read from the routes, so a new component appears here on its own. */
-	protected readonly components = inject(Router)
-		.config.filter(
-			(route) =>
-				route.path?.startsWith("components/") &&
-				typeof route.title === "string",
-		)
-		.map((route) => ({ path: `/${route.path}`, title: route.title as string }))
-		.sort((a, b) => a.title.localeCompare(b.title));
+	/** Every component page, from the catalog, in its order. */
+	protected readonly components = catalog;
 }

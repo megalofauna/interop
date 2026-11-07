@@ -16,6 +16,7 @@ import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { extname, join } from "node:path";
+import { catalog } from "../../projects/demo/src/app/components/catalog.ts";
 
 const args = process.argv.slice(2);
 const option = (name) =>
@@ -33,6 +34,8 @@ const routes = [
 	.map(([, path]) => path)
 	// A path with a parameter, such as the redirect patterns/:name, is not a page.
 	.filter((path) => !path.includes(":"))
+	// The component routes are generated from the catalog, so their paths are not in the file.
+	.concat(catalog.map((entry) => `components/${entry.slug}`))
 	.filter((path) => !option("only") || path === option("only"));
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

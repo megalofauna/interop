@@ -11,6 +11,7 @@ import {
 	RouterLinkActive,
 	RouterOutlet,
 } from "@angular/router";
+import { catalog } from "./components/catalog";
 import { InteropBadge } from "interop/badge";
 import { InteropColorScheme } from "interop/color-scheme";
 import { InteropFilter } from "interop/filter";
@@ -46,6 +47,9 @@ export class App {
 			lab: route.data?.["lab"] === true,
 		}))
 		.sort((a, b) => a.title.localeCompare(b.title));
+
+	/** The component pages, for the sidebar, in the catalog's order. */
+	protected readonly catalog = catalog;
 
 	private readonly nav = viewChild.required<ElementRef<HTMLElement>>("nav");
 
