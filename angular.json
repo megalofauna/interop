@@ -26,7 +26,8 @@
 					"options": {
 						"tsConfig": "projects/interop/tsconfig.spec.json",
 						"include": ["**/*.spec.ts", "../**/*.spec.ts"],
-						"setupFiles": ["projects/interop/test-setup.ts"]
+						"setupFiles": ["projects/interop/test-setup.ts"],
+						"runnerConfig": true
 					}
 				}
 			}
@@ -101,7 +102,8 @@
 				"test": {
 					"builder": "@angular/build:unit-test",
 					"options": {
-						"setupFiles": ["projects/demo/test-setup.ts"]
+						"setupFiles": ["projects/demo/test-setup.ts"],
+						"runnerConfig": true
 					}
 				}
 			}
