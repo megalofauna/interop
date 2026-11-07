@@ -25,12 +25,65 @@
 	<span interop-tooltip="label" id="tip-list">List</span>
 	<span interop-tooltip="label" id="tip-grid">Grid</span>
 	<span interop-tooltip="label" id="tip-details">Details</span>
-	<ul itx-view="list">
+	<ul class="catalog" role="list" data-view="list">
 		@for (component of components; track component.slug) {
 			<li>
+				@if (component.imageUrl) {
+					<img [src]="component.imageUrl" alt="" />
+				}
 				<a [routerLink]="'/components/' + component.slug">{{
 					component.title
 				}}</a>
+				<p>{{ component.summary }}</p>
+				@if (
+					component.builtFrom?.length ||
+					component.usedBy.length ||
+					component.helpers?.length
+				) {
+					<dl>
+						@if (component.builtFrom?.length) {
+							<dt>Built from</dt>
+							<dd>
+								@for (
+									slug of component.builtFrom;
+									track slug;
+									let last = $last
+								) {
+									<a [routerLink]="'/components/' + slug">{{ title(slug) }}</a
+									>{{ last ? "" : ", " }}
+								}
+							</dd>
+						}
+						@if (component.usedBy.length) {
+							<dt>Used by</dt>
+							<dd>
+								@for (
+									user of component.usedBy;
+									track user.slug;
+									let last = $last
+								) {
+									<a [routerLink]="'/components/' + user.slug">{{
+										user.title
+									}}</a
+									>{{ last ? "" : ", " }}
+								}
+							</dd>
+						}
+						@if (component.helpers?.length) {
+							<dt>Helpers</dt>
+							<dd>
+								@for (
+									helper of component.helpers;
+									track helper;
+									let last = $last
+								) {
+									<code>{{ helper }}</code
+									>{{ last ? "" : ", " }}
+								}
+							</dd>
+						}
+					</dl>
+				}
 			</li>
 		}
 	</ul>
