@@ -3,6 +3,12 @@ import { Routes } from "@angular/router";
 export const routes: Routes = [
 	{ path: "", pathMatch: "full", redirectTo: "components/button" },
 	{
+		path: "components",
+		title: "Components",
+		loadComponent: () =>
+			import("./components/index").then((m) => m.ComponentsIndex),
+	},
+	{
 		path: "components/badge",
 		title: "Badge",
 		loadComponent: () =>

@@ -1,0 +1,35 @@
+<h1>Components</h1>
+<p>
+	Each component is a native element with Interop's styles, and a small helper
+	where it needs one.
+</p>
+<div class="outer">
+	<fieldset interop-radio-group="segmented icon" itx-size="md">
+		<legend>View</legend>
+		<label>
+			<input type="radio" name="view" value="list" checked />
+			<svg interop-icon itx-size="lg" name="tabler-list"></svg>
+			<span itx-visually-hidden>List</span>
+		</label>
+		<label>
+			<input type="radio" name="view" value="grid" />
+			<svg interop-icon itx-size="lg" name="tabler-layout-grid"></svg>
+			<span itx-visually-hidden>Grid</span>
+		</label>
+		<label>
+			<input type="radio" name="view" value="details" />
+			<svg interop-icon itx-size="lg" name="tabler-list-details"></svg>
+			<span itx-visually-hidden>Details</span>
+		</label>
+	</fieldset>
+	<span interop-tooltip="label" id="tip-list">List</span>
+	<span interop-tooltip="label" id="tip-grid">Grid</span>
+	<span interop-tooltip="label" id="tip-details">Details</span>
+	<ul itx-view="list">
+		@for (component of components; track component.path) {
+			<li>
+				<a [routerLink]="component.path">{{ component.title }}</a>
+			</li>
+		}
+	</ul>
+</div>

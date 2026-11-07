@@ -117,6 +117,16 @@
 					<ul role="list">
 						<li>
 							<a
+								routerLink="/components"
+								routerLinkActive="active"
+								[routerLinkActiveOptions]="{ exact: true }"
+								ariaCurrentWhenActive="page"
+								>All components</a
+							>
+						</li>
+
+						<li>
+							<a
 								routerLink="/components/badge"
 								routerLinkActive="active"
 								ariaCurrentWhenActive="page"
