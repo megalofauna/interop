@@ -119,6 +119,14 @@ Every live example on a demo page has its code under it, from one source:
 - Captions: "HTML", "Angular template", "TS", "CSS". Tabs indent. Attributes go
   identity first (`interop-*`), then `itx-*`, then the native ones.
 
+## Motion
+
+- Every transition and animation reads a shared duration from `styles/transition.css`, so reduced
+  motion reaches it (`styles/motion.spec.ts`).
+- To fade content that changes in place, such as a list switching views, give each state its own
+  `itx-fade-in-1` to `-4` as its `animation-name`. An animation plays again only when its name
+  changes, so one shared name would play once.
+
 ## DOM writes during animation/drag
 
 Never trigger Angular change detection inside a drag or animation loop. Write directly to `element.style` in pointer event handlers, batched via `requestAnimationFrame`. Emit Angular outputs only at end-of-drag (`pointerup` / `keydown` settle).

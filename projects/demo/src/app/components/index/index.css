@@ -19,28 +19,7 @@
 	margin: 0;
 }
 
-/*
- * A view change fades the items in. An animation plays again only when its name changes, so each
- * view has its own name for the same keyframes. The duration is the shared token, which reduced
- * motion sets to 0.
- */
-@keyframes catalog-in-list {
-	from {
-		opacity: 0;
-	}
-}
-
-@keyframes catalog-in-grid {
-	from {
-		opacity: 0;
-	}
-}
-
-@keyframes catalog-in-details {
-	from {
-		opacity: 0;
-	}
-}
+/* A view change fades the items in: each view has its own shared fade (styles/transition.css). */
 
 .catalog li {
 	animation-duration: var(--itx-transition-duration);
@@ -48,15 +27,15 @@
 }
 
 .outer:has(input[name="view"][value="list"]:checked) .catalog li {
-	animation-name: catalog-in-list;
+	animation-name: itx-fade-in-1;
 }
 
 .outer:has(input[name="view"][value="grid"]:checked) .catalog li {
-	animation-name: catalog-in-grid;
+	animation-name: itx-fade-in-2;
 }
 
 .outer:has(input[name="view"][value="details"]:checked) .catalog li {
-	animation-name: catalog-in-details;
+	animation-name: itx-fade-in-3;
 }
 
 .catalog a {
