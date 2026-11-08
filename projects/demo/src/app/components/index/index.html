@@ -5,14 +5,14 @@
 </p>
 <div class="outer">
 	<fieldset interop-radio-group="segmented icon" itx-size="md">
-		<legend>View</legend>
+		<legend>Select view</legend>
 		<label>
-			<input type="radio" name="view" value="list" checked />
+			<input type="radio" name="view" value="list" />
 			<svg interop-icon itx-size="lg" name="tabler-list"></svg>
 			<span itx-visually-hidden>List</span>
 		</label>
 		<label>
-			<input type="radio" name="view" value="grid" />
+			<input type="radio" name="view" value="grid" checked />
 			<svg interop-icon itx-size="lg" name="tabler-layout-grid"></svg>
 			<span itx-visually-hidden>Grid</span>
 		</label>
@@ -25,7 +25,7 @@
 	<span interop-tooltip="label" id="tip-list">List</span>
 	<span interop-tooltip="label" id="tip-grid">Grid</span>
 	<span interop-tooltip="label" id="tip-details">Details</span>
-	<ul class="catalog" role="list" data-view="list">
+	<ul class="catalog" role="list">
 		@for (component of components; track component.slug) {
 			<li>
 				@if (component.imageUrl) {
@@ -34,7 +34,7 @@
 				<a [routerLink]="'/components/' + component.slug">{{
 					component.title
 				}}</a>
-				<p>{{ component.summary }}</p>
+				<p class="summary">{{ component.summary }}</p>
 				@if (
 					component.builtFrom?.length ||
 					component.usedBy.length ||

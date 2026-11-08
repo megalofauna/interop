@@ -9,7 +9,6 @@ import { RouterLink } from "@angular/router";
 import { bindTooltip } from "interop";
 import { InteropIcon } from "interop/icon";
 import { catalog, usedBy, type CatalogEntry } from "../catalog";
-import { bindView } from "./bind-view";
 
 @Component({
 	selector: "demo-components",
@@ -29,12 +28,6 @@ export class ComponentsIndex {
 						`input[name="view"][value="${view}"]`,
 					)!,
 					host.querySelector<HTMLElement>(`#tip-${view}`)!,
-				),
-			);
-			unbinds.push(
-				bindView(
-					host.querySelector<HTMLFieldSetElement>("fieldset")!,
-					host.querySelector<HTMLElement>("ul[data-view]")!,
 				),
 			);
 			destroyRef.onDestroy(() => unbinds.forEach((unbind) => unbind()));
