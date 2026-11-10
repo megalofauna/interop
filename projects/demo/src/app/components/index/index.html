@@ -27,22 +27,24 @@
 	<span interop-tooltip="label" id="tip-details">Details</span>
 	<ul class="catalog" role="list">
 		@for (component of components; track component.slug) {
-			<li>
+			<li class="catalog-item">
 				@if (component.imageUrl) {
 					<img [src]="component.imageUrl" alt="" />
 				}
-				<a [routerLink]="'/components/' + component.slug">{{
+				<a class="catalog-item__link" [routerLink]="'/components/' + component.slug">{{
 					component.title
 				}}</a>
-				<p class="summary">{{ component.summary }}</p>
+				<p class="catalog-item__lede">{{ component.summary }}</p>
 				@if (
 					component.builtFrom?.length ||
 					component.usedBy.length ||
 					component.helpers?.length
 				) {
-					<dl>
+					<dl class="catalog-item__details">
 						@if (component.builtFrom?.length) {
-							<dt>Built from</dt>
+							<dt>
+								<svg interop-icon itx-size="lg" name="tabler-egg"></svg>
+							</dt>
 							<dd>
 								@for (
 									slug of component.builtFrom;
