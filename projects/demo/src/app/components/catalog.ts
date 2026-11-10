@@ -229,7 +229,7 @@ export const catalog = [
 		title: "Tooltip",
 		summary:
 			"Text shown while the pointer rests on its trigger or the trigger has focus.",
-		helpers: ["bindTooltip"],
+		helpers: ["bindTooltips"],
 	},
 	{
 		slug: "tree",

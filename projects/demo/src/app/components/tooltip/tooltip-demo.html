@@ -7,11 +7,14 @@
 	is clear without it.
 </p>
 <p>
-	The trigger points at its tooltip with <code>aria-labelledby</code> or
-	<code>aria-describedby</code>, so it has its name before any script runs.
-	<code>bindTooltip(trigger, tooltip)</code> from <code>interop</code> opens and
-	closes it. In Angular, <code>[interopTooltip]</code> takes the tooltip element
-	and adds the reference itself.
+	A tooltip is written in the markup: an element with
+	<code>interop-tooltip</code>, <code>popover="hint"</code>,
+	<code>role="tooltip"</code> and an <code>id</code>. Its trigger names it in
+	<code>aria-labelledby</code> or <code>aria-describedby</code>, so the trigger
+	has its name before any script runs, and <code>popover</code> keeps the
+	tooltip out of the page until it opens. Call <code>bindTooltips()</code> from
+	<code>interop</code> once and it opens and closes every tooltip, including
+	ones a framework adds or re-renders later.
 </p>
 
 <h2>Naming an icon button</h2>

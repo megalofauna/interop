@@ -22,7 +22,7 @@ export { bindTabs, type TabsBinding, type TabsChangeDetail, type TabsOptions } f
 export { bindTargetCurrent } from './bind-target-current';
 export { bindTagInput, bindTags, type TagAddDetail, type TagInputOptions, type TagsOptions } from './bind-tags';
 export { bindToolbar } from './bind-toolbar';
-export { bindTooltip } from './bind-tooltip';
+export { bindTooltips } from './bind-tooltips';
 export {
 	bindValidation,
 	defaultValidationMessages,

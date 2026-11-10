@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { bindTooltip } from "interop";
+import { bindTooltips } from "interop";
 import { DemoExample } from "../../example/example";
 import describing from "./examples/describing.html";
 import edge from "./examples/edge.html";
@@ -24,22 +24,12 @@ export class TooltipDemo {
 		timingCss,
 	};
 
-	/** Binds each tooltip in an example to the trigger that points at it. */
-	protected readonly bind = (root: HTMLElement) => {
-		const unbinds = Array.from(
-			root.querySelectorAll<HTMLElement>("[interop-tooltip][id]"),
-		).flatMap((tooltip) => {
-			const trigger = root.querySelector<HTMLElement>(
-				`[aria-labelledby~="${tooltip.id}"], [aria-describedby~="${tooltip.id}"]`,
-			);
-			return trigger ? [bindTooltip(trigger, tooltip)] : [];
-		});
-		return () => unbinds.forEach((unbind) => unbind());
-	};
+	/** The app calls bindTooltips() once; each example calls it too, as a page on its own would. */
+	protected readonly bind = () => bindTooltips();
 
-	protected readonly ts = `import { bindTooltip } from "interop";
+	protected readonly ts = `import { bindTooltips } from "interop";
 
-// Returns a function that removes the behavior.
-bindTooltip(document.querySelector('[aria-labelledby="tip-copy"]'), document.getElementById("tip-copy"));
+// Once, for the whole document. Returns a function that removes it.
+bindTooltips();
 `;
 }

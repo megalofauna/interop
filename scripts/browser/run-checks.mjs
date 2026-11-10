@@ -8,6 +8,7 @@ import { checkPassword } from "./check-password.mjs";
 import { checkProgress } from "./check-progress.mjs";
 import { checkReact } from "./check-react.mjs";
 import { checkTabs } from "./check-tabs.mjs";
+import { checkTooltips } from "./check-tooltip.mjs";
 import { checkValidation } from "./check-validation.mjs";
 import { serve } from "./serve.mjs";
 
@@ -20,6 +21,7 @@ const checks = {
 	list: checkList,
 	hydration: checkHydration,
 	react: checkReact,
+	tooltips: checkTooltips,
 };
 const { url, stop } = await serve();
 let failed = 0;

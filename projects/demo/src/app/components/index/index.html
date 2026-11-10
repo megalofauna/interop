@@ -7,33 +7,49 @@
 	<fieldset interop-radio-group="segmented icon" itx-size="md">
 		<legend>Select view</legend>
 		<label>
-			<input type="radio" name="view" value="list" />
+			<input type="radio" name="view" value="list" aria-labelledby="tip-list" />
 			<svg interop-icon itx-size="lg" name="tabler-list"></svg>
-			<span itx-visually-hidden>List</span>
 		</label>
 		<label>
-			<input type="radio" name="view" value="grid" checked />
+			<input
+				type="radio"
+				name="view"
+				value="grid"
+				aria-labelledby="tip-grid"
+				checked
+			/>
 			<svg interop-icon itx-size="lg" name="tabler-layout-grid"></svg>
-			<span itx-visually-hidden>Grid</span>
 		</label>
 		<label>
-			<input type="radio" name="view" value="details" />
+			<input
+				type="radio"
+				name="view"
+				value="details"
+				aria-labelledby="tip-details"
+			/>
 			<svg interop-icon itx-size="lg" name="tabler-list-details"></svg>
-			<span itx-visually-hidden>Details</span>
 		</label>
 	</fieldset>
-	<span interop-tooltip="label" id="tip-list">List</span>
-	<span interop-tooltip="label" id="tip-grid">Grid</span>
-	<span interop-tooltip="label" id="tip-details">Details</span>
+	<span interop-tooltip="label" id="tip-list" popover="hint" role="tooltip"
+		>List</span
+	>
+	<span interop-tooltip="label" id="tip-grid" popover="hint" role="tooltip"
+		>Grid</span
+	>
+	<span interop-tooltip="label" id="tip-details" popover="hint" role="tooltip"
+		>Details</span
+	>
 	<ul class="catalog" role="list">
 		@for (component of components; track component.slug) {
 			<li class="catalog-item">
 				@if (component.imageUrl) {
 					<img [src]="component.imageUrl" alt="" />
 				}
-				<a class="catalog-item__link" [routerLink]="'/components/' + component.slug">{{
-					component.title
-				}}</a>
+				<a
+					class="catalog-item__link"
+					[routerLink]="'/components/' + component.slug"
+					>{{ component.title }}</a
+				>
 				<p class="catalog-item__lede">{{ component.summary }}</p>
 				@if (
 					component.builtFrom?.length ||

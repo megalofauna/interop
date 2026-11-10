@@ -1,12 +1,5 @@
-import {
-	Component,
-	DestroyRef,
-	ElementRef,
-	afterNextRender,
-	inject,
-} from "@angular/core";
+import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { bindTooltip } from "interop";
 import { InteropIcon } from "interop/icon";
 import { catalog, usedBy, type CatalogEntry } from "../catalog";
 
@@ -18,22 +11,6 @@ import { catalog, usedBy, type CatalogEntry } from "../catalog";
 	styleUrl: "./index.css",
 })
 export class ComponentsIndex {
-	constructor() {
-		const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-		const destroyRef = inject(DestroyRef);
-		afterNextRender(() => {
-			const unbinds = ["list", "grid", "details"].map((view) =>
-				bindTooltip(
-					host.querySelector<HTMLElement>(
-						`input[name="view"][value="${view}"]`,
-					)!,
-					host.querySelector<HTMLElement>(`#tip-${view}`)!,
-				),
-			);
-			destroyRef.onDestroy(() => unbinds.forEach((unbind) => unbind()));
-		});
-	}
-
 	/** Every component page, from the catalog, in its order, with the pages built from it. */
 	protected readonly components = catalog.map((entry: CatalogEntry) => ({
 		...entry,

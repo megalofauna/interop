@@ -151,15 +151,49 @@ describe('auditInterop', () => {
 
 	it('flags a tooltip holding a control', () => {
 		render(`
-			<span interop-tooltip>Read <a href="/docs">the docs</a></span>
-			<span interop-tooltip>Saves a draft</span>
+			<button type="button" aria-describedby="a">Help</button><span interop-tooltip id="a" popover="hint">Read <a href="/docs">the docs</a></span>
+			<button type="button" aria-describedby="b">Save</button><span interop-tooltip id="b" popover="hint">Saves a draft</span>
 		`);
 		expect(rules()).toEqual(['tooltip-interactive']);
 	});
 
+	it('flags a tooltip that is not a popover', () => {
+		render(`
+			<button type="button" aria-describedby="a">Save</button><span interop-tooltip id="a">Saves a draft</span>
+			<button type="button" aria-describedby="b">Send</button><span interop-tooltip id="b" popover="hint">Sends it now</span>
+		`);
+		expect(rules()).toEqual(['tooltip-not-popover']);
+	});
+
+	it('flags a tooltip referenced through the wrong attribute', () => {
+		render(`
+			<button type="button" aria-describedby="a">Save</button><span interop-tooltip="label" id="a" popover="hint">Save the draft</span>
+			<button interop-button="icon" type="button" aria-labelledby="b"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip id="b" popover="hint">Close</span>
+			<button interop-button="icon" type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c" popover="hint">Close</span>
+		`);
+		expect(rules()).toEqual(['tooltip-relation', 'tooltip-relation']);
+	});
+
+	it('flags a tooltip on an element the keyboard cannot reach', () => {
+		render(`
+			<span aria-describedby="a">Draft</span><span interop-tooltip id="a" popover="hint">Not yet sent</span>
+			<button type="button" aria-describedby="b">Draft</button><span interop-tooltip id="b" popover="hint">Not yet sent</span>
+		`);
+		expect(rules()).toEqual(['tooltip-trigger-unfocusable']);
+	});
+
+	it('flags a tooltip that no element references', () => {
+		render(`
+			<span interop-tooltip id="a" popover="hint">Saves a draft</span>
+			<span interop-tooltip popover="hint">Sends it now</span>
+			<button type="button" aria-describedby="hint c">Copy</button><span id="hint">Ctrl+C</span><span interop-tooltip id="c" popover="hint">Copies the link</span>
+		`);
+		expect(rules()).toEqual(['tooltip-orphan', 'tooltip-orphan']);
+	});
+
 	it('flags a disabled control with a tooltip', () => {
 		render(`
-			<button type="button" disabled aria-describedby="t">Save</button><span interop-tooltip id="t">Saves a draft</span>
+			<button type="button" disabled aria-describedby="t">Save</button><span interop-tooltip id="t" popover="hint">Saves a draft</span>
 			<button type="button" disabled aria-describedby="d">Save</button><span id="d">Saves a draft</span>
 			<button type="button" aria-disabled="true" aria-describedby="t">Save</button>
 		`);
@@ -168,18 +202,18 @@ describe('auditInterop', () => {
 
 	it('flags a describing tooltip that repeats the name, and accepts one that labels', () => {
 		render(`
-			<button interop-button type="button" aria-label="Copy code" aria-describedby="a"></button><span interop-tooltip id="a">Copy code</span>
-			<button interop-button type="button" aria-labelledby="b"></button><span interop-tooltip="label" id="b">Copy code</span>
-			<button interop-button type="button" aria-describedby="c">Save</button><span interop-tooltip id="c">Saves a draft</span>
+			<button interop-button type="button" aria-label="Copy code" aria-describedby="a"></button><span interop-tooltip id="a" popover="hint">Copy code</span>
+			<button interop-button type="button" aria-labelledby="b"></button><span interop-tooltip="label" id="b" popover="hint">Copy code</span>
+			<button interop-button type="button" aria-describedby="c">Save</button><span interop-tooltip id="c" popover="hint">Saves a draft</span>
 		`);
 		expect(rules()).toEqual(['tooltip-repeats-name']);
 	});
 
 	it('flags a label tooltip that replaces visible text, and accepts one that keeps it', () => {
 		render(`
-			<button interop-button type="button" aria-labelledby="a">Delete</button><span interop-tooltip="label" id="a">Remove this item</span>
-			<button interop-button type="button" aria-labelledby="b">Delete</button><span interop-tooltip="label" id="b">Delete this item</span>
-			<button interop-button="icon" type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c">Copy code</span>
+			<button interop-button type="button" aria-labelledby="a">Delete</button><span interop-tooltip="label" id="a" popover="hint">Remove this item</span>
+			<button interop-button type="button" aria-labelledby="b">Delete</button><span interop-tooltip="label" id="b" popover="hint">Delete this item</span>
+			<button interop-button="icon" type="button" aria-labelledby="c"><svg interop-icon aria-hidden="true"></svg></button><span interop-tooltip="label" id="c" popover="hint">Copy code</span>
 		`);
 		expect(rules()).toEqual(['tooltip-label-in-name']);
 	});

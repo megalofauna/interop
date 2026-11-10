@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Tooltips on a plain page</title>
+		<link rel="stylesheet" href="dist/interop.css" />
+		<style>
+			body {
+				max-inline-size: 40rem;
+				margin: 6rem auto;
+				padding-inline: 1rem;
+			}
+		</style>
+		<script type="module">
+			import { bindTooltips } from "./dist/tooltips.js";
+			window.unbindTooltips = bindTooltips();
+		</script>
+	</head>
+	<body itx-flow>
+		<h1>Tooltips</h1>
+		<p>
+			<button type="button" id="save" aria-describedby="hint tip-save">
+				Save
+			</button>
+			<span id="hint">Ctrl+S</span>
+			<span interop-tooltip id="tip-save" popover="hint" role="tooltip"
+				>Saves without publishing</span
+			>
+		</p>
+		<fieldset interop-radio-group>
+			<legend>View</legend>
+			<label id="grid-label"
+				><input
+					type="radio"
+					name="view"
+					value="grid"
+					aria-labelledby="tip-grid" /><svg
+					width="16"
+					height="16"
+					aria-hidden="true"
+				>
+					<rect width="16" height="16" /></svg
+			></label>
+		</fieldset>
+		<span interop-tooltip="label" id="tip-grid" popover="hint" role="tooltip"
+			>Grid</span
+		>
+		<div id="later"></div>
+	</body>
+</html>

@@ -1,6 +1,6 @@
 # TODO — helpers bound to elements stop working when a framework re-renders them
 
-**Status:** deferred
+**Status:** tooltips done by `bindTooltips()` ([bind-tooltips.md](bind-tooltips.md)); other bound helpers deferred
 **Raised:** 2026-11-08, on the Components index page (`projects/demo/src/app/components/index/`)
 
 ## The problem

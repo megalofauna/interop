@@ -11,7 +11,6 @@ import { InteropScrollArea } from 'interop/scroll-area';
 import { InteropStepsForm } from 'interop/steps';
 import 'interop/tabs';
 import { InteropToolbar } from 'interop/toolbar';
-import { InteropTooltip } from 'interop/tooltip';
 import {
 	TablerAlertCircle,
 	TablerAlertTriangle,
@@ -40,7 +39,7 @@ const reveal = (element: Element) => {
 };
 
 @Component({
-	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea, InteropTooltip],
+	imports: [InteropBadge, InteropCodeBlock, InteropIcon, InteropInvoker, InteropScrollArea],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 	template: `
 		<main>
@@ -64,10 +63,10 @@ const reveal = (element: Element) => {
 				Activity
 				<span interop-badge="dot" itx-badge-position="top-end">New activity</span>
 			</button>
-			<button interop-button="icon" type="button" [interopTooltip]="close"><svg interop-icon name="tabler-x"></svg></button>
-			<span interop-tooltip="label" #close>Close</span>
-			<button interop-button type="button" [interopTooltip]="draft">Save draft</button>
-			<span interop-tooltip #draft>Saves without publishing</span>
+			<button interop-button="icon" type="button" aria-labelledby="tip-close"><svg interop-icon name="tabler-x"></svg></button>
+			<span interop-tooltip="label" id="tip-close" popover="hint" role="tooltip">Close</span>
+			<button interop-button type="button" aria-describedby="tip-draft">Save draft</button>
+			<span interop-tooltip id="tip-draft" popover="hint" role="tooltip">Saves without publishing</span>
 			<button interop-button type="button" [popoverTarget]="menu">Options</button>
 			<button interop-button type="button" commandfor="axe-drawer" command="toggle-popover">Menu</button>
 			<nav id="axe-drawer" interop-popover="drawer" popover aria-label="Pages">
