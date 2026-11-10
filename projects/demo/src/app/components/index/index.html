@@ -5,19 +5,19 @@
 </p>
 <div class="outer">
 	<fieldset interop-radio-group="segmented icon" itx-size="md">
-		<legend>View</legend>
+		<legend>Select view</legend>
+		<label>
+			<input type="radio" name="view" value="list" aria-labelledby="tip-list" />
+			<svg interop-icon itx-size="lg" name="tabler-list"></svg>
+		</label>
 		<label>
 			<input
 				type="radio"
 				name="view"
-				value="list"
-				aria-labelledby="tip-list"
+				value="grid"
+				aria-labelledby="tip-grid"
 				checked
 			/>
-			<svg interop-icon itx-size="lg" name="tabler-list"></svg>
-		</label>
-		<label>
-			<input type="radio" name="view" value="grid" aria-labelledby="tip-grid" />
 			<svg interop-icon itx-size="lg" name="tabler-layout-grid"></svg>
 		</label>
 		<label>
@@ -39,24 +39,28 @@
 	<span interop-tooltip="label" id="tip-details" popover="hint" role="tooltip"
 		>Details</span
 	>
-	<ul class="catalog" role="list" data-view="list">
+	<ul class="catalog" role="list">
 		@for (component of components; track component.slug) {
-			<li>
+			<li class="catalog-item">
 				@if (component.imageUrl) {
 					<img [src]="component.imageUrl" alt="" />
 				}
-				<a [routerLink]="'/components/' + component.slug">{{
-					component.title
-				}}</a>
-				<p>{{ component.summary }}</p>
+				<a
+					class="catalog-item__link"
+					[routerLink]="'/components/' + component.slug"
+					>{{ component.title }}</a
+				>
+				<p class="catalog-item__lede">{{ component.summary }}</p>
 				@if (
 					component.builtFrom?.length ||
 					component.usedBy.length ||
 					component.helpers?.length
 				) {
-					<dl>
+					<dl class="catalog-item__details">
 						@if (component.builtFrom?.length) {
-							<dt>Built from</dt>
+							<dt>
+								<svg interop-icon itx-size="lg" name="tabler-egg"></svg>
+							</dt>
 							<dd>
 								@for (
 									slug of component.builtFrom;

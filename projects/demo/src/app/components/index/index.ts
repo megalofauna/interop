@@ -1,14 +1,7 @@
-import {
-	Component,
-	DestroyRef,
-	ElementRef,
-	afterNextRender,
-	inject,
-} from "@angular/core";
+import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { InteropIcon } from "interop/icon";
 import { catalog, usedBy, type CatalogEntry } from "../catalog";
-import { bindView } from "./bind-view";
 
 @Component({
 	selector: "demo-components",
@@ -18,19 +11,6 @@ import { bindView } from "./bind-view";
 	styleUrl: "./index.css",
 })
 export class ComponentsIndex {
-	constructor() {
-		const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-		const destroyRef = inject(DestroyRef);
-		afterNextRender(() => {
-			destroyRef.onDestroy(
-				bindView(
-					host.querySelector<HTMLFieldSetElement>("fieldset")!,
-					host.querySelector<HTMLElement>("ul[data-view]")!,
-				),
-			);
-		});
-	}
-
 	/** Every component page, from the catalog, in its order, with the pages built from it. */
 	protected readonly components = catalog.map((entry: CatalogEntry) => ({
 		...entry,

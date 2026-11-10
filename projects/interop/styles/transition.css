@@ -22,3 +22,38 @@
 		--itx-animation-duration-sweep: 2s;
 	}
 }
+
+/*
+ * A short fade in, for content that changes in place, such as a list switching between views. An
+ * animation plays again only when its name changes, so these are four copies of one fade under
+ * four names: give each state of a component its own, and every change of state plays it.
+ *
+ *   .catalog li { animation-duration: var(--itx-transition-duration); }
+ *   .outer:has([value="list"]:checked) .catalog li { animation-name: itx-fade-in-1; }
+ *   .outer:has([value="grid"]:checked) .catalog li { animation-name: itx-fade-in-2; }
+ *
+ * Read a shared duration, so reduced motion stops it. A state with no name of its own never fades.
+ */
+@keyframes itx-fade-in-1 {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes itx-fade-in-2 {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes itx-fade-in-3 {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes itx-fade-in-4 {
+	from {
+		opacity: 0;
+	}
+}
