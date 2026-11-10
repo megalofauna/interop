@@ -10,12 +10,11 @@ import {
 	signal,
 	viewChild,
 } from '@angular/core';
-import { announce, registerIcons, scopeSelectAll, splitLines } from 'interop';
+import { announce, bindTooltips, registerIcons, scopeSelectAll, splitLines } from 'interop';
 import { getLanguage, highlightCode } from 'interop/highlight';
 import { InteropIcon } from 'interop/icon';
 import { InteropScrollArea } from 'interop/scroll-area';
 import { TablerCheck, TablerCopy } from 'interop/tabler';
-import { InteropTooltip } from 'interop/tooltip';
 
 let nextId = 0;
 
@@ -31,7 +30,7 @@ let nextId = 0;
  */
 @Component({
 	selector: 'figure[interop-code-block]',
-	imports: [InteropIcon, InteropScrollArea, InteropTooltip],
+	imports: [InteropIcon, InteropScrollArea],
 	template: `
 		@if (caption()) {
 			<figcaption [id]="captionId">{{ caption() }}</figcaption>
@@ -42,13 +41,12 @@ let nextId = 0;
 				interop-button="icon"
 				type="button"
 				itx-size="sm"
-				[interopTooltip]="copyLabel"
 				[attr.aria-labelledby]="caption() ? copyLabelId + ' ' + captionId : copyLabelId"
 				(click)="copy()"
 			>
 				<svg interop-icon [name]="copied() ? 'tabler-check' : 'tabler-copy'"></svg>
 			</button>
-			<span interop-tooltip="label" [id]="copyLabelId" #copyLabel>Copy code</span>
+			<span interop-tooltip="label" [id]="copyLabelId" popover="hint" role="tooltip">Copy code</span>
 		}
 		<!--
 			TODO: An overflowing block is focusable but has no name of its own. The figure around it has
@@ -92,7 +90,10 @@ export class InteropCodeBlock {
 	constructor() {
 		registerIcons(TablerCopy, TablerCheck);
 		const destroyRef = inject(DestroyRef);
-		if (typeof document !== 'undefined') scopeSelectAll();
+		if (typeof document !== 'undefined') {
+			scopeSelectAll();
+			destroyRef.onDestroy(bindTooltips());
+		}
 
 		let removeColors = () => {};
 		let run = 0;

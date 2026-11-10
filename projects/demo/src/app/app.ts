@@ -11,6 +11,7 @@ import {
 	RouterLinkActive,
 	RouterOutlet,
 } from "@angular/router";
+import { bindTooltips } from "interop";
 import { catalog } from "./components/catalog";
 import { InteropBadge } from "interop/badge";
 import { InteropColorScheme } from "interop/color-scheme";
@@ -70,5 +71,8 @@ export class App {
 		});
 		resized.observe(host);
 		inject(DestroyRef).onDestroy(() => resized.disconnect());
+
+		// Every tooltip on every page, read from its markup when the pointer or focus reaches it.
+		inject(DestroyRef).onDestroy(bindTooltips());
 	}
 }

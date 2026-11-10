@@ -15,7 +15,6 @@ import {
 	TablerStrikethrough,
 } from "interop/tabler";
 import { InteropToolbar } from "interop/toolbar";
-import { InteropTooltip } from "interop/tooltip";
 import {
 	applyMarkdown,
 	groups,
@@ -47,13 +46,7 @@ registerIcons(
 		"(keyup)": "changed()",
 		"(pointerup)": "changed()",
 	},
-	imports: [
-		NgTemplateOutlet,
-		InteropCodeBlock,
-		InteropIcon,
-		InteropToolbar,
-		InteropTooltip,
-	],
+	imports: [NgTemplateOutlet, InteropCodeBlock, InteropIcon, InteropToolbar],
 	templateUrl: "./toolbar-demo.html",
 	styleUrl: "./toolbar-demo.css",
 })
@@ -65,6 +58,11 @@ export class ToolbarDemo {
 
 	protected changed(): void {
 		this.revision.update((n) => n + 1);
+	}
+
+	/** The ID of an action's label tooltip, unique per toolbar because each is named after its field. */
+	protected tipId(field: HTMLTextAreaElement, action: MarkdownAction): string {
+		return `${field.id}-tip-${action.label.toLowerCase().replace(/\s+/g, "-")}`;
 	}
 
 	/** aria-pressed for a toggle, or null for a command, which has no pressed state. */
