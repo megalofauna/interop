@@ -6,7 +6,6 @@ import {
 	inject,
 } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { bindTooltip } from "interop";
 import { InteropIcon } from "interop/icon";
 import { catalog, usedBy, type CatalogEntry } from "../catalog";
 import { bindView } from "./bind-view";
@@ -23,21 +22,12 @@ export class ComponentsIndex {
 		const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 		const destroyRef = inject(DestroyRef);
 		afterNextRender(() => {
-			const unbinds = ["list", "grid", "details"].map((view) =>
-				bindTooltip(
-					host.querySelector<HTMLElement>(
-						`input[name="view"][value="${view}"]`,
-					)!,
-					host.querySelector<HTMLElement>(`#tip-${view}`)!,
-				),
-			);
-			unbinds.push(
+			destroyRef.onDestroy(
 				bindView(
 					host.querySelector<HTMLFieldSetElement>("fieldset")!,
 					host.querySelector<HTMLElement>("ul[data-view]")!,
 				),
 			);
-			destroyRef.onDestroy(() => unbinds.forEach((unbind) => unbind()));
 		});
 	}
 

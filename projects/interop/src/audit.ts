@@ -1,4 +1,4 @@
-import { OWNS_ARROW_KEYS } from './focusable';
+import { OWNS_ARROW_KEYS, isFocusable } from './focusable';
 import { tabsShowedPanels } from './bind-tabs';
 import { activationGuardCount } from './guard-activation';
 
@@ -223,6 +223,59 @@ const RULES: Record<string, { selector: string; check: Rule }> = {
 						advice: 'Use a describing tooltip, interop-tooltip without "label", or start the tooltip with the visible text.',
 					}
 				: null;
+		},
+	},
+	'tooltip-not-popover': {
+		selector: '[interop-tooltip]:not([popover])',
+		check: () => ({
+			problem: 'This tooltip is not a popover.',
+			reason: 'Until it opens, its text sits in the page, where screen readers read it and it takes up space.',
+			advice: 'Add popover="hint" and role="tooltip" to the tooltip.',
+		}),
+	},
+	'tooltip-relation': {
+		selector: '[aria-labelledby], [aria-describedby]',
+		check: (trigger) =>
+			tooltipsOf(trigger, 'aria-labelledby').some((tooltip) => tooltip.getAttribute('interop-tooltip') !== 'label') ||
+			tooltipsOf(trigger, 'aria-describedby').some((tooltip) => tooltip.getAttribute('interop-tooltip') === 'label')
+				? {
+						problem: 'This control references a tooltip through the wrong attribute.',
+						reason:
+							'A label tooltip is the control’s name and a describing tooltip adds to it, so the other attribute reads the wrong role.',
+						advice: 'Reference interop-tooltip="label" with aria-labelledby, and interop-tooltip with aria-describedby.',
+					}
+				: null,
+	},
+	'tooltip-trigger-unfocusable': {
+		selector: ':is([aria-labelledby], [aria-describedby]):not(:disabled)',
+		// Only a rendered element: a control in a closed popover is hidden, not unreachable.
+		check: (trigger) =>
+			(tooltipsOf(trigger, 'aria-labelledby').length || tooltipsOf(trigger, 'aria-describedby').length) &&
+			(trigger as HTMLElement).checkVisibility?.() !== false &&
+			!isFocusable(trigger)
+				? {
+						problem: 'This element has a tooltip but the keyboard cannot reach it.',
+						reason: 'A tooltip opens on hover or keyboard focus, so keyboard users never see this one.',
+						advice: 'Put the tooltip on a control, such as a button, or show the text on the page.',
+					}
+				: null,
+	},
+	'tooltip-orphan': {
+		selector: '[interop-tooltip]',
+		check: (tooltip) => {
+			const id = tooltip.id;
+			const referenced =
+				id &&
+				Array.from(tooltip.ownerDocument.querySelectorAll('[aria-labelledby], [aria-describedby]')).some((element) =>
+					['aria-labelledby', 'aria-describedby'].some((relation) => (element.getAttribute(relation) ?? '').split(/\s+/).includes(id)),
+				);
+			return referenced
+				? null
+				: {
+						problem: 'No element references this tooltip.',
+						reason: 'A tooltip opens for the control that names it in aria-labelledby or aria-describedby, so this one never opens.',
+						advice: 'Give the tooltip an id, and name it in its control’s aria-labelledby or aria-describedby.',
+					};
 		},
 	},
 	'control-name': {

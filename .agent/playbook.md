@@ -284,7 +284,9 @@ A helper:
   for it: a status region's text, or an error summary's `<ul>`;
 - keeps no state the page cannot read from the DOM;
 - binds only the element it is given. Nothing scans the page and binds by
-  itself;
+  itself. The exception is behavior that must survive a framework re-render:
+  it listens once on the document and reads the markup each time an event
+  arrives, so it holds no element between events (`bindTooltips()`);
 - adds every listener with `{ signal }` from one `AbortController`, and its
   unbind calls `abort()` and disconnects its observers;
 - finds focus targets with `focusables()` or `isFocusable()` from
@@ -302,7 +304,7 @@ ship; a helper with nothing on the horizon needs a reason to exist.
 |---|---|---|
 | `bindTabs` | Arrow keys, selection, panels | `focusgroup` takes the arrow keys (Chrome 150); nothing proposed for selection |
 | `bindRadioHomeEnd` | Home and End in a radio group | `focusgroup` moves focus with them, but does not check the radio |
-| `bindTooltip` | Show on hover and keyboard focus | Interest invokers, `interestfor` (Chrome 142) |
+| `bindTooltips` | Show on hover and keyboard focus | Interest invokers, `interestfor` (Chrome 142), which buttons and links only take |
 | `bindPasswordToggle` | Showing a password | Nothing proposed; Open UI has no command for it |
 | `bindCharacterCount` | A count that does not block typing, announced on a pause | Nothing proposed |
 | `bindValidation` | Error messages in the page, at the right time, wired to the field; an error summary | Nothing proposed. The browser checks the constraints; only its message bubbles are replaced |

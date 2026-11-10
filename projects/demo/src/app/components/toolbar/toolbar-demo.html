@@ -22,13 +22,19 @@
 				<button
 					interop-button="icon"
 					type="button"
-					[interopTooltip]="tip"
+					[attr.aria-labelledby]="tipId(field, action)"
 					[attr.aria-pressed]="pressed(field, action)"
 					(click)="apply(field, action)"
 				>
 					<svg interop-icon [name]="action.icon"></svg>
 				</button>
-				<span interop-tooltip="label" #tip>{{ action.label }}</span>
+				<span
+					interop-tooltip="label"
+					[id]="tipId(field, action)"
+					popover="hint"
+					role="tooltip"
+					>{{ action.label }}</span
+				>
 			}
 		</div>
 	}
