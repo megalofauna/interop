@@ -4,48 +4,33 @@
 	margin-block-start: var(--itx-space-8);
 }
 
+/* ── Every view ─────────────────────────────────────────────────────────── */
+
 .catalog {
 	margin: var(--itx-space-6) 0 0;
-	padding: 0;
+	padding: var(--itx-space-2);
 	list-style: none;
 	background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-900));
 	border: var(--itx-border-width) solid
 		light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
 	border-radius: calc(var(--itx-radius-base) * 4);
-	padding: var(--itx-space-2);
 }
 
-.catalog li {
+/* A change of view fades the items in. Each view names its own shared fade (styles/transition.css). */
+.catalog-item {
 	margin: 0;
-}
-
-/* A view change fades the items in: each view has its own shared fade (styles/transition.css). */
-
-.catalog li {
 	animation-duration: var(--itx-transition-duration);
 	animation-timing-function: var(--itx-transition-timing-function);
 }
 
-.outer:has(input[name="view"][value="list"]:checked) .catalog li {
-	animation-name: itx-fade-in-1;
-}
-
-.outer:has(input[name="view"][value="grid"]:checked) .catalog li {
-	animation-name: itx-fade-in-2;
-}
-
-.outer:has(input[name="view"][value="details"]:checked) .catalog li {
-	animation-name: itx-fade-in-3;
-}
-
-.catalog a {
+.catalog-item__link {
 	font-weight: 500;
 	font-size: var(--itx-font-size-p-lg);
 	text-decoration: none;
 }
 
-.catalog p,
-.catalog dl {
+.catalog-item__lede,
+.catalog-item__details {
 	margin: 0;
 	color: light-dark(var(--itx-neutral-700), var(--itx-neutral-300));
 }
@@ -57,89 +42,102 @@
 	object-fit: cover;
 }
 
-/*
- * The checked radio picks the view, with no script: each view's rules match while its radio is
- * checked. Built from, used by and helpers show only in the details view.
- */
-.outer:not(:has(input[name="view"][value="details"]:checked)) .catalog dl {
-	display: none;
-}
-
-/* List: one row per component, the title then its summary, with a rule between rows. */
-.outer:has(input[name="view"][value="list"]:checked) .catalog li {
-	display: grid;
-	grid-template-columns: minmax(10rem, 14rem) 1fr;
-	column-gap: var(--itx-space-4);
-	padding-block: var(--itx-space-3);
-	border-block-start: var(--itx-border-width) solid
-		light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
-}
-
-.outer:has(input[name="view"][value="list"]:checked) .catalog img {
-	display: none;
-}
-
-/* Grid and details: cards. Details cards are wider and hold more. */
-.outer:has(input[name="view"]:is([value="grid"], [value="details"]):checked)
-	.catalog {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
-	gap: var(--itx-space-2);
-}
-
-.outer:has(input[name="view"][value="details"]:checked) .catalog {
-	grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr));
-}
-
-.outer:has(input[name="view"]:is([value="grid"], [value="details"]):checked)
-	.catalog
-	li {
-	display: flex;
-	flex-direction: column;
-	gap: var(--itx-space-2);
-	padding: var(--itx-space-4);
-	background-color: light-dark(var(--itx-neutral-100), var(--itx-neutral-900));
-	border: var(--itx-border-width) solid
-		light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-	border-radius: var(--itx-radius-base);
-}
-
-.outer:has(input[name="view"][value="grid"]:checked) .catalog li {
-	padding: var(--itx-space-5);
-	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
-	border: var(--itx-border-width) solid
-		light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
-	border-radius: calc(var(--itx-radius-base) * 2);
-
-	.summary {
-		display: none;
-	}
-}
-
-.catalog dl {
+.catalog-item__details {
 	display: grid;
 	grid-template-columns: auto 1fr;
 	gap: var(--itx-space-1) var(--itx-space-3);
 	margin-block-start: var(--itx-space-2);
+
+	dt {
+		font-weight: 600;
+		color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+	}
+
+	dd {
+		margin: 0;
+	}
+
+	/* Ordinary text links; only an item's title is bold. */
+	dd a {
+		font-weight: inherit;
+	}
 }
 
-.catalog dt {
-	font-weight: 600;
-	color: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
+/*
+ * Each view is one block, matched while its radio is checked, with no script. A view states what it
+ * shows and hides; nothing in one view reaches another.
+ */
+
+/* ── List: one row per component, the title then its summary ────────────── */
+
+.outer:has(input[name="view"][value="list"]:checked) .catalog {
+	.catalog-item {
+		display: grid;
+		grid-template-columns: minmax(10rem, 14rem) 1fr;
+		column-gap: var(--itx-space-4);
+		padding-block: var(--itx-space-3);
+		border-block-start: var(--itx-border-width) solid
+			light-dark(var(--itx-neutral-200), var(--itx-neutral-700));
+		animation-name: itx-fade-in-1;
+	}
+
+	img,
+	.catalog-item__details {
+		display: none;
+	}
+
+	/* Narrow: the summary moves under the title. */
+	@container (width < 30rem) {
+		.catalog-item {
+			grid-template-columns: 1fr;
+		}
+	}
 }
 
-.catalog dd {
-	margin: 0;
+/* ── Grid: small cards, the title alone ─────────────────────────────────── */
+
+.outer:has(input[name="view"][value="grid"]:checked) .catalog {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+	gap: var(--itx-space-2);
+
+	.catalog-item {
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-space-2);
+		padding: var(--itx-space-5);
+		background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+		border: var(--itx-border-width) solid
+			light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+		border-radius: calc(var(--itx-radius-base) * 2);
+		animation-name: itx-fade-in-2;
+	}
+
+	.catalog-item__lede,
+	.catalog-item__details {
+		display: none;
+	}
 }
 
-/* The details links are ordinary text links; only the title is bold. */
-.catalog dd a {
-	font-weight: inherit;
-}
+/* ── Details: larger cards with what each is built from, what uses it, and its helpers ── */
 
-/* Narrow: list rows stack the summary under the title. */
-@container (width < 30rem) {
-	.outer:has(input[name="view"][value="list"]:checked) .catalog li {
-		grid-template-columns: 1fr;
+.outer:has(input[name="view"][value="details"]:checked) .catalog {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(22rem, 100%), 1fr));
+	gap: var(--itx-space-2);
+
+	.catalog-item {
+		display: flex;
+		flex-direction: column;
+		gap: var(--itx-space-2);
+		padding: var(--itx-space-4);
+		background-color: light-dark(
+			var(--itx-neutral-100),
+			var(--itx-neutral-900)
+		);
+		border: var(--itx-border-width) solid
+			light-dark(var(--itx-neutral-300), var(--itx-neutral-700));
+		border-radius: var(--itx-radius-base);
+		animation-name: itx-fade-in-3;
 	}
 }
