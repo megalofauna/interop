@@ -1,0 +1,37 @@
+<button interop-button type="button" commandfor="example" command="show-modal">
+	Standard small
+</button>
+
+<dialog
+	id="example"
+	interop-dialog
+	role="alertdialog"
+	closedby="none"
+	aria-labelledby="example-title"
+	aria-describedby="provide-an-id"
+>
+	<header class="itx-dialog-header">
+		<h2 class="itx-dialog-heading" id="example-title">
+			Your session is about to end
+		</h2>
+
+		<button interop-button="icon" aria-label="Dismiss">
+			<svg interop-icon name="tabler-x"></svg>
+		</button>
+	</header>
+
+	<div id="provide-an-id" class="itx-dialog-content" itx-flow>
+		You will be signed out in 2 minutes. Unsaved work will be stolen.
+	</div>
+
+	<form method="dialog">
+		<footer class="itx-dialog-footer">
+			<button interop-button="secondary" type="submit" value="stay" autofocus>
+				No
+			</button>
+			<button interop-button="primary" type="submit" value="sign-out">
+				Yes
+			</button>
+		</footer>
+	</form>
+</dialog>

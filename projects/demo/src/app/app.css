@@ -42,7 +42,7 @@
 	box-sizing: border-box;
 	block-size: var(--shell-header-block-size);
 	padding-inline: calc(var(--shell-gutter) + var(--itx-space-4));
-	background-color: light-dark(Canvas, var(--itx-neutral-900));
+	background-color: light-dark(Canvas, var(--itx-neutral-950));
 	border-block-end: 1px solid
 		light-dark(var(--itx-neutral-200), var(--itx-neutral-800));
 }
@@ -55,10 +55,11 @@
 	grid-area: main;
 	min-inline-size: 0;
 	padding: var(--itx-space-4);
-	/*background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));*/
+	/*background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-950));*/
 	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-950));
 
 	h1 {
+		display: block;
 		margin-top: var(--itx-space-12);
 	}
 }

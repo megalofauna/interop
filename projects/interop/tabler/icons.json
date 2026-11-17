@@ -25,5 +25,11 @@
 	"note",
 	"device-floppy",
 	"layout-grid",
-	"list-details"
+	"list-details",
+	"category",
+	"clipboard-data",
+	"dumbbell",
+	"brush",
+	"accessible",
+	"plug-connected"
 ]

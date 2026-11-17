@@ -1,0 +1,35 @@
+:where([interop-dialog]) {
+	display: flex;
+	flex-direction: column;
+	row-gap: var(--itx-space-6);
+
+	.itx-dialog-header {
+		display: flex;
+		align-items: center;
+		/*justify-content: center;*/
+
+		[interop-button="icon"] {
+			border-radius: var(--itx-radius-full);
+			background-color: var(--itx-neutral-700);
+			border: none;
+
+			&:hover {
+				color: var(--itx-neutral-700);
+				background-color: var(--itx-neutral-300);
+			}
+		}
+
+		.itx-dialog-heading {
+			font-size: var(--itx-font-size-p);
+			font-weight: 700;
+		}
+	}
+	.itx-dialog-content {
+		color: var(--itx-neutral-300);
+	}
+	.itx-dialog-footer {
+		[interop-button] {
+			min-inline-size: var(--itx-space-32);
+		}
+	}
+}

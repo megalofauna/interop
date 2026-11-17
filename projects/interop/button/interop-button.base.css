@@ -69,3 +69,5 @@
 	--itx-button-font-size: var(--itx-font-size-p-lg);
 	--itx-icon-size: var(--itx-icon-size-lg);
 }
+
+@import "variants/primary.css";

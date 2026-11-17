@@ -10,6 +10,7 @@ import alert from "./examples/alert.html";
 import confirm from "./examples/confirm.html";
 import lightDismiss from "./examples/light-dismiss.html";
 import long from "./examples/long.html";
+import standardSm from "./examples/standard-sm.html";
 
 @Component({
 	selector: "demo-dialog",
@@ -18,7 +19,7 @@ import long from "./examples/long.html";
 	templateUrl: "./dialog-demo.html",
 })
 export class DialogDemo {
-	protected readonly examples = { ...ts, confirm, lightDismiss, alert, long };
+	protected readonly examples = { ...ts, confirm, lightDismiss, alert, long, standardSm };
 	protected readonly renameCode = region(template, "rename");
 	protected readonly fromCodeCode = region(template, "from-code");
 

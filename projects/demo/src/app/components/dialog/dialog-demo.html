@@ -1,4 +1,4 @@
-<h1>Dialog</h1>
+<h1 itx-font="display">Dialog</h1>
 <p class="aka">
 	Also known as modal, modal dialog, alert dialog, sheet, lightbox.
 </p>
@@ -13,6 +13,15 @@
 	Name every dialog with <code>aria-labelledby</code> pointing at its heading,
 	so a screen reader says what it is for when it opens.
 </p>
+
+<h2>Standard dialog</h2>
+<p>
+	The buttons sit in <code>&lt;form method="dialog"&gt;</code>: pressing one
+	closes the dialog, and its <code>value</code> becomes the dialog's
+	<code>returnValue</code>. Escape leaves it empty. Focus starts on the least
+	destructive button.
+</p>
+<demo-example [html]="examples.standardSm" [bind]="bindConfirm" />
 
 <h2>Confirm an action</h2>
 <p>
@@ -51,7 +60,7 @@
 	(cancel)="guard($event)"
 >
 	<header>
-		<h2 id="rename-title">Rename file</h2>
+		<p id="rename-title">Rename file</p>
 		<button
 			interop-button="icon"
 			itx-size="sm"

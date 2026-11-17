@@ -42,7 +42,7 @@
 
 :root {
 	/* On the 4px grid, so the whole scale is too. */
-	--itx-radius-base: 4px;
+	--itx-radius-base: 8px;
 	--itx-radius-full: 9999px;
 }
 

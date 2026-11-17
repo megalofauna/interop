@@ -19,12 +19,15 @@ export interface CatalogEntry {
 	builtFrom?: readonly string[];
 	/** The functions from `interop` and the custom elements it offers. Absent when it is CSS only. */
 	helpers?: readonly string[];
+	/** The kind of component, for grouping the index. Absent when none fits. */
+	category?: "input" | "panel" | "navigation" | "utility" | "augmentation" | "readout";
 }
 
 export const catalog = [
 	{
 		slug: "accordion",
 		title: "Accordion",
+		category: "panel",
 		summary:
 			"A stack of disclosures under a heading, each opening its own section.",
 		builtFrom: ["disclosure"],
@@ -38,6 +41,7 @@ export const catalog = [
 	{
 		slug: "button",
 		title: "Button",
+		category: "input",
 		summary:
 			"An action, on the native button, with sizes, icons and a pending state.",
 		helpers: ["bindPendingAction"],
@@ -51,18 +55,21 @@ export const catalog = [
 	{
 		slug: "cards",
 		title: "Cards",
+		category: "input",
 		summary: "The options of a radio or checkbox group, drawn as cards.",
 		builtFrom: ["checkbox", "radio-group"],
 	},
 	{
 		slug: "checkbox",
 		title: "Checkbox",
+		category: "input",
 		summary: "A native checkbox inside its label, alone or in a group.",
 		helpers: ["bindSelectAll"],
 	},
 	{
 		slug: "chips",
 		title: "Chips",
+		category: "input",
 		summary: "The options of a checkbox or radio group, drawn as pills.",
 		builtFrom: ["checkbox", "radio-group"],
 	},
@@ -76,6 +83,7 @@ export const catalog = [
 	{
 		slug: "command-palette",
 		title: "Command palette",
+		category: "navigation",
 		summary:
 			"A search field over a list of links, in a dialog that a shortcut opens.",
 		builtFrom: ["dialog", "field"],
@@ -84,16 +92,19 @@ export const catalog = [
 	{
 		slug: "dialog",
 		title: "Dialog",
+		category: "panel",
 		summary: "The native dialog, modal or not, with Interop's look.",
 	},
 	{
 		slug: "disclosure",
 		title: "Disclosure",
+		category: "panel",
 		summary: "A summary that shows and hides the content after it.",
 	},
 	{
 		slug: "field",
 		title: "Field",
+		category: "input",
 		summary: "A label, an optional hint and error, and a native control.",
 		helpers: [
 			"bindCharacterCount",
@@ -106,22 +117,26 @@ export const catalog = [
 	{
 		slug: "group",
 		title: "Group",
+		category: "input",
 		summary: "Controls that belong together, with one name.",
 	},
 	{
 		slug: "icon",
 		title: "Icon",
 		summary: "An SVG named after a registered icon.",
+		category: "utility",
 		helpers: ["drawIcons", "registerIcons"],
 	},
 	{
 		slug: "list",
 		title: "List",
+		category: "augmentation",
 		summary: "A numbered list with each number drawn in a circle.",
 	},
 	{
 		slug: "page-nav",
 		title: "Page nav",
+		category: "navigation",
 		summary: "Links to the sections of the page, marking the one in view.",
 		builtFrom: ["tree"],
 		helpers: ["bindTargetCurrent"],
@@ -129,6 +144,7 @@ export const catalog = [
 	{
 		slug: "popover",
 		title: "Popover",
+		category: "panel",
 		summary:
 			"The platform's popover, anchored to the button that opens it, or a drawer.",
 		helpers: ["bindDrawer"],
@@ -136,16 +152,19 @@ export const catalog = [
 	{
 		slug: "progress",
 		title: "Progress",
+		category: "readout",
 		summary: "How far a task has got: an upload, a sync, an export.",
 	},
 	{
 		slug: "radio-group",
 		title: "Radio group",
+		category: "input",
 		summary: "One choice from a set: native radios that share a name.",
 	},
 	{
 		slug: "scroll-area",
 		title: "Scroll area",
+		category: "panel",
 		summary:
 			"A scroll container with a shadow at each edge that has more content.",
 		helpers: ["bindScrollArea"],
@@ -153,6 +172,7 @@ export const catalog = [
 	{
 		slug: "segmented-control",
 		title: "Segmented control",
+		category: "input",
 		summary: "A radio group drawn as a row of segments.",
 		builtFrom: ["radio-group"],
 		helpers: ["bindRadioHomeEnd", "bindSegmentedFit"],
@@ -160,11 +180,13 @@ export const catalog = [
 	{
 		slug: "select",
 		title: "Select",
+		category: "input",
 		summary: "The native select, with a field's look.",
 	},
 	{
 		slug: "slider",
 		title: "Slider",
+		category: "input",
 		summary:
 			"One value from a range, when the range matters more than the exact number.",
 		helpers: ["bindSlider"],
@@ -172,18 +194,21 @@ export const catalog = [
 	{
 		slug: "split-button",
 		title: "Split button",
+		category: "input",
 		summary: "An action, joined to a button that opens other choices for it.",
 		builtFrom: ["button", "group", "popover"],
 	},
 	{
 		slug: "steps",
 		title: "Steps",
+		category: "navigation",
 		summary: "Where you are in an ordered process, and the steps themselves.",
 		helpers: ["bindSteps"],
 	},
 	{
 		slug: "switch",
 		title: "Switch",
+		category: "input",
 		summary: "An on or off setting: a native checkbox with the switch role.",
 	},
 	{
@@ -194,12 +219,14 @@ export const catalog = [
 	{
 		slug: "tabs",
 		title: "Tabs",
+		category: "panel",
 		summary: "One of several sections shown at a time.",
 		helpers: ["bindTabs", "<interop-tabs>"],
 	},
 	{
 		slug: "tags",
 		title: "Tags",
+		category: "input",
 		summary:
 			"Values the user can remove: applied filters, or the entries of a tag input.",
 		helpers: ["bindTagInput", "bindTags"],
@@ -207,6 +234,7 @@ export const catalog = [
 	{
 		slug: "theme-switcher",
 		title: "Theme switcher",
+		category: "input",
 		summary: "Light, Dark and System, as a segmented control.",
 		builtFrom: ["segmented-control"],
 		helpers: ["bindColorScheme"],
@@ -221,6 +249,7 @@ export const catalog = [
 	{
 		slug: "toolbar",
 		title: "Toolbar",
+		category: "input",
 		summary: "Three or more controls that act on one thing, as one Tab stop.",
 		helpers: ["bindToolbar"],
 	},
@@ -234,6 +263,7 @@ export const catalog = [
 	{
 		slug: "tree",
 		title: "Tree",
+		category: "navigation",
 		summary: "Navigation through a hierarchy of pages.",
 	},
 ] as const satisfies readonly CatalogEntry[];

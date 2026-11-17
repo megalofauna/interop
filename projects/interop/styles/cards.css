@@ -41,7 +41,7 @@
 	/* Checked: thicker, so the change survives forced colors, and 3:1 against the page. */
 	--itx-cards-card-border-width-checked: var(--itx-border-width-strong);
 	--itx-cards-card-border-color-checked: light-dark(var(--itx-neutral-900), var(--itx-neutral-50));
-	--itx-cards-card-border-radius: var(--itx-radius, var(--itx-radius-base));
+	--itx-cards-card-border-radius: calc(var(--itx-radius, var(--itx-radius-base)));
 	--itx-cards-transition-duration: var(--itx-transition-duration);
 	--itx-cards-transition-timing-function: var(--itx-transition-timing-function);
 
@@ -105,6 +105,8 @@
 	fieldset[interop-checkbox-group~="cards"] > label[interop-checkbox]:has(> input:checked)
 ) {
 	padding: calc(var(--itx-cards-card-padding) - var(--itx-cards-card-border-width-checked));
+	background-color: light-dark(var(--itx-neutral-50), var(--itx-neutral-900));
+	color: light-dark(var(--itx-neutral-800), var(--itx-neutral-200));
 	border-width: var(--itx-cards-card-border-width-checked);
 	border-color: var(--itx-cards-card-border-color-checked);
 }

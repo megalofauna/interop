@@ -1,23 +1,17 @@
-<h1>Components</h1>
-<p>
+<h1 id="page-title">Component Index</h1>
+<!--<p>
 	Each component is a native element with Interop's styles, and a small helper
 	where it needs one.
-</p>
-<div class="outer">
-	<fieldset interop-radio-group="segmented icon" itx-size="md">
+</p>-->
+<div itx-composite="contentviewer">
+	<fieldset interop-radio-group="segmented icon">
 		<legend>Select view</legend>
 		<label>
 			<input type="radio" name="view" value="list" aria-labelledby="tip-list" />
 			<svg interop-icon itx-size="lg" name="tabler-list"></svg>
 		</label>
 		<label>
-			<input
-				type="radio"
-				name="view"
-				value="grid"
-				aria-labelledby="tip-grid"
-				checked
-			/>
+			<input type="radio" name="view" value="grid" aria-labelledby="tip-grid" />
 			<svg interop-icon itx-size="lg" name="tabler-layout-grid"></svg>
 		</label>
 		<label>
@@ -26,6 +20,7 @@
 				name="view"
 				value="details"
 				aria-labelledby="tip-details"
+				checked
 			/>
 			<svg interop-icon itx-size="lg" name="tabler-list-details"></svg>
 		</label>
@@ -39,24 +34,68 @@
 	<span interop-tooltip="label" id="tip-details" popover="hint" role="tooltip"
 		>Details</span
 	>
-	<ul class="catalog" role="list">
-		@for (component of components; track component.slug) {
-			<li class="catalog-item">
-				@if (component.imageUrl) {
-					<img [src]="component.imageUrl" alt="" />
-				}
-				<a
-					class="catalog-item__link"
-					[routerLink]="'/components/' + component.slug"
-					>{{ component.title }}</a
-				>
-				<p class="catalog-item__lede">{{ component.summary }}</p>
-				@if (
-					component.builtFrom?.length ||
-					component.usedBy.length ||
-					component.helpers?.length
-				) {
-					<dl class="catalog-item__details">
+	<div
+		interop-scroll-area
+		class="notes"
+		aria-labelledby="release-notes"
+		itx-flow
+	>
+		<ul role="list" class="itx-list">
+			@for (component of components; track component.slug) {
+			<li class="itx-list-item">
+				<!--{{ component.category }}-->
+
+				<div class=":start">
+					<p class=":path">components / input</p>
+					<a class=":link" [routerLink]="'/components/' + component.slug"
+						>{{ component.title }}</a
+					>
+					<code class=":selector">button[interop-button]</code>
+					<!--<p class="item-summary">{{ component.summary }}</p>-->
+				</div>
+				<div class=":end">
+					<table class="itx-table --oversized" itx-size="sm">
+						<thead>
+							<tr>
+								<th><svg interop-icon name="tabler-clipboard-data"></svg></th>
+								<th>At a glance</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><svg interop-icon name="tabler-dumbbell"></svg></td>
+								<td>1.7 kilobytes <small>(brotli)</small></td>
+							</tr>
+							<tr>
+								<td><svg interop-icon name="tabler-brush"></svg></td>
+								<td>28 customizable tokens</td>
+							</tr>
+							<tr>
+								<td><svg interop-icon name="tabler-accessible"></svg></td>
+								<td>Fully accessible</td>
+							</tr>
+							<tr>
+								<td>
+									<svg
+										itx-size="lg"
+										interop-icon
+										name="tabler-plug-connected"
+									></svg>
+								</td>
+								<td>1 optional helper</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="lineage">
+						<div class="lineage-start">button</div>
+						<div class="lineage-inter"></div>
+						<div class="lineage-end">split button</div>
+					</div>
+				</div>
+
+				@if ( component.builtFrom?.length || component.usedBy.length ||
+				component.helpers?.length ) {
+				<!--<dl class="">
 						@if (component.builtFrom?.length) {
 							<dt>
 								<svg interop-icon itx-size="lg" name="tabler-egg"></svg>
@@ -72,6 +111,8 @@
 								}
 							</dd>
 						}
+
+
 						@if (component.usedBy.length) {
 							<dt>Used by</dt>
 							<dd>
@@ -87,6 +128,8 @@
 								}
 							</dd>
 						}
+
+
 						@if (component.helpers?.length) {
 							<dt>Helpers</dt>
 							<dd>
@@ -100,9 +143,10 @@
 								}
 							</dd>
 						}
-					</dl>
+					</dl>-->
 				}
 			</li>
-		}
-	</ul>
+			}
+		</ul>
+	</div>
 </div>
