@@ -11,7 +11,11 @@ import stylesReset from '../styles/reset.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesSpace from '../styles/space.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
+import stylesSpaceFluid from '../styles/space-fluid.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
 import stylesTypography from '../styles/typography.css' with { loader: 'text' };
+// @ts-expect-error The text loader turns the file into a string.
+import stylesTypographyFluid from '../styles/typography-fluid.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
 import stylesCode from '../styles/code.css' with { loader: 'text' };
 // @ts-expect-error The text loader turns the file into a string.
@@ -158,7 +162,9 @@ export const sheets: Record<string, string> = {
 	'fonts/inter.css': fontsInter,
 	'styles/reset.css': stylesReset,
 	'styles/space.css': stylesSpace,
+	'styles/space-fluid.css': stylesSpaceFluid,
 	'styles/typography.css': stylesTypography,
+	'styles/typography-fluid.css': stylesTypographyFluid,
 	'styles/code.css': stylesCode,
 	'styles/radius.css': stylesRadius,
 	'styles/border.css': stylesBorder,

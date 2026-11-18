@@ -1,34 +1,32 @@
 /*
- * Fluid type sizes, an opt-in companion to typography.css:
- *
- *   @import "interop/styles/typography-fluid.css";
+ * Fluid type sizes, alongside the fixed ones in typography.css.
  *
  * Each `--itx-font-size-f<role>` and `--itx-line-height-f<role>` grows linearly with the
- * viewport, from the next size down the scale at 320px to its own fixed size at 1400px, and holds
- * at both ends. The fixed token is the same role's, so the two sets meet at 1400px. Caption and the
- * body roles stay fixed, and so does h3's line height, which is 28px at both ends.
+ * viewport, from the next size down the scale at 320px to its own fixed size at 1280px (80rem), and
+ * holds at both ends. The fixed token is the same role's, so the two sets meet at 1280px. Caption
+ * and the body roles stay fixed, and so does h3's line height, which is 28px at both ends.
  *
  * The preferred value includes a rem term, so text still scales with the browser's font size.
  */
 
 :root {
-	/* 24px at 320px, 32px at 1400px. */
-	--itx-font-size-fh1: clamp(1.5rem, 1.351852rem + 0.740741vw, 2rem);
-	--itx-line-height-fh1: clamp(2rem, 1.851852rem + 0.740741vw, 2.5rem);
+	/* 32px at 320px, 40px at 1280px. */
+	--itx-font-size-fdisplay: clamp(2rem, 1.833333rem + 0.833333vw, 2.5rem);
+	--itx-line-height-fdisplay: clamp(2.5rem, 2.333333rem + 0.833333vw, 3rem);
 
-	/* 32px at 320px, 40px at 1400px. */
-	--itx-font-size-fdisplay: clamp(2rem, 1.851852rem + 0.740741vw, 2.5rem);
-	--itx-line-height-fdisplay: clamp(2.5rem, 2.351852rem + 0.740741vw, 3rem);
+	/* 24px at 320px, 32px at 1280px. */
+	--itx-font-size-fh1: clamp(1.5rem, 1.333333rem + 0.833333vw, 2rem);
+	--itx-line-height-fh1: clamp(2rem, 1.833333rem + 0.833333vw, 2.5rem);
 
-	/* 20px at 320px, 24px at 1400px. */
-	--itx-font-size-fh2: clamp(1.25rem, 1.175926rem + 0.370370vw, 1.5rem);
-	--itx-line-height-fh2: clamp(1.75rem, 1.675926rem + 0.370370vw, 2rem);
+	/* 20px at 320px, 24px at 1280px. */
+	--itx-font-size-fh2: clamp(1.25rem, 1.166667rem + 0.416667vw, 1.5rem);
+	--itx-line-height-fh2: clamp(1.75rem, 1.666667rem + 0.416667vw, 2rem);
 
-	/* 18px at 320px, 20px at 1400px. */
-	--itx-font-size-fh3: clamp(1.125rem, 1.087963rem + 0.185185vw, 1.25rem);
+	/* 18px at 320px, 20px at 1280px. */
+	--itx-font-size-fh3: clamp(1.125rem, 1.083333rem + 0.208333vw, 1.25rem);
 
-	/* 16px at 320px, 18px at 1400px. */
-	--itx-font-size-fh4: clamp(1rem, 0.962963rem + 0.185185vw, 1.125rem);
-	/* 24px at 320px, 28px at 1400px. */
-	--itx-line-height-fh4: clamp(1.5rem, 1.425926rem + 0.370370vw, 1.75rem);
+	/* 16px at 320px, 18px at 1280px. */
+	--itx-font-size-fh4: clamp(1rem, 0.958333rem + 0.208333vw, 1.125rem);
+	/* 24px at 320px, 28px at 1280px. */
+	--itx-line-height-fh4: clamp(1.5rem, 1.416667rem + 0.416667vw, 1.75rem);
 }

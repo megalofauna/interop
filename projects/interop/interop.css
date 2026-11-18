@@ -1,6 +1,8 @@
 @import "./fonts/inter.css";
 @import "./styles/space.css";
+@import "./styles/space-fluid.css";
 @import "./styles/typography.css";
+@import "./styles/typography-fluid.css";
 @import "./styles/code.css";
 @import "./styles/radius.css";
 @import "./styles/border.css";

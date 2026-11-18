@@ -1,28 +1,27 @@
 /*
- * Fluid space sizes, an opt-in companion to space.css:
- *
- *   @import "interop/styles/space-fluid.css";
+ * Fluid space sizes, alongside the fixed steps in space.css.
  *
  * Each `--itx-space-f<role>` grows linearly with the viewport, from the step below it at 320px to
- * its own step at 1400px, and holds at both ends. Each token's large end is the next token's small
- * end, so the five form one continuous scale. They are for intra- and extra-component spacing.
+ * its own step at 1280px (80rem), and holds at both ends. Each token's large end is the next
+ * token's small end, so the five form one continuous scale. They are for intra- and
+ * extra-component spacing.
  *
  * The preferred value includes a rem term, so spacing still scales with the browser's font size.
  */
 
 :root {
-	/* 4px at 320px, 8px at 1400px. */
-	--itx-space-fxs: clamp(0.25rem, 0.175926rem + 0.370370vw, 0.5rem);
+	/* 4px at 320px, 8px at 1280px. */
+	--itx-space-fxs: clamp(0.25rem, 0.166667rem + 0.416667vw, 0.5rem);
 
-	/* 8px at 320px, 16px at 1400px. */
-	--itx-space-fsm: clamp(0.5rem, 0.351852rem + 0.740741vw, 1rem);
+	/* 8px at 320px, 16px at 1280px. */
+	--itx-space-fsm: clamp(0.5rem, 0.333333rem + 0.833333vw, 1rem);
 
-	/* 16px at 320px, 24px at 1400px. */
-	--itx-space-fmd: clamp(1rem, 0.851852rem + 0.740741vw, 1.5rem);
+	/* 16px at 320px, 24px at 1280px. */
+	--itx-space-fmd: clamp(1rem, 0.833333rem + 0.833333vw, 1.5rem);
 
-	/* 24px at 320px, 32px at 1400px. */
-	--itx-space-flg: clamp(1.5rem, 1.351852rem + 0.740741vw, 2rem);
+	/* 24px at 320px, 32px at 1280px. */
+	--itx-space-flg: clamp(1.5rem, 1.333333rem + 0.833333vw, 2rem);
 
-	/* 32px at 320px, 40px at 1400px. */
-	--itx-space-fxl: clamp(2rem, 1.851852rem + 0.740741vw, 2.5rem);
+	/* 32px at 320px, 40px at 1280px. */
+	--itx-space-fxl: clamp(2rem, 1.833333rem + 0.833333vw, 2.5rem);
 }
